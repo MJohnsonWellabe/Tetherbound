@@ -2,14 +2,13 @@
   "criterion": "F21#4",
   "integration_base": "7dcd2a8649660553f38702f2de71390efc6f1343",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
-  "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
+  "observed_source": "bf9df4536c4290516570072502b958883531d423",
   "status": "F21#4 candidate runtime PASS at bf9, nine moving pairs; independent strict/code-blind dynamic verdict and main landing pending. Previous native failures retained.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
-    "moving small/normal/giant nine-pair production player-path framing witness",
-    "fresh current-main runtime integration",
-    "independent dynamic visual verdict if new moving footage is used"
+    "independent strict source/runtime and fresh code-blind dynamic verdict",
+    "reviewed camera slice landing on main"
   ],
   "not_claimed": [
     "F21#5",
@@ -19,28 +18,6 @@
     "earned creature/campaign acquisition"
   ],
   "camera_cut_before_capture": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
-  "live_capture_pending": {
-    "mode": "--matrix-live",
-    "source_status": "Containing commit freezes successor after actual9507 failure; no engine launch or acceptance implied.",
-    "physics_boundaries_per_pair": 300,
-    "settling_physics_boundaries": 120,
-    "observed_physics_boundaries": 180,
-    "duration": "300 physics boundaries at actual Engine.physics_ticks_per_second (5 seconds at60Hz), independent of draw/PNG latency; actual draw count and timing are recorded. 30-second per-case wall limit;900-second whole-script cap.",
-    "physical_input": "Pre-physics left Y -0.85 at observed30 torelease90; physical quick trigger120 torelease122, flush buffered events at both trigger edges; right stick neutral. No direct action injection. Every actual post-draw view after settling scored, terminal/aborted renders retained.",
-    "images_per_pair": 6,
-    "ordered_png_milestones": [
-      0,
-      30,
-      60,
-      90,
-      120,
-      179
-    ],
-    "invariants": "Complete pass requires all9 cases,300 physics samples/case,6 nonblank1920x1080 PNG/case on distinct draws with requested+actual tick metadata, >=6 scored render records/case, strict0 overlap/in-frame/live simulation on EVERY scored render, physical movement and actual quick action. If skipped milestones cannot all be captured within interval, fail; no held-lifecycle escape.",
-    "output_plan": "If ROOT grants: fresh combat-camera-live-r4/frames and combat-camera-live-r4-user isolated APPDATA/LOCALAPPDATA, same single smoke parser/sole regression/one LowCompatibility1920x1080 full live9matrix.",
-    "asset_import_status": "No new assets. Existing cache ran984ee Low native successfully to a truthful7-caseFAIL. No import requested unless actual parser requires a missing/invalid necessary cache, coordinated with ROOT.",
-    "scope": "Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise BEFORE each pair only. No rescale, freeze, invulnerability, mid-interval HP/resource grants or earned acquisition claim."
-  },
   "live_runtime": {
     "source": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
     "native_exit": 1,
@@ -395,5 +372,71 @@
     "scored_render_count": 299,
     "scope": "Physical movement and Quick input with actual authored bodies/enemy AI/rig/collision live, staged pair roster/start/action baselines; measured canonical bounded hitstop remains live presentation.",
     "independent_review": "pending"
+  },
+  "historical_capture_plan": {
+    "mode": "--matrix-live",
+    "source_status": "Containing commit freezes successor after actual9507 failure; no engine launch or acceptance implied.",
+    "physics_boundaries_per_pair": 300,
+    "settling_physics_boundaries": 120,
+    "observed_physics_boundaries": 180,
+    "duration": "300 physics boundaries at actual Engine.physics_ticks_per_second (5 seconds at60Hz), independent of draw/PNG latency; actual draw count and timing are recorded. 30-second per-case wall limit;900-second whole-script cap.",
+    "physical_input": "Pre-physics left Y -0.85 at observed30 torelease90; physical quick trigger120 torelease122, flush buffered events at both trigger edges; right stick neutral. No direct action injection. Every actual post-draw view after settling scored, terminal/aborted renders retained.",
+    "images_per_pair": 6,
+    "ordered_png_milestones": [
+      0,
+      30,
+      60,
+      90,
+      120,
+      179
+    ],
+    "invariants": "Complete pass requires all9 cases,300 physics samples/case,6 nonblank1920x1080 PNG/case on distinct draws with requested+actual tick metadata, >=6 scored render records/case, strict0 overlap/in-frame/live simulation on EVERY scored render, physical movement and actual quick action. If skipped milestones cannot all be captured within interval, fail; no held-lifecycle escape.",
+    "output_plan": "If ROOT grants: fresh combat-camera-live-r4/frames and combat-camera-live-r4-user isolated APPDATA/LOCALAPPDATA, same single smoke parser/sole regression/one LowCompatibility1920x1080 full live9matrix.",
+    "asset_import_status": "No new assets. Existing cache ran984ee Low native successfully to a truthful7-caseFAIL. No import requested unless actual parser requires a missing/invalid necessary cache, coordinated with ROOT.",
+    "scope": "Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise BEFORE each pair only. No rescale, freeze, invulnerability, mid-interval HP/resource grants or earned acquisition claim.",
+    "status": "Historical pre-run plan only; superseded by live_runtime_r4_types_r2 complete native0 receipt."
+  },
+  "current_live_source_equivalence": {
+    "executed_source": "bf9df4536c4290516570072502b958883531d423",
+    "archive_commit": "7ef57d5f4c",
+    "method": "SHA256 raw git show bytes compared to frozen native receipt before/after hashes, all seven exact",
+    "files": {
+      "scripts/combat/combat_manager.gd": {
+        "executed_source_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+        "current_git_blob_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+        "equal": true
+      },
+      "scripts/combat/fight_camera.gd": {
+        "executed_source_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+        "current_git_blob_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+        "equal": true
+      },
+      "scripts/player/camera_rig.gd": {
+        "executed_source_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "current_git_blob_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "equal": true
+      },
+      "data/config/camera.json": {
+        "executed_source_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+        "current_git_blob_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+        "equal": true
+      },
+      "data/config/combat.json": {
+        "executed_source_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "current_git_blob_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "equal": true
+      },
+      "tests/smoke_combat_camera.gd": {
+        "executed_source_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d",
+        "current_git_blob_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d",
+        "equal": true
+      },
+      "tests/test_fight_camera.gd": {
+        "executed_source_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "current_git_blob_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "equal": true
+      }
+    },
+    "scope": "Actual moving-camera proof belongs to these bytes. Historical static blind verdict is not transferred; fresh dynamic judge remains pending."
   }
 }
