@@ -10,6 +10,8 @@ extends "res://tools/catalogue_survey.gd"
 ## Native stdout/stderr must be retained by the caller beside this JSON.
 
 const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
+const CONTAINER_DEPTH_LIMIT := 6
+const CONTAINER_VALUE_LIMIT := 1024
 var _graphics_capture: Dictionary = {}
 var _census: Array[Dictionary] = []
 var _resources: Dictionary = {}
@@ -142,7 +144,8 @@ func _resource_ref(resource: Resource) -> String:
 	_resource_ids[instance_id] = key
 	var path := resource.resource_path
 	var row := {"class": resource.get_class(), "path": path,
-		"resource_name": resource.resource_name, "children": {}, "null_object_properties": []}
+		"resource_name": resource.resource_name, "children": {}, "null_object_properties": [],
+		"container_values_seen": 0, "container_scan_truncated": []}
 	_resources[key] = row # Register before recursion; material graphs can share/cycle.
 	if not path.is_empty() and path.begins_with("res://"):
 		var source_path := path.split("::")[0]
@@ -161,9 +164,26 @@ func _resource_ref(resource: Resource) -> String:
 		if shader_rid.is_valid():
 			for parameter: Dictionary in RenderingServer.get_shader_parameter_list(shader_rid):
 				row.builtin_shader_uniform_names.append(str(parameter.name))
+		if resource.has_method("get_material_rid"):
+			var material_rid: RID = resource.call("get_material_rid")
+			row["terrain_gpu_uniform_bindings"] = {}
+			# The builtin list is an inventory, not proof it is the active shader.
+			var uniforms: Array = RenderingServer.get_shader_parameter_list(shader_rid) \
+				if shader_rid.is_valid() else []
+			if resource.has_method("is_shader_override_enabled") \
+					and resource.has_method("get_shader_override"):
+				var override_enabled: bool = resource.call("is_shader_override_enabled")
+				row["terrain_override_enabled"] = override_enabled
+				var override_shader: Shader = resource.call("get_shader_override")
+				if override_enabled and override_shader != null:
+					uniforms.append_array(override_shader.get_shader_uniform_list())
+			for uniform: Dictionary in uniforms:
+				if int(uniform.type) == TYPE_OBJECT:
+					row.terrain_gpu_uniform_bindings[str(uniform.name)] = \
+						_gpu_binding_metadata(material_rid, str(uniform.name))
 		# This extension's get_shader_param readback is explicitly unreliable in
 		# playground_world.gd. Absence in that getter is not a missing texture.
-		row["terrain_limit"] = "Stored assets/override graph and builtin shader uniform names only. get_shader_rid is the builtin shader, distinct from an override; these names alone do not certify the active override or private generated terrain texture arrays."
+		row["terrain_limit"] = "Builtin shader names are an inventory, not active-override proof. Stored resource graph and direct material RID readbacks do not certify texture pixels, compiled appearance or earlier silent substitutions; null readbacks may be shader defaults."
 	if resource is BaseMaterial3D:
 		var material := resource as BaseMaterial3D
 		row["albedo_rgba"] = [material.albedo_color.r, material.albedo_color.g,
@@ -173,32 +193,63 @@ func _resource_ref(resource: Resource) -> String:
 		row["emission_enabled"] = material.emission_enabled
 	if resource is ShaderMaterial:
 		var material := resource as ShaderMaterial
+		row["null_getter_gpu_bindings"] = {}
 		if material.shader != null:
 			for uniform: Dictionary in material.shader.get_shader_uniform_list():
 				var name := str(uniform.name)
 				var value: Variant = material.get_shader_parameter(name)
 				if value is Resource:
 					row.children["shader_parameter/" + name] = _resource_ref(value)
-				elif int(uniform.type) == TYPE_OBJECT:
+				elif value == null and int(uniform.type) == TYPE_OBJECT:
 					row.null_object_properties.append("shader_parameter/" + name)
+					row.null_getter_gpu_bindings[name] = _gpu_binding_metadata(material.get_rid(), name)
 	# Stored object properties include BaseMaterial textures, Terrain3D assets,
 	# terrain shader overrides and Environment.sky/Sky.sky_material.
 	for property: Dictionary in resource.get_property_list():
 		var name := str(property.name)
 		if name == "script" or not (int(property.usage) & PROPERTY_USAGE_STORAGE):
 			continue
-		if int(property.type) not in [TYPE_OBJECT, TYPE_ARRAY]:
+		if int(property.type) not in [TYPE_OBJECT, TYPE_ARRAY, TYPE_DICTIONARY]:
 			continue
 		var value: Variant = resource.get(name)
-		if value is Resource:
-			row.children[name] = _resource_ref(value)
-		elif value is Array:
-			for index in value.size():
-				if value[index] is Resource:
-					row.children["%s/%d" % [name, index]] = _resource_ref(value[index])
-		elif int(property.type) == TYPE_OBJECT:
+		_collect_resource_values(value, name, row)
+		if value == null and int(property.type) == TYPE_OBJECT:
 			row.null_object_properties.append(name)
 	return key
+
+
+func _collect_resource_values(value: Variant, path: String, row: Dictionary, depth: int = 0) -> void:
+	if int(row.container_values_seen) >= CONTAINER_VALUE_LIMIT or depth > CONTAINER_DEPTH_LIMIT:
+		row.container_scan_truncated.append(path)
+		return
+	row.container_values_seen += 1
+	if value is Resource:
+		row.children[path] = _resource_ref(value)
+	elif value is Array:
+		for index in value.size():
+			if int(row.container_values_seen) >= CONTAINER_VALUE_LIMIT:
+				row.container_scan_truncated.append(path)
+				break
+			_collect_resource_values(value[index], "%s/%d" % [path, index], row, depth + 1)
+	elif value is Dictionary:
+		for dictionary_key: Variant in value:
+			if int(row.container_values_seen) >= CONTAINER_VALUE_LIMIT:
+				row.container_scan_truncated.append(path)
+				break
+			_collect_resource_values(value[dictionary_key], path + "/" + str(dictionary_key), row, depth + 1)
+
+
+func _gpu_binding_metadata(material_rid: RID, uniform_name: String) -> Dictionary:
+	if not material_rid.is_valid():
+		return {"material_rid_valid": false, "value_type": "unobserved"}
+	# GrassField binds texture-array RIDs directly; the Resource getter can be
+	# null while this actual RenderingServer material parameter holds a RID.
+	var value: Variant = RenderingServer.material_get_param(material_rid, StringName(uniform_name))
+	var metadata := {"material_rid_valid": true, "value_type": type_string(typeof(value))}
+	if typeof(value) == TYPE_RID:
+		var binding_rid: RID = value
+		metadata["binding_rid_valid"] = binding_rid.is_valid()
+	return metadata
 
 
 func _write_manifest() -> void:
