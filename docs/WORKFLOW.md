@@ -33,7 +33,7 @@ choices open and continue independent slices. No count of passing checks
 alone closes a chapter.
 **The active plan is the owner redesign (owner, 2026-09-29).**
 `CODEX_START_HERE.md` is the build plan for every lane, Claude or Codex:
-§1 the owner decisions RD-01..RD-35, §4 the waves (0–3) and lanes, §5 the
+§1 the owner decisions RD-01..RD-36, §4 the waves (0–3) and lanes, §5 the
 feature register F16–F49 (34 features, 179 criteria), §6 the work order,
 owned files and dependencies of each feature, §7 landing, hourly push and
 board rules, and §7.5 how still-open F01–F15 criteria fold into the new
@@ -47,7 +47,7 @@ chapter cards/31 roadmap steps as feature-request IDs. The board counts
 Start concurrent sessions from `CODEX_START_HERE.md` §4; a lane starts when
 its §6 dependencies have landed. Split each active F into 30–90 minute
 work orders after checking current code and evidence. Each work order names
-its F/X ID, one criterion, baseline, exact owned paths, expected player
+its F/X ID, criterion or coherent batch, baseline, exact owned paths, expected player
 result, proof, dependencies and exclusions. Put the ID and criterion in the
 landing PR (§8), update STATE with actual progress and revise estimates when
 evidence changes. A failed card names the next repair, not a request for
@@ -274,15 +274,29 @@ hours. A git-tracked lock loses the race it exists to prevent.
 
 # 5. Testing
 
+**Owner override RD-36 (2026-09-29, CODEX_START_HERE §1/§7.2):** prioritize content and
+code generation; test only for required acceptance evidence or substantial rework risk.
+Batch necessary checks across coherent changes and reuse passing evidence for unchanged
+relevant source and paths. Avoid tests that merely mirror implementation or low-risk edits.
+Each criterion still needs its own independent strict verdict and named proof; required
+save/authority/transaction, real-path and code-blind checks remain. Full suites run once
+per coherent batch when explicitly required or justified by broad save/autoload/shared
+system risk, never automatically once per criterion or docs/evidence-only commit. After a
+fix, rerun affected checks; broaden only for new wider risk. Record source SHA, risks covered
+and reused evidence. Existing tests and required CI are never skipped, disabled or quarantined.
+Import only for a missing cache or changes that require it. This overrides older mandatory
+per-criterion/per-push repetition in this workflow; it does not weaken ACCEPTANCE.
+
 - **Unit suite:** `godot --headless --path . --script tests/run_tests.gd`
-  (~28 minutes on a 4-core box; before landing, import once with
-  `godot --headless --path . --import`, then run 4 shards with
-  `-- --shard=I/4` on the merged head). One file or one method:
+  (~28 minutes on a 4-core box; when required under RD-36, run 4 shards with
+  `-- --shard=I/4` on the merged batch head, without exclusions; import only
+  if needed). One file or one method:
   `-- --only=<file>::<test>`. A selector matching nothing is a hard error, so a
   typo can't silently run and pass the whole suite. Shard with `-- --shard=I/N`.
 - **Smoke:** `godot --headless --path . --script tests/smoke_<name>.gd`
-- Run the tests the task names, plus `tests/smoke_art.gd` for anything touching
-  creature data or models, plus the **full** suite for save-format or autoload
+- Run required named proofs and necessary affected checks under RD-36. Use
+  `tests/smoke_art.gd` when creature/model changes risk construction regressions;
+  the **full** suite is needed once per batch for broad save-format or autoload
   changes. The redesign resets saves once (F16, RD-35: v27-and-older saves are
   refused, never overwritten); every later schema change migrates again and
   proves it with a fixture.
@@ -300,9 +314,10 @@ hours. A git-tracked lock loses the race it exists to prevent.
   failures in one day were fixed-slot lookups going stale.
 - If a test is red because the implementation is wrong, **fix the
   implementation.** Never skip, disable or quarantine a test to get green.
-- **A world boot is its own test.** Run
-  `godot --headless --path . --script tests/smoke_playground.gd` before any push
-  touching world, spawn, creature or encounter code. Then grep the log for
+- **A world boot is its own test.** For a batch changing world, spawn, creature
+  or encounter construction, run `godot --headless --path . --script tests/smoke_playground.gd`
+  once on the relevant source, reusing it for unchanged subsequent pushes under RD-36.
+  Then grep the log for
   `^ERROR:` — **`SCRIPT ERROR` alone is not enough.** GDScript raises
   `SCRIPT ERROR`, but the engine's own subsystems raise plain `ERROR:`, and a
   narrower grep silently passes those. A native `ERROR: Parameter "material" is
@@ -405,7 +420,8 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
     1. has it re-checked by an independent strict read-only sub-agent, which
        closes it only on MET;
     2. merges `origin/main`;
-    3. runs the unit suite once on the merged head (4 shards, §5);
+    3. runs necessary batch validation under RD-36 (§5), sharing checks across
+       related criteria; a required full suite runs once (4 shards);
     4. updates the board row (`status`, `evidence`, `gap`) and one STATE §0 line;
     5. opens its own PR to `main` with the template,
        `tools/check_pr_traceability.mjs` and auto-merge. CI decides. If CI goes
@@ -466,8 +482,11 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
     if it cites the producing run (commit SHA plus run ID or log). While
     debugging, iterate from the earned save just before a failure; the
     `closes` proof is one uninterrupted run from its earned start.
-  - **One criterion at a time.** A lane carries one criterion to closed before
-    starting the next.
+  - **Coherent batches (owner RD-36).** Related criteria with shared source and
+    validation may be built and landed together to avoid repeated test work.
+    Keep ownership and wave dependencies exact, the diff reviewable, and each
+    criterion's evidence and independent verdict separate. Do not block coding
+    on a repeated suite that unchanged source has already passed.
   - **Codex-queue IDs carry a lane prefix and are append-only**
     (`ralph/reports/VISUAL/AUDIT.md`: `V-MC-n`, `V-MA-n`, `V-MR-n`, `V-CR-n`,
     `V-SW-n`, `V-TW-n`, `V-VIS-n`, `V-X05-n`, `V-CX-n`). Rows never renumber,
@@ -509,7 +528,7 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
   containers have 4 CPUs and no GPU; renders are software-rasterised. Start
   runs over ~2 minutes in the background and keep working; iterate captures
   with `VP_FAST=1`/`--fast` and take full-resolution evidence once; run only
-  the tests the diff touches, plus the full unit suite once before landing; run
+  necessary affected checks under RD-36 (§5), batching broader validation; run
   up to 3 headless tests at once, each with its own `XDG_DATA_HOME`. To free
   the container entirely, dispatch `.github/workflows/render.yml` from `main`
   with `checkout_ref` = the lane branch, `script` = a `tests/` or `tools/`
