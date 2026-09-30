@@ -1,0 +1,3 @@
+* -text
+strict-review.txt whitespace=cr-at-eol
+review.json whitespace=cr-at-eol

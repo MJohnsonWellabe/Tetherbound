@@ -28,7 +28,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | Neutral e4eb checkpoint; narrow authority landing. Broad RED retained; scoped12/287 +Storm8/86 PASS. |
+| `tb/foundations` | F16 | Neutral prepared core PR496; wire7/admission and bool writer; scoped authority proofs PASS; live callers OPEN. |
 | `tb/hub` | F17, F18 | #0-#3 main; M1 r4 native/v3 source FAIL retained. Unfinished correction held; F18 open. |
 | `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
 | `tb/combat` | F21–F24 | Camera cut recovering from0fde99; static9 PASS, moving-player/source binding open. F23 held. |
