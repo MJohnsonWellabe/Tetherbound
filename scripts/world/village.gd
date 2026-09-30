@@ -202,6 +202,10 @@ func _place(spec: Dictionary) -> void:
 		return
 
 	building.name = "%s_%d" % [prefab_name, _placed]
+	building.set_meta("village_role", str(spec.get("id", prefab_name)))
+	if bool(spec.get("road_house", false)):
+		building.add_to_group("village_road_houses")
+		building.set_meta("house_name", str(spec.get("display_name", prefab_name)))
 	# Sunk slightly further so a structure never hovers on a residual slope.
 	# The prefabs' own stone border skirts (0.13m tall) stay proud of this.
 	building.position = Vector3(x, ground - 0.05, z)

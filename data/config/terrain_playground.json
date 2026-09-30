@@ -101,19 +101,71 @@
     "core_width_m": 3.2,
     "skirt_m": 4.5,
     "points": [
-      [66.2, -63.1, 0.078],
-      [69.0, -62.0, 1.173],
-      [72.0, -61.0, 2.324],
-      [75.0, -61.0, 3.416],
-      [78.0, -61.0, 4.508],
-      [81.0, -61.0, 5.600],
-      [84.0, -60.0, 6.751],
-      [86.0, -59.0, 7.564],
-      [89.0, -56.0, 9.109],
-      [90.0, -53.0, 10.260],
-      [93.0, -52.0, 11.411],
-      [97.0, -54.0, 13.038],
-      [99.5, -55.0, 14.018]
+      [
+        66.2,
+        -63.1,
+        0.078
+      ],
+      [
+        69.0,
+        -62.0,
+        1.173
+      ],
+      [
+        72.0,
+        -61.0,
+        2.324
+      ],
+      [
+        75.0,
+        -61.0,
+        3.416
+      ],
+      [
+        78.0,
+        -61.0,
+        4.508
+      ],
+      [
+        81.0,
+        -61.0,
+        5.6
+      ],
+      [
+        84.0,
+        -60.0,
+        6.751
+      ],
+      [
+        86.0,
+        -59.0,
+        7.564
+      ],
+      [
+        89.0,
+        -56.0,
+        9.109
+      ],
+      [
+        90.0,
+        -53.0,
+        10.26
+      ],
+      [
+        93.0,
+        -52.0,
+        11.411
+      ],
+      [
+        97.0,
+        -54.0,
+        13.038
+      ],
+      [
+        99.5,
+        -55.0,
+        14.018
+      ]
     ]
   },
   "_comment_rock_form": "OF11. The rises' rock FORM, and a replacement for -- not an extension of -- `colour.relief_amplitude`/`relief_frequency`, which were removed. Those added one smooth FBM bump to a smooth analytic cone; a blind critic on the result still read 'a single smooth, continuous, unbroken curve,' and five rounds before that only ever repainted the same dome. Smooth noise cannot produce stone at any amplitude: FBM's extrema are rounded, so its surfaces are swells, and a swell painted grey is a stain. This block builds the two things a rock hillside actually has and a swell does not, both of them DISCONTINUITIES: creased ribs and gullies (a RIDGED fractal, domain-warped so the ribs meander and pinch out rather than tiling) and bedding planes (`terrace_*`, which quantises the rise's own height into near-level ledges separated by steep risers -- the plateau in docs/reference/palworld-04 and the crags in the key art are made of exactly this). See playground_heightfield.gd::_rise_relief. Everything here is faded out at the rim (`rim_in`/`rim_out`) so `rises` alone still decides each landform's footprint and the roads at its foot are untouched. ALL TUNABLE.",
@@ -164,18 +216,6 @@
   },
   "flats": [
     {
-      "_comment": "Building pads: FULL flatten inside radius (a tilted barn reads as a mistake), smoothstep skirt back to natural ground. The two pads carry Grandpa's house and the village square; village.json places structures on them and the opening spawns the player in the house. Heights are EXPLICIT and near each other: defaulting to the raw height at each centre put the pads 7.3m apart 33m from each other, and the skirts absorbed that step at 79 degrees - a crater wall of smeared grass texture ringing the village in every wide shot. Wide skirts for the same reason: max skirt slope is 1.5 * step / skirt. TUNABLE.",
-      "_comment_r7_1_found_2": "Was 2.2/0.6 (1.6m apart). The two circles leave barely 0.5m of open ground between them (32m of combined radius against 32.56m between centres), and _apply_flats's old winner-take-all rule snapped that whole 1.6m difference across that half-metre wherever the winner flipped - a live-measured 81-degree wall, the near-vertical earthen bank the survey caught and first misread as a carved path trench. Fixed with two changes together: _apply_flats itself now blends target HEIGHTS by weight outside a pad's own radius instead of one winning outright (see its own comment), and these two heights were brought closer, 1.6m apart down to 0.3m. Combined, the live worst slope there measures ~31 degrees - a soil-textured bank, not a cliff. Still EXPLICIT and TUNABLE; the house sits marginally above the square by design (a yard is not a floor).",
-      "centre": [
-        -22.0,
-        -16.0
-      ],
-      "radius": 14.0,
-      "skirt": 20.0,
-      "_why": "Grandpa's house and its yard",
-      "height": 1.2
-    },
-    {
       "centre": [
         10.0,
         -10.0
@@ -183,39 +223,6 @@
       "radius": 18.0,
       "skirt": 24.0,
       "_why": "the village square",
-      "height": 0.9
-    },
-    {
-      "_comment_owner_0912_inn_frontage_repair": "OWNER-0912 visual acceptance repair. The inn rotated out of the west road and onto its south side. This same-height pad covers the corrected long footprint and overlaps the existing village flat without a step, so solving the street intersection cannot trade it for a tilted or buried public room.",
-      "centre": [
-        -2.5,
-        -6.0
-      ],
-      "radius": 8.5,
-      "skirt": 12.0,
-      "_why": "the village inn and its north-facing public frontage",
-      "height": 0.9
-    },
-    {
-      "_comment_owner_0912_village_street": "OWNER-0912 / C3 V-1. One shared level pad carries the workshop at [2,12] and Mira's shop at [18,4] on opposite sides of the south street. It shares the square's explicit 0.9m height, so the overlapping skirts blend without reintroducing the old village-pad step. Radius 15 covers both probed prefab footprints and their immediate yards while leaving Grandpa's fixed pad and the tournament field unchanged. Requires the integration terrain bake and production ground-contact proof.",
-      "centre": [
-        10.0,
-        8.0
-      ],
-      "radius": 15.0,
-      "skirt": 18.0,
-      "_why": "the village south street, Tam's workshop and Mira's shop",
-      "height": 0.9
-    },
-    {
-      "_comment": "EV6-remainder-polish plus OWNER-0912. cottage_b's small pad follows the building to [19,-18]. Its 0.9m explicit height matches the square, while its own skirt keeps the cottage's downhill border off the larger pad's falloff. TUNABLE.",
-      "centre": [
-        19.5,
-        -6.0
-      ],
-      "radius": 7.0,
-      "skirt": 14.0,
-      "_why": "OWNER-0912: cottage_b's moved yard -- keeps the downhill border skirt off the square skirt's falloff",
       "height": 0.9
     },
     {
@@ -310,6 +317,76 @@
       "skirt": 9.0,
       "_why": "the Old Mill Crossing's village-side abutment, its landing, and the mill's own yard",
       "_comment_ow5c": "OW5C: rotated+translated with old_mill_crossing (crossings[1]) -- MISSED in the first pass, found once smoke_traversal showed the crossing physically unwalkable in both lock states, because ground_height_at at the new site was sampling raw unlevelled riverbank rather than this pad."
+    },
+    {
+      "centre": [
+        2,
+        14
+      ],
+      "radius": 14,
+      "skirt": 20,
+      "height": 0.9,
+      "_why": "F17 farmhouse and berry yard"
+    },
+    {
+      "centre": [
+        24,
+        14
+      ],
+      "radius": 20,
+      "skirt": 12,
+      "height": 0.9,
+      "_why": "F17 continuous village-road pad; skirt ends before practice-wild disk"
+    },
+    {
+      "centre": [
+        48,
+        14
+      ],
+      "radius": 20,
+      "skirt": 12,
+      "height": 0.9,
+      "_why": "F17 continuous village-road pad; skirt ends before practice-wild disk"
+    },
+    {
+      "centre": [
+        72,
+        14
+      ],
+      "radius": 20,
+      "skirt": 12,
+      "height": 0.9,
+      "_why": "F17 continuous village-road pad; skirt ends before practice-wild disk"
+    },
+    {
+      "centre": [
+        96,
+        14
+      ],
+      "radius": 20,
+      "skirt": 12,
+      "height": 0.9,
+      "_why": "F17 continuous village-road pad; skirt ends before practice-wild disk"
+    },
+    {
+      "centre": [
+        107,
+        14
+      ],
+      "radius": 24,
+      "skirt": 16,
+      "height": 0.9,
+      "_why": "F17 Crossing Hall nave and side shrine footprint"
+    },
+    {
+      "centre": [
+        78,
+        44
+      ],
+      "radius": 16,
+      "skirt": 12,
+      "height": 0.9,
+      "_why": "F17 practice and tournament arena lawn"
     }
   ],
   "building_aprons": {
@@ -420,7 +497,7 @@
     ]
   },
   "paths": {
-    "_comment": "Dirt paths, authored polylines in world metres. playground_heightfield.path_factor() is the single reader: the bake (build_playground_terrain.gd::_path_control) paints real soil texture into the CONTROL map along them, the scatter keeps vegetation off them, and they double as wayfinding \u2014 every route starts at the village square and ends somewhere the player is meant to go. ALL TUNABLE.",
+    "_comment": "Dirt paths, authored polylines in world metres. playground_heightfield.path_factor() is the single reader: the bake (build_playground_terrain.gd::_path_control) paints real soil texture into the CONTROL map along them, the scatter keeps vegetation off them, and they double as wayfinding — every route starts at the village square and ends somewhere the player is meant to go. ALL TUNABLE.",
     "_comment_ev4": "EV4: was a `tint` field lerped into the colour map (a worn-earth multiplier over whatever texture was already there, never a real material). Removed -- the control map now swaps in the actual soil texture, which is what R9.4-remainder-4/R7.1-found-3 asked for (\"a path reads as trodden earth, not a colour\"). `width`/`shoulder` below still shape the fade band; path_factor()'s own noise now wobbles that band's position so the edge is not a mathematically exact offset curve.",
     "_comment_width_shoulder_r2": "GROUND-REBUILD round 2. width 3.0->2.0, shoulder 1.5->2.5. A blind critic measured path-like pixels at 43.8%/40.5% of the band-1/band-3 ground frames against 26.1% for the palworld-02 reference measured identically, and the reference's walked trail is 2-3m wide. The old numbers put the dirt edge at 2.21m from the centreline (a 4.4m ribbon, 4-6m after 2m quantisation); the new ones put it at 1.72m -- a 3.4m ribbon quantising to 2-4m. Critically the OLD verge band spanned only 2.21m->2.58m, a 0.37m strip THINNER THAN ONE 2m TEXEL, so the intended grass->gold->dirt staircase almost never landed a texel and the eye got the single-step cliff the design exists to avoid; the new band is ~1.4m each side, reliably at least one texel. See macro.path_core/path_shoulder below, tuned together with this.",
     "_comment_width_palworld": "GRASS-FIELD, owner-directed. width 2.0 -> 1.4 and shoulder 2.5 -> 1.1, so path_factor reaches zero 1.8m from the centreline and the painted band is 3.6m rather than 7.0m. Blind passes measured the result of the old numbers as \"8-12m across against a 1.80m figure -- that is a road, not the worn footpath the framing describes\", against palworld-02 whose path is \"narrower than its walker's stride-and-a-half\". This one change narrows the painted dirt AND the vegetation exclusion together, because the grass and stone fields both mask off the same control map this bake writes -- there is no second number to keep in step. REQUIRES A TERRAIN RE-BAKE and then a scatter re-bake; the control map is where the width lives. TUNABLE.",
@@ -437,12 +514,12 @@
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): the north cross lane along z=-16 from the main street to Grandpa's door (endpoint unchanged at [-16.5,-16]); Berry Lane leaves it at x=-7.5.",
         "points": [
           [
-            10.5,
-            -16.0
+            7.5,
+            14
           ],
           [
-            -16.5,
-            -16.0
+            13.79,
+            14
           ]
         ]
       },
@@ -582,7 +659,16 @@
         "width": 3.0,
         "shoulder": 1.2,
         "_why": "OPTION-B (owner 2026-09-29, 'the shape of the village still hasn't changed'): ONE straight north-south main street at x=10.5 from the z=-16 crossroads (Stoneyard Lane, the Rise lane and Grandpa's cross lane) south to z=2, where the Pond lane and South Street leave it. Houses line both sides; the well stands on its axis at the centre of a small green. tests/test_village_main_street.gd pins it straight within 0.5 m. Same 3.0/1.2 village width as every other village road.",
-        "points": [[10.5, -16.0], [10.5, 2.0]]
+        "points": [
+          [
+            10.5,
+            -16.0
+          ],
+          [
+            10.5,
+            2.0
+          ]
+        ]
       },
       {
         "id": "village_south_street",
@@ -641,7 +727,32 @@
         "shoulder": 1.2,
         "_why": "F01 (#270, coordinator ruling 13:17): the in-village leg of The Pond, painted at the village width. An approach, not a route, so signpost.gd draws no extra fingerpost arm; the route itself (and its leg outside the fence) keeps the owner-directed 1.4/1.1. Ends exactly at the gate the route crosses, on the route's own line.",
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): painted twin of the Pond lane route above.",
-        "points": [[10.5, 2.0], [3.0, 2.5], [-5.0, 4.0], [-12.5, 6.5], [-14.0, 14.0], [-21.0, 21.0]]
+        "points": [
+          [
+            10.5,
+            2.0
+          ],
+          [
+            3.0,
+            2.5
+          ],
+          [
+            -5.0,
+            4.0
+          ],
+          [
+            -12.5,
+            6.5
+          ],
+          [
+            -14.0,
+            14.0
+          ],
+          [
+            -21.0,
+            21.0
+          ]
+        ]
       },
       {
         "id": "village_rise_leg",
@@ -650,7 +761,24 @@
         "shoulder": 1.2,
         "_why": "F01 (#270, coordinator ruling 13:17): the in-village leg of The Rise, painted at the village width. An approach, not a route, so signpost.gd draws no extra fingerpost arm; the route itself (and its leg outside the fence) keeps the owner-directed 1.4/1.1. Ends exactly at the gate the route crosses, on the route's own line.",
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): painted twin of the Rise lane route above; exit at [38.72,-19.85] unchanged.",
-        "points": [[10.5, -16.0], [19.0, -16.0], [28.0, -16.17], [38.72, -19.85]]
+        "points": [
+          [
+            10.5,
+            -16.0
+          ],
+          [
+            19.0,
+            -16.0
+          ],
+          [
+            28.0,
+            -16.17
+          ],
+          [
+            38.72,
+            -19.85
+          ]
+        ]
       },
       {
         "id": "village_green_walk",
@@ -658,7 +786,20 @@
         "width": 3.0,
         "shoulder": 1.2,
         "_why": "OPTION-B (owner 2026-09-29): the stone cottage's doorstep [16.37,-5] faces the green from the east but sat 5.9 m from the nearest road. This short walk leaves the main street at the green's north edge [10.5,-10] (6 m from the z=-16 crossroads, the same node the inn's route uses) and ends on the doorstep. An approach, not a route, so the junction fingerpost draws no extra arm.",
-        "points": [[10.5, -10.0], [14.0, -8.6], [16.37, -5.0]]
+        "points": [
+          [
+            10.5,
+            -10.0
+          ],
+          [
+            14.0,
+            -8.6
+          ],
+          [
+            16.37,
+            -5.0
+          ]
+        ]
       },
       {
         "id": "village_berry_lane",
@@ -767,6 +908,44 @@
         "_comment_width_r2": "GROUND-REBUILD round 2: width 6.5->4.5, shoulder 2.2->2.8, the same measured-vs-reference correction as paths.width/shoulder above, applied to this route's own override so its edge quantises onto a real verge band instead of the old sub-texel strip.",
         "_comment_tail": "THE LAST 90m ARE HAND-SET AND THAT IS THE POINT. The first version of this road ran west-to-east along z ~ -180 and stopped at the ramp foot, which is a correct road and a useless one: every wayfinding viewpoint stands DUE SOUTH of the gate (229.8,-214.4 / -170.4 / -162.8), the road never came within 28m of any of them, and the rendered frame still showed a player standing in unbroken grass looking at a fortress with a faint smudge passing behind it. A gate is approached head-on. So the road swings east and comes back up the gate's own axis: (226,-210.5)->(232,-211) passes 3.6m from the `silhouette-close` eye, and the run north from (236,-197) to the ramp foot puts the road under the `silhouette-approach` eye at 2.1m -- the player is ON it, which is what 'a road leads to the stronghold' has to mean. Probed leg by leg with tools/_probe_road_leg.gd: worst slope on the whole tail 17.1 degrees at (212,-202), and the final 50m up the axis is under 12 degrees the whole way.",
         "_comment_width": "6.5m with a 2.2m shoulder, against `paths.width`'s 3.0/1.5 default -- the per-route override STRONGHOLD-R2 added to playground_heightfield.path_factor(). At the shared 3.0m this road rendered as a faint discolouration in the grass rather than as a road, which is the same 'nothing leads there' reading one step further on. It is also the honest width: the four `routes` entries are dirt tracks out of a village square, and this is the road an occupying army moves along. TUNABLE, but widening `paths.width` instead would widen Grandpa's garden path with it."
+      },
+      {
+        "name": "crossing_hall_approach",
+        "points": [
+          [
+            91,
+            14
+          ],
+          [
+            92,
+            14
+          ]
+        ],
+        "width": 5.2,
+        "shoulder": 2
+      },
+      {
+        "name": "village_tournament_lawn",
+        "points": [
+          [
+            78,
+            14
+          ],
+          [
+            88,
+            14
+          ],
+          [
+            88,
+            44
+          ],
+          [
+            78,
+            44
+          ]
+        ],
+        "width": 3.2,
+        "shoulder": 1.5
       }
     ],
     "_comment_op21_17_rise_cottage_conflict": "OP21-17, FOUND NOT FIXED. 'The Rise' road's first leg ((10,-10)->(45,-22)) passes within 0.21m of cottage_b's centre (village.json `structures`, at [21,-14]) -- well inside its own footprint half_extents [3.05,3.05] (building_aprons.footprints), i.e. a maintained road running straight through a house wall, exactly the kind of thing that makes the square not read as a believable settlement. Not fixed by this pass: a `paths.routes` polyline is baked into the ground CONTROL map offline (`build_playground_terrain.gd::_path_control`, per `paths`'s own top comment), so moving it needs a real terrain re-bake, not a data edit alone -- and every candidate detour tried by hand (bending south toward the practice-meadow fences, bending north toward cottage_a's own apron, widening either bend) traded this building conflict for a new one against a neighbour, the village square being tightly packed already. Re-siting this leg needs the bake step and a render to confirm the new line, which this pass's box (heavily contended by several other lanes' own render jobs) could not safely absorb alongside the rest of OP21-17/18/19. Left flagged rather than shipped half-verified.",
@@ -1054,7 +1233,7 @@
       {
         "_why_vp4_separation": "VP4-CORRIDOR round 4 addendum. `at` moved from (-419.56,2472.46) to (-422.10,2477.89) -- 10.1m from 'Warren Undertrail's own trailhead sign (-417.83,2468.76) along the same bearing the two signs already stood apart on (was 4.08m), rather than a new direction. Both trailheads mark roads that fork from the identical junction point (-420,2470), so both signs generated only ~2-4m off that one point and stood close enough together that a blind visual pass on tools/_capture_corridor.gd's station 08 (which stands almost on this exact junction) read their overlapping planks as one signpost's text rendering corrupted/clipped ('Stone Gate Spoke' showing as 'one Gate Spoke', 'Warren Undertrail' as illegible) -- not a text-fitting bug (scripts/world/signpost.gd's own `_label_scale()` already fits any length correctly, and Label3D.double_sided was also checked and set false as a legitimate but insufficient fix), but two physical signposts standing close enough to visually collide. `points` (the arm's own bearing) is unchanged, so the arm still points correctly down the Stone Gate spoke road; only the post's own siting moved. Two OTHER trailhead pairs with the same shared-junction pattern (Pond Circuit/River Gorge Spoke at 2.25m, Quarry Haul Road/Mountain Trail Spoke at 4.21m) were found by the same audit but are not in view at any VP4 corridor station and are left for whoever next touches signpost siting.",
         "at": [
-          -422.10,
+          -422.1,
           2477.89
         ],
         "label": "Stone Gate Spoke",
@@ -1178,31 +1357,41 @@
     "village_topology": {
       "_comment": "F01-a, WORLD 3.2 / ACCEPTANCE F01. The village is a road settlement, not the old compact radial plan in which Practice Meadow, The Pond and The Rise all radiated from the well. This block is DECLARATIVE ONLY -- nothing in the game reads it; tests/test_village_road_topology.gd checks every claim here against the actual road polylines road_bands() unions (routes, approaches, trail.bands), and ralph/reports/MEADOWS-PAYOFFS/village-road/make_plan.py draws the OLD/NEW overhead plan from the same data. Coordinates are world (x,z) metres; +z runs toward the South Bridge.",
       "home_door": [
-        -16.5,
-        -16.0
+        7.5,
+        14
       ],
       "bridge_exit_gate": "TrailGate",
       "through_road": {
         "roads": [
-          "Grandpa's House",
           "village_main_street",
           "village_south_street",
           "band1_lower_meadows"
         ],
-        "_why": "OPTION-B: Grandpa's door -> the z=-16 cross lane -> Main Street (x=10.5, past the green) -> South Street -> TrailGate [13.79,22.4] -> Lower Meadows spine -> South Bridge (0,1330). One continuous line with no junction at the well."
+        "_why": "F17 straight village road beside the existing South Bridge exit, without moving the field catch lesson."
       },
       "well": [
-        10.5,
-        -6.0
+        13,
+        5
       ],
       "_comment_green": "OPTION-B (owner 2026-09-29): the small village green. Declarative: the ground is the existing 0.9 m square flat (grass, no collision, no new material); village.json's well stands at its centre on the main street axis, and the inn door and the stone cottage door face it. tests/test_village_main_street.gd reads centre and radius.",
       "green": {
-        "centre": [10.5, -6.0],
-        "radius_m": 4.0
+        "centre": [
+          13,
+          5
+        ],
+        "radius_m": 4
       },
       "main_street": {
         "road": "village_main_street",
-        "axis_x": 10.5
+        "axis_z": 14,
+        "from": [
+          7.5,
+          14
+        ],
+        "to": [
+          91,
+          14
+        ]
       },
       "well_hub_radius_m": 8.0,
       "_comment_well": "The old plan's failure mode, as a number: within this radius of the well at most two road arms may meet (the through-road passing the square) and no road node may be a junction. OLD measured five arms and a degree-5 node at [7,-7].",
@@ -2574,7 +2763,7 @@
     ],
     "_comment_ow5c_resite": "OW5C, docs/MEADOWS_MACRO_LAYOUT.md section 7: every spoke re-sited by a verified rotate+scale+translate transform (rotation around the old shared village hub road[0]=(10,-10), scale so each spoke's own far reach matches section 7's leave/end distance, translation landing road[0] exactly on the new leave point) -- not a fresh hand-authoring, so every carve's D50-analysed wall dimensions (rim/depth/half_width/half_length/end_fade) are untouched scalars; only positions and axis_deg rotate/scale. Confirmed: no spoke's farthest point exceeds |x|=752.66 or z=7618.89 (this world's edges are at x=+-1024/z=7680), so none of the seven reach either edge polyline -- the edge grammar (section 6/D51) needs no gap/opening cut into it, resolving D51's own open question. blighted_road confirmed north of the river (closest approach z=4161.1 vs the river's z~4200-4204 there, 38.9m clearance, over the required 30m)."
   },
-  "_comment_water": "EV5 (bible sec15). One flat water level, not a water body outline: the probe run for this item confirmed the pond valley is the ONLY terrain below -18m anywhere on the 512m map, so everything below `level` is one pond (~2,200 sq.m at -22.5, bbox x[-178,-112] z[116,164]) whose shoreline follows the terrain's own contours instead of tracing an authored ellipse. The 'The Pond' route above already ends at [-105,115], which sits 1.1m above this waterline -- the path genuinely arrives at the bank. `stream` is the pond's inflow: probed at 2m steps from head to mouth with zero uphill reversals, so the water only ever runs downhill. `carve_depth`/`carve_width` cut a real channel into the heightfield (playground_heightfield.gd::_stream_carve) so the ribbon of water sits IN the ground rather than painted on it; `head_ramp` fades the carve in over the first metres so the spring emerges from the meadow instead of starting as an abrupt trench. Geometry lives HERE because the heightfield, the bake and the scatter all read it; how the water LOOKS lives in data/config/water.json. ALL TUNABLE. Stream points were densified through a Catmull-Rom pass over the seven authored waypoints (blind round 1: 'bends are angular chevrons rather than curves') \u2014 re-derive through a spline rather than hand-editing 25 points if the course ever moves.",
+  "_comment_water": "EV5 (bible sec15). One flat water level, not a water body outline: the probe run for this item confirmed the pond valley is the ONLY terrain below -18m anywhere on the 512m map, so everything below `level` is one pond (~2,200 sq.m at -22.5, bbox x[-178,-112] z[116,164]) whose shoreline follows the terrain's own contours instead of tracing an authored ellipse. The 'The Pond' route above already ends at [-105,115], which sits 1.1m above this waterline -- the path genuinely arrives at the bank. `stream` is the pond's inflow: probed at 2m steps from head to mouth with zero uphill reversals, so the water only ever runs downhill. `carve_depth`/`carve_width` cut a real channel into the heightfield (playground_heightfield.gd::_stream_carve) so the ribbon of water sits IN the ground rather than painted on it; `head_ramp` fades the carve in over the first metres so the spring emerges from the meadow instead of starting as an abrupt trench. Geometry lives HERE because the heightfield, the bake and the scatter all read it; how the water LOOKS lives in data/config/water.json. ALL TUNABLE. Stream points were densified through a Catmull-Rom pass over the seven authored waypoints (blind round 1: 'bends are angular chevrons rather than curves') — re-derive through a spline rather than hand-editing 25 points if the course ever moves.",
   "water": {
     "level": -17.0,
     "_comment_gate_a_level": "Gate A: OW5D moved the basin roughly 400m but retained the old basin's -22.5m water level, leaving the new pond centre at -20.7m with no rendered surface quads. -17.0m restores a roughly 3.7m-deep centre and a real shoreline in the relocated basin; this value is derived from the current heightfield rather than copied from the former site. TUNABLE.",
@@ -2724,8 +2913,8 @@
     "_comment_ow5d_pond": "OW5D, docs/MEADOWS_MACRO_LAYOUT.md section 10.2: `pond_centre` moves from (-145,138) to (-395,545) -- the anchor every other pond-group OW5D move (village.json mill/footbridge/ranger, flats[4,5], building_aprons.footprints[5,6], vegetation.json footprints/clearings, spawns.json's four water species) is offset from, uniformly by (-250,+407). NOT moved by this pass, and flagged loudly: `water.level`/`shore_step` (unverified at the new site's actual ground), the `outlet.sill`/`outlet.channel` (which connect the pond to the river gorge and are entangled with OW5C's river re-derivation -- moving the pond alone without them leaves this outlet pointing at the OLD gorge join), and `stream.points` (the pond's own inflow, 25 authored points feeding it from the old (-148,38) head -- the macro-layout doc's full section 10.2 lists a re-authored stream 'feeding the pond from (-200,300)', but that row is NOT in this task's given relocation table, so it was left untouched here). Moving the pond's centre without its stream and outlet is exactly the kind of tear the macro-layout doc warns about; this is recorded so the gap is visible rather than silently shipped.",
     "_comment_op21_19_reprobe": "OP21-19 re-probe (the owner's 'trees/houses/bushes standing in the pond' reproduction). `water.level` above was ALREADY corrected to -17.0 by a prior Gate A pass (see `_comment_gate_a_level`) and `pond_centre`/mill/footbridge/ranger/flats/vegetation-footprints above were already offset correctly, per this comment's own account -- those were not the bug. The actual bug this pass found and fixed: vegetation.json's per-layer `min_height` gates (trees/grove/saplings/deadfall/bushes/grass/drygrass/flowers/rocks/path_stones) were still anchored to the OLD water level (-22.5) this same OW5D pass left untouched, so every layer's floor sat 4-6m BELOW the new -17.0 waterline and grew straight through it -- exactly what stood trees and bushes in the water. Re-anchored by the same +5.5m the water level itself moved (see vegetation.json's own updated comments), and scripts/world/scatter_rules.gd now also enforces a hard `water_level()-0.5` floor underneath every layer's own min_height, so a future re-relocation cannot silently reopen this the way this one did. `stream.points` (the pond's inflow, previously flagged above as untouched) was ALSO translated by this pass, by the same (-250,+407) -- it was landing 270m from the new pond with no probe-verified reconnection; a direct height_at probe along the new points now shows a mostly-monotonic descent from the head (-9.7m) into the basin, with a small (~2.7m) non-monotonic wobble over the last ~15m as the course crosses the basin's own slope into the waterline -- not re-smoothed by this pass, flagged rather than silently left. `outlet.sill`/`outlet.channel` remain UNTOUCHED and still point at the OLD gorge join: unlike the stream, this is entangled with `river_gorge`'s own (already-relocated, but for a DIFFERENT, later reason -- see its own `_comment_length`) carve geometry, and blindly translating it risked cutting a channel that connects to nothing at the new site without inspecting the actual gorge shelf there first. Left for the lane/task that owns OW5C's river re-derivation, as this comment already asked."
   },
-  "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo \u2014 it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
-  "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 \u2014 below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",
+  "_comment_colour": "Slope-driven ground colour, written to Terrain3D's colour map. It MULTIPLIES the PBR albedo — it does not replace it. These were authored when the colour map was the entire ground treatment and there were no textures at all; they stayed after the textures arrived, and grass albedo at luminance 0.40 times a #496c34 map at 0.36 is a surface of 0.14 before any light reaches it. That is the whole reason the near field measured 0.096 against 0.27-0.60 across the references, and why no amount of sun, shadow, ambient or normal tuning moved it: nothing was wrong with the lighting.",
+  "_comment_colour_now": "Near-white, so this modulates rather than paints. The textures carry the colour; this carries the slope-driven variation and the macro break-up that stops a 2K tile reading as wallpaper. Keep everything here above roughly #c0 — below that it is a brightness change wearing a colour's clothes, which is the mistake this comment exists to stop being repeated.",
   "_comment_soil_ev4_hillside_seam_remainder_2": "EV4-hillside-seam-remainder-2. Was #e0cea4 (min channel a4=164, actually BELOW this comment's own #c0 floor) -- a real, if modest, colour it was carrying rather than modulating, and it compounded multiplicatively with the soil texture's own `tint` below on top of an already-oversaturated source photo, landing rendered soil saturation at 0.65-0.76 even after the photo itself was fixed. Pulled to #f3ebdb (min channel db=219, now honestly above #c0) so this layer goes back to doing what the comment above says it should: modulate, not paint. See the soil texture's own comment for the paired tint change and the measurement that found this.",
   "colour": {
     "_comment_ground_rebuild": "GROUND-REBUILD. Every colour here is now near-WHITE, and that is the point. This block multiplies the terrain albedo, and it was tuned when the surfaces were photographic scans that had to be dragged toward a palette they could not reach on their own -- #c2d492 grass, #f3ebdb soil, #cfcdc4 rock. The surfaces are now generated to an exact target colour (tools/art_pipeline/stylised_ground_spec.py), so leaving those multipliers in place would take a measured H77 S0.47 V0.43 meadow and silently darken it by a quarter and shift its hue -- undoing the entire rebuild in a channel nobody would think to look in. What this block is FOR now is variation, not colour: it is the only channel that renders smoothly (control-map texture ids cannot interpolate, which is measured, see build_playground_terrain.gd), so it carries the soft gradients -- wet shores, building aprons, drained ground, the macro dryness. Note the hard limit that shapes all of them: this map can only ever DARKEN, because Terrain3D multiplies by it and 1.0 is the ceiling. Anything that has to read LIGHTER than the base meadow has to be a real surface in the splat, which is why `verge_grass` exists as its own texture rather than as a bright tint.",
@@ -2734,15 +2923,15 @@
     "soil": "#fbfbf6",
     "rock": "#ffffff",
     "soil_slope_deg": 34.0,
-    "_comment_soil_slope_of11": "OF11: back to 30 from EV4-hillside-seam-remainder's 24. That round widened the pure-soil plateau because soil had to be visible as a third BAND on an otherwise smooth flank. It is not a band any more \u2014 with `rock_form`'s bedding planes the flank is ledge/riser/ledge, and soil's job is the transition where turf on a ledge gives out at the foot of the next riser. Held at 24 the rebuilt rise came out 46% soil and only 15% grass across peaks[0]'s footprint (tools/_probe_rise_form.gd), i.e. a dirt mound; both reference boards draw a green hill with rock breaking out of it. TUNABLE.",
+    "_comment_soil_slope_of11": "OF11: back to 30 from EV4-hillside-seam-remainder's 24. That round widened the pure-soil plateau because soil had to be visible as a third BAND on an otherwise smooth flank. It is not a band any more — with `rock_form`'s bedding planes the flank is ledge/riser/ledge, and soil's job is the transition where turf on a ledge gives out at the foot of the next riser. Held at 24 the rebuilt rise came out 46% soil and only 15% grass across peaks[0]'s footprint (tools/_probe_rise_form.gd), i.e. a dirt mound; both reference boards draw a green hill with rock breaking out of it. TUNABLE.",
     "rock_slope_deg": 42.0,
     "_comment_rock_slope_of11_r2": "OF11 round 2 tried 44 -> 48 and round 3 reversed past it to 42 -- 48 made the visible flank 46% SOIL, and a blind critic read the whole landform as \"a plain khaki dome\" and \"scorched late-summer scrub\": warm tan Ground003 over most of the face is the opposite of reading as stone. At 42 against `soil_slope_deg` 34, a flank sitting at 40-55 degrees is mostly ROCK, soil is the thin band where a ledge's turf gives out, and grass holds the ledges themselves -- green ledges, stone risers, which is what the key art's hilltop crag actually looks like. Original round-2 note follows. Round 2: 44 -> 48. With `rock_form`'s bedding planes the lower flank alternates ledge and riser, and at 44 the risers AND most of the un-terraced flank between them crossed into rock -- the round-1 render came out 39% rock across peaks[0]'s footprint, a bare hill. Both reference boards draw a GREEN hill with rock breaking out of it and a rock crag on the crown, so the flank should hold turf between its outcrops and the continuous stone should be the cap (`rock_crown_deg` below), not a mid-slope wash. TUNABLE.",
     "blend_deg": 6.0,
     "blend_deg_rock": 8.0,
-    "_comment_blend_deg_rock": "OF11 round 6. The band-ramp width ON THE RISES, interpolated against `blend_deg` above by build_playground_terrain.gd::_band_blend \u2014 the same rise/meadow split `slope_sample_step_rock` already uses, and for the same underlying reason. `blend_deg` is a width in DEGREES, but what a viewer sees is a width in METRES, and round 4 deliberately made slope change very fast on the rises by sampling it at 2m instead of 6m. Out on the meadow 6 degrees of ramp is several metres of gradual transition; across a `rock_form` riser the same 6 degrees is crossed inside a pixel or two, so the ramp collapses and the boundary bakes as a hard edge \u2014 which is what the round-5 blind critic reported: the moss/dirt patches 'meet bare stone in hard stencil-edged shapes with no organic blend... a stencil laid over the rock, not moss actually growing in a crevice.' That is a side effect of round 4's win, not a regression in it, so the fix widens the ramp only where the slope field is steep and leaves both the meadow and the fine sampling alone. 8.0 is the CEILING, not a preference: `_control_for` needs `soil_slope_deg + blend <= rock_slope_deg` to keep its five bands from overlapping, and that gap is 42-34 = 8. Raising this further does nothing until those two move apart; the function clamps rather than letting the bands collapse. TUNABLE.",
+    "_comment_blend_deg_rock": "OF11 round 6. The band-ramp width ON THE RISES, interpolated against `blend_deg` above by build_playground_terrain.gd::_band_blend — the same rise/meadow split `slope_sample_step_rock` already uses, and for the same underlying reason. `blend_deg` is a width in DEGREES, but what a viewer sees is a width in METRES, and round 4 deliberately made slope change very fast on the rises by sampling it at 2m instead of 6m. Out on the meadow 6 degrees of ramp is several metres of gradual transition; across a `rock_form` riser the same 6 degrees is crossed inside a pixel or two, so the ramp collapses and the boundary bakes as a hard edge — which is what the round-5 blind critic reported: the moss/dirt patches 'meet bare stone in hard stencil-edged shapes with no organic blend... a stencil laid over the rock, not moss actually growing in a crevice.' That is a side effect of round 4's win, not a regression in it, so the fix widens the ramp only where the slope field is steep and leaves both the meadow and the fine sampling alone. 8.0 is the CEILING, not a preference: `_control_for` needs `soil_slope_deg + blend <= rock_slope_deg` to keep its five bands from overlapping, and that gap is 42-34 = 8. Raising this further does nothing until those two move apart; the function clamps rather than letting the bands collapse. TUNABLE.",
     "outcrop_detail_deg": 4.0,
     "outcrop_detail_frequency": 0.28,
-    "_comment_outcrop_detail": "OF11 round 6, and the other half of the stencil-edge fix \u2014 the half that does the real work, since `blend_deg_rock` only had 2 degrees of headroom to give. `outcrop_jitter_*` above runs at ~35m and decides where the rock band bulges into a LOBE; it cannot do anything about the EDGE of that lobe, which at 35m is a smooth vector curve however many lobes it makes. A turf/stone boundary is ragged at the scale of the turf, so this second field runs at ~3.6m (frequency 0.28) with 3 octaves and breaks the boundary into interlocking fingers of moss and stone instead of a cut line. Gated to the rises by `rise_form_factor` inside playground_heightfield.gd::rock_bias_deg, deliberately NOT folded into `outcrop_jitter_deg`: at this wavelength an ungated 4 degrees would ride the open meadow's own grass/soil threshold and speckle soil across flat ground, which is the blotching `slope_sample_step` exists to suppress. TUNABLE: amplitude is the raggedness, frequency is the finger size; lower the frequency if the edge starts reading as noise rather than as growth.",
+    "_comment_outcrop_detail": "OF11 round 6, and the other half of the stencil-edge fix — the half that does the real work, since `blend_deg_rock` only had 2 degrees of headroom to give. `outcrop_jitter_*` above runs at ~35m and decides where the rock band bulges into a LOBE; it cannot do anything about the EDGE of that lobe, which at 35m is a smooth vector curve however many lobes it makes. A turf/stone boundary is ragged at the scale of the turf, so this second field runs at ~3.6m (frequency 0.28) with 3 octaves and breaks the boundary into interlocking fingers of moss and stone instead of a cut line. Gated to the rises by `rise_form_factor` inside playground_heightfield.gd::rock_bias_deg, deliberately NOT folded into `outcrop_jitter_deg`: at this wavelength an ungated 4 degrees would ride the open meadow's own grass/soil threshold and speckle soil across flat ground, which is the blotching `slope_sample_step` exists to suppress. TUNABLE: amplitude is the raggedness, frequency is the finger size; lower the frequency if the edge starts reading as noise rather than as growth.",
     "slope_sample_step": 6.0,
     "slope_sample_step_rock": 2.0,
     "_comment_slope_sample_step_rock": "OF11 round 4. The band pick's slope sample step ON THE RISES, interpolated against `slope_sample_step` above by playground_heightfield.gd::rise_form_factor. One global step cannot serve both places any more: 6m exists to low-pass the `detail` noise layer out on the open meadow (see `_comment_slope_sample_step`), and on a rise it low-passes away the ledges, riser lips and metre-scale creases `rock_form` builds -- so the material landed in soft blobs that ignored the crevices under them, which is exactly what the round-3 blind critic reported ('the dark olive patches have hard, rounded, blobby edges that don't track the crevice geometry underneath them... the bumps and the tint aren't talking to each other'). They were not talking because the pick was deaf at the scale the geometry speaks at. 2m resolves a terrace riser and a rib crest; the meadow keeps 6m and its blotching stays fixed. TUNABLE: lower for a tighter fit to the rock form, raise if the rise starts speckling.",
@@ -2764,21 +2953,21 @@
   "_comment_blend_deg_r2": "EV4-hillside-seam round 2 (was 7.0, tried 14.0), round 3 (blend 8.0, rock_slope_deg 44.0 -> 40.0), round 4 (blend 6.0, rock_slope_deg back to 44.0). Round 2 doubled blend_deg to fix a round-1 critic's 'hard, unblended seam' complaint, but pushed pure rock's threshold (rock_slope_deg + blend_deg) to 58 degrees, outside this landform's own reachable slope -- probed directly with tools/debug_slope_probe.gd against `rises.peaks[0]` (centre [140,-90], radius 78, the exact landform capture_hillside.gd frames), this rise's slope peaks at ~52.5 degrees around 72m out along the east bearing and then RECEDES toward its base skirt. Round 3 fixed that by lowering rock_slope_deg to 40, which worked -- rock became visible -- but overcorrected the other way: a fresh blind critic reported rock now DOMINATES two of three frames (60-75% of the visible hill) and there is still no distinct soil band, because blend=8 left only a 2-degree pure-soil plateau (38-40), too thin to read as a third material at these camera distances. Round 4 keeps blend NARROWER (6.0, between round 2's failed 14.0 and the original 7.0) and restores rock_slope_deg to its original pre-EV4-hillside-seam value (44.0) rather than lowering it again, which together open an 8-degree pure-soil plateau (36-44, versus round 3's 2) while pushing pure rock back to 50 degrees -- the probe shows that band occurs only from roughly 68m to 74m out, a narrow accent ring near the base rather than a dominant face. TUNABLE; if soil still doesn't read as distinct, the plateau needs to be wider still (soil_slope_deg itself is the next lever, not touched by any of these four rounds); if rock has become too rare again, rock_slope_deg is the lever, not blend_deg -- round 3 already showed widening blend without checking landform-max-slope is how this regresses.",
   "_comment_ev4_hillside_seam_remainder": "EV4-hillside-seam-remainder. `soil_slope_deg` 30 -> 24 widens the pure-soil plateau from round 4's 8 degrees (36-44) to 14 (30-44) without moving `rock_slope_deg`, so rock's own share of the hill (round 4 already tuned to a narrow accent ring, not the round-3 dominant face) is untouched -- this is the 'plateau needs to be wider still' half of round 4's own next-step note. `outcrop_jitter_deg`/`outcrop_jitter_frequency` are new: every band pick used to be a pure function of slope, so a roughly circular rise baked a perfectly circular ring of soil and rock -- a 'collar,' per the round-4 critic, not an authored outcrop. `playground_heightfield.gd::outcrop_jitter_deg()` adds a coarse, seeded noise value (see its own comment) to the sampled slope before the band lookup, so the ring bulges into lobes in some directions and recedes in others instead of tracing one smooth circle. Symmetric around 0 (does not change the AVERAGE amount of rock or soil, only where each band's edge falls), so it is additive to the plateau widening above rather than a competing lever. TUNABLE: raise `outcrop_jitter_deg` for chunkier, more separated outcrops; lower `outcrop_jitter_frequency` for fewer, larger lobes.",
   "_comment_slope_sample_step": "EV4-hillside-seam. The grass/soil/rock band is picked from slope, and slope was sampled with the SAME 1m central-difference step as the geometry itself -- so every texture decision saw the `detail` noise layer's own ripple (frequency 0.018, ~14m at its highest FBM octave, amplitude enough to swing slope roughly +-14 degrees) on top of the actual macro shape. Against a 7-degree blend_deg that ripple is bigger than the band it is supposed to smooth, so a rise's flank does not read as one coherent ring per material -- it reads as whichever material the local noise happened to push slope past THIS pixel, over and over, which is the 'camouflage' pattern a blind critic named twice (EV4 round 3, EV4-hillside-seam). Sampling slope at a wider step low-passes exactly that ripple while leaving the geometry, collision and vegetation placement (scatter_rules.gd calls slope_degrees_at with its own default step) untouched -- this value is read ONLY by build_playground_terrain.gd's two texture bakes. TUNABLE: too small and the blotching returns, too large and the band stops following the rise's own shape and reads as a smeared ring.",
-  "_comment_shader": "Terrain3D shader settings. Every one of these is TUNABLE presentation and none of them touches collision or height \u2014 the bake is authored data and this is only how it is drawn.",
+  "_comment_shader": "Terrain3D shader settings. Every one of these is TUNABLE presentation and none of them touches collision or height — the bake is authored data and this is only how it is drawn.",
   "shader": {
-    "_comment_background": "2 = NOISE. It was 1 = FLAT, which draws an infinite plane at y=0 past the baked 512m and fogs it to a uniform sheet. That produced a measured 0.146 luminance step across the ENTIRE width of `03-rise-overlook` at row 252 \u2014 the blind critic found it independently and called it the first thing the eye lands on. Noise gives the distance real shape instead, so the world stops having a visible edge.",
+    "_comment_background": "2 = NOISE. It was 1 = FLAT, which draws an infinite plane at y=0 past the baked 512m and fogs it to a uniform sheet. That produced a measured 0.146 luminance step across the ENTIRE width of `03-rise-overlook` at row 252 — the blind critic found it independently and called it the first thing the eye lands on. Noise gives the distance real shape instead, so the world stops having a visible edge.",
     "world_background": 0,
-    "_comment_world_noise_removed": "world_noise_scale/height/region_blend/lod_distance/max_octaves/min_octaves are NOT real uniforms on this Terrain3D build \u2014 confirmed by dumping Terrain3DMaterial's actual _get_shader_parameters() keys directly (R7.1), which do not include any world_noise_* name. world_background=NOISE above is a real property and does apply; the background's shape beyond it is this build's fixed default, not tunable from here. Removed rather than left silently ignored, same reasoning as dual_scale below.",
-    "_comment_macro": "Macro variation tints the ground at two large scales, which is the only thing that stops a 2K tile reading as tiling. The critic measured the previous ground as high-frequency mottled noise with 'no blade direction and no scale cue' \u2014 a texture repeating every few metres with nothing varying above that.",
-    "_comment_macro_multiply": "These MULTIPLY the albedo \u2014 the shader does `macrov = mix(colour1, white, noise1); macrov *= mix(colour2, white, noise2)`. So they can only ever darken, and two mid-tones compound: the first attempt used #c6d18a and #8fa06a, which multiply out to roughly 0.47 at their overlap and took the near-field ground from luminance 0.124 to 0.054 \u2014 a black foreground in every frame. Keep both near white and let them tint, not shade. Anything below about #b0 here is a brightness change wearing a colour's clothes.",
+    "_comment_world_noise_removed": "world_noise_scale/height/region_blend/lod_distance/max_octaves/min_octaves are NOT real uniforms on this Terrain3D build — confirmed by dumping Terrain3DMaterial's actual _get_shader_parameters() keys directly (R7.1), which do not include any world_noise_* name. world_background=NOISE above is a real property and does apply; the background's shape beyond it is this build's fixed default, not tunable from here. Removed rather than left silently ignored, same reasoning as dual_scale below.",
+    "_comment_macro": "Macro variation tints the ground at two large scales, which is the only thing that stops a 2K tile reading as tiling. The critic measured the previous ground as high-frequency mottled noise with 'no blade direction and no scale cue' — a texture repeating every few metres with nothing varying above that.",
+    "_comment_macro_multiply": "These MULTIPLY the albedo — the shader does `macrov = mix(colour1, white, noise1); macrov *= mix(colour2, white, noise2)`. So they can only ever darken, and two mid-tones compound: the first attempt used #c6d18a and #8fa06a, which multiply out to roughly 0.47 at their overlap and took the near-field ground from luminance 0.124 to 0.054 — a black foreground in every frame. Keep both near white and let them tint, not shade. Anything below about #b0 here is a brightness change wearing a colour's clothes.",
     "macro_variation1": "#b8b58c",
     "macro_variation2": "#8ea369",
     "noise1_scale": 0.012,
     "noise2_scale": 0.03,
     "noise1_angle": 0.7,
-    "_comment_dual_scale_removed": "Terrain3D's dual-scaling uniforms (dual_scale_texture/near/far/reduction) are NOT reachable through set_shader_param on this build \u2014 the shader only compiles them in behind a feature this API does not expose, and writing them returns quietly having done nothing. They were configured here for two rounds while the surveys came back byte-identical. `_apply_ground_shader` now reads every uniform back and warns by name, which is how this was finally caught.",
+    "_comment_dual_scale_removed": "Terrain3D's dual-scaling uniforms (dual_scale_texture/near/far/reduction) are NOT reachable through set_shader_param on this build — the shader only compiles them in behind a feature this API does not expose, and writing them returns quietly having done nothing. They were configured here for two rounds while the surveys came back byte-identical. `_apply_ground_shader` now reads every uniform back and warns by name, which is how this was finally caught.",
     "_comment_auto_removed": "auto_slope/auto_height_reduction (R7.1): also not real uniform names on this build, same check as world_noise_* above. There is no exposed control over the auto-shader's grass/rock slope threshold or blend softness in this Terrain3D version; `colour.blend_deg` above only softens the BAKED vertex-colour transition, a separate layer from the live auto-shader texture switch.",
-    "_comment_enable_macro": "R7.1: macro_variation1/2 above were configured but never actually applied \u2014 enable_macro_variation defaults false and nothing set it true. blend_sharpness, mipmap_bias, macro_variation1/2 and noise1/2_scale/angle ARE real uniforms on this build (confirmed the same way, and separately confirmed to affect the render: forcing extreme values visibly changes the frame even though get_shader_param() reads them back as null after every set \u2014 the readback is unreliable on this build, not the write). The `ignored N setting(s)` warning below is therefore a false positive for exactly these seven keys; it stays because it is still correct about world_noise_*/auto_slope/auto_height_reduction, which really are dead.",
+    "_comment_enable_macro": "R7.1: macro_variation1/2 above were configured but never actually applied — enable_macro_variation defaults false and nothing set it true. blend_sharpness, mipmap_bias, macro_variation1/2 and noise1/2_scale/angle ARE real uniforms on this build (confirmed the same way, and separately confirmed to affect the render: forcing extreme values visibly changes the frame even though get_shader_param() reads them back as null after every set — the readback is unreliable on this build, not the write). The `ignored N setting(s)` warning below is therefore a false positive for exactly these seven keys; it stays because it is still correct about world_noise_*/auto_slope/auto_height_reduction, which really are dead.",
     "blend_sharpness": 0.5,
     "mipmap_bias": 0.86,
     "enable_macro_variation": true,
@@ -2810,8 +2999,8 @@
     "_comment_macro_vp2": "VP2: macro_variation1/2 were near-white (#f0eee6/#e4e6e2), which multiplies to nothing -- the 'flat lime, one green value everywhere' read in every wide frame. A dry olive and a deeper green at longer wavelengths (noise scales 0.022/0.055 -> 0.012/0.03) give the far ground the patchy tone the keyart's hills carry; blend_sharpness 0.38 -> 0.5 so slope transitions crisp up; mipmap_bias 0.92 -> 0.86 keeps texture grain a little further out. Runtime-only (no terrain re-bake), but this file is in the scatter fingerprint -> scatter re-bake."
   },
   "_comment_textures": "Real PBR ground, replacing the `show_colormap` debug view that stood in for it from M1 to the first art pass. Terrain3D's auto shader picks texture 0 on walkable ground and texture 1 on slopes, so the grass/soil/rock intent the bake already encodes is expressed with albedo and normal detail instead of flat vertex colour. `uv_scale` is metres per tile: too large and the ground is mush at distance, too small and it visibly repeats.",
-  "_comment_uv_scale": "Metres per tile is 1/uv_scale, so 0.34 tiles every ~3m. It was 0.18 (~5.5m), and at that size the near ground showed the photograph's own brown patches rather than its average \u2014 a green meadow with a brown foreground, reading as two materials. Tighter tiling averages to grass; too tight and it visibly repeats, which is what the macro variation and detiling above are for.",
-  "_comment_normal_depth": "The most consequential number in this file. A photographic grass normal map at full strength turns most of its texels away from a 52-degree sun, and the ground within ~30m of the camera goes black \u2014 measured at luminance 0.071 against 0.27-0.60 across the references, with exactly the high-frequency mottled fizz the critic described. It flattens with distance because the mip average cancels the perturbation, which is why the far hills looked correct and the foreground did not. Raise it for more relief; if the near ground starts crushing to black again, this is the cause.",
+  "_comment_uv_scale": "Metres per tile is 1/uv_scale, so 0.34 tiles every ~3m. It was 0.18 (~5.5m), and at that size the near ground showed the photograph's own brown patches rather than its average — a green meadow with a brown foreground, reading as two materials. Tighter tiling averages to grass; too tight and it visibly repeats, which is what the macro variation and detiling above are for.",
+  "_comment_normal_depth": "The most consequential number in this file. A photographic grass normal map at full strength turns most of its texels away from a 52-degree sun, and the ground within ~30m of the camera goes black — measured at luminance 0.071 against 0.27-0.60 across the references, with exactly the high-frequency mottled fizz the critic described. It flattens with distance because the mip average cancels the perturbation, which is why the far hills looked correct and the foreground did not. Raise it for more relief; if the near ground starts crushing to black again, this is the cause.",
   "_comment_detiling": "Rotates and shifts the tile per region so a 2K texture stops announcing its own repeat period. Together with the shader's macro variation, this is what separates 'ground material' from 'wallpaper'.",
   "textures": [
     {
@@ -2963,22 +3152,40 @@
     "far_bank_floodplain": [
       {
         "id": "long_water_west_floodplain",
-        "at": [-374.0, 4225.0],
-        "half_extent": [36.0, 25.0],
+        "at": [
+          -374.0,
+          4225.0
+        ],
+        "half_extent": [
+          36.0,
+          25.0
+        ],
         "depth": 10.8,
         "_why": "The widest, lowest inside-meander shelf replaces the west wall with a long floodplain tongue, then eases into the meadow well behind the visible bank."
       },
       {
         "id": "long_water_middle_floodplain",
-        "at": [-301.0, 4223.5],
-        "half_extent": [28.0, 23.5],
+        "at": [
+          -301.0,
+          4223.5
+        ],
+        "half_extent": [
+          28.0,
+          23.5
+        ],
         "depth": 7.2,
         "_why": "A higher middle bench sits behind a retained shoulder gap, making the top line step by landform rather than by decorative rocks."
       },
       {
         "id": "long_water_east_floodplain",
-        "at": [-233.5, 4224.0],
-        "half_extent": [28.5, 24.0],
+        "at": [
+          -233.5,
+          4224.0
+        ],
+        "half_extent": [
+          28.5,
+          24.0
+        ],
         "depth": 9.0,
         "_why": "A medium-low east lobe carries the natural shoreline toward the accepted bend while ending safely before the Old Mill narrows."
       }

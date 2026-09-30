@@ -7,50 +7,35 @@
       "props": [
         {
           "model": "Anvil_Log",
-          "at": [
-            12.5,
-            -35.5
-          ],
+          "at": [34.5, -21.5],
           "yaw_deg": 30.0,
           "scale": 1.0,
           "_why": "the cluster's anchor -- an anvil mounted on its own stump"
         },
         {
           "model": "Workbench",
-          "at": [
-            11.5,
-            -34.5
-          ],
+          "at": [33.5, -20.5],
           "yaw_deg": 110.0,
           "scale": 1.0,
           "_why": "faces the anvil across the nook -- pulled in 0.7m (round 1 blind critic: the anvil/whetstone and crate/workbench read as two separate groups, not one station)"
         },
         {
           "model": "Whetstone",
-          "at": [
-            13.3,
-            -34.3
-          ],
+          "at": [35.3, -20.3],
           "yaw_deg": 0.0,
           "scale": 1.0,
           "_why": "a sharpening stone within reach of the bench -- pulled in 0.4m, same reason"
         },
         {
           "model": "Crate_Wooden",
-          "at": [
-            11.5,
-            -36.1
-          ],
+          "at": [33.5, -22.1],
           "yaw_deg": 200.0,
           "scale": 1.0,
           "_why": "stock crate behind the anvil -- pulled in 0.9m, same reason"
         },
         {
           "model": "Pickaxe_Bronze",
-          "at": [
-            13.7,
-            -36.1
-          ],
+          "at": [35.7, -22.1],
           "yaw_deg": -40.0,
           "scale": 1.0,
           "_why": "a tool left leaning, mid-repair -- pulled in 0.3m, same reason"
@@ -64,50 +49,35 @@
       "props": [
         {
           "model": "Barrel_Apples",
-          "at": [
-            -24.0,
-            -25.0
-          ],
+          "at": [0.0, 5.0],
           "yaw_deg": 10.0,
           "scale": 1.0,
           "_why": "the cluster's anchor -- overflow from the last harvest"
         },
         {
           "model": "FarmCrate_Apple",
-          "at": [
-            -24.9,
-            -24.6
-          ],
+          "at": [-0.9, 5.4],
           "yaw_deg": -20.0,
           "scale": 1.0,
           "_why": "set right against the barrel's side, not just nearby -- round 2 blind critic: a loose arc of props near a wall reads as dumped, not a task. This is meant to read as one pile: a load just carried out and set down together."
         },
         {
           "model": "FarmCrate_Empty",
-          "at": [
-            -23.3,
-            -24.7
-          ],
+          "at": [0.7, 5.3],
           "yaw_deg": 50.0,
           "scale": 1.0,
           "_why": "touching the barrel's other side, tipped at an angle rather than square -- just set down, not arranged. FarmCrate_Carrot swapped out earlier (round 1 blind critic): its vertex-colour-tinted contents render as an unreadable white/grey smear, a model defect not a placement one."
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [
-            -24.3,
-            -26.0
-          ],
+          "at": [-0.3, 4.0],
           "yaw_deg": 190.0,
           "scale": 1.0,
           "_why": "in front of the pile, facing back toward it -- the tool that did the carrying, set down after"
         },
         {
           "model": "Crate_Wooden",
-          "at": [
-            -23.2,
-            -26.1
-          ],
+          "at": [0.8, 3.9],
           "yaw_deg": -30.0,
           "scale": 1.0,
           "_why": "the big piece of the same load, closing the pile from the front"
@@ -252,10 +222,7 @@
       "props": [
         {
           "model": "log_large",
-          "at": [
-            -15.0,
-            -18.9
-          ],
+          "at": [29.0, -10.9],
           "yaw_deg": 10.0,
           "scale": 1.0,
           "dir": "res://assets/environment/nature",
@@ -263,20 +230,14 @@
         },
         {
           "model": "Crate_Wooden",
-          "at": [
-            -14.3,
-            -19.4
-          ],
+          "at": [29.7, -11.4],
           "yaw_deg": -15.0,
           "scale": 1.0,
           "_why": "set against the woodpile's own foot (0.86m centre to centre, touching), not floating separately -- one pile, not a scatter."
         },
         {
           "model": "Barrel",
-          "at": [
-            3.6,
-            -8.4
-          ],
+          "at": [47.6, -0.4],
           "yaw_deg": 200.0,
           "scale": 1.0,
           "_why": "the inn's cellar barrels, south of its east door (door node (3.5,-9); east wall collider ends at x 3.73, so 0.9m clear), on the square side where the well-to-inn path arrives. A public house's clutter, not a private home's.",
@@ -284,10 +245,7 @@
         },
         {
           "model": "Bench",
-          "at": [
-            3.7,
-            -3.6
-          ],
+          "at": [47.7, 4.4],
           "yaw_deg": -90.0,
           "scale": 1.0,
           "_why": "a seat along the inn's east wall NORTH of the door, running with the wall (local X on world -Z, spanning z -8.0..-5.2, so the door's 1.6m leaf at z -9.8..-8.2 stays clear): somewhere to sit before going in, which is the whole difference an inn's frontage needs over a private home's."
@@ -295,10 +253,7 @@
         {
           "model": "Barrel",
           "name": "Barrel_inn_2",
-          "at": [
-            3.9,
-            -9.2
-          ],
+          "at": [47.9, -1.2],
           "yaw_deg": 40.0,
           "scale": 1.0,
           "_why": "VP5: the second barrel, touching the first (0.85m centre to centre) at a different yaw -- a pair set down together reads as stock, one alone reads as a prop."
@@ -314,20 +269,14 @@
         {
           "model": "Bench",
           "name": "Bench_east",
-          "at": [
-            26.0,
-            9.6
-          ],
+          "at": [91.0, 44.6],
           "yaw_deg": 130.0,
           "scale": 1.0,
           "_why": "east flank of the ring, facing north-west at the fight ground and the board; 3.2m from Halda (E1 had it at (24,12), 0.4m from her standing spot), 4.7m inside the east fence, 4.1m from the berry node."
         },
         {
           "model": "Barrel",
-          "at": [
-            27.6,
-            11.2
-          ],
+          "at": [92.6, 46.2],
           "yaw_deg": 25.0,
           "scale": 1.0,
           "_why": "a water barrel at the east bench's end (0.9m from it) -- the one thing a crowd on a warm day needs, and it stops the bench reading as a lone plank."
@@ -335,20 +284,14 @@
         {
           "model": "Bench",
           "name": "Bench_west",
-          "at": [
-            17.2,
-            18.6
-          ],
+          "at": [82.2, 53.6],
           "yaw_deg": 307.0,
           "scale": 1.0,
           "_why": "the board's other flank, facing back toward it across the ring, 2.1m east of the corridor road's centreline (its 0.7m half-width plus 1.1m shoulder is 1.8m, so it sits on the verge, not the road), 3m inside the new north-east fence."
         },
         {
           "model": "Crate_Wooden",
-          "at": [
-            23.0,
-            14.2
-          ],
+          "at": [88.0, 49.2],
           "yaw_deg": 30.0,
           "sink_m": 0.06,
           "scale": 1.0,
@@ -356,20 +299,14 @@
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [
-            23.75,
-            14.9
-          ],
+          "at": [88.75, 49.9],
           "yaw_deg": 0.0,
           "scale": 1.0,
           "_why": "water for the creature waiting its bout, touching the crate's north-east corner."
         },
         {
           "model": "Bag",
-          "at": [
-            22.35,
-            14.7
-          ],
+          "at": [87.35, 49.7],
           "yaw_deg": 120.0,
           "scale": 1.0,
           "_why": "a trainer's pack leaning on the crate's west face (0.82m centre to centre)."
@@ -736,10 +673,7 @@
       "props": [
         {
           "model": "log_large",
-          "at": [
-            19.5,
-            -9.4
-          ],
+          "at": [60.0, 22.6],
           "yaw_deg": 15.0,
           "scale": 1.0,
           "dir": "res://assets/environment/nature",
@@ -747,10 +681,7 @@
         },
         {
           "model": "tree-log-small",
-          "at": [
-            20.4,
-            -9.4
-          ],
+          "at": [60.9, 22.6],
           "yaw_deg": 100.0,
           "scale": 1.0,
           "dir": "res://assets/props/kenney_survival",
@@ -766,20 +697,14 @@
       "props": [
         {
           "model": "FarmCrate_Apple",
-          "at": [
-            -17.4,
-            -9.3
-          ],
+          "at": [6.6, 20.7],
           "yaw_deg": 20.0,
           "scale": 1.0,
           "_why": "the harvest crate, half full."
         },
         {
           "model": "Bucket_Wooden_1",
-          "at": [
-            -17.9,
-            -8.4
-          ],
+          "at": [6.1, 21.6],
           "yaw_deg": -30.0,
           "scale": 1.0,
           "_why": "the watering bucket, touching the crate's side."
@@ -793,10 +718,7 @@
       "props": [
         {
           "model": "Bonfire_Fire",
-          "at": [
-            -15.4,
-            -17.2
-          ],
+          "at": [8.6, 12.8],
           "yaw_deg": 35.0,
           "scale": 0.22,
           "dir": "res://assets/props/quaternius_survival",
@@ -814,10 +736,7 @@
         {
           "model": "Bench",
           "name": "GrandpaHarvestTable",
-          "at": [
-            -17.9,
-            -21.15
-          ],
+          "at": [6.1, 8.85],
           "yaw_deg": 0.0,
           "scale": 0.82,
           "_why": "The installed Bench is a trestle work table in this pack. Scaled modestly and aligned with the south wall so it reads as the yard's anchor without becoming a second foreground mass. Its z position clears the eaves/wall and its east-west span stays outside the doorway lane."
@@ -825,10 +744,7 @@
         {
           "model": "FarmCrate_Apple",
           "name": "GrandpaFreshHarvest",
-          "at": [
-            -19.25,
-            -20.55
-          ],
+          "at": [4.75, 9.45],
           "yaw_deg": 18.0,
           "scale": 0.82,
           "_why": "A partly filled harvest crate touching the work table's west end, connecting the nook to the six berry plots north of the house without adding a new interaction."
@@ -836,10 +752,7 @@
         {
           "model": "Bucket_Wooden_1",
           "name": "GrandpaWashBucket",
-          "at": [
-            -16.45,
-            -20.55
-          ],
+          "at": [7.55, 9.45],
           "yaw_deg": -22.0,
           "scale": 0.86,
           "_why": "Wash bucket at the opposite end of the same work surface, close enough to compose as one lived-in task rather than another scattered prop."
@@ -847,10 +760,7 @@
         {
           "model": "Stool",
           "name": "GrandpaYardStool",
-          "at": [
-            -18.0,
-            -22.25
-          ],
+          "at": [6.0, 7.75],
           "yaw_deg": 12.0,
           "scale": 0.82,
           "_why": "A small seat facing the table from the open yard. It completes the domestic-use story while leaving the direct east-door approach several metres clear."

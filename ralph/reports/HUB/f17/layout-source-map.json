@@ -1,0 +1,830 @@
+{
+  "state": "UNACCEPTED WIP; source mapping only",
+  "dependency_candidate": "7e328309889ecb3250662d8c60c32f9e7d4f66a0",
+  "house_old": [
+    -22,
+    -16
+  ],
+  "house_new": [
+    2,
+    14
+  ],
+  "road_plan": {
+    "home_centre": [
+      2,
+      14
+    ],
+    "home_door": [
+      7.5,
+      14
+    ],
+    "road_start": [
+      7.5,
+      14
+    ],
+    "road_end": [
+      91,
+      14
+    ],
+    "width_m": 5.2,
+    "hall_centre": [
+      107,
+      14
+    ],
+    "hall_yaw_deg": 90,
+    "exit_gate": "TrailGate",
+    "houses_required": [
+      8,
+      10
+    ]
+  },
+  "houses": [
+    {
+      "id": "mira_shop",
+      "display_name": "Mira’s Shop",
+      "prefab": "cottage_a",
+      "at": [
+        24,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "shop"
+    },
+    {
+      "id": "tam_workshop",
+      "display_name": "Tam’s Workshop",
+      "prefab": "workshop",
+      "at": [
+        24,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true
+    },
+    {
+      "id": "bram_inn",
+      "display_name": "Bram’s Inn",
+      "prefab": "inn",
+      "at": [
+        42,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "inn"
+    },
+    {
+      "id": "halda_house",
+      "display_name": "Halda’s House",
+      "prefab": "cottage_b",
+      "at": [
+        42,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "research_house",
+      "display_name": "Research House",
+      "prefab": "cottage_a",
+      "at": [
+        60,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "oskar_house",
+      "display_name": "Oskar’s House",
+      "prefab": "cottage_b",
+      "at": [
+        60,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "alder_house",
+      "display_name": "Alder Cottage",
+      "prefab": "cottage_b",
+      "at": [
+        78,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "orchard_house",
+      "display_name": "Orchard Cottage",
+      "prefab": "cottage_a",
+      "at": [
+        78,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
+    }
+  ],
+  "actors": [
+    {
+      "file": "data/config/village_npcs.json",
+      "identity": "Mira",
+      "old": [
+        19.4,
+        4.0
+      ],
+      "new": [
+        24,
+        7
+      ]
+    },
+    {
+      "file": "data/config/village_npcs.json",
+      "identity": "Oskar",
+      "old": [
+        25.0,
+        4.0
+      ],
+      "new": [
+        60,
+        20
+      ]
+    },
+    {
+      "file": "data/config/village_npcs.json",
+      "identity": "Tam",
+      "old": [
+        8.0,
+        12.0
+      ],
+      "new": [
+        24,
+        20
+      ]
+    },
+    {
+      "file": "data/config/village_npcs.json",
+      "identity": "Bram",
+      "old": [
+        -6.89,
+        -6.0
+      ],
+      "new": [
+        42,
+        8
+      ]
+    },
+    {
+      "file": "data/config/village_npcs.json",
+      "identity": "Halda",
+      "old": [
+        23.5,
+        11.5
+      ],
+      "new": [
+        88.5,
+        46.5
+      ]
+    },
+    {
+      "file": "data/config/village_npcs.json",
+      "identity": "Nessa",
+      "old": [
+        102.2,
+        177.0
+      ],
+      "new": [
+        60,
+        7
+      ]
+    },
+    {
+      "file": "data/config/bands/band1_lower_meadows/trainers.json",
+      "identity": "practice_trainer",
+      "old": [
+        13.0,
+        9.0
+      ],
+      "new": [
+        78.0,
+        44.0
+      ]
+    },
+    {
+      "file": "data/config/bands/band1_lower_meadows/trainers.json",
+      "identity": "tournament_quarter_mira",
+      "old": [
+        20.0,
+        12.0
+      ],
+      "new": [
+        85.0,
+        47.0
+      ]
+    },
+    {
+      "file": "data/config/bands/band1_lower_meadows/trainers.json",
+      "identity": "tournament_semi_tam",
+      "old": [
+        20.0,
+        12.0
+      ],
+      "new": [
+        85.0,
+        47.0
+      ]
+    },
+    {
+      "file": "data/config/bands/band1_lower_meadows/trainers.json",
+      "identity": "tournament_final_oskar",
+      "old": [
+        20.0,
+        12.0
+      ],
+      "new": [
+        85.0,
+        47.0
+      ]
+    }
+  ],
+  "props": [
+    {
+      "cluster": "work_area",
+      "index": 0,
+      "model": "Anvil_Log",
+      "old": [
+        12.5,
+        -35.5
+      ],
+      "new": [
+        34.5,
+        -21.5
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "work_area",
+      "index": 1,
+      "model": "Workbench",
+      "old": [
+        11.5,
+        -34.5
+      ],
+      "new": [
+        33.5,
+        -20.5
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "work_area",
+      "index": 2,
+      "model": "Whetstone",
+      "old": [
+        13.3,
+        -34.3
+      ],
+      "new": [
+        35.3,
+        -20.3
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "work_area",
+      "index": 3,
+      "model": "Crate_Wooden",
+      "old": [
+        11.5,
+        -36.1
+      ],
+      "new": [
+        33.5,
+        -22.1
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "work_area",
+      "index": 4,
+      "model": "Pickaxe_Bronze",
+      "old": [
+        13.7,
+        -36.1
+      ],
+      "new": [
+        35.7,
+        -22.1
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "farmhouse_yard",
+      "index": 0,
+      "model": "Barrel_Apples",
+      "old": [
+        -24.0,
+        -25.0
+      ],
+      "new": [
+        0.0,
+        5.0
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "farmhouse_yard",
+      "index": 1,
+      "model": "FarmCrate_Apple",
+      "old": [
+        -24.9,
+        -24.6
+      ],
+      "new": [
+        -0.9,
+        5.4
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "farmhouse_yard",
+      "index": 2,
+      "model": "FarmCrate_Empty",
+      "old": [
+        -23.3,
+        -24.7
+      ],
+      "new": [
+        0.7,
+        5.3
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "farmhouse_yard",
+      "index": 3,
+      "model": "Bucket_Wooden_1",
+      "old": [
+        -24.3,
+        -26.0
+      ],
+      "new": [
+        -0.3,
+        4.0
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "farmhouse_yard",
+      "index": 4,
+      "model": "Crate_Wooden",
+      "old": [
+        -23.2,
+        -26.1
+      ],
+      "new": [
+        0.8,
+        3.9
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "village_twins_yard",
+      "index": 0,
+      "model": "log_large",
+      "old": [
+        -15.0,
+        -18.9
+      ],
+      "new": [
+        29.0,
+        -10.9
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "village_twins_yard",
+      "index": 1,
+      "model": "Crate_Wooden",
+      "old": [
+        -14.3,
+        -19.4
+      ],
+      "new": [
+        29.7,
+        -11.4
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "village_twins_yard",
+      "index": 2,
+      "model": "Barrel",
+      "old": [
+        3.6,
+        -8.4
+      ],
+      "new": [
+        47.6,
+        -0.4
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "village_twins_yard",
+      "index": 3,
+      "model": "Bench",
+      "old": [
+        3.7,
+        -3.6
+      ],
+      "new": [
+        47.7,
+        4.4
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "village_twins_yard",
+      "index": 4,
+      "model": "Barrel",
+      "old": [
+        3.9,
+        -9.2
+      ],
+      "new": [
+        47.9,
+        -1.2
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "tournament_ground",
+      "index": 0,
+      "model": "Bench",
+      "old": [
+        26.0,
+        9.6
+      ],
+      "new": [
+        91.0,
+        44.6
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "tournament_ground",
+      "index": 1,
+      "model": "Barrel",
+      "old": [
+        27.6,
+        11.2
+      ],
+      "new": [
+        92.6,
+        46.2
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "tournament_ground",
+      "index": 2,
+      "model": "Bench",
+      "old": [
+        17.2,
+        18.6
+      ],
+      "new": [
+        82.2,
+        53.6
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "tournament_ground",
+      "index": 3,
+      "model": "Crate_Wooden",
+      "old": [
+        23.0,
+        14.2
+      ],
+      "new": [
+        88.0,
+        49.2
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "tournament_ground",
+      "index": 4,
+      "model": "Bucket_Wooden_1",
+      "old": [
+        23.75,
+        14.9
+      ],
+      "new": [
+        88.75,
+        49.9
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "tournament_ground",
+      "index": 5,
+      "model": "Bag",
+      "old": [
+        22.35,
+        14.7
+      ],
+      "new": [
+        87.35,
+        49.7
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "cottage_b_backyard",
+      "index": 0,
+      "model": "log_large",
+      "old": [
+        19.5,
+        -9.4
+      ],
+      "new": [
+        60.0,
+        22.6
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "cottage_b_backyard",
+      "index": 1,
+      "model": "tree-log-small",
+      "old": [
+        20.4,
+        -9.4
+      ],
+      "new": [
+        60.9,
+        22.6
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "garden_gate",
+      "index": 0,
+      "model": "FarmCrate_Apple",
+      "old": [
+        -17.4,
+        -9.3
+      ],
+      "new": [
+        6.6,
+        20.7
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "garden_gate",
+      "index": 1,
+      "model": "Bucket_Wooden_1",
+      "old": [
+        -17.9,
+        -8.4
+      ],
+      "new": [
+        6.1,
+        21.6
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "grandpa_door_lantern",
+      "index": 0,
+      "model": "Bonfire_Fire",
+      "old": [
+        -15.4,
+        -17.2
+      ],
+      "new": [
+        8.6,
+        12.8
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "grandpa_southeast_work_yard",
+      "index": 0,
+      "model": "Bench",
+      "old": [
+        -17.9,
+        -21.15
+      ],
+      "new": [
+        6.1,
+        8.85
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "grandpa_southeast_work_yard",
+      "index": 1,
+      "model": "FarmCrate_Apple",
+      "old": [
+        -19.25,
+        -20.55
+      ],
+      "new": [
+        4.75,
+        9.45
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "grandpa_southeast_work_yard",
+      "index": 2,
+      "model": "Bucket_Wooden_1",
+      "old": [
+        -16.45,
+        -20.55
+      ],
+      "new": [
+        7.55,
+        9.45
+      ],
+      "scale_unchanged": true
+    },
+    {
+      "cluster": "grandpa_southeast_work_yard",
+      "index": 3,
+      "model": "Stool",
+      "old": [
+        -18.0,
+        -22.25
+      ],
+      "new": [
+        6.0,
+        7.75
+      ],
+      "scale_unchanged": true
+    }
+  ],
+  "farm_plots_old": [
+    {
+      "at": [
+        -24.4,
+        -9.0
+      ]
+    },
+    {
+      "at": [
+        -22.0,
+        -9.0
+      ]
+    },
+    {
+      "at": [
+        -19.6,
+        -9.0
+      ]
+    },
+    {
+      "at": [
+        -24.4,
+        -6.6
+      ]
+    },
+    {
+      "at": [
+        -22.0,
+        -6.6
+      ]
+    },
+    {
+      "at": [
+        -19.6,
+        -6.6
+      ]
+    }
+  ],
+  "farm_plots_new": [
+    {
+      "at": [
+        -0.4,
+        21.0
+      ]
+    },
+    {
+      "at": [
+        2.0,
+        21.0
+      ]
+    },
+    {
+      "at": [
+        4.4,
+        21.0
+      ]
+    },
+    {
+      "at": [
+        -0.4,
+        23.4
+      ]
+    },
+    {
+      "at": [
+        2.0,
+        23.4
+      ]
+    },
+    {
+      "at": [
+        4.4,
+        23.4
+      ]
+    }
+  ],
+  "opening_fallbacks": {
+    "bed": {
+      "old": {
+        "_comment": "Beat 1. The player wakes in the bed upstairs and 'Get up' is the only prompt in the house. The position is a PLACEHOLDER — the house builder finalizes it when the farmhouse interior is laid out; nothing should be tuned against it until then.",
+        "position": [
+          -24.0,
+          0.0,
+          -18.0
+        ],
+        "prompt": "Get up"
+      },
+      "new": {
+        "_comment": "Beat 1. The player wakes in the bed upstairs and 'Get up' is the only prompt in the house. The position is a PLACEHOLDER — the house builder finalizes it when the farmhouse interior is laid out; nothing should be tuned against it until then.",
+        "position": [
+          0.0,
+          0.0,
+          12.0
+        ],
+        "prompt": "Get up"
+      }
+    },
+    "grandpa": {
+      "old": {
+        "_comment": "Where he stands in the meadow once the sequence moves outdoors. Far enough that the walk to the practice bramblebun is worth taking; near enough that a player who wanders off can find him again.",
+        "offset": [
+          10.0,
+          0.0,
+          32.0
+        ],
+        "_comment_indoor": "Where he stands downstairs for the briefing. A PLACEHOLDER like the bed — the house builder finalizes it against the real farmhouse floor plan.",
+        "indoor_position": [
+          -22.0,
+          0.0,
+          -16.0
+        ],
+        "_comment_config": "Which block of data/config/art.json his body comes from.",
+        "art": "grandpa",
+        "display_name": "Grandpa Elias",
+        "prompt": "Talk to Grandpa",
+        "_comment_prompt_radius": "OP-0830-4. Raised 4.0 -> 5.0. The ground floor of the rebuilt farmhouse is 9.4m x 5.4m and he stands 2.4m west of its centre, so at 4.0 the east third of the room -- including the whole approach to the door -- offered no prompt at all. It is not the fix for the trapped-in-the-house defect (the door callout in sequence_director.gd::_refresh_door_gate is), but a player who turns round and walks back should find him offering before they are standing on him. TUNABLE; outdoors he stands alone in the meadow and contests nothing at this radius.",
+        "prompt_radius": 5.0
+      },
+      "new": {
+        "_comment": "Where he stands in the meadow once the sequence moves outdoors. Far enough that the walk to the practice bramblebun is worth taking; near enough that a player who wanders off can find him again.",
+        "offset": [
+          10.0,
+          0.0,
+          32.0
+        ],
+        "_comment_indoor": "Where he stands downstairs for the briefing. A PLACEHOLDER like the bed — the house builder finalizes it against the real farmhouse floor plan.",
+        "indoor_position": [
+          2.0,
+          0.0,
+          14.0
+        ],
+        "_comment_config": "Which block of data/config/art.json his body comes from.",
+        "art": "grandpa",
+        "display_name": "Grandpa Elias",
+        "prompt": "Talk to Grandpa",
+        "_comment_prompt_radius": "OP-0830-4. Raised 4.0 -> 5.0. The ground floor of the rebuilt farmhouse is 9.4m x 5.4m and he stands 2.4m west of its centre, so at 4.0 the east third of the room -- including the whole approach to the door -- offered no prompt at all. It is not the fix for the trapped-in-the-house defect (the door callout in sequence_director.gd::_refresh_door_gate is), but a player who turns round and walks back should find him offering before they are standing on him. TUNABLE; outdoors he stands alone in the meadow and contests nothing at this radius.",
+        "prompt_radius": 5.0
+      }
+    }
+  },
+  "notes": [
+    "Farm plot identity remains its placed index0..5 and realm, so planted/yield/receipt state stays keyed identically. No save schema reset or earned checkpoint restamp.",
+    "Real bed/loft wake/Grandpa/door/starter anchors come from GrandpaHouse.marker(), not the fallback coordinates. Actual new opening path still requires runtime proof.",
+    "Practice wild disk [30,-40] radius15 remains authored unchanged; old square terrain pad kept because its skirt reaches that disk. New village pads end before the disk.",
+    "Three gate-jamb coordinates retained; east polygon extends for Hall and road. Gate closure and controller travel still require new proof.",
+    "Terrain/scatter bake not yet refreshed; Hall is not visually judged; old F16 runtime proof covers its unchanged original scene only.",
+    "Legacy route proofs and arena driver poses must be updated/retained for new F17 geometry. No test removed or skipped."
+  ]
+}

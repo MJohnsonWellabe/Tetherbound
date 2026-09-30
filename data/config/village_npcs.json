@@ -10,10 +10,10 @@
       "_why_prompt_height": "F01#2 (village walk day r2, render.yml 36365090624): standing at her counter 2.3 m away, the greet prompt's waist-height sight ray hit the counter, so only the shop door's Close Door was offered. village_npcs.gd lifts her prompt point to 1.5 m, above the counter top. TUNABLE.",
       "config_key": "villager_farmer",
       "position": [
-        19.4,
-        4.0
+        24,
+        7
       ],
-      "facing_deg": -90.0,
+      "facing_deg": 180,
       "greeting": "village_mira",
       "greeting_when": [
         {
@@ -66,10 +66,10 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        25.0,
-        4.0
+        60,
+        20
       ],
-      "facing_deg": -90.0,
+      "facing_deg": 0,
       "greeting": "village_oskar",
       "greeting_when": [
         {
@@ -117,10 +117,10 @@
       "name": "Tam",
       "config_key": "villager_smith",
       "position": [
-        8.0,
-        12.0
+        24,
+        20
       ],
-      "facing_deg": 90.0,
+      "facing_deg": 0,
       "greeting": "village_tam",
       "greeting_when": [
         {
@@ -241,10 +241,10 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        -6.89,
-        -6.0
+        42,
+        8
       ],
-      "facing_deg": 90.0,
+      "facing_deg": 180,
       "greeting": "village_bram",
       "greeting_when": [
         {
@@ -274,10 +274,10 @@
         "_comment_hue_spacing_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N04-DIALOGUE-PORTRAITS's routed finding. Once N04 made the per-NPC hair colour actually VISIBLE on the plates (the mask-by-region recolour), its blind judge measured three pairs still close enough to read as the same person at speaking distance -- deltaE at 72px: ranger/Rae 5.4, Tam/Halda 8.9, Mira/Rae 8.3. N04's own framing: these were 'chosen when they were invisible'. Spread here by VALUE inside each colour's own family, not by picking new hues -- the family each of these people belongs to was a deliberate call and is not being reopened. Measured as CIE76 deltaE on the raw swatches (the judge's at-72px numbers are the same ordering, compressed by the render): the closest pair goes 8.45 -> 15.19, and the bar is the 15.19 that ranger-vs-Mira already sat at WITHOUT being flagged. Every pair now meets it. Halda: #8f8f96 -> #63636e. Hue is identical (240 degrees) and this is still the iron grey the line above describes -- value 0.59 -> 0.43 and saturation 0.05 -> 0.10, i.e. iron rather than pewter. Darkening HER rather than the smith's silver because Tam's #8a8578 is the lighter, warmer of the two, and separating a grey pair is a value job: vs Tam 12.21 -> 19.44."
       },
       "position": [
-        23.5,
-        11.5
+        88.5,
+        46.5
       ],
-      "facing_deg": 215.0,
+      "facing_deg": 215,
       "_why_here": "The tournament ground: the open north field behind the square, inside the same 14m vegetation clearing at [13, 9] that Bryn's practice arena already uses, 5.0m from the bracket board at [20, 15] and 10.8m from Bryn himself -- more than the two challenge prompts' radii added together, so she never contests his. Facing 215 degrees turns her back toward the square, so she is looking at whoever walks up from the well.",
       "greeting": "tournament_halda",
       "greeting_when": [
@@ -287,7 +287,10 @@
           "_why": "FIRST in the list: once the tournament is won, every branch below it is spent and this is her permanent steady state. It is also the line the owner directive asks for -- the one that says a Meadowhart can be ridden and what the saddle costs. The pattern itself is granted by the final round's own `reward.flags`, not by this conversation, so a champion who never walks back here still has it."
         },
         {
-          "if_flag": ["tournament_semi_won", "tournament_final_at_ring"],
+          "if_flag": [
+            "tournament_semi_won",
+            "tournament_final_at_ring"
+          ],
           "unless_flag": "tournament_won",
           "conversation": "tournament_final_begin",
           "_why": "TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle'. Above the plain `tournament_final` branch so once the player has heard Oskar's ring-entrance banter (which sets `tournament_final_at_ring` and starts nothing), every later greeting goes straight to the explicit begin-the-round line, which is the one that ends on `battle:tournament_final_oskar`."
@@ -299,7 +302,10 @@
           "_why": "Round 3's ring-entrance banter. Sets `tournament_final_at_ring` and starts nothing -- `tournament_final_begin` above is what opens the fight, once the player greets her again. Stays offered for as long as the final is unwon -- which is what makes a loss retryable: nothing is consumed by losing, so the player heals their team and greets her again, landing straight back on the begin branch above."
         },
         {
-          "if_flag": ["tournament_quarter_won", "tournament_semi_at_ring"],
+          "if_flag": [
+            "tournament_quarter_won",
+            "tournament_semi_at_ring"
+          ],
           "unless_flag": "tournament_semi_won",
           "conversation": "tournament_semi_begin",
           "_why": "TOURNAMENT-FLOW-0903. Round 2's own begin branch, same shape and same reason as the final's above."
@@ -311,7 +317,10 @@
           "_why": "Round 2's ring-entrance banter. Sets `tournament_semi_at_ring` and starts nothing; ends on `battle:tournament_semi_tam` only through `tournament_semi_begin` above."
         },
         {
-          "if_flag": ["tournament_entered", "tournament_quarter_at_ring"],
+          "if_flag": [
+            "tournament_entered",
+            "tournament_quarter_at_ring"
+          ],
           "unless_flag": "tournament_quarter_won",
           "conversation": "tournament_quarter_begin",
           "_why": "TOURNAMENT-FLOW-0903. Round 1's own begin branch, same shape and same reason as the other two above."
@@ -323,7 +332,10 @@
           "_why": "Round 1's ring-entrance banter. Sets `tournament_quarter_at_ring` and starts nothing; ends on `battle:tournament_quarter_mira` only through `tournament_quarter_begin` above."
         },
         {
-          "unless_flag": ["opening:tournament_registered", "tournament_team_ready"],
+          "unless_flag": [
+            "opening:tournament_registered",
+            "tournament_team_ready"
+          ],
           "conversation": "tournament_halda_register",
           "_why": "FIRST-HOUR-FUN-REBUILD, narrowed by TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 2: 'even after I had everything, I had to talk to the starter several times'). Used to fire on ANY unregistered first meeting regardless of how ready the team already was, forcing a throwaway registration talk before the readiness branches below could ever be reached even when every one of them already held. Now also requires the team NOT be team-ready, so a player who built and trained a full roster before ever walking up to Halda skips this branch entirely and lands directly on whichever readiness branch actually names their state -- sign-up if everything holds, camp/condition/train otherwise. Every one of those branches now also writes `opening:tournament_registered` itself (data/dialogue/bands/band1_lower_meadows.json), so the opening's own handoff still fires no matter which branch is the player's first."
         },
@@ -380,7 +392,10 @@
     {
       "name": "Wilhelm",
       "config_key": "innkeeper",
-      "position": [341.0, 932.0],
+      "position": [
+        341.0,
+        932.0
+      ],
       "facing_deg": -160.0,
       "greeting": "village_innkeeper",
       "_why": "OWNER-0912 / C3 V-7. Host at the first Trail Camp fire, where an innkeeper on the road has a reason to be present without crowding Bram's inn."
@@ -388,7 +403,10 @@
     {
       "name": "Corin",
       "config_key": "trader",
-      "position": [-150.0, 4232.0],
+      "position": [
+        -150.0,
+        4232.0
+      ],
       "facing_deg": 12.0,
       "greeting": "village_trader",
       "_why": "OWNER-0912 / C3 V-7. A peddler waiting at Old Mill Crossing, where stopped traffic gives the trader a reason to stand."
@@ -396,7 +414,10 @@
     {
       "name": "Ada",
       "config_key": "craftsperson",
-      "position": [-262.0, 2258.0],
+      "position": [
+        -262.0,
+        2258.0
+      ],
       "facing_deg": 35.0,
       "greeting": "village_craftsperson",
       "_why": "OWNER-0912 / C3 V-7. Salvaging at the abandoned ranger camp, where a craftsperson has an authored work context."
@@ -404,7 +425,10 @@
     {
       "name": "Garrick",
       "config_key": "farmer",
-      "position": [-45.0, 185.0],
+      "position": [
+        -45.0,
+        185.0
+      ],
       "facing_deg": 20.0,
       "greeting": "village_farmer",
       "_why": "OWNER-0912 / C3 V-7. At the Long Field farmstead on the Band 1 road, so the first face beyond the fence belongs to the landscape instead of the village crowd."
@@ -412,7 +436,10 @@
     {
       "name": "Old Perrin",
       "config_key": "local_historian",
-      "position": [-378.0, 352.0],
+      "position": [
+        -378.0,
+        352.0
+      ],
       "facing_deg": 65.0,
       "greeting": "village_local_historian",
       "_why": "OWNER-0912 / C3 V-7. At the Rise crest overlook by the dead tree, where the local historian can read the seven severed roads in the landscape."
@@ -420,13 +447,19 @@
     {
       "name": "Tobin",
       "config_key": "lost_traveler",
-      "position": [-28.0, 1298.0],
+      "position": [
+        -28.0,
+        1298.0
+      ],
       "facing_deg": 180.0,
       "greeting": "village_lost_traveler",
       "greeting_when": [
         {
           "if_flag": "road_gate_open",
-          "unless_flag": ["south_bridge_team_prompt_heard", "south_bridge_open"],
+          "unless_flag": [
+            "south_bridge_team_prompt_heard",
+            "south_bridge_open"
+          ],
           "conversation": "village_south_bridge_team_prompt",
           "_why": "OWNER-0912 Tier 1 #3. The road gate proves the player is actually on the village-to-bridge leg; the personal heard flag makes the lesson one-shot, and an already-open bridge retires advice about preparing to cross it."
         }
@@ -436,8 +469,11 @@
     {
       "name": "Nessa",
       "config_key": "inn_helper",
-      "position": [102.2, 177.0],
-      "facing_deg": 150.0,
+      "position": [
+        60,
+        7
+      ],
+      "facing_deg": 180,
       "greeting": "village_nessa_overlook",
       "greeting_when": [
         {
@@ -451,7 +487,10 @@
     {
       "name": "Maren",
       "config_key": "field_researcher",
-      "position": [-343.0, 501.0],
+      "position": [
+        -343.0,
+        501.0
+      ],
       "facing_deg": -71.6,
       "greeting": "village_field_researcher",
       "_why": "T1-CREATURE-RIG. At the ranger station by the pond crossing (village.json's `ranger_station`, empty since Sela moved to the square) -- a field researcher's own logical desk. Probed 4.71m clear of the station's footprint, ground present (the pond-route shoulder), off every path."
@@ -459,7 +498,10 @@
     {
       "name": "Sorrel",
       "config_key": "alpha_tracker",
-      "position": [-390.0, 524.0],
+      "position": [
+        -390.0,
+        524.0
+      ],
       "facing_deg": -59.0,
       "greeting": "village_alpha_tracker",
       "_why": "T1-CREATURE-RIG. By the mill crossing, watching the water where the pond route's wild ecology is thickest -- probed 7.35m clear of the mill's own footprint, ground present, off every path, 52.33m from Maren so the pond-crossing pair reads as two people, not one doubled."
@@ -467,7 +509,10 @@
     {
       "name": "Lark",
       "config_key": "courier",
-      "position": [-32.0, 4062.0],
+      "position": [
+        -32.0,
+        4062.0
+      ],
       "facing_deg": 15.0,
       "greeting": "village_courier",
       "_why": "OWNER-0912 / C3 V-7. On the near-bank river walk, where a stopped courier makes the broken crossing legible as a lived problem."
@@ -475,7 +520,10 @@
     {
       "name": "Ren",
       "config_key": "former_tether_member",
-      "position": [334.0, 5704.0],
+      "position": [
+        334.0,
+        5704.0
+      ],
       "facing_deg": -80.0,
       "greeting": "village_former_tether_member",
       "_why": "OWNER-0912 / C3 V-7. At the Band 4 wind-ridge rest point, where a former Tether member can explain consoles, guards and Sigils before the hierarchy closes in."
