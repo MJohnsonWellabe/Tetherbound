@@ -29,11 +29,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | #0/#2 main; this cut #1 native1920 DAY YES/NIGHT YES strict. Full craft/four remaining rows open. F18 prototypes preserved; dependency hold. |
+| `tb/hub` | F17, F18 | #0/#1/#2 main105; r2 DAY/NIGHT YES. Services source next; F18 held, typed authority prototype unparsed. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 130d host-debit aborted red/d7 initialized smoke source; prior7/700/0 valid. Camera narrow PASS/full craft open; CAS/ACK drafts. |
-| `tb/vfx` | F25, F35 | R7 native12/36/0, fullcraft FAIL/flag off. R8 native12/36/0; fresh blind unresolved; all F25 open. |
-| `tb/lookdev` | F26 | #1/#2 main; Stormwood3 native0/current11/12. MeadowLow dialogue-hold red; d5e fixture fix source PASS/Low running. |
+| `tb/combat` | F21–F24 | 9220 utility4/58/0; corrected10/734+16 native0. Earlier SCRIPT ERROR red retained; CAS/utility WIP, no MET. |
+| `tb/vfx` | F25, F35 | R8 native12/36/0; sampled1/3/5 identity/upgrade PASS/full craft FAIL. Sole new craft writer, library off/all open. |
+| `tb/lookdev` | F26 | #1/#2 main; Cloud M/H catalogue48 native0/full bar FAIL. Post-Hall Meadows3 running986b; other9 reuse. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
