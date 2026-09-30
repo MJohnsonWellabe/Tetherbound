@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-30T20:08:45Z",
+ "updated": "2026-09-30T20:13:49Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
   "Criteria met: 109 of 280. Original:95/101; redesign:14/179. F16 all5, F17#0\u2013#3, F26#0/#1/#2/#4 and F27#0 landed by this cut. F26 material path strict MET; full visual bar and Ally/default gates remain open. F17 M1/co-op/full craft remain open.",
@@ -518,7 +518,7 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T20:08:45Z",
+ "last_lane_refresh": "2026-09-30T20:13:49Z",
  "lane_activity": [
   {
    "lane": "Shared authority \u00b7 tb/foundations",
@@ -535,10 +535,24 @@
  ],
  "active_work": [
   {
+   "criterion": "F21#4",
+   "lane": "tb/combat",
+   "source": "ecd45e2b1e; camera-only current-main cut",
+   "state": "bounded landing and moving-player proof; unaccepted"
+  },
+  {
+   "criterion": "F16/F23 shared authority dependency",
+   "lane": "tb/foundations",
+   "source": "86a0efd217; narrow prepared authority cut, final manifest pending",
+   "state": "bounded landing assembly; no new criterion credit"
+  }
+ ],
+ "preserved_work": [
+  {
    "criterion": "F17#4",
    "lane": "tb/hub",
    "source": "1e3ead1b7f; sealed opening v3 patch38b0f9/helper7c0e3b, external routing outputs",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   },
@@ -546,7 +560,7 @@
    "criterion": "F23#1",
    "lane": "tb/combat + TM knowledge helper",
    "source": "f506adb306; tetherbound-tm-knowledge-player-path/outputs/v1, CLI01a0f3ac-1eb5",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   },
@@ -554,7 +568,7 @@
    "criterion": "F23#2",
    "lane": "tb/combat",
    "source": "f506adb306; production-vitals-r2 ignored caller drafts",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   },
@@ -562,7 +576,7 @@
    "criterion": "F23#3",
    "lane": "tb/combat",
    "source": "f506adb306; loadout service/panel and receipt-only owner ACK source",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   },
@@ -570,7 +584,7 @@
    "criterion": "F25#0",
    "lane": "tb/vfx",
    "source": "8fae061e36",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   },
@@ -578,7 +592,7 @@
    "criterion": "F26#3",
    "lane": "tb/lookdev",
    "source": "main9806bef7bc; exclusive full-bar CLI01a0f3ac-1e5e",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   },
@@ -586,7 +600,7 @@
    "criterion": "F27#3",
    "lane": "tb/training",
    "source": "0e89dbb79a",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   },
@@ -594,7 +608,7 @@
    "criterion": "F32#1",
    "lane": "tb/homestead",
    "source": "f4176d27c2; Forge actor work in the owned checkout",
-   "state": "coding/review; unaccepted",
+   "state": "held; checkpoint preserved; unaccepted",
    "approval_policy": "never",
    "sandbox_mode": "danger-full-access"
   }
