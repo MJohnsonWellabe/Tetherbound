@@ -1521,6 +1521,8 @@
         "scope": "target_point",
         "arming_seconds": 0.5,
         "root_seconds": 0.8,
+        "boss_root_seconds": 0.4,
+        "trigger_radius": 1.25,
         "duration": 6.0,
         "maximum_per_source": 1,
         "maximum_triggers": 1,

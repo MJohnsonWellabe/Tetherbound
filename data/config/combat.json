@@ -1,6 +1,10 @@
 {
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their creature, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
+  "utility_limits": {
+    "_scope": "Host-only encounter ledger; retained action identities refuse replay until encounter teardown. Fail closed at the bound, never evict receipts to allow reapplication.",
+    "receipt_limit_per_encounter": 4096
+  },
   "damage": {
     "_comment": "damage = power * scale * attack / (attack + defence). Bounded on purpose: a raw attack/defence ratio explodes when defence is low and produces one-shot kills that read as bugs. With scale 2, equal attack and defence deals exactly the move's power.",
     "scale": 2.0,
