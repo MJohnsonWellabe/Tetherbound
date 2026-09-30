@@ -1,0 +1,60 @@
+{
+  "scope": "Only four added actor-vitals/movement-lease methods plus affected parsers; no gameplay dispatch/Heal/Session durability/rejoin acceptance",
+  "runs": [
+    {
+      "source": "c9c5cbd986fb67b674c8b68cc51744904b29c54f",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "tests/test_utility_effects.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-vitals-r1-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 0.8900000000139698,
+      "log": "D:\\tetherbound\\combat-f23-vitals-r1\\test-parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "c9c5cbd986fb67b674c8b68cc51744904b29c54f",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "scripts/creatures/wild_creature.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-vitals-r1-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 0.6720000000204891,
+      "log": "D:\\tetherbound\\combat-f23-vitals-r1\\wild-parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "c9c5cbd986fb67b674c8b68cc51744904b29c54f",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_utility_effects.gd::test_actor_vitals,test_utility_effects.gd::test_movement_lease"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-vitals-r1-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 3.452999999979511,
+      "log": "D:\\tetherbound\\combat-f23-vitals-r1\\focused.txt",
+      "raw_sha256": "f1c6c262b8bce8d201617334c1e58996488b33ab40ca73d5b299d873e2daa5bf"
+    }
+  ]
+}

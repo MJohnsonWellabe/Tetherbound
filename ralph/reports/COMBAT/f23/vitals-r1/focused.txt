@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_utility_effects.gd::test_actor_vitals,test_utility_effects.gd::test_movement_lease: 1 of 675 test files
+  ok    test_utility_effects.gd :: test_actor_vitals_fail_closed_on_shapes_capacity_and_receipt_budget
+  ok    test_utility_effects.gd :: test_actor_vitals_stage_then_commit_rejects_stale_tampered_and_replayed_damage
+  ok    test_utility_effects.gd :: test_actor_vitals_survive_peer_change_and_teardown_waits_for_latest_durable_handoff
+  ok    test_utility_effects.gd :: test_movement_lease_is_owner_scoped_and_duplicate_cannot_extend_or_resurrect_root
+
+4 tests, 79 assertions, 0 failed
