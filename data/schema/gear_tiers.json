@@ -1,0 +1,90 @@
+[
+  {
+    "id": "gear_tier_1",
+    "tier": 1,
+    "biome": "meadows",
+    "status": "live",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  },
+  {
+    "id": "gear_tier_2",
+    "tier": 2,
+    "biome": "tidewake",
+    "status": "live",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  },
+  {
+    "id": "gear_tier_3",
+    "tier": 3,
+    "biome": "cloudreach",
+    "status": "live",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  },
+  {
+    "id": "gear_tier_4",
+    "tier": 4,
+    "biome": "stormwood",
+    "status": "live",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  },
+  {
+    "id": "gear_tier_5",
+    "tier": 5,
+    "biome": "biome5",
+    "status": "reserved",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  },
+  {
+    "id": "gear_tier_6",
+    "tier": 6,
+    "biome": "biome6",
+    "status": "reserved",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  },
+  {
+    "id": "gear_tier_7",
+    "tier": 7,
+    "biome": "biome7",
+    "status": "reserved",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  },
+  {
+    "id": "gear_tier_8",
+    "tier": 8,
+    "biome": "biome8",
+    "status": "reserved",
+    "slots": [
+      "harness",
+      "charm"
+    ],
+    "max_upgrade": 3
+  }
+]

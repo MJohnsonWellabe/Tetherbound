@@ -1,5 +1,10 @@
 extends SceneTree
 
+## Retired-path regression fixture: RD-35 redesign saves are current schema,
+## but this probe deliberately enables the single legacy physical-crossing
+## flag. Production remains default-off; this is not portal-loop acceptance.
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
 ## A bounded live fixture using the production player, interaction arbiter,
 ## Warden payout, shrine, gate and disk save. It does not claim to play the
 ## Warden combat or walk the Meadows. The production world crossing/return is
@@ -24,6 +29,7 @@ var failures: Array[String] = []
 
 
 func _init() -> void:
+	assert(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 	_run.call_deferred()
 
 

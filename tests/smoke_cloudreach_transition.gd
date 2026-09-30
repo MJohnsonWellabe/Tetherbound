@@ -1,5 +1,10 @@
 extends SceneTree
 
+## Retired-path regression fixture: RD-35 redesign saves are current schema,
+## but this probe deliberately enables the single legacy physical-crossing
+## flag. Production remains default-off; this is not portal-loop acceptance.
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
 ## End-to-end Phase 1 realm smoke using the production Game router and both
 ## production world scenes. OP-0905-15/D110: the Meadows no longer hands off
 ## through a keyed arch (`realm_gate.gd`) -- it is the storm road's own
@@ -29,6 +34,7 @@ class FlatWorld extends Node3D:
 
 
 func _init() -> void:
+	assert(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 	_run.call_deferred()
 
 

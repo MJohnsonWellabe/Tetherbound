@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/keys",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "home_key",
+          "portal_key_meadows",
+          "portal_key_tidewake",
+          "portal_key_cloudreach",
+          "portal_key_stormwood",
+          "portal_key_biome5",
+          "portal_key_biome6",
+          "portal_key_biome7",
+          "portal_key_biome8"
+        ]
+      },
+      "kind": {
+        "type": "string",
+        "enum": [
+          "home",
+          "portal"
+        ]
+      },
+      "protected": {
+        "const": true
+      }
+    },
+    "required": [
+      "id",
+      "kind",
+      "protected"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "home_key"
+          },
+          "kind": {
+            "const": "home"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_meadows"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_tidewake"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_cloudreach"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_stormwood"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_biome5"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_biome6"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_biome7"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_key_biome8"
+          },
+          "kind": {
+            "const": "portal"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 9,
+  "uniqueItems": true,
+  "maxItems": 9
+}

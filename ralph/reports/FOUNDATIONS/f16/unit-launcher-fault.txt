@@ -1,0 +1,5 @@
+Invalid launcher attempt; no unit evidence credited.
+
+The first four-shard PowerShell loop used unsupported Tee-Object -LiteralPath and -Append parameters. That pipeline failed before logging, while the native child processes continued. Four overlapping unlogged shard processes resulted. Their exact owned process tree was inspected and terminated; no source changes or test exemptions were used.
+
+Changed approach: one explicit native Godot invocation per shard, one exec session, Tee-Object -FilePath, native exit recorded after completion. The retained valid shard-1 log identifies pinned source and baseline. RD36 then held shards 2–4 until the related F16 implementation batch was coherent. No green shard was repeated simply to refresh evidence.

@@ -1487,6 +1487,11 @@ func can_enter_realm(realm_id: String) -> bool:
 	var scene := str(realm_hearts.call("scene_for_realm", realm_id))
 	if scene == "":
 		return false
+	var order := preload("res://scripts/data/biome_order.gd")
+	if not order.legacy_physical_crossings():
+		var biome := order.canonical_id(realm_id)
+		return biome == order.ids(false)[0] or world.redesign_world.portal_unlocks.has(biome) \
+			or local.redesign_character.portal_unlocks.has(biome)
 	var key_flag := str(realm_hearts.call("entry_key_for_realm", realm_id))
 	return key_flag == "" or bool(progression.call("has", key_flag))
 

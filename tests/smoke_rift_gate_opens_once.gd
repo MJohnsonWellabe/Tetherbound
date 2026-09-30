@@ -1,5 +1,10 @@
 extends SceneTree
 
+## Retired-path regression fixture: RD-35 redesign saves are current schema,
+## but this probe deliberately enables the single legacy physical-crossing
+## flag. Production remains default-off; this is not portal-loop acceptance.
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
 ## F05 (ROADMAP §3) / ACCEPTANCE §6.1 F05 and card M4: "the gate opens exactly
 ## once" -- the Meadows -> Cloudreach crossing `scripts/world/rift_crossing.gd`
 ## rebuilds over the storm road's carve.
@@ -50,6 +55,7 @@ var passes: Array[String] = []
 
 
 func _init() -> void:
+	assert(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 	_run.call_deferred()
 
 

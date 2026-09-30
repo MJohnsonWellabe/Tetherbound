@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/waystones",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "meadows_entry",
+          "tidewake_entry",
+          "cloudreach_entry",
+          "stormwood_entry",
+          "biome5_entry",
+          "biome6_entry",
+          "biome7_entry",
+          "biome8_entry"
+        ]
+      },
+      "biome": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "entry_id": {
+        "type": "string",
+        "enum": [
+          "meadows_entry",
+          "tidewake_entry",
+          "cloudreach_entry",
+          "stormwood_entry",
+          "biome5_entry",
+          "biome6_entry",
+          "biome7_entry",
+          "biome8_entry"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "live",
+          "reserved"
+        ]
+      }
+    },
+    "required": [
+      "id",
+      "biome",
+      "entry_id",
+      "status"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "meadows_entry"
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          },
+          "entry_id": {
+            "const": "meadows_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tidewake_entry"
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          },
+          "entry_id": {
+            "const": "tidewake_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cloudreach_entry"
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          },
+          "entry_id": {
+            "const": "cloudreach_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "stormwood_entry"
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          },
+          "entry_id": {
+            "const": "stormwood_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "biome5_entry"
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "entry_id": {
+            "const": "biome5_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "biome6_entry"
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "entry_id": {
+            "const": "biome6_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "biome7_entry"
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "entry_id": {
+            "const": "biome7_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "biome8_entry"
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "entry_id": {
+            "const": "biome8_entry"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 8,
+  "uniqueItems": true,
+  "maxItems": 8
+}

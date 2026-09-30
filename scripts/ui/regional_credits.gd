@@ -232,5 +232,12 @@ func _read_config() -> Dictionary:
 		push_error("regional credits config is malformed")
 		return {"ok": false, "sections": []}
 	var out: Dictionary = parsed
+	var biomes := preload("res://scripts/data/biome_order.gd")
+	var journey: Array[String] = []
+	for id: String in biomes.ids(false):
+		journey.append(biomes.display_name(id))
+	var sections: Array = out.get("sections", []).duplicate(true)
+	sections.push_front({"heading": "The journey", "lines": journey})
+	out["sections"] = sections
 	out["ok"] = true
 	return out

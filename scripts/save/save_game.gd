@@ -261,7 +261,11 @@ const SPECIES_PATH := "res://data/creatures/species.json"
 ## v25-to-v26 step is a version barrier only: legacy rows remain unchanged.
 ## Version 27 adds durable creature ids and the portable ordered tournament
 ## selection. Older saves mint ids while loading and begin unregistered.
-const VERSION := 27
+## RD-35: the owner redesign is a fresh schema. Historical migration helpers
+## below are retained as reference, but no load path may admit their versions.
+const VERSION := 28
+const RESET_MAX_VERSION := 27
+const OLD_VERSION_MESSAGE := "This save is from an older version. Start a new game. Your old save has been kept."
 const WATER_TRAVERSAL := preload("res://scripts/save/water_traversal_save.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const SLOT_COUNT := 5
@@ -285,14 +289,29 @@ const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 const WATER_RECIPE_MIGRATION := preload("res://scripts/save/water_recipe_migration.gd")
 const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
+const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 
 signal fallback_completed(success: bool)
 
 var _dir: String
+var _legacy_dir: String = ""
 var _worlds: RefCounted = null
 var _characters: RefCounted = null
 var _fallback: RefCounted = null
 var _fallback_writer: RefCounted = null
+## Typed outcome for UI and tools; refused loads never apply live state.
+var last_load_result: Dictionary = {}
+
+
+static func version_result(raw_version: Variant) -> Dictionary:
+	if not _finite_number(raw_version) or float(raw_version) != floor(float(raw_version)):
+		return {"ok": false, "code": "invalid_version", "message": "That save has an invalid version."}
+	var version := int(raw_version)
+	if version <= RESET_MAX_VERSION:
+		return {"ok": false, "code": "incompatible_old_version", "message": OLD_VERSION_MESSAGE}
+	if version > VERSION:
+		return {"ok": false, "code": "incompatible_future_version", "message": "This save needs a newer version of Tetherbound."}
+	return {"ok": true, "code": "ok", "message": ""}
 
 
 ## `dir` is the slot directory. The two D100 directories are the real
@@ -301,14 +320,17 @@ var _fallback_writer: RefCounted = null
 ## `smoke_alpha_pins`) gets scratch split directories under it, so a unit test
 ## can never leave a world or a character behind where a real playthrough on the
 ## same machine would find it.
-func _init(dir: String = "user://saves/") -> void:
+func _init(dir: String = "user://saves/", legacy_dir: String = "") -> void:
 	_dir = dir if dir.ends_with("/") else dir + "/"
 	if _dir == "user://saves/":
-		_worlds = WORLD_SAVE.new("user://worlds/")
-		_characters = CHARACTER_SAVE.new("user://characters/")
+		_legacy_dir = _dir
+		_dir += "redesign-v28/"
+		_worlds = WORLD_SAVE.new("user://worlds/redesign-v28/")
+		_characters = CHARACTER_SAVE.new("user://characters/redesign-v28/")
 	else:
+		_legacy_dir = legacy_dir if legacy_dir.is_empty() or legacy_dir.ends_with("/") else legacy_dir + "/"
 		_worlds = WORLD_SAVE.new(_dir + "worlds/")
-		_characters = CHARACTER_SAVE.new(_dir + "characters/")
+		_characters = CHARACTER_SAVE.new(_dir + "characters/", _legacy_dir + "characters/" if not _legacy_dir.is_empty() else "")
 
 
 ## The two savers, for a caller that needs to read a world or a character
@@ -328,7 +350,16 @@ func slot_path(slot: int) -> String:
 
 
 func has_slot(slot: int) -> bool:
-	return slot >= 0 and slot < SLOT_COUNT and ATOMIC_SAVE_FILE.has_readable(slot_path(slot))
+	return slot >= 0 and slot < SLOT_COUNT and ATOMIC_SAVE_FILE.has_readable(_read_slot_path(slot))
+
+
+## The old canonical files are read-only. A fresh run writes only the new
+## namespace, including autosave, so refusal followed by New Game loses nothing.
+func _read_slot_path(slot: int) -> String:
+	var current := slot_path(slot)
+	if ATOMIC_SAVE_FILE.has_readable(current) or _legacy_dir.is_empty():
+		return current
+	return "%sslot_%d.json" % [_legacy_dir, slot]
 
 
 func delete_slot(slot: int) -> bool:
@@ -343,9 +374,13 @@ func slot_info(slot: int) -> Dictionary:
 	if data.is_empty():
 		return {}
 	var version := int(data.get("version", 0)) if _finite_number(data.get("version")) else 0
+	var result := version_result(data.get("version", null))
+	if not bool(result.ok):
+		return {"day": 0, "party_size": 0, "realm": "", "legacy": version <= RESET_MAX_VERSION, "load_result": result}
+	var party_raw: Variant = data.get("party", [])
 	return {
-		"day": int(data.get("day", 1)),
-		"party_size": (data.get("party", []) as Array).size(),
+		"day": int(data.get("day", 1)) if _finite_number(data.get("day", 1)) else 1,
+		"party_size": party_raw.size() if party_raw is Array else 0,
 		"realm": str(data.get("current_realm", "meadows")),
 		# D100: the title screen lists a slot written by an older build under a
 		# "Legacy" label until it has been opened once, because opening it is
@@ -354,6 +389,7 @@ func slot_info(slot: int) -> Dictionary:
 		# the player has since re-saved is at the current version and is not
 		# legacy any more, and the directory would say it forever.
 		"legacy": version > 0 and version < VERSION,
+		"load_result": result,
 	}
 
 
@@ -381,6 +417,9 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 ## worker's saver and file handles are separate from the main-thread saver.
 func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		character_only: String = "") -> Dictionary:
+	if not _redesign_errors(snapshot(game)).is_empty():
+		push_error("Save refused: invalid redesign state")
+		return {}
 	var world_id := ""
 	var character_id := character_only
 	if write_split:
@@ -559,6 +598,8 @@ func snapshot(game: Object) -> Dictionary:
 	var reward_namespace: String = reward_namespace_raw if reward_namespace_raw is String else ""
 	var data := {
 		"version": VERSION,
+		"redesign_world": _redesign_payload(world_obj, "world"),
+		"redesign_character": _redesign_payload(personal, "character"),
 		"day": int(game.get("day")),
 		"chosen_character": str(personal.get("chosen_character")) if personal is Object else "trainer",
 		"party": _party_to_array(game.get("party")),
@@ -597,6 +638,17 @@ func snapshot(game: Object) -> Dictionary:
 	return data
 
 
+static func _redesign_payload(owner: Variant, scope: String) -> Dictionary:
+	var value: Variant = owner.get("redesign_" + scope) if owner is Object else null
+	return value.duplicate(true) if value is Dictionary else REDESIGN_STATE.defaults(scope)
+
+
+static func _redesign_errors(data: Dictionary) -> Array[String]:
+	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+	errors.append_array(REDESIGN_STATE.validate("character", data.get("redesign_character", REDESIGN_STATE.defaults("character")), REDESIGN_STATE.uids(data.get("party", []))))
+	return errors
+
+
 func _player_skills(game: Object) -> RefCounted:
 	var local: Variant = game.get("local")
 	return local.get("skills") as RefCounted if local is Object else null
@@ -620,8 +672,16 @@ func _restore_equipment(game: Object, raw: Variant) -> void:
 ## newer-than-this-build file.
 func load_slot(game: Object, slot: int) -> bool:
 	finish_fallback()
+	last_load_result = {"ok": false, "code": "unreadable_save", "message": "That save could not be loaded."}
 	var data := _read(slot)
 	if data.is_empty():
+		return false
+	last_load_result = version_result(data.get("version", null))
+	if not bool(last_load_result.ok):
+		return false
+	var redesign_errors := _redesign_errors(data)
+	if not redesign_errors.is_empty():
+		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That save contains invalid data.", "errors": redesign_errors}
 		return false
 	var version := int(data.get("version", 0))
 	if version < 1 or version > VERSION:
@@ -668,6 +728,7 @@ func load_slot(game: Object, slot: int) -> bool:
 				return false
 			_set_resolved_split_ids(game, str(migrated["world_id"]), str(migrated["character_id"]))
 		_:
+			last_load_result = authority.get("load_result", {"ok": false, "code": "invalid_split_authority", "message": "That save could not be loaded."})
 			push_warning("save slot %d has split authority that could not be resolved" % slot)
 			return false
 
@@ -682,6 +743,8 @@ func load_slot(game: Object, slot: int) -> bool:
 	game.set("death_satchels", WORLD_RECORDS.normalized(data.get("death_satchels", [])))
 	var world_obj: Variant = game.get("world")
 	if world_obj != null:
+		if world_obj.get("redesign_world") is Dictionary:
+			world_obj.set("redesign_world", data.get("redesign_world", REDESIGN_STATE.defaults("world")).duplicate(true))
 		var capture_claims: Variant = data.get("water_capture_claims", {})
 		world_obj.set("water_capture_claims", capture_claims.duplicate(true) if capture_claims is Dictionary else {})
 		var deliveries: Variant = data.get("reward_deliveries", {})
@@ -700,6 +763,8 @@ func load_slot(game: Object, slot: int) -> bool:
 	var skills_obj := _player_skills(game)
 	var personal: Variant = game.get("local")
 	if personal is Object:
+		if personal.get("redesign_character") is Dictionary:
+			personal.set("redesign_character", data.get("redesign_character", REDESIGN_STATE.defaults("character")).duplicate(true))
 		personal.set("chosen_character", str(data.get("chosen_character", "trainer")))
 		if str(personal.get("chosen_character")).is_empty():
 			personal.set("chosen_character", "trainer")
@@ -911,9 +976,14 @@ func _read_split_pair(world_id: String, character_id: String) -> Dictionary:
 	if not _safe_split_id(world_id) or not _safe_split_id(character_id):
 		return {"state": "refuse"}
 	var world: Dictionary = _worlds.call("read", world_id)
+	var world_result: Dictionary = _worlds.get("last_load_result").duplicate(true)
 	var character: Dictionary = _characters.call("read", character_id)
+	var character_result: Dictionary = _characters.get("last_load_result").duplicate(true)
 	if world.is_empty() or character.is_empty():
-		return {"state": "refuse"}
+		var result := world_result if world.is_empty() else character_result
+		if str(character_result.get("code", "")) == "incompatible_old_version": result = character_result
+		if str(world_result.get("code", "")) == "incompatible_old_version": result = world_result
+		return {"state": "refuse", "load_result": result.duplicate(true)}
 	if str(world.get("world_id", "")) != world_id or str(character.get("character_id", "")) != character_id:
 		return {"state": "refuse"}
 	return {"state": "split", "world_id": world_id, "character_id": character_id,
@@ -1271,10 +1341,10 @@ func _mapped_realm_ids() -> Array[String]:
 			var map_landmarks := str((entry as Dictionary).get("map_landmarks_path", ""))
 			if not map_world.is_empty() or not map_landmarks.is_empty():
 				ids.append(id)
-	return ids
+	return preload("res://scripts/data/biome_order.gd").ordered_runtime_ids(ids)
 
 
-func _finite_number(value: Variant) -> bool:
+static func _finite_number(value: Variant) -> bool:
 	return (typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT) and is_finite(float(value))
 
 
@@ -1298,8 +1368,11 @@ func _finite_number(value: Variant) -> bool:
 ## this checks that it did: a step that forgets refuses the load rather than
 ## spinning forever on the same number.
 func _migrate_to_current(data: Dictionary, version: int, slot: int) -> Dictionary:
+	# Retained only for direct regression tests of the pre-redesign migrations.
+	# Real readers refuse <= RESET_MAX_VERSION before reaching this helper.
+	# There is deliberately no migration across the RD-35 reset boundary.
 	var migrated := data
-	while version < VERSION:
+	while version < mini(VERSION, RESET_MAX_VERSION):
 		var step := "_migrate_v%d" % version
 		if not has_method(step):
 			push_warning("save slot %d is version %d and this build has no %s -- not loading" % [
@@ -1705,7 +1778,7 @@ func _species_moves(species_table: Dictionary, species_id: String) -> Dictionary
 func _read(slot: int) -> Dictionary:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return {}
-	var canonical := slot_path(slot)
+	var canonical := _read_slot_path(slot)
 	if not ATOMIC_SAVE_FILE.has_readable(canonical):
 		return {}
 	var path := ATOMIC_SAVE_FILE.readable_path(canonical)

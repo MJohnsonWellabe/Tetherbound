@@ -1,0 +1,42 @@
+[
+  {
+    "id": "master_t1",
+    "tier": 1,
+    "cap_level": 10,
+    "biome": "meadows",
+    "feast_id": "feast_t1",
+    "participants": 1
+  },
+  {
+    "id": "master_t2",
+    "tier": 2,
+    "cap_level": 20,
+    "biome": "meadows",
+    "feast_id": "feast_t2",
+    "participants": 1
+  },
+  {
+    "id": "master_t3",
+    "tier": 3,
+    "cap_level": 30,
+    "biome": "tidewake",
+    "feast_id": "feast_t3",
+    "participants": 1
+  },
+  {
+    "id": "master_t4",
+    "tier": 4,
+    "cap_level": 40,
+    "biome": "cloudreach",
+    "feast_id": "feast_t4",
+    "participants": 1
+  },
+  {
+    "id": "master_t5",
+    "tier": 5,
+    "cap_level": 50,
+    "biome": "stormwood",
+    "feast_id": "feast_t5",
+    "participants": 1
+  }
+]

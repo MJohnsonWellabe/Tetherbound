@@ -82,8 +82,19 @@ func _init() -> void:
 	set_realm("meadows")
 
 
+func chapter_order() -> Array[String]:
+	return preload("res://scripts/data/biome_order.gd").runtime_ids()
+
+
+func chapter_heading() -> String:
+	var order := preload("res://scripts/data/biome_order.gd")
+	var chapter := order.runtime_ids().find(_realm_id)
+	return "Chapter %d · %s" % [chapter + 1, order.display_name(_realm_id)]
+
+
 ## The realm chooses the authored task feed; flags remain in the shared save.
 func set_realm(realm_id: String) -> bool:
+	realm_id = preload("res://scripts/data/biome_order.gd").runtime_id(realm_id)
 	if realm_id == _realm_id:
 		return false
 	_realm_id = realm_id

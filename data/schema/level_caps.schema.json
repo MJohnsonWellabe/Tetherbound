@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/level_caps",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "cap_10",
+          "cap_20",
+          "cap_30",
+          "cap_40",
+          "cap_50",
+          "cap_60",
+          "cap_70",
+          "cap_80",
+          "cap_90",
+          "cap_100"
+        ]
+      },
+      "level": {
+        "type": "integer",
+        "minimum": 10,
+        "maximum": 100
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "live",
+          "reserved"
+        ]
+      }
+    },
+    "required": [
+      "id",
+      "level",
+      "status"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "cap_10"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_20"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_30"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_40"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_50"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_60"
+          },
+          "status": {
+            "const": "live"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_70"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_80"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_90"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "cap_100"
+          },
+          "status": {
+            "const": "reserved"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 10,
+  "uniqueItems": true,
+  "maxItems": 10
+}

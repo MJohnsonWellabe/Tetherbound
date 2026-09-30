@@ -69,10 +69,10 @@ func _flat(player: RefCounted, day: int = 1, world_seed: int = 0) -> Dictionary:
 	return data
 
 
-func _write_v1_without_equipment(character_id: String, player: RefCounted) -> void:
+func _write_without_equipment(character_id: String, player: RefCounted, version: int = 1) -> void:
 	var payload := CHARACTER_SAVE.partition(_flat(player))
 	payload.erase("equipment")
-	payload["version"] = 1
+	payload["version"] = version
 	payload["character_id"] = character_id
 	payload["display_name"] = str(player.get("display_name"))
 	payload["created_at"] = "2026-09-09T00:00:00Z"
@@ -88,20 +88,50 @@ func _write_v1_without_equipment(character_id: String, player: RefCounted) -> vo
 		file.close()
 
 
-func test_v1_portable_character_without_equipment_loads_as_empty_worn_state() -> void:
+func test_v1_portable_character_is_refused_without_touching_file_or_worn_state() -> void:
 	var legacy := _player("legacy")
-	_write_v1_without_equipment("legacy", legacy)
-	var raw: Dictionary = characters.call("read", "legacy")
+	_write_without_equipment("legacy", legacy)
+	var path := str(characters.call("path_for", "legacy"))
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var modified := FileAccess.get_modified_time(path)
+	var raw: Dictionary = JSON.parse_string(bytes.get_string_from_utf8())
 	assert_eq(int(raw.get("version", 0)), 1)
 	assert_false(raw.has("equipment"), "the real legacy file has no equipment field")
+	assert_true((characters.call("read", "legacy") as Dictionary).is_empty())
+	assert_eq((characters.get("last_load_result") as Dictionary).get("code"), "incompatible_old_version")
 
+	var arriving := _player("arriving", "insulated_boots")
+	var before: Dictionary = (arriving.call("save_data") as Dictionary).duplicate(true)
+	var character_ids: Array = (characters.call("list_ids") as Array).duplicate()
+	var world_ids: Array = (worlds.call("list_ids") as Array).duplicate()
+	var game := PortableGame.new()
+	game.local = arriving
+	assert_false(bool(characters.call("apply", game, "legacy")), "RD-35 refuses old portable files")
+	assert_eq((characters.get("last_load_result") as Dictionary).get("code"), "incompatible_old_version")
+	assert_eq(arriving.call("save_data"), before, "refusal preserves every live character field")
+	assert_eq(str((arriving.get("equipment") as RefCounted).call("equipped_in", "boots")), "insulated_boots")
+	assert_eq(str(arriving.get("character_id")), "arriving")
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes)
+	assert_eq(FileAccess.get_modified_time(path), modified)
+	assert_eq(characters.call("list_ids"), character_ids)
+	assert_eq(worlds.call("list_ids"), world_ids)
+
+
+func test_current_portable_character_without_equipment_clears_previous_worn_state() -> void:
+	# Preserve the original missing-equipment regression on an independently
+	# authored current-format file; never restamp the refused v1 fixture.
+	var source := _player("current")
+	_write_without_equipment("current", source, CHARACTER_SAVE.VERSION)
+	var raw: Dictionary = characters.call("read", "current")
+	assert_eq(int(raw.get("version", 0)), CHARACTER_SAVE.VERSION)
+	assert_false(raw.has("equipment"))
 	var arriving := _player("arriving", "insulated_boots")
 	var game := PortableGame.new()
 	game.local = arriving
-	assert_true(bool(characters.call("apply", game, "legacy")))
+	assert_true(bool(characters.call("apply", game, "current")))
 	assert_eq(str((arriving.get("equipment") as RefCounted).call("equipped_in", "boots")), "",
-		"missing legacy equipment clears worn state instead of leaking the prior character")
-	assert_eq(str(arriving.get("character_id")), "legacy")
+		"missing equipment clears worn state instead of leaking the prior character")
+	assert_eq(str(arriving.get("character_id")), "current")
 
 
 func test_v2_portable_disk_roundtrip_keeps_worn_item_outside_inventory() -> void:

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "tier_1",
+    "tier": 1,
+    "biome": "meadows",
+    "status": "live",
+    "raws": [
+      "wood",
+      "stone",
+      "fiber",
+      "rootstone",
+      "ironwood",
+      "sunleaf"
+    ],
+    "refined": "rootiron_ingot"
+  },
+  {
+    "id": "tier_2",
+    "tier": 2,
+    "biome": "tidewake",
+    "status": "live",
+    "raws": [
+      "driftwood",
+      "reed_fiber",
+      "reef_stone",
+      "sluice_metal",
+      "tide_bloom",
+      "tide_pearl"
+    ],
+    "refined": "tidesteel_ingot"
+  },
+  {
+    "id": "tier_3",
+    "tier": 3,
+    "biome": "cloudreach",
+    "status": "live",
+    "raws": [
+      "windworn_heartwood",
+      "cliffglass_ore",
+      "gale_fiber",
+      "skyplume",
+      "cloudberry"
+    ],
+    "refined": "skyglass_ingot"
+  },
+  {
+    "id": "tier_4",
+    "tier": 4,
+    "biome": "stormwood",
+    "status": "live",
+    "raws": [
+      "thunderwood",
+      "stormglass",
+      "conductor_vine",
+      "glowmoss",
+      "sparkfur",
+      "voltcap"
+    ],
+    "refined": "stormglass_plate"
+  },
+  {
+    "id": "tier_5",
+    "tier": 5,
+    "biome": "biome5",
+    "status": "reserved",
+    "raws": [],
+    "refined": ""
+  },
+  {
+    "id": "tier_6",
+    "tier": 6,
+    "biome": "biome6",
+    "status": "reserved",
+    "raws": [],
+    "refined": ""
+  },
+  {
+    "id": "tier_7",
+    "tier": 7,
+    "biome": "biome7",
+    "status": "reserved",
+    "raws": [],
+    "refined": ""
+  },
+  {
+    "id": "tier_8",
+    "tier": 8,
+    "biome": "biome8",
+    "status": "reserved",
+    "raws": [],
+    "refined": ""
+  }
+]

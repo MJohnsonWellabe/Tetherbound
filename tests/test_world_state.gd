@@ -93,14 +93,15 @@ func test_farm_plot_at_grows_the_array_on_demand_and_refuses_a_negative_index() 
 
 # --- save / load -------------------------------------------------------------
 
-func test_save_data_carries_the_world_half_of_the_v22_keys() -> void:
+func test_save_data_carries_the_world_half_and_redesign_carrier() -> void:
 	var data: Dictionary = world.save_data()
 	for key: String in ["world_id", "day", "clock_elapsed_seconds", "world_seed",
 			"placed_buildings", "farm_plots", "death_satchels",
 			"harvested_vegetation", "felled_vegetation", "flags", "realm_environment", "water_capture_claims",
-			"reward_deliveries", "reward_delivery_namespace"]:
+			"reward_deliveries", "reward_delivery_namespace", "redesign_world"]:
 		assert_true(data.has(key), "world.save_data() is missing '%s'" % key)
-	assert_eq(data.keys().size(), 14, "and nothing else -- got %s" % str(data.keys()))
+	assert_eq(data.keys().size(), 15, "and nothing else -- got %s" % str(data.keys()))
+	assert_false(data.has("redesign_character"), "a world snapshot cannot overwrite a trainer's redesign progress")
 
 
 func test_save_data_carries_no_player_key() -> void:

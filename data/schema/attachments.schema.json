@@ -1,0 +1,707 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/attachments",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "forge_meadows",
+          "forge_tidewake",
+          "forge_cloudreach",
+          "forge_stormwood",
+          "forge_biome5",
+          "forge_biome6",
+          "forge_biome7",
+          "forge_biome8",
+          "kitchen_meadows",
+          "kitchen_tidewake",
+          "kitchen_cloudreach",
+          "kitchen_stormwood",
+          "kitchen_biome5",
+          "kitchen_biome6",
+          "kitchen_biome7",
+          "kitchen_biome8",
+          "altar_meadows",
+          "altar_tidewake",
+          "altar_cloudreach",
+          "altar_stormwood",
+          "altar_biome5",
+          "altar_biome6",
+          "altar_biome7",
+          "altar_biome8",
+          "den_meadows",
+          "den_tidewake",
+          "den_cloudreach",
+          "den_stormwood",
+          "den_biome5",
+          "den_biome6",
+          "den_biome7",
+          "den_biome8"
+        ]
+      },
+      "station_id": {
+        "type": "string",
+        "enum": [
+          "forge",
+          "kitchen",
+          "altar",
+          "den"
+        ]
+      },
+      "biome": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "tier": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 8
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "live",
+          "reserved"
+        ]
+      },
+      "display_name": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "required": [
+      "id",
+      "station_id",
+      "biome",
+      "tier",
+      "status",
+      "display_name"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "forge_meadows"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge_tidewake"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge_cloudreach"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge_stormwood"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge_biome5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge_biome6"
+          },
+          "tier": {
+            "const": 6
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge_biome7"
+          },
+          "tier": {
+            "const": 7
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge_biome8"
+          },
+          "tier": {
+            "const": 8
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_meadows"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_tidewake"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_cloudreach"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_stormwood"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_biome5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_biome6"
+          },
+          "tier": {
+            "const": 6
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_biome7"
+          },
+          "tier": {
+            "const": 7
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen_biome8"
+          },
+          "tier": {
+            "const": 8
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_meadows"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_tidewake"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_cloudreach"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_stormwood"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_biome5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_biome6"
+          },
+          "tier": {
+            "const": 6
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_biome7"
+          },
+          "tier": {
+            "const": 7
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar_biome8"
+          },
+          "tier": {
+            "const": 8
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_meadows"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_tidewake"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_cloudreach"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_stormwood"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_biome5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_biome6"
+          },
+          "tier": {
+            "const": 6
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_biome7"
+          },
+          "tier": {
+            "const": 7
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den_biome8"
+          },
+          "tier": {
+            "const": 8
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "station_id": {
+            "const": "den"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 32,
+  "uniqueItems": true,
+  "maxItems": 32
+}

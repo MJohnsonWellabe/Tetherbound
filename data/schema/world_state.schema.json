@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/world_state",
+  "type": "object",
+  "properties": {
+    "portal_unlocks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "shrine_display": {
+      "type": "object",
+      "properties": {
+        "meadows": {
+          "type": "boolean"
+        },
+        "tidewake": {
+          "type": "boolean"
+        },
+        "cloudreach": {
+          "type": "boolean"
+        },
+        "stormwood": {
+          "type": "boolean"
+        },
+        "biome5": {
+          "type": "boolean"
+        },
+        "biome6": {
+          "type": "boolean"
+        },
+        "biome7": {
+          "type": "boolean"
+        },
+        "biome8": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "station_tiers": {
+      "type": "object",
+      "properties": {
+        "workbench": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "forge": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "kitchen": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "altar": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "den": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "farm": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "node_cycles": {
+      "type": "object",
+      "properties": {
+        "essence_ground": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "essence_water": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "essence_air": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "essence_electric": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "essence_fire": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "essence_dark": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "essence_ice": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "essence_psychic": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "rematch_cycles": {
+      "type": "object",
+      "properties": {
+        "meadows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tidewake": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cloudreach": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stormwood": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome5": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome6": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome7": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome8": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "alpha_cycles": {
+      "type": "object",
+      "properties": {
+        "meadows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tidewake": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cloudreach": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stormwood": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome5": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome6": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome7": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "biome8": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "bounty_day": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fifth_arch_stirred": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "portal_unlocks",
+    "shrine_display",
+    "station_tiers",
+    "node_cycles",
+    "rematch_cycles",
+    "alpha_cycles",
+    "bounty_day",
+    "fifth_arch_stirred"
+  ],
+  "additionalProperties": false
+}

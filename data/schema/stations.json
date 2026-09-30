@@ -1,0 +1,32 @@
+[
+  {
+    "id": "workbench",
+    "home_only": true,
+    "attachment_slots": 0
+  },
+  {
+    "id": "forge",
+    "home_only": true,
+    "attachment_slots": 8
+  },
+  {
+    "id": "kitchen",
+    "home_only": true,
+    "attachment_slots": 8
+  },
+  {
+    "id": "altar",
+    "home_only": true,
+    "attachment_slots": 8
+  },
+  {
+    "id": "den",
+    "home_only": true,
+    "attachment_slots": 8
+  },
+  {
+    "id": "farm",
+    "home_only": true,
+    "attachment_slots": 0
+  }
+]
