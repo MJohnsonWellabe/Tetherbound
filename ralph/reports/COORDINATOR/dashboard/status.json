@@ -518,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T09:28:00Z",
+ "last_lane_refresh": "2026-09-30T10:34:00Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "At this refresh main has 103/280; F17#0 is landed and six F17 rows remain open. Hub9c69e2652f adds the actual floor-derived Hall arch/pedestal controller circuit, runtime active. F18#0 independently strict MET at c69a2bebb0: actual opening1f177 native0/145.438s and unchanged gift/key logic10/67/0; physical gift and protected key slot persist through production death callback and actual file reload. Initial naming red and all shortcuts retained. Landing held on F17 dependency; portal authority and Home/waystone travel remain WIP."
+   "checkpoint": "At this refresh main has 103/280; only F17#0 is landed. F17#2 independently strict MET on candidate9131: all16 physical Hall approaches native0/242.640s, dark reserved material source verified; headless structural limits disclosed. F17#1 actual2a1 two same-pose original1920 images native0/215.078s, fresh strict DAY NO/NIGHT NO: Hall indistinct/occluded. F18#0 strict candidate MET, unchanged logic10/67/0 and actual protected gift/death/reload native0; dependency hold. Session/portal CAS remains ignored draft. Reorder4c3 authors corrected chapter tables and unconnected participant key/relic projector, no runtime/MET."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat da308350e0 adds detached whole-party UID/species/carrier preflight, typed known/loadout/mastery schema and canonical save fields; source-only/runtime open. Corrected native Low nine-pair camera/controls PASS with strict zero overlap; fresh blind narrow readability PASS, full craft still unmet. Prior guest incoming one missingLabel red retained; prior actual Fireball/host incoming native0 and named camera5/106/0 remain evidence. No new F21–24 MET."
+   "checkpoint": "Combat fc9b99fa1a corrects power-before-damage-floor within host mastery CAS/frozen-rank source, named checks active/unclaimed. Coherent5126 portable validation has fresh source PASS and7methods/700assertions/0 native0, transitive parser0; initial fixture parser red retained. Original host feedback replay4f4 native0/all assertions, earlier label red and wrapper cp1252 error retained. Actual Low nine-pair zero-overlap/controls native0 and narrow blind PASS; whole craft and guest replay remain open. No F21–24 MET."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX 47e5d01d04 drafts r7 authored flame texture/curved layers/contact and clearer rank layering, native pending. Latest actual r6 08be native0/12cases/36PNG, clocks/leases PASS; fresh blind four literal identities PASS but full craft FAIL, mastery incomplete and world unproven. Historical reds retained, library flag off/all F25 open."
+   "checkpoint": "VFX b500 actual r7 game47e: exact new PNG import native0/5.531s, original12cases/36PNG native0/23.734s, zero failures/native errors, arrivals/clocks/ending leases PASS. Canceled broad import4294967295/492.734s retained; scoped asset approach preserves all assertions. Fresh blind sampled Fireball explosion identity FAIL/all-four full craft FAIL; sampled ranks1/3/5 PASS only. Prior reds and world integration gaps retained. Library flag off/all F25 open."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "Renderer fix PR477 landed ef1b149113; exact424ca00d Hall route native0 Forward+Medium506/High481frames at1920x1080, incremental buffer-refresh independent source/receipt PASS. Cloudreach batch05e9d4a964 Low15064/Medium10423/High8229frames all native0; archive underway. Eight of12 current preset routes proven. Prior stack failures retained; no visual/device/full-matrix or Ally/performance-bar claim. F26#1/#2 remain only MET; materials/visual/full matrix open."
+   "checkpoint": "Lookdev971 archives Cloudreach3 native0 and independent receipt PASS, current8of12 preset routes. Existing landed renderer fix and Meadows Forward+Medium506/High481 Hall route proof retained. Prior native stack failures preserved. Only F26#1/#2 MET; remaining biome/preset matrix, code-blind material/atmosphere, actual Ally15W and device bars open. No new acceptance or performance-bar claim."
   }
  ]
 }
