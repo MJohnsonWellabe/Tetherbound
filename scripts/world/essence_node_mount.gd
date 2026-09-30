@@ -7,6 +7,7 @@ extends Node3D
 
 const CATALOGUE := preload("res://scripts/world/essence_node_catalog.gd")
 const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
+const PRESENTATION_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const HARVEST := preload("res://scripts/world/harvest_node.gd")
 
 var _mounted: Dictionary = {}
@@ -64,6 +65,7 @@ func mount(world: Node3D, realm: String, trainer: CharacterBody3D) -> Dictionary
 		add_child(node)
 		node.global_position = verdict["position"]
 		node.call("setup", CATALOGUE.harvest_spec(spec, stock))
+		_apply_presentation_candidate(node, spec, source)
 		_mounted[id] = node
 		_refusals.erase(id)
 	return census()
@@ -120,3 +122,147 @@ static func placement_verdict(world: Node3D, spec: Dictionary,
 		return {"ok": false, "reason": "Trainer capsule overlaps a terrain or prop collider."}
 	return {"ok": true, "position": site_position, "body_clearance_proven": true,
 		"ordinary_player_path_proven": false}
+
+
+## F32 candidate hook: keep the HarvestNode wrapper identity, authority and glow
+## lifecycle. Nothing runs unless the whole authored candidate is true.
+func _apply_presentation_candidate(node: Node3D, spec: Dictionary, source: Dictionary) -> bool:
+	var candidate_config: Variant = source.get("presentation_candidate")
+	if not candidate_config is Dictionary or typeof(candidate_config.get("enabled")) != TYPE_BOOL \
+			or candidate_config["enabled"] != true:
+		return false
+	var profiles: Variant = candidate_config.get("profiles")
+	var limit: Variant = candidate_config.get("maximum_parts_per_node")
+	if not profiles is Dictionary or not _candidate_integer(limit):
+		return false
+	var profile: Variant = profiles.get(spec.get("type"))
+	if not profile is Dictionary or not profile.get("parts") is Array \
+			or profile["parts"].is_empty() or profile["parts"].size() > int(limit):
+		return false
+	var visual: Variant = node.get("_visual")
+	if not visual is Node3D or not is_instance_valid(visual) \
+			or not _candidate_scale(visual.scale.x) or not _candidate_scale(visual.scale.y) \
+			or not _candidate_scale(visual.scale.z):
+		return false
+	var staged := Node3D.new()
+	staged.name = "EssencePresentationCandidate"
+	for raw: Variant in profile["parts"]:
+		if not raw is Dictionary or not raw.get("model") is String \
+				or not _candidate_point(raw.get("at")) or not _candidate_scale(raw.get("scale")) \
+				or not _candidate_number(raw.get("yaw_deg")) \
+				or not raw.get("surface_accents") is Dictionary:
+			staged.free()
+			return false
+		var model := str(raw["model"])
+		if not ResourceLoader.exists(model):
+			staged.free()
+			return false
+		var packed: Resource = load(model)
+		if not packed is PackedScene:
+			staged.free()
+			return false
+		var instance: Node = (packed as PackedScene).instantiate()
+		if not instance is Node3D:
+			if instance != null:
+				instance.free()
+			staged.free()
+			return false
+		var part := instance as Node3D
+		staged.add_child(part)
+		if not _candidate_render_only(part):
+			staged.free()
+			return false
+		part.position = Vector3(float(raw["at"][0]), float(raw["at"][1]), float(raw["at"][2]))
+		part.rotation_degrees.y = float(raw["yaw_deg"])
+		part.scale = Vector3.ONE * float(raw["scale"])
+		# Reuse the existing nature-family texture/finish path before accents;
+		# all overrides below are detached per-instance materials.
+		node.call("_apply_material_fixups", part, model)
+		if not _candidate_accents(part, raw["surface_accents"]):
+			staged.free()
+			return false
+	# Imported cutout foliage keeps its alpha/normals/roughness/textures.
+	# This existing helper applies the same dielectric/backlight fix as the
+	# normal HarvestNode path. No lights, particles, shaders or new imports.
+	PRESENTATION_MATERIALS.make_dielectric(staged)
+	staged.scale = Vector3.ONE / visual.scale
+	for child: Node in visual.get_children():
+		if child is Node3D:
+			(child as Node3D).visible = false
+	visual.add_child(staged)
+	node.set_meta("essence_presentation_candidate", true)
+	return true
+
+
+static func _candidate_number(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(value))
+
+
+static func _candidate_render_only(node: Node) -> bool:
+	# Fail closed if a selected imported scene ever gains collision, a light,
+	# particles, animation, scripts or another actor-bearing node. The candidate
+	# is static Node3D/MeshInstance3D presentation only.
+	if node.get_script() != null or not node.get_class() in ["Node3D", "MeshInstance3D"]:
+		return false
+	for child: Node in node.get_children():
+		if not _candidate_render_only(child):
+			return false
+	return true
+
+
+static func _candidate_scale(value: Variant) -> bool:
+	return _candidate_number(value) and float(value) > 0.0
+
+
+static func _candidate_integer(value: Variant) -> bool:
+	return _candidate_scale(value) and float(value) == float(int(value))
+
+
+static func _candidate_point(value: Variant) -> bool:
+	if not value is Array or value.size() != 3:
+		return false
+	for coordinate: Variant in value:
+		if not _candidate_number(coordinate):
+			return false
+	return true
+
+
+static func _candidate_accents(part: Node3D, accents: Dictionary) -> bool:
+	for key: Variant in accents:
+		var settings: Variant = accents[key]
+		if not key is String or not settings is Dictionary \
+				or not settings.get("tint") is String or not Color.html_is_valid(settings["tint"]) \
+				or not _candidate_number(settings.get("emission_energy")) \
+				or float(settings["emission_energy"]) < 0.0:
+			return false
+	var found := {}
+	var meshes: Array[MeshInstance3D] = []
+	if part is MeshInstance3D:
+		meshes.append(part as MeshInstance3D)
+	for descendant: Node in part.find_children("*", "MeshInstance3D", true, false):
+		meshes.append(descendant as MeshInstance3D)
+	for mesh_instance: MeshInstance3D in meshes:
+		if mesh_instance.mesh == null:
+			continue
+		for surface in mesh_instance.mesh.get_surface_count():
+			var authored := mesh_instance.mesh.surface_get_material(surface)
+			if authored == null or not accents.has(authored.resource_name):
+				continue
+			var existing := mesh_instance.get_surface_override_material(surface)
+			var standard := (existing if existing != null else authored) as StandardMaterial3D
+			if standard == null:
+				return false
+			var settings: Dictionary = accents[authored.resource_name]
+			# Duplicate the material while sharing immutable source textures;
+			# avoid a texture copy per rare-node instance on the shared GPU.
+			var material := standard.duplicate() as StandardMaterial3D
+			material.albedo_color = material.albedo_color * Color(settings["tint"])
+			material.emission_enabled = float(settings["emission_energy"]) > 0.0
+			material.emission = Color(settings["tint"])
+			material.emission_energy_multiplier = float(settings["emission_energy"])
+			mesh_instance.set_surface_override_material(surface, material)
+			found[authored.resource_name] = true
+	for key: String in accents:
+		if not found.has(key):
+			return false
+	return true

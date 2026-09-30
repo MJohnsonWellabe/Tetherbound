@@ -1264,5 +1264,315 @@
     "requires_actual_trainer_collision_shape": true,
     "requires_registered_host_site": true,
     "player_path_proven": false
+  },
+  "presentation_candidate": {
+    "enabled": false,
+    "status": "unrendered_prototype_flag_off_pending_production_capture_and_code_blind_full_bar_pass",
+    "_comment": "F32 bounded presentation proposal only. Preserve all32 site IDs, coordinates, stock, yields, prompts and body/reach checks. Whole candidate stays OFF until ordinary production Medium/High captures and an independent code-blind full Palworld/Animo world + Valheim atmosphere verdict pass, with Low readability. Silhouette descriptions are intentions, not validated results. No labels substitute for shape. No Meshy/new creature art/lighting/particles/colliders or durable state.",
+    "maximum_parts_per_node": 3,
+    "family": "Quaternius Stylized Nature",
+    "reference_sources": [
+      "docs/reference/owner-board-2026-08-15-creature-colors.png: inspected owner palette/material/ground-water-air and subtle emissive language; future-type icons are historical, current eight types remain canonical.",
+      "scripts/ui/ui_tokens.gd: canonical eight owner-reference-derived type swatches; Fire uses orange; oxblood/red reserved for Team Tether.",
+      "docs/design/ART_DIRECTION.md sections1,5,7: readable pickup silhouettes, established nature family, no full-bar claim from one defect."
+    ],
+    "profiles": {
+      "ground": {
+        "intended_silhouette": "A low, broad rootstone cluster, with one offset shoulder; warm ochre mineral texture.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+            "scale": 0.4,
+            "at": [
+              0,
+              0.127,
+              0
+            ],
+            "yaw_deg": 20,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#B99050",
+                "emission_energy": 0.08
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.2,
+            "at": [
+              0.55,
+              0.011,
+              -0.25
+            ],
+            "yaw_deg": 125,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#B99050",
+                "emission_energy": 0.08
+              }
+            }
+          }
+        ]
+      },
+      "water": {
+        "intended_silhouette": "One broad upright fan with overlapping blue leaf blades, not a mineral deposit.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Plant_1_Big.gltf",
+            "scale": 0.38,
+            "at": [
+              0,
+              0.022,
+              0
+            ],
+            "yaw_deg": 30,
+            "surface_accents": {
+              "Leaves": {
+                "tint": "#4AADE8",
+                "emission_energy": 0.18
+              }
+            }
+          }
+        ]
+      },
+      "air": {
+        "intended_silhouette": "A tall loose three-flower spray, sky-blue petals above natural green stems.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+            "scale": 0.66,
+            "at": [
+              0,
+              0.023,
+              0
+            ],
+            "yaw_deg": 65,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#73C8ED",
+                "emission_energy": 0.18
+              }
+            }
+          }
+        ]
+      },
+      "electric": {
+        "intended_silhouette": "A dense upright branched crown of gold buds, more compact and rigid than Air.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Group.gltf",
+            "scale": 0.6,
+            "at": [
+              0,
+              0.035,
+              0
+            ],
+            "yaw_deg": 15,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F5D33A",
+                "emission_energy": 0.22
+              }
+            }
+          }
+        ]
+      },
+      "fire": {
+        "intended_silhouette": "Three staggered orange blooms make a flared low crown; orange, never oxblood/red.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+            "scale": 0.45,
+            "at": [
+              -0.32,
+              0.03,
+              -0.2
+            ],
+            "yaw_deg": 0,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#EE7B33",
+                "emission_energy": 0.2
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+            "scale": 0.55,
+            "at": [
+              0.12,
+              0.03,
+              0.12
+            ],
+            "yaw_deg": 115,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#EE7B33",
+                "emission_energy": 0.2
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+            "scale": 0.35,
+            "at": [
+              0.43,
+              0.03,
+              -0.12
+            ],
+            "yaw_deg": 230,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#EE7B33",
+                "emission_energy": 0.2
+              }
+            }
+          }
+        ]
+      },
+      "dark": {
+        "intended_silhouette": "An asymmetric violet shelf-fungus stack with a round cap at its foot.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+            "scale": 0.6,
+            "at": [
+              0,
+              0.104,
+              0
+            ],
+            "yaw_deg": 35,
+            "surface_accents": {
+              "Mushrooms": {
+                "tint": "#9B7BEA",
+                "emission_energy": 0.12
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+            "scale": 1.2,
+            "at": [
+              0.55,
+              0.022,
+              0.34
+            ],
+            "yaw_deg": 100,
+            "surface_accents": {
+              "Mushrooms": {
+                "tint": "#9B7BEA",
+                "emission_energy": 0.12
+              }
+            }
+          }
+        ]
+      },
+      "ice": {
+        "intended_silhouette": "Three pale froststone uprights with a dominant central peak; an upright triad rather than Ground's low shoulder.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.3,
+            "at": [
+              -0.46,
+              0.016,
+              -0.05
+            ],
+            "yaw_deg": 10,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#A8E6EC",
+                "emission_energy": 0.12
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.52,
+            "at": [
+              0,
+              0.027,
+              0.1
+            ],
+            "yaw_deg": 100,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#A8E6EC",
+                "emission_energy": 0.12
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.32,
+            "at": [
+              0.52,
+              0.017,
+              -0.08
+            ],
+            "yaw_deg": 205,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#A8E6EC",
+                "emission_energy": 0.12
+              }
+            }
+          }
+        ]
+      },
+      "psychic": {
+        "intended_silhouette": "A mirrored pair of lilac blooms framing one raised central bloom, reading as a shallow arch.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+            "scale": 0.42,
+            "at": [
+              -0.48,
+              0.025,
+              0
+            ],
+            "yaw_deg": 0,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F09ADB",
+                "emission_energy": 0.22
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+            "scale": 0.64,
+            "at": [
+              0,
+              0.035,
+              0.1
+            ],
+            "yaw_deg": 100,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F09ADB",
+                "emission_energy": 0.22
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+            "scale": 0.42,
+            "at": [
+              0.48,
+              0.025,
+              0
+            ],
+            "yaw_deg": 210,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F09ADB",
+                "emission_energy": 0.22
+              }
+            }
+          }
+        ]
+      }
+    }
   }
 }
