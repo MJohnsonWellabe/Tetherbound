@@ -1,0 +1,163 @@
+[
+  {
+    "item": "essence_ground",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Ground Essence at the Altar to pay for a ground creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "essence_water",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Water Essence at the Altar to pay for a water creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "essence_air",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Air Essence at the Altar to pay for an air creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "essence_electric",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Electric Essence at the Altar to pay for an electric creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "essence_fire",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Fire Essence at the Altar to pay for a fire creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "essence_dark",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Dark Essence at the Altar to pay for a dark creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "essence_ice",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Ice Essence at the Altar to pay for an ice creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "essence_psychic",
+    "main_has_description": false,
+    "main": null,
+    "cut": "Spend Psychic Essence at the Altar to pay for a psychic creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "intended": true
+  },
+  {
+    "item": "wood",
+    "main_has_description": true,
+    "main": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u00e2\u20ac\u201d walls, tools and campfires all start here.",
+    "cut": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u2014 walls, tools and campfires all start here.",
+    "intended": false
+  },
+  {
+    "item": "ironwood",
+    "main_has_description": true,
+    "main": "Close-grained wood cut from the old-growth stands on the Rise's flank, so dense a fresh-cut round barely floats. It is still wood \u00e2\u20ac\u201d the axe is still the tool \u00e2\u20ac\u201d but it takes twice the swinging, and what it braces does not give.",
+    "cut": "Close-grained wood cut from the old-growth stands on the Rise's flank, so dense a fresh-cut round barely floats. It is still wood \u2014 the axe is still the tool \u2014 but it takes twice the swinging, and what it braces does not give.",
+    "intended": false
+  },
+  {
+    "item": "potion_large",
+    "main_has_description": true,
+    "main": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go \u00e2\u20ac\u201d the thing you carry into a gauntlet where there is no time to stop and pour three.",
+    "cut": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go \u2014 the thing you carry into a gauntlet where there is no time to stop and pour three.",
+    "intended": false
+  },
+  {
+    "item": "field_sigil",
+    "main_has_description": true,
+    "main": "A heavy bronze disc struck with Team Tether's mark and the ploughed-furrow device of the high pasture posting. A captain carries one, and hands it over when they lose \u00e2\u20ac\u201d the officers' own rule, and they keep it.",
+    "cut": "A heavy bronze disc struck with Team Tether's mark and the ploughed-furrow device of the high pasture posting. A captain carries one, and hands it over when they lose \u2014 the officers' own rule, and they keep it.",
+    "intended": false
+  },
+  {
+    "item": "saddle_frame",
+    "main_has_description": true,
+    "main": "A rigid frame built to take real weight, its joints braced with worked rootstone rather than plain wood. Not a saddle yet \u00e2\u20ac\u201d just the part that has to be right before the rest of one is worth building.",
+    "cut": "A rigid frame built to take real weight, its joints braced with worked rootstone rather than plain wood. Not a saddle yet \u2014 just the part that has to be right before the rest of one is worth building.",
+    "intended": false
+  },
+  {
+    "item": "orb_basic",
+    "main_has_description": true,
+    "main": "A plain, unmarked sphere from Grandpa's old pack \u00e2\u20ac\u201d no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb.",
+    "cut": "A plain, unmarked sphere from Grandpa's old pack \u2014 no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb.",
+    "intended": false
+  },
+  {
+    "item": "potion_small",
+    "main_has_description": true,
+    "main": "A small dose that restores 50 HP to one creature. It only works on a creature \u00e2\u20ac\u201d for you, it's soup and rest, same as always.",
+    "cut": "A small dose that restores 50 HP to one creature. It only works on a creature \u2014 for you, it's soup and rest, same as always.",
+    "intended": false
+  },
+  {
+    "item": "revive",
+    "main_has_description": true,
+    "main": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength \u00e2\u20ac\u201d a proper rest is still what finishes the job.",
+    "cut": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength \u2014 a proper rest is still what finishes the job.",
+    "intended": false
+  },
+  {
+    "item": "good_candy",
+    "main_has_description": true,
+    "main": "Wrapped and a little sticky, found rather than bought. Feed it to a creature and that creature is one level further along, no fight required \u00e2\u20ac\u201d the addendum's exploration-reward candy, three tiers of the same wrapper.",
+    "cut": "Wrapped and a little sticky, found rather than bought. Feed it to a creature and that creature is one level further along, no fight required \u2014 the addendum's exploration-reward candy, three tiers of the same wrapper.",
+    "intended": false
+  },
+  {
+    "item": "great_candy",
+    "main_has_description": true,
+    "main": "The blue-wrapped tier \u00e2\u20ac\u201d a tougher detour or a stronger encounter earned it. Two levels on the creature that eats it, no fight required.",
+    "cut": "The blue-wrapped tier \u2014 a tougher detour or a stronger encounter earned it. Two levels on the creature that eats it, no fight required.",
+    "intended": false
+  },
+  {
+    "item": "speed_mushroom",
+    "main_has_description": true,
+    "main": "Blue-capped, found clustered at tree bases and rocks. The same timed-buff mechanism a tonic already uses \u00e2\u20ac\u201d the world reward version of one.",
+    "cut": "Blue-capped, found clustered at tree bases and rocks. The same timed-buff mechanism a tonic already uses \u2014 the world reward version of one.",
+    "intended": false
+  },
+  {
+    "item": "wild_mushroom",
+    "main_has_description": true,
+    "main": "Red-capped, broad and unmistakable. A short attack buff \u00e2\u20ac\u201d the least specialised of the three, general-purpose foraging.",
+    "cut": "Red-capped, broad and unmistakable. A short attack buff \u2014 the least specialised of the three, general-purpose foraging.",
+    "intended": false
+  },
+  {
+    "item": "knife",
+    "main_has_description": true,
+    "main": "Short, sharp, and built for stripping \u00e2\u20ac\u201d one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly.",
+    "cut": "Short, sharp, and built for stripping \u2014 one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly.",
+    "intended": false
+  },
+  {
+    "item": "hoe",
+    "main_has_description": true,
+    "main": "A broad flat blade on a long shaft, for turning matted meadow sod into soil loose enough to take seed. It is no use on a tree, a rock or a creature \u00e2\u20ac\u201d the only thing it is for is the ground in front of a farmhouse.",
+    "cut": "A broad flat blade on a long shaft, for turning matted meadow sod into soil loose enough to take seed. It is no use on a tree, a rock or a creature \u2014 the only thing it is for is the ground in front of a farmhouse.",
+    "intended": false
+  },
+  {
+    "item": "tm_stone_rush",
+    "main_has_description": true,
+    "main": "A flat grey disc that hums faintly when a ground-type creature is near. Hold it out and the creature takes the shape of the move straight off it \u00e2\u20ac\u201d once. The disc goes dull afterwards.",
+    "cut": "A flat grey disc that hums faintly when a ground-type creature is near. Hold it out and the creature takes the shape of the move straight off it \u2014 once. The disc goes dull afterwards.",
+    "intended": false
+  }
+]

@@ -340,5 +340,7 @@
   "final_main": "e060aca21d1218ccc1ccd647a92e54a04224234e",
   "main_merge_checkpoint": "39565203e5414c0c2fdfa323ea4ddb90fd1a9f96",
   "docs_only_main_delta": "e060 vs f8 has no autoload/scripts/data/tests changes; current board/STATE exact e060",
-  "core_patch_sha256": "35c9c0003ed94c134b26e4a6c3f6f296e71092a1a0eb748013f104a3e437b39e"
+  "core_patch_sha256": "35c9c0003ed94c134b26e4a6c3f6f296e71092a1a0eb748013f104a3e437b39e",
+  "catalogue_git_byte_audit": "catalogue-git-byte-audit/keyed-field-proof.json",
+  "catalogue_review_extraction_correction": "Named main Git blob decoded directly as UTF-8 has only the eight approved added essence descriptions plus TM Fireball row; reviewer extracted main contains mojibake. Source unchanged; gate remains pending."
 }

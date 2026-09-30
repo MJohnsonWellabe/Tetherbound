@@ -91,5 +91,6 @@
       "scoped05d_canonical_lf_sha256": "201945f2fad61e7e2a687fd7d55ad116b6d61f5b38b98cf4f8c74d4ec08ccb49",
       "equals_scoped05d": true
     }
-  ]
+  ],
+  "catalogue_utf8_binding": "catalogue-git-byte-audit/keyed-field-proof.json: actual ItemDB/pickup bytes equal original scoped05d. All 99 description values satisfy unchanged method string/nonempty conditions. Reviewer extraction counterexample archived; no new native result."
 }
