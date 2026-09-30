@@ -1,0 +1,16 @@
+{
+  "source": "7207773e9a57f50c1d910e99605e2a63d2075565",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "res://scripts/world/crossing_hall.gd",
+    "--check-only"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\f17-readability-r2-profile",
+  "native_exit": 0,
+  "elapsed_seconds": 0.3440000000409782,
+  "log": "ralph\\reports\\HUB\\f17\\runtime\\hall-frontage-parser-r2.txt"
+}
