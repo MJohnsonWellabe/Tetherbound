@@ -1,0 +1,38 @@
+{
+  "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-vfx",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1920x1080",
+    "--write-movie",
+    "D:\\tetherbound\\vfx-r17-selected-runtime\\identities-motion.avi",
+    "--fixed-fps",
+    "30",
+    "--script",
+    "res://tests/smoke_move_effects_library.gd",
+    "--",
+    "--batch=identities",
+    "--identity=small-stones:r1",
+    "--out=D:/tetherbound/vfx-small-stones-selected-r17"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 16.39,
+  "tracked_process_ids": [
+    5772,
+    19348
+  ],
+  "owned_orphan_cleanup": [],
+  "godot_processes_remaining": [],
+  "errors": [],
+  "source_unchanged": true,
+  "selected_identity": "small-stones:r1",
+  "native_preflight_checks": 18,
+  "unit_reused": "R14 light lease, 27 assertions PASS; unchanged budget/test source, no full suite",
+  "scope": "Synthetic production-node lifetime and visual candidate, not HP/player/combat/Medium/device/final craft acceptance",
+  "movie_limit": "Fixed30fps synthetic0.7s travel; not real-time/performance proof"
+}

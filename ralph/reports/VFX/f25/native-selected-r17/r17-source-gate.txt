@@ -1,0 +1,146 @@
+SOURCEPASS — bounded independent source gate only
+2026-09-30, America/Chicago
+
+Baseline: 89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e
+Candidate: 33fea6237a14d0a5daf0d2866b1323a49e82d58c
+Repository read: D:/tetherbound/redesign-vfx
+Disposition: eligible for ROOT's one affected native diagnostic rerun;
+no native lease-fix PASS, no visual-craft PASS, no F25 closure or enablement.
+
+Scope and method
+Read AGENTS.md, CODEX_START_HERE F25/F26, RD-36/RD-37 and section 7.2,
+WORKFLOW section 5, actual ACCEPTANCE F25/F26 wording, and the pinned
+fixture/production timer, arrival, impact, release and budget source.
+Reviewed git diff 89a075c6d7..33fea for move_effect.gd, vfx.json and
+smoke_move_effects_library.gd. Every source finding below concerns the
+pinned candidate, not the concurrently advancing worktree HEAD.
+Git reads only; no repository writes, Git mutation, Godot, imports, GPU,
+gameplay checks, unit tests, CI, renders, captures or original-image review.
+Exact Git blob object IDs are recorded in r17-source-hashpins.json.
+
+Actual acceptance remains required
+F25#0: about 24 archetypes, each with configured body, trail, impact, sound.
+F25#1: every moves.json move maps with parameters; unmapped move fails a test.
+F25#2: code-blind frames identify several small stones, one boulder, burning
+orb with trail/explosion, and lightning striking the target from above.
+F25#3: damage resolves on arrival or a documented archetype exception;
+no damage number before visible hit.
+F25#4: per-effect budgets, worst-case real four-creature Medium fight frame
+rate, and Compatibility drawing or fallback.
+F25#5: mastery visibly upgrades size/count/trail.
+These are separate acceptance obligations. This synthetic-source review
+earns none of them. F26 retains High/Medium look judgment, real route frame
+times, selectable Compatibility Low and the owner's Ally gate before
+Forward+ becomes default. RD-36/RD-37 permit affected checks and reused
+unchanged evidence, while preserving named proofs and forbidding test
+skipping/disabling/quarantine. No broad units/full CI are selected here.
+
+Clock repair: PASS for source preservation and justified clock choice
+1. The old allowance formula remains exactly:
+   max(2, travel + row.impact.duration + 1) seconds, microsecond integer.
+   With configured identity travel 0.7s, this is 2.42s for stone_throw and
+   fireball, and 2.18s for sky_lightning. Impact durations are unchanged.
+2. Capture runs use create_timer(allowance, false) as the deadline. In this
+   SceneTree fixture the corresponding presentation timer, flight shutter,
+   arrival-relative impact shutter and independent schedule all also use
+   create_timer(..., false). No pause or clock-scale change is introduced.
+3. Production move_effect._ready creates its idle presentation timer after
+   launch geometry creation; _process derives pre-arrival elapsed from that
+   timer. _finish_presentation resets _elapsed to _travel, builds contact
+   geometry, then emits arrived once. Thereafter _process adds delta and
+   queue_free runs when impact progress reaches 1. _exit_tree still releases
+   the actual budget lease. Production CombatManager and EncounterDirector
+   own separate idle timers for host damage, independent of this node.
+4. The capture deadline starts after launch/setup, without an intervening
+   await. This removes synchronous creation/encoding wall cost from the
+   simulation lifetime allowance; it does not extend the production lifetime
+   or change the host's authoritative schedule.
+5. Noncapture profile/library/clock still use the same wall deadline: the
+   watchdog equals the old timeout, no simulation deadline is created, and
+   the wall-frame/CPU collection remains under `if not capture`.
+6. Captures additionally retain a finite 30,000,000-usec wall guard and append
+   `Capture wall watchdog expired` as a failure if it expires. New receipts
+   expose end process frame, end wall seconds, deadline clock, allowance and
+   watchdog expiry. This supplies useful evidence for the affected rerun.
+
+Assertions and selector: PASS for source preservation
+All old missing-move/resolution/launch/model/bounds/shutter/save-PNG failures
+remain. Flight clearance against measured expanded target bounds, no flight
+after contact, and no contact/impact frame before arrival remain. The final
+checks still require exactly the expected arrivals, particle peak <= cap,
+actual end lease zero, each arrival frame equal to the independent schedule,
+and all configured capture phases. End-slot failure is evaluated before
+cleanup; cancel_encounter cannot turn a failed lifetime into PASS.
+The 18-check actual-node light/audio lifecycle preflight remains unchanged
+and still runs before both default and selected identities.
+Only an exact configured id/rank string may select an affected identity;
+unknown id/rank or any non-identities batch exits 1. The configured 4 identities
+x ranks [1,3,5] remain unchanged: 12 default cases, 36 original phase images.
+Without a selector, the same loops execute every case. An explicit selected
+run is a bounded diagnostic, not evidence that omitted identities passed on
+R17. This is a diagnostic fixture selector, not a skipped/quarantined unit.
+
+Production stage delta: PASS for bounded presentation source
+Only _process, _build_impact, _update_puffs and _update_impact change in the
+production node. The remaining methods, including configure/_ready,
+_finish_presentation, _exit_tree, cancellation, target/contact anchors,
+light allocation, cues, geometry and projectile/trail construction retain
+their implementations. Config changes are 16 fields in three profiles:
+stone_throw (9), fireball (4), sky_lightning (3).
+- Authored growth profiles now receive _update_impact(0,0) within the original
+  impact build before arrived emits. Initial scales are applied in the contact
+  frame; no extra allocation, signal, duration or host transaction is added.
+- Positive bounded growth exponents shape existing impact/puff expansion.
+  Puff initial scale/reveal are data values and affect existing puff instances.
+  Profiles without the optional controls retain linear/default behavior.
+- The sky bolt/trail opacity decays during its existing 0.22s contact hold;
+  the vertical path, visibility hold, endpoints and lifetime are unchanged.
+- Stone palette/texture blend and trail width/opacity are presentation tunables.
+  Stone_throw is shared by small stones and the boulder, so both are affected.
+The diff leaves impact durations, mastery tables, counts, particle/light caps,
+budgets, meshes, target anchors, cue mappings, move mappings and combat source
+unchanged. The broad commit delta also contains reports/media and authored
+audio recipe/generator additions; this gate does not review that generator.
+It does not claim the entire commit changes only these three files.
+move_library.enabled is explicitly false. The existing fixture opt-in is
+process-local and does not enable the production candidate.
+
+R14 evidence and causal limits
+The archived native run is RED, exit 1, 12 cases, with the sole failure
+`Lease remains small-stones:r1`. Its first case has end_slots=42/peak_slots=42,
+arrival wall 1.792404s, contact capture wall 2.072042s, impact capture wall
+2.253433s, and equal arrival/independent-schedule process frames of 78.
+The raw movie log reports fixed 30fps, 564 frames, movie duration 18.8s,
+recording wall duration 33s, and 11.06s aggregate encoding time. Those facts
+and the source clocks support a wall/simulation mismatch. They do not isolate
+encoding as the cause: first-material work, PNG writing or other stalls can
+also consume wall time. The old result lacks case-start/end process frame and
+simulation age at timeout, so it cannot prove the exact point of termination
+or rule out a runtime defect. Source choice is justified; causal/native
+resolution still requires the affected rerun. R14 RED is not superseded.
+
+The full 36-original independent R14 report records every family full-craft
+FAIL despite narrow identity/mastery successes. That verdict remains raw and
+unsuperseded. This source reviewer read the report but did not rejudge images.
+
+Remaining limitations and next evidence
+- The 30s wall guard is cooperative: while blocked awaiting process_frame or
+  frame_post_draw, it cannot kill a hung engine. ROOT must retain the separate
+  finite process-tree timeout/owned cleanup already required by the proposal.
+- The unchanged light preflight has its own 8s wall loop. This source review
+  does not declare it stall-proof or change it.
+- --identity= with an empty value is treated as the default (absence of a
+  selector); exact known-only validation applies to a nonempty selector.
+- A single small-stones:r1 native result can resolve that diagnostic lease
+  regression only. R17 changed all four displayed families through three
+  shared profiles, so other R14 native/visual results cannot prove R17 stage
+  behavior. Independent original-image/motion craft proof still needs the
+  affected family/rank coverage when ROOT separately schedules that batch.
+- The R17 author's proposed full12/36 next capture is a future proposal;
+  it does not override ROOT's present allocation of one affected rerun.
+- Actual admitted player HP/number timing, audio, Medium four-creature fight,
+  ranks 2/4, environment integration and hardware remain unproved here.
+
+Final bounded verdict: SOURCEPASS. No source blocker found for the one
+small-stones:r1 native diagnostic. Native lease repair UNTESTED; visual craft
+UNPROVED; R14 failures preserved; all F25 criteria OPEN; library OFF.
