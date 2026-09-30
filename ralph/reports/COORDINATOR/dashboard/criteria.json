@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-26 09:08 UTC",
- "main_sha": "e2de59571",
+ "generated_at": "2026-09-30T00:47:42.776Z",
+ "main_sha": "3cc8e789c",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
   {
@@ -916,8 +916,8 @@
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 4,
+    "in_progress": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -926,31 +926,31 @@
      "text": "Save schema bumped past v27; loading any v27-or-older save shows a clear 'older version, start a new game' message, never crashes and never overwrites the old file (unit test with a v27 fixture).",
      "status": "in_progress",
      "evidence": "",
-     "gap": "tb/foundations implementing v28 refusal and title New Game affordance from e2de59571; fixture, real title path, independent strict re-check and four-shard suite still required. No criterion closure claimed."
+     "gap": "WIP cf702dc0e, merged docs main at 2014963ea. Focused 166 tests/2240 assertions/0 failures and title refusal-to-New-Game/autosave witness inspected. Final candidate re-check, expanded focused regressions and four full unit shards remain; no MET claim."
     },
     {
      "text": "Data schemas exist and validate for type essences, material tiers (8 slots, 4 live), stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, level caps (10–100); a schema test fails on a missing or unknown id.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "gap": "Schemas and loaders implemented in supporting WIP; independent missing/unknown-ID and identity invariants strengthened after review. Final candidate runtime and strict re-check remain."
     },
     {
      "text": "Biome order is one config list (meadows, tidewake, cloudreach, stormwood, then four reserved slots); a test proves no gameplay code hard-codes the old Meadows→Cloudreach→Stormwood→Water order.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "gap": "Central order accessor and actual map/journal/credits/shrine consumers implemented. New production shrine placement and shipping-code scan tests await focused runtime/re-check. Narrative reorder remains F19/F20."
     },
     {
      "text": "Every new durable field declares scope (world or character) and transaction semantics in the flag-scope registry; a two-peer save/reload round trip preserves them.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "gap": "World/character/creature fields declare scope and transaction rules and persist through split carriers. Populated real two-peer save/reload/rejoin proof remains. Future mechanics are schema declarations only."
     },
     {
      "text": "New game from the title reaches Grandpa's opening on the new schema with an empty satchel apart from authored gifts; the full unit suite is green.",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "gap": "Real title New Game reaches Meadows/Grandpa opening prompts with empty satchel and v28 autosave. Actual Grandpa dialogue/input extension, full four-shard suite and strict re-check remain."
     }
    ]
   },
