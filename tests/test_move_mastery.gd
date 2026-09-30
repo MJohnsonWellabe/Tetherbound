@@ -183,6 +183,14 @@ func test_actual_host_debit_rolls_back_on_cas_refusal_and_saturated_hits_still_d
 	assert_false(body.critical,"successful contact spends critical once")
 	assert_eq(mastered.move_mastery_uses.pebble_toss,300)
 	assert_eq(mastered.move_mastery_receipts.pebble_toss.size(),300,"no receipt growth after mastery cap")
+	enemy.hp = enemy.max_hp
+	enemy.fainted = false
+	body.critical = false
+	result = manager.host_roll_damage({"attack": 1.0},"pebble_toss",.001,false,{"mastery_rank": 5})
+	var damage_cfg: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("damage", {})
+	assert_true(float(result.damage) >= float(damage_cfg.get("minimum", 1.0)))
+	assert_true(float(result.damage) <= float(damage_cfg.get("minimum", 1.0)) * (1.0 + float(damage_cfg.get("variance", .1))),
+		"mastery enters power before the shared minimum; it cannot multiply already floored damage")
 	manager.free()
 	body.free()
 

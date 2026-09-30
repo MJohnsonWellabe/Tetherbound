@@ -2777,15 +2777,14 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	var killed: bool = killed_override
 	if damage_override < 0.0:
 		damage = MATH.rolled_damage(
-			float(profile.get("power", 9.0)),
+			float(profile.get("power", 9.0)) * MOVE_MASTERY.power_multiplier(int(launch.get("mastery_rank", 1))),
 			creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
 			_moves.power(move_id), type_mult
 		)
 		if stagger_crit:
 			damage *= _poise_crit_scale()
 		# Rank belongs to the accepted launch, including a hit crossing a rank
-		# threshold. Contact time, reach, cost and geometry do not change.
-		damage *= MOVE_MASTERY.power_multiplier(int(launch.get("mastery_rank", 1)))
+		# threshold. It enters power before the shared minimum/variance rules.
 		var hp_before := float(_enemy.hp)
 		var fainted_before := bool(_enemy.fainted)
 		killed = _enemy.take_damage(damage)
@@ -3009,14 +3008,13 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
 	)
 	var damage: float = MATH.rolled_damage(
-		move_power,
+		move_power * MOVE_MASTERY.power_multiplier(int(impact_context.get("mastery_rank", 1))),
 		maxf(1.0, float(card.get("attack", 1.0))),
 		_enemy.effective_defence(cfg),
 		_rng.randf(),
 		_moves.power(move_id),
 		type_mult
 	)
-	damage *= MOVE_MASTERY.power_multiplier(int(impact_context.get("mastery_rank", 1)))
 	var stagger_crit := false
 	if _wild != null and _wild.has_method("consume_stagger_critical"):
 		stagger_crit = bool(_wild.call("stagger_critical_ready")) if mastery_commit.is_valid() else bool(_wild.call("consume_stagger_critical"))
