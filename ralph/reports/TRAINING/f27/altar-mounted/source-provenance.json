@@ -1,0 +1,42 @@
+{
+  "parent_training_pin": "b00c98678c56f10ab3640ab547af08062afbae68",
+  "inspected_main_pin": "bcbcae5e59d0e13fe20d975b95b2415de6a81872",
+  "owned_before_sha256": {
+    "scripts/ui/altar_service.gd": "607865d4646fd69a12ca9a4a527c3b2ee5cca33079c8b6d9839acf68fb2600fd",
+    "scripts/ui/altar_panel.gd": "fb4c8b95fd873528fc80a70f68eeb02c8cb25c6a762660560fa087a8b64413d5",
+    "scripts/ui/altar_station_interaction.gd": null,
+    "scripts/creatures/essence.gd": "fe34d0d3a1d64b3243afa28a1e9b05bfd8fa138bb287ef00407a73a723907218",
+    "data/config/essence.json": "333a4f81775e82f2372c6bf38b422ed98ee79008a527b9bc6b0802e5e05f3f22"
+  },
+  "owned_after_sha256": {
+    "scripts/ui/altar_service.gd": "bbebf43b20e583ec0592318d51b9629e91fa386c8721ee5ce44246847ce1c405",
+    "scripts/ui/altar_panel.gd": "5422ac50e1ad95a21c67e8383e77fd0f5ac54c03a105adb999fc36eb6be1e969",
+    "scripts/ui/altar_station_interaction.gd": "908f55cceead292d2aea46c5216813b25304b2297f1de7ae335bd04d16b17e88",
+    "scripts/creatures/essence.gd": "a4dfbdda05577c130b121d5d310f4aa67953d3ecf06a09ba3fb22455030a4004",
+    "data/config/essence.json": "a232807812b1d41960596b6dab6f6ea6ea897aceaa02f95fe0a7d9da40510ff4"
+  },
+  "owned_patch_sha256": "79751d6aaf8a91108173793b90143182a09b8dfbc727ca4e4c98047e7d27e990",
+  "shared_builder_before_sha256": "b58ec9ee3dfb76f03a0f0cf080cf414cc1ca98fe55b7b9e2019ca3e327a968d4",
+  "shared_builder_after_sha256": "50ea0ce7efef3671274fb5b11d6ca4593b6feaaff6939b0badae50160f7a3e6d",
+  "shared_builder_patch_sha256": "4ffb80064ccab93ada73bb83bc128c9ff3cf5af36b05ad2a9d0b81d3aca3ff46",
+  "critical_api_source_sha256": {
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1"
+  },
+  "ui_changes": [
+    "actual placed-building Interactable using existing arbiter; no new input reader or held mechanic",
+    "async sender/session/context/quote-id fenced replies with 8-second config budget",
+    "original frozen spend ID and actual saved evidence retained; quotes never mutate spend identity",
+    "five-field receipt bind including original revision",
+    "exact 2-line shared builder mount proposal only; homestead/foundation owner application required"
+  ],
+  "portable_fields_added": false,
+  "engine_unit_ci_gpu_runs": 0,
+  "live_source_changed": false,
+  "independent_verdict": "Pending ROOT exact source gate; no claim",
+  "landing_ready": false,
+  "minimal_schema_sha256": "2b029897120ee3fe7d8e16a29d1caae51ecdfd38c3065d22d3294d890977426e",
+  "foundation_current_main": "7dcd2a8649660553f38702f2de71390efc6f1343"
+}
