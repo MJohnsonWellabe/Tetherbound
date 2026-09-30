@@ -205,7 +205,15 @@ lanes = "".join(
     for l in status.get("lanes", []))
 legend = "".join(f'<span class="leg">{pill(k)} {counts[k]}</span>' for k in ORDER)
 
-page = f"""<title>Tetherbound Acceptance Board</title>
+# A complete document (owner report, 2026-09-30): the board is also served raw by
+# hosts that add no wrapper, where a missing charset turns "·" into "Â·", a missing
+# viewport shrinks the page on phones, and a missing doctype falls into quirks mode.
+page = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tetherbound Acceptance Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,750&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
@@ -280,6 +288,8 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 }}
 @media (prefers-reduced-motion:no-preference){{ .meter span{{transition:width .4s ease}} }}
 </style>
+</head>
+<body>
 <main class="wrap">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
@@ -312,6 +322,8 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   </div>
   <p class="note">Status is strict: fixture-only proof counts as partial, visual criteria need a passing code-blind judge verdict, and co-op criteria need two-peer evidence. Percentages are the coordinator's evidence audit, not a measured play-through.</p>
 </main>
+</body>
+</html>
 """
 (HERE / "tetherbound_dashboard.html").write_text(page, encoding="utf-8")
 print("wrote", HERE / "tetherbound_dashboard.html", "overall", overall, "counts", counts)
