@@ -34,9 +34,14 @@ static func eligible(game: Object) -> bool:
 	if not personal is Dictionary:
 		return false
 	var id := character_id(game)
+	var receipts: Variant = personal.get("transaction_receipts", [])
+	return has_return_receipt(id, receipts) if receipts is Array else false
+
+
+static func has_return_receipt(id: String, receipts: Array) -> bool:
 	if id.is_empty():
 		return false
-	for raw: Variant in personal.get("transaction_receipts", []):
+	for raw: Variant in receipts:
 		var pieces := str(raw).split(":")
 		if pieces.size() == 4 and pieces[0] == HOME_RETURN_PREFIX.trim_suffix(":") \
 				and not pieces[1].is_empty() and pieces[2] == id and not pieces[3].is_empty():

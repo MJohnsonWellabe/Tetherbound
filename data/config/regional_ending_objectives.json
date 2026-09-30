@@ -1,5 +1,5 @@
 {
-  "required_world_flag": "stormwood:long_storm_ended",
+  "_comment_eligibility": "The canonical traveler's held or hung Stormwood relic invites Home Key use. Only their bound actual Home arrival receipt invites Grandpa. World flags alone grant neither invitation.",
   "supported_realms": [
     "water",
     "stormwood",
@@ -14,13 +14,13 @@
       "label": "Bring your companions home.",
       "realms": {
         "water": {
-          "how": "Use your Home Key to return to Grandpa's farm with your current companions."
+          "how": "Use your Home Key to return to the Crossing Hall's Home Arch, then follow the village road to Grandpa."
         },
         "stormwood": {
-          "how": "Use your Home Key to return to Grandpa's farm with your current companions."
+          "how": "Use your Home Key to return to the Crossing Hall's Home Arch, then follow the village road to Grandpa."
         },
         "cloudreach": {
-          "how": "Use your Home Key to return to Grandpa's farm with your current companions."
+          "how": "Use your Home Key to return to the Crossing Hall's Home Arch, then follow the village road to Grandpa."
         },
         "meadows": {
           "how": "Bring the companions travelling with you to Grandpa's home and talk to him.",
@@ -41,13 +41,13 @@
       "label": "Finish your homecoming.",
       "realms": {
         "water": {
-          "how": "Use your Home Key to return to Grandpa's farm with your current companions."
+          "how": "Use your Home Key to return to the Crossing Hall's Home Arch, then follow the village road to Grandpa."
         },
         "stormwood": {
-          "how": "Use your Home Key to return to Grandpa's farm with your current companions."
+          "how": "Use your Home Key to return to the Crossing Hall's Home Arch, then follow the village road to Grandpa."
         },
         "cloudreach": {
-          "how": "Use your Home Key to return to Grandpa's farm with your current companions."
+          "how": "Use your Home Key to return to the Crossing Hall's Home Arch, then follow the village road to Grandpa."
         },
         "meadows": {
           "how": "Talk to Grandpa again, then Continue or Skip the credits to return to the same world.",
