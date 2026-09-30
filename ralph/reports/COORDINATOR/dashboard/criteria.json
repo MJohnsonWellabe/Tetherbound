@@ -959,10 +959,10 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 43,
+   "pct": 57,
    "counts": {
-    "met": 3,
-    "not_started": 4,
+    "met": 4,
+    "not_started": 3,
     "partial": 0,
     "in_progress": 0,
     "blocked": 0,
@@ -989,9 +989,9 @@
     },
     {
      "text": "Every house has a named resident or lived-in dressing; shop, workshop, inn, tournament board and research keeper are reachable on a controller day and night walk.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "Independent strict MET: ralph/reports/HUB/f17/recheck-f17-3.txt and exact audit, executed360ee7a6cd/archive273231a942. Every one of8 actual houses has named resident or actual lived-in furniture/light;16 physical day/night house approaches max0.519m/on_floor. Actual shop/workshop/inn/research keeper prompts plus tournament keeper/board owner assertions reachable through parsed joypad/physical doors. Native0/448.703s, parser0/0.750s; services-result.md and runtime/services-day-night-r3.txt/receipt. Shortcuts disclosed: opening/starter fixture, one initial farmhouse pose, frozen production time/clear weather, injected InputMap events not physical device. R1/r2 reds retained; actual capsule-clear witness changed approach after two failures. No full shop/craft/M1/co-op/pixel quality claim; main credit at this PR landing.",
+     "gap": ""
     },
     {
      "text": "The M1 opening chain (starter, practice catch, camp, three-bed readiness, three tournament rounds) still completes on the new layout.",

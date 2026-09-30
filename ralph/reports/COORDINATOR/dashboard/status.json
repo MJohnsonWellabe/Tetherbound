@@ -2,7 +2,7 @@
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 106 of 280. Original:95/101; redesign:11/179. F16 all5, F17#0/#1/#2 and F26#1/#2/#4 landed by this cut; F26#4 full12 computer route captures strict MET. Four remaining F17 rows and F26 material/visual/Ally rows remain open.",
+  "Criteria met: 107 of 280. Original:95/101; redesign:12/179. F16 all5, F17#0/#1/#2/#3 and F26#1/#2/#4 landed by this cut. F17 services strict MET from one actual physical day/night circuit; M1/co-op/full craft and F26 material/visual/Ally rows remain open.",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -370,7 +370,7 @@
   },
   {
    "lane": "tb/hub",
-   "now": "F17#0/#2 main; this cut closes only #1 with actual ordinary farm-door native1920 day/night and independent code-blind DAY YES/NIGHT YES. Four remaining F17 rows open; full craft unproved. F18 authority prototypes preserved outside this cut, dependency hold remains.",
+   "now": "F17#0/#1/#2/#3 landed by this cut; services actual day/night8-house/all required prompt circuit native0/448.703s with independent strict MET. R1/r2 failures retained, body-clear physical witness preserves floor/arrival/doors/input. M1/co-op/full craft #4/#5/#6 open. F18/shared combat prototypes preserved outside landing cut.",
    "next": "Ordinary day/night house/arch/pedestal paths, M1 chain, two-peer layout/states and code-blind visual bar; F18 protected-key/channel/transaction drafts advance."
   },
   {
