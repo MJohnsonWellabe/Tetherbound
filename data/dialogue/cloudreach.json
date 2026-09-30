@@ -21,11 +21,11 @@
     },
     "cloudreach_aila_after_restoration": {
       "speaker": "Warden Aila", "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
-      "lines": ["Listen. The bells answer one another again. Galefoot, Windscar, Cliffhold: three places that can finally be neighbors.", "We'll mend the spans and bring the stranded people home. Keep the camps supplied while the roads fill again.", "From Stormward Overlook you can see a storm that never moves. The Rodfolk live beneath it. Our road reaches their forest now."]
+      "lines": ["Listen. The bells answer one another again. Galefoot, Windscar, Cliffhold: three places that can finally be neighbors.", "We'll mend the spans and bring the stranded people home. Keep the camps supplied while the roads fill again.", "Cloudreach's roads belong to its people again. When you're ready for another journey, Crossing Hall will be your starting point."]
     },
     "cloudreach_aila_final_reward": {
       "speaker": "Warden Aila", "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
-      "lines": ["You brought the wind back to its roads. No warden should own those roads; our work is to keep them open for everyone.", "These are the Wings of Cloudreach, and the Key to the Stormwood. Place the Wings at their stone in the Meadows shrine circle when you return: Skyborne lets you fly without spending stamina. You can choose one relic power at a time.", {"text": "Take them with our thanks. Past Stormward Overlook, the scarred stair leads down to the sealed gate. Beyond it lies the Rodfolk's forest. Farther still, that glint is water. Keep the road home close.", "effect": "cloudreach:cloudreach_aila_final_reward_complete"}]
+      "lines": ["You brought the wind back to its roads. No warden should own those roads; our work is to keep them open for everyone.", "You've earned the Wings of Cloudreach and the Stormwood Portal Key. Bring your Wings to the Hall Shrine in Crossing Hall: Skyborne lets you fly without spending stamina. You can choose one relic power at a time.", {"text": "Take our thanks with you. Use the Stormwood Portal Key at the Stormwood arch in Crossing Hall when you're ready. Your Home Key brings you back to the Hall's Home Arch.", "effect": "cloudreach:cloudreach_aila_final_reward_complete"}]
     },
     "cloudreach_iven_waycamp": {
       "speaker": "Iven", "portrait": "res://assets/ui/portraits/wilhelm.png",

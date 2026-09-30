@@ -147,3 +147,13 @@ Only the protected boss projector may owe the fifth key/relic to participants;
 this world event never replaces it. The source generator reproduces the narrow
 data edits. This source checkpoint stays unlanded until the actual protected
 delivery/arrival producers connect; no partial progress-stranding cut is ready.
+
+Cloudreach's matching active reward conversation now points its personal relic
+to the Hall Shrine and its next Stormwood key to the keyed Hall arch. Aila's
+existing `cloudreach_aila_after_restoration` closing line and final-reward
+effect identity remain; they no longer invite a scarred physical crossing or
+future Water route. The owned chapter guide and route-description metadata
+match that Hall itinerary while saved objective, event, reward and flag IDs
+remain intact. Legacy world key grants still await their protected participant
+replacement in one coherent candidate. These lines describe the intended
+handoff; the actual protected delivery and ordinary Hall travel remain unproved.

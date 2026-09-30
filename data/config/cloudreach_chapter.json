@@ -13,7 +13,7 @@
       "causeway_travel_broken"
     ],
     "escalation_truth": "The lower anchors feed a summit extraction engine that bottles Cloudreach's ancestral winds.",
-    "resolution": "Disable the network, defeat its captain, restore the winds, and reopen the Stormward route into the Stormwood."
+    "resolution": "Disable the network, defeat its captain, and restore Cloudreach's winds. The earned Stormwood Portal Key opens its arch in Crossing Hall."
   },
   "persistent_flags": {
     "entry": ["cloudreach_chapter_started"],
@@ -264,7 +264,7 @@
           "flag_id": "cloudreach_chapter_complete",
           "scope": "world",
           "label": "Claim the Wings of Cloudreach and look Stormward.",
-          "how": "Accept the Wings and the Key to the Stormwood. Follow the scarred stair beyond Stormward Overlook.",
+          "how": "Bring your Wings of Cloudreach to the Hall Shrine, and use your Stormwood Portal Key at the Stormwood arch in Crossing Hall.",
           "region_id": "summit_final_stronghold",
           "requires_flags": ["cloudreach_winds_restored"],
           "grants_flags": [
@@ -919,7 +919,7 @@
     "unlock_events": [
       {"flag_id": "fly_traversal_unlocked", "reveals_landmark_ids": ["sky_shrine_heartstone", "high_roost_perches"], "world_change": "High-altitude wind-route markers become visible."},
       {"flag_id": "cloudreach_upper_route_unlocked", "reveals_landmark_ids": ["cliffhold_settlement", "old_wind_observatory"], "world_change": "The counterweight stair is shown as a grounded route."},
-      {"flag_id": "stormward_route_revealed", "reveals_landmark_ids": ["waterward_overlook"], "world_change": "The Waterward route and future realm direction appear after the finale."}
+      {"flag_id": "stormward_route_revealed", "reveals_landmark_ids": ["waterward_overlook"], "world_change": "Stormward Overlook clears after the finale. The next realm is reached through its keyed arch in Crossing Hall."}
     ],
     "fly_route_readability": "Use perch silhouettes, cloth streamers, airborne motes, and aligned updraft columns; the minimap supports but never replaces these cues."
   },
@@ -982,7 +982,7 @@
     "grants": [
       {"id": "cloudreach_heart", "kind": "realm_heart", "display_name": "Wings of Cloudreach", "flag_id": "realm_heart_cloudreach_earned", "definition_status": "skyborne_single_active_relic"},
       {"id": "water_realm_key", "kind": "realm_key", "display_name": "Key to the Stormwood", "flag_id": "realm_key_stormwood", "definition_status": "entitlement_not_consumable"},
-      {"id": "waterward_reveal", "kind": "map_unlock", "display_name": "Stormward Overlook", "flag_id": "stormward_route_revealed", "definition_status": "stormwood_gate_route"}
+      {"id": "waterward_reveal", "kind": "map_unlock", "display_name": "Stormward Overlook", "flag_id": "stormward_route_revealed", "definition_status": "crossing_hall_portal_destination"}
     ],
     "completion_feedback": ["chapter_banner", "reward_summary", "heart_received_message", "waterward_map_reveal"]
   },
@@ -994,7 +994,7 @@
       {"id": "settlements_reconnect", "system": "dialogue", "change": "Galefoot and Cliffhold NPCs receive post-restoration dialogue states."},
       {"id": "audio_opens", "system": "audio", "change": "The tether drone falls silent and distant bird calls return to the summit mix."},
       {"id": "fly_routes_stabilize", "system": "traversal", "change": "Restored wind-route markers and recovery currents remain available after victory."},
-      {"id": "waterward_route_visible", "system": "map", "change": "Waterward Overlook reveals the future Water-biome route without making that biome enterable."}
+      {"id": "waterward_route_visible", "system": "map", "change": "Stormward Overlook clears as Cloudreach's winds return. The earned Stormwood Portal Key is used at Crossing Hall, not at a physical crossing here."}
     ],
     "return_dialogue_ids": ["cloudreach_aila_after_restoration", "cloudreach_orrin_route_open", "cloudreach_maela_after_restoration", "cloudreach_kelm_after_restoration"],
     "save_contract": "Boss victory, rewards, disabled anchors, restored ambience, NPC relocation, and Waterward reveal persist across save/load and Meadows return travel."

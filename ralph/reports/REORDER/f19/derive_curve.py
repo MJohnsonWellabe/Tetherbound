@@ -207,6 +207,20 @@ def derive():
         levels(data, cloud)
         retired_entry_clauses(data, "realm_key_cloudreach")
         data["acts"][0]["objectives"][0]["how"] = "Follow the cliff road to the first camp."
+        data["story_problem"]["resolution"] = "Disable the network, defeat its captain, and restore Cloudreach's winds. The earned Stormwood Portal Key opens its arch in Crossing Hall."
+        for act in data["acts"]:
+            for objective in act["objectives"]:
+                if objective["id"] == "cloudreach_claim_reward":
+                    objective["how"] = "Bring your Wings of Cloudreach to the Hall Shrine, and use your Stormwood Portal Key at the Stormwood arch in Crossing Hall."
+        for event in data["map_navigation"]["unlock_events"]:
+            if event["flag_id"] == "stormward_route_revealed":
+                event["world_change"] = "Stormward Overlook clears after the finale. The next realm is reached through its keyed arch in Crossing Hall."
+        for reward in data["rewards"]["grants"]:
+            if reward["id"] == "waterward_reveal":
+                reward["definition_status"] = "crossing_hall_portal_destination"
+        for change in data["aftermath"]["state_changes"]:
+            if change["id"] == "waterward_route_visible":
+                change["change"] = "Stormward Overlook clears as Cloudreach's winds return. The earned Stormwood Portal Key is used at Crossing Hall, not at a physical crossing here."
         # Wild endpoints follow the declared 29–43 envelope, not trainer formula.
         for table in data["encounter_tables"]:
             before = next(t for t in json.loads(source("data/config/cloudreach_chapter.json"))["encounter_tables"] if t["id"] == table["id"])
@@ -219,6 +233,14 @@ def derive():
         for member, level in zip(data["final_encounter"]["opposition_contract"]["slots"], [43, 43, 44], strict=True):
             member["level"] = level
     write_edits("data/config/cloudreach_chapter.json", cloud_chapter)
+
+    def cloud_reward_dialogue(data):
+        conversations = data["conversations"]
+        conversations["cloudreach_aila_after_restoration"]["lines"][-1] = "Cloudreach's roads belong to its people again. When you're ready for another journey, Crossing Hall will be your starting point."
+        reward = conversations["cloudreach_aila_final_reward"]["lines"]
+        reward[1] = "You've earned the Wings of Cloudreach and the Stormwood Portal Key. Bring your Wings to the Hall Shrine in Crossing Hall: Skyborne lets you fly without spending stamina. You can choose one relic power at a time."
+        reward[2]["text"] = "Take our thanks with you. Use the Stormwood Portal Key at the Stormwood arch in Crossing Hall when you're ready. Your Home Key brings you back to the Hall's Home Arch."
+    write_edits("data/dialogue/cloudreach.json", cloud_reward_dialogue)
 
     water = lambda n: half_down(20 + (n - 43) * 13 / 12)
     def water_trainers(data):
