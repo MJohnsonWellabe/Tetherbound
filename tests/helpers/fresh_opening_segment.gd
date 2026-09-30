@@ -67,6 +67,7 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 		front = front.normalized()
 		var offset := _player.global_position - door
 		offset.y = 0.0
+		left_farmhouse = offset.length() < 4.0
 		if offset.length() < 4.0 and offset.dot(front) < 1.0:
 			var outside := door + front * 1.8
 			if not await _walk_toward(outside, budget) or not _player.is_on_floor():
