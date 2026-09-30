@@ -66,6 +66,7 @@ var _checked_start := false
 
 func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable) -> void:
 	super(tree, player, rig, drive)
+	_contact_init()
 	_body = player as CharacterBody3D
 	_world = player.get_parent() as Node3D
 	_cap = player.get_node_or_null(^"Collision") as CollisionShape3D
@@ -220,6 +221,17 @@ func _spend() -> bool:
 
 
 func _motion(pose: Transform3D, motion: Vector3, recover: bool = false) -> Dictionary:
+	if _contact_enabled:
+		_contact_query_kind = &"zero_recovery" if recover and motion == Vector3.ZERO else &"body_test_motion"
+		_contact_query_pose = pose
+		_contact_rejected_pose = pose
+		_contact_leg = motion
+		_contact_native_pose = pose
+		_contact_native_leg = motion
+		_contact_recovery = recover
+		_contact_blocked = false
+		_contact_hit = null
+		_contact_overlaps = null
 	if not pose.origin.is_finite() or not motion.is_finite() or motion.length() > MAX_EDGE \
 			or not _registered_body_contract() or not _spend():
 		return {"blocked": true, "hit": null}
@@ -233,6 +245,9 @@ func _motion(pose: Transform3D, motion: Vector3, recover: bool = false) -> Dicti
 	# No fresh KinematicCollision3D owner lookup, shape clone or body replacement.
 	var hit := PhysicsTestMotionResult3D.new()
 	var blocked := PhysicsServer3D.body_test_motion(_body_rid, parameters, hit)
+	if _contact_enabled:
+		_contact_hit = hit
+		_contact_blocked = blocked
 	# Check AFTER each native call too; one call can exceed the cooperative cap.
 	if not _registered_body_contract() or Time.get_ticks_usec() > _deadline \
 			or hit.get_collision_count() >= CONTACTS:
@@ -302,8 +317,14 @@ func _foot(pose: Transform3D) -> float:
 
 
 func _floor_contacts(hit: PhysicsTestMotionResult3D, pose: Transform3D, shallow: bool) -> bool:
+	if _contact_enabled:
+		_contact_hit = hit
+		_contact_rejected_pose = pose
+		_contact_shallow = shallow
+		_contact_index = -1
 	if hit == null or hit.get_collision_count() == 0 or hit.get_collision_count() >= CONTACTS \
 			or not _registered_body_contract():
+		_contact_mark(&"floor_missing_saturated_or_registration")
 		return false
 	var ceiling: float = _foot(pose) + _cap.shape.radius * (1.0 - cos(_body.floor_max_angle)) + _body.safe_margin
 	for index in hit.get_collision_count():
@@ -317,12 +338,23 @@ func _floor_contacts(hit: PhysicsTestMotionResult3D, pose: Transform3D, shallow:
 				or normal.dot(Vector3.UP) < cos(_body.floor_max_angle) \
 				or contact.y < _foot(pose) - _body.safe_margin - CONTACT_EPS \
 				or contact.y > ceiling + CONTACT_EPS:
+			if _contact_enabled:
+				_contact_index = index
+			_contact_mark(&"floor_contact_guard")
 			return false
 	return true
 
-func _start_clear(pose: Transform3D) -> bool:
+
+func _start_clear_impl(pose: Transform3D) -> bool:
 	# Explicit actual overlap query. No raised origin, shape shrink or floor RID exclusion.
+	if _contact_enabled:
+		_contact_query_kind = &"intersect_shape"
+		_contact_query_pose = pose
+		_contact_rejected_pose = pose
+		_contact_leg = Vector3.ZERO
+		_contact_overlaps = null
 	if not _registered_body_contract() or not _spend():
+		_contact_mark(&"overlap_contract_or_budget")
 		return false
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = _body.shape_owner_get_shape(_owner, 0)
@@ -333,22 +365,28 @@ func _start_clear(pose: Transform3D) -> bool:
 	query.collide_with_areas = false
 	query.exclude = [_body_rid] # Self only. Never exclude a support/blocking body.
 	var overlaps := _body.get_world_3d().direct_space_state.intersect_shape(query, CONTACTS)
+	if _contact_enabled:
+		_contact_overlaps = overlaps
 	if not _registered_body_contract() or overlaps.size() >= CONTACTS or Time.get_ticks_usec() > _deadline:
 		_stop_geometry("starting overlap saturation/deadline")
+		_contact_mark(&"overlap_saturation_registration_or_deadline")
 		return false
 	# Identity of an overlapping floor shape does not prove there is no wall
 	# contact in that same concave shape. Refuse ALL exact-shape intersections,
 	# including a legitimate floor touch that this backend reports as overlap.
 	# Only recovery SKIN contact outside the unshrunk capsule may be floor-classified.
 	if not overlaps.is_empty():
+		_contact_mark(&"exact_overlap")
 		return false
 	var recovery := _motion(pose, Vector3.ZERO, true)
 	if refused() or recovery.hit == null:
+		_contact_mark(&"zero_recovery_missing_or_refused")
 		return false
 	var hit: PhysicsTestMotionResult3D = recovery.hit
 	# Zero-motion recovery must itself be shallow at this supplied pose.
 	# Do not silently admit a large recovery displacement after an overlap miss.
 	if hit.get_travel().length() > _body.safe_margin + CONTACT_EPS:
+		_contact_mark(&"zero_recovery_travel")
 		return false
 	if not recovery.blocked and overlaps.is_empty() and hit.get_collision_count() == 0:
 		return true
@@ -357,32 +395,47 @@ func _start_clear(pose: Transform3D) -> bool:
 	return true # Provisional floor/skin classification, NOT a collision theorem.
 
 
-func _supported_step(direction: Vector3) -> bool:
-	var pose := _body.global_transform
+func _supported_step_from(pose: Transform3D, direction: Vector3) -> bool:
 	var forward := direction.normalized() * _probe
+	if _contact_enabled:
+		_contact_probe_pose = pose
+		_contact_forward = forward
+	_contact_stage_at(&"forward")
 	var sweep := _motion(pose, forward)
 	if refused():
+		_contact_mark(&"forward_motion_refused")
 		return false
 	var landing := pose.translated(forward)
 	var drop := _body.floor_snap_length
 	if sweep.blocked:
 		# Read-only counterpart of production's bounded step probes. Never apply poses.
+		_contact_stage_at(&"step_up")
 		if _motion(pose, Vector3.UP * _step_height).blocked or refused():
+			_contact_mark(&"step_up_blocked_or_refused")
 			return false
 		var raised := pose.translated(Vector3.UP * _step_height)
-		if not _start_clear(raised) or _motion(raised, forward).blocked or refused():
+		_contact_stage_at(&"raised_start_clear")
+		if not _start_clear(raised):
+			return false
+		_contact_stage_at(&"raised_forward")
+		if _motion(raised, forward).blocked or refused():
+			_contact_mark(&"raised_forward_blocked_or_refused")
 			return false
 		landing = raised.translated(forward)
 		drop = _step_height # Production _try_step_up drops only STEP_HEIGHT.
+	_contact_stage_at(&"landing_start_clear")
 	if not _start_clear(landing):
 		return false
+	_contact_stage_at(&"support_down")
 	var support := _motion(landing, Vector3.DOWN * drop, true)
 	if not support.blocked or support.hit == null or refused():
+		_contact_mark(&"support_missing_or_refused")
 		return false
 	var travel: Vector3 = support.hit.get_travel()
 	if not travel.is_finite() or absf(travel.x) > _body.safe_margin + CONTACT_EPS \
 			or absf(travel.z) > _body.safe_margin + CONTACT_EPS or travel.y > _body.safe_margin + CONTACT_EPS \
 			or -travel.y > drop + _body.safe_margin + CONTACT_EPS:
+		_contact_mark(&"support_travel_guard")
 		return false
 	landing = landing.translated(travel)
 	var rise := _foot(landing) - _foot(pose)
@@ -390,9 +443,18 @@ func _supported_step(direction: Vector3) -> bool:
 	# Keep swept support identity/normal/foot-band guards, then independently
 	# apply the unchanged shallow depth bound via ZERO motion at that safe pose.
 	# _start_clear also retains exact unshrunk overlap refusal at the safe pose.
-	return rise <= _step_height + _body.safe_margin + CONTACT_EPS \
-		and rise >= -_body.floor_snap_length - _body.safe_margin - CONTACT_EPS \
-		and _floor_contacts(support.hit, landing, false) and _start_clear(landing) and not refused()
+	_contact_stage_at(&"rise_bounds")
+	if not (rise <= _step_height + _body.safe_margin + CONTACT_EPS \
+		and rise >= -_body.floor_snap_length - _body.safe_margin - CONTACT_EPS):
+		_contact_mark(&"rise_bounds")
+		return false
+	_contact_stage_at(&"support_floor_contacts")
+	if not _floor_contacts(support.hit, landing, false):
+		return false
+	_contact_stage_at(&"safe_landing_start_clear")
+	if not _start_clear(landing):
+		return false
+	return not refused()
 
 
 func _choose(point: Vector2, tolerance: float) -> bool:
@@ -429,7 +491,7 @@ func _choose(point: Vector2, tolerance: float) -> bool:
 	return false
 
 
-func _native_tick(_delta: float) -> void:
+func _native_tick_impl(_delta: float) -> void:
 	if OS.get_thread_caller_id() != OS.get_main_thread_id():
 		# Never access a physics space from a changed sub-thread group.
 		_reason = "native harness no longer runs on the main physics thread"
@@ -635,3 +697,236 @@ func _prepare_departure(target: Vector3) -> bool:
 
 func _xz(point: Vector3) -> Vector2:
 	return Vector2(point.x, point.z)
+
+
+# Temporary opt-in diagnosis. Pool construction is outside physics callbacks.
+# Existing result objects are retained; output is built only after refusal.
+const CONTACT_DIAGNOSTIC_LIMIT := 8
+
+class ContactDiagnostic extends RefCounted:
+	var probe_pose: Transform3D
+	var forward: Vector3
+	var stage: StringName
+	var reason: StringName
+	var query_kind: StringName
+	var query_pose: Transform3D
+	var leg: Vector3
+	var native_pose: Transform3D
+	var native_leg: Vector3
+	var recovery: bool
+	var blocked: bool
+	var hit: PhysicsTestMotionResult3D
+	var overlaps: Variant
+	var rejected_pose: Transform3D
+	var contact_index: int
+	var shallow: bool
+
+var _contact_enabled := false
+var _contact_pool: Array[ContactDiagnostic] = []
+var _contact_count := 0
+var _contact_emitted := false
+var _contact_active := false
+var _contact_staged := false
+var _contact_probe_pose := Transform3D.IDENTITY
+var _contact_forward := Vector3.ZERO
+var _contact_stage: StringName = &"actual_start"
+var _contact_reason: StringName = &""
+var _contact_query_kind: StringName = &""
+var _contact_query_pose := Transform3D.IDENTITY
+var _contact_leg := Vector3.ZERO
+var _contact_native_pose := Transform3D.IDENTITY
+var _contact_native_leg := Vector3.ZERO
+var _contact_recovery := false
+var _contact_blocked := false
+var _contact_hit: PhysicsTestMotionResult3D
+var _contact_overlaps: Variant = null
+var _contact_rejected_pose := Transform3D.IDENTITY
+var _contact_index := -1
+var _contact_shallow := false
+
+
+func _contact_init() -> void:
+	_contact_enabled = OS.get_cmdline_user_args().has("--opening-contact-diagnostics")
+	if _contact_enabled:
+		for index in CONTACT_DIAGNOSTIC_LIMIT:
+			_contact_pool.append(ContactDiagnostic.new())
+
+
+func _contact_mark(reason: StringName) -> void:
+	if _contact_enabled and _contact_reason == &"":
+		_contact_reason = reason
+
+
+func _contact_stage_at(stage: StringName) -> void:
+	if _contact_enabled:
+		_contact_stage = stage
+
+
+func _contact_capture() -> void:
+	if not _contact_enabled or _contact_count >= CONTACT_DIAGNOSTIC_LIMIT:
+		return
+	var record: ContactDiagnostic = _contact_pool[_contact_count]
+	_contact_count += 1
+	record.probe_pose = _contact_probe_pose
+	record.forward = _contact_forward
+	record.stage = _contact_stage
+	record.reason = _contact_reason
+	record.query_kind = _contact_query_kind
+	record.query_pose = _contact_query_pose
+	record.leg = _contact_leg
+	record.native_pose = _contact_native_pose
+	record.native_leg = _contact_native_leg
+	record.recovery = _contact_recovery
+	record.blocked = _contact_blocked
+	record.hit = _contact_hit
+	record.overlaps = _contact_overlaps
+	record.rejected_pose = _contact_rejected_pose
+	record.contact_index = _contact_index
+	record.shallow = _contact_shallow
+
+
+func _contact_vector(value: Vector3) -> Array:
+	return [value.x, value.y, value.z]
+
+
+func _contact_pose(value: Transform3D) -> Dictionary:
+	return {"origin": _contact_vector(value.origin), "basis_x": _contact_vector(value.basis.x),
+		"basis_y": _contact_vector(value.basis.y), "basis_z": _contact_vector(value.basis.z)}
+
+
+func _contact_dump() -> void:
+	if not _contact_enabled or _contact_emitted or _contact_count == 0:
+		return
+	_contact_emitted = true # At most eight records per navigator lifetime.
+	# No geometry query, ray, terrain height lookup or new native motion here.
+	for record_index in _contact_count:
+		var record: ContactDiagnostic = _contact_pool[record_index]
+		var report: Dictionary = {"record": record_index, "staged": _contact_staged,
+			"stage": String(record.stage), "query_kind": String(record.query_kind),
+			"reason": String(record.reason), "sticky_refusal": _reason,
+			"probe_pose": _contact_pose(record.probe_pose), "forward": _contact_vector(record.forward),
+			"query_pose": _contact_pose(record.query_pose), "leg": _contact_vector(record.leg),
+			"recovery_as_collision": record.recovery, "blocked": record.blocked,
+			"rejected_pose": _contact_pose(record.rejected_pose), "failed_contact_index": record.contact_index,
+			"shallow_required": record.shallow, "request": _contact_vector(_request),
+			"goal": [ _goal.x, _goal.y ], "raw": _raw, "arrival": _arrival,
+			"queries": _queries, "total_queries": _total_queries, "requests": _requests, "plans": _plans}
+		var valid_body: bool = is_instance_valid(_body)
+		var valid_capsule: bool = is_instance_valid(_cap) and _cap.shape is CapsuleShape3D
+		var foot: float = NAN
+		var upper: float = NAN
+		if valid_body:
+			report["live_pose"] = _contact_pose(_body.global_transform)
+			report["body"] = {"floor_angle": _body.floor_max_angle, "snap": _body.floor_snap_length,
+				"safe_margin": _body.safe_margin, "up": _contact_vector(_body.up_direction),
+				"is_on_floor": _body.is_on_floor(), "mask": _body.collision_mask,
+				"rid": str(_body_rid), "owner": _owner, "local_shape": _capsule_index}
+		if valid_body and valid_capsule:
+			var capsule: CapsuleShape3D = _cap.shape as CapsuleShape3D
+			foot = (record.rejected_pose * _cap.transform).origin.y - capsule.height * 0.5
+			upper = foot + capsule.radius * (1.0 - cos(_body.floor_max_angle)) + _body.safe_margin
+			report["capsule"] = {"radius": capsule.radius, "height": capsule.height,
+				"owner_transform": _contact_pose(_cap.transform), "disabled": _cap.disabled}
+			report["limits"] = {"foot": foot, "contact_lower": foot - _body.safe_margin - CONTACT_EPS,
+				"contact_upper": upper + CONTACT_EPS, "shallow_depth": _body.safe_margin + CONTACT_EPS,
+				"max_rise": _step_height, "probe": _probe, "eps": CONTACT_EPS}
+		if is_instance_valid(_world):
+			var terrain: Object = _world.get("_terrain")
+			if is_instance_valid(terrain):
+				report["terrain_collision_metadata"] = {"mode": terrain.get("collision_mode"),
+					"radius": terrain.get("collision_radius"), "shape_size": terrain.get("collision_shape_size")}
+		if record.hit != null:
+			var hit: PhysicsTestMotionResult3D = record.hit
+			var contacts: Array = []
+			for index in mini(CONTACTS, hit.get_collision_count()):
+				var normal: Vector3 = hit.get_collision_normal(index)
+				var point: Vector3 = hit.get_collision_point(index)
+				var depth: float = hit.get_collision_depth(index)
+				var contact: Dictionary = {"index": index, "normal": _contact_vector(normal),
+					"point": _contact_vector(point), "depth": depth, "local_shape": hit.get_collision_local_shape(index),
+					"collider_id": hit.get_collider_id(index), "collider_rid": str(hit.get_collider_rid(index)),
+					"collider_shape": hit.get_collider_shape(index), "finite": normal.is_finite() and point.is_finite() and is_finite(depth)}
+				if valid_body and valid_capsule and record.reason == &"floor_contact_guard":
+					contact["guard_failures"] = {"depth_negative": depth < -CONTACT_EPS,
+						"shallow_depth": record.shallow and depth > _body.safe_margin + CONTACT_EPS,
+						"local_shape": hit.get_collision_local_shape(index) != _capsule_index,
+						"unit_normal": absf(normal.length_squared() - 1.0) > 0.001,
+						"floor_cone": normal.dot(Vector3.UP) < cos(_body.floor_max_angle),
+						"below_foot": point.y < foot - _body.safe_margin - CONTACT_EPS,
+						"above_band": point.y > upper + CONTACT_EPS}
+				contacts.append(contact)
+			report["motion"] = {"from": _contact_pose(record.native_pose), "leg": _contact_vector(record.native_leg),
+				"travel": _contact_vector(hit.get_travel()),
+				"safe": hit.get_collision_safe_fraction(), "unsafe": hit.get_collision_unsafe_fraction(),
+				"contact_count": hit.get_collision_count(), "contacts": contacts}
+		if record.overlaps is Array:
+			var overlaps: Array = []
+			for index in mini(CONTACTS, record.overlaps.size()):
+				var overlap: Dictionary = record.overlaps[index]
+				var collider: Object = overlap.get("collider")
+				overlaps.append({"rid": str(overlap.get("rid")), "collider_id": overlap.get("collider_id"),
+					"shape": overlap.get("shape"), "path": str((collider as Node).get_path()) if is_instance_valid(collider) and collider is Node else "<raw>"})
+			report["overlaps"] = overlaps
+		print("OPENING_CONTACT_DIAG " + JSON.stringify(report, "", true, true))
+
+
+func _native_tick(delta: float) -> void:
+	if not _contact_enabled or not _requested or OS.get_thread_caller_id() != OS.get_main_thread_id():
+		_native_tick_impl(delta)
+		return
+	_contact_count = 0 # First eight failed probes in this callback, not earlier successful callbacks.
+	_native_tick_impl(delta)
+	if refused():
+		_contact_dump() # Formatting/allocation happens only after the callback refused.
+
+
+func _supported_step(direction: Vector3) -> bool:
+	return _supported_step_at(_body.global_transform, direction)
+
+
+func _supported_step_at(pose: Transform3D, direction: Vector3) -> bool:
+	if not _contact_enabled:
+		return _supported_step_from(pose, direction)
+	_contact_active = true
+	_contact_reason = &""
+	_contact_index = -1
+	_contact_shallow = false
+	var admitted: bool = _supported_step_from(pose, direction)
+	if not admitted:
+		_contact_capture()
+	_contact_active = false
+	return admitted
+
+
+func _start_clear(pose: Transform3D) -> bool:
+	if not _contact_enabled:
+		return _start_clear_impl(pose)
+	if not _contact_active:
+		_contact_probe_pose = pose
+		_contact_forward = Vector3.ZERO
+		_contact_stage = &"actual_start"
+		_contact_reason = &""
+		_contact_index = -1
+		_contact_shallow = false
+		_contact_hit = null
+	var admitted: bool = _start_clear_impl(pose)
+	if not admitted and not _contact_active:
+		_contact_capture()
+	return admitted
+
+
+# Diagnostic only: virtual query pose, registered real trainer, no body pose write.
+# Call once from a main-thread node physics callback; never from physics_frame.
+func diagnose_supported_pose(pose: Transform3D, direction: Vector3) -> bool:
+	if not _contact_enabled or OS.get_thread_caller_id() != OS.get_main_thread_id():
+		return false
+	_contact_staged = true
+	_contact_count = 0
+	_queries = 0
+	_deadline = Time.get_ticks_usec() + FRAME_QUERY_US
+	var admitted: bool = _trainer_contract() and _start_clear(pose) and _supported_step_at(pose, direction)
+	_contact_dump()
+	print("OPENING_CONTACT_STAGED_RESULT " + JSON.stringify({"staged": true, "acceptance_credit": false,
+		"admitted": admitted, "refusal": _reason, "queries": _queries, "failed_records": _contact_count}, "", true, true))
+	_contact_staged = false
+	return admitted
