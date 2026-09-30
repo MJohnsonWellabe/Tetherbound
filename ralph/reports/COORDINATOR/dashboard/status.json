@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-30T20:13:49Z",
+ "updated": "2026-09-30T21:10:52Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
   "Criteria met: 109 of 280. Original:95/101; redesign:14/179. F16 all5, F17#0\u2013#3, F26#0/#1/#2/#4 and F27#0 landed by this cut. F26 material path strict MET; full visual bar and Ally/default gates remain open. F17 M1/co-op/full craft remain open.",
-  "Closure-first execution: two implementation writers recover the F21#4 camera landing and the shared prepared authority dependency. Other lane expansion is held with checkpoints preserved. Eight earlier gameplay/art targets remain open; active sessions and drafts are not completed criteria. Required player-path proofs remain; no automatic unit/full-CI repeat.",
+  "Owner priority: quality, a good game and verified main closures; majority closure by Friday morning is a target, not an accepted result. Prepared authority core PR496 is merged. Camera, admitted equipment inputs and the opening chain are the three bounded active targets. Required player-path proofs remain; minimal batched checks under RD36/RD37.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -365,13 +365,13 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "Neutral e4eb76cab0 evidence checkpoint; narrow authority landing being assembled. Original broad batch RED retained; scoped12/287 and Storm8/86 PASS. No criterion credit.",
+   "now": "Prepared authority core PR496 main79c3. Admitted equipment and conservative personal-power read view drafted; required hello wire8 packet freezing. Save28 unchanged. Actual callers and owner-ACK/rejoin proof open.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
    "lane": "tb/hub",
-   "now": "F17#0-#3 main. Opening r4 native FAIL and v3 source FAIL retained; correction packet unfinished, held. F18 dependencies open.",
-   "next": "Resume preserved code after the shared integration lands and ROOT allocates a bounded player path."
+   "now": "F17#0-#3 main. ROOT recovery8316c68826 fixes registered native motion result identity; independent source review running. M1 r4 native/v3 source FAIL retained; actual chain still open. F18 open.",
+   "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
    "lane": "tb/reorder",
@@ -380,7 +380,7 @@
   },
   {
    "lane": "tb/combat",
-   "now": "Recovering F21#4 camera slice from0fde99d801. Static nine-pair blind PASS; moving-player proof and current-main source binding open. F23 drafts held.",
+   "now": "F21#4 live6155 FAIL retained atf384bab32a: overlap54/119 scored observations, actual KO before quick. Production camera lag/body-limit fix underway. Static nine-pair PASS gives no moving-player or full-craft closure.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
@@ -492,7 +492,7 @@
  "wip": [
   "F16 evidence3e9837302: all five independently strict MET; full populated ENet persistence and actual Grandpa opening preserved. Required667-file batch plus RD36 affected corrections maps5422/5422 current methods to passing witnesses. Historical red logs retained; sparse historical proofs restored exactly, satchel retired-helper coverage kept. Full-ci/main landing gates publication; no future mechanic/visual/device claim.",
   "OWNER RD-37 supersedes automatic full-ci for any code/data/scene/test change. Units/full CI are exceptional: explicit acceptance or integration risk that scoped checks cannot cover. Reuse valid proof; a process-only green never proves engine behavior. Advance independent next tasks on lane branches while checks/CI run, against pushed dependency candidates if needed; land only after dependencies. Never skip/disable/quarantine tests or remove a selected label to evade red. F16#4 explicitly names the full unit suite; its already-running batch remains required, with affected repairs only.",
-  "Current ownership: ROOT holds board duty; foundations owns the neutral dependency landing; combat owns the camera landing. Other writers held. One independent reviewer is used for exact ready cuts; import/render/export remain serialized.",
+  "Current ownership: foundations owns admitted stat inputs; combat owns the camera fix; ROOT owns the opening recovery and board. Other writers held. Exact ready cuts receive independent read-only review; all Godot/import/render/export remain serialized.",
   "Proof shortcuts disclosed: authored v27 and populated carrier fixtures, isolated profiles, direct load/picker/Steam/name callbacks, physical injected joypad taps and loft-to-Grandpa teleport. Grandpa conversation actually observed all six authored lines. Peer rejoin clears memory in the same processes, without OS restart; JSON numeric normalization compares full payloads. Peer host logged two closed-channel sends at disconnect; original coordinator fallback error retained, startup isolation corrected with an independently probed one-frame readiness wait. Named playground has only the established material-null native error set, no SCRIPT ERROR. Future gameplay transaction verbs and device/visual evidence are not claimed.",
   "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE \u00a76. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE \u00a77.5 and STATE \u00a70.",
   "Tidewake Phase 2d P2-008 remains open after owner-directed wind-down: eight native before/after pairs are tracked in ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/phase2d-review; local shore symptom 8/8 clear, full photo/Bar A/Bar B/Palworld-quality 0/8. Resume from phase2d-shore-profile-review.md's view table and failed-probe/pickup sections. Next: coordinated dune habitat and Veilfall main-mass art with route/terrain validation, then re-score all eight fixed views code-blind. Do not start the rest of the visual queue or claim regional acceptance from this checkpoint.",
@@ -518,33 +518,43 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T20:13:49Z",
+ "last_lane_refresh": "2026-09-30T21:10:52Z",
  "lane_activity": [
   {
    "lane": "Shared authority \u00b7 tb/foundations",
-   "checkpoint": "Neutral e4eb76cab0 evidence checkpoint; narrow authority landing being assembled. Original broad batch RED retained; scoped12/287 and Storm8/86 PASS. No criterion credit. Canonical F23 data/codec and actual obtainable Fireball TM prerequisites retained; unrelated F17 repairs excluded only with explicit risk provenance."
+   "checkpoint": "Prepared authority core PR496 main79c3. Admitted equipment and conservative personal-power read view drafted; required hello wire8 packet freezing. Save28 unchanged. Actual callers and owner-ACK/rejoin proof open. Original broad batch RED retained; final core strict PASS reuses source-bound evidence. No new acceptance credit."
   },
   {
    "lane": "F21#4 \u00b7 tb/combat",
-   "checkpoint": "Recovering F21#4 camera slice from0fde99d801. Static nine-pair blind PASS; moving-player proof and current-main source binding open. F23 drafts held. Camera source/capture cuts preserve native sizes. Full visual-craft bar and F21#5 remain unproved."
+   "checkpoint": "F21#4 live6155 FAIL retained atf384bab32a: overlap54/119 scored observations, actual KO before quick. Production camera lag/body-limit fix underway. Static nine-pair PASS gives no moving-player or full-craft closure. Camera source/capture cuts preserve native sizes. Full visual-craft bar and F21#5 remain unproved."
+  },
+  {
+   "lane": "F17#4 \u00b7 ROOT on tb/hub",
+   "checkpoint": "F17#0-#3 main. ROOT recovery8316c68826 fixes registered native motion result identity; independent source review running. M1 r4 native/v3 source FAIL retained; actual chain still open. F18 open."
   },
   {
    "lane": "Preserved targets \u00b7 other lanes",
-   "checkpoint": "F17#4, F23#1/#2/#3, F25#0, F26#3, F27#3 and F32#1 remain unaccepted. Existing authored code and evidence preserved; no new coding/review/render launches in these lanes."
+   "checkpoint": "Other F23 drafts, F25#0, F26#3, F27#3 and F32#1 remain held/unaccepted. Existing code and evidence preserved."
   }
  ],
  "active_work": [
   {
    "criterion": "F21#4",
    "lane": "tb/combat",
-   "source": "ecd45e2b1e; camera-only current-main cut",
-   "state": "bounded landing and moving-player proof; unaccepted"
+   "source": "f384bab32a; live6155 FAIL archived; production successor in progress",
+   "state": "actual dynamic overlap fix; unaccepted"
   },
   {
-   "criterion": "F16/F23 shared authority dependency",
+   "criterion": "F23 shared admitted stat prerequisite",
    "lane": "tb/foundations",
-   "source": "86a0efd217; narrow prepared authority cut, final manifest pending",
-   "state": "bounded landing assembly; no new criterion credit"
+   "source": "PR496 merged; equipment/personal-power read-view draft",
+   "state": "bounded actual admitted-carrier implementation; no new criterion credit"
+  },
+  {
+   "criterion": "F17#4",
+   "lane": "tb/hub",
+   "source": "8316c68826; registered trainer shape correction",
+   "state": "independent source review; actual M1 chain open"
   }
  ],
  "preserved_work": [
