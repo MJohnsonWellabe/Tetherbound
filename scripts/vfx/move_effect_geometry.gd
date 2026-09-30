@@ -129,6 +129,11 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("ion_colour", colour)
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.95)))
 		out.set_shader_parameter("pulse_strength", float(profile.get("pulse_strength", 0.08)))
+		out.set_shader_parameter("core_width", float(profile.get("core_width", 0.12)))
+		out.set_shader_parameter("corona_width", float(profile.get("corona_width", 0.72)))
+		out.set_shader_parameter("corona_opacity", float(profile.get("corona_opacity", 0.5)))
+		out.set_shader_parameter("emission_floor", float(profile.get("emission_floor", 0.2)))
+		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.4)))
 		return out
 	if kind == "burning_core":
 		out.shader = FIRE_CORE_SHADER
