@@ -70,7 +70,7 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
 	return failures
 
 
-func seed(raw: Dictionary, character_id: String) -> Dictionary:
+func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionary:
 	if _world_instance.is_empty():
 		return {"ok": false, "code": "world_not_bound"}
 	var failures := errors(raw, character_id)
@@ -93,12 +93,12 @@ func revision(character_id: String) -> int:
 
 
 ## Session alone projects the actual local host PlayerState here. Remote
-## packets never reach this arm: their baseline is retained by seed(). This
+## packets never reach this arm: their baseline is retained by admission. This
 ## tracks host-earned party/gifts without taking a client's proposed refresh.
 func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
 	if _portal_stages.has(character_id) or _loadout_pending.has(character_id):
 		return {"ok": true, "revision": revision(character_id), "state": state(character_id), "pending_transaction": true}
-	var seeded := seed(raw, character_id)
+	var seeded := seed_admitted_character(raw, character_id)
 	if not bool(seeded.get("ok", false)) or not bool(seeded.get("already_seeded", false)):
 		return seeded
 	var current := state(character_id)

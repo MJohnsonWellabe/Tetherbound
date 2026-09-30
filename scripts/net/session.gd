@@ -794,7 +794,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 		_reject_hello(sender, "character_in_use",
 			"That character is already connected to this world.")
 		return
-	var seeded: Dictionary = _character_authority.call("seed", portable, character_id)
+	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
 	if not bool(seeded.get("ok", false)):
 		_registry.call("remove", sender)
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")

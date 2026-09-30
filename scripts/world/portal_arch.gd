@@ -150,7 +150,7 @@ static func escrow_errors(raw: Variant, character_id: String) -> Array[String]:
 	for key: Variant in raw:
 		var value: Variant = raw[key]
 		var portal_key := str(key).begins_with(KIND + ":")
-		var portal_kind := value is Dictionary and value.get("kind") == KIND
+		var portal_kind: bool = value is Dictionary and value.get("kind") == KIND
 		if portal_key or portal_kind:
 			if not valid_row(value, character_id) or str(key) != str(value.get("receipt", "")):
 				errors.append("malformed portal escrow %s" % str(key))
