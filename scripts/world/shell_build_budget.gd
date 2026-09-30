@@ -96,6 +96,7 @@ const LONG_SLICE_MS := 250
 var _tree: SceneTree = null
 var _active := false
 var _multiplayer_staging := false
+var _forward_upload := false
 var _budget_ms := DEFAULT_BUDGET_MS
 var _frame_started_ms := 0
 var _step_started_ms := 0
@@ -135,6 +136,7 @@ var _profile_step_ms := 0
 ##      same frame.
 func begin(world: Node, shell: bool) -> void:
 	_multiplayer_staging = false
+	_forward_upload = false
 	_profile_load = OS.get_cmdline_user_args().has("--profile-realm-load")
 	_profile_step_ms = Time.get_ticks_msec()
 	_began_ms = _profile_step_ms
@@ -157,7 +159,9 @@ func begin(world: Node, shell: bool) -> void:
 		_budget_ms = CROSSING_BUDGET_MS
 		if cfg.has("crossing_build_budget_ms"):
 			_budget_ms = maxi(1, int(cfg["crossing_build_budget_ms"]))
-	elif RenderingServer.get_current_rendering_method() == "forward_plus":
+	elif RenderingServer.get_current_rendering_method() == "forward_plus" \
+			and DisplayServer.get_name() != "headless":
+		_forward_upload = true
 		_budget_ms = maxi(1, int(cfg.get("forward_build_budget_ms", FORWARD_BUILD_BUDGET_MS)))
 	else:
 		_active = false
@@ -183,6 +187,13 @@ func is_slicing() -> bool:
 ## Forward+ solo still builds the full authored landmarks and route shoulders.
 func uses_multiplayer_staging() -> bool:
 	return _multiplayer_staging
+
+
+## Physics ticks can run before a draw. Solo Vulkan construction must wait
+## for an actual render boundary; network construction retains its heartbeat
+## signal. Cloudreach owns the same signal await in its Node coroutine.
+func needs_render_release() -> bool:
+	return _forward_upload
 
 
 ## Live diagnostic breadcrumb emitted BEFORE a potentially costly authored
@@ -211,9 +222,13 @@ func breathe() -> void:
 	# continuation when a deeply nested world-build coroutine awaits this
 	# RefCounted method while it, in turn, awaits another RefCounted coroutine.
 	# Keeping the signal await here removes that extra continuation boundary;
-	# the number and kind of frames released are unchanged.
+	# Multiplayer retains its physics heartbeat frames; native solo Forward+
+	# releases a completed render instead of assuming a physics tick drew.
 	for i in frames:
-		await _tree.physics_frame
+		if needs_render_release():
+			await RenderingServer.frame_post_draw
+		else:
+			await _tree.physics_frame
 	finish_release(frames)
 
 
@@ -226,7 +241,10 @@ func step(label: String) -> void:
 	if frames <= 0:
 		return
 	for i in frames:
-		await _tree.physics_frame
+		if needs_render_release():
+			await RenderingServer.frame_post_draw
+		else:
+			await _tree.physics_frame
 	finish_step(label, frames)
 
 
@@ -269,8 +287,12 @@ func finish_step(label: String, frames: int) -> void:
 
 ## One frame normally; a whole heartbeat window after an indivisible slice.
 ## Kept synchronous so `breathe()` and `step()` remain the sole owners of the
-## physics-signal await and their callers have only one continuation boundary.
+## signal await and their callers have only one continuation boundary.
 func _frames_to_release(slice_ms: int) -> int:
+	# Solo render uploads need one completed draw, rather than the network
+	# heartbeat payback window after an indivisible CPU construction step.
+	if _forward_upload:
+		return 1
 	var frames := 1
 	if slice_ms >= LONG_SLICE_MS:
 		frames = HEARTBEAT_FRAMES + 5

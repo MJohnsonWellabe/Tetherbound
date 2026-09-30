@@ -499,7 +499,10 @@ func shell_build_complete() -> bool:
 func _build_breathe() -> void:
 	var frames := int(_shell_build.call("take_breathe_frames"))
 	for i in frames:
-		await get_tree().physics_frame
+		if bool(_shell_build.call("needs_render_release")):
+			await RenderingServer.frame_post_draw
+		else:
+			await get_tree().physics_frame
 	if frames > 0:
 		_shell_build.call("finish_release", frames)
 
@@ -507,7 +510,10 @@ func _build_breathe() -> void:
 func _build_step(label: String) -> void:
 	var frames := int(_shell_build.call("take_step_frames", label))
 	for i in frames:
-		await get_tree().physics_frame
+		if bool(_shell_build.call("needs_render_release")):
+			await RenderingServer.frame_post_draw
+		else:
+			await get_tree().physics_frame
 	if frames > 0:
 		_shell_build.call("finish_step", label, frames)
 
