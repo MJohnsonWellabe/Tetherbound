@@ -1,5 +1,10 @@
 extends SceneTree
 
+## Retired-path regression fixture: RD-35 redesign saves are current schema,
+## but this probe deliberately enables the single legacy physical-crossing
+## flag. Production remains default-off; this is not portal-loop acceptance.
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
 ## Focused fixture-only Water return proof. This mounts the production Water
 ## scene, walks its real player to the mounted return gate through ordinary
 ## stick input, activates the exact InteractionArbiter winner through a parsed
@@ -27,6 +32,7 @@ var _gate_prompt_id := 0
 
 
 func _init() -> void:
+	assert(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 	_run.call_deferred()
 
 
