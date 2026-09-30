@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-30T00:47:42.776Z",
- "main_sha": "3cc8e789c",
+ "generated_at": "2026-09-30T02:20:55Z",
+ "main_sha": "82eda1835",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
   {
@@ -943,14 +943,14 @@
     {
      "text": "Every new durable field declares scope (world or character) and transaction semantics in the flag-scope registry; a two-peer save/reload round trip preserves them.",
      "status": "in_progress",
-     "evidence": "",
-     "gap": "World/character/creature fields declare scope and transaction rules and persist through split carriers. Populated real two-peer save/reload/rejoin proof remains. Future mechanics are schema declarations only."
+     "evidence": "Independent strict candidate MET: 32d4b9e36 / pushed evidence 1fb68ea08; committed two-peer-final.txt / two-peer-host.txt / two-peer-guest.txt evidence under ralph/reports/FOUNDATIONS/f16. Runtime source e457754dd, two real ENet processes, ALL CHECKS PASSED/native0, full 8/14/9 carrier payloads; registry scope/authority/transactions declared.",
+     "gap": "Candidate only until full batch, full-ci PR and landing. Authored fixtures, direct title callbacks, same-process memory wipe, JSON numeric normalization disclosed. Two closed-channel host sends at leave retained; original coordinator fallback error retained, readiness-only delta independently probed. Future gameplay transactions not claimed."
     },
     {
      "text": "New game from the title reaches Grandpa's opening on the new schema with an empty satchel apart from authored gifts; the full unit suite is green.",
      "status": "in_progress",
-     "evidence": "",
-     "gap": "Real title New Game reaches Meadows/Grandpa opening prompts with empty satchel and v28 autosave. Actual Grandpa dialogue/input extension, full four-shard suite and strict re-check remain."
+     "evidence": "Committed title-grandpa-final.txt on 32d4b9e36 / pushed evidence 1fb68ea08, runtime e457754dd/native0: physical New Game and bed wake, six actual authored Grandpa dialogue lines to starter picker, authored-gifts-only empty satchel, production v28 autosave and old files preserved.",
+     "gap": "Actual player-path clause independently PASS; whole criterion NOT MET while full unit batch remains open. RD-35 portable expectation repaired; two obsolete satchel expectations and sparse manifest-only omission being repaired from actual shard failures. Fixtures/direct callbacks/loft teleport/injected taps disclosed; no device/visual claim."
     }
    ]
   },
