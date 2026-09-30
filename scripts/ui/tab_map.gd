@@ -1775,6 +1775,8 @@ func _realm_link_unlock_flags() -> Array:
 ## map may promise a way through before one exists); Cloudreach always shows
 ## the way back, since arriving there requires the way in to already exist.
 func _realm_link_visible() -> bool:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		return false
 	var realm_id := _display_realm()
 	if realm_id == "meadows":
 		return _cloudreach_unlocked()

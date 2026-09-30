@@ -71,8 +71,8 @@ func test_meadows_is_the_only_available_realm_until_cloudreach_is_reachable() ->
 	game.progression.set_flag("realm_key_cloudreach")
 	assert_eq(tab.call("_available_realms"), ["meadows", "cloudreach"],
 		"the Warden's key flag (D110) makes Cloudreach a selectable realm")
-	assert_true(bool(tab.call("_realm_link_visible")),
-		"the crossing marker appears on the Meadows map once Cloudreach is reachable")
+	assert_false(bool(tab.call("_realm_link_visible")),
+		"portal reachability does not restore a retired physical crossing marker")
 
 
 func test_cloudreachs_own_discovery_alone_unlocks_the_selector_without_any_flag() -> void:
