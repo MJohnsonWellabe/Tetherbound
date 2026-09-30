@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-30T02:42:39Z",
+ "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 95 of 280. Original: 95/101; redesign: 0/179. All five F16 criteria in progress; no new acceptance counted.",
-  "Wave 0: foundations evidence candidate 1fb68ea08 pushed, main 82eda1835 merged. Independent F16#0/#1/#2/#3 candidate MET; actual title New Game, bed wake and all six Grandpa lines pass. Full unit batch remains open; old-load expectations are being corrected to RD-35 without weakening current-schema persistence. Combat and VFX implementation patches plus graphics preset code are drafted in ignored scratch; prepared lane branches apply after F16 lands. Board duty: tb/redesign-board.",
+  "Criteria met: 100 of 280. Original:95/101; redesign:5/179. F16 Wave0 complete in this reviewed integration candidate; CI and main landing gate acceptance publication.",
+  "Wave0 F16 complete: all5 independent strict MET, schema28/refusal-preservation, validated catalogs, central order, populated two-peer persistence and actual Grandpa opening. Required667-file batch covers5422/5422 current methods after affected repairs under RD36; full-ci integration required for this broad save/autoload/network patch. Wave1 lanes may land after this PR merges.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -365,8 +365,8 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "F16 batch in progress: 1fb68ea08 pushed; independent candidate MET #0–#3; #4 actual player path PASS, full unit batch open",
-   "next": "Work order in CODEX_START_HERE §6: F16"
+   "now": "F16 all5 criteria strict MET; required batch complete5422/5422 passing methods; integration PR main landing gate",
+   "next": "Wave0 lands before Wave1; foundations reuse later assigned work"
   },
   {
    "lane": "tb/hub",
@@ -489,9 +489,9 @@
  ],
  "four_chapter_run": null,
  "wip": [
-  "F16 evidence 1fb68ea08 / peer+title runtime e457754dd: independent #0–#3 candidates MET. Actual populated ENet peers preserve all 8 world, 14 personal and 9 per-creature fields through production saves/reloads and named-ID rejoin. Actual New Game, bed wake, six Grandpa lines, authored-gifts-only satchel and v28 autosave pass. Shard1 original red portable expectation was repaired and affected checks pass; shard2 found two obsolete satchel migration expectations plus omitted historical manifest files from sparse checkout. Preserve failed logs; rerun only affected checks and execute every remaining shard without exclusions. Nothing newly MET on main.",
+  "F16 evidence3e9837302: all five independently strict MET; full populated ENet persistence and actual Grandpa opening preserved. Required667-file batch plus RD36 affected corrections maps5422/5422 current methods to passing witnesses. Historical red logs retained; sparse historical proofs restored exactly, satchel retired-helper coverage kept. Full-ci/main landing gates publication; no future mechanic/visual/device claim.",
   "OWNER RD-37 supersedes automatic full-ci for any code/data/scene/test change. Units/full CI are exceptional: explicit acceptance or integration risk that scoped checks cannot cover. Reuse valid proof; a process-only green never proves engine behavior. Advance independent next tasks on lane branches while checks/CI run, against pushed dependency candidates if needed; land only after dependencies. Never skip/disable/quarantine tests or remove a selected label to evade red. F16#4 explicitly names the full unit suite; its already-running batch remains required, with affected repairs only.",
-  "Active ownership: foundations owns Wave 0 source/tests and its Godot batch; root owns board/STATE and bounded satchel expectation repair after shard exit. Combat owns impact/host receipts and feedback primitives; VFX owns move archetypes/projectile/VFX move blocks; lookdev owns renderer/settings/shaders. Shared paths serialize. No tracked Wave 1 implementation before F16. Import/render/export writers serialize; concurrent units require separate frozen source checkouts and user-data roots because some tests mutate res/config fixtures.",
+  "Active ownership: foundations owns F16 closure PR and board/STATE delta; root owns lookdev graphics. Combat and VFX own their bounded implementation lanes. Wave1 may land after F16 merges. Import/render/export writers serialize; units with res/config fixture mutations require distinct frozen source checkouts and user-data roots.",
   "Proof shortcuts disclosed: authored v27 and populated carrier fixtures, isolated profiles, direct load/picker/Steam/name callbacks, physical injected joypad taps and loft-to-Grandpa teleport. Grandpa conversation actually observed all six authored lines. Peer rejoin clears memory in the same processes, without OS restart; JSON numeric normalization compares full payloads. Peer host logged two closed-channel sends at disconnect; original coordinator fallback error retained, startup isolation corrected with an independently probed one-frame readiness wait. Named playground has only the established material-null native error set, no SCRIPT ERROR. Future gameplay transaction verbs and device/visual evidence are not claimed.",
   "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE §6. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE §7.5 and STATE §0.",
   "Tidewake Phase 2d P2-008 remains open after owner-directed wind-down: eight native before/after pairs are tracked in ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/phase2d-review; local shore symptom 8/8 clear, full photo/Bar A/Bar B/Palworld-quality 0/8. Resume from phase2d-shore-profile-review.md's view table and failed-probe/pickup sections. Next: coordinated dune habitat and Veilfall main-mass art with route/terrain validation, then re-score all eight fixed views code-blind. Do not start the rest of the visual queue or claim regional acceptance from this checkpoint.",

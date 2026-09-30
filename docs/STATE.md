@@ -28,7 +28,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | 1fb68ea08 pushed, main82eda merged; independent #0–#3 candidate MET; #4 six-line Grandpa path PASS; full unit batch open, old satchel expectations being corrected to RD-35 |
+| `tb/foundations` | F16 | All5 strict MET; schema28, central order, full populated ENet roundtrip and actual Grandpa opening.667-file batch5422/5422 passing methods with RD36 affected repairs; logs/shortcuts in ralph/reports/FOUNDATIONS/f16. Full-ci/main landing required; Wave1 follows merge. |
 | `tb/hub` | F17, F18 | waits on F16 |
 | `tb/reorder` | F19, F20 | waits on F16, F18 |
 | `tb/combat` | F21–F24 | prototype complete; independent F16 review; edits after F16 |
