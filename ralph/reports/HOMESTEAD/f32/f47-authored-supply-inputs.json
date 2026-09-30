@@ -1,0 +1,1248 @@
+{
+  "method": "Source-only supply inputs derived from the existing independent exact-blob eligibility census. No GDScript/native execution, gameplay, stock sampling, simulation, units or CI.",
+  "ordinary_census_source_commit": "22d8bce7eaf6022d76bfa50b18bf10534f694cde",
+  "current_recipe_source_commit": "acdabd291de004acfc38c91d50a5b2ddb355c0fe",
+  "ordinary_census_evidence": "ralph/reports/HOMESTEAD/f32/renewable-shed-review-22d8/source-audit.json",
+  "scope": "All node stock and base quantity totals are one shared host-world pool, never multiplied by four characters. Character receipts/outputs still belong to the winning claimant.",
+  "limit": "Numbers below are potential authored full-cycle upper bounds assuming every eligible definition is actually mounted, reachable, admitted by route/phase/tool gates and ready. None of those runtime premises is proven. Missing/off candidates, seed chance, character inventory capacity and applicable blueprint eligibility are not guaranteed supply.",
+  "criteria_state": "All six F32 criteria OPEN/UNPROVED. Inputs are for F47, not a solvent-four-player or real-gatherability verdict.",
+  "ordinary": {
+    "meadows": {
+      "wood": {
+        "definition_count": 37,
+        "potential_world_units_per_complete_ready_cycle": 147,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 37
+          }
+        ]
+      },
+      "stone": {
+        "definition_count": 41,
+        "potential_world_units_per_complete_ready_cycle": 131,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 41
+          }
+        ]
+      },
+      "fiber": {
+        "definition_count": 40,
+        "potential_world_units_per_complete_ready_cycle": 156,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 40
+          }
+        ]
+      },
+      "rootstone": {
+        "definition_count": 10,
+        "potential_world_units_per_complete_ready_cycle": 20,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 10
+          }
+        ]
+      },
+      "ironwood": {
+        "definition_count": 23,
+        "potential_world_units_per_complete_ready_cycle": 69,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 23
+          }
+        ]
+      }
+    },
+    "water": {
+      "reed_fiber": {
+        "definition_count": 46,
+        "potential_world_units_per_complete_ready_cycle": 138,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 46
+          }
+        ]
+      },
+      "driftwood": {
+        "definition_count": 45,
+        "potential_world_units_per_complete_ready_cycle": 135,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 45
+          }
+        ]
+      },
+      "reef_stone": {
+        "definition_count": 38,
+        "potential_world_units_per_complete_ready_cycle": 78,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 38
+          }
+        ]
+      },
+      "tide_bloom": {
+        "definition_count": 29,
+        "potential_world_units_per_complete_ready_cycle": 58,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 29
+          }
+        ]
+      },
+      "sluice_metal": {
+        "definition_count": 23,
+        "potential_world_units_per_complete_ready_cycle": 46,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 23
+          }
+        ]
+      }
+    },
+    "cloudreach": {
+      "gale_fiber": {
+        "definition_count": 4,
+        "potential_world_units_per_complete_ready_cycle": 10,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 4
+          }
+        ]
+      },
+      "cloudberry": {
+        "definition_count": 2,
+        "potential_world_units_per_complete_ready_cycle": 8,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 2
+          }
+        ]
+      },
+      "windworn_heartwood": {
+        "definition_count": 2,
+        "potential_world_units_per_complete_ready_cycle": 9,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 2
+          }
+        ]
+      },
+      "cliffglass_ore": {
+        "definition_count": 6,
+        "potential_world_units_per_complete_ready_cycle": 18,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 6
+          }
+        ]
+      },
+      "sunleaf": {
+        "definition_count": 1,
+        "potential_world_units_per_complete_ready_cycle": 3,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 0,
+        "validation_metadata_profiles": [
+          {
+            "availability": [],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 1
+          }
+        ]
+      }
+    },
+    "stormwood": {
+      "conductor_vine": {
+        "definition_count": 26,
+        "potential_world_units_per_complete_ready_cycle": 78,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 26,
+        "validation_metadata_profiles": [
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 26
+          }
+        ]
+      },
+      "glowmoss": {
+        "definition_count": 32,
+        "potential_world_units_per_complete_ready_cycle": 96,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 32,
+        "validation_metadata_profiles": [
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 20
+          },
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "stormwood:rootgate_released",
+            "requires_world_flags": [],
+            "definition_count": 12
+          }
+        ]
+      },
+      "stormglass": {
+        "definition_count": 64,
+        "potential_world_units_per_complete_ready_cycle": 192,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 64,
+        "validation_metadata_profiles": [
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 28
+          },
+          {
+            "availability": [
+              "break",
+              "fading"
+            ],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 8
+          },
+          {
+            "availability": [
+              "break",
+              "fading"
+            ],
+            "requires_flag": "stormwood:rootgate_released",
+            "requires_world_flags": [],
+            "definition_count": 10
+          },
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "stormwood:rootgate_released",
+            "requires_world_flags": [],
+            "definition_count": 18
+          }
+        ]
+      },
+      "voltcap": {
+        "definition_count": 18,
+        "potential_world_units_per_complete_ready_cycle": 54,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 18,
+        "validation_metadata_profiles": [
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 6
+          },
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "stormwood:rootgate_released",
+            "requires_world_flags": [],
+            "definition_count": 12
+          }
+        ]
+      },
+      "thunderwood": {
+        "definition_count": 30,
+        "potential_world_units_per_complete_ready_cycle": 120,
+        "respawn_days": [
+          2
+        ],
+        "has_host_phase_or_route_validation_metadata_count": 30,
+        "validation_metadata_profiles": [
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "",
+            "requires_world_flags": [],
+            "definition_count": 12
+          },
+          {
+            "availability": [
+              "calm",
+              "building",
+              "break",
+              "fading"
+            ],
+            "requires_flag": "stormwood:rootgate_released",
+            "requires_world_flags": [],
+            "definition_count": 18
+          }
+        ]
+      }
+    }
+  },
+  "unmounted_material_candidates": {
+    "meadows": {
+      "known_to_canonical_registry": false,
+      "included_in_ordinary_supply_totals": false,
+      "body_depth_slope_and_player_path_proven": false,
+      "rows": [
+        {
+          "id": "meadows:sunleaf:patch:01",
+          "at": [
+            3.0,
+            141.0
+          ],
+          "outputs": {
+            "sunleaf": 3
+          },
+          "respawn_days": 2
+        },
+        {
+          "id": "meadows:sunleaf:patch:02",
+          "at": [
+            158.0,
+            1565.0
+          ],
+          "outputs": {
+            "sunleaf": 3
+          },
+          "respawn_days": 2
+        },
+        {
+          "id": "meadows:sunleaf:patch:03",
+          "at": [
+            -297.0,
+            5075.0
+          ],
+          "outputs": {
+            "sunleaf": 3
+          },
+          "respawn_days": 2
+        }
+      ]
+    },
+    "water": {
+      "known_to_canonical_registry": false,
+      "included_in_ordinary_supply_totals": false,
+      "body_depth_slope_and_player_path_proven": false,
+      "rows": [
+        {
+          "id": "water:tide_pearl:reef_bed:first_shore:01",
+          "at": [
+            80.0,
+            -24.0
+          ],
+          "outputs": {
+            "tide_pearl": 2
+          },
+          "respawn_days": 2
+        },
+        {
+          "id": "water:tide_pearl:reef_bed:reedhaven:01",
+          "at": [
+            -154.0,
+            506.0
+          ],
+          "outputs": {
+            "tide_pearl": 2
+          },
+          "respawn_days": 2
+        },
+        {
+          "id": "water:tide_pearl:reef_bed:brine_steps:01",
+          "at": [
+            560.0,
+            534.0
+          ],
+          "outputs": {
+            "tide_pearl": 2
+          },
+          "respawn_days": 2
+        }
+      ]
+    }
+  },
+  "essence_definitions": {
+    "meadows": {
+      "ground": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ground": 3,
+          "attuned_ground": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ground",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "water": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_water": 3,
+          "attuned_water": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_water",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "air": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_air": 3,
+          "attuned_air": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_air",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "electric": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_electric": 3,
+          "attuned_electric": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_electric",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "fire": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_fire": 3,
+          "attuned_fire": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_fire",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "dark": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_dark": 3,
+          "attuned_dark": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_dark",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "ice": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ice": 3,
+          "attuned_ice": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ice",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "psychic": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_psychic": 3,
+          "attuned_psychic": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_psychic",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      }
+    },
+    "cloudreach": {
+      "ground": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ground": 3,
+          "attuned_ground": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ground",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "water": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_water": 3,
+          "attuned_water": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_water",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "air": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_air": 3,
+          "attuned_air": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_air",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "electric": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_electric": 3,
+          "attuned_electric": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_electric",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "fire": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_fire": 3,
+          "attuned_fire": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_fire",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "dark": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_dark": 3,
+          "attuned_dark": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_dark",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "ice": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ice": 3,
+          "attuned_ice": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ice",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "psychic": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_psychic": 3,
+          "attuned_psychic": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_psychic",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      }
+    },
+    "stormwood": {
+      "ground": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ground": 3,
+          "attuned_ground": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ground",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "water": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_water": 3,
+          "attuned_water": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_water",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "air": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_air": 3,
+          "attuned_air": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_air",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "electric": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_electric": 3,
+          "attuned_electric": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_electric",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "fire": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_fire": 3,
+          "attuned_fire": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_fire",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "dark": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_dark": 3,
+          "attuned_dark": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_dark",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "ice": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ice": 3,
+          "attuned_ice": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ice",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "psychic": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_psychic": 3,
+          "attuned_psychic": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_psychic",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      }
+    },
+    "water": {
+      "ground": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ground": 3,
+          "attuned_ground": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ground",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "water": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_water": 3,
+          "attuned_water": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_water",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "air": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_air": 3,
+          "attuned_air": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_air",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "electric": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_electric": 3,
+          "attuned_electric": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_electric",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "fire": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_fire": 3,
+          "attuned_fire": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_fire",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "dark": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_dark": 3,
+          "attuned_dark": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_dark",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "ice": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_ice": 3,
+          "attuned_ice": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_ice",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      },
+      "psychic": {
+        "source_definition_count": 1,
+        "status": "authored_candidates_not_runtime_mounted",
+        "deterministic_outputs_per_ready_definition": {
+          "essence_psychic": 3,
+          "attuned_psychic": 1
+        },
+        "respawn_days": 3,
+        "seed_drop_chance_definition": {
+          "item": "seed_psychic",
+          "amount": 1,
+          "chance": 0.25
+        },
+        "seed_is_guaranteed": false,
+        "actual_stock_mount_and_body_path_proven": false
+      }
+    }
+  },
+  "crop_definitions": {
+    "berries": {
+      "seed_item": "berry_seeds",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 1,
+      "outputs_per_manual_harvest": {
+        "berries": 4
+      },
+      "native_without_greenhouse": true,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "ground": {
+      "seed_item": "seed_ground",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_ground": 2,
+        "essence_ground": 3
+      },
+      "native_without_greenhouse": true,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "water": {
+      "seed_item": "seed_water",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_water": 2,
+        "essence_water": 3
+      },
+      "native_without_greenhouse": false,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "air": {
+      "seed_item": "seed_air",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_air": 2,
+        "essence_air": 3
+      },
+      "native_without_greenhouse": true,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "electric": {
+      "seed_item": "seed_electric",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_electric": 2,
+        "essence_electric": 3
+      },
+      "native_without_greenhouse": false,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "fire": {
+      "seed_item": "seed_fire",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_fire": 2,
+        "essence_fire": 3
+      },
+      "native_without_greenhouse": false,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "dark": {
+      "seed_item": "seed_dark",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_dark": 2,
+        "essence_dark": 3
+      },
+      "native_without_greenhouse": false,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "ice": {
+      "seed_item": "seed_ice",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_ice": 2,
+        "essence_ice": 3
+      },
+      "native_without_greenhouse": false,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    },
+    "psychic": {
+      "seed_item": "seed_psychic",
+      "seed_cost_per_sow": 1,
+      "grow_host_world_days": 2,
+      "outputs_per_manual_harvest": {
+        "attuned_psychic": 2,
+        "essence_psychic": 3
+      },
+      "native_without_greenhouse": false,
+      "greenhouse_build_path_proven": false,
+      "actual_sow_growth_payout_and_cache_path_proven": false
+    }
+  },
+  "refining_definitions": {
+    "rootiron_ingot": {
+      "tier": 1,
+      "required_attachment_tier": 0,
+      "station": "forge",
+      "canonical_cost_per_unit": [
+        {
+          "id": "rootstone",
+          "n": 2
+        },
+        {
+          "id": "ironwood",
+          "n": 1
+        }
+      ],
+      "output_per_completed_unit": {
+        "id": "rootiron_ingot",
+        "n": 1
+      },
+      "actual_station_personal_eligibility_and_atomic_path_proven": false
+    },
+    "tidesteel_ingot": {
+      "tier": 2,
+      "required_attachment_tier": 0,
+      "station": "forge",
+      "canonical_cost_per_unit": [
+        {
+          "id": "sluice_metal",
+          "n": 2
+        },
+        {
+          "id": "reef_stone",
+          "n": 1
+        }
+      ],
+      "output_per_completed_unit": {
+        "id": "tidesteel_ingot",
+        "n": 1
+      },
+      "actual_station_personal_eligibility_and_atomic_path_proven": false
+    },
+    "skyglass_ingot": {
+      "tier": 3,
+      "required_attachment_tier": 0,
+      "station": "forge",
+      "canonical_cost_per_unit": [
+        {
+          "id": "cliffglass_ore",
+          "n": 2
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 1
+        }
+      ],
+      "output_per_completed_unit": {
+        "id": "skyglass_ingot",
+        "n": 1
+      },
+      "actual_station_personal_eligibility_and_atomic_path_proven": false
+    },
+    "stormglass_plate": {
+      "tier": 4,
+      "required_attachment_tier": 0,
+      "station": "forge",
+      "canonical_cost_per_unit": [
+        {
+          "id": "stormglass",
+          "n": 2
+        },
+        {
+          "id": "thunderwood",
+          "n": 1
+        }
+      ],
+      "output_per_completed_unit": {
+        "id": "stormglass_plate",
+        "n": 1
+      },
+      "actual_station_personal_eligibility_and_atomic_path_proven": false
+    }
+  },
+  "crop_scope": "Host-world plots/growth, one shared manual harvest; seed debit and outputs in the claiming actor character inventory under one canonical transaction. Existing authored6beds are not multiplied by four players.",
+  "crop_authored_bed_count": 6,
+  "refining_registration_status": "authored_proposals_not_runtime_registered",
+  "refining_manual_channel": {
+    "seconds_per_unit": 1.5,
+    "radius_m": 3.0,
+    "tap_start": true,
+    "held_input": false,
+    "queue": false,
+    "offline_production": false,
+    "commit_per_unit": true,
+    "pay_unstarted_units": false,
+    "stop_on": [
+      "out_of_radius",
+      "another_modal",
+      "combat"
+    ]
+  },
+  "not_budgeted_as_guaranteed": [
+    "Chance seed outputs",
+    "Wild-win shed rolls",
+    "Unregistered/manual Den grooming and care composition",
+    "Unmounted Sunleaf/Tide Pearl candidates",
+    "Unproved stock readiness, route/phase admission, placement and body/player path",
+    "Guest personal blueprint or recipe grants",
+    "Ignored Greenhouse buildable cost/placement proposal"
+  ]
+}
