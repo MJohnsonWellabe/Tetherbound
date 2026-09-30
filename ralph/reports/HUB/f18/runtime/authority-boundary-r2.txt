@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_character_authority.gd: 1 of 677 test files
+  ok    test_character_authority.gd :: test_admission_and_rejoin_cannot_replace_or_mutate_owned_baseline
+  ok    test_character_authority.gd :: test_loadout_cas_retains_pending_edit_and_requires_matching_owner_save_ack
+  ok    test_character_authority.gd :: test_owned_portal_stage_promotes_only_frozen_state_and_rolls_back_failed_world_save
+
+3 tests, 44 assertions, 0 failed

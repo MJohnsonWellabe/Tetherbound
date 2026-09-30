@@ -1,0 +1,16 @@
+{
+  "source": "57dc208f98d763a9719e94c97ed0125192d39821",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "res://tests/run_tests.gd",
+    "--",
+    "--only=test_character_authority.gd"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\authority-r1-profile",
+  "native_exit": 0,
+  "elapsed_seconds": 4.422000000020489
+}
