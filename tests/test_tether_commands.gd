@@ -152,3 +152,50 @@ func test_command_gear_combo_and_pouch_apply_only_admitted_own_support() -> void
 	host.pouch_item_kind = "consumable"
 	host.item_deals_damage = true
 	assert_false(_stage(state, _intent("item_throw"), host).ok)
+
+
+func test_equipped_backpack_tier_cannot_come_from_other_slots_or_malformed_data() -> void:
+	var db := preload("res://autoload/item_db.gd").new()
+	var equipment := preload("res://scripts/player/player_equipment.gd").new()
+	equipment.configure(db)
+	assert_eq(equipment.command_gear_profile().tier, 1)
+	assert_eq(equipment.command_pouch_size(), 1)
+	assert_true(equipment.equip("hide_vest").ok)
+	db.definition("hide_vest")["tether_pouch_tier"] = 4
+	assert_eq(equipment.command_gear_profile().tier, 1, "a worn torso upgrade is not an equipped backpack")
+	assert_true(equipment.equip("travel_pack").ok)
+	assert_eq(equipment.command_gear_profile().tier, 1, "ordinary authored pack retains the base profile")
+	# Local ItemDB fixture only: tier-four gear content/crafting is not authored.
+	var definition: Dictionary = db.definition("travel_pack")
+	definition["tether_pouch_tier"] = 4
+	var detached := equipment.command_gear_profile()
+	assert_eq(detached.tier, 4)
+	assert_eq(equipment.command_pouch_size(), 3)
+	detached.tier = 1
+	assert_eq(equipment.command_gear_profile().tier, 4, "readers do not expose the ItemDB/profile by reference")
+	for malformed: Variant in [0, 5, 2.5, "4", true, NAN, INF]:
+		definition["tether_pouch_tier"] = malformed
+		assert_true(equipment.command_gear_profile().is_empty())
+		assert_eq(equipment.command_pouch_size(), 0)
+	definition["tether_pouch_tier"] = 4
+	definition["kind"] = "key"
+	assert_true(equipment.command_gear_profile().is_empty())
+	definition["kind"] = "armor"
+	definition["armor_slot"] = "boots"
+	assert_true(equipment.command_gear_profile().is_empty())
+
+
+func test_snare_catch_arithmetic_keeps_owner_expiry_and_existing_ceiling() -> void:
+	var catching := preload("res://scripts/combat/catch_math.gd")
+	var staged := _stage(_state(), _intent("snare"), _host())
+	assert_true(staged.ok)
+	var accepted: Dictionary = staged.state # Staged fixture; no live command commit.
+	var base := catching.catch_chance(0.25, 0.5, "orb_basic", 0.0, 1.0)
+	var own_bonus := COMMANDS.snare_catch_bonus(accepted, "character-a", "wild-a", 1001)
+	var ceiling := float(catching.config().chance.max)
+	assert_almost_eq(catching.catch_chance(0.25, 0.5, "orb_basic", 0.0, 1.0, 0.0, own_bonus), minf(base + 0.1, ceiling))
+	for scoped_bonus: float in [COMMANDS.snare_catch_bonus(accepted, "character-b", "wild-a", 1001), COMMANDS.snare_catch_bonus(accepted, "character-a", "wild-a", 4000), -1.0, NAN, INF]:
+		assert_almost_eq(catching.catch_chance(0.25, 0.5, "orb_basic", 0.0, 1.0, 0.0, scoped_bonus), base)
+	assert_almost_eq(catching.catch_chance(1.0, 0.0, "orb_basic", 0.0, 1.0, 1.0, own_bonus), ceiling)
+	var chance := catching.catch_chance(0.25, 0.5, "orb_basic", 0.0, 1.0, 0.0, own_bonus)
+	assert_false(catching.resolve(0.25, 0.5, "orb_basic", 0.0, 1.0, chance, 0.0, own_bonus).caught, "the decision uses one final clamped chance")

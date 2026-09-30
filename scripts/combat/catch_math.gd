@@ -155,14 +155,19 @@ static func orb_ids() -> Array:
 ## rather than a special case in code.
 static func catch_chance(
 	species_rate: float, hp_fraction: float, orb_id: String,
-	offset: float, body_radius: float, skill_bonus: float = 0.0
+	offset: float, body_radius: float, skill_bonus: float = 0.0, snare_bonus: float = 0.0
 ) -> float:
 	var cfg: Dictionary = config().get("chance", {})
 	var raw := species_rate \
 		* hp_factor(hp_fraction) \
 		* orb_multiplier(orb_id) \
 		* accuracy_bonus(offset, body_radius)
-	return clampf(raw + maxf(0.0, skill_bonus) if is_finite(skill_bonus) else raw,
+	# F24 supplies only the host-owned, matching-character/target unexpired
+	# Snare value. Pure arithmetic cannot authorize that state or a capture.
+	# Resolve both bonuses before the existing ceiling, never after it.
+	var bonus := maxf(0.0, skill_bonus) if is_finite(skill_bonus) else 0.0
+	bonus += clampf(snare_bonus, 0.0, 1.0) if is_finite(snare_bonus) else 0.0
+	return clampf(raw + bonus,
 		float(cfg.get("min", 0.02)), float(cfg.get("max", 0.95)))
 
 
@@ -176,9 +181,9 @@ static func catch_chance(
 ## needs is here, so nothing downstream ever has to roll again.
 static func resolve(
 	species_rate: float, hp_fraction: float, orb_id: String,
-	offset: float, body_radius: float, roll: float, skill_bonus: float = 0.0
+	offset: float, body_radius: float, roll: float, skill_bonus: float = 0.0, snare_bonus: float = 0.0
 ) -> Dictionary:
-	var chance := catch_chance(species_rate, hp_fraction, orb_id, offset, body_radius, skill_bonus)
+	var chance := catch_chance(species_rate, hp_fraction, orb_id, offset, body_radius, skill_bonus, snare_bonus)
 	var caught := roll < chance
 	return {
 		"caught": caught,

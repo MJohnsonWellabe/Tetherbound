@@ -1,0 +1,9 @@
+{
+  "base_source": "ce12aae9d9205b0829df7acd2a2b082e32de4a73",
+  "original_methods": 3,
+  "candidate_methods": 5,
+  "existing_source_preserved": true,
+  "candidate_sha256": "760d0d42fbb79b02d3b60dad0f1a448635394ca07f0775dc56ba845bbdc27fa5",
+  "patch_sha256": "f7fac82a76964b8340c913c13532bdc13392d7c51c8e7d440c4bd64291990ee4",
+  "scope": "two added ignored helper boundaries only; no authored tier4 gear, earned meter or live transport proof"
+}

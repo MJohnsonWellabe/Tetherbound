@@ -28,6 +28,7 @@ const SLOTS: Array[String] = ["helmet", "upper_body", "lower_body", "boots", "ba
 ## but well below 1.0 -- armour softens a fall, it does not make the player
 ## unkillable. Tunable.
 const MAX_TOTAL_DEFENSE := 0.6
+const TETHER_COMMANDS := preload("res://scripts/combat/tether_commands.gd")
 
 var _equipped: Dictionary = {} # slot name (String) -> item id (String)
 var _items: RefCounted = null  # item_db.gd
@@ -76,6 +77,29 @@ func unequip(slot: String) -> String:
 
 func equipped_in(slot: String) -> String:
 	return str(_equipped.get(slot, ""))
+
+
+## Admission-only F24 reader. The equipped backpack's authored pouch tier
+## is the sole upgrade input; five armour slots/save fields stay unchanged.
+## Until gear items are authored, an ordinary/no backpack uses the base tier.
+## The host must resolve this from admitted equipment, not a per-command tier.
+func command_gear_profile() -> Dictionary:
+	var tier: Variant = 1
+	var item_id := equipped_in("backpack")
+	if not item_id.is_empty():
+		if _items == null or not bool(_items.call("has", item_id)) \
+			or str(_items.call("kind", item_id)) != "armor": return {}
+		var definition: Dictionary = _items.call("definition", item_id)
+		if definition.get("armor_slot") != "backpack": return {}
+		tier = definition.get("tether_pouch_tier", 1)
+	if not (tier is int or tier is float) or not is_finite(float(tier)) \
+		or float(tier) != floorf(float(tier)) or float(tier) < 1.0 or float(tier) > 4.0: return {}
+	return TETHER_COMMANDS.gear_profile(int(tier))
+
+
+func command_pouch_size() -> int:
+	var profile := command_gear_profile()
+	return int(profile.get("pouch_size", 0))
 
 
 ## Bag-facing transaction. Inventory has no callbacks or awaits: removing the

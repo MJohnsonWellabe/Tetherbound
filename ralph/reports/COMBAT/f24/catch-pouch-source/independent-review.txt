@@ -1,0 +1,18 @@
+Independent bounded catch/pouch draft source gate
+Base: ce12aae9d9205b0829df7acd2a2b082e32de4a73
+Exact patch SHA256: 3210d645b202fae4212bda5caf4d02db43d97c2739c6d01013143e7e5caad729
+Scope: scripts/combat/catch_math.gd and scripts/player/player_equipment.gd only.
+Verdict: SOURCE PASS the two-file unused helper draft. No F24 acceptance criterion is MET; no live command producer or admission is proven.
+
+Audited exact patch hash and strict unified-hunk application against the pinned base in memory. Only the two listed source paths appear. Reconstructed candidate catch_math SHA256 is b36e8a4829a03a031bb9d3d9791cb361c0a94a796d35448bfda2a46a2fec501b and player_equipment SHA256 is c7a0e34db5c8f9498dac159b8f6552cf37574f2f1951ddbbbc34387bf9f660bd, both matching candidate-hashes.json. No tracked source was modified.
+
+Catch arithmetic: existing species-rate/HP/orb/accuracy product is unchanged. Existing finite nonnegative skill bonus behavior is preserved; nonfinite skill bonus contributes zero as before. Optional Snare bonus defaults0, contributes zero if nonfinite, otherwise clamps to0..1. Both bonuses are added before the existing configured minimum/maximum clamp. No bonus is added after the cap. resolve forwards the optional argument once into catch_chance; roll, caught comparison, shake computation, failure bound and legal-target checks are unchanged. Existing callsites omit the new argument, so they do not activate Snare automatically. Pure arithmetic does not authenticate character/target/expiry and is not claimed to do so.
+
+Equipment reader: command_gear_profile reads the actual currently equipped backpack ID from the existing _equipped dictionary. A nonempty ID must exist in the configured ItemDB, be armor and have authored armor_slot backpack. It then reads authored tether_pouch_tier, default1 if omitted. Only finite whole numeric1..4 is accepted; strings, booleans, nonfinite/fractional/out-of-range tiers refuse with empty profile. Ordinary/no backpack returns tier1. Gear numbers come from the existing authored command profile, and the returned profile is detached. command_pouch_size reads that profile and returns0 on refusal. No external per-command tier parameter exists.
+
+The five slots, existing equip/load/save methods, inventory transactions, defense, mitigation and all existing equipment fields remain unchanged. Helpers add no setter, public binder, remint, command dispatch, canonical admission writer, packet field, player input, human HP/poise damage or inventory mutation. No new authored gear item was added by this patch.
+
+Limits: the reader observes current equipment; the future host admission transaction must freeze it once into the existing canonical participant admission row, rather than refreshing it per command or trusting peer-supplied equipment. That producer is absent. Actual catch consumer must supply only matching-character/target unexpired Snare state resolved from canonical host data; this patch adds no such consumer. No engine/Godot constructor, parser, arithmetic execution, inventory/equipment operation, co-op, save/rejoin or player path was run. No broad tests/full-suite/full-CI requested by this gate. Any later caller/admission wiring needs its separate source/transaction proof.
+
+Audit: .tmp/independent-combat-review/catch_pouch_audit.py
+No Godot/GPU, import/render/export, tracked-source/board/STATE write or Git mutation.
