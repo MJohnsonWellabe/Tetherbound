@@ -20,5 +20,92 @@
       "sunleaf"
     ],
     "essence_node_config": "res://data/config/essence_nodes.json"
+  },
+  "additional_material_node_candidates": {
+    "status": "authored_candidates_not_runtime_mounted",
+    "_comment": "F32#0: Meadows Sunleaf supply, using its existing Cloudreach nature-family plant model. Source anchors are existing fibre patches;8m offsets are unproven candidates. Not part of BandContent nodes, so old merged entries, orders and positions remain unchanged. World-owner mounting and typed host stock follow actual body/path validation.",
+    "nodes": [
+      {
+        "id": "meadows:sunleaf:patch:01",
+        "realm": "meadows",
+        "region_id": "band1_lower_meadows",
+        "item": "sunleaf",
+        "amount": 3,
+        "outputs": {
+          "sunleaf": 3
+        },
+        "respawn_days": 2,
+        "at": [
+          3.0,
+          141.0
+        ],
+        "label": "Gather Sunleaf",
+        "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+        "model_scale": 0.8,
+        "anchor": {
+          "id": "order:1000",
+          "config": "data/config/bands/band1_lower_meadows/harvest.json",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "terrain_and_player_path_proven": false
+      },
+      {
+        "id": "meadows:sunleaf:patch:02",
+        "realm": "meadows",
+        "region_id": "band2_stone_and_root",
+        "item": "sunleaf",
+        "amount": 3,
+        "outputs": {
+          "sunleaf": 3
+        },
+        "respawn_days": 2,
+        "at": [
+          158.0,
+          1565.0
+        ],
+        "label": "Gather Sunleaf",
+        "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+        "model_scale": 0.8,
+        "anchor": {
+          "id": "order:2008",
+          "config": "data/config/bands/band2_stone_and_root/harvest.json",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "terrain_and_player_path_proven": false
+      },
+      {
+        "id": "meadows:sunleaf:patch:03",
+        "realm": "meadows",
+        "region_id": "band4_upper_meadows_ironwood",
+        "item": "sunleaf",
+        "amount": 3,
+        "outputs": {
+          "sunleaf": 3
+        },
+        "respawn_days": 2,
+        "at": [
+          -297.0,
+          5075.0
+        ],
+        "label": "Gather Sunleaf",
+        "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+        "model_scale": 0.8,
+        "anchor": {
+          "id": "order:4007",
+          "config": "data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "terrain_and_player_path_proven": false
+      }
+    ]
   }
 }

@@ -7019,5 +7019,92 @@
       "tide_bloom",
       "tide_pearl"
     ]
+  },
+  "additional_material_node_candidates": {
+    "status": "authored_candidates_not_runtime_mounted",
+    "_comment": "F32#0: human-reachable main-island Tide Pearl reef beds, offset8m from existing gentle reef-stone anchor points. No sub20degree reef-stone anchor was available at Salt Crown; use existing gentle first-shore/Reedhaven/next-island pockets instead of fabricating a measured surface. Old harvest/pickup arrays, IDs and positions remain unchanged. Candidates stay separate pending registered host stock, actual terrain/body approach validation and world-owner mount. Richer optional Dive beds belong to F37.",
+    "nodes": [
+      {
+        "id": "water:tide_pearl:reef_bed:first_shore:01",
+        "realm": "water",
+        "region_id": "first_shore",
+        "item": "tide_pearl",
+        "amount": 2,
+        "outputs": {
+          "tide_pearl": 2
+        },
+        "respawn_days": 2,
+        "at": [
+          80.0,
+          -24.0
+        ],
+        "label": "Gather Tide Pearls",
+        "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "model_scale": 0.4,
+        "anchor": {
+          "id": "water:first_shore:harvest:005",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "requires_dive": false,
+        "terrain_and_player_path_proven": false
+      },
+      {
+        "id": "water:tide_pearl:reef_bed:reedhaven:01",
+        "realm": "water",
+        "region_id": "reedhaven",
+        "item": "tide_pearl",
+        "amount": 2,
+        "outputs": {
+          "tide_pearl": 2
+        },
+        "respawn_days": 2,
+        "at": [
+          -154.0,
+          506.0
+        ],
+        "label": "Gather Tide Pearls",
+        "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "model_scale": 0.4,
+        "anchor": {
+          "id": "water:reedhaven:harvest:006",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "requires_dive": false,
+        "terrain_and_player_path_proven": false
+      },
+      {
+        "id": "water:tide_pearl:reef_bed:brine_steps:01",
+        "realm": "water",
+        "region_id": "brine_steps",
+        "item": "tide_pearl",
+        "amount": 2,
+        "outputs": {
+          "tide_pearl": 2
+        },
+        "respawn_days": 2,
+        "at": [
+          560.0,
+          534.0
+        ],
+        "label": "Gather Tide Pearls",
+        "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "model_scale": 0.4,
+        "anchor": {
+          "id": "water:brine_steps:harvest:017",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "requires_dive": false,
+        "terrain_and_player_path_proven": false
+      }
+    ]
   }
 }
