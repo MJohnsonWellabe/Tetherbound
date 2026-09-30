@@ -1,6 +1,6 @@
 {
   "criterion": "F21#4",
-  "integration_base": "f8ffb2b333f69de2ab423a003621db43a4c757a3",
+  "integration_base": "e060aca21d1218ccc1ccd647a92e54a04224234e",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
   "status": "implementation plus partial evidence; no full criterion MET from held stills",
@@ -81,8 +81,9 @@
     },
     "tests/smoke_combat_camera.gd": {
       "observed_sha256": "5c98d9255dce5ab8d75742e96876e07219dbc8c551fb56ba0c2f752702c9340d",
-      "cut_sha256": "5c98d9255dce5ab8d75742e96876e07219dbc8c551fb56ba0c2f752702c9340d",
-      "equal": true
+      "cut_sha256": "be8f79f1249d994803c956298b3c7a52a8cf06e0b26a03f91bfb66b09d52015c",
+      "equal": false,
+      "scope": "Capture-only successor adds opt-in --matrix-live; original static matrix and retained original controls remain. No original native proof is transferred to the unexecuted live mode."
     }
   },
   "dependencies": {
@@ -142,5 +143,18 @@
     "earned creature/campaign acquisition"
   ],
   "dependency_difference": "CreatureBody differs by the excluded impact-feedback/movement lease prototype. The held matrix disabled body physics; exact render-bounds callers, art/catalog/model inputs and rig/solver/config are retained. This difference is not used to transfer a moving nine-pair result.",
-  "existing_moving_input_evidence": "Observed native-fullscreen.txt includes retained physical-input encounter/orbit/manual grace, varying separation, creature switch, aim/cancel and exit assertions after the held matrix was restored. It does not cover movement of every staged nine-pair body combination."
+  "existing_moving_input_evidence": "Observed native-fullscreen.txt includes retained physical-input encounter/orbit/manual grace, varying separation, creature switch, aim/cancel and exit assertions after the held matrix was restored. It does not cover movement of every staged nine-pair body combination.",
+  "camera_cut_before_capture": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
+  "live_capture_pending": {
+    "mode": "--matrix-live",
+    "source_status": "capture-only source, unparsed/unrun pending token",
+    "observations_per_pair": 300,
+    "setup_observations": 120,
+    "scored_observations": 180,
+    "physical_input": "Left stick Y -0.85 for scored observations30..89, right trigger quick tap at120..121; right stick neutral. Production simulation, AI, collision, HUD and rig live.",
+    "images_per_pair": 6,
+    "case_wall_budget_ms": 30000,
+    "whole_script_wall_budget_s": 900,
+    "scope": "Direct fresh species/roster/pose and action/Wind/poise setup before each pair; no size edits, freeze, mid-observation health/resource grants or earned acquisition claim."
+  }
 }
