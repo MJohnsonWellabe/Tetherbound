@@ -2651,11 +2651,53 @@ static func admitted_wind_card(owned: Dictionary) -> Dictionary:
 		"bond_nodes": shadow.bond_nodes(), "wind_cap_scale": 1.0, "wind_regen_scale": 1.0}
 
 
+## Resolve only the engine/body bound to this exact live encounter. An absent
+## wild runtime is a refusal, never a fallback to another locally engaged foe.
+func _host_utility_opponent_context(encounter_id: String) -> Dictionary:
+	if not _is_host() or _encounter_host == null: return {}
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	if str(record.get("phase", "")) != "active": return {}
+	var kind := str(record.get("kind", ""))
+	var runtime := _shared_host_fight(encounter_id)
+	var engine: Node
+	var wild: Node3D
+	if kind == "wild":
+		if not is_instance_valid(runtime): return {}
+		engine = runtime
+		wild = runtime.call("body") as Node3D
+	else:
+		if _local_bound_encounter_id() != encounter_id: return {}
+		engine = _manager
+		wild = _engaged_with
+	if not is_instance_valid(engine) or not engine.is_inside_tree() or engine.is_queued_for_deletion() \
+		or not is_instance_valid(wild) or not wild.is_inside_tree() or wild.is_queued_for_deletion(): return {}
+	var opponent := wild.get("instance") as RefCounted
+	var engine_opponent := engine.get("_enemy") as RefCounted
+	if opponent == null or engine_opponent != opponent or engine.get("_wild") != wild \
+		or not utility_opponent_association_valid(encounter_id, kind, runtime != null,
+			str(engine.get("_encounter_id")), str(opponent.get("uid")),
+			str(engine_opponent.get("uid")), _local_bound_encounter_id()): return {}
+	return {"engine": engine, "body": wild, "opponent": opponent}
+
+
+static func utility_opponent_association_valid(encounter_id: String, kind: String,
+		has_shared_runtime: bool, engine_encounter_id: String, body_uid: String,
+		engine_uid: String, local_bound_encounter_id: String) -> bool:
+	if encounter_id.is_empty() or engine_encounter_id != encounter_id \
+		or body_uid.is_empty() or engine_uid != body_uid: return false
+	if kind == "wild": return has_shared_runtime
+	return kind in ["trainer", "boss"] and local_bound_encounter_id == encounter_id
+
+
 ## Supporting status door; deliberately not added to the intent dispatcher
 ## before the incoming-vitals/durable-handshake batch is ready. It has no card-
 ## only compatibility path. An intent names a move, never a status or HP value.
 func _commit_host_status_utility(intent: Dictionary, peer_id: int) -> Dictionary:
 	var id := str(intent.get("encounter_id", ""))
+	var target := _host_utility_opponent_context(id)
+	if target.is_empty():
+		return {"ok": false, "kind": "utility_intent", "peer": peer_id,
+			"code": "unknown_encounter", "reason": "That fight is over.", "pending": false, "delta": {}}
 	var context := _host_actor_vitals_context(id, peer_id)
 	if context.is_empty() or _host_peer_staggered(id, peer_id):
 		return {"ok": false, "kind": "utility_intent", "peer": peer_id,
@@ -2665,16 +2707,12 @@ func _commit_host_status_utility(intent: Dictionary, peer_id: int) -> Dictionary
 	if not bool(owned.get("ok", false)) or not bool(owned.get("enabled", false)):
 		return {"ok": false, "kind": "utility_intent", "peer": peer_id,
 			"code": "invalid_owned_move", "reason": "That utility is not in your admitted loadout.", "pending": false, "delta": {}}
-	var runtime := _shared_host_fight(id)
-	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
-	var engine: Node = runtime if runtime != null else _manager
-	if not is_instance_valid(engine) or not is_instance_valid(wild) \
-		or wild.is_queued_for_deletion() or not wild.is_inside_tree(): return {}
+	var engine: Node = target.engine
+	var wild: Node3D = target.body
+	var opponent: RefCounted = target.opponent
 	var moves := engine.get("_moves") as RefCounted
 	if moves == null: return {}
 	var move: Dictionary = moves.call("move", move_id)
-	var opponent := wild.get("instance") as RefCounted
-	if opponent == null: return {}
 	var body: Node3D = context.body
 	var view := {"source_uid": str(context.creature_uid), "source_generation": int(context.generation),
 		"origin": body.call("centre"), "facing": body.call("facing"),

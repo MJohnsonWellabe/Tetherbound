@@ -378,3 +378,12 @@ func test_admitted_wind_ignores_peer_numeric_profile_and_refuses_malformed_saved
 	var bad: Dictionary = owned.duplicate(true)
 	bad.feeds_together = 1.5
 	assert_true(DIRECTOR.admitted_wind_card(bad).is_empty(), "fractional milestone counters fail closed")
+
+
+func test_utility_target_requires_the_exact_live_engine_without_wild_local_fallback() -> void:
+	assert_true(DIRECTOR.utility_opponent_association_valid("fight-a", "wild", true, "fight-a", "foe-a", "foe-a", "fight-b"))
+	assert_false(DIRECTOR.utility_opponent_association_valid("fight-a", "wild", false, "fight-a", "foe-a", "foe-a", "fight-a"), "missing wild runtime never falls back to local manager")
+	assert_false(DIRECTOR.utility_opponent_association_valid("fight-a", "wild", true, "fight-b", "foe-b", "foe-b", "fight-b"), "another manager cannot author a named record's status")
+	assert_false(DIRECTOR.utility_opponent_association_valid("fight-a", "wild", true, "fight-a", "foe-b", "foe-a", "fight-a"), "actual body and engine enemy must be the same UID")
+	assert_true(DIRECTOR.utility_opponent_association_valid("fight-a", "trainer", false, "fight-a", "foe-a", "foe-a", "fight-a"))
+	assert_false(DIRECTOR.utility_opponent_association_valid("fight-a", "trainer", false, "fight-a", "foe-a", "foe-a", "fight-b"), "trainer local binding must name the same encounter")
