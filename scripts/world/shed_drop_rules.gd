@@ -20,6 +20,11 @@ static func _positive_integer(value: Variant) -> bool:
 		and float(value) == float(int(value)) and int(value) > 0
 
 
+static func _required_boolean(policy: Dictionary, key: String, expected: bool) -> bool:
+	var value: Variant = policy.get(key)
+	return typeof(value) == TYPE_BOOL and value == expected
+
+
 static func _profile(config: Dictionary, species: String) -> Dictionary:
 	var table: Variant = config.get("species", {})
 	if not table is Dictionary:
@@ -110,11 +115,11 @@ static func den_groom_candidate(character_id: String, owned_party: Array,
 	if not table is Dictionary:
 		return {"ok": false, "code": "invalid_shed_table"}
 	if not policy is Dictionary or policy.get("clock") != "host_world_day" \
-			or not bool(policy.get("manual_tap", false)) \
-			or not bool(policy.get("once_per_owned_uid_per_day", false)) \
-			or bool(policy.get("offline_production", true)) \
-			or bool(policy.get("automatic_production", true)) \
-			or not bool(policy.get("compose_with_care_essence", false)):
+			or not _required_boolean(policy, "manual_tap", true) \
+			or not _required_boolean(policy, "once_per_owned_uid_per_day", true) \
+			or not _required_boolean(policy, "offline_production", false) \
+			or not _required_boolean(policy, "automatic_production", false) \
+			or not _required_boolean(policy, "compose_with_care_essence", true):
 		return {"ok": false, "code": "invalid_shed_table"}
 	var selected := {}
 	var seen := {}

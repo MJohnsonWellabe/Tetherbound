@@ -102,6 +102,9 @@ static func _add(realm: String, site: Dictionary, source_path: String) -> void:
 	if site.has("grade") and not site["grade"] is String:
 		_fail(realm, "Malformed grade: " + str(id))
 		return
+	if site.has("region_id") and not site["region_id"] is String:
+		_fail(realm, "Malformed region: " + str(id))
+		return
 	var sites: Dictionary = _sites[realm]
 	if sites.has(id):
 		_fail(realm, "Duplicate site: " + str(id))
@@ -218,10 +221,13 @@ static func _load_rows(realm: String, config: Dictionary, source_path: String,
 			if row.has("claim_policy") and not row["claim_policy"] is String:
 				_fail(realm, "Malformed harvest claim policy")
 				continue
+			if not row.get("claim_policy", "") in ["", "existing_world_pickup_policy", "character_once"]:
+				_fail(realm, "Unknown harvest claim policy")
+				continue
 			if row.get("claim_policy", "") == "character_once":
 				continue
 		if realm == "cloudreach":
-			if not row.get("respawn_policy") is String:
+			if not row.get("respawn_policy") in ["world_day_regrow", "encounter_cycle"]:
 				_fail(realm, "Malformed resource respawn policy")
 				continue
 			if row["respawn_policy"] != "world_day_regrow":

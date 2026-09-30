@@ -1,0 +1,32 @@
+INDEPENDENT STRICT SOURCE REVIEW — F32#4 SHED PROPOSALS
+
+Exact source pin: 4e4b90a1ccb3fdcfc6e20d80267b14a1664290ca.
+Owned review scope: data/config/shed_drops.json and scripts/world/shed_drop_rules.gd only. Existing species, item, encounter and design data were read as context. New F31/F33/F34 activation/schema/station code is expressly outside this review.
+Verdict: CHANGES REQUESTED for malformed grooming-policy validation. F32#4 remains OPEN/UNPROVED; no board update is warranted.
+
+Literal acceptance: "Shed items (skyplume, sparkfur and others) drop after wins and from Den grooming; no item implies hunting or butchering (test)."
+Owning contract: HOMESTEAD §5.4, TRAINING §1. Starting wild chance is 25% per defeated wild with a table. Manual Den grooming is once per owned creature per in-game day and pays the capped care essence (1 essence/grooming, cap 5/character/day). Five owned creatures, no creature jobs/automation or offline production.
+
+FINDING P2 — FAIL-CLOSED POLICY STILL ACCEPTS MALFORMED VALUES
+Location: scripts/world/shed_drop_rules.gd:112–117.
+The declared config contains proper booleans, but den_groom_candidate coerces five policy fields through bool(). A malformed manual_tap:"false" (or once_per_owned_uid_per_day:"false" / compose_with_care_essence:"false") is a nonempty string and becomes true, allowing a payout proposal. The inverse production fields also permit nonboolean false-like values such as 0 instead of rejecting malformed config. This violates this bounded work order's explicit failclosed-malformed requirement. This is a source finding, not a claim that the checked-in valid config currently enables automation or that a client can supply config.
+Minimum correction: require actual TYPE_BOOL for all five policy fields and then compare their exact required true/false values. Reject missing and malformed fields with invalid_shed_table. Retain the existing valid configured behavior and detached proposal architecture; no broad engine suite is requested for this small source correction.
+
+SOURCE ASSESSMENT
+- Checked-in configuration declares 0.25 wild chance, one item per winning roll, positive quantities, manual host-world-day grooming, and no automatic/offline production.
+- Galecrest, Sparkit and Staticub are known canonical species. Skyplume and Sparkfur are existing ItemDB items. Galecrest is present in Cloudreach's chapter encounter_tables (not directly in its site-only cloudreach_encounters file); Sparkit and Staticub are in the Stormwood encounter data. Staticub is not one of the three exclusive starters (Terrapup, Ripplet, Galewisp).
+- wild_win_candidate requires trusted wild/settled/won context and participant membership; rejects missing/duplicate defeated UIDs and missing/out-of-range eligible host rolls; processes one roll per eligible defeated UID. It returns ok with an empty output on a miss, so upstream may durably record misses. Existing receipt rejects repeat calls for the same world-instance/encounter/character.
+- Structured JSON hashed receipt identities avoid concatenation delimiter ambiguity. Groom receipt includes world instance, stable character, host day and owned UID. Party input is restricted to 1–5 with unique nonempty UIDs, and selected UID must exist in that supplied actual host roster. Receipt lookup refuses an already-groomed UID/day.
+- Pure returned output dictionaries are detached. Neither helper grants inventory, writes a save, mutates a roster/receipt map or alters state. This is appropriate for foundation's canonical authority/transaction owner.
+- _profile rejects non-dictionary profiles, unknown-to-local-allowlist item values, nonpositive/nonintegral quantities and non-array realm lists. Authored data uses real canonical species/items and valid realm arrays. This does NOT prove a full canonical schema validator: species/item/realm membership checks here are config-local, and upstream must validate trusted catalogs/rosters and requests. Do not allow clients to supply configuration or trusted outcome/roster/day/roll inputs.
+
+EXPLICIT INTEGRATION GAPS / SHORTCUT DISCLOSURE
+- No call site exists at this pin beyond the helper's own DATA_PATH reference. Source proposals are not runtime registration or actual win/Den payout evidence. No actual victory producer, manual Den UI path, host participant authentication, care-essence composition, durability/CAS, inventory-capacity rollback, failed-commit recovery, reconnect or contention proof was executed or established here.
+- The helper checks supplied receipts but does not own or cap/evict a journal. Foundation must enforce bounded durable receipt semantics, journal host rolls and commit even misses. Repeated proposal evaluation with empty received_receipts alone can reroll; a once-only claim depends on the canonical host service. Never implement local direct grants to make presentation appear finished.
+- Den material proposal contains no essence output, care cap or care stamp. Canonical training/foundation composition must settle care and shed output under one receipt atomically. This helper alone does not prove daily care cap or world-hop treatment.
+- Actual malformed trusted outcome/roster identities may be string-coerced rather than rejected by exact scalar type. These functions expressly require the canonical trusted registry/roster; its validation remains necessary, not proven by this source review.
+- The checked-in item names at this pin still include Hide Helm, Hide Vest, Hide Leggings and Hide Boots, plus hide wording in the first two descriptions. Training owns items.json and already has a separate rename candidate under review. This known remaining naming gap is not a new shed-helper regression and must not cause duplicate edits or F32 closure here.
+- No Godot parse/import/render/export, GPU work, unit test, full CI or actual gameplay run was performed. JSON/source inspection is not a substitute for the acceptance's named test and real player paths.
+- No source, tracked evidence, board or STATE edits, commits, fetches, merges or branch changes were made. Raw artifacts were written only to the ignored independent-review directory.
+
+Evidence: shed-source-audit.json and shed_source_audit.py alongside this report. The JSON audit reads exact git blobs, lists known-species/item checks, authored encounter matches and item naming context, and records SHA-256 for the two reviewed files. It contains no simulated gameplay verdict.

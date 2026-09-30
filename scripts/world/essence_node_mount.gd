@@ -6,6 +6,7 @@ extends Node3D
 ## query with the real trainer shape; it is not an ordinary-player-path proof.
 
 const CATALOGUE := preload("res://scripts/world/essence_node_catalog.gd")
+const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 const HARVEST := preload("res://scripts/world/harvest_node.gd")
 
 var _mounted: Dictionary = {}
@@ -35,9 +36,13 @@ func mount(world: Node3D, realm: String, trainer: CharacterBody3D) -> Dictionary
 		return {"mounted_ids": [], "errors": errors}
 	var items: RefCounted = game.get("items")
 	var tuning: Dictionary = source.get("placement_validation", {})
-	for spec: Dictionary in CATALOGUE.nodes_for(realm, source):
-		var id := str(spec["id"])
+	for authored: Dictionary in CATALOGUE.nodes_for(realm, source):
+		var id := str(authored["id"])
 		if _mounted.has(id) and is_instance_valid(_mounted[id]):
+			continue
+		var spec := RENEWABLE_SITES.by_id(realm, id)
+		if spec.is_empty():
+			_refusals[id] = "Canonical renewable definition is unavailable."
 			continue
 		var stock: Variant = state.call("renewable_stock_state", realm, id)
 		if not stock is Dictionary or stock.is_empty():
