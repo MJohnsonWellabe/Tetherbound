@@ -424,6 +424,7 @@ func test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldow
 	var host := ENCOUNTER.new()
 	var rec := host.open(1, "meadows", "wild", {"hp": 100.0}, first.uid, "owner_a")
 	var id := str(rec.encounter_id)
+	assert_true(host.join(id, 9, "other_uid", "owner_b").ok, "another participant keeps this reconnect fixture active")
 	var body := Node.new()
 	var intent := {"encounter_id": id, "action": 1}
 	var view := {"source_uid": first.uid, "source_generation": 1, "now_ms": 1000, "origin": Vector3.ZERO}
@@ -460,6 +461,10 @@ func test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldow
 	assert_true(accepted.ok)
 	assert_almost_eq(float(accepted.vitals.hp), float(first.max_hp) * 0.62)
 	assert_almost_eq(float(rec.participants[1].wind), 76.0, 0.0001, "authored Heal Pulse spends 24 Wind exactly once")
+	assert_eq(host.strike_authority_state(id, 1).deadline_ms, 1638,
+		"actual 0.85 player pace applies to both .35 windup and .4 recovery")
+	assert_eq(rec.participants[1].wind_ready_at_ms, 2238,
+		"Wind quiet delay begins after BOTH paced windup and recovery")
 	before = rec.duplicate(true)
 	assert_false(host.commit_actor_heal_utility(bundle).ok)
 	assert_eq(rec, before, "replayed or stale staged heal cannot debit again")
@@ -468,6 +473,24 @@ func test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldow
 	player.party.add(third)
 	var third_row: Dictionary = _portable(player).party[2]
 	third_row.hp = float(third_row.max_hp) * 0.5
+	host.leave(id, 1)
+	assert_true(host.join(id, 2, third_row.uid, "owner_a").ok)
+	assert_eq(host.strike_authority_state(id, 2).deadline_ms, 1638,
+		"reconnect transfers the existing stable owner's shared action authority")
+	assert_true(host.bind_actor_body(id, 2, "owner_a", third_row, body.get_instance_id()).ok)
+	view.source_uid = third_row.uid
+	view.source_generation = 4
+	view.now_ms = 1637
+	intent.action = 2
+	before = rec.duplicate(true)
+	assert_eq(host.stage_actor_heal_utility(intent, 2, view, "heal_pulse", profile, 16).code, "cooldown")
+	assert_eq(rec, before, "rejoining with owned B cannot spend retained Wind during A's shared recovery")
+	view.now_ms = 1638
+	assert_true(host.stage_actor_heal_utility(intent, 2, view, "heal_pulse", profile, 16).ok,
+		"another owned UID becomes eligible exactly at shared recovery, before A's separate utility cooldown")
+	host.leave(id, 2)
+	assert_true(host.join(id, 1, third_row.uid, "owner_a").ok)
+	assert_eq(host.strike_authority_state(id, 1).last_action, 1, "a staged boundary probe did not advance accepted action history")
 	assert_true(host.bind_actor_body(id, 1, "owner_a", third_row, body.get_instance_id()).ok)
 	view.source_uid = third_row.uid
 	view.source_generation = 4

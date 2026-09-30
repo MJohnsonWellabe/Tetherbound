@@ -171,6 +171,8 @@ var _minted: int = 0
 var _host_peer_id: int = 1
 
 ## Host-owned action ledger, encounter id -> peer id -> accepted action state.
+## A departed bound actor's entry temporarily uses its stable-character String
+## key in this SAME cache; active peer keys are ints. Rejoin transfers it back.
 ## This deliberately does not ride the replicated encounter record: clients
 ## need the verdict and shared HP, not authority internals they could mistake
 ## for something they are allowed to write back.
@@ -273,6 +275,10 @@ func leave(encounter_id: String, peer_id: int) -> Dictionary:
 		var retained: Dictionary = record.get("retained_actor_participants", {})
 		record["retained_actor_participants"] = retained
 		retained[stable_id] = departing
+		# Move the SAME private action authority to stable identity while its
+		# peer is absent. Round reset/close still clears this existing cache.
+		var authority := _strike_state_for(encounter_id)
+		if authority.has(peer_id): authority[stable_id] = authority[peer_id]
 	participants.erase(peer_id)
 	_strike_state_for(encounter_id).erase(peer_id)
 	(_strike_receipts.get(encounter_id, {}) as Dictionary).erase(peer_id)
@@ -1065,6 +1071,10 @@ func _add_participant(rec: Dictionary, peer_id: int, creature_uid: String,
 	if not character_id.is_empty() and retained.has(character_id):
 		var restored: Dictionary = retained[character_id]
 		retained.erase(character_id)
+		var authority := _strike_state_for(str(rec.encounter_id))
+		if authority.has(character_id):
+			authority[peer_id] = authority[character_id]
+			authority.erase(character_id)
 		# character_id and active UID are supplied by host admission, never by
 		# the incoming intent. Binding a new body below rechecks owned UID.
 		restored["creature_uid"] = creature_uid
@@ -1349,6 +1359,9 @@ func stage_actor_heal_utility(intent: Dictionary, peer_id: int, view: Dictionary
 	if not UTILITY_EFFECTS.valid_definition(move) or float(move.base_power) != 0.0 \
 		or str(move.utility.kind) != "heal" or str(move.utility.scope) != "self":
 		return {"ok": false, "code": "unsupported_heal"}
+	# Same host tuning as ordinary player moves; raw MoveDB timings cannot
+	# define a second unpaced utility action lifecycle.
+	move = MATH.with_player_pace(move, "player_utility")
 	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
 	var action_id := "%s:%d:%d:heal" % [id, peer_id, int(intent.action)]
 	var host := {"encounter_id": id, "generation": 0, "action_id": action_id,
@@ -1446,7 +1459,7 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 	if bool(preview.get("wind_exhausted",true)):
 		return _refuse("utility_intent",peer_id,"insufficient_wind","Your creature needs more Wind.")
 	var wind := commit_wind(id,peer_id,action,wind_profile,float(move.wind_cost),now_ms,
-		float(recovery),float(delay))
+		float(move.windup) + float(recovery),float(delay))
 	# Shared action recovery ends before this creature's separate utility
 	# cooldown. A tag switch must not inherit another creature's ten-second lock.
 	var lock_ms := ceili(1000.0 * maxf(0.05, float(move.windup) + float(recovery)))

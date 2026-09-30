@@ -5,8 +5,8 @@
   "wire_protocol": 8,
   "source_paths": {
     "scripts/net/encounter_host.gd": {
-      "git_blob": "b95e0b973cbd046cf36240942af8e3fce60a13e1",
-      "git_bytes_sha256": "c4010e6ed67361fc9563a73d40d8524ba5cced1a476e77697ea7f140ac6f72f7"
+      "git_blob": "d044efca22eaac3fbc67aa991ebc5afe672084a5",
+      "git_bytes_sha256": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785"
     },
     "scripts/combat/utility_effects.gd": {
       "git_blob": "eb3fc4a2eebf5e21e866e8f279c68059e2752120",
@@ -17,8 +17,8 @@
       "git_bytes_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b"
     },
     "tests/test_actor_vitals_authority.gd": {
-      "git_blob": "8111e9d0ad144b1f66da2a34695b26375faf2272",
-      "git_bytes_sha256": "1bdde675cc125fa66d1fc19b4b31df388be205579d9e14a733f0d9e7b2bbdfdd"
+      "git_blob": "0a2d13248a513a0007c1fb2525e15392998d0f93",
+      "git_bytes_sha256": "576894c83ecb445c9e2570da782f42488c1d65db4d24074b32867aa22cfcf5fe"
     }
   },
   "canonical_dependency": {
@@ -34,7 +34,10 @@
     "Private actor_bound_uid prevents rejoin active-UID labels from hiding pooled-body switches.",
     "Heal utility deadline keyed by creature UID; shared action lock uses windup plus recovery.",
     "Canonical Heal windup/recovery and regen delay validated before detached resource trial.",
-    "Three allocated adversarial methods append to existing test file; existing body unchanged."
+    "Three allocated adversarial methods append to existing test file; existing body unchanged.",
+    "After c97 SOURCE FAIL: canonical with_player_pace used for Heal; Wind quiet delay starts after paced windup+recovery.",
+    "Absent peer action authority transfers to stable-character String key in SAME existing private cache and back on rejoin.",
+    "Existing Heal risk method adds exact deadlines and changed-peer reconnect recovery boundary checks; c97 assertions preserved."
   ],
   "unmodified_dependencies": {
     "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
@@ -53,10 +56,21 @@
   ],
   "offline_structural_checks": [
     "Existing test prefix byte-identical after removing sole preload.",
+    "All c97 assertion lines retained in original order.",
     "UtilityEffects exact canonical Git bytes.",
     "Only two config blocks additive; runtime_enabled false.",
     "Listed canonical save/registry/caller/move dependencies unchanged."
   ],
+  "retained_prior_source_gate": {
+    "head": "c97ddd449b81534fa03da50161727cc8bfc90a23",
+    "verdict": "FAIL bounded source gate; 42 structural checks; no native",
+    "source_dir": "D:\\tetherbound\\redesign-foundations\\.tmp\\independent-actor-lifetime-heal-c97",
+    "lossless_archived_sha256": {
+      "strict-review.txt": "c5ca4120c2e9119556f3522cf9cb5ef7965a902bef0370ee7672428c2fc38032",
+      "review.json": "3bd31ca3ff222bd4e6faf9be71029c698bb713e81951540c2d221beaa038b3e1",
+      "source.patch": "d7eb2d1fa09857858f71097195bf9ec38d3051ebfbf36c9682035ae9404f4a06"
+    }
+  },
   "missing_actual_caller_work": [
     "Bind current admitted stable character/owned UID/real host body at encounter entry and switch.",
     "Solo/local and remote actor-only routing without global network guard widening.",

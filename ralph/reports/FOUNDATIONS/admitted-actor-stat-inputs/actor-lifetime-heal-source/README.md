@@ -14,6 +14,10 @@ removed from detached presentation snapshots.
 Heal stages a detached trial through the existing Wind/action validator. The
 actual actor, Wind and utility state change only in a synchronous exact commit.
 Its shared action recovery is separate from the creature's utility cooldown.
+Heal uses the canonical player pace, and Wind quiet time starts after both
+windup and recovery. Departed peer action authority transfers to its stable
+character's String key in the same existing private cache; integer peer keys
+resume on rejoin. Ordinary round reset and close still clear that cache.
 Full, fainted, replayed, ambiguous and insufficient-Wind attempts refuse before
 cost. The canonical UtilityEffects dependency is unchanged from Combat f506.
 
@@ -27,5 +31,9 @@ Actual Manager/Director integration, explicit solo/local admission and clock,
 owner-write failure/rejoin gameplay proof and scoped native checks remain open.
 The runtime flag is false. Sap, Hearten, ultimates and mastery are outside this
 packet. Three appended adversarial methods are allocated but have not run.
+The c97 source gate failed on raw timing, omitted windup in Wind readiness,
+and lost shared recovery across reconnect. That FAIL is retained losslessly;
+this corrected successor has no source verdict or native proof yet. Its same
+Heal method adds exact timing and changed-peer reconnect boundary assertions.
 Manifest hashes bind the four changed code/config/test paths and unchanged
 registry, writers, move data and caller sources; no criterion status changes.
