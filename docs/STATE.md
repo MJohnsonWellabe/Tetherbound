@@ -4,9 +4,9 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 ## 0. Resume here
 
-**Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-35, Waves 0–3, F16–F49, ownership and run rules. Wave 0 F16 must land before Wave 1 implementation. Combat/VFX/lookdev read-only prototypes are complete. Prior lane/wind-down history: `git show 1c3f0b0d:docs/STATE.md`.
+**Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-36, Waves 0–3, F16–F49, ownership and run rules. RD-36: prioritize code/content; minimum necessary tests, coherent batches and reuse of unchanged passing evidence. Required acceptance/save/co-op proofs, independent review and CI remain. Wave 0 F16 lands before Wave 1. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** `ralph/reports/COORDINATOR/dashboard/` (`criteria.json`, `status.json`, `build_dashboard.py`; README for the scoring rule and republishing). **Criteria met: 95 of 280.** That is 95 of the original 101 (F01–F15) plus 0 of 179 redesign criteria (F16–F49, ACCEPTANCE §6.2). No chapter is accepted. Goal source baseline e2de59571; main 3cc8e789c. F16 in progress; no new acceptance counted. Main was green at `8f5dd6ed2` (full CI run 36626653020), and the rolling download was rebuilt there.
+**Board:** `ralph/reports/COORDINATOR/dashboard/` (`criteria.json`, `status.json`, `build_dashboard.py`; README for scoring/republishing). **Criteria met: 95 of 280:** original 95/101, redesign 0/179. No chapter accepted. Goal baseline e2de59571; snapshot main 0d0b6f063. Candidate F16 verdicts do not count before landing. Main was green at `8f5dd6ed2` (full CI 36626653020); the rolling download was rebuilt there.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -24,11 +24,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Recent landed owner requests (2026-09-29):** combat pace faster on both sides and power-attack re-aim (#448/#450/#454/#457, `combat.json` `strike_reaim`, `player_pace`); sprint lean and cadence (#449; owner to feel it on a pad); village option B, one straight main street (#455, `tests/test_village_main_street.gd`), which F17 now rebuilds into the road-plus-Crossing-Hall layout. The mouse-capture fix needs the owner to confirm it on a real PC.
 
-**To resume work:** read CODEX_START_HERE §0 and your lane's work order. Work on `tb/<lane>` from current main. Push at least hourly. Land each closed criterion through the lane's own PR (strict re-check, unit suite once, board and STATE line, auto-merge). The board-duty holder rebuilds the board hourly (§7.3). Add one line per landing to the lane table below. Keep this file under 25 KB. Current /goal explicitly resumes the full redesign and supersedes the older wind-down stop below.
+**To resume work:** read CODEX_START_HERE §0 and your lane's work order. Work on `tb/<lane>` from current main; push hourly. Under RD-36, related criteria share necessary validation and a reviewable PR; each keeps its strict verdict, evidence and board row. Update STATE and auto-merge. Rebuild the board hourly (§7.3). Keep STATE under 25 KB. Current /goal resumes the full redesign and supersedes the older wind-down stop below.
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | WIP cf702dc0e pushed; main merged at 2014963ea; focused 166/2240/0 and title/autosave witness inspected; F16#0 final review/full units open |
+| `tb/foundations` | F16 | 94b81b02c pushed; independent #0/#1/#2 candidate MET; #3 populated peers/#4 Grandpa remain; RD-36 batches necessary validation; first shard has an obsolete v1 expectation to fix |
 | `tb/hub` | F17, F18 | waits on F16 |
 | `tb/reorder` | F19, F20 | waits on F16, F18 |
 | `tb/combat` | F21–F24 | prototype complete; independent F16 review; edits after F16 |
@@ -70,7 +70,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 
 ## 1. Rulings in force
 
-**Owner redesign (2026-09-29):** CODEX_START_HERE §1 (RD-01..RD-35) is the newest owner direction. Where a ruling below conflicts with it, the RD entry wins. The rulings below still govern proof, counting and process.
+**Owner redesign (2026-09-29):** CODEX_START_HERE §1 (RD-01..RD-36) is the newest owner direction. Where a ruling below conflicts with it, the RD entry wins, including RD-36's minimum necessary testing and batch validation. Other proof/counting rules remain.
 
 **Owner and coordinator, 2026-09-27.** Nothing may contradict these.
 1. **Counting and proofs.** Criteria count at merge; post-batch full CI is a safety net. Disclosed fixtures/declared starts, teleports, flag/party writes, harness fights and skipped sub-parts are allowed (ACCEPTANCE §6.1, WORKFLOW §8), as are earned checkpoints. Held Fly is lawful; tap pulse optional.
