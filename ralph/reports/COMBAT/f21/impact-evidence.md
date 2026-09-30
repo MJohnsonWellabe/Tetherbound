@@ -1,0 +1,15 @@
+# F21 impact work in progress
+
+No F21 criterion is closed by this checkpoint. Implementation and runtime evidence still require a hosted outgoing/incoming/observer witness, independent strict re-check and dependency landing. F21 camera, code-blind matched sequences, controller rumble and Medium frame-rate proof remain open.
+
+## Exact source and named proof
+
+- Source `336dceb0028ec897665cf20b208ca0e06a5da1ee`: `unit-feedback-initial.txt` records 17 tests, 65 assertions, 0 failed, native exit 0. Five pure hit-feedback tests plus the unchanged combat-feedback/reduced-motion and shared-wild adapter tests ran in one process.
+- Same source: `impulse-final.txt` records real body manager/timed overlapping lease ownership and release, plus both original solo/arena impulse peak and tail assertions, native exit 0. `impulse-initial.txt` preserves the first red combined-lease assertion with very short fixture intervals; the corrected fixture reports each lease phase rather than inferring it. No original assertions were removed.
+- Same source: `player-final.txt` records the existing InputMap-piloted fight: ten immutable impact receipts and ten actual HUD labels, five outgoing and five incoming hits, two genuine misses, fight win and normal exit, preserved health and original geometry/type/damage assertions; native exit 0. `player-initial.txt` preserves the initial red timing assertion based on capped fixed physics frames. The final driver observes the actual returned presentation node's `arrived` signal instead.
+- The final ranged blow launched at 0.258 seconds frozen duration; its actual visible-arrival callback reported wall time 0.458 seconds with pre-impact target HP unchanged. Authoritative damage/number followed at wall time 0.577 seconds. That approximately 0.119-second gap is explicitly NOT proof of F25 synchronous arrival. VFX subsequently changed its clock independently; the player witness must be checked on that delta before any timing closure.
+- Subsequent combat source `e078c376338537560fabf45c3df28cf6786bfb23` adds a presentation-only timed hitstop lease for an observing guest's opponent proxy and a bounded seen-sequence window for legitimate out-of-order hits. Those two changes and the updated replay test have not yet been exercised by the listed earlier logs.
+
+## Scope and shortcuts
+
+The existing player driver directly adopts the Ripplet starter, exits the farmhouse and stages disclosed out-of-range ground positions. It drives logical InputMap actions rather than physical controller hardware, isolates type arithmetic with the existing critical-scale fixture, and searches real HUD Labels after production impact signals. It proves an ordinary solo fight transaction path, not internet multiplayer, visual legibility, a code-blind judge, Medium performance or all move identities. Lethal hits use the grounded faint response instead of a hurt flinch. Runtime logs preserve initial failures; only the specific corrected final paths have native exit 0. Authority remains independent of presentation-node arrival, deletion and visibility.

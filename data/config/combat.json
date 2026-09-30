@@ -380,6 +380,7 @@
       "giant_knockback_scale": 0.5,
       "default_profile_knockback_scale": 1.0,
       "receipt_history_limit": 256,
+      "receipt_sequence_window": 256,
       "numbers": {
         "enabled": true,
         "mode": "on",

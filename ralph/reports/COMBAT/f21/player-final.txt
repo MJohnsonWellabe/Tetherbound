@@ -1,0 +1,179 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1172)
+       [1] _ready (res://scripts/world/playground_world.gd:798)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 388608 placements, 431161 skipped]=3051 reorder[16 layers]=269
+[vegetation] grass field is on; 431161 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=3483 mark_harvestable=59 group_by_model=322 register_mesh_assets=70 build_batches_total=5797 (of which harvest_points[56469 nodes]=3553, initial_collision_stream[51385 solid]=177) update_mmis=527
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 387220 props in 36 batches (56469 harvestable, 0 already chopped, 389/51385 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 146 band pickups (0 already taken, 33 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66233
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66234
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66235
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66236
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66237
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66238
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+wild creature at 41, -1, -48
+outside a fight, combat_quick says: 'Can't attack outside a fight.'
+outside a fight, combat_throw stays quiet
+with a build armed, the same press stays quiet
+approached to 3.3m (engage range 6.0m)
+camera 12.1m from the creature, line of sight clear
+creature moved 4.3m on the stick
+F21 actual launch :solo-enemy:1 travel=0.000 frame=606
+F21 actual impact :solo-enemy:1 elapsed_physics=0.000 elapsed_wall=0.007 damage=10.083 weight=light hitstop=0.030 knockback=0.300
+pushed to 11.0m from the arena centre (radius 11.0m)
+a swing from out of range missed, as it should
+F21 actual launch :solo-enemy:2 travel=0.000 frame=1074
+F21 actual impact :solo-enemy:2 elapsed_physics=0.000 elapsed_wall=0.003 damage=10.357 weight=light hitstop=0.030 knockback=0.300
+F21 actual launch :solo-enemy:3 travel=0.000 frame=1201
+F21 actual impact :solo-enemy:3 elapsed_physics=0.000 elapsed_wall=0.002 damage=10.740 weight=light hitstop=0.030 knockback=0.300
+F21 actual launch :solo-enemy:4 travel=0.000 frame=1328
+F21 actual impact :solo-enemy:4 elapsed_physics=0.000 elapsed_wall=0.002 damage=9.832 weight=light hitstop=0.030 knockback=0.300
+F21 actual launch :solo:5 travel=0.000 frame=1387
+F21 actual impact :solo:5 elapsed_physics=0.000 elapsed_wall=0.003 damage=14.273 weight=light hitstop=0.030 knockback=0.300
+quick attack: enemy 106.2 -> 91.9 hp
+F21 actual launch :solo-enemy:6 travel=0.000 frame=1458
+F21 actual impact :solo-enemy:6 elapsed_physics=0.000 elapsed_wall=0.003 damage=9.039 weight=light hitstop=0.030 knockback=0.300
+enemy dealt damage: ally 82.2 -> 73.1 hp
+type chart reached the fight: 6 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
+F21 actual launch :solo:7 travel=0.000 frame=1473
+F21 actual impact :solo:7 elapsed_physics=0.000 elapsed_wall=0.003 damage=12.755 weight=light hitstop=0.030 knockback=0.300
+F21 actual launch :solo:8 travel=0.000 frame=1502
+F21 actual impact :solo:8 elapsed_physics=0.000 elapsed_wall=0.002 damage=13.021 weight=light hitstop=0.030 knockback=0.300
+F21 actual launch :solo:9 travel=0.000 frame=1531
+F21 actual impact :solo:9 elapsed_physics=0.000 elapsed_wall=0.004 damage=12.333 weight=light hitstop=0.120 knockback=0.300
+F21 actual launch :solo:10 travel=0.264 frame=1583
+F21 actual visible arrival :solo:10 elapsed_wall=0.458 target_hp=53.779
+F21 actual impact :solo:10 elapsed_physics=0.333 elapsed_wall=0.577 damage=58.155 weight=heavy hitstop=0.070 knockback=1.200
+enemy fainted after 234 action frames; outcome 'won'
+tally: 5 hits on the enemy, 5 on the ally, 2 misses
+F21 receipt/actual HUD number witnesses: 10/10
+5 blows landed for 110.5 damage (the chart says 112.5; a chart-less fight would say 90.0)
+post-fight HP held at 73.1, no auto-heal
+
+combat: OK — a fight can be entered, piloted, won and left.
+Native Godot exit status: 0

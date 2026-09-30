@@ -105,7 +105,7 @@ func _initialize() -> void:
 
 func _init_budgets() -> void:
 	super._init_budgets()
-	if "--guardian" in OS.get_cmdline_user_args():
+	if "--guardian" in OS.get_cmdline_user_args() or "--feedback" in OS.get_cmdline_user_args():
 		# Two complete Meadows builds can exceed the ordinary startup bound
 		# while the owner's other work has CPU priority. Gameplay bounds stay.
 		_budgets["hello_budget_s"] = 360.0
@@ -346,6 +346,8 @@ func _fresh_accepted_receipt(state: Dictionary, encounter_id: String, peer_id: i
 
 
 func _run() -> void:
+	# Game._ready must finish before launch isolates the coordinator save root.
+	await process_frame
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
@@ -564,6 +566,48 @@ func _run() -> void:
 			"both peers draw the same health bar after it, within %d poll(s) (host %.3f, guest %.3f, gap %.3f)"
 				% [hp_polls, host_hp, guest_hp, absf(guest_hp - host_hp)])
 		hp_before = host_hp
+
+	# F21: keep the original direct-intent authority probes above and below,
+	# then also exercise the real physical/polled InputMap strike path. Staged
+	# creature placement is disclosed and uses the existing geometry fixture.
+	for peer in 2:
+		var landed_input := false
+		for attempt in SWINGS:
+			var before_view := await _encounter(peer)
+			var before_count := _own_feedback_hits(before_view)
+			var aim := _vec((await _encounter(0)).get("opponent_pos", []))
+			if aim == Vector3.INF: break
+			var seat := aim + Vector3(0.0, 0.0, -NEAR_Z if peer == 0 else NEAR_Z)
+			await step(peer, "place_creature", {"at": [seat.x, seat.y, seat.z], "face": [aim.x, aim.y, aim.z], "settle": PLACE_SETTLE})
+			await _await_host_action_ready(host_peer_id if peer == 0 else guest_peer_id)
+			var pressed := await step(peer, "press", {"action": "combat_quick", "tap_frames": 2})
+			check(str(pressed.get("verdict", "")) == "PASS", "peer %d used actual combat_quick InputMap input" % peer)
+			for poll in HP_CONVERGE_POLLS:
+				if _own_feedback_hits(await _encounter(peer)) > before_count:
+					landed_input = true
+					break
+			if landed_input: break
+		check(landed_input, "peer %d actual combat_quick produced its own immutable impact receipt" % peer)
+	var incoming_count := 0
+	for peer in 2:
+		var view := await _encounter(peer)
+		var rows: Array = (view.get("feedback", {}) as Dictionary).get("impacts", [])
+		var observer_count := 0
+		for raw: Dictionary in rows:
+			check(bool(raw.get("receipt_read_only", false)), "peer %d received immutable host feedback %s" % [peer, raw.action_id])
+			check(bool(raw.get("number_seen", false)), "peer %d rendered actual damage-number Label for %s" % [peer, raw.action_id])
+			check(bool(raw.get("target_hitstop_active", false)) and bool(raw.get("target_physics_paused", false)),
+				"peer %d impact froze actual target body for %s" % [peer, raw.action_id])
+			if not bool(raw.get("own_hit", true)):
+				observer_count += 1
+				check(int(raw.get("target_timed_leases", 0)) > 0, "peer %d observer proxy received body-only timed lease" % peer)
+			if not bool(raw.get("on_enemy", true)): incoming_count += 1
+			var launched: Dictionary = raw.get("launch", {})
+			if float(launched.get("travel_seconds", 0.0)) > 0.0:
+				check(int(launched.get("contact_process_frame", -1)) >= 0 and int(launched.contact_process_frame) <= int(raw.impact_process_frame),
+					"peer %d damage number followed actual visible contact for %s" % [peer, raw.action_id])
+		check(observer_count > 0, "peer %d observed other player's actual host impact with timed target lease" % peer)
+	check(incoming_count > 0, "real host enemy AI produced an incoming impact and number on a participant")
 
 	# --- host action/replay/cooldown authority --------------------------------
 	# First let the previous real swing's host deadline elapse. The probe reads
@@ -1039,6 +1083,13 @@ func _run() -> void:
 func _encounter(peer: int) -> Dictionary:
 	var value = await probe(peer, "encounter")
 	return value if value is Dictionary else {}
+
+
+func _own_feedback_hits(view: Dictionary) -> int:
+	var count := 0
+	for row: Dictionary in (view.get("feedback", {}) as Dictionary).get("impacts", []):
+		if bool(row.get("on_enemy", false)) and bool(row.get("own_hit", true)): count += 1
+	return count
 
 
 func _runtime(peer: int, encounter_id: String, ambient_instance_id: int = 0) -> Dictionary:
