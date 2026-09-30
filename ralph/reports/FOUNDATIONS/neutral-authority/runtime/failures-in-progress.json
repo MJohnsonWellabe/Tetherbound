@@ -1,0 +1,294 @@
+{
+  "1": {
+    "status": "finished RED; original retained",
+    "failures": [
+      {
+        "marker": "FAIL  test_inn_interior_visual_identity.gd :: test_bram_faces_the_customer_lane_instead_of_the_stock_wall",
+        "details": [
+          "          expected 0.000000 +/- 0.010000, got 180.000000  (Bram no longer uses the production-corrected patron-facing yaw)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_meadows_south_trail_pulls_0912.gd :: test_nessa_makes_the_overlook_a_persisted_person_and_gift_pull",
+        "details": [
+          "          expected true, got false  (Nessa is no longer standing with the overlook supply load)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_road_creature_visibility.gd :: test_historical_road_baseline_can_only_improve",
+        "details": [
+          "          expected 251, got 250  (meadows/band1_lower_meadows sample count)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_save_format.gd :: test_a_species_the_catalogue_forgot_keeps_what_the_save_said",
+        "details": [
+          "          expected true, got false",
+          "          expected true, got false"
+        ]
+      },
+      {
+        "marker": "FAIL  test_save_format.gd :: test_save_then_load_round_trips_creature_progression_and_moves",
+        "details": [
+          "          expected true, got false",
+          "          expected true, got false"
+        ]
+      },
+      {
+        "marker": "FAIL  test_vegetation_human_prompt_height.gd :: test_exact_failed_baked_tree_spawns_reachable_prompt_without_radius_change",
+        "details": [
+          "          expected false, got true"
+        ]
+      }
+    ],
+    "script_error_lines": 6,
+    "receipt": "unit-shard-1-receipt.json"
+  },
+  "2": {
+    "status": "finished RED; original retained",
+    "failures": [
+      {
+        "marker": "FAIL  test_band_vegetation.gd :: test_merged_arrays_are_identical_to_the_pre_split_file",
+        "details": [
+          "          expected , got clearings[2].x is 2.0, expected -22.0  (clearings: the merged entry does not match the pre-split file \u2014 clearings[2].x is 2.0, expected -22.0)",
+          "          expected , got clearings[4].x is 78.0, expected 13.0  (clearings: the merged entry does not match the pre-split file \u2014 clearings[4].x is 78.0, expected 13.0)",
+          "          expected , got footprints[0].x is 2.0, expected -22.0  (footprints: the merged entry does not match the pre-split file \u2014 footprints[0].x is 2.0, expected -22.0)",
+          "          expected , got footprints[6].x is 44.0, expected -2.5  (footprints: the merged entry does not match the pre-split file \u2014 footprints[6].x is 44.0, expected -2.5)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_gate_f_village_passage.gd :: test_closed_gate_refuses_crossing_but_allows_outside_detour",
+        "details": [
+          "          expected true, got false  ({ \"ok\": false, \"reason\": \"no verified open village passage connects this walk to its target\", \"waypoints\": [] })",
+          "          expected true, got false  (Both endpoints outside does not make a fence-crossing chord valid)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_moves_data.gd :: test_every_move_has_a_valid_slot",
+        "details": [
+          "          expected true, got false  (move 'snare' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'slow_field' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'shove' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'dash_strike' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'veil' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'heal_pulse' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'bramble_trap' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'hearten' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'sap' has an unrecognised slot 'utility')",
+          "          expected true, got false  (move 'quake_ring' has an unrecognised slot 'utility')"
+        ]
+      }
+    ],
+    "script_error_lines": 0,
+    "receipt": "unit-shard-2-receipt.json"
+  },
+  "3": {
+    "status": "finished RED; original retained",
+    "failures": [
+      {
+        "marker": "FAIL  test_band_content.gd :: test_merged_arrays_are_identical_to_the_pre_split_files",
+        "details": [
+          "          expected , got clusters[1].props[0].at[0] is 0.0, expected -24.0  (props.json: the merged entry does not match the pre-split file \u2014 clusters[1].props[0].at[0] is 0.0, expected -24.0)",
+          "          expected , got trainers[0].position[0] is 78.0, expected 13.0  (trainers.json: the merged entry does not match the pre-split file \u2014 trainers[0].position[0] is 78.0, expected 13.0)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_gate_f_instrumentation.gd :: test_no_journey_walk_crosses_the_village_fence_away_from_a_gate",
+        "details": [
+          "          expected true, got false  (the walk S10d-98 -> S10e-98g ((0, 1330) to (55, -10)) crosses the village fence at (52.6, 47.4), 46.2 m from the nearest gate. The fence is solid: that walk cannot arrive. Route it through a gate, the way the Pond road and the Rise road already do.)",
+          "          expected true, got false  (the walk S10e-98g -> S10e-98h ((55, -10) to (39, -20)) crosses the village fence at (42.8, -17.4), 4.8 m from the nearest gate. The fence is solid: that walk cannot arrive. Route it through a gate, the way the Pond road and the Rise road already do.)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_gate_f_segments.gd :: test_village_tutorial_shop_route_tracks_current_shell_and_clears_its_walls",
+        "details": [
+          "          expected true, got false  (S03 doorway must follow the current shop pose)",
+          "          expected true, got false  (S03 doorway must follow the current shop pose)",
+          "          expected true, got false  (rear-pen route must go around the cottage side, outside its 2m half-width)",
+          "          expected true, got false  (rear-pen route must go around the cottage side, outside its 2m half-width)",
+          "          expected true, got false  (S03C doorway must follow the current shop pose)",
+          "          expected true, got false  (S03C doorway must follow the current shop pose)",
+          "          expected true, got false  (rear-pen route must go around the cottage side, outside its 2m half-width)",
+          "          expected true, got false  (rear-pen route must go around the cottage side, outside its 2m half-width)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_grandpa_yard_visual_identity.gd :: test_grandpa_domestic_apron_is_bounded_off_progression_space",
+        "details": [
+          "          expected true, got false  (Grandpa's apron drifted off the south-east work yard)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_grandpa_yard_visual_identity.gd :: test_grandpa_work_yard_has_one_coherent_domestic_cluster",
+        "details": [
+          "          expected true, got false  (Grandpa-yard dressing drifted north into the house or door approach)",
+          "          expected true, got false  (Grandpa-yard dressing drifted north into the house or door approach)",
+          "          expected true, got false  (Grandpa-yard dressing drifted north into the house or door approach)",
+          "          expected true, got false  (Grandpa-yard dressing drifted north into the house or door approach)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_meadows_named_location_ledger_0912.gd :: test_final_polish_locations_have_complete_accepted_evidence_rounds",
+        "details": [
+          "          expected true, got false  (THE-RISE-IDENTITY-R33 has no manifest)",
+          "          expected true, got false  (THE-RISE-IDENTITY-R33 is not complete)",
+          "          expected true, got false  (THE-RISE-IDENTITY-R33 has no independent review)",
+          "          expected true, got false  (THE-RISE-IDENTITY-R33 independent review records no PASS)",
+          "          expected true, got false  (OLD-QUARRY-TERRACE-R55-DESKTOP-01 has no manifest)",
+          "          expected true, got false  (OLD-QUARRY-TERRACE-R55-DESKTOP-01 is not complete)",
+          "          expected true, got false  (OLD-QUARRY-TERRACE-R55-DESKTOP-01 has no independent review)",
+          "          expected true, got false  (OLD-QUARRY-TERRACE-R55-DESKTOP-01 independent review records no PASS)",
+          "          expected true, got false  (final-old-mill-63-desktop-01 has no manifest)",
+          "          expected true, got false  (final-old-mill-63-desktop-01 is not complete)",
+          "          expected true, got false  (final-old-mill-63-desktop-01 has no independent review)",
+          "          expected true, got false  (final-old-mill-63-desktop-01 independent review records no PASS)",
+          "          expected true, got false  (final-warrens-62-desktop-01 has no manifest)",
+          "          expected true, got false  (final-warrens-62-desktop-01 is not complete)",
+          "          expected true, got false  (final-warrens-62-desktop-01 has no independent review)",
+          "          expected true, got false  (final-warrens-62-desktop-01 independent review records no PASS)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_stormwood_road_surface.gd :: test_bake_manifest_is_fresh_and_covers_routes_and_surface",
+        "details": [
+          "          expected 2236840266, got 601121851  (the committed bake is fresh for this checkout)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_tournament_ground_presentation.gd :: test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring",
+        "details": [
+          "          expected (20.0, 10.0), got (78.0, 44.0)  (the marking follows the existing tournament fight centre)",
+          "          expected true, got false  (the marshal backdrop at (85.2, 51.1) remains inside the visible village boundary (0.62m))"
+        ]
+      },
+      {
+        "marker": "FAIL  test_village_street_0912.gd :: test_both_street_legs_place_buildings_and_thresholds_at_their_authored_roles",
+        "details": [
+          "          expected [-2.5, -6.0], got [44.0, 2.0]  (OPTION-B: the inn stands west of the green, off the main street)",
+          "          expected 90.0, got 0.0  (the inn's public door faces east onto the green)",
+          "          expected [19.5, -6.0], got [44.0, 26.0]  (the stone cottage stands on the green's east side)",
+          "          expected -90.0, got 180.0  (the cottage door faces west toward the street)",
+          "          expected [2.0, 12.0], got [26.0, 26.0]  (Tam's workshop stands west of the south leg)",
+          "          expected 90.0, got 180.0  (the workshop bay faces east onto the street)",
+          "          expected [18.0, 4.0], got [26.0, 2.0]  (Mira's shop stands east of the south leg)",
+          "          expected -90.0, got 0.0  (Mira's real door faces west onto the street)",
+          "          expected true, got false  (the inn threshold moved with its green-facing door)",
+          "          expected true, got false  (the cottage threshold moved with its door)",
+          "          expected true, got false  (Mira's threshold moved with the shop door)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_village_street_0912.gd :: test_every_moved_building_has_scatter_and_ground_cover_exclusion",
+        "details": [
+          "          expected true, got false  (the moved building at (-2.5, -6.0) rejects even clearing-exempt ground cover)",
+          "          expected true, got false  (the moved building at (2.0, 12.0) rejects even clearing-exempt ground cover)",
+          "          expected true, got false  (the moved building at (18.0, 4.0) rejects even clearing-exempt ground cover)",
+          "          expected true, got false  (the moved building at (19.5, -6.0) rejects even clearing-exempt ground cover)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_village_street_0912.gd :: test_fences_define_working_yards_without_cutting_the_street",
+        "details": [
+          "          expected 90.0, got inf  (Oskar's pen has a rear rail parallel to the shop wall)",
+          "          expected 90.0, got inf  (Tam's rear yard has a west rail)",
+          "          expected 0.0, got inf  (Tam's rear rails meet as a readable L)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_village_street_0912.gd :: test_opening_village_keeps_exactly_five_functional_people_inside",
+        "details": [
+          "          expected [\"Bram\", \"Halda\", \"Mira\", \"Oskar\", \"Tam\"], got [\"Bram\", \"Halda\", \"Maren\", \"Mira\", \"Nessa\", \"Oskar\", \"Tam\"]  (the village boundary contains exactly its five opening functions, not an idle crowd)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_village_street_0912.gd :: test_south_street_buildings_share_level_ground_and_matching_aprons",
+        "details": [
+          "          expected false, got true  (the shop/workshop street has a dedicated level pad)",
+          "          expected true, got false  (the shared pad covers both rotated footprints)",
+          "          expected 0.9, got inf  (the new pad shares the square's explicit height)",
+          "          expected true, got false  (the corrected long inn footprint has dedicated level ground)",
+          "          expected 0.9, got inf  (the inn pad cannot introduce a step into the village square)",
+          "          expected false, got true  (the moved building at (2.0, 12.0) has a worked-soil apron)",
+          "          expected 90.0, got inf  (the apron at (2.0, 12.0) mirrors the production building rotation)",
+          "          expected false, got true  (the moved building at (18.0, 4.0) has a worked-soil apron)",
+          "          expected -90.0, got inf  (the apron at (18.0, 4.0) mirrors the production building rotation)",
+          "          expected false, got true  (the moved building at (19.5, -6.0) has a worked-soil apron)",
+          "          expected -90.0, got inf  (the apron at (19.5, -6.0) mirrors the production building rotation)",
+          "          expected false, got true  (the moved building at (-2.5, -6.0) has a worked-soil apron)",
+          "          expected 90.0, got inf  (the apron at (-2.5, -6.0) mirrors the production building rotation)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_village_street_0912.gd :: test_south_street_has_one_continuous_hidden_road_to_trailgate",
+        "details": [
+          "          expected [[10.5, 2.0], [11.5, 2.0], [14.0, 20.0]], got [[13.79, 14.0], [13.79, 22.4]]  (the south street leaves the main street at z=2 and meets the existing TrailGate waypoint)",
+          "          expected [[10.5, -16.0], [-16.5, -16.0]], got [[8.3, 14.0], [13.79, 14.0]]  (the cross lane runs straight along z=-16 from the main street to Grandpa's real door)",
+          "          expected [[10.5, -10.0], [6.6, -7.0], [3.6, -6.0]], got [[46.0, 14.0], [46.0, 10.6], [44.0, 10.6]]  (the inn has a short path from the main street to its green-facing doorstep)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_village_street_0912.gd :: test_the_five_villagers_belong_to_visible_street_functions",
+        "details": [
+          "          expected (19.4, 4.0), got (26.0, 0.6)  (Mira remains inside her moved shop)",
+          "          expected -90.0, got 180.0  (Mira faces her west street door)",
+          "          expected (25.0, 4.0), got (62.0, 20.0)  (Oskar stands in the visible creature pen)",
+          "          expected (8.0, 12.0), got (26.0, 20.0)  (Tam stands at his workshop bay)",
+          "          expected (-6.89, -6.0), got (44.0, -2.39)  (Bram remains at the moved inn bar)",
+          "          expected 90.0, got 180.0  (Bram faces the inn's green-facing public door)",
+          "          expected (23.5, 11.5), got (88.5, 46.5)  (Halda remains at the tournament board)"
+        ]
+      }
+    ],
+    "script_error_lines": 7,
+    "receipt": "unit-shard-3-receipt.json"
+  },
+  "4": {
+    "status": "finished RED; original retained",
+    "failures": [
+      {
+        "marker": "FAIL  test_chapter_rewards.gd :: test_every_tm_in_the_game_can_actually_be_obtained",
+        "details": [
+          "          expected true, got false  ('tm_fireball' exists as an item but is in no shop, no trainer reward and nowhere in the world; a player can never get it)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_farming.gd :: test_farm_json_places_beds_where_r7_6_allows",
+        "details": [
+          "          expected true, got false  (bed at (-0.4, 21.0) is outside the house pad's flatten radius)",
+          "          expected true, got false  (bed at (2.0, 21.0) is outside the house pad's flatten radius)",
+          "          expected true, got false  (bed at (4.4, 21.0) is outside the house pad's flatten radius)",
+          "          expected true, got false  (bed at (-0.4, 23.4) is outside the house pad's flatten radius)",
+          "          expected true, got false  (bed at (2.0, 23.4) is outside the house pad's flatten radius)",
+          "          expected true, got false  (bed at (4.4, 23.4) is outside the house pad's flatten radius)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_item_icons.gd :: test_every_item_has_a_non_empty_description",
+        "details": [
+          "          expected false, got true  (item 'essence_ground' has no description)",
+          "          expected false, got true  (item 'essence_water' has no description)",
+          "          expected false, got true  (item 'essence_air' has no description)",
+          "          expected false, got true  (item 'essence_electric' has no description)",
+          "          expected false, got true  (item 'essence_fire' has no description)",
+          "          expected false, got true  (item 'essence_dark' has no description)",
+          "          expected false, got true  (item 'essence_ice' has no description)",
+          "          expected false, got true  (item 'essence_psychic' has no description)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_map_baker.gd :: test_authored_route_survives_coarse_terrain_sampling",
+        "details": [
+          "          expected true, got false  (an authored route waypoint must remain visible at minimap bake density)"
+        ]
+      },
+      {
+        "marker": "FAIL  test_objective_beacon.gd :: test_return_targets_match_authored_gates_and_grandpa",
+        "details": [
+          "          expected (2.0, 14.0), got (-22.0, -16.0)"
+        ]
+      }
+    ],
+    "script_error_lines": 0,
+    "receipt": "unit-shard-4-receipt.json"
+  }
+}

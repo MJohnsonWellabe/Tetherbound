@@ -1,0 +1,110 @@
+{
+  "status": "Historical four-shard batch RED; targeted12/287/0 repairs PASS. No full-suite green claim. False-ok SCRIPT ERROR methods excluded from passing reuse.",
+  "raw": [
+    {
+      "path": "affected-repairs-r1-receipt.json",
+      "bytes": 4770,
+      "sha256": "e462a0e3cba36243526a4760244ab1603b6fa211107ad0db8909c05785c405e1"
+    },
+    {
+      "path": "affected-repairs-r1.txt",
+      "bytes": 2303,
+      "sha256": "542dbac2bf267aa7ce3ce3076b6a86df68584b9ae653e5a8a955ea3c2922d910"
+    },
+    {
+      "path": "batch-method-census.json",
+      "bytes": 5402,
+      "sha256": "84eb32b567f8e42b186ef7748c59ac087b1280f23d1a9694b2a9bda805ac45b0"
+    },
+    {
+      "path": "failures-in-progress.json",
+      "bytes": 19162,
+      "sha256": "93fb1ad530aa18dc917ed4557422f50340e42c11f7e06f83cd4dba5de8bbf5e8"
+    },
+    {
+      "path": "neutral-actor-parser-final.txt",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "neutral-actor-parser-initial.txt",
+      "bytes": 364,
+      "sha256": "f4f910fb19307082d8f046c085033250e77c1e45005477e26de70736963eac39"
+    },
+    {
+      "path": "neutral-actor-parser-second.txt",
+      "bytes": 630,
+      "sha256": "39daa8acaa9dfd5832008320fb9fd7e031df4631e028245f9ef02d311e6fdbfc"
+    },
+    {
+      "path": "neutral-ledger-parser-final.txt",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "neutral-session-parser-initial.txt",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "neutral-vitals-test-parser-corrected.txt",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "neutral-vitals-test-parser-final.txt",
+      "bytes": 437,
+      "sha256": "bc541104503d673602b2c0d599a83c6711a70a6c0a61a4dacb068c5a144c56da"
+    },
+    {
+      "path": "unit-shard-1-initial-aborted-receipt.json",
+      "bytes": 3616,
+      "sha256": "148fd5b8cc8bdefc946932e22de1ec684c4b21ea979ca54748f51fee115b41d8"
+    },
+    {
+      "path": "unit-shard-1-initial-aborted.txt",
+      "bytes": 253964,
+      "sha256": "aa90fd59d686fe6b3fd315be4df05fe58a5a11f7bfde827372a969b8828734ce"
+    },
+    {
+      "path": "unit-shard-1-receipt.json",
+      "bytes": 3492,
+      "sha256": "adaf8d72ee46320c4e0453d14f8961a15583beebe2f9f0189435cdc0e2b2e937"
+    },
+    {
+      "path": "unit-shard-1.txt",
+      "bytes": 321385,
+      "sha256": "3eaefe2a990a16b9a32dbf56f5f8208b0a78d131d24cc2ca7341a3c0fbe401fc"
+    },
+    {
+      "path": "unit-shard-2-receipt.json",
+      "bytes": 3493,
+      "sha256": "9f324fce9ba388f76c40060b5babb474c24f0d236a3f293b6d88c265c64707f8"
+    },
+    {
+      "path": "unit-shard-2.txt",
+      "bytes": 189311,
+      "sha256": "76e7adde9d3d5434249fdb5d519f1e11d3eadd00593b24153013ae501fb0a522"
+    },
+    {
+      "path": "unit-shard-3-receipt.json",
+      "bytes": 3636,
+      "sha256": "f2b67164d3933120c27a1fb9c48d1115b7ecd0ddf7988ac5f4e6c8e4b29dcedd"
+    },
+    {
+      "path": "unit-shard-3.txt",
+      "bytes": 194073,
+      "sha256": "ae7f929dbc135eb3890575c9eaa33cd6ef5696789970f092ab14a0a14c8d6232"
+    },
+    {
+      "path": "unit-shard-4-receipt.json",
+      "bytes": 3636,
+      "sha256": "954045fbee1b51d19be82dd96bbafef5ab70b333cd08b2fa4319d2bb4dda9e54"
+    },
+    {
+      "path": "unit-shard-4.txt",
+      "bytes": 152887,
+      "sha256": "378bd8097370e85701d9f9b31d78f0bad91e76a17c91b03e4196b587ea0a1284"
+    }
+  ]
+}
