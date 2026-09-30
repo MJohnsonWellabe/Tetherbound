@@ -78,6 +78,9 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 				if arches.size() != 1:
 					return _services_fail("workshop must have one actual open arch")
 				target = arches[0].global_position + building.global_basis.z.normalized() * 1.5
+			target = _body_clear_frontage(target, building)
+			if not target.is_finite():
+				return _services_fail("no actual actor-clear approach within this house frontage: " + role)
 			if not await _service_leg([_xz(), _road_join(start, end), Vector2(target.x, start.y), Vector2(target.x, target.z)], time_name + " house " + role):
 				return false
 		for person: String in HOUSE_SERVICES:
@@ -146,6 +149,47 @@ func _has_cottage_furnishings(interior: Node) -> bool:
 				and size.y >= .3 and size.y < 1.0:
 			storage = true
 	return bed and storage
+
+
+## The old nominal workshop endpoint overlapped Tam's actual capsule. Choose
+## among nearby frontage approaches using actual physical body radii; keep the
+## real .75m arrival/floor gate and let collision/input still decide reachability.
+func _body_clear_frontage(nominal: Vector3, building: Node3D) -> Vector3:
+	var player_radius := _capsule_radius(_player)
+	if player_radius <= 0.0:
+		return Vector3.INF
+	var actors: Array[Node3D] = []
+	var largest_radius := 0.0
+	for raw: Node in _world.find_children("*", "Node3D", true, false):
+		if raw.has_method("add_prompt") and _capsule_radius(raw as Node3D) > 0.0:
+			actors.append(raw as Node3D)
+			largest_radius = maxf(largest_radius, _capsule_radius(raw as Node3D))
+	var step := player_radius + largest_radius + .35
+	var tangent := building.global_basis.x.normalized()
+	for multiplier: float in [0.0, 1.0, -1.0, 2.0, -2.0]:
+		var candidate := nominal + tangent * step * multiplier
+		if candidate.distance_to(nominal) > 3.0:
+			continue
+		var clear := true
+		for actor: Node3D in actors:
+			if Vector2(candidate.x, candidate.z).distance_to(Vector2(actor.global_position.x, actor.global_position.z)) \
+					< player_radius + _capsule_radius(actor) + .2:
+				clear = false
+				break
+		if clear:
+			print("F17#3 actual body-clear frontage: nominal=%s chosen=%s player_radius=%.3f" % [nominal, candidate, player_radius])
+			return candidate
+	return Vector3.INF
+
+
+func _capsule_radius(owner: Node3D) -> float:
+	var radius := 0.0
+	for raw: Node in owner.find_children("*", "CollisionShape3D", true, false):
+		var collision := raw as CollisionShape3D
+		if not collision.disabled and collision.shape is CapsuleShape3D:
+			var scale_xz := maxf(collision.global_basis.x.length(), collision.global_basis.z.length())
+			radius = maxf(radius, (collision.shape as CapsuleShape3D).radius * scale_xz)
+	return radius
 
 
 func _service_leg(points: Array, label: String) -> bool:
