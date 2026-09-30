@@ -6,7 +6,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 95 of 280:** original 95/101, redesign 0/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. Main was green at `8f5dd6ed2` (full CI 36626653020); the rolling download was rebuilt there.
+**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 102 of 280:** original 95/101, redesign 7/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -28,12 +28,12 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | All5 strict MET; schema28, central order, full populated ENet roundtrip and actual Grandpa opening.667-file batch5422/5422 passing methods with RD36 affected repairs; logs/shortcuts in ralph/reports/FOUNDATIONS/f16. Full-ci/main landing required; Wave1 follows merge. |
-| `tb/hub` | F17, F18 | waits on F16 |
-| `tb/reorder` | F19, F20 | waits on F16, F18 |
-| `tb/combat` | F21–F24 | prototype complete; independent F16 review; edits after F16 |
-| `tb/vfx` | F25, F35 | prototype complete; independent schema/carrier review; edits after F16 |
-| `tb/lookdev` | F26 | Persistent presets and reference-backed look bar: #1/#2 strict candidate MET (combat/VFX), graphics PR follows landed F16. Water native Low/Medium/High 3/12 routes; material/matrix/Ally gates open. Evidence VISUAL/lookdev/recheck-presets.md. |
+| `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
+| `tb/hub` | F17, F18 | F17 source 6f083d1d4 pushed against landed F16; warm import native0, geometry44/3982/4red retained; exact Hall/sign/berry pose fixes underway. Player, bake and visual gates open. |
+| `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
+| `tb/combat` | F21–F24 | source09eab35c8; hosted first-HP/authority/rejoin evidence92c0481a1 native0, independent verdict pending; poise/critical runtime and pad rumble/TM path open. |
+| `tb/vfx` | F25, F35 | r3 evidence7c6af296c native0/36 PNGs; blind F25#2/#5 FAIL, flag off. Actual soft-flame/ribbon/chips rework after two quality rejections. |
+| `tb/lookdev` | F26 | Persistent presets and reference-backed look bar: #1/#2 strict MET (combat/VFX), landed via #470 main39840191c. Water native Low/Medium/High 3/12 routes; material/matrix/Ally gates open. Evidence VISUAL/lookdev/recheck-presets.md. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
@@ -41,7 +41,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | `tb/hud` | F42 | Wave 2 |
 | `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43–F49 | Wave 3 |
 
-**Active ownership:** `tb/foundations` owns the F16 save/title refusal, central-order consumers and legacy-crossing gate call sites through Wave 0; hub/reorder take those paths only after F16. Exact extra paths are in board `status.json` WIP. `tb/redesign-board` holds board/STATE writes during this slice. Godot import/render/export writers serialize; distinct-user-dir two-peer headless groups run together. Reference boards restored in the clean board checkout.
+**Active ownership:** F16 landed; `tb/hub` owns F17 village/Hall geometry and then F18 portals, with exact pose extensions recorded in HUB evidence. Combat, VFX and lookdev advance Wave 1 in their lanes. Exact extra paths are in board `status.json` WIP. `tb/redesign-board` holds board/STATE writes during this slice. Godot import/render/export writers serialize; distinct-user-dir two-peer headless groups run together. Reference boards restored in the clean board checkout.
 
 ### Open owner decisions
 
