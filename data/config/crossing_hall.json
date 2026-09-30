@@ -205,5 +205,87 @@
     0,
     0.15,
     -15
-  ]
+  ],
+  "frontage": {
+    "_why": "F17 destination r1 DAY NO/NIGHT NO: complete the installed central gable/clerestory at the existing road-facing end, identify the public threshold and put warm practical fixtures on that real facade. Native module scale; no new floor/collider, entrance, route or camera changes.",
+    "modules": [
+      {
+        "module": "Wall_Plaster_Window_Wide_Flat",
+        "at": [
+          0,
+          3.12,
+          -15
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "module": "Wall_Plaster_Window_Wide_Flat",
+        "at": [
+          0,
+          6.24,
+          -15
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "module": "Roof_Front_Brick6",
+        "at": [
+          0,
+          9.36,
+          -15
+        ],
+        "yaw_deg": 180
+      }
+    ],
+    "sign": {
+      "text": "CROSSING HALL",
+      "at": [
+        0,
+        5.95,
+        -15.48
+      ],
+      "yaw_deg": 180,
+      "font_size": 48,
+      "pixel_size": 0.008,
+      "colour": "#ead8ab"
+    },
+    "lanterns": [
+      {
+        "at": [
+          -2.3,
+          3.55,
+          -15.35
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "at": [
+          2.3,
+          3.55,
+          -15.35
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "at": [
+          0,
+          7.45,
+          -15.35
+        ],
+        "yaw_deg": 180
+      }
+    ],
+    "light": {
+      "colour": "#ffd09b",
+      "energy": 1.7,
+      "range_m": 7.5,
+      "glow_energy": 0.5,
+      "glow_at": [
+        0,
+        0.15,
+        0.12
+      ],
+      "glow_radius_m": 0.065
+    }
+  }
 }

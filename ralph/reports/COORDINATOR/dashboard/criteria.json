@@ -959,14 +959,14 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 29,
+   "pct": 43,
    "counts": {
-    "met": 2,
+    "met": 3,
     "not_started": 4,
     "partial": 0,
     "in_progress": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -977,9 +977,9 @@
     },
     {
      "text": "From Grandpa's farm door at the normal camera, the Crossing Hall reads as the destination down the road (code-blind judge YES, day and night).",
-     "status": "failing",
-     "evidence": "Actual source2a1c6d37f3: two original1920x1080 normal-camera day/night frames at the same farm-door pose, native0/215.078s. Fresh code-blind DAY NO/NIGHT NO; exact raw report and original PNGs in ralph/reports/HUB/f17/destination-day-night-r1, receipt/log and destination-day-night-result.md. Shortcuts disclosed: authored opening fixture, injected ordinary input, production WorldLook day/night + clear weather; no camera/body/HUD geometry alteration. No visual MET.",
-     "gap": "Hall remains an indistinct distant multi-gable mass, partly occluded by dominant market canopy; night lacks a distinct warm arrival silhouette."
+     "status": "met",
+     "evidence": "Independent code-blind strict DAY YES / NIGHT YES: ralph/reports/HUB/f17/destination-day-night-r2/strict-codeblind.txt; original native1920 day/night frames and frames.json. Actual same ordinary farmhouse-door pose/camera, executed7207773e9a, native0/176.125s; runtime/destination-day-night-r2.txt and receipt. Hall/canopy correction uses installed meshes and restrained facade lanterns; floor/collision/road unchanged, Hall transitive parser native0. Shortcuts disclosed: authored opening/starter; initial farmhouse pose; injected joypad; frozen production day/night/clear weather. Small sign text, busy fountains/night foreground overexposure remain; full F17#6 bar unproved. Original DAY NO/NIGHT NO retained. Main credit only at this PR landing.",
+     "gap": ""
     },
     {
      "text": "The Hall nave holds the home arch plus 7 portal arches (3 live-capable, 4 sealed and dark but visible), each signed by biome; a Shrine Room holds 8 pedestals; a controller walk reaches every arch and pedestal with no collision snag.",

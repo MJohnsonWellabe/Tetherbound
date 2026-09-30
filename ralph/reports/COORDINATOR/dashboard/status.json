@@ -2,7 +2,7 @@
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 104 of 280. Original:95/101; redesign:9/179. F16 all five, F26#1/#2 and F17#0/#2 landed main. F17#1 strict DAY NO/NIGHT NO remains failing; no additional candidate credit.",
+  "Criteria met: 105 of 280. Original:95/101; redesign:10/179. F16 all five, F26#1/#2 and F17#0/#2 landed; this PR closes only F17#1 with fresh strict DAY YES/NIGHT YES. Four remaining F17 criteria and full visual bar remain open.",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -370,7 +370,7 @@
   },
   {
    "lane": "tb/hub",
-   "now": "F17#0/#2 landed main380e466a15: straight road/topology and sixteen physical Hall approaches independently MET. F17#1 strict DAY NO/NIGHT NO remains failing; five remaining criteria open. Actual native-family Hall frontage/stale canopy correction source WIP, fresh capture unproved. F18 dependency hold; single-registry authority work continues.",
+   "now": "F17#0/#2 main; this cut closes only #1 with actual ordinary farm-door native1920 day/night and independent code-blind DAY YES/NIGHT YES. Four remaining F17 rows open; full craft unproved. F18 authority prototypes preserved outside this cut, dependency hold remains.",
    "next": "Ordinary day/night house/arch/pedestal paths, M1 chain, two-peer layout/states and code-blind visual bar; F18 protected-key/channel/transaction drafts advance."
   },
   {
