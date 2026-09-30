@@ -26,6 +26,9 @@ func test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys() 
 	var outside_hash := FileAccess.get_sha256(root.path_join("region_1_1.bin"))
 	var result: Dictionary = BAKE.write_regions("playground", {"trees": [_placement(20), _placement(40), _placement(300)]}, {}, 256, 7, [[0, 0]], root)
 	assert_true(bool(result.get("ok", false)), str(result))
+	result = BAKE.write_regions("playground", {"trees": [_placement(20), _placement(40), _placement(300)]}, {}, 256, 7, [[0.0,0.0]], root)
+	assert_true(bool(result.get("ok", false)), str(result))
+	assert_eq(TERRAIN.read_manifest(root).regions.size(),2,"repeated whole-float selection cannot duplicate a canonical catalog cell")
 	var rows: Array = []
 	for name: String in ["region_0_0.bin", "region_1_1.bin"]:
 		var layers := {}

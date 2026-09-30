@@ -66,13 +66,18 @@ static func read_village_scope(path: String, selection: Array) -> Dictionary:
 
 
 static func same_regions(left: Variant, right: Variant) -> bool:
-	if not valid_region_selection(left) or not valid_region_selection(right) or left.size() != right.size():
-		return false
-	for index: int in left.size():
-		for axis: int in 2:
-			if int(left[index][axis]) != int(right[index][axis]):
-				return false
-	return true
+	var canonical_left := canonical_regions(left)
+	var canonical_right := canonical_regions(right)
+	return not canonical_left.is_empty() and canonical_left == canonical_right
+
+
+static func canonical_regions(raw: Variant) -> Array:
+	if not valid_region_selection(raw):
+		return []
+	var out: Array = []
+	for pair: Array in raw:
+		out.append([int(pair[0]),int(pair[1])])
+	return out
 
 
 

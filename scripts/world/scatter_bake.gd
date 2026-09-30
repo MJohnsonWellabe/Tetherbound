@@ -516,6 +516,9 @@ static func write_regions(world_name: String, by_layer: Dictionary, drained: Dic
 	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_BAKE.CONFIG_PATH))
 	if not config is Dictionary or not valid_world_selection(selection, config.get("world_bounds", {}), region_size):
 		return {"ok": false, "code": "invalid_region_selection"}
+	# Normalize once at the API boundary. Every subsequent selection, lookup,
+	# catalog and receipt uses the same validated integer-cell representation.
+	selection = TERRAIN_BAKE.canonical_regions(selection)
 	var data_dir := _bake_dir(world_name)
 	if not test_data_dir.is_empty():
 		if not OS.has_feature("debug") or not test_data_dir.begins_with("user://"):
@@ -529,8 +532,8 @@ static func write_regions(world_name: String, by_layer: Dictionary, drained: Dic
 	var prior := TERRAIN_BAKE.read_manifest(data_dir)
 	if int(prior.get("base_seed", -1)) != base_seed or float(prior.get("region_size", -1)) != region_size:
 		return {"ok": false, "code": "incompatible_base_bake"}
-	var prior_catalog: Variant = prior.get("regions", [])
-	if not TERRAIN_BAKE.valid_region_selection(prior_catalog):
+	var prior_catalog := TERRAIN_BAKE.canonical_regions(prior.get("regions", []))
+	if prior_catalog.is_empty():
 		return {"ok": false, "code": "invalid_base_catalog"}
 	var selected := {}
 	for pair: Array in selection:
@@ -611,15 +614,16 @@ static func write_regions(world_name: String, by_layer: Dictionary, drained: Dic
 	# cell cannot be appended again solely because the new selection uses ints.
 	var catalog: Array = []
 	for pair: Array in prior_catalog:
-		catalog.append([int(pair[0]), int(pair[1])])
+		catalog.append(pair.duplicate())
 	for pair: Array in selection:
 		var region := Vector2i(int(pair[0]), int(pair[1]))
 		var name := _region_path(world_name, region).get_file()
 		if _write_region(stage.path_join(name), buckets.get(region, {})) < 0:
 			return {"ok": false, "code": "write_failed"}
 		files.append(name)
-		if not catalog.has(pair):
-			catalog.append(pair.duplicate())
+		var cell := [region.x,region.y]
+		if not catalog.has(cell):
+			catalog.append(cell)
 	var patch := {"config_fingerprint": config_fingerprint(), "regions": selection.duplicate(true),
 		"identity_high_water": high_water, "region_catalog": catalog,
 		"scope": "explicit regional scatter update; outside bytes and base provenance retained"}
