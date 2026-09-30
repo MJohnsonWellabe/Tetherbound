@@ -272,7 +272,11 @@ func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
 		extent += Vector3(float(offset[0]), float(offset[1]), float(offset[2])).length()
 		radius = maxf(radius, float(row.parameters.size) * extent)
-	radius += maxf(0.0, float(row.parameters.get("spread", 0.0)))
+	var spread := maxf(0.0, float(row.parameters.get("spread", 0.0)))
+	if int(row.parameters.count) > 1:
+		spread = maxf(spread, float(row.parameters.size) * float(profile.get("volley_separation_scale", 2.8)))
+		spread += float(int(row.parameters.count) - 1) * 0.5 * float(profile.get("volley_stagger_m", 0.25))
+	radius += spread
 	var cfg: Dictionary = _scenarios.transit_shutter
 	radius += float(cfg.clearance_m)
 	var expanded := target_bounds.grow(radius)
