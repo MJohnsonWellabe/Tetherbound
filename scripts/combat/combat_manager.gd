@@ -1169,6 +1169,7 @@ func _ground_height(x: float, z: float) -> float:
 ## height. A second camera would be a second thing to keep in sync, and the rig
 ## already eases onto a new target for free.
 func _take_camera() -> void:
+	_fight_camera_solution = {}
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	# `set_target()` below resets the rig's height and clear-orbit swing to the
@@ -2134,6 +2135,7 @@ func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 
 
 func _release_camera(fought_at: Variant = null) -> void:
+	_fight_camera_solution = {}
 	_camera_framing_extra = 0.0
 	_camera_framing_height = 0.0
 	_camera_clear_orbit_deg = 0.0

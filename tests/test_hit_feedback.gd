@@ -193,4 +193,3 @@ func test_launch_freezes_real_visual_bounds_without_affecting_host_schedule() ->
 		var invalid := FEEDBACK.launch("fight:2:6","fight","own","wild","fireball","charged",Vector3.ZERO,Vector3.ONE,0.25,4,Vector3.INF,AABB(Vector3.ZERO,size))
 		assert_false(invalid.has("target_visual_bounds"), "invalid envelope omitted without changing host timing")
 		assert_eq(invalid.travel_seconds, 0.25)
-
