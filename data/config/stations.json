@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "inactive_station_source_not_runtime_registered",
+  "_comment": "F31/F32 bounded Forge actor configuration only. No buildable, blueprint, station, recipe or transport is registered by this file. Canonical live placement and character/world transaction adapters remain dependencies. All other station/attachment definitions remain with their owning work orders.",
+  "forge": {
+    "runtime_enabled": false,
+    "id": "forge",
+    "realm": "meadows",
+    "maximum_manual_units": 20,
+    "maximum_tick_delta_seconds": 0.25,
+    "_comment_tuning": "Starting bounds for one present tap-start channel; F47 may tune them. Recipe seconds/radius remain in recipes_forge.json. No catch-up production after an oversized host tick, no automatic retry or saved/offline channel.",
+    "_comment_authority": "The host-only station actor resolves a stable built UID and an actual body. A trusted canonical context reader supplies current world/character snapshots and per-character modal/combat/homestead policy. The existing canonical commit adapter owns each completed unit's authenticated inventory CAS, debit/output, stable receipt and durable result. Missing/unknown context or adapter refuses; source-only plans are never Craft success."
+  }
+}
