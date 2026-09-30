@@ -2489,6 +2489,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	impact["killed"] = bool(rolled.get("killed", false))
 	impact.make_read_only()
 	rolled["impact"] = impact
+	_host_pause_peer_defence(encounter_id, peer_id, impact)
 	var delta: Dictionary = verdict.get("delta", {})
 	delta.erase("scheduled")
 	delta.erase("launch")
@@ -6816,6 +6817,13 @@ func _host_defence_state(encounter_id: String, peer_id: int, target_uid: String)
 		state = HIT_FEEDBACK.defence_state(target_uid, Time.get_ticks_msec(), HIT_FEEDBACK.MATH.config().get("poise", {}))
 		peers[peer_id] = state
 	return state
+
+func _host_pause_peer_defence(encounter_id: String, peer_id: int, impact: Dictionary) -> void:
+	var target_uid := str(_creature_card_for(peer_id).get("creature_uid", ""))
+	if not host_enemy_target_current(encounter_id, peer_id, target_uid): return
+	var state := _host_defence_state(encounter_id, peer_id, target_uid)
+	HIT_FEEDBACK.pause_defence(state, Time.get_ticks_msec(),
+		float(impact.get("hitstop_seconds", 0.0)), HIT_FEEDBACK.MATH.config().get("poise", {}))
 
 func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> Dictionary:
 	var impact: Dictionary = payload.get("impact", {})

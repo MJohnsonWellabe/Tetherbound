@@ -147,6 +147,38 @@ func _check_the_look_rows() -> void:
 		_fail("D-pad right did not put camera shake back")
 		return
 	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	var rumble: HSlider = _tab.get("_rumble_slider")
+	if rumble == null or _focused() != rumble:
+		_fail("D-pad down from camera shake did not reach rumble")
+		return
+	var rumble_before: int = motion.call("rumble_percent")
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	var rumble_lower: int = motion.call("rumble_percent")
+	if rumble_lower >= rumble_before or _focused() != rumble:
+		_fail("native rumble slider did not lower amplitude while retaining pad focus")
+		return
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	if int(motion.call("rumble_percent")) != rumble_before:
+		_fail("D-pad right did not restore rumble amplitude")
+		return
+	for i in int(ceil(float(rumble_before) / maxf(1.0, rumble.step))) + 1:
+		await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	if int(motion.call("rumble_percent")) != 0 or not str(_tab.get("_rumble_label").text).ends_with("Off"):
+		_fail("pad rumble at zero did not expose Off")
+		return
+	var rumble_bindings: RefCounted = _menu.get("bindings")
+	var rumble_reload: RefCounted = KEY_BINDINGS.new(str(rumble_bindings.call("path")))
+	if int(rumble_reload.call("load_overrides")) != KEY_BINDINGS.LOAD_OK \
+		or int((rumble_reload.get("accessibility") as Dictionary).get("rumble_percent", -1)) != 0:
+		_fail("ordinary Settings rumble Off did not persist to device file")
+		return
+	for i in int(ceil(float(rumble_before) / maxf(1.0, rumble.step))):
+		await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	if int(motion.call("rumble_percent")) != rumble_before:
+		_fail("pad could not restore rumble after persisted Off")
+		return
+	print("physical D-pad reaches native rumble slider, retains focus, exposes Off and persists device value")
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
 	if _focused() != sensitivity:
 		_fail("D-pad down from reduced motion did not reach look sensitivity")
 		return
@@ -220,7 +252,8 @@ func _check_the_look_rows() -> void:
 	if int(text.call("background_percent")) != bg_before:
 		_fail("D-pad right did not put dialogue background back")
 		return
-	for i in 7:
+	# The new rumble row adds one ordinary focus stop; all prior rows remain.
+	for i in 8:
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
 	if _focused() != _tab.get("_reduced_motion_button"):
 		_fail("D-pad up from the inversion rows did not return to reduced motion")

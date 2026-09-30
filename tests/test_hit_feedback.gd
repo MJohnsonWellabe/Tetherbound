@@ -144,3 +144,33 @@ func test_host_relic_resolution_ignores_numeric_peer_claims_and_unplaced_identit
 	hearts.placed = true
 	assert_eq(director.validate_card_incoming_multiplier({"active_relic_id": "forged-heart"}, hearts, progression), 1.0)
 	assert_eq(director.validate_card_incoming_multiplier(card, null, progression), 1.0)
+
+func test_host_stagger_recovery_resets_pool_before_the_next_hit() -> void:
+	var cfg := {"max": 40.0, "regen_delay": 2.0, "regen_per_second": 20.0,
+		"stagger_seconds": 0.6, "crit_scale": 1.5}
+	var state := FEEDBACK.defence_state("owned-a", 0, cfg)
+	assert_true(FEEDBACK.resolve_defence_hit(state, 50.0, 1.0, 0, 0.03, cfg).staggered)
+	var next := FEEDBACK.resolve_defence_hit(state, 5.0, 1.0, 650, 0.03, cfg)
+	assert_false(next.critical)
+	assert_false(next.staggered, "local recovery restores resistance; the host must do the same")
+	assert_eq(next.poise, 35.0)
+
+func test_host_defensive_pause_unions_overlap_and_outgoing_hits_extend_stagger() -> void:
+	var cfg := {"max": 40.0, "regen_delay": 2.0, "regen_per_second": 20.0,
+		"stagger_seconds": 0.6, "crit_scale": 1.5}
+	var state := FEEDBACK.defence_state("owned-a", 0, cfg)
+	FEEDBACK.resolve_defence_hit(state, 50.0, 1.0, 0, 0.1, cfg)
+	FEEDBACK.pause_defence(state, 20, 0.03, cfg)
+	assert_eq(state.stagger_until_ms, 700, "a covered pause never adds another full lease")
+	FEEDBACK.pause_defence(state, 50, 0.12, cfg)
+	assert_eq(state.stagger_until_ms, 770, "only the new 70ms extends the paused action clock")
+	FEEDBACK.advance_defence(state, 710, cfg)
+	assert_true(state.critical_ready, "outgoing accepted impact still pauses the actor's stagger window")
+	FEEDBACK.advance_defence(state, 771, cfg)
+	assert_eq(state.poise, 40.0)
+	assert_false(state.critical_ready)
+	var overlap := FEEDBACK.defence_state("owned-b", 0, cfg)
+	FEEDBACK.pause_defence(overlap, 0, 0.1, cfg)
+	var incoming := FEEDBACK.resolve_defence_hit(overlap, 50.0, 1.0, 20, 0.03, cfg)
+	assert_eq(overlap.stagger_until_ms, 700, "new stagger waits the remaining 80ms, not just its new 30ms")
+	assert_almost_eq(incoming.stagger_left, 0.6, 0.00001)

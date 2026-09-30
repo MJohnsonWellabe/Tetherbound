@@ -149,17 +149,34 @@ static func rumble_spec(impact: Dictionary, scale: float) -> Dictionary:
 static func defence_state(target_uid: String, now_ms: int, cfg: Dictionary) -> Dictionary:
 	return {"target_uid": target_uid, "poise": maxf(1.0, float(cfg.get("max", 40.0))),
 		"last_ms": now_ms, "quiet_until_ms": now_ms, "stagger_until_ms": now_ms,
-		"pause_until_ms": now_ms, "critical_ready": false, "actions": {}}
+		"pause_until_ms": now_ms, "stagger_active": false, "critical_ready": false, "actions": {}}
 
 static func advance_defence(state: Dictionary, now_ms: int, cfg: Dictionary) -> void:
 	now_ms = maxi(now_ms, int(state.last_ms))
+	if bool(state.get("stagger_active", false)) and now_ms >= int(state.stagger_until_ms):
+		# Match CombatManager._reset_player_poise at actual stagger recovery.
+		state.poise = maxf(1.0, float(cfg.get("max", 40.0)))
+		state.quiet_until_ms = now_ms
+		state.critical_ready = false
+		state.stagger_active = false
 	var regen_start := maxi(int(state.last_ms), maxi(int(state.quiet_until_ms),
 		maxi(int(state.stagger_until_ms), int(state.pause_until_ms))))
 	if now_ms > regen_start:
 		state.poise = minf(maxf(1.0, float(cfg.get("max", 40.0))),
 			float(state.poise) + float(cfg.get("regen_per_second", 20.0)) * (now_ms - regen_start) / 1000.0)
-	if now_ms >= int(state.stagger_until_ms): state.critical_ready = false
 	state.last_ms = now_ms
+
+## Local action/poise clocks pause for the union of accepted hitstop leases.
+## Only an independently accepted host receipt may call this; observer feedback
+## never extends the observer's defensive state.
+static func pause_defence(state: Dictionary, now_ms: int, seconds: float, cfg: Dictionary) -> void:
+	advance_defence(state, now_ms, cfg)
+	var previous_end := maxi(now_ms, int(state.pause_until_ms))
+	var next_end := maxi(previous_end, now_ms + int(round(maxf(0.0, seconds) * 1000.0)))
+	var uncovered := next_end - previous_end
+	if int(state.stagger_until_ms) > now_ms: state.stagger_until_ms += uncovered
+	if int(state.quiet_until_ms) > now_ms: state.quiet_until_ms += uncovered
+	state.pause_until_ms = next_end
 
 static func resolve_defence_hit(state: Dictionary, base_damage: float, multiplier: float,
 		now_ms: int, hitstop_seconds: float, cfg: Dictionary) -> Dictionary:
@@ -170,10 +187,12 @@ static func resolve_defence_hit(state: Dictionary, base_damage: float, multiplie
 	if critical: damage *= maxf(1.0, float(cfg.get("crit_scale", 1.5)))
 	state.poise = maxf(0.0, float(state.poise) - damage)
 	var freeze_ms := int(round(maxf(0.0, hitstop_seconds) * 1000.0))
-	state.pause_until_ms = maxi(int(state.pause_until_ms), now_ms + freeze_ms)
+	pause_defence(state, now_ms, hitstop_seconds, cfg)
+	freeze_ms = maxi(0, int(state.pause_until_ms) - now_ms)
 	state.quiet_until_ms = now_ms + int(round(maxf(0.0, float(cfg.get("regen_delay", 2.0))) * 1000.0)) + freeze_ms
 	var staggered := float(state.poise) <= 0.0
 	if staggered:
+		state.stagger_active = true
 		state.critical_ready = true
 		state.stagger_until_ms = now_ms + int(round(maxf(0.0, float(cfg.get("stagger_seconds", 0.6))) * 1000.0)) + freeze_ms
 		# Existing local regen waits through the stagger before its quiet beat.
