@@ -28,10 +28,10 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | PR496 core main; wire8 gear/inactive power admission 4/49 native0; callers/solo/equipCAS/relic/ownerACK OPEN. |
-| `tb/hub` | F17, F18 | #0-#3 main; ROOT8316 shape correction in source review. Actual M1 and F18 OPEN. |
+| `tb/foundations` | F16 | Actor/Heal c5c strict +3/73 native PASS; runtime OFF. Gear PR498 main; actual callers/ACK OPEN. |
+| `tb/hub` | F17, F18 | #0-#3 main; M1 r2 terrain route FAIL. dff local-step source PASS, actual r3 running; F18 OPEN. |
 | `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
-| `tb/combat` | F21–F24 | Live6155 FAIL54/119 overlaps archivedf384; production lag/body-limit fix active; F23 held. |
+| `tb/combat` | F21–F24 | Live r2 seven-pair FAIL retained;9507 constrained lens frozen/queued; incoming caller draft active. |
 | `tb/vfx` | F25, F35 | 8fae preserved/held; R17 stone PASS, R14 craft FAIL; library OFF. |
 | `tb/lookdev` | F26 | #0/#1/#2/#4 main. ade7b cliff OFF/held; full bar open; Ally owner-gated. |
 | `tb/training` | F27–F30, F37 | #0 main; Altar0e89 preserved/held; durable player path open. |

@@ -50,6 +50,9 @@ extends RefCounted
 ## delta: missing is a legal outcome of a legal swing, not a refusal.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
+const ACTOR_MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+var _actor_moves: RefCounted = null
 
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 
@@ -168,6 +171,8 @@ var _minted: int = 0
 var _host_peer_id: int = 1
 
 ## Host-owned action ledger, encounter id -> peer id -> accepted action state.
+## A departed bound actor's entry temporarily uses its stable-character String
+## key in this SAME cache; active peer keys are ints. Rejoin transfers it back.
 ## This deliberately does not ride the replicated encounter record: clients
 ## need the verdict and shared HP, not authority internals they could mistake
 ## for something they are allowed to write back.
@@ -177,6 +182,7 @@ var _strike_authority: Dictionary = {}
 ## One detached row replaces the preceding row for that participant. It never
 ## rides the replicated encounter record and no combat decision reads it.
 var _strike_receipts: Dictionary = {}
+var _vitals_namespace: String = Crypto.new().generate_random_bytes(16).hex_encode()
 
 
 func _init(host_peer_id: int = 1) -> void:
@@ -236,6 +242,12 @@ func join(encounter_id: String, peer_id: int, creature_uid: String = "",
 		# must not re-seat you at a new `joined_seq`; a retried intent is the
 		# ordinary shape of an unreliable world.
 		return _ok("engage", peer_id, {"encounter_id": encounter_id, "rejoined": true})
+	# Stable admitted owner identity cannot alias another participant, even
+	# before either body is bound. Otherwise retained HP can be overwritten.
+	if not character_id.is_empty():
+		for other_peer: Variant in participants:
+			if (participants[other_peer] as Dictionary).get("character_id") == character_id:
+				return _refuse("engage", peer_id, "duplicate_character", "That character is already in this fight.")
 	_strike_state_for(encounter_id).erase(peer_id)
 	_add_participant(record, peer_id, creature_uid, character_id)
 	seq += 1
@@ -257,6 +269,16 @@ func leave(encounter_id: String, peer_id: int) -> Dictionary:
 	if record.is_empty():
 		return _refuse("disengage", peer_id, "unknown_encounter", "That fight is over.")
 	var participants: Dictionary = record["participants"]
+	var departing: Dictionary = participants.get(peer_id, {})
+	var stable_id := str(departing.get("character_id", ""))
+	if not stable_id.is_empty() and departing.has("actor_vitals"):
+		var retained: Dictionary = record.get("retained_actor_participants", {})
+		record["retained_actor_participants"] = retained
+		retained[stable_id] = departing
+		# Move the SAME private action authority to stable identity while its
+		# peer is absent. Round reset/close still clears this existing cache.
+		var authority := _strike_state_for(encounter_id)
+		if authority.has(peer_id): authority[stable_id] = authority[peer_id]
 	participants.erase(peer_id)
 	_strike_state_for(encounter_id).erase(peer_id)
 	(_strike_receipts.get(encounter_id, {}) as Dictionary).erase(peer_id)
@@ -1032,6 +1054,10 @@ func close(encounter_id: String) -> void:
 ## Forget a finished fight. Kept separate from `close()` so a participant can
 ## still be told the record's final state before it stops existing.
 func forget(encounter_id: String) -> void:
+	# A failed owner save/disconnect cannot turn an accepted faint into healthy
+	# old portable HP. Teardown waits for the single Session registry's durable
+	# handoff of every exact latest revision, including departed participants.
+	if not pending_actor_vitals(encounter_id).is_empty(): return
 	encounters.erase(encounter_id)
 	_strike_authority.erase(encounter_id)
 	_strike_receipts.erase(encounter_id)
@@ -1041,6 +1067,19 @@ func forget(encounter_id: String) -> void:
 
 func _add_participant(rec: Dictionary, peer_id: int, creature_uid: String,
 		character_id: String) -> void:
+	var retained: Dictionary = rec.get("retained_actor_participants", {})
+	if not character_id.is_empty() and retained.has(character_id):
+		var restored: Dictionary = retained[character_id]
+		retained.erase(character_id)
+		var authority := _strike_state_for(str(rec.encounter_id))
+		if authority.has(character_id):
+			authority[peer_id] = authority[character_id]
+			authority.erase(character_id)
+		# character_id and active UID are supplied by host admission, never by
+		# the incoming intent. Binding a new body below rechecks owned UID.
+		restored["creature_uid"] = creature_uid
+		(rec["participants"] as Dictionary)[peer_id] = restored
+		return
 	(rec["participants"] as Dictionary)[peer_id] = {
 		"character_id": character_id,
 		"creature_uid": creature_uid,
@@ -1100,3 +1139,336 @@ static func _refuse(kind_name: String, peer_id: int, code: String, reason: Strin
 		"ok": false, "kind": kind_name, "peer": peer_id, "code": code,
 		"reason": reason, "pending": false, "delta": {},
 	}
+
+
+## Internal canonical actor lifetime. The owning caller must first resolve
+## admitted character/UID and the actual current host body; never packet HP.
+func bind_actor_vitals(encounter_id: String, peer_id: int, character_id: String,
+		owned_row: Dictionary, body_generation: int) -> Dictionary:
+	var participant := _actor_participant(encounter_id, peer_id, character_id)
+	var uid: Variant = owned_row.get("uid")
+	var hp: Variant = owned_row.get("hp")
+	var maximum: Variant = owned_row.get("max_hp")
+	var fainted: Variant = owned_row.get("fainted")
+	if participant.is_empty() or not UTILITY_EFFECTS._identity(uid) or body_generation < 1 \
+		or body_generation > 2147483647 \
+		or not UTILITY_EFFECTS._number(maximum, 1.0, 1000000000.0) \
+		or not UTILITY_EFFECTS._number(hp, 0.0, float(maximum)) \
+		or not fainted is bool or bool(fainted) != (float(hp) == 0.0):
+		return {"ok": false, "code": "invalid_actor"}
+	var actors: Dictionary = participant.get("actor_vitals", {})
+	var actor: Dictionary = actors.get(uid, {})
+	if actor.is_empty():
+		if actors.size() >= 5: return {"ok": false, "code": "party_capacity"}
+		actor = {"creature_uid": uid, "hp": float(hp), "max_hp": float(maximum),
+			"fainted": fainted, "body_generation": body_generation, "revision": 0,
+			"receipts": {}, "settled_revision": 0, "settlement_receipt": {}}
+		actors[uid] = actor
+		participant["actor_vitals"] = actors
+	elif float(actor.max_hp) != float(maximum) or body_generation < int(actor.body_generation):
+		return {"ok": false, "code": "stale_actor"}
+	else:
+		actor["body_generation"] = body_generation
+	participant["creature_uid"] = uid
+	participant["actor_bound_uid"] = uid
+	participant["actor_generation"] = maxi(int(participant.get("actor_generation", 0)), body_generation)
+	return {"ok": true, "vitals": _actor_vitals_view(actor)}
+
+func bind_actor_body(encounter_id: String, peer_id: int, character_id: String,
+		owned_row: Dictionary, host_body_instance_id: int) -> Dictionary:
+	var participant := _actor_participant(encounter_id, peer_id, character_id)
+	if participant.is_empty() or host_body_instance_id < 1 \
+		or not UTILITY_EFFECTS._identity(owned_row.get("uid")):
+		return {"ok": false, "code": "invalid_actor"}
+	var uid := str(owned_row.uid)
+	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(uid, {})
+	var generation := int(actor.get("body_generation", 0))
+	if actor.is_empty() or str(participant.get("actor_bound_uid", "")) != uid \
+		or int(actor.get("body_instance_id", 0)) != host_body_instance_id:
+		var previous := int(participant.get("actor_generation", 0))
+		if previous >= 2147483647: return {"ok": false, "code": "generation_exhausted"}
+		generation = previous + 1
+	var result := bind_actor_vitals(encounter_id, peer_id, character_id, owned_row, generation)
+	if not bool(result.get("ok", false)): return result
+	(participant.actor_vitals[uid] as Dictionary)["body_instance_id"] = host_body_instance_id
+	return result
+
+func actor_vitals(encounter_id: String, peer_id: int, creature_uid: String,
+		body_generation: int) -> Dictionary:
+	var participant := _actor_participant(encounter_id, peer_id)
+	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(creature_uid, {})
+	if str(participant.get("creature_uid", "")) != creature_uid or actor.is_empty() \
+		or int(actor.body_generation) != body_generation: return {}
+	return _actor_vitals_view(actor)
+
+func stage_actor_vitals(encounter_id: String, peer_id: int, creature_uid: String,
+		body_generation: int, expected_revision: int, action_id: String, kind: String,
+		amount: float, receipt_limit: int) -> Dictionary:
+	var before := actor_vitals(encounter_id, peer_id, creature_uid, body_generation)
+	if before.is_empty() or expected_revision != int(before.revision) \
+		or not UTILITY_EFFECTS._identity(action_id) or kind not in ["damage", "heal"] \
+		or not is_finite(amount) or amount <= 0.0 or receipt_limit < 1 or receipt_limit > 65536:
+		return {"ok": false, "code": "invalid_vitals"}
+	var participant := _actor_participant(encounter_id, peer_id)
+	var actor: Dictionary = participant.actor_vitals[creature_uid]
+	if (actor.receipts as Dictionary).has(action_id): return {"ok": false, "code": "replayed_action"}
+	if actor.receipts.size() >= receipt_limit: return {"ok": false, "code": "receipt_budget"}
+	if bool(before.fainted): return {"ok": false, "code": "fainted"}
+	var next_hp := maxf(0.0, float(before.hp) - amount) if kind == "damage" \
+		else minf(float(before.max_hp), float(before.hp) + amount)
+	if next_hp == float(before.hp): return {"ok": false, "code": "no_change"}
+	var revision := int(before.revision) + 1
+	var receipt := {"receipt_id": _vitals_namespace + ":" +
+		(encounter_id + "|" + creature_uid + "|" + action_id + "|" + str(revision)).sha256_text(),
+		"encounter_id": encounter_id, "creature_uid": creature_uid,
+		"body_generation": body_generation, "vitals_revision": revision}
+	receipt.make_read_only()
+	return {"ok": true, "encounter_id": encounter_id, "peer_id": peer_id,
+		"creature_uid": creature_uid, "body_generation": body_generation,
+		"expected_revision": expected_revision, "action_id": action_id,
+		"kind": kind, "amount": amount, "receipt_limit": receipt_limit,
+		"hp_before": float(before.hp), "hp_after": next_hp,
+		"max_hp": float(before.max_hp), "fainted": next_hp == 0.0,
+		"revision": revision, "settlement_receipt": receipt}
+
+func commit_actor_vitals(proposal: Dictionary) -> Dictionary:
+	if not bool(proposal.get("ok", false)): return {"ok": false, "code": "invalid_proposal"}
+	for key: String in ["encounter_id", "creature_uid", "action_id", "kind"]:
+		if not proposal.get(key) is String: return {"ok": false, "code": "invalid_proposal"}
+	for key: String in ["peer_id", "body_generation", "expected_revision", "receipt_limit"]:
+		if not proposal.get(key) is int: return {"ok": false, "code": "invalid_proposal"}
+	if not UTILITY_EFFECTS._number(proposal.get("amount"), 0.0, INF):
+		return {"ok": false, "code": "invalid_proposal"}
+	var verified := stage_actor_vitals(str(proposal.get("encounter_id", "")),
+		int(proposal.get("peer_id", 0)), str(proposal.get("creature_uid", "")),
+		int(proposal.get("body_generation", 0)), int(proposal.get("expected_revision", -1)),
+		str(proposal.get("action_id", "")), str(proposal.get("kind", "")),
+		float(proposal.get("amount", NAN)), int(proposal.get("receipt_limit", 0)))
+	if not bool(verified.get("ok", false)) or verified != proposal:
+		return {"ok": false, "code": "stale_proposal"}
+	var participant := _actor_participant(str(proposal.encounter_id), int(proposal.peer_id))
+	var actor: Dictionary = participant.actor_vitals[str(proposal.creature_uid)]
+	actor["hp"] = proposal.hp_after
+	actor["fainted"] = proposal.fainted
+	actor["revision"] = proposal.revision
+	actor["settlement_receipt"] = proposal.settlement_receipt.duplicate(true)
+	(actor.receipts as Dictionary)[str(proposal.action_id)] = true
+	seq += 1
+	(encounters[str(proposal.encounter_id)] as Dictionary)["seq"] = seq
+	return {"ok": true, "vitals": _actor_vitals_view(actor)}
+
+func pending_actor_vitals(encounter_id: String) -> Array:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	var out: Array = []
+	var rows: Array = (rec.get("participants", {}) as Dictionary).values()
+	rows.append_array((rec.get("retained_actor_participants", {}) as Dictionary).values())
+	for participant: Dictionary in rows:
+		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():
+			if int(actor.revision) <= int(actor.settled_revision): continue
+			var pending := _actor_vitals_view(actor)
+			pending["character_id"] = str(participant.character_id)
+			out.append(pending)
+	return out
+
+func acknowledge_actor_vitals(encounter_id: String, character_id: String,
+		creature_uid: String, revision: int, receipt: Dictionary) -> bool:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	var rows: Array = (rec.get("participants", {}) as Dictionary).values()
+	rows.append_array((rec.get("retained_actor_participants", {}) as Dictionary).values())
+	for participant: Dictionary in rows:
+		if str(participant.get("character_id", "")) != character_id: continue
+		var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(creature_uid, {})
+		if actor.is_empty() or revision != int(actor.revision) \
+			or receipt != actor.settlement_receipt: return false
+		actor["settled_revision"] = revision
+		return true
+	return false
+
+func actor_encounter_is_current(encounter_id: String, peer_id: int, character_id: String) -> bool:
+	if peer_id<=0 or character_id.is_empty(): return false
+	var current: Dictionary = encounters.get(encounter_id,{})
+	if str(current.get("phase",""))!="active": return false
+	var participants: Variant = current.get("participants")
+	if not participants is Dictionary or not participants.get(peer_id) is Dictionary \
+		or participants[peer_id].get("character_id")!=character_id: return false
+	for other_peer: Variant in participants:
+		var row: Variant = participants[other_peer]
+		if not row is Dictionary: return false
+		if other_peer != peer_id and row.get("character_id") == character_id: return false
+	for id: String in encounters:
+		if id==encounter_id: continue
+		var candidate: Dictionary = encounters[id]
+		if str(candidate.get("phase","")) not in ["active","catching","resolving"]: continue
+		var others: Variant = candidate.get("participants")
+		if not others is Dictionary: return false
+		for other_peer: Variant in others:
+			var row: Variant = others[other_peer]
+			if not row is Dictionary: return false
+			if other_peer==peer_id or row.get("character_id")==character_id: return false
+	return true
+
+func _actor_participant(encounter_id: String, peer_id: int, character_id: String = "") -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty() or str(rec.get("phase", "")) != "active": return {}
+	var participant: Dictionary = (rec.get("participants", {}) as Dictionary).get(peer_id, {})
+	if str(participant.get("character_id", "")).is_empty() \
+		or (not character_id.is_empty() and str(participant.character_id) != character_id): return {}
+	if not actor_encounter_is_current(encounter_id, peer_id, str(participant.character_id)): return {}
+	return participant
+
+static func _actor_vitals_view(actor: Dictionary) -> Dictionary:
+	var out := actor.duplicate(true)
+	out.erase("receipts")
+	out.erase("body_instance_id")
+	return out
+
+static func presentation_snapshot(rec: Dictionary) -> Dictionary:
+	var out := rec.duplicate(true)
+	out.erase("retained_actor_participants")
+	out.erase("utility_state")
+	for participant: Dictionary in (out.get("participants", {}) as Dictionary).values():
+		participant.erase("actor_generation")
+		participant.erase("actor_bound_uid")
+		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():
+			actor.erase("receipts")
+			actor.erase("body_instance_id")
+			actor.erase("settlement_receipt")
+			actor.erase("settled_revision")
+	return out
+
+
+## A detached trial reuses the same canonical self-heal resource validator;
+## it is scoped to this one encounter/action and never kept as another roster.
+## Real resources/HP stay untouched until silent world durability succeeds.
+func stage_actor_heal_utility(intent: Dictionary, peer_id: int, view: Dictionary,
+		move_id: String, wind_profile: Dictionary, receipt_limit: int) -> Dictionary:
+	var id := str(intent.get("encounter_id", ""))
+	var rec: Dictionary = encounters.get(id, {})
+	if rec.is_empty() or str(rec.get("phase", "")) != "active" \
+		or not is_participant(id, peer_id) or typeof(view.get("source_generation")) != TYPE_INT \
+		or not UTILITY_EFFECTS._identity(view.get("source_uid")) \
+		or typeof(view.get("now_ms")) != TYPE_INT or int(view.now_ms) < 0 \
+		or not UTILITY_EFFECTS._point(view.get("origin")) \
+		or typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0:
+		return {"ok": false, "code": "invalid_actor"}
+	var uid := str(view.source_uid)
+	var actor := actor_vitals(id, peer_id, uid, int(view.source_generation))
+	if actor.is_empty() or bool(actor.fainted): return {"ok": false, "code": "invalid_actor"}
+	if _actor_moves == null: _actor_moves = ACTOR_MOVE_DB.new()
+	var move: Dictionary = _actor_moves.call("move", move_id)
+	if not UTILITY_EFFECTS.valid_definition(move) or float(move.base_power) != 0.0 \
+		or str(move.utility.kind) != "heal" or str(move.utility.scope) != "self":
+		return {"ok": false, "code": "unsupported_heal"}
+	# Same host tuning as ordinary player moves; raw MoveDB timings cannot
+	# define a second unpaced utility action lifecycle.
+	move = MATH.with_player_pace(move, "player_utility")
+	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
+	var action_id := "%s:%d:%d:heal" % [id, peer_id, int(intent.action)]
+	var host := {"encounter_id": id, "generation": 0, "action_id": action_id,
+		"source_uid": uid, "target_uid": uid, "source_position": view.origin,
+		"target_position": view.origin, "source_hp": float(actor.hp),
+		"source_max_hp": float(actor.max_hp), "hostile": false, "geometry_connected": true}
+	var effect := UTILITY_EFFECTS.stage_application(state, move_id, move, host, int(view.now_ms), receipt_limit)
+	if not bool(effect.get("ok", false)): return effect # Full/faint refuses BEFORE spending anything.
+	var proposal := stage_actor_vitals(id, peer_id, uid, int(view.source_generation),
+		int(actor.revision), action_id, "heal", float(effect.receipt.hp_after) - float(actor.hp), receipt_limit)
+	if not bool(proposal.get("ok", false)): return proposal
+	var trial = get_script().new(_host_peer_id)
+	trial.encounters[id] = rec.duplicate(true)
+	trial._strike_authority[id] = (_strike_authority.get(id, {}) as Dictionary).duplicate(true)
+	trial.seq = seq
+	var canonical_view := view.duplicate(true)
+	canonical_view["move_id"] = move_id
+	var verdict: Dictionary = trial._authorize_actor_self_heal(intent, peer_id, canonical_view, move, wind_profile)
+	if not bool(verdict.get("ok", false)): return verdict
+	var after: Dictionary = (trial.encounters[id].participants[peer_id] as Dictionary)
+	var resource_fields := ["wind", "wind_max", "wind_regen_per_second", "wind_updated_ms",
+		"wind_last_action", "wind_ready_at_ms", "utility_deadlines"]
+	var resources := {}
+	for key: String in resource_fields: resources[key] = after[key]
+	# No self heal can mint hostile landed authorization or meter/mastery gain.
+	var authority: Dictionary = (trial._strike_authority[id][peer_id] as Dictionary).duplicate(true)
+	return {"ok": true, "encounter_id": id, "peer_id": peer_id,
+		"expected_seq": int(rec.seq), "intent": intent.duplicate(true), "view": canonical_view,
+		"move_id": move_id, "wind_profile": wind_profile.duplicate(true), "receipt_limit": receipt_limit,
+		"vitals_proposal": proposal, "effect": effect, "resources": resources,
+		"authority": authority, "verdict": verdict, "resource_seq_delta": trial.seq - seq}
+
+
+## Exact re-stage before ANY write. After success, no callbacks or fallible
+## publication runs between actor HP and resource/status commit.
+func commit_actor_heal_utility(bundle: Dictionary) -> Dictionary:
+	if not bool(bundle.get("ok", false)) or not bundle.get("intent") is Dictionary \
+		or not bundle.get("view") is Dictionary or not bundle.get("wind_profile") is Dictionary \
+		or not bundle.get("move_id") is String or typeof(bundle.get("peer_id")) != TYPE_INT \
+		or typeof(bundle.get("receipt_limit")) != TYPE_INT: return {"ok": false, "code": "invalid_bundle"}
+	var verified := stage_actor_heal_utility(bundle.intent, int(bundle.peer_id), bundle.view,
+		str(bundle.move_id), bundle.wind_profile, int(bundle.receipt_limit))
+	if not bool(verified.get("ok", false)) or verified != bundle:
+		return {"ok": false, "code": "stale_bundle"}
+	var committed := commit_actor_vitals(bundle.vitals_proposal)
+	if not bool(committed.get("ok", false)): return committed
+	var rec: Dictionary = encounters[str(bundle.encounter_id)]
+	var participant: Dictionary = rec.participants[int(bundle.peer_id)]
+	# Apply only the existing resource fields: never replace an actor/party
+	# with the staged pre-heal copy or restore its older HP accidentally.
+	for key: String in bundle.resources:
+		var raw: Variant = bundle.resources[key]
+		participant[key] = raw.duplicate(true) if raw is Dictionary else raw
+	_strike_state_for(str(bundle.encounter_id))[int(bundle.peer_id)] = bundle.authority.duplicate(true)
+	rec["utility_state"] = (bundle.effect.state as Dictionary).duplicate(true)
+	seq += int(bundle.resource_seq_delta)
+	rec["seq"] = seq
+	var verdict: Dictionary = bundle.verdict.duplicate(true)
+	(verdict.delta as Dictionary)["utility_receipt"] = (bundle.effect.receipt as Dictionary).duplicate(true)
+	return {"ok": true, "vitals": committed.vitals, "verdict": verdict}
+
+## Heal-only authorization on a detached trial. It shares the existing action
+## sequence, deadline, participant Wind and recovery; no hostile authorization,
+## fake strike, second resource ledger, meter or mastery is introduced.
+func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictionary,
+		move: Dictionary, wind_profile: Dictionary) -> Dictionary:
+	var id := str(intent.get("encounter_id", ""))
+	var participant := _actor_participant(id, peer_id)
+	if participant.is_empty() or typeof(intent.get("action")) != TYPE_INT \
+		or int(intent.action) <= 0 or typeof(view.get("now_ms")) != TYPE_INT \
+		or int(view.now_ms) < 0 or not UTILITY_EFFECTS.valid_definition(move) \
+		or str(move.utility.kind) != "heal" or str(move.utility.scope) != "self" \
+		or not UTILITY_EFFECTS._number(wind_profile.get("max"),1.0,1000000000.0) \
+		or not UTILITY_EFFECTS._number(wind_profile.get("regen_per_second"),0.0,1000000000.0):
+		return _refuse("utility_intent",peer_id,"invalid_heal","That heal could not commit safely.")
+	var now_ms := int(view.now_ms)
+	var action := int(intent.action)
+	var authority := strike_authority_state(id,peer_id)
+	if action <= maxi(int(authority.get("last_action",0)),int(participant.get("wind_last_action",0))):
+		return _refuse("utility_intent",peer_id,"replayed_action","That action was already handled.")
+	var deadlines: Dictionary = participant.get("utility_deadlines",{})
+	var uid := str(view.get("source_uid", ""))
+	if not UTILITY_EFFECTS._identity(uid):
+		return _refuse("utility_intent",peer_id,"invalid_actor","That heal could not commit safely.")
+	if now_ms < int(authority.get("deadline_ms",0)) or now_ms < int(deadlines.get(uid,0)):
+		return _refuse("utility_intent",peer_id,"cooldown","That move is still recovering.")
+	var wind_cfg: Dictionary = MATH.config().get("wind",{})
+	var delay: Variant = wind_cfg.get("regen_delay")
+	var recovery: Variant = move.get("recovery")
+	if not UTILITY_EFFECTS._number(delay,0.0,1000.0) \
+		or not UTILITY_EFFECTS._number(move.get("windup"),0.0,60.0) \
+		or not UTILITY_EFFECTS._number(recovery,0.0,60.0):
+		return _refuse("utility_intent",peer_id,"invalid_config","That heal could not commit safely.")
+	var preview := preview_wind(id,peer_id,wind_profile,float(move.wind_cost),now_ms)
+	if bool(preview.get("wind_exhausted",true)):
+		return _refuse("utility_intent",peer_id,"insufficient_wind","Your creature needs more Wind.")
+	var wind := commit_wind(id,peer_id,action,wind_profile,float(move.wind_cost),now_ms,
+		float(move.windup) + float(recovery),float(delay))
+	# Shared action recovery ends before this creature's separate utility
+	# cooldown. A tag switch must not inherit another creature's ten-second lock.
+	var lock_ms := ceili(1000.0 * maxf(0.05, float(move.windup) + float(recovery)))
+	var deadline := now_ms + lock_ms
+	_strike_state_for(id)[peer_id] = {"last_action":action,"accepted_at_ms":now_ms,
+		"deadline_ms":deadline,"cooldown_ms":lock_ms}
+	participant["utility_deadlines"] = deadlines.duplicate(true)
+	participant.utility_deadlines[uid] = now_ms + ceili(float(move.cooldown)*1000.0)
+	var delta := {"encounter_id":id,"accepted_action":action,"accepted_at_ms":now_ms,
+		"cooldown_deadline_ms":deadline,"hit":false,"target":"self"}
+	delta.merge(wind,true)
+	return _ok("utility_intent",peer_id,delta)

@@ -1,0 +1,276 @@
+{
+  "verdict": "FAIL bounded source gate",
+  "head": "c97ddd449b81534fa03da50161727cc8bfc90a23",
+  "main": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
+  "checks": [
+    {
+      "check": "exact six scoped changed paths",
+      "pass": true
+    },
+    {
+      "check": "source hash and blob scripts/net/encounter_host.gd",
+      "pass": true
+    },
+    {
+      "check": "source hash and blob scripts/combat/utility_effects.gd",
+      "pass": true
+    },
+    {
+      "check": "source hash and blob data/config/combat.json",
+      "pass": true
+    },
+    {
+      "check": "source hash and blob tests/test_actor_vitals_authority.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/net/session.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/net/character_authority.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/net/ledger_rpc.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/net/actor_vitals_delivery.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/save/save_game.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/combat/encounter_director.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/combat/combat_manager.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency data/moves/moves.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/save/character_save.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/save/world_save.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/net/world_ledger.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/creatures/move_db.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency scripts/combat/combat_math.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency data/schema/character_state.schema.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency docs/STATE.md",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency docs/design/COMBAT.md",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency docs/ACCEPTANCE.md",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency ralph/reports/COORDINATOR/dashboard/criteria.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency ralph/reports/COORDINATOR/dashboard/status.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged dependency ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash scripts/net/session.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash scripts/net/character_authority.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash scripts/net/ledger_rpc.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash scripts/net/actor_vitals_delivery.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash scripts/save/save_game.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash scripts/combat/encounter_director.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash scripts/combat/combat_manager.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest unchanged hash data/moves/moves.json",
+      "pass": true
+    },
+    {
+      "check": "canonical UtilityEffects exact historical source",
+      "pass": true
+    },
+    {
+      "check": "only additive OFF actor flag and bounded receipt config",
+      "pass": true
+    },
+    {
+      "check": "existing entire test body retained after one preload",
+      "pass": true
+    },
+    {
+      "check": "exact three appended meaningful methods",
+      "pass": true
+    },
+    {
+      "check": "no new persistent top-level authority store",
+      "pass": true
+    },
+    {
+      "check": "generation int32 exhaustion refuses before binding",
+      "pass": true
+    },
+    {
+      "check": "exact pure commit verification before write",
+      "pass": true
+    },
+    {
+      "check": "teardown awaits pending latest handoff",
+      "pass": true
+    },
+    {
+      "check": "unchanged board count 109/280",
+      "pass": true
+    }
+  ],
+  "structural_failures": [],
+  "findings": [
+    {
+      "id": "H1",
+      "path": "scripts/net/encounter_host.gd",
+      "line": 1348,
+      "severity": "blocking source gate",
+      "problem": "Heal uses unscaled MoveDB windup/recovery; owning COMBAT \u00a71 requires utility player_pace. No argument enables caller to supply the paced row.",
+      "example": "Raw windup0.35+recovery0.4 gives750ms shared lock; owner0.85 scale requires ceil637.5=638ms. Mastery must not change timing/range/cost.",
+      "smallest_fix": "Resolve row through existing MATH.with_player_pace exactly once, retaining typed/finite validation of raw and resulting timings."
+    },
+    {
+      "id": "H2",
+      "path": "scripts/net/encounter_host.gd",
+      "line": 1448,
+      "severity": "blocking source gate",
+      "problem": "Existing commit_wind receives recovery only, so Wind regen eligibility omits windup even though the same acceptance time starts windup+recovery lock.",
+      "example": "At t1000, current ready t2000; raw quiet period requirest2350, paced timings requiret2238. COMBAT \u00a72 and authored wind config require0.6seconds after windup/recovery.",
+      "smallest_fix": "Feed canonical paced windup+recovery to the existing commit_wind duration; assert authoritative ready and shared deadline in the existing appended Heal risk method."
+    },
+    {
+      "id": "H3",
+      "path": "scripts/net/encounter_host.gd",
+      "line": 277,
+      "severity": "blocking source gate",
+      "problem": "Departure erases shared action deadline; retained participant restores Wind/utility cooldown but join also erases strike authority. A different owned UID can act inside the pre-departure shared commitment.",
+      "example": "Heal A action1 at t1000; leave, join peer2 with owned B, bind B, action2 at t1100: wind_last_action1 is retained, B has no perUID utility deadline, shared authority empty, so internal host Heal accepts before A shared deadline.",
+      "smallest_fix": "Preserve/restore the same existing action authority across retained stable-character rejoin; no alternate persistent ledger. Exercise rejoin inside recovery in existing appended Heal method."
+    }
+  ],
+  "accepted_source_observations": [
+    "Actor state is ephemeral on existing participant record; bind callers must supply canonical admitted owned row and actual current host body ObjectID, not a client packet.",
+    "Current stable-character qualifier rejects same-record alias and other active/catching/resolving peer/character ambiguity. Bound UID preserves pooled-body switch detection and monotonic int32 generation.",
+    "Departed accepted HP retained until exact latest durable handoff; healthy portable baseline does not reseed existing HP. Latest ACK matches stable character/UID/revision/full receipt.",
+    "Presentation detached; removes retained actors, replay/status authority, body ObjectIDs and settlement receipt. Transport caller not yet wired.",
+    "Heal full/faint/unsupported/invalid identity/replay/receipt-budget/insufficient Wind refusals stage no real HP or resource cost; source exact restage precedes callback-free HP plus resource/status publication.",
+    "Authored Heal costs24Wind and heals12% maxHP, no damage/mastery/meter or revive; perUID utility cooldown10s distinct shared action lock.",
+    "Three appended existing-file risk methods use actual canonical player saves, Node ObjectIDs, MoveDB and real host door; unrun."
+  ],
+  "OPEN": [
+    "No parser/native result; exact three appended methods are unrun.",
+    "Actual Manager/Director caller, explicit solo/local and remote actor routing and single host clock integration absent.",
+    "Caller must validate admitted ownership and equipped/learned utility slot before invoking internal host door; raw move ID alone does not prove entitlement.",
+    "Caller must freeze after fallback, prepared durable world CAS then immediate pure commit/finalize/exact handoff; actual owner-save failure/ACK/rejoin player proof absent.",
+    "actor_vitals read assumes bind/current body qualification performed by owning caller; rejoin creature label alone is not a completed current-body binding.",
+    "No acceptance credit or flag activation."
+  ],
+  "reader": "binary Git + explicit UTF8 strict; no source normalization",
+  "reviewer_engine_parser_tests_import_GPU_Git_tracked_mutations": false,
+  "sha256": {
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/README.md": "6d8a5f03396a3da15230e0a1080ebe25310812a74f093cc6b280edaefacbf1ab",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/manifest.json": "ccfa6737ed39a17c481df15708fe9764eec4580953f543c055c2678cbb71f437",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/net/encounter_host.gd": "c4010e6ed67361fc9563a73d40d8524ba5cced1a476e77697ea7f140ac6f72f7",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:tests/test_actor_vitals_authority.gd": "1bdde675cc125fa66d1fc19b4b31df388be205579d9e14a733f0d9e7b2bbdfdd",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/net/actor_vitals_delivery.gd": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:data/moves/moves.json": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/save/character_save.gd": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/save/world_save.gd": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/net/world_ledger.gd": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/creatures/move_db.gd": "9eae060a43a49a550e259bf6f3cbd73bc7c3ddc37e76329580102933cd882b9d",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:scripts/combat/combat_math.gd": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:data/schema/character_state.schema.json": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:docs/STATE.md": "ef068b94bf50e56005cf26fe76e202a0f653f9b64017479eafae2231353b0f97",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:docs/design/COMBAT.md": "66794dc2de1982a73ebf55be4b548fa56086fa318bbc7f69589fc2a0cbc83c14",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:docs/ACCEPTANCE.md": "fe68fffa864e78d05fc546a18833638161056a42493918db7df6f9b4a98515e3",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:ralph/reports/COORDINATOR/dashboard/criteria.json": "6320c4abbb8e069f23abde3130ed9c1e38a8cd3b74ba218be3757091bb1db4aa",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:ralph/reports/COORDINATOR/dashboard/status.json": "400aef3d4a759a35be0ebf9ff3d46d70ec86c3f04683b6d8bb229740807e324c",
+    "c97ddd449b81534fa03da50161727cc8bfc90a23:ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html": "f2915a0361f0d0ddfb408a8a3eae0f070d6fa720f2b057513542a1cc48ca846f",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/net/actor_vitals_delivery.gd": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:data/moves/moves.json": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/save/character_save.gd": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/save/world_save.gd": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/net/world_ledger.gd": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/creatures/move_db.gd": "9eae060a43a49a550e259bf6f3cbd73bc7c3ddc37e76329580102933cd882b9d",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/combat/combat_math.gd": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:data/schema/character_state.schema.json": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:docs/STATE.md": "ef068b94bf50e56005cf26fe76e202a0f653f9b64017479eafae2231353b0f97",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:docs/design/COMBAT.md": "66794dc2de1982a73ebf55be4b548fa56086fa318bbc7f69589fc2a0cbc83c14",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:docs/ACCEPTANCE.md": "fe68fffa864e78d05fc546a18833638161056a42493918db7df6f9b4a98515e3",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:ralph/reports/COORDINATOR/dashboard/criteria.json": "6320c4abbb8e069f23abde3130ed9c1e38a8cd3b74ba218be3757091bb1db4aa",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:ralph/reports/COORDINATOR/dashboard/status.json": "400aef3d4a759a35be0ebf9ff3d46d70ec86c3f04683b6d8bb229740807e324c",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html": "f2915a0361f0d0ddfb408a8a3eae0f070d6fa720f2b057513542a1cc48ca846f",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:scripts/net/encounter_host.gd": "0ca08da7979ea1ee106386de24db140c5626aa03d800dadb0af7f2397de8c4c1",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:data/config/combat.json": "a87d1be087861c1e5b5a7e135c194203bbe90ec0b4fe07aed6f584ade626dbfd",
+    "8b7707c3dd333acb67bf2925a99366ce36e04a5b:tests/test_actor_vitals_authority.gd": "5707a6725ed677059420a48447fa5d685ac1ec0ecefc498fc9a696eb525cd2cc",
+    "f506adb306ce8640a6a34f60620d4dc335dbf7fc:scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba"
+  }
+}
