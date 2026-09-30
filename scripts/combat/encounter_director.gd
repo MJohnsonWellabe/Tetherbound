@@ -2482,6 +2482,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	if rolled.is_empty(): return {}
 	var impact: Dictionary = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
 	impact["presentation_launched"] = float(launch.travel_seconds) > 0.0
+	impact["killed"] = bool(rolled.get("killed", false))
 	impact.make_read_only()
 	rolled["impact"] = impact
 	var delta: Dictionary = verdict.get("delta", {})
@@ -2492,8 +2493,9 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)), rolled)
 	if bool(rolled.get("killed", false)):
 		_encounter_host.call("set_phase", encounter_id, "done" if runtime != null else "resolving")
-	_host_after_encounter_change(encounter_id, peer_id)
+	# Reconcile observer contact before the reliable absolute-HP snapshot.
 	_host_publish_peer_impact(encounter_id, peer_id, impact)
+	_host_after_encounter_change(encounter_id, peer_id)
 	if deliver:
 		host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
 		if peer_id == _local_peer_id(): _deliver_encounter_verdict(verdict)
@@ -2504,7 +2506,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 
 func _publish_host_attack_launch(encounter_id: String, author: int, launch: Dictionary) -> void:
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
-		if peer_id == author: continue
+		# Publish to the actor before the host timer starts too; returned launch deduplicates.
 		if peer_id == _local_peer_id():
 			if _manager != null and _local_bound_encounter_id() == encounter_id:
 				_manager.call("present_host_attack_launch", launch, deployed_body_for(author))

@@ -2630,6 +2630,8 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 	if state != State.ACTIVE:
 		return
 	_sync_authoritative_wind(payload)
+	# Accepted host contact reconciles presentation before applying its HP.
+	PROJECTILE.confirm_impact(get_tree(), str(feedback.get("action_id", "")))
 	if payload.has("hp") and _enemy != null:
 		# §3: WRITTEN, not decremented. `take_damage()` here would apply the
 		# host's blow on top of whatever the record broadcast already set, and
@@ -2902,6 +2904,8 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
 		if stagger_crit:
 			damage *= _poise_crit_scale()
+	# Presentation completion never decides this independently scheduled host debit.
+	PROJECTILE.confirm_impact(get_tree(), str(impact_context.get("action_id", "")))
 	var killed: bool = _enemy.take_damage(damage)
 	var stagger_triggered := false
 	if not killed and _wild != null and _wild.has_method("apply_poise_damage"):
@@ -3051,6 +3055,7 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	if creature == null:
 		return
 	if not feedback.is_empty() and str(feedback.get("target_uid", "")) != str(creature.get("uid")): return
+	PROJECTILE.confirm_impact(get_tree(), str(feedback.get("action_id", "")))
 	# Host rolls the base strike; this character's one active relic applies
 	# once at the owning health mutation, also for a host on another island.
 	var damage := _incoming_owned_damage(float(payload.get("damage", 0.0)))
@@ -4335,6 +4340,7 @@ func _begin_resolve(outcome: String) -> void:
 
 
 func _finish() -> void:
+	PROJECTILE.cancel_encounter(get_tree(), _encounter_id)
 	_end_hitstop()
 	state = State.INACTIVE
 	_disconnect_opponent_callbacks(_wild)
@@ -4874,13 +4880,16 @@ func present_host_peer_impact(impact: Dictionary) -> void:
 	if _wild == null or not is_instance_valid(_wild): return
 	if _enemy == null or str(impact.get("target_uid", "")) != str(_enemy.get("uid")): return
 	if not HIT_FEEDBACK.admit(_seen_impact_actions, impact): return
+	PROJECTILE.confirm_impact(get_tree(), str(impact.get("action_id", "")))
 	# Only the observed actor's presentation receives the frozen host lease.
 	# This never pauses the observing player's combat or resource clocks.
 	_host_body_hitstop(_wild, impact)
 	_flash_at(_wild.call("centre"), str(impact.get("weight", "light")) in ["heavy", "ultimate"],
 		VFX.tint_for_type(_moves.type_of(str(impact.get("move_id", "")))), _wild,
 		float(impact.get("damage", 0.0)) / maxf(1.0, float(_enemy.max_hp)), impact, false)
-	if _enemy != null and float(_enemy.hp) > 0.0:
+	if bool(impact.get("killed", false)):
+		_wild.call("play_faint")
+	elif float(_enemy.hp) > 0.0:
 		_play_combat_flinch(_wild, impact.get("direction", Vector3.ZERO), impact)
 	var bounds := _body_world_bounds(_wild)
 	var where := bounds.position + Vector3(bounds.size.x * 0.5,
