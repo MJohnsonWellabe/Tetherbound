@@ -7089,7 +7089,7 @@
         },
         "respawn_days": 2,
         "at": [
-          560.0,
+          544.0,
           534.0
         ],
         "label": "Gather Tide Pearls",
@@ -7098,12 +7098,13 @@
         "anchor": {
           "id": "water:brine_steps:harvest:017",
           "offset_xz_m": [
-            8,
+            -8,
             0
           ]
         },
         "requires_dive": false,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": false,
+        "candidate_refinement": "Authored-radius planning moved the unmounted offset inward from reef-stone anchor; no baked-height/body/water-depth/player-path proof. Keep unmounted until actual validated placement."
       }
     ]
   }

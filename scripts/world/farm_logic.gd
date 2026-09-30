@@ -308,3 +308,33 @@ static func crop_action_for(plot: Dictionary, day: int, has_hoe: bool, seed_coun
 		RIPE:
 			return ACTION_HARVEST if not harvest_candidate(plot, day, config).is_empty() else ACTION_NONE
 	return ACTION_NONE
+
+
+## F32 source proposal accessor for the F31/F47 owners. This deliberately
+## accepts only an OFF, unregistered candidate; it is not a build/unlock grant,
+## placement validator or inventory transaction. Canonical services own those.
+static func greenhouse_buildable_proposal(config: Dictionary) -> Dictionary:
+	var farm_greenhouse: Variant = config.get("greenhouse")
+	if not farm_greenhouse is Dictionary or farm_greenhouse.get("scope") != "world" \
+			or not farm_greenhouse.get("buildable_id") is String \
+			or farm_greenhouse["buildable_id"].is_empty():
+		return {}
+	var proposal: Variant = farm_greenhouse.get("buildable_candidate")
+	if not proposal is Dictionary or typeof(proposal.get("enabled")) != TYPE_BOOL \
+			or proposal["enabled"] != false \
+			or proposal.get("status") != "authored_proposal_not_runtime_registered" \
+			or proposal.get("id") != farm_greenhouse["buildable_id"] \
+			or proposal.get("building_scope") != "world" \
+			or proposal.get("blueprint_scope") != "character":
+		return {}
+	var costs: Variant = proposal.get("cost")
+	if not costs is Array or costs.is_empty():
+		return {}
+	var seen := {}
+	for raw: Variant in costs:
+		if not raw is Dictionary or not raw.get("id") is String \
+				or raw["id"].is_empty() or seen.has(raw["id"]) \
+				or not _positive_integer(raw.get("n")):
+			return {}
+		seen[raw["id"]] = true
+	return proposal.duplicate(true)

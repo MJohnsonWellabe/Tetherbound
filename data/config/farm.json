@@ -58,7 +58,84 @@
     "station": "farm",
     "scope": "world",
     "allows_off_biome_types": true,
-    "automatic_harvest": false
+    "automatic_harvest": false,
+    "buildable_candidate": {
+      "enabled": false,
+      "status": "authored_proposal_not_runtime_registered",
+      "id": "greenhouse",
+      "name": "Greenhouse",
+      "building_scope": "world",
+      "blueprint_scope": "character",
+      "cost": [
+        {
+          "id": "wood",
+          "n": 12
+        },
+        {
+          "id": "fiber",
+          "n": 8
+        },
+        {
+          "id": "rootstone",
+          "n": 4
+        },
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        }
+      ],
+      "_comment_cost": "Starting value for F47; follows the existing cost id/n schema. Refined-item registration and a solvent Forge path remain dependencies; this block does not charge anyone.",
+      "authority_contract": {
+        "placement_owner": "F31/foundation canonical building service using the existing place_building path; no second placement or payment service.",
+        "validation_before_commit": [
+          "Stable authenticated character and live world/realm",
+          "Canonical registered buildable definition and character blueprint grant",
+          "Authoritative real placement/body/footprint and existing occupancy checks",
+          "Exact host cost and complete actor inventory capacity/solvency",
+          "Stable transaction identity and world revision"
+        ],
+        "single_commit": "Host-created world building UID/record plus placer character inventory debit and delivery receipt commit together, or neither changes.",
+        "client_cost_or_baseline_authoritative": false,
+        "client_paid_or_available_materials_authoritative": false,
+        "pending_or_refused_effect": "No local placement, debit, refund or blueprint grant; presentation waits for the canonical committed world mirror.",
+        "save_rejoin": "Existing host-world building records and canonical character/world receipts; no new stock, actor, inventory or receipt bag.",
+        "blueprint_delivery": "Existing per-source/per-character once-only grant; the source is not assigned or invented by this proposal.",
+        "dismantle": "Existing canonical dismantle/refund transaction removes world presence. It never erases a crop, accelerates growth or grants harvest."
+      },
+      "farm_contract": {
+        "one_farm_buildable_not_attachment": true,
+        "tier_attachment_track": false,
+        "allows_off_biome_types": true,
+        "automatic_harvest": false,
+        "offline_production": false,
+        "crop_mutation_path": "Existing farm_plot_action host transaction; no new crop state write or free seed/harvest path.",
+        "presence_source": "Confirmed canonical world building records in the host realm. UI may read the replicated mirror; it cannot authorize sowing."
+      }
+    },
+    "visual_proposal": {
+      "enabled": false,
+      "family": "Quaternius Medieval Village MegaKit",
+      "starting_footprint_m": [
+        8.0,
+        6.0
+      ],
+      "minimum_entry_clear_width_m": 1.6,
+      "minimum_entry_clear_height_m": 2.3,
+      "entry_clearance_proven": false,
+      "module_scale": 1.0,
+      "modules": [
+        "res://assets/buildings/quaternius_medieval/DoorFrame_Flat_WoodDark.gltf",
+        "res://assets/buildings/quaternius_medieval/Window_Wide_Flat1.gltf",
+        "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf",
+        "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf"
+      ],
+      "wood_material": "MI_WoodTrim",
+      "glass_material": "MI_WindowGlass",
+      "entry_collision_proposal": "Separate jambs/lintel only, following the existing build_door API. Raw doorframe bounds alone do not prove the required clear opening.",
+      "floor_proposal": "Leave existing authored soil beds open; installed uneven-brick modules only at perimeter/entry footing.",
+      "crop_read_proposal": "Framed transparent panes preserve sight of hand-harvested beds; preserve all working prompts and authored bed positions.",
+      "production_render_player_path_or_full_bar_proven": false
+    }
   },
   "crop_order": [
     "berries",
