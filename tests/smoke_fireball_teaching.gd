@@ -11,6 +11,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
 const FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
+const MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 const PICKUP_ID := "b5_tm_fireball_scorched_pocket"
 var _world: Node
 var _game: Node
@@ -23,12 +24,15 @@ var _failures: Array[String] = []
 var _launches: Dictionary = {}
 var _accepted_fireball := false
 var _incoming := 0
+var _mastery_checks := false
+var _observed_mastery_events: Dictionary = {}
 
 func _init() -> void:
 	_run()
 
 func _run() -> void:
 	await process_frame
+	_mastery_checks = OS.get_cmdline_user_args().has("--mastery")
 	create_timer(900.0).timeout.connect(func() -> void: _fail("bounded Fireball witness exceeded900s"); _finish())
 	print("SCOPE: isolated fresh world; direct one-Cindercub roster fixture; pickup/practice teleports; physical InputMap taps; no inventory grants; no earned-campaign claim")
 	_world = (load(SCENE) as PackedScene).instantiate()
@@ -189,7 +193,37 @@ func _run() -> void:
 	Input.action_release("move_forward")
 	if not _accepted_fireball: _fail("physical charged tap never produced an accepted Fireball with real contact/HP/number")
 	if _incoming == 0: _fail("real wild opponent never delivered incoming feedback in the same player-path fixture")
+	if _mastery_checks: await _verify_mastery_persistence()
 	_finish()
+
+func _verify_mastery_persistence() -> void:
+	if _observed_mastery_events.is_empty(): _fail("no actual outgoing mastery use was observed")
+	if bool(_manager.call("is_fighting")): await _tap_action("combat_run")
+	for _frame in 300:
+		if not bool(_manager.call("is_fighting")): break
+		await physics_frame
+	if bool(_manager.call("is_fighting")):
+		_fail("physical exit did not settle before mastery save/reload")
+		return
+	var uid := str(_learner.get("uid"))
+	var uses: Dictionary = (_learner.get("move_mastery_uses") as Dictionary).duplicate(true)
+	var receipts: Dictionary = (_learner.get("move_mastery_receipts") as Dictionary).duplicate(true)
+	var slot := int(_game.call("autosave_slot"))
+	if not bool(_game.call("autosave_here")) or not bool(_game.call("load_game", slot)):
+		_fail("production mastery autosave/reload refused")
+		return
+	var restored: RefCounted = null
+	for creature: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if str(creature.get("uid")) == uid: restored = creature
+	if restored == null:
+		_fail("mastery reload lost the real learner UID")
+		return
+	var after: Dictionary = restored.get("move_mastery_uses")
+	if after.size() != uses.size() or restored.get("move_mastery_receipts") != receipts:
+		_fail("mastery reload changed the actual use map or durable action receipts")
+	for move: String in uses:
+		if int(after.get(move, -1)) != int(uses[move]): _fail("mastery use count changed on reload for " + move)
+	print("MASTERY actual physical hits -> production autosave -> same-process load: uid=%s uses=%s receipts=%s. No seeded uses or thresholds; multiplayer/restart/utility remain unproved." % [uid, JSON.stringify(after), JSON.stringify(restored.get("move_mastery_receipts"))])
 
 func _teleport(position: Vector3) -> void:
 	position.y = float(_world.call("ground_height_at", position.x, position.z)) + 1.0
@@ -200,6 +234,12 @@ func _teleport(position: Vector3) -> void:
 func _observe_launch(outgoing: bool, launch: Dictionary, presentation: Node3D) -> void:
 	var target: RefCounted = _manager.call("enemy") if outgoing else _manager.call("active_creature")
 	var sample := {"arrived": false, "instant": float(launch.get("travel_seconds", 0.0)) <= 0.0, "hp": float(target.get("hp")), "move_id": str(launch.move_id), "process_frame": Engine.get_process_frames()}
+	if outgoing and _mastery_checks:
+		sample["mastery_action_id"] = str(launch.get("mastery_action_id", ""))
+		sample["mastery_rank"] = int(launch.get("mastery_rank", 0))
+		sample["uses_before"] = int((_learner.get("move_mastery_uses") as Dictionary).get(str(launch.move_id), 0))
+		if sample.mastery_action_id.is_empty() or int(sample.mastery_rank) != MASTERY.rank_from_uses(int(sample.uses_before)):
+			_fail("real launch did not freeze its authority use identity and pre-credit rank")
 	_launches[str(launch.action_id)] = sample
 	if presentation != null:
 		presentation.connect("arrived", func() -> void: sample.arrived = true)
@@ -234,6 +274,18 @@ func _observe_impact(outgoing: bool, receipt: Dictionary, _where: Vector3) -> vo
 		for label: Label in hud.get("_damage_numbers"):
 			if is_instance_valid(label) and label.text == str(style.text): number_found = true
 	if not number_found: _fail("accepted hit did not create its real HUD number")
+	if outgoing and _mastery_checks:
+		var event_id := str(sample.get("mastery_action_id", ""))
+		var move_id := str(receipt.get("move_id", ""))
+		var uses: Dictionary = _learner.get("move_mastery_uses")
+		var receipts: Dictionary = _learner.get("move_mastery_receipts")
+		if event_id.is_empty() or _observed_mastery_events.has(event_id) \
+				or not (receipts.get(move_id, []) as Array).has(event_id) \
+				or int(uses.get(move_id, 0)) <= int(sample.get("uses_before", 0)) \
+				or int(receipt.get("mastery_rank", 0)) != int(sample.get("mastery_rank", 0)):
+			_fail("actual landed use did not credit once or changed its frozen same-action rank")
+		_observed_mastery_events[event_id] = true
+		print("MASTERY actual landed move=%s event=%s frozen_rank=%d uses_before=%d uses_after=%d" % [move_id,event_id,sample.get("mastery_rank",0),sample.get("uses_before",0),uses.get(move_id,0)])
 	if outgoing and str(receipt.get("move_id", "")) == "fireball": _accepted_fireball = true
 	if not outgoing: _incoming += 1
 	print("IMPACT %s move=%s outgoing=%s contact=%s instant=%s hp_before=%.3f hp_after=%.3f damage=%.3f number=%s crit=%s" % [id, receipt.get("move_id", ""), outgoing, sample.arrived, sample.instant, sample.hp, target.get("hp") if target != null else -1, receipt.damage, number_found, receipt.critical])
