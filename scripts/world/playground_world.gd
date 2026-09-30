@@ -496,7 +496,7 @@ const RIVER_NEST_FACING_DEG := -74.0
 ## data/config/terrain_playground.json's `flats`. One source of truth would be
 ## nicer, but the flat is a terrain concept and the house is a building; they
 ## meet at this number and the bake test asserts the pad is genuinely flat.
-const HOUSE_AT := Vector2(-22.0, -16.0)
+const HOUSE_AT := Vector2(2.0, 14.0)
 
 ## Terrain3D.CollisionMode. 1 is DYNAMIC_GAME: real collision shapes rebuilt
 ## incrementally around the camera, out to `COLLISION_RADIUS_REQUESTED`.

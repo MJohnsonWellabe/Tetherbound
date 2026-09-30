@@ -2,7 +2,6 @@
   "_comment": "TOURNAMENT-1. The village tournament, owner-locked on 2026-08-22 (archive/owner/OWNER_DIRECTIVES_2026-08-22.md section 2): an EIGHT-SLOT bracket of which the player fights exactly THREE rounds. The other four slots are named opponents whose results are simulated on the board between the player's own matches, so the bracket reads as a real event rather than as three trainer battles in a row. Nothing here invents a quest engine -- the rounds are ordinary `data/config/bands/band1_lower_meadows/trainers.json` entries fought through `encounter_director.begin_trainer_battle()`, opened by the ordinary `battle:` dialogue effect, and every piece of state is a flat progression flag.",
   "_comment_no_new_art": "CLAUDE.md and spec sec21: the three fought rounds are Band 1's EXISTING trainers (Mira, Tam, Oskar) and the marshal is a villager entry on a rig that already exists. No new humanoid mesh, no Meshy generation, no new creature. The four simulated names never stand up a body at all -- they are text on a board, which is the whole reason the owner allowed eight slots against three fights.",
   "_comment_tunable": "Every number in this file is TUNABLE. The entry thresholds in particular are a first honest guess at 'your team is ready' and nobody has played the ladder yet.",
-
   "entry": {
     "min_party_size": 5,
     "min_level": 5,
@@ -10,19 +9,19 @@
     "_comment_training": "`min_level` is checked against the `min_party_size` strongest creatures. With the required party size equal to the five-creature cap, this is every owned creature; a newly caught weak creature is a real team choice, not a loophole around preparation. Once set, neither roster/strength flag is cleared -- they record that the player established a complete, trained team.",
     "_comment_owner_0901": "Lowered from 6 to 5 per archive/owner/OWNER_PLAYTEST_2026-09-01.md item 12 -- the owner's own words. Halda's `tournament_halda_train` guidance (data/dialogue/bands/band1_lower_meadows.json) was rewritten in the same pass to name this number explicitly instead of saying vague 'train'."
   },
-
   "board": {
-    "position": [20.0, 15.0],
+    "position": [
+      85,
+      50
+    ],
     "facing_deg": 205.0,
-    "_comment": "The north field behind the square, inside the same 14m vegetation clearing (data/config/bands/band1_lower_meadows/vegetation.json, clearing order 4 at 13,9) that Bryn's practice arena already stands in -- so the tournament fights happen on ground that is deliberately clear of trees, and the tournament ground IS the practice ground the player already knows. 9.2m from that clearing's centre and 9.2m from Bryn himself, which is more than the two prompt radii added together (4.2 + 3.6), so the board never contests his challenge prompt.",
+    "_comment": "F17: the tournament lawn centres on [78,44], with the same board/practice offset as before. Halda remains beside the board; field wilds are unchanged.",
     "_comment_facing": "Degrees of yaw, same convention every placed prop and NPC in this project uses: 0 looks along -Z (toward the village). 205 turns the board's painted face back toward the square, so a player walking up from the well reads it head-on."
   },
-
   "marshal": {
     "name": "Halda",
     "_comment": "The person who runs it. A `data/config/village_npcs.json` entry on the villager_ranger rig with her own hair colour -- CLAUDE.md's rule is 'reuse the installed cast, differentiate per material', and a tournament marshal is exactly the case that rule exists for. She is named here as well so a test can assert the board and the marshal agree about who is running the event."
   },
-
   "rounds": [
     {
       "id": "quarter",
@@ -58,19 +57,42 @@
   "_comment_rounds": "Three, in order. `trainer` is a real trainers.json id whose `reward.flags` sets `won_flag` -- so the round is recorded by the SAME code path that records every other trainer defeat in the chapter, and there is no second place where a win is remembered. `conversation` is the opponent's ring-entrance banter and ends on `flag:<at_ring_flag>`; `begin_conversation` is the short, explicit 'begin the round' line owner playtest 2026-09-03 item 3 asked for, and it is the one that ends on `battle:<trainer>` -- the fight starts when THAT box closes, not the banter's. `at_ring_flag` is never cleared once set (a contract flag, same idiom as `tournament_team_ready`), so retrying a lost round goes straight back to `begin_conversation` and does not repeat the banter.",
   "_comment_final_mount": "The final opponent rides a Meadowhart -- owner-locked. Meadowhart is already the authored first mount (data/creatures/species.json, `rideable.requires_item: \"saddle\"`), so the reward the win grants points straight at the creature the player just fought. Burrowback deliberately stays non-rideable.",
   "_comment_retry": "PROGRESSION section 7: losing preserves bracket wins and restores health plus pre-round care for the registered three, allowing immediate retry or reselection with Halda. It grants no reward and does not heal the unentered two. Selection is separate from the sticky five-owned, all-five-level-5 milestone. Only the ordered three selected through Halda may deploy in a round; Party persists their creature UIDs. Final victory dialogue still restores all five.",
-
   "bracket": [
-    {"slot": 1, "name": "You", "player": true},
-    {"slot": 2, "name": "Mira"},
-    {"slot": 3, "name": "Tam"},
-    {"slot": 4, "name": "Fen"},
-    {"slot": 5, "name": "Oskar"},
-    {"slot": 6, "name": "Hollis"},
-    {"slot": 7, "name": "Bryn"},
-    {"slot": 8, "name": "Dara"}
+    {
+      "slot": 1,
+      "name": "You",
+      "player": true
+    },
+    {
+      "slot": 2,
+      "name": "Mira"
+    },
+    {
+      "slot": 3,
+      "name": "Tam"
+    },
+    {
+      "slot": 4,
+      "name": "Fen"
+    },
+    {
+      "slot": 5,
+      "name": "Oskar"
+    },
+    {
+      "slot": 6,
+      "name": "Hollis"
+    },
+    {
+      "slot": 7,
+      "name": "Bryn"
+    },
+    {
+      "slot": 8,
+      "name": "Dara"
+    }
   ],
   "_comment_bracket": "Eight slots, drawn on the board in this order and paired 1v2, 3v4, 5v6, 7v8. Four of them are the player and the three trainers they actually fight; the other four (Fen, Hollis, Bryn, Dara) are the named opponents the owner's directive calls for. Bryn is Band 1's practice trainer and stands in this same field -- he is a NAME in the bracket here rather than a fourth fight, which is what keeps the fought-round count at three.",
-
   "simulated": [
     {
       "round": "quarter",

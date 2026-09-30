@@ -1,0 +1,87 @@
+{
+  "status": "SOURCE ONLY, engine combined_aabb comparison and physical path still required",
+  "method": "Installed glTF POSITION min/max, no node transforms present; recipe scale and Godot yaw/pitch/roll transform; half bounds include 0.2m apron margin",
+  "bounds": {
+    "cottage_a": {
+      "min": [
+        -2.849999988079071,
+        -0.008544828742742538,
+        -3.849999988079071
+      ],
+      "max": [
+        2.849999988079071,
+        7.2,
+        3.849999988079071
+      ],
+      "half_extents": [
+        3.05,
+        4.05
+      ]
+    },
+    "cottage_b": {
+      "min": [
+        -2.849999988079071,
+        -0.008544828742742538,
+        -2.849999988079071
+      ],
+      "max": [
+        2.849999988079071,
+        7.177875280380249,
+        2.849999988079071
+      ],
+      "half_extents": [
+        3.05,
+        3.05
+      ]
+    },
+    "workshop": {
+      "min": [
+        -4.124891757965088,
+        -0.007091104984283447,
+        -4.828753471374512
+      ],
+      "max": [
+        4.124891757965088,
+        7.940044689178467,
+        4.8539862632751465
+      ],
+      "half_extents": [
+        4.3249,
+        5.054
+      ]
+    },
+    "inn": {
+      "min": [
+        -4.124891757965088,
+        -0.008544828742742538,
+        -5.897581100463867
+      ],
+      "max": [
+        4.124891757965088,
+        12.07787528038025,
+        6.577261996269226
+      ],
+      "half_extents": [
+        4.3249,
+        6.7773
+      ]
+    },
+    "crossing_hall_shell": {
+      "min": [
+        -7.756538152694702,
+        -1.1920928955078125e-07,
+        -16.82875347137451
+      ],
+      "max": [
+        17.09244640171528,
+        14.250044689178466,
+        16.853986263275146
+      ],
+      "half_extents": [
+        17.2924,
+        17.054
+      ]
+    }
+  },
+  "approach_change": "Two initial scratch rewrites matched nonexistent name keys instead of actual id. Corrected once using explicit id/label map; runtime geometry and existing structural tests pending."
+}

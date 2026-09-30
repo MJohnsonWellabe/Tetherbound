@@ -1,0 +1,28 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+baking x[-1024.0, 1024.0] z[-512.0, 7680.0], 4 of 64 regions (4x16 full-world grid) at 2.00m spacing, 256 of 256
+  PARTIAL bake -- 4 region(s): [(-1, -1), (-1, 0), (0, -1), (0, 0)]
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+ERROR: Terrain3D#1025:_grab_camera:155: Cannot find the active camera. Set it manually with Terrain3D.set_camera(). Stopping _physics_process()
+   at: push_error (core/variant/variant_utility.cpp:1023)
+  control map: verge dry 19.7%, path 0.0%, path shoulder 0.0%, damp 0.0% (target 14 / 0.6 / -- / 1)
+  control map painted: base/overlay/blend by slope, paths in path (21 pixels), wet bed (0 pixels), building aprons in soil (0 pixels), drained ground in soil (0 pixels), auto-shader off
+  region (-1, -1) x[-512.0,0.0] z[-512.0,0.0] baked
+  control map: verge dry 21.3%, path 1.1%, path shoulder 0.6%, damp 0.6% (target 14 / 0.6 / -- / 1)
+  control map painted: base/overlay/blend by slope, paths in path (722 pixels), wet bed (415 pixels), building aprons in soil (64 pixels), drained ground in soil (0 pixels), auto-shader off
+  region (-1, 0) x[-512.0,0.0] z[0.0,512.0] baked
+  control map: verge dry 21.8%, path 0.9%, path shoulder 0.5%, damp 0.0% (target 14 / 0.6 / -- / 1)
+  control map painted: base/overlay/blend by slope, paths in path (612 pixels), wet bed (0 pixels), building aprons in soil (48 pixels), drained ground in soil (0 pixels), auto-shader off
+  region (0, -1) x[0.0,512.0] z[-512.0,0.0] baked
+  control map: verge dry 23.2%, path 0.8%, path shoulder 0.3%, damp 0.0% (target 14 / 0.6 / -- / 1)
+  control map painted: base/overlay/blend by slope, paths in path (547 pixels), wet bed (0 pixels), building aprons in soil (516 pixels), drained ground in soil (0 pixels), auto-shader off
+  region (0, 0) x[0.0,512.0] z[0.0,512.0] baked
+  height range -20.1m .. 51.2m (relief 71.3m)
+  1.8% of the surface is steeper than 30 degrees
+Terrain3DRegion#8570:save:226: Writing region (-1, -1) to res://.tmp/terrain-patch-17796-1790751980-277987/terrain3d-01-01.res
+Terrain3DRegion#1763:save:226: Writing region (-1, 0) to res://.tmp/terrain-patch-17796-1790751980-277987/terrain3d-01_00.res
+Terrain3DRegion#0007:save:226: Writing region (0, -1) to res://.tmp/terrain-patch-17796-1790751980-277987/terrain3d_00-01.res
+Terrain3DRegion#8251:save:226: Writing region (0, 0) to res://.tmp/terrain-patch-17796-1790751980-277987/terrain3d_00_00.res
+baked -> res://data/terrain/playground (4 region(s))
+SOURCE_SHA=af78aa2256ea0356b403205e009262e04aa78cf5 NATIVE_EXIT=0 ELAPSED_SECONDS=151.4656752
