@@ -182,3 +182,34 @@ forks and extends them with trail scaling. Sky start, struck target and ground
 endpoint, marker window and travel duration remain unchanged. Its contact puffs
 and sparks share the original particle lease. This is unrendered source work,
 not a lightning finish or mastery acceptance result.
+
+## R5 native red clearance guard, all evidence preserved
+
+Executed exact clean source `a74500624fea0dd05ec1166d4a16c1e0722cea8b` with
+Godot4.7 official5b4e0cb0f, native Compatibility/OpenGL on NVIDIA GTX1060 3GB,
+driver560.94,1920x1080 and isolated APPDATA `D:/tetherbound/vfx-proof-home`.
+Command: `Godot_v4.7-stable_win64_console.exe --path D:/tetherbound/redesign-vfx --rendering-method gl_compatibility --resolution 1920x1080 --script tests/smoke_move_effects_library.gd -- --batch=identities --out=D:/tetherbound/vfx-identities-native-r5`.
+
+The process exited1, with12 cases and exactly two failures: Pebble Toss ranks3/5
+reported flight body reaching the measured target envelope. No native/script
+ERROR occurred. All36 original1920x1080 PNGs, private complete phase receipts,
+raw native log and SHA256 inventory are preserved in `native-identities-r5/`.
+Every actual arrival matched its separate local schedule frame, contact/impact
+followed arrival, and every lease released to0. This is a red batch, not PASS.
+
+Source diagnosis: the shutter expands the target by a conservative group
+envelope including the volley's spread/stagger, then checks each already-spread
+body against that same expanded group envelope. This counts separation twice.
+The replacement guard must distinguish individual body/layer envelope from the
+group trajectory envelope, retain actual per-body positions and the measured
+production target, and fail genuine overlap. No model/camera/pose relocation,
+resizing, image masking or omission is justified. The red frames are retained
+for independent inspection rather than replaced by a hand-selected sequence.
+
+Fireball/Rock satisfied the source guard in this batch; that certifies neither
+their visual identity nor finish. Ranks1/3/5 of four effects in a posed native
+production-target synthetic arena remain a scope limit. The target has no
+encounter, AI or HP authority; travel remains slowed0.7seconds. There is no
+High/Medium, earned mastery/player, four-creature performance, Ally, audio,
+continuous motion or multiplayer HP acceptance here. A fresh code-blind verdict
+is pending. The library stays flag-off and all F25 criteria remain open.
