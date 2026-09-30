@@ -400,47 +400,66 @@ func test_utility_target_requires_the_exact_live_engine_without_wild_local_fallb
 	assert_false(DIRECTOR.utility_opponent_association_valid("fight-a", "trainer", false, "fight-a", "foe-a", "foe-a", "fight-b"), "trainer local binding must name the same encounter")
 
 
-func _meter_contact(action_id: String, uid: String = "owned-1", slot: String = "quick",
-		hp_before: float = 100.0, hp_after: float = 90.0) -> Dictionary:
-	return {"action_id": action_id, "source_uid": uid, "target_uid": "foe-1",
-		"slot": slot, "hp_before": hp_before, "hp_after": hp_after}
+## Exercise real accepted geometry and the canonical authored move row. This
+## fixture supplies host positions/actor binding, not a fabricated hit receipt.
+func _meter_strike(host: RefCounted, id: String, action: int, move_id: String = "pebble_toss",
+		uid: String = "owned-1", generation: int = 1, facing: Vector3 = Vector3.RIGHT,
+		slot_claim: String = "quick") -> Dictionary:
+	var moves := MOVES.new()
+	var move: Dictionary = moves.move(move_id).duplicate(true)
+	var view := {"now_ms": action * 20000, "origin": Vector3.ZERO, "bodies": [],
+		"source_uid": uid, "source_generation": generation, "move_id": move_id,
+		"target_uid": "foe-1", "target_position": Vector3(2, 0, 0), "facing": facing}
+	var intent := {"encounter_id": id, "action": action, "slot": slot_claim, "facing": facing}
+	if str(move.slot) == "utility":
+		return host.validate_utility(intent, 1, view, move, {"max": 100.0, "regen_per_second": 0.0})
+	move["move_id"] = move_id
+	intent["move"] = move
+	return host.validate_strike(intent, 1, view)
 
 
 func test_ultimate_meter_credits_host_debit_once_and_keeps_uid_meter_across_switch_rejoin() -> void:
 	var host := ENCOUNTER_HOST.new(1)
-	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0, "card": {"uid": "foe-1"}}, "owned-1", "character-1")
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0, "position": [2, 0, 0], "card": {"uid": "foe-1"}}, "owned-1", "character-1")
 	var id := str(record.encounter_id)
 	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 1).ok)
+	assert_true(_meter_strike(host, id, 1).delta.hit)
 	var baseline: Dictionary = host.record(id).duplicate(true)
-	var first: Dictionary = host.stage_ultimate_credit(id, 1, 1, _meter_contact("accepted-action-1"))
+	var first: Dictionary = host.stage_ultimate_credit(id, 1, 1, 1, 10.0)
 	assert_true(first.ok)
 	assert_eq(host.record(id), baseline, "staging grants no meter or receipt")
 	assert_true(host.commit_ultimate_credit(first).ok)
 	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 6.0)
-	host.set_opponent_hp(id, 90.0, 100.0)
+	assert_eq(host.opponent_hp(id), 90.0, "earned grant commits the actual hostile HP debit atomically")
 	baseline = host.record(id).duplicate(true)
-	assert_true(host.stage_ultimate_credit(id, 1, 1, _meter_contact("accepted-action-1")).duplicate)
+	assert_true(host.stage_ultimate_credit(id, 1, 1, 1, 10.0).duplicate)
 	assert_false(host.commit_ultimate_credit(first).ok)
 	assert_eq(host.record(id), baseline, "original accepted contact cannot grant twice")
-	var tampered := _meter_contact("accepted-action-1", "owned-1", "charged")
-	assert_false(host.stage_ultimate_credit(id, 1, 1, tampered).ok, "same receipt cannot claim a larger slot gain")
+	var tampered: Dictionary = first.duplicate(true)
+	tampered.authorization.slot = "charged"
+	assert_false(host.commit_ultimate_credit(tampered).ok, "same receipt cannot claim a larger slot gain")
 	for index: int in range(2, 18):
-		var hp_before := float(host.record(id).opponent.hp)
-		var contact := _meter_contact("accepted-action-%d" % index, "owned-1", "quick", hp_before, hp_before - 1.0)
-		var proposal: Dictionary = host.stage_ultimate_credit(id, 1, 1, contact)
+		assert_true(_meter_strike(host, id, index).delta.hit)
+		var proposal: Dictionary = host.stage_ultimate_credit(id, 1, 1, index, 1.0)
 		assert_true(proposal.ok)
 		assert_true(host.commit_ultimate_credit(proposal).ok)
-		host.set_opponent_hp(id, float(contact.hp_after), 100.0)
+	assert_eq(host.opponent_hp(id), 74.0, "every meter-building quick removes real HP")
 	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 100.0, "repeated authored gains cap at 100")
-	var saturation_contact := _meter_contact("saturation-contact", "owned-1", "quick", 74.0, 73.0)
-	var saturation: Dictionary = host.stage_ultimate_credit(id, 1, 1, saturation_contact)
+	assert_true(_meter_strike(host, id, 18).delta.hit)
+	var saturation: Dictionary = host.stage_ultimate_credit(id, 1, 1, 18, 1.0)
+	var stale: Dictionary = saturation.duplicate(true)
+	host.set_opponent_hp(id, 74.0, 100.0) # Even an identical-HP publication advances host revision.
+	var revised: Dictionary = host.record(id).duplicate(true)
+	assert_false(host.commit_ultimate_credit(stale).ok, "host revision changes invalidate an older atomic proposal")
+	assert_eq(host.record(id), revised, "stale debit changes neither HP nor meter")
+	saturation = host.stage_ultimate_credit(id, 1, 1, 18, 1.0)
 	assert_true(host.commit_ultimate_credit(saturation).ok)
-	host.set_opponent_hp(id, 73.0, 100.0)
-	assert_true(host.stage_ultimate_credit(id, 1, 1, saturation_contact).duplicate)
+	assert_eq(host.opponent_hp(id), 73.0)
+	assert_true(host.stage_ultimate_credit(id, 1, 1, 18, 1.0).duplicate)
 	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals("owned-2"), 2).ok)
 	assert_eq(host.ultimate_meter(id, 1, "owned-2"), 0.0)
 	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 100.0, "bench neither gains nor loses meter")
-	assert_false(host.stage_ultimate_credit(id, 1, 1, _meter_contact("bench-hit")).ok)
+	assert_false(host.stage_ultimate_credit(id, 1, 1, 18, 1.0).ok)
 	host.join(id, 2, "other-player", "character-2")
 	assert_true(host.leave(id, 1).ok)
 	assert_true(host.join(id, 7, "owned-2", "character-1").ok)
@@ -456,35 +475,55 @@ func test_ultimate_meter_refuses_fake_gain_and_bounded_history_never_evicts_repl
 	var original_limit: Variant = cfg.receipt_limit_per_creature
 	cfg.receipt_limit_per_creature = 3
 	var host := ENCOUNTER_HOST.new(1)
-	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "card": {"uid": "foe-1"}}, "owned-1", "character-1")
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 100.0, "position": [2, 0, 0], "card": {"uid": "foe-1"}}, "owned-1", "character-1")
 	var id := str(record.encounter_id)
 	host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 1)
 	var baseline: Dictionary = host.record(id).duplicate(true)
-	assert_false(host.stage_ultimate_credit(id, 1, 1, _meter_contact("no-debit", "owned-1", "quick", 100.0, 100.0)).ok, "no HP debit grants nothing")
-	assert_false(host.stage_ultimate_credit(id, 1, 1, _meter_contact("incoming-debit", "owned-1", "damage_taken")).ok, "incoming damage grants nothing even with a positive HP debit")
-	var inflated := _meter_contact("fake-gain")
-	inflated.gain = 999.0
-	assert_false(host.stage_ultimate_credit(id, 1, 1, inflated).ok, "numeric gain claims are not part of accepted receipt shape")
-	var friendly := _meter_contact("friendly-hit")
-	friendly.target_uid = "owned-1"
-	assert_false(host.stage_ultimate_credit(id, 1, 1, friendly).ok)
-	assert_false(host.stage_ultimate_credit(id, 1, 2, _meter_contact("wrong-body")).ok)
+	assert_false(host.stage_ultimate_credit(id, 1, 1, 999, 1.0).ok, "fresh unaccepted action cannot invent a debit")
 	assert_eq(host.record(id), baseline)
-	var zero: Dictionary = host.stage_ultimate_credit(id, 1, 1, _meter_contact("ultimate-contact", "owned-1", "ultimate"))
-	assert_true(host.commit_ultimate_credit(zero).ok)
-	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 0.0, "ultimate deals damage without filling itself")
-	host.set_opponent_hp(id, 90.0, 100.0)
-	var charged_contact := _meter_contact("charged-contact", "owned-1", "charged", 90.0, 80.0)
-	var charged: Dictionary = host.stage_ultimate_credit(id, 1, 1, charged_contact)
-	assert_true(host.commit_ultimate_credit(charged).ok)
-	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 14.0)
-	host.set_opponent_hp(id, 80.0, 100.0)
-	var utility_contact := _meter_contact("damaging-utility-contact", "owned-1", "utility", 80.0, 79.0)
-	assert_true(host.commit_ultimate_credit(host.stage_ultimate_credit(id, 1, 1, utility_contact)).ok)
-	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 18.0, "damaging utility contributes the authored four")
-	host.set_opponent_hp(id, 79.0, 100.0)
+	var missed: Dictionary = _meter_strike(host, id, 1, "pebble_toss", "owned-1", 1, Vector3.LEFT)
+	assert_true(missed.ok)
+	assert_false(missed.delta.hit)
+	assert_false(host.stage_ultimate_credit(id, 1, 1, 1, 1.0).ok, "accepted whiff has no debit entitlement")
+	assert_false(_meter_strike(host, id, 1).ok)
+	assert_false(host.stage_ultimate_credit(id, 1, 1, 1, 1.0).ok, "refused replay cannot become a landed hit")
+	var zero: Dictionary = _meter_strike(host, id, 2, "hearten")
+	assert_true(zero.ok)
+	assert_false(host.stage_ultimate_credit(id, 1, 1, 2, 10.0).ok, "accepted non-damaging utility cannot be relabeled as a damaging contact")
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 0.0, "no non-damaging effect or ultimate label manufactures a refill")
+	assert_eq(host.opponent_hp(id), 100.0)
+	# Incoming actor damage has its own actual committed receipt. It cannot
+	# authorize an outbound quick by reusing that action number.
+	var incoming: Dictionary = host.stage_actor_vitals(id, 1, "owned-1", 1, 0, "incoming-3", "damage", 1.0, 10)
+	assert_true(host.commit_actor_vitals(incoming).ok)
+	assert_false(host.stage_ultimate_credit(id, 1, 1, 3, 1.0).ok, "incoming damage grants nothing even with an actual positive HP debit")
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 0.0)
+	assert_true(_meter_strike(host, id, 4).delta.hit)
 	baseline = host.record(id).duplicate(true)
-	assert_eq(host.stage_ultimate_credit(id, 1, 1, _meter_contact("new-after-bound", "owned-1", "quick", 79.0, 78.0)).code, "receipt_budget")
-	assert_true(host.stage_ultimate_credit(id, 1, 1, charged_contact).duplicate, "exact duplicate handled before capacity refusal")
+	assert_false(host.stage_ultimate_credit(id, 1, 1, 4, 0.0).ok, "no HP debit grants nothing")
+	assert_false(host.stage_ultimate_credit(id, 1, 2, 4, 1.0).ok)
+	assert_eq(host.record(id), baseline)
+	var quick: Dictionary = host.stage_ultimate_credit(id, 1, 1, 4, 10.0)
+	var inflated: Dictionary = quick.duplicate(true)
+	inflated.gain = 999.0
+	assert_false(host.commit_ultimate_credit(inflated).ok, "numeric gain claims are not part of the exact host proposal")
+	var friendly: Dictionary = quick.duplicate(true)
+	friendly.authorization.target_uid = "owned-1"
+	assert_false(host.commit_ultimate_credit(friendly).ok)
+	assert_true(host.commit_ultimate_credit(quick).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 6.0)
+	# Peer slot claims cannot inflate a quick or turn a charged into incoming.
+	assert_true(_meter_strike(host, id, 5, "fireball", "owned-1", 1, Vector3.RIGHT, "damage_taken").delta.hit)
+	var charged: Dictionary = host.stage_ultimate_credit(id, 1, 1, 5, 10.0)
+	assert_true(host.commit_ultimate_credit(charged).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 20.0, "authored charged gain is 14 regardless of peer label")
+	assert_true(_meter_strike(host, id, 6, "quake_ring").delta.hit)
+	assert_true(host.commit_ultimate_credit(host.stage_ultimate_credit(id, 1, 1, 6, 1.0)).ok)
+	assert_eq(host.ultimate_meter(id, 1, "owned-1"), 24.0, "damaging utility contributes the authored four")
+	assert_eq(host.opponent_hp(id), 79.0)
+	assert_true(_meter_strike(host, id, 7).delta.hit)
+	baseline = host.record(id).duplicate(true)
+	assert_eq(host.stage_ultimate_credit(id, 1, 1, 7, 1.0).code, "receipt_budget")
+	assert_true(host.stage_ultimate_credit(id, 1, 1, 5, 10.0).duplicate, "exact duplicate handled before capacity refusal")
 	assert_eq(host.record(id), baseline, "bound refuses new receipt and never evicts old replay protection")
 	cfg.receipt_limit_per_creature = original_limit

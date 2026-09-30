@@ -51,6 +51,7 @@ extends RefCounted
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 
@@ -182,6 +183,8 @@ var _strike_receipts: Dictionary = {}
 ## Host-process namespace: settlement identities cannot collide after restart.
 ## Actor HP stays in the participant's encounter row, never an ownership roster.
 var _vitals_namespace: String = Crypto.new().generate_random_bytes(16).hex_encode()
+var _debit_minted: int = 0
+var _debit_moves: RefCounted = null
 
 
 func _init(host_peer_id: int = 1) -> void:
@@ -510,7 +513,13 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"accepted_at_ms": now_ms,
 		"deadline_ms": deadline_ms,
 		"cooldown_ms": lock_ms,
+		"landed_actions": _landed_actions(encounter_id, peer_id),
+		"landing": {"hit": bool(connected.get("hit", false)), "source_uid": view.get("source_uid"),
+			"source_generation": view.get("source_generation"), "move_id": move.get("move_id"),
+			"profile": move.duplicate(true), "utility": false},
 	}
+	if bool(connected.get("hit", false)):
+		_authorize_landed_debit(encounter_id, peer_id, action)
 	return _record_strike_receipt(intent, peer_id, view, rec,
 		_ok("strike_intent", peer_id, {
 		"encounter_id": encounter_id,
@@ -594,7 +603,13 @@ func validate_utility(intent: Dictionary, peer_id: int, view: Dictionary,
 		float(MATH.config().get("wind", {}).get("regen_delay", 0.6)))
 	var lock_ms := ceili(maxf(0.05, recovery_seconds) * 1000.0)
 	_strike_state_for(encounter_id)[peer_id] = {"last_action": action,
-		"accepted_at_ms": now_ms, "deadline_ms": now_ms + lock_ms, "cooldown_ms": lock_ms}
+		"accepted_at_ms": now_ms, "deadline_ms": now_ms + lock_ms, "cooldown_ms": lock_ms,
+		"landed_actions": _landed_actions(encounter_id, peer_id),
+		"landing": {"hit": connected, "source_uid": view.get("source_uid"),
+			"source_generation": view.get("source_generation"), "move_id": view.get("move_id"),
+			"profile": move.duplicate(true), "utility": true}}
+	if connected:
+		_authorize_landed_debit(encounter_id, peer_id, action)
 	deadlines[uid] = now_ms + ceili(float(move.cooldown) * 1000.0)
 	participant["utility_deadlines"] = deadlines
 	var delta := {"encounter_id": encounter_id, "source_uid": uid,
@@ -743,6 +758,7 @@ func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 	_strike_state_for(encounter_id)[peer_id] = {
 		"last_action": action, "accepted_at_ms": now_ms,
 		"deadline_ms": deadline_ms, "cooldown_ms": ceili(safe_duration * 1000.0),
+		"landed_actions": _landed_actions(encounter_id, peer_id),
 	}
 	var delta := {
 		"encounter_id": encounter_id,
@@ -1363,50 +1379,94 @@ func commit_actor_vitals(proposal: Dictionary) -> Dictionary:
 	return {"ok": true, "vitals": _actor_vitals_view(actor)}
 
 
-## F23 ultimate meter stays on the admitted participant row. These host-only
-## APIs have no gameplay caller yet. Caller supplies ONE immutable accepted
-## action identity and the clamped hostile HP before/after from its actual
-## committed debit, before publishing set_opponent_hp. Presentation callbacks,
-## damage taken and peer-provided gains never enter this door.
+## Keep the pending authorizations inside the existing action authority. They
+## are minted only by accepted landed validation, never by a public contact
+## registration method or a diagnostic/presentation receipt.
+func _landed_actions(encounter_id: String, peer_id: int) -> Dictionary:
+	return ((_strike_authority.get(encounter_id, {}) as Dictionary).get(peer_id, {}) as Dictionary).get("landed_actions", {})
+
+
+func _authorize_landed_debit(encounter_id: String, peer_id: int, action: int) -> void:
+	var authority: Dictionary = (_strike_authority.get(encounter_id, {}) as Dictionary).get(peer_id, {})
+	var landing: Dictionary = authority.get("landing", {})
+	if int(authority.get("last_action", 0)) != action or not bool(landing.get("hit", false)): return
+	if typeof(landing.get("source_generation")) != TYPE_INT or not landing.get("source_uid") is String:
+		return # Legacy callers do not acquire the new debit/meter capability.
+	var uid := str(landing.source_uid)
+	var generation := int(landing.source_generation)
+	var move_id := str(landing.get("move_id", ""))
+	var profile: Dictionary = landing.profile
+	var utility := bool(landing.utility)
+	var actor := actor_vitals(encounter_id, peer_id, uid, generation)
+	if actor.is_empty() or bool(actor.fainted): return
+	if _debit_moves == null: _debit_moves = MOVE_DB.new()
+	var authored: Dictionary = _debit_moves.call("move", move_id)
+	var slot := str(authored.get("slot", ""))
+	# Freeze slot from shipped move data, never from an intent/contact label.
+	if utility:
+		if slot != "utility" or profile != authored \
+			or not UTILITY_EFFECTS._number(authored.get("base_power"), 0.001, 1000000.0) \
+			or str((authored.get("utility", {}) as Dictionary).get("scope", "self")) == "self": return
+	elif slot not in ["quick", "charged"] \
+		or not UTILITY_EFFECTS._number(authored.get("power"), 0.001, 1000000.0): return
+	var rec: Dictionary = encounters[encounter_id]
+	var raw_card: Variant = rec.opponent.get("card", {})
+	if not raw_card is Dictionary: return
+	var target_uid: Variant = raw_card.get("uid")
+	if not UTILITY_EFFECTS._identity(target_uid) or target_uid == uid: return
+	var raw_cfg: Variant = MATH.config().get("ultimate")
+	if not raw_cfg is Dictionary: return
+	var limit: Variant = raw_cfg.get("receipt_limit_per_creature")
+	if not UTILITY_EFFECTS._number(limit, 1.0, 65536.0) or float(limit) != floorf(float(limit)): return
+	var actions := _landed_actions(encounter_id, peer_id)
+	if actions.has(action): return # Private retries cannot replace a frozen token.
+	if actions.size() >= int(limit) * 5 or _debit_minted == 9223372036854775807: return
+	_debit_minted += 1
+	var authorization := {"receipt_id": "%s:%d" % [_vitals_namespace, _debit_minted],
+		"action": action, "source_uid": uid, "body_generation": generation,
+		"target_uid": str(target_uid), "move_id": move_id, "slot": slot}
+	authorization.make_read_only()
+	actions[action] = authorization
+	(_strike_state_for(encounter_id)[peer_id] as Dictionary)["landed_actions"] = actions
+
+
+## F23 atomic hostile HP debit plus ultimate credit. No gameplay caller yet.
+## The caller supplies only its host-computed damage and an already accepted
+## action number. This door resolves the immutable authorization itself and
+## derives HP before/after from current host state; no external contact, slot,
+## gain or HP-after dictionary can mint entitlement. Existing engine callers
+## must adopt this transaction, not debit HP then invoke it a second time.
 func stage_ultimate_credit(encounter_id: String, peer_id: int, body_generation: int,
-		contact: Dictionary) -> Dictionary:
-	var keys := ["action_id", "source_uid", "target_uid", "slot", "hp_before", "hp_after"]
-	if contact.size() != keys.size(): return {"ok": false, "code": "invalid_contact"}
-	for key: String in keys:
-		if not contact.has(key): return {"ok": false, "code": "invalid_contact"}
-	for key: String in ["action_id", "source_uid", "target_uid"]:
-		if not UTILITY_EFFECTS._identity(contact[key]): return {"ok": false, "code": "invalid_contact"}
-	if not contact.slot is String or str(contact.slot) not in ["quick", "charged", "utility", "ultimate"] \
-		or not UTILITY_EFFECTS._number(contact.hp_before, 0.001, 1000000000.0) \
-		or not UTILITY_EFFECTS._number(contact.hp_after, 0.0, float(contact.hp_before)) \
-		or float(contact.hp_after) >= float(contact.hp_before):
+		action: int, damage: float) -> Dictionary:
+	var authorization: Dictionary = _landed_actions(encounter_id, peer_id).get(action, {})
+	if authorization.is_empty(): return {"ok": false, "code": "unaccepted_action"}
+	if not UTILITY_EFFECTS._number(damage, 0.001, 1000000000.0):
 		return {"ok": false, "code": "no_landed_debit"}
-	var actor := actor_vitals(encounter_id, peer_id, str(contact.source_uid), body_generation)
-	if actor.is_empty() or bool(actor.fainted): return {"ok": false, "code": "invalid_actor"}
+	var actor := actor_vitals(encounter_id, peer_id, str(authorization.source_uid), body_generation)
+	if actor.is_empty() or bool(actor.fainted) or body_generation != int(authorization.body_generation):
+		return {"ok": false, "code": "invalid_actor"}
 	var participant := _actor_participant(encounter_id, peer_id)
 	var state: Dictionary = participant.get("ultimate_state", {"revision": 0, "meters": {}, "receipts": {}})
-	var canonical := {"action_id": str(contact.action_id), "source_uid": str(contact.source_uid),
-		"target_uid": str(contact.target_uid), "slot": str(contact.slot),
-		"hp_before": float(contact.hp_before), "hp_after": float(contact.hp_after)}
-	var prior: Dictionary = state.receipts.get(canonical.action_id, {})
+	var prior: Dictionary = state.receipts.get(authorization.receipt_id, {})
 	if not prior.is_empty():
-		if prior.contact != canonical or int(prior.body_generation) != body_generation:
+		if prior.authorization != authorization or float(prior.damage) != damage:
 			return {"ok": false, "code": "receipt_conflict"}
-		return {"ok": true, "duplicate": true, "meter": float(state.meters.get(canonical.source_uid, 0.0))}
+		return {"ok": true, "duplicate": true, "meter": float(state.meters.get(authorization.source_uid, 0.0))}
 	var rec: Dictionary = encounters[encounter_id]
 	var opponent: Dictionary = rec.get("opponent", {})
 	var raw_card: Variant = opponent.get("card", {})
-	if not raw_card is Dictionary or raw_card.get("uid") != canonical.target_uid \
-		or canonical.target_uid == canonical.source_uid \
-		or not UTILITY_EFFECTS._number(opponent.get("hp"), 0.001, 1000000000.0) \
-		or float(opponent.hp) != float(canonical.hp_before):
+	if not raw_card is Dictionary or raw_card.get("uid") != authorization.target_uid \
+		or not UTILITY_EFFECTS._number(opponent.get("hp"), 0.001, 1000000000.0):
 		return {"ok": false, "code": "wrong_hostile_debit"}
+	var hp_before := float(opponent.hp)
+	var hp_after := maxf(0.0, hp_before - damage)
+	if hp_after >= hp_before: return {"ok": false, "code": "no_landed_debit"}
 	var raw_cfg: Variant = MATH.config().get("ultimate", {})
 	if not raw_cfg is Dictionary or not raw_cfg.get("gain") is Dictionary:
 		return {"ok": false, "code": "invalid_config"}
 	var cfg: Dictionary = raw_cfg
 	var maximum: Variant = cfg.get("max")
-	var gain: Variant = (cfg.gain as Dictionary).get(canonical.slot)
+	var gain: Variant = (cfg.gain as Dictionary).get(authorization.slot)
 	var limit: Variant = cfg.get("receipt_limit_per_creature")
 	if not UTILITY_EFFECTS._number(maximum, 1.0, 1000000.0) \
 		or not UTILITY_EFFECTS._number(gain, 0.0, float(maximum)) \
@@ -1418,37 +1478,47 @@ func stage_ultimate_credit(encounter_id: String, peer_id: int, body_generation: 
 	# make a replay of a saturation hit able to refill it. Never evict history.
 	var uid_receipts := 0
 	for row: Dictionary in state.receipts.values():
-		if str(row.contact.source_uid) == str(canonical.source_uid): uid_receipts += 1
+		if str(row.authorization.source_uid) == str(authorization.source_uid): uid_receipts += 1
 	# The total bound also survives accepted releases/replacements. Retaining
 	# old UID receipts must never permit unbounded history through roster churn.
 	if uid_receipts >= int(limit) or state.receipts.size() >= int(limit) * 5:
 		return {"ok": false, "code": "receipt_budget"}
-	if not state.meters.has(canonical.source_uid) and state.meters.size() >= 5:
+	if not state.meters.has(authorization.source_uid) and state.meters.size() >= 5:
 		return {"ok": false, "code": "party_capacity"}
-	var before := float(state.meters.get(canonical.source_uid, 0.0))
+	var before := float(state.meters.get(authorization.source_uid, 0.0))
 	var next := state.duplicate(true)
-	next.meters[canonical.source_uid] = minf(float(maximum), before + float(gain))
-	next.receipts[canonical.action_id] = {"contact": canonical, "body_generation": body_generation}
+	next.meters[authorization.source_uid] = minf(float(maximum), before + float(gain))
+	next.receipts[authorization.receipt_id] = {"authorization": authorization.duplicate(true),
+		"damage": damage, "hp_before": hp_before, "hp_after": hp_after}
 	next.revision = int(state.revision) + 1
 	return {"ok": true, "duplicate": false, "encounter_id": encounter_id, "peer_id": peer_id,
-		"body_generation": body_generation, "contact": canonical, "expected_revision": int(state.revision),
-		"meter_before": before, "meter": float(next.meters[canonical.source_uid]), "state": next}
+		"body_generation": body_generation, "action": action, "damage": damage,
+		"authorization": authorization.duplicate(true), "expected_revision": int(state.revision),
+		"record_revision": int(rec.seq), "actor_revision": int(actor.revision),
+		"hp_before": hp_before, "hp_after": hp_after,
+		"meter_before": before, "meter": float(next.meters[authorization.source_uid]), "state": next}
 
 
 func commit_ultimate_credit(proposal: Dictionary) -> Dictionary:
 	if not bool(proposal.get("ok", false)) or bool(proposal.get("duplicate", false)) \
 		or not proposal.get("encounter_id") is String or not proposal.get("peer_id") is int \
-		or not proposal.get("body_generation") is int or not proposal.get("contact") is Dictionary:
+		or not proposal.get("body_generation") is int or not proposal.get("action") is int \
+		or not UTILITY_EFFECTS._number(proposal.get("damage"), 0.001, 1000000000.0):
 		return {"ok": false, "code": "invalid_proposal"}
 	var verified := stage_ultimate_credit(str(proposal.encounter_id), int(proposal.peer_id),
-		int(proposal.body_generation), proposal.contact)
+		int(proposal.body_generation), int(proposal.action), float(proposal.damage))
 	if not bool(verified.get("ok", false)) or verified != proposal:
 		return {"ok": false, "code": "stale_proposal"}
 	var participant := _actor_participant(str(proposal.encounter_id), int(proposal.peer_id))
+	var rec: Dictionary = encounters[str(proposal.encounter_id)]
+	# These two writes are one pure host transaction. No callbacks/await occur
+	# between the canonical HP mutation and its earned meter/receipt mutation.
+	(rec.opponent as Dictionary)["hp"] = float(proposal.hp_after)
 	participant["ultimate_state"] = proposal.state.duplicate(true)
 	seq += 1
-	(encounters[str(proposal.encounter_id)] as Dictionary)["seq"] = seq
-	return {"ok": true, "meter": float(proposal.meter), "source_uid": str(proposal.contact.source_uid)}
+	rec["seq"] = seq
+	return {"ok": true, "meter": float(proposal.meter), "source_uid": str(proposal.authorization.source_uid),
+		"hp": float(proposal.hp_after), "actual_damage": float(proposal.hp_before) - float(proposal.hp_after)}
 
 
 func ultimate_meter(encounter_id: String, peer_id: int, creature_uid: String) -> float:
