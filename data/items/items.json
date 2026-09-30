@@ -19,6 +19,30 @@
   "_comment_armor": "R7.7. GAME_DESIGN.md sec18's five trainer equipment slots (Helmet, Upper body, Lower body, Boots, Backpack) -- 'trainer armor protects the human, not creatures'. `kind: \"armor\"` items are worn, not spent (`stack: 1`, same as a tool), and carry two fields nothing else in this file uses: `armor_slot` (one of the five slot names scripts/player/player_equipment.gd knows) and `defense` (a 0..1 fraction of incoming damage the piece alone soaks, summed across every equipped piece and capped by player_equipment.gd's own MAX_TOTAL_DEFENSE). CLAUDE.md's hard rules bound this on purpose: no shields (this is passive damage reduction, never a block/parry verb), and the human still cannot fight (nothing here is a weapon or adds an attack). The only real damage source the Meadows has today is a fall (player_vitals.gd's own fall-damage curve), so that is the one thing armor reduces so far; GAME_DESIGN.md's 'later biomes require gear' line is explicitly Biome-2 scope and stays unbuilt. Icons are original flat silhouettes (tools/gen_item_icons.py, spec sec21's sanctioned 'simple generated vector icons for game-specific concepts') -- neither vendored Kenney icon pack this project uses has a clothing/armor glyph to reuse.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
+    "rootiron_ingot": {
+      "name": "Rootiron Ingot", "kind": "material", "stack": 50,
+      "colour": "#a6a076", "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Meadows metal refined at the Forge for Rootiron gear.",
+      "description": "Refined from Rootstone and Ironwood. A Meadows tier material used to craft gear at the homestead."
+    },
+    "tidesteel_ingot": {
+      "name": "Tidesteel Ingot", "kind": "material", "stack": 50,
+      "colour": "#83b9ba", "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Tidewake metal refined at the Forge for Tidesteel gear.",
+      "description": "Refined from Sluice Metal and Reef Stone. A Tidewake tier material used to craft gear at the homestead."
+    },
+    "skyglass_ingot": {
+      "name": "Skyglass Ingot", "kind": "material", "stack": 50,
+      "colour": "#b4cadc", "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Cloudreach glass refined at the Forge for Skyglass gear.",
+      "description": "Refined from Cliffglass Ore and Windworn Heartwood. A Cloudreach tier material used to craft gear at the homestead."
+    },
+    "stormglass_plate": {
+      "name": "Stormglass Plate", "kind": "material", "stack": 50,
+      "colour": "#b6add2", "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Stormwood glass refined at the Forge for Stormglass gear.",
+      "description": "Refined from Stormglass and Thunderwood. A Stormwood tier material used to craft gear at the homestead."
+    },
     "attuned_ground": {
       "name": "Attuned Ground", "kind": "material", "stack": 50,
       "colour": "#b39b68", "icon": "res://assets/ui/icons/items/berries.png",

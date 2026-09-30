@@ -35,3 +35,11 @@ ItemDB, stacking, actual acquisition, four-character contention, grooming and
 code-blind visual proof remain pending; no F32 criterion closes here. Tide
 Pearl is present in the homestead tier-material declaration, but this item row
 does not create an actual gatherable node. That source stays with homestead.
+
+Additional exact allocation: rootiron_ingot, tidesteel_ingot, skyglass_ingot,
+stormglass_plate, all material/stack 50. Names match HOMESTEAD 5.1/5.2 and the
+four live material_tiers.json refined IDs. Input pair wording matches 2+1
+Rootstone/Ironwood, Sluice Metal/Reef Stone, Cliffglass Ore/Windworn Heartwood,
+Stormglass/Thunderwood. Recipe file and manual tap-start Forge runtime remain
+homestead/foundation ownership and are not activated by these catalogue rows.
+The existing Water item/recipe registration path was not duplicated or edited.
