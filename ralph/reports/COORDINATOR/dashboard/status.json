@@ -517,5 +517,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T03:28:16Z"
+ "last_lane_refresh": "2026-09-30T04:28:59Z",
+ "lane_activity": [
+  {
+   "lane": "tb/foundations / tb/hub",
+   "checkpoint": "F16 PR #467 head 7e328309889ecb: selected full CI run 36667090983 has 22 completed jobs and 8 active jobs on the first page, no failures observed. Historical reds and scoped fixes retained. F16 is unlanded; at this refresh main has 95/280. F17 actual straight village road, eight houses, opening/arena poses and Crossing Hall source pushed on tb/hub 2f4a0bb08; runtime, route and visual proof remain open."
+  },
+  {
+   "lane": "tb/combat",
+   "checkpoint": "Corrected c591 hosted witness reached actual world contexts and finished native exit 1 with three early damage-number failures. Original authority checks passed; presentation reconciliation repair is underway. Initial startup deadline failure and actual red witness retained; audio/flash next source drafted."
+  },
+  {
+   "lane": "tb/vfx",
+   "checkpoint": "Native identity r2 PASS d8e0c240c: 12 cases and 36 native 1920-wide PNGs, native exit 0 with no native errors; synthetic arena, no code-blind judge or earned player path claimed. Rejected r1 premature shutters retained. Earlier focused 4 checks / 644 assertions and actual 24-library clock batch passed. Independent identity judgment remains open."
+  },
+  {
+   "lane": "tb/lookdev",
+   "checkpoint": "840ede55d pushed with Medium/High same-Forward+ route batch. Guard source 358bc68b5 independently passed; executed Water Low 1186526b9: 201 frames, two 1920-wide PNGs, native exit 0, raw VISUAL/lookdev/routes/water-low-r1 proof. One of twelve F26#4 routes witnessed; new batch review and native runtime remain open. F26#2 candidate independently passed, unlanded."
+  }
+ ]
 }
