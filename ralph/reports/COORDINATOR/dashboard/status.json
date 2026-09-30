@@ -2,8 +2,8 @@
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 100 of 280. Original:95/101; redesign:5/179. F16 Wave0 complete in this reviewed integration candidate; CI and main landing gate acceptance publication.",
-  "Wave0 F16 complete: all5 independent strict MET, schema28/refusal-preservation, validated catalogs, central order, populated two-peer persistence and actual Grandpa opening. Required667-file batch covers5422/5422 current methods after affected repairs under RD36; full-ci integration required for this broad save/autoload/network patch. Wave1 lanes may land after this PR merges.",
+  "Criteria met: 100 of 280. Original: 95/101; redesign: 5/179. All five F16 criteria independently MET and landed main b2ea1455a via PR #467.",
+  "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -365,13 +365,13 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "F16 all5 criteria strict MET; required batch complete5422/5422 passing methods; integration PR main landing gate",
-   "next": "Wave0 lands before Wave1; foundations reuse later assigned work"
+   "now": "F16 all five criteria strict MET and landed main b2ea1455a via #467; batch5422/5422, selected full CI and final required CI passed.",
+   "next": "Foundation agent rotated to tb/hub F17/F18."
   },
   {
    "lane": "tb/hub",
-   "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F17, F18"
+   "now": "F17 source6f083d1d4 pushed against landed F16. Warm import native0; focused geometry44/3982/4red preserved, exact Hall/sign/berry geometry fixes underway. Runtime/player/visual gates remain open.",
+   "next": "Finish affected geometry correction, refresh village terrain, controller/peer paths and code-blind Hall/village judging; F18 authority draft advances."
   },
   {
    "lane": "tb/reorder",
@@ -380,12 +380,12 @@
   },
   {
    "lane": "tb/combat",
-   "now": "F21 implementation pushed 683575cb3: host impact receipts, feedback primitives, reactions and number policy; runtime proof underway, lands after F16.",
+   "now": "Combat source09eab35c8 adds defensive poise/relic critical slice; runtime pending token. Evidence92c0481a1: executed a16 hosted first-HP path native0, six guest HP writes contact-before-write and original authority/rejoin checks PASS, both peer exits0/no native SCRIPT ERROR. Independent evidence verdict pending; rumble2/13 logic PASS, actual pad/UI and earned TM path open. No new F21–24 MET.",
    "next": "Work order in CODEX_START_HERE §6: F21, F22, F23, F24"
   },
   {
    "lane": "tb/vfx",
-   "now": "F25 implementation pushed c58488e09: 24 archetypes, 52 move mappings, mastery tiers, budgets and original cues; runtime batch prepared, awaiting serialized token after combat, lands after F16.",
+   "now": "VFX evidence7c6af296c, executed a90aa0c05 r3:12 Compatibility cases/36 PNGs, native0/no native errors. Fresh code-blind r3 F25#2 and whole#5 FAIL; flag stays off/no F25 MET. After second quality rejection, actual soft-flame/ribbon and ballistic chips/dust source rework with production creature targets underway. Raw failed judges retained.",
    "next": "Work order in CODEX_START_HERE §6: F25, F35"
   },
   {
@@ -517,23 +517,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T04:28:59Z",
+ "last_lane_refresh": "2026-09-30T05:28:23Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "F16 PR #467 head 7e328309889ecb: selected full CI run 36667090983 has 22 completed jobs and 8 active jobs on the first page, no failures observed. Historical reds and scoped fixes retained. F16 is unlanded; at this refresh main has 95/280. F17 actual straight village road, eight houses, opening/arena poses and Crossing Hall source pushed on tb/hub 2f4a0bb08; runtime, route and visual proof remain open."
+   "checkpoint": "F16 landed main b2ea1455a via #467, all five criteria MET; selected full CI36667090983 and final required CI36670808563 passed with disclosed docs-only source reuse. At this refresh main has100/280. Hub source6f083d1d4: actual road/eight houses/Hall and opening/arena poses implemented; warm import native0 and44 geometry tests/3982assertions/4failing methods preserved. Exact real Hall entry, sign and berry pose repairs underway; player/bake/visual proof open."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Corrected c591 hosted witness reached actual world contexts and finished native exit 1 with three early damage-number failures. Original authority checks passed; presentation reconciliation repair is underway. Initial startup deadline failure and actual red witness retained; audio/flash next source drafted."
+   "checkpoint": "Combat source09eab35c8 adds defensive poise/relic critical slice; runtime pending token. Evidence92c0481a1: executed a16 hosted first-HP path native0, six guest HP writes contact-before-write and original authority/rejoin checks PASS, both peer exits0/no native SCRIPT ERROR. Independent evidence verdict pending; rumble2/13 logic PASS, actual pad/UI and earned TM path open. No new F21–24 MET."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "Native identity r2 PASS d8e0c240c: 12 cases and 36 native 1920-wide PNGs, native exit 0 with no native errors; synthetic arena, no code-blind judge or earned player path claimed. Rejected r1 premature shutters retained. Earlier focused 4 checks / 644 assertions and actual 24-library clock batch passed. Independent identity judgment remains open."
+   "checkpoint": "VFX evidence7c6af296c, executed a90aa0c05 r3:12 Compatibility cases/36 PNGs, native0/no native errors. Fresh code-blind r3 F25#2 and whole#5 FAIL; flag stays off/no F25 MET. After second quality rejection, actual soft-flame/ribbon and ballistic chips/dust source rework with production creature targets underway. Raw failed judges retained."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "840ede55d pushed with Medium/High same-Forward+ route batch. Guard source 358bc68b5 independently passed; executed Water Low 1186526b9: 201 frames, two 1920-wide PNGs, native exit 0, raw VISUAL/lookdev/routes/water-low-r1 proof. One of twelve F26#4 routes witnessed; new batch review and native runtime remain open. F26#2 candidate independently passed, unlanded."
+   "checkpoint": "Lookdev source8090a70ce: independent strict F26#1 MET and F26#2 documentation MET candidates; actual graphics PR in preparation closing only those two, main still100 at this refresh. Nineteen Settings checks, fresh-process renderer persistence and named native preset evidence retained. Nine remaining F26#4 routes now executing under serialized root GPU token; other graphics rows remain open."
   }
  ]
 }
