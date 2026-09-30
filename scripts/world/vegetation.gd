@@ -263,6 +263,11 @@ const HARVEST_REMOVE_RADIUS := 0.05
 ## not the ground under the tree.
 var _field: RefCounted = null
 
+## Preserve the native Forward+ build's bounded uploads when later local
+## removals/healing refresh the instancer. A destructive rebuild recreates
+## every unchanged cell buffer, including the whole world during water clears.
+var _region_render_uploads := false
+
 ## The live Terrain3D node passed to `build()`, and the three sub-objects the
 ## instancer swap needs from it.
 ## D97 / Wave 6 lane 6.A. "The visual half of vegetation", skipped -- what
@@ -475,6 +480,7 @@ func _load_performance_overrides() -> void:
 ## the same frame, so nothing about a real build changes.
 func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_load_performance_overrides()
+	_region_render_uploads = _uses_region_render_uploads(slicer)
 	for child in get_children():
 		child.queue_free()
 	_placed = 0
@@ -1498,6 +1504,13 @@ func _uses_region_render_uploads(slicer: RefCounted) -> bool:
 			and bool(slicer.call("needs_render_release"))
 
 
+## Terrain3D removes empty cells immediately and marks changed nonempty cells
+## for refresh. update_mmis(false) preserves the other cells and their buffers;
+## Compatibility and network builds retain their existing rebuild behavior.
+func _refresh_render_instances() -> void:
+	_instancer.call("update_mmis", not _region_render_uploads)
+
+
 func _submit_render_transforms(mesh_id: int, transforms: Array[Transform3D],
 		colours: PackedColorArray, slicer: RefCounted) -> void:
 	if not _uses_region_render_uploads(slicer):
@@ -2163,7 +2176,7 @@ func restore_drained(within: Array = []) -> int:
 	# instancer's live MultiMeshInstance3Ds need exactly one rebuild after
 	# all of this healing's models are queued, same as `build()`'s own loop.
 	if _instancer != null:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	_regrown += _placed - before
 	_drained = held
 	return _placed - before
@@ -2326,7 +2339,7 @@ func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = tru
 		"raycast_height": 10.0,
 	})
 	if update:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 
 
 ## Drops this placement's `CollisionShape3D` (if one was resident) and
@@ -2639,7 +2652,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			removed += 1
 		_instance_positions[mesh_id_value] = kept
 	if removed > 0 and _instancer != null:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	# A fight ring opened here later must not put these back.
 	for i in _soft_occluder_positions.size():
 		var soft: Vector3 = _soft_occluder_positions[i]
@@ -2785,7 +2798,7 @@ func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
 		_forget_instance_position(_soft_occluder_mesh_ids[i], spot)
 		_soft_occluder_state[i] = SOFT_HIDDEN_BY_FIGHT
 	if removed:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	return hidden
 
 
@@ -2830,7 +2843,7 @@ func restore_fight_occluders(token: PackedInt32Array) -> int:
 		_instance_positions[mesh_id] = known
 		_instancer.call("add_transforms", mesh_id, transforms, PackedColorArray(), false)
 	if restored > 0:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	return restored
 
 
