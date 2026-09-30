@@ -11,7 +11,7 @@
       "config_key": "villager_farmer",
       "position": [
         26,
-        7
+        0.6
       ],
       "facing_deg": 180,
       "greeting": "village_mira",
@@ -242,7 +242,7 @@
       "config_key": "villager_keeper",
       "position": [
         44,
-        8
+        -2.39
       ],
       "facing_deg": 180,
       "greeting": "village_bram",

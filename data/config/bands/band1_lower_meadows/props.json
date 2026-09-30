@@ -7,35 +7,35 @@
       "props": [
         {
           "model": "Anvil_Log",
-          "at": [34.5, -21.5],
+          "at": [12.5, -35.5],
           "yaw_deg": 30.0,
           "scale": 1.0,
           "_why": "the cluster's anchor -- an anvil mounted on its own stump"
         },
         {
           "model": "Workbench",
-          "at": [33.5, -20.5],
+          "at": [11.5, -34.5],
           "yaw_deg": 110.0,
           "scale": 1.0,
           "_why": "faces the anvil across the nook -- pulled in 0.7m (round 1 blind critic: the anvil/whetstone and crate/workbench read as two separate groups, not one station)"
         },
         {
           "model": "Whetstone",
-          "at": [35.3, -20.3],
+          "at": [13.3, -34.3],
           "yaw_deg": 0.0,
           "scale": 1.0,
           "_why": "a sharpening stone within reach of the bench -- pulled in 0.4m, same reason"
         },
         {
           "model": "Crate_Wooden",
-          "at": [33.5, -22.1],
+          "at": [11.5, -36.1],
           "yaw_deg": 200.0,
           "scale": 1.0,
           "_why": "stock crate behind the anvil -- pulled in 0.9m, same reason"
         },
         {
           "model": "Pickaxe_Bronze",
-          "at": [35.7, -22.1],
+          "at": [13.7, -36.1],
           "yaw_deg": -40.0,
           "scale": 1.0,
           "_why": "a tool left leaning, mid-repair -- pulled in 0.3m, same reason"

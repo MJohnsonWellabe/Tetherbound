@@ -11,7 +11,7 @@ func test_actual_houses_face_the_same_straight_road_at_native_scale() -> void:
 	var recipes: Dictionary = _read(PREFABS).get("prefabs", {})
 	var road := PackedVector2Array()
 	for entry: Dictionary in terrain.paths.approaches:
-		if entry.get("name") == "village_main_street":
+		if entry.get("id") == "village_main_street":
 			for at: Array in entry.points:
 				road.append(Vector2(float(at[0]), float(at[1])))
 	assert_true(road.size() >= 2, "the baked main road exists")

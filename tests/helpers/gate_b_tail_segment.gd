@@ -91,7 +91,18 @@ const MOVE_FRAME_LIMIT := 3600
 ## The tournament ground. `trainers.json`'s own vetted-clear practice spot, the
 ## same one `smoke_tournament_bracket.gd` fights on and for the same reason:
 ## the opponent's fallback spawn has to have somewhere legal to stand.
-const ARENA_XZ := Vector2(13.0, 9.0)
+## F17 reads the authored practice trainer pose; battle values remain unchanged.
+static func _arena_xz() -> Vector2:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/bands/band1_lower_meadows/trainers.json"))
+	if raw is Dictionary:
+		for trainer: Dictionary in raw.get("trainers", []):
+			if trainer.get("id") == "practice_trainer":
+				var position: Array = trainer.get("position", [])
+				if position.size() == 2:
+					return Vector2(float(position[0]), float(position[1]))
+	push_error("Gate B pilot needs the authored practice arena pose")
+	return Vector2.INF
 
 const HOTBAR_ACTIONS: Array[StringName] = [&"hotbar_1", &"hotbar_2", &"hotbar_3", &"hotbar_4"]
 const ROUND_FRAME_LIMIT := 9000
@@ -740,8 +751,9 @@ func _call_out_a_creature() -> bool:
 
 
 func _stand_on_the_tournament_ground() -> void:
-	var y := float(_world.call("ground_height_at", ARENA_XZ.x, ARENA_XZ.y)) + 1.0
-	_player.global_position = Vector3(ARENA_XZ.x, y, ARENA_XZ.y)
+	var arena := _arena_xz()
+	var y := float(_world.call("ground_height_at", arena.x, arena.y)) + 1.0
+	_player.global_position = Vector3(arena.x, y, arena.y)
 	_player.velocity = Vector3.ZERO
 	_rig.set("yaw", 0.0)
 

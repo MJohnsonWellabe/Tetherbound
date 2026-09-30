@@ -1,6 +1,6 @@
 {
   "state": "UNACCEPTED WIP; source mapping only",
-  "dependency_candidate": "7e328309889ecb3250662d8c60c32f9e7d4f66a0",
+  "dependency_candidate": "F16 landed main b2ea1455abdda7f2a7078ed1f148d5c40952c9fc",
   "house_old": [
     -22,
     -16
@@ -145,7 +145,7 @@
       ],
       "new": [
         26,
-        7
+        0.6
       ]
     },
     {
@@ -181,7 +181,7 @@
       ],
       "new": [
         44,
-        8
+        -2.39
       ]
     },
     {
@@ -258,76 +258,6 @@
     }
   ],
   "props": [
-    {
-      "cluster": "work_area",
-      "index": 0,
-      "model": "Anvil_Log",
-      "old": [
-        12.5,
-        -35.5
-      ],
-      "new": [
-        34.5,
-        -21.5
-      ],
-      "scale_unchanged": true
-    },
-    {
-      "cluster": "work_area",
-      "index": 1,
-      "model": "Workbench",
-      "old": [
-        11.5,
-        -34.5
-      ],
-      "new": [
-        33.5,
-        -20.5
-      ],
-      "scale_unchanged": true
-    },
-    {
-      "cluster": "work_area",
-      "index": 2,
-      "model": "Whetstone",
-      "old": [
-        13.3,
-        -34.3
-      ],
-      "new": [
-        35.3,
-        -20.3
-      ],
-      "scale_unchanged": true
-    },
-    {
-      "cluster": "work_area",
-      "index": 3,
-      "model": "Crate_Wooden",
-      "old": [
-        11.5,
-        -36.1
-      ],
-      "new": [
-        33.5,
-        -22.1
-      ],
-      "scale_unchanged": true
-    },
-    {
-      "cluster": "work_area",
-      "index": 4,
-      "model": "Pickaxe_Bronze",
-      "old": [
-        13.7,
-        -36.1
-      ],
-      "new": [
-        35.7,
-        -22.1
-      ],
-      "scale_unchanged": true
-    },
     {
       "cluster": "farmhouse_yard",
       "index": 0,
@@ -825,6 +755,10 @@
     "Practice wild disk [30,-40] radius15 remains authored unchanged; old square terrain pad kept because its skirt reaches that disk. New village pads end before the disk.",
     "Three gate-jamb coordinates retained; east polygon extends for Hall and road. Gate closure and controller travel still require new proof.",
     "Terrain/scatter bake not yet refreshed; Hall is not visually judged; old F16 runtime proof covers its unchanged original scene only.",
-    "Legacy route proofs and arena driver poses must be updated/retained for new F17 geometry. No test removed or skipped."
+    "Legacy route proofs and arena driver poses must be updated/retained for new F17 geometry. No test removed or skipped.",
+    "Two scratch approach rewrites matched name rather than authored id; no runtime proof or acceptance was claimed. Corrected by explicit ID map, and source-only native apron bounds are recorded separately.",
+    "Original Grove oaks and berry fences retained. Stoneyard work_area reverted to its unchanged field subarea; no earned resource poses moved.",
+    "Mira and Bram now derive their local stand offsets from original interior roles, then rotate with their actual new building poses.",
+    "Existing mainstreet11 test methods retained; old Option-B x-axis/distance pins are RD29-superseded, while straightness/facing/spawn/no-overlap/connectivity/reach checks remain. Existing graph test adaptation awaits field-approach classification review."
   ]
 }
