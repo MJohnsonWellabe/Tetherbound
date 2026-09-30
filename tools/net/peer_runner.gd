@@ -2873,6 +2873,46 @@ func _combat_manager() -> Node:
 	return current_scene.get_node_or_null(^"CombatManager")
 
 
+## Read-only F21 witness. Attach before an encounter's first submitted input;
+## report actual signals, body leases and HUD nodes, never manufacture a result.
+func _observe_combat_feedback(manager: Node) -> Dictionary:
+	if not manager.has_meta("f21_observations"):
+		var state := {"launches": {}, "impacts": []}
+		manager.set_meta("f21_observations", state)
+		manager.connect("attack_launched", func(on_enemy: bool, launch: Dictionary, presentation: Node3D) -> void:
+			var id := str(launch.get("action_id", ""))
+			var row := {"action_id": id, "on_enemy": on_enemy, "travel_seconds": float(launch.get("travel_seconds", 0.0)),
+				"launch_process_frame": Engine.get_process_frames(), "contact_process_frame": -1}
+			state.launches[id] = row
+			if presentation != null and is_instance_valid(presentation):
+				presentation.connect("arrived", func() -> void: row["contact_process_frame"] = Engine.get_process_frames(), CONNECT_ONE_SHOT)
+		)
+		manager.connect("impact_confirmed", func(on_enemy: bool, receipt: Dictionary, _at: Vector3) -> void:
+			var id := str(receipt.get("action_id", ""))
+			var body: Node = manager.call("enemy_body") if on_enemy else manager.get("_ally_body")
+			var launch: Dictionary = state.launches.get(id, {})
+			var feedback := preload("res://scripts/combat/hit_feedback.gd")
+			var expected := str(feedback.number_style(receipt, on_enemy).get("text", ""))
+			var hud := current_scene.find_child("CombatHUD", true, false) if current_scene != null else null
+			var number_seen := false
+			if hud != null:
+				for label: Variant in hud.get("_damage_numbers"):
+					if label is Label and is_instance_valid(label) and label.text == expected: number_seen = true
+			var row := {"action_id": id, "on_enemy": on_enemy, "own_hit": bool(receipt.get("own_hit", true)),
+				"receipt_read_only": receipt.is_read_only(), "weight": str(receipt.get("weight", "")),
+				"damage": float(receipt.get("damage", 0.0)), "number_text": expected, "number_seen": number_seen,
+				"hitstop_seconds": float(receipt.get("hitstop_seconds", 0.0)), "knockback_m": float(receipt.get("knockback_m", 0.0)),
+				"target_hitstop_active": bool(body.get("_combat_hitstop_active")) if is_instance_valid(body) else false,
+				"target_physics_paused": not body.is_physics_processing() if is_instance_valid(body) else false,
+				"target_timed_leases": int(body.get("_combat_timed_hitstop_count")) if is_instance_valid(body) else 0,
+				"impact_process_frame": Engine.get_process_frames(), "launch": launch.duplicate(true)}
+			state.impacts.append(row)
+			if state.impacts.size() > 256: state.impacts.pop_front()
+			print("F21 real peer impact ", JSON.stringify(row))
+		)
+	return (manager.get_meta("f21_observations") as Dictionary).duplicate(true)
+
+
 func _encounter_director() -> Node:
 	if current_scene == null:
 		return null
@@ -5519,6 +5559,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var emanager := _combat_manager()
 			if edirector == null or emanager == null:
 				return {"available": false}
+			var feedback_observation := _observe_combat_feedback(emanager)
 			var rec: Dictionary = edirector.call("encounter_record")
 			var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
 			var mine: Variant = edirector.call("ally_instance")
@@ -5527,6 +5568,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			for row: Variant in (edirector.call("joinable_encounters") as Array):
 				joinable.append(str((row as Dictionary).get("encounter_id", "")))
 			var out := {
+				"feedback": feedback_observation,
 				"available": true,
 				"fighting": bool(emanager.call("is_fighting")),
 				"id": str(rec.get("encounter_id", "")),
