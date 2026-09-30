@@ -27,6 +27,28 @@ var moves: RefCounted = null
 var tms: RefCounted = null
 var items: RefCounted = null
 
+func test_tm_stages_knowledge_without_equipping_or_recrediting_mastery() -> void:
+	var creature := preload("res://scripts/creatures/creature_instance.gd").from_species("cindercub", SPECIES.definition("cindercub"))
+	var before_quick: String = creature.move_quick
+	var before_charged: String = creature.move_charged
+	var before_known: Array = creature.known_moves.duplicate()
+	var proposed := TEACHING.stage_tm_knowledge(creature, "tm_fireball", tms, moves)
+	assert_true(bool(proposed.get("ok", false)))
+	assert_false(bool(proposed.get("replayed", true)))
+	assert_true((proposed.get("known_moves", []) as Array).has("fireball"))
+	assert_eq(creature.known_moves, before_known, "stage neither spends nor publishes before the transaction commits")
+	assert_eq(creature.move_quick, before_quick)
+	assert_eq(creature.move_charged, before_charged, "learning a TM cannot equip a field loadout")
+	assert_true(creature.move_mastery_uses.is_empty())
+	assert_true(creature.move_mastery_receipts.is_empty())
+	creature.known_moves = proposed.known_moves
+	var repeated := TEACHING.stage_tm_knowledge(creature, "tm_fireball", tms, moves)
+	assert_true(bool(repeated.get("ok", false)))
+	assert_true(bool(repeated.get("replayed", false)), "transaction retries must not spend a second disc")
+	assert_eq(repeated.known_moves, creature.known_moves)
+	var secondary := preload("res://scripts/creatures/creature_instance.gd").from_species("ashtusk", SPECIES.definition("ashtusk"))
+	assert_false(bool(TEACHING.stage_tm_knowledge(secondary, "tm_fireball", tms, moves).get("ok", true)), "secondary fire is not primary-type TM permission")
+
 
 func before_each() -> void:
 	moves = MOVE_DB.new()

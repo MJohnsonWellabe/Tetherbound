@@ -53,6 +53,33 @@ static func _remember_taught_move(creature: RefCounted, move: String) -> void:
 			creature.set("known_moves",known)
 			return
 
+## F23 knowledge-only TM staging. The existing teach() remains the retired
+## auto-equip helper for its callers/tests. The real transaction must first
+## validate the owned whole party, then atomically debit one TM, publish this
+## detached known list and persist; refusal never equips or spends anything.
+static func stage_tm_knowledge(creature: RefCounted, tm_id: String, tms: RefCounted, moves: RefCounted) -> Dictionary:
+	if creature == null or tms == null or moves == null: return {"ok": false, "reason": "unavailable"}
+	var fields := {}
+	for property: Dictionary in creature.get_property_list(): fields[str(property.name)] = true
+	for field: String in ["creature_type", "known_moves", "move_mastery_uses", "move_mastery_receipts"]:
+		if not fields.has(field): return {"ok": false, "reason": "canonical_knowledge_required"}
+	if not can_learn(str(creature.get("creature_type")), tm_id, tms): return {"ok": false, "reason": "incompatible"}
+	var move := str(tms.call("move_id", tm_id))
+	if move.is_empty() or not bool(moves.call("has", move)): return {"ok": false, "reason": "unknown_move"}
+	var slot := str(moves.call("slot", move))
+	if not ["quick", "charged", "utility"].has(slot): return {"ok": false, "reason": "signature_not_teachable"}
+	var known: Variant = creature.get("known_moves")
+	if not known is Array: return {"ok": false, "reason": "invalid_knowledge"}
+	var uses: Variant = creature.get("move_mastery_uses")
+	var receipts: Variant = creature.get("move_mastery_receipts")
+	if not MASTERY.valid_document(known, uses, receipts, known): return {"ok": false, "reason": "invalid_knowledge"}
+	if known.has(move): return {"ok": true, "replayed": true, "move_id": move, "known_moves": known.duplicate()}
+	var next: Array[String] = []
+	for id: String in known: next.append(id)
+	next.append(move)
+	if not MASTERY.valid_document(next, uses, receipts, next): return {"ok": false, "reason": "knowledge_full"}
+	return {"ok": true, "replayed": false, "move_id": move, "known_moves": next}
+
 
 const LEARNSETS_PATH := "res://data/moves/learnsets.json"
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
