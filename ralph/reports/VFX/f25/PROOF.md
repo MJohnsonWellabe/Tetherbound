@@ -253,3 +253,7 @@ slice. No native parse/import, movement, visual, audio or performance checks ran
 while another lane held the engine. Rolling-wave ground height is still frozen
 to target ground; slope-path presentation remains open. Persistent status
 verbs and earned mastery are not implemented by this presentation slice.
+
+## Actual r6 and independent full-bar verdict
+
+Exact pushed game08be1a3b26ebabf76a77057dcd18a0ea7fc6ce50: one named parser native0 and Compatibility1920 native0/12cases/36 originals, arrival exactly once on independent clock and leases0 at end; raw files retained in native-identities-r6. Fresh independent code-blind report there is verbatim, with complete SHA256 image inventory. Sampled literal4-family identities PASS; mastery progression incomplete (Pebble3-to5 weak, ranks2/4/other moves unproved). Full effect/creature craft FAIL all4; actual integrated world UNPROVED on synthetic background. No F25 criterion is complete; library stays flag-off. Previous native1 and visual failures retained. Next content approach must replace repeated procedural finish attempts with reference-backed authored shape/material/layer hierarchy and clear rank progression; runtime/timing/authority remain unchanged.
