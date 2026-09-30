@@ -1097,5 +1097,72 @@
       "sprint": 8.6
     },
     "animation_libraries": []
+  },
+  "graphics_presets": {
+    "Low": {
+      "renderer": "gl_compatibility",
+      "volumetric_fog": false,
+      "ssao": false,
+      "ssil": false,
+      "glow": false,
+      "shadow_quality": "Low",
+      "draw_distance": "Near"
+    },
+    "Medium": {
+      "renderer": "forward_plus",
+      "volumetric_fog": true,
+      "ssao": true,
+      "ssil": false,
+      "glow": true,
+      "shadow_quality": "Medium",
+      "draw_distance": "Normal",
+      "volumetric_fog_density": 0.0005,
+      "volumetric_fog_length": 96.0,
+      "volumetric_fog_sky_affect": 0.0
+    },
+    "High": {
+      "renderer": "forward_plus",
+      "volumetric_fog": true,
+      "ssao": true,
+      "ssil": true,
+      "glow": true,
+      "shadow_quality": "High",
+      "draw_distance": "Far",
+      "volumetric_fog_density": 0.0005,
+      "volumetric_fog_length": 128.0,
+      "volumetric_fog_sky_affect": 0.0
+    },
+    "shadow_quality_options": {
+      "Off": {
+        "atlas_size": 1024,
+        "filter_quality": 0
+      },
+      "Low": {
+        "atlas_size": 2048,
+        "filter_quality": 1
+      },
+      "Medium": {
+        "atlas_size": 2048,
+        "filter_quality": 2
+      },
+      "High": {
+        "atlas_size": 4096,
+        "filter_quality": 3
+      }
+    },
+    "draw_distance_options": {
+      "Near": {
+        "far": 320.0,
+        "lod_threshold": 4.0
+      },
+      "Normal": {
+        "far": 520.0,
+        "lod_threshold": 2.0
+      },
+      "Far": {
+        "far": 900.0,
+        "lod_threshold": 1.0
+      }
+    }
   }
 }
