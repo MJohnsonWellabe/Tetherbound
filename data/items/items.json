@@ -1137,7 +1137,8 @@
       "stack": 1,
       "colour": "#6caac7",
       "blurb": "Unlock the Tidewake arch in the Crossing Hall.",
-      "description": "Unlock the Tidewake arch in the Crossing Hall."
+      "description": "Unlock the Tidewake arch in the Crossing Hall.",
+      "character_bound": true
     },
     "cloudreach_portal_key": {
       "name": "Cloudreach Portal Key",
@@ -1145,7 +1146,8 @@
       "stack": 1,
       "colour": "#cee4ee",
       "blurb": "Unlock the Cloudreach arch in the Crossing Hall.",
-      "description": "Unlock the Cloudreach arch in the Crossing Hall."
+      "description": "Unlock the Cloudreach arch in the Crossing Hall.",
+      "character_bound": true
     },
     "stormwood_portal_key": {
       "name": "Stormwood Portal Key",
@@ -1153,7 +1155,8 @@
       "stack": 1,
       "colour": "#a89cd9",
       "blurb": "Unlock the Stormwood arch in the Crossing Hall.",
-      "description": "Unlock the Stormwood arch in the Crossing Hall."
+      "description": "Unlock the Stormwood arch in the Crossing Hall.",
+      "character_bound": true
     },
     "fifth_portal_key": {
       "name": "Fifth Portal Key",
@@ -1161,7 +1164,8 @@
       "stack": 1,
       "colour": "#bbbd87",
       "blurb": "Stir the fifth arch in the Crossing Hall.",
-      "description": "Stir the fifth arch in the Crossing Hall."
+      "description": "Stir the fifth arch in the Crossing Hall.",
+      "character_bound": true
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",

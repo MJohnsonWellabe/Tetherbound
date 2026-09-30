@@ -6,7 +6,8 @@ The Home Key is a real inventory SKU with authored `character_bound` and
 `unique_owned` policy. Grandpa gives it in `grandpa_first_catch`, the earlier
 natural beat specified by the work order. The original six-line house briefing
 and starter picker remain unchanged. The four portal key SKUs are also real
-items; their runtime portal transactions remain unbuilt at this checkpoint.
+items protected by the same bound policy, as WORLD §2.7 requires; their runtime
+portal transactions remain unbuilt at this checkpoint.
 
 The existing dialogue whole-batch capacity preflight remains authoritative. A
 full satchel closes the conversation without committing subsequent effects;

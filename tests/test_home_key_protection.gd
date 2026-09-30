@@ -16,7 +16,8 @@ func test_real_bound_item_retains_slot_through_drop_sell_trade_and_death() -> vo
 	bag.add("home_key", 1)
 	bag.add("wood", 4)
 	assert_true(db.is_character_bound("home_key"))
-	assert_false(db.is_character_bound("tidewake_portal_key"), "portal keys retain their authored ordinary item policy")
+	for key: String in ["tidewake_portal_key", "cloudreach_portal_key", "stormwood_portal_key", "fifth_portal_key"]:
+		assert_true(db.is_character_bound(key), "WORLD §2.7 protects each personal portal key")
 	assert_eq(bag.drop_slot(0), {})
 	assert_eq(bag.count("home_key"), 1)
 	assert_eq(TRADE.new().sell(bag, "mira", "home_key", 1), TRADE.REFUSED_NOT_BOUGHT)
