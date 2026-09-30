@@ -8,6 +8,7 @@ extends Node3D
 ## with the creature encounter pass.
 
 const HARVEST := preload("res://scripts/world/harvest_node.gd")
+const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const PRESENTATION_PATH := "res://data/config/cloudreach_resources.json"
 
@@ -57,20 +58,7 @@ static func depletion_flag(spec: Dictionary, world_day: int) -> String:
 ## day flags are retained; the renewable stock identity is the stable id.
 ## No encounter-cycle shed item is converted into a gatherable node here.
 static func renewable_site(spec: Dictionary) -> Dictionary:
-	var id := str(spec.get("id", ""))
-	var item := str(spec.get("resource_id", ""))
-	var config := load_config(PRESENTATION_PATH)
-	var policy: Dictionary = config.get("renewable", {})
-	if id.is_empty() or not (policy.get("materials", []) as Array).has(item) \
-			or str(spec.get("respawn_policy", "")) != "world_day_regrow":
-		return {}
-	var amount := int(spec.get("amount", 0))
-	var position: Variant = spec.get("position")
-	if amount < 1 or not position is Array or position.size() != 3:
-		return {}
-	return {"id": id, "realm": "cloudreach", "region_id": str(spec.get("region_id", "")),
-		"at": [position[0], position[2]], "item": item, "amount": amount,
-		"outputs": {item: amount}, "respawn_days": int(policy.get("material_respawn_days", 0))}
+	return RENEWABLE_SITES.by_id("cloudreach", str(spec.get("id", "")))
 
 
 ## Called only after the world owner registers the typed host claim and

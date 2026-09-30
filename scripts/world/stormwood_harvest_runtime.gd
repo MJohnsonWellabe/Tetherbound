@@ -6,17 +6,10 @@ extends Node3D
 
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const ARCH_BUILD := preload("res://scripts/world/stormwood_arch_build_rules.gd")
+const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 
 const DATA_PATH := "res://data/config/stormwood_harvests.json"
 const REALM_ID := "stormwood"
-const REGION_PREREQUISITES := {
-	"cinder_verge": "",
-	"glowmoss_hollows": "",
-	"conductor_run": "",
-	"hollow_crown": "stormwood:crown_reached",
-	"deepwood": "stormwood:rootgate_released",
-	"dynamo": "stormwood:rootgate_released",
-}
 
 var world: Node3D
 var _game: Node
@@ -44,22 +37,8 @@ static func authority_contract() -> Dictionary:
 
 ## F32 host registration data only. Charged/crown availability and region
 ## prerequisites remain host validators; neither is accepted from a client.
-static func renewable_site(spec: Dictionary, catalogue: Dictionary) -> Dictionary:
-	var id := str(spec.get("id", ""))
-	var item := str(spec.get("item", ""))
-	var policy: Dictionary = catalogue.get("renewable", {})
-	if id.is_empty() or not (policy.get("materials", []) as Array).has(item):
-		return {}
-	var amount := int(spec.get("amount", 0))
-	var point: Variant = spec.get("position")
-	if amount < 1 or not point is Array or point.size() != 2:
-		return {}
-	return {"id": id, "realm": REALM_ID, "region_id": str(spec.get("region_id", "")),
-		"at": point.duplicate(), "item": item, "amount": amount, "outputs": {item: amount},
-		"respawn_days": int(policy.get("material_respawn_days", 0)),
-		"availability": (spec.get("availability", []) as Array).duplicate(),
-		"charged": bool(spec.get("charged", false)), "grade": str(spec.get("grade", "")),
-		"requires_flag": str(REGION_PREREQUISITES.get(str(spec.get("region_id", "")), ""))}
+static func renewable_site(spec: Dictionary, _catalogue: Dictionary) -> Dictionary:
+	return RENEWABLE_SITES.by_id(REALM_ID, str(spec.get("id", "")))
 
 
 func mount(owner_world: Node3D) -> void:
@@ -150,7 +129,7 @@ func sync_progression() -> void:
 			continue
 		if items == null or not bool(items.call("has", item)):
 			continue # The item payload has not been integrated yet.
-		var prerequisite := str(REGION_PREREQUISITES.get(str(spec.get("region_id", "")), ""))
+		var prerequisite := str((_catalogue.get("region_prerequisites", {}) as Dictionary).get(str(spec.get("region_id", "")), ""))
 		if not prerequisite.is_empty() and not bool(_flags.call("has", prerequisite)):
 			continue
 		_mount_site(spec)

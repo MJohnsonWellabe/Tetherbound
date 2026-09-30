@@ -4594,6 +4594,14 @@
       "grade": ""
     }
   ],
+  "region_prerequisites": {
+    "cinder_verge": "",
+    "glowmoss_hollows": "",
+    "conductor_run": "",
+    "hollow_crown": "stormwood:crown_reached",
+    "deepwood": "stormwood:rootgate_released",
+    "dynamo": "stormwood:rootgate_released"
+  },
   "renewable": {
     "clock": "host_world_day",
     "scope": "world",
