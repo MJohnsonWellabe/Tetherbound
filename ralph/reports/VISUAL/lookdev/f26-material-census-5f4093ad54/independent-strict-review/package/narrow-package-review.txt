@@ -1,0 +1,26 @@
+F26#0 NARROW PACKAGING REVIEW — SOURCE PASS (MERGE-BOUND CANDIDATE ONLY)
+
+Candidate actual HEAD: 846a30d5f70814434593ca98f2cd05d0b7e61c00.
+Expected board-source prefix resolves to that exact HEAD.
+Raw-review integration ancestor: f22078c7b8b1556653fe8d8ec9ee038a5debba8c.
+Compared main: c7cb265b54dbf52d287c72c29c3d79ecedb2d908.
+Capture source: 5f4093ad54e4675b782ab1f04129e1047c0977df.
+Retained Stormwood capture: 0620d57bad036e52c88446fa1c04408b07cea909.
+Previously audited archive pins: b6a97ad1a29039ddc094d4f78bd16688a29a571c and 59cd215400351a55cd5b311ffb1d32bdbb834d1a.
+Both main and raw integration are ancestors of the pinned candidate. HEAD was unchanged at the end of the mechanical review.
+
+Only F26#0's criterion object changes against main; all other 279 objects, other feature rows, chapter cards and cross-cutting gates are identical. Candidate total is exactly 280 with 109 met: original 95/101 and redesign 14/179. Global statuses: met109, partial5, in_progress2, blocked1, not_started163, failing0. F26 has met4, in_progress1, blocked1 and zero others; weighted percentage is round(100*(4+0.25)/6)=71. STATE is 24,858 canonical Git bytes, below 25,000. Main's recorded total remains 108/280 until the candidate PR merges.
+
+The unchanged actual dashboard builder was evaluated with exact candidate criteria/status buffers in memory. A virtual Path intercepted its reads and sole output write; no source file was written. Generated HTML equals the committed candidate HTML byte-for-byte, SHA256 a330a4087bbcdc0e01ea4920a86d8e6c05a3671c13d90c71eea80c4fc793043f. Builder counts, F26 71%, redesign14/179 and global weighted35% agree. Owner needs and F26#3/#5 remain unchanged/open; no full-bar, Ally or default-promotion closure occurs. The F26 shortcut disclosure is retained in the generated board and its shortcut-debt section.
+
+All four newly archived raw review Git blobs equal the original SHA256 receipts and original files byte-for-byte, including SHA256SUMS.txt. The original report and both audit versions were not rewritten. The prior 113-file byte audit was reused by verifying every candidate archive blob ID equals its previously audited archive pin; no 1MB audit JSON was reparsed and no captures were reopened. All 113 match.
+
+Production project.godot and project/assets/autoload/data/scenes/scripts/shaders source paths equal main by Git blob identity. art.json is byte-exact main, retaining night rim1.0 and Compatibility default. The only new production executable tool, tools/capture_renderer_material_census.gd, equals its exercised 5f capture source and recorded before-native SHA256 ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258. Named capture/Low evidence reuse is justified; repeated full units or engine runs are unnecessary for this packaging cut under RD-36/RD-37.
+
+All 123 changed paths are exactly 118 evidence files, that one census driver, and four board/docs files: docs/STATE.md, criteria.json, status.json and tetherbound_dashboard.html. No other diff path or gameplay/default change was found. The material-path scope survives in criterion evidence, the compact STATE lane entry and status headline/lane; detailed travel/time/camera/isolated-data warnings remain in the raw report and board evidence. Prior strict material MET is not reopened by this narrow review.
+
+Wording flags for ROOT before any pre-merge publication: STATE line36 says '#0/#1/#2/#4 main109'; status headline[1] says those rows 'landed by this cut'; status lookdev.now says '#0/#1/#2/#4 strict MET and landed'. These are prepared post-merge statements, not current-main facts at c7cb. Do not publish or quote them as already landed before PR merge; label them candidate/pending merge if publishing earlier. The HTML's inherited main_sha82eda1835 and 'all PRs merged' metadata is unchanged from main and remains stale context, not identification of this candidate. Its inherited older lookdev activity also still lists #0 open. None changes another criterion or grants an owner/full-bar gate.
+
+PR body .tmp/f26-pr-body.md follows the Lane/Anchor/Evidence/Independent review template. Its material-path, exact capture pins, Low reuse, night limitation, warnings and no broader credit claims are accurate for this candidate. Its '109/280 on this cut' is candidate accounting; prefer '109/280 upon merge; main remains108/280 until then' if presenting it as current status. No fresh-main-run, gameplay, owner/Ally or full-bar claim was found. PR traceability is ROOT's separate check.
+
+This SOURCE PASS certifies the reviewed merge-bound source/evidence/accounting payload, not already-landed F26#0 on main or suitability of premature publication wording. No PR merge, fresh main run, package/export, engine/GPU/import/render/tests/CI, Git mutation, tracked write, session messaging or spawning occurred. Only new review files in outputs/full-access-package were written. ROOT remains sole integrator.
