@@ -28,6 +28,18 @@ static func _component(value: Variant) -> bool:
 		and not value.contains("\n") and not value.contains("\r")
 
 
+## Host event/session identities may contain separators. They remain opaque
+## and are hashed before becoming receipt components; do not narrow the
+## neutral core's existing 160-character identity contract to UUID-only IDs.
+static func _opaque_id(value: Variant) -> bool:
+	return value is String and not value.is_empty() and value.length() <= 160 \
+		and value == value.strip_edges() and not value.contains("\n") and not value.contains("\r")
+
+
+static func _defeat_action_component(namespace: String, event_id: String) -> String:
+	return JSON.stringify([namespace, event_id]).sha256_text()
+
+
 static func config() -> Dictionary:
 	if _configuration.is_empty():
 		var raw: Variant = DATA.json(CONFIG_PATH)
@@ -95,7 +107,10 @@ static func essence_item(type_id: String) -> String:
 static func _species_types(row: Dictionary) -> Array[String]:
 	if _species.is_empty():
 		var raw: Variant = DATA.json("res://data/creatures/species.json")
-		if raw is Dictionary and raw.get("species") is Dictionary: _species = raw.species
+		if raw is Dictionary and raw.get("species") is Dictionary:
+			var merged := preload("res://scripts/creatures/water_species_catalog.gd").merge_catalogue(raw.species)
+			if bool(merged.get("ok", false)): _species = merged.catalogue
+			else: return [] # Never invent type identity on a conflicting roster.
 	var definition: Variant = _species.get(row.get("species_id"))
 	var result: Array[String] = []
 	if not definition is Dictionary or row.get("creature_type") != definition.get("type") \
@@ -239,6 +254,8 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	if not inventory.remove(payment_item, cost): return _refuse("insufficient_items")
 	var next_row := PROGRESSION.staged_next_level(owned, cap, progression_cfg)
 	if next_row.is_empty(): return _refuse("invalid_creature")
+	next_row = PROGRESSION.staged_training_condition(next_row, 1, false)
+	if next_row.is_empty(): return _refuse("invalid_creature_condition")
 	var next := admitted.duplicate(true)
 	next.party[index] = next_row
 	next.inventory = RULES.slots(inventory)
@@ -248,6 +265,422 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,
 		"creature_uid": uid, "receipt": receipt, "payment": {"id": payment_item, "n": cost},
 		"state": next, "before": admitted.duplicate(true), "old_level": expected_level, "new_level": expected_level + 1}
+
+
+## Exact detached character fields affected by training. Portal/vitals carrier
+## and every unrelated portable field remain on the original admitted record.
+static func training_projection(record: Dictionary) -> Dictionary:
+	if not record.get("party") is Array or not record.get("inventory") is Array \
+			or not record.get("redesign_character") is Dictionary: return {}
+	return {"party": record.get("party", []).duplicate(true),
+		"inventory": record.get("inventory", []).duplicate(true),
+		"redesign_character": record.get("redesign_character", {}).duplicate(true)}
+
+
+static func _equivalent(a: Variant, b: Variant) -> bool:
+	if (a is int or a is float) and (b is int or b is float):
+		return is_finite(float(a)) and is_finite(float(b)) and float(a) == float(b)
+	if a is Dictionary and b is Dictionary:
+		if a.size() != b.size(): return false
+		for key: Variant in a:
+			if not b.has(key) or not _equivalent(a[key], b[key]): return false
+		return true
+	if a is Array and b is Array:
+		if a.size() != b.size(): return false
+		for index: int in a.size():
+			if not _equivalent(a[index], b[index]): return false
+		return true
+	return typeof(a) == typeof(b) and a == b
+
+
+## Canonical F23 providers are supplied by the actual host adapter. Missing
+## providers refuse; known/mastery/loadout history is never invented or reset.
+static func refresh_training_moves(candidate: Dictionary, available_moves: Callable,
+		mirror_provider: Callable) -> Dictionary:
+	if not available_moves.is_valid() or not mirror_provider.is_valid(): return {}
+	var next := candidate.duplicate(true)
+	for raw: Variant in next.get("party", []):
+		if not raw is Dictionary or not raw.get("known_moves") is Array: return {}
+		var uid := str(raw.get("uid", ""))
+		var personal: Variant = next.redesign_character.creatures.get(uid, {})
+		if not personal is Dictionary: return {}
+		var tiers: Variant = personal.get("breakthroughs", [])
+		if not tiers is Array: return {}
+		var additions: Variant = available_moves.call(str(raw.get("species_id", "")), int(raw.get("level", 0)), tiers)
+		if not additions is Array: return {}
+		for move: Variant in additions:
+			if not move is String or str(move).is_empty(): return {}
+			if not raw.known_moves.has(move): raw.known_moves.append(move)
+	var mirror: Variant = mirror_provider.call(next.party, next.redesign_character)
+	if not mirror is Dictionary: return {}
+	next.redesign_character = mirror
+	return next
+
+
+## Session has already bound the transport sender, validated the actual Altar
+## and finished fallback before capturing these admitted values. The packet
+## contains exactly the established UI intent fields, never a state or cost.
+static func stage_core_spend(admitted: Dictionary, character_id: String, host_revision: int,
+		request: Dictionary, cfg: Dictionary, progression_cfg: Dictionary,
+		available_moves: Callable, mirror_provider: Callable) -> Dictionary:
+	var keys := ["spend_id", "creature_uid", "expected_level", "payment_item", "expected_character_revision"]
+	if request.size() != keys.size(): return _refuse("invalid_spend_intent")
+	for key: String in keys:
+		if not request.has(key): return _refuse("invalid_spend_intent")
+	for key: String in ["spend_id", "creature_uid", "payment_item"]:
+		if not _component(request[key]): return _refuse("invalid_spend_intent")
+	if not _integer(request.expected_level, 1, 60) \
+			or not _integer(request.expected_character_revision, 0, 2147483646) or host_revision < 0:
+		return _refuse("invalid_spend_revision")
+	var proposal := stage_spend(admitted, character_id, request.creature_uid, request.spend_id,
+		int(request.expected_level), request.payment_item, int(request.expected_character_revision), cfg, progression_cfg)
+	if not bool(proposal.get("ok", false)) or bool(proposal.get("duplicate", false)): return proposal
+	if int(request.expected_character_revision) != host_revision: return _refuse("stale_revision")
+	var refreshed := refresh_training_moves(proposal.state, available_moves, mirror_provider)
+	if refreshed.is_empty() or not _baseline_errors(refreshed, character_id).is_empty():
+		return _refuse("canonical_power_refresh_unavailable")
+	proposal.state = refreshed
+	return proposal
+
+
+## Host event is frozen by actual wild defeat authority, never an RPC packet.
+## XP, essence, typed caps and receipt are one candidate. No inventory payout
+## can occur if any XP recipient/cap/slot/journal validation refuses.
+static func stage_defeat(admitted: Dictionary, character_id: String, host_event: Dictionary,
+		character_revision: int, cfg: Dictionary, progression_cfg: Dictionary) -> Dictionary:
+	if character_revision < 0 or character_revision > 2147483646 \
+			or not _baseline_errors(admitted, character_id).is_empty() \
+			or not configuration_errors(cfg).is_empty(): return _refuse("invalid_defeat")
+	var keys := ["event_id", "world_namespace", "encounter_id", "enemy_uid", "enemy_record", "active_uid", "eligible_uids", "kind"]
+	if host_event.size() != keys.size(): return _refuse("invalid_defeat_event")
+	for key: String in keys:
+		if not host_event.has(key): return _refuse("invalid_defeat_event")
+	for key: String in ["event_id", "world_namespace", "encounter_id"]:
+		if not _opaque_id(host_event[key]): return _refuse("invalid_defeat_identity")
+	for key: String in ["enemy_uid", "active_uid"]:
+		if not _component(host_event[key]): return _refuse("invalid_defeat_identity")
+	if host_event.kind != "wild_defeat" or not host_event.enemy_record is Dictionary \
+			or host_event.enemy_record.get("uid") != host_event.enemy_uid \
+			or host_event.enemy_record.get("fainted") != true \
+			or not _integer(host_event.enemy_record.get("hp"), 0, 0) \
+			or not _integer(host_event.enemy_record.get("level"), 1, 100) \
+			or not host_event.eligible_uids is Array: return _refuse("not_actual_wild_defeat")
+	var eligible: Array[String] = []
+	var seen: Dictionary = {}
+	for uid: Variant in host_event.eligible_uids:
+		if not _component(uid) or seen.has(uid):
+			return _refuse("invalid_defeat_participants")
+		seen[uid] = true
+		eligible.append(uid)
+	eligible.sort() # Stable same-event signature despite caller array order.
+	var types := _species_types(host_event.enemy_record)
+	if types.is_empty() or eligible.is_empty() or not eligible.has(host_event.active_uid):
+		return _refuse("invalid_defeat_participants")
+	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
+		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
+		types, host_event.active_uid, eligible]).sha256_text()
+	var prefix := "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)]
+	var receipt := prefix + signature
+	var duplicate := false
+	for old: String in admitted.redesign_character.transaction_receipts:
+		if not old.begins_with(prefix): continue
+		if duplicate or old != receipt: return _refuse("receipt_conflict")
+		duplicate = true
+	if duplicate:
+		return {"ok": true, "duplicate": true, "receipt": receipt, "expected_character_revision": character_revision}
+	if _owned_index(admitted, host_event.enemy_uid) >= 0: return _refuse("owned_enemy_refused")
+	for uid: String in eligible:
+		if _owned_index(admitted, uid) < 0: return _refuse("invalid_defeat_participants")
+	if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
+		return _refuse("receipt_budget")
+	var caps: Dictionary = {}
+	for uid: String in eligible:
+		caps[uid] = creature_cap(admitted.redesign_character, uid)
+	var xp := PROGRESSION.staged_combat_party_xp(admitted.party, host_event.active_uid,
+		eligible, caps, int(host_event.enemy_record.level), progression_cfg, cfg)
+	if xp.is_empty(): return _refuse("invalid_defeat_XP_or_cap")
+	var payout := defeat_payout(host_event.enemy_record, cfg)
+	if payout.is_empty(): return _refuse("invalid_defeat_payout")
+	var inventory := RULES.inventory_from(admitted.inventory)
+	for stack: Dictionary in payout:
+		if not RULES.db().has(str(stack.id)) or inventory.add(str(stack.id), int(stack.n)) != 0:
+			return _refuse("inventory_full")
+	var next := admitted.duplicate(true)
+	next.party = xp.party.duplicate(true)
+	next.inventory = RULES.slots(inventory)
+	next.redesign_character.transaction_receipts.append(receipt)
+	# The foundation owner must admit the explicit defeat namespace; never
+	# disguise defeat XP as an Altar spend or bypass REDESIGN validation.
+	if not _baseline_errors(next, character_id).is_empty(): return _refuse("defeat_schema_or_candidate_unavailable")
+	return {"ok": true, "duplicate": false, "before": admitted.duplicate(true), "state": next,
+		"expected_character_revision": character_revision, "receipt": receipt,
+		"payout": payout, "xp_awards": xp.awards.duplicate(true)}
+
+
+static func stage_core_defeat(admitted: Dictionary, character_id: String, host_event: Dictionary,
+		host_revision: int, cfg: Dictionary, progression_cfg: Dictionary,
+		available_moves: Callable, mirror_provider: Callable) -> Dictionary:
+	var proposal := stage_defeat(admitted, character_id, host_event, host_revision, cfg, progression_cfg)
+	if not bool(proposal.get("ok", false)) or bool(proposal.get("duplicate", false)): return proposal
+	var refreshed := refresh_training_moves(proposal.state, available_moves, mirror_provider)
+	if refreshed.is_empty() or not _baseline_errors(refreshed, character_id).is_empty():
+		return _refuse("canonical_power_refresh_unavailable")
+	proposal.state = refreshed
+	return proposal
+
+
+const TRAINING_KIND := "creature_training"
+const TRAINING_ROW_FIELDS := ["version", "kind", "delivery_id", "world_id", "world_namespace",
+	"session_id", "character_id", "action", "action_id", "intent", "before", "after",
+	"receipt", "character_revision", "journal_revision", "status"]
+
+
+## Latest absolute settlement per character, using the EXISTING world reward
+## carrier. Old action receipts stay in the canonical character journal.
+static func training_delivery_id(namespace: String, character_id: String) -> String:
+	if not _opaque_id(namespace) or not _component(character_id): return ""
+	return TRAINING_KIND + ":" + JSON.stringify([namespace, character_id]).sha256_text()
+
+
+static func training_row_valid(raw: Variant, character_id: String = "", namespace: String = "") -> bool:
+	if not raw is Dictionary or raw.size() != TRAINING_ROW_FIELDS.size(): return false
+	for field: String in TRAINING_ROW_FIELDS:
+		if not raw.has(field): return false
+	if raw.kind != TRAINING_KIND or not _integer(raw.version, 1, 1) \
+			or not raw.action in ["altar_spend", "wild_defeat"] or not raw.status in ["pending", "accepted"] \
+			or not _integer(raw.character_revision, 1, 2147483647) \
+			or not _integer(raw.journal_revision, 1, 2147483647): return false
+	for field: String in ["world_id", "world_namespace", "session_id"]:
+		if not _opaque_id(raw[field]): return false
+	if not _component(raw.character_id): return false
+	if raw.action == "altar_spend":
+		if not _component(raw.action_id): return false
+	elif not _opaque_id(raw.action_id): return false
+	if not character_id.is_empty() and raw.character_id != character_id: return false
+	if not namespace.is_empty() and raw.world_namespace != namespace: return false
+	if raw.delivery_id != training_delivery_id(raw.world_namespace, raw.character_id) \
+			or not raw.intent is Dictionary or not raw.receipt is String: return false
+	var component := raw.action_id if raw.action == "altar_spend" else _defeat_action_component(raw.world_namespace, raw.action_id)
+	var prefix := ("essence_spend" if raw.action == "altar_spend" else "defeat") + ":%s:%s:" % [raw.character_id, component]
+	if not raw.receipt.begins_with(prefix): return false
+	for field: String in ["before", "after"]:
+		var projection: Variant = raw[field]
+		if not projection is Dictionary or projection.size() != 3 \
+				or not projection.get("party") is Array or not projection.get("inventory") is Array \
+				or not projection.get("redesign_character") is Dictionary: return false
+		var candidate := projection.duplicate(true)
+		candidate["character_id"] = raw.character_id
+		if not _baseline_errors(candidate, raw.character_id).is_empty(): return false
+	return STATE.uids(raw.before.party) == STATE.uids(raw.after.party) \
+		and not raw.before.redesign_character.transaction_receipts.has(raw.receipt) \
+		and raw.after.redesign_character.transaction_receipts.has(raw.receipt)
+
+
+## Owner/world validators reconstruct the typed operation, including exact
+## ingredients, level math, caps and known moves; they never import a packet's
+## numerical balance or arbitrary roster replacement as an accepted delta.
+static func training_transition_valid(raw: Variant, cfg: Dictionary, progression_cfg: Dictionary,
+		available_moves: Callable, mirror_provider: Callable) -> bool:
+	if not training_row_valid(raw): return false
+	var baseline: Dictionary = raw.before.duplicate(true)
+	baseline["character_id"] = raw.character_id
+	var proposal: Dictionary = {}
+	if raw.action == "altar_spend":
+		if raw.intent.get("spend_id") != raw.action_id \
+				or not _equivalent(raw.intent.get("expected_character_revision"), int(raw.character_revision) - 1): return false
+		proposal = stage_core_spend(baseline, raw.character_id, int(raw.character_revision) - 1,
+			raw.intent, cfg, progression_cfg, available_moves, mirror_provider)
+	else:
+		if raw.intent.get("event_id") != raw.action_id or raw.intent.get("world_namespace") != raw.world_namespace: return false
+		proposal = stage_core_defeat(baseline, raw.character_id, raw.intent, int(raw.character_revision) - 1,
+			cfg, progression_cfg, available_moves, mirror_provider)
+	return proposal.get("ok") == true and proposal.get("duplicate") == false \
+		and proposal.get("receipt") == raw.receipt and proposal.get("state") is Dictionary \
+		and _equivalent(training_projection(proposal.state), raw.after)
+
+
+## Frozen registry output only, fetched by its private stage token. Never
+## call this with a client's proposed snapshot. The prepared ledger writer
+## owns matching host world identity and bool SaveWorld; this constructs data.
+static func next_training_delivery(world_id: String, namespace: String, session_id: String,
+		accepted: Dictionary, previous: Variant, cfg: Dictionary, progression_cfg: Dictionary,
+		available_moves: Callable, mirror_provider: Callable) -> Dictionary:
+	var character: Variant = accepted.get("character_id")
+	if not _component(character) or not _integer(accepted.get("character_revision"), 1, 2147483647) \
+			or not accepted.get("before") is Dictionary or not accepted.get("state") is Dictionary \
+			or not accepted.get("intent") is Dictionary: return {}
+	var journal_revision := 1
+	if previous != null:
+		if not training_row_valid(previous, character, namespace) or previous.world_id != world_id \
+				or previous.status != "accepted" or int(previous.character_revision) >= int(accepted.character_revision): return {}
+		journal_revision = int(previous.journal_revision) + 1
+	var row := {"version": 1, "kind": TRAINING_KIND, "delivery_id": training_delivery_id(namespace, character),
+		"world_id": world_id, "world_namespace": namespace, "session_id": session_id,
+		"character_id": character, "action": accepted.get("action"), "action_id": accepted.get("action_id"),
+		"intent": accepted.intent.duplicate(true), "before": training_projection(accepted.before),
+		"after": training_projection(accepted.state), "receipt": accepted.get("receipt"),
+		"character_revision": int(accepted.character_revision), "journal_revision": journal_revision, "status": "pending"}
+	return row if training_transition_valid(row, cfg, progression_cfg, available_moves, mirror_provider) else {}
+
+
+## Prepared owner candidate. The caller first validates the host sender/world,
+## finishes fallback, freezes actual owner state and later uses bool SaveCharacter.
+## The already canonical action receipt is the atomic application marker; no
+## parallel balance/roster/seed escrow is added. An applied marker still needs
+## a real successful owner save before any ACK, including duplicate delivery.
+static func stage_training_owner(actual_owner: Dictionary, incoming: Dictionary,
+		cfg: Dictionary, progression_cfg: Dictionary, available_moves: Callable,
+		mirror_provider: Callable) -> Dictionary:
+	var character: Variant = actual_owner.get("character_id")
+	if not _component(character) or not training_row_valid(incoming, character) \
+			or not training_transition_valid(incoming, cfg, progression_cfg, available_moves, mirror_provider):
+		return _refuse("invalid_training_delivery")
+	if not _baseline_errors(actual_owner, character).is_empty(): return _refuse("invalid_owner_baseline")
+	var current := training_projection(actual_owner)
+	var applied := actual_owner.redesign_character.transaction_receipts.has(incoming.receipt)
+	if applied:
+		if not _equivalent(current, incoming.after): return _refuse("training_marker_state_conflict")
+		return {"ok": true, "duplicate": true, "state": actual_owner.duplicate(true),
+			"requires_owner_save": true, "receipt": incoming.receipt, "journal_revision": incoming.journal_revision}
+	if incoming.status != "pending": return _refuse("accepted_training_history_is_not_a_new_award")
+	if not _equivalent(current, incoming.before): return _refuse("training_owner_baseline_conflict")
+	var next := actual_owner.duplicate(true)
+	for field: String in ["party", "inventory", "redesign_character"]:
+		next[field] = incoming.after[field].duplicate(true)
+	return {"ok": true, "duplicate": false, "state": next, "before": actual_owner.duplicate(true),
+		"requires_owner_save": true, "receipt": incoming.receipt, "journal_revision": incoming.journal_revision}
+
+
+## Production owner path built on neutral c023's prepared bool writer. Shared
+## Session retry/snapshot guards must exist before activation; missing doors
+## refuse before any live mutation. Existing creature instances survive the
+## update, so active bodies and UI references are never replaced by a new party.
+static func apply_training_owner(game: Node, incoming: Dictionary,
+		available_moves: Callable, mirror_provider: Callable) -> Dictionary:
+	if game == null: return _refuse("owner_game_unavailable")
+	var saver: Variant = game.get("save_system")
+	if not saver is Object or not saver.has_method("finish_fallback") \
+			or not saver.has_method("fallback_busy") or not saver.has_method("save_character_prepared"):
+		return _refuse("prepared_owner_writer_missing")
+	saver.call("finish_fallback") # Reentrant completion comes BEFORE freezing.
+	if saver.call("fallback_busy") == true: return _refuse("fallback_busy")
+	var player: Variant = game.get("local")
+	var world: Variant = game.get("world")
+	var session: Variant = game.get("session")
+	if not player is RefCounted or not world is RefCounted or not session is Node:
+		return _refuse("owner_context_missing")
+	for method: String in ["_retain_owner_training_retry", "_mark_owner_training_saved"]:
+		if not session.has_method(method): return _refuse("owner_training_retry_unavailable")
+	if not player.has_method("save_data"): return _refuse("owner_snapshot_unavailable")
+	var deliveries: Variant = world.get("reward_deliveries")
+	if not deliveries is Dictionary: return _refuse("owner_world_journal_unavailable")
+	var character := str(player.get("character_id"))
+	var namespace := str(world.get("reward_delivery_namespace"))
+	if not training_row_valid(incoming, character, namespace) \
+			or incoming.world_id != world.get("world_id") \
+			or not _equivalent(deliveries.get(incoming.delivery_id), incoming):
+		return _refuse("foreign_or_superseded_training")
+	var snapshot: Variant = player.call("save_data")
+	if not snapshot is Dictionary: return _refuse("owner_snapshot_unavailable")
+	var proposal := stage_training_owner(snapshot, incoming, config(), PROGRESSION.config(),
+		available_moves, mirror_provider)
+	if proposal.get("ok") != true: return proposal
+	var party: Variant = player.get("party")
+	var inventory: Variant = player.get("inventory")
+	if not party is RefCounted or not party.has_method("members") \
+			or not inventory is RefCounted or not inventory.has_method("set_slot"):
+		return _refuse("owner_transients_unavailable")
+	var members: Variant = party.call("members")
+	if not members is Array or members.size() != incoming.after.party.size(): return _refuse("owner_party_changed")
+	for index: int in members.size():
+		if not members[index] is RefCounted or members[index].get("uid") != incoming.after.party[index].uid:
+			return _refuse("owner_party_changed")
+	if session.call("_retain_owner_training_retry", player, world, incoming) != true:
+		return _refuse("owner_training_retry_refused")
+	if proposal.get("duplicate") != true:
+		# No yield, signal or snapshot replacement between these scalar updates.
+		# The retained retry guard rejects any half-installed ordinary autosave.
+		for index: int in members.size():
+			var creature: RefCounted = members[index]
+			var row: Dictionary = incoming.after.party[index]
+			for field: String in ["level", "xp", "levels_gained_with_you", "battles_fought"]:
+				creature.set(field, int(row[field]))
+			for field: String in ["max_hp", "hp", "attack", "defence", "happiness"]:
+				creature.set(field, float(row[field]))
+			var known: Array[String] = []
+			for move: String in row.known_moves: known.append(move)
+			creature.set("known_moves", known)
+		for slot: int in incoming.after.inventory.size():
+			var stack: Variant = incoming.after.inventory[slot]
+			if not _equivalent(snapshot.inventory[slot], stack):
+				inventory.call("set_slot", slot, stack.duplicate(true) if stack is Dictionary else null)
+		player.set("redesign_character", incoming.after.redesign_character.duplicate(true))
+	var installed: Variant = player.call("save_data")
+	if not installed is Dictionary or not _equivalent(training_projection(installed), incoming.after):
+		return {"ok": false, "code": "owner_training_install_conflict", "pending": true}
+	if saver.call("save_character_prepared", game, character) != true:
+		# World acceptance stays earned; keep the exact in-memory state/receipt
+		# locked for a real bool-write retry instead of refunding durable rewards.
+		return {"ok": false, "code": "owner_training_save_failed", "pending": true,
+			"delivery_id": incoming.delivery_id, "journal_revision": incoming.journal_revision}
+	# This marks the real writer complete, but MUST retain the mutation/readiness
+	# guard until the host confirms its durable accepted row. Losing an ACK
+	# cannot let a care tick or a second action destroy the frozen retry baseline.
+	if game.get("local") != player or game.get("world") != world \
+			or not _equivalent(world.get("reward_deliveries").get(incoming.delivery_id), incoming) \
+			or session.call("_mark_owner_training_saved", player, world, incoming) != true:
+		return {"ok": false, "code": "owner_training_context_changed", "saved": true, "pending": true}
+	return {"ok": true, "duplicate": proposal.get("duplicate") == true, "saved": true,
+		"character_revision": incoming.character_revision, "journal_revision": incoming.journal_revision,
+		"action": incoming.action, "action_id": incoming.action_id, "receipt": incoming.receipt,
+		"delivery_id": incoming.delivery_id}
+
+
+## Typed immutable stage identity for the foundation-owned registry extension.
+## This method never receives a proposed client state or numeric item cost.
+## Fallback must finish before the Session owner enters this synchronous arm.
+static func commit_host_training(registry: RefCounted, prepared_writer: Node, peer_id: int,
+		character_id: String, action: String, action_id: String, intent: Dictionary, proposal: Dictionary) -> Dictionary:
+	if registry == null or prepared_writer == null or peer_id < 1 or not _component(character_id) \
+			or not _opaque_id(action_id) or not action in ["altar_spend", "wild_defeat"]:
+		return _refuse("invalid_training_commit")
+	for method: String in ["stage_creature_training", "staged_creature_training", "finish_creature_training"]:
+		if not registry.has_method(method): return _refuse("training_registry_unavailable")
+	if not prepared_writer.has_method("journal_creature_training_prepared"):
+		return _refuse("training_writer_unavailable")
+	if not bool(proposal.get("ok", false)): return proposal.duplicate(true)
+	if bool(proposal.get("duplicate", false)):
+		# An admitted receipt alone is not an owner-save ACK. Reconcile the
+		# existing durable world decision, never acknowledge optimistically.
+		return {"ok": true, "duplicate": true, "resolved": false, "pending_owner_save": true,
+			"receipt": proposal.get("receipt", ""), "code": "reconcile_training_decision"}
+	if not proposal.get("before") is Dictionary or not proposal.get("state") is Dictionary \
+			or not proposal.get("receipt") is String \
+			or not _integer(proposal.get("expected_character_revision"), 0, 2147483646):
+		return _refuse("invalid_training_proposal")
+	var stage: Dictionary = registry.call("stage_creature_training", character_id, action, action_id,
+		int(proposal.expected_character_revision), intent, proposal.before, proposal.state, proposal.receipt)
+	if not bool(stage.get("ok", false)): return stage
+	if bool(stage.get("duplicate", false)):
+		stage["resolved"] = false
+		stage["pending_owner_save"] = true
+		return stage
+	var accepted: Variant = registry.call("staged_creature_training", stage)
+	if not accepted is Dictionary or accepted.is_empty():
+		registry.call("finish_creature_training", stage, false)
+		return _refuse("training_stage_unavailable")
+	var journal: Variant = prepared_writer.call("journal_creature_training_prepared", peer_id, character_id, accepted)
+	var saved := journal is Dictionary and journal.get("ok") == true and journal.get("durable") == true
+	if not bool(registry.call("finish_creature_training", stage, saved)):
+		return {"ok": false, "code": "training_stage_changed", "durable": saved, "resolved": false}
+	if not saved:
+		return journal if journal is Dictionary else _refuse("training_journal_failed")
+	stage.erase("token")
+	stage["durable"] = true
+	stage["resolved"] = false
+	stage["pending_owner_save"] = true
+	stage["delivery_id"] = journal.get("delivery_id", "")
+	return stage
 
 
 ## Amount only; the encounter owner proves wild defeat, participants and the

@@ -16,6 +16,7 @@ extends RefCounted
 ## has in hand. Passing it in keeps both cases the same function call.
 
 const CONFIG_PATH := "res://data/config/progression.json"
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 static var _config: Dictionary = {}
 
@@ -159,6 +160,44 @@ static func staged_xp(row: Dictionary, cap: int, amount: int, cfg: Dictionary) -
 	return current
 
 
+## Detached property adapter calls the EXISTING condition arithmetic without
+## a live CreatureInstance, feed event, scene mutation or copied mood formula.
+class TrainingConditionSnapshot extends RefCounted:
+	var values: Dictionary = {}
+	func _get(property: StringName) -> Variant:
+		return values.get(str(property))
+	func _set(property: StringName, value: Variant) -> bool:
+		if not values.has(str(property)): return false
+		values[str(property)] = value
+		return true
+
+
+static func staged_training_condition(row: Dictionary, levels_gained: int,
+		victory: bool, condition_cfg: Dictionary = {}) -> Dictionary:
+	if levels_gained < 0 or levels_gained > 59 or not row.get("fainted") is bool: return {}
+	var mood: Variant = row.get("happiness")
+	if not (mood is int or mood is float) or not is_finite(float(mood)) or float(mood) < 0.0: return {}
+	var cfg := CONDITION.config() if condition_cfg.is_empty() else condition_cfg
+	var happiness: Variant = cfg.get("happiness")
+	if not happiness is Dictionary: return {}
+	for field: String in ["max", "on_victory", "on_level_up"]:
+		var value: Variant = happiness.get(field)
+		if not (value is int or value is float) or not is_finite(float(value)): return {}
+	if float(happiness.max) < 0.0 or float(mood) > float(happiness.max): return {}
+	var snapshot := TrainingConditionSnapshot.new()
+	snapshot.values = row.duplicate(true)
+	if victory:
+		var fought: Variant = row.get("battles_fought")
+		if row.fainted or not (fought is int or fought is float) or not is_finite(float(fought)) \
+				or float(fought) != floorf(float(fought)) or float(fought) < 0.0 or float(fought) >= 2147483647.0:
+			return {}
+		snapshot.values.battles_fought = int(fought) + 1
+		CONDITION.note_victory(snapshot, cfg)
+	for _level: int in levels_gained:
+		CONDITION.note_level_up(snapshot, cfg)
+	return snapshot.values
+
+
 ## Pure full-party XP proposal for an actual host defeat. The combat owner
 ## derives active UID, eligible UIDs and caps from its admitted/frozen records;
 ## none is accepted from a client packet. This provides no journal/CAS/ACK.
@@ -197,7 +236,11 @@ static func staged_combat_party_xp(party_rows: Array, host_active_uid: String,
 		var amount := full if uid == host_active_uid else share
 		var changed := staged_xp(next[index], int(eligible[uid]), amount, cfg)
 		if changed.is_empty(): return {}
-		awards[uid] = {"authored_award": amount, "levels": int(changed.level) - int(next[index].level),
+		var gained := int(changed.level) - int(next[index].level)
+		changed = staged_training_condition(changed, gained, true)
+		if changed.is_empty(): return {}
+		awards[uid] = {"authored_award": amount, "levels": gained, "battle_credit": 1,
+			"happiness_before": next[index].happiness, "happiness_after": changed.happiness,
 			"old_level": int(next[index].level), "level": int(changed.level), "xp": int(changed.xp),
 			"cap": int(eligible[uid]), "at_cap": int(changed.level) == int(eligible[uid])}
 		next[index] = changed
