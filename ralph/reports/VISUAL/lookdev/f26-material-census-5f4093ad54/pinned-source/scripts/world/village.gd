@@ -1,0 +1,398 @@
+extends Node3D
+
+## The settlement, placed from data/config/village.json.
+##
+## EV6: every structure is now a PREFAB — a building composed once from
+## Medieval Village MegaKit modules by scripts/world/building_prefabs.gd
+## (D24: the one civilian architectural family) — rather than a single farm
+## pack mesh. Same shape as before at this level: data describes, code
+## places, nothing is saved into a scene. Each placement is stood on the
+## ground by asking the world (docs/decisions/D09 — never a raycast) and
+## given real collision; a building you can walk through is a hologram, and
+## the camera's spring arm needs the walls as much as the player does.
+##
+## Collision comes from the prefab's own recipe when it authors collider
+## boxes (the workshop does, so its open arch bay is enterable), and from
+## one combined-AABB box otherwise — the same behaviour the farm pack got.
+
+const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const INN_EXTERIOR_IDENTITY := preload("res://scripts/world/inn_exterior_identity.gd")
+const MILL_POND_IDENTITY := preload("res://scripts/world/mill_pond_identity.gd")
+const VILLAGE_WELL_PRESENTATION := preload("res://scripts/world/village_well_presentation.gd")
+const CROSSING_HALL := preload("res://scripts/world/crossing_hall.gd")
+## Read for its group and meta names only -- see `_declare_ground`.
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+
+## How far past its own wall line a building's footprint reaches. 0.7m, which
+## is what `vegetation.json`'s hand-authored footprints already carry over the
+## same measurement -- see `_ground_clear_radius`.
+const CLEAR_MARGIN := 0.7
+const CONFIG_PATH := "res://data/config/village.json"
+@export var config_path := CONFIG_PATH
+
+var _prefabs: RefCounted = null
+var _placed := 0
+
+
+## `slicer` is `scripts/world/shell_build_budget.gd`, handed down by
+## `playground_world.gd` exactly as it hands it to `vegetation.gd`. Each
+## structure is a prefab instantiate plus per-module colliders, a ground-height
+## probe at every corner and, for some, a door and an interior -- heavy enough
+## that on a slow host the whole 25-structure loop was measured as ONE
+## indivisible slice past the shell's 15 s heartbeat budget (`docs/CURRENT_STATE.md`,
+## 2026-09-06). `null` (every non-shell build) makes `_breathe()` a no-op, so
+## single-player boot is unchanged.
+func build(slicer: RefCounted = null) -> void:
+	var file := FileAccess.open(config_path, FileAccess.READ)
+	if file == null:
+		push_error("village.json missing; the settlement is a field")
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_error("village.json is not valid JSON")
+		return
+
+	_prefabs = PREFABS.new()
+	if not _prefabs.call("load_recipes"):
+		return
+
+	# Cached prefab templates need a real SceneTree parent or they leak
+	# RenderingServer resources at engine shutdown (see building_prefabs.gd's
+	# own header on `_holder`) -- a hidden child of this node, never a raycast
+	# target, never rendered.
+	var template_holder := Node3D.new()
+	template_holder.name = "PrefabTemplates"
+	template_holder.visible = false
+	add_child(template_holder)
+	_prefabs.call("set_template_holder", template_holder)
+
+	for entry: Variant in (parsed as Dictionary).get("structures", []):
+		if not entry is Dictionary:
+			continue
+		_place(entry as Dictionary)
+		await _breathe(slicer)
+	print("[village] placed %d structures" % _placed)
+
+
+## `vegetation.gd::_breathe()`'s own pattern, verbatim: `slicer == null` (every
+## non-shell build) returns without ever suspending, so `await`ing this costs a
+## live build nothing.
+func _breathe(slicer: RefCounted) -> void:
+	if slicer == null:
+		return
+	await slicer.call("breathe")
+
+
+## Tell the runtime ground cover that this structure is standing here.
+##
+## GRASS-INDOORS, owner 2026-08-28: "grass grows through indoor buildings now".
+## `scripts/world/grass_field.gd`'s ring is procedural and camera-relative, so
+## unlike the baked scatter it cannot be authored around a building -- it has to
+## be TOLD, and the thing that knows where a building is and how big it is is
+## whatever placed it. That is here.
+##
+## WHICH structures: the ones the player stands inside or on, identified from
+## the prefab's own recipe rather than from a hand-kept list. A recipe with
+## `Floor_` modules has a floor to stand on; one with a `room` is fitted out
+## inside; one with a `door` can be walked into even when its inside is bare
+## ground, which is `cottage_a` exactly -- no room, no floor modules, a door,
+## and a meadow growing in it that you can see through its own windows.
+##
+## A fence run, a wagon, an oak, a gate leaf and the castle shell have none of
+## the three and are all correctly left alone. The castle is the one that
+## matters: its modules span 36x44, so a rule that took every structure would
+## have cleared a 29m disc of meadow around it.
+##
+## The RADIUS is the half-diagonal of the recipe's own module extent plus
+## `CLEAR_MARGIN`, and that formula is not invented: run against the buildings
+## `vegetation.json` already footprints by hand it reproduces every one of them
+## to within 0.2m -- the inn's 6x10 of modules gives 6.53 against an authored
+## 6.5, the mill 5.31 against 5.5, the ranger station 4.31 against 4.5. So the
+## structures that were never footprinted get the numbers the authored ones
+## would have got, rather than numbers somebody guessed.
+func _declare_ground(building: Node3D, prefab_name: String) -> void:
+	var radius := _ground_clear_radius(prefab_name)
+	if radius <= 0.0:
+		return
+	building.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, radius)
+	building.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+
+
+## The footprint radius for a prefab, or 0 if it is not something the player
+## stands inside or on. Reads `building_prefabs.json`'s own recipe.
+func _ground_clear_radius(prefab_name: String) -> float:
+	var recipe: Dictionary = _prefabs.call("recipe", prefab_name)
+	if recipe.is_empty():
+		return 0.0
+	var has_floor := not (recipe.get("room", {}) as Dictionary).is_empty() \
+			or not (recipe.get("door", {}) as Dictionary).is_empty()
+	var min_x := INF
+	var max_x := -INF
+	var min_z := INF
+	var max_z := -INF
+	for entry: Variant in recipe.get("modules", []):
+		var module: Dictionary = entry
+		if str(module.get("module", "")).begins_with("Floor_"):
+			has_floor = true
+		var at: Array = module.get("at", [])
+		if at.size() < 3:
+			continue
+		min_x = minf(min_x, float(at[0]))
+		max_x = maxf(max_x, float(at[0]))
+		min_z = minf(min_z, float(at[2]))
+		max_z = maxf(max_z, float(at[2]))
+	if not has_floor or min_x > max_x:
+		return 0.0
+	return Vector2(max_x - min_x, max_z - min_z).length() * 0.5 + CLEAR_MARGIN
+
+
+func placed() -> int:
+	return _placed
+
+
+func _place(spec: Dictionary) -> void:
+	var prefab_name := str(spec.get("prefab", ""))
+	var building: Node3D = _prefabs.call("instantiate", prefab_name)
+	if building == null:
+		return
+	var at: Array = spec.get("at", [0.0, 0.0])
+	var x := float(at[0])
+	var z := float(at[1])
+	var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	var placement_scale := float(spec.get("scale", 1.0))
+
+	# Ground at the LOWEST of the footprint's centre and four corners, not the
+	# centre alone: a multi-metre footprint on the flat's smoothstep skirt
+	# otherwise stands on its uphill edge and hangs its downhill corner in the
+	# air — the first EV6 render caught cottage_b doing exactly that, border
+	# skirt floating over its own shadow. Sinking to the lowest corner buries
+	# the high side a little instead, which is what an embedded building does
+	# (bible §E).
+	# `ground: "highest"` is for structures that deliberately overhang a drop —
+	# the footbridge spans the stream carve and the mill hangs its wheel over
+	# the channel, so their lowest AABB corner is the streambed and sinking to
+	# it would drown the deck. Everything else keeps the lowest-corner rule.
+	var take_highest := str(spec.get("ground", "lowest")) == "highest"
+	# An enterable building stands on its ground-touching wall/floor collider
+	# footprint. Chimneys and entry canopies belong to its silhouette, but they
+	# are not foundation corners and can extend several metres past the room.
+	# Deliberate overhangs keep the full render AABB because their `highest`
+	# policy exists specifically to span the terrain under the whole model.
+	var aabb: AABB = _prefabs.call("combined_aabb", building) if take_highest \
+			else _grounding_aabb(building, prefab_name)
+	var ground := _ground_height(x, z)
+	for corner: Vector2 in [
+		Vector2(aabb.position.x, aabb.position.z) * placement_scale,
+		Vector2(aabb.position.x, aabb.end.z) * placement_scale,
+		Vector2(aabb.end.x, aabb.position.z) * placement_scale,
+		Vector2(aabb.end.x, aabb.end.z) * placement_scale,
+	]:
+		var world := Vector2(x, z) + corner.rotated(-yaw)
+		var h := _ground_height(world.x, world.y)
+		if not is_nan(h):
+			if is_nan(ground):
+				ground = h
+			elif take_highest:
+				ground = maxf(ground, h)
+			else:
+				ground = minf(ground, h)
+	if is_nan(ground):
+		push_error("no ground under village structure '%s' at %.0f, %.0f" % [prefab_name, x, z])
+		building.free()
+		return
+
+	building.name = "%s_%d" % [prefab_name, _placed]
+	building.set_meta("village_role", str(spec.get("id", prefab_name)))
+	if bool(spec.get("road_house", false)):
+		building.add_to_group("village_road_houses")
+		building.set_meta("house_name", str(spec.get("display_name", prefab_name)))
+	# Sunk slightly further so a structure never hovers on a residual slope.
+	# The prefabs' own stone border skirts (0.13m tall) stay proud of this.
+	building.position = Vector3(x, ground - 0.05, z)
+	building.rotation.y = yaw
+	# Modest per-placement scale, for the authored trees (a 25% spread is the
+	# difference between two oaks and a stamp). Colliders are children of the
+	# building, so they inherit it.
+	building.scale = Vector3.ONE * placement_scale
+	var retint: Variant = spec.get("retint", {})
+	if retint is Dictionary and not (retint as Dictionary).is_empty():
+		_prefabs.call("apply_retint", building, retint)
+	add_child(building)
+	_exterior_identity(building, prefab_name)
+
+	_declare_ground(building, prefab_name)
+	_collide(building, prefab_name)
+	_door(building, prefab_name)
+	_interior(building, prefab_name, spec)
+	_placed += 1
+
+
+## The inn shares the settlement's architectural kit, but it must not share a
+## private farmhouse's read. Attach its public frontage in the same local frame
+## as its authored door before collision/interior setup; every other prefab is
+## deliberately unchanged.
+func _exterior_identity(building: Node3D, prefab_name: String) -> void:
+	var identity: Node3D
+	if prefab_name == "inn":
+		identity = INN_EXTERIOR_IDENTITY.new()
+	elif prefab_name == "mill":
+		identity = MILL_POND_IDENTITY.new()
+	elif prefab_name == "well":
+		identity = VILLAGE_WELL_PRESENTATION.new()
+	elif prefab_name == "crossing_hall_shell":
+		identity = CROSSING_HALL.new()
+		building.add_child(identity)
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+		if not raw is Dictionary or not bool(identity.call("build", raw)):
+			push_error("Crossing Hall layout is missing or invalid")
+		return
+	else:
+		return
+	building.add_child(identity)
+	identity.call("build")
+
+
+## The support rectangle for a walkable prefab, in prefab-local metres.
+##
+## Recipes already describe this physical footprint once: wall and floor
+## collider boxes whose bottom touches y=0. Using those boxes keeps placement,
+## collision and the room behind a real door on the same geometry. Roof and
+## ceiling boxes start around y=3 and are excluded. Decorative/non-enterable
+## prefabs retain their full imported render AABB, preserving established
+## wagon, tree, well, fence and landmark placement.
+func _grounding_aabb(building: Node3D, prefab_name: String) -> AABB:
+	var recipe: Dictionary = _prefabs.call("recipe", prefab_name)
+	var walkable := not (recipe.get("room", {}) as Dictionary).is_empty() \
+			or not (recipe.get("door", {}) as Dictionary).is_empty()
+	if not walkable:
+		for value: Variant in recipe.get("modules", []):
+			if value is Dictionary and str((value as Dictionary).get("module", "")).begins_with("Floor_"):
+				walkable = true
+				break
+	if not walkable:
+		return _prefabs.call("combined_aabb", building)
+
+	var min_x := INF
+	var max_x := -INF
+	var min_z := INF
+	var max_z := -INF
+	for value: Variant in _prefabs.call("colliders", prefab_name):
+		if not value is Dictionary:
+			continue
+		var collider := value as Dictionary
+		var at: Array = collider.get("at", [])
+		var size: Array = collider.get("size", [])
+		if at.size() < 3 or size.size() < 3:
+			continue
+		if float(at[1]) - float(size[1]) * 0.5 > 0.15:
+			continue
+		min_x = minf(min_x, float(at[0]) - float(size[0]) * 0.5)
+		max_x = maxf(max_x, float(at[0]) + float(size[0]) * 0.5)
+		min_z = minf(min_z, float(at[2]) - float(size[2]) * 0.5)
+		max_z = maxf(max_z, float(at[2]) + float(size[2]) * 0.5)
+	if min_x > max_x:
+		return _prefabs.call("combined_aabb", building)
+	return AABB(Vector3(min_x, 0.0, min_z), Vector3(max_x - min_x, 0.0, max_z - min_z))
+
+
+## OF31/D39. Some buildings have an inside.
+##
+## `"interior": "shop"` in data/config/village.json attaches
+## `scripts/world/shop_interior.gd` as a child of the placement, so the room
+## inherits the building's position, yaw and scale for free and the interior
+## script can be written entirely in the prefab's own local metres.
+##
+## Deliberately a small named table rather than a script path in the JSON: data
+## naming a res:// script is data that can load code, and the set of interiors
+## is going to stay countable (D39 built one; Grandpa's house has its own
+## dedicated scene script and is not in here). An unknown name is a loud error,
+## never a silent brick.
+const INTERIORS := {
+	"shop": preload("res://scripts/world/shop_interior.gd"),
+	"cottage": preload("res://scripts/world/cottage_interior.gd"),
+	"inn": preload("res://scripts/world/inn_interior.gd"),
+	"workshop": preload("res://scripts/world/workshop_interior.gd"),
+}
+
+func _interior(building: Node3D, prefab_name: String, spec: Dictionary) -> void:
+	var kind := str(spec.get("interior", ""))
+	# Every use of the shared workshop prefab has the same 6x8m open bay.
+	# Dress it here rather than repeating metadata in Meadows and Stormwood;
+	# Stormwood's settlement file is also a scatter fingerprint source, and an
+	# interior-only key must not require an unrelated vegetation rebake.
+	if kind.is_empty() and prefab_name == "workshop":
+		kind = "workshop"
+	if kind.is_empty():
+		return
+	if not INTERIORS.has(kind):
+		push_error("village.json asks for interior '%s'; village.gd knows %s" % [
+			kind, str(INTERIORS.keys())
+		])
+		return
+	var interior: Node3D = (INTERIORS[kind] as GDScript).new()
+	interior.name = "Interior"
+	building.add_child(interior)
+	var room: Dictionary = _prefabs.call("room_spec", prefab_name)
+	interior.call("build", room)
+
+
+## R7.8: the door verb, attached wherever the recipe declares one
+## (building_prefabs.json's own `door` key — `leaf_module`, `at`, and
+## optionally `width`/`height`/`open_yaw_deg`). A house with no `door` key
+## stays exactly as it was (for example, the workshop's open arch bay).
+const DOOR := preload("res://scripts/world/village_door.gd")
+
+func _door(building: Node3D, prefab_name: String) -> void:
+	var spec: Dictionary = _prefabs.call("door_spec", prefab_name)
+	if spec.is_empty():
+		return
+	var index: int = _prefabs.call("door_leaf_index", prefab_name)
+	if index < 0 or index >= building.get_child_count():
+		push_error("building_prefabs.json: '%s' names a door leaf module not in its own modules list" % prefab_name)
+		return
+	var leaf := building.get_child(index) as Node3D
+	if leaf == null:
+		return
+	var at: Array = spec.get("at", [0.0, 0.0, 0.0])
+	var door: Node3D = DOOR.new()
+	door.name = "Door"
+	building.add_child(door)
+	door.call("setup", leaf, Vector3(float(at[0]), float(at[1]), float(at[2])),
+		"Door",
+		float(spec.get("width", 1.6)), float(spec.get("height", 2.3)),
+		float(spec.get("open_yaw_deg", -100.0)))
+
+
+func _collide(building: Node3D, prefab_name: String) -> void:
+	var body := StaticBody3D.new()
+	body.name = "Collision"
+	var boxes: Array = _prefabs.call("colliders", prefab_name)
+	if boxes.is_empty():
+		var aabb: AABB = _prefabs.call("combined_aabb", building)
+		boxes = [{
+			"at": [aabb.get_center().x, aabb.get_center().y, aabb.get_center().z],
+			"size": [aabb.size.x, aabb.size.y, aabb.size.z],
+		}]
+	for entry: Variant in boxes:
+		if not entry is Dictionary:
+			continue
+		var spec := entry as Dictionary
+		var at: Array = spec.get("at", [0.0, 0.0, 0.0])
+		var size: Array = spec.get("size", [1.0, 1.0, 1.0])
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(float(size[0]), float(size[1]), float(size[2]))
+		shape.shape = box
+		shape.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+		body.add_child(shape)
+	# A child of the building, so every box inherits its position and yaw.
+	building.add_child(body)
+
+
+func _ground_height(x: float, z: float) -> float:
+	var node: Node = get_parent()
+	while node != null:
+		if node.has_method("ground_height_at"):
+			return float(node.call("ground_height_at", x, z))
+		node = node.get_parent()
+	return NAN
