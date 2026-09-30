@@ -179,6 +179,10 @@ var _strike_authority: Dictionary = {}
 ## rides the replicated encounter record and no combat decision reads it.
 var _strike_receipts: Dictionary = {}
 
+## Host-process namespace: settlement identities cannot collide after restart.
+## Actor HP stays in the participant's encounter row, never an ownership roster.
+var _vitals_namespace: String = Crypto.new().generate_random_bytes(16).hex_encode()
+
 
 func _init(host_peer_id: int = 1) -> void:
 	_host_peer_id = host_peer_id
@@ -237,6 +241,12 @@ func join(encounter_id: String, peer_id: int, creature_uid: String = "",
 		# must not re-seat you at a new `joined_seq`; a retried intent is the
 		# ordinary shape of an unreliable world.
 		return _ok("engage", peer_id, {"encounter_id": encounter_id, "rejoined": true})
+	# Once actor state exists, one admitted character cannot have two active
+	# participant rows. The host registry supplies the stable identity.
+	if not character_id.is_empty():
+		for active: Dictionary in participants.values():
+			if active.has("actor_vitals") and str(active.get("character_id", "")) == character_id:
+				return _refuse("engage", peer_id, "duplicate_character", "That character is already in this fight.")
 	_strike_state_for(encounter_id).erase(peer_id)
 	_add_participant(record, peer_id, creature_uid, character_id)
 	seq += 1
@@ -258,6 +268,12 @@ func leave(encounter_id: String, peer_id: int) -> Dictionary:
 	if record.is_empty():
 		return _refuse("disengage", peer_id, "unknown_encounter", "That fight is over.")
 	var participants: Dictionary = record["participants"]
+	var departing: Dictionary = participants.get(peer_id, {})
+	var stable_id := str(departing.get("character_id", ""))
+	if not stable_id.is_empty() and departing.has("actor_vitals"):
+		var retained: Dictionary = record.get("retained_actor_participants", {})
+		record["retained_actor_participants"] = retained
+		retained[stable_id] = departing
 	participants.erase(peer_id)
 	_strike_state_for(encounter_id).erase(peer_id)
 	(_strike_receipts.get(encounter_id, {}) as Dictionary).erase(peer_id)
@@ -1115,6 +1131,10 @@ func close(encounter_id: String) -> void:
 ## Forget a finished fight. Kept separate from `close()` so a participant can
 ## still be told the record's final state before it stops existing.
 func forget(encounter_id: String) -> void:
+	# A failed owner save/disconnect cannot turn an accepted faint into healthy
+	# old portable HP. Teardown waits for the single Session registry's durable
+	# handoff of every exact latest revision, including departed participants.
+	if not pending_actor_vitals(encounter_id).is_empty(): return
 	encounters.erase(encounter_id)
 	_strike_authority.erase(encounter_id)
 	_strike_receipts.erase(encounter_id)
@@ -1124,11 +1144,186 @@ func forget(encounter_id: String) -> void:
 
 func _add_participant(rec: Dictionary, peer_id: int, creature_uid: String,
 		character_id: String) -> void:
+	var retained: Dictionary = rec.get("retained_actor_participants", {})
+	if not character_id.is_empty() and retained.has(character_id):
+		var restored: Dictionary = retained[character_id]
+		retained.erase(character_id)
+		# character_id and active UID are supplied by host admission, never by
+		# the incoming intent. Binding a new body below rechecks owned UID.
+		restored["creature_uid"] = creature_uid
+		(rec["participants"] as Dictionary)[peer_id] = restored
+		return
 	(rec["participants"] as Dictionary)[peer_id] = {
 		"character_id": character_id,
 		"creature_uid": creature_uid,
 		"joined_seq": seq,
 	}
+
+
+## F23 live actor HP. These are internal host APIs, not RPC payload readers.
+## Caller resolves character identity/owned row from the one validated Session
+## registry and derives generation from the actual host body before binding.
+## An existing UID is never re-seeded from a new deployment/portable snapshot.
+func bind_actor_vitals(encounter_id: String, peer_id: int, character_id: String,
+		owned_row: Dictionary, body_generation: int) -> Dictionary:
+	var participant := _actor_participant(encounter_id, peer_id, character_id)
+	var uid: Variant = owned_row.get("uid")
+	var hp: Variant = owned_row.get("hp")
+	var maximum: Variant = owned_row.get("max_hp")
+	var fainted: Variant = owned_row.get("fainted")
+	if participant.is_empty() or not UTILITY_EFFECTS._identity(uid) or body_generation < 1 \
+		or not UTILITY_EFFECTS._number(maximum, 1.0, 1000000000.0) \
+		or not UTILITY_EFFECTS._number(hp, 0.0, float(maximum)) \
+		or not fainted is bool or bool(fainted) != (float(hp) == 0.0):
+		return {"ok": false, "code": "invalid_actor"}
+	var actors: Dictionary = participant.get("actor_vitals", {})
+	var actor: Dictionary = actors.get(uid, {})
+	if actor.is_empty():
+		if actors.size() >= 5: return {"ok": false, "code": "party_capacity"}
+		actor = {"creature_uid": uid, "hp": float(hp), "max_hp": float(maximum),
+			"fainted": fainted, "body_generation": body_generation, "revision": 0,
+			"receipts": {}, "settled_revision": 0, "settlement_receipt": {}}
+		actors[uid] = actor
+		participant["actor_vitals"] = actors
+	elif float(actor.max_hp) != float(maximum) or body_generation < int(actor.body_generation):
+		return {"ok": false, "code": "stale_actor"}
+	else:
+		actor["body_generation"] = body_generation
+	participant["creature_uid"] = uid
+	return {"ok": true, "vitals": _actor_vitals_view(actor)}
+
+
+func actor_vitals(encounter_id: String, peer_id: int, creature_uid: String,
+		body_generation: int) -> Dictionary:
+	var participant := _actor_participant(encounter_id, peer_id)
+	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(creature_uid, {})
+	if str(participant.get("creature_uid", "")) != creature_uid or actor.is_empty() \
+		or int(actor.body_generation) != body_generation: return {}
+	return _actor_vitals_view(actor)
+
+
+## Stage exact live HP without publishing, allowing the caller to reject a
+## failed persistence transaction before poise, VFX, meters or callbacks.
+func stage_actor_vitals(encounter_id: String, peer_id: int, creature_uid: String,
+		body_generation: int, expected_revision: int, action_id: String, kind: String,
+		amount: float, receipt_limit: int) -> Dictionary:
+	var before := actor_vitals(encounter_id, peer_id, creature_uid, body_generation)
+	if before.is_empty() or expected_revision != int(before.revision) \
+		or not UTILITY_EFFECTS._identity(action_id) or kind not in ["damage", "heal"] \
+		or not is_finite(amount) or amount <= 0.0 or receipt_limit < 1 or receipt_limit > 65536:
+		return {"ok": false, "code": "invalid_vitals"}
+	var participant := _actor_participant(encounter_id, peer_id)
+	var actor: Dictionary = participant.actor_vitals[creature_uid]
+	if (actor.receipts as Dictionary).has(action_id): return {"ok": false, "code": "replayed_action"}
+	if actor.receipts.size() >= receipt_limit: return {"ok": false, "code": "receipt_budget"}
+	if bool(before.fainted): return {"ok": false, "code": "fainted"}
+	var next_hp := maxf(0.0, float(before.hp) - amount) if kind == "damage" \
+		else minf(float(before.max_hp), float(before.hp) + amount)
+	if next_hp == float(before.hp): return {"ok": false, "code": "no_change"}
+	var revision := int(before.revision) + 1
+	var receipt := {"receipt_id": _vitals_namespace + ":" +
+		(encounter_id + "|" + creature_uid + "|" + action_id + "|" + str(revision)).sha256_text(),
+		"encounter_id": encounter_id, "creature_uid": creature_uid,
+		"body_generation": body_generation, "vitals_revision": revision}
+	receipt.make_read_only()
+	return {"ok": true, "encounter_id": encounter_id, "peer_id": peer_id,
+		"creature_uid": creature_uid, "body_generation": body_generation,
+		"expected_revision": expected_revision, "action_id": action_id,
+		"kind": kind, "amount": amount, "receipt_limit": receipt_limit,
+		"hp_before": float(before.hp), "hp_after": next_hp,
+		"max_hp": float(before.max_hp), "fainted": next_hp == 0.0,
+		"revision": revision, "settlement_receipt": receipt}
+
+
+## Re-stage under the same revision: edited/stale proposals never publish.
+## Until the actual director transaction is wired, this method is unused by
+## gameplay. The single durable Session handoff is acknowledged separately.
+func commit_actor_vitals(proposal: Dictionary) -> Dictionary:
+	if not bool(proposal.get("ok", false)): return {"ok": false, "code": "invalid_proposal"}
+	for key: String in ["encounter_id", "creature_uid", "action_id", "kind"]:
+		if not proposal.get(key) is String: return {"ok": false, "code": "invalid_proposal"}
+	for key: String in ["peer_id", "body_generation", "expected_revision", "receipt_limit"]:
+		if not proposal.get(key) is int: return {"ok": false, "code": "invalid_proposal"}
+	if not UTILITY_EFFECTS._number(proposal.get("amount"), 0.0, INF):
+		return {"ok": false, "code": "invalid_proposal"}
+	var verified := stage_actor_vitals(str(proposal.get("encounter_id", "")),
+		int(proposal.get("peer_id", 0)), str(proposal.get("creature_uid", "")),
+		int(proposal.get("body_generation", 0)), int(proposal.get("expected_revision", -1)),
+		str(proposal.get("action_id", "")), str(proposal.get("kind", "")),
+		float(proposal.get("amount", NAN)), int(proposal.get("receipt_limit", 0)))
+	if not bool(verified.get("ok", false)) or verified != proposal:
+		return {"ok": false, "code": "stale_proposal"}
+	var participant := _actor_participant(str(proposal.encounter_id), int(proposal.peer_id))
+	var actor: Dictionary = participant.actor_vitals[str(proposal.creature_uid)]
+	actor["hp"] = proposal.hp_after
+	actor["fainted"] = proposal.fainted
+	actor["revision"] = proposal.revision
+	actor["settlement_receipt"] = proposal.settlement_receipt.duplicate(true)
+	(actor.receipts as Dictionary)[str(proposal.action_id)] = true
+	seq += 1
+	(encounters[str(proposal.encounter_id)] as Dictionary)["seq"] = seq
+	return {"ok": true, "vitals": _actor_vitals_view(actor)}
+
+
+## Exact latest rows still awaiting durable handoff. Detached output permits
+## teardown retry for disconnected owners, without trusting a new client HP.
+func pending_actor_vitals(encounter_id: String) -> Array:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	var out: Array = []
+	var rows: Array = (rec.get("participants", {}) as Dictionary).values()
+	rows.append_array((rec.get("retained_actor_participants", {}) as Dictionary).values())
+	for participant: Dictionary in rows:
+		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():
+			if int(actor.revision) <= int(actor.settled_revision): continue
+			var pending := _actor_vitals_view(actor)
+			pending["character_id"] = str(participant.character_id)
+			out.append(pending)
+	return out
+
+
+## Only the director's successful durable registry handoff calls this, never
+## an owner packet/ACK. An old settlement cannot clear newer pending damage.
+func acknowledge_actor_vitals(encounter_id: String, character_id: String,
+		creature_uid: String, revision: int, receipt: Dictionary) -> bool:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	var rows: Array = (rec.get("participants", {}) as Dictionary).values()
+	rows.append_array((rec.get("retained_actor_participants", {}) as Dictionary).values())
+	for participant: Dictionary in rows:
+		if str(participant.get("character_id", "")) != character_id: continue
+		var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(creature_uid, {})
+		if actor.is_empty() or revision != int(actor.revision) \
+			or receipt != actor.settlement_receipt: return false
+		actor["settled_revision"] = revision
+		return true
+	return false
+
+
+func _actor_participant(encounter_id: String, peer_id: int, character_id: String = "") -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty() or str(rec.get("phase", "")) != "active": return {}
+	var participant: Dictionary = (rec.get("participants", {}) as Dictionary).get(peer_id, {})
+	if str(participant.get("character_id", "")).is_empty() \
+		or (not character_id.is_empty() and str(participant.character_id) != character_id): return {}
+	return participant
+
+
+static func _actor_vitals_view(actor: Dictionary) -> Dictionary:
+	var out := actor.duplicate(true)
+	out.erase("receipts")
+	return out
+
+
+## Called only after a typed host release/evolution ownership commit. Pending
+## HP must first reach the durable registry; discarding it is never a release.
+func remove_actor_vitals(encounter_id: String, peer_id: int, creature_uid: String) -> bool:
+	var participant := _actor_participant(encounter_id, peer_id)
+	var actors: Dictionary = participant.get("actor_vitals", {})
+	var actor: Dictionary = actors.get(creature_uid, {})
+	if actor.is_empty() or int(actor.revision) != int(actor.settled_revision): return false
+	actors.erase(creature_uid)
+	if str(participant.get("creature_uid", "")) == creature_uid:
+		participant["creature_uid"] = ""
+	return true
 
 
 static func _opponent_row(opponent: Dictionary) -> Dictionary:

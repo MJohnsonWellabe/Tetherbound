@@ -122,3 +122,96 @@ func test_host_authorization_shares_action_lock_and_spends_once_without_hostile_
 	assert_eq(denied.code, "insufficient_wind")
 	assert_eq(host.record(id).participants[1].wind, 0.0)
 	assert_eq(host.strike_authority_state(id, 1).last_action, 3, "unaffordable utility adds no action/cooldown")
+
+
+func _owned_vitals(uid: String = "owned-1", hp: float = 60.0) -> Dictionary:
+	return {"uid": uid, "hp": hp, "max_hp": 100.0, "fainted": hp == 0.0}
+
+
+func test_actor_vitals_stage_then_commit_rejects_stale_tampered_and_replayed_damage() -> void:
+	var host := ENCOUNTER_HOST.new(1)
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 30.0}, "owned-1", "character-1")
+	var id := str(record.encounter_id)
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 3).ok)
+	var baseline: Dictionary = host.record(id).duplicate(true)
+	var staged: Dictionary = host.stage_actor_vitals(id, 1, "owned-1", 3, 0, "hit-1", "damage", 20.0, 3)
+	assert_true(staged.ok)
+	assert_eq(host.record(id), baseline, "staging changes no live HP or receipt")
+	var tampered: Dictionary = staged.duplicate(true)
+	tampered.hp_after = 100.0
+	assert_false(host.commit_actor_vitals(tampered).ok)
+	assert_eq(host.record(id), baseline)
+	assert_true(host.commit_actor_vitals(staged).ok)
+	assert_eq(host.actor_vitals(id, 1, "owned-1", 3).hp, 40.0)
+	assert_false(host.commit_actor_vitals(staged).ok)
+	assert_false(host.stage_actor_vitals(id, 1, "owned-1", 3, 1, "hit-1", "damage", 20.0, 3).ok)
+	assert_false(host.stage_actor_vitals(id, 1, "owned-1", 2, 1, "hit-2", "damage", 20.0, 3).ok)
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals("owned-1", 100.0), 4).ok)
+	assert_eq(host.actor_vitals(id, 1, "owned-1", 4).hp, 40.0, "deployment cannot reseed old healthy HP")
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals("owned-2", 90.0), 5).ok)
+	assert_true(host.actor_vitals(id, 1, "owned-1", 4).is_empty(), "inactive UID cannot take/heal a hit")
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 6).ok)
+	assert_eq(host.actor_vitals(id, 1, "owned-1", 6).hp, 40.0)
+	var lethal: Dictionary = host.stage_actor_vitals(id, 1, "owned-1", 6, 1, "hit-2", "damage", 999.0, 3)
+	assert_eq(lethal.hp_after, 0.0)
+	assert_true(host.commit_actor_vitals(lethal).ok)
+	assert_true(host.actor_vitals(id, 1, "owned-1", 6).fainted)
+	assert_false(host.stage_actor_vitals(id, 1, "owned-1", 6, 2, "heal-1", "heal", 12.0, 3).ok, "HealPulse never revives")
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals("owned-1", 100.0), 7).ok)
+	assert_eq(host.actor_vitals(id, 1, "owned-1", 7).hp, 0.0, "rebind cannot resurrect accepted faint")
+
+
+func test_actor_vitals_survive_peer_change_and_teardown_waits_for_latest_durable_handoff() -> void:
+	var host := ENCOUNTER_HOST.new(1)
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 30.0}, "owned-1", "character-1")
+	var id := str(record.encounter_id)
+	host.join(id, 2, "other-owned", "character-2")
+	host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 3)
+	var first: Dictionary = host.stage_actor_vitals(id, 1, "owned-1", 3, 0, "hit-1", "damage", 35.0, 10)
+	assert_true(host.commit_actor_vitals(first).ok)
+	assert_true(host.leave(id, 1).ok)
+	assert_eq(host.participant_count(id), 1, "departed actor does not inflate active scaling/targets")
+	assert_eq(host.pending_actor_vitals(id).size(), 1)
+	host.forget(id)
+	assert_false(host.record(id).is_empty(), "failed/unavailable durable handoff retains absolute HP")
+	assert_true(host.join(id, 22, "owned-1", "character-1").ok)
+	assert_false(host.join(id, 33, "owned-1", "character-1").ok, "one character cannot be duplicated into another active row")
+	assert_true(host.bind_actor_vitals(id, 22, "character-1", _owned_vitals("owned-1", 100.0), 4).ok)
+	assert_eq(host.actor_vitals(id, 22, "owned-1", 4).hp, 25.0)
+	assert_true(host.actor_vitals(id, 1, "owned-1", 3).is_empty())
+	var second: Dictionary = host.stage_actor_vitals(id, 22, "owned-1", 4, 1, "hit-2", "damage", 5.0, 10)
+	assert_true(host.commit_actor_vitals(second).ok, "pending owner save does not freeze later host damage")
+	assert_false(host.acknowledge_actor_vitals(id, "character-1", "owned-1", 1, first.settlement_receipt), "old ACK cannot clear newer pending damage")
+	assert_eq(host.pending_actor_vitals(id).size(), 1)
+	assert_false(host.remove_actor_vitals(id, 22, "owned-1"), "release cannot discard unsettled HP")
+	assert_true(host.acknowledge_actor_vitals(id, "character-1", "owned-1", 2, second.settlement_receipt))
+	assert_eq(host.pending_actor_vitals(id).size(), 0)
+	host.leave(id, 22)
+	host.leave(id, 2)
+	assert_eq(host.phase(id), "done", "last-leaver policy remains unchanged")
+	host.forget(id)
+	assert_true(host.record(id).is_empty())
+
+
+func test_actor_vitals_fail_closed_on_shapes_capacity_and_receipt_budget() -> void:
+	var host := ENCOUNTER_HOST.new(1)
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 30.0}, "owned-1", "character-1")
+	var id := str(record.encounter_id)
+	var baseline: Dictionary = host.record(id).duplicate(true)
+	for key: String in ["uid", "hp", "max_hp", "fainted"]:
+		var bad := _owned_vitals()
+		bad[key] = {} if key != "fainted" else "false"
+		assert_false(host.bind_actor_vitals(id, 1, "character-1", bad, 3).ok)
+	assert_eq(host.record(id), baseline)
+	assert_false(host.bind_actor_vitals(id, 1, "other-character", _owned_vitals(), 3).ok)
+	for i: int in range(5):
+		assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals("owned-" + str(i)), i + 1).ok)
+	assert_false(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals("sixth"), 6).ok)
+	var staged: Dictionary = host.stage_actor_vitals(id, 1, "owned-4", 5, 0, "heal-1", "heal", 1000.0, 1)
+	assert_eq(staged.hp_after, 100.0, "healing clamps actual host maximum")
+	assert_true(host.commit_actor_vitals(staged).ok)
+	assert_false(host.stage_actor_vitals(id, 1, "owned-4", 5, 1, "hit-1", "damage", 20.0, 1).ok, "bound refuses instead of evicting replay protection")
+	assert_false(host.stage_actor_vitals(id, 1, "owned-4", 5, 1, "heal-1", "heal", 1.0, 1).ok)
+	var corrupt: Dictionary = staged.duplicate(true)
+	corrupt.amount = {}
+	assert_false(host.commit_actor_vitals(corrupt).ok, "host API refuses malformed proposal without conversion crash")
