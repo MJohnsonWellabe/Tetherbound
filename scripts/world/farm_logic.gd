@@ -181,6 +181,11 @@ static func harvested(plot: Dictionary) -> Dictionary:
 
 ## F32: definitions come from the HOST's farm.json, never from the intent.
 ## An unknown crop is refused rather than silently becoming berries.
+static func _positive_integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(value)) \
+		and float(value) == float(int(value)) and int(value) > 0
+
+
 static func crop_definition(config: Dictionary, crop_id: String) -> Dictionary:
 	var crops: Variant = config.get("crops", {})
 	if not crops is Dictionary:
@@ -189,16 +194,16 @@ static func crop_definition(config: Dictionary, crop_id: String) -> Dictionary:
 	if not raw is Dictionary:
 		return {}
 	var definition: Dictionary = raw
-	if str(definition.get("seed_item", "")).is_empty() \
-			or int(definition.get("grow_days", 0)) < 1:
+	if not definition.get("seed_item") is String or definition["seed_item"].is_empty() \
+			or not _positive_integer(definition.get("grow_days")) \
+			or (definition.has("type") and not definition["type"] is String):
 		return {}
 	var outputs: Variant = definition.get("outputs")
 	if not outputs is Dictionary or outputs.is_empty():
 		return {}
 	for item: Variant in outputs:
 		if not item is String or str(item).is_empty() \
-				or not (typeof(outputs[item]) in [TYPE_INT, TYPE_FLOAT]) \
-				or float(outputs[item]) != float(int(outputs[item])) or int(outputs[item]) < 1:
+				or not _positive_integer(outputs[item]):
 			return {}
 	return definition.duplicate(true)
 
