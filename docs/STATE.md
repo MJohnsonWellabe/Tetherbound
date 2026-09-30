@@ -6,7 +6,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 107 of 280:** original 95/101, redesign 12/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
+**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 109 of 280:** original 95/101, redesign 14/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | #0–#3 main107; services360 native0/448.703s strict MET, r1/r2 reds retained. M1/co-op/craft open; F18 held. |
-| `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 15af loadout ACK source; c9c5 vitals/movement4/79/0+parsers. Prior10/734+16 native0; aborted9-method red retained. |
-| `tb/vfx` | F25, F35 | edd109 native queued; capacity failed before edits/engine. R8 ranks1/3/5 PASS/full craft FAIL; library off/F25 open. |
-| `tb/lookdev` | F26 | #1/#2/#4 main106; full12 native1920 strict MET (VISUAL/lookdev/twelve-route-result.md). Cloud M/H48 full-bar FAIL; #0/#3/#5 open. |
-| `tb/training` | F27–F30, F37 | c4a80 essence/release/candy source; authority/runtime open, no MET. |
-| `tb/homestead` | F31–F34 | bbe906 site/farm source; mounts uncalled, authority open, no MET. |
+| `tb/foundations` | F16 | Neutral prepared core PR496; wire7/admission and bool writer; scoped authority proofs PASS; live callers OPEN. |
+| `tb/hub` | F17, F18 | #0-#3 main; M1 r4 native/v3 source FAIL retained. Unfinished correction held; F18 open. |
+| `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
+| `tb/combat` | F21–F24 | Camera cut recovering from0fde99; static9 PASS, moving-player/source binding open. F23 held. |
+| `tb/vfx` | F25, F35 | 8fae preserved/held; R17 stone PASS, R14 craft FAIL; library OFF. |
+| `tb/lookdev` | F26 | #0/#1/#2/#4 main. ade7b cliff OFF/held; full bar open; Ally owner-gated. |
+| `tb/training` | F27–F30, F37 | #0 main; Altar0e89 preserved/held; durable player path open. |
+| `tb/homestead` | F31–F34 | 499e8 preserved/held; Forge +Den080c source PASS, mounted durable path open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |

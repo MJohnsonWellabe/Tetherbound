@@ -1,0 +1,611 @@
+{
+  "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+  "scope": "Read-only actual mounted binding review by source-map/tool author. Final independent criterion gate must be another non-author session.",
+  "native_receipt": {
+    "source_commit": "0620d57bad036e52c88446fa1c04408b07cea909",
+    "native_exit": 0,
+    "elapsed_seconds": 137.844,
+    "command": [
+      "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+      "--path",
+      "D:\\tetherbound\\redesign-lookdev",
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "tools/capture_renderer_material_census.gd",
+      "--",
+      "--preset=Medium",
+      "--source-commit=0620d57bad036e52c88446fa1c04408b07cea909",
+      "--output=D:/tetherbound/f26-storm-medium-0620d57bad",
+      "--biome=stormwood",
+      "--times=day",
+      "--subset=The Stormheart Tree"
+    ],
+    "timed_out": false,
+    "errors": [],
+    "scope": "One selected existing production-camera capture subset. Staged audit travel and day/night clock, isolated user data. No earned campaign, full matrix, performance, Ally or full-bar acceptance claim."
+  },
+  "manifest_sha256": "7e996eb6ce613da6c0a0a812564da8d9a6b7bfc4539676661ee65028d47f8b77",
+  "log_sha256": "1ad9ee5ab996dfba1d74ea7d2083753b73c5914a2216a36ccd967168d26e4807",
+  "warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: TwistedTree_2.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply",
+    "WARNING: TwistedTree_4.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply",
+    "WARNING: wild cluster 1365603512 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate",
+    "WARNING: wild cluster 1365603540 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate",
+    "WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate"
+  ],
+  "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day",
+  "png": {
+    "path": "D:\\tetherbound\\f26-storm-medium-0620d57bad\\stormwood__dynamo__12__the_stormheart_tree__day.png",
+    "sha256": "84f4ba63e9cf9e776e09210cb991169b56a57c9b16a5147b304476d619402ce0",
+    "bytes": 2091417,
+    "dimensions": [
+      1920,
+      1080
+    ]
+  },
+  "binding_count": 32355,
+  "resource_count": 1312,
+  "dangling_resource_ids": [],
+  "missing_source_paths": [],
+  "empty_shader_code": [],
+  "container_scan_truncated": [],
+  "unbound_active_surfaces": [
+    {
+      "active_material": "",
+      "classification": "unbound_primitive_default_requires_source_review",
+      "extra": {},
+      "kind": "mesh_instance",
+      "material_overlay": "",
+      "material_override": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "mesh_source_material": "",
+      "node": "Player/Model/Body",
+      "owner_script": "",
+      "surface": 0,
+      "visible_in_tree": false
+    },
+    {
+      "active_material": "",
+      "classification": "unbound_primitive_default_requires_source_review",
+      "extra": {},
+      "kind": "mesh_instance",
+      "material_overlay": "",
+      "material_override": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "mesh_source_material": "",
+      "node": "Player/Model/Nose",
+      "owner_script": "",
+      "surface": 0,
+      "visible_in_tree": false
+    }
+  ],
+  "unbound_triage": "Only hidden imported-player fallback Body/Nose capsules. Source character_model.gd::_hide_placeholders hides them after the imported body is built.",
+  "terrain_override_enabled": false,
+  "terrain_gpu_uniform_bindings": {
+    "_color_maps": {
+      "binding_rid_valid": true,
+      "material_rid_valid": true,
+      "value_type": "RID"
+    },
+    "_control_maps": {
+      "binding_rid_valid": true,
+      "material_rid_valid": true,
+      "value_type": "RID"
+    },
+    "_height_maps": {
+      "binding_rid_valid": true,
+      "material_rid_valid": true,
+      "value_type": "RID"
+    },
+    "_texture_array_albedo": {
+      "binding_rid_valid": true,
+      "material_rid_valid": true,
+      "value_type": "RID"
+    },
+    "_texture_array_normal": {
+      "binding_rid_valid": true,
+      "material_rid_valid": true,
+      "value_type": "RID"
+    },
+    "noise_texture": {
+      "binding_rid_valid": true,
+      "material_rid_valid": true,
+      "value_type": "RID"
+    }
+  },
+  "terrain_texture_pairs": [
+    [
+      "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+      "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png"
+    ],
+    [
+      "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+      "res://assets/environment/terrain/stylised/verge_grass_NormalGL.png"
+    ],
+    [
+      "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+      "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png"
+    ],
+    [
+      "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+      "res://assets/environment/terrain/stylised/dirt_path_NormalGL.png"
+    ],
+    [
+      "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+      "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png"
+    ],
+    [
+      "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+      "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png"
+    ]
+  ],
+  "ground_null_getter_actual_gpu_bindings": [
+    {
+      "id": "resource_000099",
+      "bindings": {
+        "_color_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_control_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_height_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        }
+      }
+    },
+    {
+      "id": "resource_000101",
+      "bindings": {
+        "_color_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_control_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_height_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        }
+      }
+    },
+    {
+      "id": "resource_000103",
+      "bindings": {
+        "_color_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_control_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_height_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        }
+      }
+    },
+    {
+      "id": "resource_000105",
+      "bindings": {
+        "_color_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_control_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_height_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        }
+      }
+    },
+    {
+      "id": "resource_000106",
+      "bindings": {
+        "_color_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_control_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_height_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        }
+      }
+    },
+    {
+      "id": "resource_000107",
+      "bindings": {
+        "_color_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_control_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_height_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        }
+      }
+    },
+    {
+      "id": "resource_000108",
+      "bindings": {
+        "_color_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_control_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        },
+        "_height_maps": {
+          "binding_rid_valid": true,
+          "material_rid_valid": true,
+          "value_type": "RID"
+        }
+      }
+    }
+  ],
+  "families": {
+    "terrain": {
+      "mode": "production_default",
+      "bindings": 23820,
+      "kind_counts": {
+        "terrain_material": 1,
+        "terrain_assets": 1,
+        "multimesh": 23817,
+        "mesh_instance": 1
+      },
+      "first_nodes": [
+        "Terrain",
+        "Terrain",
+        "Terrain/MMI/Region-01_00/MMI3D_C02_02_M1_L0",
+        "Terrain/MMI/Region-01_00/MMI3D_C03_02_M1_L0"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+        "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+        "res://assets/environment/stylized_nature/Bark_NormalTree.png",
+        "res://assets/environment/stylized_nature/Bark_NormalTree_Normal.png",
+        "res://assets/environment/stylized_nature/Bark_TwistedTree.png",
+        "res://assets/environment/stylized_nature/Bark_TwistedTree_Normal.png",
+        "res://assets/environment/stylized_nature/Bush_Common.gltf::ArrayMesh_yc8pv",
+        "res://assets/environment/stylized_nature/CommonTree_3.gltf::ArrayMesh_p2x2f",
+        "res://assets/environment/stylized_nature/DeadTree_1.gltf::ArrayMesh_2vhy4",
+        "res://assets/environment/stylized_nature/DeadTree_1.gltf::ArrayMesh_afaad",
+        "res://assets/environment/stylized_nature/DeadTree_1.gltf::StandardMaterial3D_y0pfy",
+        "res://assets/environment/stylized_nature/DeadTree_3.gltf::ArrayMesh_7ng4h",
+        "res://assets/environment/stylized_nature/DeadTree_3.gltf::ArrayMesh_j0dd2",
+        "res://assets/environment/stylized_nature/DeadTree_3.gltf::StandardMaterial3D_pnjpb",
+        "res://assets/environment/stylized_nature/Fern_1.gltf::ArrayMesh_jkhcq",
+        "res://assets/environment/stylized_nature/Leaves.png",
+        "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png",
+        "res://assets/environment/stylized_nature/Mushroom_Common.gltf::ArrayMesh_67y7a",
+        "res://assets/environment/stylized_nature/Mushroom_Common.gltf::ArrayMesh_ebp8i",
+        "res://assets/environment/stylized_nature/Mushroom_Common.gltf::StandardMaterial3D_llqmy",
+        "res://assets/environment/stylized_nature/Mushrooms.png",
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf::ArrayMesh_3wc5w",
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf::ArrayMesh_nogx5",
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf::StandardMaterial3D_of1k0",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf::ArrayMesh_2n7gw",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf::ArrayMesh_ldr7x",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf::StandardMaterial3D_hwx6p",
+        "res://assets/environment/stylized_nature/Rocks_Diffuse.png",
+        "res://assets/environment/stylized_nature/TwistedTree_2.gltf::ArrayMesh_uen64",
+        "res://assets/environment/stylized_nature/TwistedTree_4.gltf::ArrayMesh_g7fxl",
+        "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png",
+        "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+        "res://assets/environment/terrain/stylised/dirt_path_NormalGL.png",
+        "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+        "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
+        "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+        "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
+        "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+        "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
+        "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+        "res://assets/environment/terrain/stylised/verge_grass_NormalGL.png",
+        "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+        "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
+        "res://scripts/world/foliage_camera_visibility.gdshader"
+      ],
+      "limit": "Use actual stored resources and direct GPU sampler RID metadata. Builtin uniform names alone are not active shader/array proof."
+    },
+    "ground_cover": {
+      "mode": "config_enabled",
+      "bindings": 161,
+      "kind_counts": {
+        "multimesh": 160,
+        "mesh_instance": 1
+      },
+      "first_nodes": [
+        "StormwoodGroundCover/GrassTile_-3_-1",
+        "StormwoodGroundCover/GrassTile_-3_0",
+        "StormwoodGroundCover/GrassTile_-3_-2",
+        "StormwoodGroundCover/GrassTile_-3_1"
+      ],
+      "bound_resource_paths": [
+        "res://shaders/cover_tier.gdshader",
+        "res://shaders/far_cover.gdshader",
+        "res://shaders/grass_field.gdshader",
+        "res://shaders/stone_field.gdshader"
+      ],
+      "limit": "Camera-relative tiers may omit visible tiles; identify mounted/disabled tiers separately. A valid RID proves a handle, not pixels."
+    },
+    "stormheart_bark_and_crown": {
+      "mode": "production_default",
+      "bindings": 58,
+      "kind_counts": {
+        "mesh_instance": 52,
+        "multimesh": 6
+      },
+      "first_nodes": [
+        "StormheartTree/OuterWorks/@MeshInstance3D@16181",
+        "StormheartTree/DynamoCore/@MeshInstance3D@16183",
+        "StormheartTree/CrownChamber/@MeshInstance3D@16185",
+        "StormheartTree/HollowTrunkAscent/@MeshInstance3D@16187"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/stylized_nature/Bark_TwistedTree.png",
+        "res://assets/environment/stylized_nature/Leaves_TwistedTree_C.png",
+        "res://assets/environment/stylized_nature/TwistedTree_2.gltf::StandardMaterial3D_wmy6j",
+        "res://assets/environment/stylized_nature/TwistedTree_4.gltf::StandardMaterial3D_bb00w",
+        "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png",
+        "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf::StandardMaterial3D_40f6r",
+        "res://assets/props/quaternius_fantasy/T_Trim_Metal_BaseColor.png",
+        "res://assets/props/quaternius_fantasy/T_Trim_Metal_Normal.png",
+        "res://assets/props/quaternius_fantasy/T_Trim_Metal_ORM.png"
+      ],
+      "limit": "Current presentation.enabled false does not mean the whole tree is absent. Original tree and documented fallback canopy remain live."
+    },
+    "stormheart_candidates": {
+      "status": "candidate off; shared original-tree nodes do not establish candidate coverage",
+      "flags": {
+        "ancient_trunk": false,
+        "branching_crown": false,
+        "built_detail": false,
+        "canopy_atlas": false
+      }
+    },
+    "glass_field_legacy": {
+      "mode": "legacy_default",
+      "bindings": 92,
+      "kind_counts": {
+        "mesh_instance": 92
+      },
+      "first_nodes": [
+        "GlassFieldPresentation/StormglassCluster_south_west/FusedStrikeScar",
+        "GlassFieldPresentation/StormglassCluster_south_west/GlassShard00",
+        "GlassFieldPresentation/StormglassCluster_south_west/GlassShard01",
+        "GlassFieldPresentation/StormglassCluster_south_west/GlassShard02"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+        "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+        "res://assets/environment/stylized_nature/DeadTree_1.gltf::StandardMaterial3D_y0pfy",
+        "res://assets/environment/stylized_nature/DeadTree_2.gltf::StandardMaterial3D_t6uqk",
+        "res://assets/environment/stylized_nature/DeadTree_3.gltf::StandardMaterial3D_pnjpb",
+        "res://assets/environment/team_tether/hall/team_tether_banner_rig.glb::StandardMaterial3D_16rmq",
+        "res://assets/environment/team_tether/hall/team_tether_banner_rig.glb::StandardMaterial3D_b6enn",
+        "res://assets/environment/team_tether/hall/team_tether_banner_rig.glb::StandardMaterial3D_tsvpr"
+      ],
+      "limit": "Counts are source-authored logical meshes, not a guaranteed census surface count. Current scorched_scars false: no scorched-ground candidate, low smoked-glass variant or clearing approval."
+    },
+    "rod_line": {
+      "mode": "production_default_state_dependent",
+      "bindings": 2672,
+      "kind_counts": {
+        "mesh_instance": 2672
+      },
+      "first_nodes": [
+        "StormwoodRodLine/RodPylon0/mesh_node",
+        "StormwoodRodLine/@MeshInstance3D@17664",
+        "StormwoodRodLine/RodPylon1/mesh_node",
+        "StormwoodRodLine/@MeshInstance3D@17665"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/team_tether/tether_pylon.glb::StandardMaterial3D_5lhef",
+        "res://assets/environment/team_tether/tether_pylon_albedo.png"
+      ],
+      "limit": "Imported pylon mesh-source null is intentional; active override null is not. Fresh reset does not earn aftermath; do not certify dead state if only live state is mounted."
+    },
+    "crown_stones_and_records": {
+      "mode": "production_default",
+      "bindings": 7,
+      "kind_counts": {
+        "mesh_instance": 7
+      },
+      "first_nodes": [
+        "CrownHeartstone/Rock_Medium_32/Rock_Medium_3",
+        "CrownRecords/CrownRecord_rain_ledger/Rock_Medium_22/Rock_Medium_2",
+        "CrownRecords/CrownRecord_rain_ledger/RecordGlyph",
+        "CrownRecords/CrownRecord_root_census/Rock_Medium_22/Rock_Medium_2"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf::StandardMaterial3D_ckox5",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf::StandardMaterial3D_hwx6p",
+        "res://assets/environment/stylized_nature/Rocks_Diffuse.png"
+      ],
+      "limit": "Reaching/story flags enable prompts; they do not demonstrate shader load. Scene visibility is not pixel exposure."
+    },
+    "dynamo_arena": {
+      "mode": "production_default",
+      "bindings": 11,
+      "kind_counts": {
+        "mesh_instance": 11
+      },
+      "first_nodes": [
+        "StormwoodDynamo/DynamoArena/CapacitorBank0/tether_pylon/mesh_node",
+        "StormwoodDynamo/DynamoArena/DischargeLane0",
+        "StormwoodDynamo/DynamoArena/CapacitorBank1/tether_pylon/mesh_node",
+        "StormwoodDynamo/DynamoArena/DischargeLane1"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/team_tether/tether_pylon.glb::StandardMaterial3D_5lhef",
+        "res://assets/environment/team_tether/tether_pylon_albedo.png"
+      ],
+      "limit": "Dynamic phase changes charge/glow/readout; one default census is not overload/break/released phase proof."
+    },
+    "capacitor_grove": {
+      "mode": "production_default_footing",
+      "bindings": 25,
+      "kind_counts": {
+        "mesh_instance": 25
+      },
+      "first_nodes": [
+        "StormglassArches/Footing_capacitor_grove/CapacitorGrovePresentation/CapacitorBank_west/GroundedPlinth",
+        "StormglassArches/Footing_capacitor_grove/CapacitorGrovePresentation/CapacitorBank_west/InstalledPylon/mesh_node",
+        "StormglassArches/Footing_capacitor_grove/CapacitorGrovePresentation/CapacitorBank_west/ChargeRing0",
+        "StormglassArches/Footing_capacitor_grove/CapacitorGrovePresentation/CapacitorBank_west/ChargeRing1"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/team_tether/tether_pylon.glb::StandardMaterial3D_5lhef",
+        "res://assets/environment/team_tether/tether_pylon_albedo.png"
+      ],
+      "limit": "Grove is mounted from configured capacitor_grove footing. Built player-made arch pieces absent from fresh world do not become renderer proof."
+    },
+    "sentinel": {
+      "mode": "production_default",
+      "bindings": 17,
+      "kind_counts": {
+        "mesh_instance": 17
+      },
+      "first_nodes": [
+        "StruckSentinelPresentation/CharredRootPlate",
+        "StruckSentinelPresentation/LightningSplitElder/DeadTree_1",
+        "StruckSentinelPresentation/FallenCrownLimb/DeadTree_2",
+        "StruckSentinelPresentation/LightningSplitScar/Scar00"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+        "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+        "res://assets/environment/stylized_nature/DeadTree_1.gltf::StandardMaterial3D_y0pfy",
+        "res://assets/environment/stylized_nature/DeadTree_2.gltf::StandardMaterial3D_t6uqk",
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf::StandardMaterial3D_of1k0",
+        "res://assets/environment/stylized_nature/Rocks_Diffuse.png"
+      ],
+      "limit": "Prior entrance originals can be reused for pixel subset; a late stand census records the currently mounted sentinel even if outside camera."
+    },
+    "camps": {
+      "mode": "production_default",
+      "bindings": 600,
+      "kind_counts": {
+        "mesh_instance": 600
+      },
+      "first_nodes": [
+        "StormwoodCamps/ashfoot_waycamp/CampCreatureBed/@Node3D@20952/camp_bed/Mesh",
+        "StormwoodCamps/ashfoot_waycamp/CampCreatureBed/NestRim/@MeshInstance3D@20955",
+        "StormwoodCamps/ashfoot_waycamp/CampCreatureBed/NestRim/@MeshInstance3D@20955/@MeshInstance3D@20956",
+        "StormwoodCamps/ashfoot_waycamp/CampCreatureBed/NestRim/@MeshInstance3D@20955/@MeshInstance3D@20957"
+      ],
+      "bound_resource_paths": [
+        "res://assets/environment/team_tether/tether_pylon.glb::StandardMaterial3D_5lhef",
+        "res://assets/environment/team_tether/tether_pylon_albedo_dead.png",
+        "res://assets/props/generated_camp/camp_bed.glb::StandardMaterial3D_ci7jn",
+        "res://assets/props/generated_camp/camp_bed_0.jpg",
+        "res://assets/props/generated_camp/camp_firewood.glb::StandardMaterial3D_6t0iq",
+        "res://assets/props/generated_camp/camp_firewood_base_color.jpg",
+        "res://assets/props/generated_camp/camp_firewood_metallic_roughness.jpg",
+        "res://assets/props/generated_camp/camp_firewood_normal.jpg",
+        "res://assets/props/generated_camp/camp_tent.glb::StandardMaterial3D_ngo70",
+        "res://assets/props/generated_camp/camp_tent_0.jpg",
+        "res://assets/props/generated_camp/camp_tent_base_color.jpg",
+        "res://assets/props/generated_camp/camp_tent_normal.jpg",
+        "res://assets/props/generated_camp/campfire_stone_ring.glb::StandardMaterial3D_jc6k5",
+        "res://assets/props/generated_camp/campfire_stone_ring_base_color.jpg",
+        "res://assets/props/generated_camp/campfire_stone_ring_metallic_roughness.jpg",
+        "res://assets/props/generated_camp/campfire_stone_ring_normal.jpg"
+      ],
+      "limit": "Camps all build after config validation. Recovery unlocks differ from material mounting. Missing prop path emits ERROR and skips geometry; remaining props do not certify omitted props."
+    },
+    "pickups_and_shafts": {
+      "mode": "progression_and_taken_state_dependent",
+      "bindings": 132,
+      "kind_counts": {
+        "mesh_instance": 132
+      },
+      "first_nodes": [
+        "StormwoodPickups/stormwood_pickup_route_01/@Node3D@20829/candy_pickup/geometry_0",
+        "StormwoodPickups/stormwood_pickup_route_02/@Node3D@20830/candy_pickup/geometry_0",
+        "StormwoodPickups/stormwood_pickup_route_03/@Node3D@20831/candy_pickup/geometry_0",
+        "StormwoodPickups/stormwood_pickup_route_04/@Node3D@20832/candy_pickup/geometry_0"
+      ],
+      "bound_resource_paths": [
+        "res://assets/props/candy_pickup/candy_pickup.glb::StandardMaterial3D_l6xwb",
+        "res://assets/props/candy_pickup/candy_pickup_0.png",
+        "res://assets/props/potion_plant/potion_plant.glb::StandardMaterial3D_i2yfo",
+        "res://assets/props/potion_plant/potion_plant_0.png",
+        "res://assets/props/potion_plant/potion_plant_1.png",
+        "res://assets/props/tm_orb/tm_orb.glb::StandardMaterial3D_xgr17",
+        "res://assets/props/tm_orb/tm_orb_0.jpg"
+      ],
+      "limit": "Requires_unlock/taken-state can omit rewards. Empty inline shader path is expected. Do not grant unlocked/reload/reward art approval for absent nodes."
+    },
+    "surge_lightning": {
+      "mode": "transient_phase_event",
+      "bindings": 0,
+      "kind_counts": {},
+      "first_nodes": [],
+      "bound_resource_paths": [],
+      "limit": "One daytime/default census may contain no current strike. Do not inject phase/flags or claim full Surge appearance; reuse any actual retained strike materials/images only at their precise source scope."
+    }
+  },
+  "mounted_camps": [
+    "ashfoot_waycamp",
+    "lantern_pools_camp",
+    "rodline_refuge",
+    "still_grove_shelter",
+    "lantern_hollow_waycamp",
+    "ember_bivouac"
+  ],
+  "bounded_verdict": "No concrete missing active material or required stored texture found in this mounted Stormwood frame. Five Terrain arrays and seven null-getter ground-cover shader resources hold valid direct GPU RID bindings. No material/art repair justified by these observations.",
+  "limits": [
+    "One Medium daytime catalogue stand at The Stormheart Tree, staged travel/clock and isolated user data; no earned campaign, High or whole visual matrix proof.",
+    "Mounted bindings and visible_in_tree do not prove in-camera pixels, texture contents, absence of earlier silent loader substitutions or full-bar appearance.",
+    "All current flag-off Stormheart/scorched-glass candidates remain off; shared nodes and preloads grant no candidate approval.",
+    "Rain/ceiling/steam are mounted under StormwoodSurge. No transient StormwoodLightning binding observed: strike, phase transitions, aftermath and full Surge remain unproved.",
+    "Actual pickups/arch presentation may be mounted through the catalogue state. This does not certify progression, construction, rewards or reload transactions.",
+    "Raw warnings retain two canopy layer retint conflicts and three deterministic creature-spacing fallback warnings, plus one deprecation.",
+    "F26#0 whole village/Hall/four-biomes/Low criterion is not closed by this supplement. Another non-author session performs the final strict criterion review."
+  ]
+}

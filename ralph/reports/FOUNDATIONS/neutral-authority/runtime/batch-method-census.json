@@ -1,0 +1,107 @@
+{
+  "source": "289efe0d8d76d9c27e2efecb465e47246b32f454",
+  "status": "NOT GREEN: affected source/fixture repairs required",
+  "suite_files": 670,
+  "declared_methods": 5434,
+  "attempted_markers": 5436,
+  "missing_declared_methods": [],
+  "reported_failed_methods": [
+    "test_band_content.gd :: test_merged_arrays_are_identical_to_the_pre_split_files",
+    "test_band_vegetation.gd :: test_merged_arrays_are_identical_to_the_pre_split_file",
+    "test_chapter_rewards.gd :: test_every_tm_in_the_game_can_actually_be_obtained",
+    "test_farming.gd :: test_farm_json_places_beds_where_r7_6_allows",
+    "test_gate_f_instrumentation.gd :: test_no_journey_walk_crosses_the_village_fence_away_from_a_gate",
+    "test_gate_f_segments.gd :: test_village_tutorial_shop_route_tracks_current_shell_and_clears_its_walls",
+    "test_gate_f_village_passage.gd :: test_closed_gate_refuses_crossing_but_allows_outside_detour",
+    "test_grandpa_yard_visual_identity.gd :: test_grandpa_domestic_apron_is_bounded_off_progression_space",
+    "test_grandpa_yard_visual_identity.gd :: test_grandpa_work_yard_has_one_coherent_domestic_cluster",
+    "test_inn_interior_visual_identity.gd :: test_bram_faces_the_customer_lane_instead_of_the_stock_wall",
+    "test_item_icons.gd :: test_every_item_has_a_non_empty_description",
+    "test_map_baker.gd :: test_authored_route_survives_coarse_terrain_sampling",
+    "test_meadows_named_location_ledger_0912.gd :: test_final_polish_locations_have_complete_accepted_evidence_rounds",
+    "test_meadows_south_trail_pulls_0912.gd :: test_nessa_makes_the_overlook_a_persisted_person_and_gift_pull",
+    "test_moves_data.gd :: test_every_move_has_a_valid_slot",
+    "test_objective_beacon.gd :: test_return_targets_match_authored_gates_and_grandpa",
+    "test_road_creature_visibility.gd :: test_historical_road_baseline_can_only_improve",
+    "test_save_format.gd :: test_a_species_the_catalogue_forgot_keeps_what_the_save_said",
+    "test_save_format.gd :: test_save_then_load_round_trips_creature_progression_and_moves",
+    "test_stormwood_road_surface.gd :: test_bake_manifest_is_fresh_and_covers_routes_and_surface",
+    "test_tournament_ground_presentation.gd :: test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring",
+    "test_vegetation_human_prompt_height.gd :: test_exact_failed_baked_tree_spawns_reachable_prompt_without_radius_change",
+    "test_village_street_0912.gd :: test_both_street_legs_place_buildings_and_thresholds_at_their_authored_roles",
+    "test_village_street_0912.gd :: test_every_moved_building_has_scatter_and_ground_cover_exclusion",
+    "test_village_street_0912.gd :: test_fences_define_working_yards_without_cutting_the_street",
+    "test_village_street_0912.gd :: test_opening_village_keeps_exactly_five_functional_people_inside",
+    "test_village_street_0912.gd :: test_south_street_buildings_share_level_ground_and_matching_aprons",
+    "test_village_street_0912.gd :: test_south_street_has_one_continuous_hidden_road_to_trailgate",
+    "test_village_street_0912.gd :: test_the_five_villagers_belong_to_visible_street_functions"
+  ],
+  "reported_ok_methods": 5407,
+  "script_error_census": [
+    {
+      "shard": 1,
+      "count": 6,
+      "sha256": "3eaefe2a990a16b9a32dbf56f5f8208b0a78d131d24cc2ca7341a3c0fbe401fc"
+    },
+    {
+      "shard": 2,
+      "count": 0,
+      "sha256": "76e7adde9d3d5434249fdb5d519f1e11d3eadd00593b24153013ae501fb0a522"
+    },
+    {
+      "shard": 3,
+      "count": 7,
+      "sha256": "ae7f929dbc135eb3890575c9eaa33cd6ef5696789970f092ab14a0a14c8d6232"
+    },
+    {
+      "shard": 4,
+      "count": 0,
+      "sha256": "378bd8097370e85701d9f9b31d78f0bad91e76a17c91b03e4196b587ea0a1284"
+    }
+  ],
+  "native": [
+    {
+      "shard": 1,
+      "native_exit": 1,
+      "wall_seconds": 720.687,
+      "started_utc": "2026-09-30T17:25:08.549190+00:00",
+      "finished_utc": "2026-09-30T17:37:09.244556+00:00",
+      "isolated_checkout": null
+    },
+    {
+      "shard": 2,
+      "native_exit": 1,
+      "wall_seconds": 1287.171,
+      "started_utc": "2026-09-30T17:40:27.177790+00:00",
+      "finished_utc": "2026-09-30T18:01:54.352938+00:00",
+      "isolated_checkout": null
+    },
+    {
+      "shard": 3,
+      "native_exit": 1,
+      "wall_seconds": 1915.11,
+      "started_utc": "2026-09-30T17:35:52.598042+00:00",
+      "finished_utc": "2026-09-30T18:07:47.707635+00:00",
+      "isolated_checkout": "D:\\tetherbound\\foundations-batch-check"
+    },
+    {
+      "shard": 4,
+      "native_exit": 1,
+      "wall_seconds": 285.016,
+      "started_utc": "2026-09-30T18:08:33.229415+00:00",
+      "finished_utc": "2026-09-30T18:13:18.243381+00:00",
+      "isolated_checkout": "D:\\tetherbound\\foundations-batch-check"
+    }
+  ],
+  "reuse_rule": "Reported ok markers whose method contains SCRIPT ERROR are not passing witnesses; failed original shards stay red.",
+  "inherited_method_explanation": {
+    "file": "test_stormwood_fenn_clearance.gd",
+    "parent": "res://tests/test_stormwood_varga_clearance.gd",
+    "methods": [
+      "test_stormwood_fenn_clearance.gd :: test_varga_is_grounded_on_the_authored_first_ascent",
+      "test_stormwood_fenn_clearance.gd :: test_varga_prompt_is_distinct_without_creating_dead_travel"
+    ],
+    "status": "Two inherited methods are legitimate suite attempts; all5434 local declarations plus2 inherited methods attempted=5436."
+  },
+  "unmapped_markers": []
+}

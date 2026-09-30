@@ -1,0 +1,542 @@
+{
+  "_comment": "Phase 2 canonical authored world-data package for Cloudreach Cliffs. Coordinates are metres in realm-local [x, y, z] space. This file defines composition and traversal contracts; it is not a procedural generator and does not place runtime nodes by itself.",
+  "schema_version": 1,
+  "realm": {
+    "id": "cloudreach_cliffs",
+    "display_name": "Cloudreach Cliffs",
+    "world_bounds": {
+      "min_x": -1600.0,
+      "max_x": 1600.0,
+      "min_y": -200.0,
+      "max_y": 1500.0,
+      "min_z": -500.0,
+      "max_z": 6000.0
+    },
+    "grounded_unlock_id": "cloudreach_upper_route_unlocked",
+    "fall_recovery": {
+      "_comment": "OP-0905-22: below-the-world failsafe (scripts/world/fall_recovery.gd). The kill plane sits this far below the CloudSea mesh's own Y (cloudreach_world.gd::_build_cloud_sea, not re-derived from world_bounds.min_y so the two can never drift apart) -- far enough that a real fall reads as dropping through the cloud sea before recovery, close enough that recovery follows within about a second. bounds_margin_m pads world_bounds.min_x/max_x/min_z/max_z outward so the kill volume can never be narrower than the traversable realm.",
+      "below_cloud_sea_m": 50.0,
+      "bounds_margin_m": 400.0
+    }
+  },
+  "transition_points": {
+    "stormwood_return": {
+      "id": "cloudreach_return_from_stormwood",
+      "role": "return_from_stormwood",
+      "region_id": "summit_final_stronghold",
+      "position": [-420.0, 1104.25, 5694.0],
+      "facing_yaw_deg": 180.0,
+      "peer_realm_id": "stormwood",
+      "peer_anchor_id": "stormwood_arrival_from_cloudreach",
+      "requires_flag": "realm_key_stormwood",
+      "save_anchor": true
+    },
+    "meadows_entry": {
+      "id": "cloudreach_arrival_from_meadows",
+      "role": "entry_from_meadows",
+      "region_id": "gate_lower_cliffs",
+      "position": [0.0, 105.0, -260.0],
+      "facing_yaw_deg": 165.0,
+      "peer_realm_id": "meadows",
+      "peer_anchor_id": "meadows_cloudreach_gate_exit",
+      "requires_flag": "realm_key_cloudreach",
+      "save_anchor": true
+    },
+    "meadows_return": {
+      "id": "cloudreach_return_to_meadows",
+      "role": "return_to_meadows",
+      "region_id": "gate_lower_cliffs",
+      "position": [-55.0, 105.0, -300.0],
+      "facing_yaw_deg": 180.0,
+      "peer_realm_id": "meadows",
+      "peer_anchor_id": "meadows_cloudreach_gate_return",
+      "requires_flag": "",
+      "save_anchor": true
+    }
+  },
+  "unlocks": [
+    {
+      "id": "fly_traversal_unlocked",
+      "granted_at_landmark_id": "windscar_flight_aerie",
+      "purpose": "Enables creature-powered flight and access to the visible High Roost sheer cliff."
+    },
+    {
+      "id": "cloudreach_upper_route_unlocked",
+      "granted_at_landmark_id": "sky_shrine_heartstone",
+      "purpose": "Releases the counterweight stair in Windscar Ravine, creating the grounded route to Upper Cloudreach and the Summit."
+    }
+  ],
+  "regions": [
+    {
+      "id": "gate_lower_cliffs",
+      "display_name": "Cloudreach Gate / Lower Cliffs",
+      "order": 1,
+      "position": [0.0, 160.0, 300.0],
+      "bounds": {"min_x": -950.0, "max_x": 950.0, "min_y": 50.0, "max_y": 400.0, "min_z": -400.0, "max_z": 1050.0},
+      "access": {
+        "mode": "ground",
+        "requires_unlock": "",
+        "blocks_ground_route": false,
+        "visible_from_region_ids": []
+      },
+      "purpose": "Arrival, vertical-terrain orientation, first camp and the first view toward the upper realm."
+    },
+    {
+      "id": "broken_causeways",
+      "display_name": "Broken Causeways",
+      "order": 2,
+      "position": [-240.0, 390.0, 1600.0],
+      "bounds": {"min_x": -1450.0, "max_x": 1000.0, "min_y": 150.0, "max_y": 720.0, "min_z": 850.0, "max_z": 2350.0},
+      "access": {
+        "mode": "ground",
+        "requires_unlock": "",
+        "blocks_ground_route": false,
+        "visible_from_region_ids": ["gate_lower_cliffs"]
+      },
+      "crown_cut": {
+        "_comment": "F08#4 (code-blind judge r1: the causeway route 'stops dead at a steep grass slope'). broken_causeway_main's climb from the Three Bells landing ((-450,342,1360) -> (-260,390,1560)) enters this region's drawn crown (top y 390) at its rim and runs up to ~20 m under it for its last ~100 m: from outside the road ends at a grass wall, and inside it the player walks under the crown with its grass cover floating overhead. Same carve as summit_final_stronghold (see its comment for every parameter): the crown is cut down to each road under it and the one carved surface is drawn and collided, so the road reads as a cutting climbing onto the plateau.",
+        "floor_half_width_m": 10.0,
+        "floor_drop_m": 0.25,
+        "bank_slope": 2.5,
+        "bank_normal_y": 0.64,
+        "min_lowering_m": 0.3,
+        "min_raise_m": 0.05,
+        "fill_clearance_m": 8.9,
+        "cell_m": 3.5
+      },
+      "purpose": "Shattered stone roads, bridge choices, resource pockets and previews of inaccessible high terrain."
+    },
+    {
+      "id": "windscar_ravine",
+      "display_name": "Windscar Ravine",
+      "order": 3,
+      "position": [-80.0, 470.0, 2850.0],
+      "bounds": {"min_x": -1100.0, "max_x": 950.0, "min_y": 200.0, "max_y": 820.0, "min_z": 2150.0, "max_z": 3600.0},
+      "access": {
+        "mode": "ground",
+        "requires_unlock": "",
+        "blocks_ground_route": false,
+        "visible_from_region_ids": ["broken_causeways"]
+      },
+      "purpose": "Narrow exposed traversal, the mid-biome conflict and the authored Fly unlock."
+    },
+    {
+      "id": "high_roost_sky_shrine",
+      "display_name": "High Roost / Sky Shrine",
+      "order": 4,
+      "position": [1110.0, 1020.0, 2920.0],
+      "bounds": {"min_x": 700.0, "max_x": 1550.0, "min_y": 760.0, "max_y": 1370.0, "min_z": 2350.0, "max_z": 3500.0},
+      "access": {
+        "mode": "fly_only",
+        "requires_unlock": "fly_traversal_unlocked",
+        "blocks_ground_route": true,
+        "visible_from_region_ids": ["broken_causeways", "windscar_ravine", "upper_cloudreach"]
+      },
+      "purpose": "A memorable sheer-cliff destination visible before it is reachable; its shrine releases the separate grounded route upward."
+    },
+    {
+      "id": "upper_cloudreach",
+      "display_name": "Upper Cloudreach",
+      "order": 5,
+      "position": [-100.0, 850.0, 4200.0],
+      "bounds": {"min_x": -1300.0, "max_x": 1050.0, "min_y": 650.0, "max_y": 1200.0, "min_z": 3450.0, "max_z": 4950.0},
+      "access": {
+        "mode": "ground_after_unlock",
+        "requires_unlock": "cloudreach_upper_route_unlocked",
+        "blocks_ground_route": false,
+        "visible_from_region_ids": ["broken_causeways", "windscar_ravine", "high_roost_sky_shrine"]
+      },
+      "purpose": "Large elevated plateau loops, the main settlement, stronger encounters and late-chapter preparation."
+    },
+    {
+      "id": "summit_final_stronghold",
+      "display_name": "Summit / Final Stronghold",
+      "order": 6,
+      "position": [120.0, 1160.0, 5350.0],
+      "bounds": {"min_x": -1000.0, "max_x": 1000.0, "min_y": 850.0, "max_y": 1500.0, "min_z": 4800.0, "max_z": 5850.0},
+      "access": {
+        "mode": "ground_after_unlock",
+        "requires_unlock": "cloudreach_upper_route_unlocked",
+        "blocks_ground_route": false,
+        "visible_from_region_ids": ["windscar_ravine", "upper_cloudreach"]
+      },
+      "crown_cut": {
+        "_comment": "F06 / C1 (CLOUDREACH-PLAYER-CAMERA 'the summit crown has no floor'). The upper_summit_road and the summit_overlook_loop's western leg climb up INSIDE this region's drawn crown (up to 33 m under it). cloudreach_world.gd carves the crown down to each such road -- a flat floor floor_drop_m under the road out to floor_half_width_m, then banks rising bank_slope metres per metre back to the crown -- and draws AND collides that one carved surface, so the whole crown can be stood on without roofing or walling the roads. A vertex is carved only when that lowers it by more than min_lowering_m; cell_m is the tessellation of the carved wedges and must stay under floor_half_width_m - 3.9 (ribbon half-width + trainer radius) divided by 1.42, so no triangle can reach from the bank over the ribbon. Banks steeper than bank_normal_y draw in the cliff material. The same cut FILLS the crown up toward a road standing over it (the overlook loop's rising east leg, both trench mouths): the same floor out to floor_half_width_m with banks falling bank_slope metres per metre, raising a vertex only by more than min_raise_m (so the ribbon never stands more than floor_drop_m + min_raise_m over it) -- with no height cutoff, so the crown always meets a road with a bank however high the road stands, never with fins or a hollow under it (review MEDIUM-1) -- so the road's hidden 7 m collision ribbon never walls or roofs walkable crown -- the co-op build has no route shoulders over it (review M1). A road's carve wins wherever it lowers the crown; elsewhere a fill never rises over any road's carve profile taken with a floor only fill_clearance_m wide (ribbon half-width + trainer radius + one cell diagonal, 3.9 + 1.42 x cell_m), so it cannot roof or wall a neighbouring road yet may bank up beside a level pad stub.",
+        "floor_half_width_m": 10.0,
+        "floor_drop_m": 0.25,
+        "bank_slope": 2.5,
+        "bank_normal_y": 0.64,
+        "min_lowering_m": 0.3,
+        "min_raise_m": 0.05,
+        "fill_clearance_m": 8.9,
+        "cell_m": 3.5
+      },
+      "purpose": "The authored final approach, elite stronghold, chapter climax and distant Water-biome setup."
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "realm_gate_crag",
+      "display_name": "Realm Gate Crag",
+      "region_id": "gate_lower_cliffs",
+      "position": [0.0, 150.0, -130.0],
+      "category": "major",
+      "silhouette": true,
+      "visible_from_region_ids": ["gate_lower_cliffs"],
+      "requires_traversal": "ground",
+      "requires_unlock": ""
+    },
+    {
+      "id": "lower_cliffs_waycamp",
+      "display_name": "Galefoot Waycamp",
+      "region_id": "gate_lower_cliffs",
+      "position": [-280.0, 180.0, 520.0],
+      "category": "settlement",
+      "silhouette": false,
+      "visible_from_region_ids": ["gate_lower_cliffs"],
+      "requires_traversal": "ground",
+      "requires_unlock": ""
+    },
+    {
+      "id": "three_bells_bridge",
+      "display_name": "Three Bells Bridge",
+      "region_id": "broken_causeways",
+      "position": [-485.0, 338.0, 1320.0],
+      "category": "major",
+      "silhouette": true,
+      "visible_from_region_ids": ["gate_lower_cliffs", "broken_causeways"],
+      "requires_traversal": "ground",
+      "requires_unlock": ""
+    },
+    {
+      "id": "broken_skyroad_arch",
+      "display_name": "Broken Skyroad Arch",
+      "region_id": "broken_causeways",
+      "position": [350.0, 480.0, 1940.0],
+      "category": "major",
+      "silhouette": true,
+      "visible_from_region_ids": ["gate_lower_cliffs", "broken_causeways"],
+      "requires_traversal": "ground",
+      "requires_unlock": ""
+    },
+    {
+      "id": "windscar_beacon",
+      "display_name": "Windscar Beacon",
+      "region_id": "windscar_ravine",
+      "position": [-260.0, 500.0, 2680.0],
+      "category": "major",
+      "silhouette": true,
+      "visible_from_region_ids": ["broken_causeways", "windscar_ravine"],
+      "requires_traversal": "ground",
+      "requires_unlock": ""
+    },
+    {
+      "id": "windscar_flight_aerie",
+      "display_name": "Windscar Flight Aerie",
+      "region_id": "windscar_ravine",
+      "position": [400.0, 610.0, 3250.0],
+      "category": "story",
+      "silhouette": true,
+      "visible_from_region_ids": ["windscar_ravine"],
+      "requires_traversal": "ground",
+      "requires_unlock": ""
+    },
+    {
+      "id": "sky_shrine_heartstone",
+      "display_name": "Sky Shrine",
+      "region_id": "high_roost_sky_shrine",
+      "position": [1110.0, 1050.0, 2940.0],
+      "category": "story",
+      "silhouette": true,
+      "visible_from_region_ids": ["broken_causeways", "windscar_ravine", "upper_cloudreach"],
+      "requires_traversal": "fly",
+      "requires_unlock": "fly_traversal_unlocked"
+    },
+    {
+      "id": "high_roost_perches",
+      "display_name": "The High Perches",
+      "region_id": "high_roost_sky_shrine",
+      "position": [900.0, 1020.0, 2700.0],
+      "category": "major",
+      "silhouette": true,
+      "visible_from_region_ids": ["broken_causeways", "windscar_ravine"],
+      "requires_traversal": "fly",
+      "requires_unlock": "fly_traversal_unlocked"
+    },
+    {
+      "id": "cliffhold_settlement",
+      "display_name": "Cliffhold",
+      "region_id": "upper_cloudreach",
+      "position": [-340.0, 830.0, 3970.0],
+      "category": "settlement",
+      "silhouette": true,
+      "visible_from_region_ids": ["windscar_ravine", "high_roost_sky_shrine", "upper_cloudreach"],
+      "requires_traversal": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked"
+    },
+    {
+      "id": "old_wind_observatory",
+      "display_name": "Old Wind Observatory",
+      "region_id": "upper_cloudreach",
+      "position": [430.0, 920.0, 4500.0],
+      "category": "major",
+      "silhouette": true,
+      "visible_from_region_ids": ["windscar_ravine", "upper_cloudreach"],
+      "requires_traversal": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked"
+    },
+    {
+      "id": "summit_eyrie_stronghold",
+      "display_name": "Summit Eyrie",
+      "region_id": "summit_final_stronghold",
+      "position": [100.0, 1160.0, 5350.0],
+      "category": "stronghold",
+      "silhouette": true,
+      "visible_from_region_ids": ["windscar_ravine", "upper_cloudreach"],
+      "requires_traversal": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked"
+    },
+    {
+      "id": "waterward_overlook",
+      "display_name": "Stormward Overlook",
+      "region_id": "summit_final_stronghold",
+      "position": [-420.0, 1110.0, 5650.0],
+      "category": "major",
+      "silhouette": true,
+      "visible_from_region_ids": ["upper_cloudreach", "summit_final_stronghold"],
+      "requires_traversal": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked"
+    }
+  ],
+  "routes": [
+    {
+      "id": "arrival_gate_road",
+      "from_region_id": "gate_lower_cliffs",
+      "to_region_id": "gate_lower_cliffs",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "",
+      "polyline": [[0.0, 105.0, -260.0], [-80.0, 130.0, 40.0], [-300.0, 145.0, 200.0], [-280.0, 180.0, 490.0], [-280.0, 180.0, 520.0]],
+      "_runtime_evidence": "The original direct segment from [-80,130,40] to the waycamp intersected the solid lower-cliffs mesa at [-139,145,183], pushing a normally walking player off the road. The western bend goes around the existing cliff face. The final level approach reaches camp height before its solid terrace edge at z=502, removing a measured 1.33 m entrance wall.",
+      "purpose": "Readable arrival road connecting the realm gate to Galefoot Waycamp."
+    },
+    {
+      "id": "lower_cliff_road",
+      "from_region_id": "gate_lower_cliffs",
+      "to_region_id": "broken_causeways",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "",
+      "polyline": [[-280.0, 180.0, 520.0], [-120.0, 205.0, 700.0], [-260.0, 235.0, 790.0], [-320.0, 300.0, 1040.0]],
+      "purpose": "Primary rising road from the arrival basin into the first suspended road network."
+    },
+    {
+      "id": "lower_overlook_loop",
+      "from_region_id": "gate_lower_cliffs",
+      "to_region_id": "gate_lower_cliffs",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "",
+      "polyline": [[-120.0, 205.0, 700.0], [260.0, 255.0, 620.0], [520.0, 300.0, 820.0], [-260.0, 235.0, 790.0]],
+      "purpose": "Optional overlook circuit that previews High Roost and the Summit instead of making Region 1 a corridor."
+    },
+    {
+      "id": "broken_causeway_main",
+      "from_region_id": "broken_causeways",
+      "to_region_id": "windscar_ravine",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "",
+        "polyline": [[-320.0, 300.0, 1040.0], [-540.0, 330.0, 1280.0], [-511.2, 338.25, 1305.6], [-468.0, 338.25, 1344.0], [-450.0, 342.0, 1360.0], [-260.0, 390.0, 1560.0], [-230.0, 390.0, 1575.0], [110.0, 420.0, 1815.0], [120.0, 420.0, 1830.0], [-60.0, 450.0, 2220.0], [-100.0, 470.0, 2440.0]],
+      "purpose": "Main broken skyroad, crossing alternating rope and stone spans before entering the ravine."
+    },
+    {
+      "id": "causeway_west_loop",
+      "from_region_id": "broken_causeways",
+      "to_region_id": "broken_causeways",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "",
+      "polyline": [[-320.0, 300.0, 1040.0], [-1000.0, 350.0, 1320.0], [-1200.0, 420.0, 1700.0], [-760.0, 400.0, 2050.0], [-60.0, 450.0, 2220.0]],
+      "purpose": "Long optional western circuit with resource pockets and a reconnecting route."
+    },
+    {
+      "id": "windscar_floor_loop",
+      "from_region_id": "windscar_ravine",
+      "to_region_id": "windscar_ravine",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "",
+        "polyline": [[-100.0, 470.0, 2440.0], [-520.0, 430.0, 2720.0], [-300.0, 460.0, 3100.0], [120.0, 520.0, 3380.0], [373.0, 610.0, 3262.5357], [400.0, 610.0, 3250.0]],
+      "purpose": "Ravine circuit through the beacon and flight aerie, with a return leg rather than a dead-end spur."
+    },
+    {
+      "id": "windscar_to_high_roost_flight",
+      "from_region_id": "windscar_ravine",
+      "to_region_id": "high_roost_sky_shrine",
+      "bidirectional": true,
+      "traversal_mode": "fly",
+      "requires_unlock": "fly_traversal_unlocked",
+      "polyline": [[400.0, 610.0, 3250.0], [620.0, 720.0, 3150.0], [850.0, 880.0, 3020.0], [1110.0, 1050.0, 2940.0]],
+      "purpose": "The mandatory Fly crossing to the sheer-cliff Sky Shrine; never part of the grounded route graph."
+    },
+    {
+      "id": "windscar_counterweight_pass",
+      "from_region_id": "windscar_ravine",
+      "to_region_id": "upper_cloudreach",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[-100.0, 470.0, 2440.0], [-360.0, 520.0, 2900.0], [-650.0, 570.0, 3300.0], [-820.0, 620.0, 3480.0], [-720.0, 700.0, 3680.0], [-400.0, 780.0, 3890.0]],
+      "purpose": "A physical counterweight stair released at the Sky Shrine; the sole grounded crossing into Upper Cloudreach."
+    },
+    {
+      "id": "upper_plateau_circuit",
+      "from_region_id": "upper_cloudreach",
+      "to_region_id": "upper_cloudreach",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[-400.0, 780.0, 3890.0], [-920.0, 760.0, 4100.0], [-750.0, 850.0, 4560.0], [-180.0, 900.0, 4720.0], [430.0, 920.0, 4500.0], [-340.0, 830.0, 3970.0]],
+      "purpose": "A broad settlement-and-observatory loop supporting detours, resources and late-game preparation."
+    },
+    {
+      "id": "upper_summit_road",
+      "from_region_id": "upper_cloudreach",
+      "to_region_id": "summit_final_stronghold",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[-180.0, 900.0, 4720.0], [450.0, 900.0, 4660.0], [520.0, 980.0, 4870.0], [300.0, 1080.0, 5100.0], [100.0, 1160.0, 5350.0]],
+      "purpose": "Final authored ascent from Upper Cloudreach to the Summit Eyrie approach."
+    },
+    {
+      "id": "summit_overlook_loop",
+      "from_region_id": "summit_final_stronghold",
+      "to_region_id": "summit_final_stronghold",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[100.0, 1160.0, 5350.0], [520.0, 1210.0, 5520.0], [160.0, 1180.0, 5740.0], [-420.0, 1110.0, 5650.0], [-520.0, 1080.0, 5300.0], [100.0, 1160.0, 5350.0]],
+      "purpose": "Summit circuit around the stronghold, final arena and Waterward Overlook."
+    },
+    {
+      "id": "windscar_counterweight_return",
+      "from_region_id": "windscar_ravine",
+      "to_region_id": "windscar_ravine",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[-300.0, 460.0, 3100.0], [-650.0, 570.0, 3300.0]],
+      "purpose": "Return leg that closes the Windscar floor loop: from the chain bridge's far landing straight up to the counterweight stair's second landing, so the post-shrine return from the aerie no longer re-crosses the bridge to the junction.",
+      "_why_f07_route_edit": "F07#2 (WORLD 2.1 'use shortcuts and route edits to remove dead travel'). The floor loop dead-ended at the aerie; the required aerie -> counterweight return walked the whole loop back over the chain bridge to the Windscar junction and up the stair's lower flight (3,254 m, the recorded 885.87 s stretch). Both ends are existing pads (floor-loop vertex 2, counterweight vertex 2), the leg runs perpendicular to the chain bridge (clear of its deck), and it joins the stair 780 m of arc below the sealed upper_counterweight_gate, so the seal and its protected regions are unchanged. It opens with the stair it feeds."
+    },
+    {
+      "id": "observatory_summit_link",
+      "from_region_id": "upper_cloudreach",
+      "to_region_id": "upper_cloudreach",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[430.0, 920.0, 4500.0], [450.0, 900.0, 4660.0]],
+      "purpose": "Short saddle from the Old Wind Observatory pad to the summit road's first bend, closing the plateau/summit-road fork into a triangle.",
+      "_why_f07_route_edit": "F07#2 (WORLD 2.1). The plateau circuit and the summit road both leave the (-180,900,4720) fork and end 161 m apart; after the east anchor at the observatory the required route walked 649 m west to the fork and 633 m back east on the summit road. Both ends are existing pads; no landmark, region or gate changes."
+    },
+    {
+      "id": "observatory_latch_descent",
+      "from_region_id": "summit_final_stronghold",
+      "to_region_id": "upper_cloudreach",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "side_observatory_latch_complete",
+      "polyline": [[-520.0, 1080.0, 5300.0], [-350.0, 990.0, 5010.0], [-180.0, 900.0, 4720.0]],
+      "purpose": "F07#0 Observatory return latch (WORLD 11, ruling (b) on #356): the Fly-only drop from the summit loop's west pad to the plateau fork, walkable only once the far-side latch is thrown. Two latch-built stone spans meet at a mid landing pad (a Fly-only perch before the latch) that carries a cliffglass node, so the 696 m descent has no A7-empty stretch; no ground ribbon or shoulder is added."
+    }
+  ],
+  "bridges": [
+    {
+      "id": "first_rope_span",
+      "route_id": "broken_causeway_main",
+      "region_id": "broken_causeways",
+      "type": "rope_suspension",
+      "position": [-495.0, 336.0, 1320.0],
+      "endpoints": [[-540.0, 330.0, 1280.0], [-450.0, 342.0, 1360.0]],
+      "deck_profile": [[-540.0,330.0,1280.0],[-511.2,338.25,1305.6],[-468.0,338.25,1344.0],[-450.0,342.0,1360.0]],
+      "width_m": 4.0,
+      "length_m": 121.0,
+      "requires_unlock": ""
+    },
+    {
+      "id": "split_stone_viaduct",
+      "route_id": "broken_causeway_main",
+      "region_id": "broken_causeways",
+      "type": "broken_stone",
+      "position": [-60.0, 395.0, 1695.0],
+        "endpoints": [[-230.0, 390.0, 1575.0], [110.0, 420.0, 1815.0]],
+      "width_m": 7.0,
+      "length_m": 419.0,
+      "requires_unlock": ""
+    },
+    {
+      "id": "west_watch_ropeway",
+      "route_id": "causeway_west_loop",
+      "region_id": "broken_causeways",
+      "type": "rope_suspension",
+      "position": [-980.0, 405.0, 1875.0],
+      "endpoints": [[-1200.0, 420.0, 1700.0], [-760.0, 400.0, 2050.0]],
+      "width_m": 3.5,
+      "length_m": 563.0,
+      "requires_unlock": ""
+    },
+    {
+      "id": "windscar_chain_bridge",
+      "route_id": "windscar_floor_loop",
+      "region_id": "windscar_ravine",
+      "type": "rope_chain",
+      "position": [-410.0, 445.0, 2910.0],
+      "endpoints": [[-520.0, 430.0, 2720.0], [-300.0, 460.0, 3100.0]],
+      "width_m": 3.5,
+      "length_m": 440.0,
+      "requires_unlock": ""
+    },
+    {
+      "id": "upper_cloudreach_arch",
+      "route_id": "upper_plateau_circuit",
+      "region_id": "upper_cloudreach",
+      "type": "ancient_stone",
+      "position": [-835.0, 805.0, 4330.0],
+      "endpoints": [[-920.0, 760.0, 4100.0], [-750.0, 850.0, 4560.0]],
+      "width_m": 8.0,
+      "length_m": 499.0,
+      "requires_unlock": "cloudreach_upper_route_unlocked"
+    },
+    {"id": "observatory_latch_stair_upper", "route_id": "observatory_latch_descent", "position": [-435.0, 1035.0, 5155.0], "endpoints": [[-520.0, 1080.0, 5300.0], [-350.0, 990.0, 5010.0]], "deck_profile": [[-520.0, 1080.0, 5300.0], [-515.95, 1080.0, 5293.1], [-435.0, 1035.0, 5155.0], [-354.05, 990.0, 5016.9], [-350.0, 990.0, 5010.0]], "length_m": 348.0, "region_id": "upper_cloudreach", "type": "ancient_stone", "width_m": 6.0, "requires_unlock": "side_observatory_latch_complete", "built_by_flag": "side_observatory_latch_complete", "_why_built_by_flag": "Deck visibility, collision and ground surfaces follow this world flag (cloudreach_world.gd _sync_progression_gates); the pads stay as the visible reverse side before the latch. The last 8 m at each pad is level with it: a latch deck is not in the crown-taper road network, so a sloped end left a 1.3 m step up onto the pad."},
+    {"id": "observatory_latch_stair_lower", "route_id": "observatory_latch_descent", "position": [-265.0, 945.0, 4865.0], "endpoints": [[-350.0, 990.0, 5010.0], [-180.0, 900.0, 4720.0]], "deck_profile": [[-350.0, 990.0, 5010.0], [-345.95, 990.0, 5003.1], [-265.0, 945.0, 4865.0], [-184.05, 900.0, 4726.9], [-180.0, 900.0, 4720.0]], "length_m": 348.0, "region_id": "upper_cloudreach", "type": "ancient_stone", "width_m": 6.0, "requires_unlock": "side_observatory_latch_complete", "built_by_flag": "side_observatory_latch_complete", "_why_built_by_flag": "Deck visibility, collision and ground surfaces follow this world flag (cloudreach_world.gd _sync_progression_gates); the pads stay as the visible reverse side before the latch. The last 8 m at each pad is level with it: a latch deck is not in the crown-taper road network, so a sloped end left a 1.3 m step up onto the pad."}
+  ],
+  "gates": [
+    {
+        "id": "high_roost_fly_gate",
+      "kind": "traversal",
+      "region_id": "windscar_ravine",
+        "position": [426.4, 623.2, 3238.0],
+      "required_traversal": "fly",
+      "requires_unlock": "fly_traversal_unlocked",
+      "protects_region_ids": ["high_roost_sky_shrine"]
+    },
+    {
+        "id": "upper_counterweight_gate",
+      "kind": "story_unlock",
+      "region_id": "windscar_ravine",
+      "_placement": "F06 (restores authored intent): the gate protects upper_cloudreach/summit_final_stronghold, so it stands where windscar_counterweight_pass first enters the upper_cloudreach region bounds (y reaches 650 on the [-820,620,3480]->[-720,700,3680] segment, t=0.375, arc length 1353.9 m). The former [-123.4,474.5,2481.4] sat 48 m past the Windscar junction and put Windscar content (the Windscar beacon crown, its bell and optional_loop pickups, ~210-270 m further up) behind the lock. The portcullis opening (opening_width_m, closed by LockedTraversalBarrier and its drawn LockedGateClosure) spans the ridge's flat walkable track (2 x (0.53 x 21.75 + 0.4) m); the piers and the masonry wing walls (wing_width_m) carry the closure across the ridge's falling shoulders to +/-27.28 m (1.10 x 21.75 m flared shoulder + 0.4 m capsule per side), all reaching barrier_depth_below_m below the gate point (deepest dropped ridge edge 14 + 2 x 20 m). Non-colliding rock spurs and ridge shelves that would straddle the closed gate are not built (cloudreach_world.gd straddles_closed_ground_gate). The Fly side of the same seal is cloudreach_physical_runtime.json restrictions cloudreach_counterweight_stair_1..7 and cloudreach_counterweight_gate_crown.",
+        "position": [-782.5, 650.0, 3555.0],
+      "opening_width_m": 24.0,
+      "wing_width_m": 13.0,
+      "barrier_depth_below_m": 56.0,
+      "required_traversal": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "protects_region_ids": ["upper_cloudreach", "summit_final_stronghold"],
+      "_comment_approach_position": "F06 rejoin gate: where cloudreach_world.gd::enforce_sealed_placement seats a trainer whose loaded or carried-over pose lies in a protected region while this gate is closed in the current (host) world. The counterweight pass's own first point, on the gate's legal (south) side in windscar_ravine.",
+      "approach_position": [-100.0, 470.0, 2440.0]
+    }
+  ]
+}

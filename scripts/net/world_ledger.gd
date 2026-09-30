@@ -1,4 +1,5 @@
 extends RefCounted
+const ACTOR_VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 
 const STORMWOOD_ARCH_BUILD := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 
@@ -1119,7 +1120,32 @@ func _legacy_receipt_only_reward(intent: Dictionary, peer_id: int, realm: String
 	return verdict
 
 
+## Internal typed host arm; not recognized by _commit_intent/client packets.
+func commit_actor_vitals_delivery(delivery: Dictionary, peer_id: int) -> Dictionary:
+	var op := {"op": "actor_vitals_journal", "scope": "world",
+		"delivery_id": str(delivery.get("delivery_id", "")), "delivery": delivery.duplicate(true)}
+	if world == null or not ACTOR_VITALS.valid_world_op(op, world.get("reward_deliveries"),
+		str(world.get("reward_delivery_namespace"))):
+		return _refuse("actor_vitals", peer_id, "invalid_vitals", "That accepted vitality record is not ready.")
+	return _commit([op, {"op": "actor_vitals_settle", "scope": "player", "peers": [peer_id],
+		"delivery": delivery.duplicate(true)}], "actor_vitals", peer_id, "")
+
+
+func accept_actor_vitals_delivery(id: String, character: String, journal_revision: int,
+		receipt: Dictionary, peer_id: int) -> Dictionary:
+	if character.is_empty():
+		return _refuse("actor_vitals_accept", peer_id, "not_admitted", "This character has not been admitted.")
+	var op := {"op": "actor_vitals_accept", "scope": "world", "delivery_id": id,
+		"character_id": character, "journal_revision": journal_revision, "receipt": receipt.duplicate(true)}
+	if world == null or not ACTOR_VITALS.valid_world_op(op, world.get("reward_deliveries"),
+		str(world.get("reward_delivery_namespace"))):
+		return _refuse("actor_vitals_accept", peer_id, "stale_vitals_ack", "That vitality receipt is no longer current.")
+	return _commit([op], "actor_vitals_accept", peer_id, "")
+
+
 func accept_reward_delivery(delivery_id: String, character_id: String, peer_id: int) -> Dictionary:
+	if delivery_id.begins_with("actor_vitals:"):
+		return _refuse("reward_delivery_accept", peer_id, "typed_receipt_required", "That vitality receipt requires its exact revision.")
 	var raw: Variant = (world.get("reward_deliveries") as Dictionary).get(delivery_id)
 	if delivery_id.is_empty() or character_id.is_empty() or not raw is Dictionary \
 			or str((raw as Dictionary).get("character_id", "")) != character_id:
