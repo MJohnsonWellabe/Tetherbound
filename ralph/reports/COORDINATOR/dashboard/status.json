@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-30T02:20:55Z",
+ "updated": "2026-09-30T02:42:39Z",
  "headline": [
-  "OWNER REDESIGN (2026-09-29): RD-01..RD-36 and 34 feature rows F16–F49 with 179 criteria. RD-36 prioritizes content/code, minimum necessary testing and coherent validation batches; required acceptance proofs, independent verdicts and CI remain. CODEX_START_HERE governs Waves 0–3.",
+  "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
   "Criteria met: 95 of 280. Original: 95/101; redesign: 0/179. All five F16 criteria in progress; no new acceptance counted.",
   "Wave 0: foundations evidence candidate 1fb68ea08 pushed, main 82eda1835 merged. Independent F16#0/#1/#2/#3 candidate MET; actual title New Game, bed wake and all six Grandpa lines pass. Full unit batch remains open; old-load expectations are being corrected to RD-35 without weakening current-schema persistence. Combat and VFX implementation patches plus graphics preset code are drafted in ignored scratch; prepared lane branches apply after F16 lands. Board duty: tb/redesign-board.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
@@ -380,17 +380,17 @@
   },
   {
    "lane": "tb/combat",
-   "now": "F21 actual config/host receipt/knockback/reaction/damage-number code patch drafted in ignored scratch; tb/combat checkout ready; apply after F16",
+   "now": "F21 branch implementation authorized under RD-37 against pushed F16 candidate; combat feedback/host receipts/reactions/numbers draft applying; lands after F16",
    "next": "Work order in CODEX_START_HERE §6: F21, F22, F23, F24"
   },
   {
    "lane": "tb/vfx",
-   "now": "F25 data-driven archetype/budget/move projectile code draft in ignored scratch; tb/vfx checkout ready; apply after F16",
+   "now": "F25 branch implementation authorized under RD-37; 24 archetypes/52 move maps/mastery/budgets and original cues draft applying; lands after F16",
    "next": "Work order in CODEX_START_HERE §6: F25, F35"
   },
   {
    "lane": "tb/lookdev",
-   "now": "F26 persistent device-local graphics preset/settings/renderer override code draft in ignored scratch; tb/lookdev checkout preparing; apply after F16",
+   "now": "F26 graphics branch ready; persistent preset/settings/renderer draft, independent persistence issue being fixed; lands after F16",
    "next": "Work order in CODEX_START_HERE §6: F26"
   },
   {
@@ -490,7 +490,7 @@
  "four_chapter_run": null,
  "wip": [
   "F16 evidence 1fb68ea08 / peer+title runtime e457754dd: independent #0–#3 candidates MET. Actual populated ENet peers preserve all 8 world, 14 personal and 9 per-creature fields through production saves/reloads and named-ID rejoin. Actual New Game, bed wake, six Grandpa lines, authored-gifts-only satchel and v28 autosave pass. Shard1 original red portable expectation was repaired and affected checks pass; shard2 found two obsolete satchel migration expectations plus omitted historical manifest files from sparse checkout. Preserve failed logs; rerun only affected checks and execute every remaining shard without exclusions. Nothing newly MET on main.",
-  "OWNER RD-36: prioritize content and code generation. Test only for acceptance or substantial rework risk, batch related changes, reuse passing evidence for unchanged relevant source/path, and rerun affected checks after fixes. Full suites no longer repeat per criterion. Keep required save/authority/transaction, actual-player-path and visual proofs, independent reviews and full-ci PR labels; never skip/disable/quarantine tests.",
+  "OWNER RD-37 supersedes automatic full-ci for any code/data/scene/test change. Units/full CI are exceptional: explicit acceptance or integration risk that scoped checks cannot cover. Reuse valid proof; a process-only green never proves engine behavior. Advance independent next tasks on lane branches while checks/CI run, against pushed dependency candidates if needed; land only after dependencies. Never skip/disable/quarantine tests or remove a selected label to evade red. F16#4 explicitly names the full unit suite; its already-running batch remains required, with affected repairs only.",
   "Active ownership: foundations owns Wave 0 source/tests and its Godot batch; root owns board/STATE and bounded satchel expectation repair after shard exit. Combat owns impact/host receipts and feedback primitives; VFX owns move archetypes/projectile/VFX move blocks; lookdev owns renderer/settings/shaders. Shared paths serialize. No tracked Wave 1 implementation before F16. Import/render/export writers serialize; concurrent units require separate frozen source checkouts and user-data roots because some tests mutate res/config fixtures.",
   "Proof shortcuts disclosed: authored v27 and populated carrier fixtures, isolated profiles, direct load/picker/Steam/name callbacks, physical injected joypad taps and loft-to-Grandpa teleport. Grandpa conversation actually observed all six authored lines. Peer rejoin clears memory in the same processes, without OS restart; JSON numeric normalization compares full payloads. Peer host logged two closed-channel sends at disconnect; original coordinator fallback error retained, startup isolation corrected with an independently probed one-frame readiness wait. Named playground has only the established material-null native error set, no SCRIPT ERROR. Future gameplay transaction verbs and device/visual evidence are not claimed.",
   "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE §6. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE §7.5 and STATE §0.",
