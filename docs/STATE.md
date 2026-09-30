@@ -6,7 +6,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 107 of 280:** original 95/101, redesign 12/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
+**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 108 of 280:** original 95/101, redesign 13/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | #0–#3 main107; services360 strict MET. M1 a6fb native1 farmhouse-wall stall; door-clear fix pending. F18 held. |
+| `tb/foundations` | F16 | F16 all5 main;5422 pass witnesses/selectedCI retained. c023 neutral registry/vitals wire7 SOURCE gate pending, no engine. |
+| `tb/hub` | F17, F18 | #0–#3 main108. M1 r4 1/354.5s: catch PASS, farmhouse wood FAIL; coherent route draft review. F18 held. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 2b34 actor/status5/68/0+parsers. Prior10/734+16 native0; aborted9 red retained. Durable HP/loadout open. |
-| `tb/vfx` | F25, F35 | 89a075 r14 unit27/light18 PASS, smallstones lease FAIL/native1;36PNG retained, blind pending; flag off/F25 open. |
-| `tb/lookdev` | F26 | #1/#2/#4 main107; full12 strict MET. ff0395 trainer/Water native0, Storm census active; Cloud craft FAIL/#0/#3/#5 open. |
-| `tb/training` | F27–F30, F37 | 0f9d3 review; essence/candy source, authority/runtime open; no MET. |
-| `tb/homestead` | F31–F34 | 6f37f5 review; site/farm source, durable resolver/milestone open; no MET. |
+| `tb/combat` | F21–F24 | df99 WIP;2/110/0 native0/prior5/68+parsers; aborted9 retained. Commands/HP/loadout unconnected. |
+| `tb/vfx` | F25, F35 | bdda WIP;R14 blind craft FAIL/identity PASS;R17 SOURCE PASS/native pending/OFF. |
+| `tb/lookdev` | F26 | #1/#2/#4 main108. b6a three censuses native0; Cloud craft FAIL/#0/#3/#5 open. |
+| `tb/training` | F27–F30, F37 | #0 item-only489 main; static strict MET999/99. Essence/spend authority/runtime open. |
+| `tb/homestead` | F31–F34 | acdab inactive bootstrap/crop SOURCE PASS; durable conversion/milestone open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |

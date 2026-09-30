@@ -1483,21 +1483,21 @@
    "title": "Type essence and chosen leveling",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 0,
+   "pct": 17,
    "counts": {
-    "met": 0,
+    "met": 1,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 6,
+    "not_started": 5,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Eight type essences (ground, water, air, electric, fire, dark, ice, psychic) and Tether Candy exist as stackable items.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "Independent strict static MET at5ca22f623474ffd8c9377a9a62e659c7e494455a: exact nine added item definitions; eight canonical essences stack999, Tether Candy stack99; existing catalogue otherwise parsed-equal. Actual unchanged ItemDB loader and Inventory capped-stack path inspected. Raw final review: ralph/reports/TRAINING/f27/review-items-cut-5ca22f.txt. Shortcuts disclosed: static data/production-path inspection only; no Godot, acquisition, spending, UI, save/reload or co-op execution. RD-36/RD-37 permit isolated item-existence proof; all other F27 rows open. Main credit begins at merge.",
+     "gap": ""
     },
     {
      "text": "Sources work: defeating wilds, releasing a caught creature (its type), attuned nodes, essence crops, research tasks and a capped daily care trickle; no creature expeditions or automation.",

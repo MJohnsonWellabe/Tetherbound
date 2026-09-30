@@ -1,0 +1,19 @@
+Independent strict F27#0 final committed cut verdict
+Reviewer role: independent read-only source reviewer, not the implementation author.
+Exact candidate: 5ca22f623474ffd8c9377a9a62e659c7e494455a
+Main baseline: 1daa6dfff5ac4aa509e627c5e2f2fd2cff7ce972
+Criterion wording: Eight type essences (ground, water, air, electric, fire, dark, ice, psychic) and Tether Candy exist as stackable items.
+Strict verdict: MET ON THE REVIEWED CANDIDATE. Count on main only after merge. This is one criterion, F27#0; no other F27 criterion is closed.
+
+Independent final audit passes. The baseline is an ancestor of the candidate. The full candidate diff against that baseline contains exactly data/items/items.json and two training evidence files. items.json has exactly nine new definitions: essence_ground, essence_water, essence_air, essence_electric, essence_fire, essence_dark, essence_ice, essence_psychic and tether_candy. Removing those nine definitions makes the entire parsed catalogue exactly equal to main: no existing item or other catalogue field changed. Committed LF-normalized items SHA256 is 16d7394713a57a37212a2417d8cd5f399db9ef523478975d29cba6e79d54cadc, matching the independently reviewed draft. Diff whitespace check passes.
+
+All eight essence IDs, types and integer stack limits match the canonical schema: stack999 each. Names match their eight canonical types. Tether Candy is named correctly with integer stack99, kind training and no level_up field. Icons exist in Git, and none of these nine IDs is overwritten by the existing Water proposal registry. Existing legacy candies are unchanged. No seeds, Forge/attuned/gear items, hide rename, F28 recipe/content, runtime script, config, scene, save/autoload change or UI activation is included.
+
+Actual reachable production path inspected: project.godot autoloads Game; Game._ready/reset instantiate the default ItemDB. ItemDB.ITEMS_PATH reads this data/items/items.json root items dictionary into the canonical _items registry. has/definition query it and stack_size reads its stack field. Game configures PlayerState with this ItemDB; PlayerState.configure/_build_transients create canonical Inventory bound to it. Inventory.add reads stack_size, tops up partial same-ID stacks, opens additional capped slots and preserves overflow; move_slot merges matching stackable IDs to the same cap. There is no item-kind whitelist excluding essence or training. These files are byte-identical at the candidate, current main baseline and prior independently inspected baseline a6fbdb5bac7d3af93a59e45c246399943b9ee813. Canonical stack behavior requires no new runtime implementation for these IDs.
+
+Evidence scope/disclosure: exact parsed committed JSON and inspection of actual unchanged loader/inventory paths. No Godot constructor, native inventory operation, acquisition, Altar spending, player UI, save/reload or two-peer path was executed. The F27#0 wording specifies item existence/stackability and names no native/player-path/co-op test. Under RD-36/RD-37, this isolated data fact is strictly met with disclosed static evidence and no additional engine/unit/full-CI run. Generic inventory test source exists but is not cited as a newly executed result. No test was skipped, disabled or quarantined.
+
+The sellable:false metadata is present but is not treated as proof of universal vendor enforcement. Tether Candy consumption remains inactive. Sources, leveling, release/spend transactions, route ledger and all other F27 criteria remain OPEN. The prior archived draft report is accurately identified as a draft; this final committed-cut report supersedes its pending-pin qualification.
+
+Audit helper: .tmp/independent-f27-review/items_cut_final_audit.py
+This reviewer made no tracked-source/board/STATE change and no Git mutation. Raw review can be archived with its final pin by the lane owner; the board must retain static-only proof disclosure and must not count this candidate before merge to main.
