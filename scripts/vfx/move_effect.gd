@@ -318,6 +318,11 @@ func action_id() -> String:
 func encounter_id() -> String:
 	return str(_context.get("encounter_id", "global"))
 
+func confirm_presentation_impact() -> void:
+	# A host result may reach a late client before its local travel clock.
+	# Snap the frozen visual only; guarded finish keeps arrival exactly once.
+	_finish_presentation()
+
 func cancel_presentation() -> void:
 	# This cannot cancel an earned action or an authoritative pending hit.
 	# Stop local processing now; deferred deletion still releases the lease.

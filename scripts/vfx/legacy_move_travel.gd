@@ -175,8 +175,13 @@ func _finish_presentation() -> void:
 	if _done: return
 	_done = true
 	global_position = _to
+	_redraw(1.0)
 	arrived.emit()
 	queue_free()
+
+func confirm_presentation_impact() -> void:
+	# Legacy travel fades out at contact; the combat receipt owns its flash.
+	_finish_presentation()
 
 
 ## The bolt itself, rebuilt each frame in local space.
