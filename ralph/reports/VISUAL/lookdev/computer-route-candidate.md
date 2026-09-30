@@ -32,8 +32,25 @@ production-scene setup is not an earned campaign run. Combat, owner Ally
 performance, code-blind visual matrices, High/Medium look approval, every
 material path and the F49 integrated run need their own evidence.
 
-Non-Stormwood routes explicitly pin day/clear weather using the existing
-survey helper. Stormwood keeps the production Surge clock and weather live;
+Non-Stormwood routes initialize day/clear using the existing survey helper,
+then restore normal live clock/weather callbacks for the timed route. This
+includes production clock blending, camera quality updates and weather work
+in the measured frames. Stormwood keeps its Surge clock and weather live;
 the receipt records the observed phase at both ends. A fight or dialogue that
 holds locomotion consumes the declared route budget and can fail the route;
-the tool never dismisses it, grants progress or teleports past it.
+the tool never dismisses it, grants progress or teleports past it. Samples
+include any such hold and possible stationary padding to the minimum frame
+count; they are not a claim of continuous-motion-only timing.
+
+Independent VFX source review of `d9cdb9788` identified inherited callback
+suppression as a timing blocker before any native capture. This candidate
+restores both callback sets and unfreezes the clock before measurement.
+Malformed sample structures now produce a preserved failed matrix summary.
+The updated diff still needs the reviewer's strict re-check.
+
+Visual matrix adapters `capture_lookdev_catalogue.gd` and
+`capture_lookdev_stormwood.gd` select actual device presets before mounting
+the existing production-camera capture paths. Stormwood uses the existing
+four-phase and aftermath fixture, always-purple grade, ordinary HUD and
+declared phase/health staging. These adapters are pending native validation;
+their stills are separate from performance samples and earned player proof.

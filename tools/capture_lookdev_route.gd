@@ -90,6 +90,15 @@ func _run() -> void:
 		_failures.append("initial trainer did not settle on a production collider")
 	if _biome_id != "stormwood":
 		await _pin_time("day")
+		# The survey helper stops callbacks for still captures. Route timings
+		# must include normal camera, quality, clock and weather work instead.
+		_look.set_process(true)
+		_look.set_physics_process(true)
+		if _look.has_method("set_clock_frozen"):
+			_look.call("set_clock_frozen", false)
+		if _weather != null:
+			_weather.set_process(true)
+			_weather.set_physics_process(true)
 	if not _failures.is_empty():
 		_write_route_receipt(false)
 		quit(1)
@@ -212,7 +221,7 @@ func _write_route_receipt(complete: bool) -> void:
 		"waypoints_reached": _waypoints_reached, "samples": _samples, "failures": _failures,
 		"environment_start": _clock_start, "environment_end": _clock_end,
 		"elapsed_ms": maxf(0.0, (_route_finished_usec - _route_started_usec) / 1000.0),
-		"scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather, others pinned day; route matrix and owner Ally test remain separate."}
+		"scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate."}
 	var file := FileAccess.open(_output_dir.path_join("route.json"), FileAccess.WRITE)
 	if file == null:
 		_failures.append("Cannot write route receipt")

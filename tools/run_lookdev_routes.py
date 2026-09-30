@@ -86,7 +86,11 @@ def run() -> int:
         except (OSError, ValueError) as exc:
             receipt = {}
             receipt_error = str(exc)
-        samples = [float(row["wall_ms"]) for row in receipt.get("samples", [])]
+        try:
+            samples = [float(row["wall_ms"]) for row in receipt.get("samples", [])]
+        except (KeyError, TypeError, ValueError) as exc:
+            samples = []
+            receipt_error = f"Malformed frame samples: {exc}"
         complete = (exit_code == 0 and not timed_out and not errors and not receipt_error and receipt.get("complete") is True
                     and receipt.get("source_commit") == source
                     and receipt.get("route_config_sha256") == matrix["route_config_sha256"]
