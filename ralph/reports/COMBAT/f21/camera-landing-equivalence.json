@@ -3,7 +3,7 @@
   "integration_base": "79c3ff4e5dd93d40171b9fb9ac238768864c4562",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
-  "status": "Production moving-camera fix is source-only; live r1 failed; F21#4 NOT MET pending current-source native and fresh dynamic blind gates.",
+  "status": "F21#4 NOT MET; source984ee actual nine-pair live matrix complete but7casesfailed. Changed approach required aftertwofailed live attempts.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
@@ -21,12 +21,12 @@
   "camera_cut_before_capture": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
   "live_capture_pending": {
     "mode": "--matrix-live",
-    "source_status": "Current-source successor unexecuted; original6155 nativeFAIL preserved in camera-live-r1.",
+    "source_status": "Executed984ee: parser0/newregression1test18assertions0failed; native1 all9\u00d7300physics samples/54PNGs,7failed. No retry authorized.",
     "physics_boundaries_per_pair": 300,
     "settling_physics_boundaries": 120,
     "observed_physics_boundaries": 180,
     "duration": "300 physics boundaries at actual Engine.physics_ticks_per_second (5 seconds at60Hz), independent of draw/PNG latency; actual draw count and timing are recorded. 30-second per-case wall limit;900-second whole-script cap.",
-    "physical_input": "Pre-physics boundary input: left Y -0.85 at observed30→release90 (60ticks); quick trigger120→release122 (2ticks); right stick neutral. Every actual post-draw view after settling scored; all terminal/aborted render records retained.",
+    "physical_input": "Pre-physics boundary input: left Y -0.85 at observed30\u2192release90 (60ticks); quick trigger120\u2192release122 (2ticks); right stick neutral. Every actual post-draw view after settling scored; all terminal/aborted render records retained.",
     "images_per_pair": 6,
     "ordered_png_milestones": [
       0,
@@ -221,5 +221,40 @@
       "Changed production framing requires fresh native/pixel gates; literal zero overlap has not been relaxed.",
       "No shared CreatureBody/collision/AI/scale or authority changes; staged roster/start positions are not earned campaign evidence."
     ]
-  }
+  },
+  "live_runtime_r2": {
+    "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+    "native_exit": 1,
+    "elapsed_seconds": 283.4220000000205,
+    "proof": "camera-live-r2/source-proof.json",
+    "complete_cases": 9,
+    "physics_samples_per_case": [
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300
+    ],
+    "original_png_count": 54,
+    "passed_pairs": [
+      "normal/small",
+      "giant/small"
+    ],
+    "failed_pairs": [
+      "small/small",
+      "small/normal",
+      "small/giant",
+      "normal/normal",
+      "normal/giant",
+      "giant/normal",
+      "giant/giant"
+    ],
+    "same_source_before_after": true,
+    "processes_exited": "ROOT wrapper terminal confirms native ended; engine queue now belongs ROOT/M1."
+  },
+  "next_approach": "Actual post-physics/render composition + world/spring constraint diagnosis; no mere speed/lag tuning, zero-overlap relaxation, body shrinking, AI disable, HP raise or bad-row suppression."
 }

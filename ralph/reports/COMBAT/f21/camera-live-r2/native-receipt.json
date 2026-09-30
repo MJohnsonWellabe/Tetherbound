@@ -1,0 +1,108 @@
+{
+  "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+  "tracked_clean_before": true,
+  "source_raw_hashes_before": {
+    "scripts/combat/combat_manager.gd": "56388e088557c81a8243450baca93ec5c6bed7fa7cd0b01331904bb89163167a",
+    "scripts/combat/fight_camera.gd": "8f122481725c95dba8ad1c3d9415dd8aca4abe20c6f0c60f53a22789443341cc",
+    "scripts/player/camera_rig.gd": "5a4fa8bc56fe1a492385f1460a266ecb89617ed5060fc23217572dedf6157cfb",
+    "data/config/camera.json": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3",
+    "data/config/combat.json": "a87d1be087861c1e5b5a7e135c194203bbe90ec0b4fe07aed6f584ade626dbfd",
+    "tests/smoke_combat_camera.gd": "25e6fade847a2d395d6a429e3b6dec1c6f8ec377a7eb196bc048b16f8994e2a0",
+    "tests/test_fight_camera.gd": "7300242a951ed3318f49f2a71fb80fd83a5d6058750bcb06ffe794584fc19803"
+  },
+  "engine_path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "environment": {
+    "APPDATA": "D:\\tetherbound\\combat-camera-live-r2-user\\APPDATA",
+    "LOCALAPPDATA": "D:\\tetherbound\\combat-camera-live-r2-user\\LOCALAPPDATA"
+  },
+  "runs": [
+    {
+      "label": "parser",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--headless",
+        "--check-only",
+        "--script",
+        "tests/smoke_combat_camera.gd"
+      ],
+      "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+      "timeout_s": 60,
+      "pid": 19412,
+      "native_exit": 0,
+      "elapsed_seconds": 0.6559999999590218,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "errors": []
+    },
+    {
+      "label": "regression",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--headless",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_fight_camera.gd::test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_lens_collapse"
+      ],
+      "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+      "timeout_s": 60,
+      "pid": 13144,
+      "native_exit": 0,
+      "elapsed_seconds": 3.8280000000959262,
+      "raw_sha256": "6f3c495cb7139f3451a3e6128ba7711eb4ecba4fbae1b9343f4da6c388b9adfc",
+      "errors": []
+    },
+    {
+      "label": "native",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fullscreen",
+        "--script",
+        "tests/smoke_combat_camera.gd",
+        "--",
+        "--matrix-live",
+        "--matrix-preset=Low",
+        "--matrix-dir=D:\\tetherbound\\combat-camera-live-r2\\frames",
+        "--source-commit=984ee07808aac06ca0883c18c8ba2ebfa08382ae"
+      ],
+      "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+      "timeout_s": 930,
+      "pid": 17956,
+      "native_exit": 1,
+      "elapsed_seconds": 283.4220000000205,
+      "raw_sha256": "86dd9c86b71f6e04baf533f2b71966d22a6f0a5d8ec3a3938567e736efde4c7b",
+      "errors": [
+        "FAIL: live matrix small/small failed strict rendered framing/live motion/quick evidence; input travel=3.95309805870056\r",
+        "FAIL: live matrix small/normal failed strict rendered framing/live motion/quick evidence; input travel=3.59391069412231\r",
+        "FAIL: live matrix small/giant failed strict rendered framing/live motion/quick evidence; input travel=3.95230913162231\r",
+        "FAIL: live matrix normal/normal failed strict rendered framing/live motion/quick evidence; input travel=2.74962282180786\r",
+        "FAIL: live matrix normal/giant failed strict rendered framing/live motion/quick evidence; input travel=3.58265924453735\r",
+        "FAIL: live matrix giant/normal failed strict rendered framing/live motion/quick evidence; input travel=2.91115522384644\r",
+        "FAIL: live matrix giant/giant failed strict rendered framing/live motion/quick evidence; input travel=1.66844010353088\r"
+      ]
+    }
+  ],
+  "scope": "One smoke parser, one added rotated-model regression, then one graphical Low/Compatibility1920x1080 live nine-pair capture; staged roster/poses and setup baselines; native result is not independent blind acceptance.",
+  "source_raw_hashes_after": {
+    "scripts/combat/combat_manager.gd": "56388e088557c81a8243450baca93ec5c6bed7fa7cd0b01331904bb89163167a",
+    "scripts/combat/fight_camera.gd": "8f122481725c95dba8ad1c3d9415dd8aca4abe20c6f0c60f53a22789443341cc",
+    "scripts/player/camera_rig.gd": "5a4fa8bc56fe1a492385f1460a266ecb89617ed5060fc23217572dedf6157cfb",
+    "data/config/camera.json": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3",
+    "data/config/combat.json": "a87d1be087861c1e5b5a7e135c194203bbe90ec0b4fe07aed6f584ade626dbfd",
+    "tests/smoke_combat_camera.gd": "25e6fade847a2d395d6a429e3b6dec1c6f8ec377a7eb196bc048b16f8994e2a0",
+    "tests/test_fight_camera.gd": "7300242a951ed3318f49f2a71fb80fd83a5d6058750bcb06ffe794584fc19803"
+  },
+  "same_source_before_after": true,
+  "head_after": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+  "tracked_clean_after": true
+}
