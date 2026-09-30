@@ -53,6 +53,39 @@ static func depletion_flag(spec: Dictionary, world_day: int) -> String:
 	return HARVEST.flag_id("order:" + str(crop_spec.get("order", ""))) if not crop_spec.is_empty() else ""
 
 
+## F32 detached host registration payload. Existing placement IDs and legacy
+## day flags are retained; the renewable stock identity is the stable id.
+## No encounter-cycle shed item is converted into a gatherable node here.
+static func renewable_site(spec: Dictionary) -> Dictionary:
+	var id := str(spec.get("id", ""))
+	var item := str(spec.get("resource_id", ""))
+	var config := load_config(PRESENTATION_PATH)
+	var policy: Dictionary = config.get("renewable", {})
+	if id.is_empty() or not (policy.get("materials", []) as Array).has(item) \
+			or str(spec.get("respawn_policy", "")) != "world_day_regrow":
+		return {}
+	var amount := int(spec.get("amount", 0))
+	var position: Variant = spec.get("position")
+	if amount < 1 or not position is Array or position.size() != 3:
+		return {}
+	return {"id": id, "realm": "cloudreach", "region_id": str(spec.get("region_id", "")),
+		"at": [position[0], position[2]], "item": item, "amount": amount,
+		"outputs": {item: amount}, "respawn_days": int(policy.get("material_respawn_days", 0))}
+
+
+## Called only after the world owner registers the typed host claim and
+## supplies stock from the authoritative snapshot. Unknown stock stays hidden.
+static func renewable_harvest_spec(spec: Dictionary, world_day: int, stock: Dictionary) -> Dictionary:
+	var site := renewable_site(spec)
+	if site.is_empty():
+		return {}
+	var result := harvest_spec(spec, world_day)
+	result["realm"] = "cloudreach"
+	result["renewable_site_id"] = str(site["id"])
+	result["renewable_stock"] = stock.duplicate(true)
+	return result
+
+
 func setup(spec: Dictionary) -> void:
 	_spec = spec.duplicate(true)
 	add_to_group("progression_restore")

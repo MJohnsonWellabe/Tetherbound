@@ -80,6 +80,8 @@ static func sanitised(value: Variant) -> Dictionary:
 		clean["crop_id"] = str(plot["crop_id"])
 	if plot.has("planted_on_day"):
 		clean["planted_on_day"] = int(plot["planted_on_day"])
+	if plot.has("revision"):
+		clean["revision"] = maxi(0, int(plot["revision"]))
 	return clean
 
 
@@ -261,3 +263,43 @@ static func harvest_candidate(plot: Dictionary, day: int, config: Dictionary) ->
 		return {}
 	return {"plot": harvested(clean), "crop_id": crop_id,
 		"outputs": (definition["outputs"] as Dictionary).duplicate(true)}
+
+
+## Prompt adapter for typed plots. crop_id is the player's selected seed on
+## an empty bed; once planted, the world plot's saved identity takes priority.
+## This is presentation only; the host independently validates a sow intent.
+static func crop_label_for(plot: Dictionary, day: int, has_hoe: bool, seed_count: int,
+		config: Dictionary, crop_id: String, greenhouse_built: bool) -> String:
+	var clean := sanitised(plot)
+	var state := state_of(clean, day)
+	if state == FALLOW:
+		return label_for(clean, day, has_hoe, seed_count)
+	if state == SOWN or state == RIPE:
+		crop_id = str(clean.get("crop_id", config.get("default_crop", "berries")))
+	var definition := crop_definition(config, crop_id)
+	if definition.is_empty():
+		return "Choose seeds" if state == TILLED else "Crop unavailable"
+	match state:
+		TILLED:
+			if not can_grow(config, crop_id, greenhouse_built):
+				return "Needs a Greenhouse"
+			if seed_count < 1:
+				return "Needs %s seeds" % str(definition.get("name", crop_id))
+			return str(definition.get("sow_label", "Sow seeds"))
+		SOWN:
+			return label_for(clean, day, has_hoe, seed_count)
+		RIPE:
+			return str(definition.get("harvest_label", "Pick crop"))
+	return ""
+
+
+static func crop_action_for(plot: Dictionary, day: int, has_hoe: bool, seed_count: int,
+		config: Dictionary, crop_id: String, greenhouse_built: bool) -> String:
+	match state_of(plot, day):
+		FALLOW:
+			return ACTION_TILL if has_hoe else ACTION_NONE
+		TILLED:
+			return ACTION_SOW if seed_count > 0 and can_grow(config, crop_id, greenhouse_built) else ACTION_NONE
+		RIPE:
+			return ACTION_HARVEST if not harvest_candidate(plot, day, config).is_empty() else ACTION_NONE
+	return ACTION_NONE

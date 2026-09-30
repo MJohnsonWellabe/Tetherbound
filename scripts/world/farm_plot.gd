@@ -38,35 +38,18 @@ extends Node3D
 ## bush -- and why the state has to be saved (`game_state.gd::farm_plots`)
 ## rather than rebuilt from nothing on load the way a respawn timer can be.
 ##
-## ## Stage B Wave 6 lane 6.E: PICKING is a claim; tilling and sowing are not
-##
-## D103. Picking a ripe bed paid the crop straight into this peer's satchel and
-## wrote the bed back to TILLED locally. Two players reaching for the same ripe
-## bed therefore each got the full yield. Picking now submits a `harvest`
-## INTENT -- the same kind `harvest_node.gd` uses -- against a flag that names
-## THIS CROP CYCLE:
-##
-##     farm:<realm>:<plot index>#<ripe_on_day>
-##
-## The day the crop ripened is part of the id on purpose. A farm bed is the one
-## gather point in this game that comes back, so a flag naming only the bed
-## would refuse the second crop it ever grew; a flag naming the bed AND the
-## cycle is claimed exactly once per crop and is fresh again the moment the bed
-## is re-sown. The host commits the first claim and refuses the rest in one
-## sentence the loser can read.
-##
-## The bed's own `{state, ripe_on_day}` record is NOT replicated, and that is a
-## known gap rather than an oversight: `WorldState` has no farm op and
-## `world_ledger.gd`/`world_state.gd` are outside this lane's file list. What
-## closes most of it anyway is that the committed flag reaches every peer, so
-## every peer returns that bed to TILLED off the delta -- see
-## `_on_delta_applied`. Tilling and sowing remain local writes; the residual and
-## the op that would close it are written down in
-## `ralph/reports/MP-6E-CLOUDREACH-0906/REPORT.md`.
+## F32: every durable verb is a typed host intent. The host resolves the
+## authored plot, day, seed/crop definition, Greenhouse and inventory. This
+## consumer only selects a crop and refreshes after an internal farm_plot_set
+## delta; it never writes a plot, debits seeds or awards harvest locally.
+## Landing requires the foundation's atomic world/character transaction.
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const LOCAL_PAUSE := preload("res://scripts/ui/local_pause.gd")
+const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 ## The host refused this peer's pick, with one sentence a player can act on.
@@ -128,6 +111,12 @@ var _grow_days: int = 1
 var _yield: int = 3
 var _seed_id: String = "berry_seeds"
 var _crop_id: String = "berries"
+var _config: Dictionary = {}
+var _selected_crop: String = "berries"
+var _seed_picker: CanvasLayer
+var _closing_cancel := false
+var _closing_confirm := false
+var _mouse_before := Input.MOUSE_MODE_CAPTURED
 
 var _prompt: Node3D = null
 var _soil: MeshInstance3D = null
@@ -149,6 +138,8 @@ var _claim: Dictionary = {}
 
 func setup(index: int, config: Dictionary, realm_id: String = "meadows") -> void:
 	_index = index
+	_config = config.duplicate(true)
+	_selected_crop = str(config.get("default_crop", "berries"))
 	_realm = realm_id if not realm_id.is_empty() else "meadows"
 	_grow_days = maxi(1, int(config.get("grow_days", 1)))
 	_yield = maxi(1, int(config.get("yield", 3)))
@@ -177,7 +168,11 @@ func _ready() -> void:
 	# So a hoe swing finds this the same way an axe swing finds a tree
 	# (`harvest_logic.gd::GROUP`).
 	add_to_group(HARVEST_LOGIC.GROUP)
+	add_to_group(INPUT_OWNER.GROUP)
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport != null and not transport.is_connected("intent_refused", _on_intent_refused):
+		transport.connect("intent_refused", _on_intent_refused)
 
 
 ## The prompt has to answer for the CURRENT day and the CURRENT satchel, and
@@ -186,6 +181,16 @@ func _ready() -> void:
 ## `sequence_director.gd` polls its own gates -- a label written once at
 ## build time is a label that is wrong the first time anything moves.
 func _process(_delta: float) -> void:
+	if _closing_cancel and not Input.is_action_pressed("menu_cancel"):
+		_closing_cancel = false
+	if _closing_confirm and not Input.is_action_pressed("ui_accept"):
+		_closing_confirm = false
+	if is_open():
+		if Input.is_action_just_pressed("menu_cancel"):
+			INPUT_OWNER.suppress_pause_reopen(get_tree())
+			_close_seed_picker()
+		elif FARM_LOGIC.state_of(_plot(), _day()) != FARM_LOGIC.TILLED:
+			_close_seed_picker()
 	_refresh()
 
 
@@ -228,25 +233,31 @@ func _seed_count() -> int:
 ## --- what the player sees ---------------------------------------------------
 
 func _refresh() -> void:
+	if _prompt == null:
+		return
 	var plot := _plot()
 	var day := _day()
 	var has_hoe := _has_hoe()
-	var seeds := _seed_count()
-
+	var greenhouse := _greenhouse_built()
+	var choices := FARM_LOGIC.available_crops(_config, _seed_counts(), greenhouse)
 	var state := FARM_LOGIC.state_of(plot, day)
 	if state != _drawn_state:
 		_drawn_state = state
 		_redraw(state)
-
-	var label := FARM_LOGIC.label_for(plot, day, has_hoe, seeds)
+	var label := FARM_LOGIC.crop_label_for(plot, day, has_hoe, _selected_seed_count(),
+		_config, _selected_crop, greenhouse)
+	var actionable := FARM_LOGIC.crop_action_for(plot, day, has_hoe, _selected_seed_count(),
+		_config, _selected_crop, greenhouse) != FARM_LOGIC.ACTION_NONE
+	if state == FARM_LOGIC.TILLED:
+		label = "Choose seeds" if not choices.is_empty() else "Needs seeds"
+		actionable = not choices.is_empty()
+	if not _claim.is_empty():
+		label = "Waiting for the world"
+		actionable = false
 	if label != _drawn_label:
 		_drawn_label = label
 		_prompt.call("configure", label, PROMPT_RADIUS, true)
-	# Set separately from configure(), which has no parameter for it: a
-	# statement line ("Ripens tomorrow", "Needs a Hoe") has to draw without a
-	# button glyph or the HUD promises a press that does nothing. See
-	# `interactable.gd`'s own `actionable` export, added for this.
-	_prompt.set("actionable", FARM_LOGIC.is_actionable(plot, day, has_hoe, seeds))
+	_prompt.set("actionable", actionable)
 
 
 ## Four boards round the rim of the bed, standing proud of the soil.
@@ -361,105 +372,34 @@ func _on_activated() -> void:
 ## never disagree -- and so `tool_hold.gd` needs no knowledge that farm plots
 ## exist at all.
 func gather(_equipped_tool: Variant = null) -> void:
-	var game := _game()
-	if game == null or _index < 0:
+	if _game() == null or _index < 0 or not _claim.is_empty() or owns_input():
 		return
-	var inventory: RefCounted = game.get("inventory")
-	var items: RefCounted = game.get("items")
-	if inventory == null or items == null:
-		return
-
-	var plot := _plot()
-	var day := _day()
-	match FARM_LOGIC.action_for(plot, day, _has_hoe(), _seed_count()):
-		FARM_LOGIC.ACTION_TILL:
-			_till(game, inventory)
-		FARM_LOGIC.ACTION_SOW:
-			_sow(game, inventory, day)
-		FARM_LOGIC.ACTION_HARVEST:
-			_harvest(game, inventory, items)
-		_:
-			# Nothing to do, and the prompt already says why (it is drawn
-			# non-actionable in that case). OF20's rule -- a silent refusal
-			# reads as "this does nothing at all" -- is answered by the label,
-			# not by a second toast on every press.
-			pass
+	var state := FARM_LOGIC.state_of(_plot(), _day())
+	match state:
+		FARM_LOGIC.FALLOW:
+			if _has_hoe():
+				_submit_action(FARM_LOGIC.ACTION_TILL)
+		FARM_LOGIC.TILLED:
+			_open_seed_picker()
+		FARM_LOGIC.RIPE:
+			if not FARM_LOGIC.harvest_candidate(_plot(), _day(), _config).is_empty():
+				_submit_action(FARM_LOGIC.ACTION_HARVEST)
 	_refresh()
 
 
-func _till(game: Node, inventory: RefCounted) -> void:
-	var slot := HARVEST_LOGIC.tool_slot(FARM_LOGIC.TILL_TOOL, inventory)
-	if slot < 0:
-		return
-	game.call("set_farm_plot", _index, FARM_LOGIC.tilled(_plot()))
-	# The hoe wears down on the one thing it does, through the same call an
-	# axe pays for a tree (R2.2). D50: once per plot, not once per crop --
-	# harvesting returns the bed to TILLED, so a 40-durability hoe is not a
-	# tax on farming forever.
-	inventory.call("damage_tool", slot)
-
-
-func _sow(game: Node, inventory: RefCounted, day: int) -> void:
-	if not bool(inventory.call("remove", _seed_id, 1)):
-		return
-	game.call("set_farm_plot", _index, FARM_LOGIC.sown(_plot(), day, _grow_days))
-
-
-func _harvest(game: Node, inventory: RefCounted, items: RefCounted) -> void:
-	# The fourth caller of the shared gather body, alongside harvest_node.gd
-	# and vegetation_harvest_point.gd. Berries carry no `gathered_with`, so
-	# this returns the full yield and `required_slot` -1 (nothing wears down)
-	# -- but it is routed through here anyway so that the day someone DOES
-	# tool-gate a crop, the farm already obeys the same durability and
-	# wrong-tool rules as every other gather in the game rather than needing
-	# to grow its own copy of them.
-	var gathered: Dictionary = HARVEST_LOGIC.gather(_crop_id, _yield, inventory, items)
-	var amount := int(gathered["amount"])
-	if amount <= 0:
-		return
-	if not bool(inventory.call("has_room_for", _crop_id, amount)):
-		# INTERACT-SWEEP-0903: this claimed "refused, visibly" without ever
-		# saying anything -- `FARM_LOGIC.is_actionable()` has no notion of
-		# satchel capacity, so the prompt stays green and a press on a full
-		# satchel produced nothing a player could tell apart from a dropped
-		# press. Now speaks, matching `harvest_node.gd`'s own fix.
-		#
-		# Still LOCAL and still ahead of the intent: `world_ledger.gd`'s own
-		# header says the host cannot see a client's satchel, so "is there room"
-		# is a question only the pressing peer can answer.
-		game.call("push_world_message", "Satchel is full.")
-		return
+func _submit_action(action: String, crop_id: String = "") -> void:
 	if not _claim.is_empty():
-		# A press while this peer's own claim is still with the host. Waiting is
-		# the honest answer; submitting again would only lose to itself.
 		return
-	# Recorded BEFORE the submit, because solo and host commit in-process and
-	# `submit()` emits the delta before it returns -- `_on_delta_applied` has
-	# already run by the time the next line finishes.
-	_claim = {"flag": claim_flag(), "slot": int(gathered["required_slot"])}
-	var verdict := LEDGER_CLAIM.submit(self, {
-		"kind": "harvest",
-		"realm": _realm,
-		"flag": _claim["flag"],
-		"item": _crop_id,
-		"amount": amount,
-	})
+	var txn := "farm:%s:%d:%d" % [_realm, _index, Time.get_ticks_usec()]
+	_claim = {"txn_id": txn, "action": action}
+	var intent := {"kind": "farm_plot_action", "realm": _realm, "plot_index": _index,
+		"action": action, "expected_revision": int(_plot().get("revision", 0)), "txn_id": txn}
+	if action == FARM_LOGIC.ACTION_SOW:
+		intent["crop_id"] = crop_id
+	var verdict := LEDGER_CLAIM.submit(self, intent)
 	if not LEDGER_CLAIM.in_flight(verdict):
-		# Refused outright (someone else picked this crop, or there is no
-		# transport). `ledger_claim.gd` has already shown the sentence.
 		_claim = {}
-		if str(verdict.get("code", "")) != "offline":
-			harvest_refused.emit(str(verdict.get("code", "")), str(verdict.get("reason", "")))
-		if str(verdict.get("code", "")) == "offline":
-			# No transport at all: a unit fixture or a capture tool. The old
-			# local path, unchanged, for the same reason every other consumer
-			# keeps one -- a farm that grows crops and refuses to pay them is
-			# worse than one written locally in a process with nobody to tell.
-			inventory.call("add", _crop_id, amount)
-			var slot := int(gathered["required_slot"])
-			if slot >= 0:
-				inventory.call("damage_tool", slot)
-			game.call("set_farm_plot", _index, FARM_LOGIC.harvested(_plot()))
+		harvest_refused.emit(str(verdict.get("code", "")), str(verdict.get("reason", "")))
 
 
 ## The world fact "this crop cycle has been picked". Realm-qualified and
@@ -479,45 +419,162 @@ func claim_prefix() -> String:
 	return "farm:%s:%d#" % [_realm, _index]
 
 
-## A committed delta landed on this peer, host or client.
-##
-## Two halves, and the order matters. The DELTA is checked first: any peer whose
-## delta carries a claim on this bed returns the bed to worked soil, which is
-## what keeps six beds looking the same on two screens without a farm op in
-## `WorldState`. Only then is this peer's own `_claim` consulted, for the half
-## no delta carries -- the tool it wore down. Written the other way round, a
-## guard on `_claim` alone would drop the mirror on every peer but the presser
-## (the ordering lane 3.B paid for, in `ledger_rpc.gd::_rpc_delta`).
-##
-## The crop itself is NOT added here: `harvest`'s item grant is a player-scope
-## op addressed to the winning peer, and `ledger_rpc.gd::_apply_player_ops`
-## already put it in their satchel.
+## Internal world op is already applied durably by the foundation transport.
+## Never write another local copy off a flag; never pay inventory/tool wear here.
 func _on_delta_applied(delta: Dictionary) -> void:
-	if _index < 0:
-		return
-	var prefix := claim_prefix()
-	var claimed := ""
-	for raw: Variant in (delta.get("ops", []) as Array):
-		if typeof(raw) != TYPE_DICTIONARY:
+	for raw: Variant in delta.get("ops", []):
+		if not raw is Dictionary:
 			continue
-		var op := raw as Dictionary
-		if str(op.get("scope", "")) != "world" or str(op.get("op", "")) != "flag":
+		if str(raw.get("op", "")) != "farm_plot_set" or str(raw.get("scope", "")) != "world" \
+				or str(raw.get("realm", "")) != _realm or int(raw.get("index", -1)) != _index:
 			continue
-		var id := str(op.get("id", ""))
-		if id.begins_with(prefix) and bool(op.get("value", true)):
-			claimed = id
-			break
-	if claimed.is_empty():
+		if not _claim.is_empty() and str(raw.get("txn_id", "")) == str(_claim.get("txn_id", "")):
+			_claim = {}
+		_refresh()
+
+
+func _on_intent_refused(kind: String, code: String, reason: String, detail: Dictionary) -> void:
+	if kind != "farm_plot_action" or _claim.is_empty() \
+			or str(detail.get("txn_id", "")) != str(_claim.get("txn_id", "")):
 		return
-	var game := _game()
-	if game != null:
-		game.call("set_farm_plot", _index, FARM_LOGIC.harvested(_plot()))
-	if _claim.is_empty() or str(_claim.get("flag", "")) != claimed:
-		return
-	var slot := int(_claim.get("slot", -1))
 	_claim = {}
-	if slot >= 0 and game != null:
-		var inventory: RefCounted = game.get("inventory")
-		if inventory != null:
-			inventory.call("damage_tool", slot)
+	harvest_refused.emit(code, reason)
 	_refresh()
+
+
+func _seed_counts() -> Dictionary:
+	var result := {}
+	var game := _game()
+	var inventory: RefCounted = game.get("inventory") if game != null else null
+	if inventory == null:
+		return result
+	for crop_id: Variant in _config.get("crop_order", []):
+		var definition := FARM_LOGIC.crop_definition(_config, str(crop_id))
+		if not definition.is_empty():
+			var seed := str(definition["seed_item"])
+			result[seed] = int(inventory.call("count", seed))
+	return result
+
+
+func _selected_seed_count() -> int:
+	var definition := FARM_LOGIC.crop_definition(_config, _selected_crop)
+	return int(_seed_counts().get(str(definition.get("seed_item", "")), 0))
+
+
+func _greenhouse_built() -> bool:
+	var game := _game()
+	if game == null:
+		return false
+	var definition: Dictionary = _config.get("greenhouse", {})
+	var id := str(definition.get("buildable_id", ""))
+	if id.is_empty():
+		return false
+	for row: Variant in game.get("placed_buildings"):
+		if row is Dictionary and str(row.get("id", "")) == id and str(row.get("realm", "meadows")) == _realm:
+			return true
+	return false
+
+
+func is_open() -> bool:
+	return is_instance_valid(_seed_picker) and _seed_picker.visible
+
+
+func owns_input() -> bool:
+	return is_open() or _closing_cancel or _closing_confirm
+
+
+func _open_seed_picker() -> void:
+	if is_open() or INPUT_OWNER.current(get_tree()) != null:
+		return
+	var choices := FARM_LOGIC.available_crops(_config, _seed_counts(), _greenhouse_built())
+	if choices.is_empty():
+		return
+	_seed_picker = CanvasLayer.new()
+	_seed_picker.layer = 80
+	add_child(_seed_picker)
+	var root := Control.new()
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_seed_picker.add_child(root)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.55)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.add_child(dim)
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.add_child(center)
+	var panel := PanelContainer.new()
+	var presentation: Dictionary = _config.get("presentation", {})
+	panel.custom_minimum_size.x = float(presentation.get("panel_width", 560))
+	var style := UI_TOKENS.panel_box(UI_TOKENS.BG_PANEL, UI_TOKENS.BORDER)
+	style.content_margin_left = 24
+	style.content_margin_right = 24
+	style.content_margin_top = 16
+	style.content_margin_bottom = 16
+	panel.add_theme_stylebox_override("panel", style)
+	center.add_child(panel)
+	var rows := VBoxContainer.new()
+	rows.add_theme_constant_override("separation", 4)
+	panel.add_child(rows)
+	var title := Label.new()
+	title.text = "Plant a crop"
+	title.add_theme_font_size_override("font_size", UI_TOKENS.FONT_TITLE)
+	rows.add_child(title)
+	var first: Button
+	var counts := _seed_counts()
+	var greenhouse := _greenhouse_built()
+	for raw_id: Variant in _config.get("crop_order", []):
+		var crop_id := str(raw_id)
+		var crop := FARM_LOGIC.crop_definition(_config, crop_id)
+		if crop.is_empty():
+			continue
+		var count := int(counts.get(str(crop["seed_item"]), 0))
+		var allowed := FARM_LOGIC.can_grow(_config, crop_id, greenhouse)
+		var button := Button.new()
+		button.text = "%s · %d seeds · %d days" % [str(crop.get("name", crop_id)), count, int(crop["grow_days"])]
+		if not allowed:
+			button.text += " · Needs a Greenhouse"
+		button.disabled = not allowed or count < 1
+		button.custom_minimum_size.y = float(presentation.get("crop_row_height", 36))
+		button.add_theme_font_size_override("font_size", UI_TOKENS.FONT_BODY)
+		button.pressed.connect(_choose_crop.bind(crop_id))
+		rows.add_child(button)
+		if first == null and not button.disabled:
+			first = button
+	var cancel := Button.new()
+	cancel.text = "Cancel"
+	cancel.pressed.connect(_close_seed_picker)
+	rows.add_child(cancel)
+	_mouse_before = Input.mouse_mode
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	LOCAL_PAUSE.hold(get_tree())
+	INPUT_OWNER.set_world_hud_visible(get_tree(), false)
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	if first != null:
+		first.grab_focus()
+
+
+func _choose_crop(crop_id: String) -> void:
+	_selected_crop = crop_id
+	_close_seed_picker()
+	if FARM_LOGIC.state_of(_plot(), _day()) == FARM_LOGIC.TILLED \
+			and FARM_LOGIC.available_crops(_config, _seed_counts(), _greenhouse_built()).has(crop_id):
+		_submit_action(FARM_LOGIC.ACTION_SOW, crop_id)
+
+
+func _close_seed_picker() -> void:
+	if not is_open():
+		return
+	_seed_picker.visible = false
+	_seed_picker.queue_free()
+	_seed_picker = null
+	var release_world := INPUT_OWNER.current(get_tree()) == null
+	_closing_cancel = Input.is_action_pressed("menu_cancel")
+	_closing_confirm = Input.is_action_pressed("ui_accept")
+	if release_world:
+		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
+		Input.mouse_mode = _mouse_before
+		LOCAL_PAUSE.release(get_tree())
+
+
+func _exit_tree() -> void:
+	_close_seed_picker()

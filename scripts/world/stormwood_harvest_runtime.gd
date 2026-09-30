@@ -42,6 +42,26 @@ static func authority_contract() -> Dictionary:
 	}
 
 
+## F32 host registration data only. Charged/crown availability and region
+## prerequisites remain host validators; neither is accepted from a client.
+static func renewable_site(spec: Dictionary, catalogue: Dictionary) -> Dictionary:
+	var id := str(spec.get("id", ""))
+	var item := str(spec.get("item", ""))
+	var policy: Dictionary = catalogue.get("renewable", {})
+	if id.is_empty() or not (policy.get("materials", []) as Array).has(item):
+		return {}
+	var amount := int(spec.get("amount", 0))
+	var point: Variant = spec.get("position")
+	if amount < 1 or not point is Array or point.size() != 2:
+		return {}
+	return {"id": id, "realm": REALM_ID, "region_id": str(spec.get("region_id", "")),
+		"at": point.duplicate(), "item": item, "amount": amount, "outputs": {item: amount},
+		"respawn_days": int(policy.get("material_respawn_days", 0)),
+		"availability": (spec.get("availability", []) as Array).duplicate(),
+		"charged": bool(spec.get("charged", false)), "grade": str(spec.get("grade", "")),
+		"requires_flag": str(REGION_PREREQUISITES.get(str(spec.get("region_id", "")), ""))}
+
+
 func mount(owner_world: Node3D) -> void:
 	world = owner_world
 	_catalogue = read()

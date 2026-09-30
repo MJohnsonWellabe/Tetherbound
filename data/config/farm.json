@@ -179,5 +179,9 @@
       "sow_label": "Sow mindleaf seeds",
       "harvest_label": "Pick mindleaf"
     }
+  },
+  "presentation": {
+    "panel_width": 560,
+    "crop_row_height": 36
   }
 }
