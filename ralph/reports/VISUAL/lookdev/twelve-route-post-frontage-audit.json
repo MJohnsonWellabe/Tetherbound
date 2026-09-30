@@ -1,0 +1,108 @@
+{
+  "pin": "171ee13405",
+  "case_count": 3,
+  "verified_git_manifest_items": 12,
+  "issues": [],
+  "cases": [
+    {
+      "folder": "meadows-frontage-r3",
+      "biome": "meadows",
+      "preset": "Low",
+      "source": "986b4e2a0b1ac4cc60ce698fe0d0ff1f756b49b8",
+      "samples": 399,
+      "waypoints": 3,
+      "camera_far": 320.0,
+      "stats": {
+        "mean": 51.2798947368421,
+        "p50": 51.472,
+        "p95": 62.40819999999999,
+        "p99": 75.4092199999998,
+        "maximum": 129.736
+      },
+      "waypoint_distances": [
+        0.12125223568528218,
+        0.04524599530912201,
+        1.1236343570867786
+      ],
+      "fixture_flags": [
+        "opening:beat:wake",
+        "opening:beat:house",
+        "opening:beat:choose",
+        "opening:starter_granted",
+        "opening:beat:name",
+        "opening:beat:return_starter",
+        "opening:beat:walk_out"
+      ],
+      "config_sha256": "03eecf6f598218f22d43401c43db1a61ee0753e4cf5d9cca819dac983d2b0041",
+      "actual_terminal_distance_m": 1.1236343570867786,
+      "production_arrival_tolerance_m": 1.2
+    },
+    {
+      "folder": "meadows-frontage-r3",
+      "biome": "meadows",
+      "preset": "Medium",
+      "source": "986b4e2a0b1ac4cc60ce698fe0d0ff1f756b49b8",
+      "samples": 512,
+      "waypoints": 3,
+      "camera_far": 520.0,
+      "stats": {
+        "mean": 39.937666015625,
+        "p50": 39.757999999999996,
+        "p95": 43.743399999999994,
+        "p99": 45.56736,
+        "maximum": 46.712
+      },
+      "waypoint_distances": [
+        0.12125223568528218,
+        0.12154661815461117,
+        1.206970234948705
+      ],
+      "fixture_flags": [
+        "opening:beat:wake",
+        "opening:beat:house",
+        "opening:beat:choose",
+        "opening:starter_granted",
+        "opening:beat:name",
+        "opening:beat:return_starter",
+        "opening:beat:walk_out"
+      ],
+      "config_sha256": "03eecf6f598218f22d43401c43db1a61ee0753e4cf5d9cca819dac983d2b0041",
+      "actual_terminal_distance_m": 1.1236343570867786,
+      "production_arrival_tolerance_m": 1.2
+    },
+    {
+      "folder": "meadows-frontage-r3",
+      "biome": "meadows",
+      "preset": "High",
+      "source": "986b4e2a0b1ac4cc60ce698fe0d0ff1f756b49b8",
+      "samples": 533,
+      "waypoints": 3,
+      "camera_far": 900.0,
+      "stats": {
+        "mean": 40.594356472795496,
+        "p50": 40.074,
+        "p95": 44.973,
+        "p99": 47.38007999999998,
+        "maximum": 201.642
+      },
+      "waypoint_distances": [
+        0.15648976803786382,
+        0.017505802549488244,
+        1.3533172895893442
+      ],
+      "fixture_flags": [
+        "opening:beat:wake",
+        "opening:beat:house",
+        "opening:beat:choose",
+        "opening:starter_granted",
+        "opening:beat:name",
+        "opening:beat:return_starter",
+        "opening:beat:walk_out"
+      ],
+      "config_sha256": "03eecf6f598218f22d43401c43db1a61ee0753e4cf5d9cca819dac983d2b0041",
+      "actual_terminal_distance_m": 1.1866455331233592,
+      "production_arrival_tolerance_m": 1.2
+    }
+  ],
+  "scope_note": "Final process sample can precede physics arrival. High nearest final sample1.353317m, actual synchronous environment_end1.186646m. No arrival tolerance retuning; production1.2m guard unchanged."
+}

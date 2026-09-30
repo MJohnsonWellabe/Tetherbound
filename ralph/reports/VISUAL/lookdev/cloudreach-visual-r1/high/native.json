@@ -1,0 +1,24 @@
+{
+  "source_commit": "f43cde88acde0648123b89895d3023e1f5c50a08",
+  "native_exit": 0,
+  "elapsed_seconds": 295.328,
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_lookdev_catalogue.gd",
+    "--",
+    "--biome=cloudreach",
+    "--preset=High",
+    "--source-commit=f43cde88acde0648123b89895d3023e1f5c50a08",
+    "--output=D:/tetherbound/lookdev-cloudreach-high-visual-r1"
+  ],
+  "timed_out": false,
+  "errors": [],
+  "scope": "Complete authored Cloudreach catalogue day/night High visual baseline, original production camera/HUD, explicitly staged destinations/time. Not earned traversal/performance/full craft approval. No imports or source changes."
+}

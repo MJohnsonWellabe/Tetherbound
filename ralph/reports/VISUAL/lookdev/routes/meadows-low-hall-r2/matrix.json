@@ -1,0 +1,58 @@
+{
+  "source_commit": "d5e0c30dc14048521649432330d9dfa583cc56dc",
+  "route_config_sha256": "03eecf6f598218f22d43401c43db1a61ee0753e4cf5d9cca819dac983d2b0041",
+  "started_utc": "2026-09-30T11:25:26.424423+00:00",
+  "cases": [
+    {
+      "biome": "meadows",
+      "preset": "Low",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=meadows",
+        "--preset=Low",
+        "--source-commit=d5e0c30dc14048521649432330d9dfa583cc56dc",
+        "--output=D:/tetherbound/lookdev-meadows-low-hall-r2/meadows-low"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-meadows-low-hall-r2\\home-meadows-low",
+      "elapsed_seconds": 195.28099999995902,
+      "process_presets": [
+        "Low"
+      ],
+      "case_index": 0,
+      "scene_reused_across_presets": false,
+      "raw_log": "D:\\tetherbound\\lookdev-meadows-low-hall-r2\\meadows-low.log",
+      "receipt": "D:\\tetherbound\\lookdev-meadows-low-hall-r2\\meadows-low\\route.json",
+      "receipt_error": "",
+      "sample_count": 411,
+      "wall_frame_ms": {
+        "mean": 49.72305352798053,
+        "p50": 50.494,
+        "p95": 59.1755,
+        "p99": 85.55829999999995,
+        "maximum": 127.057
+      }
+    }
+  ],
+  "requested_cases": [
+    {
+      "biome": "meadows",
+      "preset": "Low"
+    }
+  ],
+  "scope": "Computer production-scene render routes. No earned campaign, blinded visual approval, Hall proof or owner Ally result.",
+  "complete": true,
+  "all_twelve_route_cases_complete": false
+}
