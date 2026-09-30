@@ -2,15 +2,20 @@ extends "res://tests/test_case.gd"
 
 const FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 
-func test_replayed_and_older_hits_do_not_repeat_and_issuers_are_independent() -> void:
+func test_replayed_hits_refuse_but_legitimate_out_of_order_impacts_and_issuers_are_independent() -> void:
 	var history: Dictionary = {}
 	assert_true(FEEDBACK.admit(history, {"action_id":"fight:1:3"}))
 	assert_false(FEEDBACK.admit(history, {"action_id":"fight:1:3"}))
+	assert_true(FEEDBACK.admit(history, {"action_id":"fight:1:2"}), "earlier travelling hit may arrive after a later contact hit")
 	assert_false(FEEDBACK.admit(history, {"action_id":"fight:1:2"}))
 	assert_true(FEEDBACK.admit(history, {"action_id":"fight:2:1"}))
 	assert_false(FEEDBACK.admit(history, {"action_id":"fight:1:bad"}))
+	var before := history.duplicate(true)
 	assert_true(FEEDBACK.admit(history, {"action_id":"fight:1:4"}, false))
-	assert_eq(history["fight:1"], 3, "preview never consumes the host receipt")
+	assert_eq(history, before, "preview never consumes the host receipt")
+	var next := 3 + int(FEEDBACK.config().get("receipt_sequence_window", 256))
+	assert_true(FEEDBACK.admit(history, {"action_id":"fight:1:%d" % next}))
+	assert_false(FEEDBACK.admit(history, {"action_id":"fight:1:3"}), "evicted old replay remains refused")
 
 func test_weighted_feedback_is_immutable_and_preserves_host_damage() -> void:
 	var light := FEEDBACK.receipt("fight:1:1", "pebble_toss", {}, "quick", 17.25, 1.0, false, Vector3.RIGHT)

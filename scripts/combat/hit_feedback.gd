@@ -75,9 +75,23 @@ static func admit(history: Dictionary, receipt: Dictionary, commit: bool = true)
 	if not suffix.is_valid_int(): return false
 	var sequence := int(suffix)
 	var issuer := action_id.substr(0, split)
-	if sequence <= int(history.get(issuer, 0)): return false
+	if sequence <= 0: return false
+	var row: Dictionary = history.get(issuer, {})
+	var newest := int(row.get("newest", 0))
+	var seen: Dictionary = row.get("seen", {})
+	var window := maxi(1, int(config().get("receipt_sequence_window", 256)))
+	# Launch sequence and impact order differ: a later contact move can land
+	# before an earlier projectile. Accept unseen arrivals within the bounded
+	# window, while old evicted identities can never become valid again.
+	if sequence <= newest - window or seen.has(sequence): return false
 	if not history.has(issuer) and history.size() >= int(config().get("receipt_history_limit", 256)): return false
-	if commit: history[issuer] = sequence
+	if commit:
+		newest = maxi(newest, sequence)
+		seen = seen.duplicate()
+		seen[sequence] = true
+		for previous: int in seen.keys():
+			if previous <= newest - window: seen.erase(previous)
+		history[issuer] = {"newest": newest, "seen": seen}
 	return true
 
 static func number_style(receipt: Dictionary, on_enemy: bool) -> Dictionary:

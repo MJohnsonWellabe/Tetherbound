@@ -4866,6 +4866,9 @@ func present_host_peer_impact(impact: Dictionary) -> void:
 	if _wild == null or not is_instance_valid(_wild): return
 	if _enemy == null or str(impact.get("target_uid", "")) != str(_enemy.get("uid")): return
 	if not HIT_FEEDBACK.admit(_seen_impact_actions, impact): return
+	# Only the observed actor's presentation receives the frozen host lease.
+	# This never pauses the observing player's combat or resource clocks.
+	_host_body_hitstop(_wild, impact)
 	if _enemy != null and float(_enemy.hp) > 0.0:
 		_play_combat_flinch(_wild, impact.get("direction", Vector3.ZERO), impact)
 	var bounds := _body_world_bounds(_wild)
