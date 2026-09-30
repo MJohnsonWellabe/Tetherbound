@@ -99,6 +99,10 @@ func test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_l
 		"empty enclosing-box corner cannot collapse the lens to its minimum arm")
 	var hit := FIT.oriented_body_limit(Vector3(0,3,0),Vector3(0,-2,0),local,pose_a,0.1,0.1)
 	assert_true(is_finite(hit) and hit>0.0 and hit<=1.0,"actual model intersection still limits the lens")
+	var clipped_probe := func(point: Vector3, probe_basis: Basis, _distance: float) -> Dictionary:
+		return {"pivot":point,"distance":0.2,"transform":Transform3D(probe_basis,point+probe_basis.z*0.2)}
+	var constrained := FIT.solve(a,b,PI*0.75,deg_to_rad(-25),68,16.0/9.0,9.5,FIT.config(),false,points_a,points_b,clipped_probe)
+	assert_false(bool(constrained.get("pass",false)),"requested clear fit cannot bypass an actual clipped lens constraint")
 
 func _body(height: float, feet: Vector3) -> AABB:
 	var width := height * 0.7

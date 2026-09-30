@@ -32,6 +32,7 @@ var pitch: float = 0.0
 ## Presentation-only offset relative to target + profile height; reset on every takeover.
 var _framing_pivot_offset := Vector3.ZERO
 var _fight_yaw_target: Variant = null
+var _fight_frame_composer: Callable = Callable()
 
 var _distance: float = 5.2
 var _height: float = 1.75
@@ -260,6 +261,7 @@ func _load_config() -> void:
 ## "the animal I walked up to" and "the animal I am fighting".
 func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_fight_yaw_target = null
+	_fight_frame_composer = Callable()
 	_framing_pivot_offset = Vector3.ZERO
 	_impact_nudge_left = 0.0
 	rotation.z = 0.0
@@ -485,6 +487,9 @@ func _process(delta: float) -> void:
 	_apply_tracking(delta)
 	_follow(delta)
 	_tick_impact_nudge(delta)
+	# Actors completed their physics steps before this idle tick. Compose the
+	# final constrained view after follow/impact roll, before this frame draws.
+	if _fight_frame_composer.is_valid(): _fight_frame_composer.call(delta)
 
 
 ## The conversation push-in, and only the push-in.
@@ -667,16 +672,61 @@ func set_framing_pivot_offset(offset: Vector3) -> void:
 func set_fight_yaw_target(radians: Variant) -> void:
 	_fight_yaw_target = radians if (radians is float or radians is int) and is_finite(float(radians)) else null
 
+func set_fight_frame_composer(composer: Callable) -> void:
+	_fight_frame_composer = composer
+
+## Read-only same-frame lens query. Uses the same world mask, swept ball,
+## exclusions and margin as the existing rig, plus the actual rotated foe box.
+## Nothing here moves the actors, camera, rig or spring arm.
+func probe_fight_camera_pose(pivot: Vector3, camera_basis: Basis, distance: float,
+		foe_box: AABB, foe_pose: Transform3D, body_margin: float, body_minimum: float) -> Dictionary:
+	if _target == null or not is_instance_valid(_target) or not pivot.is_finite() \
+		or not is_finite(distance) or distance <= 0.0: return {}
+	var offset := pivot - (_world_point(_target) + Vector3.UP * _height)
+	var anchor := _pivot_anchor_for_offset(offset)
+	var safe := _world_point(_target) + Vector3.UP * minf(maxf(0.0,_height+offset.y),VERTICAL_SWEEP_FROM_M)
+	var leg := anchor-safe
+	if leg.length()>0.001: anchor = safe+leg.normalized()*_free_distance_behind(safe,leg.normalized(),leg.length())
+	var basis := camera_basis.orthonormalized()
+	var room := _free_distance_behind(anchor,basis.z,distance)
+	var body_room := preload("res://scripts/combat/fight_camera.gd").oriented_body_limit(anchor,
+		anchor+basis.z*distance,foe_box,foe_pose,body_margin,body_minimum)
+	var length := minf(distance,minf(room,body_room))
+	if not is_finite(length) or length<=0.0: return {}
+	var view_origin := anchor+basis.z*length
+	if _camera != null: view_origin += basis.x*_camera.h_offset+basis.y*_camera.v_offset
+	return {"pivot":anchor,"distance":length,"transform":Transform3D(basis,view_origin),
+		"world_room":room,"model_room":body_room}
+
+## Only an already scored constrained presentation pose reaches this door.
+## SpringArm's cached physics child placement is replaced for this draw; its
+## next physics update remains intact. World collision is queried above.
+func apply_fight_camera_pose(pose: Dictionary, requested_yaw: float) -> void:
+	if _camera == null or not pose.get("transform") is Transform3D \
+		or not pose.get("pivot") is Vector3 or not pose.get("distance") is float: return
+	var shot: Transform3D = pose.transform
+	if not shot.origin.is_finite() or not (pose.pivot as Vector3).is_finite() \
+		or not is_finite(float(pose.distance)) or float(pose.distance)<=0.0 or not is_finite(requested_yaw): return
+	yaw = wrapf(requested_yaw,-PI,PI)
+	_fight_yaw_target = yaw
+	global_transform = Transform3D(shot.basis,pose.pivot)
+	spring_length = float(pose.distance)
+	set_body_limit(float(pose.get("model_room",INF)))
+	_camera.position = Vector3(0.0,0.0,float(pose.distance))
+
 func framing_pivot_offset() -> Vector3:
 	return _framing_pivot_offset
 
 func _pivot_anchor() -> Vector3:
-	var height := maxf(0.0, _height + _framing_pivot_offset.y)
+	return _pivot_anchor_for_offset(_framing_pivot_offset)
+
+func _pivot_anchor_for_offset(offset: Vector3) -> Vector3:
+	var height := maxf(0.0, _height + offset.y)
 	var base_up := minf(height, VERTICAL_SWEEP_FROM_M)
 	var anchor := _world_point(_target) + Vector3.UP * base_up
 	if height > base_up:
 		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, height - base_up)
-	var lateral := Vector3(_framing_pivot_offset.x, 0.0, _framing_pivot_offset.z)
+	var lateral := Vector3(offset.x, 0.0, offset.z)
 	var length := lateral.length()
 	if length > 0.001:
 		anchor += lateral / length * _free_distance_behind(anchor, lateral / length, length)

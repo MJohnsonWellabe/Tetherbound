@@ -324,8 +324,14 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 					_send_axis(LEFT_Y,0.0)
 				elif observed_frame == 120:
 					_send_axis(JOY_AXIS_TRIGGER_RIGHT,1.0)
+					# This edge is scheduled inside physics_frame, after the
+					# engine's normal input flush. Deliver the physical event
+					# before the manager reads it; slow draws must not coalesce
+					# both edges of the two-tick tap into a released axis.
+					Input.flush_buffered_events()
 				elif observed_frame == 122:
 					_send_axis(JOY_AXIS_TRIGGER_RIGHT,0.0)
+					Input.flush_buffered_events()
 				var pending: Dictionary = _manager.get("_pending_move") as Dictionary
 				var action := int(_manager.get("_action"))
 				if observed_frame >= 120 and action in [1,2] and bool(pending.get("is_quick",false)): ctx.quick_seen = true
@@ -443,7 +449,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 		output.store_string(JSON.stringify({"source_commit":source,"camera_config_sha256":FileAccess.get_sha256("res://data/config/camera.json"),
 			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
 			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap, inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
-			"physics_ticks_per_second":Engine.physics_ticks_per_second,"input_timing":"Pre-physics boundaries: left Y -0.85 at observed30, release90; quick trigger at120, release122. Six PNG milestones0/30/60/90/120/179 use distinct actual draws with actual boundary recorded; every post-draw view including terminal/aborted view retained.",
+			"physics_ticks_per_second":Engine.physics_ticks_per_second,"input_timing":"Pre-physics boundaries: left Y -0.85 at observed30, release90; physical quick trigger at120, release122, buffered-event flush at both trigger edges before manager physics. Six PNG milestones0/30/60/90/120/179 use distinct actual draws with actual boundary recorded; every post-draw view including terminal/aborted view retained.",
 			"scope":"Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded physics ticks and rendered observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
 			"cases":cases,"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))
 		output.close()
@@ -451,12 +457,18 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 
 func _camera_solution_record() -> Dictionary:
 	var solution: Dictionary = (_manager.get("_fight_camera_solution") as Dictionary).duplicate(true)
-	for key: String in ["pivot"]:
+	for key: String in ["pivot","requested_pivot","selected_pivot"]:
 		if solution.get(key) is Vector3: solution[key] = _point_record(solution[key])
+	for key: String in ["transform","selected_transform"]:
+		if solution.get(key) is Transform3D:
+			var pose: Transform3D = solution[key]
+			solution[key] = {"position":_point_record(pose.origin),"basis":[_point_record(pose.basis.x),_point_record(pose.basis.y),_point_record(pose.basis.z)]}
 	for key: String in ["ally_rect","foe_rect"]:
 		if solution.get(key) is Rect2:
 			var rect: Rect2 = solution[key]
 			solution[key] = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
+	for key: String in ["world_room","model_room"]:
+		if solution.get(key) is float and not is_finite(float(solution[key])): solution[key] = null
 	return solution
 
 ## Refuse uniform opaque or transparent frames as evidence. This is only a

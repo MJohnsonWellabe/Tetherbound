@@ -111,7 +111,8 @@ static func oriented_body_limit(pivot_position: Vector3, arm_end: Vector3, box: 
 ## Caller retains manual-look grace and world-obstruction authority.
 static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 		vertical_fov_deg: float, aspect: float, base_distance: float, config: Dictionary, apply_pitch_offset: bool = true,
-		ally_points: PackedVector3Array = PackedVector3Array(), foe_points: PackedVector3Array = PackedVector3Array()) -> Dictionary:
+		ally_points: PackedVector3Array = PackedVector3Array(), foe_points: PackedVector3Array = PackedVector3Array(),
+		constrain_pose: Callable = Callable()) -> Dictionary:
 	var axis_ally := ally_points.is_empty()
 	var axis_foe := foe_points.is_empty()
 	if ally_points.is_empty(): ally_points = box_points(ally)
@@ -141,7 +142,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var guarded_foe := box_points(foe.grow(guard)) if axis_foe else guarded_points(foe_points,foe.get_center(),guard)
 	for raw: Variant in offsets:
 		var offset := float(raw)
-		var basis := Basis.from_euler(Vector3(start_pitch, yaw + deg_to_rad(offset), 0.0))
+		var basis := Basis.from_euler(Vector3(start_pitch, yaw + deg_to_rad(offset), float(config.get("roll_radians",0.0))))
 		var minimum := maxf(base_distance + float(profile.get("distance_offset_m", 0.0)), required_distance_points(guarded_ally, guarded_foe, point, basis,
 			vertical_fov_deg, aspect, float(config.get("frame_fill", 0.82)), float(config.get("near_clearance_m", 0.5))))
 		# Framing alone does not separate projected boxes. Search bounded
@@ -149,6 +150,22 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 		for step: int in distance_steps + 1:
 			var distance := minf(minimum * pow(distance_scale,step),maximum) if step < distance_steps else maximum
 			var transform := Transform3D(basis, point + basis.z * distance)
+			var actual_pivot := point
+			var actual_distance := distance
+			var constraint_info: Dictionary = {}
+			if constrain_pose.is_valid():
+				# Read-only caller probe owns world/model obstruction and the
+				# actual available lens arm. Requested fit never bypasses it.
+				var constrained: Variant = constrain_pose.call(point,basis,distance)
+				if not constrained is Dictionary or not constrained.get("transform") is Transform3D \
+					or not constrained.get("pivot") is Vector3 \
+					or not constrained.get("distance") is float: continue
+				transform = constrained.transform
+				actual_pivot = constrained.pivot
+				actual_distance = constrained.distance
+				constraint_info = constrained
+				if not transform.origin.is_finite() or not actual_pivot.is_finite() \
+					or not is_finite(actual_distance) or actual_distance <= 0.0 or actual_distance > maximum: continue
 			var a := project_points(ally_points, transform, vertical_fov_deg, aspect, 0.05)
 			var b := project_points(foe_points, transform, vertical_fov_deg, aspect, 0.05)
 			if not bool(a.get("valid", false)) or not bool(b.get("valid", false)): continue
@@ -159,8 +176,12 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 				and overlap_ratio(guarded_a.rect,guarded_b.rect)<=float(config.get("max_actor_overlap",0.0))
 			var passed := bool(a.in_frame) and bool(b.in_frame) and clear
 			var framed := bool(a.in_frame) and bool(b.in_frame)
-			var candidate := {"pair": profile.pair, "pivot": point, "distance": distance, "pitch": start_pitch,
+			var candidate := {"pair": profile.pair, "pivot": actual_pivot, "distance": actual_distance, "pitch": start_pitch,
+				"transform":transform,"requested_pivot":point,"requested_distance":distance,
 				"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect, "pass": passed, "framed": framed}
+			if not constraint_info.is_empty():
+				candidate["world_room"] = constraint_info.get("world_room",null)
+				candidate["model_room"] = constraint_info.get("model_room",INF)
 			if best.is_empty() or (framed and not bool(best.framed)) \
 					or (framed == bool(best.framed) and overlap < float(best.overlap)):
 				best = candidate

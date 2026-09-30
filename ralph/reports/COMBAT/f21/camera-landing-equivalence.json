@@ -1,9 +1,9 @@
 {
   "criterion": "F21#4",
-  "integration_base": "79c3ff4e5dd93d40171b9fb9ac238768864c4562",
+  "integration_base": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
-  "status": "F21#4 NOT MET; source984ee actual nine-pair live matrix complete but7casesfailed. Changed approach required aftertwofailed live attempts.",
+  "status": "F21#4 NOT MET. Both original live failures retained; changed-approach final constrained draw source is unexecuted and awaits independent source/native/dynamic blind gates.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
@@ -21,12 +21,12 @@
   "camera_cut_before_capture": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
   "live_capture_pending": {
     "mode": "--matrix-live",
-    "source_status": "Executed984ee: parser0/newregression1test18assertions0failed; native1 all9\u00d7300physics samples/54PNGs,7failed. No retry authorized.",
+    "source_status": "Changed-approach successor frozen by containing commit, unexecuted; both6155 and984ee nativeFAIL retained. No engine grant implied.",
     "physics_boundaries_per_pair": 300,
     "settling_physics_boundaries": 120,
     "observed_physics_boundaries": 180,
     "duration": "300 physics boundaries at actual Engine.physics_ticks_per_second (5 seconds at60Hz), independent of draw/PNG latency; actual draw count and timing are recorded. 30-second per-case wall limit;900-second whole-script cap.",
-    "physical_input": "Pre-physics boundary input: left Y -0.85 at observed30\u2192release90 (60ticks); quick trigger120\u2192release122 (2ticks); right stick neutral. Every actual post-draw view after settling scored; all terminal/aborted render records retained.",
+    "physical_input": "Pre-physics left Y -0.85 at observed30 torelease90; physical quick trigger120 torelease122, flush buffered events at both trigger edges; right stick neutral. No direct action injection. Every actual post-draw view after settling scored, terminal/aborted renders retained.",
     "images_per_pair": 6,
     "ordered_png_milestones": [
       0,
@@ -37,8 +37,8 @@
       179
     ],
     "invariants": "Complete pass requires all9 cases,300 physics samples/case,6 nonblank1920x1080 PNG/case on distinct draws with requested+actual tick metadata, >=6 scored render records/case, strict0 overlap/in-frame/live simulation on EVERY scored render, physical movement and actual quick action. If skipped milestones cannot all be captured within interval, fail; no held-lifecycle escape.",
-    "output_plan": "Fresh D:/tetherbound/combat-camera-live-r2/frames; fresh isolated D:/tetherbound/combat-camera-live-r2-user APPDATA+LOCALAPPDATA; Low Compatibility1920x1080.",
-    "asset_import_status": "Existing lane cache supported6155 parser and native r1; no new assets/import needed by this source fix. Only import on actual missing/invalid necessary cache with root coordination.",
+    "output_plan": "If ROOT grants: fresh D:/tetherbound/combat-camera-live-r3/frames and isolated D:/tetherbound/combat-camera-live-r3-user APPDATA/LOCALAPPDATA; Low Compatibility1920x1080. One existing smoke parser, sole meaningful regression, then one graphical live matrix.",
+    "asset_import_status": "No new assets. Existing cache ran984ee Low native successfully to a truthful7-caseFAIL. No import requested unless actual parser requires a missing/invalid necessary cache, coordinated with ROOT.",
     "scope": "Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise BEFORE each pair only. No rescale, freeze, invulnerability, mid-interval HP/resource grants or earned acquisition claim."
   },
   "live_runtime": {
@@ -182,6 +182,89 @@
     "existing_moving_input_evidence": "Observed native-fullscreen.txt includes retained physical-input encounter/orbit/manual grace, varying separation, creature switch, aim/cancel and exit assertions after the held matrix was restored. It does not cover movement of every staged nine-pair body combination."
   },
   "current_fix": {
+    "source_identity": "The containing commit freezes these bytes. External launch must verify actual clean HEAD and before/after hashes; no source claim derives from a script argument alone.",
+    "files": {
+      "data/config/camera.json": {
+        "raw_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3",
+        "git_lf_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3"
+      },
+      "scripts/combat/combat_manager.gd": {
+        "raw_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5",
+        "git_lf_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5"
+      },
+      "scripts/combat/fight_camera.gd": {
+        "raw_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897",
+        "git_lf_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897"
+      },
+      "scripts/player/camera_rig.gd": {
+        "raw_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "git_lf_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398"
+      },
+      "tests/smoke_combat_camera.gd": {
+        "raw_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588",
+        "git_lf_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588"
+      },
+      "tests/test_fight_camera.gd": {
+        "raw_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a",
+        "git_lf_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a"
+      }
+    },
+    "diagnosis": "Source984ee actual complete nine-pair run failed7 cases.314 scored draws/149bad; read-only15-axis SAT on actual eight model-transformed corners found0 OBB intersections. Small/small observed48 requested9.5m clear but actual lens2m; observed51 spring3.6855m with cached hit2.9035m matching preceding spring. Giant-foe lenses similarly collapsed2..2.48m. This does not justify changing bodies/collision/scale.",
+    "production_changes": [
+      "Rig calls its scoped fight composer after actor physics, ordinary look/tracking/follow and impact roll, before the current draw. Target changes clear this callback for aim/exit/conversation.",
+      "Read-only pose probes reuse existing spherical casts, world mask/exclusions/margin, vertical/lateral/pivot sweeps and oriented actual foe guard. Pure solver projects the returned constrained lens transform, including live roll and Camera3D offsets.",
+      "Keep a newly probed current-yaw/follow view when it is framed and clear; otherwise select nearest scored constrained safe orbit. Manual grace restricts candidates to current yaw. Existing distance cap and literal zero-overlap equation remain.",
+      "Apply only the scored rig/Camera3D presentation pose for this draw, replacing the stale SpringArm physics child placement. Subsequent SpringArm physics continues normally. No actor movement, collision/size changes, AI pause, HP/cost/authority or input-map edits."
+    ],
+    "capture_delta": "Existing live driver and all strict assertions retained. Flush only its two scheduled physical trigger edges before manager physics; raw r2 small/small was READY with action strength0 through120..122. Godot4.7 parse_input_event buffers by default, so slow draws can defer both edges. Actual next run must still observe a real quick action. Requested/selected transforms and constraint lengths now serialized numerically, not Variant strings.",
+    "primary_source_checks": {
+      "input_buffer_and_flush": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/input/input.cpp#L1410-L1468",
+      "camera_adjusted_transform_offsets": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/3d/camera_3d.cpp#L247-L259"
+    },
+    "regression": "Same existing rotated-long-model regression now also refuses a requested clear fit when a read-only constraint probe returns a0.2m lens. No method/assertion removed; one added assertion, total expected19 in this sole selected method. No broad suite needed for this source change.",
+    "source_limitations": [
+      "Unparsed/unexecuted new source. Native same-frame actual geometry, controller controls and nine live pairs may still fail; no acceptance from source presence.",
+      "Safety correction can change camera pose promptly when smooth follow is invalid; dynamic pixel readability and correction quality need fresh independent blind judgment.",
+      "Scene query work is bounded by existing angular/distance search but FPS/Medium/Ally/F21#5 remain unproved.",
+      "Staged actual roster/start poses and setup baselines are disclosed; no earned campaign/acquisition or full-craft claim."
+    ]
+  },
+  "live_runtime_r2": {
+    "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+    "native_exit": 1,
+    "elapsed_seconds": 283.4220000000205,
+    "proof": "camera-live-r2/source-proof.json",
+    "complete_cases": 9,
+    "physics_samples_per_case": [
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300
+    ],
+    "original_png_count": 54,
+    "passed_pairs": [
+      "normal/small",
+      "giant/small"
+    ],
+    "failed_pairs": [
+      "small/small",
+      "small/normal",
+      "small/giant",
+      "normal/normal",
+      "normal/giant",
+      "giant/normal",
+      "giant/giant"
+    ],
+    "same_source_before_after": true,
+    "processes_exited": "ROOT wrapper terminal confirms native ended; engine queue now belongs ROOT/M1."
+  },
+  "next_approach": "After two failed live attempts, replace the requested-pose/lagged-arm approach with current-draw constrained-pose scoring after actual actor physics, follow and impact roll. Preserve zero overlap, real sizes, AI, collision and input.",
+  "historical_fix_r2": {
     "source_identity": "The commit containing this manifest freezes the listed byte hashes; the external runner pins actual git HEAD and tracked cleanliness before and after execution.",
     "files": {
       "data/config/camera.json": {
@@ -221,40 +304,5 @@
       "Changed production framing requires fresh native/pixel gates; literal zero overlap has not been relaxed.",
       "No shared CreatureBody/collision/AI/scale or authority changes; staged roster/start positions are not earned campaign evidence."
     ]
-  },
-  "live_runtime_r2": {
-    "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
-    "native_exit": 1,
-    "elapsed_seconds": 283.4220000000205,
-    "proof": "camera-live-r2/source-proof.json",
-    "complete_cases": 9,
-    "physics_samples_per_case": [
-      300,
-      300,
-      300,
-      300,
-      300,
-      300,
-      300,
-      300,
-      300
-    ],
-    "original_png_count": 54,
-    "passed_pairs": [
-      "normal/small",
-      "giant/small"
-    ],
-    "failed_pairs": [
-      "small/small",
-      "small/normal",
-      "small/giant",
-      "normal/normal",
-      "normal/giant",
-      "giant/normal",
-      "giant/giant"
-    ],
-    "same_source_before_after": true,
-    "processes_exited": "ROOT wrapper terminal confirms native ended; engine queue now belongs ROOT/M1."
-  },
-  "next_approach": "Actual post-physics/render composition + world/spring constraint diagnosis; no mere speed/lag tuning, zero-overlap relaxation, body shrinking, AI disable, HP raise or bad-row suppression."
+  }
 }
