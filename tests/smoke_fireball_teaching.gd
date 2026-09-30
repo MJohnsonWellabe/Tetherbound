@@ -4,6 +4,8 @@ extends SceneTree
 ## Initial fixture: one existing primary-fire Cindercub; teleport to the real
 ## authored pickup, then back to the practice approach. No item grants, damage,
 ## teaching, equipment or accepted-impact callbacks are injected by this driver.
+## After two contact-witness failures, use actual zero-duration target-body
+## geometry/fresh flash instead of projectile callbacks or the HUD-number anchor.
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
@@ -216,9 +218,11 @@ func _observe_impact(outgoing: bool, receipt: Dictionary, _where: Vector3) -> vo
 		# callback. Observe the actual fresh production flash at this contact.
 		var arena: Node3D = _manager.call("arena")
 		var fresh_flash := false
+		var struck: Node3D = _manager.call("enemy_body") if outgoing else _manager.get("_ally_body")
+		var contact: Vector3 = struck.call("centre") if is_instance_valid(struck) else Vector3.INF
 		if arena != null:
 			for node: Node in arena.get_children():
-				if node.get_script() == FLASH and is_zero_approx(float(node.get("_life"))) and (node as Node3D).global_position.distance_to(_where) < 0.01:
+				if node.get_script() == FLASH and is_zero_approx(float(node.get("_life"))) and (node as Node3D).global_position.distance_to(contact) < 0.01:
 					fresh_flash = true
 		if not fresh_flash: _fail("instant contact did not construct its actual fresh receipt flash")
 	var target: RefCounted = _manager.call("enemy") if outgoing else _manager.call("active_creature")
