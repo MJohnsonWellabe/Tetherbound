@@ -70,7 +70,7 @@
     "tests/test_moves_data.gd": "201945f2fad61e7e2a687fd7d55ad116b6d61f5b38b98cf4f8c74d4ec08ccb49",
     "tests/test_farming.gd": "1107498508aea329a5e4c01c7b2c7ac83900cf7c038c909609f3c99e77c7d634",
     "tests/test_map_baker.gd": "36bc3b5c003da529c173a6103aef76c8d59d540db87c02781ba6e317283f68bd",
-    "tests/test_village_street_0912.gd": "f35cf5b1b50285eefc66954ddb94a7f3bf8cb2f8523e811bf1d0ec889cc3b6c9",
+    "tests/test_village_street_0912.gd": "d5bde2cb66d71971025eec1d059037bc81441277c018d0642d45edfbe3108691",
     "tests/test_vegetation_human_prompt_height.gd": "b5b52ede2d90034ae747f321ab1c4143716acacbf14cb1a1b1081686b54ef44a",
     "tests/fixtures/historical_prompt_tree_b2ea1455.json": "64c4805ac49bfffc975b81e2d39d82efc28cd020abf9f846c9b907f7a3b3eaf1",
     "tests/test_chapter_rewards.gd": "c070dda6eebd3e288ea29dc5bc1f388e823a3432e1146d50f4c25ed15fde13cd",
@@ -94,5 +94,10 @@
     "exact8descriptionfields": true,
     "all99items_other_fields_preserved": true,
     "tm_fireball_preserved": true
+  },
+  "fence_guard_correction": {
+    "base": "786d016e14e12d4784dc26708d8e05dd27bb6636",
+    "status": "source only; focused runtime pending",
+    "contract": "Full segment intersection and bidirectional endpoint-to-segment minimum distance; authored road half-width plus actual collider half-thickness; crossing and finite-road-end counterexamples retained."
   }
 }

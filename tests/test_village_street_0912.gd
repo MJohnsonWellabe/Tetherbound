@@ -105,6 +105,14 @@ func _road_segment() -> Array[Vector2]:
 	var plan: Dictionary = _json(VILLAGE_PATH).get("road_plan", {})
 	return [_at(plan, "road_start"), _at(plan, "road_end")]
 
+func _segment_distance(a: Vector2, b: Vector2, c: Vector2, d: Vector2) -> float:
+	if Geometry2D.segment_intersects_segment(a, b, c, d) != null:
+		return 0.0
+	return minf(minf(a.distance_to(Geometry2D.get_closest_point_to_segment(a, c, d)),
+		b.distance_to(Geometry2D.get_closest_point_to_segment(b, c, d))),
+		minf(c.distance_to(Geometry2D.get_closest_point_to_segment(c, a, b)),
+			d.distance_to(Geometry2D.get_closest_point_to_segment(d, a, b))))
+
 func _collider_radius(prefab: String) -> float:
 	var recipe: Dictionary = _json("res://data/config/building_prefabs.json").get("prefabs", {}).get(prefab, {})
 	assert_false(recipe.is_empty(), "the installed prefab must exist")
@@ -260,14 +268,32 @@ func test_fences_define_working_yards_without_cutting_the_street() -> void:
 			fences.append(row)
 	assert_true(fences.size() >= 2, "working yards retain enclosing rail composition")
 	var recipe: Dictionary = _json("res://data/config/building_prefabs.json").get("prefabs", {}).get("fence_run", {})
-	var length := float(recipe.get("colliders", [])[0].size[0])
+	var plan: Dictionary = _json(VILLAGE_PATH).get("road_plan", {})
+	var road_half_width := float(plan.get("width_m", 0.0)) * 0.5
+	assert_true(road_half_width > 0.0, "the authored walking band must have positive width")
+	# A rail crossing the road can have both endpoints outside it. The whole
+	# segment, including the road's finite endpoints, must retain clearance.
+	assert_eq(_segment_distance(Vector2(40, 10.925), Vector2(40, 17.075), road[0], road[1]), 0.0,
+		"a perpendicular rail through the walking band must be rejected")
+	assert_true(absf(_segment_distance(Vector2(7, 10), Vector2(7, 18), road[0], road[1]) - 1.3) < 0.001,
+		"the nearest road endpoint must count even when both rail endpoints are farther away")
 	for row: Dictionary in fences:
 		var yaw := deg_to_rad(float(row.get("yaw_deg", 0.0)))
 		var direction := Vector2(cos(yaw), -sin(yaw))
-		var centre := _at(row)
-		for end: Vector2 in [centre - direction * length * 0.5, centre + direction * length * 0.5]:
-			assert_true(end.distance_to(Geometry2D.get_closest_point_to_segment(end, road[0], road[1])) > 2.6,
-				"the actual whole yard rail must stay outside the full walking band")
+		for box: Dictionary in recipe.get("colliders", []):
+			var offset: Array = box.get("at", [])
+			var size: Array = box.get("size", [])
+			assert_true(offset.size() == 3 and size.size() == 3, "the actual rail collision box must be defined")
+			if offset.size() != 3 or size.size() != 3:
+				continue
+			var centre := _at(row) + Vector2(float(offset[0]), float(offset[2])).rotated(-yaw)
+			var half_length := float(size[0]) * 0.5
+			var half_thickness := float(size[2]) * 0.5
+			assert_true(half_length > 0.0 and half_thickness > 0.0, "the rail retains its actual solid dimensions")
+			var first := centre - direction * half_length
+			var last := centre + direction * half_length
+			assert_true(_segment_distance(first, last, road[0], road[1]) > road_half_width + half_thickness,
+				"the actual whole solid yard rail must stay outside the full walking band")
 	assert_true(absf(float(fences[0].get("yaw_deg", 0)) - float(fences[1].get("yaw_deg", 0))) == 90.0,
 		"the retained working yard has a readable perpendicular enclosure")
 
