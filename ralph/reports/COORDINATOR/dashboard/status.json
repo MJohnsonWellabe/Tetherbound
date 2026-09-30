@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-29 owner redesign",
+ "updated": "2026-09-30T00:10:38.176Z",
  "headline": [
   "OWNER REDESIGN (2026-09-29): 35 owner decisions (RD-01..RD-35) and 34 new feature rows F16–F49 with 179 criteria. Every lane now works from CODEX_START_HERE.md (Waves 0–3). The Phase 1 and Phase 2 briefs are superseded; still-open F01–F15 criteria fold into the new rows (§7.5).",
-  "Criteria met: 95 of 280. That is 95/101 original (F01–F15) plus 0/179 redesign (F16–F49). Chapter cards complete: 9 of 13 (M1, M4, C1, C2, C3, S1, S3, T1, T3); M2, M3, S2 and T2 re-run under F49 in the new order.",
-  "Next: Wave 0 tb/foundations (F16: save reset, schemas, biome order). tb/combat, tb/vfx and tb/lookdev may prototype in parallel. Lanes push at least hourly; the board-duty holder rebuilds this board hourly (CODEX_START_HERE §7.3).",
+  "Criteria met: 95 of 280. Original: 95/101; redesign: 0/179. F16#0 in progress; independent acceptance and integrated F49 run remain open.",
+  "Wave 0 active: tb/foundations implements F16 from main e2de59571. Combat and lookdev read-only prototypes are active; VFX read-only prototype is active. Wave 1 implementation and landings wait for F16. Board duty: tb/redesign-board.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -365,7 +365,7 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "not started (redesign plan landed 2026-09-29)",
+   "now": "F16#0 implementing save refusal on tb/foundations; no MET claim",
    "next": "Work order in CODEX_START_HERE §6: F16"
   },
   {
@@ -380,17 +380,17 @@
   },
   {
    "lane": "tb/combat",
-   "now": "not started (redesign plan landed 2026-09-29)",
+   "now": "Read-only prototype: audit move-weight feedback and host shared-fight impulse; edits wait for F16",
    "next": "Work order in CODEX_START_HERE §6: F21, F22, F23, F24"
   },
   {
    "lane": "tb/vfx",
-   "now": "not started (redesign plan landed 2026-09-29)",
+   "now": "Read-only archetype mapping/arrival prototype active; edits wait for F16",
    "next": "Work order in CODEX_START_HERE §6: F25, F35"
   },
   {
    "lane": "tb/lookdev",
-   "now": "not started (redesign plan landed 2026-09-29)",
+   "now": "Read-only prototype: persistent graphics preferences and runtime Environment hooks; edits wait for F16",
    "next": "Work order in CODEX_START_HERE §6: F26"
   },
   {
@@ -475,16 +475,21 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "ROG Ally test of the Forward+ build (F26#5) when tb/lookdev posts the checklist in STATE.",
-  "Meshy overnight cap: 30 generations per night unless you set another number (RD-26).",
-  "Name the new Stormwood storm bear (working name Stormursa).",
-  "Steam AppID, partner access and four accounts for internet co-op.",
-  "Whether to author the nine missing Stormwood audio files from installed sources.",
-  "Owner play pass at the end of Wave 3 (F47/F49).",
-  "Confirm on a real PC: (1) the mouse steers the camera after the build menu and after trading with Oskar; (2) power attacks land when aimed and combat feels faster; (3) running looks better (8 degree lean on the baked 19, sprint cadence x0.85, about 15% foot slide at full sprint)."
+  "F26#5 Ally: when the Forward+ test build is ready, run Medium at handheld 15 W on the scripted route. Recommended: retain Compatibility default until measured >=30 fps (40 preferred).",
+  "RD-26 Meshy cap: retain 30 generations per night, counting refine/retexture/retry tasks; every failed candidate stays flag-off.",
+  "RD-28 storm bear name: recommended working name Stormursa; no naming change assumed.",
+  "Internet co-op: supply Steam AppID, partner access and four accounts (at least two separate home networks). Recommended: ship_steam_runtime remains off until an AppID exists.",
+  "Stormwood audio: confirm authoring the nine missing WAVs from installed licensed sources under AUDIO §10. Recommended: scoped authoring with spectral/loop checks plus owner listen; retain current policy meanwhile.",
+  "F47/F49 owner play pass: complete the end-of-Wave-3 normal-route human pass. Recommended: use the passing integrated build and record duration/findings.",
+  "Controller map: recommended tap RB then face for ultimate, tap d-pad for commands; LT orb aim, RT flee; free ordinary consumables, command meter buys instant throw; LB+face optional preset only. Conservative documented defaults remain.",
+  "Final relay story framing: recommended Stormheart final relay, Tidewake one regional link, dock exchange retained. Keep current conservative wording until confirmed.",
+  "PRODUCT proposals: confirm cut order, Build the best five sub-line, village/Hall/first-loop demo and US$19.99 at 15–25 h. Recommended: retain existing product defaults; no commercial launch authorized.",
+  "Real-PC feel checks: mouse camera after build/trade, faster aimed power attacks, sprint lean/cadence. Recommended: test the installed build on a pad before changing settled values.",
+  "CODEX_START_HERE §8.1 defaults: recommended retain each documented conservative default unless owner overrides."
  ],
  "four_chapter_run": null,
  "wip": [
+  "Active Wave 0 ownership: foundations additionally owns title_screen.gd refusal; realm_heart_state.gd, tab_map.gd, scripts/world/quest_log.gd, regional_credits.gd and realm_hearts/regional_credits config order consumers; realm_gate.gd/rift_crossing.gd and Game.can_enter_realm legacy-gate lines; feature_flags.json legacy_physical_crossings only. Future hub/reorder edits serialize after F16. Combat owns existing impact VFX; future tb/vfx owns new archetypes and moves.json VFX blocks. Lookdev owns rendering project settings. All Godot writers serialized; foundations currently holds focused-test/import token.",
   "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE §6. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE §7.5 and STATE §0.",
   "Tidewake Phase 2d P2-008 remains open after owner-directed wind-down: eight native before/after pairs are tracked in ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/phase2d-review; local shore symptom 8/8 clear, full photo/Bar A/Bar B/Palworld-quality 0/8. Resume from phase2d-shore-profile-review.md's view table and failed-probe/pickup sections. Next: coordinated dune habitat and Veilfall main-mass art with route/terrain validation, then re-score all eight fixed views code-blind. Do not start the rest of the visual queue or claim regional acceptance from this checkpoint.",
   "Stormwood Phase 2c wind-down (tb/x04-stormwood), owner requested no new experiments. P2-042 remains fixed/enabled by1ed0259e5. P2-082 portraits and P2-084 eleven NPC openings passed96 native1920 captures, independent evidence audit and fresh blind review; enabled on branch bya53f158c9/8f5c25445. They remain catalog-open until full regression and landing finish. Full unit suite on8f5c25445 is still running at checkpoint: session46696, console12232/native9904, log .tmp/stormwood-phase2/people-accepted-full-suite.log. Reattach/check terminal result; do not restart merely for elapsed time. Scoped people Bars A/B YES/YES do not close chapter bars. Duplicate named cast identities, Fenn post-view obstruction and rough close-range materials remain separate findings. P2-037 remains open and all geometry/material candidates stay off; latest22 native frames/14 pairs prefer construction readability but complete crown/core/arena fails, scoped ancient-tree A YES/B NO. Production chapter matrix30 native frames plus derived720 review remains Bars A/B NO/NO; ordinary combat/HUD, adequate settlement coverage and wholechapter acceptance remain open. P2-041 confirmed by78-frame baseline; P2-043 glass candidate stays off after partial five-pair review. P2-045 candy, P2-081 trainer dialogue and P2-110 roster refresh remain off. P2-081 audit matches19 trainer plates; four missing profile recipes cover seven trainers. Reviewed scratch helpere0c5866ac was cancelled before native launch; no plates generated. P2-092 deferred to gameplay for collision/contact/lunge separation. P2-093 fade/HUD source hypothesis needs live measurement. P2-111 concerns persistent quick bindings. All remaining owned impact>=12 work stays open/needs_capture/deferred as catalogued. No regional or Phase1 criterion closure. See phase2/catalog.csv and stormwood/fixes/.",
