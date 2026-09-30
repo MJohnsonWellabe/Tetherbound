@@ -305,7 +305,7 @@ func _floor_contacts(hit: PhysicsTestMotionResult3D, pose: Transform3D, shallow:
 	if hit == null or hit.get_collision_count() == 0 or hit.get_collision_count() >= CONTACTS \
 			or not _registered_body_contract():
 		return false
-	var ceiling := _foot(pose) + _cap.shape.radius * (1.0 - cos(_body.floor_max_angle)) + _body.safe_margin
+	var ceiling: float = _foot(pose) + _cap.shape.radius * (1.0 - cos(_body.floor_max_angle)) + _body.safe_margin
 	for index in hit.get_collision_count():
 		var normal := hit.get_collision_normal(index)
 		var contact := hit.get_collision_point(index)
