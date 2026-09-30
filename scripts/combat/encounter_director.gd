@@ -2573,22 +2573,82 @@ func _host_actor_vitals_context(encounter_id: String, peer_id: int) -> Dictionar
 	if not character_id is String or character_id.is_empty() \
 		or character_id != (record.participants[peer_id] as Dictionary).get("character_id"): return {}
 	var body := deployed_body_for(peer_id)
-	var uid := str(_creature_card_for(peer_id).get("creature_uid", ""))
-	if not is_instance_valid(body) or not body.is_inside_tree() or body.is_queued_for_deletion() \
-		or uid.is_empty(): return {}
+	if not is_instance_valid(body) or not body.is_inside_tree() or body.is_queued_for_deletion(): return {}
+	var deployment: Dictionary = (_deployed_by.get(peer_id, {}) as Dictionary).duplicate(true)
+	var body_identity: Dictionary = {}
+	if peer_id == _local_peer_id():
+		if _ally == null or body.get("instance") != _ally: return {}
+		body_identity = {"character_id": _local_character_id(), "species_id": str(_ally.get("species_id")),
+			"creature_uid": str(_ally.get("uid"))}
+		if deployment.is_empty():
+			deployment = {"character_id": body_identity.character_id, "species_id": body_identity.species_id,
+				"creature_uid": body_identity.creature_uid, "card": _creature_card(_ally)}
+	else:
+		# Remote proxy spawn identity is host-held and immutable for its lifetime.
+		# The proxy has no canonical saved UID; its outer deployment UID is
+		# checked against the inner card, admitted row and frozen roster below.
+		body_identity = {"character_id": body.get("owner_character_id"), "species_id": body.get("deploy_species")}
+	var uid := str(deployment.get("creature_uid", ""))
+	if uid.is_empty(): return {}
 	var owned: Dictionary = {}
 	for row: Dictionary in personal.party:
 		if str(row.uid) == uid:
 			owned = row
 			break
-	if owned.is_empty(): return {}
+	if owned.is_empty() or not deployment_identity_matches(owned, deployment, body_identity,
+		character_id, _frozen_tournament_roster(encounter_id, peer_id)): return {}
+	var wind_card := admitted_wind_card(owned)
+	if wind_card.is_empty(): return {}
 	var bound: Dictionary = _encounter_host.call("bind_actor_body", encounter_id,
 		peer_id, character_id, owned, body.get_instance_id())
 	if not bool(bound.get("ok", false)): return {}
 	return {"body": body, "creature_uid": uid, "character_id": character_id,
 		"generation": int(bound.vitals.body_generation), "vitals": bound.vitals,
-		"owned_row": owned.duplicate(true),
+		"owned_row": owned.duplicate(true), "wind_card": wind_card,
 		"character_revision": int(_session.call("admitted_character_revision", peer_id))}
+
+
+## One canonical deployment UID, including the frozen-tournament boundary.
+## Remote bodies expose their host-spawned character/species identity; local
+## bodies additionally expose the real saved instance UID. Presentation numeric
+## card stats never establish either identity or an admitted resource profile.
+static func deployment_identity_matches(owned: Dictionary, deployment: Dictionary,
+		body_identity: Dictionary, character_id: String, frozen_roster: Array) -> bool:
+	var uid: Variant = owned.get("uid")
+	var species: Variant = owned.get("species_id")
+	var card: Variant = deployment.get("card")
+	if not uid is String or uid.is_empty() or not species is String or species.is_empty() \
+		or character_id.is_empty() or not card is Dictionary: return false
+	if deployment.get("character_id") != character_id or body_identity.get("character_id") != character_id \
+		or deployment.get("creature_uid") != uid or card.get("creature_uid") != uid \
+		or deployment.get("species_id") != species or card.get("species_id") != species \
+		or body_identity.get("species_id") != species: return false
+	if body_identity.has("creature_uid") and body_identity.creature_uid != uid: return false
+	return frozen_roster.is_empty() or frozen_roster.has(uid)
+
+
+## Reconstruct only admitted Wind inputs. Portable rows carry nourishment and
+## lifetime bond counters, not arbitrary numeric cap/regen claims. Timed tonic
+## buffs are not serialized in this carrier; until an accepted host buff seam
+## exists they remain neutral here, never copied from a guest display card.
+static func admitted_wind_card(owned: Dictionary) -> Dictionary:
+	var species: Variant = owned.get("species_id")
+	if not species is String or SPECIES.definition(species).is_empty(): return {}
+	var cfg := CONDITION.config()
+	var maximum: Variant = cfg.get("nourishment", {}).get("max", 100.0)
+	var nourishment: Variant = owned.get("nourishment", 0.0)
+	if not (maximum is int or maximum is float) or not is_finite(float(maximum)) or float(maximum) <= 0.0 \
+		or not (nourishment is int or nourishment is float) or not is_finite(float(nourishment)) \
+		or float(nourishment) < 0.0 or float(nourishment) > float(maximum): return {}
+	var shadow := CREATURE_INSTANCE.new()
+	shadow.nourishment = float(nourishment)
+	for key: String in ["battles_fought", "landmarks_visited_together", "distance_m_together", "rest_nights_together", "feeds_together"]:
+		var value: Variant = owned.get(key, 0)
+		if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0 \
+			or float(value) > 1000000000.0 or (key != "distance_m_together" and floorf(float(value)) != float(value)): return {}
+		shadow.set(key, float(value) if key == "distance_m_together" else int(value))
+	return {"species_id": species, "nourishment_fraction": CONDITION.nourishment_fraction(shadow, cfg),
+		"bond_nodes": shadow.bond_nodes(), "wind_cap_scale": 1.0, "wind_regen_scale": 1.0}
 
 
 ## Supporting status door; deliberately not added to the intent dispatcher
@@ -2621,7 +2681,7 @@ func _commit_host_status_utility(intent: Dictionary, peer_id: int) -> Dictionary
 		"target_uid": str(opponent.get("uid")), "target_position": wild.call("centre"),
 		"now_ms": Time.get_ticks_msec()}
 	return _encounter_host.call("commit_status_utility", intent, peer_id, view, move_id, move,
-		COMBAT_MANAGER.host_wind_profile(_creature_card_for(peer_id)))
+		COMBAT_MANAGER.host_wind_profile(context.wind_card))
 
 
 ## Called synchronously inside actual host HP debit, before damage feedback,

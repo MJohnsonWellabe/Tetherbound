@@ -4,6 +4,8 @@ const EFFECTS := preload("res://scripts/combat/utility_effects.gd")
 const MOVES := preload("res://scripts/creatures/move_db.gd")
 const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
+const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 
 func _host(action_id: String = "host-action-1") -> Dictionary:
 	return {"action_id": action_id, "encounter_id": "fight-1", "generation": 3,
@@ -331,3 +333,48 @@ func test_status_commit_refuses_stale_or_unsupported_effect_before_spend_and_mis
 	view.now_ms = 34000
 	assert_false(host.commit_status_utility(intent, 1, view, "hearten", moves.move("hearten"), profile).ok)
 	assert_eq(host.record(id), baseline, "retained faint cannot cast using old healthy portable seed")
+
+
+func test_admitted_deployment_rejects_split_card_uid_and_frozen_outer_uid_bypass() -> void:
+	var owned := {"uid": "owned-1", "species_id": "ripplet"}
+	var deployment := {"creature_uid": "owned-1", "species_id": "ripplet", "character_id": "character-1",
+		"card": {"creature_uid": "owned-1", "species_id": "ripplet"}}
+	var body := {"character_id": "character-1", "species_id": "ripplet"}
+	assert_true(DIRECTOR.deployment_identity_matches(owned, deployment, body, "character-1", ["owned-1"]))
+	var split: Dictionary = deployment.duplicate(true)
+	split.card.creature_uid = "admitted-but-not-frozen"
+	assert_false(DIRECTOR.deployment_identity_matches(owned, split, body, "character-1", ["owned-1"]), "legal frozen outer UID cannot hide another inner-card UID")
+	var other_owned := {"uid": "admitted-but-not-frozen", "species_id": "ripplet"}
+	assert_false(DIRECTOR.deployment_identity_matches(other_owned, split, body, "character-1", ["owned-1"]), "inner identity cannot select a different admitted actor")
+	split.creature_uid = "admitted-but-not-frozen"
+	assert_false(DIRECTOR.deployment_identity_matches(other_owned, split, body, "character-1", ["owned-1"]), "one consistent UID still must be in frozen roster")
+	for field: String in ["character_id", "species_id"]:
+		var wrong: Dictionary = body.duplicate(true)
+		wrong[field] = "other-owner-or-species"
+		assert_false(DIRECTOR.deployment_identity_matches(owned, deployment, wrong, "character-1", ["owned-1"]))
+	body.creature_uid = "other-local-instance"
+	assert_false(DIRECTOR.deployment_identity_matches(owned, deployment, body, "character-1", []), "actual local instance identity is also required")
+
+
+func test_admitted_wind_ignores_peer_numeric_profile_and_refuses_malformed_saved_inputs() -> void:
+	var owned := {"species_id": "ripplet", "nourishment": 20.0, "battles_fought": 0,
+		"landmarks_visited_together": 0, "distance_m_together": 0.0, "rest_nights_together": 0, "feeds_together": 0}
+	var card := DIRECTOR.admitted_wind_card(owned)
+	assert_false(card.is_empty())
+	assert_almost_eq(card.nourishment_fraction, 0.2, 0.00001)
+	assert_eq(card.bond_nodes, 0)
+	var forged: Dictionary = owned.duplicate(true)
+	forged.nourishment_fraction = 1.0
+	forged.bond_nodes = 5
+	forged.wind_cap_scale = 3.0
+	forged.wind_regen_scale = 3.0
+	forged.active_buffs = [{"stat": "wind_cap", "scale": 3.0, "remaining_s": 600.0}]
+	assert_eq(DIRECTOR.admitted_wind_card(forged), card, "unaccepted numeric card/buff claims never become host resource truth")
+	assert_eq(COMBAT_MANAGER.host_wind_profile(DIRECTOR.admitted_wind_card(forged)), COMBAT_MANAGER.host_wind_profile(card))
+	for value: Variant in [NAN, INF, -1.0, 101.0, "100"]:
+		var bad: Dictionary = owned.duplicate(true)
+		bad.nourishment = value
+		assert_true(DIRECTOR.admitted_wind_card(bad).is_empty())
+	var bad: Dictionary = owned.duplicate(true)
+	bad.feeds_together = 1.5
+	assert_true(DIRECTOR.admitted_wind_card(bad).is_empty(), "fractional milestone counters fail closed")
