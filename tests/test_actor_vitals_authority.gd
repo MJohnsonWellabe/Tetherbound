@@ -11,6 +11,7 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const CHARACTER := preload("res://scripts/save/character_save.gd")
 const LEDGER := preload("res://scripts/net/world_ledger.gd")
 const FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
+const ENCOUNTER := preload("res://scripts/net/encounter_host.gd")
 var _dir := ""
 
 class OwnerWriter:
@@ -326,3 +327,162 @@ func test_prepared_writer_never_flushes_a_reentrant_replacement_fallback() -> vo
 	assert_true(saver.save_character_prepared(null, "owner_a"))
 	assert_eq(saver.writes, 2)
 	assert_eq(saver.finishes, 1, "prepared owner save never emits completion inside receipt freeze")
+
+
+func test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation() -> void:
+	var player := _player()
+	player.party.add(INSTANCE.from_species("terrapup", SPECIES.table().terrapup))
+	var saved := _portable(player)
+	var first: Dictionary = saved.party[0]
+	var second: Dictionary = saved.party[1]
+	var host := ENCOUNTER.new()
+	var rec := host.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0}, first.uid, "owner_a")
+	var id := str(rec.encounter_id)
+	var before := rec.duplicate(true)
+	assert_eq(host.join(id, 2, second.uid, "owner_a").code, "duplicate_character")
+	assert_eq(rec, before, "a second peer cannot alias the same stable character before binding")
+	assert_true(host.join(id, 9, "other_uid", "owner_b").ok)
+	var body := Node.new()
+	assert_eq(host.bind_actor_body(id, 1, "owner_a", first, body.get_instance_id()).vitals.body_generation, 1)
+	assert_eq(host.bind_actor_body(id, 1, "owner_a", second, body.get_instance_id()).vitals.body_generation, 2)
+	assert_eq(host.bind_actor_body(id, 1, "owner_a", first, body.get_instance_id()).vitals.body_generation, 3)
+	host.leave(id, 1)
+	assert_true(host.join(id, 2, second.uid, "owner_a").ok)
+	assert_eq(host.bind_actor_body(id, 2, "owner_a", second, body.get_instance_id()).vitals.body_generation, 4,
+		"rejoin's active-UID label cannot conceal a switch on the same pooled ObjectID")
+	assert_true(host.actor_vitals(id, 2, second.uid, 2).is_empty(), "old generation is not current authority")
+	var participant: Dictionary = rec.participants[2]
+	rec.participants[3] = participant.duplicate(true)
+	assert_true(host.actor_vitals(id, 2, second.uid, 4).is_empty(), "corrupt same-record aliases fail closed")
+	rec.participants.erase(3)
+	var competing := host.open(4, "meadows", "wild", {"hp": 100.0}, second.uid, "owner_a")
+	assert_false(host.actor_encounter_is_current(id, 2, "owner_a"), "another active fight cannot share owner authority")
+	host.close(str(competing.encounter_id))
+	assert_true(host.actor_encounter_is_current(id, 2, "owner_a"))
+	participant.actor_generation = 2147483647
+	var replacement := Node.new()
+	before = rec.duplicate(true)
+	assert_eq(host.bind_actor_body(id, 2, "owner_a", second, replacement.get_instance_id()).code, "generation_exhausted")
+	assert_eq(rec, before, "exhausted generation cannot remint or mutate accepted actor state")
+	replacement.free()
+	body.free()
+
+
+func test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private() -> void:
+	var owned: Dictionary = _portable(_player()).party[0]
+	var host := ENCOUNTER.new()
+	var rec := host.open(1, "meadows", "wild", {"hp": 100.0}, owned.uid, "owner_a")
+	var id := str(rec.encounter_id)
+	host.join(id, 9, "other_uid", "owner_b")
+	var body := Node.new()
+	assert_true(host.bind_actor_body(id, 1, "owner_a", owned, body.get_instance_id()).ok)
+	var before := rec.duplicate(true)
+	var proposal := host.stage_actor_vitals(id, 1, owned.uid, 1, 0, "actual_hit", "damage", 1.0, 16)
+	assert_true(proposal.ok)
+	assert_eq(rec, before, "pre-durability staging cannot publish HP or cost")
+	assert_true(host.commit_actor_vitals(proposal).ok)
+	assert_eq(host.actor_vitals(id, 1, owned.uid, 1).hp, float(owned.hp) - 1.0)
+	assert_false(host.commit_actor_vitals(proposal).ok, "an exact accepted hit cannot debit twice")
+	var projected := ENCOUNTER.presentation_snapshot(rec)
+	var wire_actor: Dictionary = projected.participants[1].actor_vitals[owned.uid]
+	for private_key: String in ["body_instance_id", "receipts", "settlement_receipt", "settled_revision"]:
+		assert_false(wire_actor.has(private_key), "presentation cannot become host replay or settlement authority")
+	assert_false(projected.participants[1].has("actor_bound_uid"))
+	wire_actor.hp = 999.0
+	assert_eq(host.actor_vitals(id, 1, owned.uid, 1).hp, float(owned.hp) - 1.0, "wire view is detached")
+	host.leave(id, 1)
+	host.forget(id)
+	assert_false(host.record(id).is_empty(), "departure cannot discard accepted HP before durable handoff")
+	assert_eq(host.pending_actor_vitals(id)[0].hp, float(owned.hp) - 1.0)
+	assert_false(ENCOUNTER.presentation_snapshot(rec).has("retained_actor_participants"))
+	assert_true(host.join(id, 2, owned.uid, "owner_a").ok)
+	assert_true(host.bind_actor_body(id, 2, "owner_a", owned, body.get_instance_id()).ok)
+	assert_eq(host.actor_vitals(id, 2, owned.uid, 1).hp, float(owned.hp) - 1.0,
+		"healthy portable baseline cannot reseed accepted damage on reconnect")
+	assert_false(host.acknowledge_actor_vitals(id, "foreign_owner", owned.uid, 1, proposal.settlement_receipt))
+	assert_false(host.acknowledge_actor_vitals(id, "owner_a", owned.uid, 0, proposal.settlement_receipt))
+	var wrong := proposal.settlement_receipt.duplicate(true)
+	wrong.receipt_id += "_forged"
+	assert_false(host.acknowledge_actor_vitals(id, "owner_a", owned.uid, 1, wrong))
+	assert_true(host.acknowledge_actor_vitals(id, "owner_a", owned.uid, 1, proposal.settlement_receipt),
+		"this internal ACK is durable world handoff, not an owner-save-success claim")
+	assert_true(host.pending_actor_vitals(id).is_empty())
+	host.close(id)
+	host.forget(id)
+	assert_true(host.record(id).is_empty())
+	body.free()
+
+
+func test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown() -> void:
+	var player := _player()
+	player.party.add(INSTANCE.from_species("terrapup", SPECIES.table().terrapup))
+	var saved := _portable(player)
+	var first: Dictionary = saved.party[0].duplicate(true)
+	var second: Dictionary = saved.party[1].duplicate(true)
+	# Actual canonical saved creatures with injured/full/fainted storage fixtures;
+	# this proves the host door, not earned ownership of an equipped Heal Pulse.
+	var host := ENCOUNTER.new()
+	var rec := host.open(1, "meadows", "wild", {"hp": 100.0}, first.uid, "owner_a")
+	var id := str(rec.encounter_id)
+	var body := Node.new()
+	var intent := {"encounter_id": id, "action": 1}
+	var view := {"source_uid": first.uid, "source_generation": 1, "now_ms": 1000, "origin": Vector3.ZERO}
+	var profile := {"max": 100.0, "regen_per_second": 0.0}
+	assert_true(host.bind_actor_body(id, 1, "owner_a", first, body.get_instance_id()).ok)
+	var before := rec.duplicate(true)
+	assert_false(host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16).ok)
+	assert_eq(rec, before, "full actor refuses before action/Wind/status changes")
+	# A separate fainted owned row is refused without changing its life state.
+	second.hp = 0.0
+	second.fainted = true
+	assert_true(host.bind_actor_body(id, 1, "owner_a", second, body.get_instance_id()).ok)
+	view.source_uid = second.uid
+	view.source_generation = 2
+	before = rec.duplicate(true)
+	assert_false(host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16).ok)
+	assert_eq(rec, before, "Heal Pulse cannot revive or spend on a fainted actor")
+	assert_true(host.bind_actor_body(id, 1, "owner_a", first, body.get_instance_id()).ok)
+	view.source_uid = first.uid
+	view.source_generation = 3
+	var injury := host.stage_actor_vitals(id, 1, first.uid, 3, 0, "injure_first", "damage", float(first.max_hp) * 0.5, 16)
+	assert_true(host.commit_actor_vitals(injury).ok)
+	host.preview_wind(id, 1, profile, 0.0, 1000)
+	rec.participants[1].wind = 0.0
+	before = rec.duplicate(true)
+	assert_eq(host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16).code, "insufficient_wind")
+	assert_eq(rec, before, "refused uncommitted heal cannot charge Wind or HP")
+	rec.participants[1].wind = 100.0
+	before = rec.duplicate(true)
+	var bundle := host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16)
+	assert_true(bundle.ok)
+	assert_eq(rec, before, "world-write refusal can discard the whole staged bundle without rollback")
+	var accepted := host.commit_actor_heal_utility(bundle)
+	assert_true(accepted.ok)
+	assert_almost_eq(float(accepted.vitals.hp), float(first.max_hp) * 0.62)
+	assert_almost_eq(float(rec.participants[1].wind), 76.0, 0.0001, "authored Heal Pulse spends 24 Wind exactly once")
+	before = rec.duplicate(true)
+	assert_false(host.commit_actor_heal_utility(bundle).ok)
+	assert_eq(rec, before, "replayed or stale staged heal cannot debit again")
+	# Bind a different actually owned injured creature on the same pooled body.
+	var third := INSTANCE.from_species("terrapup", SPECIES.table().terrapup)
+	player.party.add(third)
+	var third_row: Dictionary = _portable(player).party[2]
+	third_row.hp = float(third_row.max_hp) * 0.5
+	assert_true(host.bind_actor_body(id, 1, "owner_a", third_row, body.get_instance_id()).ok)
+	view.source_uid = third_row.uid
+	view.source_generation = 4
+	view.now_ms = 1800
+	intent.action = 2
+	var switched := host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16)
+	assert_true(switched.ok, "after shared recovery a different UID does not inherit the first UID's ten-second cooldown")
+	assert_true(host.commit_actor_heal_utility(switched).ok)
+	assert_almost_eq(float(rec.participants[1].wind), 52.0)
+	assert_true(host.bind_actor_body(id, 1, "owner_a", first, body.get_instance_id()).ok)
+	view.source_uid = first.uid
+	view.source_generation = 5
+	view.now_ms = 3000
+	intent.action = 3
+	before = rec.duplicate(true)
+	assert_eq(host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", profile, 16).code, "cooldown")
+	assert_eq(rec, before, "switching away and back cannot erase that creature's own utility cooldown")
+	body.free()

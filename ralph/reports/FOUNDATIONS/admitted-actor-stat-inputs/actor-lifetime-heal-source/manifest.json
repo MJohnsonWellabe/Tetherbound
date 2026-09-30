@@ -1,0 +1,68 @@
+{
+  "status": "APPLIED SOURCE PACKET ONLY; NO PARSER/NATIVE/PLAYER/COOP ACCEPTANCE",
+  "base_main": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
+  "save_schema": 28,
+  "wire_protocol": 8,
+  "source_paths": {
+    "scripts/net/encounter_host.gd": {
+      "git_blob": "b95e0b973cbd046cf36240942af8e3fce60a13e1",
+      "git_bytes_sha256": "c4010e6ed67361fc9563a73d40d8524ba5cced1a476e77697ea7f140ac6f72f7"
+    },
+    "scripts/combat/utility_effects.gd": {
+      "git_blob": "eb3fc4a2eebf5e21e866e8f279c68059e2752120",
+      "git_bytes_sha256": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba"
+    },
+    "data/config/combat.json": {
+      "git_blob": "a2d9da2cd9b47048388d9a5b8bc9061db6b5b906",
+      "git_bytes_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b"
+    },
+    "tests/test_actor_vitals_authority.gd": {
+      "git_blob": "8111e9d0ad144b1f66da2a34695b26375faf2272",
+      "git_bytes_sha256": "1bdde675cc125fa66d1fc19b4b31df388be205579d9e14a733f0d9e7b2bbdfdd"
+    }
+  },
+  "canonical_dependency": {
+    "source_commit": "f506adb306ce8640a6a34f60620d4dc335dbf7fc",
+    "path": "scripts/combat/utility_effects.gd",
+    "byte_identical": true
+  },
+  "combat_net_packet": {
+    "patch_sha256": "922d1e0d95b563a22f3da8e45511ffe6019dc0dbe4df57df9376cd20acee972c",
+    "transport_CRLF_normalized_before_apply": true
+  },
+  "intentional_successor_changes": [
+    "Private actor_bound_uid prevents rejoin active-UID labels from hiding pooled-body switches.",
+    "Heal utility deadline keyed by creature UID; shared action lock uses windup plus recovery.",
+    "Canonical Heal windup/recovery and regen delay validated before detached resource trial.",
+    "Three allocated adversarial methods append to existing test file; existing body unchanged."
+  ],
+  "unmodified_dependencies": {
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "scripts/net/actor_vitals_delivery.gd": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962",
+    "scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "data/moves/moves.json": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886"
+  },
+  "new_named_methods": [
+    "test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation",
+    "test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private",
+    "test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown"
+  ],
+  "offline_structural_checks": [
+    "Existing test prefix byte-identical after removing sole preload.",
+    "UtilityEffects exact canonical Git bytes.",
+    "Only two config blocks additive; runtime_enabled false.",
+    "Listed canonical save/registry/caller/move dependencies unchanged."
+  ],
+  "missing_actual_caller_work": [
+    "Bind current admitted stable character/owned UID/real host body at encounter entry and switch.",
+    "Solo/local and remote actor-only routing without global network guard widening.",
+    "One existing authoritative host clock advances Wind and action recovery offline or networked.",
+    "Finish fallback before freeze; prepared durable world CAS before pure actor/Heal commit.",
+    "Exact latest finalize and durable encounter handoff; owner bool save/ACK and rejoin proof.",
+    "Use detached presentation_snapshot for transport rather than private host record."
+  ]
+}
