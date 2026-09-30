@@ -28,7 +28,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | 94b81b02c pushed; independent #0/#1/#2 candidate MET; #3 populated peers/#4 Grandpa remain; RD-36 batches necessary validation; first shard has an obsolete v1 expectation to fix |
+| `tb/foundations` | F16 | 1fb68ea08 pushed, main82eda merged; independent #0–#3 candidate MET; #4 six-line Grandpa path PASS; full unit batch open, old satchel expectations being corrected to RD-35 |
 | `tb/hub` | F17, F18 | waits on F16 |
 | `tb/reorder` | F19, F20 | waits on F16, F18 |
 | `tb/combat` | F21–F24 | prototype complete; independent F16 review; edits after F16 |
