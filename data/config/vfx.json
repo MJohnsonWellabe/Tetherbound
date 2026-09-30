@@ -664,7 +664,8 @@
           "ribbon_ratio": 0.13,
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
-          "marker_opacity": 0.38
+          "marker_opacity": 0.38,
+          "glyph_sides": 6
         },
         "trail": {
           "style": "ion",
@@ -1942,7 +1943,8 @@
           "ribbon_ratio": 0.13,
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
-          "marker_opacity": 0.38
+          "marker_opacity": 0.38,
+          "glyph_sides": 6
         },
         "trail": {
           "style": "dust",
@@ -2612,12 +2614,13 @@
           "height_ratio": 3.0,
           "sky_height": 6.0,
           "tip_ratio": 0.0,
-          "width": 0.1,
+          "width": 0.06,
           "turns": 3.0,
           "ribbon_ratio": 0.13,
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
-          "marker_opacity": 0.38
+          "marker_opacity": 0.38,
+          "glyph_sides": 6
         },
         "trail": {
           "style": "wisp",
@@ -2639,7 +2642,9 @@
           "gravity": 1.0,
           "width": 0.12,
           "height_ratio": 2.3,
-          "segments": 16
+          "segments": 16,
+          "glyph_sides": 6,
+          "secondary_shape": "sigil"
         },
         "sound": {
           "launch": "vfx_debuff_hex_launch",
@@ -2714,7 +2719,7 @@
       },
       "guard_flash": {
         "body": {
-          "shape": "orb",
+          "shape": "glint",
           "motion": "self",
           "lit": false,
           "opacity": 1.0,
@@ -2728,7 +2733,8 @@
           "ribbon_ratio": 0.13,
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
-          "marker_opacity": 0.38
+          "marker_opacity": 0.38,
+          "ray_width_ratio": 0.12
         },
         "trail": {
           "style": "mote",
@@ -2739,7 +2745,7 @@
           "wave_speed": 6.0
         },
         "impact": {
-          "shape": "orb",
+          "shape": "glint",
           "duration": 0.42,
           "grow": 1.8,
           "heat": 0.35,
@@ -2750,7 +2756,9 @@
           "gravity": 1.0,
           "width": 0.12,
           "height_ratio": 2.3,
-          "segments": 16
+          "segments": 16,
+          "secondary_shape": "glint",
+          "ray_width_ratio": 0.12
         },
         "sound": {
           "launch": "vfx_guard_flash_launch",

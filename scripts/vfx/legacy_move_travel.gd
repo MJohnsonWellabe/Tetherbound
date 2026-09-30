@@ -50,6 +50,9 @@ var _travel: float = 0.2
 var _colour: Color = Color("#ffd27a")
 var _kind: String = "projectile"
 var _done: bool = false
+var _action_id: String = ""
+var _encounter_id: String = "global"
+var _presentation_clock: SceneTreeTimer
 
 var _body: MeshInstance3D = null
 var _mesh: ImmediateMesh = null
@@ -61,7 +64,8 @@ var _mesh: ImmediateMesh = null
 ## that has no travel to draw (a plain melee swing), which lets the caller ask
 ## unconditionally and branch on the answer instead of duplicating the
 ## "is this move ranged" test.
-static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary) -> Node3D:
+static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
+		context: Dictionary = {}) -> Node3D:
 	var kind := str(spec.get("kind", "melee"))
 	if kind == "melee" or parent == null:
 		return null
@@ -76,12 +80,24 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary) -
 	# gets the floor and reads as an immediate burst.
 	var distance := from.distance_to(to) if kind != "area" else 0.0
 	shot._travel = clampf(distance / maxf(speed, 0.001), MIN_TRAVEL, MAX_TRAVEL)
+	if context.has("travel_seconds"):
+		shot._travel = maxf(0.0, float(context.travel_seconds))
+	shot._action_id = str(context.get("action_id", ""))
+	shot._encounter_id = str(context.get("encounter_id", "global"))
 	parent.add_child(shot)
 	shot.global_position = from
+	if context.has("travel_seconds") and shot._travel > 0.0:
+		# Match the host's idle SceneTreeTimer time domain and creation phase.
+		# This independent timer only moves/finishes the local drawing. Removing
+		# the shot cannot change the host's separately owned gameplay timer.
+		shot.set_physics_process(false)
+		shot._presentation_clock = shot.get_tree().create_timer(shot._travel, false)
+		shot._presentation_clock.timeout.connect(shot._finish_presentation, CONNECT_ONE_SHOT)
 	return shot
 
 
 func _ready() -> void:
+	add_to_group("move_effect_presentation")
 	_mesh = ImmediateMesh.new()
 	_body = MeshInstance3D.new()
 	_body.mesh = _mesh
@@ -146,9 +162,21 @@ func _physics_process(delta: float) -> void:
 	global_position = _from.lerp(_to, t)
 	_redraw(t)
 	if t >= 1.0:
-		_done = true
-		arrived.emit()
-		queue_free()
+		_finish_presentation()
+
+func _process(_delta: float) -> void:
+	if _done or _presentation_clock == null: return
+	_elapsed = maxf(0.0, _travel - _presentation_clock.time_left)
+	var t := clampf(_elapsed / maxf(_travel, 0.001), 0.0, 1.0)
+	global_position = _from.lerp(_to, t)
+	_redraw(t)
+
+func _finish_presentation() -> void:
+	if _done: return
+	_done = true
+	global_position = _to
+	arrived.emit()
+	queue_free()
 
 
 ## The bolt itself, rebuilt each frame in local space.
@@ -233,3 +261,15 @@ func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3,
 	_mesh.surface_add_vertex(c)
 	_mesh.surface_set_color(far_colour)
 	_mesh.surface_add_vertex(d)
+
+func action_id() -> String:
+	return _action_id
+
+func encounter_id() -> String:
+	return _encounter_id
+
+func cancel_presentation() -> void:
+	_done = true
+	set_process(false)
+	set_physics_process(false)
+	queue_free()

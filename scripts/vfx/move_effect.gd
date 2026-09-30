@@ -29,8 +29,7 @@ var _mote_positions: Array[Vector3] = []
 var _velocities: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
 var _colour: Color
-var _audio_launch: AudioStreamPlayer3D
-var _audio_impact: AudioStreamPlayer3D
+var _presentation_clock: SceneTreeTimer
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		travel: float, config: Dictionary) -> void:
@@ -45,6 +44,7 @@ func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 	_rng.seed = int(context.get("seed", 0))
 
 func _ready() -> void:
+	add_to_group("move_effect_presentation")
 	top_level = true
 	global_transform = Transform3D.IDENTITY
 	var budget: Dictionary = _row.get("budget", {})
@@ -77,6 +77,12 @@ func _ready() -> void:
 		_trails.append(trail)
 	_update_bodies(0.0)
 	_play_launch()
+	if _context.has("travel_seconds") and _travel > 0.0:
+		# The host creates its separate authoritative timer after launch returns.
+		# Both timers have the same idle clock and birth phase; this one can
+		# finish visuals only and is independent of the damage transaction.
+		_presentation_clock = get_tree().create_timer(_travel, false)
+		_presentation_clock.timeout.connect(_finish_presentation, CONNECT_ONE_SHOT)
 
 func _mesh_node(mesh: Mesh, colour: Color, opacity: float = 1.0, lit: bool = false) -> MeshInstance3D:
 	var node := MeshInstance3D.new()
@@ -87,19 +93,16 @@ func _mesh_node(mesh: Mesh, colour: Color, opacity: float = 1.0, lit: bool = fal
 	return node
 
 func _process(delta: float) -> void:
-	_elapsed += delta
+	if not _arrived and _presentation_clock != null:
+		_elapsed = maxf(0.0, _travel - _presentation_clock.time_left)
+	else:
+		_elapsed += delta
 	var t := clampf(_elapsed / maxf(_travel, 0.00001), 0.0, 1.0)
 	if not _arrived:
 		_update_bodies(t)
 		_update_trail()
-		if _elapsed >= _travel:
-			_arrived = true
-			_build_impact()
-			_play_impact()
-			# Emitted after the contact body exists, never during _ready, so
-			# existing launch(...).arrived.connect callers cannot miss it.
-			arrived.emit()
-			presentation_arrived.emit(_context)
+		if _presentation_clock == null and _elapsed >= _travel:
+			_finish_presentation()
 	else:
 		_update_trail()
 		var duration := float((_row.impact as Dictionary).get("duration", 0.45))
@@ -109,6 +112,18 @@ func _process(delta: float) -> void:
 		for trail: MeshInstance3D in _trails:
 			(trail.material_override as StandardMaterial3D).albedo_color.a = (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78))
 		if u >= 1.0: queue_free()
+
+func _finish_presentation() -> void:
+	if _arrived: return
+	_elapsed = _travel
+	_update_bodies(1.0)
+	_arrived = true
+	_build_impact()
+	_play_impact()
+	# Contact geometry exists before the later host timer can resolve HP.
+	# No observer of this informational signal can authorize a gameplay hit.
+	arrived.emit()
+	presentation_arrived.emit(_context)
 
 func _update_bodies(t: float) -> void:
 	var mode := str((_row.body as Dictionary).get("motion", "projectile"))
@@ -165,6 +180,15 @@ func _update_bodies(t: float) -> void:
 					var marker_fraction := float((_row.body as Dictionary).get("marker_fraction", 0.65))
 					body.visible = t >= marker_fraction
 					body.scale.y = maxf(0.02, (t - marker_fraction) / maxf(0.001, 1.0 - marker_fraction))
+					# CylinderMesh is centered on its origin. Raise its center by
+					# half its current height so the root grows from the floor,
+					# rather than from the target's torso or below the ground.
+					var ground: Vector3 = _context.get("target_ground", _to)
+					var horizontal := Vector3(direction.x, 0.0, direction.z).normalized()
+					if horizontal.length_squared() < 0.001: horizontal = Vector3.FORWARD
+					var across := horizontal.cross(Vector3.UP).normalized()
+					body.position = ground + (across * cos(angle) + horizontal * sin(angle)) * float(_params.get("spread", 0.0))
+					body.position.y += float(_params.size) * float((_row.body as Dictionary).get("height_ratio", 3.0)) * body.scale.y * 0.5
 					if _marker != null: _marker.visible = not body.visible
 				if str((_row.body as Dictionary).get("shape", "")) == "crescent":
 					body.rotation = Vector3(PI * 0.5, angle, t * PI * 0.5)
@@ -208,14 +232,14 @@ func _build_impact() -> void:
 	if _marker != null: _marker.visible = false
 	_impact = Node3D.new()
 	add_child(_impact)
-	_impact.position = _from if str((_row.body as Dictionary).get("motion", "")) == "self" else _to
+	_impact.position = _contact_position()
 	var profile: Dictionary = _row.impact
 	var scale_factor := float(_params.size) * float(_params.impact_scale)
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	if bool(_row.impact_layer):
-		var secondary := _mesh_node(GEOMETRY.shape("ring", scale_factor * 1.35, profile), _colour, 0.65)
+		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
 		secondary.reparent(_impact, false)
 		secondary.rotation.x = PI * 0.5
 	var count := int(BUDGET.allocation(_lease).get("impact", 0))
@@ -260,20 +284,40 @@ func _cue(name: String) -> String:
 	var id := str(sounds.get(name, ""))
 	return str(AUDIO.section("move_effect_cues").get(id, ""))
 
+func _contact_position() -> Vector3:
+	var body: Dictionary = _row.body
+	if str(body.get("motion", "")) == "self": return _from
+	if str(body.get("motion", "")) == "target" and str(body.get("shape", "")) == "spike":
+		return _context.get("target_ground", _to)
+	return _to
+
 func _play_launch() -> void:
 	var minimum := float((_row.sound as Dictionary).get("travel_min_seconds", 0.18))
 	var name := "launch_travel" if _travel >= minimum else "launch"
 	if int(_row.mastery_rank) >= 5: name += "_mastery"
 	var path := _cue(name)
 	if path.is_empty(): return
-	_audio_launch = AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _from, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
+	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _from, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
 
 func _play_impact() -> void:
 	var name := "impact_mastery" if int(_row.mastery_rank) >= 5 else "impact"
 	var path := _cue(name)
 	if path.is_empty(): return
-	_audio_impact = AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _to, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
+	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _contact_position(), "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
 
 func _exit_tree() -> void:
 	BUDGET.release(_lease)
 	# AudioManager owns its pooled players; do not stop a recycled voice here.
+
+func action_id() -> String:
+	return str(_context.get("action_id", ""))
+
+func encounter_id() -> String:
+	return str(_context.get("encounter_id", "global"))
+
+func cancel_presentation() -> void:
+	# This cannot cancel an earned action or an authoritative pending hit.
+	# Stop local processing now; deferred deletion still releases the lease.
+	set_process(false)
+	_arrived = true
+	queue_free()
