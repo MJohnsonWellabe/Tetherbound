@@ -590,6 +590,8 @@ func begin(
 	var creature := active_creature()
 	if creature == null or creature.fainted or bool(creature.get("resting")):
 		return false
+	if _ally_body.has_method("reset_combat_movement_owner"):
+		_ally_body.call("reset_combat_movement_owner")
 
 	_action = Action.READY
 	_action_timer = 0.0

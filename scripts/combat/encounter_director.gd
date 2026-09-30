@@ -2413,6 +2413,10 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	# own two body radii. A peer cannot post itself a longer reach.
 	var card: Dictionary = _creature_card_for(peer_id)
 	var slot := str(intent.get("slot", "quick"))
+	if slot not in ["quick", "charged"]:
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "invalid_slot", "reason": "Utility moves use their own effect transaction.",
+			"pending": false, "delta": {}}
 	var mastery := _host_owned_move(peer_id, str(card.get("creature_uid", "")), str(intent.get("move_id", "")), slot)
 	if not bool(mastery.get("ok", false)):
 		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
@@ -2537,7 +2541,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 func _host_owned_move(peer_id: int, uid: String, move_id: String, slot: String) -> Dictionary:
 	if _session == null or not _session.has_method("admitted_character_state"):
 		return {"ok": true, "enabled": false, "rank": 1}
-	if not _is_host() or slot not in ["quick", "charged"]: return {"ok": false}
+	if not _is_host() or slot not in ["quick", "charged", "utility"]: return {"ok": false}
 	var personal: Dictionary = _session.call("admitted_character_state", peer_id)
 	if personal.is_empty() or not MOVE_TEACHING.admitted_party_errors(personal.get("party"), personal.get("redesign_character")).is_empty():
 		return {"ok": false}
@@ -2548,6 +2552,43 @@ func _host_owned_move(peer_id: int, uid: String, move_id: String, slot: String) 
 		return {"ok": true, "enabled": true, "row": row.duplicate(true),
 			"rank": MOVE_MASTERY.rank_from_uses(int((row.get("move_mastery_uses", {}) as Dictionary).get(move_id, 0)))}
 	return {"ok": false}
+
+
+## Strict live actor context for the upcoming utility/vitals caller. This
+## supporting seam is not called by gameplay yet. Stable character and owned
+## canonical row come from Session; UID and ObjectID come from the current
+## host deployment, never an intent. No legacy card-only HP fallback is legal.
+func _host_actor_vitals_context(encounter_id: String, peer_id: int) -> Dictionary:
+	if not _is_host() or _encounter_host == null or _session == null \
+		or not _session.has_method("admitted_character_state") \
+		or not _session.has_method("admitted_character_revision"): return {}
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	if str(record.get("phase", "")) != "active" \
+		or not (record.get("participants", {}) as Dictionary).has(peer_id) \
+		or not _tournament_combat_identity_valid(encounter_id, peer_id): return {}
+	var personal: Dictionary = _session.call("admitted_character_state", peer_id)
+	if personal.is_empty() or not MOVE_TEACHING.admitted_party_errors(
+		personal.get("party"), personal.get("redesign_character")).is_empty(): return {}
+	var character_id: Variant = personal.get("character_id")
+	if not character_id is String or character_id.is_empty() \
+		or character_id != (record.participants[peer_id] as Dictionary).get("character_id"): return {}
+	var body := deployed_body_for(peer_id)
+	var uid := str(_creature_card_for(peer_id).get("creature_uid", ""))
+	if not is_instance_valid(body) or not body.is_inside_tree() or body.is_queued_for_deletion() \
+		or uid.is_empty(): return {}
+	var owned: Dictionary = {}
+	for row: Dictionary in personal.party:
+		if str(row.uid) == uid:
+			owned = row
+			break
+	if owned.is_empty(): return {}
+	var bound: Dictionary = _encounter_host.call("bind_actor_body", encounter_id,
+		peer_id, character_id, owned, body.get_instance_id())
+	if not bool(bound.get("ok", false)): return {}
+	return {"body": body, "creature_uid": uid, "character_id": character_id,
+		"generation": int(bound.vitals.body_generation), "vitals": bound.vitals,
+		"owned_row": owned.duplicate(true),
+		"character_revision": int(_session.call("admitted_character_revision", peer_id))}
 
 
 ## Called synchronously inside actual host HP debit, before damage feedback,
