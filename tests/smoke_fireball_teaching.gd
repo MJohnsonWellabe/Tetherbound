@@ -172,8 +172,8 @@ func _run() -> void:
 		var direction := wild.global_position - ally.global_position
 		direction.y = 0
 		_rig.set("yaw", atan2(-direction.x, -direction.z))
-		var slot := "charged" if bool(_manager.call("charged_ready")) else "quick"
-		var reach := float(_manager.call("combat_move_reach", slot))
+		var move_slot := "charged" if bool(_manager.call("charged_ready")) else "quick"
+		var reach := float(_manager.call("combat_move_reach", move_slot))
 		if direction.length() > reach - 0.15:
 			Input.action_press("move_forward")
 		else:
