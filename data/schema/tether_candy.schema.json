@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/tether_candy",
+  "type": "object",
+  "properties": {
+    "id": {
+      "const": "tether_candy"
+    },
+    "levels_granted": {
+      "const": 1
+    },
+    "sellable": {
+      "const": false
+    }
+  },
+  "required": [
+    "id",
+    "levels_granted",
+    "sellable"
+  ],
+  "additionalProperties": false
+}

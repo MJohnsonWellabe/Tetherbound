@@ -48,7 +48,10 @@ const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 ## Version 5 records the world instance on durable satchel escrow rows; v4
 ## readers must refuse rather than replay a row using only a slot locator.
 ## Version 6 owns the ordered tournament selection alongside the portable party.
-const VERSION := 6
+## RD-35 resets both merged and portable formats; v6 is a pre-redesign save.
+const VERSION := 28
+const RESET_MAX_VERSION := 27
+const OLD_VERSION_MESSAGE := "This save is from an older version. Start a new game. Your old save has been kept."
 
 const ENVELOPE_KEYS: Array[String] = [
 	"version", "character_id", "display_name", "created_at", "last_played",
@@ -57,6 +60,7 @@ const ENVELOPE_KEYS: Array[String] = [
 
 ## The v22 keys this half owns under their own names.
 const STATE_KEYS: Array[String] = [
+	"redesign_character",
 	"chosen_character", "party", "tournament_selection", "inventory", "equipment", "hotbar", "satiety", "player_pose", "pending_realm_entry",
 	"realm_hearts", "realm_maps", "skills", "satchel_escrow",
 ]
@@ -66,6 +70,7 @@ const STATE_KEYS: Array[String] = [
 const DERIVED_KEYS: Array[String] = ["map", "alpha_pins"]
 
 var _dir: String
+var _legacy_dir: String = ""
 
 ## id -> the envelope fields a re-save must PRESERVE rather than recompute.
 ##
@@ -74,10 +79,12 @@ var _dir: String
 ## a third full JSON parse on a path that runs while the player is walking
 ## around. The first write of a session pays one read; the rest do not.
 var _envelope_cache: Dictionary = {}
+var last_load_result: Dictionary = {}
 
 
-func _init(dir: String = "user://characters/") -> void:
+func _init(dir: String = "user://characters/redesign-v28/") -> void:
 	_dir = dir if dir.ends_with("/") else dir + "/"
+	if _dir == "user://characters/redesign-v28/": _legacy_dir = "user://characters/"
 
 
 func root_dir() -> String:
@@ -93,7 +100,13 @@ func path_for(character_id: String) -> String:
 
 
 func has(character_id: String) -> bool:
-	return not character_id.is_empty() and ATOMIC_SAVE_FILE.has_readable(path_for(character_id))
+	return not character_id.is_empty() and ATOMIC_SAVE_FILE.has_readable(_read_path(character_id))
+
+
+func _read_path(character_id: String) -> String:
+	var current := path_for(character_id)
+	if ATOMIC_SAVE_FILE.has_readable(current) or _legacy_dir.is_empty(): return current
+	return "%s%s/character.json" % [_legacy_dir, character_id]
 
 
 func delete(character_id: String) -> bool:
@@ -101,12 +114,11 @@ func delete(character_id: String) -> bool:
 
 
 func list_ids() -> Array:
-	if not DirAccess.dir_exists_absolute(_dir):
-		return []
 	var out: Array = []
-	for name: String in DirAccess.get_directories_at(_dir):
-		if has(name):
-			out.append(name)
+	for directory: String in [_dir, _legacy_dir]:
+		if directory.is_empty() or not DirAccess.dir_exists_absolute(directory): continue
+		for name: String in DirAccess.get_directories_at(directory):
+			if has(name) and not out.has(name): out.append(name)
 	out.sort()
 	return out
 
@@ -172,6 +184,9 @@ static func _flag_ids(raw: Variant) -> Array:
 func write(character_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
 	if character_id.is_empty():
 		return false
+	var contract := preload("res://scripts/data/redesign_state.gd")
+	if not contract.validate("character", payload.get("redesign_character", contract.defaults("character")), contract.uids(payload.get("party", []))).is_empty():
+		return false
 	var dir := dir_for(character_id)
 	if DirAccess.make_dir_recursive_absolute(dir) != OK:
 		push_warning("character save: could not create %s" % dir)
@@ -222,9 +237,10 @@ func _envelope_of(data: Dictionary) -> Dictionary:
 
 
 func read(character_id: String) -> Dictionary:
+	last_load_result = {"ok": false, "code": "unreadable_save", "message": "That character could not be loaded."}
 	if not has(character_id):
 		return {}
-	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(path_for(character_id)), FileAccess.READ)
+	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(_read_path(character_id)), FileAccess.READ)
 	if file == null:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
@@ -232,14 +248,25 @@ func read(character_id: String) -> Dictionary:
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}
 	var data := parsed as Dictionary
+	var raw_version: Variant = data.get("version", null)
+	if not WORLD_SAVE.is_number(raw_version) or not is_finite(float(raw_version)) or float(raw_version) != floor(float(raw_version)):
+		last_load_result = {"ok": false, "code": "invalid_version", "message": "That character has an invalid version."}
+		return {}
 	var version := int(data.get("version", 0)) if WORLD_SAVE.is_number(data.get("version")) else 0
+	if version <= RESET_MAX_VERSION:
+		last_load_result = {"ok": false, "code": "incompatible_old_version", "message": OLD_VERSION_MESSAGE}
+		return {}
 	if version < 1 or version > VERSION:
 		push_warning("character '%s' is version %d, this build reads %d -- not loading" % [
 			character_id, version, VERSION,
 		])
 		return {}
-	if version < 4 and not data.has("last_world_instance_id"):
-		data["last_world_instance_id"] = ""
+	var contract := preload("res://scripts/data/redesign_state.gd")
+	var errors := contract.validate("character", data.get("redesign_character", contract.defaults("character")), contract.uids(data.get("party", [])))
+	if not errors.is_empty():
+		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That character contains invalid data.", "errors": errors}
+		return {}
+	last_load_result = {"ok": true, "code": "ok", "message": ""}
 	return data
 
 

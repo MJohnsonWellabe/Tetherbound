@@ -25,6 +25,8 @@ extends RefCounted
 
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+var redesign_world: Dictionary = REDESIGN_STATE.defaults("world")
 
 ## `game_state.gd::CLOCK_UNSET`, repeated here rather than imported: this file
 ## is the one that owns the field now, and `game_state.gd` keeps its own const
@@ -94,6 +96,7 @@ func _init() -> void:
 ## every New Game is one more thing to get wrong. `load_data({})` is the flag
 ## store's own "working fresh state" contract.
 func reset() -> void:
+	redesign_world = REDESIGN_STATE.defaults("world")
 	flags.call("load_data", {})
 	day = 1
 	clock_elapsed_seconds = CLOCK_UNSET
@@ -256,6 +259,7 @@ func set_farm_plot(index: int, plot: Dictionary) -> void:
 ## 1.C replaces that path; this is the shape it replaces it with.
 func save_data() -> Dictionary:
 	return {
+		"redesign_world": redesign_world.duplicate(true),
 		"world_id": world_id,
 		"day": day,
 		"clock_elapsed_seconds": clock_elapsed_seconds,
@@ -277,6 +281,12 @@ func save_data() -> Dictionary:
 ## the same contract `map_state.gd` and `progression_state.gd` already give
 ## `save_game.gd`.
 func load_data(data: Dictionary) -> void:
+	var redesign: Variant = data.get("redesign_world", REDESIGN_STATE.defaults("world"))
+	var redesign_errors := REDESIGN_STATE.validate("world", redesign)
+	if not redesign_errors.is_empty():
+		push_error("World schema refused: %s" % "; ".join(redesign_errors))
+		return
+	redesign_world = redesign.duplicate(true)
 	world_id = str(data.get("world_id", world_id))
 	day = _int(data.get("day"), 1)
 	clock_elapsed_seconds = _finite_clock(data.get("clock_elapsed_seconds"))

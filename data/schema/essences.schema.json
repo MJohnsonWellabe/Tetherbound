@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/essences",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "essence_ground",
+          "essence_water",
+          "essence_air",
+          "essence_electric",
+          "essence_fire",
+          "essence_dark",
+          "essence_ice",
+          "essence_psychic"
+        ]
+      },
+      "type": {
+        "type": "string",
+        "enum": [
+          "ground",
+          "water",
+          "air",
+          "electric",
+          "fire",
+          "dark",
+          "ice",
+          "psychic"
+        ]
+      },
+      "stack_limit": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "sellable": {
+        "const": false
+      }
+    },
+    "required": [
+      "id",
+      "type",
+      "stack_limit",
+      "sellable"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "essence_ground"
+          },
+          "type": {
+            "const": "ground"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "essence_water"
+          },
+          "type": {
+            "const": "water"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "essence_air"
+          },
+          "type": {
+            "const": "air"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "essence_electric"
+          },
+          "type": {
+            "const": "electric"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "essence_fire"
+          },
+          "type": {
+            "const": "fire"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "essence_dark"
+          },
+          "type": {
+            "const": "dark"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "essence_ice"
+          },
+          "type": {
+            "const": "ice"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "essence_psychic"
+          },
+          "type": {
+            "const": "psychic"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 8,
+  "uniqueItems": true,
+  "maxItems": 8
+}

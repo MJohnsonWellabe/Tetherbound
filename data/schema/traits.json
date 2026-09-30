@@ -1,0 +1,8 @@
+[
+  {
+    "id": "hardy",
+    "rarity": "common",
+    "effect": "max_hp_scale",
+    "magnitude": 0.05
+  }
+]

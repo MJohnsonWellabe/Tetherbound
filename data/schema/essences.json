@@ -1,0 +1,50 @@
+[
+  {
+    "id": "essence_ground",
+    "type": "ground",
+    "stack_limit": 999,
+    "sellable": false
+  },
+  {
+    "id": "essence_water",
+    "type": "water",
+    "stack_limit": 999,
+    "sellable": false
+  },
+  {
+    "id": "essence_air",
+    "type": "air",
+    "stack_limit": 999,
+    "sellable": false
+  },
+  {
+    "id": "essence_electric",
+    "type": "electric",
+    "stack_limit": 999,
+    "sellable": false
+  },
+  {
+    "id": "essence_fire",
+    "type": "fire",
+    "stack_limit": 999,
+    "sellable": false
+  },
+  {
+    "id": "essence_dark",
+    "type": "dark",
+    "stack_limit": 999,
+    "sellable": false
+  },
+  {
+    "id": "essence_ice",
+    "type": "ice",
+    "stack_limit": 999,
+    "sellable": false
+  },
+  {
+    "id": "essence_psychic",
+    "type": "psychic",
+    "stack_limit": 999,
+    "sellable": false
+  }
+]

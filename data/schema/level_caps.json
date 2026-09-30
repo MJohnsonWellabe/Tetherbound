@@ -1,0 +1,52 @@
+[
+  {
+    "id": "cap_10",
+    "level": 10,
+    "status": "live"
+  },
+  {
+    "id": "cap_20",
+    "level": 20,
+    "status": "live"
+  },
+  {
+    "id": "cap_30",
+    "level": 30,
+    "status": "live"
+  },
+  {
+    "id": "cap_40",
+    "level": 40,
+    "status": "live"
+  },
+  {
+    "id": "cap_50",
+    "level": 50,
+    "status": "live"
+  },
+  {
+    "id": "cap_60",
+    "level": 60,
+    "status": "live"
+  },
+  {
+    "id": "cap_70",
+    "level": 70,
+    "status": "reserved"
+  },
+  {
+    "id": "cap_80",
+    "level": 80,
+    "status": "reserved"
+  },
+  {
+    "id": "cap_90",
+    "level": 90,
+    "status": "reserved"
+  },
+  {
+    "id": "cap_100",
+    "level": 100,
+    "status": "reserved"
+  }
+]

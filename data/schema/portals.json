@@ -1,0 +1,58 @@
+[
+  {
+    "id": "portal_meadows",
+    "biome": "meadows",
+    "status": "live",
+    "key_id": "portal_key_meadows",
+    "entry_id": "meadows_entry"
+  },
+  {
+    "id": "portal_tidewake",
+    "biome": "tidewake",
+    "status": "live",
+    "key_id": "portal_key_tidewake",
+    "entry_id": "tidewake_entry"
+  },
+  {
+    "id": "portal_cloudreach",
+    "biome": "cloudreach",
+    "status": "live",
+    "key_id": "portal_key_cloudreach",
+    "entry_id": "cloudreach_entry"
+  },
+  {
+    "id": "portal_stormwood",
+    "biome": "stormwood",
+    "status": "live",
+    "key_id": "portal_key_stormwood",
+    "entry_id": "stormwood_entry"
+  },
+  {
+    "id": "portal_biome5",
+    "biome": "biome5",
+    "status": "reserved",
+    "key_id": "portal_key_biome5",
+    "entry_id": "biome5_entry"
+  },
+  {
+    "id": "portal_biome6",
+    "biome": "biome6",
+    "status": "reserved",
+    "key_id": "portal_key_biome6",
+    "entry_id": "biome6_entry"
+  },
+  {
+    "id": "portal_biome7",
+    "biome": "biome7",
+    "status": "reserved",
+    "key_id": "portal_key_biome7",
+    "entry_id": "biome7_entry"
+  },
+  {
+    "id": "portal_biome8",
+    "biome": "biome8",
+    "status": "reserved",
+    "key_id": "portal_key_biome8",
+    "entry_id": "biome8_entry"
+  }
+]

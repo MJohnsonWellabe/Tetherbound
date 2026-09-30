@@ -1,5 +1,5 @@
 {
-  "_comment": "D99 / docs/specs/MP_STATE_SEAM.md §3. Every story flag id is world or player. A flag matching nothing here is a test failure (tests/test_flag_scopes.gd), never a default: defaulting an unknown id to world makes a friend's tutorial already done, and defaulting it to player leaves a gate closed for the friend who did not open it. Resolution is exact id first, then the LONGEST matching prefix, then nothing (autoload/progression_state.gd::scope_of).",
+  "_comment": "D99 / docs/specs/MP_STATE_SEAM.md \u00c2\u00a73. Every story flag id is world or player. A flag matching nothing here is a test failure (tests/test_flag_scopes.gd), never a default: defaulting an unknown id to world makes a friend's tutorial already done, and defaulting it to player leaves a gate closed for the friend who did not open it. Resolution is exact id first, then the LONGEST matching prefix, then nothing (autoload/progression_state.gd::scope_of).",
   "_comment_prefixes": "A prefix ends with ':' or '_' so it can never swallow an unrelated id. Longest-prefix wins, so 'opening:beat:' resolves ahead of 'opening:' even though both are player.",
   "_comment_rule": "world = something happened to THE WORLD once (a boss fell, a gate opened, a pickup was taken, a relay went dark, a shop opened, an NPC was met). player = a tutorial beat, a personal readiness check, or a personal payoff (items handed over, a saddle fitted on YOUR creature, YOUR camp, YOUR legendary). Home and creature-bed flags are player flags GRANTED TO EVERY CONNECTED PEER when the world gains the pieces (D99); until Wave 3's grant_player_flag exists, solo writes them to the local store exactly as today.",
   "_why_lost_creature_rue_returned": "F03: world scope. The player leads Juno's freed Meadowhart home; once she stands beside Juno that is true for every peer, and band4_lost_creature completes on it (data/config/lost_companion_reunion.json).",
@@ -225,5 +225,193 @@
       "cloudreach:legendary_answer_world:"
     ]
   },
-  "_why_cloudreach_solmane": "Owner ruling 2026-09-27 (#356 5858140459): Solmane is Cloudreach's freed legendary, offered to each Veyra participant through stronghold_climax.gd with cloudreach:-prefixed receipts (data/config/cloudreach_solmane_climax.json). World: the freeing and settle, and per-character resolution receipts. Player: each character's own joined/refused answer and the world it was given in."
+  "_why_cloudreach_solmane": "Owner ruling 2026-09-27 (#356 5858140459): Solmane is Cloudreach's freed legendary, offered to each Veyra participant through stronghold_climax.gd with cloudreach:-prefixed receipts (data/config/cloudreach_solmane_climax.json). World: the freeing and settle, and per-character resolution receipts. Player: each character's own joined/refused answer and the world it was given in.",
+  "durable_fields": {
+    "redesign_world.portal_unlocks": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "portal_unlock:<arch>:<character_id>; world commit then atomic character key debit/unlock before ACK; duplicate no debit",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_world.shrine_display": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "host validates character hang receipt; idempotent world set",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_world.station_tiers": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "existing host building transaction; atomic cost/placement; derive effective tier from attachments",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_world.node_cycles": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "host-clock renewable claim; first valid claimant wins; grant escrow before ACK",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_world.rematch_cycles": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "rematch:<world-instance>:<id>:<cycle>:<character_id>; host cycle and personal receipt",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_world.alpha_cycles": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "host spawn cycle; one physical wild and one catcher",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_world.bounty_day": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "host world day; idempotent monotonic rotation index",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_world.fifth_arch_stirred": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "portal_unlock:fifth:<character_id>; idempotent visual fact; never opens arch",
+      "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.portal_unlocks": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "portal_unlock:<arch>:<character_id>; world commit then atomic character key debit/unlock before ACK; duplicate no debit",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.waystones_activated": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "host validates touch; idempotent set; portable character write",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.last_waystones": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "same touch transaction as activation; portable last pointer",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.relics_held": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "host per-participant delivery; escrow before ACK",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.relics_hung": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "relic_hang:<biome>:<character_id>; character receipt then shared shrine display; replay no duplicate",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.attachment_recipes": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "per-source per-character durable delivery; once",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.feast_recipes": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "master_recipe:<master_id>:<character_id>; once character-global",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.master_wins": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "same master_recipe transaction; host validates exactly one duelist",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.release_receipts": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "release:<creature_uid>; remove creature and grant payout in one character write",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.transaction_receipts": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "domain:<character_id>:<sequence>; host validates; atomically debit/grant; replay no mutation",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.research_receipts": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "research:<species>:<task>:<character_id>; once character-global host-confirmed",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.bounty_receipts": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "bounty:<instance>:<character_id>; once host-confirmed",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.pouch_tier": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "craft:<character_id>:<sequence>; inventory/equipment atomic character write",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.creatures": {
+      "scope": "character",
+      "authority": "host validates; owning peer persists character",
+      "transaction": "per-owned UID; feast_feed:<uid>:<tier>, trait_teach:<uid>:<slot>:<sequence>; atomic character write",
+      "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.creatures.<uid>.cap_level": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.breakthroughs": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.evolution_choices": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.rolled_traits": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.taught_traits": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.known_moves": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.loadout": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.mastery": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.best": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    }
+  }
 }

@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/portals",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "portal_meadows",
+          "portal_tidewake",
+          "portal_cloudreach",
+          "portal_stormwood",
+          "portal_biome5",
+          "portal_biome6",
+          "portal_biome7",
+          "portal_biome8"
+        ]
+      },
+      "biome": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "live",
+          "reserved"
+        ]
+      },
+      "key_id": {
+        "type": "string",
+        "enum": [
+          "portal_key_meadows",
+          "portal_key_tidewake",
+          "portal_key_cloudreach",
+          "portal_key_stormwood",
+          "portal_key_biome5",
+          "portal_key_biome6",
+          "portal_key_biome7",
+          "portal_key_biome8"
+        ]
+      },
+      "entry_id": {
+        "type": "string",
+        "enum": [
+          "meadows_entry",
+          "tidewake_entry",
+          "cloudreach_entry",
+          "stormwood_entry",
+          "biome5_entry",
+          "biome6_entry",
+          "biome7_entry",
+          "biome8_entry"
+        ]
+      }
+    },
+    "required": [
+      "id",
+      "biome",
+      "status",
+      "key_id",
+      "entry_id"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "portal_meadows"
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "status": {
+            "const": "live"
+          },
+          "key_id": {
+            "const": "portal_key_meadows"
+          },
+          "entry_id": {
+            "const": "meadows_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_tidewake"
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "status": {
+            "const": "live"
+          },
+          "key_id": {
+            "const": "portal_key_tidewake"
+          },
+          "entry_id": {
+            "const": "tidewake_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_cloudreach"
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "status": {
+            "const": "live"
+          },
+          "key_id": {
+            "const": "portal_key_cloudreach"
+          },
+          "entry_id": {
+            "const": "cloudreach_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_stormwood"
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "status": {
+            "const": "live"
+          },
+          "key_id": {
+            "const": "portal_key_stormwood"
+          },
+          "entry_id": {
+            "const": "stormwood_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_biome5"
+          },
+          "biome": {
+            "const": "biome5"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "key_id": {
+            "const": "portal_key_biome5"
+          },
+          "entry_id": {
+            "const": "biome5_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_biome6"
+          },
+          "biome": {
+            "const": "biome6"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "key_id": {
+            "const": "portal_key_biome6"
+          },
+          "entry_id": {
+            "const": "biome6_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_biome7"
+          },
+          "biome": {
+            "const": "biome7"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "key_id": {
+            "const": "portal_key_biome7"
+          },
+          "entry_id": {
+            "const": "biome7_entry"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "portal_biome8"
+          },
+          "biome": {
+            "const": "biome8"
+          },
+          "status": {
+            "const": "reserved"
+          },
+          "key_id": {
+            "const": "portal_key_biome8"
+          },
+          "entry_id": {
+            "const": "biome8_entry"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 8,
+  "uniqueItems": true,
+  "maxItems": 8
+}

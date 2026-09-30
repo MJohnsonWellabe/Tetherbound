@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/masters",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "master_t1",
+          "master_t2",
+          "master_t3",
+          "master_t4",
+          "master_t5"
+        ]
+      },
+      "tier": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 5
+      },
+      "cap_level": {
+        "type": "integer",
+        "minimum": 10,
+        "maximum": 50
+      },
+      "biome": {
+        "type": "string",
+        "enum": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ]
+      },
+      "feast_id": {
+        "type": "string",
+        "enum": [
+          "feast_t1",
+          "feast_t2",
+          "feast_t3",
+          "feast_t4",
+          "feast_t5"
+        ]
+      },
+      "participants": {
+        "const": 1
+      }
+    },
+    "required": [
+      "id",
+      "tier",
+      "cap_level",
+      "biome",
+      "feast_id",
+      "participants"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "master_t1"
+          },
+          "tier": {
+            "const": 1
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "cap_level": {
+            "const": 10
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "master_t2"
+          },
+          "tier": {
+            "const": 2
+          },
+          "biome": {
+            "const": "meadows"
+          },
+          "cap_level": {
+            "const": 20
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "master_t3"
+          },
+          "tier": {
+            "const": 3
+          },
+          "biome": {
+            "const": "tidewake"
+          },
+          "cap_level": {
+            "const": 30
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "master_t4"
+          },
+          "tier": {
+            "const": 4
+          },
+          "biome": {
+            "const": "cloudreach"
+          },
+          "cap_level": {
+            "const": 40
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "master_t5"
+          },
+          "tier": {
+            "const": 5
+          },
+          "biome": {
+            "const": "stormwood"
+          },
+          "cap_level": {
+            "const": 50
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 5,
+  "uniqueItems": true,
+  "maxItems": 5
+}

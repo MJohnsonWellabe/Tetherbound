@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tetherbound/stations",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "enum": [
+          "workbench",
+          "forge",
+          "kitchen",
+          "altar",
+          "den",
+          "farm"
+        ]
+      },
+      "home_only": {
+        "const": true
+      },
+      "attachment_slots": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 8
+      }
+    },
+    "required": [
+      "id",
+      "home_only",
+      "attachment_slots"
+    ],
+    "additionalProperties": false,
+    "oneOf": [
+      {
+        "properties": {
+          "id": {
+            "const": "workbench"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "forge"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "kitchen"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "altar"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "den"
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "farm"
+          }
+        }
+      }
+    ]
+  },
+  "minItems": 6,
+  "uniqueItems": true,
+  "maxItems": 6
+}
