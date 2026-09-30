@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | F16 all5 main;5422 pass witnesses/selectedCI retained. c023 neutral registry/vitals wire7 SOURCE gate pending, no engine. |
-| `tb/hub` | F17, F18 | #0–#3 main108. M1 r4 1/354.5s: catch PASS, farmhouse wood FAIL; coherent route draft review. F18 held. |
+| `tb/foundations` | F16 | F16 main. Neutral289 source/parser PASS; units1 red6+hidden aborts,2/3 running; vitals4 PASS, callers OFF. |
+| `tb/hub` | F17, F18 | #0–#3 main109. M1r4 wood-wall FAIL; routev2 SOURCEFAIL/change approach. F18 held. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | df99 WIP;2/110/0 native0/prior5/68+parsers; aborted9 retained. Commands/HP/loadout unconnected. |
-| `tb/vfx` | F25, F35 | bdda WIP;R14 blind craft FAIL/identity PASS;R17 SOURCE PASS/native pending/OFF. |
+| `tb/combat` | F21–F24 | 858b resolver SOURCE PASS/OFF; save compatibility draft. Incoming/heal/loadout authority integration open. |
+| `tb/vfx` | F25, F35 | 9a6 ShadowBolt WIP; R17 selected18 native PASS; R14 blind craft FAIL/identity PASS, OFF. |
 | `tb/lookdev` | F26 | #0/#1/#2/#4 main109. f220 material strict MET/censuses0; Cloud full craft FAIL/#3 and Ally/default #5 open. |
-| `tb/training` | F27–F30, F37 | #0 item-only489 main; static strict MET999/99. Essence/spend authority/runtime open. |
-| `tb/homestead` | F31–F34 | acdab inactive bootstrap/crop SOURCE PASS; durable conversion/milestone open. |
+| `tb/training` | F27–F30, F37 | #0 items main;2229 capXP/Master/chest source, legacy XP unwired; spend/runtime open. |
+| `tb/homestead` | F31–F34 | 510273 OFF greenhouse/Pearl/refining SOURCE PASS; mount guard/durable settlement open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |

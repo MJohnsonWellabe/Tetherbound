@@ -899,6 +899,12 @@ same criteria, numbered from zero (`F27#3`).
 - Each lane: `tb/<lane>`, branched from current `main`, reused for all its landings. After
   each landing, merge `origin/main` back in.
 
+- New separate work sessions must explicitly use `approval_policy=never` and
+  `sandbox_mode=danger-full-access`; verify the effective permission context before
+  assigning mutations. The projectless app `create_thread` path silently overrides
+  configuration and must not launch lanes. Preserve exact file ownership and the
+  exclusive Godot writer token.
+
 ### 7.2 Landing a criterion or coherent batch (self-landing, no human gate)
 1. Implement content and code first. Under RD-36, use existing focused checks where sufficient;
    add tests only for required acceptance or substantial rework risk. Exercise the required actual
