@@ -1740,6 +1740,8 @@ func _game() -> Node:
 
 
 ## Shared detached truth for protected keys and the host combat roster.
+## Equipment comes from the one admitted personal record; legacy realm power
+## is inactive in this read view until protected personal hang is implemented.
 func admitted_character_state(peer_id: int) -> Dictionary:
 	if not is_host() or not _bind_character_authority():
 		return {}
@@ -1750,11 +1752,13 @@ func admitted_character_state(peer_id: int) -> Dictionary:
 		var game := _game()
 		if game != null and game.get("local") != null:
 			var portable := CHARACTER_AUTHORITY.portable_projection(game.get("local").save_data())
-			_character_authority.call("refresh_host_local", portable, character)
+			var refreshed: Dictionary = _character_authority.call("refresh_host_local", portable, character)
+			if not bool(refreshed.get("ok", false)):
+				return {}
 			var recovered: Dictionary = _character_authority.call("recover_durable_vitals", character, game.get("world").reward_deliveries)
 			if not bool(recovered.get("ok", false)):
 				return {}
-	return _character_authority.call("state", character)
+	return _character_authority.call("actor_stat_state", character)
 
 
 func admitted_character_revision(peer_id: int) -> int:
