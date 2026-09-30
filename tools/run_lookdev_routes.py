@@ -86,7 +86,14 @@ def run() -> int:
                 exit_code = process.wait(timeout=900 + len(presets) * config["capture"]["maximum_wall_seconds"] + 60)
             except subprocess.TimeoutExpired:
                 timed_out = True
-                process.kill()
+                # The Windows console executable delegates to a GUI child.
+                # End its whole owned process tree before releasing the writer
+                # slot; killing only the console leaves that renderer running.
+                if os.name == "nt":
+                    subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                                   stdout=log, stderr=subprocess.STDOUT, check=False)
+                else:
+                    process.kill()
                 exit_code = process.wait()
         raw_log = log_path.read_text(encoding="utf-8", errors="replace")
         errors = [line for line in raw_log.splitlines() if "ERROR:" in line or "SCRIPT ERROR:" in line]

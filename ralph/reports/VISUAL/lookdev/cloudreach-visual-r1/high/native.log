@@ -1,0 +1,128 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+CATALOGUE BOOT cloudreach load begin t=4980
+CATALOGUE BOOT cloudreach instantiate begin t=13597
+CATALOGUE BOOT cloudreach attach begin t=13668
+[shell_build] CloudreachCliffs begin:forward_upload total=0ms slice=0ms
+[shell_build] CloudreachCliffs materials:begin total=50ms slice=50ms
+[shell_build] CloudreachCliffs complete:materials total=135ms slice=135ms
+CATALOGUE BOOT cloudreach attached t=14057
+[shell_build] CloudreachCliffs regions:begin total=53308ms slice=7ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:mesa:begin total=53470ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:strata:begin total=53814ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:satellites:begin total=53862ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:vegetation:begin total=53908ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:mesa:begin total=54068ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:strata:begin total=54377ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:satellites:begin total=54406ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:vegetation:begin total=54434ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:mesa:begin total=54465ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:strata:begin total=54584ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:satellites:begin total=54614ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:vegetation:begin total=54644ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:mesa:begin total=54673ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:strata:begin total=54790ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:satellites:begin total=54830ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:vegetation:begin total=54906ms slice=1ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:mesa:begin total=54990ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:strata:begin total=55148ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:satellites:begin total=55262ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:vegetation:begin total=55305ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:mesa:begin total=55374ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:strata:begin total=55759ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:satellites:begin total=55790ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:vegetation:begin total=55817ms slice=0ms
+[shell_build] CloudreachCliffs complete:regions total=55844ms slice=27ms
+[shell_build] CloudreachCliffs complete:ledges total=55918ms slice=43ms
+[shell_build] CloudreachCliffs routes:begin total=55946ms slice=0ms
+[shell_build] CloudreachCliffs routes:arrival_gate_road:begin total=55976ms slice=0ms
+[shell_build] CloudreachCliffs routes:lower_cliff_road:begin total=57308ms slice=3ms
+[shell_build] CloudreachCliffs routes:lower_overlook_loop:begin total=58628ms slice=2ms
+[shell_build] CloudreachCliffs routes:broken_causeway_main:begin total=62373ms slice=4ms
+[shell_build] CloudreachCliffs routes:causeway_west_loop:begin total=65173ms slice=5ms
+[shell_build] CloudreachCliffs routes:windscar_floor_loop:begin total=70146ms slice=4ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_pass:begin total=73104ms slice=5ms
+[shell_build] CloudreachCliffs routes:upper_plateau_circuit:begin total=76393ms slice=6ms
+[shell_build] CloudreachCliffs routes:upper_summit_road:begin total=82250ms slice=6ms
+[shell_build] CloudreachCliffs routes:summit_overlook_loop:begin total=85862ms slice=4ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_return:begin total=91009ms slice=8ms
+[shell_build] CloudreachCliffs routes:observatory_summit_link:begin total=92301ms slice=1ms
+[shell_build] CloudreachCliffs routes:observatory_latch_descent:begin total=92373ms slice=1ms
+[shell_build] CloudreachCliffs complete:routes total=92426ms slice=0ms
+[shell_build] CloudreachCliffs complete:gates total=92457ms slice=3ms
+[shell_build] CloudreachCliffs complete:bridges total=92844ms slice=337ms
+[shell_build] CloudreachCliffs complete:landmarks total=95323ms slice=2ms
+[shell_build] CloudreachCliffs complete:return_gate total=95472ms slice=113ms
+[shell_build] CloudreachCliffs complete:route_details total=95558ms slice=11ms
+[shell_build] CloudreachCliffs complete:resource_patches total=96063ms slice=7ms
+[shell_build] CloudreachCliffs complete:environment total=96322ms slice=205ms
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:461)
+       [6] _build_ground_cover (res://scripts/world/cloudreach_world.gd:2438)
+       [7] build (res://scripts/world/cloudreach_ground_cover.gd:85)
+       [8] _build_patch_tier (res://scripts/world/cloudreach_ground_cover.gd:173)
+       [9] _emit_patch_tier (res://scripts/world/cloudreach_ground_cover.gd:199)
+       [10] _breathe (res://scripts/world/cloudreach_ground_cover.gd:204)
+       [11] breathe (res://scripts/world/shell_build_budget.gd:232)
+[village_npcs] placed 11 of 11
+[climax] no 'CloudreachNoStronghold' node; standing the climax on its own fallback coordinates
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:235)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:211)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:119)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:462)
+       [4] _build_ground_cover (res://scripts/world/cloudreach_world.gd:2438)
+       [5] build (res://scripts/world/cloudreach_ground_cover.gd:85)
+       [6] _build_patch_tier (res://scripts/world/cloudreach_ground_cover.gd:173)
+       [7] _emit_patch_tier (res://scripts/world/cloudreach_ground_cover.gd:199)
+       [8] _breathe (res://scripts/world/cloudreach_ground_cover.gd:204)
+       [9] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:235)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:211)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:119)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:462)
+       [4] _build_ground_cover (res://scripts/world/cloudreach_world.gd:2438)
+       [5] build (res://scripts/world/cloudreach_ground_cover.gd:85)
+       [6] _build_patch_tier (res://scripts/world/cloudreach_ground_cover.gd:173)
+       [7] _emit_patch_tier (res://scripts/world/cloudreach_ground_cover.gd:199)
+       [8] _breathe (res://scripts/world/cloudreach_ground_cover.gd:204)
+       [9] breathe (res://scripts/world/shell_build_budget.gd:232)
+[shell_build] CloudreachCliffs complete:mount total=232019ms slice=35805ms
+[cloudreach] shell build 232.3 s wall, 3547 yields at 16 ms/frame, 0 indivisible slices given a heartbeat window each, worst held slice 35805 ms (in the step following 'environment'); steps (ms wall, yields included): materials=135 regions=2543 ledges=43 routes=36480 gates=3 bridges=337 landmarks=2443 return_gate=113 route_details=11 resource_patches=469 environment=205 mount=135655
+CATALOGUE CAPTURE cloudreach__gate_lower_cliffs__01__realm_gate_crag__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png
+CATALOGUE CAPTURE cloudreach__gate_lower_cliffs__01__realm_gate_crag__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png
+CATALOGUE CAPTURE cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png
+CATALOGUE CAPTURE cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png
+CATALOGUE CAPTURE cloudreach__broken_causeways__03__three_bells_bridge__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__broken_causeways__03__three_bells_bridge__day.png
+CATALOGUE CAPTURE cloudreach__broken_causeways__03__three_bells_bridge__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__broken_causeways__03__three_bells_bridge__night.png
+CATALOGUE CAPTURE cloudreach__broken_causeways__04__broken_skyroad_arch__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__broken_causeways__04__broken_skyroad_arch__day.png
+CATALOGUE CAPTURE cloudreach__broken_causeways__04__broken_skyroad_arch__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__broken_causeways__04__broken_skyroad_arch__night.png
+CATALOGUE CAPTURE cloudreach__windscar_ravine__05__windscar_beacon__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__windscar_ravine__05__windscar_beacon__day.png
+CATALOGUE CAPTURE cloudreach__windscar_ravine__05__windscar_beacon__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__windscar_ravine__05__windscar_beacon__night.png
+CATALOGUE CAPTURE cloudreach__windscar_ravine__06__windscar_flight_aerie__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png
+CATALOGUE CAPTURE cloudreach__windscar_ravine__06__windscar_flight_aerie__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__windscar_ravine__06__windscar_flight_aerie__night.png
+CATALOGUE CAPTURE cloudreach__high_roost_sky_shrine__07__sky_shrine__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__high_roost_sky_shrine__07__sky_shrine__day.png
+CATALOGUE CAPTURE cloudreach__high_roost_sky_shrine__07__sky_shrine__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__high_roost_sky_shrine__07__sky_shrine__night.png
+CATALOGUE CAPTURE cloudreach__high_roost_sky_shrine__08__the_high_perches__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png
+CATALOGUE CAPTURE cloudreach__high_roost_sky_shrine__08__the_high_perches__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__high_roost_sky_shrine__08__the_high_perches__night.png
+CATALOGUE CAPTURE cloudreach__upper_cloudreach__09__cliffhold__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__upper_cloudreach__09__cliffhold__day.png
+CATALOGUE CAPTURE cloudreach__upper_cloudreach__09__cliffhold__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__upper_cloudreach__09__cliffhold__night.png
+CATALOGUE CAPTURE cloudreach__upper_cloudreach__10__old_wind_observatory__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__upper_cloudreach__10__old_wind_observatory__day.png
+CATALOGUE CAPTURE cloudreach__upper_cloudreach__10__old_wind_observatory__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__upper_cloudreach__10__old_wind_observatory__night.png
+CATALOGUE CAPTURE cloudreach__summit_final_stronghold__11__summit_eyrie__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__summit_final_stronghold__11__summit_eyrie__day.png
+CATALOGUE CAPTURE cloudreach__summit_final_stronghold__11__summit_eyrie__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__summit_final_stronghold__11__summit_eyrie__night.png
+CATALOGUE CAPTURE cloudreach__summit_final_stronghold__12__stormward_overlook__day -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__day.png
+CATALOGUE CAPTURE cloudreach__summit_final_stronghold__12__stormward_overlook__night -> D:/tetherbound/lookdev-cloudreach-high-visual-r1/cloudreach__summit_final_stronghold__12__stormward_overlook__night.png

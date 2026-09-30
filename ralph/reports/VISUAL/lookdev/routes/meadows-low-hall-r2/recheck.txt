@@ -1,0 +1,3 @@
+Low: native0, 411 frames, mean49.723ms/P9559.175/P9985.558/max127.057; 3 actual waypoints.
+
+Locked Godot4.7/GTX1060 3GB/1920x1080. Production scene, real InputMap/collision route, declared initial placement and own warmup; live clock/weather, no between-waypoint teleport or speedup. Medium/High reuse one world. Loading excluded from sampled frame times. Source receipts/raw logs/original PNG retained. No full visual-bar, earned campaign, Ally or integrated-run claim. Compatibility default unchanged. Explicit seven post-opening character flags are recorded in receipt: this is a render-route fixture, not earned opening proof. It uses current F17 Hall road geometry. Independent overall F26#4 review pending.

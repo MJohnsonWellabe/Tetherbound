@@ -267,6 +267,7 @@ func _mount_production_world() -> bool:
 	if str((local as Object).get("chosen_character")) != _character_id:
 		_failures.append("production player state did not retain character choice %s" % _character_id)
 		return false
+	_prepare_character_fixture(game)
 	game.set("current_realm", _biome_id)
 	print("CATALOGUE BOOT %s load begin t=%d" % [_biome_id, Time.get_ticks_msec()])
 	var packed := load(str(SCENES[_biome_id])) as PackedScene
@@ -288,6 +289,10 @@ func _mount_production_world() -> bool:
 	for _frame in BOOT_SETTLE_FRAMES:
 		await physics_frame
 	return true
+
+
+func _prepare_character_fixture(_game: Node) -> void:
+	pass
 
 
 func _prepare_capture_shell() -> bool:

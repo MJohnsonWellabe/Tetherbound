@@ -1,0 +1,18 @@
+{
+  "source_commit": "986b4e2a0b1ac4cc60ce698fe0d0ff1f756b49b8",
+  "text_encoding": "Git canonical LF; original PNG bytes unchanged",
+  "sha256": {
+    "matrix.json": "7574124ca34cae079487f42465056e0922e31ec270a8d7c742389ed3b7489884",
+    "meadows-low.log": "82ba5999f2cfc8dc715738e2077f66a5dc23daaaeacf4c500bb3bf4d85a2ba85",
+    "meadows-medium-high.log": "070c7a9565d6670954e1bf2db4d9d422cadbb0fb1485f3833a7951138f53f426",
+    "high/end.png": "5b0b77fb282506fd21f99d5719000f03843e9454acfaae677d7ef3f6193354df",
+    "high/route.json": "e65da1dfe495b8048d1622719bb5dea5d775c41997855ed79e753b2e8d81bffb",
+    "high/start.png": "88fe17443c2ab12e3366a271bbbb6291a192b3c642fc5b1f4d97e98f5de870e0",
+    "low/end.png": "8446c6b8c3b61c18812f8a3c64c3d610625b5bf322c6400d16d38e7bf6381e93",
+    "low/route.json": "ac54d3f86532dfe675f7c8e6e0dd3a145c0cd333beb3b1cfdbe97482d69346d2",
+    "low/start.png": "354094427280b40db3fbdb0f06dd814889e1f96d8d8b1020c683189101994228",
+    "medium/end.png": "0aae4f37f5e6e96beda9ed7f42a5cf7e498878003392069ed6d78b19c8a08e17",
+    "medium/route.json": "1acfb436d36301c838c60906505a9f909c26c322cfa456c516f3196f1833a5d6",
+    "medium/start.png": "5de461b3d318439ca9c7abbff66967aa1772234640820f5a29db7d0096183eff"
+  }
+}
