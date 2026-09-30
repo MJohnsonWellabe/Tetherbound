@@ -1,0 +1,152 @@
+{
+  "source_commit": "05e9d4a964dd8a91c377d19810f6ce9c7072fa44",
+  "route_config_sha256": "03eecf6f598218f22d43401c43db1a61ee0753e4cf5d9cca819dac983d2b0041",
+  "started_utc": "2026-09-30T09:22:45.187682+00:00",
+  "cases": [
+    {
+      "biome": "cloudreach",
+      "preset": "Low",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=cloudreach",
+        "--preset=Low",
+        "--source-commit=05e9d4a964dd8a91c377d19810f6ce9c7072fa44",
+        "--output=D:/tetherbound/lookdev-cloudreach-r1/cloudreach-low"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-cloudreach-r1\\home-cloudreach-low",
+      "elapsed_seconds": 357.875,
+      "process_presets": [
+        "Low"
+      ],
+      "case_index": 0,
+      "scene_reused_across_presets": false,
+      "raw_log": "D:\\tetherbound\\lookdev-cloudreach-r1\\cloudreach-low.log",
+      "receipt": "D:\\tetherbound\\lookdev-cloudreach-r1\\cloudreach-low\\route.json",
+      "receipt_error": "",
+      "sample_count": 15064,
+      "wall_frame_ms": {
+        "mean": 11.628846255974508,
+        "p50": 11.403,
+        "p95": 15.221849999999998,
+        "p99": 16.40995999999999,
+        "maximum": 260.463
+      }
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Medium",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=cloudreach",
+        "--preset=Medium,High",
+        "--source-commit=05e9d4a964dd8a91c377d19810f6ce9c7072fa44",
+        "--output=D:/tetherbound/lookdev-cloudreach-r1/cloudreach-medium-high"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-cloudreach-r1\\home-cloudreach-medium-high",
+      "elapsed_seconds": 609.8280000000959,
+      "process_presets": [
+        "Medium",
+        "High"
+      ],
+      "case_index": 0,
+      "scene_reused_across_presets": true,
+      "raw_log": "D:\\tetherbound\\lookdev-cloudreach-r1\\cloudreach-medium-high.log",
+      "receipt": "D:\\tetherbound\\lookdev-cloudreach-r1\\cloudreach-medium-high\\medium\\route.json",
+      "receipt_error": "",
+      "sample_count": 10423,
+      "wall_frame_ms": {
+        "mean": 16.799083373309028,
+        "p50": 15.83,
+        "p95": 30.38,
+        "p99": 31.49378,
+        "maximum": 89.554
+      }
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "High",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=cloudreach",
+        "--preset=Medium,High",
+        "--source-commit=05e9d4a964dd8a91c377d19810f6ce9c7072fa44",
+        "--output=D:/tetherbound/lookdev-cloudreach-r1/cloudreach-medium-high"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-cloudreach-r1\\home-cloudreach-medium-high",
+      "elapsed_seconds": 609.844000000041,
+      "process_presets": [
+        "Medium",
+        "High"
+      ],
+      "case_index": 1,
+      "scene_reused_across_presets": true,
+      "raw_log": "D:\\tetherbound\\lookdev-cloudreach-r1\\cloudreach-medium-high.log",
+      "receipt": "D:\\tetherbound\\lookdev-cloudreach-r1\\cloudreach-medium-high\\high\\route.json",
+      "receipt_error": "",
+      "sample_count": 8229,
+      "wall_frame_ms": {
+        "mean": 21.27732105966703,
+        "p50": 20.316,
+        "p95": 29.412,
+        "p99": 32.96676000000001,
+        "maximum": 90.712
+      }
+    }
+  ],
+  "requested_cases": [
+    {
+      "biome": "cloudreach",
+      "preset": "Low"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Medium"
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "High"
+    }
+  ],
+  "scope": "Computer production-scene render routes. No earned campaign, blinded visual approval, Hall proof or owner Ally result.",
+  "complete": true,
+  "all_twelve_route_cases_complete": false
+}

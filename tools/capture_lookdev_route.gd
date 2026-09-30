@@ -8,6 +8,11 @@ extends "res://tools/catalogue_survey.gd"
 const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const ROUTES_PATH := "res://data/config/lookdev_routes.json"
+const MEADOWS_OPENING_FLAGS := [
+	"opening:beat:wake", "opening:beat:house", "opening:beat:choose",
+	"opening:starter_granted", "opening:beat:name", "opening:beat:return_starter",
+	"opening:beat:walk_out",
+]
 var _preset := ""
 var _presets: Array[String] = []
 var _case_index := 0
@@ -24,6 +29,17 @@ var _navigation: RefCounted
 var _clock_start: Dictionary = {}
 var _clock_end: Dictionary = {}
 var _timed_out := false
+
+
+func _prepare_character_fixture(game: Node) -> void:
+	if _biome_id != "meadows":
+		return
+	# This is a render-route fixture, not an earned opening. The survey's fresh
+	# character otherwise triggers Grandpa's modal during warmup, leaving the
+	# ordinary navigator correctly unable to walk. Set these before scene mount;
+	# never dismiss a live modal, enable locomotion, or repair the timed route.
+	for flag: String in MEADOWS_OPENING_FLAGS:
+		game.get("progression").call("set_flag", flag)
 
 
 func _run() -> void:
@@ -253,6 +269,7 @@ func _write_route_receipt(complete: bool) -> void:
 	var data := {"complete": complete, "source_commit": _source_commit,
 		"process_presets": _presets, "case_index": _case_index,
 		"scene_reused_across_presets": _presets.size() > 1,
+		"opening_fixture_flags": MEADOWS_OPENING_FLAGS if _biome_id == "meadows" else [],
 		"route_revision": _manifest.get("route_revision", ""),
 		"route_config_sha256": _manifest.get("route_config_sha256", ""),
 		"biome": _biome_id, "preset": _preset,
