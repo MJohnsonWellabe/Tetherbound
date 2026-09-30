@@ -1,8 +1,8 @@
 {
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
-  "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 105 of 280. Original:95/101; redesign:10/179. F16 all five, F26#1/#2 and F17#0/#2 landed; this PR closes only F17#1 with fresh strict DAY YES/NIGHT YES. Four remaining F17 criteria and full visual bar remain open.",
+  "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
+  "Criteria met: 106 of 280. Original:95/101; redesign:11/179. F16 all5, F17#0/#1/#2 and F26#1/#2/#4 landed by this cut; F26#4 full12 computer route captures strict MET. Four remaining F17 rows and F26 material/visual/Ally rows remain open.",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -41,7 +41,7 @@
    "name": "CI speedup (PR #240)",
    "sha": "bfbcbd94",
    "state": "Merged",
-   "contents": "Longest job 21.6→16.2 min; runner-min 269→249"
+   "contents": "Longest job 21.6\u219216.2 min; runner-min 269\u2192249"
   },
   {
    "name": "Batch 6 (PR #242)",
@@ -203,7 +203,7 @@
    "name": "Batch 30 (PR #316)",
    "sha": "7af7bfcf",
    "state": "Auto-merge on, fast-tier CI",
-   "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159→20 s, Codex dock lanterns, Codex visual queue (batch 29)"
+   "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159\u219220 s, Codex dock lanterns, Codex visual queue (batch 29)"
   },
   {
    "name": "Batch 31 (PR #327)",
@@ -227,7 +227,7 @@
    "name": "Batch 34 (PR #336)",
    "sha": "",
    "state": "Merged",
-   "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
+   "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13\u2013V34"
   },
   {
    "name": "Batch 58",
@@ -335,7 +335,7 @@
    "name": "Codex evidence compaction (PR #408)",
    "sha": "8a91b67e",
    "state": "Merged, CI green",
-   "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB → 78 MB tree); unblocks lane pushes"
+   "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB \u2192 78 MB tree); unblocks lane pushes"
   },
   {
    "name": "Codex Tidewake 2c tooling (PR #409)",
@@ -344,19 +344,19 @@
    "contents": "Compact capture rounds for Phase 2c"
   },
   {
-   "name": "Phase 1 landings 14:24–15:36",
+   "name": "Phase 1 landings 14:24\u201315:36",
    "sha": "4b02032b",
    "state": "Merged, CI green",
    "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
   },
   {
-   "name": "Phase 1 landings 16:52–18:26",
+   "name": "Phase 1 landings 16:52\u201318:26",
    "sha": "6b85e6b0",
    "state": "Merged",
    "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
   },
   {
-   "name": "Landings 18:35–21:55",
+   "name": "Landings 18:35\u201321:55",
    "sha": "33afd91f",
    "state": "Merged",
    "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
@@ -376,86 +376,86 @@
   {
    "lane": "tb/reorder",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F19, F20"
+   "next": "Work order in CODEX_START_HERE \u00a76: F19, F20"
   },
   {
    "lane": "tb/combat",
-   "now": "Combat source09eab35c8 adds defensive poise/relic critical slice; runtime pending token. Evidence92c0481a1: executed a16 hosted first-HP path native0, six guest HP writes contact-before-write and original authority/rejoin checks PASS, both peer exits0/no native SCRIPT ERROR. Independent evidence verdict pending; rumble2/13 logic PASS, actual pad/UI and earned TM path open. No new F21–24 MET.",
-   "next": "Work order in CODEX_START_HERE §6: F21, F22, F23, F24"
+   "now": "Combat source09eab35c8 adds defensive poise/relic critical slice; runtime pending token. Evidence92c0481a1: executed a16 hosted first-HP path native0, six guest HP writes contact-before-write and original authority/rejoin checks PASS, both peer exits0/no native SCRIPT ERROR. Independent evidence verdict pending; rumble2/13 logic PASS, actual pad/UI and earned TM path open. No new F21\u201324 MET.",
+   "next": "Work order in CODEX_START_HERE \u00a76: F21, F22, F23, F24"
   },
   {
    "lane": "tb/vfx",
    "now": "VFX evidence7c6af296c, executed a90aa0c05 r3:12 Compatibility cases/36 PNGs, native0/no native errors. Fresh code-blind r3 F25#2 and whole#5 FAIL; flag stays off/no F25 MET. After second quality rejection, actual soft-flame/ribbon and ballistic chips/dust source rework with production creature targets underway. Raw failed judges retained.",
-   "next": "Work order in CODEX_START_HERE §6: F25, F35"
+   "next": "Work order in CODEX_START_HERE \u00a76: F25, F35"
   },
   {
    "lane": "tb/lookdev",
    "now": "F26#1/#2 independently strict MET and landed via #470 main39840191c; persistent presets and reference-backed look bar. Water Low/Medium/High native PASS (3/12 cases); other material/visual/route/owner Ally gates open.",
-   "next": "Work order in CODEX_START_HERE §6: F26"
+   "next": "Work order in CODEX_START_HERE \u00a76: F26"
   },
   {
    "lane": "tb/training",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F27, F28, F29, F30, F37"
+   "next": "Work order in CODEX_START_HERE \u00a76: F27, F28, F29, F30, F37"
   },
   {
    "lane": "tb/homestead",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F31, F32, F33, F34"
+   "next": "Work order in CODEX_START_HERE \u00a76: F31, F32, F33, F34"
   },
   {
    "lane": "tb/creature-art",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F36"
+   "next": "Work order in CODEX_START_HERE \u00a76: F36"
   },
   {
    "lane": "tb/visual-meadows",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F38"
+   "next": "Work order in CODEX_START_HERE \u00a76: F38"
   },
   {
    "lane": "tb/visual-tidewake",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F39"
+   "next": "Work order in CODEX_START_HERE \u00a76: F39"
   },
   {
    "lane": "tb/visual-cloudreach",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F40"
+   "next": "Work order in CODEX_START_HERE \u00a76: F40"
   },
   {
    "lane": "tb/visual-stormwood",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F41"
+   "next": "Work order in CODEX_START_HERE \u00a76: F41"
   },
   {
    "lane": "tb/hud",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F42"
+   "next": "Work order in CODEX_START_HERE \u00a76: F42"
   },
   {
    "lane": "tb/loop",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F43, F44, F45, F46"
+   "next": "Work order in CODEX_START_HERE \u00a76: F43, F44, F45, F46"
   },
   {
    "lane": "tb/balance",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F47"
+   "next": "Work order in CODEX_START_HERE \u00a76: F47"
   },
   {
    "lane": "tb/coop",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F48"
+   "next": "Work order in CODEX_START_HERE \u00a76: F48"
   },
   {
    "lane": "tb/release",
    "now": "not started (redesign plan landed 2026-09-29)",
-   "next": "Work order in CODEX_START_HERE §6: F49"
+   "next": "Work order in CODEX_START_HERE \u00a76: F49"
   }
  ],
  "decisions": [
-  "Owner redesign 2026-09-29: RD-01..RD-35 in CODEX_START_HERE §1 (grind loop, creature-power spine, hybrid leveling and breakthroughs via Masters and feasts, per-type essence, homestead with six stations, Crossing Hall with Home Key, portals and waystones, the new order Meadows→Tidewake→Cloudreach→Stormwood, three move slots plus ultimate, Tether Commands, effect archetypes, the Palworld+Valheim bar, Forward+ pending the Ally test, the Meshy overnight batch, evolution per biome with a new storm bear, traits, repeatables, the fifth-key ending, saves reset).",
+  "Owner redesign 2026-09-29: RD-01..RD-35 in CODEX_START_HERE \u00a71 (grind loop, creature-power spine, hybrid leveling and breakthroughs via Masters and feasts, per-type essence, homestead with six stations, Crossing Hall with Home Key, portals and waystones, the new order Meadows\u2192Tidewake\u2192Cloudreach\u2192Stormwood, three move slots plus ultimate, Tether Commands, effect archetypes, the Palworld+Valheim bar, Forward+ pending the Ally test, the Meshy overnight batch, evolution per biome with a new storm bear, traits, repeatables, the fifth-key ending, saves reset).",
   "Coordinator 2026-09-28 (delegated): new Combat Spacing lane owns contact-range body separation; new Cards lane owns M1/M2 integrated runs and T2/S2 non-fight clauses; biome lanes keep only their F rows (Meadows also M3).",
   "Owner 2026-09-28: the coordinator makes lane decisions. First: Tidewake lands #407's player-visible fixes now instead of holding them for a criterion close.",
   "Owner 2026-09-28 (F04#7): option (c). The Meadows top-fight C2 bar becomes a masher lead-faint rate plus a reader/masher party-cost ratio, with harder five-member captains at the level ceiling; the same bar applies to Tidewake F14#0.",
@@ -479,14 +479,14 @@
   "RD-26 Meshy cap: retain 30 generations per night, counting refine/retexture/retry tasks; every failed candidate stays flag-off.",
   "RD-28 storm bear name: recommended working name Stormursa; no naming change assumed.",
   "Internet co-op: supply Steam AppID, partner access and four accounts (at least two separate home networks). Recommended: ship_steam_runtime remains off until an AppID exists.",
-  "Stormwood audio: confirm authoring the nine missing WAVs from installed licensed sources under AUDIO §10. Recommended: scoped authoring with spectral/loop checks plus owner listen; retain current policy meanwhile.",
+  "Stormwood audio: confirm authoring the nine missing WAVs from installed licensed sources under AUDIO \u00a710. Recommended: scoped authoring with spectral/loop checks plus owner listen; retain current policy meanwhile.",
   "F47/F49 owner play pass: complete the end-of-Wave-3 normal-route human pass. Recommended: use the passing integrated build and record duration/findings.",
   "Controller map: recommended tap RB then face for ultimate, tap d-pad for commands; LT orb aim, RT flee; free ordinary consumables, command meter buys instant throw; LB+face optional preset only. Conservative documented defaults remain.",
   "Final relay story framing: recommended Stormheart final relay, Tidewake one regional link, dock exchange retained. Keep current conservative wording until confirmed.",
-  "PRODUCT proposals: confirm cut order, Build the best five sub-line, village/Hall/first-loop demo and US$19.99 at 15–25 h. Recommended: retain existing product defaults; no commercial launch authorized.",
+  "PRODUCT proposals: confirm cut order, Build the best five sub-line, village/Hall/first-loop demo and US$19.99 at 15\u201325 h. Recommended: retain existing product defaults; no commercial launch authorized.",
   "Real-PC feel checks: mouse camera after build/trade, faster aimed power attacks, sprint lean/cadence. Recommended: test the installed build on a pad before changing settled values.",
-  "CODEX_START_HERE §8.1 defaults: recommended retain each documented conservative default unless owner overrides.",
-  "F18 Meadows waystones: recommended home arch also returns to the last activated Meadows waystone, with no additional Meadows arch. Keep home-only until owner confirms (WORLD §2.7)."
+  "CODEX_START_HERE \u00a78.1 defaults: recommended retain each documented conservative default unless owner overrides.",
+  "F18 Meadows waystones: recommended home arch also returns to the last activated Meadows waystone, with no additional Meadows arch. Keep home-only until owner confirms (WORLD \u00a72.7)."
  ],
  "four_chapter_run": null,
  "wip": [
@@ -494,7 +494,7 @@
   "OWNER RD-37 supersedes automatic full-ci for any code/data/scene/test change. Units/full CI are exceptional: explicit acceptance or integration risk that scoped checks cannot cover. Reuse valid proof; a process-only green never proves engine behavior. Advance independent next tasks on lane branches while checks/CI run, against pushed dependency candidates if needed; land only after dependencies. Never skip/disable/quarantine tests or remove a selected label to evade red. F16#4 explicitly names the full unit suite; its already-running batch remains required, with affected repairs only.",
   "Active ownership: foundations owns F16 closure PR and board/STATE delta; root owns lookdev graphics. Combat and VFX own their bounded implementation lanes. Wave1 may land after F16 merges. Import/render/export writers serialize; units with res/config fixture mutations require distinct frozen source checkouts and user-data roots.",
   "Proof shortcuts disclosed: authored v27 and populated carrier fixtures, isolated profiles, direct load/picker/Steam/name callbacks, physical injected joypad taps and loft-to-Grandpa teleport. Grandpa conversation actually observed all six authored lines. Peer rejoin clears memory in the same processes, without OS restart; JSON numeric normalization compares full payloads. Peer host logged two closed-channel sends at disconnect; original coordinator fallback error retained, startup isolation corrected with an independently probed one-frame readiness wait. Named playground has only the established material-null native error set, no SCRIPT ERROR. Future gameplay transaction verbs and device/visual evidence are not claimed.",
-  "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE §6. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE §7.5 and STATE §0.",
+  "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE \u00a76. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE \u00a77.5 and STATE \u00a70.",
   "Tidewake Phase 2d P2-008 remains open after owner-directed wind-down: eight native before/after pairs are tracked in ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/phase2d-review; local shore symptom 8/8 clear, full photo/Bar A/Bar B/Palworld-quality 0/8. Resume from phase2d-shore-profile-review.md's view table and failed-probe/pickup sections. Next: coordinated dune habitat and Veilfall main-mass art with route/terrain validation, then re-score all eight fixed views code-blind. Do not start the rest of the visual queue or claim regional acceptance from this checkpoint.",
   "Stormwood Phase 2c wind-down (tb/x04-stormwood), owner requested no new experiments. P2-042 remains fixed/enabled by1ed0259e5. P2-082 portraits and P2-084 eleven NPC openings passed96 native1920 captures, independent evidence audit and fresh blind review; enabled on branch bya53f158c9/8f5c25445. They remain catalog-open until full regression and landing finish. Full unit suite on8f5c25445 is still running at checkpoint: session46696, console12232/native9904, log .tmp/stormwood-phase2/people-accepted-full-suite.log. Reattach/check terminal result; do not restart merely for elapsed time. Scoped people Bars A/B YES/YES do not close chapter bars. Duplicate named cast identities, Fenn post-view obstruction and rough close-range materials remain separate findings. P2-037 remains open and all geometry/material candidates stay off; latest22 native frames/14 pairs prefer construction readability but complete crown/core/arena fails, scoped ancient-tree A YES/B NO. Production chapter matrix30 native frames plus derived720 review remains Bars A/B NO/NO; ordinary combat/HUD, adequate settlement coverage and wholechapter acceptance remain open. P2-041 confirmed by78-frame baseline; P2-043 glass candidate stays off after partial five-pair review. P2-045 candy, P2-081 trainer dialogue and P2-110 roster refresh remain off. P2-081 audit matches19 trainer plates; four missing profile recipes cover seven trainers. Reviewed scratch helpere0c5866ac was cancelled before native launch; no plates generated. P2-092 deferred to gameplay for collision/contact/lunge separation. P2-093 fade/HUD source hypothesis needs live measurement. P2-111 concerns persistent quick bindings. All remaining owned impact>=12 work stays open/needs_capture/deferred as catalogued. No regional or Phase1 criterion closure. See phase2/catalog.csv and stormwood/fixes/.",
   "Stormwood Glass Field scorched scars: flag stormwood_glass_field.json scorched_scars=false. P2-043 five native route pairs independently reviewed: partial improvement, full item and Bars A/B fail. Revise smooth patch margins, straight white fissures, dark chunks and lost glass-field identity before another native review; see phase2/stormwood/fixes/P2-043/pair-verdict.md.",
@@ -526,7 +526,7 @@
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat9220e1a521 targeted utility4methods58assertions/native0; corrected portable10/734/0 plus initialized host-debit16assertions/native0/no engine errors retained. Earlier9-method misleading ok markers/SCRIPT ERROR and leak reds remain archived. Native Low9-pair zero-overlap/controls plus narrow blind PASS retained; full camera craft open. Host utility dispatch, one-registry mastery/loadout ACK/owner-save/rejoin and typed roster mutations WIP. All F21–24 criteria open; no new MET."
+   "checkpoint": "Combat9220e1a521 targeted utility4methods58assertions/native0; corrected portable10/734/0 plus initialized host-debit16assertions/native0/no engine errors retained. Earlier9-method misleading ok markers/SCRIPT ERROR and leak reds remain archived. Native Low9-pair zero-overlap/controls plus narrow blind PASS retained; full camera craft open. Host utility dispatch, one-registry mastery/loadout ACK/owner-save/rejoin and typed roster mutations WIP. All F21\u201324 criteria open; no new MET."
   },
   {
    "lane": "tb/vfx",
@@ -534,7 +534,7 @@
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "Lookdev archivedd6b: actual Cloudreach Medium24/High24 original1920 catalogue frames native0/298.610s/295.328s, fresh independent code-blind Medium FAIL / High FAIL: stretched repeated cliffs, sparse flat lawn, empty horizons, angular ground patches, primitive cyan rings and overlit night avatar; wildlife appeal unproved. Prior12 route receipts independently MET on old presentation; Hall720 lighting/canopy invalidates Meadows reuse, so only fresh Meadows3 batch986b is running. Other9 routes reused; no whole matrix credit until refreshed evidence. Only F26#1/#2 main; visual/Ally/device open. Functional training F27 session authors inventory essence/detached spend/release against the same admission CAS; no runtime/MET."
+   "checkpoint": "F26#4 full12 native computer1920 capture matrix strict MET: fresh Meadows3 on986b after Hall frontage; unchanged other9 reused. Exact raw PNG/sample/native/hash/reviews retained. Cloudreach Medium/High48 catalogue originals full-bar FAIL. F26#0/#3/#5 remain open; conservative Compatibility default. Training/homestead/VFX sessions continue separate source ownership; one serialized GPU writer."
   }
  ]
 }
