@@ -87,21 +87,11 @@ func test_default_bake_uses_square_world_texels_over_a_rectangular_corridor() ->
 
 func test_authored_route_survives_coarse_terrain_sampling() -> void:
 	var image := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS).get_image()
-	# The actual authored home route must survive the coarse 8m/px overlay.
-	# F17 moved the home; a retired coordinate would only test empty lawn.
-	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
-		"res://data/config/terrain_playground.json"))
-	var home_route: Dictionary = {}
-	for route: Dictionary in terrain.get("paths", {}).get("routes", []):
-		if str(route.get("label", "")) == "Grandpa's House":
-			home_route = route
-	assert_false(home_route.is_empty(), "the real home route must be authored")
-	var points: Array = home_route.get("points", [])
-	assert_true(points.size() >= 2, "a home route needs a connected approach")
-	if points.size() < 2:
-		return
-	var waypoint: Array = points.back()
-	var route_pixel := _world_to_pixel(Vector2(float(waypoint[0]), float(waypoint[1])))
+	# Grandpa's House route starts at the square bend (7,-7) (F01-a moved every
+	# route origin off the well at (10,-10)). At this deliberately coarse
+	# 8m/px bake its 3m width cannot reliably hit texel centres, so this point
+	# specifically proves the canonical-polyline overlay carries the route.
+	var route_pixel := _world_to_pixel(Vector2(7.0, -7.0))
 	# RGB8 quantizes the authored float colour on write.
 	var actual := image.get_pixelv(route_pixel)
 	assert_true(maxf(absf(actual.r - MAP_BAKER.PATH_COLOUR.r),

@@ -1,9 +1,10 @@
 extends "res://tests/test_case.gd"
 
-## OWNER-0912 safeguards updated to settled F17: one straight home-to-Hall
-## road, eight facing homes and the seven named service residents. Historical
-## method names are retained; their doorway, terrain, exclusion, fence and
-## story safeguards apply to the actual authored layout, not retired poses.
+## OWNER-0912 / C3 village replan regression coverage. The opening settlement
+## is a five-person street, not a ring of idle bodies around the well. The
+## south-leg buildings require their own baked-terrain slice. This file pins
+## the complete source authoring; the integration lane still owes that bake and
+## production visual acceptance.
 
 const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 const VILLAGE_PATH := "res://data/config/village.json"
@@ -14,9 +15,7 @@ const DIALOGUE_PATH := "res://data/dialogue/village.json"
 const RELAY_DIALOGUE_PATH := "res://data/dialogue/relay.json"
 const SHOP_INTERIOR_PATH := "res://scripts/world/shop_interior.gd"
 
-const OPENING_FIVE := ["Mira", "Oskar", "Tam", "Bram", "Halda", "Nessa", "Maren"]
-const HOUSE_IDS := ["mira_shop", "tam_workshop", "bram_inn", "halda_house",
-	"research_house", "oskar_house", "alder_house", "orchard_house"]
+const OPENING_FIVE := ["Mira", "Oskar", "Tam", "Bram", "Halda"]
 const ROUTE_ROLES := {
 	"Quarry Foreman": Vector2(392.0, 1792.0),
 	"Wilhelm": Vector2(341.0, 932.0),
@@ -90,42 +89,6 @@ func _vegetation_entry(kind: String, centre: Vector2) -> Dictionary:
 	return {}
 
 
-
-func _identified(id: String) -> Dictionary:
-	var result := {}
-	var count := 0
-	for row: Dictionary in _json(VILLAGE_PATH).get("structures", []):
-		if str(row.get("id", "")) == id:
-			result = row
-			count += 1
-	assert_eq(count, 1, "%s must have exactly one actual structure" % id)
-	return result
-
-func _road_segment() -> Array[Vector2]:
-	var plan: Dictionary = _json(VILLAGE_PATH).get("road_plan", {})
-	return [_at(plan, "road_start"), _at(plan, "road_end")]
-
-func _segment_distance(a: Vector2, b: Vector2, c: Vector2, d: Vector2) -> float:
-	if Geometry2D.segment_intersects_segment(a, b, c, d) != null:
-		return 0.0
-	return minf(minf(a.distance_to(Geometry2D.get_closest_point_to_segment(a, c, d)),
-		b.distance_to(Geometry2D.get_closest_point_to_segment(b, c, d))),
-		minf(c.distance_to(Geometry2D.get_closest_point_to_segment(c, a, b)),
-			d.distance_to(Geometry2D.get_closest_point_to_segment(d, a, b))))
-
-func _collider_radius(prefab: String) -> float:
-	var recipe: Dictionary = _json("res://data/config/building_prefabs.json").get("prefabs", {}).get(prefab, {})
-	assert_false(recipe.is_empty(), "the installed prefab must exist")
-	var bound := 0.0
-	for box: Dictionary in recipe.get("colliders", []):
-		var at: Array = box.get("at", [0, 0, 0])
-		var size: Array = box.get("size", [0, 0, 0])
-		var corner := Vector2(absf(float(at[0])) + float(size[0]) * 0.5,
-			absf(float(at[2])) + float(size[2]) * 0.5)
-		bound = maxf(bound, corner.length())
-	assert_true(bound > 0.0, "the real home must retain physical collision")
-	return bound
-
 func test_opening_village_keeps_exactly_five_functional_people_inside() -> void:
 	var outline := BOUNDARY.outline(BOUNDARY.load_config())
 	var inside: Array[String] = []
@@ -139,12 +102,12 @@ func test_opening_village_keeps_exactly_five_functional_people_inside() -> void:
 		expected.append(name)
 	expected.sort()
 	assert_eq(inside, expected,
-		"the village boundary retains exactly its seven named F17 service residents")
+		"the village boundary contains exactly its five opening functions, not an idle crowd")
 
 
 func test_every_resited_villager_is_retained_at_their_authored_route_role() -> void:
 	assert_eq(_people().size(), 20,
-		"the replan retains the installed cast; F17 returns Nessa to the Research House service")
+		"the replan retains the installed cast and the 0912 overlook reuses Nessa outside the village")
 	for name: String in ROUTE_ROLES:
 		var spec := _person(name)
 		assert_false(spec.is_empty(), "%s remains in the cast" % name)
@@ -181,156 +144,119 @@ func test_selas_rescue_testimony_is_short_and_keeps_the_story_payload() -> void:
 
 
 func test_both_street_legs_place_buildings_and_thresholds_at_their_authored_roles() -> void:
-
-	var road := _road_segment()
-	assert_true(road[0].distance_to(road[1]) > 70.0, "one substantial through-road connects the destinations")
-	var sides := [0, 0]
-	for id: String in HOUSE_IDS:
-		var house := _identified(id)
-		var centre := _at(house)
-		var nearest := Geometry2D.get_closest_point_to_segment(centre, road[0], road[1])
-		var yaw := float(house.get("yaw_deg", INF))
-		var front := Vector2(sin(deg_to_rad(yaw)), cos(deg_to_rad(yaw)))
-		assert_true(front.dot((nearest - centre).normalized()) > 0.99,
-			"%s's native +Z facade must face the actual road" % id)
-		sides[0 if centre.y < road[0].y else 1] += 1
-		var threshold := _identified(id + "_threshold")
-		var approach := _at(threshold)
-		assert_true((approach - centre).dot(front) > 0.0,
-			"%s's real threshold must be on its public front" % id)
-		assert_true(approach.distance_to(nearest) < centre.distance_to(nearest),
-			"%s's threshold brings the doorway closer to the street" % id)
-	assert_eq(sides, [4, 4], "eight homes form two facing rows")
+	var inn := _structure("inn")
+	var cottage := _structure("cottage_b")
+	var workshop := _structure("workshop")
+	var shop := _structure("cottage_a")
+	assert_eq(inn.get("at", []), [-2.5, -6.0], "OPTION-B: the inn stands west of the green, off the main street")
+	assert_eq(float(inn.get("yaw_deg", 0.0)), 90.0, "the inn's public door faces east onto the green")
+	assert_eq(cottage.get("at", []), [19.5, -6.0], "the stone cottage stands on the green's east side")
+	assert_eq(float(cottage.get("yaw_deg", 0.0)), -90.0, "the cottage door faces west toward the street")
+	assert_eq(workshop.get("at", []), [2.0, 12.0], "Tam's workshop stands west of the south leg")
+	assert_eq(float(workshop.get("yaw_deg", 0.0)), 90.0, "the workshop bay faces east onto the street")
+	assert_eq(shop.get("at", []), [18.0, 4.0], "Mira's shop stands east of the south leg")
+	assert_eq(float(shop.get("yaw_deg", 0.0)), -90.0, "Mira's real door faces west onto the street")
+	var doorstep_positions: Array[Vector2] = []
+	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "doorstep":
+			var at: Array = (raw as Dictionary).get("at", []) as Array
+			doorstep_positions.append(Vector2(float(at[0]), float(at[1])))
+	assert_true(Vector2(3.6, -6.0) in doorstep_positions, "the inn threshold moved with its green-facing door")
+	assert_true(Vector2(16.37, -5.0) in doorstep_positions, "the cottage threshold moved with its door")
+	assert_true(Vector2(13.87, 5.0) in doorstep_positions, "Mira's threshold moved with the shop door")
 
 
 func test_south_street_has_one_continuous_hidden_road_to_trailgate() -> void:
-
-	var paths: Dictionary = _json(TERRAIN_PATH).get("paths", {})
-	var plan: Dictionary = _json(VILLAGE_PATH).get("road_plan", {})
-	var street := {}
-	for row: Dictionary in paths.get("approaches", []):
-		if str(row.get("id", "")) == "village_south_street":
-			street = row
-	assert_false(street.is_empty(), "the physical through-road retains its TrailGate side lane")
-	var points: Array = street.get("points", [])
-	assert_true(points.size() >= 2)
-	if points.size() < 2:
-		return
-	var road := _road_segment()
-	var start := Vector2(float(points[0][0]), float(points[0][1]))
-	assert_true(start.distance_to(Geometry2D.get_closest_point_to_segment(start, road[0], road[1])) < 0.01,
-		"the gate lane must actually connect to the village street")
-	# Gate actor position is the canonical boundary gate; accept only its actual crossing.
-	var outline := BOUNDARY.load_config()
-	var found := false
-	for candidate: Dictionary in outline.get("gates", {}).get("entries", []):
-		if str(candidate.get("name", candidate.get("id", ""))) == "TrailGate":
-			var at: Array = candidate.get("at", [])
-			if at.size() == 2:
-				found = Vector2(float(points.back()[0]), float(points.back()[1])).distance_to(Vector2(float(at[0]), float(at[1]))) < 0.1
-	assert_true(found, "the painted lane must reach the real TrailGate")
-	var home := {}
-	for route: Dictionary in paths.get("routes", []):
-		if str(route.get("label", "")) == "Grandpa's House":
-			home = route
-	assert_false(home.is_empty(), "the real home remains connected")
-	var home_points: Array = home.get("points", [])
-	assert_true(home_points.size() >= 2)
-	if home_points.size() >= 2:
-		assert_true(plan.get("home_door", []) in home_points, "home route reaches the actual farmhouse door")
+	var paths := _json(TERRAIN_PATH).get("paths", {}) as Dictionary
+	var street: Dictionary = {}
+	for raw: Variant in (paths.get("approaches", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == "village_south_street":
+			street = raw as Dictionary
+	assert_false(street.is_empty(), "the well-to-TrailGate street is authored as painted ground")
+	assert_eq(street.get("points", []), [[10.5, 2.0], [11.5, 2.0], [14.0, 20.0]],
+		"the south street leaves the main street at z=2 and meets the existing TrailGate waypoint")
+	var grandpa_route: Dictionary = {}
+	var inn_route: Dictionary = {}
+	for raw: Variant in (paths.get("routes", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("label", "")) == "Grandpa's House":
+			grandpa_route = raw as Dictionary
+		if raw is Dictionary and str((raw as Dictionary).get("label", "")) == "The Inn":
+			inn_route = raw as Dictionary
+	assert_false(grandpa_route.is_empty(), "the west street to Grandpa remains authored")
+	assert_eq(grandpa_route.get("points", []), [[10.5, -16.0], [-16.5, -16.0]],
+		"the cross lane runs straight along z=-16 from the main street to Grandpa's real door")
+	# OPTION-B: the inn's path leaves the main street at the green's north edge
+	# and ends on the doorstep that faces the green.
+	assert_eq(inn_route.get("points", []), [[10.5, -10.0], [6.6, -7.0], [3.6, -6.0]],
+		"the inn has a short path from the main street to its green-facing doorstep")
+	assert_true(Vector2(10.5, -10.0).distance_to(Vector2(10.5, -6.0)) >= 4.0,
+		"the inn path leaves the street at the green's edge, clear of the well canopy and bucket")
 
 
 func test_south_street_buildings_share_level_ground_and_matching_aprons() -> void:
-
-	var flats: Array = _json(TERRAIN_PATH).get("flats", [])
-	for id: String in HOUSE_IDS:
-		var house := _identified(id)
-		var centre := _at(house)
-		var radius := _collider_radius(str(house.prefab))
-		var covered := false
-		for flat: Dictionary in flats:
-			if _at(flat, "centre").distance_to(centre) + radius <= float(flat.get("radius", 0.0)):
-				assert_eq(float(flat.get("height", INF)), 0.9, "homes share the street's level ground")
-				covered = true
-		assert_true(covered, "%s's actual complete collision footprint must stand on flattened ground" % id)
-		var apron := _apron(centre)
-		assert_false(apron.is_empty(), "%s retains worked-soil footing" % id)
-		assert_eq(float(apron.get("yaw_deg", INF)), float(house.get("yaw_deg", 0.0)),
-			"each real apron follows its building's actual orientation")
+	var pad := _terrain_flat(Vector2(10.0, 8.0))
+	assert_false(pad.is_empty(), "the shop/workshop street has a dedicated level pad")
+	assert_true(float(pad.get("radius", 0.0)) >= 15.0, "the shared pad covers both rotated footprints")
+	assert_eq(float(pad.get("height", INF)), 0.9, "the new pad shares the square's explicit height")
+	var inn_pad := _terrain_flat(Vector2(-2.5, -6.0))
+	assert_true(float(inn_pad.get("radius", 0.0)) >= 8.5,
+		"the corrected long inn footprint has dedicated level ground")
+	assert_eq(float(inn_pad.get("height", INF)), 0.9,
+		"the inn pad cannot introduce a step into the village square")
+	for expected: Dictionary in [
+		{"centre": Vector2(2.0, 12.0), "yaw": 90.0},
+		{"centre": Vector2(18.0, 4.0), "yaw": -90.0},
+		{"centre": Vector2(19.5, -6.0), "yaw": -90.0},
+		{"centre": Vector2(-2.5, -6.0), "yaw": 90.0},
+	]:
+		var apron := _apron(expected.centre)
+		assert_false(apron.is_empty(), "the moved building at %s has a worked-soil apron" % expected.centre)
+		assert_eq(float(apron.get("yaw_deg", INF)), float(expected.yaw),
+			"the apron at %s mirrors the production building rotation" % expected.centre)
 
 
 func test_fences_define_working_yards_without_cutting_the_street() -> void:
-
-	var road := _road_segment()
-	var fences: Array[Dictionary] = []
-	for row: Dictionary in _json(VILLAGE_PATH).get("structures", []):
-		if str(row.get("prefab", "")) == "fence_run":
-			fences.append(row)
-	assert_true(fences.size() >= 2, "working yards retain enclosing rail composition")
-	var recipe: Dictionary = _json("res://data/config/building_prefabs.json").get("prefabs", {}).get("fence_run", {})
-	var plan: Dictionary = _json(VILLAGE_PATH).get("road_plan", {})
-	var road_half_width := float(plan.get("width_m", 0.0)) * 0.5
-	assert_true(road_half_width > 0.0, "the authored walking band must have positive width")
-	# A rail crossing the road can have both endpoints outside it. The whole
-	# segment, including the road's finite endpoints, must retain clearance.
-	assert_eq(_segment_distance(Vector2(40, 10.925), Vector2(40, 17.075), road[0], road[1]), 0.0,
-		"a perpendicular rail through the walking band must be rejected")
-	assert_true(absf(_segment_distance(Vector2(7, 10), Vector2(7, 18), road[0], road[1]) - 1.3) < 0.001,
-		"the nearest road endpoint must count even when both rail endpoints are farther away")
-	for row: Dictionary in fences:
-		var yaw := deg_to_rad(float(row.get("yaw_deg", 0.0)))
-		var direction := Vector2(cos(yaw), -sin(yaw))
-		for box: Dictionary in recipe.get("colliders", []):
-			var offset: Array = box.get("at", [])
-			var size: Array = box.get("size", [])
-			assert_true(offset.size() == 3 and size.size() == 3, "the actual rail collision box must be defined")
-			if offset.size() != 3 or size.size() != 3:
-				continue
-			var centre := _at(row) + Vector2(float(offset[0]), float(offset[2])).rotated(-yaw)
-			var half_length := float(size[0]) * 0.5
-			var half_thickness := float(size[2]) * 0.5
-			assert_true(half_length > 0.0 and half_thickness > 0.0, "the rail retains its actual solid dimensions")
-			var first := centre - direction * half_length
-			var last := centre + direction * half_length
-			assert_true(_segment_distance(first, last, road[0], road[1]) > road_half_width + half_thickness,
-				"the actual whole solid yard rail must stay outside the full walking band")
-	assert_true(absf(float(fences[0].get("yaw_deg", 0)) - float(fences[1].get("yaw_deg", 0))) == 90.0,
-		"the retained working yard has a readable perpendicular enclosure")
+	var fence_poses: Dictionary = {}
+	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "fence_run":
+			fence_poses[_at(raw as Dictionary)] = float((raw as Dictionary).get("yaw_deg", INF))
+	assert_eq(fence_poses.get(Vector2(28.0, 4.0), INF), 90.0,
+		"Oskar's pen has a rear rail parallel to the shop wall")
+	assert_eq(fence_poses.get(Vector2(-10.0, 15.0), INF), 90.0,
+		"Tam's rear yard has a west rail")
+	assert_eq(fence_poses.get(Vector2(-7.0, 18.0), INF), 0.0,
+		"Tam's rear rails meet as a readable L")
+	assert_false(fence_poses.has(Vector2(-11.0, -9.5)),
+		"the orphaned yard rail no longer cuts across the inn/Grandpa street composition")
+	for at: Vector2 in [Vector2(28.0, 4.0), Vector2(-10.0, 15.0), Vector2(-7.0, 18.0)]:
+		assert_true(at.distance_to(Vector2(12.0, at.y)) >= 11.0,
+			"yard rail at %s remains outside the south-street walking lane" % at)
 
 
 func test_the_five_villagers_belong_to_visible_street_functions() -> void:
-
-	var homes := {"Mira": "mira_shop", "Oskar": "oskar_house", "Tam": "tam_workshop",
-		"Bram": "bram_inn", "Nessa": "research_house", "Maren": "research_house"}
-	for name: String in homes:
-		var person := _person(name)
-		assert_false(person.is_empty(), "%s remains at their actual service" % name)
-		assert_true(_point(person).distance_to(_at(_identified(homes[name]))) <= 8.0,
-			"%s belongs to the actual named home frontage/interior" % name)
-		assert_false(str(person.get("greeting", "")).is_empty(), "each resident retains their playable service conversation")
-	var tournament: Dictionary = _json("res://data/config/tournament.json")
-	var arena: Array = tournament.get("board", {}).get("position", [])
-	assert_eq(arena.size(), 2)
-	if arena.size() == 2:
-		assert_true(_point(_person("Halda")).distance_to(Vector2(float(arena[0]), float(arena[1]))) <= 6.0,
-			"Halda remains beside the real tournament service")
+	assert_eq(_point(_person("Mira")), Vector2(19.4, 4.0), "Mira remains inside her moved shop")
+	assert_eq(float(_person("Mira").get("facing_deg", INF)), -90.0, "Mira faces her west street door")
+	assert_eq(_point(_person("Oskar")), Vector2(25.0, 4.0), "Oskar stands in the visible creature pen")
+	assert_eq(_point(_person("Tam")), Vector2(8.0, 12.0), "Tam stands at his workshop bay")
+	assert_eq(_point(_person("Bram")), Vector2(-6.89, -6.0), "Bram remains at the moved inn bar")
+	assert_eq(float(_person("Bram").get("facing_deg", INF)), 90.0,
+		"Bram faces the inn's green-facing public door")
+	assert_eq(_point(_person("Halda")), Vector2(23.5, 11.5), "Halda remains at the tournament board")
 
 
 func test_every_moved_building_has_scatter_and_ground_cover_exclusion() -> void:
-
-	var vegetation := _json(VEGETATION_PATH)
-	for id: String in HOUSE_IDS:
-		var house := _identified(id)
-		var centre := _at(house)
-		var radius := _collider_radius(str(house.prefab))
-		var covered := false
-		for clearing: Dictionary in vegetation.get("clearings", []):
-			var at := Vector2(float(clearing.get("x", INF)), float(clearing.get("z", INF)))
-			covered = covered or at.distance_to(centre) + radius <= float(clearing.get("radius", 0.0))
-		assert_true(covered, "%s clears random solid scatter over its full physical footprint" % id)
-		var footprint := _vegetation_entry("footprints", centre)
-		assert_true(float(footprint.get("radius", 0.0)) >= radius,
-			"%s excludes even clearing-exempt ground cover over its actual collision envelope" % id)
+	var clearing := _vegetation_entry("clearings", Vector2(10.0, 8.0))
+	assert_true(float(clearing.get("radius", 0.0)) >= 17.0,
+		"the south street clears random trees and rocks around its buildings")
+	for expected: Dictionary in [
+		{"centre": Vector2(-2.5, -6.0), "radius": 7.8},
+		{"centre": Vector2(2.0, 12.0), "radius": 7.5},
+		{"centre": Vector2(18.0, 4.0), "radius": 6.0},
+		{"centre": Vector2(19.5, -6.0), "radius": 5.3},
+	]:
+		var footprint := _vegetation_entry("footprints", expected.centre)
+		assert_true(float(footprint.get("radius", 0.0)) >= float(expected.radius),
+			"the moved building at %s rejects even clearing-exempt ground cover" % expected.centre)
 
 
 func test_miras_shop_uses_an_installed_trade_crest_not_placeholder_text() -> void:

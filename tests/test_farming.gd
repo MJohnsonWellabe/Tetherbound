@@ -24,8 +24,6 @@ const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 
-const HOUSE := preload("res://scripts/world/grandpa_house.gd")
-
 const FARM_CONFIG := "res://data/config/farm.json"
 const ITEMS_PATH := "res://data/items/items.json"
 const RECIPES_PATH := "res://data/recipes/recipes.json"
@@ -236,42 +234,23 @@ func test_farm_json_places_beds_where_r7_6_allows() -> void:
 	assert_true(db.has(str(config.get("seed_item", ""))), "farm.json names an unknown seed item")
 	assert_true(db.has(str(config.get("crop_item", ""))), "farm.json names an unknown crop item")
 
-	# Retain R7.6's physical constraints using the real F17 home pad rather
-	# than the removed pre-redesign square/fence coordinates.
-	var village := _json("res://data/config/village.json")
-	var terrain := _json("res://data/config/terrain_playground.json")
-	var centre: Array = village.get("road_plan", {}).get("home_centre", [])
-	assert_eq(centre.size(), 2, "the real homestead must have an authored centre")
-	if centre.size() != 2:
-		return
-	var house := Vector2(float(centre[0]), float(centre[1]))
-	var pad_radius := 0.0
-	for flat: Dictionary in terrain.get("flats", []):
-		var at: Array = flat.get("centre", [])
-		if at.size() == 2 and Vector2(float(at[0]), float(at[1])).distance_to(house) < 0.01:
-			pad_radius = float(flat.get("radius", 0.0))
-	assert_true(pad_radius > 0.0, "the actual home needs a full-flatten pad")
+	# R7.6's stated constraints: beside Grandpa's house at [-22,-16], clear of
+	# the square flat at [10,-10] r18 and of the fence run at [3,-18]. Also
+	# inside the house pad's own full-flatten radius (r14), or a bed stands on
+	# the skirt and tilts.
+	var house := Vector2(-22.0, -16.0)
+	var square := Vector2(10.0, -10.0)
+	var fence := Vector2(3.0, -18.0)
 	for entry: Variant in plots:
 		var at: Array = (entry as Dictionary).get("at", [])
 		assert_eq(at.size(), 2, "a farm plot has no [x, z]")
-		if at.size() != 2:
-			continue
 		var here := Vector2(float(at[0]), float(at[1]))
-		assert_true(here.distance_to(house) <= pad_radius,
-			"bed at %s is outside the actual house pad's full flatten" % here)
-		# A plot's soil cannot share a structural collider or the public road.
-		var local := here - house
-		assert_false(absf(local.x) <= HOUSE.EXT_HALF_W + 0.5
-			and absf(local.y) <= HOUSE.EXT_HALF_D + 0.5,
-			"bed at %s overlaps the actual farmhouse footprint" % here)
-		var road: Dictionary = village.get("road_plan", {})
-		var start: Array = road.get("road_start", [0, 0])
-		var end: Array = road.get("road_end", [0, 0])
-		var closest := Geometry2D.get_closest_point_to_segment(here,
-			Vector2(float(start[0]), float(start[1])), Vector2(float(end[0]), float(end[1])))
-		assert_true(here.distance_to(closest) > float(road.get("width_m", 0.0)) * 0.5,
-			"bed at %s intrudes on the actual public road" % here)
-
+		assert_true(here.distance_to(house) <= 14.0,
+			"bed at %s is outside the house pad's flatten radius" % str(here))
+		assert_true(here.distance_to(square) > 18.0,
+			"bed at %s intrudes on the square flat" % str(here))
+		assert_true(here.distance_to(fence) > 4.0,
+			"bed at %s sits on the fence run" % str(here))
 
 
 ## Two beds close enough to share the arbiter's attention is fine (nearest

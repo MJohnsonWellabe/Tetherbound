@@ -5,28 +5,18 @@ const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const TARGET := Vector3(45.44735, -0.188587, -62.50097)
 
 func _exact_placement() -> Dictionary:
-	# The F17 regional generation removed this old tree without recycling its
-	# durable ID. Retain the actual measured b2ea placement as a historical
-	# regression input; the test still runs the real production prompt builder.
-	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(
-		"res://tests/fixtures/historical_prompt_tree_b2ea1455.json"))
-	assert_true(raw is Dictionary, "the measured historical record must exist")
-	if not raw is Dictionary:
-		return {}
-	var fixture: Dictionary = raw
-	assert_eq(str(fixture.get("source_commit", "")).substr(0, 8), "b2ea1455")
-	assert_false(str(fixture.get("source_blob", "")).is_empty())
-	var xyz: Array = fixture.get("position", [])
-	assert_eq(xyz.size(), 3)
-	if xyz.size() != 3:
-		return {}
-	var position := Vector3(float(xyz[0]), float(xyz[1]), float(xyz[2]))
-	assert_true(position.distance_to(TARGET) < 0.01,
-		"the regression must retain the exact originally measured tree")
-	return {"position": position, "model": str(fixture.model),
-		"yaw": float(fixture.yaw), "scale": float(fixture.scale),
-		"harvest_layer": str(fixture.layer), "harvest_index": int(fixture.order),
-		"harvest_item": "wood", "harvest_amount": 2}
+	var layers := {}
+	BAKE._read_region(FileAccess.open("res://data/scatter/playground/region_0_-1.bin", FileAccess.READ), layers, {})
+	for layer: String in layers:
+		for record: Dictionary in layers[layer]:
+			if record.placement.position.distance_to(TARGET) < 0.01:
+				var placement: Dictionary = record.placement.duplicate(true)
+				placement.harvest_layer = layer
+				placement.harvest_index = int(record.order)
+				placement.harvest_item = "wood"
+				placement.harvest_amount = 2
+				return placement
+	return {}
 
 func test_exact_failed_baked_tree_spawns_reachable_prompt_without_radius_change() -> void:
 	var placement := _exact_placement()
