@@ -109,3 +109,15 @@ all four legendary capacity/choice branches, personal objective/map getter
 integration, disconnect/reload and earned route saves remain unproved. These
 require owned runtime handoffs and F18's transactions before landing. All
 authored acceptance checks remain unrun; there is no native or real-path PASS.
+
+The separately allocated F22 forward-camp data hunk explicitly opts in the
+existing Band 5 cluster `the_waystop` (order 5001) with `rest.loadout: true`.
+Its placement, radius, crafting point, creature bed and every prop remain
+unchanged. The normalized props source SHA256 changes from
+`d0fc3016ffbbc91d8acbfc42527f9e0b1223db845c3d48846ff13d0c9276a8c5` to
+`f6ca97297a07a488731c1948a8d89aa20a8fad8abb1120ce48ef551655e1344f`.
+A source-only structural comparison finds exactly that one field addition;
+this is not runtime loadout proof. Terrain/scatter bake fingerprint inputs
+exclude this props file, so their freshness is unaffected. The camp's added
+regional order 5001 is absent from the pre-split props fixture; no historical
+fixture mirror is changed. Combat owns the actual explicit loadout consumer.
