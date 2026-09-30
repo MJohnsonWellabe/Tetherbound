@@ -1,0 +1,88 @@
+{
+  "source_commit": "e410fb58aa8e0f8e91cad008ad7a2d6f5320a408",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_lookdev_route.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=Medium",
+    "--source-commit=e410fb58aa8e0f8e91cad008ad7a2d6f5320a408",
+    "--output=D:/tetherbound/lookdev-meadows-native-debug-r2/route"
+  ],
+  "exits": [
+    {
+      "pid": 11100,
+      "exit": 3221225725
+    },
+    {
+      "pid": 16316,
+      "exit": 3221225725
+    },
+    {
+      "pid": 13948,
+      "exit": 0
+    }
+  ],
+  "events": [
+    {
+      "first_chance": true,
+      "code": "0xc00000fd",
+      "fault_rva": "0x6650296",
+      "stack_bytes": 23336,
+      "leaf_return_rva": "0x1365ae9",
+      "barrier_view_counts": {
+        "memory": 1,
+        "buffer": 177006,
+        "texture": 0,
+        "acceleration": 0
+      },
+      "stack_read_stop": {
+        "ok": false,
+        "error": 299,
+        "requested": 4096,
+        "read": 0
+      },
+      "memory_at_fault": {
+        "commit_total": 17295036416,
+        "commit_limit": 20001132544,
+        "physical_total": 17092575232,
+        "physical_available": 4935045120
+      },
+      "dump_skipped": "Prior writer failed; page-bounded readable stack/context approach"
+    },
+    {
+      "first_chance": false,
+      "code": "0xc00000fd",
+      "fault_rva": "0x6650296",
+      "stack_bytes": 23336,
+      "leaf_return_rva": "0x1365ae9",
+      "barrier_view_counts": {
+        "memory": 1,
+        "buffer": 177006,
+        "texture": 0,
+        "acceleration": 0
+      },
+      "stack_read_stop": {
+        "ok": false,
+        "error": 299,
+        "requested": 4096,
+        "read": 0
+      },
+      "memory_at_fault": {
+        "commit_total": 17295036416,
+        "commit_limit": 20001132544,
+        "physical_total": 17092575232,
+        "physical_available": 4933402624
+      },
+      "dump_skipped": "Prior writer failed; page-bounded readable stack/context approach"
+    }
+  ],
+  "scope": "Affected Forward+ Medium production route. Page-bounded debugger evidence only, not performance measurement or acceptance pass. Raw process memory remains local."
+}

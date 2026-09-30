@@ -1,0 +1,70 @@
+{
+  "source_commit": "2ed7b808417b2d0067541da574d5be8699d196c8",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_lookdev_route.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=Medium,High",
+    "--source-commit=2ed7b808417b2d0067541da574d5be8699d196c8",
+    "--output=D:/tetherbound/lookdev-meadows-native-debug-r1/route"
+  ],
+  "exits": [
+    {
+      "pid": 10456,
+      "exit": 3221225725
+    },
+    {
+      "pid": 12512,
+      "exit": 3221225725
+    },
+    {
+      "pid": 8260,
+      "exit": 0
+    }
+  ],
+  "events": [
+    {
+      "code": "0xc00000fd",
+      "first_chance": true,
+      "fault_rva": "0x6650296",
+      "context_ok": true,
+      "stack_bytes": 0,
+      "dump_ok": false,
+      "dump_error": "0x800703e6",
+      "memory_at_fault": {
+        "commit_total": 16832241664,
+        "commit_limit": 20001132544,
+        "physical_total": 17092575232,
+        "physical_available": 5085954048
+      },
+      "rax": "0x17e010",
+      "rbx": "0x974010"
+    },
+    {
+      "code": "0xc00000fd",
+      "first_chance": false,
+      "fault_rva": "0x6650296",
+      "context_ok": true,
+      "stack_bytes": 0,
+      "dump_ok": false,
+      "dump_error": "0x800703e6",
+      "memory_at_fault": {
+        "commit_total": 16832090112,
+        "commit_limit": 20001132544,
+        "physical_total": 17092575232,
+        "physical_available": 5085782016
+      },
+      "rax": "0x17e010",
+      "rbx": "0x974010"
+    }
+  ],
+  "scope": "One affected actual Forward+ Meadows Medium reproduction under process-local Windows debugger. No performance or visual acceptance claim. Raw process dumps/memory remain ignored locally."
+}
