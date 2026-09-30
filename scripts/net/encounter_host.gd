@@ -50,6 +50,7 @@ extends RefCounted
 ## delta: missing is a legal outcome of a legal swing, not a refusal.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
 
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 
@@ -504,6 +505,88 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"accepted_at_ms": now_ms,
 		"cooldown_deadline_ms": deadline_ms,
 		}), true)
+
+
+## F23 utility authorization. move/wind_profile/view are reconstructed by the
+## host transport, never accepted from intent. Self effects do not manufacture
+## an opponent hit. Action ordering and recovery share the existing strike/
+## burst ledger; a utility's longer cooldown stays keyed to creature identity.
+## No HP/status effect occurs here: the owning host transaction rechecks body
+## generation and phase at resolution before publishing the staged effect.
+func validate_utility(intent: Dictionary, peer_id: int, view: Dictionary,
+		move: Dictionary, wind_profile: Dictionary) -> Dictionary:
+	var encounter_id := str(intent.get("encounter_id", ""))
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	if rec.is_empty(): return _refuse("utility_intent", peer_id, "unknown_encounter", "That fight is over.")
+	var participants: Dictionary = rec.get("participants", {})
+	if not participants.has(peer_id): return _refuse("utility_intent", peer_id, "not_participant", "You are not in that fight.")
+	if str(rec.get("phase", "")) != "active": return _refuse("utility_intent", peer_id, "wrong_phase", "That fight is not taking moves right now.")
+	if typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0 \
+		or not UTILITY_EFFECTS.valid_definition(move) or not view.get("source_uid") is String \
+		or str(view.source_uid).is_empty() or not view.get("origin") is Vector3 \
+		or not (view.origin as Vector3).is_finite() or typeof(view.get("now_ms")) != TYPE_INT \
+		or int(view.now_ms) < 0:
+		return _refuse("utility_intent", peer_id, "malformed", "That utility could not be validated.")
+	for key: String in ["windup", "recovery", "cooldown"]:
+		if not UTILITY_EFFECTS._number(move.get(key), 0.0, 60.0):
+			return _refuse("utility_intent", peer_id, "malformed", "That utility has invalid timing.")
+	var action := int(intent.action)
+	var now_ms := int(view.now_ms)
+	var uid := str(view.source_uid)
+	var participant: Dictionary = participants[peer_id]
+	var authority := strike_authority_state(encounter_id, peer_id)
+	var last_action := maxi(int(authority.last_action), int(participant.get("wind_last_action", 0)))
+	if action <= last_action: return _refuse("utility_intent", peer_id, "replayed_action", "That move was already handled.")
+	if now_ms < int(authority.deadline_ms): return _refuse("utility_intent", peer_id, "cooldown", "Your creature is still recovering.")
+	var deadlines: Dictionary = participant.get("utility_deadlines", {})
+	if now_ms < int(deadlines.get(uid, 0)): return _refuse("utility_intent", peer_id, "cooldown", "That utility is still recovering.")
+	var scope := str((move.utility as Dictionary).scope)
+	var connected := true
+	var target_point: Vector3 = view.origin
+	if scope != "self":
+		var opponent: Dictionary = rec.get("opponent", {})
+		if float(opponent.get("hp", 0.0)) <= 0.0 or not view.get("target_uid") is String \
+			or str(view.target_uid).is_empty() or str(view.target_uid) == uid \
+			or not view.get("target_position") is Vector3 or not (view.target_position as Vector3).is_finite():
+			return _refuse("utility_intent", peer_id, "wrong_target", "That utility needs a live opponent.")
+		target_point = view.target_position
+		if scope == "target_point":
+			# Minimum point placement is the host-held opponent floor position.
+			# An intent's arbitrary coordinates never author effect geometry.
+			var offset: Vector3 = target_point - (view.origin as Vector3)
+			offset.y = 0.0
+			connected = offset.length() <= float(move.range)
+		elif scope == "self_ring":
+			var offset: Vector3 = target_point - (view.origin as Vector3)
+			offset.y = 0.0
+			connected = offset.length() <= float(move.utility.radius)
+		else:
+			if not view.get("facing") is Vector3 or not (view.facing as Vector3).is_finite() \
+				or (view.facing as Vector3).length_squared() <= 0.000001:
+				return _refuse("utility_intent", peer_id, "malformed", "That utility needs a valid facing.")
+			connected = MATH.move_connects(move, view.origin, view.facing, target_point)
+	var preview := preview_wind(encounter_id, peer_id, wind_profile, float(move.wind_cost), now_ms)
+	if preview.is_empty() or bool(preview.get("wind_exhausted", true)):
+		var tired := _refuse("utility_intent", peer_id, "insufficient_wind", "Your creature needs more Wind for that utility.")
+		(tired.delta as Dictionary).merge(preview, true)
+		return tired
+	# Commitment spends once even when targeted geometry misses. Refusals above
+	# spend nothing, and insufficient Wind never uses exhausted-attack scaling.
+	var recovery_seconds := float(move.windup) + float(move.recovery)
+	var wind_delta := commit_wind(encounter_id, peer_id, action, wind_profile,
+		float(move.wind_cost), now_ms, recovery_seconds,
+		float(MATH.config().get("wind", {}).get("regen_delay", 0.6)))
+	var lock_ms := ceili(maxf(0.05, recovery_seconds) * 1000.0)
+	_strike_state_for(encounter_id)[peer_id] = {"last_action": action,
+		"accepted_at_ms": now_ms, "deadline_ms": now_ms + lock_ms, "cooldown_ms": lock_ms}
+	deadlines[uid] = now_ms + ceili(float(move.cooldown) * 1000.0)
+	participant["utility_deadlines"] = deadlines
+	var delta := {"encounter_id": encounter_id, "source_uid": uid,
+		"hit": connected, "effect_scope": scope, "target_point": target_point,
+		"accepted_action": action, "accepted_at_ms": now_ms,
+		"cooldown_deadline_ms": now_ms + lock_ms, "utility_deadline_ms": deadlines[uid]}
+	delta.merge(wind_delta, true)
+	return _ok("utility_intent", peer_id, delta)
 
 
 ## COMBAT-3. Authorize and spend one movement burst as a single host operation.

@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const EFFECTS := preload("res://scripts/combat/utility_effects.gd")
 const MOVES := preload("res://scripts/creatures/move_db.gd")
+const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
 
 func _host(action_id: String = "host-action-1") -> Dictionary:
 	return {"action_id": action_id, "encounter_id": "fight-1", "generation": 3,
@@ -80,3 +81,44 @@ func test_heal_and_one_hit_buff_are_separate_from_damage_and_never_revive() -> v
 	assert_eq(EFFECTS.power_multiplier(consumed.state, "owned-1", 3), 1.0)
 	assert_false(EFFECTS.stage_consume_next_hit(consumed.state, "owned-1", 3).ok)
 	assert_eq(EFFECTS.power_multiplier(buff.state, "owned-1", 3), 1.15, "failed hit/rollback keeps original buff until published")
+
+func test_host_authorization_shares_action_lock_and_spends_once_without_hostile_self_hit() -> void:
+	var moves := MOVES.new()
+	var host := ENCOUNTER_HOST.new(1)
+	var record: Dictionary = host.open(1, "meadows", "wild", {"species_id": "bramblebun", "hp": 30.0, "hp_max": 30.0, "position": [3,0,0]})
+	var id := str(record.encounter_id)
+	var view := {"source_uid": "owned-1", "origin": Vector3.ZERO, "target_uid": "foe-1", "target_position": Vector3(3,0,0), "facing": Vector3.RIGHT, "now_ms": 1000}
+	var profile := {"max": 100.0, "regen_per_second": 0.0}
+	var intent := {"encounter_id": id, "action": 1, "origin": [9999,0,0], "target_point": [9999,0,0]}
+	var accepted: Dictionary = host.validate_utility(intent, 1, view, moves.move("heal_pulse"), profile)
+	assert_true(accepted.ok)
+	assert_true(accepted.delta.hit, "self effect does not fake an opponent damage-geometry hit")
+	assert_eq(accepted.delta.effect_scope, "self")
+	assert_eq(accepted.delta.wind, 76.0)
+	assert_eq(host.record(id).opponent.hp, 30.0, "authorization never performs foe HP damage or self healing")
+	var baseline: Dictionary = host.record(id).duplicate(true)
+	assert_false(host.validate_utility(intent, 1, view, moves.move("heal_pulse"), profile).ok)
+	assert_eq(host.record(id), baseline, "same action cannot spend twice")
+	var quick := {"encounter_id": id, "action": 2, "facing": [1,0,0], "move": {"range": 4.0, "cone_degrees": 90.0, "windup": 0.1, "recovery": 0.2, "cooldown": 0.4}}
+	assert_eq(host.validate_strike(quick, 1, view).code, "cooldown", "quick cannot cancel the utility recovery")
+	view.now_ms = 2000
+	assert_true(host.validate_strike(quick, 1, view).ok, "utility's ten-second slot cooldown does not lock all ordinary attacks")
+	intent.action = 3
+	view.now_ms = 2500
+	assert_false(host.validate_utility(intent, 1, view, moves.move("heal_pulse"), profile).ok, "same UID retains utility cooldown")
+	view.source_uid = "owned-2"
+	var second: Dictionary = host.validate_utility(intent, 1, view, moves.move("slow_field"), profile)
+	assert_true(second.ok, "host-validated second creature has its own utility cooldown")
+	assert_eq(second.delta.target_point, Vector3(3,0,0), "untrusted intent point/origin never authors field placement")
+	intent.action = 4
+	view.now_ms = 4000
+	view.source_uid = "owned-3"
+	host.commit_wind(id, 1, 3, profile, 100.0, 2500, 0.0, 0.0)
+	# The direct call above is the same accepted action and intentionally cannot
+	# re-spend. Spend a distinct earlier host ledger action to exhaust the pool.
+	host.commit_wind(id, 1, 4, profile, 100.0, 3000, 0.0, 0.0)
+	intent.action = 5
+	var denied: Dictionary = host.validate_utility(intent, 1, view, moves.move("veil"), profile)
+	assert_eq(denied.code, "insufficient_wind")
+	assert_eq(host.record(id).participants[1].wind, 0.0)
+	assert_eq(host.strike_authority_state(id, 1).last_action, 3, "unaffordable utility adds no action/cooldown")
