@@ -28,7 +28,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | PR496 core main; admitted gear/personal-power read view drafted. Save28; actual callers OPEN. |
+| `tb/foundations` | F16 | PR496 core main; wire8 gear/inactive power admission 4/49 native0; callers/solo/equipCAS/relic/ownerACK OPEN. |
 | `tb/hub` | F17, F18 | #0-#3 main; ROOT8316 shape correction in source review. Actual M1 and F18 OPEN. |
 | `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
 | `tb/combat` | F21–F24 | Live6155 FAIL54/119 overlaps archivedf384; production lag/body-limit fix active; F23 held. |

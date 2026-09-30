@@ -1,0 +1,106 @@
+{
+  "base": "79c3ff4e5dd93d40171b9fb9ac238768864c4562",
+  "status": "Source packet only; independent source review and combined actual caller/runtime batch pending. No acceptance criterion credit.",
+  "wire_protocol": "tetherbound-invite-v8",
+  "save_schema": 28,
+  "paths": [
+    {
+      "path": "scripts/net/character_authority.gd",
+      "canonical_lf_sha256": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "canonical_lf_sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571"
+    },
+    {
+      "path": "scripts/net/build_fingerprint.gd",
+      "canonical_lf_sha256": "c780d838c73ca7d36c4ca94cdeb20a4a53cbcbb6ed709b05c257099a9cf409d6"
+    },
+    {
+      "path": "tests/test_actor_vitals_authority.gd",
+      "canonical_lf_sha256": "5707a6725ed677059420a48447fa5d685ac1ec0ecefc498fc9a696eb525cd2cc"
+    },
+    {
+      "path": "tests/test_session_build_compat.gd",
+      "canonical_lf_sha256": "fd79e1aba1614b38d75b82908e4d86dd416201708c65a8eeabb4f8d3cd3c0242"
+    }
+  ],
+  "actual_producer": "PlayerState.save_data() -> CharacterAuthority.portable_projection() -> Session _rpc_hello validation -> same seed_admitted_character record. Host local uses same save_data/seed/refresh; rejoin retains admitted stable character, never replaces state.",
+  "field_sources": [
+    {
+      "field": "equipment",
+      "source": "PlayerState.equipment -> PlayerEquipment.save_data(): exact helmet,upper_body,lower_body,boots,backpack strings",
+      "authority": "Host ItemDB validates known armor/kind/exact slot. No packet tier, stat total or sixth slot. Stored once in same admitted record; local refresh is not gear CAS."
+    },
+    {
+      "field": "realm_hearts",
+      "source": "PlayerState.hearts -> RealmHeartState.save_data(): exact active_id string",
+      "authority": "Known runtime IDs only; original portable/record legacy selection retained. Existing loader uses merged world placed flags, which do not prove personal hang."
+    },
+    {
+      "field": "redesign_character.relics_hung",
+      "source": "Existing validated character carrier/save28 schema and declared character scope",
+      "authority": "Typed storage preserved; no protected personal live hang producer on main. Detached combat view empties hung array and active_id until that actual producer exists."
+    }
+  ],
+  "read_consumer": "Session.admitted_character_state(peer_id) -> same registered stable character -> CharacterAuthority.actor_stat_state(character_id). Same detached canonical party UID/care/moves; actual gear; realm_hearts.active_id empty and redesign_character.relics_hung empty; baseline incoming multiplier1.0, no relic entitlement inferred. CAS/revision/writer/journal APIs unchanged.",
+  "generation_boundary": "Combat owns actual body ObjectID/private monotonic generation binding and nonbinding UID/body/revision rechecks. This packet supplies the canonical owned row to those existing preserved callers; it adds no alternate actor registry or client body claim.",
+  "legitimate_absent_saved_defaults": "PlayerState.load_data of v28 missing equipment/realm_hearts reconstructs actual five-empty-slot PlayerEquipment and inactive RealmHeartState. Received v8 hello must explicitly carry both; malformed present/missing packet fields fail closed.",
+  "rejoin": "Same stable character retained despite different peer, fresh party/gear/selected-power packet. Host local invalid refresh now returns empty read instead of silently exposing previous successful state.",
+  "actual_baseline_item_ids": [
+    {
+      "id": "hide_helm",
+      "slot": "helmet",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "hide_vest",
+      "slot": "upper_body",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "hide_leggings",
+      "slot": "lower_body",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "hide_boots",
+      "slot": "boots",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "travel_pack",
+      "slot": "backpack",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "insulated_helm",
+      "slot": "helmet",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "insulated_vest",
+      "slot": "upper_body",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "insulated_leggings",
+      "slot": "lower_body",
+      "tether_pouch_tier": null
+    },
+    {
+      "id": "insulated_boots",
+      "slot": "boots",
+      "tether_pouch_tier": null
+    }
+  ],
+  "protected_producer_gap": "No personal relic-hang or typed host gear-update CAS is implemented or claimed. The actor read is conservatively inactive for relics, initial admission captures worn items, and saved portable sources are never rewritten. Future producer must use same authoritative record/durable receipts; no invented entitlement.",
+  "unchanged_durable_invariants": "One admitted registry; prepared bool world/character writers and typed actor-vitals journal/owner guards untouched. Save28 modern/legacy734 codec unchanged. No schema/default files or LedgerRpc modification necessary.",
+  "minimum_unrun_methods": [
+    "test_actor_vitals_authority.gd :: test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes",
+    "test_actor_vitals_authority.gd :: test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power",
+    "test_session_build_compat.gd existing pinned-version/mismatch methods"
+  ],
+  "existing_callers_not_applied": "Combat Manager/Director/CreatureBody and ignored net-owner Heal/status packets remain excluded. Future actual combined incoming/heal/owner-save-failure/rejoin proof pending.",
+  "no_engine": "No engine, unit suite, CI dispatch or independent reviewer launched by author."
+}

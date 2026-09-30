@@ -1,0 +1,42 @@
+{
+  "source": "edcff2556f9050b69325a05887f5d2e632f38e10",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-foundations",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_actor_vitals_authority.gd::test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes,test_actor_vitals_authority.gd::test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power,test_session_build_compat.gd::test_wire_protocol_marker_is_pinned,test_session_build_compat.gd::test_each_mismatch_names_what_differs"
+  ],
+  "selectors": [
+    "test_actor_vitals_authority.gd::test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes",
+    "test_actor_vitals_authority.gd::test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power",
+    "test_session_build_compat.gd::test_wire_protocol_marker_is_pinned",
+    "test_session_build_compat.gd::test_each_mismatch_names_what_differs"
+  ],
+  "before": {
+    "scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/build_fingerprint.gd": "c780d838c73ca7d36c4ca94cdeb20a4a53cbcbb6ed709b05c257099a9cf409d6",
+    "tests/test_actor_vitals_authority.gd": "5707a6725ed677059420a48447fa5d685ac1ec0ecefc498fc9a696eb525cd2cc",
+    "tests/test_session_build_compat.gd": "fd79e1aba1614b38d75b82908e4d86dd416201708c65a8eeabb4f8d3cd3c0242"
+  },
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "scope": "Exactly four named carrier/compatibility methods; actual player/RPC/owner save/ACK/rejoin integration remains OPEN",
+  "pid": 20764,
+  "native_exit": 0,
+  "elapsed_seconds": 5.031000000075437,
+  "after": {
+    "scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/build_fingerprint.gd": "c780d838c73ca7d36c4ca94cdeb20a4a53cbcbb6ed709b05c257099a9cf409d6",
+    "tests/test_actor_vitals_authority.gd": "5707a6725ed677059420a48447fa5d685ac1ec0ecefc498fc9a696eb525cd2cc",
+    "tests/test_session_build_compat.gd": "fd79e1aba1614b38d75b82908e4d86dd416201708c65a8eeabb4f8d3cd3c0242"
+  },
+  "raw_sha256": "89349c24c464a3dcfafe3df3af7fb7b172a378fbdb5d661ea5ada9b65587718b",
+  "errors": [],
+  "same_source": true,
+  "head_after": "edcff2556f9050b69325a05887f5d2e632f38e10"
+}
