@@ -58,6 +58,57 @@ static func xp_award_for(enemy_level: int, cfg: Dictionary) -> int:
 	return int(base + per_level * float(enemy_level))
 
 
+## F27 host defeat integration calls this instead of changing the legacy award
+## until essence payout and the per-creature cap arrive in the same transaction.
+## The rest bonus remains on its existing independent path. A real positive
+## combat award never rounds down to zero after applying the authored scale.
+static func scaled_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dictionary) -> int:
+	var raw: Variant = essence_cfg.get("auto_xp_scale")
+	if not (raw is int or raw is float) or not is_finite(float(raw)) \
+			or float(raw) <= 0.0 or float(raw) >= 1.0:
+		return 0 # Invalid configuration refuses the new transaction.
+	var amount := xp_award_for(enemy_level, cfg)
+	return maxi(1, int(floor(float(amount) * float(raw)))) if amount > 0 else 0
+
+
+## Detached snapshot math uses the same canonical stat functions as
+## CreatureInstance._apply_level_stats. Live HP, XP, UI events and saves are
+## untouched here. The host commits this with the resource debit or neither.
+static func staged_next_level(row: Dictionary, cap: int, cfg: Dictionary) -> Dictionary:
+	var level_raw: Variant = row.get("level")
+	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
+			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) < 1 or int(level_raw) >= cap:
+		return {}
+	for field: String in ["hp", "max_hp", "base_hp", "base_attack", "base_defence", "iv_hp", "iv_attack", "iv_defence", "xp", "levels_gained_with_you"]:
+		var raw: Variant = row.get(field)
+		if not (raw is int or raw is float) or not is_finite(float(raw)) or float(raw) < 0.0:
+			return {}
+	for stat: String in ["hp", "attack", "defence"]:
+		var boost: Variant = row.get("boost_" + stat, 0)
+		if not (boost is int or boost is float) or not is_finite(float(boost)) \
+				or float(boost) < 0.0 or float(boost) != floorf(float(boost)) \
+				or float(row["iv_" + stat]) > 1.0 or float(row["base_" + stat]) <= 0.0:
+			return {}
+	if float(row.max_hp) <= 0.0 or float(row.hp) > float(row.max_hp) \
+			or float(row.xp) != floorf(float(row.xp)) or int(row.xp) >= xp_to_next(int(row.level), cfg) \
+			or float(row.levels_gained_with_you) != floorf(float(row.levels_gained_with_you)):
+		return {}
+	var next := row.duplicate(true)
+	var fraction := float(row.hp) / float(row.max_hp)
+	next.level = int(row.level) + 1
+	next.xp = 0 if int(next.level) == cap else int(row.xp)
+	next.levels_gained_with_you = int(row.levels_gained_with_you) + 1
+	var growth: Dictionary = cfg.get("level", {}).get("growth_per_level", {})
+	for stat: String in ["hp", "attack", "defence"]:
+		var value := stat_at_level(float(row["base_" + stat]), int(next.level), float(growth.get(stat, 0.0))) \
+			* individuality_multiplier(float(row["iv_" + stat]), cfg) + float(row.get("boost_" + stat, 0))
+		if not is_finite(value) or value <= 0.0:
+			return {}
+		next["max_hp" if stat == "hp" else stat] = value
+	next.hp = float(next.max_hp) * fraction
+	return next
+
+
 ## What one party member's share of `amount` xp is, floored so a three-way
 ## split can never hand out fractional xp.
 static func party_share(amount: int, cfg: Dictionary) -> int:

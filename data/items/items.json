@@ -19,6 +19,61 @@
   "_comment_armor": "R7.7. GAME_DESIGN.md sec18's five trainer equipment slots (Helmet, Upper body, Lower body, Boots, Backpack) -- 'trainer armor protects the human, not creatures'. `kind: \"armor\"` items are worn, not spent (`stack: 1`, same as a tool), and carry two fields nothing else in this file uses: `armor_slot` (one of the five slot names scripts/player/player_equipment.gd knows) and `defense` (a 0..1 fraction of incoming damage the piece alone soaks, summed across every equipped piece and capped by player_equipment.gd's own MAX_TOTAL_DEFENSE). CLAUDE.md's hard rules bound this on purpose: no shields (this is passive damage reduction, never a block/parry verb), and the human still cannot fight (nothing here is a weapon or adds an attack). The only real damage source the Meadows has today is a fall (player_vitals.gd's own fall-damage curve), so that is the one thing armor reduces so far; GAME_DESIGN.md's 'later biomes require gear' line is explicitly Biome-2 scope and stays unbuilt. Icons are original flat silhouettes (tools/gen_item_icons.py, spec sec21's sanctioned 'simple generated vector icons for game-specific concepts') -- neither vendored Kenney icon pack this project uses has a clothing/armor glyph to reuse.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
+    "essence_ground": {
+      "name": "Ground Essence", "kind": "essence", "stack": 999,
+      "colour": "#b39b68", "essence_type": "ground", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise a ground creature's level at the Altar."
+    },
+    "essence_water": {
+      "name": "Water Essence", "kind": "essence", "stack": 999,
+      "colour": "#66b8d9", "essence_type": "water", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise a water creature's level at the Altar."
+    },
+    "essence_air": {
+      "name": "Air Essence", "kind": "essence", "stack": 999,
+      "colour": "#b5d6b9", "essence_type": "air", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise an air creature's level at the Altar."
+    },
+    "essence_electric": {
+      "name": "Electric Essence", "kind": "essence", "stack": 999,
+      "colour": "#e5cb73", "essence_type": "electric", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise an electric creature's level at the Altar."
+    },
+    "essence_fire": {
+      "name": "Fire Essence", "kind": "essence", "stack": 999,
+      "colour": "#e79b60", "essence_type": "fire", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise a fire creature's level at the Altar."
+    },
+    "essence_dark": {
+      "name": "Dark Essence", "kind": "essence", "stack": 999,
+      "colour": "#9b88b8", "essence_type": "dark", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise a dark creature's level at the Altar."
+    },
+    "essence_ice": {
+      "name": "Ice Essence", "kind": "essence", "stack": 999,
+      "colour": "#a6d9dd", "essence_type": "ice", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise an ice creature's level at the Altar."
+    },
+    "essence_psychic": {
+      "name": "Psychic Essence", "kind": "essence", "stack": 999,
+      "colour": "#c6a2d6", "essence_type": "psychic", "sellable": false,
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Raise a psychic creature's level at the Altar."
+    },
+    "tether_candy": {
+      "name": "Tether Candy", "kind": "training", "stack": 99,
+      "colour": "#e8bf63", "sellable": false,
+      "icon": "res://assets/ui/icons/items/rare_candy.png",
+      "blurb": "One level for a chosen creature at the Altar, up to its cap.",
+      "description": "A special sweet earned from memorable fights. At the Altar, one pays the whole essence cost of one level. Existing found candies keep their own rules."
+    },
     "windworn_heartwood": {
       "name": "Windworn Heartwood",
       "kind": "resource",
