@@ -544,12 +544,12 @@ func _check_the_dpad_reaches_the_audio_rows() -> void:
 	# linked in that order: reduced motion, look sensitivity, both inversions.
 	var lane: Array = [_tab.get("_dialogue_bg_button"), _tab.get("_text_size_button"),
 		_tab.get("_aim_assist_button"), _tab.get("_invert_y_button"), _tab.get("_invert_x_button"),
-		_tab.get("_look_sensitivity_button"), _tab.get("_shake_button"),
+		_tab.get("_look_sensitivity_button"), _tab.get("_rumble_slider"), _tab.get("_shake_button"),
 		_tab.get("_reduced_motion_button")]
 	for expected: Variant in lane:
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
 		if _focused() != expected:
-			_fail("D-pad skipped the Accessibility row '%s'" % (expected as Button).text.strip_edges() if expected != null else "missing")
+			_fail("D-pad skipped the Accessibility control '%s'" % str((expected as Control).name) if expected != null else "missing")
 			return
 	await _check_the_look_rows()
 
