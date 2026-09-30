@@ -1,0 +1,18 @@
+{
+  "base_commit": "2f12558d401670c60657e52424fa176b53296920",
+  "scope": "Later data-only candidate using existing materials; no parser/native/visual/full-craft PASS",
+  "only_runtime_file_changed": "data/config/vfx.json",
+  "only_profile_changed": "ember_burst body/trail/impact presentation",
+  "all_scripts_shaders_assets_moves_audio_tests_and_R24_bundle_unchanged": true,
+  "body_mesh": "Same existing SphereMesh branch, size/rings/segments; bounded inward-only burning_core surface",
+  "impact_mesh": "Existing explosion/ember card resources replace generic sphere/ring resources; topology differs",
+  "mesh_instance_count_particle_light_voice_caps_mastery_parameters_and_timing_unchanged": true,
+  "active_cues_unchanged": 175,
+  "library_enabled": false,
+  "frozen_R24_before_after_pins_unchanged": true,
+  "new_runtime_generators_or_images": 0,
+  "limits": [
+    "No earned-player/HP/multiplayer or real Medium/performance proof",
+    "Family identity/full bar needs later native motion and independent code-blind judgment"
+  ]
+}
