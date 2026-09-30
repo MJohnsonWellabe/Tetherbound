@@ -22,7 +22,7 @@ class LoadoutRecord extends RefCounted:
 static func ensure(tree: SceneTree) -> Node:
 	var existing := tree.root.get_node_or_null(^"LoadoutService")
 	if existing != null: return existing
-	var service := (load("res://scripts/creatures/loadout_service.gd") as GDScript).new()
+	var service: Node = (load("res://scripts/creatures/loadout_service.gd") as GDScript).new()
 	service.name = "LoadoutService"
 	tree.root.add_child(service)
 	return service
