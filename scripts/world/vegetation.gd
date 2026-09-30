@@ -649,10 +649,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 		await _build_batch(model, by_model[model], slicer)
 		await _breathe(slicer)
 	var t_batches1 := Time.get_ticks_msec()
-	# One rebuild of the instancer's live MultiMeshInstance3Ds after every
-	# batch is queued, not one per model -- `add_transforms()` below is
-	# called with `update=false` for exactly this reason.
-	if not simulation_only:
+	# Native solo Forward+ materializes each existing region/model below.
+	# A final destructive rebuild would queue every GPU buffer again in one
+	# native call, defeating those bounded uploads. Other build modes retain
+	# their existing single rebuild.
+	if not simulation_only and not _uses_region_render_uploads(slicer):
 		_instancer.call("update_mmis", true)
 	var t_mmis1 := Time.get_ticks_msec()
 	_warn_about_shared_models(by_layer)
@@ -1470,13 +1471,8 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 			_spawn_harvest_point(placement)
 			_t_harvest_ms += Time.get_ticks_msec() - t_h0
 
-	# `update=false`: one bulk native call per model instead of one per
-	# placement (the MultiMesh path's `set_instance_transform` loop, ~23.7k
-	# individual calls today and the measured cause of the boot-time cost
-	# this swap exists to remove), and `update_mmis(true)` runs once after
-	# every model in `build()`'s loop rather than once per model here.
 	if not simulation_only:
-		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
+		await _submit_render_transforms(mesh_id, transforms, colours, slicer)
 
 	var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
 	for spot: Vector3 in displayed_positions:
@@ -1490,6 +1486,48 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 	var t_c0 := Time.get_ticks_msec()
 	_add_collision(model_path, placements)
 	_t_collision_ms += Time.get_ticks_msec() - t_c0
+
+
+## The locked Terrain3D API can materialize one region/model through
+## add_transforms(update=true). Its global update_mmis(true) otherwise creates
+## tens of thousands of cell buffers in one indivisible native call. World
+## loop yields cannot subdivide that call; partition the existing transforms
+## instead, keeping each region's original transform/colour order intact.
+func _uses_region_render_uploads(slicer: RefCounted) -> bool:
+	return slicer != null and slicer.has_method("needs_render_release") \
+			and bool(slicer.call("needs_render_release"))
+
+
+func _submit_render_transforms(mesh_id: int, transforms: Array[Transform3D],
+		colours: PackedColorArray, slicer: RefCounted) -> void:
+	if not _uses_region_render_uploads(slicer):
+		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
+		return
+	var by_region: Dictionary = {}
+	var region_colours: Dictionary = {}
+	var asset: Object = _assets.call("get_mesh_asset", mesh_id)
+	var height_offset := float(asset.get("height_offset"))
+	for i in transforms.size():
+		var xf: Transform3D = transforms[i]
+		# Match add_transforms' own adjusted region selection, including a
+		# sloped model's authored height offset. The native call still owns
+		# conversion to region space and all placement validation.
+		var adjusted := xf.origin + xf.basis.y * height_offset
+		var region: Vector2i = _data.call("get_region_location", adjusted)
+		if not by_region.has(region):
+			var bucket: Array[Transform3D] = []
+			by_region[region] = bucket
+			region_colours[region] = PackedColorArray()
+		(by_region[region] as Array[Transform3D]).append(xf)
+		if not colours.is_empty():
+			var palette: PackedColorArray = region_colours[region]
+			palette.append(colours[i])
+			region_colours[region] = palette
+	for region: Vector2i in by_region:
+		_instancer.call("add_transforms", mesh_id, by_region[region], region_colours[region], true)
+		# Always release this bounded native upload, even if its CPU work
+		# happened to finish inside the time-slice budget.
+		await slicer.call("step", "scatter_upload:%d:%d,%d" % [mesh_id, region.x, region.y])
 
 
 ## One real gather point on the world's own scattered vegetation (R2.3) --
