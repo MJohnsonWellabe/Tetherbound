@@ -26,11 +26,12 @@ extends RefCounted
 ## This is compatibility, not authentication. A modified client can claim any
 ## fingerprint; the host still validates every transaction on its own state.
 
-## v7: hello requires a validated portable-character authority projection;
+## v8: hello also requires canonical personal equipment and realm_hearts;
+## v7 peers lack these actor-stat inputs and cannot join this contract.
 ## older peers are refused before registry admission or snapshot preparation.
 ## Typed actor-vitals journal/receipt RPCs share this required wire contract.
 ## Save schema remains v28; this marker only versions network compatibility.
-const WIRE_PROTOCOL := "tetherbound-invite-v7"
+const WIRE_PROTOCOL := "tetherbound-invite-v8"
 const CONTENT_ROOT := "res://data"
 const CONTENT_EXTENSION := "json"
 ## Hex digits of the content hash shown to players. Long enough to tell builds
