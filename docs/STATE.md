@@ -29,11 +29,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | F17#0 strict MET:8house road/plot/Hall, scoped bakes preserve312 outside files/IDs,13-method PASS union, physical Hallwalk/worldboot native0. Other6/player/visual criteria open; F18 authority drafts active. |
+| `tb/hub` | F17, F18 | F17#0 landed #474; six rows open. F18 guards10/67/0; opening pilot name-input failure retained, correction queued. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | b013e4379: Fireball/hosted incoming native0; camera16/199/0. Strict-zero9pair native/blind and guest incoming proofs pending; no new MET. |
-| `tb/vfx` | F25, F35 | a74500624 fire/impact/lightning static53mapping PASS/native queued; r4 blind #2/#5 FAIL retained, flag off. |
-| `tb/lookdev` | F26 | #1/#2 landed #470. 6e0612f1f scheduler source PASS/parser0; affected Medium route failed3221225725 before receipt; upload approach changes next. Prior0xc00000fd retained. Matrix/material/Ally open. |
+| `tb/combat` | F21–F24 | 0aa: guest incoming native1/one missingLabel red; poise/authority checks PASS. Low camera preflight refused dimensions, no capture; pure4/104/0. No new MET. |
+| `tb/vfx` | F25, F35 | 67c620: r6 native0/12cases/36PNG, clocks/leases PASS; strict blind pending. Prior reds retained; full craft/world open, flag off. |
+| `tb/lookdev` | F26 | #1/#2 landed #470. 1642 second scheduler stack failure retained. 4a528 region/model upload+Hall route parser0/independent source PASS; native queued, matrix/material/Ally open. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
@@ -65,6 +65,8 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
     - Ordinary consumable use stays free, and the Tether Command item throw only buys an instant throw (default).
     - The LB+face command layout is an optional preset only.
     - Command unlock: item throw and Snare at the practice catch; Rally and Tag-switch at the first two-creature fight.
+
+11. **Meadows waystones (F18):** recommend home arch returns to last Meadows waystone; keep home-only until owner confirms.
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 

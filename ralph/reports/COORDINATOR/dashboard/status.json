@@ -485,7 +485,8 @@
   "Final relay story framing: recommended Stormheart final relay, Tidewake one regional link, dock exchange retained. Keep current conservative wording until confirmed.",
   "PRODUCT proposals: confirm cut order, Build the best five sub-line, village/Hall/first-loop demo and US$19.99 at 15–25 h. Recommended: retain existing product defaults; no commercial launch authorized.",
   "Real-PC feel checks: mouse camera after build/trade, faster aimed power attacks, sprint lean/cadence. Recommended: test the installed build on a pad before changing settled values.",
-  "CODEX_START_HERE §8.1 defaults: recommended retain each documented conservative default unless owner overrides."
+  "CODEX_START_HERE §8.1 defaults: recommended retain each documented conservative default unless owner overrides.",
+  "F18 Meadows waystones: recommended home arch also returns to the last activated Meadows waystone, with no additional Meadows arch. Keep home-only until owner confirms (WORLD §2.7)."
  ],
  "four_chapter_run": null,
  "wip": [
@@ -517,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T07:28:00Z",
+ "last_lane_refresh": "2026-09-30T08:28:00Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "Hub pushed bf0f38b20: actual four-region terrain/scatter generation native0, all60 outside terrain and252 outside scatter files byte-identical; matched harvest IDs retained and additions above old maxima. Regional logic5/65/0 and affected13-method passing union; initial checkout-line-ending failure retained and unchanged terrain tests5/20/0 after LF-only correction. At this refresh main102/280; F17 strict closure/player paths/visual bar remain open. F18 protected-policy and authority drafts advance in ignored scratch."
+   "checkpoint": "At this refresh main has 103/280: F17#0 landed via PR474/ad92f7973 with independent strict review, scoped regional generation preserving 312 outside files and harvest IDs, physical Hall walk and named world boot. Remaining six F17 criteria are open. Hub pushed 9b37b08d4: actual HomeKey gift/personal-save rollback and protected inventory/sell/trade/death/host-ledger boundaries, with scoped checks authored; runtime and independent review pending. F18 travel/waystones and ordinary-input loop remain open."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat pushed b013e4379: actual7401 Fireball pickup/backpack teaching/quick-hit/cast/contact/HP/number and instant incoming-flash player proof native0; actual two-peer host-target incoming ledger and retained first-HP/observer/authority checks native0. Camera/feedback16/199/0 plus guest-driver parser0. Strict-zero nine-pair camera/native/blind matrix and actual guest incoming replay pending; no new F21–24 MET."
+   "checkpoint": "Combat pushed 0aa123a92: guest incoming replay native1 with one first host enemy:1 missingLabel failure retained; actual guest selected by AI, defensive poise/lease/number and first-HP/authority/rejoin checks passed. Diagnostic HUD/camera probe added. Low nine-pair preflight refused actual preset/1920 gate before boot; launch dimensions investigated, no capture claimed. Pure camera4/104/0 reuses scoped correction; prior Fireball/host incoming native0 retained. No new F21–24 MET."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX pushed a74500624: bounds-measured clear flight, burning core/envelopes, leased target-bound impact and softer lightning source; static53/53 mapping,24archetypes/5tier definitions and budgets PASS, native r5 queued. R4 e164/98efd native0/36 PNGs retains fresh blind F25#2/#5 whole FAIL; sampled1/3/5 scaling and lightning target identity are bounded observations. Flag off; no F25 MET."
+   "checkpoint": "VFX pushed67c620d82: actual r6 executed08be1a3b2 native0,12 cases/36 PNGs/zero failures/no engine errors; arrival clocks and end leases0 passed. Fresh blind neutral observations delivered, strict full-craft verdict pending. R5 native1/two guard failures and prior full-bar rejects retained; integrated world unproven, library flag off/all F25 open."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "F26#1/#2 landed #470. Root pushed6e0612f1f central-budget upload scheduler fix; independent source PASS and scheduler check-only native0. Affected Forward+ Meadows Medium route failed3221225725 after116.625s before frames/receipt; scheduler yielded through vegetation then434props. Prior native0xc00000fd/raw diagnostics retained; upload approach changes next. Water3preset/MeadowsLow passes reused, remaining matrix/material/Ally gates open; no new F26 MET."
+   "checkpoint": "F26#1/#2 landed via PR470. Second Forward+ scheduler candidate1642 failed native0xc00000fd before frames/receipt; diagnostics captured176813 buffer barriers requesting9901536 bytes beyond8MiB. After two failures, source4a528affa changes to per-region/model GPU materialization using existing Terrain3D API and the landed Hall route; parser0 and independent combat/VFX source PASS, native queued. Compatibility/default/network/content/scatter IDs preserved. Matrix/material/Ally remain open; no new F26 MET."
   }
  ]
 }
