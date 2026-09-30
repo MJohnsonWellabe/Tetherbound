@@ -4,7 +4,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 ## 0. Resume here
 
-**Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-36, Waves 0–3, F16–F49, ownership and run rules. RD-36: prioritize code/content; minimum necessary tests, coherent batches and reuse of unchanged passing evidence. Required acceptance/save/co-op proofs, independent review and CI remain. Wave 0 F16 lands before Wave 1. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
+**Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
 **Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 95 of 280:** original 95/101, redesign 0/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. Main was green at `8f5dd6ed2` (full CI 36626653020); the rolling download was rebuilt there.
 
@@ -70,7 +70,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 
 ## 1. Rulings in force
 
-**Owner redesign (2026-09-29):** CODEX_START_HERE §1 (RD-01..RD-36) is the newest owner direction. Where a ruling below conflicts with it, the RD entry wins, including RD-36's minimum necessary testing and batch validation. Other proof/counting rules remain.
+**Owner redesign (2026-09-29):** CODEX_START_HERE §1 (RD-01..RD-37) is the newest owner direction. Where a ruling below conflicts with it, the RD entry wins, including RD-36's minimum necessary testing and batch validation. Other proof/counting rules remain.
 
 **Owner and coordinator, 2026-09-27.** Nothing may contradict these.
 1. **Counting and proofs.** Criteria count at merge; post-batch full CI is a safety net. Disclosed fixtures/declared starts, teleports, flag/party writes, harness fights and skipped sub-parts are allowed (ACCEPTANCE §6.1, WORKFLOW §8), as are earned checkpoints. Held Fly is lawful; tap pulse optional.

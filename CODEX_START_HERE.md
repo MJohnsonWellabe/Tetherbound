@@ -86,6 +86,7 @@ Ground rules (unchanged unless §1 says otherwise):
 | RD-34 | **This plan supersedes Phase 1 and Phase 2.** Still-valid open rows fold into the new features. Obsolete ones close as "superseded by owner redesign 2026-09-29" with the replacing criterion cited. |
 | RD-35 | **Saves reset.** v27-and-older saves are refused with a clear message. This is an owner override of the migration hard rule, for this redesign only. Migration discipline resumes for every later change. |
 | RD-36 | **Minimum necessary testing; batch validation (owner, 2026-09-29).** Prioritize content and code generation. Run only checks needed for acceptance or to prevent substantial rework; batch them across coherent changes and reuse passing evidence when the relevant source and path are unchanged. This supersedes the per-criterion full-suite repetition and strict one-criterion work queue. Related criteria may share a reviewable implementation/validation batch, but each retains its own evidence and independent verdict. Save preservation, multiplayer authority/transactions, required real player paths, code-blind visual judgments and named acceptance proofs remain required. Never skip, disable or quarantine tests to get green. |
+| RD-37 | **Selective checks; keep implementation moving (owner, 2026-09-29).** Unit tests and full CI are not defaults for every change/PR. Use only named acceptance proofs or substantial-rework-risk checks, with reuse of relevant passing evidence. Full suites/full CI require an explicit acceptance need or integration risk that scoped checks cannot cover; a process-only green never proves engine behavior. Work on independent next tasks while validation/CI runs, on lane branches against a pushed dependency candidate where needed; land only after required dependencies. Keep ownership, serialized import/render/export and no test skipping/disabling/quarantine. |
 
 Carry-over owner rules that still apply: five owned total, catch only in wild combat,
 starters exclusive, per-participant legendary offers, light satiety with no starvation
@@ -252,7 +253,7 @@ Godot import, render and export writers are serialized (one at a time per machin
 | Wave | Lanes (branch) | Starts when |
 |---|---|---|
 | 0 | `tb/foundations` (F16) | now |
-| 1 | `tb/hub` (F17, F18), `tb/reorder` (F19, F20), `tb/combat` (F21–F24), `tb/vfx` (F25, later F35), `tb/lookdev` (F26) | F16 landed (tb/combat, tb/vfx and tb/lookdev may start on read-only prototyping at once) |
+| 1 | `tb/hub` (F17, F18), `tb/reorder` (F19, F20), `tb/combat` (F21–F24), `tb/vfx` (F25, later F35), `tb/lookdev` (F26) | F16 landed for landing; RD-37 permits branch implementation against the pushed F16 candidate while its checks/CI run |
 | 2 | `tb/training` (F27–F30, F37), `tb/homestead` (F31–F34), `tb/creature-art` (F36), `tb/visual-meadows`, `tb/visual-tidewake`, `tb/visual-cloudreach`, `tb/visual-stormwood` (F38–F41), `tb/hud` (F42) | their dependencies in §6 landed |
 | 3 | `tb/loop` (F43–F46), `tb/balance` (F47), `tb/coop` (F48), `tb/release` (F49) | Waves 1–2 feature-complete |
 
@@ -907,16 +908,18 @@ same criteria, numbered from zero (`F27#3`).
    harness input) in the evidence text.
 3. Merge `origin/main`. Choose the smallest necessary validation set for the batch, recording
    the covered risks, source SHA and any reused evidence. Run the full unit suite once per coherent
-   batch when acceptance explicitly requires it or broad save/autoload/shared-system changes risk
-   substantial rework (`--script tests/run_tests.gd -- --shard=I/4`, 4 shards, no exclusions).
+   batch when acceptance explicitly requires it or scoped checks cannot cover a substantial
+   integration/rework risk (RD-37) (`--script tests/run_tests.gd -- --shard=I/4`, 4 shards, no exclusions).
    Import only when the cache is absent or affected assets/scripts require it. Do not repeat a
    passing suite for each criterion, evidence-only commit or docs update; after a fix, rerun only
    affected checks unless the change creates wider uncertainty. Required CI still runs on the PR.
 4. Update the board row (`status`, `evidence`, `gap`), STATE §0 (one line), then open the PR with
-   the template, `tools/check_pr_traceability.mjs`, and auto-merge. **Label every PR that touches
-   code, data, scenes or tests `full-ci`.** `ci.yml` runs no build or test jobs on an unlabelled PR, so an
-   unlabelled green PR proves nothing about the engine. A docs-only PR (board, STATE) needs no label.
-   With the label on, CI decides.
+   the template, `tools/check_pr_traceability.mjs`, and auto-merge. **RD-37 supersedes automatic
+   `full-ci` labelling for code/data/scenes/tests.** Select full CI only for an explicit acceptance
+   need or substantial integration risk that the scoped proofs cannot cover. Otherwise cite the
+   smallest actual named checks or independent review sufficient for the bounded risk. Current
+   `ci.yml` runs no build/test jobs on an unlabelled PR: call that process-only evidence, never engine
+   verification. Required selected CI must pass; do not remove a label to evade a failure.
 5. If CI goes red on your PR, fix it on the same PR. Never skip, disable or quarantine a test.
 
 ### 7.3 Pushing and the hourly board
