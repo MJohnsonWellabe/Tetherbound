@@ -236,6 +236,11 @@ func _refresh() -> void:
 	if _prompt == null:
 		return
 	var plot := _plot()
+	# A reconnect snapshot may already contain this or another claimant's
+	# newer revision without replaying its live delta to this presentation.
+	# Clearing the UI wait does not settle a character receipt or pay anything.
+	if not _claim.is_empty() and int(plot.get("revision", 0)) > int(_claim.get("expected_revision", -1)):
+		_claim = {}
 	var day := _day()
 	var has_hoe := _has_hoe()
 	var greenhouse := _greenhouse_built()
@@ -391,9 +396,10 @@ func _submit_action(action: String, crop_id: String = "") -> void:
 	if not _claim.is_empty():
 		return
 	var txn := "farm:%s:%d:%d" % [_realm, _index, Time.get_ticks_usec()]
-	_claim = {"txn_id": txn, "action": action}
+	var expected := int(_plot().get("revision", 0))
+	_claim = {"txn_id": txn, "action": action, "expected_revision": expected}
 	var intent := {"kind": "farm_plot_action", "realm": _realm, "plot_index": _index,
-		"action": action, "expected_revision": int(_plot().get("revision", 0)), "txn_id": txn}
+		"action": action, "expected_revision": expected, "txn_id": txn}
 	if action == FARM_LOGIC.ACTION_SOW:
 		intent["crop_id"] = crop_id
 	var verdict := LEDGER_CLAIM.submit(self, intent)

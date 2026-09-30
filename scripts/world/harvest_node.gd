@@ -146,6 +146,7 @@ func _claim_intent(actual_amount: int) -> Dictionary:
 	if not _renewable_site_id.is_empty():
 		var txn := "harvest:%s:%s:%d" % [_realm_id, _renewable_site_id, Time.get_ticks_usec()]
 		_claim["txn_id"] = txn
+		_claim["expected_revision"] = int(_renewable_stock.get("revision", -1))
 		return {"kind": "renewable_harvest", "realm": _realm_id,
 			"site_id": _renewable_site_id, "expected_revision": int(_renewable_stock.get("revision", -1)),
 			"txn_id": txn}
@@ -669,6 +670,11 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if not _renewable_site_id.is_empty():
 		_read_renewable_stock(get_node_or_null(^"/root/Game"))
+		# The character journal handles settlement; a newer world snapshot
+		# only releases this shell's stale UI wait, including a lost race.
+		if _claiming and int(_renewable_stock.get("revision", -1)) > int(_claim.get("expected_revision", -1)):
+			_claiming = false
+			_claim = {}
 		_refresh_renewable_presentation()
 
 
