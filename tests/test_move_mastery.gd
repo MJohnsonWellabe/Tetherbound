@@ -116,7 +116,7 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 		wrong[0].uid = identity
 		assert_false(TEACHING.party_loadout_errors(wrong,character).is_empty(),"new canonical document never remints an invalid stored identity")
 	assert_false(TEACHING.party_loadout_errors([before[0],before[0].duplicate(true)],character).is_empty(),"new canonical duplicates refuse before clear/apply")
-	var bad := entries[0].duplicate(true)
+	var bad: Dictionary = entries[0].duplicate(true)
 	bad.loadout_revision = .5
 	entries.append(bad)
 	assert_false(TEACHING.party_loadout_errors(entries,character).is_empty(),"a later invalid row refuses the whole party")
