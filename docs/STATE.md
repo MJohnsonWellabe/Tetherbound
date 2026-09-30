@@ -29,11 +29,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | F17#0 landed #474; six rows open. F18 guards10/67/0; opening pilot name-input failure retained, correction queued. |
+| `tb/hub` | F17, F18 | F17#0 main; six rows open. F18#0 strict candidate MET, opening native0/logic10/67/0; dependency hold. Hall circuit9c69 active. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 0aa: guest incoming native1/one missingLabel red; poise/authority checks PASS. Low camera preflight refused dimensions, no capture; pure4/104/0. No new MET. |
-| `tb/vfx` | F25, F35 | 67c620: r6 native0/12cases/36PNG, clocks/leases PASS; strict blind pending. Prior reds retained; full craft/world open, flag off. |
-| `tb/lookdev` | F26 | #1/#2 main. 424ca00d native0 Hall route Medium506/High481frames; buffer-refresh source PASS. Prior reds retained; materials/visual/7routes/Ally open. |
+| `tb/combat` | F21–F24 | da308: typed save/mastery source WIP. Native9-pair zero-overlap/control PASS; blind narrow PASS/full craft open. Label red retained. |
+| `tb/vfx` | F25, F35 | 47e r7 unrendered. R6 native0/12cases/36PNG; blind identities PASS/full craft FAIL/mastery partial. Flag off; all F25 open. |
+| `tb/lookdev` | F26 | #1/#2 main. #477 fix landed; Medium506/High481 and Cloudreach3 presets native0, 8/12routes. Reds retained; visual/device/Ally open. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
