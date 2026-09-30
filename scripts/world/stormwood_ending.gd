@@ -728,14 +728,14 @@ func _build_waterward_view() -> void:
 	_view_prompt = INTERACTABLE.new()
 	_view_prompt.name = "WaterwardView"
 	_view_prompt.position = Vector3(0.0, 1.4, 17.0)
-	_view_prompt.call("configure", "Look beyond the broken storm", VIEW_RADIUS_M, false)
+	_view_prompt.call("configure", "Look over the cleared sky", VIEW_RADIUS_M, false)
 	_view_prompt.connect("activated", _on_waterward_view)
 	add_child(_view_prompt)
 	if bool(world.get("simulation_only")):
 		return
-	# The view remains a horizon and has no collision. The deliberate gate on
-	# this same platform is built separately and stays sealed until this view
-	# grants the one-time key.
+	# The view is a quiet aftermath horizon with no collision. The protected
+	# boss payout owns the fifth key; this existing view event closes the chapter
+	# and directs the traveler home through the Hall.
 	_waterward_sea = MeshInstance3D.new()
 	_waterward_sea.name = "DistantWaterwardSea"
 	var plane := PlaneMesh.new()

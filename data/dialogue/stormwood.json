@@ -714,9 +714,9 @@
         "stormwood:waterward_revealed"
       ],
       "lines": [
-        "At its Meadows stone, Livewire makes every creature move recover twenty-five percent faster while the Spark is active. Activating another relic releases it.",
-        "From the Dynamo's high platform, the broken storm no longer hides the sea. Islands stand beyond the bright water, and an old route descends toward their first shore.",
-        "Tidewake lies beyond. The Waterward route is charted, and its key is yours."
+        "While the Spark's Livewire blessing is active, creature moves recover twenty-five percent faster. Only one relic blessing is active at a time.",
+        "The Dynamo is quiet. The cleared sky belongs to Stormwood again.",
+        "Use your Home Key to arrive at the Crossing Hall's HOME ARCH, then walk the village road back to Grandpa."
       ]
     },
     "stormwood_crown_caretaker_neri_arrival": {

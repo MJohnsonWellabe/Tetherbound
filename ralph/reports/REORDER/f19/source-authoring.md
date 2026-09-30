@@ -130,3 +130,20 @@ this is not runtime loadout proof. Terrain/scatter bake fingerprint inputs
 exclude this props file, so their freshness is unaffected. The camp's added
 regional order 5001 is absent from the pre-split props fixture; no historical
 fixture mirror is changed. Combat owns the actual explicit loadout consumer.
+
+The later active-consumer audit removes the retired `realm_key_cloudreach`
+entry requirement from Aila's arrival event, Maela's flight-trial event, and
+Maela's matching greeting in `cloudreach_npc_runtime.json`. Their authored
+chapter-start/aerie prerequisites remain intact. The named curve pin now
+checks these three real data rows; no ordinary traversal has run.
+
+Stormwood's existing `aftermath:waterward_view` event and saved objective/flag
+identities remain for compatibility. Its world objective no longer grants or
+consumes an obsolete Tidewake entry key; presentation/chapter completion facts
+remain. Its prompt, guide and three aftermath dialogue lines now describe the
+quiet cleared sky and Home Key → Hall HOME ARCH → village walk → Grandpa.
+Reward metadata names typed `portal_key_biome5` and keeps the destination sealed.
+Only the protected boss projector may owe the fifth key/relic to participants;
+this world event never replaces it. The source generator reproduces the narrow
+data edits. This source checkpoint stays unlanded until the actual protected
+delivery/arrival producers connect; no partial progress-stranding cut is ready.

@@ -246,6 +246,17 @@ def derive():
         data["legendary_placeholder"]["catchable"] = False
     write_edits("data/config/stormwood_encounters.json", storm_wild)
 
+    def cloud_npc_entry(data):
+        for guard in data["dialogue_event_guards"]:
+            if guard["conversation"] in ["cloudreach_aila_arrival", "cloudreach_maela_flight_trial"]:
+                guard["requires_flags"] = [flag for flag in guard["requires_flags"] if flag != "realm_key_cloudreach"]
+        for npc in data["npcs"]:
+            if npc["id"] == "keeper_maela":
+                for greeting in npc.get("greeting_when", []):
+                    if greeting["conversation"] == "cloudreach_maela_flight_trial":
+                        greeting["if_flag"] = [flag for flag in greeting["if_flag"] if flag != "realm_key_cloudreach"]
+    write_edits("data/config/cloudreach_npc_runtime.json", cloud_npc_entry)
+
     def solmane(data):
         data["legendary"]["level"] = 44
         data["legendary"]["_comment_level"] = "F19: Cloudreach exit L44; volunteer offer, never a wild capture."
@@ -269,6 +280,14 @@ def derive():
     def storm_chapter(data):
         data["final_encounter"]["legendary_level"] = 55
         retired_entry_clauses(data, "realm_key_stormwood")
+        for act in data["acts"]:
+            for objective in act.get("objectives", []):
+                if objective["id"] == "stormwood_waterward_revealed":
+                    objective["label"] = "Look over the cleared sky."
+                    objective["how"] = "Take in the cleared sky, then use your Home Key to reach the Crossing Hall HOME ARCH. Walk the village road back to Grandpa."
+                    objective["grants_flags"] = [flag for flag in objective["grants_flags"] if flag != "realm_key_water"]
+                    objective["consumed_grants"] = {}
+        data["rewards"]["next_realm_key"] = "portal_key_biome5"
     write_edits("data/config/stormwood_chapter.json", storm_chapter)
 
 

@@ -221,6 +221,46 @@ func test_chapter_arrival_does_not_require_a_second_legacy_world_key() -> void:
 				"actual portal admission is the sole crossrealm entry gate")
 			for row: Dictionary in act.get("objectives", []):
 				assert_false((row.get("requires_flags", []) as Array).has(old_key))
+	var npc_config := _read("res://data/config/cloudreach_npc_runtime.json")
+	var expected_guards := {"cloudreach_aila_arrival": ["cloudreach_chapter_started"],
+		"cloudreach_maela_flight_trial": ["windscar_aerie_prepared"]}
+	var guards_found := 0
+	for guard: Dictionary in npc_config.get("dialogue_event_guards", []):
+		var conversation := str(guard.get("conversation", ""))
+		if expected_guards.has(conversation):
+			guards_found += 1
+			assert_eq(guard.get("requires_flags", []), expected_guards[conversation])
+	assert_eq(guards_found, 2, "both live arrival/trial event guards retain their story prerequisite")
+	var trial_found := false
+	for npc: Dictionary in npc_config.get("npcs", []):
+		if str(npc.get("id", "")) != "keeper_maela":
+			continue
+		for greeting: Dictionary in npc.get("greeting_when", []):
+			if str(greeting.get("conversation", "")) == "cloudreach_maela_flight_trial":
+				trial_found = true
+				assert_eq(greeting.get("if_flag", []), ["windscar_aerie_prepared"])
+	assert_true(trial_found, "actual Maela trial greeting remains available after canonical portal arrival")
+
+
+func test_stormwood_aftermath_closes_the_chapter_without_another_key_grant() -> void:
+	var chapter := _read("res://data/config/stormwood_chapter.json")
+	var rewards: Dictionary = chapter.get("rewards", {})
+	assert_eq(rewards.get("next_realm_key"), "portal_key_biome5")
+	assert_false(bool(rewards.get("next_realm_enterable", true)), "the fifth key never opens a live biome")
+	var aftermath_found := false
+	for act: Dictionary in chapter.get("acts", []):
+		for objective: Dictionary in act.get("objectives", []):
+			if str(objective.get("id", "")) != "stormwood_waterward_revealed":
+				continue
+			aftermath_found = true
+			assert_eq(objective.get("completion_event"), "aftermath:waterward_view",
+				"retain the existing durable event identity")
+			assert_eq(objective.get("grants_flags"), ["waterward_route_revealed", "stormwood:chapter_complete"],
+				"compatibility presentation/chapter facts cannot replace a protected participant payout")
+			assert_eq(objective.get("consumed_grants"), {})
+			assert_true(str(objective.get("how", "")).contains("HOME ARCH"))
+			assert_true(str(objective.get("how", "")).contains("village road back to Grandpa"))
+	assert_true(aftermath_found, "actual Stormwood aftermath remains authored")
 
 
 func test_boss_hand_offs_keep_typed_keys_distinct_from_item_skus() -> void:
