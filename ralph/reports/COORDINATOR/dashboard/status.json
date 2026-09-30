@@ -1,9 +1,9 @@
 {
- "updated": "2026-09-30T00:10:38.176Z",
+ "updated": "2026-09-30T00:47:42.777Z",
  "headline": [
   "OWNER REDESIGN (2026-09-29): 35 owner decisions (RD-01..RD-35) and 34 new feature rows F16–F49 with 179 criteria. Every lane now works from CODEX_START_HERE.md (Waves 0–3). The Phase 1 and Phase 2 briefs are superseded; still-open F01–F15 criteria fold into the new rows (§7.5).",
-  "Criteria met: 95 of 280. Original: 95/101; redesign: 0/179. F16#0 in progress; independent acceptance and integrated F49 run remain open.",
-  "Wave 0 active: tb/foundations implements F16 from main e2de59571. Combat and lookdev read-only prototypes are active; VFX read-only prototype is active. Wave 1 implementation and landings wait for F16. Board duty: tb/redesign-board.",
+  "Criteria met: 95 of 280. Original: 95/101; redesign: 0/179. All five F16 criteria in progress; no new acceptance counted.",
+  "Wave 0: foundations WIP cf702dc0e pushed; merged main 3cc8e789c into candidate 2014963ea. Focused 166/2240/0 and title-to-autosave witness inspected; final candidate review/full units remain. Combat/VFX/lookdev prototypes complete. Wave 1 edits wait for all F16 landings; first concurrent lanes: hub, combat, lookdev. Board duty: tb/redesign-board.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -365,7 +365,7 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "F16#0 implementing save refusal on tb/foundations; no MET claim",
+   "now": "F16 in progress; pushed supporting WIP cf702dc0e; first landing targets F16#0; independent final review/full suite open",
    "next": "Work order in CODEX_START_HERE §6: F16"
   },
   {
@@ -380,17 +380,17 @@
   },
   {
    "lane": "tb/combat",
-   "now": "Read-only prototype: audit move-weight feedback and host shared-fight impulse; edits wait for F16",
+   "now": "Read-only prototype complete; independently reviews F16 saves/order/tests; Wave 1 edits wait for F16",
    "next": "Work order in CODEX_START_HERE §6: F21, F22, F23, F24"
   },
   {
    "lane": "tb/vfx",
-   "now": "Read-only archetype mapping/arrival prototype active; edits wait for F16",
+   "now": "Read-only archetype/arrival prototype complete; independently reviews F16 schema/carriers; edits wait for F16 and an agent slot",
    "next": "Work order in CODEX_START_HERE §6: F25, F35"
   },
   {
    "lane": "tb/lookdev",
-   "now": "Read-only prototype: persistent graphics preferences and runtime Environment hooks; edits wait for F16",
+   "now": "Read-only graphics prototype complete; ready for parallel Wave 1 implementation after F16",
    "next": "Work order in CODEX_START_HERE §6: F26"
   },
   {
@@ -489,7 +489,8 @@
  ],
  "four_chapter_run": null,
  "wip": [
-  "Active Wave 0 ownership: foundations additionally owns title_screen.gd refusal; realm_heart_state.gd, tab_map.gd, scripts/world/quest_log.gd, regional_credits.gd and realm_hearts/regional_credits config order consumers; realm_gate.gd/rift_crossing.gd and Game.can_enter_realm legacy-gate lines; feature_flags.json legacy_physical_crossings only. Future hub/reorder edits serialize after F16. Combat owns existing impact VFX; future tb/vfx owns new archetypes and moves.json VFX blocks. Lookdev owns rendering project settings. All Godot writers serialized; foundations currently holds focused-test/import token.",
+  "Active Wave 0 extra ownership: foundations owns title_screen refusal and readonly portable discovery; realm_heart_state, tab_map, tab_quest_log heading, world/quest_log, regional_credits and realm_heart_shrine ordering; realm_gate/rift_crossing/stormwood_water_gate and Game.can_enter_realm legacy-gate lines; biome_order.json is the single default-off legacy flag. Scoped save/default-directory, old-save repair and gate tests plus new title/net foundations smokes and peer_runner diagnostics belong to foundations. Parent authored and returned exact tests/test_schema_biome_order.gd, test_meadows_realm_save_repair.gd and three gate-unit fixture hooks; independent review/runtime follow. Future hub/reorder edits serialize after F16. Combat owns existing impact VFX; future VFX owns new archetypes and moves.json VFX blocks. Lookdev owns rendering project settings. Import/render/export writers serialize; two-peer headless groups use distinct user directories.",
+  "Current proof limits: title refusal invokes real load-menu methods directly; New Game uses injected physical joypad bindings and trainer-name _confirm. Isolated save directories and a minimal authored v27 fixture are disclosed; Grandpa prompt presence does not prove the conversation. Retired crossing tests explicitly enable the same legacy flag in debug fixtures and separately assert the shipping default-off path. No F16 criterion is MET yet.",
   "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE §6. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE §7.5 and STATE §0.",
   "Tidewake Phase 2d P2-008 remains open after owner-directed wind-down: eight native before/after pairs are tracked in ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/phase2d-review; local shore symptom 8/8 clear, full photo/Bar A/Bar B/Palworld-quality 0/8. Resume from phase2d-shore-profile-review.md's view table and failed-probe/pickup sections. Next: coordinated dune habitat and Veilfall main-mass art with route/terrain validation, then re-score all eight fixed views code-blind. Do not start the rest of the visual queue or claim regional acceptance from this checkpoint.",
   "Stormwood Phase 2c wind-down (tb/x04-stormwood), owner requested no new experiments. P2-042 remains fixed/enabled by1ed0259e5. P2-082 portraits and P2-084 eleven NPC openings passed96 native1920 captures, independent evidence audit and fresh blind review; enabled on branch bya53f158c9/8f5c25445. They remain catalog-open until full regression and landing finish. Full unit suite on8f5c25445 is still running at checkpoint: session46696, console12232/native9904, log .tmp/stormwood-phase2/people-accepted-full-suite.log. Reattach/check terminal result; do not restart merely for elapsed time. Scoped people Bars A/B YES/YES do not close chapter bars. Duplicate named cast identities, Fenn post-view obstruction and rough close-range materials remain separate findings. P2-037 remains open and all geometry/material candidates stay off; latest22 native frames/14 pairs prefer construction readability but complete crown/core/arena fails, scoped ancient-tree A YES/B NO. Production chapter matrix30 native frames plus derived720 review remains Bars A/B NO/NO; ordinary combat/HUD, adequate settlement coverage and wholechapter acceptance remain open. P2-041 confirmed by78-frame baseline; P2-043 glass candidate stays off after partial five-pair review. P2-045 candy, P2-081 trainer dialogue and P2-110 roster refresh remain off. P2-081 audit matches19 trainer plates; four missing profile recipes cover seven trainers. Reviewed scratch helpere0c5866ac was cancelled before native launch; no plates generated. P2-092 deferred to gameplay for collision/contact/lunge separation. P2-093 fade/HUD source hypothesis needs live measurement. P2-111 concerns persistent quick bindings. All remaining owned impact>=12 work stays open/needs_capture/deferred as catalogued. No regional or Phase1 criterion closure. See phase2/catalog.csv and stormwood/fixes/.",
