@@ -68,21 +68,21 @@ func test_meadows_is_the_only_available_realm_until_cloudreach_is_reachable() ->
 	assert_false(bool(tab.call("_realm_link_visible")),
 		"no crossing marker on the Meadows map before Cloudreach exists")
 
-	game.progression.set_flag("realm_key_cloudreach")
+	_unlock_personal(game, "cloudreach")
 	assert_eq(tab.call("_available_realms"), ["meadows", "cloudreach"],
-		"the Warden's key flag (D110) makes Cloudreach a selectable realm")
+		"an actual personal portal unlock makes Cloudreach selectable")
 	assert_false(bool(tab.call("_realm_link_visible")),
 		"portal reachability does not restore a retired physical crossing marker")
 
 
-func test_cloudreachs_own_discovery_alone_unlocks_the_selector_without_any_flag() -> void:
+func test_cloudreach_discovery_does_not_bypass_portal_unlock() -> void:
 	var game := _game()
 	var cloud: RefCounted = game.realm_map_for("cloudreach")
 	cloud.mark_visited(CLOUDREACH_AT)
 	var tab := _tab(game)
-	assert_true(bool(tab.call("_cloudreach_unlocked")),
-		"real discovery already sitting in Cloudreach's own MapState unlocks the selector "
-		+ "even with no progression flag set (a debug-teleported or migrated save)")
+	assert_false(bool(tab.call("_cloudreach_unlocked")),
+		"discovery does not substitute for an actual canonical portal unlock")
+	assert_true(cloud.is_discovered(CLOUDREACH_AT), "local fog remains intact while destination is locked")
 
 
 func test_standing_in_cloudreach_unlocks_the_selector_and_defaults_the_view_there() -> void:
@@ -97,7 +97,7 @@ func test_standing_in_cloudreach_unlocks_the_selector_and_defaults_the_view_ther
 
 func test_switching_the_view_reads_the_other_realms_map_state_without_moving_the_active_map() -> void:
 	var game := _game()
-	game.progression.set_flag("realm_key_cloudreach")
+	_unlock_personal(game, "cloudreach")
 	var cloud: RefCounted = game.realm_map_for("cloudreach")
 	cloud.mark_visited(CLOUDREACH_AT)
 	var tab := _tab(game)
@@ -123,7 +123,7 @@ func test_switching_the_view_reads_the_other_realms_map_state_without_moving_the
 
 func test_player_marker_and_objective_only_draw_in_the_players_own_realm() -> void:
 	var game := _game()
-	game.progression.set_flag("realm_key_cloudreach")
+	_unlock_personal(game, "cloudreach")
 	var tab := _tab(game)
 
 	assert_true(bool(tab.call("_should_draw_player_marker")),
@@ -157,7 +157,7 @@ func test_realm_link_points_are_read_from_the_shared_transition_source() -> void
 
 func test_realm_link_labels_and_icon_come_from_map_json_and_name_the_destination() -> void:
 	var game := _game()
-	game.progression.set_flag("realm_key_cloudreach")
+	_unlock_personal(game, "cloudreach")
 	var tab := _tab(game)
 
 	var cfg: Dictionary = tab.call("_realm_link_config")
@@ -174,12 +174,40 @@ func test_realm_link_labels_and_icon_come_from_map_json_and_name_the_destination
 func test_selector_uses_all_unlocked_registry_realms_not_a_binary_pair() -> void:
 	var game := _game()
 	game.local.configure_map_definitions(THREE_REALM_MAPS)
-	game.progression.set_flag("realm_key_cloudreach")
+	_unlock_personal(game, "cloudreach")
 	var storm: RefCounted = game.realm_map_for("stormwood")
 	storm.mark_visited(STORMWOOD_AT)
+	game.world.redesign_world.portal_unlocks.append("stormwood")
 	var tab := _tab(game)
 	assert_eq(tab.call("_available_realms"), ["meadows", "cloudreach", "stormwood"])
 	assert_eq(str(tab.call("_other_realm", "cloudreach")), "stormwood")
 	tab.call("_on_realm_button_pressed", "stormwood")
 	assert_eq(tab.call("_map_state"), storm)
 	assert_false(bool(tab.call("_should_draw_player_marker")))
+
+
+## Explicit synthetic personal unlock fixture; not an earned portal witness.
+func _unlock_personal(game: Node, biome: String) -> void:
+	game.local.redesign_character.portal_unlocks.append(biome)
+
+
+func test_only_host_world_or_personal_unlocks_expose_live_destinations() -> void:
+	var game := _game()
+	var tab := _tab(game)
+	game.progression.set_flag("realm_key_cloudreach")
+	game.progression.set_flag("realm_gate_cloudreach_unlocked")
+	assert_false(bool(tab.call("_realm_unlocked", "cloudreach")),
+		"legacy key/gate facts cannot expose a locked portal destination")
+	game.world.redesign_world.portal_unlocks.append("cloudreach")
+	assert_true(bool(tab.call("_realm_unlocked", "cloudreach")),
+		"the host world's actual unlock is available to this traveler")
+	game.world.redesign_world.portal_unlocks.clear()
+	_unlock_personal(game, "cloudreach")
+	assert_true(bool(tab.call("_realm_unlocked", "cloudreach")),
+		"the character's portable unlock works in a locked host world")
+	game.world.redesign_world.fifth_arch_stirred = true
+	assert_false(bool(tab.call("_realm_unlocked", "biome5")),
+		"a stirred fifth arch never becomes a live map destination")
+	var other := _game()
+	assert_false(bool(_tab(other).call("_realm_unlocked", "cloudreach")),
+		"another character/world does not inherit this portal unlock")

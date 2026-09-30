@@ -1,6 +1,7 @@
 # F19 authored curve checkpoint
 
-Source: `a778658659`, based on main `ddeadbc1eb9cc2f81693d69eded98ee9183579a1`.
+Curve source: `a778658659`; source consumers through `24db37dc1d`, based on
+main `ddeadbc1eb9cc2f81693d69eded98ee9183579a1`.
 Windows source authoring only. No Godot, gameplay, save, co-op or earned-route
 proof has run for this checkpoint. No F19/F20 criterion is claimed MET.
 
@@ -70,9 +71,41 @@ consumer and disk-persistence checks; **they are not earned route/arrival
 proof**. No test has run. Tidewake's chapter result no longer qualifies a
 character for homecoming.
 
+`3cb2eaa2cf` removes the retired Cloudreach/Stormwood chapter-entry world-key
+clauses. Actual F18 portal admission remains the hard gate. `6602da6a64`
+authors personal regional objectives through the agreed detached traveler
+getters. Before actual arrival, the objective sends the traveler by Home Key
+to the Crossing Hall HOME ARCH, then along the village road to Grandpa.
+An ahead host world never supplies this character's ending eligibility.
+Foundation published the getter source at `a4b484cbea2b8b650185df89f0890de93bdd33a0`;
+the shared source is not merged into this branch and has no runtime proof yet.
+The existing quest-log fixture is explicitly synthetic and has not run.
+
+`5c681064e1` authors fifth-arch presentation data only: the installed Hall
+PortalSurface material family, a bounded 1.2-second pulse, a tracked neutral
+tether-drone excerpt, and literal `Not ready yet.`. The sealed arch receives
+no travel permission, quest, marker or new durable state. Asset provenance
+and authored envelopes are recorded in the config; audible quality and
+performance have not been measured. Foundation owns the actual Hall consumer
+after a protected typed biome5 stir result.
+
+`e5a14672e8` adds a prerequisite-field scan to the existing named curve pin
+and replaces Tidewake's old cross-realm dialogue with the Home Key/Hall
+route and dock resolution. `24db37dc1d` hides the old physical map crossing
+in the shipping F16 path. Historical coordinate/label helpers remain for
+their pure data tests. The tracked canonical portal-map consumer now requires
+that foundation getter pin: only finite live destinations and the actual host
+world or personal portal unlock expose remote maps. Current realm display,
+local fog, chapter cycle order and icon helpers remain covered by the existing
+test file. Discovery and old key/gate flags no longer substitute for unlocks;
+a stirred fifth arch remains unavailable. These unlock fixtures are synthetic,
+and the migrated tests remain unrun.
+
 Remaining real-path gaps: live boss payouts still use legacy world key flags;
-chapter entry/reward clauses still reference physical-crossing entitlements;
-protected participant grants and Home travel remain unconnected; fifth-arch
-effects, all four legendary capacity/choice branches, personal objective
-eligibility, disconnect/reload and earned route saves remain unproved.
-Those require owned runtime handoffs and F18's transactions before landing.
+protected participant grants and Home travel remain unconnected. The Warden's
+old reward flags must remain until its protected per-participant next-key and
+relic replacement connects in the same coherent candidate. Fifth-arch effects,
+all four legendary capacity/choice branches, personal objective/map getter
+integration, disconnect/reload and earned route saves remain unproved. These
+require owned runtime handoffs and F18's transactions before landing. All
+authored acceptance checks remain unrun; there is no native or real-path PASS.

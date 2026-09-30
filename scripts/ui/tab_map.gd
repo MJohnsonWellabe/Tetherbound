@@ -1628,8 +1628,8 @@ func _realm_map_state(realm_id: String) -> RefCounted:
 
 ## Every realm the player may currently VIEW on this tab. The map registry is
 ## the authority; this tab never assumes a two-realm world. Meadows remains
-## first and later configured realms stay alphabetic, so cycle order never
-## reshuffles as a player makes discoveries.
+## first and later realms follow biome_order, preserving chapter order as
+## portal unlocks add destinations.
 func _available_realms() -> Array[String]:
 	var out: Array[String] = []
 	for realm_id: String in _configured_map_realms():
@@ -1640,43 +1640,27 @@ func _available_realms() -> Array[String]:
 	return out
 
 
-## A configured realm becomes viewable when the player is there, has its
-## configured entry key, or already has personal discovery in its own map.
-## The last case preserves migrated/debug saves without leaking another
-## player's fog: `_realm_map_state()` only returns this local player's object.
+## Only actual host-world or personal canonical portal unlocks make another
+## live destination viewable. Discovery and old world-key flags are not entry.
 func _realm_unlocked(realm_id: String) -> bool:
 	var game := state()
 	if game == null:
 		return false
+	var order := preload("res://scripts/data/biome_order.gd")
+	var biome := order.canonical_id(realm_id)
+	if not order.ids(false).has(biome):
+		return false
 	if _player_realm() == realm_id:
 		return true
-	var key_flag := _realm_entry_key(realm_id)
 	var progression: RefCounted = game.get("progression")
-	if not key_flag.is_empty() and progression != null and bool(progression.call("has", key_flag)):
-		return true
-	var map_state := _realm_map_state(realm_id)
-	return map_state != null and map_state.has_method("discovered_fraction") \
-		and float(map_state.call("discovered_fraction")) > 0.0
-
-
-## Cloudreach's historical helper remains public for callers/tests. Its three
-## old alternate flags remain valid until those old save paths age out.
-func _cloudreach_unlocked() -> bool:
-	if _realm_unlocked("cloudreach"):
-		return true
-	var game := state()
-	if game == null:
+	if progression == null or not progression.has_method("portal_is_unlocked"):
 		return false
-	var progression: RefCounted = game.get("progression")
-	if progression != null:
-		for flag in _realm_link_unlock_flags():
-			if bool(progression.call("has", str(flag))):
-				return true
-	var cloud_map := _realm_map_state("cloudreach")
-	if cloud_map != null and cloud_map.has_method("discovered_fraction") \
-			and float(cloud_map.call("discovered_fraction")) > 0.0:
-		return true
-	return false
+	return bool(progression.call("portal_is_unlocked", biome))
+
+
+## Retained public helper, answered by the same finite canonical predicate.
+func _cloudreach_unlocked() -> bool:
+	return _realm_unlocked("cloudreach")
 
 
 func _configured_map_realms() -> Array[String]:
