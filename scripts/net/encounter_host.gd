@@ -605,6 +605,78 @@ func validate_utility(intent: Dictionary, peer_id: int, view: Dictionary,
 	return _ok("utility_intent", peer_id, delta)
 
 
+## Narrow F23 status transaction. Only the three zero-damage status verbs
+## enter here; damage/control utilities and healing need their own actual HP
+## transaction. The director supplies current host geometry, not intent points.
+## This supporting API has no gameplay caller until live incoming vitals and
+## durable settlement are connected. No callbacks run between spend and status.
+func commit_status_utility(intent: Dictionary, peer_id: int, view: Dictionary,
+		move_id: String, move: Dictionary, wind_profile: Dictionary) -> Dictionary:
+	var id := str(intent.get("encounter_id", ""))
+	if not UTILITY_EFFECTS.valid_definition(move) or not UTILITY_EFFECTS._identity(move_id) \
+		or float(move.base_power) != 0.0 or str(move.utility.kind) not in [
+			"movement_buff", "next_hit_buff", "damage_taken_debuff"]:
+		return _refuse("utility_intent", peer_id, "unsupported_effect", "That utility is not ready.")
+	if not UTILITY_EFFECTS._identity(view.get("source_uid")) \
+		or typeof(view.get("source_generation")) != TYPE_INT \
+		or typeof(view.get("now_ms")) != TYPE_INT or int(view.now_ms) < 0 \
+		or not UTILITY_EFFECTS._point(view.get("origin")):
+		return _refuse("utility_intent", peer_id, "invalid_actor", "Your creature could not be validated.")
+	var uid := str(view.source_uid)
+	var actor := actor_vitals(id, peer_id, uid, int(view.source_generation))
+	if actor.is_empty() or bool(actor.fainted):
+		return _refuse("utility_intent", peer_id, "invalid_actor", "Your creature cannot use that utility.")
+	var rec: Dictionary = encounters.get(id, {})
+	var self_effect := str(move.utility.scope) == "self"
+	var target_uid := uid if self_effect else str(view.get("target_uid", ""))
+	var target_position: Vector3 = view.origin
+	var connected := true
+	if not self_effect:
+		if not UTILITY_EFFECTS._identity(view.get("target_uid")) \
+			or target_uid == uid or not UTILITY_EFFECTS._point(view.get("target_position")) \
+			or not UTILITY_EFFECTS._point(view.get("facing")):
+			return _refuse("utility_intent", peer_id, "wrong_target", "That utility needs a live opponent.")
+		target_position = view.target_position
+		connected = MATH.move_connects(move, view.origin, view.facing, target_position)
+	if typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0:
+		return _refuse("utility_intent", peer_id, "malformed", "That utility needs an action identity.")
+	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
+	var limits: Dictionary = MATH.config().get("utility_limits", {})
+	var raw_limit: Variant = limits.get("receipt_limit_per_encounter")
+	if not UTILITY_EFFECTS._number(raw_limit, 1.0, 65536.0) \
+		or float(raw_limit) != floorf(float(raw_limit)):
+		return _refuse("utility_intent", peer_id, "invalid_config", "That utility could not be configured.")
+	var action_id := "%s:%d:%d" % [id, peer_id, int(intent.action)]
+	var host := {"encounter_id": id, "generation": 0, "action_id": action_id,
+		"source_uid": uid, "target_uid": target_uid, "source_position": view.origin,
+		"target_position": target_position, "source_hp": float(actor.hp),
+		"source_max_hp": float(actor.max_hp), "hostile": not self_effect,
+		"target_hp": float((rec.get("opponent", {}) as Dictionary).get("hp", 0.0)),
+		"geometry_connected": connected}
+	var staged: Dictionary = {}
+	if connected:
+		staged = UTILITY_EFFECTS.stage_application(state, move_id, move, host,
+			int(view.now_ms), int(raw_limit))
+		if not bool(staged.get("ok", false)):
+			return _refuse("utility_intent", peer_id, str(staged.get("code", "invalid_effect")), "That utility could not take effect.")
+	# No staging failure above advances resource/action/cooldown authority.
+	# A valid target miss deliberately commits its authored cost and cooldown,
+	# with no status, damage, mastery, energy or ultimate reward.
+	var verdict := validate_utility(intent, peer_id, view, move, wind_profile)
+	if not bool(verdict.get("ok", false)): return verdict
+	if connected:
+		rec["utility_state"] = staged.state
+		(verdict.delta as Dictionary)["utility_receipt"] = staged.receipt.duplicate(true)
+		rec["seq"] = seq
+	return verdict
+
+
+## Detached status reads; callers revalidate current UID and actual host body.
+func utility_state(encounter_id: String) -> Dictionary:
+	var rec: Dictionary = encounters.get(encounter_id, {})
+	return (rec.get("utility_state", UTILITY_EFFECTS.empty_state(encounter_id, 0)) as Dictionary).duplicate(true)
+
+
 ## COMBAT-3. Authorize and spend one movement burst as a single host operation.
 ## It shares the strike action sequence and deadline: a burst cannot cancel an
 ## accepted attack, and an attack cannot begin until the burst's 0.2s commit is
@@ -1345,6 +1417,7 @@ static func _actor_vitals_view(actor: Dictionary) -> Dictionary:
 static func presentation_snapshot(rec: Dictionary) -> Dictionary:
 	var out := rec.duplicate(true)
 	out.erase("retained_actor_participants")
+	out.erase("utility_state")
 	for participant: Dictionary in (out.get("participants", {}) as Dictionary).values():
 		participant.erase("actor_generation")
 		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():

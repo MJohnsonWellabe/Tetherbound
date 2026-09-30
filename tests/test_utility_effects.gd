@@ -276,3 +276,58 @@ func test_actual_body_object_ids_map_to_monotonic_private_actor_generations() ->
 	assert_false(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 2147483648).ok)
 	body.free()
 	replacement.free()
+
+
+func test_status_commit_refuses_stale_or_unsupported_effect_before_spend_and_miss_costs_once() -> void:
+	var moves := MOVES.new()
+	var host := ENCOUNTER_HOST.new(1)
+	var record: Dictionary = host.open(1, "meadows", "wild", {"hp": 30.0, "hp_max": 30.0}, "owned-1", "character-1")
+	var id := str(record.encounter_id)
+	assert_true(host.bind_actor_vitals(id, 1, "character-1", _owned_vitals(), 3).ok)
+	var view := {"source_uid": "owned-1", "source_generation": 3, "origin": Vector3.ZERO,
+		"target_uid": "foe-1", "target_position": Vector3(3,0,0), "facing": Vector3.RIGHT, "now_ms": 1000}
+	var profile := {"max": 100.0, "regen_per_second": 0.0}
+	var intent := {"encounter_id": id, "action": 1, "target_point": [9999,0,0]}
+	var accepted: Dictionary = host.commit_status_utility(intent, 1, view, "hearten", moves.move("hearten"), profile)
+	assert_true(accepted.ok)
+	assert_eq(accepted.delta.wind, 76.0)
+	assert_eq(EFFECTS.power_multiplier(host.utility_state(id), "owned-1", 1001), 1.15)
+	assert_eq(host.record(id).opponent.hp, 30.0, "self buff never damages or heals opponent")
+	assert_eq(host.actor_vitals(id, 1, "owned-1", 3).hp, 60.0, "status never changes actual actor HP")
+	var baseline: Dictionary = host.record(id).duplicate(true)
+	assert_false(host.commit_status_utility(intent, 1, view, "hearten", moves.move("hearten"), profile).ok)
+	assert_eq(host.record(id), baseline, "same action cannot spend or extend buff twice")
+	intent.action = 2
+	view.now_ms = 12000
+	view.source_generation = 2
+	assert_false(host.commit_status_utility(intent, 1, view, "hearten", moves.move("hearten"), profile).ok)
+	assert_eq(host.record(id), baseline, "stale actual body generation advances no clock or cost")
+	view.source_generation = 3
+	assert_false(host.commit_status_utility(intent, 1, view, "heal_pulse", moves.move("heal_pulse"), profile).ok)
+	assert_false(host.commit_status_utility(intent, 1, view, "snare", moves.move("snare"), profile).ok)
+	assert_eq(host.record(id), baseline, "healing and damaging utilities cannot use status-only door")
+	view.facing = Vector3.LEFT
+	var miss: Dictionary = host.commit_status_utility(intent, 1, view, "sap", moves.move("sap"), profile)
+	assert_true(miss.ok)
+	assert_false(miss.delta.hit)
+	assert_eq(miss.delta.wind, 52.0, "valid whiff spends authored cost exactly once")
+	assert_false(miss.delta.has("utility_receipt"))
+	assert_eq(EFFECTS.damage_taken_multiplier(host.utility_state(id), "foe-1", 12001), 1.0)
+	intent.action = 3
+	view.now_ms = 23000
+	view.facing = Vector3.RIGHT
+	var sap: Dictionary = host.commit_status_utility(intent, 1, view, "sap", moves.move("sap"), profile)
+	assert_true(sap.ok)
+	assert_eq(sap.delta.wind, 28.0)
+	assert_eq(EFFECTS.damage_taken_multiplier(host.utility_state(id), "foe-1", 23001), 1.1)
+	assert_false(ENCOUNTER_HOST.presentation_snapshot(host.record(id)).has("utility_state"), "authority state never leaks into snapshot")
+	var detached := host.utility_state(id)
+	detached.statuses.clear()
+	assert_eq(EFFECTS.damage_taken_multiplier(host.utility_state(id), "foe-1", 23001), 1.1)
+	var lethal: Dictionary = host.stage_actor_vitals(id, 1, "owned-1", 3, 0, "actual-hit", "damage", 999.0, 10)
+	assert_true(host.commit_actor_vitals(lethal).ok)
+	baseline = host.record(id).duplicate(true)
+	intent.action = 4
+	view.now_ms = 34000
+	assert_false(host.commit_status_utility(intent, 1, view, "hearten", moves.move("hearten"), profile).ok)
+	assert_eq(host.record(id), baseline, "retained faint cannot cast using old healthy portable seed")

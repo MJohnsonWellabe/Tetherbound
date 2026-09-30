@@ -2591,6 +2591,39 @@ func _host_actor_vitals_context(encounter_id: String, peer_id: int) -> Dictionar
 		"character_revision": int(_session.call("admitted_character_revision", peer_id))}
 
 
+## Supporting status door; deliberately not added to the intent dispatcher
+## before the incoming-vitals/durable-handshake batch is ready. It has no card-
+## only compatibility path. An intent names a move, never a status or HP value.
+func _commit_host_status_utility(intent: Dictionary, peer_id: int) -> Dictionary:
+	var id := str(intent.get("encounter_id", ""))
+	var context := _host_actor_vitals_context(id, peer_id)
+	if context.is_empty() or _host_peer_staggered(id, peer_id):
+		return {"ok": false, "kind": "utility_intent", "peer": peer_id,
+			"code": "invalid_actor", "reason": "Your creature cannot use that utility.", "pending": false, "delta": {}}
+	var move_id := str(intent.get("move_id", ""))
+	var owned := _host_owned_move(peer_id, str(context.creature_uid), move_id, "utility")
+	if not bool(owned.get("ok", false)) or not bool(owned.get("enabled", false)):
+		return {"ok": false, "kind": "utility_intent", "peer": peer_id,
+			"code": "invalid_owned_move", "reason": "That utility is not in your admitted loadout.", "pending": false, "delta": {}}
+	var runtime := _shared_host_fight(id)
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var engine: Node = runtime if runtime != null else _manager
+	if not is_instance_valid(engine) or not is_instance_valid(wild) \
+		or wild.is_queued_for_deletion() or not wild.is_inside_tree(): return {}
+	var moves := engine.get("_moves") as RefCounted
+	if moves == null: return {}
+	var move: Dictionary = moves.call("move", move_id)
+	var opponent := wild.get("instance") as RefCounted
+	if opponent == null: return {}
+	var body: Node3D = context.body
+	var view := {"source_uid": str(context.creature_uid), "source_generation": int(context.generation),
+		"origin": body.call("centre"), "facing": body.call("facing"),
+		"target_uid": str(opponent.get("uid")), "target_position": wild.call("centre"),
+		"now_ms": Time.get_ticks_msec()}
+	return _encounter_host.call("commit_status_utility", intent, peer_id, view, move_id, move,
+		COMBAT_MANAGER.host_wind_profile(_creature_card_for(peer_id)))
+
+
 ## Called synchronously inside actual host HP debit, before damage feedback,
 ## poise, impulses, snapshots or critical-window consumption. Never an RPC.
 func _host_commit_landed_mastery(target_uid: String, hp_before: float, applied_damage: float,
