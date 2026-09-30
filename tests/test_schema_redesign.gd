@@ -9,6 +9,20 @@ func test_every_authored_contract_validates() -> void:
 		var result := DATA.load_catalog(domain)
 		assert_true(result.ok, "%s: %s" % [domain, result.get("errors", [])])
 
+func test_numeric_enum_accepts_runtime_integer_without_string_or_boolean_coercion() -> void:
+	var schema: Dictionary = JSON.parse_string('{"type":"integer","enum":[10,20,30]}')
+	assert_true(DATA.validate(20, schema).is_empty(), "real runtime integer matches parsed JSON numeric enum")
+	assert_true(DATA.validate(20.0, schema).is_empty())
+	for invalid: Variant in [true, "20", 21, 20.5]:
+		assert_false(DATA.validate(invalid, schema).is_empty())
+	assert_false(DATA.validate([20, 20.0], {"type": "array", "uniqueItems": true}).is_empty())
+
+func test_missing_defaults_or_schema_refuses_with_structured_failure() -> void:
+	assert_eq(STATE.defaults("missing_contract"), {})
+	var errors := STATE.validate("missing_contract", {})
+	assert_eq(errors.size(), 1)
+	assert_true(errors[0].contains("schema is missing or malformed"))
+
 func test_missing_unknown_and_duplicate_ids_fail_in_every_table() -> void:
 	for domain: String in DATA.DOMAINS:
 		var value: Variant = DATA.json(DATA.ROOT + domain + ".json")

@@ -4,10 +4,17 @@ const DATA := preload("res://scripts/data/redesign_data.gd")
 const BIOMES := preload("res://scripts/data/biome_order.gd")
 
 static func defaults(scope: String) -> Dictionary:
-	return DATA.json("res://data/schema/%s_state.json" % scope).duplicate(true)
+	var value: Variant = DATA.json("res://data/schema/%s_state.json" % scope)
+	if not value is Dictionary:
+		push_error("Redesign %s defaults are missing or malformed" % scope)
+		return {}
+	return value.duplicate(true)
 
 static func validate(scope: String, value: Variant, owned_uids: Array = []) -> Array[String]:
-	var schema: Dictionary = DATA.json("res://data/schema/%s_state.schema.json" % scope)
+	var raw_schema: Variant = DATA.json("res://data/schema/%s_state.schema.json" % scope)
+	if not raw_schema is Dictionary:
+		return ["Redesign %s schema is missing or malformed" % scope]
+	var schema: Dictionary = raw_schema
 	var errors := DATA.validate(value, schema)
 	if not value is Dictionary: return errors
 	if scope == "character":

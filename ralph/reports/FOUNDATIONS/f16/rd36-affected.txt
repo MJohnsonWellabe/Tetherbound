@@ -1,0 +1,188 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_equipment_portable_save.gd,test_session_snapshot.gd,test_schema_redesign.gd: 3 of 667 test files
+  ok    test_equipment_portable_save.gd :: test_current_portable_character_without_equipment_clears_previous_worn_state
+  ok    test_equipment_portable_save.gd :: test_switching_two_portable_characters_and_reset_never_leaks_gear
+  ok    test_equipment_portable_save.gd :: test_v1_portable_character_is_refused_without_touching_file_or_worn_state
+  ok    test_equipment_portable_save.gd :: test_v2_portable_disk_roundtrip_keeps_worn_item_outside_inventory
+  ok    test_equipment_portable_save.gd :: test_world_partition_merge_keeps_guest_gear_and_host_world_facts
+  ok    test_schema_redesign.gd :: test_durable_schema_rejects_unknown_fields_ids_and_unowned_uid
+  ok    test_schema_redesign.gd :: test_eight_slots_have_exactly_four_live_and_four_sealed
+  ok    test_schema_redesign.gd :: test_every_authored_contract_validates
+  ok    test_schema_redesign.gd :: test_foreign_unknown_ids_and_wrong_slot_pairs_refuse
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] json (res://scripts/data/redesign_data.gd:11)
+       [1] defaults (res://scripts/data/redesign_state.gd:7)
+       [2] test_missing_defaults_or_schema_refuses_with_structured_failure (res://tests/test_schema_redesign.gd:13)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign missing_contract defaults are missing or malformed
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] defaults (res://scripts/data/redesign_state.gd:9)
+       [1] test_missing_defaults_or_schema_refuses_with_structured_failure (res://tests/test_schema_redesign.gd:13)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] json (res://scripts/data/redesign_data.gd:11)
+       [1] validate (res://scripts/data/redesign_state.gd:14)
+       [2] test_missing_defaults_or_schema_refuses_with_structured_failure (res://tests/test_schema_redesign.gd:14)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_schema_redesign.gd :: test_missing_defaults_or_schema_refuses_with_structured_failure
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $: duplicate array member
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_missing_unknown_and_duplicate_ids_fail_in_every_table (res://tests/test_schema_redesign.gd:41)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_schema_redesign.gd :: test_missing_unknown_and_duplicate_ids_fail_in_every_table
+  ok    test_schema_redesign.gd :: test_registry_declares_scope_transactions_and_every_schema_field
+ERROR: Redesign data refused: $[0]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:75)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[1]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:75)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[2]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:75)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[3]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:75)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[4]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:75)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Redesign data refused: $[5]: identity must match exactly one authored contract
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _failure (res://scripts/data/redesign_data.gd:196)
+       [1] load_catalog (res://scripts/data/redesign_data.gd:79)
+       [2] test_station_attachment_slot_contract_refuses_wrong_slots_through_loader (res://tests/test_schema_redesign.gd:75)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_schema_redesign.gd :: test_station_attachment_slot_contract_refuses_wrong_slots_through_loader
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+  ok    test_session_snapshot.gd :: test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack
+[session] snapshot applied (2 keys, day 7)
+  ok    test_session_snapshot.gd :: test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _abort_host_snapshot (res://scripts/net/session.gd:995)
+       [1] _expire_snapshot_sends (res://scripts/net/session.gd:1497)
+       [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:245)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+
+20 tests, 342 assertions, 0 failed
+Native Godot exit status: 0

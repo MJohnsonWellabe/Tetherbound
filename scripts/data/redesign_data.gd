@@ -36,7 +36,7 @@ static func validate(value: Variant, schema: Dictionary, path: String = "$") -> 
 		if matches != 1: errors.append("%s: identity must match exactly one authored contract" % path)
 	if schema.has("const") and value != schema.const:
 		errors.append("%s: expected constant %s" % [path, schema.const])
-	if schema.has("enum") and not (schema.enum as Array).has(value):
+	if schema.has("enum") and not _contains_json_value(schema.enum, value):
 		errors.append("%s: unknown id/value %s" % [path, value])
 	if value is Dictionary:
 		var properties: Dictionary = schema.get("properties", {})
@@ -53,7 +53,7 @@ static func validate(value: Variant, schema: Dictionary, path: String = "$") -> 
 		if bool(schema.get("uniqueItems", false)):
 			var seen: Array = []
 			for element: Variant in value:
-				if seen.has(element): errors.append("%s: duplicate array member" % path)
+				if _contains_json_value(seen, element): errors.append("%s: duplicate array member" % path)
 				seen.append(element)
 		if value.size() < int(schema.get("minItems", 0)) or value.size() > int(schema.get("maxItems", 2147483647)):
 			errors.append("%s: invalid item count %d" % [path, value.size()])
@@ -66,6 +66,15 @@ static func validate(value: Variant, schema: Dictionary, path: String = "$") -> 
 		if float(value) < float(schema.get("minimum", -INF)) or float(value) > float(schema.get("maximum", INF)):
 			errors.append("%s: number outside allowed range" % path)
 	return errors
+
+## JSON has one numeric domain. Parsed 20.0 and a runtime integer 20 are
+## equivalent, while booleans and strings never acquire numeric membership.
+static func _contains_json_value(values: Array, value: Variant) -> bool:
+	for candidate: Variant in values:
+		if typeof(candidate) == typeof(value) and candidate == value: return true
+		if (candidate is int or candidate is float) and (value is int or value is float) \
+				and float(candidate) == float(value): return true
+	return false
 
 static func load_catalog(domain: String, path: String = "") -> Dictionary:
 	if not DOMAINS.has(domain):
