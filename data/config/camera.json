@@ -55,7 +55,7 @@
       "normal_max_m": 5.0
     },
     "midpoint_bias": 0.5,
-    "max_actor_overlap": 0.1,
+    "max_actor_overlap": 0.0,
     "frame_fill": 0.82,
     "near_clearance_m": 0.5,
     "max_distance_m": 48.0,

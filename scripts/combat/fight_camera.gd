@@ -87,7 +87,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 		var b := project_box(foe, transform, vertical_fov_deg, aspect, 0.05)
 		if not bool(a.get("valid", false)) or not bool(b.get("valid", false)): continue
 		var overlap := overlap_ratio(a.rect, b.rect)
-		var passed := bool(a.in_frame) and bool(b.in_frame) and overlap <= float(config.get("max_actor_overlap", 0.1))
+		var passed := bool(a.in_frame) and bool(b.in_frame) and overlap <= float(config.get("max_actor_overlap", 0.0))
 		var framed := bool(a.in_frame) and bool(b.in_frame)
 		var candidate := {"pair": profile.pair, "pivot": point, "distance": distance, "pitch": start_pitch,
 			"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect, "pass": passed, "framed": framed}

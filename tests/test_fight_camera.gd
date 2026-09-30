@@ -16,8 +16,8 @@ func test_nine_authored_pairs_project_both_bodies_without_silhouette_overlap() -
 				var fit := FIT.solve(a, b, deg_to_rad(35.0), deg_to_rad(-25.0), 68.0, aspect, 9.5, cfg)
 				var pair := ally_class + "/" + foe_class
 				assert_eq(str(fit.get("pair", "")), pair)
-				assert_true(bool(fit.get("pass", false)), pair + " fully framed with at most10% smaller-box overlap: " + str(fit))
-				assert_true(float(fit.get("overlap", 1.0)) <= 0.1, pair)
+				assert_true(bool(fit.get("pass", false)), pair + " fully framed without projected-box overlap: " + str(fit))
+				assert_true(float(fit.get("overlap", 1.0)) <= 0.0, pair)
 				assert_eq(a.size.y, float(heights[ally_class]), "fit never shrinks the actual actor")
 				assert_eq(b.size.y, float(heights[foe_class]))
 
