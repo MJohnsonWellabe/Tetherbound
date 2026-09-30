@@ -23,6 +23,11 @@ func test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist() 
 		assert_false(LIBRARY.resolve(data.moves[id].vfx).is_empty(), id + " must resolve")
 	assert_true(LIBRARY.resolve({"archetype": "unknown"}).is_empty())
 	assert_true(LIBRARY.resolve({}).is_empty())
+	var boulder := LIBRARY.resolve(data.moves.rock_throw.vfx, 5)
+	assert_eq(int(boulder.parameters.count), 1, "Rock Throw retains one boulder at maximum mastery")
+	assert_true(str(boulder.sound.launch).begins_with("vfx_stone_boulder"))
+	assert_true(int(LIBRARY.resolve(data.moves.pebble_toss.vfx, 3).parameters.count) >= 3,
+		"Pebble Toss retains several small stones")
 
 func test_mastery_grows_presentation_without_changing_arrival_schedule() -> void:
 	for id: String in LIBRARY.config().archetypes:

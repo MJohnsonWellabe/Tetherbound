@@ -1024,10 +1024,10 @@
       "recovery": 0.2,
       "lunge": 3.0,
       "vfx": {
-        "count": 1,
-        "size": 0.45,
+        "count": 8,
+        "size": 0.09,
         "colour": "#f07a2b",
-        "arc": 0.0,
+        "arc": 0.25,
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.0,

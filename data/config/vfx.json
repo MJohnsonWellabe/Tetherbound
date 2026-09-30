@@ -1,7 +1,6 @@
 {
   "_comment": "W09-VFX (CL-A2, funded by the owner 2026-09-04). Combat and reward VFX: the hit spark and body flash on every landed blow, the KO puff, the catch-success burst and the level-up flourish. ALL of this is tunable presentation; nothing here touches damage, reach, timing or progression. `enabled` false is the whole revert -- the existing impact_flash.gd ring in combat.json `impact` is independent and keeps playing either way. Sizes are in metres BEFORE the struck body's own radius scales them (see `body_scale`), so a bramblebun and a tuskroot each get a burst sized to their body rather than one fixed burst that swamps one and vanishes on the other. Colours are '#rrggbb'.",
   "enabled": true,
-
   "_comment_type_colours": "The elemental hue a hit carries, keyed by the move's `type` in data/moves/moves.json. The move's own `vfx.colour` wins when it names one (every shipped move does); this map is the fallback for a strike that reaches the flash with only a type name, and the source of truth a designer edits to recolour an element everywhere at once. Values are the same swatches moves.json already uses.",
   "type_colours": {
     "ground": "#d9b26a",
@@ -14,18 +13,15 @@
     "ice": "#a8dcf0"
   },
   "default_colour": "#ffb257",
-
   "_comment_tint_saturation": "Multiplier on the saturation of whatever colour a hit arrives with (the move's own swatch or the type map) before it becomes a spark. moves.json's swatches were picked for a HUD hairline and are pale; 1.6 turns ground's tan into amber and water's sky blue into a real blue while air, which has almost no saturation to multiply, stays the pale it is meant to be.",
   "tint_saturation": 1.7,
-
   "_comment_damage_scale": "How much bigger a heavy blow bursts than a light one. `fraction` is damage / the struck creature's max HP: at or below `light_fraction` the burst plays at `min`, at or above `heavy_fraction` at `max`, linear between. A charged move that takes a third of the bar should not look like a quick jab that took a twentieth.",
   "damage_scale": {
     "light_fraction": 0.04,
-    "heavy_fraction": 0.30,
+    "heavy_fraction": 0.3,
     "min": 1.2,
     "max": 2.0
   },
-
   "_comment_burst_keys": "`heat` is how white-hot a particle is born before cooling to its tint (0 none, 1 fully white at birth); `halo` the opacity of a darker, larger disc drawn behind each mote so it keeps an edge on bright ground (0 off). Shared by hit_spark, ko_puff and catch_burst (all scripts/vfx/vfx_burst.gd): `up_bias` tilts every particle's direction upward before normalising (0 isotropic, 1 mostly up); `grow` is how much a particle swells over its life (0 none, 1.2 more than doubles); `alpha` the peak opacity; `core_*` the bright flash at the origin that dies fast.",
   "_comment_hit_spark": "The spark: a spray of bright motes and streaks thrown out from the point of contact, falling under gravity and fading. Lives longer than combat.json's 0.26s ring on purpose -- the ring says 'contact', the spray is what is still on screen a third of a second later. `count` is per burst; `speed` metres/second; `spread_degrees` the cone around the camera plane the sprays leave in; `size` the mote radius in metres; `streak_fraction` how many of them are drawn as elongated streaks along their own motion rather than round motes.",
   "hit_spark": {
@@ -51,7 +47,6 @@
     "body_scale": 0.5,
     "no_depth_test": true
   },
-
   "_comment_hit_flash": "A RIM, not a flood. `flat_mix` was raised to 0.7 once and a blind round reported the body \"flooded with a flat gold-amber tint\" that \"erases the separation between shell plate and fur\" -- at a high flat mix the overlay stops being a light on the creature and becomes paint over it, and it made being hurt and being rewarded the same picture. Keep it low; the fresnel is what should carry it. The struck body lights up for a few frames: a material overlay drawn over every mesh of the creature, brightest at the silhouette (fresnel) so the flash reads as the body being lit rather than as a white blob painted over it. Per-instance (GeometryInstance3D.material_overlay), so two creatures of one species never flash together the way a shared-material edit would make them.",
   "hit_flash": {
     "enabled": true,
@@ -62,7 +57,6 @@
     "flat_mix": 0.3,
     "charged_strength": 1.0
   },
-
   "_comment_ko_puff": "The creature that just fainted lets out a soft cloud: slow, pale, mostly upward, bigger and longer than a hit. Fired from the same damage hook as the spark, on the blow that emptied the bar, so a trainer's second creature falling mid-battle puffs the same as a wild one ending the fight.",
   "ko_puff": {
     "enabled": true,
@@ -88,7 +82,6 @@
     "alpha": 0.8,
     "no_depth_test": true
   },
-
   "_comment_catch_burst": "The seal, on top of catching.json's own warm flash: gold sparkles thrown out from the sealed orb and drifting up, so a catch lands as a reward and not only as a verdict line.",
   "catch_burst": {
     "_why_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N07-VFX-POLISH's routed finding: 'vfx.json catch_burst throws 26 dark-haloed motes from the orb; at three ticks they are still packed on it and the round-1 judge read them as dust or mud kicked up, burying the orb.'\n\nThe first attempt at this was WRONG and the arithmetic is why, so it is recorded: raising `speed` and WIDENING `speed_variance` moves the leading edge and leaves the slow tail exactly where it was, and the slow tail is what sits on the orb. `vfx_burst.gd` places a mote at `speed * (1 +- variance) * duration * (1 - (1 - u)^2.2)`, so at three ticks (u = 0.05, eased 0.107) the SHIPPED burst put its slowest motes 0.224 m from the orb centre -- deep inside a 0.60 m orb (`catching.json::throw.radius`), which is the pile-up the judge saw -- while its fastest were already 0.672 m out and clear. It was never a burst that failed to leave; it was a burst whose slowest third never left.\n\nSo `speed` 4.2 -> 8.1 and `speed_variance` 0.5 -> 0.30, which RAISES the floor rather than the ceiling: the slowest motes now stand 0.605 m out at three ticks, on the orb's rim rather than inside it, and the fastest at 1.124 m. `count` 26 -> 16 thins what is over the orb at any instant. `duration`, `size`, `halo`, `heat`, `streak_*`, `gravity` and both colours are untouched, so it is W09's own sparkle, thrown harder and thinner.\n\nWhat this trades: at 8.1 the motes leave the resolve camera's frame sooner, so the sparkle is briefer. That is the priority N07's own round-2 judge already set on this composite when it ranked the orb's legibility above the ring's persistence -- 'every extra tenth of a second is a tenth of a second the orb is veiled'.",
@@ -115,7 +108,6 @@
     "alpha": 0.95,
     "no_depth_test": true
   },
-
   "_comment_level_up": "The reward picture. On the creature that levelled: a vertical column of light through the body, two rings that rise from the feet past the crown, gold motes climbing with them, and a rim glow on the body itself, all over `duration` seconds. Sized off the body's own height and radius so it fits whoever levelled. `bench_on_trainer` false means a party member that levelled in its orb (the bench share) gets no world flourish -- the HUD line still names it; there is no body to light. `min_gap` collapses a poll detection and a progression-feed event for the same creature into one flourish once Game.progression_feed exists.",
   "level_up": {
     "enabled": true,
@@ -230,7 +222,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -238,7 +230,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 1,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -246,7 +238,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 1,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -254,7 +246,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 1,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -401,7 +393,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -409,7 +401,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -417,7 +409,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -425,7 +417,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -512,7 +504,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -520,7 +512,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -528,7 +520,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -536,7 +528,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -548,7 +540,7 @@
       "ember_burst": {
         "body": {
           "shape": "orb",
-          "motion": "pulse",
+          "motion": "radial",
           "lit": false,
           "opacity": 1.0,
           "segments": 24,
@@ -604,10 +596,10 @@
         "collision": "host-strike geometry; visual-only; no travelling hitbox",
         "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
         "parameters": {
-          "count": 1,
-          "size": 0.45,
+          "count": 8,
+          "size": 0.09,
           "colour": "#f6a132",
-          "arc": 0.0,
+          "arc": 0.25,
           "speed": 24.0,
           "spread": 0.0,
           "trail": 1.0,
@@ -623,7 +615,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -631,7 +623,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -639,7 +631,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -647,7 +639,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -734,7 +726,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -742,7 +734,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -750,7 +742,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -758,7 +750,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -845,7 +837,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -853,7 +845,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -861,7 +853,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -869,7 +861,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -964,7 +956,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -972,7 +964,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -980,7 +972,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -988,7 +980,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1090,7 +1082,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1098,7 +1090,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 1,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1106,7 +1098,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 1,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1114,7 +1106,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 1,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1201,7 +1193,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1209,7 +1201,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1217,7 +1209,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1225,7 +1217,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1320,7 +1312,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1328,7 +1320,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1336,7 +1328,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1344,7 +1336,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1440,7 +1432,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1448,7 +1440,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1456,7 +1448,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1464,7 +1456,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1559,7 +1551,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1567,7 +1559,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 1,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1575,7 +1567,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 1,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1583,7 +1575,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 1,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1670,7 +1662,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1678,7 +1670,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1686,7 +1678,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1694,7 +1686,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1790,7 +1782,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1798,7 +1790,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1806,7 +1798,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1814,7 +1806,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -1901,7 +1893,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -1909,7 +1901,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -1917,7 +1909,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -1925,7 +1917,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2012,7 +2004,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2020,7 +2012,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2028,7 +2020,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2036,7 +2028,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2123,7 +2115,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2131,7 +2123,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2139,7 +2131,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2147,7 +2139,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2234,7 +2226,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2242,7 +2234,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2250,7 +2242,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2258,7 +2250,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2345,7 +2337,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2353,7 +2345,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2361,7 +2353,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2369,7 +2361,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2456,7 +2448,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2464,7 +2456,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2472,7 +2464,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2480,7 +2472,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2576,7 +2568,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2584,7 +2576,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2592,7 +2584,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2600,7 +2592,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2687,7 +2679,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2695,7 +2687,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2703,7 +2695,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2711,7 +2703,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2798,7 +2790,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2806,7 +2798,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2814,7 +2806,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2822,7 +2814,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,
@@ -2909,7 +2901,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.05,
+            "size_scale": 1.075,
             "count_add": 0,
             "trail_scale": 1.16,
             "impact_scale": 1.08,
@@ -2917,7 +2909,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.1,
+            "size_scale": 1.15,
             "count_add": 0,
             "trail_scale": 1.32,
             "impact_scale": 1.16,
@@ -2925,7 +2917,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.15,
+            "size_scale": 1.225,
             "count_add": 0,
             "trail_scale": 1.48,
             "impact_scale": 1.24,
@@ -2933,7 +2925,7 @@
             "impact_layer": false
           },
           {
-            "size_scale": 1.2,
+            "size_scale": 1.3,
             "count_add": 0,
             "trail_scale": 1.6400000000000001,
             "impact_scale": 1.32,

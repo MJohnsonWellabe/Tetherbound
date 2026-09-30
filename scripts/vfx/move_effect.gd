@@ -150,7 +150,14 @@ func _update_bodies(t: float) -> void:
 				body.scale.y = maxf(0.02, _from.distance_to(front) / (float(_params.size) * float((_row.body as Dictionary).get("height_ratio", 3.0))))
 			"pulse":
 				body.position = _from
-				body.scale = Vector3.ONE * maxf(0.05, _from.distance_to(_to) / maxf(float(_params.size), 0.01) * t)
+				# Keep the wavefront's width constant as its radius expands.
+				# Scaling the whole band would turn a long pulse into a slab.
+				var profile: Dictionary = _row.body
+				body.mesh = GEOMETRY.shape(str(profile.shape), maxf(0.05, _from.distance_to(_to) * t), profile)
+			"radial":
+				var radius := _from.distance_to(_to) * t
+				body.position = _from + (direction * cos(angle) + side * sin(angle)) * radius
+				body.position.y += float(_params.get("arc", 0.0)) * sin(t * PI)
 			"target":
 				body.position = _to + (side * cos(angle) + direction * sin(angle)) * float(_params.get("spread", 0.0))
 				body.scale.y = maxf(0.02, t)

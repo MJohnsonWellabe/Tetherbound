@@ -29,7 +29,11 @@ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 	var tiers: Array = resolved.get("mastery", [])
 	if tiers.size() != 5: return {}
 	var tier: Dictionary = tiers[rank - 1]
-	params["count"] = clampi(int(params.get("count", 1)) + int(tier.get("count_add", 0)), 1, int(library.get("max_body_count", 12)))
+	var base_count := int(params.get("count", 1))
+	# A boulder stays one boulder at every rank. Volley growth adds bodies only
+	# to an already-authored volley; size/trail/layer growth still applies.
+	var count_add := int(tier.get("count_add", 0)) if base_count > 1 else 0
+	params["count"] = clampi(base_count + count_add, 1, int(library.get("max_body_count", 12)))
 	params["size"] = maxf(0.01, float(params.get("size", 0.4)) * float(tier.get("size_scale", 1.0)))
 	params["trail"] = maxf(0.0, float(params.get("trail", 1.0)) * float(tier.get("trail_scale", 1.0)))
 	params["impact_scale"] = maxf(0.01, float(params.get("impact_scale", 1.0)) * float(tier.get("impact_scale", 1.0)))
