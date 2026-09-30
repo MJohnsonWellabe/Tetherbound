@@ -9,6 +9,7 @@ const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
 const CREATURE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 var _arena: Node3D
 var _target: CharacterBody3D
 var _moves: Dictionary
@@ -18,6 +19,7 @@ var _failures: Array[String] = []
 var _out := "user://move-effects-preview"
 var _batch := "identities"
 var _medium := false
+var _light_lifecycle: Dictionary = {}
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -104,6 +106,7 @@ func _run() -> void:
 	LIBRARY.config()["enabled"] = true # Process-local diagnostic opt-in only.
 	for i in int(_scenarios.warmup_frames): await process_frame
 	if _batch == "identities":
+		await _exercise_light_lifecycle()
 		for case: Dictionary in _scenarios.identities:
 			for rank: int in _scenarios.ranks: await _exercise(case, rank, 1, true)
 	else:
@@ -131,6 +134,7 @@ func _run() -> void:
 		"engine": Engine.get_version_info(),
 		"target": {"species": str(_scenarios.get("target_species", "mudsnout")), "production_model": _target != null, "scope": "posed production body; no encounter or HP authority"},
 		"medium_features": _medium, "cases": _records, "failures": _failures,
+		"light_lifecycle": _light_lifecycle,
 		"limits": ["No combat/damage authority exercised", "Wall-frame intervals include CPU/GPU/present/OS scheduling",
 			"No Ally or four-creature-fight acceptance claim", "Identity duration slowed for readable frames; host timing requires separate player witness"]}
 	var file := FileAccess.open(_out.path_join("results.json"), FileAccess.WRITE)
@@ -140,6 +144,99 @@ func _run() -> void:
 		file.close()
 	print("F25 batch=%s cases=%d failures=%d renderer=%s out=%s scope=synthetic_no_combat" % [_batch, _records.size(), _failures.size(), RenderingServer.get_current_rendering_method(), _out])
 	quit(0 if _failures.is_empty() else 1)
+
+## Real production effect nodes exercise the finite light pool before frames.
+## This is synthetic lifetime/audio observation, never HP/host acceptance.
+func _exercise_light_lifecycle() -> void:
+	var checks := {"initial_lights_empty": BUDGET.lights_used() == 0}
+	var cap := int(LIBRARY.config().get("scene_light_cap", 0))
+	checks["authored_scene_cap_four"] = cap == 4
+	var previous_logging := AUDIO.logging_enabled
+	AUDIO.logging_enabled = true
+	var audio_start := AUDIO.recent().size()
+	var cancelled: Array[Node3D] = []
+	var cancel_arrivals := [0]
+	for i in 5:
+		var context := {"action_id": "light-cancel:%d" % (i + 1),
+			"encounter_id": "light-cancel-%d" % i, "mastery_rank": 1,
+			"seed": i, "travel_seconds": 0.05, "impact_audio_owner": "renderer"}
+		var effect := LIBRARY.launch(_arena, Vector3(-5, 2, -8), Vector3(2, 2, -8), _moves.fireball.vfx, context)
+		if effect != null:
+			cancelled.append(effect)
+			effect.connect("arrived", func() -> void: cancel_arrivals[0] += 1)
+	checks["cancel_five_actual_nodes"] = cancelled.size() == 5
+	checks["cancel_global_cap"] = BUDGET.lights_used() == 4
+	var actual_lights := 0
+	for effect in cancelled:
+		for child: Node in effect.get_children():
+			if child is OmniLight3D: actual_lights += 1
+	checks["cancel_actual_light_nodes"] = actual_lights == 4
+	var hidden := true
+	for effect in cancelled:
+		effect.call("cancel_presentation")
+		for child: Node in effect.get_children():
+			if child is OmniLight3D and child.visible: hidden = false
+	checks["cancel_hides_lights_immediately"] = hidden
+	await process_frame
+	await process_frame
+	var removed := true
+	for effect in cancelled:
+		if is_instance_valid(effect): removed = false
+	checks["cancel_frees_actual_nodes"] = removed
+	checks["cancel_reclaims_lights"] = BUDGET.lights_used() == 0
+	var particles_empty := true
+	for i in 5:
+		if BUDGET.used("light-cancel-%d" % i) != 0: particles_empty = false
+	checks["cancel_reclaims_particles"] = particles_empty
+	var natural: Array[Node3D] = []
+	var natural_arrivals := [0]
+	for i in 5:
+		var context := {"action_id": "light-natural:%d" % (i + 1),
+			"encounter_id": "light-natural-%d" % i, "mastery_rank": 1,
+			"seed": i + 5, "travel_seconds": 0.05, "impact_audio_owner": "renderer"}
+		var effect := LIBRARY.launch(_arena, Vector3(-5, 2, -8), Vector3(2, 2, -8), _moves.fireball.vfx, context)
+		if effect != null:
+			natural.append(effect)
+			effect.connect("arrived", func() -> void: natural_arrivals[0] += 1)
+	checks["natural_five_actual_nodes"] = natural.size() == 5
+	var peak := BUDGET.lights_used()
+	var deadline := Time.get_ticks_msec() + 8000
+	removed = false
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		peak = maxi(peak, BUDGET.lights_used())
+		removed = true
+		for effect in natural:
+			if is_instance_valid(effect): removed = false
+		if removed: break
+	checks["natural_peak_bounded"] = peak == 4
+	checks["natural_arrives_once_per_node"] = int(natural_arrivals[0]) == 5
+	checks["natural_frees_actual_nodes"] = removed
+	checks["natural_reclaims_lights"] = BUDGET.lights_used() == 0
+	particles_empty = true
+	for i in 5:
+		if BUDGET.used("light-natural-%d" % i) != 0: particles_empty = false
+	checks["natural_reclaims_particles"] = particles_empty
+	checks["cancel_never_emits_arrival"] = int(cancel_arrivals[0]) == 0
+	var launches := 0
+	var impacts := 0
+	for entry: Dictionary in AUDIO.recent().slice(audio_start):
+		if str(entry.name) == "fireball:launch": launches += 1
+		if str(entry.name) == "fireball:impact": impacts += 1
+	checks["one_launch_voice_per_node"] = launches == 10
+	checks["natural_only_contact_cues"] = impacts == 5
+	AUDIO.logging_enabled = previous_logging
+	_light_lifecycle = {"scope": "production_nodes_synthetic_lifetime_only",
+		"checks": checks, "check_count": checks.size(), "peak_lights": peak,
+		"cancel_arrivals": int(cancel_arrivals[0]), "natural_arrivals": int(natural_arrivals[0]),
+		"launch_cues": launches, "impact_cues": impacts}
+	for name: String in checks:
+		if not bool(checks[name]): _failures.append("Light lifecycle: " + name)
+	# Failure evidence is retained; cleanup cannot convert failed checks to PASS.
+	for effect in natural:
+		if is_instance_valid(effect): effect.call("cancel_presentation")
+	await process_frame
+	await process_frame
 
 func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) -> void:
 	var id := str(case.id)

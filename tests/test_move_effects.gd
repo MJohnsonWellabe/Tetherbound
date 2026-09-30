@@ -62,4 +62,29 @@ func test_optional_receipt_is_recursively_frozen_and_detached() -> void:
 	assert_eq(frozen.nested.count, 3)
 	assert_true(frozen.is_read_only())
 	assert_true(frozen.waypoints.is_read_only())
+
+func test_light_cap_is_global_idempotent_and_reclaims_existing_lease() -> void:
+	assert_eq(BUDGET.lights_used(), 0, "No previous test leaves a light lease")
+	var tokens: Array[int] = []
+	for i in 5:
+		var encounter := "light-unit-%d" % i
+		var token := BUDGET.reserve(encounter, 12, 8, 48)
+		tokens.append(token)
+		assert_eq(BUDGET.reserve_light(token, 4), i < 4, "Cap spans distinct encounter IDs")
+		assert_eq(BUDGET.used(encounter), 20, "Light reservation preserves particle accounting")
+	assert_eq(BUDGET.lights_used(), 4)
+	assert_true(BUDGET.reserve_light(tokens[0], 4), "Repeating an active reservation is idempotent")
+	assert_eq(BUDGET.lights_used(), 4)
+	assert_false(BUDGET.reserve_light(tokens[4], 0), "Disabled light cap refuses a new light")
+	assert_false(BUDGET.reserve_light(-1, 4), "An absent lifetime token cannot own a light")
+	BUDGET.release(tokens[0])
+	assert_eq(BUDGET.lights_used(), 3)
+	assert_false(BUDGET.reserve_light(tokens[0], 4), "Released token cannot resurrect")
+	assert_true(BUDGET.reserve_light(tokens[4], 4), "A released light slot admits another active effect")
+	assert_eq(BUDGET.lights_used(), 4)
+	BUDGET.release(tokens[0])
+	assert_eq(BUDGET.lights_used(), 4, "Repeating stale release preserves the new owner")
+	for token in tokens: BUDGET.release(token)
+	assert_eq(BUDGET.lights_used(), 0)
+	for i in 5: assert_eq(BUDGET.used("light-unit-%d" % i), 0)
 	assert_true(frozen.nested.is_read_only())
