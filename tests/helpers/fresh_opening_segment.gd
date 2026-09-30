@@ -50,12 +50,38 @@ func _earned_walk_stick(x: float, y: float) -> void:
 	_send_axis(JOY_AXIS_LEFT_Y, y)
 
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+	# The opening's marker approach can finish within its unchanged 0.8m
+	# tolerance before the whole capsule has cleared the doorway. First keep
+	# walking along the actual front axis; turning toward a northern wild at
+	# that point otherwise pushes the capsule into the farmhouse wall.
+	var started_frame := Engine.get_physics_frames()
+	var house := _world.get_node_or_null(^"GrandpaHouse") as Node3D
+	if house != null:
+		var door: Vector3 = house.call("marker", "door")
+		var front := door - house.global_position
+		front.y = 0.0
+		if front.length_squared() < 0.01:
+			_stop_left_stick()
+			return false
+		front = front.normalized()
+		var offset := _player.global_position - door
+		offset.y = 0.0
+		if offset.length() < 4.0 and offset.dot(front) < 1.0:
+			var outside := door + front * 1.8
+			if not await _walk_toward(outside, budget) or not _player.is_on_floor():
+				_stop_left_stick()
+				print("live farmhouse exit failed: door=%s outside=%s player=%s floor=%s" % [
+					door, outside, _player.global_position, _player.is_on_floor()])
+				return false
+			print("live farmhouse exit cleared by controller: door=%s player=%s floor=%s" % [
+				door, _player.global_position, _player.is_on_floor()])
 	# Walk with the obstacle-aware navigator, as the prompt approach above does.
 	# A straight push stalled 7-9 m short against the work-area workbench
 	# whenever the tutorial Bramblebun had wandered behind it (2 of 16 local
 	# runs; colliders Props/work_area/Workbench_Collision + Terrain).
 	var nav := EARNED_NAV.new(_tree, _player, _rig, _earned_walk_stick)
-	for _frame in budget:
+	var remaining := maxi(0, budget - int(Engine.get_physics_frames() - started_frame))
+	for _frame in remaining:
 		if not is_instance_valid(target) or not bool(target.call("is_alive")):
 			_stop_left_stick()
 			print("live wild approach: target freed or not alive at frame ", _frame)
