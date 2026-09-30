@@ -2,7 +2,7 @@
   "source": "bf9df4536c4290516570072502b958883531d423",
   "canonical_main": "7dcd2a8649660553f38702f2de71390efc6f1343",
   "criterion": "F21#4",
-  "verdict": "RUNTIME PASS; independent strict and code-blind dynamic reviews PENDING; no main MET",
+  "verdict": "NUMERIC RUNTIME PASS; independent blind camera readability FAIL (seven of nine pairs); no main MET",
   "native_exit": 0,
   "elapsed_seconds": 293.8280000000959,
   "parser": {
@@ -585,5 +585,19 @@
     "all-world obstructions",
     "independent blind verdict",
     "main acceptance"
-  ]
+  ],
+  "independent_blind": {
+    "verdict": "FAIL",
+    "camera_failed_pairs": 7,
+    "narrow_camera_pass_pairs": [
+      "small/small",
+      "giant/small"
+    ],
+    "broader_craft": "FAIL all nine",
+    "report": "blind-r1/strict-review.txt.raw",
+    "report_sha256": "3f897f6cf94c414cc256c712acdcf12bedf22e64aaad416c375a1947bb84613b",
+    "json": "blind-r1/review.json.raw",
+    "json_sha256": "fedff7050209ab7842e662554732c5dd2c7e1b83b5b86e68afd796b1c99dde7c",
+    "limits": "54 individual original still moments, no motion judgment; reused session context disclosed, no source consulted for camera findings."
+  }
 }

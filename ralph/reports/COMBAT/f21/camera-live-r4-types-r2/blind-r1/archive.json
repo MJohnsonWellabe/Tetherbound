@@ -1,0 +1,19 @@
+{
+  "source": "bf9df4536c4290516570072502b958883531d423",
+  "verdict": "FAIL: seven of nine camera-readability pairs; all nine broader craft FAIL",
+  "review_method": "All 54 original PNGs individually viewed; still moments only, no motion/animation/performance or earned path judgment. Reused reviewer session with earlier unrelated work disclosed in verbatim report.",
+  "files": {
+    "strict-review.txt": {
+      "original_sha256": "3f897f6cf94c414cc256c712acdcf12bedf22e64aaad416c375a1947bb84613b",
+      "original_bytes": 38329,
+      "lossless_original": "strict-review.txt.raw",
+      "readable_sha256": "3f897f6cf94c414cc256c712acdcf12bedf22e64aaad416c375a1947bb84613b"
+    },
+    "review.json": {
+      "original_sha256": "fedff7050209ab7842e662554732c5dd2c7e1b83b5b86e68afd796b1c99dde7c",
+      "original_bytes": 78346,
+      "lossless_original": "review.json.raw",
+      "readable_sha256": "fedff7050209ab7842e662554732c5dd2c7e1b83b5b86e68afd796b1c99dde7c"
+    }
+  }
+}

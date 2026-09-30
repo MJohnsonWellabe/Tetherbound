@@ -1,0 +1,386 @@
+STRICT CODE-BLIND PIXELS REVIEW — camera-bf9-blind-r1
+Date: 2026-09-30
+WHOLE MATRIX: FAIL. Full quality bar: FAIL.
+Criterion: F21#4: Fight camera keeps both actors framed without overlap for small, normal and giant bodies (catalog P2-062/P2-092 class); code-blind judge PASS on a size matrix.
+
+All 54 actual originals individually viewed at original detail through view_image; all are 1920x1080. Every original was SHA256-hashed before and after review; all unchanged.
+Combatant separation: no overlap between the two primary combatants observed. Primary viewport clipping: none observed. These favorable findings do not waive HUD/head/body coverage or full presentation quality.
+Camera/readability: 7 of 9 pairs FAIL; 20 of 54 frames FAIL. Any failed still fails its pair and whole matrix.
+Strict full-quality judgment: all nine pairs FAIL for the shared visible craft defects, with additional frame-specific visibility failures in seven pairs. Limited camera PASS entries below are not acceptance PASS.
+
+BLIND SCOPE AND LIMITS
+Only the 54 user-named original native PNGs and four restored reference images were used as visual evidence.
+No production source, solver, numerical producer pass/fail verdicts or author self-report were read for this visual task. Pair mapping and moment labels come from the user's instruction. Visible HUD text is part of original pixels.
+This is the reused session requested by the user, not a fresh-context reviewer. Earlier unrelated village/source work existed in its context. No Fight-camera production-source rationale was consulted or used to decide these visual findings.
+The two size-matrix combat creatures are the primary actors. Human and other creatures are recorded separately as scene presentation/occlusion findings. Screen left/right can change; labels refer to visible position in each image.
+All 54 actual originals individually opened through view_image with original detail. No sheets, crops, recoloring, fabricated images, image regeneration or scene render used. Borderline contacts were re-viewed in five original images.
+Any failed supplied frame fails its pair and the matrix. Camera/readability observations and the requested broader craft judgment are explicitly recorded; a limited camera PASS is not a full-quality or acceptance PASS.
+- Six still moments per pair only; unobserved frames and transitions are unjudged.
+- No motion, frame-rate, animation continuity, camera stability over time, earned gameplay path or co-op claims.
+- PNG pixels cannot authenticate the engine version, actor resource IDs/catalog class, camera mode implementation, live control state or provenance beyond the user-supplied original files.
+- Pose-caused self-hiding of a face is reported without automatically calling it camera clipping; HUD coverage of antlers, tails, feet or body is a strict readability failure.
+- No engine, import, render, export, GPU work, Git access/mutation, tests, production changes, board/STATE edits or external messages performed.
+- ROOT independently decides literal acceptance, packaging and authority; this review grants no acceptance credit.
+
+RESTORED REFERENCES ACTUALLY VIEWED
+D:/tetherbound/redesign-board/docs/reference/palworld-01-boss-fight-forest.jpg
+Combat reference: readable faces, deliberate lighting and material hierarchy amid effects. Its own close-cropped composition is not a waiver of the user's both-bodies requirement.
+D:/tetherbound/redesign-board/docs/reference/palworld-03-field-boss-meadow.jpg
+Combat meadow reference: focal separation, controlled vegetation/detail and clear actor identity.
+D:/tetherbound/redesign-board/docs/reference/tetherbound-meadows-keyart.png
+World craft reference: natural layered meadow palette, grouped vegetation, atmospheric depth and intentional landscape composition; illustrative board, not evidence of implemented gameplay.
+D:/tetherbound/redesign-board/docs/reference/owner-board-2026-08-15-creature-colors.png
+Creature craft reference: expressive faces, richer tonal/material detail and organic integration of ground/foliage identity. No gameplay/source authority inferred from board text.
+
+PAIR VERDICTS
+00 small/small: camera/readability PASS; strict full-quality FAIL; camera failed frames none.
+01 small/normal: camera/readability FAIL; strict full-quality FAIL; camera failed frames 01-060.png, 01-120.png, 01-179.png.
+02 small/giant: camera/readability FAIL; strict full-quality FAIL; camera failed frames 02-030.png, 02-060.png, 02-179.png.
+03 normal/small: camera/readability FAIL; strict full-quality FAIL; camera failed frames 03-060.png, 03-120.png, 03-179.png.
+04 normal/normal: camera/readability FAIL; strict full-quality FAIL; camera failed frames 04-090.png, 04-120.png.
+05 normal/giant: camera/readability FAIL; strict full-quality FAIL; camera failed frames 05-060.png, 05-090.png, 05-179.png.
+06 giant/small: camera/readability PASS; strict full-quality FAIL; camera failed frames none.
+07 giant/normal: camera/readability FAIL; strict full-quality FAIL; camera failed frames 07-000.png, 07-060.png, 07-090.png, 07-120.png, 07-179.png.
+08 giant/giant: camera/readability FAIL; strict full-quality FAIL; camera failed frames 08-090.png.
+
+ART / WORLD / LIGHTING / HUD FINDINGS
+C1 [full_quality_bar_failure; all 54 frames] Dense repeated thin bright grass blades and scattered flower stems compete with feet and ground cues; mottled yellow-green ground and conspicuous hard shadows produce a noisy combat field. The references have more controlled vegetation grouping and focal hierarchy.
+Examples: 00-030.png, 04-060.png, 06-030.png, 08-179.png
+C2 [full_quality_bar_failure; all 54 frames] HUD uses a plain single-color square where an actor identity image would be expected, large dark rectangular panels and uneven emphasis. In faded states, text/bar contrast becomes poor against vegetation. These pixels do not meet the requested finished presentation bar; no claim about the implementation reason.
+Examples: 00-030.png, 04-090.png, 04-120.png, 07-060.png, 07-090.png
+C3 [full_quality_bar_failure; giant-containing pairs 02,05,06,07,08] Giant stag chest/face and limbs have broad near-black areas with little visible internal tonal detail; bright mint-green neck patches and cream antler masses read as abrupt blocks. Compared with the restored creature board, the material transitions and organic detail are coarse. This does not by itself erase the actor's overall identity.
+Examples: 02-030.png, 05-030.png, 06-000.png, 08-030.png
+C4 [full_quality_bar_failure; visible effect moments across all pairs] Large flat beige radial polygons, pale circular flash and dust sheets wash over creature surfaces; magenta ground rings are conspicuous, flat and poorly integrated with the grass. Their basic shapes are readable, but the craft is below the reference effects.
+Examples: 00-000.png, 00-120.png, 01-120.png, 04-120.png, 07-120.png, 08-090.png
+C5 [presentation_defect; many frames outside pair 00] Noncombat creatures repeatedly crowd the fight foreground and are cut by the viewport or buried beneath controls. Human bystander is sometimes largely hidden, covered by HUD or clipped at the bottom. These are actual presentation defects, not evidence that the two primary combatants are themselves viewport-clipped.
+Examples: 03-060.png, 03-120.png, 06-179.png, 07-120.png, 08-179.png
+C6 [presentation_defect; world/lighting views including 04-179 and 07-060..179] Village views show harsh cream highlights, broadly mottled terrain, sparse small trees and a repeated fence field with limited atmospheric depth. Bright surface patches and black shadow areas lack the softer lighting/material hierarchy of the restored meadow board. This is a judgment of the supplied views only.
+Examples: 04-179.png, 07-060.png, 07-179.png
+
+EACH ORIGINAL VIEWED — EXACT OBSERVATION AND SHA256
+00-000.png | small/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully inside frame and separated at their snouts. Left creature's pale radial/dust effect overlays its face and torso, softening material detail; silhouette and eye remain identifiable. Human bystander lower body is occluded behind left creature.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/00-000.png
+SHA256 before = after: 2410fc58953c762f6f1a4687ab7814597a649003295c7abb1a83824671c7ec33
+
+00-030.png | small/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed, distinct faces and body silhouettes, with clear gap; no HUD cover of either. Dense grass overlaps feet.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/00-030.png
+SHA256 before = after: 9db42edfd8dea47c763cf06a9bc04374b1f4186b374b58a8b83998aab80b99b7
+
+00-060.png | small/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated and fully framed. Left actor presents its back, hiding its own snout/face by pose rather than screen clipping. Human stands partly alongside it. Grass softens feet.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/00-060.png
+SHA256 before = after: 3a3d793c85e7093c7ce1404fd8a7c53183bf3b0b194c4eac05842f5d420fffdd
+
+00-090.png | small/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both creatures fully framed and separated; left creature remains rear-on, right face clear. Magenta ground ring readable; HUD avoids both heads.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/00-090.png
+SHA256 before = after: db17f1ec17661aec75926194f3205c873d023145d779b841f7cf87e7c3f2ec6f
+
+00-120.png | small/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both creatures fully framed and separated. Pale flash and opaque white circular effect flatten left flank detail; left eye and snout remain readable. Right actor clear.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/00-120.png
+SHA256 before = after: 75a04cea4b4df0026ad244dfc6b7f72f2ce8166705b5852ef98cf059a4ecab32
+
+00-179.png | small/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both creatures fully framed, readable side/front silhouettes and clear gap. Right feet close above bottom-right Orbs strip but not covered; neither head covered.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/00-179.png
+SHA256 before = after: 7840909cdb20ef240474ee710b1562d1907eb04d20e0e16eb2df55a7099d333c
+
+01-000.png | small/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both creatures fully framed and separated; both faces clear, right actor's feet clear above HUD.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/01-000.png
+SHA256 before = after: dec48d5e9c97535e3b3c430368dfebd59b3ae6bd62ca49fcc0a8e5da728c0a8e
+
+01-030.png | small/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both creatures fully framed and separated; right actor raised forepaws and face clear, neither body covered by HUD.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/01-030.png
+SHA256 before = after: 37e30dac173457fef8384c699c393886fd882762812df47fd31069f1a7955147
+
+01-060.png | small/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 2 time(s)
+Creatures separated and heads clear, but bottom-right Orbs strip overlaps the outer/lower edge of right actor's rear foot; full body is not cleanly visible.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/01-060.png
+SHA256 before = after: 71e7fea4d618c16bb1f61c82322cf07ab3cfd8fe41b930abe53323ce94ec70e5
+
+01-090.png | small/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated and heads clear. Right actor's rear foot is crowded against the Orbs strip; magenta ground ring extends behind strip. Left actor rear-on.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/01-090.png
+SHA256 before = after: b7f3cbb334c6c6122b5824d5e24e3a44e61fd738a793383da60304908c3019ff
+
+01-120.png | small/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated and heads clear. Bottom-right Orbs strip covers the lower/outside rear-foot edge of the right actor. Left body partly washed by radial/dust effect, still identifiable.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/01-120.png
+SHA256 before = after: 223ecffe4bdeb550d0268570c8afa7a0b0d7cbf5a9b64586d38880ee83ba17ff
+
+01-179.png | small/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated and heads clear. Right actor's rear-foot edge falls behind the Orbs strip. Combat body framing is compromised by HUD despite no viewport clipping.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/01-179.png
+SHA256 before = after: 5a794b4fc48159e15f6cfbd14face004c22ebbda623fbe1c9a07ce9a0c47e4bf
+
+02-000.png | small/giant | camera/readability PASS | strict full-quality FAIL | viewed original 2 time(s)
+Both combat creatures fully framed and separated. Giant antlers are crowded just below/left of top-right panel but remain clear of it; hooves clear of controls. Small actor softened by dust/radial effect, identifiable.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/02-000.png
+SHA256 before = after: 04794d3bbdd481f52c81a232a751cb7b5f8770c933381dcd5408fac40dba703a
+
+02-030.png | small/giant | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated. Giant upper antler branches fall behind top-right status panel and horizontal health bars, obscuring part of its head silhouette. No viewport edge clipping.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/02-030.png
+SHA256 before = after: 6ac032f42fdc848b99c1a2fee4ea891c43d2fb6dfa5823fe4e769bfb6bf0d702
+
+02-060.png | small/giant | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated. Giant's high antler tip enters top-right panel and rear hoof is partly covered by bottom-right Orbs strip. Left creature is rear-on; background creatures also enter foreground.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/02-060.png
+SHA256 before = after: 1292d79366394acd870e2f09efcb220362b3c10cbd24163dec9fcd140bbcbb2c
+
+02-090.png | small/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated, full giant body and hooves inside viewport. Antlers closely approach lower-left edge of top-right panel but remain visibly below it. Ground ring is covered by controls; noncombat foreground creature is cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/02-090.png
+SHA256 before = after: a24cf9d39feb29439ccc8da5cd8816810ffa2ea49efcef10eb2f7b14c0cb58d0
+
+02-120.png | small/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated and bodies/antlers clear of HUD. Left creature's pale radial effect reduces surface contrast but preserves identifiable outline/face. Noncombat foreground creature partly hidden by HUD and cropped.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/02-120.png
+SHA256 before = after: bcce6b72c4d6d2f9f263af0eb2040fe451ef6c32fb868e970c1dae429db60407
+
+02-179.png | small/giant | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Creatures separated, but giant's upper antler branches run behind health bars and translucent top-right panel. Head's complete silhouette cannot be read. Noncombat foreground creature heavily covered by controls and cropped.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/02-179.png
+SHA256 before = after: e218bedbc202050564967033651833c93fde57c5fb45d3e05dc696450dcc247b
+
+03-000.png | normal/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated; left face readable through light dust/radial effect, right face clear. Unrelated creature cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/03-000.png
+SHA256 before = after: 1e864e40be9e18988bd541d6c39a02fd04220f5ccffa555b042ccff08894ddee
+
+03-030.png | normal/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated; faces and feet clear. Unrelated creature remains cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/03-030.png
+SHA256 before = after: 1c9ac8ab1e7891c87942c06894c4706e226eeed3c6543bac23def1c8ab51c4bf
+
+03-060.png | normal/small | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated, but right actor's rear body/leg is behind bottom-right Orbs and control panels. Left actor rear-on with face self-hidden by pose.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/03-060.png
+SHA256 before = after: c8fc9f570c0ac5a243ed8447d599cea973d9f13cfd86e4eae2e83b178a30e5ac
+
+03-090.png | normal/small | camera/readability PASS | strict full-quality FAIL | viewed original 2 time(s)
+Both combat creatures fully framed and separated, clear of HUD. Left actor rear-on; right face readable. Foreground creature's ear crowds the ground ring/lower silhouette but no clear combat-body occlusion is visible.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/03-090.png
+SHA256 before = after: 9180d29afbb3ef1957caf14ba09ccd11b28802adcde05fd9b5ab166c42bba4bd
+
+03-120.png | normal/small | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated, but right combatant's rump is covered by Orbs strip and its hind/lower silhouette merges with the foreground creature and control panel.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/03-120.png
+SHA256 before = after: cd14b83cf79972060efa3fc47bc32f581e6b27f7c7c77f2a397bfe7c00dfc3b7
+
+03-179.png | normal/small | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated, but right combatant's rump/lower rear body falls behind Orbs/control HUD and foreground bystander overlaps its lower silhouette. Left actor face clear.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/03-179.png
+SHA256 before = after: 21d29922f44713f718d83b79c8b952107ce6462c540e6523c43521034e1ec54c
+
+04-000.png | normal/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed with separate snouts, clear eyes and no HUD body cover. Dust/radial effect overlays left shoulder; foreground bystander cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/04-000.png
+SHA256 before = after: 68b2bba9de8534dabe8dd813491360754b1bf166d5ca6e4eff0804d6c6f4d70a
+
+04-030.png | normal/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated; feet and heads clear of HUD. Dense grass crosses lower legs.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/04-030.png
+SHA256 before = after: 31a7bd022ef751a1825fefc0f846eb4ae40a7498b04940de94fb279198573b9c
+
+04-060.png | normal/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated; right face clear, left face hidden by rear-on pose. Human partly occluded beside left body.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/04-060.png
+SHA256 before = after: 25e7af4eb36731e2a3b3459b027f5f7458a11f62164fdb430b3360939aa4c3b6
+
+04-090.png | normal/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated and heads clear, but Orbs strip covers outside of right actor's rear ankle/foot. Faded bottom panels make text and bars difficult to read against grass; left face rear-on.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/04-090.png
+SHA256 before = after: 0e2bdad51ce4c3ee83321fc18b97484cb4661bd32a3d295ecc074ff2c0eeca77
+
+04-120.png | normal/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated, but Orbs strip covers outer right rear ankle/foot. Dust/radial effects wash left body; faded HUD has poor contrast against vegetation.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/04-120.png
+SHA256 before = after: be5700766cac32f7fae2156cbb71bfb8a4a19d6e7eed0c44c9b2b0a035e09974
+
+04-179.png | normal/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both creatures fully framed and separated, both faces/feet readable and HUD clear of their bodies. Bright front lighting makes fur/stone patches flatter and cream highlights harsh; village visible.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/04-179.png
+SHA256 before = after: 9a0d0adb9dc67d08b76dee50bc226e52ddfe9b48350ae9c685986bfb9bbc4050
+
+05-000.png | normal/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated; antlers below/left of top panel, hooves clear of lower HUD. Dust overlays left shoulder; human almost entirely hidden behind left actor.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/05-000.png
+SHA256 before = after: 0b8e833e3ca66e32630ce31603a84ef0495ea11696dfbc046eb6f5347e480c52
+
+05-030.png | normal/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated, head silhouettes and feet clear of HUD. Foreground noncombat creature cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/05-030.png
+SHA256 before = after: 32d516efa1e83156fccd4f25216f482aaf0690cdc48ff079abe4588bc83b755b
+
+05-060.png | normal/giant | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated, but giant upper-right white antler tip is darkened/covered by top-right status panel. Left actor rear-on; giant body/hooves clear of controls.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/05-060.png
+SHA256 before = after: 0584f29d4c6db975dce2181cc49eda86d5a460ca4991b2e40839f1fc4ed38fdf
+
+05-090.png | normal/giant | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated and heads clear. Giant's curved tail crosses behind Orbs strip; magenta ground ring also runs behind controls. Full silhouette is interrupted by HUD.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/05-090.png
+SHA256 before = after: 7f012b721613de1eb4435b8e21c2dfebe58622e22e61a88d51c334e7f923efdf
+
+05-120.png | normal/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated, antlers and hooves clear of HUD. Heavy dust/radial overlay flattens left body and partially veils giant chest; silhouettes remain identifiable.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/05-120.png
+SHA256 before = after: aeab20d67dec03ccf389ee64ff3072e154c8f35ae301cea06dace166452aaa25
+
+05-179.png | normal/giant | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated and bodies inside viewport, but giant upper-right antler tip falls behind translucent top-right panel. Left actor face and body readable; bright grass competes with dark giant.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/05-179.png
+SHA256 before = after: e74f6932a18ee5a5370737c863b0f3234d4234f263f1f0f0dba4b5df6d47999a
+
+06-000.png | giant/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated, giant antlers and hooves clear of HUD; small face/feet readable. Human head/torso partly hidden by giant; noncombat creature cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/06-000.png
+SHA256 before = after: d6d87b61cd78939780053a94eb57084aba7b37d86211b642de7f43b9d612b582
+
+06-030.png | giant/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated; head silhouettes and feet clear of HUD. Dark giant chest lacks interior detail against busy green field, but actor remains identifiable.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/06-030.png
+SHA256 before = after: d748f9ee57e41e2f5d0907d5434a4f62f53c0ef6f6ef57af4ba489a6540bbc9b
+
+06-060.png | giant/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated, HUD clear. Giant rear-on hides face by pose; complete antlers/body remain visible. Foreground noncombat creatures cropped/covered by controls.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/06-060.png
+SHA256 before = after: 976f6edd550cf665f87e32a6b78daa102a34eeeae853c18c9a115c0af2857b9d
+
+06-090.png | giant/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated, complete giant antlers/hooves clear of HUD. Giant rear-on; small actor readable within magenta ring.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/06-090.png
+SHA256 before = after: 72f79b373e8f6dee97359c3f85f450b6c1c7882aef4f5706417f41fa66157468
+
+06-120.png | giant/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated with no HUD body cover. Radial/dust effect overlays giant antlers and flank, reducing detail but not erasing identity. Busy world and cropped bystanders remain.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/06-120.png
+SHA256 before = after: 3f86747cbd1e5dcfedd3d52667e6777b4ca5d9f31c53eca7f2f6b404c4a83051
+
+06-179.png | giant/small | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed, separated and clear of HUD; giant face/antlers and small face readable. Cropped noncombat foreground creatures and dense grass detract from presentation.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/06-179.png
+SHA256 before = after: db44d686cb4de6e274840bba46211235dfa6a04db00d2cda430697921655b300
+
+07-000.png | giant/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 2 time(s)
+Combat creatures separated and fully inside viewport. Normal actor on right has outer rear-leg edge covered by the Orbs strip. Giant antlers clear of HUD; human partly occluded by giant.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/07-000.png
+SHA256 before = after: 967e426478b14a94a7675434d36904f80a855f070fe1b03ae15f0b4becac0f6a
+
+07-030.png | giant/normal | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both combat creatures fully framed and separated, head silhouettes clear of HUD. Normal actor rear foot close to Orbs strip but visibly left/above it; no clear body cover.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/07-030.png
+SHA256 before = after: d4605d314d9dce21baa7b0ebaccb9928d0a44271dd4d15ed5becdb817a5d4937
+
+07-060.png | giant/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated; giant now on screen right. Giant upper antler tip intersects the health bars/top-right panel; human head/torso overlaps rear-leg silhouette. Bottom-right controls faded to low contrast.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/07-060.png
+SHA256 before = after: 189560bbe4ac8c0a490a44bfe5abaf3f00164d6cf676a2cdcecca5d44ba223f9
+
+07-090.png | giant/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated; giant rear-on on right. Wide antler branches go behind top-right status panel and incoming text. Human covered by faded controls; giant face self-hidden by rear pose.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/07-090.png
+SHA256 before = after: cd8644113ac9113d7518d37a3c3810cdc4620ae98835ecdb0ea6ed51c063042c
+
+07-120.png | giant/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 2 time(s)
+Combat creatures separated, but far-right antler tip meets/enters lower edge of top-right status panel. Dust/radial effect washes giant head/flank. Human legs cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/07-120.png
+SHA256 before = after: 1fa20a5db7d7a7b44e4ed106e5c32fca82231fdf15642043345646a5d0a34bdc
+
+07-179.png | giant/normal | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat creatures separated, but giant high antler branches fall behind top-right status panel, obscuring head silhouette. Human remains low at bottom edge; world lighting gives cream antlers harsh highlights.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/07-179.png
+SHA256 before = after: 943cd37122b9a6753f92fb826c902f63c36f309e43bb80894c120896639a311b
+
+08-000.png | giant/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both giants fully framed and separated, complete antlers/hooves clear of HUD. Pale radial/dust effect overlays left flank; dark chest detail limited. Human partly hidden behind giant.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/08-000.png
+SHA256 before = after: 7cf9f47df41609588df8a1c5405ca4e03b2b41a2feedc2f940368e08350e11c1
+
+08-030.png | giant/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both giants fully framed and separated, antlers and hooves clear of HUD. Dense grass and hard shadow shapes compete with dark leg silhouettes.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/08-030.png
+SHA256 before = after: 8f277d58187726e560917eacbf76b84d963c6b2b9adc66f8dde28ce2b91f9632
+
+08-060.png | giant/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both giants fully framed and separated; right actor's antlers/hooves clear of panels, left rear-on with face self-hidden by pose. Noncombat foreground creature cropped at bottom.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/08-060.png
+SHA256 before = after: 4dbc1b89e6f85d7f908193e8e48dcd4ec1f6ae4c34515cf72ba0e65971bee4fa
+
+08-090.png | giant/giant | camera/readability FAIL | strict full-quality FAIL | viewed original 1 time(s)
+Combat giants separated and heads clear, but right actor's curved tail crosses behind Orbs strip. Ground ring runs behind controls and is crowded against bottom edge.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/08-090.png
+SHA256 before = after: 6701f5b7a88f3c8fe0b06516ce8b26ac011fcd05145a9996c3dca8701da5daf9
+
+08-120.png | giant/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both giants fully framed and separated. Right tail and rear hoof close to HUD but visibly left/above its edge. Dust/radial overlay reduces left flank/antler detail; identity remains visible.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/08-120.png
+SHA256 before = after: c65f91f7d81cf95be18f0495aaa04b78936b419ba0a417c5a3caf023794cf338
+
+08-179.png | giant/giant | camera/readability PASS | strict full-quality FAIL | viewed original 1 time(s)
+Both giants fully framed and separated, complete head silhouettes and hooves clear of HUD. Foreground noncombat creatures are cropped and covered by controls; giant dark faces/chests have little tonal separation.
+Primary combatants separated; no primary viewport-edge clipping observed. Shared full-quality findings: C1, C2, C3
+Original: D:/tetherbound/combat-camera-live-r4-types-r2/frames/08-179.png
+SHA256 before = after: 54ae0b06523ae5fcd899650bf0de0f6295c8925fdcc05c31c4f80bff1f976d70
+
+FINAL SCOPE: Original pixels preserved. Review-only files; no engine/test/native-run or acceptance credit. ROOT remains independent acceptance/authority assessor.
+
