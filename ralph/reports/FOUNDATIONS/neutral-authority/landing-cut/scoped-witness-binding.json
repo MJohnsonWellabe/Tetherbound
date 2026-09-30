@@ -1,0 +1,95 @@
+{
+  "source": "05d1b1b687a3f1fa5a0d731bed90c799f38a132b",
+  "historical_actual_total": "12methods/287assertions/0fail/native0",
+  "cut_retained_bound_methods": [
+    "test_chapter_rewards.gd :: test_every_tm_in_the_game_can_actually_be_obtained",
+    "test_item_icons.gd :: test_every_item_has_a_non_empty_description",
+    "test_moves_data.gd :: test_every_move_has_a_valid_slot",
+    "test_save_format.gd :: test_a_species_the_catalogue_forgot_keeps_what_the_save_said",
+    "test_save_format.gd :: test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_flags",
+    "test_save_format.gd :: test_duplicate_saved_uids_are_reminted_and_invalidate_selection",
+    "test_save_format.gd :: test_save_then_load_round_trips_creature_progression_and_moves"
+  ],
+  "cut_excluded_witnesses": "Farm/map/tree historical proof remains authentic but excluded source no longer matches current cut; no cut pass claim for those methods. Storm actual8/86 authentic but manifest excluded.",
+  "changed_codec_sources": [
+    {
+      "path": "scripts/save/save_game.gd",
+      "cut_git_sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+      "canonical_lf_sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+      "main_canonical_lf_sha256": "ae55e0a8a9c4f1fc694de559da08cfc1104864f2bb5f4bae522b0c5985ed0879",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "acd722433f3d0d7393ff0c689f7b65ce7fdb1f44f349a1515950a7dc809079d8",
+      "equals_batch289": false,
+      "scoped05d_canonical_lf_sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+      "equals_scoped05d": true
+    },
+    {
+      "path": "scripts/creatures/creature_instance.gd",
+      "cut_git_sha256": "6f91aa87b11a5f9600f8f2a08ef09e6de38029fa825214229c751a4fc9b31ea8",
+      "canonical_lf_sha256": "6f91aa87b11a5f9600f8f2a08ef09e6de38029fa825214229c751a4fc9b31ea8",
+      "main_canonical_lf_sha256": "202ee40889cd872d5ec3cbe3d59ad3df619bed9a2e3b65656970b74084dbca49",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428",
+      "equals_batch289": false,
+      "scoped05d_canonical_lf_sha256": "6f91aa87b11a5f9600f8f2a08ef09e6de38029fa825214229c751a4fc9b31ea8",
+      "equals_scoped05d": true
+    },
+    {
+      "path": "scripts/creatures/teaching.gd",
+      "cut_git_sha256": "912a26ba74c9d6bf87bfb52320989dec0f311ab840f1ad3188aa8781afe516c7",
+      "canonical_lf_sha256": "912a26ba74c9d6bf87bfb52320989dec0f311ab840f1ad3188aa8781afe516c7",
+      "main_canonical_lf_sha256": "1879c0cee3183689c04f5e4ba74d6240572314e9801ba97b6fa50ba0ad1125b9",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "b329abd6c96a94d37d31e6908fafa4554373d0119856157d4eaa84ac53f61267",
+      "equals_batch289": false,
+      "scoped05d_canonical_lf_sha256": "912a26ba74c9d6bf87bfb52320989dec0f311ab840f1ad3188aa8781afe516c7",
+      "equals_scoped05d": true
+    }
+  ],
+  "kept_required_catalog_paths": [
+    {
+      "path": "data/items/items.json",
+      "cut_git_sha256": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff",
+      "canonical_lf_sha256": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff",
+      "main_canonical_lf_sha256": "16d7394713a57a37212a2417d8cd5f399db9ef523478975d29cba6e79d54cadc",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "2f2431760e04af540ce25bae977612eeaf12b6d9983cda0a6cba1aed6fc839ca",
+      "equals_batch289": false,
+      "scoped05d_canonical_lf_sha256": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff",
+      "equals_scoped05d": true
+    },
+    {
+      "path": "data/config/bands/band5_stronghold_approach/pickups.json",
+      "cut_git_sha256": "148ccc9f97d70ed2fe1d4d322464729672c4c2802333a187f572620b94d29e40",
+      "canonical_lf_sha256": "148ccc9f97d70ed2fe1d4d322464729672c4c2802333a187f572620b94d29e40",
+      "main_canonical_lf_sha256": "04463157397340eb638e4af2561a20bb2364db2c07513d2bca31d360644796f9",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "04463157397340eb638e4af2561a20bb2364db2c07513d2bca31d360644796f9",
+      "equals_batch289": false,
+      "scoped05d_canonical_lf_sha256": "148ccc9f97d70ed2fe1d4d322464729672c4c2802333a187f572620b94d29e40",
+      "equals_scoped05d": true
+    },
+    {
+      "path": "tests/test_chapter_rewards.gd",
+      "cut_git_sha256": "c070dda6eebd3e288ea29dc5bc1f388e823a3432e1146d50f4c25ed15fde13cd",
+      "canonical_lf_sha256": "c070dda6eebd3e288ea29dc5bc1f388e823a3432e1146d50f4c25ed15fde13cd",
+      "main_canonical_lf_sha256": "8f4a8c50cd4a8f5fd52a55447130bddbec964e0c0de070f0c231ce1cb36874f9",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "8f4a8c50cd4a8f5fd52a55447130bddbec964e0c0de070f0c231ce1cb36874f9",
+      "equals_batch289": false,
+      "scoped05d_canonical_lf_sha256": "c070dda6eebd3e288ea29dc5bc1f388e823a3432e1146d50f4c25ed15fde13cd",
+      "equals_scoped05d": true
+    },
+    {
+      "path": "tests/test_moves_data.gd",
+      "cut_git_sha256": "201945f2fad61e7e2a687fd7d55ad116b6d61f5b38b98cf4f8c74d4ec08ccb49",
+      "canonical_lf_sha256": "201945f2fad61e7e2a687fd7d55ad116b6d61f5b38b98cf4f8c74d4ec08ccb49",
+      "main_canonical_lf_sha256": "22ddd3a36ac6bd6826077818881c8cfeca9ef13150e57619fa91a033b6020c30",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "22ddd3a36ac6bd6826077818881c8cfeca9ef13150e57619fa91a033b6020c30",
+      "equals_batch289": false,
+      "scoped05d_canonical_lf_sha256": "201945f2fad61e7e2a687fd7d55ad116b6d61f5b38b98cf4f8c74d4ec08ccb49",
+      "equals_scoped05d": true
+    }
+  ]
+}
