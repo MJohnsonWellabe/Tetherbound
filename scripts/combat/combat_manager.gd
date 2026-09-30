@@ -3041,6 +3041,9 @@ func _commit_scheduled_enemy_hit(peer_id: int, payload: Dictionary, launch: Dict
 	if str(launch.get("encounter_id", "")) != _encounter_id \
 		or str(launch.get("attacker_uid", "")) != str(_enemy.get("uid")): return
 	if not bool(_encounter_link.call("host_enemy_target_current", _encounter_id, peer_id, str(launch.target_uid))): return
+	if _encounter_link.has_method("host_resolve_enemy_hit"):
+		payload = _encounter_link.call("host_resolve_enemy_hit", _encounter_id, peer_id, payload)
+		if payload.is_empty(): return
 	var impact: Dictionary = payload.get("impact", {})
 	_host_body_hitstop(_wild, impact)
 	_host_body_hitstop(target_body, impact)
@@ -3070,15 +3073,18 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 		return
 	if not feedback.is_empty() and str(feedback.get("target_uid", "")) != str(creature.get("uid")): return
 	PROJECTILE.confirm_impact(get_tree(), str(feedback.get("action_id", "")))
-	# Host rolls the base strike; this character's one active relic applies
-	# once at the owning health mutation, also for a host on another island.
-	var damage := _incoming_owned_damage(float(payload.get("damage", 0.0)))
+	# The host resolves its own defensive ledger/relic config before delivery.
+	# Preserve the legacy partial-test adapter until every link carries that result.
+	var host_resolved := bool(payload.get("host_resolved_defence", false))
+	var damage := float(payload.get("damage", 0.0)) if host_resolved else _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
-	var stagger_crit := _consume_player_stagger_critical()
-	if stagger_crit:
-		damage *= _poise_crit_scale()
+	var stagger_crit := bool(payload.get("critical", false)) if host_resolved else _consume_player_stagger_critical()
+	if stagger_crit and not host_resolved: damage *= _poise_crit_scale()
 	var killed: bool = creature.take_damage(damage)
-	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
+	var stagger_triggered := false
+	if not killed:
+		if host_resolved: stagger_triggered = _sync_host_player_defence(payload.get("defence", {}))
+		else: stagger_triggered = _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
 	var impact: Dictionary = payload.get("impact", {})
 	if impact.is_empty():
@@ -4926,3 +4932,23 @@ func present_host_peer_impact(impact: Dictionary) -> void:
 	frozen["own_hit"] = false
 	frozen.make_read_only()
 	impact_confirmed.emit(true, frozen, where)
+
+func _sync_host_player_defence(defence: Dictionary) -> bool:
+	var interrupted := _action == Action.WINDUP
+	if interrupted:
+		_pending_move = {}
+		_buffered_attack = ""
+		_buffer_left = 0.0
+	_player_poise = clampf(float(defence.get("poise", _player_poise_max())), 0.0, _player_poise_max())
+	_player_poise_quiet_left = maxf(0.0, float(defence.get("quiet_left", 0.0)))
+	_player_stagger_critical_ready = bool(defence.get("critical_ready", false))
+	if bool(defence.get("staggered", false)):
+		if _action == Action.BURST and _ally_body != null and _ally_body.has_method("cancel_combat_burst"):
+			_ally_body.call("cancel_combat_burst")
+		_action = Action.STAGGER
+		_action_timer = maxf(0.0, float(defence.get("stagger_left", 0.0)))
+		return true
+	if interrupted:
+		_action = Action.READY
+		_action_timer = 0.0
+	return false

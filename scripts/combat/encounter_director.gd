@@ -270,6 +270,7 @@ var _shared_telegraph_until_ms: int = 0
 ## Host-only, encounter id -> SharedWildHostFight. Unlike `_encounter`, these
 ## authority engines survive the local host leaving or binding another fight.
 var _shared_host_fights: Dictionary = {}
+var _host_defence: Dictionary = {}
 
 ## Host-side: the peer whose catch is currently being performed, so §8 step 4
 ## can tell everybody ELSE who got it.
@@ -2375,6 +2376,9 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
 			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
 			"pending": false, "delta": {}}
+	if _host_peer_staggered(encounter_id, peer_id):
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "staggered", "reason": "Your creature is staggered.", "pending": false, "delta": {}}
 	var runtime := _shared_host_fight(encounter_id)
 	var record: Dictionary = _encounter_host.call("record", encounter_id)
 	var striker := deployed_body_for(peer_id)
@@ -2529,6 +2533,9 @@ func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
 			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
 			"pending": false, "delta": {}}
+	if _host_peer_staggered(encounter_id, peer_id):
+		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
+			"code": "staggered", "reason": "Your creature is staggered.", "pending": false, "delta": {}}
 	var body := deployed_body_for(peer_id)
 	if body == null or not is_instance_valid(body):
 		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
@@ -2854,6 +2861,7 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 func _tick_encounter(delta: float) -> void:
 	if not _is_host():
 		return
+	_prune_host_defence()
 	var hz := maxf(1.0, float(ENCOUNTER_HOST_SCRIPT.config().get(
 		"shared_opponent_presentation_hz", 10.0)))
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
@@ -6784,3 +6792,65 @@ func _host_publish_peer_impact(encounter_id: String, author_peer_id: int, impact
 func _rpc_encounter_peer_impact(encounter_id: String, impact: Dictionary) -> void:
 	if _manager == null or _local_bound_encounter_id() != encounter_id: return
 	_manager.call("present_host_peer_impact", impact)
+
+func host_card_incoming_multiplier(card: Dictionary) -> float:
+	if not is_inside_tree(): return 1.0
+	var game := get_node_or_null(^"/root/Game")
+	if game == null: return 1.0
+	return validate_card_incoming_multiplier(card, game.get("realm_hearts") as RefCounted, game.get("progression") as RefCounted)
+
+static func validate_card_incoming_multiplier(card: Dictionary, hearts: RefCounted, progression: RefCounted) -> float:
+	if hearts == null or progression == null: return 1.0
+	var relic_id := str(card.get("active_relic_id", ""))
+	if relic_id.is_empty() or not bool(hearts.call("is_placed", relic_id, progression)): return 1.0
+	var spec: Dictionary = hearts.call("heart", relic_id)
+	var power: Variant = spec.get("power", {})
+	if not power is Dictionary: return 1.0
+	return clampf(float((power as Dictionary).get("incoming_damage_multiplier", 1.0)), 0.0, 1.0)
+
+func _host_defence_state(encounter_id: String, peer_id: int, target_uid: String) -> Dictionary:
+	var peers: Dictionary = _host_defence.get(encounter_id, {})
+	_host_defence[encounter_id] = peers
+	var state: Dictionary = peers.get(peer_id, {})
+	if str(state.get("target_uid", "")) != target_uid:
+		state = HIT_FEEDBACK.defence_state(target_uid, Time.get_ticks_msec(), HIT_FEEDBACK.MATH.config().get("poise", {}))
+		peers[peer_id] = state
+	return state
+
+func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> Dictionary:
+	var impact: Dictionary = payload.get("impact", {})
+	var target_uid := str(impact.get("target_uid", ""))
+	if not host_enemy_target_current(encounter_id, peer_id, target_uid): return {}
+	var card := _creature_card_for(peer_id)
+	var state := _host_defence_state(encounter_id, peer_id, target_uid)
+	if not HIT_FEEDBACK.admit(state.actions, impact): return {}
+	var cfg: Dictionary = HIT_FEEDBACK.MATH.config().get("poise", {})
+	var critical := bool(state.critical_ready) and Time.get_ticks_msec() < int(state.stagger_until_ms)
+	var stop := float(HIT_FEEDBACK.config().get("critical_hitstop_seconds", 0.0)) if critical else float(impact.get("hitstop_seconds", 0.0))
+	var defence := HIT_FEEDBACK.resolve_defence_hit(state, float(payload.get("damage", 0.0)),
+		host_card_incoming_multiplier(card), Time.get_ticks_msec(), stop, cfg)
+	var resolved := payload.duplicate()
+	resolved["damage"] = float(defence.damage)
+	resolved["critical"] = bool(defence.critical)
+	resolved["defence"] = defence
+	resolved["host_resolved_defence"] = true
+	resolved["impact"] = HIT_FEEDBACK.with_defence(impact, defence)
+	return resolved
+
+func _host_peer_staggered(encounter_id: String, peer_id: int) -> bool:
+	var peers: Dictionary = _host_defence.get(encounter_id, {})
+	var state: Dictionary = peers.get(peer_id, {})
+	if state.is_empty() or str(state.get("target_uid", "")) != str(_creature_card_for(peer_id).get("creature_uid", "")): return false
+	return Time.get_ticks_msec() < int(state.get("stagger_until_ms", 0))
+
+func _prune_host_defence() -> void:
+	if _encounter_host == null: return
+	for encounter_id: String in _host_defence.keys():
+		if str(_encounter_host.call("phase", encounter_id)) == "done":
+			_host_defence.erase(encounter_id)
+			continue
+		var peers: Dictionary = _host_defence[encounter_id]
+		var participants: Array = _encounter_host.call("participants_of", encounter_id)
+		for peer_id: int in peers.keys():
+			if not participants.has(peer_id): peers.erase(peer_id)
+		if peers.is_empty(): _host_defence.erase(encounter_id)

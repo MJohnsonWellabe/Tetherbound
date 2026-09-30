@@ -96,3 +96,51 @@ func test_rumble_off_and_weight_do_not_modify_host_receipt_or_timing() -> void:
 	assert_eq(motion.rumble_percent(), 100)
 	motion.set_rumble_percent(old)
 	if FileAccess.file_exists(path): DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+class IncomingHeartStub extends RefCounted:
+	var placed := true
+	func is_placed(id: String, _progression: RefCounted) -> bool:
+		return placed and id == "placed-heart"
+	func heart(_id: String) -> Dictionary:
+		return {"power": {"incoming_damage_multiplier": 0.75}}
+
+func test_host_defensive_poise_break_bonus_expiry_and_peer_scope() -> void:
+	var cfg := {"max": 20.0, "regen_delay": 0.1, "regen_per_second": 20.0,
+		"stagger_seconds": 0.2, "crit_scale": 1.5}
+	var struck := FEEDBACK.defence_state("owned-a", 0, cfg)
+	var untouched := FEEDBACK.defence_state("owned-b", 0, cfg)
+	var first := FEEDBACK.resolve_defence_hit(struck, 25.0, 1.0, 0, 0.03, cfg)
+	assert_false(first.critical)
+	assert_true(first.staggered)
+	assert_eq(first.poise, 0.0)
+	assert_almost_eq(first.stagger_left, 0.2, 0.00001)
+	assert_almost_eq(first.quiet_left, 0.1, 0.00001, "quiet beat follows presentation stagger as before")
+	var bonus := FEEDBACK.resolve_defence_hit(struck, 8.0, 0.5, 100, 0.12, cfg)
+	assert_true(bonus.critical)
+	assert_eq(bonus.damage, 6.0, "one host relic multiplier and one host critical multiplier")
+	assert_eq(untouched.poise, 20.0)
+	assert_false(untouched.critical_ready)
+	assert_eq(untouched.target_uid, "owned-b")
+	var expired := FEEDBACK.resolve_defence_hit(struck, 1.0, 1.0, 1000, 0.03, cfg)
+	assert_false(expired.critical, "expired bonus cannot survive a later strike")
+	assert_false(expired.staggered)
+	assert_true(expired.poise > 0.0, "host regen resumes after its frozen stagger/quiet intervals")
+	var receipt := FEEDBACK.receipt("f:enemy:1", "root_nibble", {}, "quick", 8.0, 0.8, false, Vector3.LEFT)
+	var resolved := FEEDBACK.with_defence(receipt, bonus)
+	assert_true(resolved.is_read_only())
+	assert_true(resolved.critical)
+	assert_eq(resolved.damage, 6.0)
+	assert_eq(resolved.type_mult, 0.8)
+	assert_eq(receipt.damage, 8.0, "pre-resolution receipt remains detached")
+
+func test_host_relic_resolution_ignores_numeric_peer_claims_and_unplaced_identity() -> void:
+	var director := preload("res://scripts/combat/encounter_director.gd")
+	var hearts := IncomingHeartStub.new()
+	var progression := RefCounted.new()
+	var card := {"active_relic_id": "placed-heart", "incoming_damage_multiplier": 0.01}
+	assert_eq(director.validate_card_incoming_multiplier(card, hearts, progression), 0.75)
+	hearts.placed = false
+	assert_eq(director.validate_card_incoming_multiplier(card, hearts, progression), 1.0)
+	hearts.placed = true
+	assert_eq(director.validate_card_incoming_multiplier({"active_relic_id": "forged-heart"}, hearts, progression), 1.0)
+	assert_eq(director.validate_card_incoming_multiplier(card, null, progression), 1.0)

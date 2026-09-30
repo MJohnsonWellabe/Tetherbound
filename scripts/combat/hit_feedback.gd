@@ -143,3 +143,52 @@ static func rumble_spec(impact: Dictionary, scale: float) -> Dictionary:
 	return {"weak": clampf(float(spec.get("weak", 0.0)) * scale, 0.0, 1.0),
 		"strong": clampf(float(spec.get("strong", 0.0)) * scale, 0.0, 1.0),
 		"seconds": maxf(0.0, float(spec.get("seconds", 0.0)))}
+
+## Host-only private ledger: encounter + peer + current deployed UID.
+## Time, pool, regen and critical window are resolved from host config.
+static func defence_state(target_uid: String, now_ms: int, cfg: Dictionary) -> Dictionary:
+	return {"target_uid": target_uid, "poise": maxf(1.0, float(cfg.get("max", 40.0))),
+		"last_ms": now_ms, "quiet_until_ms": now_ms, "stagger_until_ms": now_ms,
+		"pause_until_ms": now_ms, "critical_ready": false, "actions": {}}
+
+static func advance_defence(state: Dictionary, now_ms: int, cfg: Dictionary) -> void:
+	now_ms = maxi(now_ms, int(state.last_ms))
+	var regen_start := maxi(int(state.last_ms), maxi(int(state.quiet_until_ms),
+		maxi(int(state.stagger_until_ms), int(state.pause_until_ms))))
+	if now_ms > regen_start:
+		state.poise = minf(maxf(1.0, float(cfg.get("max", 40.0))),
+			float(state.poise) + float(cfg.get("regen_per_second", 20.0)) * (now_ms - regen_start) / 1000.0)
+	if now_ms >= int(state.stagger_until_ms): state.critical_ready = false
+	state.last_ms = now_ms
+
+static func resolve_defence_hit(state: Dictionary, base_damage: float, multiplier: float,
+		now_ms: int, hitstop_seconds: float, cfg: Dictionary) -> Dictionary:
+	advance_defence(state, now_ms, cfg)
+	var critical := bool(state.critical_ready) and now_ms < int(state.stagger_until_ms)
+	if critical: state.critical_ready = false
+	var damage := maxf(0.0, base_damage) * clampf(multiplier, 0.0, 1.0)
+	if critical: damage *= maxf(1.0, float(cfg.get("crit_scale", 1.5)))
+	state.poise = maxf(0.0, float(state.poise) - damage)
+	var freeze_ms := int(round(maxf(0.0, hitstop_seconds) * 1000.0))
+	state.pause_until_ms = maxi(int(state.pause_until_ms), now_ms + freeze_ms)
+	state.quiet_until_ms = now_ms + int(round(maxf(0.0, float(cfg.get("regen_delay", 2.0))) * 1000.0)) + freeze_ms
+	var staggered := float(state.poise) <= 0.0
+	if staggered:
+		state.critical_ready = true
+		state.stagger_until_ms = now_ms + int(round(maxf(0.0, float(cfg.get("stagger_seconds", 0.6))) * 1000.0)) + freeze_ms
+		# Existing local regen waits through the stagger before its quiet beat.
+		state.quiet_until_ms += int(round(maxf(0.0, float(cfg.get("stagger_seconds", 0.6))) * 1000.0))
+	var result := {"damage": damage, "critical": critical, "poise": float(state.poise),
+		"staggered": staggered, "critical_ready": bool(state.critical_ready),
+		"stagger_left": maxf(0.0, float(int(state.stagger_until_ms) - now_ms - freeze_ms) / 1000.0),
+		"quiet_left": maxf(0.0, float(int(state.quiet_until_ms) - now_ms - freeze_ms) / 1000.0 - (float(cfg.get("stagger_seconds", 0.6)) if staggered else 0.0))}
+	result.make_read_only()
+	return result
+
+static func with_defence(impact: Dictionary, defence: Dictionary) -> Dictionary:
+	var resolved := impact.duplicate()
+	resolved.damage = float(defence.damage)
+	resolved.critical = bool(defence.critical)
+	resolved.hitstop_seconds = float(config().get("critical_hitstop_seconds", 0.0)) if resolved.critical else float(impact.get("hitstop_seconds", 0.0))
+	resolved.make_read_only()
+	return resolved
