@@ -129,11 +129,14 @@ func _current_plan(actor: CharacterBody3D, creature_uid: String) -> Dictionary:
 	if not _identity(world.get("world_id")) or not _identity(world.get("reward_delivery_namespace")) \
 			or not _integer(world.get("day"), 1) or not _identity(character.get("character_id")) \
 			or character.get("realm") != "meadows" or not character.get("party") is Array \
-			or not _identity(creature_uid) or not _owned_roster(character["party"]):
+			or not _identity(creature_uid):
+		return _refusal("unavailable", "The character's canonical grooming state is unavailable.")
+	var owned := _shed_roster(character["party"])
+	if owned.is_empty():
 		return _refusal("unavailable", "The character's canonical grooming state is unavailable.")
 	if not _canonical_den(world.get("placed_buildings")):
 		return _refusal("missing_station", "Build a Den at the homestead.")
-	var shed := SHED.den_groom_candidate(character["character_id"], character["party"],
+	var shed := SHED.den_groom_candidate(character["character_id"], owned,
 		creature_uid, int(world["day"]), world["reward_delivery_namespace"],
 		raw["received_shed_receipts"], _shed)
 	if not bool(shed.get("ok", false)):
@@ -166,16 +169,22 @@ func _canonical_den(records: Variant) -> bool:
 	return found
 
 
-static func _owned_roster(party: Array) -> bool:
+## PlayerState.save_data() uses SaveGame._party_to_array(): species_id is the
+## canonical field. The reviewed shed helper accepts species, so translate
+## ONLY these validated trusted fields into fresh detached helper rows.
+## Never mutate the portable roster or accept its incidental species alias.
+static func _shed_roster(party: Array) -> Array:
 	if party.is_empty() or party.size() > 5:
-		return false
+		return []
 	var seen := {}
+	var projected: Array = []
 	for row: Variant in party:
-		if not row is Dictionary or not _identity(row.get("uid")) or not _identity(row.get("species")) \
+		if not row is Dictionary or not _identity(row.get("uid")) or not _identity(row.get("species_id")) \
 				or seen.has(row["uid"]):
-			return false
+			return []
 		seen[row["uid"]] = true
-	return true
+		projected.append({"uid": row["uid"], "species": row["species_id"]})
+	return projected
 
 
 func _enabled() -> bool:
