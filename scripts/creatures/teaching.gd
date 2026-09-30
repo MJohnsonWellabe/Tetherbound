@@ -132,6 +132,9 @@ static func party_loadout_errors(entries: Variant, character: Variant = {}, comp
 	if not entries is Array or not character is Dictionary:
 		errors.append("party loadout payload must be an array and character an object")
 		return errors
+	if entries.size()>5:
+		errors.append("portable party exceeds five owned creatures")
+		return errors
 	if not character.get("creatures",{}) is Dictionary:
 		errors.append("character creatures must be an object")
 		return errors
@@ -153,7 +156,7 @@ static func party_loadout_errors(entries: Variant, character: Variant = {}, comp
 			errors.append("party[%d]: %s" % [index,str(staged.get("reason","invalid_loadout"))])
 			continue
 		var record: Variant = character.get("creatures",{}).get(str(saved.get("uid","")),{})
-		if compare_carrier and record is Dictionary and record.has("mastery_receipts"):
+		if compare_carrier and record is Dictionary and not record.is_empty():
 			var expected: Dictionary = character_loadout_mirror([saved],character).creatures.get(str(saved.get("uid","")),{})
 			for field: String in ["known_moves","loadout","mastery_receipts"]:
 				if record.get(field)!=expected.get(field): errors.append("party[%d]: divergent move carrier %s" % [index,field])

@@ -108,6 +108,9 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 	assert_true(TEACHING.party_loadout_errors(entries,character).is_empty())
 	assert_true(TEACHING.admitted_party_errors(entries,character).is_empty())
 	var before := entries.duplicate(true)
+	var six := before.duplicate(true)
+	for index: int in 5: six.append(before[0].duplicate(true))
+	assert_false(TEACHING.party_loadout_errors(six,character).is_empty(),"all portable paths refuse six rows before partial restore or file writes")
 	var bad := entries[0].duplicate(true)
 	bad.loadout_revision = .5
 	entries.append(bad)
@@ -127,6 +130,10 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 	assert_eq(preserved.creatures[creature.uid].breakthroughs,[1,2])
 	assert_eq(preserved.creatures[creature.uid].taught_traits,{"1":"hardy"},"move mirror preserves other lane's earned records")
 	assert_true(TEACHING.party_loadout_errors(before,preserved,true).is_empty())
+	var stripped := preserved.duplicate(true)
+	stripped.creatures[creature.uid].erase("mastery_receipts")
+	stripped.creatures[creature.uid].loadout.quick = "stone_rush"
+	assert_false(TEACHING.party_loadout_errors(before,stripped,true).is_empty(),"removing an optional marker cannot bypass required move-carrier comparison")
 	preserved.creatures[creature.uid].loadout.quick = "stone_rush"
 	assert_false(TEACHING.party_loadout_errors(before,preserved,true).is_empty(),"a contradictory persisted carrier refuses, never becomes a second authority")
 	assert_eq(character.creatures,{},"detached projection leaves live carrier untouched")

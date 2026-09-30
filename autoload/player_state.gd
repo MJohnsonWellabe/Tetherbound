@@ -389,7 +389,7 @@ func make_creature(species_id: String, nickname: String = "") -> RefCounted:
 ## `character_save.gd` and this call goes with them.
 func save_data() -> Dictionary:
 	var saver: RefCounted = SAVE_GAME.new()
-	return {
+	var data := {
 		"redesign_character": redesign_character.duplicate(true),
 		"character_id": character_id,
 		"display_name": display_name,
@@ -409,6 +409,10 @@ func save_data() -> Dictionary:
 		"realm_maps": map_payloads(),
 		"flags": flags.save_data() if flags != null else {},
 	}
+	var teaching := preload("res://scripts/creatures/teaching.gd")
+	if teaching.party_loadout_errors(data.party,data.redesign_character).is_empty():
+		data.redesign_character = teaching.character_loadout_mirror(data.party,data.redesign_character)
+	return data
 
 
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state.
