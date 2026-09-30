@@ -183,5 +183,117 @@
   "presentation": {
     "panel_width": 560,
     "crop_row_height": 36
+  },
+  "crop_presentation_candidate": {
+    "enabled": false,
+    "status": "unrendered_prototype_flag_off_pending_production_capture_and_code_blind_full_bar_pass",
+    "_comment": "F32 typed-crop presentation only. Preserve legacy berry visuals, bed positions/size, colliders, all crop outputs and host-day growth. Eight intended silhouettes and canonical owner-derived colours use inspected installed nature models. Sown visual size is a presentation multiplier, never a growth timer. Flag stays OFF until ordinary production capture and independent code-blind full bar pass on Medium/High, with Low readability. No root/flower silhouette claim from source bounds.",
+    "family": "Quaternius Stylized Nature",
+    "state_scale_multipliers": {
+      "sown": 0.35,
+      "ripe": 1.0
+    },
+    "reference_sources": [
+      "docs/reference/owner-board-2026-08-15-creature-colors.png",
+      "scripts/ui/ui_tokens.gd"
+    ],
+    "profiles": {
+      "ground": {
+        "model": "res://assets/environment/stylized_nature/Plant_1.gltf",
+        "scale": 0.48,
+        "floor_offset_m": 0.017812,
+        "intended_silhouette": "Low Rootbud leaf rosette",
+        "surface_accents": {
+          "Leaves": {
+            "tint": "#B99050",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "water": {
+        "model": "res://assets/environment/stylized_nature/Plant_1_Big.gltf",
+        "scale": 0.25,
+        "floor_offset_m": 0.01501,
+        "intended_silhouette": "Tall Tidebud blade fan",
+        "surface_accents": {
+          "Leaves": {
+            "tint": "#4AADE8",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "air": {
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "scale": 0.35,
+        "floor_offset_m": 0.013104,
+        "intended_silhouette": "Loose Galebloom flower spray",
+        "surface_accents": {
+          "Flowers": {
+            "tint": "#73C8ED",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "electric": {
+        "model": "res://assets/environment/stylized_nature/Grass_Wheat.gltf",
+        "scale": 0.45,
+        "floor_offset_m": 0.016138,
+        "intended_silhouette": "Upright Sparkstem seed-head fork",
+        "surface_accents": {
+          "Grass": {
+            "tint": "#F5D33A",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "fire": {
+        "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+        "scale": 0.32,
+        "floor_offset_m": 0.010738,
+        "intended_silhouette": "Single orange Emberbloom crown",
+        "surface_accents": {
+          "Flowers": {
+            "tint": "#EE7B33",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "dark": {
+        "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+        "scale": 0.42,
+        "floor_offset_m": 0.073151,
+        "intended_silhouette": "Layered violet Duskcap shelf",
+        "surface_accents": {
+          "Mushrooms": {
+            "tint": "#9B7BEA",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "ice": {
+        "model": "res://assets/environment/stylized_nature/Clover_2.gltf",
+        "scale": 0.52,
+        "floor_offset_m": 0.002222,
+        "intended_silhouette": "Pale Frostbloom three-blade fan",
+        "surface_accents": {
+          "Leaves": {
+            "tint": "#A8E6EC",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "psychic": {
+        "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+        "scale": 0.37,
+        "floor_offset_m": 0.007781,
+        "intended_silhouette": "Lilac Mindleaf umbrella bloom",
+        "surface_accents": {
+          "Flowers": {
+            "tint": "#F09ADB",
+            "emission_energy": 0.1
+          }
+        }
+      }
+    }
   }
 }

@@ -46,6 +46,8 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
+const TYPE_PRESENTATION := preload("res://scripts/world/essence_node_mount.gd")
+const PRESENTATION_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const LOCAL_PAUSE := preload("res://scripts/ui/local_pause.gd")
@@ -122,6 +124,7 @@ var _prompt: Node3D = null
 var _soil: MeshInstance3D = null
 var _plant: Node3D = null
 var _drawn_state: String = ""
+var _drawn_crop: String = ""
 var _drawn_label: String = ""
 var _materials: Dictionary = {}
 
@@ -246,9 +249,11 @@ func _refresh() -> void:
 	var greenhouse := _greenhouse_built()
 	var choices := FARM_LOGIC.available_crops(_config, _seed_counts(), greenhouse)
 	var state := FARM_LOGIC.state_of(plot, day)
-	if state != _drawn_state:
+	var visual_crop := str(plot.get("crop_id", _config.get("default_crop", "berries")))
+	if state != _drawn_state or visual_crop != _drawn_crop:
 		_drawn_state = state
-		_redraw(state)
+		_drawn_crop = visual_crop
+		_redraw(state, visual_crop)
 	var label := FARM_LOGIC.crop_label_for(plot, day, has_hoe, _selected_seed_count(),
 		_config, _selected_crop, greenhouse)
 	var actionable := FARM_LOGIC.crop_action_for(plot, day, has_hoe, _selected_seed_count(),
@@ -315,7 +320,7 @@ func _plant_holder() -> Node3D:
 	return _plant
 
 
-func _redraw(state: String) -> void:
+func _redraw(state: String, crop_id: String = "") -> void:
 	_soil.material_override = _material(
 		COL_TILLED if state != FARM_LOGIC.FALLOW else COL_FALLOW)
 
@@ -325,6 +330,8 @@ func _redraw(state: String) -> void:
 	if state == FARM_LOGIC.FALLOW:
 		return
 	_build_furrows()
+	if _try_typed_crop_candidate(state, crop_id):
+		return
 
 	var model := ""
 	var model_scale := 1.0
@@ -584,3 +591,54 @@ func _close_seed_picker() -> void:
 
 func _exit_tree() -> void:
 	_close_seed_picker()
+
+
+## F32 flag-off visual candidate. Reads the host-mirrored crop id and draws;
+## it does not plant, pay, advance time or replace any durable plot state.
+func _try_typed_crop_candidate(state: String, crop_id: String) -> bool:
+	if crop_id == str(_config.get("default_crop", "berries")) \
+			or not state in [FARM_LOGIC.SOWN, FARM_LOGIC.RIPE]:
+		return false
+	var candidate: Variant = _config.get("crop_presentation_candidate")
+	if not candidate is Dictionary or typeof(candidate.get("enabled")) != TYPE_BOOL \
+			or candidate["enabled"] != true:
+		return false
+	var profiles: Variant = candidate.get("profiles")
+	var multipliers: Variant = candidate.get("state_scale_multipliers")
+	if not profiles is Dictionary or not multipliers is Dictionary:
+		return false
+	var profile: Variant = profiles.get(crop_id)
+	var multiplier: Variant = multipliers.get(state)
+	if not profile is Dictionary or not profile.get("model") is String \
+			or not TYPE_PRESENTATION._candidate_scale(profile.get("scale")) \
+			or not TYPE_PRESENTATION._candidate_scale(multiplier) \
+			or not TYPE_PRESENTATION._candidate_number(profile.get("floor_offset_m")) \
+			or float(profile["floor_offset_m"]) < 0.0 \
+			or not profile.get("surface_accents") is Dictionary:
+		return false
+	var model := str(profile["model"])
+	if not ResourceLoader.exists(model):
+		return false
+	var resource: Resource = load(model)
+	if not resource is PackedScene:
+		return false
+	var instance: Node = (resource as PackedScene).instantiate()
+	if not instance is Node3D:
+		if instance != null:
+			instance.free()
+		return false
+	var part := instance as Node3D
+	if not TYPE_PRESENTATION._candidate_render_only(part) \
+			or not TYPE_PRESENTATION._candidate_accents(part, profile["surface_accents"]):
+		part.free()
+		return false
+	PRESENTATION_MATERIALS.make_dielectric(part)
+	var wrapper := Node3D.new()
+	wrapper.name = "TypedCropPresentationCandidate"
+	wrapper.add_child(part)
+	part.scale = Vector3.ONE * float(profile["scale"]) * float(multiplier)
+	part.position.y = float(profile["floor_offset_m"]) * float(multiplier)
+	wrapper.position = Vector3(0.0, BED_HEIGHT, 0.0)
+	_plant_holder().add_child(wrapper)
+	wrapper.set_meta("crop_presentation_candidate", crop_id)
+	return true

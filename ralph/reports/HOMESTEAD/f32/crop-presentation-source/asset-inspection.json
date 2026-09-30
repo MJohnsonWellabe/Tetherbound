@@ -1,0 +1,392 @@
+{
+  "method": "Read-only installed glTF JSON/accessor/material inspection, not render/player-path/shape-recognition proof.",
+  "recorded_while_proposal_unapplied": true,
+  "whole_candidate_enabled": false,
+  "reference_sources": [
+    "docs/reference/owner-board-2026-08-15-creature-colors.png",
+    "scripts/ui/ui_tokens.gd"
+  ],
+  "current_bed_size_m": [
+    1.4,
+    1.4
+  ],
+  "modules": {
+    "res://assets/environment/stylized_nature/Plant_1.gltf": {
+      "sha256": "9400252446fd21fd9f93aec0e1c989184fc91718775f5440b9712e3c3f047252",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Plant_1"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.7107237577438354,
+            -0.0350240021944046,
+            -0.7635920643806458
+          ],
+          "max": [
+            0.562667191028595,
+            0.978546142578125,
+            0.6224353909492493
+          ]
+        }
+      ],
+      "material_names": [
+        "Leaves"
+      ],
+      "authored_scale": 0.48,
+      "scaled_xz_interval_m": [
+        [
+          -0.341147403717041,
+          0.27008025169372557
+        ],
+        [
+          -0.36652419090270993,
+          0.29876898765563964
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.48751414843749996,
+      "normalized_lf_sha256": "11749feb4c196bc69eaba0c0ad938fab09e3fe33c02e0d0f86b329eacf633b55"
+    },
+    "res://assets/environment/stylized_nature/Plant_1_Big.gltf": {
+      "sha256": "1091ddd87cfb8304b295c4483777c7b5231fa86439c967872525affcc0e93128",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Plant_1_Big"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -1.394121527671814,
+            -0.05603840574622154,
+            -1.6583820581436157
+          ],
+          "max": [
+            1.4963372945785522,
+            3.7003872394561768,
+            1.4680646657943726
+          ]
+        }
+      ],
+      "material_names": [
+        "Leaves"
+      ],
+      "authored_scale": 0.25,
+      "scaled_xz_interval_m": [
+        [
+          -0.3485303819179535,
+          0.37408432364463806
+        ],
+        [
+          -0.41459551453590393,
+          0.36701616644859314
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.9401068098640442,
+      "normalized_lf_sha256": "8c22e28d1ad79f3967c0022265b1d09319a3d82cbf14238de0cc77b5fe7e370a"
+    },
+    "res://assets/environment/stylized_nature/Flower_3_Group.gltf": {
+      "sha256": "1dc92301637cf9c9456236324356ad3b85f6e0ba5e1f8a8b5b577549ab3c9c5c",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Flower_3_Group"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.568230926990509,
+            -0.03458359092473984,
+            -0.5427353382110596
+          ],
+          "max": [
+            0.7883017063140869,
+            1.7742599248886108,
+            0.7045559287071228
+          ]
+        },
+        {
+          "min": [
+            -0.6136013269424438,
+            1.4516462087631226,
+            -0.8017617464065552
+          ],
+          "max": [
+            0.8748752474784851,
+            2.020251512527466,
+            0.789365291595459
+          ]
+        }
+      ],
+      "material_names": [
+        "Leaves",
+        "Flowers"
+      ],
+      "authored_scale": 0.35,
+      "scaled_xz_interval_m": [
+        [
+          -0.21476046442985533,
+          0.30620633661746977
+        ],
+        [
+          -0.2806166112422943,
+          0.2762778520584106
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.720192029384613,
+      "normalized_lf_sha256": "4df1612371982c543f930d6b213967372e0d459622d7eff7fc2ed1ddbfaa3b6c"
+    },
+    "res://assets/environment/stylized_nature/Grass_Wheat.gltf": {
+      "sha256": "fe68802da161b5b75bb6ba81cef7f23090a6e8d55333dc2fee989ecb80bf5fec",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Grass_Wheat"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.5564020872116089,
+            -0.03364109992980957,
+            -0.5507827401161194
+          ],
+          "max": [
+            0.5541585087776184,
+            1.7459251880645752,
+            0.4607310891151428
+          ]
+        }
+      ],
+      "material_names": [
+        "Grass"
+      ],
+      "authored_scale": 0.45,
+      "scaled_xz_interval_m": [
+        [
+          -0.25038093924522403,
+          0.24937132894992828
+        ],
+        [
+          -0.24785223305225373,
+          0.20732899010181427
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.8018043346290589,
+      "normalized_lf_sha256": "effae45c46108e79c4b6ffe92f0729ac5824795ee4818888e953459158f4bfe8"
+    },
+    "res://assets/environment/stylized_nature/Flower_4_Single.gltf": {
+      "sha256": "163d88a449eddadd9d9143b80a63977a931cb41db2e5aa630bba70c86c9a47dc",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Flower_4_Single"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.5050064325332642,
+            -0.03043048270046711,
+            -0.3631875216960907
+          ],
+          "max": [
+            0.56728196144104,
+            2.2943310737609863,
+            0.21159152686595917
+          ]
+        },
+        {
+          "min": [
+            -0.39627349376678467,
+            1.1264549493789673,
+            -0.40180256962776184
+          ],
+          "max": [
+            0.3805691599845886,
+            2.388728618621826,
+            0.37106218934059143
+          ]
+        }
+      ],
+      "material_names": [
+        "Leaves",
+        "Flowers"
+      ],
+      "authored_scale": 0.32,
+      "scaled_xz_interval_m": [
+        [
+          -0.16160205841064454,
+          0.1815302276611328
+        ],
+        [
+          -0.1285768222808838,
+          0.11873990058898926
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.7751311579589845,
+      "normalized_lf_sha256": "271189ec424eea2821d758c5c605d9e7737c259d64f4eec4555de7cd9de5a517"
+    },
+    "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf": {
+      "sha256": "2d3b29daf3238c306e1864377510336b9cedaaf759087e55e79366b0053f4992",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Mushroom_Oyster"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -1.0733827352523804,
+            -0.17178910970687866,
+            -0.15129603445529938
+          ],
+          "max": [
+            1.3203638792037964,
+            1.607744812965393,
+            1.2459725141525269
+          ]
+        }
+      ],
+      "material_names": [
+        "Mushrooms"
+      ],
+      "authored_scale": 0.42,
+      "scaled_xz_interval_m": [
+        [
+          -0.45082074880599976,
+          0.5545528292655945
+        ],
+        [
+          -0.06354433447122573,
+          0.5233084559440613
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.748403821445465,
+      "normalized_lf_sha256": "98a9420e24bb2146d8802af39b56ecfdc2962b86963f60dfec2b0f5cf751b445"
+    },
+    "res://assets/environment/stylized_nature/Clover_2.gltf": {
+      "sha256": "9d5e1000a7754863e4fdde7aa2e223882b054e9b7448710af96823a68cad4d9b",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Clover_2"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.5022982358932495,
+            -0.0023507503792643547,
+            -0.47231054306030273
+          ],
+          "max": [
+            0.34883004426956177,
+            1.261434555053711,
+            0.36432382464408875
+          ]
+        }
+      ],
+      "material_names": [
+        "Leaves"
+      ],
+      "authored_scale": 0.52,
+      "scaled_xz_interval_m": [
+        [
+          -0.26119508266448976,
+          0.18139162302017212
+        ],
+        [
+          -0.24560148239135743,
+          0.18944838881492615
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.6581679686279297,
+      "normalized_lf_sha256": "8ef8e861209c9b86e3d8f7a9c6d5653e5e0051a9a86cf22cb57849c63cc9cf10"
+    },
+    "res://assets/environment/stylized_nature/Flower_3_Single.gltf": {
+      "sha256": "f2d58e09f0b5568f35064dc465c82b17383e8eeb0e3aeb62b2e62c662a56f8e6",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Flower_3_Single"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.48073863983154297,
+            -0.018326954916119576,
+            -0.520720362663269
+          ],
+          "max": [
+            0.42587125301361084,
+            1.7716585397720337,
+            0.35561174154281616
+          ]
+        },
+        {
+          "min": [
+            -0.27247604727745056,
+            1.755362868309021,
+            -0.3710358142852783
+          ],
+          "max": [
+            0.42078328132629395,
+            2.0498666763305664,
+            0.3568156957626343
+          ]
+        }
+      ],
+      "material_names": [
+        "Leaves",
+        "Flowers"
+      ],
+      "authored_scale": 0.37,
+      "scaled_xz_interval_m": [
+        [
+          -0.17787329673767088,
+          0.15757236361503602
+        ],
+        [
+          -0.19266653418540955,
+          0.13202180743217468
+        ]
+      ],
+      "scaled_peak_above_bed_m": 0.7662316702423096,
+      "normalized_lf_sha256": "26c33edf26f0913947977109fefa2367095a854541a731dfecfd64263b7db2bc"
+    }
+  },
+  "source_state": "Applied flag-OFF source candidate in the same commit containing this artifact. No Godot/import/render/player-path/growth/payout/full-bar proof or runtime activation.",
+  "literal_crop_id_inspection": {
+    "profiles": [
+      "ground",
+      "water",
+      "air",
+      "electric",
+      "fire",
+      "dark",
+      "ice",
+      "psychic"
+    ],
+    "crop_order_excluding_default": [
+      "ground",
+      "water",
+      "air",
+      "electric",
+      "fire",
+      "dark",
+      "ice",
+      "psychic"
+    ],
+    "default_excluded": "berries",
+    "consumer_source": "farm_logic.gd available_crops reads crop_order IDs then crop_definition(config,crop_id); runtime native/Greenhouse and seed-count filtering not executed."
+  },
+  "hash_basis": "Existing sha256 fields preserve exact originally observed Windows filesystem bytes including CRLF. normalized_lf_sha256 removes CRLF from those same unchanged bytes for comparison, not a canonical Git blob proof."
+}
