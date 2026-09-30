@@ -69,6 +69,7 @@ func _ready() -> void:
 			body.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 			body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if str(profile.shape) == "stone" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.authored_material("ion_filament", profile, _colour)
+		if bool(profile.get("air_surface", false)): body.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
 		_bodies.append(body)
 		var history: Array[Vector3] = []
 		_histories.append(history)
@@ -367,6 +368,7 @@ func _build_impact() -> void:
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
 	if str(profile.get("shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
+	if bool(profile.get("air_surface", false)): core.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
 	core.position = surface_offset

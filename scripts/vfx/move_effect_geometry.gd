@@ -13,6 +13,7 @@ const AUTHORED := preload("res://scripts/vfx/authored_effect_geometry.gd")
 const TONGUE_SHADER := preload("res://assets/vfx/shaders/flame_tongue.gdshader")
 const TONGUE_TEXTURE := preload("res://assets/vfx/textures/flame_tongue_v2.png")
 const EXPLOSION_SHADER := preload("res://assets/vfx/shaders/fire_explosion.gdshader")
+const WIND_SHADER := preload("res://assets/vfx/shaders/wind_surface.gdshader")
 const BUBBLE_SHADER := preload("res://assets/vfx/shaders/bubble_surface.gdshader")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
@@ -92,6 +93,16 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 0.7)))
 		out.set_shader_parameter("center_opacity", float(profile.get("center_opacity", 0.045)))
 		out.set_shader_parameter("surface_roughness", float(profile.get("surface_roughness", 0.14)))
+		return out
+	if kind == "wind_surface":
+		out.shader = WIND_SHADER
+		out.set_shader_parameter("air_colour", colour)
+		out.set_shader_parameter("crest_colour", Color(str(profile.get("crest_colour", "#f2fff9"))))
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.72)))
+		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.1)))
+		out.set_shader_parameter("strand_frequency", float(profile.get("strand_frequency", 5.0)))
+		out.set_shader_parameter("breakup", float(profile.get("breakup", 0.38)))
+		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.04)))
 		return out
 	if kind == "fire_explosion":
 		out.shader = EXPLOSION_SHADER
