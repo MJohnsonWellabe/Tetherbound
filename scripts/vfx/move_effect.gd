@@ -65,7 +65,7 @@ func _ready() -> void:
 	for i in int(_params.count):
 		var body := _mesh_node(GEOMETRY.shape(str(profile.shape), float(_params.size), profile),
 			_colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
-		if str(profile.shape) in ["stone", "flame_orb", "burning_core", "water_stream", "rolling_wave", "ice_crystal", "flame_volume", "mist_cone"]:
+		if str(profile.shape) in ["stone", "flame_orb", "burning_core", "water_stream", "rolling_wave", "ice_crystal", "flame_volume", "mist_cone", "bubble"]:
 			body.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 			body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if str(profile.shape) == "stone" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.authored_material("ion_filament", profile, _colour)
@@ -404,7 +404,7 @@ func _build_impact() -> void:
 		_motes = MultiMeshInstance3D.new()
 		_motes.multimesh = multimesh
 		_motes.material_override = GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone")
-		if str(profile.get("mote_shape", "")) in ["soft_ember", "stone", "ice_crystal"]:
+		if str(profile.get("mote_shape", "")) in ["soft_ember", "stone", "ice_crystal", "bubble"]:
 			_motes.material_override = GEOMETRY.authored_material(str(profile.mote_shape), profile, Color(str(profile.get("mote_colour", _params.colour))))
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)

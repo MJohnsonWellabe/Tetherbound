@@ -1316,8 +1316,14 @@
         "body": {
           "shape": "bubble",
           "motion": "projectile",
-          "lit": false,
+          "lit": true,
           "opacity": 0.68,
+          "rim_colour": "#dcfaff",
+          "rim_power": 2.6,
+          "film_strength": 0.1,
+          "flow_speed": 0.7,
+          "center_opacity": 0.045,
+          "surface_roughness": 0.14,
           "segments": 24,
           "rings": 8,
           "height_ratio": 3.0,
@@ -1329,21 +1335,7 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
-          "layers": [
-            {
-              "shape": "crescent",
-              "size_scale": 0.82,
-              "colour": "#e2f8ff",
-              "opacity": 0.75,
-              "offset": [
-                0,
-                0.25,
-                0.25
-              ],
-              "width": 0.06,
-              "arc_degrees": 90
-            }
-          ]
+          "layers": []
         },
         "trail": {
           "style": "bubble",
@@ -1359,13 +1351,29 @@
           "grow": 1.8,
           "heat": 0.35,
           "opacity": 0.82,
-          "mote_shape": "orb",
+          "mote_shape": "bubble",
           "mote_size": 0.065,
           "speed": 4.5,
           "gravity": 5.0,
-          "width": 0.12,
+          "width": 0.07,
           "height_ratio": 2.3,
-          "segments": 16
+          "segments": 16,
+          "initial_grow": 0.2,
+          "growth_power": 0.45,
+          "puff_count": 4,
+          "puff_shape": "soft_foam",
+          "puff_colour": "#ddf7ff",
+          "puff_radius_scale": 0.55,
+          "target_envelope_scale": 0,
+          "puff_start_radius_scale": 0.1,
+          "puff_end_radius_scale": 0.8,
+          "puff_size_scale": 0.3,
+          "puff_opacity": 0.32,
+          "puff_initial_scale": 0.28,
+          "puff_reveal_power": 0.2,
+          "puff_grow": 1.2,
+          "puff_lift_m": 0.2,
+          "visual_anchor": "contact_surface"
         },
         "sound": {
           "launch": "vfx_bubble_volley_launch",
