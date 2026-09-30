@@ -534,7 +534,7 @@
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "F26#1/#2 landed via PR470. Second Forward+ scheduler candidate1642 failed native0xc00000fd before frames/receipt; diagnostics captured176813 buffer barriers requesting9901536 bytes beyond8MiB. After two failures, source4a528affa changes to per-region/model GPU materialization using existing Terrain3D API and the landed Hall route; parser0 and independent combat/VFX source PASS, native queued. Compatibility/default/network/content/scatter IDs preserved. Matrix/material/Ally remain open; no new F26 MET."
+   "checkpoint": "27e2d1bf6b evidence/424ca00d game: integrated Hall route native0 on Forward+Medium506/High481frames at1920x1080; independent incremental source PASS. Regional r3 native stack failure retained; changed-cell refresh preserves unchanged scatter buffers and placements. GTX1060 Medium mean40.41ms/P9545.01, High42.68/P9549.40; no Ally/performance-bar/full-matrix claim. F26#1/#2 remain the only MET; material/visual/remaining7current route cases open."
   }
  ]
 }

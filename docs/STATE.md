@@ -33,7 +33,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
 | `tb/combat` | F21–F24 | 0aa: guest incoming native1/one missingLabel red; poise/authority checks PASS. Low camera preflight refused dimensions, no capture; pure4/104/0. No new MET. |
 | `tb/vfx` | F25, F35 | 67c620: r6 native0/12cases/36PNG, clocks/leases PASS; strict blind pending. Prior reds retained; full craft/world open, flag off. |
-| `tb/lookdev` | F26 | #1/#2 landed #470. 1642 second scheduler stack failure retained. 4a528 region/model upload+Hall route parser0/independent source PASS; native queued, matrix/material/Ally open. |
+| `tb/lookdev` | F26 | #1/#2 main. 424ca00d native0 Hall route Medium506/High481frames; buffer-refresh source PASS. Prior reds retained; materials/visual/7routes/Ally open. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
