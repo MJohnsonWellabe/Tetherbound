@@ -98,7 +98,14 @@ func _run() -> void:
 		_finish_failure("actual body did not reach the Hall nave on collision: local=%s on_floor=%s" % [local_arrival, _player.is_on_floor()])
 		return
 	print("F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=%s Halllocal=%s maximum_offroad=%.3f" % [_player.global_position, local_arrival, _max_off_road])
+	if not await _after_hall_arrival(hall):
+		_finish_failure(_failed)
+		return
 	quit(0)
+
+
+func _after_hall_arrival(_hall: Node3D) -> bool:
+	return true
 
 
 func _finish_failure(reason: String) -> void:

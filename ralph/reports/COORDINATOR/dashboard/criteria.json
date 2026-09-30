@@ -959,14 +959,14 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 14,
+   "pct": 29,
    "counts": {
-    "met": 1,
-    "not_started": 6,
+    "met": 2,
+    "not_started": 4,
     "partial": 0,
     "in_progress": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
@@ -977,15 +977,15 @@
     },
     {
      "text": "From Grandpa's farm door at the normal camera, the Crossing Hall reads as the destination down the road (code-blind judge YES, day and night).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "failing",
+     "evidence": "Actual source2a1c6d37f3: two original1920x1080 normal-camera day/night frames at the same farm-door pose, native0/215.078s. Fresh code-blind DAY NO/NIGHT NO; exact raw report and original PNGs in ralph/reports/HUB/f17/destination-day-night-r1, receipt/log and destination-day-night-result.md. Shortcuts disclosed: authored opening fixture, injected ordinary input, production WorldLook day/night + clear weather; no camera/body/HUD geometry alteration. No visual MET.",
+     "gap": "Hall remains an indistinct distant multi-gable mass, partly occluded by dominant market canopy; night lacks a distinct warm arrival silhouette."
     },
     {
      "text": "The Hall nave holds the home arch plus 7 portal arches (3 live-capable, 4 sealed and dark but visible), each signed by biome; a Shrine Room holds 8 pedestals; a controller walk reaches every arch and pedestal with no collision snag.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "Independent strict MET: ralph/reports/HUB/f17/recheck-f17-2.md, candidate9131f8a9f2/executed1d34b8d3bd. Actual production nave signs one home + three live-capable + four sealed arches; sealed material #303947 emission off; Shrine Room eight signed pedestals. All16 physical controller approaches reached0.433â€“0.539m/on_floor, native0/242.640s; runtime/hall-circuit-r1.txt and receipt. Shortcuts disclosed: authored opening/starter, one initial farmhouse pose, injected joypad/headless structural visibility; darkness verified from material source, not native pixels. No visual/device/travel/co-op claim; F17#1 strict DAY NO/NIGHT NO retained. Main credit only at this PR landing.",
+     "gap": ""
     },
     {
      "text": "Every house has a named resident or lived-in dressing; shop, workshop, inn, tournament board and research keeper are reachable on a controller day and night walk.",
