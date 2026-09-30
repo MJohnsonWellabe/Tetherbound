@@ -1,0 +1,21 @@
+{
+  "neutral_api": "289efe0d8d76d9c27e2efecb465e47246b32f454",
+  "sources": {
+    "scripts/net/session.gd": {
+      "git_blob": "b8ecf4c13305b50b7723075ba0afdf4033c295d4",
+      "sha256": "907bff5b2a10dad3f5673ea97f3c5d6383ee36e7fe68da05c1712bc63db7da3c"
+    },
+    "scripts/net/ledger_rpc.gd": {
+      "git_blob": "803e801e5804bc296b0a89893a821b6d4fa98e51",
+      "sha256": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57"
+    },
+    "scripts/net/actor_vitals_delivery.gd": {
+      "git_blob": "e90b2dad5dff567895602b46acc7a7a15391440d",
+      "sha256": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962"
+    },
+    "scripts/net/character_authority.gd": {
+      "git_blob": "d6ea84f670bc56a70c6323350ff246d14211097c",
+      "sha256": "05795eca422c10c4517f03f436fedd67ba5090839fbe31b22e6af31d5f43f652"
+    }
+  }
+}

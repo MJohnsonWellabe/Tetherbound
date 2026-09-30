@@ -96,3 +96,17 @@ func stop_opponent() -> void:
 
 func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> Dictionary:
 	return authority_link.call("host_resolve_enemy_hit", encounter_id, peer_id, payload)
+
+
+func host_actor_vitals_enabled() -> bool:
+	return bool(authority_link.call("host_actor_vitals_enabled"))
+
+func host_prepare_actor_vitals(encounter_id: String) -> bool:
+	return bool(authority_link.call("host_prepare_actor_vitals", encounter_id))
+
+func host_commit_enemy_actor_hit(encounter_id: String, peer_id: int, payload: Dictionary,
+		launch: Dictionary, contact: Dictionary) -> Dictionary:
+	return authority_link.call("host_commit_enemy_actor_hit", encounter_id, peer_id, payload, launch, contact)
+
+func host_finalize_enemy_actor_hit(peer_id: int, accepted: Dictionary) -> bool:
+	return bool(authority_link.call("host_finalize_enemy_actor_hit", peer_id, accepted))

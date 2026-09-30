@@ -1,0 +1,45 @@
+{
+  "base": "858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf",
+  "source_pins": {
+    "data/config/combat.json": {
+      "git_blob": "35b0d5f0353f10522c1cf84ddf846b702f7f5f96",
+      "sha256": "4576cc4d16f7bc7a0dd56a10669b7694758562fb8e4efc710fb727d9421cc5c5"
+    },
+    "scripts/combat/combat_manager.gd": {
+      "git_blob": "0011dd4cb4b49f630090541f3eb8764a825014e5",
+      "sha256": "0923b669ac32e795ef225bf5ff8b8c34fc93d4d635f7b47811f41cea481521a0"
+    },
+    "scripts/combat/encounter_director.gd": {
+      "git_blob": "fc1ebcfde232541ea70156c219064473d4dee6c9",
+      "sha256": "3c5e1d0c972b1126a5bacd9e342c3e47b7c63e79c4f18355284d5ba30ac061fb"
+    },
+    "scripts/combat/shared_wild_host_fight.gd": {
+      "git_blob": "c729aa6778f2dc24f557d6e2123e53efb5340dea",
+      "sha256": "a04697ae1b1cb71ffef33ee97d7a2c7819217756dceef368621b668df184d0d8"
+    },
+    "scripts/net/encounter_host.gd": {
+      "git_blob": "c864800e0a0c471b51086d10f7797995ca46e408",
+      "sha256": "634ba27d5307706612edfb8d432f18fb22e297bb7035905fe7706174ab30ef1d"
+    },
+    "scripts/combat/utility_effects.gd": {
+      "git_blob": "eb3fc4a2eebf5e21e866e8f279c68059e2752120",
+      "sha256": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba"
+    },
+    "scripts/combat/move_projectile.gd": {
+      "git_blob": "f489dc08f3bd1b99280aa13d3ef4a0aa07b7be3f",
+      "sha256": "e103fce23bb599c470348f1c3cb1b2ab909a49a5eddb0805ee2de8c622435d41"
+    },
+    "scripts/combat/hit_feedback.gd": {
+      "git_blob": "5a6263c274f35f330a82ec56429aacbe7cb9f4dc",
+      "sha256": "2d197e659e352651e718c54a85855154bcedb34bab5c1ca4a46cecd004eac067"
+    },
+    "scripts/creatures/teaching.gd": {
+      "git_blob": "ea52250aec6d4376fdd0b36d8e6a39dbf2655d67",
+      "sha256": "b329abd6c96a94d37d31e6908fafa4554373d0119856157d4eaa84ac53f61267"
+    },
+    "scripts/creatures/creature_instance.gd": {
+      "git_blob": "042a5d113c80f0b066f378b89966242785a81d41",
+      "sha256": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428"
+    }
+  }
+}

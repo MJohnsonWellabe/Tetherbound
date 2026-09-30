@@ -96,6 +96,8 @@ const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 const MOVE_PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
 const MOVE_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 const MOVE_TEACHING := preload("res://scripts/creatures/teaching.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
 const OPENING_CONFIG := "res://data/config/opening.json"
 
 ## Where lane 2.A mounts the session: a `Node` child of the `Game` autoload
@@ -1923,7 +1925,7 @@ func realm_transition_arrived() -> void:
 
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	var outbound := intent
-	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent"]:
+	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent", "utility_intent"]:
 		outbound = intent.duplicate(true)
 		if intent.has("action"):
 			_encounter_action = maxi(_encounter_action, int(intent.get("action", 0)))
@@ -2021,7 +2023,7 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
 	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent",
-			"catch_attempt", "catch_finished", "trainer_victory"]:
+			"catch_attempt", "catch_finished", "trainer_victory", "utility_intent"]:
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
 		# record. An accepted `trainer_victory` tells its sender to stop retrying.
@@ -2199,6 +2201,8 @@ func _deliver_encounter_verdict(verdict: Dictionary) -> void:
 				_manager.call("apply_host_burst_verdict", verdict.get("delta", {}))
 			else:
 				_manager.call("note_encounter_refusal", verdict)
+		"utility_intent":
+			if not bool(verdict.get("ok", false)): _manager.call("note_encounter_refusal", verdict)
 		"catch_attempt":
 			if bool(_manager.call("apply_host_catch_verdict", verdict)):
 				_shared_catch_finish_pending = {}
@@ -2229,6 +2233,8 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			return verdict
 		"burst_intent":
 			return _host_burst(intent, peer_id)
+		"utility_intent":
+			return _host_commit_utility(intent, peer_id)
 		"catch_attempt":
 			return _host_catch(intent, peer_id)
 		"catch_finished":
@@ -2922,6 +2928,271 @@ func _commit_host_actor_vitals(encounter_id: String, peer_id: int,
 		"delivery_pending": not finalized}
 
 
+## Dormant production path: exact boolean OFF until the whole caller/carrier
+## and prepared writer/rejoin batch is independently accepted. No truthy cast.
+func host_actor_vitals_enabled() -> bool:
+	var cfg: Variant = MATH.config().get("actor_vitals", {})
+	return cfg is Dictionary and typeof(cfg.get("runtime_enabled")) == TYPE_BOOL \
+		and cfg.runtime_enabled
+
+
+## This may emit, so it runs before geometry, body binding or damage arithmetic.
+func host_prepare_actor_vitals(encounter_id: String) -> bool:
+	if not host_actor_vitals_enabled() or not _is_host() or _session == null \
+		or not _session.has_method("host_commit_creature_vitals") \
+		or not _session.has_method("host_finalize_creature_vitals"): return false
+	var game := get_node_or_null(^"/root/Game")
+	var saver: RefCounted = game.get("save_system") if game != null else null
+	if saver == null or not saver.has_method("save_world_prepared"): return false
+	saver.call("finish_fallback")
+	return not bool(saver.call("fallback_busy")) and _encounter_host != null \
+		and str(_encounter_host.call("phase", encounter_id)) == "active"
+
+
+## Detached arithmetic projection only, never an alternate ownership registry.
+## Best survivability comes from this SAME admitted five-member party. Relic
+## selection needs this character's typed hung entitlement, not world flags.
+func _host_admitted_incoming_card(peer_id: int, uid: String) -> Dictionary:
+	var personal: Dictionary = _session.call("admitted_character_state", peer_id)
+	if not MOVE_TEACHING.admitted_party_errors(personal.get("party"), personal.get("redesign_character")).is_empty(): return {}
+	if not personal.get("realm_hearts") is Dictionary \
+		or not (personal.realm_hearts as Dictionary).get("active_id") is String: return {}
+	var carrier: Dictionary = personal.redesign_character
+	if not carrier.get("relics_hung") is Array: return {}
+	var game := get_node_or_null(^"/root/Game")
+	var saver: RefCounted = game.get("save_system") if game != null else null
+	var hearts: RefCounted = game.get("realm_hearts") if game != null else null
+	if saver == null or hearts == null: return {}
+	var relic: String = personal.realm_hearts.active_id
+	var incoming := 1.0
+	if not relic.is_empty():
+		var canonical_relic := "tidewake" if relic == "water" else relic
+		if not (carrier.relics_hung as Array).has(canonical_relic): return {}
+		var spec: Dictionary = hearts.call("heart", relic)
+		if spec.is_empty() or not spec.get("power") is Dictionary: return {}
+		var raw: Variant = spec.power.get("incoming_damage_multiplier", 1.0)
+		if not (raw is int or raw is float) or not is_finite(float(raw)) \
+			or float(raw) < 0.0 or float(raw) > 1.0: return {}
+		incoming = float(raw)
+	var projected := preload("res://autoload/party.gd").new()
+	saver.call("_array_to_party", personal.party, projected, carrier)
+	if projected.size() != personal.party.size(): return {}
+	# Typed best selection belongs to the admitted owner, not the host's party.
+	var best_count := 0
+	for index: int in projected.size():
+		var member: RefCounted = projected.at(index)
+		var record: Dictionary = carrier.get("creatures", {}).get(str(member.get("uid")), {})
+		if bool(record.get("best", false)):
+			best_count += 1
+			if best_count > 1 or not projected.set_best(index): return {}
+	for member: RefCounted in projected.members():
+		if str(member.get("uid")) != uid: continue
+		var best := projected.best() == member
+		var ability: Dictionary = SPECIES.best_creature_ability(str(member.get("species_id"))) if best else {}
+		var defence := float(member.call("effective_defence", PROGRESSION.config(), best, ability))
+		if not is_finite(defence) or defence <= 0.0: return {}
+		return {"creature_uid": uid, "species_id": str(member.get("species_id")),
+			"creature_type": str(member.get("creature_type")), "secondary_type": str(member.get("secondary_type")),
+			"defence": defence, "incoming_multiplier": incoming}
+	return {}
+
+
+## Capture at the actual host-picked contact BEFORE any damage roll. Binding
+## here is explicit admission; later arrival must use the nonbinding verifier.
+func _host_capture_enemy_actor(encounter_id: String, peer_id: int) -> Dictionary:
+	var context := _host_owned_actor_context(encounter_id, peer_id)
+	if context.is_empty(): return {}
+	var card := _host_admitted_incoming_card(peer_id, str(context.creature_uid))
+	if card.is_empty(): return {}
+	var bound: Dictionary = _encounter_host.call("bind_actor_body", encounter_id, peer_id,
+		str(context.character_id), context.owned_row, (context.body as Node).get_instance_id())
+	if not bool(bound.get("ok", false)) or bool(bound.vitals.fainted): return {}
+	var contact := {"creature_uid": str(context.creature_uid), "body_generation": int(bound.vitals.body_generation),
+		"body_instance_id": (context.body as Node).get_instance_id(), "card": card}
+	card.make_read_only()
+	contact.make_read_only()
+	return contact
+
+
+## Read-only arrival guard. Refusal cannot seed another actor's HP, advance
+## its generation or replace the current UID on a pooled body.
+func _host_recheck_actor_contact(encounter_id: String, peer_id: int, contact: Dictionary) -> Dictionary:
+	var context := _host_owned_actor_context(encounter_id, peer_id)
+	if context.is_empty() or contact.get("creature_uid") != context.creature_uid \
+		or typeof(contact.get("body_generation")) != TYPE_INT \
+		or typeof(contact.get("body_instance_id")) != TYPE_INT \
+		or (context.body as Node).get_instance_id() != contact.body_instance_id: return {}
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	var participant: Dictionary = record.get("participants", {}).get(peer_id, {})
+	var actor: Dictionary = participant.get("actor_vitals", {}).get(str(context.creature_uid), {})
+	if participant.get("creature_uid") != context.creature_uid \
+		or actor.get("body_instance_id") != contact.body_instance_id \
+		or actor.get("body_generation") != contact.body_generation: return {}
+	var vitals: Dictionary = _encounter_host.call("actor_vitals", encounter_id, peer_id,
+		str(context.creature_uid), int(contact.body_generation))
+	if vitals.is_empty() or bool(vitals.fainted): return {}
+	context["vitals"] = vitals
+	context["generation"] = int(contact.body_generation)
+	return context
+
+
+## Accepted opponent hit: only the host Manager's frozen scheduled contact
+## calls this. No RPC accepts damage, card stats, target generation or ObjectID.
+func host_commit_enemy_actor_hit(encounter_id: String, peer_id: int, payload: Dictionary,
+		launch: Dictionary, contact: Dictionary) -> Dictionary:
+	if not host_prepare_actor_vitals(encounter_id): return {}
+	var context := _host_recheck_actor_contact(encounter_id, peer_id, contact)
+	var opponent := _host_utility_opponent_context(encounter_id)
+	if context.is_empty() or opponent.is_empty() \
+		or (opponent.body as Node).get_instance_id() != contact.get("enemy_body_instance_id") \
+		or str((opponent.opponent as RefCounted).get("uid")) != launch.get("attacker_uid") \
+		or launch.get("target_uid") != context.creature_uid \
+		or launch.get("encounter_id") != encounter_id or launch.get("action_id") != contact.get("action_id"): return {}
+	var card := _host_admitted_incoming_card(peer_id, str(context.creature_uid))
+	if card.is_empty() or card != contact.get("card"): return {}
+	var impact: Dictionary = payload.get("impact", {})
+	if impact.get("action_id") != launch.action_id or impact.get("target_uid") != context.creature_uid: return {}
+	var damage: Variant = payload.get("damage")
+	if not (damage is int or damage is float) or not is_finite(float(damage)) or float(damage) <= 0.0: return {}
+	# Stage poise/critical/replay on detached state. A failed world journal
+	# cannot consume the critical window, reset quiet time or pause a body.
+	var peers: Dictionary = _host_defence.get(encounter_id, {})
+	var staged: Dictionary = (peers.get(peer_id, {}) as Dictionary).duplicate(true)
+	var cfg: Dictionary = MATH.config().get("poise", {})
+	var now_ms := Time.get_ticks_msec()
+	if str(staged.get("target_uid", "")) != str(context.creature_uid):
+		staged = HIT_FEEDBACK.defence_state(str(context.creature_uid), now_ms, cfg)
+	if not HIT_FEEDBACK.admit(staged.actions, impact): return {}
+	HIT_FEEDBACK.advance_defence(staged, now_ms, cfg)
+	var critical := bool(staged.critical_ready) and now_ms < int(staged.stagger_until_ms)
+	var stop := float(HIT_FEEDBACK.config().get("critical_hitstop_seconds", 0.0)) if critical else float(impact.get("hitstop_seconds", 0.0))
+	var defence := HIT_FEEDBACK.resolve_defence_hit(staged, float(damage),
+		float(card.incoming_multiplier), now_ms, stop, cfg)
+	var limit: Variant = MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter")
+	if not (limit is int or limit is float) or not is_finite(float(limit)) \
+		or float(limit) < 1.0 or float(limit) > 65536.0 or floorf(float(limit)) != float(limit): return {}
+	var proposal: Dictionary = _encounter_host.call("stage_actor_vitals", encounter_id, peer_id,
+		str(context.creature_uid), int(context.generation), int(context.vitals.revision),
+		str(launch.action_id), "damage", float(defence.damage), int(limit))
+	if not bool(proposal.get("ok", false)): return {}
+	var owned: Dictionary = context.owned_row
+	var durable: Dictionary = _session.call("host_commit_creature_vitals", peer_id,
+		str(context.creature_uid), int(context.character_revision), float(owned.hp), bool(owned.fainted),
+		float(proposal.hp_after), bool(proposal.fainted), proposal.settlement_receipt)
+	if not bool(durable.get("ok", false)) or not bool(durable.get("durable", false)): return {}
+	# Silent prepared CAS -> exact pure actor commit: no await, callbacks,
+	# signals, hitstop, snapshots or owner delivery can intervene here.
+	var committed: Dictionary = _encounter_host.call("commit_actor_vitals", proposal)
+	if not bool(committed.get("ok", false)): return {} # Durable journal stays pending; never fake ACK/forget.
+	if not bool(_encounter_host.call("acknowledge_actor_vitals", encounter_id, str(context.character_id),
+		str(context.creature_uid), int(proposal.revision), proposal.settlement_receipt)): return {}
+	peers[peer_id] = staged
+	_host_defence[encounter_id] = peers
+	_encounter_host.call("note_struck", encounter_id, peer_id)
+	var resolved := payload.duplicate(true)
+	resolved["damage"] = float(proposal.hp_before) - float(proposal.hp_after)
+	resolved["critical"] = bool(defence.critical)
+	resolved["defence"] = defence
+	resolved["host_resolved_defence"] = true
+	resolved["impact"] = HIT_FEEDBACK.with_defence(impact, defence)
+	resolved["actor_vitals"] = {"creature_uid": str(context.creature_uid), "hp": float(proposal.hp_after),
+		"max_hp": float(proposal.max_hp), "fainted": bool(proposal.fainted),
+		"revision": int(proposal.revision), "body_generation": int(context.generation)}
+	# This exact durable receipt is private until the caller stages contact
+	# presentation. It is not a payload field and cannot become a client ACK.
+	return {"payload": resolved, "creature_uid": str(context.creature_uid),
+		"settlement_receipt": proposal.settlement_receipt.duplicate(true)}
+
+
+func host_finalize_enemy_actor_hit(peer_id: int, accepted: Dictionary) -> bool:
+	if not _is_host() or _session == null or not _session.has_method("host_finalize_creature_vitals"): return false
+	# Foundation rechecks exact current durable row; an old presentation
+	# callback that causes newer damage cannot clear or publish its old row.
+	return bool(_session.call("host_finalize_creature_vitals", peer_id,
+		str(accepted.get("creature_uid", "")), accepted.get("settlement_receipt", {})))
+
+## Real utility intent door, disabled by the same exact runtime boolean.
+## The intent carries a move/action only: host roster, live HP, Wind, body and
+## authored heal fraction are reconstructed before durable commitment.
+func _host_commit_utility(intent: Dictionary, peer_id: int) -> Dictionary:
+	var id := str(intent.get("encounter_id", ""))
+	if not host_prepare_actor_vitals(id): return _utility_refusal(peer_id, "not_ready")
+	var context := _host_actor_vitals_context(id, peer_id)
+	if context.is_empty() or _host_peer_staggered(id, peer_id): return _utility_refusal(peer_id, "invalid_actor")
+	if not intent.get("move_id") is String: return _utility_refusal(peer_id, "invalid_move")
+	var move_id: String = intent.move_id
+	var owned := _host_owned_move(peer_id, str(context.creature_uid), move_id, "utility")
+	if not bool(owned.get("ok", false)) or not bool(owned.get("enabled", false)):
+		return _utility_refusal(peer_id, "invalid_owned_move")
+	var moves := MOVE_DB.load_default()
+	var move: Dictionary = moves.call("move", move_id)
+	if str((move.get("utility", {}) as Dictionary).get("kind", "")) != "heal":
+		return _commit_host_status_utility(intent, peer_id)
+	if not _encounter_host.has_method("stage_actor_heal_utility") \
+		or not _encounter_host.has_method("commit_actor_heal_utility"):
+		return _utility_refusal(peer_id, "heal_transaction_not_ready")
+	var body: Node3D = context.body
+	var frozen := {"creature_uid": str(context.creature_uid), "body_generation": int(context.generation),
+		"body_instance_id": body.get_instance_id()}
+	var view := {"source_uid": str(context.creature_uid), "source_generation": int(context.generation),
+		"origin": body.call("centre"), "now_ms": Time.get_ticks_msec()}
+	var limit: Variant = MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter")
+	if not UTILITY_EFFECTS._number(limit, 1.0, 65536.0) or floorf(float(limit)) != float(limit):
+		return _utility_refusal(peer_id, "invalid_config")
+	var bundle: Dictionary = _encounter_host.call("stage_actor_heal_utility", intent, peer_id, view,
+		move_id, COMBAT_MANAGER.host_wind_profile(context.wind_card), int(limit))
+	if not bool(bundle.get("ok", false)): return _utility_refusal(peer_id, str(bundle.get("code", "invalid_heal")))
+	# The proposal derives actual max/current HP, not portable stale HP. Check
+	# the frozen body once more before the callback-free prepared writer.
+	if _host_recheck_actor_contact(id, peer_id, frozen).is_empty(): return _utility_refusal(peer_id, "stale_actor")
+	var proposal: Dictionary = bundle.vitals_proposal
+	var canonical: Dictionary = context.owned_row
+	var durable: Dictionary = _session.call("host_commit_creature_vitals", peer_id, str(context.creature_uid),
+		int(context.character_revision), float(canonical.hp), bool(canonical.fainted),
+		float(proposal.hp_after), bool(proposal.fainted), proposal.settlement_receipt)
+	if not bool(durable.get("ok", false)) or not bool(durable.get("durable", false)):
+		return _utility_refusal(peer_id, str(durable.get("code", "world_write_failed")))
+	# Silent world acceptance -> exact pure combined HP/resource commit.
+	var accepted: Dictionary = _encounter_host.call("commit_actor_heal_utility", bundle)
+	if not bool(accepted.get("ok", false)): return _utility_refusal(peer_id, "reconciliation_required")
+	if not bool(_encounter_host.call("acknowledge_actor_vitals", id, str(context.character_id),
+		str(context.creature_uid), int(proposal.revision), proposal.settlement_receipt)):
+		return _utility_refusal(peer_id, "settlement_ack_conflict")
+	var verdict: Dictionary = accepted.verdict
+	var delta: Dictionary = verdict.delta
+	delta["actor_vitals"] = {"creature_uid": str(context.creature_uid), "hp": float(proposal.hp_after),
+		"max_hp": float(proposal.max_hp), "fainted": bool(proposal.fainted),
+		"revision": int(proposal.revision), "body_generation": int(context.generation)}
+	delta["move_id"] = move_id
+	delta["mastery_rank"] = int(owned.rank) # Frozen before any earned-use event; self heal earns none.
+	# Exact source-owned body placement is presentation metadata, not request aim.
+	delta["origin"] = body.call("centre")
+	# Delivery here puts visible self contact before owner-save reconciliation.
+	# Do not duplicate a local accepted verdict in the request's return path.
+	host_deliver_utility(id, peer_id, delta)
+	_session.call("host_finalize_creature_vitals", peer_id, str(context.creature_uid), proposal.settlement_receipt)
+	_host_after_encounter_change(id)
+	verdict["already_presented"] = true
+	return verdict
+
+
+func _utility_refusal(peer_id: int, code: String) -> Dictionary:
+	return {"ok": false, "kind": "utility_intent", "peer": peer_id, "code": code,
+		"reason": "That utility could not commit safely.", "pending": false, "delta": {}}
+
+
+func host_deliver_utility(encounter_id: String, peer_id: int, delta: Dictionary) -> void:
+	if peer_id == _local_peer_id():
+		if _manager != null and _local_bound_encounter_id() == encounter_id:
+			_manager.call("apply_host_utility", delta)
+	elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_utility", [encounter_id, delta])
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_utility(encounter_id: String, delta: Dictionary) -> void:
+	if _manager != null and _local_bound_encounter_id() == encounter_id:
+		_manager.call("apply_host_utility", delta)
+
 ## F24 DRAFT: admission-side profile reader, not a binder or tier setter.
 ## The one Session record is the only payload source. Its net owner must use
 ## this once at actual encounter admission and freeze the profile + zero state
@@ -3208,6 +3479,10 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 	if best.is_empty():
 		return {}
 	var struck := int(best.get("peer_id", 0))
+	if host_actor_vitals_enabled():
+		var contact := _host_capture_enemy_actor(encounter_id, struck)
+		if contact.is_empty(): return {}
+		return {"peer_id": struck, "card": contact.card, "body": deployed_body_for(struck), "actor_contact": contact}
 	_encounter_host.call("note_struck", encounter_id, struck)
 	return {"peer_id": struck, "card": _creature_card_for(struck), "body": deployed_body_for(struck)}
 

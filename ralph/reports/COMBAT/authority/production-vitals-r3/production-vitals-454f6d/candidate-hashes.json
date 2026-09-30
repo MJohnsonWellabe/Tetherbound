@@ -1,0 +1,25 @@
+{
+  "base": "858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf",
+  "neutral_api": "289efe0d8d76d9c27e2efecb465e47246b32f454",
+  "supersedes": "R1 remains frozen. R2 adds actual heal intent/postwindup/presentation plus separate foundation-owned pure resource+HP bundle patch.",
+  "runtime_enabled": false,
+  "tracked_edits": false,
+  "net_owner": "Do not apply heal-net-owner.patch; Foundation exclusive EncounterHost, patch against combat prototype base858b only.",
+  "limits": "Missing admitted carriers/producer, actual prepared failure/reentrant owner-save/rejoin runtime, solo admission and new utility controller/startup remain unaccepted. Status-other-than-heal dispatch lacks real persistent presentation. No whole F23/F24 credit. Accepted durable actor/ACK conflict retains journal, no fake personal ACK.",
+  "sha256": {
+    "heal-net-owner.patch": "14c91641694cf8ecadad1f5de53b4dd81446c9761db463fb5b220ec2c3152ba2",
+    "production-vitals.patch": "454f6d5938206f9dd829f98f3d3777f8f46dfc2c130d0bdccb4ad25d2a0991fc",
+    "data\\config\\combat.json": "5869b9d7ae065f09a3d367849f3764c08c993815d2827369f878d78869ffd26d",
+    "scripts\\combat\\combat_manager.gd": "226cf787dd4ebdcd535e134126bbfdb7db4f8849df7d25ce487e52b50b27170a",
+    "scripts\\combat\\encounter_director.gd": "2324f57f5bca2b95906d8e72cbcbca4a31a70abe5dd2c051560572ee30c57feb",
+    "scripts\\combat\\shared_wild_host_fight.gd": "e203bdcb7b6d1beea5aac4d7aa6562f177d2732e1578807e26c21de6f75c08d9",
+    "scripts\\net\\encounter_host.gd": "36a684474e16c0de5e7bcc6f979d64b95bded753d663b0075bddd56750aeeaa7"
+  },
+  "transaction_trace": {
+    "world_write_failure": "Detached proposed HP/poise/resources only. Refusal before actor pure commit, contact/status/meter/credit; required actor binding remains explicit admission and may have seeded initial pool.",
+    "owner_write_failure": "After durable actor commit, accepted absolute HP/resource truth remains. Foundation owner delivery retains unsaved pending marker, returns no ACK. Finalize boolean is only publication/queue success.",
+    "switch_or_replacement_during_flight": "Expected UID/generation/private targetObjectID and enemyObjectID rechecked read-only after fallback callbacks; refuse without rebinding pooled actor.",
+    "faint": "Canonical actor pool reaches zero first; staged poise not applied to dead actor presentation, absolute owner faint then existing real faint path, no healing resurrection.",
+    "reconnect_or_forget": "Existing encounter pending handoff guard remains; accepted world journal carries stable owner/UID/absoluteHP. Caller ack only worlddurable handoff, not ownerSave. Actual hosted owner failure/rejoin proof still pending."
+  }
+}

@@ -242,6 +242,8 @@ var _burst_awaiting_host := false
 var _last_burst_action := 0
 var _impact_serial := 0
 var _seen_impact_actions: Dictionary = {}
+## Presentation-only revision guard for absolute accepted host HP. No ownership or HP baseline.
+var _seen_actor_vitals: Dictionary = {}
 var _seen_launch_actions: Dictionary = {}
 var _impact_generation := 0
 
@@ -401,6 +403,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	_catch_presentation_last_ms = 0
 	_last_burst_action = 0
 	_seen_impact_actions.clear()
+	_seen_actor_vitals.clear()
 	_seen_launch_actions.clear()
 
 
@@ -412,6 +415,7 @@ func unbind_encounter() -> void:
 	_burst_awaiting_host = false
 	_last_burst_action = 0
 	_seen_impact_actions.clear()
+	_seen_actor_vitals.clear()
 	_seen_launch_actions.clear()
 
 
@@ -605,6 +609,7 @@ func begin(
 	_burst_awaiting_host = false
 	_last_burst_action = 0
 	_seen_impact_actions.clear()
+	_seen_actor_vitals.clear()
 	_seen_launch_actions.clear()
 	_buffered_attack = ""
 	_buffer_left = 0.0
@@ -2592,6 +2597,10 @@ func _resolve_player_strike() -> void:
 	if creature == null or _enemy == null or _ally_body == null or _wild == null:
 		return
 
+	if str(_pending_move.get("slot", "")) == "utility":
+		_submit_utility_intent()
+		return
+
 	# Stage B lane 4.C, protocol §5. In a session THIS PROCESS DOES NOT DECIDE.
 	# What the player did -- the move, where they were, which way they faced --
 	# goes to the host, and the answer comes back through
@@ -2741,6 +2750,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		killed_override: bool = false, crit_override: bool = false,
 		stagger_triggered_override: bool = false, impact_override: Dictionary = {},
 		move_override: Dictionary = {}, launch: Dictionary = {}) -> void:
+	if str(move_override.get("slot", _pending_move.get("slot", ""))) == "utility": return
 	var creature := active_creature()
 	if creature == null or _enemy == null or _ally_body == null or _wild == null:
 		return
@@ -3116,7 +3126,9 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		attack_missed.emit(false)
 		state_changed.emit()
 		return true
-	if int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")):
+	var canonical := _encounter_link.has_method("host_actor_vitals_enabled") \
+		and bool(_encounter_link.call("host_actor_vitals_enabled"))
+	if not canonical and int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")):
 		return false
 
 	var card: Dictionary = pick.get("card", {}) as Dictionary
@@ -3145,19 +3157,39 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 	var payload := {"damage": damage, "type_mult": type_mult, "move_id": move_id,
 		"lunge": float(cfg.get("lunge", 3.4)), "impact": impact}
 	var peer_id := int(pick.get("peer_id", 0))
+	var contact: Dictionary = (pick.get("actor_contact", {}) as Dictionary).duplicate(true)
+	if canonical:
+		if contact.is_empty(): return true
+		contact["enemy_body_instance_id"] = _wild.get_instance_id()
+		contact["action_id"] = str(launch.action_id)
+		contact.make_read_only()
 	if float(launch.travel_seconds) > 0.0:
 		_encounter_link.call("host_deliver_enemy_launch", _encounter_id, peer_id, launch)
 		get_tree().create_timer(float(launch.travel_seconds), false).timeout.connect(
-			_commit_scheduled_enemy_hit.bind(peer_id, payload, launch, target_body), CONNECT_ONE_SHOT)
-	else: _commit_scheduled_enemy_hit(peer_id, payload, launch, target_body)
+			_commit_scheduled_enemy_hit.bind(peer_id, payload, launch, target_body, contact), CONNECT_ONE_SHOT)
+	else: _commit_scheduled_enemy_hit(peer_id, payload, launch, target_body, contact)
 	return true
 
 
-func _commit_scheduled_enemy_hit(peer_id: int, payload: Dictionary, launch: Dictionary, target_body: Node3D) -> void:
+func _commit_scheduled_enemy_hit(peer_id: int, payload: Dictionary, launch: Dictionary, target_body: Node3D, contact: Dictionary = {}) -> void:
 	if state != State.ACTIVE or _encounter_link == null or _enemy == null \
 		or not is_instance_valid(_wild) or not is_instance_valid(target_body): return
 	if str(launch.get("encounter_id", "")) != _encounter_id \
 		or str(launch.get("attacker_uid", "")) != str(_enemy.get("uid")): return
+	if not contact.is_empty():
+		if not _encounter_link.has_method("host_commit_enemy_actor_hit") \
+			or not _encounter_link.has_method("host_finalize_enemy_actor_hit"): return
+		var accepted: Dictionary = _encounter_link.call("host_commit_enemy_actor_hit", _encounter_id, peer_id, payload, launch, contact)
+		if accepted.is_empty(): return
+		var resolved: Dictionary = accepted.payload
+		var accepted_impact: Dictionary = resolved.get("impact", {})
+		_host_body_hitstop(_wild, accepted_impact)
+		_host_body_hitstop(target_body, accepted_impact)
+		_encounter_link.call("host_deliver_enemy_hit", _encounter_id, peer_id, resolved)
+		# Presentation callbacks are after the pure commit. The foundation's
+		# exact-receipt finalize retains/supersedes pending truth on reentrancy.
+		_encounter_link.call("host_finalize_enemy_actor_hit", peer_id, accepted)
+		return
 	if not bool(_encounter_link.call("host_enemy_target_current", _encounter_id, peer_id, str(launch.target_uid))): return
 	if _encounter_link.has_method("host_resolve_enemy_hit"):
 		payload = _encounter_link.call("host_resolve_enemy_hit", _encounter_id, peer_id, payload)
@@ -3183,14 +3215,29 @@ func _incoming_owned_damage(amount: float) -> float:
 
 func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var feedback: Dictionary = payload.get("impact", {})
-	if not feedback.is_empty() and not HIT_FEEDBACK.admit(_seen_impact_actions, feedback, false): return
 	if state != State.ACTIVE or _ally_body == null:
 		return
 	var creature := active_creature()
 	if creature == null:
 		return
 	if not feedback.is_empty() and str(feedback.get("target_uid", "")) != str(creature.get("uid")): return
+	var absolute: Dictionary = {}
+	if payload.has("actor_vitals"):
+		if not payload.actor_vitals is Dictionary: return
+		absolute = payload.actor_vitals.duplicate(true)
+		absolute.make_read_only()
+		if not _valid_absolute_actor_vitals(absolute, creature): return
+		var key := _encounter_id + ":" + str(creature.get("uid"))
+		if int(absolute.revision) <= int(_seen_actor_vitals.get(key, 0)): return
+	if not feedback.is_empty() and not HIT_FEEDBACK.admit(_seen_impact_actions, feedback, false): return
+	var body_before_contact := _ally_body
+	var encounter_before_contact := _encounter_id
+	var generation_before_contact := _impact_generation
 	PROJECTILE.confirm_impact(get_tree(), str(feedback.get("action_id", "")))
+	if active_creature() != creature or _ally_body != body_before_contact \
+		or state != State.ACTIVE or not is_instance_valid(body_before_contact): return
+	if not absolute.is_empty() and not _actor_vitals_import_is_current(absolute, creature,
+		body_before_contact, encounter_before_contact, generation_before_contact): return
 	# The host resolves its own defensive ledger/relic config before delivery.
 	# Preserve the legacy partial-test adapter until every link carries that result.
 	var host_resolved := bool(payload.get("host_resolved_defence", false))
@@ -3198,7 +3245,22 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var move_id := str(payload.get("move_id", ""))
 	var stagger_crit := bool(payload.get("critical", false)) if host_resolved else _consume_player_stagger_critical()
 	if stagger_crit and not host_resolved: damage *= _poise_crit_scale()
-	var killed: bool = creature.take_damage(damage)
+	var killed := false
+	if not absolute.is_empty():
+		# Flag-off legacy arrival has no retained projectile mesh; its receipt
+		# flash is real contact geometry and must precede the absolute HP write.
+		_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
+			_ally_body, damage / maxf(1.0, float(creature.max_hp)), feedback)
+		if not _actor_vitals_import_is_current(absolute, creature, body_before_contact,
+			encounter_before_contact, generation_before_contact): return
+		# Contact is synchronously reconciled BEFORE the first absolute HP write.
+		# This presentation import never spends/gains or acknowledges persistence.
+		creature.set("hp", float(absolute.hp))
+		creature.set("fainted", bool(absolute.fainted))
+		_seen_actor_vitals[encounter_before_contact + ":" + str(creature.get("uid"))] = int(absolute.revision)
+		killed = bool(absolute.fainted)
+	else:
+		killed = creature.take_damage(damage)
 	var stagger_triggered := false
 	if not killed:
 		if host_resolved: stagger_triggered = _sync_host_player_defence(payload.get("defence", {}))
@@ -3213,8 +3275,9 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 		_ally_body.call("play_faint")
 	else:
 		_play_combat_flinch(_ally_body, impact.direction, impact)
-	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
-		_ally_body, damage / maxf(1.0, float(creature.max_hp)), impact)
+	if absolute.is_empty():
+		_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
+			_ally_body, damage / maxf(1.0, float(creature.max_hp)), impact)
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
 	if stagger_triggered:
 		_announce_stagger(false)
@@ -3224,6 +3287,92 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	if killed:
 		CONDITION.note_faint(creature, CONDITION.config())
 		_handle_active_faint()
+
+## Called by the existing post-windup resolver only for an actual utility row.
+## No input binding/startup is enabled by this supporting OFF batch.
+func _submit_utility_intent() -> void:
+	var creature := active_creature()
+	if creature == null or _encounter_link == null \
+		or not _encounter_link.has_method("host_actor_vitals_enabled") \
+		or not bool(_encounter_link.call("host_actor_vitals_enabled")): return
+	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {
+		"kind": "utility_intent", "encounter_id": _encounter_id,
+		"move_id": str(creature.get("move_utility"))})
+	if not bool(verdict.get("pending", false)) and not bool(verdict.get("ok", false)):
+		note_encounter_refusal(verdict)
+
+
+## Reliable accepted self-heal presentation, never a hit/damage producer.
+func apply_host_utility(delta: Dictionary) -> void:
+	var creature := active_creature()
+	if state != State.ACTIVE or creature == null or not is_instance_valid(_ally_body) \
+		or not delta.get("actor_vitals") is Dictionary: return
+	var absolute: Dictionary = delta.actor_vitals.duplicate(true)
+	absolute.make_read_only()
+	if not _valid_absolute_actor_vitals(absolute, creature): return
+	var key := _encounter_id + ":" + str(creature.get("uid"))
+	if int(absolute.revision) <= int(_seen_actor_vitals.get(key, 0)): return
+	var receipt: Variant = delta.get("utility_receipt")
+	var move_id: Variant = delta.get("move_id")
+	if not receipt is Dictionary or receipt.get("kind") != "heal" or receipt.get("damaging") != false \
+		or receipt.get("source_uid") != str(creature.get("uid")) or receipt.get("target_uid") != str(creature.get("uid")) \
+		or receipt.get("encounter_id") != _encounter_id or not move_id is String \
+		or not _moves.has(move_id) or str(_moves.slot(move_id)) != "utility" \
+		or typeof(delta.get("mastery_rank")) != TYPE_INT \
+		or int(delta.mastery_rank) < 1 or int(delta.mastery_rank) > 5: return
+	var move: Dictionary = _moves.move(move_id)
+	if str((move.get("utility", {}) as Dictionary).get("kind", "")) != "heal" \
+		or float(move.get("base_power", -1.0)) != 0.0: return
+	var body_before_contact := _ally_body
+	var encounter_before_contact := _encounter_id
+	var generation_before_contact := _impact_generation
+	var at: Vector3 = _ally_body.call("centre")
+	var launch := HIT_FEEDBACK.launch(str(receipt.action_id), _encounter_id, str(creature.get("uid")),
+		str(creature.get("uid")), move_id, "utility", at, at, 0.0, int(absolute.body_generation),
+		_ally_body.global_position, _body_world_bounds(_ally_body), int(delta.mastery_rank))
+	# Object contact only: no hurt flinch, knockback, hitstop or damage audio.
+	var presentation := launch.duplicate(true)
+	presentation["impact_audio_owner"] = "renderer"
+	PROJECTILE.launch(get_parent(), at, at, move.get("vfx", {}), presentation)
+	if not _actor_vitals_import_is_current(absolute, creature, body_before_contact,
+		encounter_before_contact, generation_before_contact): return
+	_flash_at(at, false, VFX.tint_for_type(_moves.type_of(move_id)), _ally_body, 0.0, {}, false)
+	if not _actor_vitals_import_is_current(absolute, creature, body_before_contact,
+		encounter_before_contact, generation_before_contact): return
+	creature.set("hp", float(absolute.hp))
+	creature.set("fainted", bool(absolute.fainted))
+	_seen_actor_vitals[key] = int(absolute.revision)
+	_sync_authoritative_wind(delta)
+	state_changed.emit()
+	# Never hit_landed/impact_confirmed, quick energy, mastery or ultimate.
+
+
+## Presentation callbacks can synchronously import a newer absolute receipt,
+## including one for the same creature/body. Never rewind it after returning.
+## The caller freezes these six host values before invoking any presentation.
+func _actor_vitals_import_is_current(value: Dictionary, creature: RefCounted,
+		body: Node3D, encounter: String, generation: int) -> bool:
+	if state != State.ACTIVE or _encounter_id != encounter or _impact_generation != generation \
+		or active_creature() != creature or not is_instance_valid(body) or _ally_body != body:
+		return false
+	if not _valid_absolute_actor_vitals(value, creature): return false
+	var key := encounter + ":" + str(creature.get("uid"))
+	return int(value.revision) > int(_seen_actor_vitals.get(key, 0))
+
+
+func _valid_absolute_actor_vitals(value: Dictionary, creature: RefCounted) -> bool:
+	if value.size() != 6 or value.get("creature_uid") != str(creature.get("uid")) \
+		or typeof(value.get("fainted")) != TYPE_BOOL \
+		or typeof(value.get("revision")) != TYPE_INT or int(value.revision) < 1 \
+		or typeof(value.get("body_generation")) != TYPE_INT \
+		or int(value.body_generation) < 1 or int(value.body_generation) > 2147483647: return false
+	for field: String in ["hp", "max_hp"]:
+		var raw: Variant = value.get(field)
+		if not (raw is int or raw is float) or not is_finite(float(raw)): return false
+	return float(value.max_hp) == float(creature.get("max_hp")) and float(value.max_hp) > 0.0 \
+		and float(value.hp) >= 0.0 and float(value.hp) <= float(value.max_hp) \
+		and bool(value.fainted) == (float(value.hp) == 0.0) \
+		and (not bool(creature.get("fainted")) or bool(value.fainted))
 
 
 ## The opponent's body and instance, for the host to read its own truth off.
@@ -3777,6 +3926,14 @@ func _on_enemy_strike() -> void:
 	var creature := active_creature()
 	if creature == null or _enemy == null:
 		return
+	if _encounter_link != null and _encounter_link.has_method("host_actor_vitals_enabled") \
+		and bool(_encounter_link.call("host_actor_vitals_enabled")):
+		if not _encounter_link.has_method("host_prepare_actor_vitals") \
+			or not bool(_encounter_link.call("host_prepare_actor_vitals", _encounter_id)): return
+		# Cleanup may emit/switch. Re-read every actual actor before geometry.
+		creature = active_creature()
+		if state != State.ACTIVE or creature == null or _enemy == null \
+			or not is_instance_valid(_wild) or not is_instance_valid(_ally_body): return
 
 	# The creature's OWN numbers, not the raw config: it spaces itself by how big
 	# the two bodies are, and its reach grows with that spacing. Testing the

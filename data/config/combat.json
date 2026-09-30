@@ -1,6 +1,10 @@
 {
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their creature, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
+  "actor_vitals": {
+    "_scope": "Disabled while admitted carriers and silent prepared-world/pure-actor/owner-save transaction are being integrated. No client HP baseline or per-swing gear/relic claims.",
+    "runtime_enabled": false
+  },
   "ultimate": {
     "_scope": "Encounter-only host participant/creature meter; portable saves and peer presentation never grant or refill it.",
     "max": 100.0,

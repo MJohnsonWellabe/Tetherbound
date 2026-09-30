@@ -1,0 +1,27 @@
+Independent narrow successor source gate: SOURCE PASS (bounded; runtime OFF; no acceptance MET)
+Packet production-vitals-r3 / 090193
+
+Frozen qualification
+Combat base 858b55adc7a58dc48a1d6c3ab5c7c12ba62b1cbf.
+Actual neutral API basis remains 289efe0d8d76d9c27e2efecb465e47246b32f454.
+production-vitals.patch SHA256 09019350183eff4d813e62574c009080727ef0f102e61846be3df90cc0523bbe.
+Manager final SHA256 3c8f3e58c270b6f1eee44d0dc2c8030c64f643796a2680633fecfb81805ceb39.
+Foundation-only heal-net-owner.patch SHA256 14c91641694cf8ecadad1f5de53b4dd81446c9761db463fb5b220ec2c3152ba2.
+Exact hunk application of both frozen patches against pinned base reproduces every manifest candidate hash. Config, Director, shared wild fight, EncounterHost candidate and the entire separate Foundation patch are byte-identical to R2. See source-basis.json, candidate-hashes.json and r2-to-r3.diff. No supplied draft or tracked source was edited/applied.
+
+R2 P1 correction qualifies at source level
+Candidate scripts/combat/combat_manager.gd:3227-3228, 3233-3240, 3252-3260; 3310-3311, 3326-3344; shared guard 3353-3360.
+Both handlers deep-copy the six-field absolute receipt and make that detached dictionary read-only before callback-capable presentation. Its validated values are scalar; a callback cannot change the original dictionary to change the pending absolute import.
+Both freeze the encounter ID, local impact generation, current creature and current body before presentation. Incoming checks after confirm_impact and again after _flash_at. Heal checks after PROJECTILE.launch and again after _flash_at. Each final guard verifies ACTIVE state, the same encounter and local generation, same active creature, valid same body, and the current live six-field vitals constraints. It then requires incoming revision STRICTLY greater than the latest _seen_actor_vitals entry under the frozen encounter and canonical UID.
+In the previously failing source trace, nested revision 2 writes marker 2 during revision-1 presentation; the resumed revision-1 guard now refuses before HP/fainted/marker writes. An equal-revision duplicate likewise refuses. A callback that restarts the encounter, changes generation, swaps/replaces the actor/body, invalidates the body, changes max HP or leaves the creature fainted also cannot pass the final boundary merely because the manager is ACTIVE again. Marker writes use the frozen encounter (incoming) or the equivalent pre-presentation key (Heal).
+After the final guard, the candidate writes ordinary CreatureInstance hp/fainted fields and the marker without a callback-capable call between them. Existing presentation-before-absolute-import ordering is retained. This is a strict source correction gate; no engine reentrancy reproduction or personal-save/rejoin success is claimed.
+
+Reused R2 results and unresolved limitations
+The unchanged detached staging, missing-carrier refusal, frozen UID/generation/private ObjectID capture, read-only scheduled arrival, prepared-world durable acceptance followed by pure actor commit, detached same-validator Heal bundle, no-spend refusals, and no fake hostile Heal credit retain the source findings in the original report:
+D:/tetherbound/redesign-combat/.tmp/independent-combat-review/production-vitals-454f6d/review.txt
+Original raw R2 SOURCE FAIL remains retained, SHA256 98d6163cb8fa5e7e66673d06d9df757f77cc8afe2ccba3c4a65918014cb35f28.
+The actual neutral exact receipt publication guard protects the latest pending token from an old finalization. Publication boolean is not an owner-save ACK. Incoming returns that boolean; unchanged Heal ignores it and cannot claim completed publication/owner persistence merely from an accepted verdict. Durable journals and retained retry remain necessary.
+Actual portable_projection still lacks realm_hearts, so the production incoming gate refuses the available missing carrier. Actual carrier/gear producer, solo admission, new utility controller/startup, prepared-world failure, reentrant owner-save and hosted rejoin evidence remain OPEN. Other status utilities are not qualified by this Heal gate. The local impact-generation recheck qualifies callback-time replacement; it is not proof that every delayed remote body_generation receipt is qualified against a current owner generation registry. No whole F23/F24 or individual acceptance criterion becomes MET here. Runtime remains OFF.
+
+Operations
+Independent read-only source/hash/hunk/delta/control-flow review. No engine/parser/import/render/export, tests or GPU use; no Git mutation, tracked edit, board/STATE change or Foundation ownership crossing. Source verification was batched and reused unchanged results. No test was altered, disabled or quarantined. Integration and any necessary minimum targeted runtime check belong to the owning lane and coordinator.
