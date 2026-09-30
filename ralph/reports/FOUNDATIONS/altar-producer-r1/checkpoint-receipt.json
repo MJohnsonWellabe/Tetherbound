@@ -1,0 +1,10 @@
+{
+  "base": "7dcd2a8649660553f38702f2de71390efc6f1343",
+  "proposal_patch_sha256": "4d0e6f8fa3eac9aa8047da6027188842771a1f56a1109c23a5ed6777117e03d5",
+  "source_envelope_sha256": "b610e2061d33744ccba9e38cf741a89d9d761ec51ccdfd8ed4e96d508b67102e",
+  "manifest_sha256": "08fc5e951b171d6dbf58328e954a36a9d52174e49175fe9289ffcc636cbc2c8b",
+  "paths": 14,
+  "utf8_source_roundtrip": true,
+  "native_runs": 0,
+  "acceptance_claim": false
+}
