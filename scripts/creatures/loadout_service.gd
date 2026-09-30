@@ -189,11 +189,68 @@ func _commit_admitted(session: Node, peer: int, context: Dictionary, request: Di
 	# pins persistence/rollback semantics. Never substitute a local registry.
 	return {"ok": false, "reason": "station_cas_not_connected"}
 
-func _apply_owner_result(_result: Dictionary) -> bool:
-	# Fail closed until the registry owner's typed result and rejoin import
-	# contract lands. An accepted host transaction must not become a silent
-	# session-only owner change if its portable atomic write fails.
-	return false
+## Detached import from the authority-only result RPC. This grants no known
+## moves, mastery or signature change and cannot skip a loadout revision.
+static func stage_owner_loadout(creature: RefCounted, result: Dictionary) -> Dictionary:
+	if creature == null or not result.get("creature_uid") is String \
+			or str(result.creature_uid) != str(creature.get("uid")): return {"ok": false}
+	var revision: Variant = result.get("revision")
+	if not (revision is int or revision is float) or not is_finite(float(revision)) \
+			or float(revision) < 1.0 or floor(float(revision)) != float(revision): return {"ok": false}
+	var slots: Variant = result.get("loadout")
+	var receipt: Variant = result.get("receipt")
+	if not slots is Dictionary or slots.size() != 4 or not receipt is Dictionary or receipt.size() != 6: return {"ok": false}
+	for slot: String in ["quick", "charged", "utility", "ultimate"]:
+		if not slots.get(slot) is String: return {"ok": false}
+	if str(slots.ultimate) != str(creature.get("move_ultimate")): return {"ok": false}
+	for field: String in ["edit_id", "creature_uid", "quick", "charged", "utility"]:
+		if not receipt.get(field) is String: return {"ok": false}
+	if str(receipt.edit_id).is_empty() or str(receipt.edit_id).length() > 64 \
+			or str(receipt.creature_uid) != str(creature.get("uid")): return {"ok": false}
+	var expected: Variant = receipt.get("expected_revision")
+	if not (expected is int or expected is float) or not is_finite(float(expected)) \
+			or floor(float(expected)) != float(expected) or int(expected) != int(revision) - 1: return {"ok": false}
+	var current := _loadout_state(creature)
+	for slot: String in ["quick", "charged", "utility"]:
+		if receipt[slot] != slots[slot]: return {"ok": false}
+	if int(revision) == int(current.revision):
+		return {"ok": slots == current.loadout and TEACHING._same_edit_receipt(receipt, current.receipt), "replayed": true}
+	if int(revision) != int(current.revision) + 1: return {"ok": false}
+	var known: Array = creature.get("known_moves")
+	var moves := MOVES.load_default()
+	for slot: String in ["quick", "charged", "utility"]:
+		var move := str(slots[slot])
+		if slot == "utility" and move.is_empty(): continue
+		if not known.has(move) or not bool(moves.call("has", move)) or str(moves.call("slot", move)) != slot: return {"ok": false}
+	return {"ok": true, "replayed": false, "loadout": slots.duplicate(true),
+		"revision": int(revision), "receipt": receipt.duplicate(true)}
+
+func _apply_owner_result(result: Dictionary) -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	var session := _session()
+	if game == null or session == null or not session.has_method("client_character_save_ready") \
+			or not bool(session.call("client_character_save_ready")): return false
+	var player: RefCounted = game.get("local")
+	var saver: RefCounted = game.get("save_system")
+	if player == null or saver == null: return false
+	var personal: Dictionary = player.call("save_data")
+	if not TEACHING.admitted_party_errors(personal.get("party"), personal.get("redesign_character", {})).is_empty(): return false
+	var creature: RefCounted = null
+	var party: RefCounted = game.get("party")
+	for owned: RefCounted in party.call("members"):
+		if str(owned.get("uid")) == str(result.get("creature_uid", "")): creature = owned
+	var staged := stage_owner_loadout(creature, result)
+	if not bool(staged.get("ok", false)): return false
+	if bool(staged.get("replayed", false)): return true
+	var previous := _loadout_state(creature)
+	_apply_loadout(creature, staged.loadout, int(staged.revision), staged.receipt)
+	# The public production portable writer returns its atomic write outcome;
+	# Game.autosave_here has a void guest route and cannot prove this commit.
+	var character_id := str(player.get("character_id"))
+	if character_id.is_empty() or not bool(saver.call("save_character", game, character_id)):
+		_apply_loadout(creature, previous.loadout, int(previous.revision), previous.receipt)
+		return false
+	return true
 
 static func _loadout_state(creature: RefCounted) -> Dictionary:
 	var slots := {}
