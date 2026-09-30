@@ -29,11 +29,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | F17#0 main; six rows open. F18#0 strict candidate MET, opening native0/logic10/67/0; dependency hold. Hall circuit9c69 active. |
+| `tb/hub` | F17, F18 | Only #0 main; #2 strict candidate MET/16 approaches native0; #1 blind DAY NO/NIGHT NO. F18#0 dependency hold; portal CAS draft. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | da308: typed save/mastery source WIP. Native9-pair zero-overlap/control PASS; blind narrow PASS/full craft open. Label red retained. |
-| `tb/vfx` | F25, F35 | 47e r7 unrendered. R6 native0/12cases/36PNG; blind identities PASS/full craft FAIL/mastery partial. Flag off; all F25 open. |
-| `tb/lookdev` | F26 | #1/#2 main. #477 fix landed; Medium506/High481 and Cloudreach3 presets native0, 8/12routes. Reds retained; visual/device/Ally open. |
+| `tb/combat` | F21–F24 | fc9 power-floor/host CAS WIP. Portable7/700/0 and host feedback4f4 native0; prior reds retained. Camera narrow PASS/full craft open. |
+| `tb/vfx` | F25, F35 | b500 r7 native0/12cases/36PNG; blind Fireball identity/all craft FAIL, sampled1/3/5 PASS. Import red retained; flag off/all open. |
+| `tb/lookdev` | F26 | #1/#2 main;971 Cloudreach3 receipt PASS/current8/12routes. Stack reds retained; full matrix/visual/device/Ally open. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
