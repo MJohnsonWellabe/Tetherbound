@@ -11,6 +11,41 @@ static var _loaded := false
 static var _config: Dictionary = {}
 static var _host_epoch: String = ""
 static var _host_sequence: int = 0
+static var _move_registry: RefCounted = null
+
+class OwnedRecord extends RefCounted:
+	var uid: String = ""
+	var known_moves: Array[String] = []
+	var move_mastery_uses: Dictionary = {}
+	var move_mastery_receipts: Dictionary = {}
+
+## An already validated admitted row, detached from the authority registry.
+## This avoids rebuilding a species/stat instance to stage two mastery maps.
+static func owned_record(row: Dictionary) -> RefCounted:
+	var record := OwnedRecord.new()
+	record.uid = str(row.get("uid", ""))
+	for id: String in row.get("known_moves", []): record.known_moves.append(id)
+	record.move_mastery_uses = (row.get("move_mastery_uses", {}) as Dictionary).duplicate(true)
+	record.move_mastery_receipts = (row.get("move_mastery_receipts", {}) as Dictionary).duplicate(true)
+	return record
+
+## Import a host-authorized update without awarding a use locally. Caller
+## authenticates the authority RPC and matches a live owned creature UID.
+## Older reliable messages and rejoin snapshots cannot regress earned history.
+static func stage_authority_update(creature: RefCounted, uses: Dictionary, receipts: Dictionary) -> Dictionary:
+	if creature == null: return {"ok": false}
+	var known: Array = creature.get("known_moves")
+	if not valid_document(known, uses, receipts, known): return {"ok": false}
+	var previous_uses: Dictionary = creature.get("move_mastery_uses")
+	var previous_receipts: Dictionary = creature.get("move_mastery_receipts")
+	for move: String in previous_uses:
+		if int(uses.get(move, 0)) < int(previous_uses[move]): return {"ok": false}
+		var before: Array = previous_receipts.get(move, [])
+		var after: Array = receipts.get(move, [])
+		if after.size() < before.size(): return {"ok": false}
+		for index: int in before.size():
+			if after[index] != before[index]: return {"ok": false}
+	return {"ok": true, "uses": uses.duplicate(true), "receipts": receipts.duplicate(true)}
 
 ## Mint on the authority once per accepted action and freeze in its pending
 ## transaction. Encounter/body counters alone repeat after process restart;
@@ -102,6 +137,7 @@ static func stage_landed_use(creature: RefCounted, host_event: Dictionary) -> Di
 	if not known.has(move_id): return {"ok":false,"reason":"invalid_or_replayed_hit"}
 	var uses: Dictionary = creature.get("move_mastery_uses")
 	var histories: Dictionary = creature.get("move_mastery_receipts")
+	if not valid_document(known, uses, histories, known): return {"ok": false, "reason": "invalid_mastery_state"}
 	var seen: Array = histories.get(move_id,[])
 	if seen.has(event_id): return {"ok":false,"reason":"invalid_or_replayed_hit"}
 	var thresholds: Array = config().rank_thresholds
@@ -110,7 +146,7 @@ static func stage_landed_use(creature: RefCounted, host_event: Dictionary) -> Di
 	if not _whole_nonnegative(raw_uses): return {"ok":false,"reason":"invalid_mastery_state"}
 	var old_uses := int(raw_uses)
 	if seen.size() != old_uses: return {"ok":false,"reason":"invalid_mastery_state"}
-	if old_uses >= maximum or seen.size() >= maximum: return {"ok":false,"reason":"invalid_or_replayed_hit"}
+	if old_uses >= maximum or seen.size() >= maximum: return {"ok":false,"reason":"saturated"}
 	# Stage all replacements before publishing the complete character mutation.
 	var next_uses := uses.duplicate(true)
 	var next_history := histories.duplicate(true)
@@ -128,7 +164,8 @@ static func valid_document(known: Variant, uses: Variant, histories: Variant, al
 	if config().is_empty() or not known is Array or not uses is Dictionary or not histories is Dictionary: return false
 	var thresholds: Array = config().rank_thresholds
 	var maximum := int(thresholds[4])
-	var moves := MOVES.load_default()
+	if _move_registry == null: _move_registry = MOVES.load_default()
+	var moves := _move_registry
 	if known.size() > int(config().get("max_known_moves",128)) or uses.size() > known.size() or histories.size() > known.size(): return false
 	var unique: Dictionary = {}
 	for raw: Variant in known:

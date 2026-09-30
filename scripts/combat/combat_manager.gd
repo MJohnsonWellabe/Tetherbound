@@ -2753,9 +2753,10 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 
 	var profile := move_override if not move_override.is_empty() else _pending_move
 	var is_quick: bool = str(impact_override.get("slot", "")) == "quick" if impact_override.has("slot") else bool(profile.get("is_quick", false))
+	var mastery_transaction := damage_override < 0.0 and not launch.is_empty()
 	var stagger_crit := crit_override
 	if damage_override < 0.0 and _wild.has_method("consume_stagger_critical"):
-		stagger_crit = bool(_wild.call("consume_stagger_critical"))
+		stagger_crit = bool(_wild.call("stagger_critical_ready")) if mastery_transaction else bool(_wild.call("consume_stagger_critical"))
 	var move_id: String = str(impact_override.get("move_id", launch.get("move_id", creature.move_quick if is_quick else creature.move_charged)))
 	var cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
@@ -2786,16 +2787,25 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		# threshold. Contact time, reach, cost and geometry do not change.
 		damage *= MOVE_MASTERY.power_multiplier(int(launch.get("mastery_rank", 1)))
 		var hp_before := float(_enemy.hp)
+		var fainted_before := bool(_enemy.fainted)
 		killed = _enemy.take_damage(damage)
 		# No await or client callback occurs between the actual HP debit and
 		# this character-scope mutation. The timer's UID/generation guard above
 		# prevents a replacement target/attacker from receiving the credit.
-		if not launch.is_empty():
-			MOVE_MASTERY.credit_landed_use(self, creature, {
+		if mastery_transaction:
+			var event := {
 				"action_id": str(launch.get("mastery_action_id", "")),
 				"move_id": move_id, "attacker_uid": str(creature.get("uid")),
 				"target_uid": str(_enemy.get("uid")), "target_hp_before": hp_before,
-				"applied_damage": maxf(0.0, hp_before - float(_enemy.hp))})
+				"applied_damage": maxf(0.0, hp_before - float(_enemy.hp))}
+			var staged := MOVE_MASTERY.stage_landed_use(creature, event)
+			var saturated := str(staged.get("reason", "")) == "saturated"
+			if not saturated and (not bool(staged.get("ok", false)) or not MOVE_MASTERY.credit_landed_use(self, creature, event)):
+				_enemy.hp = hp_before
+				_enemy.fainted = fainted_before
+				note_encounter_refusal({"kind": "strike_intent", "code": "invalid_mastery_state", "reason": "That move's mastery could not be committed."})
+				return
+			if stagger_crit: _wild.call("consume_stagger_critical")
 	var stagger_triggered := stagger_triggered_override
 	if damage_override < 0.0 and not killed and _wild.has_method("apply_poise_damage"):
 		var force_interrupt := not is_quick and enemy_is_winding_up() \
@@ -2990,6 +3000,10 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		charged: bool = false, impact_context: Dictionary = {}) -> Dictionary:
 	if _enemy == null:
 		return {}
+	var mastery_commit: Callable = impact_context.get("mastery_commit", Callable())
+	if mastery_commit.is_valid() and (not is_inside_tree() or not get_multiplayer().is_server()
+			or not is_instance_valid(_wild) or not _wild.has_method("stagger_critical_ready")):
+		return {}
 	var cfg: Dictionary = PROGRESSION.config()
 	var type_mult: float = TYPE_CHART.multiplier_dual(
 		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
@@ -3002,14 +3016,27 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		_moves.power(move_id),
 		type_mult
 	)
+	damage *= MOVE_MASTERY.power_multiplier(int(impact_context.get("mastery_rank", 1)))
 	var stagger_crit := false
 	if _wild != null and _wild.has_method("consume_stagger_critical"):
-		stagger_crit = bool(_wild.call("consume_stagger_critical"))
+		stagger_crit = bool(_wild.call("stagger_critical_ready")) if mastery_commit.is_valid() else bool(_wild.call("consume_stagger_critical"))
 		if stagger_crit:
 			damage *= _poise_crit_scale()
 	# Presentation completion never decides this independently scheduled host debit.
 	PROJECTILE.confirm_impact(get_tree(), str(impact_context.get("action_id", "")))
+	var hp_before := float(_enemy.hp)
+	var fainted_before := bool(_enemy.fainted)
 	var killed: bool = _enemy.take_damage(damage)
+	var mastery_result: Dictionary = {}
+	if mastery_commit.is_valid():
+		# No await, signals from take_damage, or poise/feedback mutation occur
+		# inside this bounded transaction. CAS refusal restores the whole debit.
+		mastery_result = mastery_commit.call(str(_enemy.get("uid")), hp_before, maxf(0.0, hp_before - float(_enemy.hp)))
+		if not bool(mastery_result.get("ok", false)):
+			_enemy.hp = hp_before
+			_enemy.fainted = fainted_before
+			return {}
+		if stagger_crit: _wild.call("consume_stagger_critical")
 	var stagger_triggered := false
 	if not killed and _wild != null and _wild.has_method("apply_poise_damage"):
 		var force_interrupt := charged and enemy_is_winding_up() \
@@ -3021,7 +3048,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		_wild.call("add_impulse", impact.direction, HIT_FEEDBACK.impulse_for(impact))
 		_host_body_hitstop(_wild, impact)
 	_host_body_hitstop(impact_context.get("striker_body") as Node3D, impact)
-	return {"damage": damage, "killed": killed, "hp": _enemy.hp, "impact": impact,
+	var result := {"damage": damage, "killed": killed, "hp": _enemy.hp, "impact": impact,
 		"hp_max": _enemy.max_hp, "type_mult": type_mult,
 		"poise": float(_wild.call("poise_fraction")) * _enemy_poise_max() if _wild != null and _wild.has_method("poise_fraction") else _enemy_poise_max(),
 		"poise_max": _enemy_poise_max(),
@@ -3029,6 +3056,8 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		"critical_ready": stagger_triggered, "stagger_crit": stagger_crit,
 		"stagger_triggered": stagger_triggered,
 		"stagger_left": float(_wild.call("stagger_seconds_left")) if _wild != null and _wild.has_method("stagger_seconds_left") else 0.0}
+	if mastery_result.has("mastery_update"): result["mastery_update"] = mastery_result.mastery_update
+	return result
 
 
 ## The move profile the HOST tests a strike against: its own `combat.json`, its

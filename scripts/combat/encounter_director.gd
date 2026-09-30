@@ -92,6 +92,8 @@ const ENCOUNTER_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 const MOVE_PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
+const MOVE_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
+const MOVE_TEACHING := preload("res://scripts/creatures/teaching.gd")
 const OPENING_CONFIG := "res://data/config/opening.json"
 
 ## Where lane 2.A mounts the session: a `Node` child of the `Game` autoload
@@ -2173,6 +2175,8 @@ func _rpc_encounter_caught_by(encounter_id: String, peer_id: int, species_id: St
 
 
 func _deliver_encounter_verdict(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "strike_intent" and bool(verdict.get("ok", false)):
+		_receive_mastery_update((verdict.get("delta", {}) as Dictionary).get("mastery_update", {}))
 	if str(verdict.get("kind", "")) == "trainer_victory":
 		# The payout itself arrives as the host's reward delivery, world delta
 		# and `_rpc_trainer_reward`; this verdict only settles the send (ok:
@@ -2409,6 +2413,11 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	# own two body radii. A peer cannot post itself a longer reach.
 	var card: Dictionary = _creature_card_for(peer_id)
 	var slot := str(intent.get("slot", "quick"))
+	var mastery := _host_owned_move(peer_id, str(card.get("creature_uid", "")), str(intent.get("move_id", "")), slot)
+	if not bool(mastery.get("ok", false)):
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "invalid_owned_move", "reason": "That move is not in your admitted loadout.",
+			"pending": false, "delta": {}}
 	var move: Dictionary = COMBAT_MANAGER.host_move_profile(
 		damage_engine.get("_moves") as RefCounted,
 		"player_quick" if slot == "quick" else "player_charged",
@@ -2451,11 +2460,13 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	var muzzle := from + direction * _body_radius(striker)
 	var opponent := wild.get("instance") as RefCounted
 	if opponent == null: return {"ok": false, "kind": "strike_intent", "code": "unknown_encounter", "delta": {}}
-	var launch := HIT_FEEDBACK.launch("%s:%d:%d" % [encounter_id, peer_id, int(intent.get("action", 0))],
+	var action_id := "%s:%d:%d" % [encounter_id, peer_id, int(intent.get("action", 0))]
+	var launch := HIT_FEEDBACK.launch(action_id,
 		encounter_id, str(card.get("creature_uid", "")), str(opponent.get("uid")),
 		str(intent.get("move_id", "")), slot, muzzle, target,
 		MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
-		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position, _host_visual_bounds(wild))
+		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position, _host_visual_bounds(wild),
+		int(mastery.get("rank", 1)), MOVE_MASTERY.new_action_identity(action_id) if bool(mastery.get("enabled", false)) else "")
 	if float(launch.travel_seconds) <= 0.0:
 		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false)
 	delta["scheduled"] = true
@@ -2485,10 +2496,14 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	if opponent == null or not HIT_FEEDBACK.launch_matches(launch, encounter_id,
 		str(current_card.get("creature_uid", "")), str(opponent.get("uid")),
 		int(runtime.get("body_generation")) if runtime != null else 0): return {}
+	var impact_context := {"action_id": str(launch.action_id), "striker_body": striker,
+		"direction": (launch.to as Vector3) - (launch.from as Vector3),
+		"mastery_rank": int(launch.get("mastery_rank", 1))}
+	if not str(launch.get("mastery_action_id", "")).is_empty():
+		impact_context["mastery_commit"] = _host_commit_landed_mastery.bind(encounter_id, peer_id, launch)
 	var rolled: Dictionary = engine.call("host_roll_damage", card,
 		str(launch.move_id), float(move.get("power", 9.0)), str(launch.slot) == "charged",
-		{"action_id": str(launch.action_id), "striker_body": striker,
-		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
+		impact_context)
 	if rolled.is_empty(): return {}
 	var impact: Dictionary = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
 	impact["presentation_launched"] = float(launch.travel_seconds) > 0.0
@@ -2513,6 +2528,82 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [verdict])
 	if bool(rolled.get("killed", false)): _finalize_shared_host_fight(encounter_id, "won")
 	return verdict
+
+
+## The single Session registry owns admission. Until its coherent dependency
+## lands, the old rank-one session path remains explicit supporting WIP.
+## Once the seam exists, an empty/invalid registry fails closed; deploy cards
+## cannot claim another UID, an equipped move or a numeric mastery rank.
+func _host_owned_move(peer_id: int, uid: String, move_id: String, slot: String) -> Dictionary:
+	if _session == null or not _session.has_method("admitted_character_state"):
+		return {"ok": true, "enabled": false, "rank": 1}
+	if not _is_host() or slot not in ["quick", "charged"]: return {"ok": false}
+	var personal: Dictionary = _session.call("admitted_character_state", peer_id)
+	if personal.is_empty() or not MOVE_TEACHING.admitted_party_errors(personal.get("party"), personal.get("redesign_character")).is_empty():
+		return {"ok": false}
+	for row: Dictionary in personal.party:
+		if str(row.get("uid", "")) != uid: continue
+		if str(row.get("move_" + slot, "")) != move_id or not (row.get("known_moves", []) as Array).has(move_id):
+			return {"ok": false}
+		return {"ok": true, "enabled": true, "row": row.duplicate(true),
+			"rank": MOVE_MASTERY.rank_from_uses(int((row.get("move_mastery_uses", {}) as Dictionary).get(move_id, 0)))}
+	return {"ok": false}
+
+
+## Called synchronously inside actual host HP debit, before damage feedback,
+## poise, impulses, snapshots or critical-window consumption. Never an RPC.
+func _host_commit_landed_mastery(target_uid: String, hp_before: float, applied_damage: float,
+		encounter_id: String, peer_id: int, launch: Dictionary) -> Dictionary:
+	if not _is_host() or _session == null or not _session.has_method("host_commit_creature_mastery"):
+		return {"ok": false}
+	if not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id) \
+			or target_uid != str(launch.get("target_uid", "")) \
+			or str(_creature_card_for(peer_id).get("creature_uid", "")) != str(launch.get("attacker_uid", "")):
+		return {"ok": false}
+	var runtime := _shared_host_fight(encounter_id)
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var opponent: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	if opponent == null or str(record.get("phase", "")) != "active" \
+			or not HIT_FEEDBACK.launch_matches(launch, encounter_id, str(launch.attacker_uid), str(opponent.get("uid")),
+			int(runtime.get("body_generation")) if runtime != null else 0):
+		return {"ok": false}
+	var owned := _host_owned_move(peer_id, str(launch.attacker_uid), str(launch.move_id), str(launch.slot))
+	if not bool(owned.get("ok", false)) or not bool(owned.get("enabled", false)): return {"ok": false}
+	var individual := MOVE_MASTERY.owned_record(owned.row)
+	var staged := MOVE_MASTERY.stage_landed_use(individual, {
+		"action_id": str(launch.get("mastery_action_id", "")), "move_id": str(launch.move_id),
+		"attacker_uid": str(launch.attacker_uid), "target_uid": target_uid,
+		"target_hp_before": hp_before, "applied_damage": applied_damage})
+	if not bool(staged.get("ok", false)):
+		return {"ok": str(staged.get("reason", "")) == "saturated"}
+	var revision := int(_session.call("admitted_character_revision", peer_id))
+	var committed: Dictionary = _session.call("host_commit_creature_mastery", peer_id, str(launch.attacker_uid), revision,
+		individual.get("move_mastery_uses"), individual.get("move_mastery_receipts"), staged.uses, staged.receipts)
+	if not bool(committed.get("ok", false)): return {"ok": false}
+	# Only the affected UID's typed maps travel to the owning client. Importing
+	# them never runs landed-use credit and never replaces a whole live party.
+	var update := {"creature_uid": str(launch.attacker_uid),
+		"uses": staged.uses.duplicate(true), "receipts": staged.receipts.duplicate(true)}
+	if peer_id == _local_peer_id(): _receive_mastery_update(update)
+	return {"ok": true, "mastery_update": update}
+
+
+## Called only from the authority verdict door above or the local host commit.
+## This reconciles character-owned values; it never credits another use.
+func _receive_mastery_update(raw: Variant) -> void:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("creature_uid") is String \
+			or not raw.get("uses") is Dictionary or not raw.get("receipts") is Dictionary:
+		return
+	var party := _party()
+	if party == null: return
+	for creature: RefCounted in party.call("members"):
+		if str(creature.get("uid")) != str(raw.creature_uid): continue
+		var staged := MOVE_MASTERY.stage_authority_update(creature, raw.uses, raw.receipts)
+		if bool(staged.get("ok", false)):
+			creature.set("move_mastery_uses", staged.uses)
+			creature.set("move_mastery_receipts", staged.receipts)
+		return
 
 
 ## Frozen render envelope only; never collision/reach/damage authority.

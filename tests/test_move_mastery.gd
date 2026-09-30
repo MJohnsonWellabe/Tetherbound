@@ -16,6 +16,26 @@ class Individual extends RefCounted:
 	var loadout_revision := 0
 	var loadout_last_edit: Dictionary = {}
 
+class TransactionBody extends Node3D:
+	var critical := true
+	var poise_calls := 0
+	var impulse_calls := 0
+	func stagger_critical_ready() -> bool: return critical
+	func consume_stagger_critical() -> bool:
+		var before := critical
+		critical = false
+		return before
+	func apply_poise_damage(_damage: float, _force: bool) -> bool:
+		poise_calls += 1
+		return false
+	func add_impulse(_direction: Vector3, _magnitude: float) -> void: impulse_calls += 1
+	func combat_config() -> Dictionary: return {}
+	func body_height() -> float: return 1.0
+	func centre() -> Vector3: return global_position
+	func poise_fraction() -> float: return 1.0
+	func is_staggered() -> bool: return critical
+	func stagger_seconds_left() -> float: return .6 if critical else 0.0
+
 func test_invalid_config_and_portable_document_cannot_forge_known_moves_or_uses() -> void:
 	var good := {"rank_thresholds":[0,25,75,150,300],"damage_per_rank":.05,"max_known_moves":128}
 	assert_true(MASTERY.valid_config(good))
@@ -100,6 +120,71 @@ func test_mastery_launch_metadata_is_frozen_without_changing_geometry_or_timing(
 
 func _event(action_id: String) -> Dictionary:
 	return {"action_id":action_id,"move_id":"pebble_toss","attacker_uid":"companion-1","target_uid":"wild-1","target_hp_before":100.0,"applied_damage":7.0}
+
+func test_authority_update_retains_history_without_crediting_snapshots() -> void:
+	var creature := Individual.new()
+	creature.move_mastery_uses = {"pebble_toss": 1}
+	creature.move_mastery_receipts = {"pebble_toss": ["earned:1"]}
+	var next_uses := {"pebble_toss": 2.0}
+	var next_receipts := {"pebble_toss": ["earned:1", "earned:2"]}
+	var staged := MASTERY.stage_authority_update(creature, next_uses, next_receipts)
+	assert_true(staged.ok)
+	assert_eq(creature.move_mastery_uses.pebble_toss, 1, "host import stages before any live mutation")
+	creature.move_mastery_uses = staged.uses
+	creature.move_mastery_receipts = staged.receipts
+	assert_true(MASTERY.stage_authority_update(creature, next_uses, next_receipts).ok, "snapshot replay is idempotent import")
+	assert_eq(creature.move_mastery_uses.pebble_toss, 2.0, "import never awards another use")
+	assert_false(MASTERY.stage_authority_update(creature, {"pebble_toss": 1}, {"pebble_toss": ["earned:1"]}).ok)
+	assert_false(MASTERY.stage_authority_update(creature, next_uses, {"pebble_toss": ["forged:1", "earned:2"]}).ok)
+	assert_false(MASTERY.stage_authority_update(creature, {"invented_nuke": 1}, {"invented_nuke": ["earned:3"]}).ok)
+	var detached := MASTERY.owned_record({"uid": creature.uid, "known_moves": creature.known_moves,
+		"move_mastery_uses": creature.move_mastery_uses, "move_mastery_receipts": creature.move_mastery_receipts})
+	var proposed := MASTERY.stage_landed_use(detached, _event("earned:3"))
+	assert_true(proposed.ok)
+	assert_eq(creature.move_mastery_uses.pebble_toss, 2.0, "admitted staging cannot alias live party or registry")
+
+func test_actual_host_debit_rolls_back_on_cas_refusal_and_saturated_hits_still_damage() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	var body := TransactionBody.new()
+	tree.root.add_child(manager)
+	tree.root.add_child(body)
+	var enemy := preload("res://scripts/creatures/creature_instance.gd").from_species("bramblebun",preload("res://scripts/creatures/creature_species.gd").definition("bramblebun"))
+	enemy.hp = 1.0
+	enemy.fainted = false
+	manager.set("_enemy", enemy)
+	manager.set("_wild", body)
+	var captured: Array = []
+	var reject := func(uid: String, before: float, applied: float) -> Dictionary:
+		captured.append([uid,before,applied,enemy.hp])
+		return {"ok": false}
+	var result: Dictionary = manager.host_roll_damage({"attack": 100.0},"pebble_toss",9.0,false,{"mastery_rank": 5,"mastery_commit": reject})
+	assert_true(result.is_empty(),"refused CAS produces no accepted damage verdict")
+	assert_eq(captured.size(),1)
+	assert_eq(captured[0],[enemy.uid,1.0,1.0,0.0],"callback sees actual clamped committed HP debit, including overkill")
+	assert_eq(enemy.hp,1.0,"refusal restores HP before any poise/impulse/snapshot")
+	assert_false(enemy.fainted,"refusal restores faint state too")
+	assert_true(body.critical,"refusal does not spend the existing critical window")
+	assert_eq(body.poise_calls,0)
+	assert_eq(body.impulse_calls,0)
+	var mastered := Individual.new()
+	var previous: Array = []
+	for index: int in 300: previous.append("earned:%d" % index)
+	mastered.move_mastery_uses = {"pebble_toss": 300}
+	mastered.move_mastery_receipts = {"pebble_toss": previous}
+	var saturated := func(uid: String, before: float, applied: float) -> Dictionary:
+		var staged := MASTERY.stage_landed_use(mastered,{"action_id":"new:saturated:1","move_id":"pebble_toss",
+			"attacker_uid":mastered.uid,"target_uid":uid,"target_hp_before":before,"applied_damage":applied})
+		return {"ok": str(staged.get("reason","")) == "saturated"}
+	result = manager.host_roll_damage({"attack": 100.0},"pebble_toss",9.0,false,{"mastery_rank": 5,"mastery_commit": saturated})
+	assert_false(result.is_empty(),"legal rank-five no-growth contact still deals damage")
+	assert_eq(enemy.hp,0.0)
+	assert_true(enemy.fainted)
+	assert_false(body.critical,"successful contact spends critical once")
+	assert_eq(mastered.move_mastery_uses.pebble_toss,300)
+	assert_eq(mastered.move_mastery_receipts.pebble_toss.size(),300,"no receipt growth after mastery cap")
+	manager.free()
+	body.free()
 
 func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other_records() -> void:
 	var creature := preload("res://scripts/creatures/creature_instance.gd").from_species("terrapup",preload("res://scripts/creatures/creature_species.gd").definition("terrapup"))

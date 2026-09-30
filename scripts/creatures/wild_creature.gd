@@ -1218,6 +1218,12 @@ func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	return true
 
 
+## Pure transaction preview. A refused host character CAS must not consume
+## the existing one-hit critical window or disturb its recovery deadline.
+func stagger_critical_ready() -> bool:
+	return _staggered and _stagger_critical_ready
+
+
 func consume_stagger_critical() -> bool:
 	if not _staggered or not _stagger_critical_ready:
 		return false
