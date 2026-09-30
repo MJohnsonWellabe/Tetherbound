@@ -6,7 +6,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 103 of 280:** original 95/101, redesign 8/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
+**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 104 of 280:** original 95/101, redesign 9/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -29,7 +29,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | Only #0 main; #2 strict candidate MET/16 approaches native0; #1 blind DAY NO/NIGHT NO. F18#0 dependency hold; portal CAS draft. |
+| `tb/hub` | F17, F18 | #0 main; #2 strict MET in this PR/16 approaches native0, main credit at landing. #1 DAY NO/NIGHT NO; F18 dependency hold. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
 | `tb/combat` | F21–F24 | fc9 power-floor/host CAS WIP. Portable7/700/0 and host feedback4f4 native0; prior reds retained. Camera narrow PASS/full craft open. |
 | `tb/vfx` | F25, F35 | b500 r7 native0/12cases/36PNG; blind Fireball identity/all craft FAIL, sampled1/3/5 PASS. Import red retained; flag off/all open. |
