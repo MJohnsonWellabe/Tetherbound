@@ -1,0 +1,22 @@
+Passive F25 actual-path observer source, explicitly accepted as source-only by ROOT.
+New scripts/vfx/presentation_observer.gd has no active/preload/autoload/scene hooks.
+Caller must attach it after the actual CombatHUD and before ordinary admitted input.
+
+Observes only existing attack_launched, effect presentation_arrived and existing
+impact_confirmed signals. It never sends input, grants a move/item, launches a move,
+mutates receipts/HP/resources/roster/physics/save/session/config, changes clocks,
+creates a timer/node/effect, or modifies an existing label. Weak effect/label refs
+avoid owning their lifecycle; no strong body references in the detached snapshot.
+
+Records actual action IDs/move IDs/frozen ranks, callback process frames/ticks,
+the actual HUD Label's birth/first sampled draw, bounds and inherited opacity.
+Post-draw visibility is explicitly NODE visibility, never pixel/hit-locus evidence.
+Ledger bounded128; overflow and ambiguous/missing label association stay unproved.
+Legacy/contact-only callbacks without the library signal are not fabricated as hits.
+Caller owns fresh external evidence output and actual scene/source/input provenance.
+
+No parser/native test yet; this module does not activate when the library activates.
+Attach/synthetic capture alone cannot prove an earned pilot path or F25#3. Actual
+rendered originals, authority/HP timing, co-op/device/performance/mix/full craft remain
+separate required evidence. R17 proof candidate 33fea remains unchanged in Git;
+new observer lives in later source-only work, with no GPIO/engine/import writers.
