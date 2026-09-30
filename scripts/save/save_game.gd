@@ -1368,8 +1368,11 @@ static func _finite_number(value: Variant) -> bool:
 ## this checks that it did: a step that forgets refuses the load rather than
 ## spinning forever on the same number.
 func _migrate_to_current(data: Dictionary, version: int, slot: int) -> Dictionary:
+	# Retained only for direct regression tests of the pre-redesign migrations.
+	# Real readers refuse <= RESET_MAX_VERSION before reaching this helper.
+	# There is deliberately no migration across the RD-35 reset boundary.
 	var migrated := data
-	while version < VERSION:
+	while version < mini(VERSION, RESET_MAX_VERSION):
 		var step := "_migrate_v%d" % version
 		if not has_method(step):
 			push_warning("save slot %d is version %d and this build has no %s -- not loading" % [

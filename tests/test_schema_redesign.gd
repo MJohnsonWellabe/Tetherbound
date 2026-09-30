@@ -57,6 +57,18 @@ func test_foreign_unknown_ids_and_wrong_slot_pairs_refuse() -> void:
 			value[0][field] = cases[domain][field]
 			assert_false(DATA._relations(domain, value).is_empty(), "%s.%s must refuse" % [domain, field])
 
+func test_station_attachment_slot_contract_refuses_wrong_slots_through_loader() -> void:
+	var catalog: Array = DATA.json(DATA.ROOT + "stations.json")
+	for index in catalog.size():
+		var value: Array = catalog.duplicate(true)
+		value[index].attachment_slots = 0 if int(value[index].attachment_slots) == 8 else 8
+		var path := "user://schema_bad_station.json"
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		file.store_string(JSON.stringify(value))
+		file.close()
+		assert_false(DATA.load_catalog("stations", path).ok, str(value[index].id) + " rejects the wrong attachment slot count")
+		DirAccess.remove_absolute(path)
+
 func test_eight_slots_have_exactly_four_live_and_four_sealed() -> void:
 	assert_eq(BIOMES.ids(), ["meadows", "tidewake", "cloudreach", "stormwood", "biome5", "biome6", "biome7", "biome8"])
 	for domain: String in ["material_tiers", "gear_tiers", "portals"]:

@@ -143,13 +143,14 @@ func test_make_creature_builds_from_species_json_and_refuses_an_unknown_species(
 
 # --- save / load -------------------------------------------------------------
 
-func test_save_data_carries_the_player_half_of_the_v22_keys() -> void:
+func test_save_data_carries_the_player_half_and_redesign_carrier() -> void:
 	var data: Dictionary = player.save_data()
 	for key: String in ["character_id", "display_name", "chosen_character", "party", "inventory",
 			"tournament_selection", "equipment", "hotbar", "satiety", "player_pose", "realm", "pending_realm_entry",
-			"realm_hearts", "realm_maps", "skills", "flags", "satchel_escrow"]:
+			"realm_hearts", "realm_maps", "skills", "flags", "satchel_escrow", "redesign_character"]:
 		assert_true(data.has(key), "local.save_data() is missing '%s'" % key)
-	assert_eq(data.keys().size(), 17, "and nothing else -- got %s" % str(data.keys()))
+	assert_eq(data.keys().size(), 18, "and nothing else -- got %s" % str(data.keys()))
+	assert_false(data.has("redesign_world"), "a trainer snapshot cannot overwrite host-world redesign progress")
 
 
 func test_save_data_carries_no_world_key() -> void:

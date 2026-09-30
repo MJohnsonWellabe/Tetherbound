@@ -103,7 +103,7 @@ static func _relations(domain: String, value: Variant) -> Array[String]:
 	var known: Dictionary = {}
 	for row: Dictionary in manifest: known[str(row.id)] = row
 	var biome_ids := preload("res://scripts/data/biome_order.gd").ids()
-	var identity_keys: Array[String] = ["type", "tier", "biome", "status", "station_id", "level", "cap_level", "breaks_level", "source", "target", "extra_ingredient", "key_id", "entry_id", "kind", "effect"]
+	var identity_keys: Array[String] = ["type", "tier", "biome", "status", "station_id", "attachment_slots", "level", "cap_level", "breaks_level", "source", "target", "extra_ingredient", "key_id", "entry_id", "kind", "effect"]
 	for row: Variant in value:
 		if not row is Dictionary: continue
 		var id := str(row.get("id", ""))

@@ -12,9 +12,9 @@ WARNING: instance_reset_physics_interpolation() is deprecated.
        [0] _build_terrain (res://scripts/world/playground_world.gd:1172)
        [1] _ready (res://scripts/world/playground_world.gd:798)
 [playground] spawned at 0.0, 2.9, 0.0
-[scatter bake] load phases (ms): read[256 regions, 388608 placements, 431161 skipped]=3059 reorder[16 layers]=268
+[scatter bake] load phases (ms): read[256 regions, 388608 placements, 431161 skipped]=3062 reorder[16 layers]=267
 [vegetation] grass field is on; 431161 placements across 2 layers left unbuilt (grass, flowers)
-[vegetation] boot phases (ms): placements=3489 mark_harvestable=58 group_by_model=321 register_mesh_assets=71 build_batches_total=5735 (of which harvest_points[56469 nodes]=3468, initial_collision_stream[51385 solid]=178) update_mmis=562
+[vegetation] boot phases (ms): placements=3493 mark_harvestable=58 group_by_model=319 register_mesh_assets=70 build_batches_total=5779 (of which harvest_points[56469 nodes]=3519, initial_collision_stream[51385 solid]=182) update_mmis=527
 [grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
 [grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
 [grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
@@ -125,13 +125,13 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
 [stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
 [stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
 [stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66437
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66438
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66439
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66435
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66436
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66437
 [stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
-[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66440
-[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66441
-[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66442
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66438
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66439
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66440
 [stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
 [stronghold] 87 interior dressing prop(s) in the roofed rooms
 [trainers] placed 3 trainer(s) for group 'stronghold'
@@ -142,4 +142,5 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
 [climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
 [climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
 [meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
-F16 title evidence: old canonical preserved; refusal UI displayed; physical New Game reached Grandpa opening; empty satchel; production autosave v28
+F16#0 title evidence: old merged and portable files preserved; refusal UI displayed; physical New Game reached the opening director; empty satchel; production autosave v28. Grandpa conversation is not exercised by this witness.
+Native Godot exit status: 0

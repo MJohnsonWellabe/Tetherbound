@@ -46,6 +46,7 @@ func _pad(button_index: int) -> void:
 			_fail("title refusal overwrote the old save")
 		if not current_scene.call("_saved_portable_character_ids", game).has("legacy-portable"):
 			_fail("read-only legacy portable character discovery omitted the old character")
+		status.text = ""
 		current_scene.call("_show_portable_character_select")
 		if not status.text.contains("older version"):
 			_fail("portable picker silently omitted an old character without the refusal message")

@@ -127,7 +127,7 @@ func test_save_reload_in_existing_realms_retains_configured_payloads_and_ui_cont
 		assert_ne(TAB.bounds_for_map(cloud), TAB.bounds_for_map(existing_meadows))
 
 
-func test_legacy_single_map_migration_preserves_meadows_even_in_cloudreach_save() -> void:
+func test_legacy_single_map_helper_preserves_meadows_while_old_load_refuses() -> void:
 	var written := _game()
 	written.map.mark_visited(MEADOWS_AT)
 	var original: Dictionary = written.map.save_data()
@@ -138,18 +138,17 @@ func test_legacy_single_map_migration_preserves_meadows_even_in_cloudreach_save(
 	old.erase("realm_maps")
 	_write(0, old)
 	var restored := _game()
-	assert_true(_save.load_slot(restored, 0))
-	assert_eq(restored.map.map_display_name(), "Cloudreach Cliffs")
-	assert_eq(restored.map.discovered_fraction(), 0.0)
-	_assert_payload(_switch(restored, "meadows").save_data(), original)
-	assert_true(restored.map.is_discovered(MEADOWS_AT))
-	assert_true(_save.save(restored, 1))
-	var second := _game()
-	assert_true(_save.load_slot(second, 1))
-	_assert_payload(second.map.save_data(), original, "migration followed by another save loses no Meadows fog")
+	_assert_old_map_refused_without_mutation(restored, 0)
+	# Keep the retired component's ownership regression without applying or
+	# restamping its output into a new-format save. Current realm round trips
+	# remain covered by test_save_reload_in_existing_realms above.
+	var migrated: Dictionary = _save._migrate_v18(old)
+	assert_eq(migrated.version, 19)
+	_assert_payload(migrated.realm_maps.meadows, original)
+	assert_eq(migrated.realm_maps.cloudreach, {})
 
 
-func test_explicit_cloudreach_legacy_tag_is_never_loaded_as_meadows_grid() -> void:
+func test_explicit_cloudreach_legacy_tag_stays_owned_by_cloudreach_while_load_refuses() -> void:
 	var written := _game()
 	_switch(written, "cloudreach").mark_visited(CLOUDREACH_AT)
 	assert_true(_save.save(written, 0))
@@ -158,9 +157,27 @@ func test_explicit_cloudreach_legacy_tag_is_never_loaded_as_meadows_grid() -> vo
 	old.erase("realm_maps")
 	_write(0, old)
 	var restored := _game()
-	assert_true(_save.load_slot(restored, 0))
-	assert_true(restored.map.is_discovered(CLOUDREACH_AT))
-	assert_eq(_switch(restored, "meadows").discovered_fraction(), 0.0)
+	_assert_old_map_refused_without_mutation(restored, 0)
+	var migrated: Dictionary = _save._migrate_v18(old)
+	assert_eq(migrated.version, 19)
+	_assert_payload(migrated.realm_maps.cloudreach, written.map.save_data())
+	assert_eq(migrated.realm_maps.meadows, {})
+
+
+func _assert_old_map_refused_without_mutation(game: Node, slot: int) -> void:
+	var path: String = _save.slot_path(slot)
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var modified := FileAccess.get_modified_time(path)
+	var before: Dictionary = _save.snapshot(game).duplicate(true)
+	var world_ids: Array = _save.worlds().list_ids().duplicate()
+	var character_ids: Array = _save.characters().list_ids().duplicate()
+	assert_false(_save.load_slot(game, slot), "RD-35 refuses v18 before any map migration")
+	assert_eq(_save.last_load_result.code, "incompatible_old_version")
+	assert_eq(_save.snapshot(game), before)
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes)
+	assert_eq(FileAccess.get_modified_time(path), modified)
+	assert_eq(_save.worlds().list_ids(), world_ids)
+	assert_eq(_save.characters().list_ids(), character_ids)
 
 
 func test_authoritative_payloads_override_alias_and_reset_new_game_clears_both() -> void:
@@ -180,7 +197,8 @@ func test_authoritative_payloads_override_alias_and_reset_new_game_clears_both()
 func test_version_one_chain_retains_pre_cloudreach_fields_and_produces_configured_maps() -> void:
 	var old := {"version": 1, "day": 9, "party": [], "inventory": [], "placed_buildings": []}
 	var migrated: Dictionary = _save._migrate_to_current(old, 1, 0)
-	assert_eq(migrated.version, SAVE.VERSION)
+	# Historical helper regression only; real old-save reads refuse at RD-35.
+	assert_eq(migrated.version, 27, "retired migration must stop before the redesign reset")
 	assert_eq(migrated.current_realm, "meadows")
 	assert_eq(migrated.day, 9)
 	assert_true(migrated.has("realm_hearts"))
