@@ -105,7 +105,7 @@ func _initialize() -> void:
 
 func _init_budgets() -> void:
 	super._init_budgets()
-	if "--guardian" in OS.get_cmdline_user_args():
+	if "--guardian" in OS.get_cmdline_user_args() or "--feedback" in OS.get_cmdline_user_args():
 		# Two complete Meadows builds can exceed the ordinary startup bound
 		# while the owner's other work has CPU priority. Gameplay bounds stay.
 		_budgets["hello_budget_s"] = 360.0
@@ -346,6 +346,8 @@ func _fresh_accepted_receipt(state: Dictionary, encounter_id: String, peer_id: i
 
 
 func _run() -> void:
+	# Game._ready must finish before launch isolates the coordinator save root.
+	await process_frame
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
