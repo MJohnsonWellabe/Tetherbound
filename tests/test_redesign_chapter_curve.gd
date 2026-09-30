@@ -132,6 +132,9 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
 	var captive: Dictionary = _read("res://data/config/stormwood_dynamo.json").get("captive", {})
 	assert_eq(str(captive.get("placeholder_species", "")), "fulgocobra")
 	assert_eq(int(captive.get("level", 0)), 55)
+	assert_eq(int((_read("res://data/config/stormwood_chapter.json").get("final_encounter", {}) as Dictionary).get("legendary_level", 0)), 55)
+	assert_eq(preload("res://scripts/world/stormwood_ending.gd").legendary_level(), 55,
+		"actual joining companion reads the authored captive level")
 	var offer: Dictionary = _read("res://data/config/stormwood_encounters.json").get("legendary_placeholder", {})
 	assert_eq(str(offer.get("placeholder_species", "")), "fulgocobra")
 	assert_false(bool(offer.get("catchable", true)))

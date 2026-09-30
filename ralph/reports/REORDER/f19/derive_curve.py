@@ -254,6 +254,7 @@ def derive():
         data["captive"]["placeholder_species"] = "fulgocobra"
         data["captive"]["level"] = 55
     write_edits("data/config/stormwood_dynamo.json", dynamo)
+    write_edits("data/config/stormwood_chapter.json", lambda d: d["final_encounter"].update(legendary_level=55))
 
 
 if __name__ == "__main__":

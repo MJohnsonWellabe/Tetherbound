@@ -60,7 +60,8 @@ const OFFER_ACCEPT_EFFECT := "stormheart:accept"
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 const LEGENDARY_NAME := "the Stormheart"
-const LEGENDARY_LEVEL := 44
+const LEGENDARY_LEVEL := 55
+const DYNAMO_CONFIG_PATH := "res://data/config/stormwood_dynamo.json"
 const CORE_POSITION := Vector3(-100.0, 262.21, 5470.0)
 const OFFER_RADIUS_M := 14.0
 const VIEW_RADIUS_M := 18.0
@@ -763,11 +764,19 @@ func _build_water_gate() -> void:
 func _make_legendary() -> RefCounted:
 	var creature: RefCounted = TRAINER_NPC.creature_for({
 		"species": LEGENDARY_SPECIES,
-		"level": LEGENDARY_LEVEL,
+		"level": legendary_level(),
 	})
 	if creature != null:
 		creature.set("nickname", LEGENDARY_NAME)
 	return creature
+
+
+static func legendary_level() -> int:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(DYNAMO_CONFIG_PATH))
+	if not raw is Dictionary:
+		return LEGENDARY_LEVEL
+	var captive: Variant = raw.get("captive", {})
+	return int(captive.get("level", LEGENDARY_LEVEL)) if captive is Dictionary else LEGENDARY_LEVEL
 
 
 ## The party holds this claim's own Stormheart (by its uid, so levelling or
