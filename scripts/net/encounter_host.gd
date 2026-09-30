@@ -1172,6 +1172,7 @@ func bind_actor_vitals(encounter_id: String, peer_id: int, character_id: String,
 	var maximum: Variant = owned_row.get("max_hp")
 	var fainted: Variant = owned_row.get("fainted")
 	if participant.is_empty() or not UTILITY_EFFECTS._identity(uid) or body_generation < 1 \
+		or body_generation > 2147483647 \
 		or not UTILITY_EFFECTS._number(maximum, 1.0, 1000000000.0) \
 		or not UTILITY_EFFECTS._number(hp, 0.0, float(maximum)) \
 		or not fainted is bool or bool(fainted) != (float(hp) == 0.0):
@@ -1190,7 +1191,32 @@ func bind_actor_vitals(encounter_id: String, peer_id: int, character_id: String,
 	else:
 		actor["body_generation"] = body_generation
 	participant["creature_uid"] = uid
+	participant["actor_generation"] = maxi(int(participant.get("actor_generation", 0)), body_generation)
 	return {"ok": true, "vitals": _actor_vitals_view(actor)}
+
+
+## Actual body ObjectIDs are64-bit and are not wire generations. The director
+## passes the ID of its rechecked live host body; this assigns a separate
+## monotonic generation in the same participant row. UID switches also renew
+## the generation, even if a pooled body ObjectID is reused.
+func bind_actor_body(encounter_id: String, peer_id: int, character_id: String,
+		owned_row: Dictionary, host_body_instance_id: int) -> Dictionary:
+	var participant := _actor_participant(encounter_id, peer_id, character_id)
+	if participant.is_empty() or host_body_instance_id < 1 \
+		or not UTILITY_EFFECTS._identity(owned_row.get("uid")):
+		return {"ok": false, "code": "invalid_actor"}
+	var uid := str(owned_row.uid)
+	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(uid, {})
+	var generation := int(actor.get("body_generation", 0))
+	if actor.is_empty() or str(participant.get("creature_uid", "")) != uid \
+		or int(actor.get("body_instance_id", 0)) != host_body_instance_id:
+		var previous := int(participant.get("actor_generation", 0))
+		if previous >= 2147483647: return {"ok": false, "code": "generation_exhausted"}
+		generation = previous + 1
+	var result := bind_actor_vitals(encounter_id, peer_id, character_id, owned_row, generation)
+	if not bool(result.get("ok", false)): return result
+	(participant.actor_vitals[uid] as Dictionary)["body_instance_id"] = host_body_instance_id
+	return result
 
 
 func actor_vitals(encounter_id: String, peer_id: int, creature_uid: String,
@@ -1310,6 +1336,7 @@ func _actor_participant(encounter_id: String, peer_id: int, character_id: String
 static func _actor_vitals_view(actor: Dictionary) -> Dictionary:
 	var out := actor.duplicate(true)
 	out.erase("receipts")
+	out.erase("body_instance_id")
 	return out
 
 
@@ -1319,8 +1346,10 @@ static func presentation_snapshot(rec: Dictionary) -> Dictionary:
 	var out := rec.duplicate(true)
 	out.erase("retained_actor_participants")
 	for participant: Dictionary in (out.get("participants", {}) as Dictionary).values():
+		participant.erase("actor_generation")
 		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():
 			actor.erase("receipts")
+			actor.erase("body_instance_id")
 			actor.erase("settlement_receipt")
 			actor.erase("settled_revision")
 	return out
