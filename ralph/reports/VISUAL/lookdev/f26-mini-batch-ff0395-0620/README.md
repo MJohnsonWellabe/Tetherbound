@@ -1,0 +1,11 @@
+# F26 mini capture evidence
+
+This archive contains five original candidate PNGs from three serialized native runs, plus two reused Galefoot Medium baseline PNGs. Every original manifest, process receipt and combined stdout/stderr log is copied without rewriting. The baseline manifest describes 24 original images; only the two exact Galefoot comparison images are included here. All other original baseline images remain at their recorded external paths. No High candidate was run.
+
+Candidate source pins are ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd (trainer and Water, old census limitations retained) and 0620d57bad036e52c88446fa1c04408b07cea909 (Stormwood with dictionary scan/direct GPU RID readbacks). Baseline source is f43cde88acde0648123b89895d3023e1f5c50a08. Pinned-source files are exact Git blobs. The manifest separately identifies observed Windows bytes, LF-normalized projections and canonical Git source hashes; a projected hash is not an observed original hash.
+
+The subtree .gitattributes disables text conversion solely within this evidence archive so Git preserves original Windows receipt/log bytes. Images are neither cropped, resized, annotated nor recompressed. The archive helper refuses mismatched existing files and verifies every written byte hash.
+
+The authored-triage files are source-map, tool-author and receipt checks. Some original filenames/scope strings contain "independent"; those originals are preserved verbatim, but they DO NOT constitute the final independent acceptance gate. A separate non-author session must strictly review ACCEPTANCE F26#0 against main and these originals. No F26 criterion is self-closed here.
+
+Limits: staged catalogue travel/time and isolated user data; Medium Forward+ only; mounted bindings are not camera-pixel exposure, texture-content proof or full-bar art approval. Stormwood candidate flags remain off. No transient lightning, earned campaign, Surge transitions, aftermath, multiplayer transactions, Ally or performance proof. Preserve actual warnings and old Water getter/dictionary limitations. The trainer subset leaves the prior Cloudreach full-bar FAIL unchanged. Reproducer scripts retain their original external paths and were not rerun by archive preparation.

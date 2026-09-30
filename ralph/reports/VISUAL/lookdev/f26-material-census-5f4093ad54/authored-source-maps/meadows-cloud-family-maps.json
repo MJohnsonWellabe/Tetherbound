@@ -1,0 +1,495 @@
+{
+  "source_commit": "5f4093ad54e4675b782ab1f04129e1047c0977df",
+  "scope": "Source-only family maps authored by census tool/source-map helper; not an independent acceptance verdict or actual mounted result.",
+  "canonical_git_blob_hashes": {
+    "scripts/world/playground_world.gd": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241",
+    "scripts/world/village.gd": "7c7732796e25f3982c1cf0b93b46894c78c733145c8737361539c48827deed0b",
+    "scripts/world/crossing_hall.gd": "e246ac245110b11eee41a39ab804d34ad1e95226b7d127cc97457b0b084409e3",
+    "scripts/world/building_prefabs.gd": "c810de6ea61ea843847e0e4d83ae27de96dff43375b97c41ab71749e7697a9f5",
+    "scripts/world/stronghold.gd": "1f7c4e2685376c9c8044e2ad85017c2c79fa92c82a300eaf17eb66da14ce4160",
+    "scripts/world/vegetation.gd": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a",
+    "scripts/world/structure_visibility_range.gd": "7e8a24f3823a5e985c8c59f0f83162b09bb77b85eeb00281b925b68350be4c0f",
+    "scripts/world/cloudreach_world.gd": "7436b349e95f12f2ba1775b06b4b0d12aff5cb27acb4adb87e2344a00faf129f",
+    "scripts/world/cloudreach_world_runtime.gd": "7901f09bdecad21cdee529d23c70b446a636ef1dcd79bcbc18949038813e221d",
+    "scripts/world/cloudreach_environment_materials.gd": "a1e89ea0069bc2ff6e7821d4189dd004f9e21d74322d4386da05b1b5716b95de",
+    "scripts/world/cloudreach_ground_cover.gd": "6b90422ba0714d5aa1698b85f16ec75ed8cd8e11b690a314b7216fb013a1fe0b",
+    "scripts/world/tether_sigil.gd": "6186b1329862b97343557be241d36bc2cb52edd85fd1aa4fef1443abba552768",
+    "data/config/village.json": "24688edacadb6f368e4c62fed73bc923c3da98949fb841b67b15f7ea2f7aee9b",
+    "data/config/crossing_hall.json": "68cd47367dfe90e09b924833b3f3f4f0dff3f69506bc98569bdeece0590b0376",
+    "data/config/building_prefabs.json": "5e60ebd341184fe5946f115f6c9494c5d0163df08e69c5e0ae33d662f114c3b3",
+    "data/config/stronghold.json": "fcbdd44a462568b9e7fc333915ca8a3bf7df9e2b796e32daed70783b0e8f75b0",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "data/config/grass_field.json": "99be9cd94105e65615cb8156db287473f7d17adc0ad58ee082a6f8d34a8b5c16",
+    "data/config/cloudreach_world.json": "dd10fb68c7eb908c8eedd311c80021c510011ba2e9dc9dcbbf4771e40b805a00",
+    "data/config/cloudreach_visual.json": "1c9c1efa9d30377055e918873573510fa539341c8dfabbdbef2c9cc016641f4b",
+    "data/config/performance.json": "e6b71e5c0a41bd89c52140a202a6aad0d0086cbdbcfb34a95531b1fe5ec9ee48",
+    "shaders/cloudreach_cliff.gdshader": "b0931fb7de61a444a77079274591802db001de0a02781317aa3c9fcb0035641c",
+    "shaders/cloudreach_rock.gdshaderinc": "f781031ec2e1b86d36a68130b91ebabdd70f3a1f1bc42d9f328f58cc14148151",
+    "shaders/cloudreach_turf.gdshaderinc": "6a9d5de9043b21e6fe5f4455438c13da087390769586f185d40622c7b0c27b26",
+    "shaders/cloudreach_surface.gdshader": "fc41d1d63c1ca9d65ae771f3204f5c0dfd5758be9586e7301731a4041b2fe6eb",
+    "shaders/cloudreach_trail.gdshader": "18b43ed6ce91a2f8ab127ea5b5c6b1e8abda1f3bdae91f971b96f51fabf96bad",
+    "shaders/cloudreach_ground_cover.gdshader": "ff8fa007b8e820b90ec1a0a4a9e79675212d7883539d72511c96ff5814471312",
+    "shaders/cloudreach_cloud_deck.gdshader": "20da4a2ee5b1cb6596d516089d0c1df71adf46ce198c7b82892076f3ccbfea33",
+    "shaders/cloudreach_timber.gdshader": "817178885333918c9f00d1bf2989c67ae3d6a44db3e7cf25dea5339fbbb97580",
+    "shaders/cloudreach_worn_ground.gdshader": "bc49edeaf628aba625c70fdbc5a086afef4f794bc3e343423014494f34cc2120",
+    "assets/environment/team_tether/hall/hall_stone.gdshader": "0a869693cc9517a0359dc9e2f84149c1b3e0f8c4fb4159cbe388fdc157671a0c",
+    "assets/environment/team_tether/hall/banner_cloth.gdshader": "729f714595bdb56b764e5c63b321f397c6da69bb7fa9e2c1f122d7c1bbee201f"
+  },
+  "meadows_families": [
+    {
+      "family": "terrain",
+      "node_selector_hints": [
+        "Terrain"
+      ],
+      "source_owner": "playground_world.gd::_apply_ground_materials/_build_texture_list",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "texture_slots": [
+          {
+            "_comment": "GROUND-REBUILD. The default meadow surface. Albedo H77 S0.47 V0.43, targeting an on-screen H77 S0.50 V0.48 once the directional light multiplies it -- the albedo sits deliberately below the rendered target so noon sun does not double-apply saturation.",
+            "name": "grass",
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
+            "uv_scale": 0.27,
+            "_comment_uv_scale": "Metres per tile is 1/uv_scale, so this is 5.0 m per tile, as specified.",
+            "normal_depth": 0.34,
+            "ao_strength": 0.2,
+            "roughness_mod": 0.08,
+            "detiling_rotation": 0.28,
+            "detiling_shift": 0.35,
+            "tint": "#e9dfc0",
+            "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
+          },
+          {
+            "_comment": "GROUND-REBUILD. Dry gold verge grass, and the half-step that makes every grass-to-dirt boundary survivable: the eye sees grass -> dry gold -> dirt as two ~13-point value steps instead of one 27-point cliff, which is what a trampled shoulder actually looks like. Keeps the config name `soil` because the bake's slope bands and apron/drain passes address it by that name; it is no longer a dirt-brown hillside band.",
+            "name": "soil",
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "normal": "res://assets/environment/terrain/stylised/verge_grass_NormalGL.png",
+            "uv_scale": 0.2,
+            "_comment_uv_scale": "Metres per tile is 1/uv_scale, so this is 5.0 m per tile, as specified.",
+            "normal_depth": 0.22,
+            "ao_strength": 0.2,
+            "roughness_mod": 0.1,
+            "detiling_rotation": 0.31,
+            "detiling_shift": 0.37,
+            "tint": "#e2d8b4",
+            "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
+          },
+          {
+            "_comment": "GROUND-REBUILD. Exposed stone. The only surface with real relief -- bevelled cell edges, not knife-sharp -- and the neutral that anchors landmarks.",
+            "name": "rock",
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "normal": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
+            "uv_scale": 0.16,
+            "_comment_uv_scale": "T1-GROUND, 2026-08-30: was 0.1538 (6.5 m per tile), the largest tile of any ground texture in this file (grass/soil 5.0m, path 4.0m) -- and this is the SAME texture Terrain3D's slope threshold paints onto every steep surface in the corridor, river banks included (`build_playground_terrain.gd`'s `band_slope` pick is generic, not river-specific). A blind visual pass measured the river channel specifically as 'both banks faced in one large hex/pebble texture, like riprap on a canal levee' -- at 6.5m per tile the texture's own hex/pebble motif reads several times too large next to a 1.8m person. 0.22 (~4.5 m per tile) brings it in line with the other ground textures' tiling density; the motif itself is unchanged, only how many times it repeats per metre. Global (every rock-textured slope, not just the river -- there is no per-body texture override in this control-map system), so cliffs and the quarry get the same correction. TUNABLE; re-solve in tools/art_pipeline/stylised_ground_spec.py only if the texture itself needs to change, not this.",
+            "normal_depth": 0.55,
+            "ao_strength": 0.2,
+            "roughness_mod": 0.0,
+            "detiling_rotation": 0.2,
+            "detiling_shift": 0.3,
+            "tint": "#ffffff",
+            "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
+          },
+          {
+            "_comment": "GROUND-REBUILD. Packed earth, and deliberately the BRIGHTEST ground surface in the set so routes read from a hilltop. Carries embedded stones rather than ruts: a rut is directional, and tile orientation is fixed while paths turn.",
+            "name": "path",
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "normal": "res://assets/environment/terrain/stylised/dirt_path_NormalGL.png",
+            "uv_scale": 0.25,
+            "_comment_uv_scale": "Metres per tile is 1/uv_scale, so this is 4.0 m per tile, as specified.",
+            "normal_depth": 0.25,
+            "ao_strength": 0.25,
+            "roughness_mod": 0.05,
+            "detiling_rotation": 0.24,
+            "detiling_shift": 0.32,
+            "tint": "#d0b090",
+            "_comment_tint_vp2": "VP2: the path albedo is #ad9366 (V0.68), authored as the brightest ground surface so routes read from a hilltop -- and in every player-height frame it rendered as a near-white cream ribbon against the keyart's warm mid-brown earth. #d0b090 multiplies it to about #8c663b, warm packed earth that still sits a clear step lighter than the verge and the damp band. Runtime only, no re-bake.",
+            "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
+          },
+          {
+            "_comment": "GROUND-REBUILD. Dark low-chroma mud at the water margins; the quiet frame that makes water read bright. Negative roughness_mod so it catches a highlight and reads wet. The flattest texture in the set on purpose.",
+            "name": "damp",
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
+            "uv_scale": 0.25,
+            "_comment_uv_scale": "Metres per tile is 1/uv_scale, so this is 4.0 m per tile, as specified.",
+            "normal_depth": 0.18,
+            "ao_strength": 0.3,
+            "roughness_mod": -0.15,
+            "detiling_rotation": 0.26,
+            "detiling_shift": 0.29,
+            "tint": "#ffffff",
+            "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
+          },
+          {
+            "_comment": "GROUND-REBUILD. Oak-grove litter. NOT YET PLACED by the bake -- canopy-driven placement (a disc under each oak) is the next step, and this entry exists so that work does not also have to add a texture. Harmless until then: an unreferenced id costs one array slot.",
+            "name": "forest_floor",
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
+            "uv_scale": 0.25,
+            "_comment_uv_scale": "Metres per tile is 1/uv_scale, so this is 4.0 m per tile, as specified.",
+            "normal_depth": 0.3,
+            "ao_strength": 0.3,
+            "roughness_mod": 0.05,
+            "detiling_rotation": 0.22,
+            "detiling_shift": 0.33,
+            "tint": "#ffffff",
+            "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
+          }
+        ],
+        "gpu_arrays": [
+          "_height_maps",
+          "_control_maps",
+          "_color_maps",
+          "_texture_array_albedo",
+          "_texture_array_normal"
+        ]
+      },
+      "limits": "An enabled aerial override requires its actual shader child/code and stored params/direct GPU evidence. Builtin uniform names alone are not override proof."
+    },
+    {
+      "family": "scatter_and_grass",
+      "node_selector_hints": [
+        "Terrain descendants/assets",
+        "GrassField"
+      ],
+      "source_owner": "vegetation.gd::build/_register_mesh_assets; playground_world.gd::_stand_up_the_grass_field",
+      "mode": "initial-production",
+      "required_binding_semantics": [
+        "Each mounted or stored Terrain3DMeshAsset PackedScene retains its active imported material graph; actual grass shader samplers use direct map RIDs when object getters are null."
+      ],
+      "limits": "Terrain scatter and grass are camera/region dependent. Stored serialized resources do not prove every remote mesh submitted to GPU. Preserve container truncation and streamed omissions."
+    },
+    {
+      "family": "grandpa_house",
+      "node_selector_hints": [
+        "GrandpaHouse"
+      ],
+      "source_owner": "playground_world.gd::_build_settlement; grandpa_house.gd",
+      "mode": "initial-production",
+      "required_binding_semantics": [
+        "Installed civilian-family shell, interior/door and explicit authored finish retain their bound materials."
+      ],
+      "limits": "Separate house entry and interior player paths are not earned by this Village view; hidden template resources do not certify visible placements."
+    },
+    {
+      "family": "village_prefabs",
+      "node_selector_hints": [
+        "Village/<prefab>_<placement number>",
+        "Village/PrefabTemplates"
+      ],
+      "source_owner": "village.gd::build/_place; building_prefabs.gd::_build_template/_apply_retint",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "configured_structure_count": 29,
+        "configured_prefab_counts": {
+          "mill": 1,
+          "footbridge": 1,
+          "ranger_station": 1,
+          "cottage_a": 3,
+          "workshop": 1,
+          "inn": 1,
+          "cottage_b": 3,
+          "well": 1,
+          "crossing_hall_shell": 1,
+          "square_oak_a": 3,
+          "square_oak_b": 3,
+          "fence_run": 2,
+          "doorstep": 8
+        },
+        "binding_rule": "Imported Medieval Village trim-texture family remains on active surfaces. Retint duplicates colour while retaining albedo; explicit texture swaps must exist/bind. Dimensional cloth source_texture is required when that profile is selected."
+      },
+      "limits": "Village/PrefabTemplates is deliberately hidden. Match actual placed siblings and inherited active materials rather than treating hidden cached templates as the finished settlement. Missing recipe/module/ground failures can omit structures; count/material graph alone cannot excuse loader warnings."
+    },
+    {
+      "family": "crossing_hall",
+      "node_selector_hints": [
+        "Village/crossing_hall_shell_*",
+        ".../Arch_<id>/PortalSurface",
+        ".../Pedestal_<biome>",
+        ".../RoadFacingFrontage"
+      ],
+      "source_owner": "village.gd::_exterior_identity; crossing_hall.gd::build/_build_arch/_build_pedestal/_build_frontage",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "arch_ids": [
+          "home",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ],
+        "pedestal_biomes": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood",
+          "biome5",
+          "biome6",
+          "biome7",
+          "biome8"
+        ],
+        "installed_models": [
+          "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf",
+          "res://assets/props/quaternius_fantasy/BookStand.gltf",
+          "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
+        ],
+        "portal_finish": "Every PortalSurface receives an explicit StandardMaterial3D, with state colour/emission. No albedo texture is authored for these sealed/open membranes."
+      },
+      "limits": "This is the village Crossing Hall, distinct from the remote Meadows Stronghold/Hall. Eight arches and eight pedestals are logical configured objects, not total binding counts. Fresh state does not open future arches. Identity root may have autogenerated name; match owning building + child family."
+    },
+    {
+      "family": "meadows_hall_stone",
+      "node_selector_hints": [
+        "Stronghold chamber surfaces",
+        "Stronghold/HallMassing"
+      ],
+      "source_owner": "playground_world.gd::_build_stronghold; stronghold.gd::build/_stone_shader_material/_weather_hall_massing",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "required_stone_material": {
+          "shader": "res://assets/environment/team_tether/hall/hall_stone.gdshader",
+          "albedo_tex": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png",
+          "normal_tex": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png",
+          "rough_tex": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png"
+        },
+        "configured_chamber_ids": [
+          "outer_works",
+          "courtyard",
+          "tether_approach",
+          "warden_arena",
+          "legendary_chamber"
+        ],
+        "mount_rule": "All configured chambers, HallMassing, approach, trim, exterior/interior dressing and machine build before Stronghold.build returns and the world shell marks ready."
+      },
+      "limits": "No proximity visit required to mount Hall. Village pixels do not expose remote Hall; reuse its actual historical original endpoints. Deliberately untextured iron/timber/glow receives explicit material and does not require stone maps."
+    },
+    {
+      "family": "meadows_hall_prefabs_and_cloth",
+      "node_selector_hints": [
+        "Stronghold/HallMassing",
+        "Stronghold/HallDressing",
+        "Stronghold/...Banner...",
+        "Stronghold/HallPrefabTemplates"
+      ],
+      "source_owner": "stronghold.gd::_build_hall_massing/_build_hall_dressing/_banner_cloth_material; building_prefabs.gd",
+      "mode": "initial-production",
+      "required_binding_semantics": [
+        "Imported kit non-stone surfaces preserve actual installed albedo/normal bindings as declared by their source materials.",
+        "Weathered stone slots use the Hall stone three samplers; banner_cloth.gdshader device_tex comes from tether_sigil.texture and may be generated with no external filepath."
+      ],
+      "limits": "HallPrefabTemplates hidden cache does not count as placed art. State-closed blast shutters are explicitly finished surfaces. Clothing/glow without texture is not automatically missing material."
+    },
+    {
+      "family": "meadows_hall_machine",
+      "node_selector_hints": [
+        "Stronghold/TetherMachine",
+        "Stronghold/TetherMachinePlaceholder"
+      ],
+      "source_owner": "stronghold.gd::_build_machine/machine_is_placeholder",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "configured_machine": {
+          "placeholder": false,
+          "_comment_facing": "OP-0905-16: 'You can't see the legendary when you enter the chamber. The machine needs to be turned.' Measured by tools/_probe_tether_machine_facing.gd -- the installed cage's open archway sits at yaw 258.8 deg in the model's own frame (a 6-slice-wide empty run against 8 solid slices everywhere else), and rotation.y = deg_to_rad(-101.2) turns that open side onto the chamber's +x wall, the doorway the player enters through from warden_arena. TUNABLE only if the mesh is regenerated -- re-run the probe first.",
+          "facing_deg": -101.2,
+          "model": "res://assets/environment/team_tether/tether_machine.glb",
+          "chamber": "legendary_chamber",
+          "height": 19.5,
+          "finish": {
+            "hardware": "res://assets/environment/team_tether/machine_hardware.glb"
+          },
+          "base_radius": 5.6,
+          "ring_radius": 7.2,
+          "ring_pillars": 8,
+          "core_radius": 1.9,
+          "core_light": {
+            "energy": 1.9,
+            "range": 22.0,
+            "_comment": "HALL-STAGING-0906 round 2: the core was the Legendary Chamber's key at 3.2/26 -- a blind judge read the room as \"a teal machine room with one candle in the corner\". The torch rows are the key now; the core is the accent that says the machine is live."
+          },
+          "_scale_note": "Originally 15m against the board's own 0-20m bar. ROAD-VISUAL raised Veridian to 5.8m under the owner's 2026-09-07 large-creature directive; its bound 1.22x presentation then measured 10.25m at the top against an 8.89m cage crown. The machine is the smaller side and grows to 19.5m, which proportionally gives the installed mesh a roughly 7.49m cage void for the roughly 7.08m body while remaining below the chamber's 22m ceiling. base_radius/ring_radius describe the primitive fallback and are unchanged; the installed model's real extents remain authoritative.",
+          "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner authorised the generation and the key came from the Ralph art-lane Routine. Meshy multi-image-to-3D, refine tier, from four crops of board 15 cut by tools/art_pipeline/crop_prop_views.py -- and the front and side crops had the BOUND LEGENDARY LIFTED OUT of them first, because D24 licenses the machine and not its prisoner and image-to-3D follows its pictures rather than its negative prompt. `height` below is still the authority: stronghold.gd fits the mesh to it by its own visual bounds. The primitive massing under `base_radius`/`ring_radius`/`core_radius` is kept as the fallback the code still takes when `model` is empty or missing, and as the record of what the chamber was built around."
+        },
+        "binding_rule": "Check actual installed model mesh/material graph. The imported machine path is a declared asset; an authored fallback can remain fully bound and still fail to prove the model loaded."
+      },
+      "limits": "Node name alone is insufficient: source picks its name from placeholder configuration before the model-load branch. A fallback with no missing active surface is not proof of the intended installed model. No occupant/Legendary/progression approval."
+    },
+    {
+      "family": "other_initial_meadows_families",
+      "node_selector_hints": [
+        "Props",
+        "StonewaterReach",
+        "HighfieldPastureIdentity",
+        "VillageNPCs",
+        "RelayNPCs",
+        "PondNPCs",
+        "Trainers",
+        "SouthBridge",
+        "MillCrossing",
+        "SeveredSpokes",
+        "BurrowWarrens",
+        "Water"
+      ],
+      "source_owner": "playground_world.gd::_build_settlement/_build_water",
+      "mode": "initial-production",
+      "required_binding_semantics": [
+        "Retain actual active imported/material override resources and explicit sampler declarations for each mounted family, with all warnings and nulls."
+      ],
+      "limits": "Some NPC/reward/story/dungeon occupant state is gated. This source inventory only maps initial material families; no transactions, encounter phase or future state claim."
+    }
+  ],
+  "cloudreach_families": [
+    {
+      "family": "cloud_cliffs_regions_horizon",
+      "node_selector_hints": [
+        "CliffRegions",
+        "DistantHighlandRanges",
+        "DistantLowerRelief",
+        "RealmTransitionLedges"
+      ],
+      "source_owner": "cloudreach_world.gd::_build_materials/_build_regions/_build_horizon_ranges/_visual_rock_mass",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "shader": "res://shaders/cloudreach_cliff.gdshader",
+        "samplers": {
+          "rock_texture": "res://assets/environment/terrain/Rock030_Color.jpg",
+          "rock_normal": "res://assets/environment/terrain/Rock030_NormalGL.jpg"
+        },
+        "region_ids": [
+          "gate_lower_cliffs",
+          "broken_causeways",
+          "windscar_ravine",
+          "high_roost_sky_shrine",
+          "upper_cloudreach",
+          "summit_final_stronghold"
+        ]
+      },
+      "limits": "Near and hazed variants share rock maps; colour uniforms/distant no-normal response are authored. Flag-off rock-section or imported buttress candidates do not earn approval by preloading."
+    },
+    {
+      "family": "cloud_crowns_trails_and_cover",
+      "node_selector_hints": [
+        "CliffRegions crown caps",
+        "AuthoredRoutes",
+        "ProceduralGroundCover"
+      ],
+      "source_owner": "cloudreach_environment_materials.gd::ground/turf_parameters; cloudreach_world.gd::_build_materials; cloudreach_ground_cover.gd::build",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "surface_shader": "res://shaders/cloudreach_surface.gdshader",
+        "trail_shader": "res://shaders/cloudreach_trail.gdshader",
+        "cover_shader": "res://shaders/cloudreach_ground_cover.gdshader",
+        "required_turf_textures": [
+          "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+          "res://assets/environment/terrain/stylised/verge_grass_Color.png"
+        ],
+        "trail_dirt_texture": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+        "sampler_names": [
+          "grass_texture",
+          "dirt_texture",
+          "rock_texture",
+          "rock_normal"
+        ],
+        "binding_rule": "Apply sampler requirements to the actual source-selected material role. Grass/dry-grass cover receives grass_texture through ground_cover_parameters; flower/bush cover shares the shader but keeps procedural tint and default turf_match, without that texture assignment. Shared sampler declarations alone do not make inactive optional flower/bush textures required."
+      },
+      "limits": "Cover is per-patch mounted MultiMesh with distance fade; region render visibility is not completeness of submitted pixels. Logical patch counts differ from surface counts."
+    },
+    {
+      "family": "cloud_landmarks_and_bridges",
+      "node_selector_hints": [
+        "Landmarks",
+        "SuspendedBridges",
+        "TraversalGates",
+        "AuthoredRouteDetails",
+        "CloudreachResources"
+      ],
+      "source_owner": "cloudreach_world.gd::_build_landmarks/_build_bridges/_build_progression_gates/_build_authored_route_details",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "landmark_ids": [
+          "realm_gate_crag",
+          "lower_cliffs_waycamp",
+          "three_bells_bridge",
+          "broken_skyroad_arch",
+          "windscar_beacon",
+          "windscar_flight_aerie",
+          "sky_shrine_heartstone",
+          "high_roost_perches",
+          "cliffhold_settlement",
+          "old_wind_observatory",
+          "summit_eyrie_stronghold",
+          "waterward_overlook"
+        ],
+        "binding_rule": "All authored solo landmarks build before shell-ready. Installed tree/prop/bridge material graphs remain active; plain rope/copper/key glow are explicit solid finishes."
+      },
+      "limits": "Uses_multiplayer_staging false for fresh solo; multiplayer placeholders are a different scope. Story-built bridges can be mounted but hidden. Preserve route-headroom exclusions and skipped-loader warnings; do not force spawn them."
+    },
+    {
+      "family": "cloud_architecture_masonry",
+      "node_selector_hints": [
+        "Landmarks settlements/aviary",
+        "SummitArenaPresentation",
+        "CloudreachBattleYards"
+      ],
+      "source_owner": "cloudreach_environment_materials.gd::masonry/aviary_masonry; cloudreach_world_runtime.gd::build_environment/mount",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "masonry": {
+          "shader": "res://assets/environment/team_tether/hall/hall_stone.gdshader",
+          "albedo_tex": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png",
+          "normal_tex": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png",
+          "rough_tex": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Roughness.png"
+        },
+        "timber_shader": "res://shaders/cloudreach_timber.gdshader",
+        "timber_rule": "Weathered timber shader is procedural: no albedo sampler declared. Ordinary imported wooden kit surfaces still retain their installed texture materials."
+      },
+      "limits": "Every actor/material must be checked on its active surface graph. Texture-free procedural wood/metal does not imply a missing material, but full art bar is not certified."
+    },
+    {
+      "family": "cloud_banners_and_worn_ground",
+      "node_selector_hints": [
+        "SummitArenaPresentation banners",
+        "Landmarks banners/activity patches"
+      ],
+      "source_owner": "cloudreach_environment_materials.gd::banner/worn_ground",
+      "mode": "initial-production",
+      "required_binding_semantics": {
+        "cloth_shader": "res://assets/environment/team_tether/hall/banner_cloth.gdshader",
+        "cloth_sampler": "device_tex -> tether_sigil.texture generated texture",
+        "worn_ground_shader": "res://shaders/cloudreach_worn_ground.gdshader",
+        "soil_tex": "res://assets/environment/terrain/stylised/dirt_path_Color.png"
+      },
+      "limits": "Generated sigil resource path may be empty by construction. Inline/generated shaders require nonempty code, not an external path for every ShaderMaterial."
+    },
+    {
+      "family": "cloud_backdrop_and_atmosphere",
+      "node_selector_hints": [
+        "CloudBanks",
+        "CloudDecks",
+        "CloudBillows",
+        "CloudreachAtmosphere",
+        "CloudreachWorldPayoffs"
+      ],
+      "source_owner": "cloudreach_world.gd::_build_cloud_sea/_build_cloud_decks; cloudreach_world_runtime.gd::mount",
+      "mode": "initial-production plus state-dependent payoffs",
+      "required_binding_semantics": {
+        "cloud_deck_shader": "res://shaders/cloudreach_cloud_deck.gdshader",
+        "binding_rule": "Procedural cloud deck math and coloured cloud/wind veil material are intentionally untextured. Active materials/shader code still must exist."
+      },
+      "limits": "Fresh ambient/default effects differ from return-traveler/payoff/progression phases. No new weather, night, phase or earned route capture is requested."
+    }
+  ],
+  "general_rules": [
+    "Child meshes often have no owner_script; match full node path, ancestor owner and actual active material graph.",
+    "Null mesh_source plus nonnull active override is normal; null active requires exact source/visibility triage.",
+    "Optional albedo on authored solid colour is not a declared missing sampler. Source-assigned imported/sampler textures require actual resource binding; uniform declarations for unused/default-disabled roles alone do not make an optional texture required.",
+    "No missing source path, no empty shader and valid RIDs cannot alone certify texture pixels, earlier silent substitutions or full visual quality.",
+    "Preserve actual flags, culling/streaming, warnings, hidden caches/placeholders and resource container truncations.",
+    "No further native capture requested. Wait for actual new dictionaries/family inventory; a concrete required absence must be assessed first.",
+    "The separate final strict non-author reviewer reads ACCEPTANCE F26#0 and archived original evidence against main."
+  ]
+}

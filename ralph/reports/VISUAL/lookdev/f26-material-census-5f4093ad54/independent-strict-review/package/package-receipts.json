@@ -1,0 +1,1426 @@
+{
+  "scope": "Read-only narrow packaging/source review; prior material/113-file byte audit reused",
+  "pins": {
+    "candidate": "846a30d5f70814434593ca98f2cd05d0b7e61c00",
+    "expected_board_source": "846a30d5f70814434593ca98f2cd05d0b7e61c00",
+    "raw_archive_ancestor": "f22078c7b8b1556653fe8d8ec9ee038a5debba8c",
+    "main": "c7cb265b54dbf52d287c72c29c3d79ecedb2d908",
+    "capture_source": "5f4093ad54e4675b782ab1f04129e1047c0977df",
+    "new_archive_audited": "b6a97ad1a29039ddc094d4f78bd16688a29a571c",
+    "mini_archive_audited": "59cd215400351a55cd5b311ffb1d32bdbb834d1a",
+    "storm_capture_source": "0620d57bad036e52c88446fa1c04408b07cea909"
+  },
+  "ancestry": {
+    "main": true,
+    "raw_archive": true
+  },
+  "checks": {
+    "production_equal_main": true,
+    "art_exact_main": true,
+    "diff_scope": true,
+    "all_113_prior_archive_blobs_unchanged": true,
+    "four_raw_files_bytefaithful": true,
+    "already_exercised_exact_tool": true,
+    "only_F26_0_changed": true,
+    "other_279_exact_objects": true,
+    "280_109": true,
+    "other_rows_unchanged": true,
+    "top_level_criteria_metadata_unchanged": true,
+    "F26_counts_pct71": true,
+    "state_under_25000": true,
+    "builder_matches_candidate_html": true,
+    "owner_and_broader_gates_unchanged": true
+  },
+  "limitations": [],
+  "production_blob_count": 5008,
+  "production_differences": [],
+  "art_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+  "diff": [
+    [
+      "M",
+      "docs/STATE.md"
+    ],
+    [
+      "M",
+      "ralph/reports/COORDINATOR/dashboard/criteria.json"
+    ],
+    [
+      "M",
+      "ralph/reports/COORDINATOR/dashboard/status.json"
+    ],
+    [
+      "M",
+      "ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/.gitattributes"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/README.md"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/archive-manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/authored-source-maps/build_family_maps.py"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/authored-source-maps/meadows-cloud-family-maps.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/native.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/native.log"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/meadows__band1_lower_meadows__01__grandpas_village__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/native.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/native.log"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/native.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/native.log"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/water__sluice_isle__13__sluice_isle_twin_pumps__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/SHA256SUMS.txt"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/independent-audit-final.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/independent-audit.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/strict-f26-0-full-access-review.txt"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/assets/environment/team_tether/hall/banner_cloth.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/assets/environment/team_tether/hall/hall_stone.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/art.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/building_prefabs.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/cloudreach_visual.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/cloudreach_world.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/crossing_hall.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/debug_teleport_spots.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/grass_field.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/performance.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/stronghold.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/terrain_playground.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/village.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/building_prefabs.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_environment_materials.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_ground_cover.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_world.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_world_runtime.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/crossing_hall.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/playground_world.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/stronghold.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/structure_visibility_range.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/tether_sigil.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/vegetation.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/village.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_cliff.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_cloud_deck.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_ground_cover.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_rock.gdshaderinc"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_surface.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_timber.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_trail.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_turf.gdshaderinc"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_worn_ground.gdshader"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/tools/capture_renderer_material_census.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/tools/catalogue_survey.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/tools/lookdev_capture_bootstrap.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/.gitattributes"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/README.md"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/archive-manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/audit_storm_material_census.py"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/audit_water_material_census.py"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/build_storm_expected_matrix.py"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/compare_trainer_receipts.py"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/renderer-material-source-map.md"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/storm-authored-binding-triage.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/storm-source-expected-families.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/trainer-authored-receipt-check.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/water-authored-binding-triage.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/native.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/native.log"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/stormwood__dynamo__12__the_stormheart_tree__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/native.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/native.log"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/native.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/native.log"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/manifest.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/native.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/native.log"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/water__sluice_isle__13__sluice_isle_twin_pumps__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/water__veilfall__15__the_veilfall_cascade__day.png"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/data/config/art.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/capture_lookdev_catalogue.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/capture_renderer_material_census.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/catalogue_survey.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/lookdev_capture_bootstrap.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/art.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/grass_field.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormheart_presentation.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_arches.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_camps.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_dynamo.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_glass_field.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_rod_line.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/terrain_playground.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/capture_lookdev_catalogue.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/capture_renderer_material_census.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/catalogue_survey.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/lookdev_capture_bootstrap.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/data/config/art.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/capture_lookdev_catalogue.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/catalogue_survey.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/lookdev_capture_bootstrap.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/data/config/art.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/data/config/water_visual.json"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/capture_lookdev_catalogue.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/capture_renderer_material_census.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/catalogue_survey.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/lookdev_capture_bootstrap.gd"
+    ],
+    [
+      "A",
+      "ralph/reports/VISUAL/lookdev/renderer-subset-independent-review.txt"
+    ],
+    [
+      "A",
+      "tools/capture_renderer_material_census.gd"
+    ]
+  ],
+  "unexpected_diff": [],
+  "diff_count": 123,
+  "board_diff_paths": [
+    "docs/STATE.md",
+    "ralph/reports/COORDINATOR/dashboard/criteria.json",
+    "ralph/reports/COORDINATOR/dashboard/status.json",
+    "ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html"
+  ],
+  "reused_archive_blob_checks": [
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/.gitattributes",
+      "prior_blob": "4f7fc3ef1406bfab189a4a14744c344f36d77d9a",
+      "candidate_blob": "4f7fc3ef1406bfab189a4a14744c344f36d77d9a",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/README.md",
+      "prior_blob": "8d837f15fcb9c1f0605dcaa8d25d6a2dc6b13cc3",
+      "candidate_blob": "8d837f15fcb9c1f0605dcaa8d25d6a2dc6b13cc3",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/archive-manifest.json",
+      "prior_blob": "369a0db2c4db5249102e6d76b2a8ef80e76accb2",
+      "candidate_blob": "369a0db2c4db5249102e6d76b2a8ef80e76accb2",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/authored-source-maps/build_family_maps.py",
+      "prior_blob": "8bc37cdd4bd03899c1e73c916da320e445c7915c",
+      "candidate_blob": "8bc37cdd4bd03899c1e73c916da320e445c7915c",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/authored-source-maps/meadows-cloud-family-maps.json",
+      "prior_blob": "563a3fd6bd01335a5782a33698c0e5a1b81ab56c",
+      "candidate_blob": "563a3fd6bd01335a5782a33698c0e5a1b81ab56c",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "prior_blob": "f93005c5808dc239efa5c35c4dcf17b20a228a29",
+      "candidate_blob": "f93005c5808dc239efa5c35c4dcf17b20a228a29",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/manifest.json",
+      "prior_blob": "8687cc27b46571cf9b026f65bf1d75dee37c9e08",
+      "candidate_blob": "8687cc27b46571cf9b026f65bf1d75dee37c9e08",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/native.json",
+      "prior_blob": "0655d3caa00a220f3ff1cfb3891bcf61c625f001",
+      "candidate_blob": "0655d3caa00a220f3ff1cfb3891bcf61c625f001",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/cloudreach/native.log",
+      "prior_blob": "08fcf0bcb56bd0d69586596705f524de5d1ff835",
+      "candidate_blob": "08fcf0bcb56bd0d69586596705f524de5d1ff835",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/manifest.json",
+      "prior_blob": "ebfc6bdd4d5f102d49e44ade2438115d65a2e7e8",
+      "candidate_blob": "ebfc6bdd4d5f102d49e44ade2438115d65a2e7e8",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/meadows__band1_lower_meadows__01__grandpas_village__day.png",
+      "prior_blob": "18ed267971f43a067e43012bcf9a0e33d73d5794",
+      "candidate_blob": "18ed267971f43a067e43012bcf9a0e33d73d5794",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/native.json",
+      "prior_blob": "d33367b9af479629aeb2e7936498f336720f11f3",
+      "candidate_blob": "d33367b9af479629aeb2e7936498f336720f11f3",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/meadows/native.log",
+      "prior_blob": "133ca8c38c19a32a288b1dd575aa36ae8c48c1e0",
+      "candidate_blob": "133ca8c38c19a32a288b1dd575aa36ae8c48c1e0",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/manifest.json",
+      "prior_blob": "c515db835887d24ee8e62ae58b6a31b1385f208c",
+      "candidate_blob": "c515db835887d24ee8e62ae58b6a31b1385f208c",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/native.json",
+      "prior_blob": "b0feaa989069834b0634bf58e15118758dd7b6c4",
+      "candidate_blob": "b0feaa989069834b0634bf58e15118758dd7b6c4",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/native.log",
+      "prior_blob": "7686c5106d8d3586989a5c45cf6adff2b24c8ef1",
+      "candidate_blob": "7686c5106d8d3586989a5c45cf6adff2b24c8ef1",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/captures/water/water__sluice_isle__13__sluice_isle_twin_pumps__day.png",
+      "prior_blob": "756323becabca94f84db876a2a3e9d022b59950d",
+      "candidate_blob": "756323becabca94f84db876a2a3e9d022b59950d",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/assets/environment/team_tether/hall/banner_cloth.gdshader",
+      "prior_blob": "9179de9b37135dd46bf90baa2d20c3dd7932a8c8",
+      "candidate_blob": "9179de9b37135dd46bf90baa2d20c3dd7932a8c8",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/assets/environment/team_tether/hall/hall_stone.gdshader",
+      "prior_blob": "9c7d0282cf92241c074f55a8c7e222658234375e",
+      "candidate_blob": "9c7d0282cf92241c074f55a8c7e222658234375e",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/art.json",
+      "prior_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "candidate_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/building_prefabs.json",
+      "prior_blob": "18627b87d7044e1f24e44acb67ff4277a2ea43cc",
+      "candidate_blob": "18627b87d7044e1f24e44acb67ff4277a2ea43cc",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/cloudreach_visual.json",
+      "prior_blob": "36636893668cce240753e448112c3ab5904ef129",
+      "candidate_blob": "36636893668cce240753e448112c3ab5904ef129",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/cloudreach_world.json",
+      "prior_blob": "3fa41010c0ee74ebfbc6d92b2d390dd8a79c781e",
+      "candidate_blob": "3fa41010c0ee74ebfbc6d92b2d390dd8a79c781e",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/crossing_hall.json",
+      "prior_blob": "831ed621e4571b0688d30859f9a9bec260b775ce",
+      "candidate_blob": "831ed621e4571b0688d30859f9a9bec260b775ce",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/debug_teleport_spots.json",
+      "prior_blob": "c3de47d44920d56385418d82cf0566e3860bd2d9",
+      "candidate_blob": "c3de47d44920d56385418d82cf0566e3860bd2d9",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/grass_field.json",
+      "prior_blob": "0a86033120f7c7b942eaa09fecc46a7191758d71",
+      "candidate_blob": "0a86033120f7c7b942eaa09fecc46a7191758d71",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/performance.json",
+      "prior_blob": "81c3505ba35b4d06ea0887a9f0144c564114b446",
+      "candidate_blob": "81c3505ba35b4d06ea0887a9f0144c564114b446",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/stronghold.json",
+      "prior_blob": "1a74696737996f71e81efe82bb755a3c0eb628c2",
+      "candidate_blob": "1a74696737996f71e81efe82bb755a3c0eb628c2",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/terrain_playground.json",
+      "prior_blob": "fb2804d8f388c59a746e84bd534465d6b02745e8",
+      "candidate_blob": "fb2804d8f388c59a746e84bd534465d6b02745e8",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/data/config/village.json",
+      "prior_blob": "55329007ee8a9d2d2fe1ece3c51904d811c5c9e7",
+      "candidate_blob": "55329007ee8a9d2d2fe1ece3c51904d811c5c9e7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/building_prefabs.gd",
+      "prior_blob": "99d50aae1a1573afde9a45b7c4724e4d68da2bf7",
+      "candidate_blob": "99d50aae1a1573afde9a45b7c4724e4d68da2bf7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_environment_materials.gd",
+      "prior_blob": "3830955ce06d70a6a266c206961420e2b05a968f",
+      "candidate_blob": "3830955ce06d70a6a266c206961420e2b05a968f",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_ground_cover.gd",
+      "prior_blob": "054db578b1656efda54ed3e37a411103b7d9a44d",
+      "candidate_blob": "054db578b1656efda54ed3e37a411103b7d9a44d",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_world.gd",
+      "prior_blob": "9446150bd070d5a6d5fdceef834457ced07c2b95",
+      "candidate_blob": "9446150bd070d5a6d5fdceef834457ced07c2b95",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/cloudreach_world_runtime.gd",
+      "prior_blob": "ab6427ebdcebe046e032f21d89127f225f64c18b",
+      "candidate_blob": "ab6427ebdcebe046e032f21d89127f225f64c18b",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/crossing_hall.gd",
+      "prior_blob": "82d77f1b53a49cbc21719740099159291b679441",
+      "candidate_blob": "82d77f1b53a49cbc21719740099159291b679441",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/playground_world.gd",
+      "prior_blob": "4721cbd8941c37a5a3048a355a68bc2e11bcbe22",
+      "candidate_blob": "4721cbd8941c37a5a3048a355a68bc2e11bcbe22",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/stronghold.gd",
+      "prior_blob": "55e835dc91ba380e873ea047c86d4e8893fd9682",
+      "candidate_blob": "55e835dc91ba380e873ea047c86d4e8893fd9682",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/structure_visibility_range.gd",
+      "prior_blob": "388a343bad1143311bf9bc43df4c9f458b90398f",
+      "candidate_blob": "388a343bad1143311bf9bc43df4c9f458b90398f",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/tether_sigil.gd",
+      "prior_blob": "d4963238068efc00873fa0f6e071eaec8740866e",
+      "candidate_blob": "d4963238068efc00873fa0f6e071eaec8740866e",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/vegetation.gd",
+      "prior_blob": "ba1e76fb6e0fb6a499f924e4ba70496c359a1d59",
+      "candidate_blob": "ba1e76fb6e0fb6a499f924e4ba70496c359a1d59",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/scripts/world/village.gd",
+      "prior_blob": "3b12c910da4e0ba6ae6145e84a6e1c1e6fa36044",
+      "candidate_blob": "3b12c910da4e0ba6ae6145e84a6e1c1e6fa36044",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_cliff.gdshader",
+      "prior_blob": "ae5b2099302d84dd4a31a9521c577da39d6e7769",
+      "candidate_blob": "ae5b2099302d84dd4a31a9521c577da39d6e7769",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_cloud_deck.gdshader",
+      "prior_blob": "e2e84fd7576bd42e789fc471ddab40dc72cac6f0",
+      "candidate_blob": "e2e84fd7576bd42e789fc471ddab40dc72cac6f0",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_ground_cover.gdshader",
+      "prior_blob": "a269af0b2f6700edf69022587e3f81882423ba6f",
+      "candidate_blob": "a269af0b2f6700edf69022587e3f81882423ba6f",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_rock.gdshaderinc",
+      "prior_blob": "7d35d6f1a1fe59d731b3277967d7beac59900ebe",
+      "candidate_blob": "7d35d6f1a1fe59d731b3277967d7beac59900ebe",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_surface.gdshader",
+      "prior_blob": "49636e8a0441115cc6f3c29b28d10798ca2c0a06",
+      "candidate_blob": "49636e8a0441115cc6f3c29b28d10798ca2c0a06",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_timber.gdshader",
+      "prior_blob": "c4725da5f5bfe2c27b347ba25076d88aff31b21c",
+      "candidate_blob": "c4725da5f5bfe2c27b347ba25076d88aff31b21c",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_trail.gdshader",
+      "prior_blob": "6a8fecb33d33d1eba06e7348a465c231f84940d8",
+      "candidate_blob": "6a8fecb33d33d1eba06e7348a465c231f84940d8",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_turf.gdshaderinc",
+      "prior_blob": "acaab252bea7aa7d23ec74e82adb8150d9aef471",
+      "candidate_blob": "acaab252bea7aa7d23ec74e82adb8150d9aef471",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/shaders/cloudreach_worn_ground.gdshader",
+      "prior_blob": "5aa6b325e49fc9e0317ea18e6490052770493b86",
+      "candidate_blob": "5aa6b325e49fc9e0317ea18e6490052770493b86",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/tools/capture_renderer_material_census.gd",
+      "prior_blob": "a51fbe49a9742ddbf7c86d05e7cb69bf062a916a",
+      "candidate_blob": "a51fbe49a9742ddbf7c86d05e7cb69bf062a916a",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/tools/catalogue_survey.gd",
+      "prior_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "candidate_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/pinned-source/tools/lookdev_capture_bootstrap.gd",
+      "prior_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "candidate_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/.gitattributes",
+      "prior_blob": "4f7fc3ef1406bfab189a4a14744c344f36d77d9a",
+      "candidate_blob": "4f7fc3ef1406bfab189a4a14744c344f36d77d9a",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/README.md",
+      "prior_blob": "bedccf097a579d1d2d2dbe29b882147dd7750ed4",
+      "candidate_blob": "bedccf097a579d1d2d2dbe29b882147dd7750ed4",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/archive-manifest.json",
+      "prior_blob": "cccbcfab9aad851ee5cf45cd095ee0a6b6315b21",
+      "candidate_blob": "cccbcfab9aad851ee5cf45cd095ee0a6b6315b21",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/audit_storm_material_census.py",
+      "prior_blob": "fb0f5fae27afcccba0cb65ca60085cfd2c6f6df5",
+      "candidate_blob": "fb0f5fae27afcccba0cb65ca60085cfd2c6f6df5",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/audit_water_material_census.py",
+      "prior_blob": "090882d5d2b35838a6190356366db33179b66d7f",
+      "candidate_blob": "090882d5d2b35838a6190356366db33179b66d7f",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/build_storm_expected_matrix.py",
+      "prior_blob": "1ef70d36c484d89da4853b981bdfacc2a3d4204e",
+      "candidate_blob": "1ef70d36c484d89da4853b981bdfacc2a3d4204e",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/compare_trainer_receipts.py",
+      "prior_blob": "d19a60eaf61a8cd8c594f5df7e2cf374e7261423",
+      "candidate_blob": "d19a60eaf61a8cd8c594f5df7e2cf374e7261423",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/renderer-material-source-map.md",
+      "prior_blob": "8c0a34350d9896771b9b1c0f91d705241e13ed88",
+      "candidate_blob": "8c0a34350d9896771b9b1c0f91d705241e13ed88",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/storm-authored-binding-triage.json",
+      "prior_blob": "ee7d051bf71953184fc319ab4ddac7a204c425fe",
+      "candidate_blob": "ee7d051bf71953184fc319ab4ddac7a204c425fe",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/storm-source-expected-families.json",
+      "prior_blob": "831c154aaa31260b589c509b9b8ad3b385ffffd5",
+      "candidate_blob": "831c154aaa31260b589c509b9b8ad3b385ffffd5",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/trainer-authored-receipt-check.json",
+      "prior_blob": "9a83a7caf117ffec5d92210e3dde0fedc4e94190",
+      "candidate_blob": "9a83a7caf117ffec5d92210e3dde0fedc4e94190",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/authored-triage/water-authored-binding-triage.json",
+      "prior_blob": "35af33319097fc72736e92948569dc8b13a645c2",
+      "candidate_blob": "35af33319097fc72736e92948569dc8b13a645c2",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/manifest.json",
+      "prior_blob": "25220d2cd4efb03dd50ab70860b41fb376a5c281",
+      "candidate_blob": "25220d2cd4efb03dd50ab70860b41fb376a5c281",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/native.json",
+      "prior_blob": "019d6b324e8932fd8c692392d60d117e2b9f5232",
+      "candidate_blob": "019d6b324e8932fd8c692392d60d117e2b9f5232",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/native.log",
+      "prior_blob": "3eaf5e493d1b328adf73bcd740f3ca4f7336b3e7",
+      "candidate_blob": "3eaf5e493d1b328adf73bcd740f3ca4f7336b3e7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/storm-candidate-medium/stormwood__dynamo__12__the_stormheart_tree__day.png",
+      "prior_blob": "473776db231103312322b3f1f8147449e9ce6b9e",
+      "candidate_blob": "473776db231103312322b3f1f8147449e9ce6b9e",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "prior_blob": "baf7882bcd55fa7289758d5d487ec3aaaac370c7",
+      "candidate_blob": "baf7882bcd55fa7289758d5d487ec3aaaac370c7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "prior_blob": "3ca35f353ee344a4544526fe33d41e3ad98636b5",
+      "candidate_blob": "3ca35f353ee344a4544526fe33d41e3ad98636b5",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/manifest.json",
+      "prior_blob": "a5a38ad41aff2143c79350c5aff6730f1bf84d7a",
+      "candidate_blob": "a5a38ad41aff2143c79350c5aff6730f1bf84d7a",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/native.json",
+      "prior_blob": "4075a052355362d46bed12d783f3cf6fed8db245",
+      "candidate_blob": "4075a052355362d46bed12d783f3cf6fed8db245",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-baseline-medium/native.log",
+      "prior_blob": "befd026a1f3d20df0ad4c88cb61722e591db523a",
+      "candidate_blob": "befd026a1f3d20df0ad4c88cb61722e591db523a",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "prior_blob": "83ffa38ba672cefc28153b6957855e644d8591d5",
+      "candidate_blob": "83ffa38ba672cefc28153b6957855e644d8591d5",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "prior_blob": "265702da4d6b4d00238587d6024bb8267afdf625",
+      "candidate_blob": "265702da4d6b4d00238587d6024bb8267afdf625",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/manifest.json",
+      "prior_blob": "ed42b2072a9b512fee894485558509ac14685ffd",
+      "candidate_blob": "ed42b2072a9b512fee894485558509ac14685ffd",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/native.json",
+      "prior_blob": "1a657a3e449f43e886b3b7cb8711ad97bdba77c9",
+      "candidate_blob": "1a657a3e449f43e886b3b7cb8711ad97bdba77c9",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/trainer-candidate-medium/native.log",
+      "prior_blob": "f3b499f70a9f7035a9ba05cf288813066aa02fae",
+      "candidate_blob": "f3b499f70a9f7035a9ba05cf288813066aa02fae",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/manifest.json",
+      "prior_blob": "30e0afaafc768d829239bf59af8be390e011ccd0",
+      "candidate_blob": "30e0afaafc768d829239bf59af8be390e011ccd0",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/native.json",
+      "prior_blob": "1500bc5ba6b98c027983ad60be8ff507222ca1d9",
+      "candidate_blob": "1500bc5ba6b98c027983ad60be8ff507222ca1d9",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/native.log",
+      "prior_blob": "4b1973e13833ee39c3cbe138cd8b0fa91ee05d68",
+      "candidate_blob": "4b1973e13833ee39c3cbe138cd8b0fa91ee05d68",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/water__sluice_isle__13__sluice_isle_twin_pumps__day.png",
+      "prior_blob": "6d92492e72334d3335f06506144322ba45b6e400",
+      "candidate_blob": "6d92492e72334d3335f06506144322ba45b6e400",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/captures/water-candidate-medium/water__veilfall__15__the_veilfall_cascade__day.png",
+      "prior_blob": "c769940039f654b8b791f60812799f1278c6e84b",
+      "candidate_blob": "c769940039f654b8b791f60812799f1278c6e84b",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/data/config/art.json",
+      "prior_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "candidate_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/capture_lookdev_catalogue.gd",
+      "prior_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "candidate_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/capture_renderer_material_census.gd",
+      "prior_blob": "a51fbe49a9742ddbf7c86d05e7cb69bf062a916a",
+      "candidate_blob": "a51fbe49a9742ddbf7c86d05e7cb69bf062a916a",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/catalogue_survey.gd",
+      "prior_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "candidate_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/observed-current-windows-source/tools/lookdev_capture_bootstrap.gd",
+      "prior_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "candidate_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/art.json",
+      "prior_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "candidate_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/grass_field.json",
+      "prior_blob": "0a86033120f7c7b942eaa09fecc46a7191758d71",
+      "candidate_blob": "0a86033120f7c7b942eaa09fecc46a7191758d71",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormheart_presentation.json",
+      "prior_blob": "afd1e02039e0bf86e27e20ae54014bdaea593756",
+      "candidate_blob": "afd1e02039e0bf86e27e20ae54014bdaea593756",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_arches.json",
+      "prior_blob": "b0e9d5f7581afef8927036610033e994e02943c3",
+      "candidate_blob": "b0e9d5f7581afef8927036610033e994e02943c3",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_camps.json",
+      "prior_blob": "02679ee57c7675827d6a4666efa1363556aeb2f2",
+      "candidate_blob": "02679ee57c7675827d6a4666efa1363556aeb2f2",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_dynamo.json",
+      "prior_blob": "616f7fb8b9d69b1909c4c1632c4f4ff7d34e955d",
+      "candidate_blob": "616f7fb8b9d69b1909c4c1632c4f4ff7d34e955d",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_glass_field.json",
+      "prior_blob": "28edd47b6ac6bbb644ad5421d66fbdf42b589355",
+      "candidate_blob": "28edd47b6ac6bbb644ad5421d66fbdf42b589355",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/stormwood_rod_line.json",
+      "prior_blob": "debd7d0c3a5f9632640a2e22c77331da71bb5c4e",
+      "candidate_blob": "debd7d0c3a5f9632640a2e22c77331da71bb5c4e",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/data/config/terrain_playground.json",
+      "prior_blob": "fb2804d8f388c59a746e84bd534465d6b02745e8",
+      "candidate_blob": "fb2804d8f388c59a746e84bd534465d6b02745e8",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/capture_lookdev_catalogue.gd",
+      "prior_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "candidate_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/capture_renderer_material_census.gd",
+      "prior_blob": "a51fbe49a9742ddbf7c86d05e7cb69bf062a916a",
+      "candidate_blob": "a51fbe49a9742ddbf7c86d05e7cb69bf062a916a",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/catalogue_survey.gd",
+      "prior_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "candidate_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/0620d57bad036e52c88446fa1c04408b07cea909/tools/lookdev_capture_bootstrap.gd",
+      "prior_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "candidate_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/data/config/art.json",
+      "prior_blob": "9b2b34817737733eb187c66b4fc7282aeb3ef63c",
+      "candidate_blob": "9b2b34817737733eb187c66b4fc7282aeb3ef63c",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/capture_lookdev_catalogue.gd",
+      "prior_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "candidate_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/catalogue_survey.gd",
+      "prior_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "candidate_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/f43cde88acde0648123b89895d3023e1f5c50a08/tools/lookdev_capture_bootstrap.gd",
+      "prior_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "candidate_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/data/config/art.json",
+      "prior_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "candidate_blob": "1ff0b649afb417f81bd6ec6b5721780895efb7d6",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/data/config/water_visual.json",
+      "prior_blob": "8ae1209a7cc0db4d1a2dc71bd757e1fb41f1d211",
+      "candidate_blob": "8ae1209a7cc0db4d1a2dc71bd757e1fb41f1d211",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/capture_lookdev_catalogue.gd",
+      "prior_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "candidate_blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/capture_renderer_material_census.gd",
+      "prior_blob": "bff12951e38d00813b5eb045e2c158776caa8504",
+      "candidate_blob": "bff12951e38d00813b5eb045e2c158776caa8504",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/catalogue_survey.gd",
+      "prior_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "candidate_blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "matches": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-mini-batch-ff0395-0620/pinned-source/ff0395c9ae9c7ba80d8d1f0ea003c1cab3bc06cd/tools/lookdev_capture_bootstrap.gd",
+      "prior_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "candidate_blob": "11e3bab6dc50f5624cfbc4067690a4999dc175f7",
+      "matches": true
+    }
+  ],
+  "raw_review_checks": [
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/strict-f26-0-full-access-review.txt",
+      "git_blob": "b76267ed480f49af75a3b094318fd773288f5da1",
+      "sha256": "b95f2d9ef4917d60e2b7f3f637df821f8aaf4b018bc5eb550829bfff7744909e",
+      "expected_sha256": "b95f2d9ef4917d60e2b7f3f637df821f8aaf4b018bc5eb550829bfff7744909e",
+      "original_sha256": "b95f2d9ef4917d60e2b7f3f637df821f8aaf4b018bc5eb550829bfff7744909e",
+      "exact_original_equal": true,
+      "pass": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/independent-audit-final.json",
+      "git_blob": "6a81cd7910e443ef302127f4f666e4435a072029",
+      "sha256": "853b0aa1ed874f45a0fdab7e423c06366cc301ff5f400474bfd0fa8a2859f30d",
+      "expected_sha256": "853b0aa1ed874f45a0fdab7e423c06366cc301ff5f400474bfd0fa8a2859f30d",
+      "original_sha256": "853b0aa1ed874f45a0fdab7e423c06366cc301ff5f400474bfd0fa8a2859f30d",
+      "exact_original_equal": true,
+      "pass": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/independent-audit.json",
+      "git_blob": "c2a866bf6b2df2ada16c9ebe4377913ed46a55e5",
+      "sha256": "2a4e1b3680910d9b290cc6ac4d08bf00dfe2f3a6f5095ae531c0400b2eb88622",
+      "expected_sha256": "2a4e1b3680910d9b290cc6ac4d08bf00dfe2f3a6f5095ae531c0400b2eb88622",
+      "original_sha256": "2a4e1b3680910d9b290cc6ac4d08bf00dfe2f3a6f5095ae531c0400b2eb88622",
+      "exact_original_equal": true,
+      "pass": true
+    },
+    {
+      "path": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/SHA256SUMS.txt",
+      "git_blob": "34d888d8d5d9d65d85b7ba6406a9144e6a7ae372",
+      "sha256": "ead0380fa0a5c1a5ac6096c5cb69179c48944474ac74bac4591abf5d65f8bdf9",
+      "expected_sha256": "ead0380fa0a5c1a5ac6096c5cb69179c48944474ac74bac4591abf5d65f8bdf9",
+      "original_sha256": "ead0380fa0a5c1a5ac6096c5cb69179c48944474ac74bac4591abf5d65f8bdf9",
+      "exact_original_equal": true,
+      "pass": true
+    }
+  ],
+  "census_tool": {
+    "candidate_blob": "a51fbe49a9742ddbf7c86d05e7cb69bf062a916a",
+    "capture_source_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+    "candidate_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258",
+    "exact_capture_blob_equal": true,
+    "recorded_before_native_sha256": "ab5a40c7bd4cb99b0449fd57cd9e28dbb15fd5a385d344df77ff757061264258"
+  },
+  "changed_criteria": [
+    {
+      "id": "F26#0",
+      "before": {
+        "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
+        "status": "in_progress",
+        "evidence": "VISUAL/lookdev/routes/meadows-forward-incremental-r4: actual native0 Medium/High village/Hall route at424ca00d; Water Forward receipts retained.",
+        "gap": "Cloudreach/Stormwood native material coverage and independent missing-material visual review remain open."
+      },
+      "after": {
+        "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
+        "status": "met",
+        "evidence": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/strict-f26-0-full-access-review.txt: fresh independent strict MET at b95f2d9, integrated f22078c7b8. Actual Water/Meadows/Cloudreach mounted Forward+ censuses at5f4093ad54 native0; retained Stormwood0620 native0; source/main material families match, direct RID and sampler bindings validated, retained original images and actual Compatibility Low Settings/routes. Shortcuts disclosed: staged catalogue state/debug teleport, clock/camera fixtures, desktop GPU/isolated data; day captures do not certify restored night rim; optional campfire/placement warnings retained. Independent re-check: graph/resource/native/hash/source/pixel audit; material path only, no full-bar/Ally/default/co-op/campaign credit.",
+        "gap": ""
+      }
+    }
+  ],
+  "criterion_counts": {
+    "met": 109,
+    "partial": 5,
+    "in_progress": 2,
+    "not_started": 163,
+    "blocked": 1
+  },
+  "main_criterion_counts": {
+    "met": 108,
+    "partial": 5,
+    "in_progress": 3,
+    "not_started": 163,
+    "blocked": 1
+  },
+  "other_row_differences": [],
+  "F26": {
+    "counts": {
+      "met": 4,
+      "in_progress": 1,
+      "blocked": 1
+    },
+    "stored_counts": {
+      "in_progress": 1,
+      "met": 4,
+      "blocked": 1,
+      "partial": 0,
+      "not_started": 0,
+      "failing": 0
+    },
+    "computed_pct": 71,
+    "stored_pct": 71,
+    "criterion_3": {
+      "text": "A code-blind judge rates each biome's frame matrix as meeting the new bar on High and Medium.",
+      "status": "in_progress",
+      "evidence": "ART_DIRECTION \u00a74.1 full-bar target and source-reviewed capture adapters in VISUAL/lookdev/computer-route-candidate.md",
+      "gap": "Complete High/Medium frame matrices and independent code-blind full-bar verdicts remain open."
+    },
+    "criterion_5": {
+      "text": "Owner ROG Ally test: Medium handheld holds \u226530 fps (40 preferred) on the scripted route; Forward+ becomes the default only after this passes (owner-dependent).",
+      "status": "blocked",
+      "evidence": "Conservative Compatibility default retained under RD-25; status.json owner_needs",
+      "gap": "Owner Ally Medium 15 W/1920x1080 scripted route test required once a test build is ready. Recommended: keep Compatibility default until at least 30 fps, 40 preferred."
+    }
+  },
+  "state_bytes": 24858,
+  "split_counts": {
+    "original": {
+      "total": 101,
+      "met": 95
+    },
+    "redesign": {
+      "total": 179,
+      "met": 14
+    }
+  },
+  "builder": {
+    "sha256": "2060e9129f473bb4d9aeee8f9b22d618816a9e07af8b5230782485dd58da4e60",
+    "unchanged_main": true,
+    "read_buffers": [
+      "ralph/reports/COORDINATOR/dashboard/criteria.json",
+      "ralph/reports/COORDINATOR/dashboard/status.json",
+      "ralph/reports/COORDINATOR/dashboard/criteria.json"
+    ],
+    "writes_intercepted": [
+      "ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html"
+    ],
+    "generated_sha256": "a330a4087bbcdc0e01ea4920a86d8e6c05a3671c13d90c71eea80c4fc793043f",
+    "candidate_html_sha256": "a330a4087bbcdc0e01ea4920a86d8e6c05a3671c13d90c71eea80c4fc793043f",
+    "exact_equal": true,
+    "LF_equal": true,
+    "computed_counts": {
+      "met": 109,
+      "partial": 5,
+      "in_progress": 2,
+      "failing": 0,
+      "blocked": 1,
+      "not_started": 163
+    },
+    "overall_weighted_pct": 35,
+    "F26_computed_pct": 71,
+    "fully_met_F_rows": 13,
+    "redesign_met": 14,
+    "redesign_total": 179,
+    "F26_shortcut_debt": [
+      [
+        "low",
+        "F26",
+        0,
+        "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
+        [
+          "Start, position or checkpoint"
+        ],
+        "staged catalogue state/debug teleport, clock/camera fixtures, desktop GPU/isolated data; day captures do not certify restored night rim; optional campfire/placement warnings retained.",
+        false,
+        "Open: Start, position or checkpoint (retire via four-chapter run)"
+      ],
+      [
+        "low",
+        "F26",
+        1,
+        "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
+        [],
+        "persistence is headless; restart routing uses declared fake objects; no OS restart or Ally; Shadow Off retains minimum atlas cost.",
+        true,
+        "Retired by four-chapter run"
+      ]
+    ]
+  },
+  "changed_state_lines": [
+    {
+      "line": 9,
+      "text": "**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 109 of 280:** original 95/101, redesign 14/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2."
+    },
+    {
+      "line": 36,
+      "text": "| `tb/lookdev` | F26 | #0/#1/#2/#4 main109. f220 material strict MET/censuses0; Cloud full craft FAIL/#3 and Ally/default #5 open. |"
+    }
+  ],
+  "status_claims": {
+    "headline": [
+      "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
+      "Criteria met: 109 of 280. Original:95/101; redesign:14/179. F16 all5, F17#0\u2013#3, F26#0/#1/#2/#4 and F27#0 landed by this cut. F26 material path strict MET; full visual bar and Ally/default gates remain open. F17 M1/co-op/full craft remain open.",
+      "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
+      "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
+    ],
+    "lookdev_lane": {
+      "lane": "tb/lookdev",
+      "now": "F26#0/#1/#2/#4 strict MET and landed; f220 material census/source/RID/retained Low proof. Full High/Medium visual bar FAIL; Ally/default remains owner-gated.",
+      "next": "Work order in CODEX_START_HERE \u00a76: F26"
+    },
+    "lookdev_activity": {
+      "lane": "tb/lookdev",
+      "checkpoint": "Lookdev b6a archive: scoped Water84.172s/Meadows278.687s/Cloud258s censuses all native0/error0. Whole F26 material gate pending; Cloud Medium/High48 full-bar FAIL, #0/#3/#5 open; #1/#2/#4 landed. Training item-only PR489 landed F27#0 static strict MET; runtime essence/spend remains open. Homestead acdab inactive renewable bootstrap/crop SOURCE PASS; canonical resolver/legacy-depletion milestone need one durable host transaction. No further MET."
+    }
+  },
+  "pr_body": {
+    "path": "D:/tetherbound/redesign-lookdev/.tmp/f26-pr-body.md",
+    "sha256": "4eb90fb96df2dc53991ccba921e0978ad2fa951d3a52aafc63b65d011be9753d",
+    "bytes": 2659,
+    "text": "## Lane\nFeature\n\n## Anchor\nF26#0, ACCEPTANCE \u00a76.2 and CODEX_START_HERE F26 at main c7cb265b54: Forward+ renders the village, Crossing Hall and four biomes with their required materials, while Compatibility remains selectable as Low. Archive the remaining material censuses and independent strict review; close this one criterion to bring the board to 109/280. Gameplay and shipping renderer settings retain main's source, including the night rim. F26#3 full visual quality and F26#5 Ally/default promotion stay open.\n\n## Evidence\n| Criterion or invariant | Named test or ordinary-play witness | Expected | Observed on commit/package |\n|---|---|---|---|\n| F26#0 Forward+ material path | f26-material-census-5f4093ad54; retained f26-mini-batch-ff0395-0620 | Named production scenes render with required mounted material families | Water, Meadows and Cloudreach native exit 0 at 5f4093ad54; retained Stormwood native exit 0 at 0620d57b. Final independent audit validates required samplers, GPU maps, source continuity and original images. |\n| F26#0 Low remains selectable | Retained water-low-r1, meadows-low-hall-r2 and graphics-settings-final | Actual Compatibility routes and persisted Low choice | Reused passing production Settings and gl_compatibility route receipts; unchanged preference/renderer source. |\n| Acceptance accounting | Independent strict-f26-0-full-access-review.txt, raw SHA256 b95f2d9ef4917d60e2b7f3f637df821f8aaf4b018bc5eb550829bfff7744909e | Exactly one criterion gains credit | F26#0 strict MET; 109/280 on this cut, every other criterion unchanged. |\n\nRuns stage catalogue state, time and camera and use debug teleport on an isolated desktop profile. Mounted-resource coverage and original images establish this material-path criterion; they do not establish earned campaign, multiplayer, every culled pixel, full visual quality, Ally performance or renderer-default promotion. Original failures/warnings and the reviewer's superseded provisional alias audit remain archived. The day images do not certify main's night appearance.\n\nRD-36/RD-37: reuse these passing captures and source-equivalent Low evidence. No repeated unit suite or automatic full-ci label; the only new executable tool is the already exercised census driver, and engine proof remains scoped to the recorded captures.\n\n## Independent review\nReviewer: fresh read-only Full Access session 01a0f33d-a871-7510-a1a4-a3761a2e952e.\nResult: pass \u2014 strict F26#0 MET on combined retained evidence with explicit provenance and scope limits. The raw report and both audit versions are byte-faithfully archived under f26-material-census-5f4093ad54/independent-strict-review.\n"
+  },
+  "preserved_scope_text": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/strict-f26-0-full-access-review.txt: fresh independent strict MET at b95f2d9, integrated f22078c7b8. Actual Water/Meadows/Cloudreach mounted Forward+ censuses at5f4093ad54 native0; retained Stormwood0620 native0; source/main material families match, direct RID and sampler bindings validated, retained original images and actual Compatibility Low Settings/routes. Shortcuts disclosed: staged catalogue state/debug teleport, clock/camera fixtures, desktop GPU/isolated data; day captures do not certify restored night rim; optional campfire/placement warnings retained. Independent re-check: graph/resource/native/hash/source/pixel audit; material path only, no full-bar/Ally/default/co-op/campaign credit.",
+  "all_mechanical_checks_pass": true,
+  "initial_candidate_head_preserved": true
+}

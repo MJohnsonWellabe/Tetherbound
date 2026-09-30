@@ -6,7 +6,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 108 of 280:** original 95/101, redesign 13/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
+**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 109 of 280:** original 95/101, redesign 14/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | F16 all5 main;5422 pass witnesses/selectedCI retained. c023 neutral registry/vitals wire7 SOURCE gate pending, no engine. |
-| `tb/hub` | F17, F18 | #0–#3 main108. M1 r4 1/354.5s: catch PASS, farmhouse wood FAIL; coherent route draft review. F18 held. |
+| `tb/foundations` | F16 | F16 main. Neutral289 source/parser PASS; units1 red6+hidden aborts,2/3 running; vitals4 PASS, callers OFF. |
+| `tb/hub` | F17, F18 | #0–#3 main109. M1r4 wood-wall FAIL; routev2 SOURCEFAIL/change approach. F18 held. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | df99 WIP;2/110/0 native0/prior5/68+parsers; aborted9 retained. Commands/HP/loadout unconnected. |
-| `tb/vfx` | F25, F35 | bdda WIP;R14 blind craft FAIL/identity PASS;R17 SOURCE PASS/native pending/OFF. |
-| `tb/lookdev` | F26 | #1/#2/#4 main108. b6a three censuses native0; Cloud craft FAIL/#0/#3/#5 open. |
-| `tb/training` | F27–F30, F37 | #0 item-only489 main; static strict MET999/99. Essence/spend authority/runtime open. |
-| `tb/homestead` | F31–F34 | acdab inactive bootstrap/crop SOURCE PASS; durable conversion/milestone open. |
+| `tb/combat` | F21–F24 | 858b resolver SOURCE PASS/OFF; save compatibility draft. Incoming/heal/loadout authority integration open. |
+| `tb/vfx` | F25, F35 | 9a6 ShadowBolt WIP; R17 selected18 native PASS; R14 blind craft FAIL/identity PASS, OFF. |
+| `tb/lookdev` | F26 | #0/#1/#2/#4 main109. f220 material strict MET/censuses0; Cloud full craft FAIL/#3 and Ally/default #5 open. |
+| `tb/training` | F27–F30, F37 | #0 items main;2229 capXP/Master/chest source, legacy XP unwired; spend/runtime open. |
+| `tb/homestead` | F31–F34 | 510273 OFF greenhouse/Pearl/refining SOURCE PASS; mount guard/durable settlement open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |

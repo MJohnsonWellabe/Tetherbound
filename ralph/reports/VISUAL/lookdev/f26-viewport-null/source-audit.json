@@ -1,0 +1,12 @@
+{
+  "verdict": "SOURCE PASS; runtime test not independently executed",
+  "base": "3b17882907a3c28cd3809780230841fe737839c4",
+  "patch_sha256": "b8099cd5108999a77389c6a4645b4924580fbe3e3dafe62ba2b4ad8d5fc6c71c",
+  "modified_source_sha256": "5b7b429d5f7e8472d986209f1e3954d3904a9bcdd35fb3183008b78c371c7b8b",
+  "base_source_sha256": "5e02a046c7afd3b4f6cdbd8421a213338522e653c4b42f9474ce1c84d2cb7453",
+  "exact_one_path_three_hunks_context_counts_and_reconstructed_source": true,
+  "only_three_exact_null_guards_restore_entire_base": true,
+  "GraphicsPrefs_viewport_and_camera_accept_null": true,
+  "patch_and_modified_source_stable_during_capture": true,
+  "engine_tests_GPU_Git_or_tracked_mutations": false
+}
