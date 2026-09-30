@@ -3,7 +3,7 @@
   "integration_base": "7dcd2a8649660553f38702f2de71390efc6f1343",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
-  "status": "F21#4 NOT MET. R3 nativeFAIL fully preserved; adaptive intermediate-angle source and explicit canonical hitstop receipt await source/native/blind gates.",
+  "status": "F21#4 NOT MET; r3 actualFAIL and r4 parserFAIL retained. Capture-only type correction unexecuted.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
@@ -201,8 +201,8 @@
         "git_lf_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398"
       },
       "tests/smoke_combat_camera.gd": {
-        "raw_sha256": "4501a4221879674425f063117a368114545d61770abc225bf17b51c43a536ac4",
-        "git_lf_sha256": "4501a4221879674425f063117a368114545d61770abc225bf17b51c43a536ac4"
+        "raw_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d",
+        "git_lf_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d"
       },
       "tests/test_fight_camera.gd": {
         "raw_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
@@ -375,5 +375,14 @@
       "Scene query work is bounded by existing angular/distance search but FPS/Medium/Ally/F21#5 remain unproved.",
       "Staged actual roster/start poses and setup baselines are disclosed; no earned campaign/acquisition or full-craft claim."
     ]
+  },
+  "parser_failure_r4": {
+    "source": "2df26db877348f5d999dddcb160fd0f9ad4889f5",
+    "proof": "camera-live-r4-parser-fail/source-proof.json",
+    "native_exit": 1,
+    "elapsed_seconds": 1.453,
+    "regression_executed": false,
+    "gameplay_executed": false,
+    "correction": "Only explicit bool declarations across eight new/derived capture predicates. Production/config/meaningful assertions unchanged."
   }
 }

@@ -365,16 +365,16 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 				var hitstop: Dictionary = MATH.config().get("hitstop",{})
 				var stop_max := maxf(float(hitstop.get("quick_seconds",0.03)),
 					maxf(float(hitstop.get("charged_seconds",0.07)),float(hitstop.get("stagger_crit_seconds",0.12))))
-				var manager_live := _manager.is_physics_processing() and int(_manager.get("state"))==1
-				var bounded_stop := manager_live and is_finite(stop_left) and stop_left>0.0 and stop_left<=stop_max+0.000001 \
+				var manager_live: bool = _manager.is_physics_processing() and int(_manager.get("state"))==1
+				var bounded_stop: bool = manager_live and is_finite(stop_left) and stop_left>0.0 and stop_left<=stop_max+0.000001 \
 					and _manager.get("_ally_body")==_ally and _manager.get("_wild")==_wild
-				var ally_stop := bounded_stop and bool(_ally.get("_combat_hitstop_active")) \
+				var ally_stop: bool = bounded_stop and bool(_ally.get("_combat_hitstop_active")) \
 					and bool(_ally.get("_combat_hitstop_physics_was_active")) and int(ally_instance.get("hp"))>0
-				var foe_stop := bounded_stop and bool(_wild.get("_combat_hitstop_active")) \
+				var foe_stop: bool = bounded_stop and bool(_wild.get("_combat_hitstop_active")) \
 					and bool(_wild.get("_combat_hitstop_physics_was_active")) and int(foe_instance.get("hp"))>0
-				var ally_live := _ally.is_physics_processing() or ally_stop
-				var foe_live := _wild.is_physics_processing() or foe_stop
-				var live := manager_live and ally_live and foe_live and bool(_wild.get("engaged")) and _rig.is_processing()
+				var ally_live: bool = _ally.is_physics_processing() or ally_stop
+				var foe_live: bool = _wild.is_physics_processing() or foe_stop
+				var live: bool = manager_live and ally_live and foe_live and bool(_wild.get("engaged")) and _rig.is_processing()
 				var a_bounds: AABB = _manager.call("_body_world_bounds",_ally)
 				var b_bounds: AABB = _manager.call("_body_world_bounds",_wild)
 				var a_points: PackedVector3Array = _manager.call("_body_world_corners",_ally)
@@ -392,7 +392,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 				var measured_pair := FIT.size_class(a_bounds.size.y,cfg)+"/"+FIT.size_class(b_bounds.size.y,cfg)
 				var framed := bool(a.get("in_frame",false)) and bool(b.get("in_frame",false))
 				var overlap := FIT.overlap_ratio(a.rect,b.rect) if bool(a.get("valid",false)) and bool(b.get("valid",false)) else 1.0
-				var good := live and measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap)
+				var good: bool = live and measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap)
 				var body_limit: float = _rig.call("body_limit")
 				if observed_frame >= 0 and not good: passed = false
 				render_samples.append({"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),

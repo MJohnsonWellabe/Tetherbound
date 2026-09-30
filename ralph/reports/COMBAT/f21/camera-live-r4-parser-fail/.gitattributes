@@ -1,0 +1,3 @@
+*.raw -text -diff
+*.txt text eol=lf
+*.json -text
