@@ -518,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T08:28:00Z",
+ "last_lane_refresh": "2026-09-30T09:28:00Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "At this refresh main has 103/280: F17#0 landed via PR474/ad92f7973 with independent strict review, scoped regional generation preserving 312 outside files and harvest IDs, physical Hall walk and named world boot. Remaining six F17 criteria are open. Hub pushed 9b37b08d4: actual HomeKey gift/personal-save rollback and protected inventory/sell/trade/death/host-ledger boundaries, with scoped checks authored; runtime and independent review pending. F18 travel/waystones and ordinary-input loop remain open."
+   "checkpoint": "At this refresh main has 103/280; F17#0 is landed and six F17 rows remain open. Hub9c69e2652f adds the actual floor-derived Hall arch/pedestal controller circuit, runtime active. F18#0 independently strict MET at c69a2bebb0: actual opening1f177 native0/145.438s and unchanged gift/key logic10/67/0; physical gift and protected key slot persist through production death callback and actual file reload. Initial naming red and all shortcuts retained. Landing held on F17 dependency; portal authority and Home/waystone travel remain WIP."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat pushed 0aa123a92: guest incoming replay native1 with one first host enemy:1 missingLabel failure retained; actual guest selected by AI, defensive poise/lease/number and first-HP/authority/rejoin checks passed. Diagnostic HUD/camera probe added. Low nine-pair preflight refused actual preset/1920 gate before boot; launch dimensions investigated, no capture claimed. Pure camera4/104/0 reuses scoped correction; prior Fireball/host incoming native0 retained. No new F21–24 MET."
+   "checkpoint": "Combat da308350e0 adds detached whole-party UID/species/carrier preflight, typed known/loadout/mastery schema and canonical save fields; source-only/runtime open. Corrected native Low nine-pair camera/controls PASS with strict zero overlap; fresh blind narrow readability PASS, full craft still unmet. Prior guest incoming one missingLabel red retained; prior actual Fireball/host incoming native0 and named camera5/106/0 remain evidence. No new F21–24 MET."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX pushed67c620d82: actual r6 executed08be1a3b2 native0,12 cases/36 PNGs/zero failures/no engine errors; arrival clocks and end leases0 passed. Fresh blind neutral observations delivered, strict full-craft verdict pending. R5 native1/two guard failures and prior full-bar rejects retained; integrated world unproven, library flag off/all F25 open."
+   "checkpoint": "VFX 47e5d01d04 drafts r7 authored flame texture/curved layers/contact and clearer rank layering, native pending. Latest actual r6 08be native0/12cases/36PNG, clocks/leases PASS; fresh blind four literal identities PASS but full craft FAIL, mastery incomplete and world unproven. Historical reds retained, library flag off/all F25 open."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "27e2d1bf6b evidence/424ca00d game: integrated Hall route native0 on Forward+Medium506/High481frames at1920x1080; independent incremental source PASS. Regional r3 native stack failure retained; changed-cell refresh preserves unchanged scatter buffers and placements. GTX1060 Medium mean40.41ms/P9545.01, High42.68/P9549.40; no Ally/performance-bar/full-matrix claim. F26#1/#2 remain the only MET; material/visual/remaining7current route cases open."
+   "checkpoint": "Renderer fix PR477 landed ef1b149113; exact424ca00d Hall route native0 Forward+Medium506/High481frames at1920x1080, incremental buffer-refresh independent source/receipt PASS. Cloudreach batch05e9d4a964 Low15064/Medium10423/High8229frames all native0; archive underway. Eight of12 current preset routes proven. Prior stack failures retained; no visual/device/full-matrix or Ally/performance-bar claim. F26#1/#2 remain only MET; materials/visual/full matrix open."
   }
  ]
 }
