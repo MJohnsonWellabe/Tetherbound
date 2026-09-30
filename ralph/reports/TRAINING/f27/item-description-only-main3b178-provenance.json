@@ -3,8 +3,8 @@
   "base_main": "3b17882907a3c28cd3809780230841fe737839c4",
   "changed_path": "data/items/items.json",
   "before_blob_sha256": "16d7394713a57a37212a2417d8cd5f399db9ef523478975d29cba6e79d54cadc",
-  "after_blob_sha256": "f932baee0b7983166525bf6eb809c884f6e80f5b4b2d7d587b300bd1c630681e",
-  "patch_sha256": "7fba876a147c108d5bab117b85c6a2c36498a8cc75e919b395ed5dcca2a82412",
+  "after_blob_sha256": "85fd0d7b4832836995ac311dcde62947e0a45e020050e2c1c1084c5d4fcc2ddd",
+  "patch_sha256": "dd3b001059716c4e961e0c4637c16f247ab7f6e359b5bd9ff2ee2161351d8dde",
   "changed_fields": {
     "essence_ground": [
       "description"
@@ -34,11 +34,11 @@
   "description_rows": {
     "essence_ground": "Spend Ground Essence at the Altar to pay for a ground creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
     "essence_water": "Spend Water Essence at the Altar to pay for a water creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
-    "essence_air": "Spend Air Essence at the Altar to pay for a air creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
-    "essence_electric": "Spend Electric Essence at the Altar to pay for a electric creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "essence_air": "Spend Air Essence at the Altar to pay for an air creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "essence_electric": "Spend Electric Essence at the Altar to pay for an electric creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
     "essence_fire": "Spend Fire Essence at the Altar to pay for a fire creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
     "essence_dark": "Spend Dark Essence at the Altar to pay for a dark creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
-    "essence_ice": "Spend Ice Essence at the Altar to pay for a ice creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
+    "essence_ice": "Spend Ice Essence at the Altar to pay for an ice creature's next level, up to its current cap. Dual-type creatures may pay with either of their types.",
     "essence_psychic": "Spend Psychic Essence at the Altar to pay for a psychic creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
   },
   "missing_description_ids_on_exact_main": [
@@ -56,5 +56,5 @@
   "unit_engine_ci_gpu_runs": 0,
   "test_source_modified": false,
   "existing_lane_items_proposals_copied": false,
-  "verification": "UTF-8 JSON readback plus exact before/after object comparison; existing test_item_icons test source read only. Not a test/engine PASS."
+  "verification": "UTF-8 JSON readback plus exact before/after object comparison; existing test_item_icons test source read only. Not a test/engine PASS. Grammar correction changes only a\u2192an for air/electric/ice; fetched current-main catalogue retains the same exact base blob."
 }
