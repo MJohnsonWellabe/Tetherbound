@@ -29,13 +29,13 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | #0/#1/#2 main105; r2 DAY/NIGHT YES. Services source next; F18 held, typed authority prototype unparsed. |
+| `tb/hub` | F17, F18 | #0/#1/#2 main106; services r1/r2 native1 retained, body-clear360 source. Boundary57d3/44/0+parsers; F18 held. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 9220 utility4/58/0; corrected10/734+16 native0. Earlier SCRIPT ERROR red retained; CAS/utility WIP, no MET. |
-| `tb/vfx` | F25, F35 | R8 native12/36/0; sampled1/3/5 identity/upgrade PASS/full craft FAIL. Sole new craft writer, library off/all open. |
-| `tb/lookdev` | F26 | #1/#2 main; #4 full12 native1920 route captures strict MET (VISUAL/lookdev/twelve-route-result.md); fresh Meadows3/986b after Hall, other9 reused. Cloud M/H48 full bar FAIL; #0/#3/#5 open. |
-| `tb/training` | F27–F30, F37 | Wave 2 |
-| `tb/homestead` | F31–F34 | Wave 2 |
+| `tb/combat` | F21–F24 | 15af loadout ACK source; c9c5 vitals/movement4/79/0+parsers. Prior10/734+16 native0; aborted9-method red retained. |
+| `tb/vfx` | F25, F35 | edd109 native queued; capacity failed before edits/engine. R8 ranks1/3/5 PASS/full craft FAIL; library off/F25 open. |
+| `tb/lookdev` | F26 | #1/#2/#4 main106; full12 native1920 strict MET (VISUAL/lookdev/twelve-route-result.md). Cloud M/H48 full-bar FAIL; #0/#3/#5 open. |
+| `tb/training` | F27–F30, F37 | c4a80 essence/release/candy source; authority/runtime open, no MET. |
+| `tb/homestead` | F31–F34 | bbe906 site/farm source; mounts uncalled, authority open, no MET. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
