@@ -1,0 +1,14 @@
+{
+  "reviewed_candidate": "846a30d5f70814434593ca98f2cd05d0b7e61c00",
+  "base_main": "c7cb265b54dbf52d287c72c29c3d79ecedb2d908",
+  "raws": {
+    "narrow-package-review.txt": "3cbe1af3ca97897e3993f0707c5bd4db6194864f38deb5300ab70a07422fd45a",
+    "package-receipts.json": "eb3d6e553e2b21be57769f577acf53998090242754e7363ed557ca412fedd460",
+    "SHA256SUMS.txt": "ce77fad3e70b8f418fed2917ed3eddf6d8c4007e98f2fd3cf7e3b7566d596e66"
+  },
+  "pre_merge_main_count": 108,
+  "candidate_count_on_merge": 109,
+  "wording_flag_disposition": "Committed STATE/status describe the intended merged snapshot. Candidate is not main and is not published as main before confirmed PR merge; live remote Site remains actual c7/108. Narrow SOURCEPASS scope preserved.",
+  "new_production_delta_from_reviewed_candidate": false,
+  "additional_engine_runs": 0
+}

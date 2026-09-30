@@ -1,0 +1,5 @@
+SHA256 | bytes | absolute output path (original UTF-8/file bytes; no normalized projection)
+b95f2d9ef4917d60e2b7f3f637df821f8aaf4b018bc5eb550829bfff7744909e | 18071 | C:/Users/mattj/Documents/Codex/2026-09-30/tetherbound-f26-material-strict-review/outputs/full-access-review/strict-f26-0-full-access-review.txt
+853b0aa1ed874f45a0fdab7e423c06366cc301ff5f400474bfd0fa8a2859f30d | 1152561 | C:/Users/mattj/Documents/Codex/2026-09-30/tetherbound-f26-material-strict-review/outputs/full-access-review/independent-audit-final.json
+2a4e1b3680910d9b290cc6ac4d08bf00dfe2f3a6f5095ae531c0400b2eb88622 | 1091352 | C:/Users/mattj/Documents/Codex/2026-09-30/tetherbound-f26-material-strict-review/outputs/full-access-review/independent-audit.json
+All 22 prior reviewer files verified unchanged at final receipt creation.
