@@ -113,17 +113,17 @@ func _base_seed() -> int:
 
 ## The regression this whole file exists to guard: a missing or stale bake
 ## silently falls back to `vegetation.gd`'s ~60s-on-this-box compute path on
-## every single load. `BAKE.is_fresh()` is the exact check `vegetation.gd`
+## every single load. `BAKE.is_usable()` is the exact check `vegetation.gd`
 ## itself gates on, so this asserts the real production condition, not a
 ## proxy for it.
 func test_playground_bake_is_committed_and_fresh() -> void:
-	assert_true(BAKE.is_fresh(WORLD_NAME, _base_seed()),
+	assert_true(BAKE.is_usable(WORLD_NAME, _base_seed()),
 		"data/scatter/playground is missing or stale against the live config " +
-		"(vegetation.json / terrain_playground.json) -- every boot will fall " +
-		"back to computing the full corridor scatter from scratch, a ~60s " +
-		"stall measured on this box. Re-run " +
-		"`godot --headless --path . --script scripts/world/bake_playground_scatter.gd` " +
-		"and commit the result.")
+		"(vegetation.json / terrain_playground.json). Legacy generations fall " +
+		"back to expensive computation; stable-ID generations refuse unsafe " +
+		"renumbering. Prepare the independently reviewed village scope with " +
+		"tools/prepare_village_bake_scope.py and use the regional writer's " +
+		"--regions and --scope-proof arguments; commit its regions and receipt.")
 
 
 ## Loading the bake is the whole point: it must actually be fast, not merely

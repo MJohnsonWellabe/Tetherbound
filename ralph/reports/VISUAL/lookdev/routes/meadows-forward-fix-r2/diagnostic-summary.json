@@ -1,0 +1,88 @@
+{
+  "source_commit": "1642a8e4942edaa03bd5fb18c58a70eecb0b869e",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:/tetherbound/redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_lookdev_route.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=Medium",
+    "--source-commit=1642a8e4942edaa03bd5fb18c58a70eecb0b869e",
+    "--output=D:/tetherbound/lookdev-forward-fix-r2/route"
+  ],
+  "exits": [
+    {
+      "pid": 2600,
+      "exit": 3221225725
+    },
+    {
+      "pid": 1144,
+      "exit": 3221225725
+    },
+    {
+      "pid": 4748,
+      "exit": 0
+    }
+  ],
+  "events": [
+    {
+      "first_chance": true,
+      "code": "0xc00000fd",
+      "fault_rva": "0x6650296",
+      "leaf_return_rva": "0x1365ae9",
+      "barrier_view_counts": {
+        "memory": 1,
+        "buffer": 176813,
+        "texture": 0,
+        "acceleration": 0
+      },
+      "buffer_barrier_bytes_aligned16": 9901536,
+      "stack_bytes": 23640,
+      "memory_at_fault": {
+        "commit_total": 17446928384,
+        "commit_limit": 20001132544,
+        "physical_total": 17092575232,
+        "physical_available": 5043957760
+      },
+      "stack_read_stop": {
+        "ok": false,
+        "error": 299,
+        "requested": 4096,
+        "read": 0
+      }
+    },
+    {
+      "first_chance": false,
+      "code": "0xc00000fd",
+      "fault_rva": "0x6650296",
+      "leaf_return_rva": "0x1365ae9",
+      "barrier_view_counts": {
+        "memory": 1,
+        "buffer": 176813,
+        "texture": 0,
+        "acceleration": 0
+      },
+      "buffer_barrier_bytes_aligned16": 9901536,
+      "stack_bytes": 23640,
+      "memory_at_fault": {
+        "commit_total": 17446481920,
+        "commit_limit": 20001132544,
+        "physical_total": 17092575232,
+        "physical_available": 5043605504
+      },
+      "stack_read_stop": {
+        "ok": false,
+        "error": 299,
+        "requested": 4096,
+        "read": 0
+      }
+    }
+  ],
+  "scope": "Affected production Forward+ Medium startup under local debugger. Native stack overflow; no route frames/receipt. Source function identity inferred from stripped binary ABI and exact locked official source, not debug symbols. Raw process addresses/stack bytes stay local. Not normal performance evidence."
+}

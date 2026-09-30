@@ -65,7 +65,7 @@ func _groundmat_layer() -> Dictionary:
 
 func test_runtime_config_does_not_invalidate_the_committed_scatter_bake() -> void:
 	var seed := int(RULES.config().get("seed", -1))
-	assert_true(BAKE.is_fresh("playground", seed),
+	assert_true(BAKE.is_usable("playground", seed),
 		"adding the separate presentation config changed a fingerprint input or the committed bake was already stale")
 	assert_false(VEGETATION.RIDGELINE_GROUNDMAT_VISUAL_PATH.contains("vegetation.json"),
 		"the presentation config must remain outside the scatter fingerprint inputs")

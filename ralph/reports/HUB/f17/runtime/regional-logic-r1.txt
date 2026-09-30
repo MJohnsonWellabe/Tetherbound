@@ -1,0 +1,32 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_village_regional_bake.gd: 1 of 669 test files
+  ok    test_village_regional_bake.gd :: test_disjoint_receipts_validate_all_effective_hashes_and_allow_supersession
+  ok    test_village_regional_bake.gd :: test_legacy_order_is_the_existing_runtime_identity_before_conversion
+  FAIL  test_village_regional_bake.gd :: test_regional_promotion_rolls_back_and_keeps_untouched_generation_bytes
+          expected true, got false  (actual approved sources match complete seven-input receipt)
+SCRIPT ERROR: Invalid access to property or key 'identity_high_water' on a base object of type 'Dictionary'.
+   at: test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys (res://tests/test_village_regional_bake.gd:44)
+   GDScript backtrace (most recent call first):
+       [0] test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys (res://tests/test_village_regional_bake.gd:44)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_village_regional_bake.gd :: test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys
+          expected true, got false  ({ "ok": false, "code": "promotion_failed", "regions": 1 })
+          expected [0, 1, 3], got [0, 1, 2]  (existing actual layer#index keys survive; removed key2 stays retired and the addition uses key3)
+          expected 4, got 3  (bitset includes identity holes)
+SCRIPT ERROR: Invalid access to property or key 'trees' on a base object of type 'Dictionary'.
+   at: test_stable_generation_restores_old_bitset_prefix_and_empty_layer_bounds (res://tests/test_village_regional_bake.gd:126)
+   GDScript backtrace (most recent call first):
+       [0] test_stable_generation_restores_old_bitset_prefix_and_empty_layer_bounds (res://tests/test_village_regional_bake.gd:126)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_village_regional_bake.gd :: test_stable_generation_restores_old_bitset_prefix_and_empty_layer_bounds
+          expected true, got false
+
+5 tests, 46 assertions, 3 failed
+
+  test_village_regional_bake.gd :: test_regional_promotion_rolls_back_and_keeps_untouched_generation_bytes — expected true, got false  (actual approved sources match complete seven-input receipt)
+  test_village_regional_bake.gd :: test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys — expected true, got false  ({ "ok": false, "code": "promotion_failed", "regions": 1 })
+  test_village_regional_bake.gd :: test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys — expected [0, 1, 3], got [0, 1, 2]  (existing actual layer#index keys survive; removed key2 stays retired and the addition uses key3)
+  test_village_regional_bake.gd :: test_regional_scatter_preserves_outside_and_matched_runtime_harvest_keys — expected 4, got 3  (bitset includes identity holes)
+  test_village_regional_bake.gd :: test_stable_generation_restores_old_bitset_prefix_and_empty_layer_bounds — expected true, got false
+SOURCE_SHA=4fb6571ebfac1857bf5836b884697d6ffd8d4b41 NATIVE_EXIT=1 ELAPSED_SECONDS=3.9482905

@@ -2,18 +2,28 @@
   "_comment": "The first fifteen minutes, as data. Beats, placements and the conversations they run — docs/specs/OPENING_SEQUENCE.md is the prose version of this file and the two are meant to be read together.",
   "_comment_tunable": "Every distance and speed here is TUNABLE and none of it is a mechanic. The expected feedback is 'the walk to Grandpa is too long' and 'my creature keeps treading on me', and both have to be answerable by editing this file.",
   "_comment_positions": "All offsets are metres from the player's spawn point, which playground_world.gd puts on the baked ground at the world origin. Y is never given: everything is stood on the ground by asking the world for its height (docs/decisions/D09), never by a raycast and never by a hand-placed Y that rots the next time the terrain is baked.",
-
   "bed": {
     "_comment": "Beat 1. The player wakes in the bed upstairs and 'Get up' is the only prompt in the house. The position is a PLACEHOLDER — the house builder finalizes it when the farmhouse interior is laid out; nothing should be tuned against it until then.",
-    "position": [-24.0, 0.0, -18.0],
+    "position": [
+      0.0,
+      0.0,
+      12.0
+    ],
     "prompt": "Get up"
   },
-
   "grandpa": {
     "_comment": "Where he stands in the meadow once the sequence moves outdoors. Far enough that the walk to the practice bramblebun is worth taking; near enough that a player who wanders off can find him again.",
-    "offset": [10.0, 0.0, 32.0],
+    "offset": [
+      10.0,
+      0.0,
+      32.0
+    ],
     "_comment_indoor": "Where he stands downstairs for the briefing. A PLACEHOLDER like the bed — the house builder finalizes it against the real farmhouse floor plan.",
-    "indoor_position": [-22.0, 0.0, -16.0],
+    "indoor_position": [
+      2.0,
+      0.0,
+      14.0
+    ],
     "_comment_config": "Which block of data/config/art.json his body comes from.",
     "art": "grandpa",
     "display_name": "Grandpa Elias",
@@ -21,11 +31,14 @@
     "_comment_prompt_radius": "OP-0830-4. Raised 4.0 -> 5.0. The ground floor of the rebuilt farmhouse is 9.4m x 5.4m and he stands 2.4m west of its centre, so at 4.0 the east third of the room -- including the whole approach to the door -- offered no prompt at all. It is not the fix for the trapped-in-the-house defect (the door callout in sequence_director.gd::_refresh_door_gate is), but a player who turns round and walks back should find him offering before they are standing on him. TUNABLE; outdoors he stands alone in the meadow and contests nothing at this radius.",
     "prompt_radius": 5.0
   },
-
   "starters": {
     "_comment": "GAME_DESIGN.md 3: three unique starters, Ground/Water/Air, and the two you do not take stay with him.",
     "_comment_reversal": "REVERSED 2026-08-11 (SA0-orbs, owner directive): this used to say the three wait outside Grandpa's door as standing bodies you walk up to, NOT a menu, and called that decided and load-bearing. The owner asked for the opposite: 'the starters should be in orbs and you preview them while talking to Grandpa.' scripts/ui/starter_picker.gd now previews all three, live, indoors, the moment his briefing ends -- see docs/specs/OPENING_SEQUENCE.md's own record of the same reversal. `species` below is the only field the live game still reads; `forward`/`spread`/`prompt_radius` are kept only because scripts/story/opening_beats.gd::starter_offsets() and its unit test still exist as a utility, not because anything places a body with them any more.",
-    "species": ["terrapup", "ripplet", "galewisp"],
+    "species": [
+      "terrapup",
+      "ripplet",
+      "galewisp"
+    ],
     "_comment_placement": "Unused by the live opening since the reversal above. Kept for opening_beats.gd::starter_offsets(), still unit-tested.",
     "forward": 4.5,
     "_comment_spread": "Unused by the live opening since the reversal above; same reason as forward.",
@@ -33,7 +46,6 @@
     "prompt_radius": 2.6,
     "_comment_prompt": "Unused by the live opening since the reversal above; same reason as forward."
   },
-
   "follower": {
     "_comment": "How your creature walks beside you. It has no locomotion of its own — every value here is turned into a direction and a speed for creature_body.request_move(), the same call the combat AI and your own stick go through.",
     "stop_distance": 3.0,
@@ -53,7 +65,6 @@
     "run_speed": 9.0,
     "_comment_speeds": "The flank gait slightly clears the trainer's 5.0 walk and 8.6 sprint, and switches to its catch-up gait before crossing the 5.2m exploration camera. moving_station_stop_distance keeps a moving target tight without changing the wider stationary stop/resume hysteresis: motion itself prevents idle jitter, while allowing the old 1.6m hold during travel made a giant body fall back toward the camera. These remain data tunables; the follower script supplies matching safe defaults only for stripped fixtures."
   },
-
   "encounter": {
     "_comment": "Beat 6-8. The species is not named here: encounter_director.gd already spawns a bramblebun as its peaceful practice creature and this points at that one, so there is one wild creature rather than two standing in the same meadow.",
     "species": "bramblebun",
@@ -65,7 +76,6 @@
     "faint_recovery_fraction": 1.0,
     "_comment_orb_floor": "The half of the promise `max_catch_failures` cannot keep. That bound counts LANDED throws on purpose -- a throw that never reached the creature is not a failed catch -- so a player who MISSES is bounded by nothing but their orb stock. Grandpa gives fifteen; the only ways to get more are Tam's recipe and the village trader, both of them past the road gate, and the road gate is past this catch. So an opening that runs dry is a hard dead-end: `throw_aim.gd::try_begin_aim()` refuses with 'no orbs left' forever while the beat waits for a catch that can no longer be attempted. Reproduced, not theorised. While this exact encounter is live, running out tops the satchel back up to this many basic orbs. TUNABLE, and deliberately not a silent infinity: it is a floor under the tutorial only -- `sequence_director.gd` applies it behind the same beat-and-species predicate as the bound above, so the moment the opening ends, running out means running out. Set to 0 to disable the floor."
   },
-
   "beats": {
     "_comment": "The beat ORDER is the key order of `grandpa_conversations`, and each key's value is the conversation Grandpa runs if you talk to him during that beat. scripts/story/opening_beats.gd reads this; scripts/story/sequence_director.gd holds which one is current. The opening gives one immediate purpose at a time until tournament registration deliberately opens the qualification goal.",
     "_comment_correction": "This previously said the order lived in scripts/story/opening_beats.gd, 'which is code because it is a state machine rather than content'. That file did not exist when the line was written and the order was nowhere at all. The order is content — it is the shape of the first fifteen minutes and it will be argued with — so it stays here, and the code reads it.",
@@ -130,7 +140,6 @@
       "tournament_signup": "opening:tournament_registered"
     }
   },
-
   "fade": {
     "_comment": "Beat 1 fades in from black on the bed upstairs. This used to say the fade was there INSTEAD of an interior; the interior is now real (docs/specs/OPENING_SEQUENCE.md records the reversal) and the fade is simply how waking up looks.",
     "seconds": 1.6,

@@ -2,7 +2,7 @@
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 102 of 280. Original: 95/101; redesign: 7/179. F16 all five and F26#1/#2 independently MET and landed main via #467/#470 (39840191c).",
+  "Criteria met: 105 of 280. Original:95/101; redesign:10/179. F16 all five, F26#1/#2 and F17#0/#2 landed; this PR closes only F17#1 with fresh strict DAY YES/NIGHT YES. Four remaining F17 criteria and full visual bar remain open.",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -370,8 +370,8 @@
   },
   {
    "lane": "tb/hub",
-   "now": "F17 source6f083d1d4 pushed against landed F16. Warm import native0; focused geometry44/3982/4red preserved, exact Hall/sign/berry geometry fixes underway. Runtime/player/visual gates remain open.",
-   "next": "Finish affected geometry correction, refresh village terrain, controller/peer paths and code-blind Hall/village judging; F18 authority draft advances."
+   "now": "F17#0/#2 main; this cut closes only #1 with actual ordinary farm-door native1920 day/night and independent code-blind DAY YES/NIGHT YES. Four remaining F17 rows open; full craft unproved. F18 authority prototypes preserved outside this cut, dependency hold remains.",
+   "next": "Ordinary day/night house/arch/pedestal paths, M1 chain, two-peer layout/states and code-blind visual bar; F18 protected-key/channel/transaction drafts advance."
   },
   {
    "lane": "tb/reorder",
@@ -485,7 +485,8 @@
   "Final relay story framing: recommended Stormheart final relay, Tidewake one regional link, dock exchange retained. Keep current conservative wording until confirmed.",
   "PRODUCT proposals: confirm cut order, Build the best five sub-line, village/Hall/first-loop demo and US$19.99 at 15–25 h. Recommended: retain existing product defaults; no commercial launch authorized.",
   "Real-PC feel checks: mouse camera after build/trade, faster aimed power attacks, sprint lean/cadence. Recommended: test the installed build on a pad before changing settled values.",
-  "CODEX_START_HERE §8.1 defaults: recommended retain each documented conservative default unless owner overrides."
+  "CODEX_START_HERE §8.1 defaults: recommended retain each documented conservative default unless owner overrides.",
+  "F18 Meadows waystones: recommended home arch also returns to the last activated Meadows waystone, with no additional Meadows arch. Keep home-only until owner confirms (WORLD §2.7)."
  ],
  "four_chapter_run": null,
  "wip": [
@@ -517,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T05:28:23Z",
+ "last_lane_refresh": "2026-09-30T11:25:03Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "F16 landed main b2ea1455a via #467, all five criteria MET; selected full CI36667090983 and final required CI36670808563 passed with disclosed docs-only source reuse. At this refresh main has102/280 after F26#1/#2 also landed #470. Hub source6f083d1d4: actual road/eight houses/Hall and opening/arena poses implemented; warm import native0 and44 geometry tests/3982assertions/4failing methods preserved. Exact real Hall entry, sign and berry pose repairs underway; player/bake/visual proof open."
+   "checkpoint": "At this refresh main has104/280 via PR480/380e466a15: F17#0/#2 landed; all16 physical Hall approaches native0/242.640s. F17#1 strict DAY NO/NIGHT NO retained/failing. Hub a4b484cbea corrects stale tournament presentation pose and adds native-family Hall frontage/lanterns; source only, fresh capture unproved. F18#0 candidate MET/dependency hold; portable10/67/0 and real opening gift/death/reload native0 retained. One Session admission/portal/CAS draft and read-only traveler getters WIP. Reorder5c681 fifth-arch presentation data only, transaction consumer unbuilt."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat source09eab35c8 adds defensive poise/relic critical slice; runtime pending token. Evidence92c0481a1: executed a16 hosted first-HP path native0, six guest HP writes contact-before-write and original authority/rejoin checks PASS, both peer exits0/no native SCRIPT ERROR. Independent evidence verdict pending; rumble2/13 logic PASS, actual pad/UI and earned TM path open. No new F21–24 MET."
+   "checkpoint": "Combat130d7c6100 host mastery CAS/power-floor WIP: nine-method run is RED despite ok markers because actual-host-debit SCRIPT ERROR aborted before assertions; shutdown leak errors retained. Prior coherent portable7/700/0 and transitive parser0 remain valid; no host-debit PASS claimed. Actual Low nine-pair zero-overlap/controls native0 plus narrow blind PASS and host feedback4f4 native0 retained. Loadout stateless service drafts await same registry CAS/ACK/rejoin, typed capture/release/evolution ownership arms unbuilt. All F21–24 criteria open. d7e moves all16 aborted assertions verbatim to an initialized mini-smoke with count16 gate; source only, minimum retry queued."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX evidence7c6af296c, executed a90aa0c05 r3:12 Compatibility cases/36 PNGs, native0/no native errors. Fresh code-blind r3 F25#2 and whole#5 FAIL; flag stays off/no F25 MET. After second quality rejection, actual soft-flame/ribbon and ballistic chips/dust source rework with production creature targets underway. Raw failed judges retained."
+   "checkpoint": "VFX r7 original12cases/36PNG native0/23.734s, scoped PNG import0/5.531s retained; fresh blind Fireball explosion identity/all-four full craft FAIL, sampled ranks1/3/5 narrow PASS; library flag off/all F25 open. R8 explosion shader/material/config86dc has independent SOURCE PASS; import sidecar8ab pinned, original12cases/36PNG native0/21.344s, all12 arrivals once/endleases0/noERROR; nine new Fireball originals await fresh blind judgment. No fresh full-craft, world integration or criterion acceptance claim; all rejected rounds and canceled broad import preserved."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "F26#1 strict /root/combat MET and #2 /root/vfx MET, landed #470 main39840191c, official selected head CI6012 and traceability SUCCESS. Water Low/Medium/High native PASS three of12 cases; nine remaining F26#4 cases executing in root serializedGPU group pinned841940955. Material/matrix/Ally gates remain open."
+   "checkpoint": "Lookdev Stormwood3 at81148 native0/noERROR: Low11021frames mean13.74ms, Medium5895/25.75ms, High4601/32.97ms; six original1920 images/raw archive queued. Current11/12 routes. MeadowsLow81148 native1/1274frames/0waypoints: actual Grandpa opening dialogue held locomotion, noERROR; raw failure preserved. d5e0c30 pre-mount seven explicit opening fixture flags has independent SOURCE PASS; corrected Low native route running on d5e at this refresh. Only F26#1/#2 landed; whole matrix/visual/Ally/device criteria remain open."
   }
  ]
 }

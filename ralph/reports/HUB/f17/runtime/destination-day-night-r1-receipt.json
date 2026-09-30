@@ -1,0 +1,22 @@
+{
+  "source": "2a1c6d37f3b8ba1b53aeb4f1fcb0d7ffb5a4bb3d",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--fullscreen",
+    "--resolution",
+    "1920x1080",
+    "--rendering-method",
+    "gl_compatibility",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "res://tests/capture_hall_destination_day_night.gd",
+    "--",
+    "--capture-dir=D:\\tetherbound\\redesign-hub\\ralph\\reports\\HUB\\f17\\destination-day-night-r1"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\f17-destination-r1-profile",
+  "native_exit": 0,
+  "elapsed_seconds": 215.0779999999795,
+  "log": "ralph\\reports\\HUB\\f17\\runtime\\destination-day-night-r1.txt",
+  "images_directory": "ralph\\reports\\HUB\\f17\\destination-day-night-r1"
+}

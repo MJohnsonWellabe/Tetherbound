@@ -212,6 +212,8 @@ var _felled: Dictionary = {}
 ## can be ABSENT from `_harvested` entirely on this build, e.g. a config edit
 ## that dropped it — this dict answers "how many, if at all" in one lookup).
 var _harvest_layer_counts: Dictionary = {}
+# Only a validated stable-ID cache authorizes prefix restoration of old saves.
+var _stable_harvest_layers: Dictionary = {}
 ## D97. The realm this scatter belongs to, stamped on every
 ## `deplete_vegetation` intent and on every flag this file reads back. Settable
 ## rather than read from `Game.current_realm`: from Wave 6 two peers stand in
@@ -260,6 +262,11 @@ const HARVEST_REMOVE_RADIUS := 0.05
 ## the ground a metre or so off the tree it belongs to — and the ground there is
 ## not the ground under the tree.
 var _field: RefCounted = null
+
+## Preserve the native Forward+ build's bounded uploads when later local
+## removals/healing refresh the instancer. A destructive rebuild recreates
+## every unchanged cell buffer, including the whole world during water clears.
+var _region_render_uploads := false
 
 ## The live Terrain3D node passed to `build()`, and the three sub-objects the
 ## instancer swap needs from it.
@@ -473,6 +480,7 @@ func _load_performance_overrides() -> void:
 ## the same frame, so nothing about a real build changes.
 func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_load_performance_overrides()
+	_region_render_uploads = _uses_region_render_uploads(slicer)
 	for child in get_children():
 		child.queue_free()
 	_placed = 0
@@ -501,6 +509,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
+	_stable_harvest_layers.clear()
 	_harvest_lookup.clear()
 	_harvest_nodes.clear()
 	_harvest_collision_lookup.clear()
@@ -560,8 +569,14 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
 	var skipped: Dictionary = {}
 	var by_layer: Dictionary
-	if BAKE.is_fresh(_realm_bake_name, base_seed, _realm_fingerprint):
-		by_layer = BAKE.load_all(_realm_bake_name, _drained, suppressed, skipped)
+	var identity_bounds := {}
+	if BAKE.is_usable(_realm_bake_name, base_seed, _realm_fingerprint):
+		by_layer = BAKE.load_all(_realm_bake_name, _drained, suppressed, skipped, identity_bounds)
+	elif BAKE.has_stable_harvest_ids(_realm_bake_name):
+		# Recomputing a corrupt/stale stable generation would silently assign
+		# fresh array IDs to old chopped trees. Refuse until repaired offline.
+		push_error("Stable harvest generation is invalid; repair scoped bake before playing: " + _realm_bake_name)
+		return
 	elif _realm_bake_name != BAKE_WORLD_NAME:
 		push_error("Missing or stale %s scatter bake; rebuild before playing this realm." % _realm_bake_name)
 		return
@@ -603,7 +618,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_load_ridgeline_groundmat_visual(by_layer)
 
 	await _breathe(slicer)
-	_mark_harvestable(by_layer)
+	_mark_harvestable(by_layer, identity_bounds)
 	var t_mark1 := Time.get_ticks_msec()
 	await _breathe(slicer)
 
@@ -640,10 +655,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 		await _build_batch(model, by_model[model], slicer)
 		await _breathe(slicer)
 	var t_batches1 := Time.get_ticks_msec()
-	# One rebuild of the instancer's live MultiMeshInstance3Ds after every
-	# batch is queued, not one per model -- `add_transforms()` below is
-	# called with `update=false` for exactly this reason.
-	if not simulation_only:
+	# Native solo Forward+ materializes each existing region/model below.
+	# A final destructive rebuild would queue every GPU buffer again in one
+	# native call, defeating those bounded uploads. Other build modes retain
+	# their existing single rebuild.
+	if not simulation_only and not _uses_region_render_uploads(slicer):
 		_instancer.call("update_mmis", true)
 	var t_mmis1 := Time.get_ticks_msec()
 	_warn_about_shared_models(by_layer)
@@ -671,8 +687,12 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 ## INSTANCE, at the exact index it assigns in its own MultiMesh -- that index
 ## is what both the collider placement and the interact point have to agree
 ## on.
-func _mark_harvestable(by_layer: Dictionary) -> void:
-	for layer_name: String in by_layer.keys():
+func _mark_harvestable(by_layer: Dictionary, stable_identity_bounds: Dictionary = {}) -> void:
+	var layers := by_layer.keys()
+	for layer: String in stable_identity_bounds:
+		if not layers.has(layer):
+			layers.append(layer)
+	for layer_name: String in layers:
 		var layer: Dictionary = _vegetation_config().get("layers", {}).get(layer_name, {})
 		var item_id := str(layer.get("harvest_item", ""))
 		if item_id == "":
@@ -681,9 +701,15 @@ func _mark_harvestable(by_layer: Dictionary) -> void:
 		if fraction <= 0.0:
 			continue
 		var amount := int(layer.get("harvest_amount", 2))
-		var placements: Array = by_layer[layer_name]
-		_harvest_layer_counts[layer_name] = placements.size()
-		_harvested[layer_name] = _new_bitset(placements.size())
+		var placements: Array = by_layer.get(layer_name, [])
+		var identity_count := maxi(placements.size(), int(stable_identity_bounds.get(layer_name, 0)))
+		if stable_identity_bounds.has(layer_name):
+			_stable_harvest_layers[layer_name] = true
+		for placement: Dictionary in placements:
+			identity_count = maxi(identity_count, int(placement.get("harvest_identity", -1)) + 1)
+			identity_count = maxi(identity_count, int(placement.get("harvest_identity_bound", 0)))
+		_harvest_layer_counts[layer_name] = identity_count
+		_harvested[layer_name] = _new_bitset(identity_count)
 		# A stride through the layer's own draw order, not an independent
 		# per-instance coin flip -- spreads harvest points evenly across the
 		# whole layer instead of letting chance cluster (or skip) them.
@@ -694,16 +720,17 @@ func _mark_harvestable(by_layer: Dictionary) -> void:
 		# and this is exactly the lever for that.
 		var stride := maxi(1, roundi(1.0 / fraction))
 		for i in placements.size():
-			if i % stride != 0:
-				continue
 			var placement: Dictionary = placements[i]
+			var identity := int(placement.get("harvest_identity", i))
+			if identity % stride != 0:
+				continue
 			placement["harvest_item"] = item_id
 			placement["harvest_amount"] = amount
 			# HARVEST-ALL/D60: no more respawn. `harvest_respawn_seconds` (the
 			# old JSON key) is gone -- a chopped placement is removed for
 			# good, never dimmed-and-timed-out. See harvest_permanently().
 			placement["harvest_layer"] = layer_name
-			placement["harvest_index"] = i
+			placement["harvest_index"] = identity
 
 
 ## HARVEST-ALL/D60. A real bitset, not one byte per flag: at this density
@@ -1450,13 +1477,8 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 			_spawn_harvest_point(placement)
 			_t_harvest_ms += Time.get_ticks_msec() - t_h0
 
-	# `update=false`: one bulk native call per model instead of one per
-	# placement (the MultiMesh path's `set_instance_transform` loop, ~23.7k
-	# individual calls today and the measured cause of the boot-time cost
-	# this swap exists to remove), and `update_mmis(true)` runs once after
-	# every model in `build()`'s loop rather than once per model here.
 	if not simulation_only:
-		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
+		await _submit_render_transforms(mesh_id, transforms, colours, slicer)
 
 	var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
 	for spot: Vector3 in displayed_positions:
@@ -1470,6 +1492,55 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 	var t_c0 := Time.get_ticks_msec()
 	_add_collision(model_path, placements)
 	_t_collision_ms += Time.get_ticks_msec() - t_c0
+
+
+## The locked Terrain3D API can materialize one region/model through
+## add_transforms(update=true). Its global update_mmis(true) otherwise creates
+## tens of thousands of cell buffers in one indivisible native call. World
+## loop yields cannot subdivide that call; partition the existing transforms
+## instead, keeping each region's original transform/colour order intact.
+func _uses_region_render_uploads(slicer: RefCounted) -> bool:
+	return slicer != null and slicer.has_method("needs_render_release") \
+			and bool(slicer.call("needs_render_release"))
+
+
+## Terrain3D removes empty cells immediately and marks changed nonempty cells
+## for refresh. update_mmis(false) preserves the other cells and their buffers;
+## Compatibility and network builds retain their existing rebuild behavior.
+func _refresh_render_instances() -> void:
+	_instancer.call("update_mmis", not _region_render_uploads)
+
+
+func _submit_render_transforms(mesh_id: int, transforms: Array[Transform3D],
+		colours: PackedColorArray, slicer: RefCounted) -> void:
+	if not _uses_region_render_uploads(slicer):
+		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
+		return
+	var by_region: Dictionary = {}
+	var region_colours: Dictionary = {}
+	var asset: Object = _assets.call("get_mesh_asset", mesh_id)
+	var height_offset := float(asset.get("height_offset"))
+	for i in transforms.size():
+		var xf: Transform3D = transforms[i]
+		# Match add_transforms' own adjusted region selection, including a
+		# sloped model's authored height offset. The native call still owns
+		# conversion to region space and all placement validation.
+		var adjusted := xf.origin + xf.basis.y * height_offset
+		var region: Vector2i = _data.call("get_region_location", adjusted)
+		if not by_region.has(region):
+			var bucket: Array[Transform3D] = []
+			by_region[region] = bucket
+			region_colours[region] = PackedColorArray()
+		(by_region[region] as Array[Transform3D]).append(xf)
+		if not colours.is_empty():
+			var palette: PackedColorArray = region_colours[region]
+			palette.append(colours[i])
+			region_colours[region] = palette
+	for region: Vector2i in by_region:
+		_instancer.call("add_transforms", mesh_id, by_region[region], region_colours[region], true)
+		# Always release this bounded native upload, even if its CPU work
+		# happened to finish inside the time-slice budget.
+		await slicer.call("step", "scatter_upload:%d:%d,%d" % [mesh_id, region.x, region.y])
 
 
 ## One real gather point on the world's own scattered vegetation (R2.3) --
@@ -2105,7 +2176,7 @@ func restore_drained(within: Array = []) -> int:
 	# instancer's live MultiMeshInstance3Ds need exactly one rebuild after
 	# all of this healing's models are queued, same as `build()`'s own loop.
 	if _instancer != null:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	_regrown += _placed - before
 	_drained = held
 	return _placed - before
@@ -2268,7 +2339,7 @@ func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = tru
 		"raycast_height": 10.0,
 	})
 	if update:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 
 
 ## Drops this placement's `CollisionShape3D` (if one was resident) and
@@ -2410,7 +2481,7 @@ func restore_from_game(game: Object) -> void:
 			continue  # this build's config has no such harvestable layer
 		var raw := Marshalls.base64_to_raw(str((saved as Dictionary)[layer_name]))
 		var current: PackedByteArray = _harvested[layer_name]
-		if raw.size() != current.size():
+		if raw.size() != current.size() and not (_stable_harvest_layers.has(layer_name) and raw.size() <= current.size()):
 			# The layer's placement count changed under this save (a config
 			# edit, a seed bump) -- a bitset that no longer lines up index-
 			# for-index with today's scatter cannot be trusted, the same
@@ -2423,6 +2494,11 @@ func restore_from_game(game: Object) -> void:
 				continue
 			var key := "%s#%d" % [layer_name, i]
 			harvest_permanently(layer_name, i)
+			# A retired slot has no live render lookup, but its saved bit remains
+			# durable; a later addition never receives that old identity.
+			var restored: PackedByteArray = _harvested[layer_name]
+			_bit_set(restored, i)
+			_harvested[layer_name] = restored
 			if not felled.has(key):
 				continue
 			var record: Dictionary = felled[key]
@@ -2576,7 +2652,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			removed += 1
 		_instance_positions[mesh_id_value] = kept
 	if removed > 0 and _instancer != null:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	# A fight ring opened here later must not put these back.
 	for i in _soft_occluder_positions.size():
 		var soft: Vector3 = _soft_occluder_positions[i]
@@ -2722,7 +2798,7 @@ func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
 		_forget_instance_position(_soft_occluder_mesh_ids[i], spot)
 		_soft_occluder_state[i] = SOFT_HIDDEN_BY_FIGHT
 	if removed:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	return hidden
 
 
@@ -2767,7 +2843,7 @@ func restore_fight_occluders(token: PackedInt32Array) -> int:
 		_instance_positions[mesh_id] = known
 		_instancer.call("add_transforms", mesh_id, transforms, PackedColorArray(), false)
 	if restored > 0:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	return restored
 
 

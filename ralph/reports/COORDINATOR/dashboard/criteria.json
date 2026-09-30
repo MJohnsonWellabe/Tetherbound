@@ -959,33 +959,33 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 0,
+   "pct": 43,
    "counts": {
-    "met": 0,
+    "met": 3,
+    "not_started": 4,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 7,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Overhead plan and topology test: one straight road, 8–10 houses facing it on both sides, the homestead plot at the road's start beside the Meadows exit, the Crossing Hall at the road's end; road-graph test passes.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "ralph/reports/HUB/f17/overhead-plan.svg, geometry-corrected.txt (8ee:18tests/3437assertions/0failed/native0), regional-generation-result.md and actual8-file receipt/outside312-byte/ID audit atbf0. Actual parsed-joypad farmhouse-door/MainStreet/Hall-nave walk895cff native0/175.714s and unchanged mandatory smoke_playground native0/96.515s; existing dummy material-null error class matches F16 baseline. Independent re-check: fresh combat strict MET bf0 plus physical-path delta PASS895/56180, recheck-f17-0.md. Shortcuts disclosed: config-derived SVG/offline regional generation; source-aware unchanged proof reuse; authored post-opening flags/starter, one initial floor placement/yaw, then real input/collision; headless, no visual/device/earned/MP claim. F17#1–#6 remain open; main credit on feature PR landing.",
+     "gap": ""
     },
     {
      "text": "From Grandpa's farm door at the normal camera, the Crossing Hall reads as the destination down the road (code-blind judge YES, day and night).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "Independent code-blind strict DAY YES / NIGHT YES: ralph/reports/HUB/f17/destination-day-night-r2/strict-codeblind.txt; original native1920 day/night frames and frames.json. Actual same ordinary farmhouse-door pose/camera, executed7207773e9a, native0/176.125s; runtime/destination-day-night-r2.txt and receipt. Hall/canopy correction uses installed meshes and restrained facade lanterns; floor/collision/road unchanged, Hall transitive parser native0. Shortcuts disclosed: authored opening/starter; initial farmhouse pose; injected joypad; frozen production day/night/clear weather. Small sign text, busy fountains/night foreground overexposure remain; full F17#6 bar unproved. Original DAY NO/NIGHT NO retained. Main credit only at this PR landing.",
+     "gap": ""
     },
     {
      "text": "The Hall nave holds the home arch plus 7 portal arches (3 live-capable, 4 sealed and dark but visible), each signed by biome; a Shrine Room holds 8 pedestals; a controller walk reaches every arch and pedestal with no collision snag.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "Independent strict MET: ralph/reports/HUB/f17/recheck-f17-2.md, candidate9131f8a9f2/executed1d34b8d3bd. Actual production nave signs one home + three live-capable + four sealed arches; sealed material #303947 emission off; Shrine Room eight signed pedestals. All16 physical controller approaches reached0.433â€“0.539m/on_floor, native0/242.640s; runtime/hall-circuit-r1.txt and receipt. Shortcuts disclosed: authored opening/starter, one initial farmhouse pose, injected joypad/headless structural visibility; darkness verified from material source, not native pixels. No visual/device/travel/co-op claim; F17#1 strict DAY NO/NIGHT NO retained. Main credit only at this PR landing.",
+     "gap": ""
     },
     {
      "text": "Every house has a named resident or lived-in dressing; shop, workshop, inn, tournament board and research keeper are reachable on a controller day and night walk.",
@@ -1443,8 +1443,8 @@
     {
      "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
      "status": "in_progress",
-     "evidence": "VISUAL/lookdev/routes/water-forward-r1; Water Medium/High actual Forward+ native exits 0",
-     "gap": "Village/Hall and the other three biomes still need actual material coverage; F17 layout is being built."
+     "evidence": "VISUAL/lookdev/routes/meadows-forward-incremental-r4: actual native0 Medium/High village/Hall route at424ca00d; Water Forward receipts retained.",
+     "gap": "Cloudreach/Stormwood native material coverage and independent missing-material visual review remain open."
     },
     {
      "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
@@ -1467,8 +1467,8 @@
     {
      "text": "Computer captures at 1920×1080 record frame time per preset for a scripted route in each biome.",
      "status": "in_progress",
-     "evidence": "VISUAL/lookdev/routes/water-low-r1 and water-forward-r1: 3/12 actual native route cases, 201/234/182 frames at 1920x1080, independent receipt checks",
-     "gap": "Remaining nine biome/preset cases open; no complete matrix claim."
+     "evidence": "VISUAL/lookdev/routes/meadows-forward-incremental-r4: native0 Medium506/High481frames at1920x1080 on integrated Hall route; Water3cases retained, total5/12 current cases.",
+     "gap": "Integrated MeadowsLow and all3 Cloudreach/Stormwood cases remain open; old MeadowsLow legacy route is retained history."
     },
     {
      "text": "Owner ROG Ally test: Medium handheld holds ≥30 fps (40 preferred) on the scripted route; Forward+ becomes the default only after this passes (owner-dependent).",
