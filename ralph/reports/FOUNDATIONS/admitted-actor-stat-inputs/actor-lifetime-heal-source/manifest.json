@@ -1,0 +1,115 @@
+{
+  "status": "INDEPENDENT SOURCE PASS AND THREE RISK METHODS PASS; RUNTIME OFF; ACTUAL PLAYER/COOP CRITERIA OPEN",
+  "base_main": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
+  "save_schema": 28,
+  "wire_protocol": 8,
+  "source_paths": {
+    "scripts/net/encounter_host.gd": {
+      "git_blob": "d044efca22eaac3fbc67aa991ebc5afe672084a5",
+      "git_bytes_sha256": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785"
+    },
+    "scripts/combat/utility_effects.gd": {
+      "git_blob": "eb3fc4a2eebf5e21e866e8f279c68059e2752120",
+      "git_bytes_sha256": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba"
+    },
+    "data/config/combat.json": {
+      "git_blob": "a2d9da2cd9b47048388d9a5b8bc9061db6b5b906",
+      "git_bytes_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b"
+    },
+    "tests/test_actor_vitals_authority.gd": {
+      "git_blob": "7249c2ee64505793290c0e16135162c151818b98",
+      "git_bytes_sha256": "6164e740d06972833a733be681c28e3e5a5b9ee29d833a384aaab5e2ccbc6297"
+    }
+  },
+  "canonical_dependency": {
+    "source_commit": "f506adb306ce8640a6a34f60620d4dc335dbf7fc",
+    "path": "scripts/combat/utility_effects.gd",
+    "byte_identical": true
+  },
+  "combat_net_packet": {
+    "patch_sha256": "922d1e0d95b563a22f3da8e45511ffe6019dc0dbe4df57df9376cd20acee972c",
+    "transport_CRLF_normalized_before_apply": true
+  },
+  "intentional_successor_changes": [
+    "Private actor_bound_uid prevents rejoin active-UID labels from hiding pooled-body switches.",
+    "Heal utility deadline keyed by creature UID; shared action lock uses windup plus recovery.",
+    "Canonical Heal windup/recovery and regen delay validated before detached resource trial.",
+    "Three allocated adversarial methods append to existing test file; existing body unchanged.",
+    "After c97 SOURCE FAIL: canonical with_player_pace used for Heal; Wind quiet delay starts after paced windup+recovery.",
+    "Absent peer action authority transfers to stable-character String key in SAME existing private cache and back on rejoin.",
+    "Existing Heal risk method adds exact deadlines and changed-peer reconnect recovery boundary checks; c97 assertions preserved.",
+    "8ca source gate passed, first native selection failed test parse before all methods; successor adds explicit Dictionary type to wrong only."
+  ],
+  "unmodified_dependencies": {
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "scripts/net/actor_vitals_delivery.gd": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962",
+    "scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "data/moves/moves.json": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886"
+  },
+  "new_named_methods": [
+    "test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation",
+    "test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private",
+    "test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown"
+  ],
+  "offline_structural_checks": [
+    "Existing test prefix byte-identical after removing sole preload.",
+    "All c97 assertion lines retained in original order.",
+    "UtilityEffects exact canonical Git bytes.",
+    "Only two config blocks additive; runtime_enabled false.",
+    "Listed canonical save/registry/caller/move dependencies unchanged."
+  ],
+  "retained_prior_source_gate": {
+    "head": "c97ddd449b81534fa03da50161727cc8bfc90a23",
+    "verdict": "FAIL bounded source gate; 42 structural checks; no native",
+    "source_dir": "D:\\tetherbound\\redesign-foundations\\.tmp\\independent-actor-lifetime-heal-c97",
+    "lossless_archived_sha256": {
+      "strict-review.txt": "c5ca4120c2e9119556f3522cf9cb5ef7965a902bef0370ee7672428c2fc38032",
+      "review.json": "3bd31ca3ff222bd4e6faf9be71029c698bb713e81951540c2d221beaa038b3e1",
+      "source.patch": "d7eb2d1fa09857858f71097195bf9ec38d3051ebfbf36c9682035ae9404f4a06"
+    }
+  },
+  "retained_first_native": {
+    "head": "8ca35627ef66d4e8bee012c97054d2a31b74e851",
+    "native_exit": 1,
+    "elapsed_seconds": 9.234,
+    "assertions": 0,
+    "methods_executed": 0,
+    "verdict": "FAIL test parser; not a runtime pass",
+    "code_delta": "var wrong: Dictionary replaces inferred var wrong := only",
+    "source_dir": "D:\\tetherbound\\actor-lifetime-heal-r1",
+    "lossless_archived_sha256": {
+      "native.txt": "da8c108b12dc137fccaa5449577908cdb96a900a1a635dccd11266e745b57197",
+      "receipt.json": "89731da39d03c4e467fc080f7c62253d04305c6e28a551a4f23e84718567aea1"
+    }
+  },
+  "missing_actual_caller_work": [
+    "Bind current admitted stable character/owned UID/real host body at encounter entry and switch.",
+    "Solo/local and remote actor-only routing without global network guard widening.",
+    "One existing authoritative host clock advances Wind and action recovery offline or networked.",
+    "Finish fallback before freeze; prepared durable world CAS before pure actor/Heal commit.",
+    "Exact latest finalize and durable encounter handoff; owner bool save/ACK and rejoin proof.",
+    "Use detached presentation_snapshot for transport rather than private host record."
+  ],
+  "passing_native": {
+    "source": "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72",
+    "methods": 3,
+    "assertions": 73,
+    "native_exit": 0,
+    "elapsed_seconds": 5.577999999979511,
+    "lossless_archived_sha256": {
+      "native-r2/native.txt": "153a4b913743850260d907cd92a97b740ef66b1f59a0efb37c218d976d0c1319",
+      "native-r2/receipt.json": "9cf82b4f2f0fa12d9bc6b719d62af5ce0f63b1347aa85e3a7333923668d82eaa",
+      "source-pass-8ca/strict-review.txt": "1878f4191ab8c40dc5760f7dd2368379605842cf5f4c938b713150ba81bfd051",
+      "source-pass-8ca/review.json": "0fd2c64cd78b67fb2748d13da11a72d639fd7d296ea6e0a35fa82f78085d459f",
+      "source-pass-c5c/strict-review.txt": "144b31241c4c55fc9a9ad14726ff3c3b9c6a87f6bc35e6c34230c5abefd1d561",
+      "source-pass-c5c/review.json": "87b045a3496fe179a45d228465421ed8a1b9be986eeba229a70b076944de6ea9"
+    },
+    "scope": "Three new actor generation, departed handoff/privacy, canonical paced Heal/Wind/rejoin risk methods only; actual callers/owner bool-saveACK/co-op gameplay remain OPEN"
+  },
+  "landing_main": "bcbcae5e59d0e13fe20d975b95b2415de6a81872",
+  "source_equivalent_after_main_merge": true
+}

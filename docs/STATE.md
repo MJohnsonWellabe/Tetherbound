@@ -28,7 +28,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | PR498 main gear input;4/49 PASS. Actor/Heal c97 timing/rejoin source FAIL; fixing. Caller OPEN. |
+| `tb/foundations` | F16 | Actor/Heal c5c strict +3/73 native PASS; runtime OFF. Gear PR498 main; actual callers/ACK OPEN. |
 | `tb/hub` | F17, F18 | #0-#3 main; M1 r2 terrain route FAIL. dff local-step source PASS, actual r3 running; F18 OPEN. |
 | `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
 | `tb/combat` | F21–F24 | Live r2 seven-pair FAIL retained;9507 constrained lens frozen/queued; incoming caller draft active. |
