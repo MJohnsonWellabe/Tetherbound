@@ -1,0 +1,119 @@
+{
+  "parent_training_pin": "4839e34afb9f134bdcdda74e25dd96d4a9f2a0bb",
+  "canonical_main_pin": "7dcd2a8649660553f38702f2de71390efc6f1343",
+  "owned_paths": [
+    "scripts/ui/altar_service.gd",
+    "scripts/ui/altar_panel.gd",
+    "scripts/ui/altar_station_interaction.gd",
+    "scripts/ui/creature_training_readout.gd",
+    "scripts/creatures/essence.gd",
+    "scripts/creatures/progression.gd",
+    "data/config/essence.json"
+  ],
+  "before_sha256": {
+    "scripts/ui/altar_service.gd": null,
+    "scripts/ui/altar_panel.gd": null,
+    "scripts/ui/altar_station_interaction.gd": null,
+    "scripts/ui/creature_training_readout.gd": null,
+    "scripts/creatures/essence.gd": null,
+    "scripts/creatures/progression.gd": "b82be9c7b70c4f672d25143f2f2c3ed87ef5b4f04900f411c220213b6ac086e9",
+    "data/config/essence.json": null
+  },
+  "after_sha256": {
+    "scripts/ui/altar_service.gd": "c338d05065c701baa92e01f8a67a89547dbcb8575cf8cf680ad32b4c7cdb75b5",
+    "scripts/ui/altar_panel.gd": "5422ac50e1ad95a21c67e8383e77fd0f5ac54c03a105adb999fc36eb6be1e969",
+    "scripts/ui/altar_station_interaction.gd": "908f55cceead292d2aea46c5216813b25304b2297f1de7ae335bd04d16b17e88",
+    "scripts/ui/creature_training_readout.gd": "305d185d8fc817970137a173656143fc34d8ce2e0e0c68039757d1ba9f1b8311",
+    "scripts/creatures/essence.gd": "aad3e3e1c6a24513eae5b0df62fe50ac3025a1e960d28c961dbf6c23adea09f1",
+    "scripts/creatures/progression.gd": "80d14f029e75856b711b99681dd09dd42887f45f13cdc31d125832f92a232881",
+    "data/config/essence.json": "40e6ee506907e6ed7f97e190d35bc49d3963b4048d479a7486197fc4b97dfd31"
+  },
+  "main_patch_sha256": "d537be0af89056615e4858da5704e933fbc3db400687662dfb24da758162715b",
+  "frozen_successor_patch_sha256": "92a1ec696fcb779bd0722f783570f4c6ae01820289525a73b2ac6debd8792728",
+  "raw_independent_r1_hold_sha256": "793878b0b5f7ddb43eb3a2c5fe6734d9068e3ec52e06772cd7b4b700fc2b0309",
+  "R1_change": "unknown/contradictory terminal replies retained; strict known-precommit whitelist + exact booleans + no accepted evidence; historical retained receipt latches durability; success checks actual bool saved/durable and existing owner+world witness",
+  "R2_change": "complete main cut includes pure Progression prerequisites and owned creature_training_readout preload; old main functions byte preserved",
+  "additional_correction": "missing typed cap mirror/cap refuses instead of inventing L10",
+  "existing_progression_functions_byte_preserved": [
+    "config",
+    "xp_to_next",
+    "xp_award_for",
+    "party_share",
+    "rest_xp",
+    "creature_bed_full_heal_seconds",
+    "rest_seconds_remaining",
+    "stat_at_level",
+    "roll_wild_level",
+    "bond_stat_scale",
+    "individuality_multiplier",
+    "appraisal_stars",
+    "trait_unlocked"
+  ],
+  "added_pure_progression_methods": [
+    "_staged_row_valid",
+    "raw_xp_award_for",
+    "scaled_combat_xp",
+    "scaled_party_combat_xp",
+    "staged_combat_party_xp",
+    "staged_next_level",
+    "staged_training_condition",
+    "staged_xp"
+  ],
+  "essence_progression_references": [
+    "config",
+    "staged_combat_party_xp",
+    "staged_next_level",
+    "staged_training_condition",
+    "xp_to_next"
+  ],
+  "static_preload_dependencies": {
+    "scripts/ui/altar_service.gd": [
+      "scripts/ui/altar_panel.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/creatures/progression.gd",
+      "scripts/world/death_satchel_rules.gd",
+      "autoload/party.gd"
+    ],
+    "scripts/ui/altar_panel.gd": [
+      "scripts/ui/input_owner.gd",
+      "scripts/ui/ui_tokens.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/ui/creature_training_readout.gd",
+      "autoload/party.gd"
+    ],
+    "scripts/ui/altar_station_interaction.gd": [
+      "scripts/world/interactable.gd",
+      "scripts/ui/altar_service.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/world/realm_world_records.gd"
+    ],
+    "scripts/ui/creature_training_readout.gd": [
+      "scripts/data/redesign_data.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/world/death_satchel_rules.gd",
+      "autoload/party.gd"
+    ],
+    "scripts/creatures/essence.gd": [
+      "scripts/data/redesign_data.gd",
+      "scripts/data/redesign_state.gd",
+      "scripts/creatures/progression.gd",
+      "scripts/world/death_satchel_rules.gd",
+      "autoload/inventory.gd",
+      "autoload/party.gd",
+      "scripts/creatures/water_species_catalog.gd"
+    ],
+    "scripts/creatures/progression.gd": [
+      "scripts/creatures/creature_condition.gd"
+    ]
+  },
+  "config_numeric_changes_from_frozen": false,
+  "frozen_4839_and_raw_HOLD_unchanged": true,
+  "shared_source_changed": false,
+  "live_source_changed": false,
+  "engine_unit_ci_gpu_runs": 0,
+  "checks": "JSON/hash/LF, static dependency closure, all13 existing Progression bodies byte preserved, frozen hash preservation, lossless source diff. Authoring checks only; no runtime/protocol pass claimed.",
+  "independent_r2_verdict": "Pending exact ROOT read-only re-check",
+  "acceptance_credit": false,
+  "landing_ready": false,
+  "exact_main_patch_reconstruction": "git apply --check then apply in ignored reconstruction, all7 result hashes match; no tracked source applied"
+}
