@@ -64,9 +64,10 @@ class PreparedProbe:
 	var busy := false
 	func fallback_busy() -> bool:
 		return busy
-	func finish_fallback() -> void:
+	func finish_fallback() -> bool:
 		finishes += 1
 		busy = true # A completion listener has started a replacement fallback.
+		return true
 	func _write_world_snapshot(_game: Object, _world: String) -> bool:
 		writes += 1
 		return true

@@ -486,13 +486,13 @@ func journal_actor_vitals_prepared(peer_id: int, character: String, accepted: Di
 		return {"ok": false, "code": "not_admitted", "durable": false}
 	var world: RefCounted = game.get("world")
 	var saver: RefCounted = game.get("save_system")
-	var namespace := str(world.get("reward_delivery_namespace"))
+	var world_namespace := str(world.get("reward_delivery_namespace"))
 	var world_id := str(world.get("world_id"))
 	if saver == null or not saver.has_method("save_world_prepared") \
-			or bool(saver.call("fallback_busy")) or namespace.is_empty() or world_id.is_empty():
+			or bool(saver.call("fallback_busy")) or world_namespace.is_empty() or world_id.is_empty():
 		return {"ok": false, "code": "world_not_prepared", "durable": false}
-	var id := ACTOR_VITALS.delivery_id(namespace, character, str(accepted.get("uid", "")))
-	var row := ACTOR_VITALS.next_record(world_id, namespace, _actor_vitals_session_id,
+	var id := ACTOR_VITALS.delivery_id(world_namespace, character, str(accepted.get("uid", "")))
+	var row := ACTOR_VITALS.next_record(world_id, world_namespace, _actor_vitals_session_id,
 		character, str(accepted.get("uid", "")), float(accepted.get("max_hp", -1.0)),
 		float(accepted.get("expected_hp", -1.0)), bool(accepted.get("expected_fainted", false)),
 		float(accepted.get("hp", -1.0)), bool(accepted.get("fainted", false)),

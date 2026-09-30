@@ -17,7 +17,7 @@ static func delivery_id(world_namespace: String, character_id: String, uid: Stri
 	return KIND + ":" + ("%s\n%s\n%s" % [world_namespace, character_id, uid]).sha256_text()
 
 
-static func valid(raw: Variant, owner: String = "", namespace: String = "") -> bool:
+static func valid(raw: Variant, owner: String = "", world_namespace: String = "") -> bool:
 	if not raw is Dictionary or raw.size() != KEYS.size():
 		return false
 	for key: String in KEYS:
@@ -30,7 +30,7 @@ static func valid(raw: Variant, owner: String = "", namespace: String = "") -> b
 			or not raw.status in ["pending", "accepted", "settled"] \
 			or raw.delivery_id != delivery_id(raw.world_namespace, raw.character_id, raw.creature_uid) \
 			or (not owner.is_empty() and raw.character_id != owner) \
-			or (not namespace.is_empty() and raw.world_namespace != namespace):
+			or (not world_namespace.is_empty() and raw.world_namespace != world_namespace):
 		return false
 	if not _integer(raw.character_revision, 1, 2147483647) or not _integer(raw.journal_revision, 1, 2147483647):
 		return false
@@ -57,7 +57,7 @@ static func valid(raw: Variant, owner: String = "", namespace: String = "") -> b
 		and _integer(receipt.vitals_revision, 1, 2147483647)
 
 
-static func next_record(world_id: String, namespace: String, session_id: String,
+static func next_record(world_id: String, world_namespace: String, session_id: String,
 		character: String, uid: String, maximum: float, expected_hp: float, expected_fainted: bool,
 		hp: float, fainted: bool,
 		character_revision: int, receipt: Dictionary, previous: Variant) -> Dictionary:
@@ -65,7 +65,7 @@ static func next_record(world_id: String, namespace: String, session_id: String,
 		return {} # Validate finite whole numbers before any int normalization.
 	var journal_revision := 1
 	if previous != null:
-		if not valid(previous, character, namespace) or previous.creature_uid != uid:
+		if not valid(previous, character, world_namespace) or previous.creature_uid != uid:
 			return {}
 		if int(previous.character_revision) >= character_revision \
 				or (previous.receipt.encounter_id == receipt.get("encounter_id") \
@@ -79,13 +79,13 @@ static func next_record(world_id: String, namespace: String, session_id: String,
 		if previous.status != "accepted":
 			expected_hp = float(previous.expected_hp)
 			expected_fainted = bool(previous.expected_fainted)
-	var row := {"version": VERSION, "kind": KIND, "delivery_id": delivery_id(namespace, character, uid),
-		"world_id": world_id, "world_namespace": namespace, "session_id": session_id,
+	var row := {"version": VERSION, "kind": KIND, "delivery_id": delivery_id(world_namespace, character, uid),
+		"world_id": world_id, "world_namespace": world_namespace, "session_id": session_id,
 		"character_id": character, "creature_uid": uid, "max_hp": maximum, "hp": hp, "fainted": fainted,
 		"expected_hp": expected_hp, "expected_fainted": expected_fainted,
 		"character_revision": character_revision, "journal_revision": journal_revision,
 		"receipt": receipt.duplicate(true), "status": "pending"}
-	return row if valid(row, character, namespace) else {}
+	return row if valid(row, character, world_namespace) else {}
 
 
 static func receipt_valid(raw: Variant, uid: String) -> bool:
@@ -116,14 +116,14 @@ static func escrow_errors(raw: Variant, owner: String) -> Array[String]:
 	return errors
 
 
-static func world_errors(raw: Variant, namespace: String, world_id: String = "") -> Array[String]:
+static func world_errors(raw: Variant, world_namespace: String, world_id: String = "") -> Array[String]:
 	var errors: Array[String] = []
 	if not raw is Dictionary:
 		return ["world deliveries must be an object"]
 	for key: Variant in raw:
 		var row: Variant = raw[key]
 		if str(key).begins_with(KIND + ":") or (row is Dictionary and row.get("kind") == KIND):
-			if namespace.is_empty() or not valid(row, "", namespace) \
+			if world_namespace.is_empty() or not valid(row, "", world_namespace) \
 					or (not world_id.is_empty() and row.world_id != world_id) \
 					or row.status == "settled" or key != row.delivery_id:
 				errors.append("malformed world actor vitals delivery " + str(key))
@@ -140,18 +140,18 @@ static func has_pending_owner(records: Dictionary, character: String) -> bool:
 
 ## Generic historical reward ops cannot inject or ACK these records. The new
 ## discriminated arms retain exact latest revision/receipt binding.
-static func valid_world_op(op: Dictionary, records: Dictionary, namespace: String) -> bool:
-	if namespace.is_empty() or op.get("scope") != "world" or not op.get("delivery_id") is String:
+static func valid_world_op(op: Dictionary, records: Dictionary, world_namespace: String) -> bool:
+	if world_namespace.is_empty() or op.get("scope") != "world" or not op.get("delivery_id") is String:
 		return false
 	var previous: Variant = records.get(op.delivery_id)
 	match op.get("op"):
 		"actor_vitals_journal":
-			if op.size() != 4 or not op.has("delivery") or not valid(op.delivery, "", namespace) \
+			if op.size() != 4 or not op.has("delivery") or not valid(op.delivery, "", world_namespace) \
 					or op.delivery.delivery_id != op.delivery_id or op.delivery.status != "pending":
 				return false
 			if previous == null:
 				return int(op.delivery.journal_revision) == 1
-			if not valid(previous, op.delivery.character_id, namespace) \
+			if not valid(previous, op.delivery.character_id, world_namespace) \
 					or previous.creature_uid != op.delivery.creature_uid \
 					or int(op.delivery.journal_revision) != int(previous.journal_revision) + 1 \
 					or int(op.delivery.character_revision) <= int(previous.character_revision):
@@ -168,7 +168,7 @@ static func valid_world_op(op: Dictionary, records: Dictionary, namespace: Strin
 					return false
 			return op.character_id is String and not op.character_id.is_empty() \
 				and previous is Dictionary and previous.get("character_id") == op.character_id \
-				and valid(previous, op.character_id, namespace) and previous.status == "pending" \
+				and valid(previous, op.character_id, world_namespace) and previous.status == "pending" \
 				and equivalent(previous.journal_revision, op.journal_revision) and equivalent(previous.receipt, op.receipt)
 	return false
 
@@ -180,7 +180,7 @@ static func personal_baseline_matches(owned: Dictionary, incoming: Dictionary, p
 	if not valid(incoming) or owned.get("uid") != incoming.creature_uid \
 			or not equivalent(owned.get("max_hp"), incoming.max_hp):
 		return false
-	var matches_after := equivalent(owned.get("hp"), incoming.hp) and owned.get("fainted") == incoming.fainted
+	var matches_after: bool = equivalent(owned.get("hp"), incoming.hp) and owned.get("fainted") == incoming.fainted
 	if previous != null:
 		if not valid(previous, incoming.character_id, incoming.world_namespace) \
 				or previous.status != "settled" or previous.creature_uid != incoming.creature_uid \
@@ -216,9 +216,9 @@ static func apply_owner(game: Node, incoming: Variant) -> Dictionary:
 	if player == null or world == null:
 		return {"ok": false, "code": "not_ready"}
 	var character := str(player.get("character_id"))
-	var namespace := str(world.get("reward_delivery_namespace"))
-	if character.is_empty() or namespace.is_empty() \
-			or not valid(incoming, character, namespace) or incoming.world_id != str(world.get("world_id")):
+	var world_namespace := str(world.get("reward_delivery_namespace"))
+	if character.is_empty() or world_namespace.is_empty() \
+			or not valid(incoming, character, world_namespace) or incoming.world_id != str(world.get("world_id")):
 		return {"ok": false, "code": "foreign_vitals"}
 	if not equivalent(world.get("reward_deliveries").get(incoming.delivery_id), incoming):
 		return {"ok": false, "code": "superseded_world_vitals"}
@@ -230,7 +230,7 @@ static func apply_owner(game: Node, incoming: Variant) -> Dictionary:
 	var previous: Variant = escrow.get(incoming.delivery_id)
 	var exact_retry := false
 	if previous != null:
-		if not valid(previous, character, namespace) or previous.status != "settled":
+		if not valid(previous, character, world_namespace) or previous.status != "settled":
 			return {"ok": false, "code": "malformed_vitals_marker"}
 		if int(previous.journal_revision) > int(incoming.journal_revision):
 			return {"ok": false, "code": "stale_vitals"}
@@ -268,7 +268,7 @@ static func apply_owner(game: Node, incoming: Variant) -> Dictionary:
 		and float(previous.max_hp) == float(incoming.max_hp) \
 		and current_hp == float(previous.hp) and current_fainted == bool(previous.fainted)
 	var retry: Dictionary = session.call("_owner_vitals_retry_receipt", player, world, incoming.creature_uid)
-	var matches_unsaved := valid(retry, character, namespace) \
+	var matches_unsaved: bool = valid(retry, character, world_namespace) \
 		and retry.world_id == incoming.world_id and retry.delivery_id == incoming.delivery_id \
 		and equivalent(retry.max_hp, incoming.max_hp) \
 		and equivalent(retry.expected_hp, incoming.expected_hp) and retry.expected_fainted == incoming.expected_fainted \

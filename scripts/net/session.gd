@@ -1819,8 +1819,8 @@ func _owner_vitals_retry_receipt(player: RefCounted, world: RefCounted, uid: Str
 func _retain_owner_vitals_retry(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
 	var actor := preload("res://scripts/net/actor_vitals_delivery.gd")
 	var character := str(player.get("character_id"))
-	var namespace := str(world.get("reward_delivery_namespace"))
-	if character.is_empty() or not actor.valid(row, character, namespace) \
+	var world_namespace := str(world.get("reward_delivery_namespace"))
+	if character.is_empty() or not actor.valid(row, character, world_namespace) \
 			or row.world_id != str(world.get("world_id")) \
 			or not actor.equivalent(world.get("reward_deliveries").get(row.delivery_id), row):
 		return false
