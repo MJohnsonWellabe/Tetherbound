@@ -1,0 +1,204 @@
+{
+  "archive_pin": "273231a942068b5312b125d8f78a69e269af4913",
+  "executed_source": "360ee7a6cda9e685891586ba95332bc582f34091",
+  "receipt": {
+    "source": "360ee7a6cda9e685891586ba95332bc582f34091",
+    "command": [
+      "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+      "--fullscreen",
+      "--resolution",
+      "1920x1080",
+      "--rendering-method",
+      "gl_compatibility",
+      "--path",
+      "D:\\tetherbound\\redesign-hub",
+      "--script",
+      "res://tests/smoke_village_services_redesign.gd"
+    ],
+    "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\village-services-r3-profile",
+    "native_exit": 0,
+    "elapsed_seconds": 448.7029999999795
+  },
+  "log_git_blob_sha256": "8102e3a4628cebbbe86ad6e11babba49eea9c5c6e9655d6a48ca6e0d0f70ac5f",
+  "kind": "independent source/log inspection only; no engine rerun",
+  "house_events": [
+    {
+      "time": "day",
+      "house": "mira_shop",
+      "event_xz_distance_m": 0.466694857160436
+    },
+    {
+      "time": "day",
+      "house": "tam_workshop",
+      "event_xz_distance_m": 0.44234542271849087
+    },
+    {
+      "time": "day",
+      "house": "bram_inn",
+      "event_xz_distance_m": 0.4683476296128772
+    },
+    {
+      "time": "day",
+      "house": "halda_house",
+      "event_xz_distance_m": 0.5039809254326992
+    },
+    {
+      "time": "day",
+      "house": "research_house",
+      "event_xz_distance_m": 0.5190290892705344
+    },
+    {
+      "time": "day",
+      "house": "oskar_house",
+      "event_xz_distance_m": 0.24986746086675485
+    },
+    {
+      "time": "day",
+      "house": "alder_house",
+      "event_xz_distance_m": 0.5182119755708072
+    },
+    {
+      "time": "day",
+      "house": "orchard_house",
+      "event_xz_distance_m": 0.5190758472516318
+    },
+    {
+      "time": "night",
+      "house": "mira_shop",
+      "event_xz_distance_m": 0.445008723039223
+    },
+    {
+      "time": "night",
+      "house": "tam_workshop",
+      "event_xz_distance_m": 0.49253340607515983
+    },
+    {
+      "time": "night",
+      "house": "bram_inn",
+      "event_xz_distance_m": 0.46316986410603095
+    },
+    {
+      "time": "night",
+      "house": "halda_house",
+      "event_xz_distance_m": 0.42091238280668525
+    },
+    {
+      "time": "night",
+      "house": "research_house",
+      "event_xz_distance_m": 0.5084305858472725
+    },
+    {
+      "time": "night",
+      "house": "oskar_house",
+      "event_xz_distance_m": 0.5065836827218198
+    },
+    {
+      "time": "night",
+      "house": "alder_house",
+      "event_xz_distance_m": 0.4668796960342144
+    },
+    {
+      "time": "night",
+      "house": "orchard_house",
+      "event_xz_distance_m": 0.4661923785305813
+    }
+  ],
+  "named_service_prompts": [
+    {
+      "time": "day",
+      "name": "Mira",
+      "prompt": "Greet Mira",
+      "actual_xz_distance_m": 2.2164798969798936
+    },
+    {
+      "time": "day",
+      "name": "Tam",
+      "prompt": "Greet Tam",
+      "actual_xz_distance_m": 2.3037425311436155
+    },
+    {
+      "time": "day",
+      "name": "Bram",
+      "prompt": "Greet Bram",
+      "actual_xz_distance_m": 2.305802638047108
+    },
+    {
+      "time": "day",
+      "name": "Oskar",
+      "prompt": "Greet Oskar",
+      "actual_xz_distance_m": 2.2543464055464053
+    },
+    {
+      "time": "day",
+      "name": "Maren",
+      "prompt": "Greet Maren",
+      "actual_xz_distance_m": 2.246087937121786
+    },
+    {
+      "time": "night",
+      "name": "Mira",
+      "prompt": "Greet Mira",
+      "actual_xz_distance_m": 2.2558723245086365
+    },
+    {
+      "time": "night",
+      "name": "Tam",
+      "prompt": "Greet Tam",
+      "actual_xz_distance_m": 2.250268533531053
+    },
+    {
+      "time": "night",
+      "name": "Bram",
+      "prompt": "Greet Bram",
+      "actual_xz_distance_m": 2.277524945799936
+    },
+    {
+      "time": "night",
+      "name": "Oskar",
+      "prompt": "Greet Oskar",
+      "actual_xz_distance_m": 2.2449599811577943
+    },
+    {
+      "time": "night",
+      "name": "Maren",
+      "prompt": "Greet Maren",
+      "actual_xz_distance_m": 2.2823632716947144
+    }
+  ],
+  "tournament_events": [
+    [
+      "day",
+      "keeper"
+    ],
+    [
+      "day",
+      "board"
+    ],
+    [
+      "night",
+      "keeper"
+    ],
+    [
+      "night",
+      "board"
+    ]
+  ],
+  "error_lines": [],
+  "warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light"
+  ],
+  "final_pass": true,
+  "driver_blob_equal": true,
+  "old_native_exits": {
+    "r1": 1,
+    "r2": 1
+  }
+}

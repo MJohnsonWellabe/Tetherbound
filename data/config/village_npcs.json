@@ -488,8 +488,8 @@
       "name": "Maren",
       "config_key": "field_researcher",
       "position": [
-        -343.0,
-        501.0
+        66,
+        7
       ],
       "facing_deg": -71.6,
       "greeting": "village_field_researcher",
