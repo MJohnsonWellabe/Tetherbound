@@ -1926,8 +1926,9 @@
     "native-receipt.json": {
       "original_sha256": "9ef021595063ac39be952e4ad339718da08f6764fca81817a10a54980eaaab70",
       "original_bytes": 11512,
-      "lossless_original": "native-receipt.json",
-      "readable_sha256": "9ef021595063ac39be952e4ad339718da08f6764fca81817a10a54980eaaab70"
+      "lossless_original": "native-receipt.json.raw",
+      "readable_sha256": "9ef021595063ac39be952e4ad339718da08f6764fca81817a10a54980eaaab70",
+      "readable_transform": "CRLF to LF only; original JSON bytes retained in .json.raw"
     },
     "native.txt": {
       "original_sha256": "919e6bd77180a10f9d14e96a2f8b608dbaf69d7231e5a9ca3d8e8bab6bb2e7c0",

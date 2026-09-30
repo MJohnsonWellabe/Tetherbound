@@ -172,5 +172,28 @@
   ],
   "all_observed_raw_match": true,
   "all_archive_differences_explained": true,
-  "scope": "No new engine run or image processing. Git text normalization does not change PNG bytes or observed raw witness; original hashes intentionally retained."
+  "scope": "No new engine run or image processing. Git text normalization does not change PNG bytes or observed raw witness; original hashes intentionally retained.",
+  "readable_terminal_cleanup": [
+    {
+      "file": "parser-combat_manager.txt",
+      "lossless_original": "parser-combat_manager.txt.raw",
+      "original_observed_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "current_readable_sha256": "c5dd95c9eab073523046778b6edec97c15bdce4fe8104f82b574aab1870161a1",
+      "transform": "Original native CRLF bytes reconstructed and verified against prior observed raw hash; readable archive trims only redundant terminal blank line."
+    },
+    {
+      "file": "parser-peer_runner.txt",
+      "lossless_original": "parser-peer_runner.txt.raw",
+      "original_observed_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "current_readable_sha256": "c5dd95c9eab073523046778b6edec97c15bdce4fe8104f82b574aab1870161a1",
+      "transform": "Original native CRLF bytes reconstructed and verified against prior observed raw hash; readable archive trims only redundant terminal blank line."
+    },
+    {
+      "file": "parser-smoke_combat_camera.txt",
+      "lossless_original": "parser-smoke_combat_camera.txt.raw",
+      "original_observed_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "current_readable_sha256": "c5dd95c9eab073523046778b6edec97c15bdce4fe8104f82b574aab1870161a1",
+      "transform": "Original native CRLF bytes reconstructed and verified against prior observed raw hash; readable archive trims only redundant terminal blank line."
+    }
+  ]
 }

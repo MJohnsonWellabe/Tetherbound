@@ -6,7 +6,8 @@
     "native-receipt.json": {
       "original_sha256": "e4a63b26b15b32404e5d9409df8648db09c1ac81feb7deeec443d86c9375f691",
       "original_bytes": 4051,
-      "lossless_original": "native-receipt.json"
+      "lossless_original": "native-receipt.json.raw",
+      "readable_transform": "CRLF to LF only; original JSON bytes retained in .json.raw"
     },
     "parser.txt": {
       "original_sha256": "156e9bcd7c641746b70df676f591cbbc8dca072e68207f774533453c7d384841",

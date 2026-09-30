@@ -1,0 +1,62 @@
+{
+  "source": "2df26db877348f5d999dddcb160fd0f9ad4889f5",
+  "tracked_clean_before": true,
+  "source_raw_hashes_before": {
+    "scripts/combat/combat_manager.gd": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+    "scripts/combat/fight_camera.gd": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+    "scripts/player/camera_rig.gd": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+    "data/config/camera.json": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "tests/smoke_combat_camera.gd": "4501a4221879674425f063117a368114545d61770abc225bf17b51c43a536ac4",
+    "tests/test_fight_camera.gd": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d"
+  },
+  "engine_path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "environment": {
+    "APPDATA": "D:\\tetherbound\\combat-camera-live-r4-user\\APPDATA",
+    "LOCALAPPDATA": "D:\\tetherbound\\combat-camera-live-r4-user\\LOCALAPPDATA"
+  },
+  "runs": [
+    {
+      "label": "parser",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--headless",
+        "--check-only",
+        "--script",
+        "tests/smoke_combat_camera.gd"
+      ],
+      "source": "2df26db877348f5d999dddcb160fd0f9ad4889f5",
+      "timeout_s": 60,
+      "pid": 5520,
+      "native_exit": 1,
+      "elapsed_seconds": 1.452999999979511,
+      "raw_sha256": "156e9bcd7c641746b70df676f591cbbc8dca072e68207f774533453c7d384841",
+      "errors": [
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"bounded_stop\" variable because the value doesn't have a set type.\r",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"ally_stop\" variable because the value doesn't have a set type.\r",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"foe_stop\" variable because the value doesn't have a set type.\r",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"ally_live\" variable because the value doesn't have a set type.\r",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"foe_live\" variable because the value doesn't have a set type.\r",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"live\" variable because the value doesn't have a set type.\r",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"good\" variable because the value doesn't have a set type.\r",
+        "ERROR: Failed to load script \"res://tests/smoke_combat_camera.gd\" with error \"Parse error\".\r"
+      ]
+    }
+  ],
+  "scope": "One smoke parser, one added rotated-model regression, then one graphical Low/Compatibility1920x1080 live nine-pair capture; staged roster/poses and setup baselines; native result is not independent blind acceptance.",
+  "source_raw_hashes_after": {
+    "scripts/combat/combat_manager.gd": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+    "scripts/combat/fight_camera.gd": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+    "scripts/player/camera_rig.gd": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+    "data/config/camera.json": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "tests/smoke_combat_camera.gd": "4501a4221879674425f063117a368114545d61770abc225bf17b51c43a536ac4",
+    "tests/test_fight_camera.gd": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d"
+  },
+  "same_source_before_after": true,
+  "head_after": "2df26db877348f5d999dddcb160fd0f9ad4889f5",
+  "tracked_clean_after": true
+}
