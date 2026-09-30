@@ -33,7 +33,7 @@ choices open and continue independent slices. No count of passing checks
 alone closes a chapter.
 **The active plan is the owner redesign (owner, 2026-09-29).**
 `CODEX_START_HERE.md` is the build plan for every lane, Claude or Codex:
-§1 the owner decisions RD-01..RD-36, §4 the waves (0–3) and lanes, §5 the
+§1 the owner decisions RD-01..RD-37, §4 the waves (0–3) and lanes, §5 the
 feature register F16–F49 (34 features, 179 criteria), §6 the work order,
 owned files and dependencies of each feature, §7 landing, hourly push and
 board rules, and §7.5 how still-open F01–F15 criteria fold into the new
@@ -274,14 +274,14 @@ hours. A git-tracked lock loses the race it exists to prevent.
 
 # 5. Testing
 
-**Owner override RD-36 (2026-09-29, CODEX_START_HERE §1/§7.2):** prioritize content and
+**Owner overrides RD-36/RD-37 (2026-09-29, CODEX_START_HERE §1/§7.2):** prioritize content and
 code generation; test only for required acceptance evidence or substantial rework risk.
 Batch necessary checks across coherent changes and reuse passing evidence for unchanged
 relevant source and paths. Avoid tests that merely mirror implementation or low-risk edits.
 Each criterion still needs its own independent strict verdict and named proof; required
 save/authority/transaction, real-path and code-blind checks remain. Full suites run once
-per coherent batch when explicitly required or justified by broad save/autoload/shared
-system risk, never automatically once per criterion or docs/evidence-only commit. After a
+per coherent batch when explicitly required or scoped checks cannot cover substantial
+integration risk, never automatically once per criterion or docs/evidence-only commit. After a
 fix, rerun affected checks; broaden only for new wider risk. Record source SHA, risks covered
 and reused evidence. Existing tests and required CI are never skipped, disabled or quarantined.
 Import only for a missing cache or changes that require it. This overrides older mandatory
@@ -296,8 +296,8 @@ per-criterion/per-push repetition in this workflow; it does not weaken ACCEPTANC
 - **Smoke:** `godot --headless --path . --script tests/smoke_<name>.gd`
 - Run required named proofs and necessary affected checks under RD-36. Use
   `tests/smoke_art.gd` when creature/model changes risk construction regressions;
-  the **full** suite is needed once per batch for broad save-format or autoload
-  changes. The redesign resets saves once (F16, RD-35: v27-and-older saves are
+  select the **full** suite only for an explicit acceptance requirement or
+  substantial integration risk that scoped checks cannot cover (RD-37). The redesign resets saves once (F16, RD-35: v27-and-older saves are
   refused, never overwritten); every later schema change migrates again and
   proves it with a fixture.
 - **New durable state is multiplayer-native from its first commit:** declare
@@ -512,18 +512,16 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
   code review. GitHub branch protection requires `ci-gate` and `traceability`.
   Verify the landing with `git merge-base --is-ancestor <sha> origin/main`,
   never with a badge or a summary line.
-- **Two CI tiers (owner, 2026-09-26).** Every PR and `main` push runs the FAST
-  tier: import, bake freshness, unit-test shards and the Windows export, about
-  10 minutes. The FULL tier (every smoke shard, net smokes, gate evidence,
-  known-red probes, about 25–35 minutes) runs every 8 hours on `main`, on
-  manual dispatch, and on a PR labelled `full-ci`. Label `full-ci` when a
-  change touches net/authority, save/migration or a harness that fast CI does
-  not run (adding the label starts a run; the two known-red jobs show red there
-  by design and do not fail the gate). A criterion counts as MET when its batch merges to `main` with a passing
-  independent re-check (owner, 2026-09-27). The scheduled FULL run on `main`
-  is the safety net: if it goes red, the lane whose landing broke it fixes it
-  first. Any lane that sees red on `main` bisects the landings since the last
-  green full run and fixes it, or leaves a note in STATE for the owning lane.
+- **Selective CI (owner RD-37, 2026-09-29).** Do not run units or full CI merely
+  because a PR touches code/data/scenes/tests. Cite only named acceptance or substantial
+  rework-risk checks; reuse unchanged relevant passing evidence. Choose `full-ci` only
+  for an explicit acceptance need or integration risk that scoped proofs cannot cover.
+  Current `ci.yml` gates engine jobs on that label; an unlabelled green proves process
+  checks only. Never remove a selected label to evade red, or skip/disable/quarantine
+  a test. A criterion counts only after independent MET and its batch lands on main.
+  Existing scheduled safety-net failures still belong to the breaking lane and must
+  be fixed. While checks/CI run, implement independent next tasks on lane branches
+  against a pushed dependency candidate if needed; keep dependency landing order.
 - **Offload long runs, never wait idle (coordinator, 2026-09-26).** Lane
   containers have 4 CPUs and no GPU; renders are software-rasterised. Start
   runs over ~2 minutes in the background and keep working; iterate captures
