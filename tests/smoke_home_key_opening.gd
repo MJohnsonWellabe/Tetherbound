@@ -16,7 +16,15 @@ func _exercise_grandpa_opening(sequence: Node, game: Node) -> void:
 	if not bool(naming.call("is_open")):
 		_fail("physical starter confirmation did not open the real creature name prompt")
 		return
-	# Existing production callback; the name is the prompt's authored prefill.
+	# The actual naming panel starts empty. Enter a real grid letter rather than
+	# assuming that the species label is an accepted name, then use the disclosed
+	# production confirmation callback to avoid a second grid-navigation fixture.
+	if str(naming.call("current_text")).is_empty():
+		await _opening_pad(&"menu_confirm")
+	if str(naming.call("current_text")).is_empty():
+		_fail("physical naming-grid confirmation did not enter a name")
+		return
+	print("HomeKey naming observation: controller grid entered '%s'; _confirm callback disclosed." % str(naming.call("current_text")))
 	naming.call("_confirm")
 	for index in 240:
 		if sequence.call("beat") == "return_starter":

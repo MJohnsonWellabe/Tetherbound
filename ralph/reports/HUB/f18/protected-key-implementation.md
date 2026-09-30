@@ -27,6 +27,12 @@ Scoped checks authored: the existing dialogue gift-capacity file retains all
 methods and adds save-failure rollback, durable unique retry and capacity/identity
 controls; `test_home_key_protection.gd` exercises actual inventory/death escrow
 and host-ledger forged requests. Parser/runtime and the real Grandpa gift path
-are pending the serialized engine token. Host/guest travel, 3–5 waystones per
+were queued for the serialized engine token. The exact source `4a0c66ea1` logic
+batch passed native0: 10 methods, 67 assertions, zero failures. The first real
+opening attempt ended native1 before the gift: the driver assumed an authored
+name prefill, but the real mandatory naming panel starts empty. The corrected
+driver enters a physical controller-grid letter before its disclosed confirm
+callback. The failed log and native receipt are retained; gift/death acceptance
+remains open until the affected witness passes. Host/guest travel, 3–5 waystones per
 live biome, glow/raise presentation and the ordinary-input return loop remain
 unbuilt. No F18 acceptance or clean-engine claim follows from these tests' source.
