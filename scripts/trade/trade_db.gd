@@ -165,6 +165,8 @@ func buy(inventory: RefCounted, vendor_id: String, item_id: String, count: int =
 
 ## Sell `count` of `item_id` to `vendor_id`, paid into `inventory`.
 func sell(inventory: RefCounted, vendor_id: String, item_id: String, count: int = 1) -> String:
+	if inventory != null and inventory.has_method("may_transfer_item") and not bool(inventory.call("may_transfer_item",item_id)):
+		return REFUSED_NOT_BOUGHT
 	if inventory == null or count <= 0:
 		return REFUSED_UNKNOWN
 	if not goods(vendor_id).has(item_id):
