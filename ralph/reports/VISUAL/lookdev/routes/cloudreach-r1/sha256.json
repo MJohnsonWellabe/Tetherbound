@@ -3,9 +3,15 @@
   "text_encoding": "Git canonical LF; original PNG bytes unchanged",
   "sha256": {
     "cloudreach-low.log": "38a7ace53b5b22824758ac739e271ce38c44e3477635a3b970166935faa26837",
+    "cloudreach-medium-high.log": "62abaa69d0ae8033f545e5be172d483e8a9e55f6aaefde45f173684bbfce33ed",
     "matrix.json": "1e870306aeed8fcf77417b26b27ce3a02f4ee2f0c4801e667818495927ff4bbf",
+    "recheck.txt": "36767922a0ca02b92abce10f69e16d04a8eae17b4e711a49da9905ba4bb7089a",
+    "sha256.json": "b46204ff8b3ce6a6edb6357b634e25071241051db6290d5383e0d2cbea788882",
     "low/end.png": "7ee225a9cc25fee9155e28d4f3f7def646cc46f8e325052e3a75992db9d38f9e",
     "low/route.json": "97da2efec52ab6982f6998a5884c40692dbaec351e48a57c8bd7d3b241045efb",
-    "low/start.png": "210ce6ab39d18ae2f6f301d7af0fb4178e476c86f22d6036be228f268126376c"
+    "low/start.png": "210ce6ab39d18ae2f6f301d7af0fb4178e476c86f22d6036be228f268126376c",
+    "medium/end.png": "85ae583365b73d0f8f7f41f92a162f745d15ba6aa164199bdb8929c4c0acdb09",
+    "medium/route.json": "8c8ed8feb6532b1fcb3af70289803048f7bc53396ab310ece4573d5ea0fcf41f",
+    "medium/start.png": "1dc5ef86e76cfbdce591a594b23fc351673057c43b0a08db3a61fe7874c8e0f9"
   }
 }

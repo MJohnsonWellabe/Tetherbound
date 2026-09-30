@@ -1,3 +1,4 @@
 Low: native0, 15064 frames, mean11.629ms/P9515.222/P9916.410/max260.463; all three actual waypoints reached.
+Medium: native0, 10423 frames, mean16.799ms/P9530.380/P9931.494/max89.554; all three actual waypoints reached.
 
 Locked Godot4.7/GTX1060 3GB/1920x1080. Actual production Cloudreach arrival road, live InputMap/collision navigator and day clock; one declared initial placement per case, own warmup. Medium/High reuse one world rather than two cold boots. Full samples/raw logs/receipts/six original PNGs retained. Eight of twelve current F26 route cases now have passing native receipts (three Water, MeadowsMedium/High, three Cloudreach); MeadowsLow and three Stormwood remain. No full visual-bar, all-material, earned traversal, live-fight, Ally or integrated-run claim. Compatibility default unchanged. Independent receipt and code-blind visual reviews pending.
