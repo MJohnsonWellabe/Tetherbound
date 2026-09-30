@@ -518,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T12:31:14Z",
+ "last_lane_refresh": "2026-09-30T13:43:28Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "At this refresh main has105/280 via PR482/d3980ed422: F17#0/#1/#2 landed. Actual ordinary farmhouse-door1920 day/night r2 native0/176.125s and independent strict DAY YES/NIGHT YES; full craft/four remaining rows open. Hub0c2f restored one admission/portal/mastery/loadout record prototype, typed serializer guards and save locks, unparsed/unrun. Canonical traveler3/20/0 native0; F18#0 opening gift/death/reload candidate MET still held by dependencies. Maren pose/services circuit source authored; no new route proof. Protected reward/roster/travel/owner-save/rejoin integrations incomplete."
+   "checkpoint": "At this refresh main has106/280 via PR484/686040ea38: F17#0/#1/#2 and F26#1/#2/#4 landed. Hub boundary57dc208f98 actual3methods44assertions0/native0 plus Session/services parsers0; initial parser-aborted zero-assertion red retained. Services r1/r2 native1 retained: imported arch descendant lookup, then nominal Tam-overlapping endpoint. Changed approach360ee7a6cd selects nearby actual CapsuleShape body-clear fronts, retaining8house/floor/.75m/door/controller/prompt checks; source PASS, native queued. F18#0 candidate MET held by F17 dependency; durable portal/vitals/travel/roster/reward integration incomplete."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat9220e1a521 targeted utility4methods58assertions/native0; corrected portable10/734/0 plus initialized host-debit16assertions/native0/no engine errors retained. Earlier9-method misleading ok markers/SCRIPT ERROR and leak reds remain archived. Native Low9-pair zero-overlap/controls plus narrow blind PASS retained; full camera craft open. Host utility dispatch, one-registry mastery/loadout ACK/owner-save/rejoin and typed roster mutations WIP. All F21\u201324 criteria open; no new MET."
+   "checkpoint": "Combat15af7c5021 owner boolSave before exact loadout ACK source; remote station CAS closed until shared admission/rejoin integration. Actualc9c5 actor-vitals/movement4methods79assertions0+two parsers native0; encounter rows unconnected to durable owner handoff. Prior portable10/734+initialized16 native0 retained; earlier9-method host-debit aborted SCRIPT ERROR is not PASS. All F21\u201324 criteria open; no new MET."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX3cfd5348c0: R8 executed8ab native12cases36originalPNG/0fail/21.344s, all12 arrivals once/endleases0/no ERROR. Fresh strict sampled Fireball identity/upgrade ranks1/3/5 PASS; full reference craft FAIL (solid round core/decorative ribbon/soft billows), ranks2/4 unproved. Functional VFX session now improves full craft; initial new sessions mutation-held. Library flag off/all F25 criteria open; all rejected rounds/canceled import retained."
+   "checkpoint": "VFXedd109dcfb porous lit Fireball impact source independently SOURCE PASS; combined minimal native family/shader/lifecycle batch queued/source-ready. Capacity failed before edits or engine. LastR8 actual8ab native12cases36PNG/0/21.344s; sampledFire identity/upgrade1/3/5 PASS but full reference craft FAIL,2/4 unproved. Library flag off/all F25 criteria open; rejected rounds/canceled broad import preserved."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "F26#4 full12 native computer1920 capture matrix strict MET: fresh Meadows3 on986b after Hall frontage; unchanged other9 reused. Exact raw PNG/sample/native/hash/reviews retained. Cloudreach Medium/High48 catalogue originals full-bar FAIL. F26#0/#3/#5 remain open; conservative Compatibility default. Training/homestead/VFX sessions continue separate source ownership; one serialized GPU writer."
+   "checkpoint": "F26#4 landed via PR484/main686040: full12 Low/Medium/High native1920 route captures strict MET, freshpost-Hall Meadows3/986b plus unchangedother9 reused. Original raw frame/process/native/hash/strict reviews retained, including High terminal1.1866GB after last process sample1.353GB; no limit retune. Cloudreach Medium/High48 catalogue originals full-bar FAIL; #0/#3/#5 open. Trainingc4a80de358 essence/release/candy and homesteadbbe9065442 renewable/site/farm intents are source-only, unmounted/authority/runtime pending; no MET."
   }
  ]
 }
