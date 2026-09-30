@@ -1,5 +1,6 @@
 {
   "status": "Historical four-shard batch RED; targeted12/287/0 repairs PASS. No full-suite green claim. False-ok SCRIPT ERROR methods excluded from passing reuse.",
+  "scope": "Only12 newly archived four-shard/scoped-repair streams and receipt/census blobs. Earlier parser evidence remains separately retained at its existing source commit.",
   "raw": [
     {
       "path": "affected-repairs-r1-receipt.json",
@@ -20,51 +21,6 @@
       "path": "failures-in-progress.json",
       "bytes": 19162,
       "sha256": "93fb1ad530aa18dc917ed4557422f50340e42c11f7e06f83cd4dba5de8bbf5e8"
-    },
-    {
-      "path": "neutral-actor-parser-final.txt",
-      "bytes": 73,
-      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
-    },
-    {
-      "path": "neutral-actor-parser-initial.txt",
-      "bytes": 364,
-      "sha256": "f4f910fb19307082d8f046c085033250e77c1e45005477e26de70736963eac39"
-    },
-    {
-      "path": "neutral-actor-parser-second.txt",
-      "bytes": 630,
-      "sha256": "39daa8acaa9dfd5832008320fb9fd7e031df4631e028245f9ef02d311e6fdbfc"
-    },
-    {
-      "path": "neutral-ledger-parser-final.txt",
-      "bytes": 73,
-      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
-    },
-    {
-      "path": "neutral-session-parser-initial.txt",
-      "bytes": 73,
-      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
-    },
-    {
-      "path": "neutral-vitals-test-parser-corrected.txt",
-      "bytes": 73,
-      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
-    },
-    {
-      "path": "neutral-vitals-test-parser-final.txt",
-      "bytes": 437,
-      "sha256": "bc541104503d673602b2c0d599a83c6711a70a6c0a61a4dacb068c5a144c56da"
-    },
-    {
-      "path": "unit-shard-1-initial-aborted-receipt.json",
-      "bytes": 3616,
-      "sha256": "148fd5b8cc8bdefc946932e22de1ec684c4b21ea979ca54748f51fee115b41d8"
-    },
-    {
-      "path": "unit-shard-1-initial-aborted.txt",
-      "bytes": 253964,
-      "sha256": "aa90fd59d686fe6b3fd315be4df05fe58a5a11f7bfde827372a969b8828734ce"
     },
     {
       "path": "unit-shard-1-receipt.json",
