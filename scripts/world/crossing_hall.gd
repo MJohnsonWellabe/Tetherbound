@@ -27,6 +27,7 @@ func build(config: Dictionary) -> bool:
 		_build_pedestal(entry)
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
+	_build_frontage()
 	refresh_from_game()
 	set_process(true)
 	return true
@@ -226,3 +227,54 @@ func display_snapshot() -> Dictionary:
 
 static func _position(values: Array) -> Vector3:
 	return Vector3(float(values[0]), float(values[1]), float(values[2]))
+
+
+## Road-facing public facade, in the same native-scale installed village kit.
+## It writes no world/personal state and adds no collision or ground footprint.
+func _build_frontage() -> void:
+	var settings: Dictionary = _config.get("frontage", {})
+	if settings.is_empty():
+		return
+	var frontage := Node3D.new()
+	frontage.name = "RoadFacingFrontage"
+	add_child(frontage)
+	for row: Dictionary in settings.get("modules", []):
+		var holder := Node3D.new()
+		holder.position = _position(row.at)
+		holder.rotation.y = deg_to_rad(float(row.get("yaw_deg", 0)))
+		frontage.add_child(holder)
+		_add_model(holder, "res://assets/buildings/quaternius_medieval/" + str(row.module) + ".gltf")
+	var sign_settings: Dictionary = settings.get("sign", {})
+	var sign := _label(frontage, str(sign_settings.get("text", "Crossing Hall")), _position(sign_settings.at))
+	sign.name = "HallDestinationSign"
+	sign.rotation.y = deg_to_rad(float(sign_settings.get("yaw_deg", 180)))
+	sign.font_size = int(sign_settings.get("font_size", 48))
+	sign.pixel_size = float(sign_settings.get("pixel_size", .008))
+	sign.modulate = Color(str(sign_settings.get("colour", "#ead8ab")))
+	var light_settings: Dictionary = settings.get("light", {})
+	for row: Dictionary in settings.get("lanterns", []):
+		var fixture := Node3D.new()
+		fixture.position = _position(row.at)
+		fixture.rotation.y = deg_to_rad(float(row.get("yaw_deg", 180)))
+		frontage.add_child(fixture)
+		_add_model(fixture, LANTERN_MODEL)
+		var material := StandardMaterial3D.new()
+		material.albedo_color = Color(str(light_settings.get("colour", "#ffd09b")))
+		material.emission_enabled = true
+		material.emission = material.albedo_color
+		material.emission_energy_multiplier = float(light_settings.get("glow_energy", .5))
+		var glow := MeshInstance3D.new()
+		var sphere := SphereMesh.new()
+		sphere.radius = float(light_settings.get("glow_radius_m", .065))
+		sphere.height = sphere.radius * 2
+		glow.mesh = sphere
+		glow.material_override = material
+		glow.position = _position(light_settings.get("glow_at", [0, .15, .12]))
+		fixture.add_child(glow)
+		var light := OmniLight3D.new()
+		light.position = glow.position
+		light.light_color = material.albedo_color
+		light.light_energy = float(light_settings.get("energy", 1.7))
+		light.omni_range = float(light_settings.get("range_m", 7.5))
+		light.shadow_enabled = false
+		fixture.add_child(light)
