@@ -401,7 +401,7 @@ func test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private() 
 		"healthy portable baseline cannot reseed accepted damage on reconnect")
 	assert_false(host.acknowledge_actor_vitals(id, "foreign_owner", owned.uid, 1, proposal.settlement_receipt))
 	assert_false(host.acknowledge_actor_vitals(id, "owner_a", owned.uid, 0, proposal.settlement_receipt))
-	var wrong := proposal.settlement_receipt.duplicate(true)
+	var wrong: Dictionary = proposal.settlement_receipt.duplicate(true)
 	wrong.receipt_id += "_forged"
 	assert_false(host.acknowledge_actor_vitals(id, "owner_a", owned.uid, 1, wrong))
 	assert_true(host.acknowledge_actor_vitals(id, "owner_a", owned.uid, 1, proposal.settlement_receipt),

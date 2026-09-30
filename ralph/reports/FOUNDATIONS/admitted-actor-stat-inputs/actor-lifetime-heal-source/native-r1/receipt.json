@@ -1,0 +1,42 @@
+{
+  "source": "8ca35627ef66d4e8bee012c97054d2a31b74e851",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-foundations",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_actor_vitals_authority.gd::test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation,test_actor_vitals_authority.gd::test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private,test_actor_vitals_authority.gd::test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown"
+  ],
+  "selectors": [
+    "test_actor_vitals_authority.gd::test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation",
+    "test_actor_vitals_authority.gd::test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private",
+    "test_actor_vitals_authority.gd::test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown"
+  ],
+  "before": {
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "tests/test_actor_vitals_authority.gd": "576894c83ecb445c9e2570da782f42488c1d65db4d24074b32867aa22cfcf5fe"
+  },
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "scope": "Exactly three new necessary risk methods: actor alias/generation, departed HP/handoff privacy, canonical paced Heal/Wind/rejoin commitment; independent SOURCEPASS8ca; actual player/solo/RPC/owner saveACK integration remains OPEN",
+  "pid": 12276,
+  "native_exit": 1,
+  "elapsed_seconds": 9.234000000054948,
+  "after": {
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "tests/test_actor_vitals_authority.gd": "576894c83ecb445c9e2570da782f42488c1d65db4d24074b32867aa22cfcf5fe"
+  },
+  "raw_sha256": "da8c108b12dc137fccaa5449577908cdb96a900a1a635dccd11266e745b57197",
+  "errors": [
+    "SCRIPT ERROR: Parse Error: Cannot infer the type of \"wrong\" variable because the value doesn't have a set type.\r",
+    "ERROR: Failed to load script \"res://tests/test_actor_vitals_authority.gd\" with error \"Parse error\".\r"
+  ],
+  "same_source": true,
+  "head_after": "8ca35627ef66d4e8bee012c97054d2a31b74e851"
+}

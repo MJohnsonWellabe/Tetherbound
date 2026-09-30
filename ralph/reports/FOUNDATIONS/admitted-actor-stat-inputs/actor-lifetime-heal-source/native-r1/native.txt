@@ -1,0 +1,16 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_actor_vitals_authority.gd::test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation,test_actor_vitals_authority.gd::test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private,test_actor_vitals_authority.gd::test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown: 1 of 670 test files
+SCRIPT ERROR: Parse Error: Cannot infer the type of "wrong" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://tests/test_actor_vitals_authority.gd:404)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_actor_vitals_authority.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+  FAIL  test_actor_vitals_authority.gd :: could not be parsed or instantiated
+
+1 tests, 0 assertions, 1 failed
+
+  res://tests/test_actor_vitals_authority.gd: parse error, see SCRIPT ERROR above
