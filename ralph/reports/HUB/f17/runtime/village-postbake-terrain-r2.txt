@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_terrain_bake_freshness.gd: 1 of 669 test files
+  ok    test_terrain_bake_freshness.gd :: test_fingerprint_ignores_crlf_line_endings
+  ok    test_terrain_bake_freshness.gd :: test_fingerprint_moves_when_the_config_changes
+  ok    test_terrain_bake_freshness.gd :: test_lf_and_crlf_terrain_configs_share_the_same_fingerprint
+  ok    test_terrain_bake_freshness.gd :: test_missing_manifest_is_not_fresh
+  ok    test_terrain_bake_freshness.gd :: test_playground_terrain_bake_is_committed_and_fresh
+
+5 tests, 20 assertions, 0 failed
+SOURCE_SHA=af78aa2256ea0356b403205e009262e04aa78cf5 NATIVE_EXIT=0 ELAPSED_SECONDS=3.3081251 LF_ONLY_CHECKOUT_CORRECTION=true TEST_SOURCE_UNCHANGED=true

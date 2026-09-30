@@ -19,6 +19,7 @@ const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const INN_EXTERIOR_IDENTITY := preload("res://scripts/world/inn_exterior_identity.gd")
 const MILL_POND_IDENTITY := preload("res://scripts/world/mill_pond_identity.gd")
 const VILLAGE_WELL_PRESENTATION := preload("res://scripts/world/village_well_presentation.gd")
+const CROSSING_HALL := preload("res://scripts/world/crossing_hall.gd")
 ## Read for its group and meta names only -- see `_declare_ground`.
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
@@ -201,6 +202,10 @@ func _place(spec: Dictionary) -> void:
 		return
 
 	building.name = "%s_%d" % [prefab_name, _placed]
+	building.set_meta("village_role", str(spec.get("id", prefab_name)))
+	if bool(spec.get("road_house", false)):
+		building.add_to_group("village_road_houses")
+		building.set_meta("house_name", str(spec.get("display_name", prefab_name)))
 	# Sunk slightly further so a structure never hovers on a residual slope.
 	# The prefabs' own stone border skirts (0.13m tall) stay proud of this.
 	building.position = Vector3(x, ground - 0.05, z)
@@ -234,6 +239,13 @@ func _exterior_identity(building: Node3D, prefab_name: String) -> void:
 		identity = MILL_POND_IDENTITY.new()
 	elif prefab_name == "well":
 		identity = VILLAGE_WELL_PRESENTATION.new()
+	elif prefab_name == "crossing_hall_shell":
+		identity = CROSSING_HALL.new()
+		building.add_child(identity)
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+		if not raw is Dictionary or not bool(identity.call("build", raw)):
+			push_error("Crossing Hall layout is missing or invalid")
+		return
 	else:
 		return
 	building.add_child(identity)

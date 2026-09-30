@@ -1,23 +1,9 @@
 extends "res://tests/test_case.gd"
 
-## OPTION-B village layout (owner decision 2026-09-29, "the shape of the village
-## still hasn't changed"): one straight main street at x = 10.5 with houses on
-## both sides and a small green around the well. Everything here is read from
-## the same data files the game and the terrain bake read, so host and guests
-## get the identical layout (nothing is generated per peer).
-##
-## Rules pinned:
-##  * the main street polyline is straight within 0.5 m of x = 10.5;
-##  * the well is on the street axis and is the centre of the declared green;
-##  * the inn no longer covers the (0,0) spawn;
-##  * no two building footprints overlap;
-##  * every villager, trainer and beacon in the village is outside every
-##    building footprint (a shopkeeper who stands inside the shop his own
-##    footprint encloses, and a beacon over an enterable house, are the named
-##    exceptions) and reachable from a road or the green;
-##  * the pond, rise, trail and stoneyard exits and Grandpa's door stay
-##    connected to the main street over the road polylines (1.5 m join);
-##  * neither moved building (inn, stone cottage) blocks the street.
+## RD-29/F17 formally supersedes OPTION-B's x=10.5 frontage poses.
+## Retain the actual straight-road, frontage, spawn-clearance, building overlap,
+## actor/marker reach and fixed field-exit connectivity contracts. Read the
+## authored new road and prefab doorway geometry rather than restamping poses.
 
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const VILLAGE_PATH := "res://data/config/village.json"
@@ -26,7 +12,8 @@ const TRAINERS_PATH := "res://data/config/bands/band1_lower_meadows/trainers.jso
 const OBJECTIVES_PATH := "res://data/progression/objectives.json"
 
 const STREET_ID := "village_main_street"
-const AXIS_X := 10.5
+const HOUSE := preload("res://scripts/world/playground_world.gd")
+const HOUSE_GEOMETRY := preload("res://scripts/world/grandpa_house.gd")
 const STRAIGHT_TOLERANCE_M := 0.5
 const JOIN_TOLERANCE_M := 1.5
 ## Villager, trainer and beacon positions this pass moved or created must sit
@@ -36,7 +23,7 @@ const MOVED_REACH_M := 3.0
 ## owner listed them as fixed). They must still be a short walk from a road.
 const FIXED_REACH_M := 13.0
 ## Only positions inside the village fence's neighbourhood are checked.
-const VILLAGE_BOX := Rect2(-45.0, -45.0, 90.0, 90.0)
+const VILLAGE_BOX := Rect2(-45.0, -65.0, 185.0, 130.0)
 ## The (0,0) spawn: data/config/terrain_playground.json spawn_pad centre.
 const SPAWN := Vector2.ZERO
 ## Shopkeepers who stand inside their own building's footprint.
@@ -44,7 +31,7 @@ const INTERIOR_PEOPLE := ["Mira", "Bram"]
 ## Beacons that name a walk-in house rather than a person outside it.
 const INTERIOR_BEACON_NAMES := ["Grandpa", "Grandpa's Village", "Your first creature"]
 ## Trainers and NPCs whose spot moved with this change.
-const MOVED_PEOPLE := ["Bram"]
+const MOVED_PEOPLE := ["Mira", "Tam", "Bram", "Oskar", "Nessa", "Halda"]
 const MOVED_TRAINER_IDS := ["trainer_oskar", "trainer_tam"]
 
 var _terrain: Dictionary = {}
@@ -180,49 +167,50 @@ func _reach(p: Vector2) -> float:
 ## --- the shape ---------------------------------------------------------------
 
 func test_the_main_street_exists_and_is_straight_at_x_10_5() -> void:
-	assert_true(_roads.has(STREET_ID), "paths.approaches carries %s" % STREET_ID)
+	# Historical function retained; RD-29 replaces its orientation, not straightness.
+	assert_true(_roads.has(STREET_ID), "the actual painted main street exists")
 	var street: PackedVector2Array = _roads.get(STREET_ID, PackedVector2Array())
 	assert_true(street.size() >= 2, "the main street has at least two points")
+	if street.size() < 2:
+		return
+	var direction := (street[-1] - street[0]).normalized()
 	var length := 0.0
-	for i in range(street.size()):
-		assert_true(absf(street[i].x - AXIS_X) <= STRAIGHT_TOLERANCE_M,
-			"main street point %d (%.2f,%.2f) is within %.1f m of x=%.1f" % [i, street[i].x, street[i].y, STRAIGHT_TOLERANCE_M, AXIS_X])
+	for i in street.size():
+		assert_true(absf((street[i] - street[0]).cross(direction)) <= STRAIGHT_TOLERANCE_M,
+			"every painted main-street point lies on one straight axis")
 		if i > 0:
-			length += street[i - 1].distance_to(street[i])
-	assert_true(length >= 15.0, "the main street is a real street, not a stub (%.1f m)" % length)
-	var north_end := minf(street[0].y, street[street.size() - 1].y)
-	assert_true(north_end <= -14.0 and north_end >= -18.0,
-		"the street starts at the north side lane, z about -16 (starts z=%.1f)" % north_end)
-
+			length += street[i-1].distance_to(street[i])
+	assert_true(length >= 15.0, "the main street is a real street, not a stub")
+	var door := HOUSE.HOUSE_AT + Vector2(HOUSE_GEOMETRY.INNER_W * .5 + HOUSE_GEOMETRY.WALL_T + 1.2, 0)
+	assert_true(street[0].distance_to(door) < .1, "street begins at the actual farmhouse door marker")
 
 func test_the_well_stands_on_the_street_axis_at_the_centre_of_the_green() -> void:
+	# RD-29 places the green beside the street; preserve the reachable small green.
 	var well := _well()
-	assert_true(absf(well.x - AXIS_X) <= 1.0, "the well is on the street axis (x=%.2f)" % well.x)
-	var street: PackedVector2Array = _roads.get(STREET_ID, PackedVector2Array())
-	assert_true(_dist_to_line(well, street) <= 1.0, "the well is on the street polyline")
+	assert_true(_dist_to_roads(well) <= 1.0, "the well has a connected walk-up road")
 	var green := _green()
-	assert_false(green.is_empty(), "paths.village_topology.green is declared")
-	assert_eq(_v(green.get("centre", [0, 0])), well, "the well is the centre of the green")
+	assert_false(green.is_empty(), "the green is declared")
+	assert_eq(_v(green.get("centre", [0, 0])), well, "the well centres the green")
 	var radius := float(green.get("radius_m", 0.0))
-	assert_true(radius >= 3.5 and radius <= 5.0, "the green is small, about 4 m (%.1f m)" % radius)
-
+	assert_true(radius >= 3.5 and radius <= 5.0, "the green remains about four metres")
+	var reach := _component(STREET_ID)
+	assert_true(reach.has("village_green_walk"), "the well walk joins the actual main street")
 
 func test_the_inn_faces_the_green_and_no_longer_covers_the_spawn() -> void:
 	var inn := _fp_named("inn")
 	assert_false(inn.is_empty(), "the inn has an apron footprint")
 	if inn.is_empty():
 		return
-	assert_false(Geometry2D.is_point_in_polygon(SPAWN, inn["poly"] as PackedVector2Array),
-		"the (0,0) spawn lies outside the inn footprint")
+	assert_false(Geometry2D.is_point_in_polygon(SPAWN, inn["poly"] as PackedVector2Array), "spawn remains outside the inn")
 	var placed := _structure("inn")
-	assert_eq(_v(placed.get("at", [])), inn["centre"], "the inn apron mirrors village.json")
-	assert_eq(float(placed.get("yaw_deg", 0.0)), 90.0, "the inn is turned 90 degrees to face the green")
-	var moved := _v(placed.get("at", [])).distance_to(Vector2(-1.5, -2.0))
-	assert_almost_eq(moved, 4.1, 0.15, "the inn moved about 4.1 m")
-	# The spawn also keeps clear of the inn's own doorstep.
-	assert_true(SPAWN.distance_to(_v(_doorstep_near(_v(placed.get("at", []))).get("at", [0, 0]))) >= 3.0,
-		"the spawn is not on the inn's doorstep")
-
+	assert_eq(_v(placed.get("at", [])), inn["centre"], "inn apron mirrors actual placement")
+	var street: PackedVector2Array = _roads[STREET_ID]
+	var nearest := Geometry2D.get_closest_point_to_segment(inn["centre"], street[0], street[-1])
+	var yaw := deg_to_rad(float(placed.get("yaw_deg", 0)))
+	assert_true(Vector2(sin(yaw), cos(yaw)).dot((nearest - (inn["centre"] as Vector2)).normalized()) > .99, "native inn front faces the road")
+	var doorstep := _v(_doorstep_near(inn["centre"]).get("at", [0,0]))
+	assert_true(_dist_to_roads(doorstep) <= .1, "inn doorstep lies on its connected approach")
+	assert_true(SPAWN.distance_to(doorstep) >= 3.0, "spawn remains clear of the inn doorstep")
 
 func _doorstep_near(centre: Vector2) -> Dictionary:
 	var best: Dictionary = {}
@@ -241,12 +229,14 @@ func _doorstep_near(centre: Vector2) -> Dictionary:
 func test_the_stone_cottage_faces_the_street_from_the_greens_east_side() -> void:
 	var cottage := _structure("cottage_b")
 	var at := _v(cottage.get("at", []))
-	assert_almost_eq(at.distance_to(Vector2(19.0, -18.0)), 12.0, 0.1, "the cottage moved 12.0 m")
-	assert_true(at.x > _well().x + float(_green().get("radius_m", 0.0)), "the cottage stands east of the green")
-	assert_eq(float(cottage.get("yaw_deg", 0.0)), -90.0, "the cottage door faces west, toward the street")
-	var step := _doorstep_near(at)
-	assert_true(_v(step.get("at", [])).x < at.x, "the doorstep is on the street side of the cottage")
-
+	var street: PackedVector2Array = _roads[STREET_ID]
+	var nearest := Geometry2D.get_closest_point_to_segment(at, street[0], street[-1])
+	var yaw := deg_to_rad(float(cottage.get("yaw_deg", 0)))
+	var front := Vector2(sin(yaw), cos(yaw))
+	assert_true(front.dot((nearest - at).normalized()) > .99, "native cottage door faces the actual road")
+	var step := _v(_doorstep_near(at).get("at", []))
+	assert_true((step - at).dot(front) > 0, "threshold is on the cottage front side")
+	assert_true(_dist_to_roads(step) <= .1, "cottage doorstep has a connected approach")
 
 func test_no_two_building_footprints_overlap() -> void:
 	assert_true(_footprints.size() >= 6, "the village's footprints are authored (%d)" % _footprints.size())
@@ -335,16 +325,17 @@ func test_every_villager_and_trainer_is_outside_buildings_and_reachable() -> voi
 
 func test_bram_moved_with_the_inn_and_his_door_meets_the_green() -> void:
 	var inn := _structure("inn")
-	var inn_at := _v(inn.get("at", []))
-	var bram := Vector2.ZERO
+	var at := _v(inn.get("at", []))
+	var bram := Vector2.INF
 	for p: Variant in _people():
 		if str((p as Dictionary)["name"]) == "Bram":
 			bram = (p as Dictionary)["at"]
-	# inn_interior.gd::bar_position() is local (0,0,-4.39): under yaw 90 that is 4.39 m west of the inn centre.
-	assert_almost_eq(bram.distance_to(inn_at), 4.39, 0.05, "Bram stands at the moved inn's bar")
-	var step := _v(_doorstep_near(inn_at).get("at", [0, 0]))
-	assert_true(_dist_to_green(step) <= MOVED_REACH_M, "the inn door opens onto the green (%.1f m)" % _dist_to_green(step))
-
+	# Production inn bar local z=-4.39; rotate it with the actual placed inn.
+	var expected := at + Vector2(0, -4.39).rotated(-deg_to_rad(float(inn.get("yaw_deg", 0))))
+	assert_true(bram.distance_to(expected) < .05, "Bram stands at his installed inn bar")
+	var step := _v(_doorstep_near(at).get("at", []))
+	assert_true(_reach(step) <= MOVED_REACH_M, "inn door opens onto a walk-up route")
+	assert_true(_component(STREET_ID).has("The Inn"), "inn approach connects to main street")
 
 func test_every_village_beacon_is_outside_buildings_and_reachable() -> void:
 	var beacons: Array = []
@@ -416,7 +407,8 @@ func test_every_exit_stays_connected_to_the_main_street() -> void:
 	var berry: PackedVector2Array = _roads["village_berry_lane"]
 	assert_true(berry[berry.size() - 1].distance_to(Vector2(-7.2, -20.5)) <= 2.5, "Berry Lane still ends in the berry field")
 	var grandpa: PackedVector2Array = _roads["Grandpa's House"]
-	assert_true(grandpa[grandpa.size() - 1].distance_to(Vector2(-16.5, -16.0)) <= 0.01, "Grandpa's door end is unchanged")
+	var door := HOUSE.HOUSE_AT + Vector2(HOUSE_GEOMETRY.INNER_W * .5 + HOUSE_GEOMETRY.WALL_T + 1.2, 0)
+	assert_true(grandpa[0].distance_to(door) <= .01, "Grandpa approach begins at the real moved door")
 
 
 func test_the_trail_gate_is_reached_over_village_roads() -> void:
@@ -427,4 +419,9 @@ func test_the_trail_gate_is_reached_over_village_roads() -> void:
 	assert_true(reach.has("band1_lower_meadows"), "the band-1 spine to TrailGate joins the main street network")
 	var south: PackedVector2Array = _roads["village_south_street"]
 	var end := south[south.size() - 1]
-	assert_true(end.distance_to(Vector2(14.0, 20.0)) <= 0.01, "South Street meets the existing TrailGate waypoint")
+	var gates: Array = _json("res://data/config/village_boundary.json").gates.entries
+	var trail_gate := Vector2.INF
+	for entry: Dictionary in gates:
+		if entry.id == "TrailGate":
+			trail_gate = _v(entry.at)
+	assert_true(end.distance_to(trail_gate) <= .1, "South Street reaches the actual existing TrailGate")

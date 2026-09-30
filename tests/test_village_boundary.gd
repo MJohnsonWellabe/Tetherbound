@@ -37,25 +37,44 @@ class TerrainHeightWorld extends Node3D:
 	func ground_height_at(x: float, z: float) -> float:
 		return float(field.call("height_at", x, z))
 
-## Places that must be inside the fence, and where each coordinate comes from.
-## Written out rather than loaded, on purpose: the point of the check is that a
-## human decided each of these belongs to Band 0, and a loader would silently
-## start including whatever moved into range later.
-const MUST_BE_INSIDE := {
-	"Grandpa's farmhouse (playground_world.gd HOUSE_AT)": Vector2(-22.0, -16.0),
-	"the farmhouse's far corner": Vector2(-27.5, -19.5),
-	"the village well / square (paths.routes origin)": Vector2(10.0, -10.0),
-	"Tam at the workshop bay (village_npcs)": Vector2(8.0, 12.0),
-	"Mira inside the moved shop (village_npcs)": Vector2(19.4, 4.0),
-	"Oskar at the shop-side creature pen (village_npcs)": Vector2(25.0, 4.0),
-	"Tam's south-street workshop (village.json)": Vector2(2.0, 12.0),
-	"Mira's south-street shop (village.json)": Vector2(18.0, 4.0),
-	"Halda the registrar (village_npcs)": Vector2(23.5, 11.5),
-	"the tournament board": Vector2(20.0, 15.0),
-	"the practice bramblebun (band1 spawns order 0)": Vector2(30.0, -40.0),
-	"the practice meadow road's end (paths.routes)": Vector2(30.0, -40.0),
-	"Grandpa's farm plots": Vector2(-24.4, -6.6),
-}
+## Required identities are fixed; their poses are read from actual authored data.
+## Loading selected identities prevents a retired literal from false-passing after
+## relocation while keeping the Band-0 containment contract explicit.
+func _json(path: String) -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	assert_true(raw is Dictionary, "required authored containment source parses")
+	return raw as Dictionary if raw is Dictionary else {}
+
+
+func _inside_witnesses() -> Dictionary:
+	var home: Vector2 = preload("res://scripts/world/playground_world.gd").HOUSE_AT
+	var out := {"actual farmhouse":home, "farmhouse far corner":home + Vector2(-5.5,-3.5),
+		"unchanged practice bramblebun":Vector2(30,-40), "unchanged practice meadow road end":Vector2(30,-40)}
+	var people := ["Tam", "Mira", "Oskar", "Bram", "Halda", "Nessa"]
+	var found: Array[String] = []
+	for person: Dictionary in _json("res://data/config/village_npcs.json").get("villagers", []):
+		if person.get("name") in people:
+			out[person.name] = Vector2(float(person.position[0]),float(person.position[1]))
+			found.append(str(person.name))
+	assert_eq(found.size(), people.size(), "all required village roles have actual poses")
+	for name: String in people:
+		assert_eq(found.count(name), 1, "required village role %s occurs exactly once" % name)
+	var required_buildings := ["mira_shop", "tam_workshop", "bram_inn", "halda_house", "research_house", "oskar_house", "alder_house", "orchard_house", "village_well", "crossing_hall"]
+	var placed: Array[String] = []
+	for building: Dictionary in _json("res://data/config/village.json").get("structures", []):
+		if bool(building.get("road_house", false)) or building.get("id") in ["village_well","crossing_hall"]:
+			out[str(building.get("id"))] = Vector2(float(building.at[0]),float(building.at[1]))
+			placed.append(str(building.get("id")))
+	for id: String in required_buildings:
+		assert_eq(placed.count(id), 1, "required village building %s occurs exactly once" % id)
+	var board: Dictionary = _json("res://data/config/tournament.json").board
+	out["tournament board"] = Vector2(float(board.position[0]),float(board.position[1]))
+	var plots: Array = _json("res://data/config/farm.json").get("plots", [])
+	assert_eq(plots.size(), 6, "all six stable farmhouse plots have actual poses")
+	for i: int in plots.size():
+		out["farm plot %d" % i] = Vector2(float(plots[i].at[0]),float(plots[i].at[1]))
+	return out
+
 
 ## Places that must be OUTSIDE it — the fence is the edge of Band 0, not a wall
 ## round the whole chapter.
@@ -82,8 +101,10 @@ func test_the_outline_is_an_authored_line_and_not_a_box() -> void:
 
 
 func test_everything_band_0_needs_is_inside_the_fence() -> void:
-	for what: String in MUST_BE_INSIDE:
-		var at: Vector2 = MUST_BE_INSIDE[what]
+	var required := _inside_witnesses()
+	assert_true(required.size() >= 20, "actual new village containment is not vacuous")
+	for what: String in required:
+		var at: Vector2 = required[what]
 		assert_true(BOUNDARY.contains(outline, at),
 			"%s is at (%.1f, %.1f), OUTSIDE the village boundary -- the opening cannot reach its own content" % [what, at.x, at.y])
 

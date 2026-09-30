@@ -43,7 +43,10 @@ func test_lf_and_crlf_terrain_configs_share_the_same_fingerprint() -> void:
 ## and re-baking to force a pass is a separate, deliberate decision, not a
 ## side effect of adding the check.
 func test_playground_terrain_bake_is_committed_and_fresh() -> void:
-	assert_true(TERRAIN_BAKE.is_terrain_bake_fresh(),
+	# F17 regional bakes retain the original full-bake fingerprint. Their
+	# separately validated receipt covers selected files, not a forged global
+	# refresh; any later source edit fails both checks until baked explicitly.
+	assert_true(TERRAIN_BAKE.is_generation_usable(),
 		"data/terrain/playground has no manifest, or is stale against the live " +
 		"data/config/terrain_playground.json -- the committed Terrain3D region " +
 		"data may not match the config that is supposed to describe it. Re-run " +

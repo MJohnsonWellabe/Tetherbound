@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1940" height="840" viewBox="0 0 1940 840">
+<style>text{font-family:Arial,sans-serif;fill:#263126}.title{font-size:22px;font-weight:bold}.label{font-size:12px;text-anchor:middle;font-weight:bold;paint-order:stroke;stroke:#f4f1e7;stroke-width:3px}.small{font-size:12px}</style>
+<rect width="1940" height="840" fill="#f4f1e7"/>
+<text x="30" y="36" font-size="26">F17 authored road topology — old and new</text>
+<text x="30" y="62" font-size="14">Source plan only: terrain bake, native controller walks and visual judging remain open. Practice catch disc and all three physical village exits stay fixed.</text>
+<g transform="translate(0,80)">
+<text x="20" y="0" class="title">Landed F16 village — old geometry</text>
+<rect x="20" y="20" width="900" height="650" fill="#e8eee0" rx="6"/>
+<circle cx="395" cy="145" r="75" fill="none" stroke="#52804c" stroke-dasharray="5 4"/>
+<polygon points="442.1,256.2 432.75,317 430,335 395,400 324.9,457.95 303,456.05 246.85,481.15 170,480 147.8,457.8 132.2,442.2 110,420 55,375 35,300 40,225 80,160 155,115 245,75 340,75 380,55 425,40 475,30 515,55 515,135 495,180 458.6,215.45 435.1,235.3" fill="none" stroke="#89967e" stroke-width="2"/>
+<polyline points="297.5,265 297.5,355" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,355 302.5,355 315,445" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,265 313,245 316,215 318,190" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,355 260,357.5 220,365 182.5,377.5 175,415 140,450" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,265 340,265 385,264.15 438.6,245.75" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,295 315,302 326.85,320" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="207.5,265 208,232.5" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="615,140 550,45" fill="none" stroke="#9c7951" stroke-width="22.5" stroke-linejoin="round"/>
+<polyline points="297.5,265 162.5,265" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,295 278,310 263,315" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,265 313,245 316,215 318,190 350,157.5 395,145" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="297.5,355 260,357.5 220,365 182.5,377.5 175,415 20,570" fill="none" stroke="#9c7951" stroke-width="10.0" stroke-linejoin="round"/>
+<polyline points="297.5,265 340,265 385,264.15 470,235 615,140" fill="none" stroke="#9c7951" stroke-width="10.0" stroke-linejoin="round"/>
+<rect x="290.0" y="307.5" width="15" height="15" transform="rotate(-15.0 297.5 315.0)" fill="#cdad87" stroke="#705743"/>
+<text x="297.5" y="309.0" class="label">well</text>
+<rect x="234.5" y="380.75" width="41.0" height="48.5" transform="rotate(-90.0 255.0 405.0)" fill="#cdad87" stroke="#705743"/>
+<text x="255.0" y="399.0" class="label">workshop</text>
+<rect x="205.0" y="397.5" width="15" height="15" transform="rotate(-90.0 212.5 405.0)" fill="#cdad87" stroke="#705743"/>
+<text x="212.5" y="399.0" class="label">wagon</text>
+<rect x="320.75" y="345.75" width="28.5" height="38.5" transform="rotate(90.0 335.0 365.0)" fill="#cdad87" stroke="#705743"/>
+<text x="335.0" y="359.0" class="label">cottage a</text>
+<rect x="328.25" y="300.75" width="28.5" height="28.5" transform="rotate(90.0 342.5 315.0)" fill="#cdad87" stroke="#705743"/>
+<text x="342.5" y="309.0" class="label">cottage b</text>
+<rect x="377.5" y="357.5" width="15" height="15" transform="rotate(-90.0 385.0 365.0)" fill="#cdad87" stroke="#705743"/>
+<text x="385.0" y="359.0" class="label">fence run</text>
+<rect x="187.5" y="412.5" width="15" height="15" transform="rotate(-90.0 195.0 420.0)" fill="#cdad87" stroke="#705743"/>
+<text x="195.0" y="414.0" class="label">fence run</text>
+<rect x="202.5" y="427.5" width="15" height="15" transform="rotate(-0.0 210.0 435.0)" fill="#cdad87" stroke="#705743"/>
+<text x="210.0" y="429.0" class="label">fence run</text>
+<rect x="365.0" y="290.0" width="15" height="15" transform="rotate(-40.0 372.5 297.5)" fill="#cdad87" stroke="#705743"/>
+<text x="372.5" y="291.5" class="label">square oak a</text>
+<rect x="242.5" y="390.0" width="15" height="15" transform="rotate(-160.0 250.0 397.5)" fill="#cdad87" stroke="#705743"/>
+<text x="250.0" y="391.5" class="label">square oak b</text>
+<rect x="212.0" y="282.25" width="41.0" height="65.5" transform="rotate(-90.0 232.5 315.0)" fill="#cdad87" stroke="#705743"/>
+<text x="232.5" y="309.0" class="label">inn</text>
+<rect x="306.84999999999997" y="362.5" width="15" height="15" transform="rotate(90.0 314.34999999999997 370.0)" fill="#cdad87" stroke="#705743"/>
+<text x="314.34999999999997" y="364.0" class="label">doorstep</text>
+<rect x="319.35" y="312.5" width="15" height="15" transform="rotate(90.0 326.85 320.0)" fill="#cdad87" stroke="#705743"/>
+<text x="326.85" y="314.0" class="label">doorstep</text>
+<rect x="255.5" y="307.5" width="15" height="15" transform="rotate(-90.0 263.0 315.0)" fill="#cdad87" stroke="#705743"/>
+<text x="263.0" y="309.0" class="label">doorstep</text>
+<rect x="127.5" y="316.0" width="15" height="15" transform="rotate(-0.0 135.0 323.5)" fill="#cdad87" stroke="#705743"/>
+<text x="135.0" y="317.5" class="label">fence run</text>
+<rect x="103.5" y="298.5" width="15" height="15" transform="rotate(-90.0 111.0 306.0)" fill="#cdad87" stroke="#705743"/>
+<text x="111.0" y="300.0" class="label">fence run</text>
+<rect x="92.5" y="317.5" width="15" height="15" transform="rotate(-15.0 100.0 325.0)" fill="#cdad87" stroke="#705743"/>
+<text x="100.0" y="319.0" class="label">wagon</text>
+<rect x="362.5" y="322.5" width="15" height="15" transform="rotate(-110.0 370.0 330.0)" fill="#cdad87" stroke="#705743"/>
+<text x="370.0" y="324.0" class="label">wagon</text>
+<rect x="395.0" y="345.0" width="15" height="15" transform="rotate(-75.0 402.5 352.5)" fill="#cdad87" stroke="#705743"/>
+<text x="402.5" y="346.5" class="label">square oak a</text>
+<rect x="262.5" y="442.5" width="15" height="15" transform="rotate(-200.0 270.0 450.0)" fill="#cdad87" stroke="#705743"/>
+<text x="270.0" y="444.0" class="label">square oak b</text>
+<rect x="212.5" y="172.5" width="15" height="15" transform="rotate(-300.0 220.0 180.0)" fill="#cdad87" stroke="#705743"/>
+<text x="220.0" y="174.0" class="label">square oak a</text>
+<rect x="150.0" y="335.0" width="15" height="15" transform="rotate(-20.0 157.5 342.5)" fill="#cdad87" stroke="#705743"/>
+<text x="157.5" y="336.5" class="label">square oak a</text>
+<rect x="122.5" y="350.0" width="15" height="15" transform="rotate(-135.0 130.0 357.5)" fill="#cdad87" stroke="#705743"/>
+<text x="130.0" y="351.5" class="label">square oak b</text>
+<rect x="142.5" y="385.0" width="15" height="15" transform="rotate(-250.0 150.0 392.5)" fill="#cdad87" stroke="#705743"/>
+<text x="150.0" y="386.5" class="label">square oak a</text>
+<rect x="115.0" y="380.0" width="15" height="15" transform="rotate(-310.0 122.5 387.5)" fill="#cdad87" stroke="#705743"/>
+<text x="122.5" y="381.5" class="label">square oak b</text>
+<rect x="130.0" y="405.0" width="15" height="15" transform="rotate(-80.0 137.5 412.5)" fill="#cdad87" stroke="#705743"/>
+<text x="137.5" y="406.5" class="label">square oak a</text>
+<rect x="157.5" y="360.0" width="15" height="15" transform="rotate(-190.0 165.0 367.5)" fill="#cdad87" stroke="#705743"/>
+<text x="165.0" y="361.5" class="label">square oak b</text>
+<rect x="192.5" y="195.0" width="15" height="15" transform="rotate(-0.0 200.0 202.5)" fill="#cdad87" stroke="#705743"/>
+<text x="200.0" y="196.5" class="label">fence run</text>
+<rect x="177.5" y="210.0" width="15" height="15" transform="rotate(-90.0 185.0 217.5)" fill="#cdad87" stroke="#705743"/>
+<text x="185.0" y="211.5" class="label">fence run</text>
+<circle cx="438.6" cy="245.75" r="6" fill="#e0be47" stroke="#605422"/><text x="446.6" y="260.75" class="small">RoadGate</text>
+<circle cx="140.0" cy="450.0" r="6" fill="#e0be47" stroke="#605422"/><text x="148.0" y="465.0" class="small">PondGate</text>
+<circle cx="313.95" cy="457.0" r="6" fill="#e0be47" stroke="#605422"/><text x="321.95" y="472.0" class="small">TrailGate</text>
+<rect x="111" y="248" width="48" height="34" fill="#aa6f48" stroke="#513627"/><text x="135" y="245" class="label">Grandpa / homestead</text>
+<text x="25" y="697" class="small">North ↑ · grid/world metres; pale shapes are source-derived building envelopes.</text></g>
+<g transform="translate(970,80)">
+<text x="20" y="0" class="title">F17 WIP — one farm-to-Hall road, eight houses</text>
+<rect x="20" y="20" width="900" height="650" fill="#e8eee0" rx="6"/>
+<circle cx="395" cy="145" r="75" fill="none" stroke="#52804c" stroke-dasharray="5 4"/>
+<polygon points="442.1,256.2 890,305 905,635 420,570 324.9,457.95 303,456.05 246.85,481.15 170,480 147.8,457.8 132.2,442.2 110,420 55,375 35,300 40,225 80,160 155,115 245,75 340,75 380,55 425,40 475,30 515,55 515,135 495,180 458.6,215.45 435.1,235.3" fill="none" stroke="#89967e" stroke-width="2"/>
+<polyline points="286.5,415 700,415" fill="none" stroke="#9c7951" stroke-width="26.0" stroke-linejoin="round"/>
+<polyline points="313.95,415 313.95,457" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="345,415 345,285 345,255 345,215 318,190" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="345,415 345,285 205,285 182.5,377.5 175,415 140,450" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="345,255 385,255 438.6,245.75" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="415,415 415,370" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="205,285 208,232.5" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="615,140 550,45" fill="none" stroke="#9c7951" stroke-width="22.5" stroke-linejoin="round"/>
+<polyline points="700,415 705,415" fill="none" stroke="#9c7951" stroke-width="26.0" stroke-linejoin="round"/>
+<polyline points="635,415 685,415 685,565 635,565" fill="none" stroke="#9c7951" stroke-width="16.0" stroke-linejoin="round"/>
+<polyline points="375,415 375,384.5 380,384.5" fill="none" stroke="#9c7951" stroke-width="6.0" stroke-linejoin="round"/>
+<polyline points="445,415 445,440.5 375,440.5" fill="none" stroke="#9c7951" stroke-width="6.0" stroke-linejoin="round"/>
+<polyline points="505,415 505,450.5 460,450.5" fill="none" stroke="#9c7951" stroke-width="6.0" stroke-linejoin="round"/>
+<polyline points="535,415 535,384.5 560,384.5" fill="none" stroke="#9c7951" stroke-width="6.0" stroke-linejoin="round"/>
+<polyline points="565,415 565,450.5 550,450.5" fill="none" stroke="#9c7951" stroke-width="6.0" stroke-linejoin="round"/>
+<polyline points="595,415 595,379.5 650,379.5" fill="none" stroke="#9c7951" stroke-width="6.0" stroke-linejoin="round"/>
+<polyline points="625,415 625,445.5 640,445.5" fill="none" stroke="#9c7951" stroke-width="6.0" stroke-linejoin="round"/>
+<polyline points="286.5,415 313.95,415" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="475,415 475,398 465,398" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="345,415 345,285 345,255 345,215 318,190 350,157.5 395,145" fill="none" stroke="#9c7951" stroke-width="15.0" stroke-linejoin="round"/>
+<polyline points="345,415 345,285 205,285 182.5,377.5 175,415 20,570" fill="none" stroke="#9c7951" stroke-width="10.0" stroke-linejoin="round"/>
+<polyline points="345,255 385,255 438.6,245.75 470,235 615,140" fill="none" stroke="#9c7951" stroke-width="10.0" stroke-linejoin="round"/>
+<rect x="360.75" y="335.75" width="28.5" height="38.5" transform="rotate(0 375 355)" fill="#cdad87" stroke="#705743"/>
+<text x="375" y="349" class="label">mira shop</text>
+<rect x="354.5" y="450.75" width="41.0" height="48.5" transform="rotate(-180 375 475)" fill="#cdad87" stroke="#705743"/>
+<text x="375" y="469" class="label">tam workshop</text>
+<rect x="444.5" y="322.25" width="41.0" height="65.5" transform="rotate(0 465 355)" fill="#cdad87" stroke="#705743"/>
+<text x="465" y="349" class="label">bram inn</text>
+<rect x="450.75" y="460.75" width="28.5" height="28.5" transform="rotate(-180 465 475)" fill="#cdad87" stroke="#705743"/>
+<text x="465" y="469" class="label">halda house</text>
+<rect x="540.75" y="335.75" width="28.5" height="38.5" transform="rotate(0 555 355)" fill="#cdad87" stroke="#705743"/>
+<text x="555" y="349" class="label">research house</text>
+<rect x="540.75" y="460.75" width="28.5" height="28.5" transform="rotate(-180 555 475)" fill="#cdad87" stroke="#705743"/>
+<text x="555" y="469" class="label">oskar house</text>
+<rect x="630.75" y="340.75" width="28.5" height="28.5" transform="rotate(0 645 355)" fill="#cdad87" stroke="#705743"/>
+<text x="645" y="349" class="label">alder house</text>
+<rect x="630.75" y="455.75" width="28.5" height="38.5" transform="rotate(-180 645 475)" fill="#cdad87" stroke="#705743"/>
+<text x="645" y="469" class="label">orchard house</text>
+<rect x="407.5" y="362.5" width="15" height="15" transform="rotate(-15 415 370)" fill="#cdad87" stroke="#705743"/>
+<text x="415" y="364" class="label">village well</text>
+<rect x="694.5" y="330.75" width="171.0" height="168.5" transform="rotate(-90 780 415)" fill="#cdad87" stroke="#705743"/>
+<text x="780" y="409" class="label">crossing hall</text>
+<rect x="150.0" y="335.0" width="15" height="15" transform="rotate(-20.0 157.5 342.5)" fill="#cdad87" stroke="#705743"/>
+<text x="157.5" y="336.5" class="label">square oak a</text>
+<rect x="122.5" y="350.0" width="15" height="15" transform="rotate(-135.0 130.0 357.5)" fill="#cdad87" stroke="#705743"/>
+<text x="130.0" y="351.5" class="label">square oak b</text>
+<rect x="142.5" y="385.0" width="15" height="15" transform="rotate(-250.0 150.0 392.5)" fill="#cdad87" stroke="#705743"/>
+<text x="150.0" y="386.5" class="label">square oak a</text>
+<rect x="115.0" y="380.0" width="15" height="15" transform="rotate(-310.0 122.5 387.5)" fill="#cdad87" stroke="#705743"/>
+<text x="122.5" y="381.5" class="label">square oak b</text>
+<rect x="130.0" y="405.0" width="15" height="15" transform="rotate(-80.0 137.5 412.5)" fill="#cdad87" stroke="#705743"/>
+<text x="137.5" y="406.5" class="label">square oak a</text>
+<rect x="157.5" y="360.0" width="15" height="15" transform="rotate(-190.0 165.0 367.5)" fill="#cdad87" stroke="#705743"/>
+<text x="165.0" y="361.5" class="label">square oak b</text>
+<rect x="192.5" y="195.0" width="15" height="15" transform="rotate(-0.0 200.0 202.5)" fill="#cdad87" stroke="#705743"/>
+<text x="200.0" y="196.5" class="label">fence run</text>
+<rect x="177.5" y="210.0" width="15" height="15" transform="rotate(-90.0 185.0 217.5)" fill="#cdad87" stroke="#705743"/>
+<text x="185.0" y="211.5" class="label">fence run</text>
+<rect x="372.5" y="377.0" width="15" height="15" transform="rotate(0 380 384.5)" fill="#cdad87" stroke="#705743"/>
+<text x="380" y="378.5" class="label">mira shop threshold</text>
+<rect x="367.5" y="433.0" width="15" height="15" transform="rotate(-180 375 440.5)" fill="#cdad87" stroke="#705743"/>
+<text x="375" y="434.5" class="label">tam workshop threshold</text>
+<rect x="457.5" y="390.5" width="15" height="15" transform="rotate(0 465 398.0)" fill="#cdad87" stroke="#705743"/>
+<text x="465" y="392.0" class="label">bram inn threshold</text>
+<rect x="452.5" y="443.0" width="15" height="15" transform="rotate(-180 460 450.5)" fill="#cdad87" stroke="#705743"/>
+<text x="460" y="444.5" class="label">halda house threshold</text>
+<rect x="552.5" y="377.0" width="15" height="15" transform="rotate(0 560 384.5)" fill="#cdad87" stroke="#705743"/>
+<text x="560" y="378.5" class="label">research house threshold</text>
+<rect x="542.5" y="443.0" width="15" height="15" transform="rotate(-180 550 450.5)" fill="#cdad87" stroke="#705743"/>
+<text x="550" y="444.5" class="label">oskar house threshold</text>
+<rect x="642.5" y="372.0" width="15" height="15" transform="rotate(0 650 379.5)" fill="#cdad87" stroke="#705743"/>
+<text x="650" y="373.5" class="label">alder house threshold</text>
+<rect x="632.5" y="438.0" width="15" height="15" transform="rotate(-180 640 445.5)" fill="#cdad87" stroke="#705743"/>
+<text x="640" y="439.5" class="label">orchard house threshold</text>
+<circle cx="438.6" cy="245.75" r="6" fill="#e0be47" stroke="#605422"/><text x="446.6" y="260.75" class="small">RoadGate</text>
+<circle cx="140.0" cy="450.0" r="6" fill="#e0be47" stroke="#605422"/><text x="148.0" y="465.0" class="small">PondGate</text>
+<circle cx="313.95" cy="457.0" r="6" fill="#e0be47" stroke="#605422"/><text x="321.95" y="472.0" class="small">TrailGate</text>
+<rect x="231" y="398" width="48" height="34" fill="#aa6f48" stroke="#513627"/><text x="255" y="395" class="label">Grandpa / homestead</text>
+<text x="25" y="697" class="small">North ↑ · grid/world metres; pale shapes are source-derived building envelopes.</text></g>
+</svg>

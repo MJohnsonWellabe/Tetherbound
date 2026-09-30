@@ -1,0 +1,112 @@
+{
+  "writer_source": "af78aa2256ea0356b403205e009262e04aa78cf5",
+  "before_source": "09e22dd6a9f6cbef8b187bc7d76e4e8ea5f607b3",
+  "generations": {
+    "terrain": {
+      "outside_files_byte_identical": 60,
+      "selected_files": [
+        "terrain3d-01-01.res",
+        "terrain3d-01_00.res",
+        "terrain3d_00-01.res",
+        "terrain3d_00_00.res"
+      ],
+      "changed_selected_files": [
+        "terrain3d-01-01.res",
+        "terrain3d-01_00.res",
+        "terrain3d_00-01.res",
+        "terrain3d_00_00.res"
+      ],
+      "original_full_fingerprint_retained": 1840363664.0,
+      "original_manifest_fields_preserved": true,
+      "receipt_verified": true
+    },
+    "scatter": {
+      "outside_files_byte_identical": 252,
+      "selected_files": [
+        "region_-1_-1.bin",
+        "region_-1_0.bin",
+        "region_0_-1.bin",
+        "region_0_0.bin"
+      ],
+      "changed_selected_files": [
+        "region_-1_-1.bin",
+        "region_-1_0.bin",
+        "region_0_-1.bin",
+        "region_0_0.bin"
+      ],
+      "original_full_fingerprint_retained": 7304950053290969.0,
+      "original_manifest_fields_preserved": true,
+      "receipt_verified": true
+    }
+  },
+  "actual_selected_scatter_identity": {
+    "bushes": {
+      "matching_positions_preserve_ids": 275,
+      "new_positions_above_old_global_max": 503,
+      "removed_old_local_ids_retired": 562,
+      "old_global_max": 40854
+    },
+    "deadfall": {
+      "matching_positions_preserve_ids": 15,
+      "new_positions_above_old_global_max": 0,
+      "removed_old_local_ids_retired": 0,
+      "old_global_max": 126
+    },
+    "drygrass": {
+      "matching_positions_preserve_ids": 375,
+      "new_positions_above_old_global_max": 6654,
+      "removed_old_local_ids_retired": 6683,
+      "old_global_max": 129649
+    },
+    "flowers": {
+      "matching_positions_preserve_ids": 3852,
+      "new_positions_above_old_global_max": 4969,
+      "removed_old_local_ids_retired": 4570,
+      "old_global_max": 71229
+    },
+    "grass": {
+      "matching_positions_preserve_ids": 666,
+      "new_positions_above_old_global_max": 26197,
+      "removed_old_local_ids_retired": 26545,
+      "old_global_max": 359930
+    },
+    "groundmat": {
+      "matching_positions_preserve_ids": 878,
+      "new_positions_above_old_global_max": 11895,
+      "removed_old_local_ids_retired": 12347,
+      "old_global_max": 155793
+    },
+    "grove": {
+      "matching_positions_preserve_ids": 22,
+      "new_positions_above_old_global_max": 3,
+      "removed_old_local_ids_retired": 1,
+      "old_global_max": 324
+    },
+    "path_stones": {
+      "matching_positions_preserve_ids": 40,
+      "new_positions_above_old_global_max": 364,
+      "removed_old_local_ids_retired": 364,
+      "old_global_max": 9408
+    },
+    "rocks": {
+      "matching_positions_preserve_ids": 551,
+      "new_positions_above_old_global_max": 163,
+      "removed_old_local_ids_retired": 180,
+      "old_global_max": 6425
+    },
+    "saplings": {
+      "matching_positions_preserve_ids": 55,
+      "new_positions_above_old_global_max": 9,
+      "removed_old_local_ids_retired": 9,
+      "old_global_max": 2761
+    },
+    "trees": {
+      "matching_positions_preserve_ids": 239,
+      "new_positions_above_old_global_max": 522,
+      "removed_old_local_ids_retired": 682,
+      "old_global_max": 41871
+    }
+  },
+  "outside_identity_proof": "252 original encoded region files byte-identical; stored layer/order keys unchanged. Runtime stable-ID reader and save-prefix behavior are covered by regional-logic-r2 at09e.",
+  "elapsed_seconds": 4.922000000020489
+}
