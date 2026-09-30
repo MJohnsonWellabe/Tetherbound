@@ -33,6 +33,27 @@ opening attempt ended native1 before the gift: the driver assumed an authored
 name prefill, but the real mandatory naming panel starts empty. The corrected
 driver enters a physical controller-grid letter before its disclosed confirm
 callback. The failed log and native receipt are retained; gift/death acceptance
-remains open until the affected witness passes. Host/guest travel, 3–5 waystones per
+was subsequently exercised by the corrected witness below. Host/guest travel, 3–5 waystones per
 live biome, glow/raise presentation and the ordinary-input return loop remain
 unbuilt. No F18 acceptance or clean-engine claim follows from these tests' source.
+
+Corrected opening witness: `opening-r2.txt` and its native receipt execute pushed
+`1f177818e9c9db9fa1cfdba1e3b249adcd2ab46a`. Native exit 0, 145.438 seconds;
+no `ERROR` or `SCRIPT ERROR`. Physical title, bed wake, six house briefing lines,
+starter choice and a controller-grid name letter reach the actual first-catch
+conversation. All seven authored gift lines complete through injected ordinary
+joypad interaction: Home Key ×1, orbs ×50, small potions ×3, berries ×5 and revives
+×10. The production death transaction excludes the Home Key and keeps its exact
+slot 0; normal gifts enter the world satchel. Production autosave and real slot
+reload retain that key slot and the committed world satchel. Old save-file
+preservation and schema v28 checks remain exercised by the inherited driver.
+
+Shortcuts disclosed: isolated save directories; handcrafted v27 refusal fixture;
+direct title/refusal/picker/Steam and trainer-name callbacks; loft-to-Grandpa
+initial placement; direct creature-name confirmation after physical grid input;
+injected joypad events; production `LedgerRpc.drop_satchel` callback simulates
+death rather than earning a health-triggered death. Headless rendering gives no
+visual or real-controller-device claim. Existing Torch/deprecation warnings are
+retained. No production logic changed between the green 10-method/67-assertion
+logic batch and this corrected pilot; that proof is reused under RD-36/RD-37.
+Independent strict review and the F17 dependency/landing remain separate.
