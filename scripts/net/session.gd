@@ -44,6 +44,7 @@ const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const REALM_SHELLS := preload("res://scripts/net/realm_shells.gd")
 const REALM_TRANSITION := preload("res://scripts/net/realm_transition.gd")
 const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
+const CHARACTER_AUTHORITY := preload("res://scripts/net/character_authority.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 const BUILD_FINGERPRINT := preload("res://scripts/net/build_fingerprint.gd")
 ## Kept as text rather than preloading steam_lobby.gd, which Session must not
@@ -81,6 +82,9 @@ const HOST_CLOSE_LINGER_S := 5.0
 const GOODBYE_LINGER_S := 1.5
 
 const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
+
+var _character_authority: RefCounted = CHARACTER_AUTHORITY.new()
+
 
 signal peer_joined(peer_id: int, character_id: String)
 signal peer_left(peer_id: int)
@@ -402,6 +406,11 @@ func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 		summary["realm"] = _local_realm()
 	if not summary.has("appearance_id"):
 		summary["appearance_id"] = _local_appearance_id()
+	# Build the proof from the restored portable document, never caller summary
+	# fields or later per-action packet inventory/rank proposals.
+	var admission_game := _game()
+	if admission_game != null and admission_game.get("local") != null:
+		summary["portable_authority"] = CHARACTER_AUTHORITY.portable_projection(admission_game.get("local").save_data())
 	# Always this process's own fingerprint: a caller cannot claim another build.
 	summary["build"] = BUILD_FINGERPRINT.current()
 	_pending_hello = summary
@@ -765,6 +774,14 @@ func _rpc_hello(summary: Dictionary) -> void:
 			str(verdict.get("reason", "The host refused this connection.")))
 		return
 	var character_id: String = raw_character_id
+	if not _bind_character_authority():
+		_reject_hello(sender, "world_not_ready", "The host world is not ready to admit this character.")
+		return
+	var portable: Variant = summary.get("portable_authority")
+	var authority_errors := CHARACTER_AUTHORITY.errors(portable, character_id)
+	if not authority_errors.is_empty():
+		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
+		return
 	if bool(_registry.call("has_reservation", character_id)):
 		_reserved_rejoins[sender] = true
 	var display_name := str(summary.get("display_name", ""))
@@ -776,6 +793,13 @@ func _rpc_hello(summary: Dictionary) -> void:
 		# Defence in depth if registry state changes between the verdict and add.
 		_reject_hello(sender, "character_in_use",
 			"That character is already connected to this world.")
+		return
+	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
+	if bool(seeded.get("ok", false)):
+		seeded = _character_authority.call("recover_durable_vitals", character_id, _game().get("world").reward_deliveries)
+	if not bool(seeded.get("ok", false)):
+		_registry.call("remove", sender)
+		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
 		return
 	if realm_transition != null and bool(realm_transition.call("prepare_joined_sender", sender)):
 		return
@@ -1024,6 +1048,8 @@ func _finalize_snapshot_receive() -> bool:
 	# mutation. WorldState's void loader refusal must never be acknowledged.
 	var redesign_errors := REDESIGN_STATE.validate("world",
 		data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+	redesign_errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(
+		data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
 	if not redesign_errors.is_empty():
 		_fail_snapshot_receive("The received world snapshot contains invalid redesign data.", true)
 		return false
@@ -1037,6 +1063,11 @@ func _finalize_snapshot_receive() -> bool:
 		_apply_registry(_latest_bootstrap_registry)
 	for delta: Dictionary in _bootstrap_deltas:
 		ledger_rpc.call("apply_remote_delta", delta)
+	if preload("res://scripts/net/actor_vitals_delivery.gd").has_pending_owner(game.get("world").reward_deliveries, _local_character_id()) \
+			and (ledger_rpc == null or not ledger_rpc.has_method("reconcile_actor_vitals_before_ready") \
+			or not bool(ledger_rpc.call("reconcile_actor_vitals_before_ready"))):
+		_fail_snapshot_receive("Your accepted vitality receipt could not be saved. It remains recoverable on the host.", true)
+		return false
 	_box["snapshot"] = true
 	_box["handshake_snapshot_applied"] = true
 	print("[session] snapshot applied (%d keys, day %d)" % [data.size(), int(data.get("day", 1))])
@@ -1706,6 +1737,245 @@ func _return_to_title(reason: String) -> void:
 
 func _game() -> Node:
 	return get_parent()
+
+
+## Shared detached truth for protected keys and the host combat roster.
+func admitted_character_state(peer_id: int) -> Dictionary:
+	if not is_host() or not _bind_character_authority():
+		return {}
+	var character := _authority_character(peer_id)
+	if character.is_empty():
+		return {}
+	if peer_id == local_peer_id():
+		var game := _game()
+		if game != null and game.get("local") != null:
+			var portable := CHARACTER_AUTHORITY.portable_projection(game.get("local").save_data())
+			_character_authority.call("refresh_host_local", portable, character)
+			var recovered: Dictionary = _character_authority.call("recover_durable_vitals", character, game.get("world").reward_deliveries)
+			if not bool(recovered.get("ok", false)):
+				return {}
+	return _character_authority.call("state", character)
+
+
+func admitted_character_revision(peer_id: int) -> int:
+	if admitted_character_state(peer_id).is_empty():
+		return -1
+	return int(_character_authority.call("revision", _authority_character(peer_id)))
+
+
+## Internal host contact CAS, never an RPC or a client numeric rank.
+func host_commit_creature_mastery(peer_id: int, creature_uid: String,
+		expected_character_revision: int, expected_uses: Dictionary, expected_receipts: Dictionary,
+		next_uses: Dictionary, next_receipts: Dictionary) -> Dictionary:
+	if admitted_character_state(peer_id).is_empty():
+		return {"ok": false, "code": "not_admitted", "revision": -1}
+	return _character_authority.call("commit_creature_mastery", _authority_character(peer_id), creature_uid,
+		expected_character_revision, expected_uses, expected_receipts, next_uses, next_receipts)
+
+
+func host_commit_creature_loadout(peer_id: int, creature_uid: String,
+		expected_character_revision: int, expected_loadout_revision: int, expected_last_edit: Dictionary,
+		next_loadout: Dictionary, next_loadout_revision: int, next_edit_receipt: Dictionary) -> Dictionary:
+	if admitted_character_state(peer_id).is_empty():
+		return {"ok": false, "code": "not_admitted", "revision": -1}
+	return _character_authority.call("commit_creature_loadout", _authority_character(peer_id), creature_uid,
+		expected_character_revision, expected_loadout_revision, expected_last_edit,
+		next_loadout, next_loadout_revision, next_edit_receipt)
+
+
+func admitted_pending_loadout(peer_id: int) -> Dictionary:
+	if admitted_character_state(peer_id).is_empty():
+		return {}
+	return _character_authority.call("pending_creature_loadout", _authority_character(peer_id))
+
+
+## Internal service door. The authority result receiver sends a reliable ACK
+## only after the portable write; the service binds its actual RPC sender.
+func host_ack_creature_loadout(peer_id: int, creature_uid: String,
+		loadout_revision: int, edit_receipt: Dictionary) -> bool:
+	if admitted_character_state(peer_id).is_empty():
+		return false
+	return bool(_character_authority.call("acknowledge_creature_loadout", _authority_character(peer_id),
+		creature_uid, loadout_revision, edit_receipt))
+
+
+## Private owner transport proof only. No RPC, balance or persisted bag: this
+## remembers which validated host receipt was applied while its bool save
+## refused. Weak identity prevents another PlayerState reusing that proof.
+var _owner_vitals_retries: Dictionary = {}
+
+
+func _owner_vitals_retry_key(player: RefCounted, world: RefCounted, uid: String) -> String:
+	return "%s\n%s\n%s" % [world.get("reward_delivery_namespace"), player.get("character_id"), uid]
+
+
+func _owner_vitals_retry_receipt(player: RefCounted, world: RefCounted, uid: String) -> Dictionary:
+	var raw: Variant = _owner_vitals_retries.get(_owner_vitals_retry_key(player, world, uid))
+	if not raw is Dictionary or raw.player.get_ref() != player or raw.world.get_ref() != world:
+		return {}
+	return raw.row.duplicate(true)
+
+
+func _retain_owner_vitals_retry(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
+	var actor := preload("res://scripts/net/actor_vitals_delivery.gd")
+	var character := str(player.get("character_id"))
+	var world_namespace := str(world.get("reward_delivery_namespace"))
+	if character.is_empty() or not actor.valid(row, character, world_namespace) \
+			or row.world_id != str(world.get("world_id")) \
+			or not actor.equivalent(world.get("reward_deliveries").get(row.delivery_id), row):
+		return false
+	var key := _owner_vitals_retry_key(player, world, row.creature_uid)
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/character_authority.json"))
+	var limit: Variant = config.get("owner_vitals_retry_limit", 0) if config is Dictionary else 0
+	if not (limit is int or limit is float) or not is_finite(float(limit)) \
+			or float(limit) != floor(float(limit)) or float(limit) < 1.0 or float(limit) > 16384.0 \
+			or (not _owner_vitals_retries.has(key) and _owner_vitals_retries.size() >= int(limit)):
+		return false # Never evict an unsaved proof to accept a replay.
+	_owner_vitals_retries[key] = {"player": weakref(player), "world": weakref(world), "row": row.duplicate(true)}
+	return true
+
+
+func _clear_owner_vitals_retry(player: RefCounted, world: RefCounted, row: Dictionary) -> void:
+	var key := _owner_vitals_retry_key(player, world, row.creature_uid)
+	var prior := _owner_vitals_retry_receipt(player, world, row.creature_uid)
+	if not prior.is_empty() and int(prior.journal_revision) <= int(row.journal_revision):
+		_owner_vitals_retries.erase(key)
+
+
+## Every ordinary autosave uses the same snapshot preparation. An accepted
+## unsaved HP value without its exact marker must never become a new portable
+## disk baseline. The prepared receiver installs that marker before writing.
+func _owner_vitals_snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
+	var actor := preload("res://scripts/net/actor_vitals_delivery.gd")
+	for proof: Dictionary in _owner_vitals_retries.values():
+		if proof.player.get_ref() != player:
+			continue
+		var row: Dictionary = proof.row
+		if str(player.get("character_id")) != row.character_id \
+				or (payload.has("character_id") and payload.character_id != row.character_id) \
+				or not payload.get("party") is Array \
+				or not payload.get("satchel_escrow") is Dictionary:
+			return false
+		var marker: Variant = payload.satchel_escrow.get(row.delivery_id)
+		var expected := row.duplicate(true)
+		expected.status = "settled"
+		if not actor.equivalent(marker, expected):
+			return false
+		var found := false
+		for owned: Variant in payload.party:
+			if owned is Dictionary and owned.get("uid") == row.creature_uid:
+				if found or not actor.equivalent(owned.get("hp"), row.hp) \
+						or not actor.equivalent(owned.get("max_hp"), row.max_hp) or owned.get("fainted") != row.fainted:
+					return false
+				found = true
+		if not found:
+			return false
+	return true
+
+
+## Host EncounterHost caller only; packet values never reach this door.
+func host_commit_creature_vitals(peer_id: int, creature_uid: String,
+		expected_character_revision: int, expected_hp: float, expected_fainted: bool,
+		next_hp: float, next_fainted: bool, host_receipt: Dictionary) -> Dictionary:
+	if not is_host() or _authority_character(peer_id).is_empty() \
+			or (_character_authority.call("state", _authority_character(peer_id)) as Dictionary).is_empty():
+		return {"ok": false, "code": "not_admitted", "revision": -1}
+	var character := _authority_character(peer_id)
+	var stage: Dictionary = _character_authority.call("stage_creature_vitals", character, creature_uid,
+		expected_character_revision, expected_hp, expected_fainted, next_hp, next_fainted, host_receipt)
+	if not bool(stage.get("ok", false)) or bool(stage.get("duplicate", false)):
+		return stage
+	var accepted: Dictionary = _character_authority.call("staged_creature_vitals", stage)
+	var transport := get_node_or_null(^"LedgerRpc")
+	if transport == null:
+		_character_authority.call("finish_creature_vitals", stage, false)
+		return {"ok": false, "code": "ledger_not_prepared", "durable": false}
+	var durable: Dictionary = transport.call("journal_actor_vitals_prepared", peer_id, character, accepted)
+	var saved := bool(durable.get("ok", false))
+	if not bool(_character_authority.call("finish_creature_vitals", stage, saved)):
+		return {"ok": false, "code": "authority_stage_changed", "durable": saved}
+	if not saved:
+		return durable
+	stage.erase("token")
+	stage["accepted"] = accepted.duplicate(true)
+	stage.accepted.durable = true
+	stage["durable"] = true
+	return stage
+
+
+## Called only AFTER the exact pure EncounterHost actor commit. Publication
+## may invoke owner saves or signals; it must never run inside the frozen CAS.
+func host_finalize_creature_vitals(peer_id: int, creature_uid: String, receipt: Dictionary) -> bool:
+	if not is_host():
+		return false
+	var transport := get_node_or_null(^"LedgerRpc")
+	if transport == null:
+		return false
+	return bool(transport.call("publish_actor_vitals", peer_id, _authority_character(peer_id), creature_uid, receipt))
+
+
+func admitted_pending_vitals(peer_id: int) -> Dictionary:
+	if admitted_character_state(peer_id).is_empty():
+		return {}
+	return _character_authority.call("pending_creature_vitals", _authority_character(peer_id))
+
+
+func host_ack_creature_vitals(peer_id: int, creature_uid: String,
+		character_revision: int, receipt: Dictionary) -> bool:
+	if admitted_character_state(peer_id).is_empty():
+		return false
+	return bool(_character_authority.call("acknowledge_creature_vitals", _authority_character(peer_id),
+		creature_uid, character_revision, receipt))
+
+
+func admitted_portal_keys(peer_id: int) -> Dictionary:
+	if admitted_character_state(peer_id).is_empty():
+		return {}
+	return _character_authority.call("protected_keys", _authority_character(peer_id), _accepted_world_deliveries())
+
+
+## Explicit staging for the existing synchronous LedgerRpc world-save boundary.
+func host_stage_portal_debit(peer_id: int, biome: String, receipt: String) -> Dictionary:
+	if admitted_character_state(peer_id).is_empty():
+		return {"ok": false, "code": "not_admitted"}
+	return _character_authority.call("stage_portal_debit", _authority_character(peer_id),
+		biome, receipt, _accepted_world_deliveries())
+
+
+func host_commit_portal_debit(stage: Dictionary) -> bool:
+	return is_host() and bool(_character_authority.call("commit_portal_debit", stage))
+
+
+func host_finish_portal_debit(stage: Dictionary, world_saved: bool) -> bool:
+	return is_host() and bool(_character_authority.call("finish_portal_debit", stage, world_saved))
+
+
+func _accepted_world_deliveries() -> Array:
+	var game := _game()
+	if game == null or game.get("world") == null:
+		return []
+	var records: Variant = game.get("world").get("reward_deliveries")
+	return records.values() if records is Dictionary else []
+
+
+func _authority_character(peer_id: int) -> String:
+	if peer_id == local_peer_id():
+		return _local_character_id()
+	var row: Dictionary = _registry.call("row", peer_id)
+	return str(row.get("character_id", ""))
+
+
+func _bind_character_authority() -> bool:
+	var game := _game()
+	if game == null or game.get("world") == null:
+		return false
+	var raw: Variant = game.get("world").get("reward_delivery_namespace")
+	# Existing Game snapshot bootstrap owns world identity creation. Use its
+	# same host-only seam once when the identity is not yet established.
+	if not raw is String or raw.is_empty():
+		_world_snapshot()
+		raw = game.get("world").get("reward_delivery_namespace")
+	return raw is String and bool(_character_authority.call("bind_world", raw))
 
 
 func _local_character_id() -> String:

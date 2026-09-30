@@ -1,0 +1,97 @@
+{
+  "base": "f77fc9b7f90520e57552707787aaa0e55f4c08a6",
+  "changes": "Godot 4.7 reserved identifier rename; explicit bool inference; fixture override returns existing bool signature. No wire/schema field or assertion changes.",
+  "runs": [
+    {
+      "log": "neutral-actor-parser-initial.txt",
+      "native_exit": 1,
+      "command": [
+        "Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--check-only",
+        "--script",
+        "scripts/net/actor_vitals_delivery.gd"
+      ]
+    },
+    {
+      "log": "neutral-actor-parser-second.txt",
+      "native_exit": 1,
+      "command": [
+        "Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--check-only",
+        "--script",
+        "scripts/net/actor_vitals_delivery.gd"
+      ]
+    },
+    {
+      "log": "neutral-actor-parser-final.txt",
+      "native_exit": 0,
+      "command": [
+        "Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--check-only",
+        "--script",
+        "scripts/net/actor_vitals_delivery.gd"
+      ]
+    },
+    {
+      "log": "neutral-session-parser-initial.txt",
+      "native_exit": 0,
+      "command": [
+        "Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--check-only",
+        "--script",
+        "scripts/net/session.gd"
+      ]
+    },
+    {
+      "log": "neutral-ledger-parser-final.txt",
+      "native_exit": 0,
+      "command": [
+        "Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--check-only",
+        "--script",
+        "scripts/net/ledger_rpc.gd"
+      ]
+    },
+    {
+      "log": "neutral-vitals-test-parser-final.txt",
+      "native_exit": 1,
+      "command": [
+        "Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--check-only",
+        "--script",
+        "tests/test_actor_vitals_authority.gd"
+      ]
+    },
+    {
+      "log": "neutral-vitals-test-parser-corrected.txt",
+      "native_exit": 0,
+      "command": [
+        "Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        ".",
+        "--check-only",
+        "--script",
+        "tests/test_actor_vitals_authority.gd"
+      ]
+    }
+  ]
+}
