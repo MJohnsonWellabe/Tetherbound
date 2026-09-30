@@ -158,6 +158,42 @@ static func _baseline_errors(admitted: Dictionary, character_id: String) -> Arra
 	return errors
 
 
+## Read-only display proposal for the Altar. The station service must validate
+## its actual registered Altar first, and must recompute costs during submit.
+## None of these balances/caps/costs are authority inputs to stage_spend.
+static func quote_spend(admitted: Dictionary, character_id: String, uid: String,
+		character_revision: int, cfg: Dictionary, progression_cfg: Dictionary) -> Dictionary:
+	if character_revision < 0 or not _component(uid) or not _baseline_errors(admitted, character_id).is_empty() \
+			or not configuration_errors(cfg).is_empty(): return _refuse("invalid_quote")
+	var index := _owned_index(admitted, uid)
+	if index < 0: return _refuse("not_owned")
+	var owned: Dictionary = admitted.party[index]
+	var cap := creature_cap(admitted.redesign_character, uid)
+	if not _integer(owned.get("level"), 1, 60) or cap < 0 or int(owned.level) > cap:
+		return _refuse("cap_not_admitted")
+	var types := _species_types(owned)
+	if types.is_empty(): return _refuse("invalid_species_type")
+	var payments: Array[Dictionary] = []
+	if int(owned.level) < cap:
+		var cost := level_cost(int(owned.level), cfg, progression_cfg)
+		if cost < 1 or PROGRESSION.staged_next_level(owned, cap, progression_cfg).is_empty():
+			return _refuse("invalid_creature")
+		if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
+			return _refuse("receipt_budget")
+		var inventory := RULES.inventory_from(admitted.inventory)
+		for type_id: String in types:
+			var item := essence_item(type_id)
+			if not RULES.db().has(item): return _refuse("unknown_payment_item")
+			payments.append({"id": item, "name": RULES.db().item_name(item),
+				"cost": cost, "available": inventory.count(item)})
+		var candy := str(cfg.tether_candy_item)
+		if not RULES.db().has(candy): return _refuse("unknown_payment_item")
+		payments.append({"id": candy, "name": RULES.db().item_name(candy),
+			"cost": int(cfg.tether_candy_cost), "available": inventory.count(candy)})
+	return {"ok": true, "creature_uid": uid, "level": int(owned.level), "cap": cap,
+		"expected_character_revision": character_revision, "payments": payments}
+
+
 ## Caller must already have validated actual registered Altar reach and
 ## cooldown against this host character revision. The request carries neither
 ## a cost nor a proposed balance/cap/party. Its expected level detects stale UI.
