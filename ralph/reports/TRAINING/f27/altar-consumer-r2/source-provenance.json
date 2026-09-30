@@ -115,5 +115,8 @@
   "independent_r2_verdict": "Pending exact ROOT read-only re-check",
   "acceptance_credit": false,
   "landing_ready": false,
-  "exact_main_patch_reconstruction": "git apply --check then apply in ignored reconstruction, all7 result hashes match; no tracked source applied"
+  "exact_main_patch_reconstruction": "git apply --check then apply in ignored reconstruction, all7 result hashes match; no tracked source applied",
+  "prior_review_lossless_bytes": "prior-independent-artifacts.bytes.json; decode base64 to recover raw bytes and verify each raw SHA256",
+  "readable_hold_git_lf_sha256": "6a7bed54dbb5a8adaf304edb3741bcad82f027d75174f3e9a14c9dcd1aaab8b2",
+  "raw_copy_line_endings": "Readable tracked copies undergo Git CRLF/LF normalisation; exact original bytes held separately, raw SHA256 in r1 review unchanged."
 }
