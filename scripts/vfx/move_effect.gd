@@ -29,8 +29,6 @@ var _mote_positions: Array[Vector3] = []
 var _velocities: Array[Vector3] = []
 var _rng := RandomNumberGenerator.new()
 var _colour: Color
-var _audio_launch: AudioStreamPlayer3D
-var _audio_impact: AudioStreamPlayer3D
 
 func configure(from: Vector3, to: Vector3, row: Dictionary, context: Dictionary,
 		travel: float, config: Dictionary) -> void:
@@ -166,6 +164,15 @@ func _update_bodies(t: float) -> void:
 					var marker_fraction := float((_row.body as Dictionary).get("marker_fraction", 0.65))
 					body.visible = t >= marker_fraction
 					body.scale.y = maxf(0.02, (t - marker_fraction) / maxf(0.001, 1.0 - marker_fraction))
+					# CylinderMesh is centered on its origin. Raise its center by
+					# half its current height so the root grows from the floor,
+					# rather than from the target's torso or below the ground.
+					var ground: Vector3 = _context.get("target_ground", _to)
+					var horizontal := Vector3(direction.x, 0.0, direction.z).normalized()
+					if horizontal.length_squared() < 0.001: horizontal = Vector3.FORWARD
+					var across := horizontal.cross(Vector3.UP).normalized()
+					body.position = ground + (across * cos(angle) + horizontal * sin(angle)) * float(_params.get("spread", 0.0))
+					body.position.y += float(_params.size) * float((_row.body as Dictionary).get("height_ratio", 3.0)) * body.scale.y * 0.5
 					if _marker != null: _marker.visible = not body.visible
 				if str((_row.body as Dictionary).get("shape", "")) == "crescent":
 					body.rotation = Vector3(PI * 0.5, angle, t * PI * 0.5)
@@ -209,7 +216,7 @@ func _build_impact() -> void:
 	if _marker != null: _marker.visible = false
 	_impact = Node3D.new()
 	add_child(_impact)
-	_impact.position = _from if str((_row.body as Dictionary).get("motion", "")) == "self" else _to
+	_impact.position = _contact_position()
 	var profile: Dictionary = _row.impact
 	var scale_factor := float(_params.size) * float(_params.impact_scale)
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
@@ -261,19 +268,26 @@ func _cue(name: String) -> String:
 	var id := str(sounds.get(name, ""))
 	return str(AUDIO.section("move_effect_cues").get(id, ""))
 
+func _contact_position() -> Vector3:
+	var body: Dictionary = _row.body
+	if str(body.get("motion", "")) == "self": return _from
+	if str(body.get("motion", "")) == "target" and str(body.get("shape", "")) == "spike":
+		return _context.get("target_ground", _to)
+	return _to
+
 func _play_launch() -> void:
 	var minimum := float((_row.sound as Dictionary).get("travel_min_seconds", 0.18))
 	var name := "launch_travel" if _travel >= minimum else "launch"
 	if int(_row.mastery_rank) >= 5: name += "_mastery"
 	var path := _cue(name)
 	if path.is_empty(): return
-	_audio_launch = AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _from, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
+	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _from, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
 
 func _play_impact() -> void:
 	var name := "impact_mastery" if int(_row.mastery_rank) >= 5 else "impact"
 	var path := _cue(name)
 	if path.is_empty(): return
-	_audio_impact = AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _to, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
+	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _contact_position(), "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
 
 func _exit_tree() -> void:
 	BUDGET.release(_lease)
