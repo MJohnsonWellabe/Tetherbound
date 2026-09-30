@@ -316,7 +316,7 @@
           "shape": "burning_core",
           "motion": "projectile",
           "lit": false,
-          "opacity": 0.97,
+          "opacity": 0.86,
           "segments": 32,
           "rings": 16,
           "height_ratio": 3.0,
@@ -339,6 +339,7 @@
               "flow_speed": 3.8,
               "emission_strength": 0.5,
               "yaw_offset_deg": 0,
+              "breakup_strength": 0.45,
               "spin_rate": 0.8,
               "offset": [
                 0,
@@ -356,6 +357,7 @@
               "flow_speed": 3.8,
               "emission_strength": 0.5,
               "yaw_offset_deg": 72,
+              "breakup_strength": 0.45,
               "spin_rate": 0.8,
               "offset": [
                 0,
@@ -373,6 +375,7 @@
               "flow_speed": 3.8,
               "emission_strength": 0.5,
               "yaw_offset_deg": 144,
+              "breakup_strength": 0.45,
               "spin_rate": 0.8,
               "offset": [
                 0,
@@ -390,6 +393,7 @@
               "flow_speed": 3.8,
               "emission_strength": 0.5,
               "yaw_offset_deg": 216,
+              "breakup_strength": 0.45,
               "spin_rate": 0.8,
               "offset": [
                 0,
@@ -407,6 +411,7 @@
               "flow_speed": 3.8,
               "emission_strength": 0.5,
               "yaw_offset_deg": 288,
+              "breakup_strength": 0.45,
               "spin_rate": 0.8,
               "offset": [
                 0,
@@ -418,7 +423,11 @@
           "hot_colour": "#fff1a2",
           "ember_colour": "#b35a07",
           "card_extent_scale": 3.5,
-          "flow_speed": 3.2
+          "flow_speed": 3.8,
+          "surface_scale": 4.8,
+          "deformation": 0.22,
+          "edge_softness": 0.42,
+          "emission_strength": 0.9
         },
         "trail": {
           "style": "painted_flame",
@@ -430,7 +439,9 @@
           "sample_spacing_m": 0.12,
           "max_length_m": 2.3,
           "flow_speed": 4.0,
-          "emission_strength": 0.35
+          "emission_strength": 0.75,
+          "breakup_strength": 0.72,
+          "hot_colour": "#fff0a8"
         },
         "impact": {
           "shape": "fire_explosion",

@@ -99,6 +99,9 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("billboard", bool(profile.get("billboard", false)))
 		out.set_shader_parameter("sprite_angle", deg_to_rad(float(profile.get("sprite_angle_deg", 0.0))))
 		out.set_shader_parameter("flame_colour", colour)
+		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff0a8"))))
+		out.set_shader_parameter("trail", kind == "soft_trail")
+		out.set_shader_parameter("breakup_strength", float(profile.get("breakup_strength", 0.0)))
 		return out
 	if kind == "soft_dust" or (kind == "soft_trail" and str(profile.get("style", "")) == "dust"):
 		out.shader = DUST_SHADER
@@ -130,6 +133,12 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.shader = FIRE_CORE_SHADER
 		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff2b2"))))
 		out.set_shader_parameter("flame_colour", colour)
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.86)))
+		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.8)))
+		out.set_shader_parameter("surface_scale", float(profile.get("surface_scale", 4.8)))
+		out.set_shader_parameter("deformation", float(profile.get("deformation", 0.22)))
+		out.set_shader_parameter("edge_softness", float(profile.get("edge_softness", 0.42)))
+		out.set_shader_parameter("emission_strength", float(profile.get("emission_strength", 0.9)))
 		return out
 	if kind in ["flame_orb", "fire_bloom", "soft_dust", "soft_ember", "soft_trail", "soft_foam", "flame_volume", "mist_cone"]:
 		out.shader = FIRE_SHADER
