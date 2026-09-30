@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_fight_camera.gd: 1 of 671 test files
+  ok    test_fight_camera.gd :: test_impossible_and_near_plane_frames_never_report_a_pass
+  ok    test_fight_camera.gd :: test_nine_authored_pairs_project_both_bodies_without_silhouette_overlap
+  ok    test_fight_camera.gd :: test_pivot_uses_actual_body_midpoint_and_class_boundaries
+  ok    test_fight_camera.gd :: test_rig_takeover_clears_midpoint_offset_and_runtime_pitch_is_not_accumulated
+
+4 tests, 104 assertions, 0 failed
