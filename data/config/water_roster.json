@@ -155,7 +155,7 @@
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
       },
       "named_encounter": {
-        "level": 49,
+        "level": 26,
         "id": "water_aquaryn_alpha",
         "reward_on_catch_or_defeat": "water_swim_stone_earned",
         "catchable": true
@@ -206,7 +206,7 @@
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
       },
       "named_encounter": {
-        "level": 54,
+        "level": 32,
         "id": "water_tidecoil_apex",
         "catchable": true,
         "mount_prohibited": true
@@ -587,7 +587,7 @@
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
       },
       "named_encounter": {
-        "level": 55,
+        "level": 33,
         "id": "water_captive_guardian",
         "acquisition": "post_release_existing_five_slot_ceremony",
         "wild_catch_enabled": false,

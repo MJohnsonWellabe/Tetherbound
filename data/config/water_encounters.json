@@ -8506,7 +8506,7 @@
     {
       "id": "water_aquaryn_alpha",
       "species_id": "aquaryn",
-      "level": 49,
+      "level": 26,
       "island_id": "tidal_cradle",
       "role": "mandatory_midpoint_alpha",
       "random_eligible": false,
@@ -8515,7 +8515,7 @@
     {
       "id": "water_abyssal_guardian_release",
       "species_id": "abyssal_guardian",
-      "level": 55,
+      "level": 33,
       "island_id": "veilfall",
       "role": "legendary_ceremony_not_wild_or_named_combat_census",
       "random_eligible": false,

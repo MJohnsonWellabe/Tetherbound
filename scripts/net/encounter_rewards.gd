@@ -65,10 +65,48 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 ## rewards module, so the shared encounter director never loads one realm's
 ## reward controller into every other realm's script closure.
 const SOLO_WIN_JOURNAL_TRAINERS := ["water_trainer_nerissa"]
+const CHAPTER_REWARDS_PATH := "res://data/config/chapter_rewards.json"
 
 
 static func journals_solo_win(trainer_key: String) -> bool:
 	return SOLO_WIN_JOURNAL_TRAINERS.has(trainer_key)
+
+
+## F19's authored boss hand-off, with runtime and canonical biome namespaces
+## kept distinct. The foundation ledger validates these component sources
+## against its admitted stable-character snapshot; this pure projection is
+## never authority to create a participant or commit an entitlement.
+static func chapter_hand_off(trainer_id: String, realm: String, config: Dictionary = {}) -> Dictionary:
+	var data := config
+	if data.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CHAPTER_REWARDS_PATH))
+		if not raw is Dictionary:
+			return {}
+		data = raw as Dictionary
+	var hand_offs: Dictionary = data.get("boss_hand_offs", {})
+	var raw_row: Variant = hand_offs.get(trainer_id, {})
+	if not raw_row is Dictionary:
+		return {}
+	var row: Dictionary = raw_row
+	if str(row.get("runtime_realm", "")) != realm:
+		return {}
+	return row.duplicate(true)
+
+
+static func chapter_grants(trainer_id: String, realm: String, participants: Array,
+		config: Dictionary = {}) -> Array:
+	var row := chapter_hand_off(trainer_id, realm, config)
+	var peers := unique_peers(participants)
+	if row.is_empty() or peers.is_empty():
+		return []
+	var item := str(row.get("portal_key_item", ""))
+	var biome := str(row.get("relic_biome", ""))
+	if item.is_empty() or biome.is_empty():
+		return []
+	var key := _grant(realm, source_for(trainer_id, "item:" + item), peers, item, 1, "")
+	var relic := _grant(realm, source_for(trainer_id, "relic:" + biome), peers, "", 0, "")
+	relic["relic_biome"] = biome
+	return [key, relic]
 
 
 ## The trainer id every source below is built from. "" for a spec with no id,

@@ -14,12 +14,21 @@ BASE = "ddeadbc1eb9cc2f81693d69eded98ee9183579a1"
 ROOT = pathlib.Path(__file__).resolve().parents[4]
 
 
+def hand_off_rows():
+    return {
+        "warden_aldis": {"runtime_realm": "meadows", "relic_biome": "meadows", "portal_key_item": "tidewake_portal_key", "portal_key_id": "portal_key_tidewake", "next_biome": "tidewake"},
+        "water_trainer_nerissa": {"runtime_realm": "water", "relic_biome": "tidewake", "portal_key_item": "cloudreach_portal_key", "portal_key_id": "portal_key_cloudreach", "next_biome": "cloudreach"},
+        "captain_veyra_storm_anchor": {"runtime_realm": "cloudreach", "relic_biome": "cloudreach", "portal_key_item": "stormwood_portal_key", "portal_key_id": "portal_key_stormwood", "next_biome": "stormwood"},
+        "captain_marrow_dynamo_core": {"runtime_realm": "stormwood", "relic_biome": "stormwood", "portal_key_item": "fifth_portal_key", "portal_key_id": "portal_key_biome5", "next_biome": "biome5"},
+    }
+
+
 def source(path):
     return subprocess.check_output(["git", "show", f"{BASE}:{path}"], cwd=ROOT).decode("utf-8")
 
 
 def leaf_spans(text):
-    """Collect JSON leaf spans by structural path; never rewrite prose numbers."""
+    """Collect JSON value spans by structural path; never rewrite prose numbers."""
     spans = {}
     decoder = json.JSONDecoder()
 
@@ -41,6 +50,7 @@ def leaf_spans(text):
                     pos = ws(pos + 1)
                 else:
                     break
+            spans[path] = (start, pos + 1)
             return pos + 1
         if text[pos] == "[":
             pos = ws(pos + 1)
@@ -52,6 +62,7 @@ def leaf_spans(text):
                     pos = ws(pos + 1)
                 else:
                     break
+            spans[path] = (start, pos + 1)
             return pos + 1
         _, end = decoder.raw_decode(text, pos)
         spans[path] = (start, end)
@@ -68,12 +79,19 @@ def write_edits(path, change):
     change(new)
     spans = leaf_spans(text)
     patches = []
-    for keys, (start, end) in spans.items():
-        before, after = old, new
-        for key in keys:
-            before, after = before[key], after[key]
-        if before != after:
+    def diff(before, after, keys=()):
+        if before == after:
+            return
+        if isinstance(before, dict) and isinstance(after, dict) and before.keys() == after.keys():
+            for key in before:
+                diff(before[key], after[key], keys + (key,))
+        elif isinstance(before, list) and isinstance(after, list) and len(before) == len(after):
+            for index in range(len(before)):
+                diff(before[index], after[index], keys + (index,))
+        else:
+            start, end = spans[keys]
             patches.append((start, end, json.dumps(after, ensure_ascii=False)))
+    diff(old, new)
     for start, end, replacement in reversed(sorted(patches)):
         text = text[:start] + replacement + text[end:]
     json.loads(text)
@@ -109,6 +127,13 @@ def trainer_levels(data, transform, boss, boss_levels, key="team"):
 
 
 def derive():
+    rewards = source("data/config/chapter_rewards.json")
+    encoded = json.dumps(hand_off_rows(), indent=2, ensure_ascii=False).replace("\n", "\n  ")
+    anchor = '  "materials": {'
+    assert rewards.count(anchor) == 1
+    rewards = rewards.replace(anchor, '  "boss_hand_offs": ' + encoded + ',\n' + anchor)
+    json.loads(rewards)
+    (ROOT / "data/config/chapter_rewards.json").write_text(rewards, encoding="utf-8", newline="\n")
     curve = json.loads(source("data/config/chapter_curve.json"))
     curve["_comment"] = "F19 / RD-10: authored four-chapter targets. biome_order.json alone owns chapter order; this file owns levels. Meadows regions retain their runtime z boundaries."
     curve["_comment_measurement"] = "These are redesign targets, not measured earned levels. The old combat-XP probe is superseded by hybrid leveling; F27/F47 must prove the earned route ledger. No fixture provenance is implied."
@@ -195,6 +220,8 @@ def derive():
             row["level"] = water(row["level"])
             if row.get("region_level_exception"):
                 row["region_level_exception"] = "F19: optional Tidecoil apex L32; normal wild tables remain within Tidewake 18–32."
+        for row in data["scripted_encounter_references"]:
+            row["level"] = water(row["level"])
     write_edits("data/config/water_encounters.json", water_wild)
     storm = lambda n: half_down(42 + (n - 32) * 13 / 12)
     write_edits("data/config/stormwood_trainers.json", lambda d: trainer_levels(d, storm, "captain_marrow_dynamo_core", [54, 54, 54, 55, 55], "party"))
@@ -212,6 +239,17 @@ def derive():
         data["legendary"]["_comment_level"] = "F19: Cloudreach exit L44; volunteer offer, never a wild capture."
     write_edits("data/config/cloudreach_solmane_climax.json", solmane)
     write_edits("data/config/water_alpha.json", lambda d: d.update(level=26))
+    write_edits("data/config/water_veilfall.json", lambda d: d.update(guardian_level=33))
+    def water_roster(data):
+        for row in data["species"].values():
+            if isinstance(row.get("named_encounter"), dict):
+                row["named_encounter"]["level"] = water(row["named_encounter"]["level"])
+    write_edits("data/config/water_roster.json", water_roster)
+    def water_regions(data):
+        for row in data["regions"]:
+            for key in ["team_level_start", "team_level_exit"]:
+                row[key] = water(row[key])
+    write_edits("data/config/water_world.json", water_regions)
     def dynamo(data):
         data["captive"]["placeholder_species"] = "fulgocobra"
         data["captive"]["level"] = 55

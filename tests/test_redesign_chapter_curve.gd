@@ -5,6 +5,7 @@ extends "res://tests/test_case.gd"
 const ORDER := preload("res://scripts/data/biome_order.gd")
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const CURVE := preload("res://scripts/creatures/chapter_curve.gd")
+const REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 
 
 func _read(path: String) -> Dictionary:
@@ -136,3 +137,35 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
 	assert_false(bool(offer.get("catchable", true)))
 	assert_eq(int(_read("res://data/config/water_alpha.json").get("level", 0)), 26)
 	assert_eq(int((_read("res://data/config/cloudreach_solmane_climax.json").get("legendary", {}) as Dictionary).get("level", 0)), 44)
+
+
+func test_boss_hand_offs_keep_typed_keys_distinct_from_item_skus() -> void:
+	var config := _read("res://data/config/chapter_rewards.json")
+	var targets := {
+		"warden_aldis": ["meadows", "meadows", "tidewake_portal_key", "portal_key_tidewake"],
+		"water_trainer_nerissa": ["water", "tidewake", "cloudreach_portal_key", "portal_key_cloudreach"],
+		"captain_veyra_storm_anchor": ["cloudreach", "cloudreach", "stormwood_portal_key", "portal_key_stormwood"],
+		"captain_marrow_dynamo_core": ["stormwood", "stormwood", "fifth_portal_key", "portal_key_biome5"],
+	}
+	assert_eq((config.get("boss_hand_offs", {}) as Dictionary).size(), 4)
+	for trainer: String in targets:
+		var want: Array = targets[trainer]
+		var row := REWARDS.chapter_hand_off(trainer, str(want[0]), config)
+		assert_eq([row.get("runtime_realm"), row.get("relic_biome"),
+			row.get("portal_key_item"), row.get("portal_key_id")], want)
+		var grants: Array = REWARDS.chapter_grants(trainer, str(want[0]), [1, 2, 2], config)
+		assert_eq(grants.size(), 2)
+		if grants.size() != 2:
+			continue
+		var key: Dictionary = grants[0]
+		var relic: Dictionary = grants[1]
+		assert_eq(key.get("peers"), [1, 2], "one full reward for each admitted participant")
+		assert_eq(relic.get("peers"), [1, 2])
+		assert_eq(key.get("item"), want[2])
+		assert_eq(int(key.get("count", 0)), 1)
+		assert_eq(relic.get("relic_biome"), want[1])
+		assert_eq(key.get("source"), "trainer:%s:item:%s" % [trainer, str(want[2])])
+		assert_eq(relic.get("source"), "trainer:%s:relic:%s" % [trainer, str(want[1])])
+		assert_eq(REWARDS.chapter_grants(trainer, "wrong_realm", [1], config), [])
+		assert_eq(REWARDS.chapter_grants(trainer, str(want[0]), [], config), [])
+	assert_eq(REWARDS.chapter_grants("not_a_boss", "meadows", [1], config), [])

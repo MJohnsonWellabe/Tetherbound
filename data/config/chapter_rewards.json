@@ -1,6 +1,36 @@
 {
   "_comment": "REWARD-ECONOMY (prompt 58). The chapter's reward audit, as data. One row per activity that pays something, in route order, recording what it gives, what that lets the player DO next, and whether the player can be expected to understand that use at the moment they receive it -- which is prompt 58's actual test ('a reward is good when the player can connect it to something they want to do next'), not whether a prize exists. Rewards themselves live where they always have: trainer payouts in the band trainer files, shop stock in trade.json, recipes in data/recipes/, world pickups in playground_world.gd. Nothing here is a second economy; this is the map of the one that ships, and tests/test_chapter_rewards.gd checks the map against it.",
   "_comment_no_new_systems": "Prompt 58 opens by forbidding a second inventory, currency, recipe or loot system, so this file deliberately holds no numbers the game reads. It is an audit and a set of invariants. The one CHANGE the audit produced was a placement, not a system: three apex TMs (tm_earthshatter/tm_leviathan_surge/tm_heavenfall) existed as items with full move data and no acquisition path anywhere in the game -- see playground_world.gd's TM_AT.",
+  "boss_hand_offs": {
+    "warden_aldis": {
+      "runtime_realm": "meadows",
+      "relic_biome": "meadows",
+      "portal_key_item": "tidewake_portal_key",
+      "portal_key_id": "portal_key_tidewake",
+      "next_biome": "tidewake"
+    },
+    "water_trainer_nerissa": {
+      "runtime_realm": "water",
+      "relic_biome": "tidewake",
+      "portal_key_item": "cloudreach_portal_key",
+      "portal_key_id": "portal_key_cloudreach",
+      "next_biome": "cloudreach"
+    },
+    "captain_veyra_storm_anchor": {
+      "runtime_realm": "cloudreach",
+      "relic_biome": "cloudreach",
+      "portal_key_item": "stormwood_portal_key",
+      "portal_key_id": "portal_key_stormwood",
+      "next_biome": "stormwood"
+    },
+    "captain_marrow_dynamo_core": {
+      "runtime_realm": "stormwood",
+      "relic_biome": "stormwood",
+      "portal_key_item": "fifth_portal_key",
+      "portal_key_id": "portal_key_biome5",
+      "next_biome": "biome5"
+    }
+  },
   "materials": {
     "_comment": "Prompt 58's resource tiers, with the use that makes each one worth picking up. Audited 2026-08-22: every material the world can yield is a recipe input, a build cost or shop stock -- there are no orphan collectibles in the Meadows.",
     "baseline": [
