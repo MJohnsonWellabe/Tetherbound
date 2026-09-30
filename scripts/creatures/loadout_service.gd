@@ -89,7 +89,37 @@ func _rpc_result(edit_id: String, result: Dictionary) -> void:
 	# pending UI must not optimistically equip a remote host refusal.
 	if bool(result.get("ok", false)) and not _apply_owner_result(result):
 		result = {"ok": false, "reason": "owner_save_failed", "host_committed": true}
+	elif bool(result.get("ok", false)):
+		result = result.duplicate(true)
+		result["pending_host_ack"] = not _acknowledge_owner_save(result)
 	completed.emit(edit_id, result)
+
+
+## Receipt-only ACK follows an actual successful portable write, including
+## replay/rejoin retries. It never imports a client party or current slots.
+func _acknowledge_owner_save(result: Dictionary) -> bool:
+	var session := _session()
+	if session == null or not bool(session.call("is_active")) \
+		or not session.has_method("host_ack_creature_loadout"): return false
+	var uid := str(result.get("creature_uid", ""))
+	var revision := int(result.get("revision", -1))
+	var receipt: Dictionary = result.get("receipt", {})
+	if uid.is_empty() or revision < 1 or receipt.is_empty(): return false
+	if bool(session.call("is_host")):
+		return bool(session.call("host_ack_creature_loadout", _local_peer(), uid, revision, receipt))
+	if not multiplayer.has_multiplayer_peer(): return false
+	_rpc_owner_loadout_saved.rpc_id(1, uid, revision, receipt)
+	# Sending cannot prove host acceptance; the retained host lock/rejoin state
+	# is the completion authority, and no local save result clears that lock.
+	return false
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_owner_loadout_saved(creature_uid: String, revision: int, receipt: Dictionary) -> void:
+	var session := _session()
+	if session == null or not bool(session.call("is_host")) \
+		or not session.has_method("host_ack_creature_loadout"): return
+	session.call("host_ack_creature_loadout", multiplayer.get_remote_sender_id(), creature_uid, revision, receipt)
 
 func _station(key: String) -> Node3D:
 	if key.is_empty() or key.length() > 96: return null
@@ -241,14 +271,14 @@ func _apply_owner_result(result: Dictionary) -> bool:
 		if str(owned.get("uid")) == str(result.get("creature_uid", "")): creature = owned
 	var staged := stage_owner_loadout(creature, result)
 	if not bool(staged.get("ok", false)): return false
-	if bool(staged.get("replayed", false)): return true
 	var previous := _loadout_state(creature)
-	_apply_loadout(creature, staged.loadout, int(staged.revision), staged.receipt)
+	var replayed := bool(staged.get("replayed", false))
+	if not replayed: _apply_loadout(creature, staged.loadout, int(staged.revision), staged.receipt)
 	# The public production portable writer returns its atomic write outcome;
 	# Game.autosave_here has a void guest route and cannot prove this commit.
 	var character_id := str(player.get("character_id"))
 	if character_id.is_empty() or not bool(saver.call("save_character", game, character_id)):
-		_apply_loadout(creature, previous.loadout, int(previous.revision), previous.receipt)
+		if not replayed: _apply_loadout(creature, previous.loadout, int(previous.revision), previous.receipt)
 		return false
 	return true
 
