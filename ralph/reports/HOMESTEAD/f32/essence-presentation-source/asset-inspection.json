@@ -2,7 +2,7 @@
   "method": "READONLY installed glTF JSON/accessor/provenance inspection, not model/engine/render/visual/path proof.",
   "whole_candidate_enabled": false,
   "reference_inspected": "docs/reference/owner-board-2026-08-15-creature-colors.png",
-  "source_state": "Actual tracked sources remain unchanged; patch is unapplied.",
+  "source_state": "Applied as flag-OFF source candidate at a247a5be9748e76c4a103a68020956fb52073894. No Godot/import/render/player-path/shape-recognition/full-bar proof or runtime activation.",
   "modules": {
     "res://assets/environment/stylized_nature/Flower_3_Group.gltf": {
       "sha256": "1dc92301637cf9c9456236324356ad3b85f6e0ba5e1f8a8b5b577549ab3c9c5c",
@@ -48,7 +48,8 @@
           "alphaMode": "MASK"
         }
       ],
-      "source_triangle_count": 755
+      "source_triangle_count": 755,
+      "normalized_lf_sha256": "4df1612371982c543f930d6b213967372e0d459622d7eff7fc2ed1ddbfaa3b6c"
     },
     "res://assets/environment/stylized_nature/Flower_3_Single.gltf": {
       "sha256": "f2d58e09f0b5568f35064dc465c82b17383e8eeb0e3aeb62b2e62c662a56f8e6",
@@ -94,7 +95,8 @@
           "alphaMode": "MASK"
         }
       ],
-      "source_triangle_count": 285
+      "source_triangle_count": 285,
+      "normalized_lf_sha256": "26c33edf26f0913947977109fefa2367095a854541a731dfecfd64263b7db2bc"
     },
     "res://assets/environment/stylized_nature/Flower_4_Group.gltf": {
       "sha256": "626e920e94761132aa01c091e6637023fc71a65909c600054a9aefcd0584ee47",
@@ -140,7 +142,8 @@
           "alphaMode": "MASK"
         }
       ],
-      "source_triangle_count": 1690
+      "source_triangle_count": 1690,
+      "normalized_lf_sha256": "69ead56b36b50f06a0cf18380797fce7434302e9b2da7bf68a85014b993c6134"
     },
     "res://assets/environment/stylized_nature/Flower_4_Single.gltf": {
       "sha256": "163d88a449eddadd9d9143b80a63977a931cb41db2e5aa630bba70c86c9a47dc",
@@ -186,7 +189,8 @@
           "alphaMode": "MASK"
         }
       ],
-      "source_triangle_count": 642
+      "source_triangle_count": 642,
+      "normalized_lf_sha256": "271189ec424eea2821d758c5c605d9e7737c259d64f4eec4555de7cd9de5a517"
     },
     "res://assets/environment/stylized_nature/Mushroom_Common.gltf": {
       "sha256": "59f6b49ba2dc57e61a1f0643f2d66d6cb5a1200ea9c1ee9c728e13f3bd5fb0a0",
@@ -216,7 +220,8 @@
           "alphaMode": "OPAQUE"
         }
       ],
-      "source_triangle_count": 880
+      "source_triangle_count": 880,
+      "normalized_lf_sha256": "2088b39d92f2f6331f45e59a048d02814dcd8b22767b024f4d220143bc8339f4"
     },
     "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf": {
       "sha256": "2d3b29daf3238c306e1864377510336b9cedaaf759087e55e79366b0053f4992",
@@ -246,7 +251,8 @@
           "alphaMode": "OPAQUE"
         }
       ],
-      "source_triangle_count": 1640
+      "source_triangle_count": 1640,
+      "normalized_lf_sha256": "98a9420e24bb2146d8802af39b56ecfdc2962b86963f60dfec2b0f5cf751b445"
     },
     "res://assets/environment/stylized_nature/Plant_1_Big.gltf": {
       "sha256": "1091ddd87cfb8304b295c4483777c7b5231fa86439c967872525affcc0e93128",
@@ -276,7 +282,8 @@
           "alphaMode": "MASK"
         }
       ],
-      "source_triangle_count": 360
+      "source_triangle_count": 360,
+      "normalized_lf_sha256": "8c22e28d1ad79f3967c0022265b1d09319a3d82cbf14238de0cc77b5fe7e370a"
     },
     "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": {
       "sha256": "d692cd6352ac5b1606968ba98e2794ce1c639e17af43dc6119d0d512313d6d51",
@@ -306,7 +313,8 @@
           "alphaMode": "OPAQUE"
         }
       ],
-      "source_triangle_count": 244
+      "source_triangle_count": 244,
+      "normalized_lf_sha256": "fac2d05a05f2d0d2098de59c09b58f42cc875c9caca4fd4c4bd57f3d36e7b12e"
     },
     "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": {
       "sha256": "8fee9a6fdc2f997a3018d995a298d05610a3443c3fd2773a488f6bbb35ac88cf",
@@ -336,7 +344,8 @@
           "alphaMode": "OPAQUE"
         }
       ],
-      "source_triangle_count": 522
+      "source_triangle_count": 522,
+      "normalized_lf_sha256": "9a575b911372cf91693aa3a56aea8137ec2251c2b99fb34a31272ee64503047f"
     }
   },
   "profiles": {
@@ -476,5 +485,8 @@
         ]
       ]
     }
-  }
+  },
+  "inspection_recorded_before_source_application": true,
+  "applied_source_commit": "a247a5be9748e76c4a103a68020956fb52073894",
+  "hash_basis": "Each existing sha256 is the exact Windows filesystem byte hash observed during original read-only inspection. Preserve those bytes/hashes, including CRLF; they are not canonical Git-LF blob hash claims. normalized_lf_sha256 below removes CRLF from the same unchanged observed JSON bytes for comparison; it is not an import or model validation."
 }
