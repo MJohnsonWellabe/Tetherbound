@@ -2,7 +2,7 @@
  "updated": "2026-09-30T16:38:05Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 108 of 280. Original:95/101; redesign:13/179. F16 all5, F17#0/#1/#2/#3 and F26#1/#2/#4 and F27#0 landed by this cut. F17 services strict MET from one actual physical day/night circuit; M1/co-op/full craft and F26 material/visual/Ally rows remain open.",
+  "Criteria met: 109 of 280. Original:95/101; redesign:14/179. F16 all5, F17#0\u2013#3, F26#0/#1/#2/#4 and F27#0 landed by this cut. F26 material path strict MET; full visual bar and Ally/default gates remain open. F17 M1/co-op/full craft remain open.",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -390,7 +390,7 @@
   },
   {
    "lane": "tb/lookdev",
-   "now": "F26#1/#2 independently strict MET and landed via #470 main39840191c; persistent presets and reference-backed look bar. Water Low/Medium/High native PASS (3/12 cases); other material/visual/route/owner Ally gates open.",
+   "now": "F26#0/#1/#2/#4 strict MET and landed; f220 material census/source/RID/retained Low proof. Full High/Medium visual bar FAIL; Ally/default remains owner-gated.",
    "next": "Work order in CODEX_START_HERE \u00a76: F26"
   },
   {

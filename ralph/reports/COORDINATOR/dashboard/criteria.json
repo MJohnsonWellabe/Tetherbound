@@ -1430,10 +1430,10 @@
    "title": "Renderer and look development (Palworld + Valheim bar)",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/lookdev",
-   "pct": 58,
+   "pct": 71,
    "counts": {
-    "in_progress": 2,
-    "met": 3,
+    "in_progress": 1,
+    "met": 4,
     "blocked": 1,
     "partial": 0,
     "not_started": 0,
@@ -1442,9 +1442,9 @@
    "criteria": [
     {
      "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
-     "status": "in_progress",
-     "evidence": "VISUAL/lookdev/routes/meadows-forward-incremental-r4: actual native0 Medium/High village/Hall route at424ca00d; Water Forward receipts retained.",
-     "gap": "Cloudreach/Stormwood native material coverage and independent missing-material visual review remain open."
+     "status": "met",
+     "evidence": "ralph/reports/VISUAL/lookdev/f26-material-census-5f4093ad54/independent-strict-review/strict-f26-0-full-access-review.txt: fresh independent strict MET at b95f2d9, integrated f22078c7b8. Actual Water/Meadows/Cloudreach mounted Forward+ censuses at5f4093ad54 native0; retained Stormwood0620 native0; source/main material families match, direct RID and sampler bindings validated, retained original images and actual Compatibility Low Settings/routes. Shortcuts disclosed: staged catalogue state/debug teleport, clock/camera fixtures, desktop GPU/isolated data; day captures do not certify restored night rim; optional campfire/placement warnings retained. Independent re-check: graph/resource/native/hash/source/pixel audit; material path only, no full-bar/Ally/default/co-op/campaign credit.",
+     "gap": ""
     },
     {
      "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
