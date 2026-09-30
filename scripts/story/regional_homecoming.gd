@@ -34,6 +34,13 @@ static func eligible(game: Object) -> bool:
 	if not personal is Dictionary:
 		return false
 	var id := character_id(game)
+	var has_stormwood_relic := false
+	for field: String in ["relics_held", "relics_hung"]:
+		var relics: Variant = personal.get(field)
+		if relics is Array and relics.has("stormwood"):
+			has_stormwood_relic = true
+	if not has_stormwood_relic:
+		return false
 	var receipts: Variant = personal.get("transaction_receipts", [])
 	return has_return_receipt(id, receipts) if receipts is Array else false
 
@@ -138,14 +145,14 @@ static func chapter_choices(flags: Object) -> String:
 		if bool(flags.call("has", row[0])):
 			lines.append("You chose to welcome %s on your travels." % row[2])
 		elif bool(flags.call("has", row[1])):
-			lines.append("You let %s stay behind when it offered to follow." % row[2])
+			lines.append("You let a freed companion stay behind when it offered to follow.")
 	if bool(flags.call("has", "stormwood:legendary_offer_accepted")):
 		lines.append("You welcomed the Stormheart when it offered to join you.")
 	elif flags.has_method("all_set"):
 		for raw: Variant in flags.call("all_set"):
 			var flag := str(raw)
 			if flag.begins_with("stormwood:legendary_answer:") and flag.ends_with(":refused"):
-				lines.append("You let the Stormheart choose its own road.")
+				lines.append("You let a freed companion choose its own road.")
 				break
 	return " ".join(lines) if not lines.is_empty() else \
 		"The companions you met had their own wishes. Their invitations were yours to answer."

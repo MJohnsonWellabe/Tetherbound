@@ -84,8 +84,12 @@ func test_ahead_world_does_not_unlock_homecoming_without_personal_return() -> vo
 	game.world.flags.set_flag("stormwood:long_storm_ended")
 	assert_eq(HOMECOMING.conversation_id(game), "", "an ahead world is not a personal ending receipt")
 	_home_return(game)
+	game.local.redesign_character.relics_held = []
+	assert_eq(HOMECOMING.conversation_id(game), "",
+		"a personal return without the personal finale relic is insufficient")
+	game.local.redesign_character.relics_hung = ["stormwood"]
 	assert_eq(HOMECOMING.conversation_id(game), "regional_homecoming_0",
-		"the protected personal return invites this character")
+		"the protected personal return and hung finale relic invite this character")
 	game.local.flags.set_flag(HOMECOMING.SEEN_FLAG)
 	assert_eq(HOMECOMING.conversation_id(game), HOMECOMING.REPEAT_ID)
 
@@ -278,6 +282,7 @@ func test_terminal_consent_decline_is_not_completion_but_accept_is() -> void:
 
 ## Synthetic contract fixture: tests the receipt consumer, not actual Home travel.
 func _home_return(game: GameStub) -> void:
+	game.local.redesign_character["relics_held"] = ["stormwood"]
 	game.local.redesign_character.transaction_receipts.append(
 		HOMECOMING.HOME_RETURN_PREFIX + "unit-world:" + game.local.character_id + ":unit-host-ticket")
 
@@ -342,7 +347,9 @@ func test_chapter_choices_use_personal_answers_and_do_not_resurrect_companions()
 	game.local.flags.set_flag("cloudreach:legendary_joined")
 	game.local.flags.set_flag("stormwood:legendary_answer:claim-a:refused")
 	var choices := HOMECOMING.chapter_choices(game.local.flags)
-	assert_true(choices.contains("Veridian stay behind"))
+	assert_true(choices.contains("freed companion stay behind"))
+	assert_false(choices.contains("Veridian"), "only accepted legendaries may be named")
 	assert_true(choices.contains("welcome Solmane"))
-	assert_true(choices.contains("Stormheart choose its own road"))
+	assert_true(choices.contains("freed companion choose its own road"))
+	assert_false(choices.contains("Stormheart"), "a refused offer does not authorize naming")
 	assert_false(choices.contains("came home"), "an accepted offer does not imply a retained creature")
