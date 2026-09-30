@@ -20,11 +20,19 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## flag into the character half as well after the save (the split-save double
 ## grant), so its on-disk count must fail.
 
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
+
 const F08_DURABLE_FLAGS: Array[String] = ["cloudreach_winds_restored",
 	"realm_heart_cloudreach_earned", "sky_shrine_reached", "realm_key_stormwood"]
 
 
 func _run() -> void:
+	# Retired physical-gate regression only; shipping remains default-off.
+	if not BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}):
+		push_error("Legacy F08 tail fixture requires the debug-only test flag")
+		quit(1)
+		return
+	print("F16 disclosure: legacy_physical_crossings enabled for retired F08 tail assertion only")
 	start_usec=Time.get_ticks_usec()
 	# Events go to user:// by default so a run never dirties the checkout
 	# (CI and every lane run this). Pass `-- --evidence-dir=<res:// or abs path>`
@@ -109,6 +117,7 @@ func _run() -> void:
 		and game.can_enter_realm("stormwood"), "Reload restored the Stormwood key: the realm opens")
 	print("CLOUDREACH PERSISTENCE TAIL %s members=%d differences=%d"%[
 		"FAIL" if failed else "PASS",game.party.size(),differences.size()])
+	BIOME_ORDER.clear_test_overrides()
 	quit(1 if failed else 0)
 
 
