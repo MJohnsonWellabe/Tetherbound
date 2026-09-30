@@ -62,6 +62,7 @@ func test_optional_receipt_is_recursively_frozen_and_detached() -> void:
 	assert_eq(frozen.nested.count, 3)
 	assert_true(frozen.is_read_only())
 	assert_true(frozen.waypoints.is_read_only())
+	assert_true(frozen.nested.is_read_only())
 
 func test_light_cap_is_global_idempotent_and_reclaims_existing_lease() -> void:
 	assert_eq(BUDGET.lights_used(), 0, "No previous test leaves a light lease")
@@ -87,4 +88,3 @@ func test_light_cap_is_global_idempotent_and_reclaims_existing_lease() -> void:
 	for token in tokens: BUDGET.release(token)
 	assert_eq(BUDGET.lights_used(), 0)
 	for i in 5: assert_eq(BUDGET.used("light-unit-%d" % i), 0)
-	assert_true(frozen.nested.is_read_only())
