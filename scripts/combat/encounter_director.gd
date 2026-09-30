@@ -2445,7 +2445,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		encounter_id, str(card.get("creature_uid", "")), str(opponent.get("uid")),
 		str(intent.get("move_id", "")), slot, muzzle, target,
 		MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
-		int(runtime.get("body_generation")) if runtime != null else 0)
+		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position)
 	if float(launch.travel_seconds) <= 0.0:
 		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false)
 	delta["scheduled"] = true

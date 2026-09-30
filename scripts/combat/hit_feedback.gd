@@ -42,11 +42,13 @@ static func receipt(action_id: String, move_id: String, move: Dictionary,
 ## Flat host schedule. No client aim, callbacks, HP or RNG is accepted here.
 static func launch(action_id: String, encounter_id: String, attacker_uid: String,
 		target_uid: String, move_id: String, slot: String, from: Vector3,
-		to: Vector3, travel_seconds: float, body_generation: int = 0) -> Dictionary:
+		to: Vector3, travel_seconds: float, body_generation: int = 0,
+		target_ground: Vector3 = Vector3.INF) -> Dictionary:
 	var value := {"action_id": action_id, "encounter_id": encounter_id,
 		"attacker_uid": attacker_uid, "target_uid": target_uid, "move_id": move_id,
 		"slot": slot, "from": from, "to": to, "travel_seconds": maxf(0.0, travel_seconds),
 		"body_generation": body_generation, "mastery_rank": 1, "seed": action_id.hash()}
+	if target_ground.is_finite(): value["target_ground"] = target_ground
 	value.make_read_only()
 	return value
 

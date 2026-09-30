@@ -61,6 +61,7 @@ signal state_changed()
 signal hit_landed(on_enemy: bool, amount: float)
 ## Host-resolved impact presentation; never an HP or authority callback.
 signal impact_confirmed(on_enemy: bool, receipt: Dictionary, world_position: Vector3)
+signal attack_launched(on_enemy: bool, launch: Dictionary, presentation: Node3D)
 signal staggered(on_enemy: bool)
 ## T3-TYPECHART. The type verdict for the hit `hit_landed` is about to report:
 ## 1 advantaged, -1 disadvantaged, 0 neutral. Emitted IMMEDIATELY BEFORE
@@ -2543,7 +2544,7 @@ func _resolve_player_strike() -> void:
 	var launch := HIT_FEEDBACK.launch("%s:solo:%d" % [_encounter_id, _impact_serial],
 		_encounter_id, str(creature.get("uid")), str(_enemy.get("uid")), move_id,
 		"quick" if bool(frozen_move.get("is_quick", false)) else "charged", muzzle, target,
-		PROJECTILE.travel_seconds(muzzle, target, frozen_move.get("vfx", {})), _impact_generation)
+		PROJECTILE.travel_seconds(muzzle, target, frozen_move.get("vfx", {})), _impact_generation, _wild.global_position)
 	present_host_attack_launch(launch)
 	if float(launch.travel_seconds) > 0.0:
 		await get_tree().create_timer(float(launch.travel_seconds), false).timeout
@@ -3001,7 +3002,7 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 	var target: Vector3 = target_body.call("centre")
 	var launch := HIT_FEEDBACK.launch("%s:enemy:%d" % [_encounter_id, _impact_serial],
 		_encounter_id, str(_enemy.get("uid")), str(card.get("creature_uid", "")),
-		move_id, "quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})))
+		move_id, "quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), 0, target_body.global_position)
 	var impact := _new_impact(move_id, "quick", damage, type_mult, false, facing, target_body, str(launch.action_id), str(card.get("creature_uid", "")))
 	var payload := {"damage": damage, "type_mult": type_mult, "move_id": move_id,
 		"lunge": float(cfg.get("lunge", 3.4)), "impact": impact}
@@ -3681,7 +3682,7 @@ func _on_enemy_strike() -> void:
 	var muzzle := origin + facing * (float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.0)
 	var launch := HIT_FEEDBACK.launch("%s:solo-enemy:%d" % [_encounter_id, _impact_serial],
 		_encounter_id, str(_enemy.get("uid")), str(creature.get("uid")), move_id,
-		"quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), _impact_generation)
+		"quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), _impact_generation, _ally_body.global_position)
 	present_host_attack_launch(launch, _wild, false)
 	if float(launch.travel_seconds) > 0.0:
 		get_tree().create_timer(float(launch.travel_seconds), false).timeout.connect(
@@ -4840,8 +4841,9 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 	if not is_instance_valid(striker): return
 	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
 	var move: Dictionary = _moves.move(str(launch.get("move_id", "")))
-	PROJECTILE.launch(parent, launch.get("from", striker.global_position),
+	var presentation := PROJECTILE.launch(parent, launch.get("from", striker.global_position),
 		launch.get("to", target_body.global_position), move.get("vfx", {}), launch)
+	attack_launched.emit(on_enemy, launch, presentation)
 
 
 func _present_impact(on_enemy: bool, impact: Dictionary, target_body: Node3D, applied_damage: float = -1.0) -> void:

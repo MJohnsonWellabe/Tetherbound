@@ -14,6 +14,24 @@ func _run() -> void:
 	body.set_script(BODY)
 	root.add_child(body)
 	await physics_frame
+	# The real body releases overlapping host leases independently of a local
+	# manager; a manager release cannot prematurely end the second hit.
+	var leases_ok := true
+	body.call("begin_combat_impact_hitstop", 0.08)
+	body.call("begin_combat_impact_hitstop", 0.5)
+	body.call("set_combat_hitstop", true)
+	body.call("set_combat_hitstop", false)
+	leases_ok = leases_ok and not body.is_physics_processing()
+	print("Host leases after manager release: count=%d physics=%s" % [int(body.get("_combat_timed_hitstop_count")), body.is_physics_processing()])
+	await create_timer(0.12).timeout
+	leases_ok = leases_ok and not body.is_physics_processing()
+	print("Host leases after short expiry: count=%d physics=%s" % [int(body.get("_combat_timed_hitstop_count")), body.is_physics_processing()])
+	body.call("set_combat_hitstop", true)
+	await create_timer(0.45).timeout
+	leases_ok = leases_ok and not body.is_physics_processing()
+	body.call("set_combat_hitstop", false)
+	leases_ok = leases_ok and body.is_physics_processing()
+	print("Overlapping host hitstop leases / manager ownership: %s" % leases_ok)
 	body.velocity = Vector3.ZERO
 	body.call("add_impulse", Vector3.RIGHT, 6.0)
 	var maximum := 0.0
@@ -38,7 +56,7 @@ func _run() -> void:
 	await process_frame
 	print("Single 6m/s impulse: peak horizontal speed %.3fm/s" % maximum)
 	print("Arena diagonal 6m/s impulse: peak horizontal speed %.3fm/s" % edge_maximum)
-	if maximum < 4.5 or maximum > 6.01 or edge_maximum < 2.0 or edge_maximum > 6.01 \
+	if not leases_ok or maximum < 4.5 or maximum > 6.01 or edge_maximum < 2.0 or edge_maximum > 6.01 \
 			or free_tail > 0.01 or edge_tail > 0.01:
 		print("FAIL: impulse missing, amplified, or retained a locomotion tail (%.4f, %.4f)" % [free_tail, edge_tail])
 		quit(1)
