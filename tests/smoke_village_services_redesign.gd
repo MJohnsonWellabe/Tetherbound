@@ -33,12 +33,15 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 	for role: String in REQUIRED_HOUSES:
 		var building: Node3D = houses[role]
 		var interior := building.get_node_or_null("Interior")
-		# Source review identifies real bed/table/stock/bar/work-tool furnishing
-		# in these installed interior templates. Actual instantiated geometry and
-		# warm room light must be present; an empty room script is insufficient.
+		# A display_name is not a resident. Unoccupied cottages must really have
+		# both a bed-sized low piece and a separate storage-sized piece, with a
+		# lit room. This verifies lived-in dressing without claiming pixel quality.
 		if interior == null or interior.find_children("*", "MeshInstance3D", true, false).size() < 3 \
 				or interior.find_children("*", "Light3D", true, false).is_empty():
 			return _services_fail("house lacks actual lived-in room furnishing/light: " + role)
+		if role in ["halda_house", "research_house", "oskar_house", "alder_house", "orchard_house"] \
+				and not _has_cottage_furnishings(interior):
+			return _services_fail("actual cottage bed/storage dressing is missing: " + role)
 	var tournament := _world.get_node_or_null("Tournament")
 	var board := _world.get_node_or_null("Tournament/Board") as Node3D
 	if tournament == null or board == null or not bool(tournament.call("built")):
@@ -122,6 +125,22 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 
 func _road_join(start: Vector2, end: Vector2) -> Vector2:
 	return Geometry2D.get_closest_point_to_segment(_xz(), start, end)
+
+
+func _has_cottage_furnishings(interior: Node) -> bool:
+	var bed := false
+	var storage := false
+	for raw: Node in interior.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if not mesh.mesh is BoxMesh:
+			continue
+		var size: Vector3 = (mesh.mesh as BoxMesh).size
+		if size.x >= 1.2 and size.z >= .7 and size.y >= .3 and size.y <= .8:
+			bed = true
+		if size.x >= .4 and size.x < 1.0 and size.z >= .35 and size.z < 1.0 \
+				and size.y >= .3 and size.y < 1.0:
+			storage = true
+	return bed and storage
 
 
 func _service_leg(points: Array, label: String) -> bool:
