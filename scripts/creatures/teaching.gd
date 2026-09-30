@@ -152,6 +152,30 @@ static func party_loadout_errors(entries: Variant, character: Variant = {}) -> A
 			errors.append("party[%d]: %s" % [index,str(staged.get("reason","invalid_loadout"))])
 	return errors
 
+## Admission is stricter than the tolerant local v28 reader: a remote host
+## must bind existing canonical UIDs and never mint replacements for a packet.
+## Call only after the portable envelope and typed character carrier validate.
+static func admitted_party_errors(entries: Variant, character: Variant) -> Array[String]:
+	var errors := party_loadout_errors(entries,character)
+	if not errors.is_empty(): return errors
+	if entries.size()>5:
+		return ["admitted party exceeds five owned creatures"]
+	var instances := load("res://scripts/creatures/creature_instance.gd") as GDScript
+	var species := load("res://scripts/creatures/creature_species.gd") as GDScript
+	var seen := {}
+	for index: int in entries.size():
+		var saved: Variant = entries[index]
+		if not saved is Dictionary or not saved.get("uid") is String:
+			errors.append("admitted party[%d] has no canonical identity" % index)
+			continue
+		var uid: String = saved.uid
+		if not instances.valid_uid(uid) or seen.has(uid):
+			errors.append("admitted party[%d] has invalid or repeated identity" % index)
+		seen[uid] = true
+		if not saved.get("species_id") is String or not species.has(str(saved.species_id)):
+			errors.append("admitted party[%d] has unknown species" % index)
+	return errors
+
 ## Typed carrier projection at a serialization boundary. The live instance is
 ## canonical; unrelated cap/breakthrough/trait/evolution records are preserved.
 ## A snapshot never calls the credit helper and cannot invent a landed use.

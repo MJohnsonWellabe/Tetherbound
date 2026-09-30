@@ -106,11 +106,15 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 	var entries: Array = saver._party_to_array(party)
 	var character := preload("res://scripts/data/redesign_state.gd").defaults("character")
 	assert_true(TEACHING.party_loadout_errors(entries,character).is_empty())
+	assert_true(TEACHING.admitted_party_errors(entries,character).is_empty())
 	var before := entries.duplicate(true)
 	var bad := entries[0].duplicate(true)
 	bad.loadout_revision = .5
 	entries.append(bad)
 	assert_false(TEACHING.party_loadout_errors(entries,character).is_empty(),"a later invalid row refuses the whole party")
+	bad.loadout_revision = 0
+	assert_false(TEACHING.admitted_party_errors(entries,character).is_empty(),"duplicate canonical UID refuses remote admission, never reminted by host")
+	bad.loadout_revision = .5
 	assert_eq(entries[0],before[0],"preflight never applies a prior good row")
 	assert_false(TEACHING.party_loadout_errors(before,{"creatures":[]}).is_empty(),"hostile carrier fails closed")
 	var mirror := TEACHING.character_loadout_mirror(before,character)
