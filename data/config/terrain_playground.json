@@ -435,7 +435,7 @@
       },
       {
         "centre": [
-          38,
+          34,
           5
         ],
         "half_extents": [
@@ -592,8 +592,12 @@
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): a short desire line from the main street across the green to the inn's doorstep, which now faces the green (inn at [-2.5,-6], yaw 90).",
         "points": [
           [
-            44,
+            46,
             14
+          ],
+          [
+            46,
+            10.6
           ],
           [
             44,
@@ -843,11 +847,11 @@
         "_why": "OPTION-B (owner 2026-09-29): the stone cottage's doorstep [16.37,-5] faces the green from the east but sat 5.9 m from the nearest road. This short walk leaves the main street at the green's north edge [10.5,-10] (6 m from the z=-16 crossroads, the same node the inn's route uses) and ends on the doorstep. An approach, not a route, so the junction fingerpost draws no extra arm.",
         "points": [
           [
-            38,
+            34,
             14
           ],
           [
-            38,
+            34,
             5
           ]
         ]
@@ -1021,11 +1025,11 @@
         "id": "tam_workshop_walk",
         "points": [
           [
-            32,
+            40,
             14
           ],
           [
-            32,
+            40,
             19.1
           ],
           [
@@ -1040,11 +1044,11 @@
         "id": "halda_house_walk",
         "points": [
           [
-            50,
+            52,
             14
           ],
           [
-            50,
+            52,
             21.1
           ],
           [
@@ -1059,11 +1063,11 @@
         "id": "research_house_walk",
         "points": [
           [
-            56,
+            58,
             14
           ],
           [
-            56,
+            58,
             7.9
           ],
           [
@@ -1078,11 +1082,11 @@
         "id": "oskar_house_walk",
         "points": [
           [
-            62,
+            64,
             14
           ],
           [
-            62,
+            64,
             21.1
           ],
           [
@@ -1097,11 +1101,11 @@
         "id": "alder_house_walk",
         "points": [
           [
-            68,
+            70,
             14
           ],
           [
-            68,
+            70,
             6.9
           ],
           [
@@ -1116,11 +1120,11 @@
         "id": "orchard_house_walk",
         "points": [
           [
-            74,
+            76,
             14
           ],
           [
-            74,
+            76,
             20.1
           ],
           [
@@ -1554,13 +1558,13 @@
         "_why": "F17 straight village road beside the existing South Bridge exit, without moving the field catch lesson."
       },
       "well": [
-        38,
+        34,
         5
       ],
-      "_comment_green": "RD-29/F17: a small off-street well green at [38,5], connected by a side walk whose main-street join remains separate from house frontages.",
+      "_comment_green": "RD-29/F17: a small off-street well green at [34,5], connected by a side walk whose main-street join remains separate from house frontages.",
       "green": {
         "centre": [
-          38,
+          34,
           5
         ],
         "radius_m": 4
@@ -1626,6 +1630,11 @@
           "road": "The Pond",
           "_why": "F01-b/F01-c. West of the Pond lane between Grandpa's kitchen garden and the fence: six authored oaks (village.json square_oak_a/b, trunk-only colliders) round stone node 6 [-18,6], with a bush understorey (band1 vegetation.json layer_anchors.bushes) and its own scatter clearing (band1 clearings order 1930) so baked random trees and rocks cannot land on the oaks. The Pond lane runs along its east edge (7.4m from the centre), so the road passes through the grove's margin rather than ending in it."
         }
+      ],
+      "primary_field_approaches": [
+        "Practice Meadow",
+        "The Pond",
+        "The Rise"
       ]
     },
     "_comment_ow5c_trailheads": "OW5C: 18 new trailheads appended, one per regional-loop leave point, shortcut origin, and spoke leave point (section 11's wayfinding answer: signpost.gd's junction post only fits four arms, so the 12km trail's forks are marked by one-arm trailhead fingerposts instead of a fifth+ arm on the post)."

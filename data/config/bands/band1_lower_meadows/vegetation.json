@@ -1095,6 +1095,13 @@
       "z": 14,
       "radius": 24.59,
       "_why": "F17 crossing_hall native module exclusion"
+    },
+    {
+      "order": 1110,
+      "x": 34,
+      "z": 5,
+      "radius": 4.5,
+      "_why": "F17 retained small well green native apron"
     }
   ],
   "_comment_w05_treeline_0904": "W05-TREELINE-0904: every `trees` anchor here that carries its own scale range (the TREE-SILHOUETTE copse peaks and bodies, the frame trunk, the crest pair, the comp4 pin, the basin and far-rim treelines, station 04) is lifted by the same 2.0/1.45 factor the corridor-wide `trees.scale_max` moved by, so each composed silhouette keeps its authored relationship to the fill around it instead of becoming the SHORT stand in a taller wood. Shoulder pairs (scale_max <= 0.85, the deliberately young trees of the peak/shoulder/body recipe) are untouched: grow, never shrink, and the recipe wants them small. Anchor `count`, `at`, `radius`, `models` untouched -- those would re-roll the shared stream; a scale range does not."

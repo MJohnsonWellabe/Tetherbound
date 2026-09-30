@@ -134,7 +134,7 @@
       "id": "village_well",
       "prefab": "well",
       "at": [
-        38,
+        34,
         5
       ],
       "yaw_deg": 15
