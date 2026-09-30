@@ -25,7 +25,7 @@
       "canonical_lf_sha256": "fd79e1aba1614b38d75b82908e4d86dd416201708c65a8eeabb4f8d3cd3c0242"
     }
   ],
-  "actual_producer": "PlayerState.save_data() -> CharacterAuthority.portable_projection() -> Session _rpc_peer_hello validation -> same seed_admitted_character record. Host local uses same save_data/seed/refresh; rejoin retains admitted stable character, never replaces state.",
+  "actual_producer": "PlayerState.save_data() -> CharacterAuthority.portable_projection() -> Session _rpc_hello validation -> same seed_admitted_character record. Host local uses same save_data/seed/refresh; rejoin retains admitted stable character, never replaces state.",
   "field_sources": [
     {
       "field": "equipment",
