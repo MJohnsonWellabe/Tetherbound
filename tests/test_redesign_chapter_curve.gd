@@ -8,6 +8,53 @@ const CURVE := preload("res://scripts/creatures/chapter_curve.gd")
 const REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 
 
+## F19#3 config gate scan. This inspects authored prerequisite fields; actual
+## portal admission and traversal remain separate runtime proof obligations.
+func _gate_strings(node: Variant, out: Array[String], prerequisite: bool = false) -> void:
+	if node is Dictionary:
+		for raw_key: Variant in node:
+			var key := str(raw_key).to_lower()
+			if key.begins_with("_"):
+				continue
+			var gated := prerequisite or key.begins_with("require") or key.begins_with("need") \
+				or key in ["access", "gate", "map_reveal_requires", "unlock_prerequisite"]
+			if gated and node[raw_key] is bool and bool(node[raw_key]):
+				out.append(key)
+			_gate_strings(node[raw_key], out, gated)
+	elif node is Array:
+		for raw: Variant in node:
+			_gate_strings(raw, out, prerequisite)
+	elif node is String and prerequisite:
+		out.append(str(node).to_lower())
+
+
+func test_authored_traversal_gates_do_not_require_fly_in_tidewake_or_later_rewards() -> void:
+	var files := DirAccess.get_files_at("res://data/config")
+	for realm: String in ["water", "cloudreach", "stormwood"]:
+		var scanned := 0
+		var prerequisites: Array[String] = []
+		for file: String in files:
+			if not file.begins_with(realm + "_") or not file.ends_with(".json"):
+				continue
+			var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/" + file))
+			assert_true(raw is Dictionary or raw is Array, "invalid gate input: " + file)
+			scanned += 1
+			_gate_strings(raw, prerequisites)
+		assert_true(scanned > 0 and not prerequisites.is_empty(), realm + " gate scan reached real prerequisite fields")
+		for gate: String in prerequisites:
+			if realm == "water":
+				assert_false(gate == "fly" or gate.contains("flight") or gate.contains("fly_traversal") \
+					or gate.contains("requires_fly") or gate.contains("require_fly"), "Tidewake Fly gate: " + gate)
+			if realm == "cloudreach":
+				assert_false(gate.contains("fulgocobra") or gate.contains("stormheart") \
+					or gate.contains("realm_heart_stormwood") or gate.contains("stormwood:legendary"),
+					"Cloudreach assumes Stormwood's later reward: " + gate)
+			if realm in ["cloudreach", "stormwood"]:
+				for future: String in ["biome5", "biome6", "biome7", "biome8"]:
+					assert_false(gate.contains(future + "_relic") or gate.contains("realm_heart_" + future) \
+						or gate.contains(future + ":legendary"), "unreleased biome reward gate: " + gate)
+
+
 func _read(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	assert_true(parsed is Dictionary, "missing/invalid curve input: " + path)
