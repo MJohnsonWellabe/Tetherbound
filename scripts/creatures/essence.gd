@@ -245,6 +245,51 @@ static func release_payout(owned: Dictionary, cfg: Dictionary) -> Array[Dictiona
 	return _split_payout(types, int(floorf(raw_total)))
 
 
+## The Den owner proves the actual grooming action and supplies the host's
+## in-game day. No client day/event/care entitlement is accepted by this helper.
+## Promote with the existing grooming receipt in the SAME character transaction.
+static func stage_care(admitted: Dictionary, character_id: String, uid: String,
+		host_day: int, character_revision: int, cfg: Dictionary) -> Dictionary:
+	if character_revision < 0 or not _integer(host_day, 0, 2147483647) or not _component(uid) \
+			or not _baseline_errors(admitted, character_id).is_empty() or not configuration_errors(cfg).is_empty():
+		return _refuse("invalid_care")
+	var day_prefix := "care:%s:%d:" % [character_id, host_day]
+	var already_awarded := 0
+	var duplicate_receipt := ""
+	var seen_uids: Dictionary = {}
+	for previous: String in admitted.redesign_character.transaction_receipts:
+		if not previous.begins_with(day_prefix): continue
+		var parts := previous.split(":")
+		if parts.size() != 5 or not _component(parts[3]) or not parts[4].is_valid_int() \
+				or not _integer(int(parts[4]), 1, 2147483647) or seen_uids.has(parts[3]):
+			return _refuse("receipt_conflict")
+		seen_uids[parts[3]] = true
+		already_awarded += int(parts[4])
+		if parts[3] == uid: duplicate_receipt = previous
+	if not duplicate_receipt.is_empty():
+		return {"ok": true, "duplicate": true, "receipt": duplicate_receipt, "expected_character_revision": character_revision}
+	var index := _owned_index(admitted, uid)
+	if index < 0: return _refuse("not_owned")
+	var amount := mini(int(cfg.care_per_grooming), int(cfg.care_daily_character_cap) - already_awarded)
+	if amount <= 0: return _refuse("daily_care_cap")
+	if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
+		return _refuse("receipt_budget")
+	var types := _species_types(admitted.party[index])
+	var payout := _split_payout(types, amount)
+	if payout.is_empty(): return _refuse("invalid_payout")
+	var inventory := RULES.inventory_from(admitted.inventory)
+	for stack: Dictionary in payout:
+		if int(inventory.add(str(stack.id), int(stack.n))) != 0: return _refuse("inventory_full")
+	var next := admitted.duplicate(true)
+	next.inventory = RULES.slots(inventory)
+	var receipt := day_prefix + "%s:%d" % [uid, amount]
+	next.redesign_character.transaction_receipts.append(receipt)
+	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
+	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,
+		"creature_uid": uid, "receipt": receipt, "payout": payout, "host_day": host_day,
+		"state": next, "before": admitted.duplicate(true), "daily_care_awarded": already_awarded + amount}
+
+
 ## Only host-held owned UIDs qualify here; the host ceremony also validates
 ## actual release eligibility. Declining a volunteer or a pending sixth is not
 ## a release entitlement. The host capture/ceremony transaction
