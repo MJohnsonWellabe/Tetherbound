@@ -6,7 +6,13 @@ size, seed and budgets live in `data/config/lookdev_routes.json`. The route
 walks through live collision after one declared initial setup teleport.
 
 `tools/run_lookdev_routes.py` runs only the requested combinations, serially,
-with an isolated device/save directory for each. It preserves native logs,
+with an isolated device/save directory for each renderer process. Medium
+and High now share one Forward+ scene mount, with a declared initial pose
+reset and fresh preset application/warmup for each route. Each writes its
+own raw frames and screenshots. The world ecology and resource caches stay
+warm across those two cases; this is disclosed in both receipts and summary,
+and is not an independent cold-start benchmark. Low uses its own process.
+The tool preserves native logs,
 actual renderer/adapter, source commit, route configuration hash, ordinary
 production-camera metadata, environment at start/end, screenshots and every
 raw wall/process/physics frame sample. Screenshot I/O brackets the timed
@@ -64,3 +70,10 @@ requires fresh explicit output paths, all five Stormwood stands and all
 phases, and checked receipt writes. Failure completion never dereferences a
 missing world. These adapter guards remain pending strict re-check/native
 validation and do not change the executed route.
+
+Independent VFX source re-check passed the adapter guards at `358bc68b5`.
+It also verified the retained native Water/Low receipt: 201 finite positive
+frames, two reached waypoints, clean native exit and 1920×1080 PNG headers.
+Images have not been code-blind judged. The new Medium/High process batch
+needs a bounded source re-check and its first native run; it does not replay
+the unchanged Low evidence or claim the remaining eleven routes passed.

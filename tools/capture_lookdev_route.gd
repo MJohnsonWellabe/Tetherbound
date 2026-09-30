@@ -9,6 +9,8 @@ const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const ROUTES_PATH := "res://data/config/lookdev_routes.json"
 var _preset := ""
+var _presets: Array[String] = []
+var _case_index := 0
 var _source_commit := ""
 var _capture: Dictionary = {}
 var _route: Dictionary = {}
@@ -29,7 +31,7 @@ func _run() -> void:
 		if arg.begins_with("--biome="):
 			_biome_id = arg.trim_prefix("--biome=")
 		elif arg.begins_with("--preset="):
-			_preset = arg.trim_prefix("--preset=")
+			_presets.assign(arg.trim_prefix("--preset=").split(",", false))
 		elif arg.begins_with("--source-commit="):
 			_source_commit = arg.trim_prefix("--source-commit=")
 		elif arg.begins_with("--output="):
@@ -38,6 +40,7 @@ func _run() -> void:
 	var config: Variant = JSON.parse_string(config_text)
 	var sha_pattern := RegEx.new()
 	sha_pattern.compile("^[0-9a-f]{40}$")
+	_preset = _presets[0] if not _presets.is_empty() else ""
 	if DisplayServer.get_name() == "headless" or not config is Dictionary \
 			or not config.get("routes", {}).has(_biome_id) or not GRAPHICS.PRESETS.has(_preset) \
 			or sha_pattern.search(_source_commit) == null or _output_dir == "":
@@ -49,13 +52,17 @@ func _run() -> void:
 	_manifest["route_config_sha256"] = config_text.sha256_text()
 	_manifest["route_revision"] = str(config.revision)
 	var required_renderer := "gl_compatibility" if _preset == "Low" else "forward_plus"
+	var seen := {}
+	for choice: String in _presets:
+		if not GRAPHICS.PRESETS.has(choice) or seen.has(choice) \
+				or ("gl_compatibility" if choice == "Low" else "forward_plus") != required_renderer:
+			print("F26 route batch requires unique presets using the same actual renderer.")
+			quit(2)
+			return
+		seen[choice] = true
 	if RenderingServer.get_current_rendering_method() != required_renderer:
 		print("F26 route refused renderer/preset mismatch; launch with --rendering-method " + required_renderer)
 		quit(2)
-		return
-	if GRAPHICS.choose(_preset) != OK:
-		print("F26 route could not persist the declared device preset.")
-		quit(1)
 		return
 	root.size = Vector2i(int(_capture.resolution[0]), int(_capture.resolution[1]))
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output_dir)):
@@ -65,18 +72,52 @@ func _run() -> void:
 	if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir)) != OK:
 		quit(1)
 		return
+	if GRAPHICS.choose(_preset) != OK:
+		print("F26 route could not persist the declared device preset.")
+		quit(1)
+		return
 	seed(int(_capture.seed))
 	if not await _mount_production_world() or not _prepare_capture_shell():
 		_write_route_receipt(false)
 		quit(1)
 		return
+	var batch_output := _output_dir
+	for index in _presets.size():
+		_case_index = index
+		_preset = _presets[index]
+		_output_dir = batch_output.path_join(_preset.to_lower()) if _presets.size() > 1 else batch_output
+		if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir)) != OK:
+			quit(1)
+			return
+		if index > 0 and GRAPHICS.choose(_preset) != OK:
+			_failures.append("Could not persist next batched device preset")
+			_write_route_receipt(false)
+			quit(1)
+			return
+		await _capture_route_case()
+		if not _failures.is_empty():
+			quit(1)
+			return
+	quit(0)
+
+
+func _capture_route_case() -> void:
+	_samples.clear()
+	_waypoints_reached = 0
+	_timed_out = false
+	_route_started_usec = 0
+	_route_finished_usec = 0
+	_clock_start.clear()
+	_clock_end.clear()
+	# Apply the live preset before warmup, so each case includes its own
+	# shader/material preparation. A reused world retains normal ecology.
+	_look.call("refresh_graphics")
 	# Only declared evidence setup teleports. Every timed leg walks through
 	# the existing movement actions and live collision, without repairs.
 	var start := _route_point(_route.start)
 	if not start.is_finite():
 		_failures.append("route start has no valid floor")
 		_write_route_receipt(false)
-		quit(1)
 		return
 	_player.global_position = start + Vector3.UP * float(_capture.floor_clearance_m)
 	_player.velocity = Vector3.ZERO
@@ -101,7 +142,6 @@ func _run() -> void:
 			_weather.set_physics_process(true)
 	if not _failures.is_empty():
 		_write_route_receipt(false)
-		quit(1)
 		return
 	_look.call("refresh_graphics")
 	for frame in int(_capture.pose_frames):
@@ -109,7 +149,6 @@ func _run() -> void:
 	await _route_still("start")
 	if not _failures.is_empty():
 		_write_route_receipt(false)
-		quit(1)
 		return
 	_clock_start = _observed_environment()
 	_navigation = NAVIGATOR.new(self, _player, _rig, _drive_route)
@@ -136,7 +175,7 @@ func _run() -> void:
 	_clock_end = _observed_environment()
 	await _route_still("end")
 	_write_route_receipt(_failures.is_empty() and _waypoints_reached == _route.waypoints.size())
-	quit(0 if _failures.is_empty() else 1)
+	print("F26 route case %s: %s" % [_preset, "PASS" if _failures.is_empty() else "FAIL"])
 
 
 func _route_point(raw: Array) -> Vector3:
@@ -212,12 +251,18 @@ func _route_still(label: String) -> void:
 
 func _write_route_receipt(complete: bool) -> void:
 	var data := {"complete": complete, "source_commit": _source_commit,
+		"process_presets": _presets, "case_index": _case_index,
+		"scene_reused_across_presets": _presets.size() > 1,
 		"route_revision": _manifest.get("route_revision", ""),
 		"route_config_sha256": _manifest.get("route_config_sha256", ""),
 		"biome": _biome_id, "preset": _preset,
 		"renderer": RenderingServer.get_current_rendering_method(), "display": DisplayServer.get_name(),
 		"adapter": RenderingServer.get_video_adapter_name(), "resolution": [root.size.x, root.size.y],
-		"engine": Engine.get_version_info(), "route": _route, "camera": _manifest.get("production_camera", {}),
+		"engine": Engine.get_version_info(), "route": _route, "camera": {
+			"path": str(_world.get_path_to(_camera)) if _world != null and _camera != null else "",
+			"fov": _camera.fov if _camera != null else 0.0,
+			"far": _camera.far if _camera != null else 0.0,
+			"near": _camera.near if _camera != null else 0.0},
 		"waypoints_reached": _waypoints_reached, "samples": _samples, "failures": _failures,
 		"environment_start": _clock_start, "environment_end": _clock_end,
 		"elapsed_ms": maxf(0.0, (_route_finished_usec - _route_started_usec) / 1000.0),
