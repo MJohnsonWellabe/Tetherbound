@@ -1,0 +1,11 @@
+# Fireball player-path work in progress
+
+No F23 or F25 criterion is closed. Production source and authored acquisition are on tb/combat, awaiting landing. One Cindercub roster fixture and pickup/practice teleports are disclosed; this is not an earned creature, chapter travel or campaign witness. No inventory grant, teaching callback, damage or energy value is injected.
+
+- Driver707ad7c80, fireball-player-initial.txt,native1: actual band loader instantiates b5_tm_fireball_scorched_pocket; physical interaction grants exactly one tm_fireball and commits cache:b5_tm_fireball_scorched_pocket; native Satchel Use and eligible learner confirmation consume that disc and write Fireball into charged while preserving quick. Cast remains unavailable because the driver did not earn energy. It incorrectly expected projectile-arrived callbacks from zero-duration contact moves.
+- Driver9cd074241, fireball-parser-initial.txt,native1: local variable name collision prevented script load; no world/player proof occurred.
+- Driver4a5d60e2d, fireball-contact-anchor-initial.txt,native1: the same real pickup and native teaching pass. Four actual Ember Bite quick hits earn energy; a physical charged trigger launches Fireball,actual returned node arrives,and targetHP65.206→9.714 loses55.492 with its actual HUD number. The overall run fails the instant incoming-flash assertion because it compared the flash to the above-head damage-number anchor. The ordinary incoming hit actually debits HP and creates its number.
+- Independent VFX source review identifies that exact anchor mismatch and confirms the fixture has no direct item/damage grants. After two failed contact-witness approaches,the driver now measures zero-duration contact against actual struck-body geometry and a freshly constructed production ImpactFlash. Travelling hits retain the actual-arrived assertion.
+- Source090be0265 corrects the anchor; fireball-parser-final.txt script-only check passes native0. The affected player replay is pending the serialized engine queue. A parser PASS does not turn the earlier real run green.
+
+No rendered-pixel,aural-quality,Medium-performance,mastery/utility/ultimate or code-blind Fireball quality proof is claimed. The library remains governed by VFX's quality gate.
