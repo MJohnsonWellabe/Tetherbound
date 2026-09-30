@@ -19,4 +19,4 @@ No parser/native test yet; this module does not activate when the library activa
 Attach/synthetic capture alone cannot prove an earned pilot path or F25#3. Actual
 rendered originals, authority/HP timing, co-op/device/performance/mix/full craft remain
 separate required evidence. R17 proof candidate 33fea remains unchanged in Git;
-new observer lives in later source-only work, with no GPIO/engine/import writers.
+new observer lives in later source-only work, with no GPU/engine/import writers.
