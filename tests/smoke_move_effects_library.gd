@@ -137,6 +137,8 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var arrival_wall: Array[float] = []
 	var arrival_frames: Array[int] = []
 	var independent_result_frame := [-1]
+	var flight_ready := [false]
+	var impact_ready := [false]
 	var started := Time.get_ticks_usec()
 	for i in simultaneous:
 		var z := float(i) * 2 - float(simultaneous - 1)
@@ -147,7 +149,14 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		effect.connect("arrived", func() -> void:
 			arrivals[0] += 1
 			arrival_frames.append(Engine.get_process_frames())
-			arrival_wall.append(float(Time.get_ticks_usec() - started) / 1000000.0))
+			arrival_wall.append(float(Time.get_ticks_usec() - started) / 1000000.0)
+			if capture and int(arrivals[0]) == simultaneous:
+				create_timer(travel * maxf(0.0, float(_scenarios.capture_phases.impact) - 1.0), false).timeout.connect(func() -> void: impact_ready[0] = true))
+	if capture:
+		# Disk capture can stretch wall time without advancing the same amount
+		# of presentation time. Shutters follow its timer/contact, never a wall
+		# duration inference; recorded wall timestamps retain the real stalls.
+		create_timer(travel * float(_scenarios.capture_phases.flight), false).timeout.connect(func() -> void: flight_ready[0] = true)
 	# Same separate idle timer combat owns; it never waits for the node. This
 	# local clock proof makes no HP mutation and cannot replace player evidence.
 	create_timer(travel, false).timeout.connect(func() -> void:
@@ -170,7 +179,9 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		peak = maxi(peak, BUDGET.used(encounter))
 		if capture and DisplayServer.get_name() != "headless":
 			for phase: String in _scenarios.capture_phases:
-				if elapsed < travel * float(_scenarios.capture_phases[phase]) or captured.has(phase): continue
+				if captured.has(phase): continue
+				var ready: bool = bool(flight_ready[0]) if phase == "flight" else (bool(impact_ready[0]) if phase == "impact" else int(arrivals[0]) == simultaneous)
+				if not ready: continue
 				await RenderingServer.frame_post_draw
 				# Neutral filenames keep archetype and rank out of blind-judge
 				# inputs; the private results record retains the mapping.
