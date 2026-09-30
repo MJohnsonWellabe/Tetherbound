@@ -1,0 +1,39 @@
+{
+  "source": "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72",
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-foundations",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_actor_vitals_authority.gd::test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation,test_actor_vitals_authority.gd::test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private,test_actor_vitals_authority.gd::test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown"
+  ],
+  "selectors": [
+    "test_actor_vitals_authority.gd::test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation",
+    "test_actor_vitals_authority.gd::test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private",
+    "test_actor_vitals_authority.gd::test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown"
+  ],
+  "before": {
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "tests/test_actor_vitals_authority.gd": "6164e740d06972833a733be681c28e3e5a5b9ee29d833a384aaab5e2ccbc6297"
+  },
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "scope": "Exactly three new necessary risk methods: actor alias/generation, departed HP/handoff privacy, canonical paced Heal/Wind/rejoin commitment; independent SOURCEPASSc5c type-only corrected test; production source8ca unchanged; actual player/solo/RPC/owner saveACK integration remains OPEN",
+  "pid": 12188,
+  "native_exit": 0,
+  "elapsed_seconds": 5.577999999979511,
+  "after": {
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "tests/test_actor_vitals_authority.gd": "6164e740d06972833a733be681c28e3e5a5b9ee29d833a384aaab5e2ccbc6297"
+  },
+  "raw_sha256": "153a4b913743850260d907cd92a97b740ef66b1f59a0efb37c218d976d0c1319",
+  "errors": [],
+  "same_source": true,
+  "head_after": "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72"
+}

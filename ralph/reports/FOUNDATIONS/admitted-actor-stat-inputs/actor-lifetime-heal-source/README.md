@@ -1,8 +1,9 @@
 # Actor lifetime and Heal source packet
 
 This is an applied, runtime-disabled dependency packet against landed main
-8b7707c3dd333acb67bf2925a99366ce36e04a5b. It has no passing native, player-path
-or co-op result. The original admitted-carrier evidence in the parent directory
+8b7707c3dd333acb67bf2925a99366ce36e04a5b. Its three named risk methods passed on c5c6bce2f: 73 assertions, native0,
+5.578 seconds, no engine/script errors. Actual player-path and co-op results
+remain open. The original admitted-carrier evidence in the parent directory
 does not prove these new encounter methods.
 
 EncounterHost owns temporary actor HP in its existing participant records.
@@ -28,15 +29,19 @@ Owner bool save/ACK remains a separate later step; refusal retains accepted HP
 and the durable journal. These existing Session/Ledger/writer paths are unchanged.
 
 Actual Manager/Director integration, explicit solo/local admission and clock,
-owner-write failure/rejoin gameplay proof and scoped native checks remain open.
+owner-write failure/rejoin gameplay proof remain open.
 The runtime flag is false. Sap, Hearten, ultimates and mastery are outside this
-packet. Three appended adversarial methods are allocated but have not run.
+packet. Three appended adversarial methods passed in one scoped batch; no full-suite result is claimed.
 The c97 source gate failed on raw timing, omitted windup in Wind readiness,
 and lost shared recovery across reconnect. That FAIL is retained losslessly.
 The 8ca bounded source gate passed, but its first three-method native selection
 failed while parsing the test's inferred `wrong` variable: native 1, zero
 assertions, no methods executed. That failed raw log and receipt remain lossless
 in native-r1. The successor only adds the explicit Dictionary type; its same
-Heal method retains exact timing and reconnect boundary assertions. Retry pending.
+Heal method retains exact timing and reconnect boundary assertions. The one
+scoped retry passed; native-r2 preserves its original receipt and raw log.
+The independent 8ca and c5c source PASS reports are preserved separately.
+The ordinary main merge changed documentation only; all four reviewed
+production/config/test Git blobs are identical to the passing native source.
 Manifest hashes bind the four changed code/config/test paths and unchanged
 registry, writers, move data and caller sources; no criterion status changes.

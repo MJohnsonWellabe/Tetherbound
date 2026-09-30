@@ -1,0 +1,368 @@
+{
+  "verdict": "SOURCEPASS type-only successor",
+  "head": "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72",
+  "prior_sourcePASS": "8ca35627ef66d4e8bee012c97054d2a31b74e851",
+  "sealed": true,
+  "checks": [
+    {
+      "check": "prior sealed sourcePASS exact8ca",
+      "pass": true
+    },
+    {
+      "check": "exact six scoped paths",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input data/config/combat.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency data/config/combat.json",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/README.md",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/manifest.json",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/combat/utility_effects.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/combat/utility_effects.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/net/encounter_host.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/net/encounter_host.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input tests/test_actor_vitals_authority.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/net/session.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/net/session.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/net/character_authority.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/net/character_authority.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/net/ledger_rpc.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/net/ledger_rpc.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/net/actor_vitals_delivery.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/net/actor_vitals_delivery.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/save/save_game.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/save/save_game.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/combat/encounter_director.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/combat/encounter_director.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/combat/combat_manager.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/combat/combat_manager.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input data/moves/moves.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency data/moves/moves.json",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/save/character_save.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/save/character_save.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/save/world_save.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/save/world_save.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/net/world_ledger.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/net/world_ledger.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/creatures/move_db.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/creatures/move_db.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input scripts/combat/combat_math.gd",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency scripts/combat/combat_math.gd",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input data/schema/character_state.schema.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency data/schema/character_state.schema.json",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input docs/STATE.md",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency docs/STATE.md",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input docs/design/COMBAT.md",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency docs/design/COMBAT.md",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input docs/ACCEPTANCE.md",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency docs/ACCEPTANCE.md",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/COORDINATOR/dashboard/criteria.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency ralph/reports/COORDINATOR/dashboard/criteria.json",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/COORDINATOR/dashboard/status.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency ralph/reports/COORDINATOR/dashboard/status.json",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/.gitattributes",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/review.json",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/review.json",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/source.patch",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/source.patch",
+      "pass": true
+    },
+    {
+      "check": "prior immutable input ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/strict-review.txt",
+      "pass": true
+    },
+    {
+      "check": "unchanged reviewed source/dependency ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/strict-review.txt",
+      "pass": true
+    },
+    {
+      "check": "exact one explicit Dictionary type correction",
+      "pass": true
+    },
+    {
+      "check": "every assertion and all method names exact",
+      "pass": true
+    },
+    {
+      "check": "manifest Git SHA/blob scripts/net/encounter_host.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest Git SHA/blob scripts/combat/utility_effects.gd",
+      "pass": true
+    },
+    {
+      "check": "manifest Git SHA/blob data/config/combat.json",
+      "pass": true
+    },
+    {
+      "check": "manifest Git SHA/blob tests/test_actor_vitals_authority.gd",
+      "pass": true
+    },
+    {
+      "check": "native FAIL archive exact original/hash native.txt",
+      "pass": true
+    },
+    {
+      "check": "native FAIL archive exact original/hash receipt.json",
+      "pass": true
+    },
+    {
+      "check": "native lossless -text attribute",
+      "pass": true
+    },
+    {
+      "check": "honest parser failure zero assertions",
+      "pass": true
+    },
+    {
+      "check": "failed run exact unchanged8ca source beforeafterHEAD",
+      "pass": true
+    },
+    {
+      "check": "retry scope remains OFF and actual caller proof open",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "production_and_config_byte_identical": true,
+  "all_assertions_preserved": true,
+  "retained_native_r1": "FAIL parser / native1 /0assertions /0risk methods executed",
+  "necessary_next_gate": "One rerun exactly the same three named risk methods, serialized by ROOT; no extra parser/default/full suite",
+  "acceptance_credit": false,
+  "OPEN": [
+    "Three new risk methods unrun; no parser/native result",
+    "Actual caller/solo/local authoritative clock/equipped learned utility validation",
+    "Prepared durable world CAS and immediate pure commit/finalize/owner-save failure ACK/rejoin real player path",
+    "Body ObjectID/owned UID must be qualified by trusted caller before internal bind/read doors",
+    "Native current tests use canonical fixture creatures and caller-qualified host inputs; no earned utility proof",
+    "MATH.with_player_pace is existing trusted data conversion; finite bounds checked on resulting timing, no standalone hostile raw-authored timing type suite performed"
+  ],
+  "engine_parser_tests_GPU_Git_tracked_mutations": false,
+  "reader": "binary Git + UTF8 strict; no raw evidence normalization",
+  "sha256": {
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/README.md": "79e7c19fc35df9bdc51e7b0e78dc94d6fe8cb9a1c7229d6a4a53c7b230bf59e2",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/manifest.json": "61a682eb04ca1d84bd2ab08c7e18ad381666c111e75de4f0cd48ad1b393b621e",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:tests/test_actor_vitals_authority.gd": "6164e740d06972833a733be681c28e3e5a5b9ee29d833a384aaab5e2ccbc6297",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/net/actor_vitals_delivery.gd": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:data/moves/moves.json": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/save/character_save.gd": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/save/world_save.gd": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/net/world_ledger.gd": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/creatures/move_db.gd": "9eae060a43a49a550e259bf6f3cbd73bc7c3ddc37e76329580102933cd882b9d",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:scripts/combat/combat_math.gd": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:data/schema/character_state.schema.json": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:docs/STATE.md": "ef068b94bf50e56005cf26fe76e202a0f653f9b64017479eafae2231353b0f97",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:docs/design/COMBAT.md": "66794dc2de1982a73ebf55be4b548fa56086fa318bbc7f69589fc2a0cbc83c14",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:docs/ACCEPTANCE.md": "fe68fffa864e78d05fc546a18833638161056a42493918db7df6f9b4a98515e3",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/COORDINATOR/dashboard/criteria.json": "6320c4abbb8e069f23abde3130ed9c1e38a8cd3b74ba218be3757091bb1db4aa",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/COORDINATOR/dashboard/status.json": "400aef3d4a759a35be0ebf9ff3d46d70ec86c3f04683b6d8bb229740807e324c",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html": "f2915a0361f0d0ddfb408a8a3eae0f070d6fa720f2b057513542a1cc48ca846f",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/.gitattributes": "fc52752cb955f2b69dfaaadab13aa0641a8ab745ce0c5b9a2f0b327b6c9c0740",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/review.json": "3bd31ca3ff222bd4e6faf9be71029c698bb713e81951540c2d221beaa038b3e1",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/source.patch": "d7eb2d1fa09857858f71097195bf9ec38d3051ebfbf36c9682035ae9404f4a06",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/strict-review.txt": "c5ca4120c2e9119556f3522cf9cb5ef7965a902bef0370ee7672428c2fc38032",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/native-r1/native.txt": "da8c108b12dc137fccaa5449577908cdb96a900a1a635dccd11266e745b57197",
+    "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/native-r1/receipt.json": "89731da39d03c4e467fc080f7c62253d04305c6e28a551a4f23e84718567aea1",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/README.md": "dab54993b3bd4fdd31c533f07737638f89c85433e01cc65f1a70b9dab907b5fc",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/manifest.json": "1de09cd0adbbe0b467eed7c48d72ed0953a5ff36511ac183fd3ac634bbb87505",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:tests/test_actor_vitals_authority.gd": "576894c83ecb445c9e2570da782f42488c1d65db4d24074b32867aa22cfcf5fe",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/net/actor_vitals_delivery.gd": "a1d9bafa55b046140d81ad798c2fd83f03c8dee7a3f21b10374cc89f73a60962",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:data/moves/moves.json": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/save/character_save.gd": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/save/world_save.gd": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/net/world_ledger.gd": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/creatures/move_db.gd": "9eae060a43a49a550e259bf6f3cbd73bc7c3ddc37e76329580102933cd882b9d",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:scripts/combat/combat_math.gd": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:data/schema/character_state.schema.json": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:docs/STATE.md": "ef068b94bf50e56005cf26fe76e202a0f653f9b64017479eafae2231353b0f97",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:docs/design/COMBAT.md": "66794dc2de1982a73ebf55be4b548fa56086fa318bbc7f69589fc2a0cbc83c14",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:docs/ACCEPTANCE.md": "fe68fffa864e78d05fc546a18833638161056a42493918db7df6f9b4a98515e3",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/COORDINATOR/dashboard/criteria.json": "6320c4abbb8e069f23abde3130ed9c1e38a8cd3b74ba218be3757091bb1db4aa",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/COORDINATOR/dashboard/status.json": "400aef3d4a759a35be0ebf9ff3d46d70ec86c3f04683b6d8bb229740807e324c",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html": "f2915a0361f0d0ddfb408a8a3eae0f070d6fa720f2b057513542a1cc48ca846f",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/.gitattributes": "703fe2593002c8c1af6abbc29b98293c9cfa14fc661848e0b117127892a4e682",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/review.json": "3bd31ca3ff222bd4e6faf9be71029c698bb713e81951540c2d221beaa038b3e1",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/source.patch": "d7eb2d1fa09857858f71097195bf9ec38d3051ebfbf36c9682035ae9404f4a06",
+    "8ca35627ef66d4e8bee012c97054d2a31b74e851:ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/actor-lifetime-heal-source/independent-review-c97/strict-review.txt": "c5ca4120c2e9119556f3522cf9cb5ef7965a902bef0370ee7672428c2fc38032"
+  }
+}

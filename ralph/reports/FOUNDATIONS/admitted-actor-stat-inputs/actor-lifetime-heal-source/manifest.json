@@ -1,5 +1,5 @@
 {
-  "status": "APPLIED SOURCE PACKET; FIRST NATIVE TEST PARSER FAIL RETAINED; NO PASSING NATIVE/PLAYER/COOP ACCEPTANCE",
+  "status": "INDEPENDENT SOURCE PASS AND THREE RISK METHODS PASS; RUNTIME OFF; ACTUAL PLAYER/COOP CRITERIA OPEN",
   "base_main": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
   "save_schema": 28,
   "wire_protocol": 8,
@@ -93,5 +93,23 @@
     "Finish fallback before freeze; prepared durable world CAS before pure actor/Heal commit.",
     "Exact latest finalize and durable encounter handoff; owner bool save/ACK and rejoin proof.",
     "Use detached presentation_snapshot for transport rather than private host record."
-  ]
+  ],
+  "passing_native": {
+    "source": "c5c6bce2f1188221bd28e0011b109f5f1ffa6d72",
+    "methods": 3,
+    "assertions": 73,
+    "native_exit": 0,
+    "elapsed_seconds": 5.577999999979511,
+    "lossless_archived_sha256": {
+      "native-r2/native.txt": "153a4b913743850260d907cd92a97b740ef66b1f59a0efb37c218d976d0c1319",
+      "native-r2/receipt.json": "9cf82b4f2f0fa12d9bc6b719d62af5ce0f63b1347aa85e3a7333923668d82eaa",
+      "source-pass-8ca/strict-review.txt": "1878f4191ab8c40dc5760f7dd2368379605842cf5f4c938b713150ba81bfd051",
+      "source-pass-8ca/review.json": "0fd2c64cd78b67fb2748d13da11a72d639fd7d296ea6e0a35fa82f78085d459f",
+      "source-pass-c5c/strict-review.txt": "144b31241c4c55fc9a9ad14726ff3c3b9c6a87f6bc35e6c34230c5abefd1d561",
+      "source-pass-c5c/review.json": "87b045a3496fe179a45d228465421ed8a1b9be986eeba229a70b076944de6ea9"
+    },
+    "scope": "Three new actor generation, departed handoff/privacy, canonical paced Heal/Wind/rejoin risk methods only; actual callers/owner bool-saveACK/co-op gameplay remain OPEN"
+  },
+  "landing_main": "bcbcae5e59d0e13fe20d975b95b2415de6a81872",
+  "source_equivalent_after_main_merge": true
 }
