@@ -1165,10 +1165,13 @@ func _make_alpha(wild: Node3D, species: String, spawn: Dictionary, centre_z: flo
 		return
 	var bonus := int(alpha.get("level_bonus", 0))
 	var instance: RefCounted = wild.get("instance")
-	if instance != null and bonus > 0:
+	if instance != null and (bonus > 0 or alpha.has("level_ceiling")):
 		var cfg: Dictionary = CHAPTER_CURVE.progression_config_at(
 			centre_z, PROGRESSION.config(), CHAPTER_CURVE.config())
-		instance.call("set_level", int(instance.get("level")) + bonus, cfg)
+		var level := int(instance.get("level")) + bonus
+		if alpha.has("level_ceiling"):
+			level = mini(level, maxi(1, int(alpha.level_ceiling)))
+		instance.call("set_level", level, cfg)
 	# Gameplay size, not node scale. `creature_body.gd::apply_size_multiplier()`
 	# grows `_height` and `_radius` and rebuilds the capsule, collider and art
 	# from them -- setting `wild.scale` would grow only the art, leaving
@@ -1324,9 +1327,12 @@ func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator,
 func _apply_elder(wild: Node3D, elder: Dictionary, base_cfg: Dictionary) -> Dictionary:
 	var instance: Variant = wild.get("instance")
 	var bonus := int(elder.get("level_bonus", 0))
-	if instance != null and bonus != 0:
+	if instance != null and (bonus != 0 or elder.has("level_ceiling")):
 		var cfg: Dictionary = PROGRESSION.config()
-		instance.call("set_level", int(instance.get("level")) + bonus, cfg)
+		var level := int(instance.get("level")) + bonus
+		if elder.has("level_ceiling"):
+			level = mini(level, maxi(1, int(elder.level_ceiling)))
+		instance.call("set_level", level, cfg)
 
 	var title := str(elder.get("title", ""))
 	if instance != null and title != "":
@@ -1337,7 +1343,7 @@ func _apply_elder(wild: Node3D, elder: Dictionary, base_cfg: Dictionary) -> Dict
 		# The three fields above are this director's own; anything else is a
 		# `configure()` key and is passed straight through, so a new tunable in
 		# wild_creature.gd needs no edit here to become elder-overridable.
-		if key in ["body_scale", "level_bonus", "title"]:
+		if key in ["body_scale", "level_bonus", "level_ceiling", "title"]:
 			continue
 		if str(key).begins_with("_"):
 			continue
