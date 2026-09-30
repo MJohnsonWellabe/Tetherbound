@@ -4,7 +4,7 @@ render_mode unshaded, cull_disabled, depth_draw_never;
 // Soft procedural silhouettes, no sampled solid shell or copied texture.
 uniform vec4 hot_colour : source_color = vec4(1.0, 0.95, 0.68, 1.0);
 uniform vec4 flame_colour : source_color = vec4(1.0, 0.34, 0.025, 1.0);
-uniform vec4 ember_colour : source_color = vec4(0.56, 0.07, 0.01, 1.0);
+uniform vec4 ember_colour : source_color = vec4(0.56, 0.23, 0.01, 1.0);
 uniform float opacity : hint_range(0.0, 1.0) = 0.95;
 uniform float flow_speed = 2.4;
 uniform bool billboard = true;

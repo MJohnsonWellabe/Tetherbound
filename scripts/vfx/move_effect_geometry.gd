@@ -75,7 +75,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.shader = FIRE_SHADER
 		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff3a6"))))
 		out.set_shader_parameter("flame_colour", colour)
-		out.set_shader_parameter("ember_colour", Color(str(profile.get("ember_colour", "#7b1806"))))
+		out.set_shader_parameter("ember_colour", Color(str(profile.get("ember_colour", "#7b4106"))))
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 1.0)))
 		out.set_shader_parameter("billboard", kind != "soft_trail")
 		out.set_shader_parameter("dust", kind == "soft_dust" or bool(profile.get("dust", false)))
