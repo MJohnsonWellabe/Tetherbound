@@ -29,6 +29,14 @@ func _run() -> void:
 	if not await launch(2, "water" if water_only else "world"):
 		quit(await finish())
 		return
+	# RD-35/F16: explicit retired-crossing fixture in isolated debug peers.
+	# All original authority, encounter and persistence assertions remain.
+	for fixture_peer in 2:
+		var legacy: Dictionary = await step(fixture_peer, "legacy_physical_crossings_fixture", {"regression": "water_alpha"})
+		check(legacy.get("verdict") == "PASS", "disclosed retired crossing fixture enabled")
+		if legacy.get("verdict") != "PASS":
+			quit(await finish())
+			return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 900000.0
 	check((await step(0, "host")).get("verdict") == "PASS", "Host starts production session")
 	var session: Dictionary = await probe(0, "session")

@@ -40,6 +40,8 @@ const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const PROMPTS := preload("res://scripts/world/prompt_arbiter.gd")
 const COMBAT_CONFIG := "res://data/config/combat.json"
+const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 ## What the team eats. `items.json`'s berries carry the `creature_food` block
 ## and grow all over the meadow the gather route already walks.
@@ -852,7 +854,7 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		var to := opponent.global_position - ally.global_position
 		to.y = 0.0
 		_rig.set("yaw", atan2(-to.x, -to.z))
-		if to.length() > _engage_distance:
+		if to.length() > _reach_for(ally, opponent):
 			Input.action_press("move_forward")
 			await _tree.physics_frame
 			Input.action_release("move_forward")
@@ -877,6 +879,18 @@ func _fight_and_win(spec: Dictionary) -> bool:
 	transcript.append("%s: won in %d frames; the board now reads '%s'"
 		% [label, frames, TOURNAMENT.status_line(_progression)])
 	return true
+
+
+## Match the production strike reach rather than pushing into the physical
+## spacing floor forever. The raw 3.6m approach threshold predates rendered
+## contact spacing; real pairs can stand 4.3m apart and still strike legally.
+## This changes only the input driver's approach/attack decision.
+func _reach_for(ally: Node3D, opponent: Node3D) -> float:
+	var mine := float(ally.call("body_radius")) if ally.has_method("body_radius") else 0.5
+	var theirs := float(opponent.call("body_radius")) if opponent.has_method("body_radius") else 0.5
+	var move := COMBAT_MANAGER.floor_reach_for_bodies({"range": _engage_distance}, mine, theirs,
+		CONTACT_SPACING.pair_reach_need(ally, opponent))
+	return float(move.range)
 
 
 ## --- 7: where Gate B ends ------------------------------------------------------

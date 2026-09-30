@@ -1,0 +1,69 @@
+Source: https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36663610989/job/109724959861
+Candidate: fee14bde76b400a181978a4fbebf3d2605b8fbad (CI synthetic merge b4c51dad9d2f)
+Retained actual failure; native exit 1. Scoped segment excludes successful editor import noise.
+2026-09-30T03:24:46.1990433Z coordinator: launched peer 0 (host) pid=2183 control_port=38483 home=/home/runner/work/_temp/f06-midride/net/home-0 log=/home/runner/work/_temp/f06-midride/net/peer-0.log
+2026-09-30T03:24:46.2020594Z coordinator: launched peer 1 (client) pid=2184 control_port=41907 home=/home/runner/work/_temp/f06-midride/net/home-1 log=/home/runner/work/_temp/f06-midride/net/peer-1.log
+2026-09-30T03:24:52.5970648Z coordinator: peer 0 hello: {"enet_port":33941.0,"godot_version":"4.7-stable (official)","main_sha":"b4c51dad9d2f","peer":0.0,"pid":2183.0,"role":"host","type":"hello","user_data_dir":"/home/runner/work/_temp/f06-midride/net/home-0/godot/app_userdata/Tetherbound"}
+2026-09-30T03:24:52.6937218Z coordinator: peer 1 hello: {"enet_port":33942.0,"godot_version":"4.7-stable (official)","main_sha":"b4c51dad9d2f","peer":1.0,"pid":2184.0,"role":"client","type":"hello","user_data_dir":"/home/runner/work/_temp/f06-midride/net/home-1/godot/app_userdata/Tetherbound"}
+2026-09-30T03:24:52.6937849Z coordinator: all 2 peer(s) said hello
+2026-09-30T03:25:49.4400458Z PASS: #1 peer 0 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+2026-09-30T03:26:47.0143466Z PASS: #1 peer 1 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+2026-09-30T03:26:47.0281504Z PASS: #2 peer 0 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+2026-09-30T03:26:47.0488499Z PASS: #2 peer 1 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+2026-09-30T03:26:47.0695381Z PASS: #3 peer 1 story_flag (setup: ONLY the guest's own world has the upper counterweight route open) -> PASS -- cloudreach_upper_route_unlocked: ok=true pending=false code='' reason=''
+2026-09-30T03:26:47.0833238Z PASS: #4 peer 1 party_grant (setup: guest party_grant meadowhart (its ground mount, first = active)) -> PASS -- 'meadowhart' at level 20 joined the party (1 member(s))
+2026-09-30T03:26:47.1523954Z PASS: #5 peer 1 party_grant (setup: guest party_grant bramblebun) -> PASS -- 'bramblebun' at level 20 joined the party (2 member(s))
+2026-09-30T03:26:47.1592195Z PASS: #6 peer 1 party_grant (setup: guest party_grant terrapup) -> PASS -- 'terrapup' at level 20 joined the party (3 member(s))
+2026-09-30T03:26:47.1799594Z PASS: #7 peer 1 party_grant (setup: guest party_grant brooktail) -> PASS -- 'brooktail' at level 20 joined the party (4 member(s))
+2026-09-30T03:26:47.2144890Z PASS: #8 peer 1 party_grant (setup: guest party_grant mudsnout) -> PASS -- 'mudsnout' at level 20 joined the party (5 member(s))
+2026-09-30T03:26:47.2421316Z PASS: #9 peer 1 storage_grant (setup: a saddle in the guest's satchel (not pre-fitted: mount() fits it)) -> PASS -- granted 1 saddle (0 did not fit)
+2026-09-30T03:26:47.2558848Z FAIL: #10 peer 0 enter_realm (host enters Cloudreach in its own world) -> FAIL -- Game.enter_realm('cloudreach') refused from 'meadows' (can_enter=false)
+2026-09-30T03:26:49.0294851Z FAIL: #10 peer 0 enter_realm (host enters Cloudreach in its own world) -> FAIL -- Game.enter_realm('cloudreach') refused from 'meadows' (can_enter=false)
+2026-09-30T03:26:49.1420468Z ##[error]Process completed with exit code 1.
+2026-09-30T03:26:49.1465292Z ##[group]Run actions/upload-artifact@v4
+2026-09-30T03:26:49.1465453Z with:
+2026-09-30T03:26:49.1465570Z   name: f06-midride-proof
+2026-09-30T03:26:49.1465714Z   path: /home/runner/work/_temp/f06-midride
+2026-09-30T03:26:49.1465866Z   retention-days: 7
+2026-09-30T03:26:49.1465987Z   if-no-files-found: warn
+2026-09-30T03:26:49.1466115Z   compression-level: 6
+2026-09-30T03:26:49.1466236Z   overwrite: false
+2026-09-30T03:26:49.1466921Z   include-hidden-files: false
+2026-09-30T03:26:49.1467052Z env:
+2026-09-30T03:26:49.1467162Z   GODOT_VERSION: 4.7-stable
+2026-09-30T03:26:49.1467288Z ##[endgroup]
+2026-09-30T03:26:49.2442224Z (node:2237) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-30T03:26:49.2443017Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-30T03:26:49.2514137Z With the provided path, there will be 13 files uploaded
+2026-09-30T03:26:49.2517834Z Artifact name is valid!
+2026-09-30T03:26:49.2518512Z Root directory input is valid!
+2026-09-30T03:26:49.5410311Z Beginning upload of artifact content to blob storage
+2026-09-30T03:26:49.5653271Z (node:2237) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-09-30T03:26:49.8194626Z Uploaded bytes 114424
+2026-09-30T03:26:49.8999483Z Finished uploading artifact content to blob storage!
+2026-09-30T03:26:49.9000184Z SHA256 digest of uploaded artifact zip is c499f73344f3a940a6ed6e779a586a204aee9f756ed85ea49a48329848bfdb68
+2026-09-30T03:26:49.9001153Z Finalizing artifact upload
+2026-09-30T03:26:50.1298149Z Artifact f06-midride-proof.zip successfully finalized. Artifact ID 11075303262
+2026-09-30T03:26:50.1298860Z Artifact f06-midride-proof has been successfully uploaded! Final size is 114424 bytes. Artifact ID is 11075303262
+2026-09-30T03:26:50.1303109Z Artifact download URL: https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36663610989/artifacts/11075303262
+2026-09-30T03:26:50.1442667Z Post job cleanup.
+2026-09-30T03:26:50.1445367Z ##[start-action display=Run actions/cache@v4;id=__bfa2d0da-82de-4715-9638-b8052bda39ba.__actions_cache]
+2026-09-30T03:26:50.1446979Z ##[end-action id=__bfa2d0da-82de-4715-9638-b8052bda39ba.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-30T03:26:50.1447985Z ##[start-action display=Run actions/cache@v4;id=__bfa2d0da-82de-4715-9638-b8052bda39ba.cache-godot]
+2026-09-30T03:26:50.1449026Z ##[end-action id=__bfa2d0da-82de-4715-9638-b8052bda39ba.cache-godot;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-09-30T03:26:50.1484631Z Post job cleanup.
+2026-09-30T03:26:50.2031742Z [command]/usr/bin/git version
+2026-09-30T03:26:50.2062266Z git version 2.55.0
+2026-09-30T03:26:50.2083766Z Temporarily overriding HOME='/home/runner/work/_temp/80b799c7-e0aa-41b7-801a-632676516b8f' before making global git config changes
+2026-09-30T03:26:50.2084492Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-30T03:26:50.2087147Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Tetherbound/Tetherbound
+2026-09-30T03:26:50.2114545Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-30T03:26:50.2139656Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-30T03:26:50.2356404Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-30T03:26:50.2374012Z http.https://github.com/.extraheader
+2026-09-30T03:26:50.2381543Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-09-30T03:26:50.2419277Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-30T03:26:50.2630013Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-30T03:26:50.2666589Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-30T03:26:50.2958382Z Cleaning up orphan processes
+2026-09-30T03:26:50.3161619Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache@v4, actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

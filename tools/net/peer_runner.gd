@@ -644,7 +644,11 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_foundations_state(args)
 		"legacy_physical_crossings_fixture":
 			var regression := str(args.get("regression", ""))
-			var enabled := regression in ["veridian_same_five", "water_return"] \
+			var enabled := regression in ["veridian_same_five", "water_return", "cloudreach_midride_rejoin",
+				"cloudreach_activity_payoffs", "cloudreach_riding", "realm_owner_disconnect_mid_fight",
+				"session_host_first_realm", "split_realms", "stormwood_finalized_death",
+				"stormwood_glass_for_bryn", "stormwood_hosted_trainers", "stormwood_livewire",
+				"stormwood_realms", "stormwood_stormheart_offers", "water_alpha", "cloudreach_veyra_reconnect"] \
 				and FOUNDATIONS_ORDER.set_test_overrides({"legacy_physical_crossings": true})
 			out = {"verdict": "PASS" if enabled else "FAIL", "detail": "disclosed retired crossing fixture: " + regression}
 		"save_character_here":
