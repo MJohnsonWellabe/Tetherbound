@@ -48,7 +48,7 @@ Foundation integration required BEFORE activation:
 Altar UI injection contract (no Game/Session mount authored here):
 configure_service(Node) requires station_available(station_key),
 quote_essence_spend(station_key, owned_uid),
-submit_essence_spend(station_key, request), and
+submit_essence_spend(station_key, request), reconcile_essence_spend(spend_id), and
 signal essence_spend_completed(spend_id, result).
 Quote display fields: ok, creature_uid, level, cap, expected_character_revision,
 payments:[{id,name,cost,available}]. All host consumers recompute the quote.
@@ -108,7 +108,8 @@ other authorized content while that batch runs. Never skip/disable/quarantine.
 
 Typed release UI integration, authored in tab_creatures.gd:
 configure_release_service(Node) requires quote_release(pending_uid,
- released_uid), submit_release(request), release_completed(release_id,result).
+ released_uid), submit_release(request), reconcile_release(release_id),
+ release_completed(release_id,result).
 Quote fields: ok, ceremony_id (actual host pending offer/capture identifier),
  pending_uid, released_uid, expected_character_revision, payout:[{id,n}].
 Request fields: release_id, ceremony_id, pending_uid, released_uid,
@@ -129,7 +130,27 @@ The waiting screen permits return to the belt without abandoning the id or
  request. Rebuilding UI preserves the pending transaction fields. Once the
  injected authority is enabled, a missing/refusing service cannot fall back
  to direct UI roster mutation. Original pre-F27 capture/volunteer paths stay
- unchanged until foundation mounts this feature, and do not pay essence.
+unchanged until foundation mounts this feature, and do not pay essence.
+Authority-enabled non-Water free-slot catches now remain pending/fail-closed:
+ UI cannot add/clear them before foundation mounts typed capture admission.
+ Existing Water claim completion, explicit Guardian decisions and disabled
+ legacy handling retain their original branch order/behavior.
+
+Both UI configure methods permit a pending exact-ID rebind. They validate
+ recovery methods, disconnect the old service, connect the new completion
+ signal first, then call reconcile_essence_spend(existing_spend_id) or
+ reconcile_release(existing_release_id). Altar presentation closes on rebind
+ while pending; identity/intent remains. No recovery call submits a candidate,
+ re-quotes/re-mints an id, creates a new journal or changes any durable state.
+ All completion results now require resolved:true for a definitive saved
+ promotion or an authoritative refusal known not applied. Unknown/in-flight,
+ transport ACKs and owner-save recovery MUST remain resolved:false and retain
+ the original id. Reconciliation binds the original admitted character and
+ recovers from its durable host transaction/claim journal; foundation must
+ persist request-id decision mapping in the existing character/claim record,
+ including release_id->ceremony settlement. A UID-only payout guard is not
+ sufficient to resolve an arbitrary lost release request by transport id.
+ This is a host-service requirement, not a new UI authority or admission bag.
 
 PROGRESSION.staged_xp(actual_host_row, admitted_cap, positive_amount,cfg)
  builds a detached multi-level XP candidate, keeps HP fraction/stats/history,

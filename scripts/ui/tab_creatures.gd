@@ -1894,6 +1894,12 @@ func _maybe_begin_release() -> void:
 			if result.get("ok", false):
 				say("%s joins the belt." % str(pending.call("label")))
 			return
+		if _release_authority_enabled:
+			# Foundation has not mounted typed free-slot capture admission yet.
+			# Keep the actual pending catch intact; an enabled mode cannot grant
+			# it locally or silently accept a volunteer outside the host seam.
+			say("Your catch is waiting for the host to finish saving your team.")
+			return
 		# Room opened between the catch and the ceremony (a load, a future
 		# system). No choice to stage — the newcomer just takes the free
 		# holder, said out loud.
@@ -2595,9 +2601,12 @@ func _show_release_done(released: RefCounted, newcomer_name: String, payout_text
 ## Service shape: quote_release(pending_uid, released_uid),
 ## submit_release(request), release_completed(release_id, result).
 ## An empty released_uid declines the unaccepted newcomer, with NO payout.
+## Pending rebind needs reconcile_release(release_id), querying the original
+## admitted character's durable decision. resolved:true marks final completion;
+## unknown/in-flight/owner-save recovery must not settle or mint another id.
 func configure_release_service(service: Node) -> bool:
-	if _release_stage != "" or not _release_request_id.is_empty() or not is_instance_valid(service): return false
-	for method: String in ["quote_release", "submit_release"]:
+	if (_release_stage != "" and _release_request_id.is_empty()) or not is_instance_valid(service): return false
+	for method: String in ["quote_release", "submit_release", "reconcile_release"]:
 		if not service.has_method(method): return false
 	if not service.has_signal("release_completed"): return false
 	if is_instance_valid(_release_service) and _release_service.is_connected("release_completed", _on_release_completed):
@@ -2605,6 +2614,8 @@ func configure_release_service(service: Node) -> bool:
 	_release_service = service
 	if not service.is_connected("release_completed", _on_release_completed): service.connect("release_completed", _on_release_completed)
 	_release_authority_enabled = true
+	if not _release_request_id.is_empty():
+		service.call("reconcile_release", _release_request_id)
 	return true
 
 
@@ -2674,6 +2685,9 @@ func _submit_typed_release() -> void:
 
 func _on_release_completed(release_id: String, result: Dictionary) -> void:
 	if release_id != _release_request_id or _release_request_id.is_empty(): return
+	if result.get("resolved") != true:
+		say("Your saved choice is still being recovered. Reconnect to continue.")
+		return
 	if bool(result.get("ok", false)):
 		# Completion must follow actual local promotion, not a transport ACK.
 		var party := _party()

@@ -7,6 +7,10 @@ extends CanvasLayer
 ## quote_essence_spend(station_key, owned_uid) -> Dictionary (display only)
 ## submit_essence_spend(station_key, request) -> void
 ## essence_spend_completed(spend_id, result) after owner state promotion.
+## Pending rebind also requires reconcile_essence_spend(spend_id): query the
+## same original admitted character's durable decision, never submit a new id.
+## Completion requires resolved:true for a final saved promotion or a known
+## refusal. Unknown/in-flight/owner-save recovery remains resolved:false.
 ## Quote: ok, creature_uid, level, cap, expected_character_revision,
 ## payments:[{id, name, cost, available}]. Never submit quoted cost/balance/cap.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -34,15 +38,20 @@ func _ready() -> void:
 
 
 func configure_service(service: Node) -> bool:
-	if _open or not _pending_id.is_empty() or not is_instance_valid(service): return false
-	for method: String in ["station_available", "quote_essence_spend", "submit_essence_spend"]:
+	if (_open and _pending_id.is_empty()) or not is_instance_valid(service): return false
+	for method: String in ["station_available", "quote_essence_spend", "submit_essence_spend", "reconcile_essence_spend"]:
 		if not service.has_method(method): return false
 	if not service.has_signal("essence_spend_completed"): return false
+	if _open: close()
 	if is_instance_valid(_service) and _service.is_connected("essence_spend_completed", _on_completed):
 		_service.disconnect("essence_spend_completed", _on_completed)
 	_service = service
 	if not _service.is_connected("essence_spend_completed", _on_completed):
 		_service.connect("essence_spend_completed", _on_completed)
+	if not _pending_id.is_empty():
+		# Connect before asking: recovery may complete synchronously. The id and
+		# original intent stay intact until this exact transaction resolves.
+		_service.call("reconcile_essence_spend", _pending_id)
 	return true
 
 
@@ -274,6 +283,10 @@ func _spend(payment_item: String) -> void:
 
 func _on_completed(spend_id: String, result: Dictionary) -> void:
 	if spend_id != _pending_id or _pending_id.is_empty(): return
+	if result.get("resolved") != true:
+		_status = "Your saved choice is still being recovered. Reconnect to continue."
+		if _open: _rebuild()
+		return
 	_pending_id = ""
 	var reason := str(result.get("reason", result.get("code", "refused")))
 	var messages := {"station_unavailable": "Return to the Altar outside combat to raise a level.",
