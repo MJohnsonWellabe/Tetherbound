@@ -10,7 +10,7 @@
       "_why_prompt_height": "F01#2 (village walk day r2, render.yml 36365090624): standing at her counter 2.3 m away, the greet prompt's waist-height sight ray hit the counter, so only the shop door's Close Door was offered. village_npcs.gd lifts her prompt point to 1.5 m, above the counter top. TUNABLE.",
       "config_key": "villager_farmer",
       "position": [
-        24,
+        26,
         7
       ],
       "facing_deg": 180,
@@ -66,7 +66,7 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        60,
+        62,
         20
       ],
       "facing_deg": 0,
@@ -117,7 +117,7 @@
       "name": "Tam",
       "config_key": "villager_smith",
       "position": [
-        24,
+        26,
         20
       ],
       "facing_deg": 0,
@@ -241,7 +241,7 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        42,
+        44,
         8
       ],
       "facing_deg": 180,
@@ -470,7 +470,7 @@
       "name": "Nessa",
       "config_key": "inn_helper",
       "position": [
-        60,
+        62,
         7
       ],
       "facing_deg": 180,

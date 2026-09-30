@@ -40,7 +40,7 @@
       "display_name": "Mira’s Shop",
       "prefab": "cottage_a",
       "at": [
-        24,
+        26,
         2
       ],
       "yaw_deg": 0,
@@ -52,7 +52,7 @@
       "display_name": "Tam’s Workshop",
       "prefab": "workshop",
       "at": [
-        24,
+        26,
         26
       ],
       "yaw_deg": 180,
@@ -63,7 +63,7 @@
       "display_name": "Bram’s Inn",
       "prefab": "inn",
       "at": [
-        42,
+        44,
         2
       ],
       "yaw_deg": 0,
@@ -75,7 +75,7 @@
       "display_name": "Halda’s House",
       "prefab": "cottage_b",
       "at": [
-        42,
+        44,
         26
       ],
       "yaw_deg": 180,
@@ -87,7 +87,7 @@
       "display_name": "Research House",
       "prefab": "cottage_a",
       "at": [
-        60,
+        62,
         2
       ],
       "yaw_deg": 0,
@@ -99,7 +99,7 @@
       "display_name": "Oskar’s House",
       "prefab": "cottage_b",
       "at": [
-        60,
+        62,
         26
       ],
       "yaw_deg": 180,
@@ -111,7 +111,7 @@
       "display_name": "Alder Cottage",
       "prefab": "cottage_b",
       "at": [
-        78,
+        80,
         2
       ],
       "yaw_deg": 0,
@@ -123,7 +123,7 @@
       "display_name": "Orchard Cottage",
       "prefab": "cottage_a",
       "at": [
-        78,
+        80,
         26
       ],
       "yaw_deg": 180,
@@ -134,7 +134,7 @@
       "id": "village_well",
       "prefab": "well",
       "at": [
-        13,
+        34,
         5
       ],
       "yaw_deg": 15
@@ -156,11 +156,11 @@
       14
     ],
     "home_door": [
-      7.5,
+      8.3,
       14
     ],
     "road_start": [
-      7.5,
+      8.3,
       14
     ],
     "road_end": [

@@ -514,7 +514,7 @@
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): the north cross lane along z=-16 from the main street to Grandpa's door (endpoint unchanged at [-16.5,-16]); Berry Lane leaves it at x=-7.5.",
         "points": [
           [
-            7.5,
+            8.3,
             14
           ],
           [
@@ -533,16 +533,12 @@
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): a short desire line from the main street across the green to the inn's doorstep, which now faces the green (inn at [-2.5,-6], yaw 90).",
         "points": [
           [
-            10.5,
-            -10.0
+            44,
+            14
           ],
           [
-            6.6,
-            -7.0
-          ],
-          [
-            3.6,
-            -6.0
+            44,
+            7
           ]
         ]
       },
@@ -556,28 +552,32 @@
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): Stoneyard Lane now leaves the main street at the z=-16 crossroads and keeps the old (13.6,-20) waypoint.",
         "points": [
           [
-            10.5,
-            -16.0
+            20,
+            14
           ],
           [
-            13.6,
-            -20.0
+            20,
+            -12
           ],
           [
-            14.2,
-            -26.0
+            20,
+            -18
+          ],
+          [
+            20,
+            -26
           ],
           [
             14.6,
-            -31.0
+            -31
           ],
           [
-            21.0,
+            21,
             -37.5
           ],
           [
-            30.0,
-            -40.0
+            30,
+            -40
           ]
         ]
       },
@@ -588,36 +588,36 @@
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): the Pond lane leaves the main street at z=2 (south of the green) and runs west between the inn and Tam's workshop; the tail from [-14,14] on is unchanged.",
         "points": [
           [
-            10.5,
-            2.0
+            20,
+            14
           ],
           [
-            3.0,
-            2.5
+            20,
+            -12
           ],
           [
-            -5.0,
-            4.0
+            -8,
+            -12
           ],
           [
             -12.5,
             6.5
           ],
           [
-            -14.0,
-            14.0
+            -14,
+            14
           ],
           [
-            -45.0,
-            45.0
+            -45,
+            45
           ],
           [
-            -80.0,
-            85.0
+            -80,
+            85
           ],
           [
-            -105.0,
-            115.0
+            -105,
+            115
           ]
         ]
       },
@@ -629,24 +629,24 @@
         "_why_main_street": "OPTION-B (owner 2026-09-29, village main street): the Rise lane is re-run along z=-16 from the main street to the RoadGate at [27.5,-16]; the tail from [28,-16.17] on is unchanged.",
         "points": [
           [
-            10.5,
-            -16.0
+            20,
+            -18
           ],
           [
-            19.0,
-            -16.0
+            28,
+            -18
           ],
           [
-            28.0,
-            -16.17
+            38.72,
+            -19.85
           ],
           [
-            45.0,
-            -22.0
+            45,
+            -22
           ],
           [
-            74.0,
-            -41.0
+            74,
+            -41
           ]
         ]
       }
@@ -1357,7 +1357,7 @@
     "village_topology": {
       "_comment": "F01-a, WORLD 3.2 / ACCEPTANCE F01. The village is a road settlement, not the old compact radial plan in which Practice Meadow, The Pond and The Rise all radiated from the well. This block is DECLARATIVE ONLY -- nothing in the game reads it; tests/test_village_road_topology.gd checks every claim here against the actual road polylines road_bands() unions (routes, approaches, trail.bands), and ralph/reports/MEADOWS-PAYOFFS/village-road/make_plan.py draws the OLD/NEW overhead plan from the same data. Coordinates are world (x,z) metres; +z runs toward the South Bridge.",
       "home_door": [
-        7.5,
+        8.3,
         14
       ],
       "bridge_exit_gate": "TrailGate",
@@ -1370,13 +1370,13 @@
         "_why": "F17 straight village road beside the existing South Bridge exit, without moving the field catch lesson."
       },
       "well": [
-        13,
+        34,
         5
       ],
       "_comment_green": "OPTION-B (owner 2026-09-29): the small village green. Declarative: the ground is the existing 0.9 m square flat (grass, no collision, no new material); village.json's well stands at its centre on the main street axis, and the inn door and the stone cottage door face it. tests/test_village_main_street.gd reads centre and radius.",
       "green": {
         "centre": [
-          13,
+          34,
           5
         ],
         "radius_m": 4
@@ -1385,7 +1385,7 @@
         "road": "village_main_street",
         "axis_z": 14,
         "from": [
-          7.5,
+          8.3,
           14
         ],
         "to": [
@@ -3377,8 +3377,8 @@
         "label": "Lower Meadows",
         "points": [
           [
-            11.5,
-            2.0
+            13.79,
+            14
           ],
           [
             14,
