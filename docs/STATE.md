@@ -29,11 +29,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | F17 source 6f083d1d4 pushed against landed F16; warm import native0, geometry44/3982/4red retained; exact Hall/sign/berry pose fixes underway. Player, bake and visual gates open. |
+| `tb/hub` | F17, F18 | F17 pushed fcc3bbf463/source8ee152a47: actual Hall/sign/berry repairs18/3437/0 native0, initial44/3982/4red retained. Regional cache draft independent review; not baked. Controller/full visual gates open. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | source09eab35c8; hosted first-HP/authority/rejoin evidence92c0481a1 native0, independent verdict pending; poise/critical runtime and pad rumble/TM path open. |
-| `tb/vfx` | F25, F35 | r3 evidence7c6af296c native0/36 PNGs; blind F25#2/#5 FAIL, flag off. Actual soft-flame/ribbon/chips rework after two quality rejections. |
-| `tb/lookdev` | F26 | Persistent presets and reference-backed look bar: #1/#2 strict MET (combat/VFX), landed via #470 main39840191c. Water native Low/Medium/High 3/12 routes; material/matrix/Ally gates open. Evidence VISUAL/lookdev/recheck-presets.md. |
+| `tb/combat` | F21–F24 | source46f51 incoming host receipt; real Settings pad07f PASS; Fireball090 flash proof scoped rerun open. Next F21 camera matrix source active; no new MET. |
+| `tb/vfx` | F25, F35 | r4 e164e7982/98efd1911 native0/36 PNGs; blind F25#2/#5 FAIL, flag off. Bounds-measured fire flight/core/burst rework underway. |
+| `tb/lookdev` | F26 | F26#1/#2 landed #470 main39840191c. Water3 presets and MeadowsLow native PASS; Forward+ Medium repro2ed native0xc00000fd, contexts saved/dump failed/caller unverified; matrix blocked. Material/Ally gates open. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
