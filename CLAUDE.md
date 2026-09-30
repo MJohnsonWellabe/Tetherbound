@@ -6,7 +6,7 @@ Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in t
 
 ## Read and route
 
-**Current build plan (owner-authorized, 2026-09-29):** every lane, Claude or Codex, starts at `CODEX_START_HERE.md`: the redesign build (Waves 0–3, features F16–F49, owner decisions RD-01..RD-36, lanes, file ownership, work orders and stop rules). It supersedes the Phase 1 and Phase 2 briefs; `CLAUDE_START_HERE.md` is now a pointer to it. Both files are part of the authorized live set.
+**Current build plan (owner-authorized, 2026-09-29):** every lane, Claude or Codex, starts at `CODEX_START_HERE.md`: the redesign build (Waves 0–3, features F16–F49, owner decisions RD-01..RD-37, lanes, file ownership, work orders and stop rules). It supersedes the Phase 1 and Phase 2 briefs; `CLAUDE_START_HERE.md` is now a pointer to it. Both files are part of the authorized live set.
 
 Read STATE first for baseline/status/current authority, then GAME_BIBLE for product, ACCEPTANCE for done, WORKFLOW for process and TECHNICAL for source/run map. Read PRODUCT/ROADMAP when choosing scope or priorities. Read the relevant `docs/design/` contract before implementation; do not reread all twelve for a bounded task with a complete brief.
 
@@ -55,6 +55,8 @@ The full recovery/evidence artifact is `ralph/reports/PLAN-REWRITE/FINDINGS.md`.
 New design targets are not built facts. If source and design differ, state both and implement only the authorized scope. The plan rewrite records its lower-level disagreements. The explicit owner art-workflow authorization above applies; it does not authorize purchases, a commercial platform launch or unrelated hard-rule changes. Rolling development downloads follow the settled-spec delivery rule below.
 
 ## Execution
+
+**RD-37 (owner, 2026-09-29): selective checks and continuous implementation.** Do not run unit tests or full CI automatically for every change or PR. Choose only named acceptance proofs or checks necessary to prevent substantial rework; reuse relevant passing evidence. Full suites/full CI are exceptional gates for explicitly required evidence or integration risk that scoped checks cannot cover. An unlabelled CI green is process evidence only when engine jobs did not run. Advance independent next tasks on lane branches while checks/CI run, using a pushed dependency candidate where needed; retain dependency landing order, exact ownership and serialized import/render/export writers. Never skip, disable or quarantine a test to make a selected check pass.
 
 **RD-36 (owner, 2026-09-29): minimum necessary testing, batched validation.** Prioritize content and code generation. Use only checks required by acceptance or substantial rework risk; reuse passing evidence for unchanged relevant source and paths. Related criteria may share a bounded implementation/validation batch, with evidence and an independent verdict for each. Do not repeat a full suite per criterion or docs/evidence-only update. Broad save/autoload/shared-system changes and explicitly named full-suite acceptance still need one full batch run; fixes need affected checks unless wider risk justifies more. Preserve required save, authority/transaction, real-path and visual proofs, CI, and the prohibition on skipping, disabling or quarantining tests. CODEX_START_HERE §7.2 and WORKFLOW §5 apply this owner override.
 
