@@ -1,0 +1,4 @@
+*.png -text -diff
+*.raw -text -diff
+*.json text eol=lf
+*.txt text eol=lf

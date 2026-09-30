@@ -3,7 +3,7 @@
   "integration_base": "7dcd2a8649660553f38702f2de71390efc6f1343",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
-  "status": "F21#4 NOT MET; r3 actualFAIL and r4 parserFAIL retained. Capture-only type correction unexecuted.",
+  "status": "F21#4 candidate runtime PASS at bf9, nine moving pairs; independent strict/code-blind dynamic verdict and main landing pending. Previous native failures retained.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
@@ -384,5 +384,16 @@
     "regression_executed": false,
     "gameplay_executed": false,
     "correction": "Only explicit bool declarations across eight new/derived capture predicates. Production/config/meaningful assertions unchanged."
+  },
+  "live_runtime_r4_types_r2": {
+    "source": "bf9df4536c4290516570072502b958883531d423",
+    "proof": "camera-live-r4-types-r2/source-proof.json",
+    "native_exit": 0,
+    "elapsed_seconds": 293.8280000000959,
+    "complete_cases": 9,
+    "original_png_count": 54,
+    "scored_render_count": 299,
+    "scope": "Physical movement and Quick input with actual authored bodies/enemy AI/rig/collision live, staged pair roster/start/action baselines; measured canonical bounded hitstop remains live presentation.",
+    "independent_review": "pending"
   }
 }
