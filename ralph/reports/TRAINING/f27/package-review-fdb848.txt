@@ -1,0 +1,18 @@
+Independent read-only F27#0 PR packaging gate
+Exact pushed pin: fdb8489d3931a5d11c3967904b6890f5027f708e
+Main baseline: 0b6677c53bb2aac5d911beafc68b31a12ef72c11
+Verdict: PASS bounded PR packaging. F27#0 is strict MET on the independently reviewed candidate; main credit begins at merge.
+
+Actual complete diff: exactly eight paths, 191 insertions and 19 deletions. These comprise items.json (nine definitions, 90 new lines), three training evidence files and the four board/STATE files. Base is an ancestor. No other runtime/data/scene/test paths differ. Candidate items.json bytes exactly equal the reviewed 5ca22f623474ffd8c9377a9a62e659c7e494455a blob.
+
+Archived final raw report bytes exactly equal this independent reviewer's original .tmp/independent-f27-review/review-items-cut-5ca22f.txt. SHA256 6d26902bf0f992595eccd3425683cf606e600d774e0ee28430baa3f5dc028ac6 agrees with the source result evidence file. Evidence names the actual candidate pin and unchanged default ItemDB/PlayerState/Inventory source trace, with explicit static-only/no Godot/acquisition/spending/UI/save/co-op disclosure. Referenced raw report path exists in Git.
+
+The only changed atomic criterion object is F27#0, from not_started to met with evidence and empty gap. The other 279 criterion objects, every criterion wording, all other feature rows and top-level criteria metadata are identical to baseline. The F27 aggregate is correctly 1 met/5 not_started and rounded17%. Recount is exactly 108 of 280; redesign13 of179 and original95 of101. Status changes only the relevant count headline and training lane current text; owner_needs and other status content are unchanged.
+
+STATE is 24923 bytes, under the specified 25000-byte ceiling, with 108/280 and redesign13/179 plus the one training status line. This patch does not claim other F27 completion. Main counting at merge is disclosed in criterion evidence/result and retained global STATE qualification.
+
+The actual pinned build_dashboard.py is unchanged from baseline. Executed that builder against pinned criteria/status copies solely in the reviewer's ignored package-render-fdb848 directory. Regenerated HTML matches the committed HTML after newline normalization, including explicit108/280 and13/179 KPIs. This is dashboard rendering, not an engine/native/gameplay proof. Git diff whitespace check passes.
+
+No Godot, GPU, import/render/export, unit suite, full CI, tracked-source/board/STATE write or Git mutation used. The only writes are ignored review/audit/render artifacts. No new engine or broad tests are necessary for this verified packaging scope under RD-36/RD-37. No tests were skipped, disabled or quarantined.
+
+Audit: .tmp/independent-f27-review/package_audit_fdb848.py
