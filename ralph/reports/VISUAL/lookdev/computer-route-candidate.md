@@ -74,6 +74,16 @@ validation and do not change the executed route.
 Independent VFX source re-check passed the adapter guards at `358bc68b5`.
 It also verified the retained native Water/Low receipt: 201 finite positive
 frames, two reached waypoints, clean native exit and 1920×1080 PNG headers.
-Images have not been code-blind judged. The new Medium/High process batch
-needs a bounded source re-check and its first native run; it does not replay
-the unchanged Low evidence or claim the remaining eleven routes passed.
+Images have not been code-blind judged. Medium/High Water now has independent
+receipt verification and a native passing run at `840ede55d`, retained in
+`routes/water-forward-r1`; together with Low, this is three of twelve cases.
+It does not replay unchanged Water evidence or certify the other biomes.
+
+Preflight of the remaining routes found the shared 3600-physics-frame leg
+deadline shorter than ordinary 5 m/s walking for the longest Cloudreach and
+Stormwood legs. Their data now declares 7200/9000 frames respectively, while
+the route wall deadline remains 900 seconds. The route reader uses this
+per-route override; Water/Meadows retain the original deadline. No movement
+speed, collision behavior, route distance or completion assertion changed.
+This prevents a known harness-only timeout before the first long-route run;
+it is not evidence that those routes pass.

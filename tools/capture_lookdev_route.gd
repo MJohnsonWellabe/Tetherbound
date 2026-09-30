@@ -209,7 +209,7 @@ func _walk_route_leg(target: Vector3) -> bool:
 	# Use the existing navigator's physical step, with the declared total leg
 	# budget also counting a fight/dialogue hold. Never wait ten hidden minutes
 	# on its campaign-oriented walk_to() hold allowance during an FPS route.
-	for frame in int(_capture.leg_budget_frames):
+	for frame in int(_route.get("leg_budget_frames", _capture.leg_budget_frames)):
 		if _wall_budget_exceeded():
 			return false
 		var offset := target - _player.global_position
