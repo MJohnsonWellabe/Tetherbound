@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_utility_effects.gd: 1 of 675 test files
+  ok    test_utility_effects.gd :: test_fields_use_frozen_foe_identity_and_trap_arms_and_triggers_once
+  ok    test_utility_effects.gd :: test_heal_and_one_hit_buff_are_separate_from_damage_and_never_revive
+  ok    test_utility_effects.gd :: test_host_authorization_shares_action_lock_and_spends_once_without_hostile_self_hit
+  ok    test_utility_effects.gd :: test_refresh_is_not_additive_and_replay_or_wrong_scope_never_mutates
+
+4 tests, 58 assertions, 0 failed

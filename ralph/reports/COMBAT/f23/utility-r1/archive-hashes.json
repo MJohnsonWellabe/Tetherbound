@@ -1,0 +1,14 @@
+{
+  "authority-parser.txt": {
+    "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+  },
+  "effects-parser.txt": {
+    "raw_sha256": "9e96d9861a0bf71f28e809932196d9cb12231d949feea455a83ad956610434d2",
+    "git_lf_sha256": "4c990db82738266bc8f2f68148b08bc2e069be1b1d89163412bf8605c1bdbe6a"
+  },
+  "receipt.json": {
+    "raw_sha256": "054d61b287a79872250fa69f7c4cb5eea74276540c4ad10cf8403a555e28aced",
+    "git_lf_sha256": "06caee5442405b75e6ba864f69e2bd2e865718003ba7f083aa0a7f6e37db8271"
+  }
+}

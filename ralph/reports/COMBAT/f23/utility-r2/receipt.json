@@ -1,0 +1,42 @@
+{
+  "scope": "Two named transitive parsers and four pure adversarial utility effect/authorization methods; no live dispatch or player/remote/save proof",
+  "runs": [
+    {
+      "source": "9220e1a521608fe0d752949b2c479344838837cf",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "tests/test_utility_effects.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-utility-r2-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 0.29599999997299165,
+      "log": "D:\\tetherbound\\combat-f23-utility-r2\\effects-parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "9220e1a521608fe0d752949b2c479344838837cf",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_utility_effects.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-utility-r2-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 3.5,
+      "log": "D:\\tetherbound\\combat-f23-utility-r2\\focused.txt",
+      "raw_sha256": "ce713333240e29a4fcf618dd6d9de9fdacfb29e7ea649f1390f303eadff0058f"
+    }
+  ]
+}
