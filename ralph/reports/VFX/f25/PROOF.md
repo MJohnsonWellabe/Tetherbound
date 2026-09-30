@@ -30,3 +30,24 @@ performance result or Ally result. Native captures are not a visual PASS:
 F25#2/#5 require an independent code-blind judge. The public host-impact drawing
 reconciliation API is present but not invoked by this synthetic batch; the
 hosted witness must prove that path separately. No F25 criterion is closed here.
+
+## Independent r2 visual failure and changed approach
+
+The independent code-blind review of the retained r2 frames failed F25#2:
+Fireball had no convincing extended trail, and lightning contact with the
+target was not established. Several stones and one boulder were identifiable,
+but their washed-out primitive surfaces and generic impacts missed the full
+commercial bar. Its F25#5 finding was only a bounded size-upgrade PASS for the
+four shown families at ranks 1/3/5; other families, ranks 2/4 and earned mastery
+remain open. All rejected r1/r2 evidence remains retained; the feature stays off.
+
+The next source approach replaces frame-count trail history with spatial
+distance samples per body, explicitly separates volley paths, and prioritizes
+primary trails when secondary layers exceed their shared budget. Fireball uses
+an animated structured material, tapered volumetric plume and overlapping
+three-dimensional burst lobes. Stones use irregular face-normal chunks and
+weathered mineral shading. Lightning anchors to the frozen ground contact and
+retains its complete branched stroke through early impact. This is geometry and
+material work based on the restored Palworld combat reference, not a shutter
+or global-grade adjustment. These source changes require new native captures
+and independent judging; they do not establish a visual PASS.

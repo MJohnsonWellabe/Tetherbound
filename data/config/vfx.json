@@ -150,8 +150,8 @@
           "motion": "projectile",
           "lit": true,
           "opacity": 1.0,
-          "segments": 8,
-          "rings": 4,
+          "segments": 13,
+          "rings": 7,
           "height_ratio": 3.0,
           "sky_height": 6.0,
           "tip_ratio": 0.0,
@@ -160,29 +160,41 @@
           "ribbon_ratio": 0.13,
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
-          "marker_opacity": 0.38
+          "marker_opacity": 0.38,
+          "stone_colour": "#71614b",
+          "mineral_colour": "#bca67d",
+          "volley_separation_scale": 4.2,
+          "volley_stagger_m": 0.4
         },
         "trail": {
           "style": "dust",
-          "width": 0.14,
-          "opacity": 0.78,
+          "width": 0.12,
+          "opacity": 0.6,
           "wave_amplitude": 0.12,
           "wave_frequency": 4.0,
-          "wave_speed": 6.0
+          "wave_speed": 6.0,
+          "colour": "#c8b796",
+          "sample_spacing_m": 0.16,
+          "max_length_m": 2.2
         },
         "impact": {
-          "shape": "stone",
+          "shape": "rock_splash",
           "duration": 0.42,
-          "grow": 1.8,
-          "heat": 0.35,
-          "opacity": 0.82,
+          "grow": 2.1,
+          "heat": 0.0,
+          "opacity": 0.6,
           "mote_shape": "stone",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "mote_size": 0.075,
+          "speed": 3.6,
+          "gravity": 8.0,
           "width": 0.12,
           "height_ratio": 2.3,
-          "segments": 16
+          "segments": 16,
+          "rays": 8,
+          "ray_width_ratio": 0.075,
+          "mote_colour": "#78664b",
+          "secondary_shape": "rock_splash",
+          "secondary_rotation_x": 0.0
         },
         "sound": {
           "launch": "vfx_stone_throw_launch",
@@ -270,12 +282,12 @@
       },
       "fireball": {
         "body": {
-          "shape": "orb",
+          "shape": "flame_orb",
           "motion": "projectile",
           "lit": false,
-          "opacity": 0.82,
-          "segments": 24,
-          "rings": 8,
+          "opacity": 1.0,
+          "segments": 32,
+          "rings": 16,
           "height_ratio": 3.0,
           "sky_height": 6.0,
           "tip_ratio": 0.0,
@@ -285,75 +297,90 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
-          "layers": [
-            {
-              "shape": "orb",
-              "size_scale": 0.52,
-              "colour": "#fff1b5",
-              "opacity": 1.0
-            },
-            {
-              "shape": "cone",
-              "size_scale": 0.25,
-              "colour": "#ffc45a",
-              "opacity": 0.84,
-              "offset": [
-                1.0,
-                0,
-                0.0
-              ],
-              "height_ratio": 3.5,
-              "spin_rate": 4.0
-            },
-            {
-              "shape": "cone",
-              "size_scale": 0.25,
-              "colour": "#ffc45a",
-              "opacity": 0.84,
-              "offset": [
-                -0.5048461045998576,
-                0,
-                0.8632093666488737
-              ],
-              "height_ratio": 3.5,
-              "spin_rate": 4.0
-            },
-            {
-              "shape": "cone",
-              "size_scale": 0.25,
-              "colour": "#ffc45a",
-              "opacity": 0.84,
-              "offset": [
-                -0.4902608213406994,
-                0,
-                -0.8715757724135882
-              ],
-              "height_ratio": 3.5,
-              "spin_rate": 4.0
-            }
-          ]
+          "layers": [],
+          "hot_colour": "#fff2b2",
+          "ember_colour": "#7b1806",
+          "turbulence": 0.045
         },
         "trail": {
           "style": "flame",
-          "width": 0.14,
-          "opacity": 0.78,
-          "wave_amplitude": 0.3,
-          "wave_frequency": 4.0,
-          "wave_speed": 6.0
+          "width": 0.38,
+          "opacity": 0.94,
+          "wave_amplitude": 0.25,
+          "wave_frequency": 2.2,
+          "wave_speed": 6.0,
+          "sample_spacing_m": 0.16,
+          "max_length_m": 2.7
         },
         "impact": {
-          "shape": "orb",
-          "duration": 0.55,
-          "grow": 2.3,
-          "heat": 0.75,
-          "opacity": 0.82,
-          "mote_shape": "orb",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "shape": "fire_bloom",
+          "duration": 0.6,
+          "grow": 3.0,
+          "heat": 0.0,
+          "opacity": 0.95,
+          "mote_shape": "shard",
+          "mote_size": 0.07,
+          "speed": 4.8,
+          "gravity": 2.4,
           "width": 0.12,
           "height_ratio": 2.3,
-          "segments": 16
+          "segments": 24,
+          "rings": 12,
+          "hot_colour": "#fff2b2",
+          "ember_colour": "#651b0b",
+          "turbulence": 0.1,
+          "mote_colour": "#ffd176",
+          "layers": [
+            {
+              "shape": "fire_bloom",
+              "segments": 20,
+              "rings": 10,
+              "size_scale": 0.65,
+              "colour": "#f57913",
+              "hot_colour": "#ffda65",
+              "ember_colour": "#902008",
+              "turbulence": 0.07,
+              "opacity": 0.84,
+              "offset": [
+                0.7,
+                0.45,
+                0.2
+              ]
+            },
+            {
+              "shape": "fire_bloom",
+              "segments": 20,
+              "rings": 10,
+              "size_scale": 0.7,
+              "colour": "#f57913",
+              "hot_colour": "#ffda65",
+              "ember_colour": "#902008",
+              "turbulence": 0.07,
+              "opacity": 0.84,
+              "offset": [
+                -0.6,
+                0.15,
+                -0.25
+              ]
+            },
+            {
+              "shape": "orb",
+              "segments": 20,
+              "rings": 10,
+              "size_scale": 1.22,
+              "colour": "#635343",
+              "opacity": 0.22,
+              "lit": true,
+              "offset": [
+                0.0,
+                0.65,
+                0.0
+              ]
+            }
+          ],
+          "initial_grow": 0.9,
+          "secondary_shape": "fire_bloom",
+          "secondary_rotation_x": 0.0
         },
         "sound": {
           "launch": "vfx_fireball_launch",
@@ -665,7 +692,11 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
-          "glyph_sides": 6
+          "glyph_sides": 6,
+          "contact_anchor": "target_ground",
+          "contact_hold_seconds": 0.22,
+          "stroke_width_scale": 0.34,
+          "branch_length_m": 0.9
         },
         "trail": {
           "style": "ion",
@@ -673,21 +704,29 @@
           "opacity": 0.78,
           "wave_amplitude": 0.3,
           "wave_frequency": 4.0,
-          "wave_speed": 6.0
+          "wave_speed": 6.0,
+          "sample_spacing_m": 0.14,
+          "max_length_m": 1.2
         },
         "impact": {
-          "shape": "spike",
-          "duration": 0.42,
-          "grow": 1.8,
-          "heat": 0.75,
-          "opacity": 0.82,
-          "mote_shape": "orb",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "shape": "lightning_crack",
+          "duration": 0.48,
+          "grow": 3.0,
+          "heat": 0.6,
+          "opacity": 0.95,
+          "mote_shape": "shard",
+          "mote_size": 0.055,
+          "speed": 4.4,
+          "gravity": 7.0,
           "width": 0.12,
           "height_ratio": 2.3,
-          "segments": 16
+          "segments": 16,
+          "rays": 10,
+          "ray_width_ratio": 0.055,
+          "mote_colour": "#fff7c1",
+          "initial_grow": 0.8,
+          "secondary_shape": "lightning_crack",
+          "secondary_rotation_x": 0.0
         },
         "sound": {
           "launch": "vfx_sky_lightning_launch",

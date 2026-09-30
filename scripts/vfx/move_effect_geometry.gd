@@ -1,5 +1,8 @@
 extends RefCounted
 
+const FIRE_SHADER := preload("res://assets/vfx/shaders/fire_body.gdshader")
+const STONE_SHADER := preload("res://assets/vfx/shaders/stone_body.gdshader")
+
 ## All bodies are real depth-tested meshes on Compatibility as well as
 ## Forward+. No screen-space distortion or GPU particles are required.
 static func material(colour: Color, opacity: float = 1.0, lit: bool = false) -> StandardMaterial3D:
@@ -10,18 +13,23 @@ static func material(colour: Color, opacity: float = 1.0, lit: bool = false) -> 
 	out.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
 	out.cull_mode = BaseMaterial3D.CULL_DISABLED
 	out.roughness = 0.8
+	out.vertex_color_use_as_albedo = true
 	out.no_depth_test = false
 	return out
 
 static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 	match kind:
-		"stone", "orb", "bubble":
+		"stone":
+			return stone(size, profile)
+		"orb", "bubble", "flame_orb", "fire_bloom":
 			var sphere := SphereMesh.new()
 			sphere.radius = size
 			sphere.height = size * 2.0
 			sphere.radial_segments = int(profile.get("segments", 8 if kind == "stone" else 16))
 			sphere.rings = int(profile.get("rings", 4 if kind == "stone" else 8))
 			return sphere
+		"rock_splash", "lightning_crack":
+			return impact_rays(size, profile, kind == "lightning_crack")
 		"shard", "spike", "cone", "stream":
 			var cylinder := CylinderMesh.new()
 			cylinder.top_radius = size * float(profile.get("tip_ratio", 0.0 if kind != "stream" else 0.7))
@@ -43,6 +51,123 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			return ribbon([Vector3.ZERO, Vector3.UP * size], float(profile.get("width", 0.09)), Color.WHITE)
 	push_error("Unknown effect geometry %s" % kind)
 	return null
+
+static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
+	var out := ShaderMaterial.new()
+	if kind in ["flame_orb", "fire_bloom"]:
+		out.shader = FIRE_SHADER
+		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff3a6"))))
+		out.set_shader_parameter("flame_colour", colour)
+		out.set_shader_parameter("ember_colour", Color(str(profile.get("ember_colour", "#7b1806"))))
+		out.set_shader_parameter("turbulence", float(profile.get("turbulence", 0.075)))
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 1.0)))
+		return out
+	if kind == "stone":
+		out.shader = STONE_SHADER
+		out.set_shader_parameter("stone_colour", Color(str(profile.get("stone_colour", "#71614b"))))
+		out.set_shader_parameter("mineral_colour", Color(str(profile.get("mineral_colour", "#bca67d"))))
+		return out
+	return material(colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
+
+## Irregular geological chunks with face normals, not smoothly shaded balls.
+static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	var segments := int(profile.get("segments", 12))
+	var rings := int(profile.get("rings", 7))
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for y in rings:
+		for x in segments:
+			var a := _stone_point(x, y, segments, rings, size)
+			var b := _stone_point(x + 1, y, segments, rings, size)
+			var c := _stone_point(x + 1, y + 1, segments, rings, size)
+			var d := _stone_point(x, y + 1, segments, rings, size)
+			_triangle(mesh, a, b, c)
+			_triangle(mesh, a, c, d)
+	mesh.surface_end()
+	return mesh
+
+static func _stone_point(x: int, y: int, segments: int, rings: int, size: float) -> Vector3:
+	var latitude := PI * float(y) / float(rings)
+	var longitude := TAU * float(x % segments) / float(segments)
+	var p := Vector3(sin(latitude) * cos(longitude), cos(latitude), sin(latitude) * sin(longitude))
+	var ridge := 1.0 + 0.12 * sin(p.x * 8.0 + p.z * 4.3) + 0.085 * sin(p.y * 9.0 - p.z * 7.0)
+	return p * size * ridge
+
+static func _triangle(mesh: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3) -> void:
+	var normal := (b - a).cross(c - a)
+	if normal.length_squared() < 0.000001: return
+	if normal.dot(a + b + c) < 0.0:
+		var swap := b; b = c; c = swap
+		normal = -normal
+	mesh.surface_set_normal(normal.normalized())
+	for point: Vector3 in [a, b, c]:
+		mesh.surface_set_color(Color.WHITE)
+		mesh.surface_add_vertex(point)
+
+static func impact_rays(size: float, profile: Dictionary, lightning: bool) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var count := int(profile.get("rays", 9))
+	for i in count:
+		var angle := TAU * float(i) / float(count)
+		var ray := Vector3(cos(angle), 0.0, sin(angle))
+		var reach := size * (1.25 + 0.3 * sin(float(i) * 3.7))
+		var end := ray * reach + Vector3.UP * size * (0.06 if lightning else 0.65)
+		var side := ray.cross(Vector3.UP) * size * float(profile.get("ray_width_ratio", 0.08))
+		quad(mesh, side, -side, end - side * 0.15, end + side * 0.15, Color.WHITE, Color(0.5, 0.55, 0.65))
+	mesh.surface_end()
+	return mesh
+
+## A closed, tapered flame volume stays readable from oblique player cameras.
+static func plume(points: Array[Vector3], width: float, colour: Color, phase: float) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	if points.size() < 2 or width <= 0.0: return mesh
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in points.size() - 1:
+		var tangent := (points[i + 1] - points[i]).normalized()
+		if tangent.length_squared() < 0.001: continue
+		var side := tangent.cross(Vector3.UP).normalized()
+		if side.length_squared() < 0.001: side = Vector3.RIGHT
+		var up := tangent.cross(side).normalized()
+		var f0 := float(i) / float(points.size() - 1)
+		var f1 := float(i + 1) / float(points.size() - 1)
+		var tail := Color("#9f2608").lerp(colour, f0)
+		var head := colour.lerp(Color("#fff1a3"), f1 * 0.75)
+		for radial in 8:
+			var a := TAU * float(radial) / 8.0
+			var b := TAU * float(radial + 1) / 8.0
+			var r0 := width * pow(f0, 0.6) * (0.8 + 0.18 * sin(a * 3.0 + phase + f0 * 12.0))
+			var r1 := width * pow(f1, 0.6) * (0.8 + 0.18 * sin(b * 3.0 + phase + f1 * 12.0))
+			quad(mesh, points[i] + (side * cos(a) + up * sin(a)) * r0,
+				points[i] + (side * cos(b) + up * sin(b)) * r0,
+				points[i + 1] + (side * cos(b) + up * sin(b)) * r1,
+				points[i + 1] + (side * cos(a) + up * sin(a)) * r1, tail, head)
+	mesh.surface_end()
+	return mesh
+
+static func bolt(points: Array[Vector3], width: float, colour: Color, profile: Dictionary) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	if points.size() < 2: return mesh
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in points.size() - 1:
+		_bolt_segment(mesh, points[i], points[i + 1], width, colour)
+		if i in [2, 5]:
+			var reach := float(profile.get("branch_length_m", 0.8))
+			var branch := points[i] + Vector3(reach * (-1.0 if i == 2 else 1.0), -reach * 0.45, reach * 0.2)
+			_bolt_segment(mesh, points[i], branch, width * 0.45, colour)
+	mesh.surface_end()
+	return mesh
+
+static func _bolt_segment(mesh: ImmediateMesh, from: Vector3, to: Vector3, width: float, colour: Color) -> void:
+	var tangent := (to - from).normalized()
+	if tangent.length_squared() < 0.001: return
+	var side := tangent.cross(Vector3.UP).normalized()
+	if side.length_squared() < 0.001: side = Vector3.RIGHT
+	var other := tangent.cross(side).normalized()
+	for axis: Vector3 in [side, other]:
+		quad(mesh, from - axis * width, from + axis * width, to + axis * width, to - axis * width, colour, colour)
+		var core := axis * width * 0.24
+		quad(mesh, from - core, from + core, to + core, to - core, Color("#fffcef"), Color("#fffcef"))
 
 static func sigil(size: float, profile: Dictionary) -> ImmediateMesh:
 	var mesh := ImmediateMesh.new()

@@ -21,7 +21,7 @@ var _arrived: bool = false
 var _lease: int = 0
 var _bodies: Array[MeshInstance3D] = []
 var _trails: Array[MeshInstance3D] = []
-var _history: Array[Vector3] = []
+var _histories: Array = []
 var _impact: Node3D
 var _marker: MeshInstance3D
 var _motes: MultiMeshInstance3D
@@ -57,7 +57,13 @@ func _ready() -> void:
 	for i in int(_params.count):
 		var body := _mesh_node(GEOMETRY.shape(str(profile.shape), float(_params.size), profile),
 			_colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
+		if str(profile.shape) in ["stone", "flame_orb"]:
+			body.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
+			body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if str(profile.shape) == "stone" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.material(Color.WHITE)
 		_bodies.append(body)
+		var history: Array[Vector3] = []
+		_histories.append(history)
 		for layer: Dictionary in profile.get("layers", []):
 			var component := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), float(_params.size) * float(layer.get("size_scale", 0.5)), layer),
 				Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.8)))
@@ -71,10 +77,13 @@ func _ready() -> void:
 	if str(profile.get("motion", "")) == "sky" or (str(profile.get("motion", "")) == "target" and str(profile.get("shape", "")) == "spike"):
 		_marker = _mesh_node(GEOMETRY.shape("sigil", float(_params.size) * float(profile.get("marker_scale", 2.0)), profile), _colour, float(profile.get("marker_opacity", 0.38)))
 		_marker.position = _context.get("target_ground", _to)
-	for layer in (2 if bool(_row.secondary_trail) else 1):
-		var trail := _mesh_node(ImmediateMesh.new(), Color.WHITE, float((_row.trail as Dictionary).get("opacity", 0.78)))
-		(trail.material_override as StandardMaterial3D).vertex_color_use_as_albedo = true
-		_trails.append(trail)
+	for i in _bodies.size():
+		var trail_layers := 2 if bool(_row.secondary_trail) and int(BUDGET.allocation(_lease).get("trail", 0)) >= _bodies.size() * 6 else 1
+		for layer in trail_layers:
+			var trail := _mesh_node(ImmediateMesh.new(), Color.WHITE, float((_row.trail as Dictionary).get("opacity", 0.78)))
+			trail.set_meta("body_index", i)
+			trail.set_meta("layer", layer)
+			_trails.append(trail)
 	_update_bodies(0.0)
 	_play_launch()
 	if _context.has("travel_seconds") and _travel > 0.0:
@@ -108,7 +117,11 @@ func _process(delta: float) -> void:
 		var duration := float((_row.impact as Dictionary).get("duration", 0.45))
 		var u := clampf((_elapsed - _travel) / maxf(duration, 0.001), 0.0, 1.0)
 		_update_impact(u, delta)
-		for body: MeshInstance3D in _bodies: body.visible = false
+		var contact_age := _elapsed - _travel
+		for body: MeshInstance3D in _bodies:
+			# Retain the completed vertical strike through contact and early
+			# impact, so the visual actually joins sky, target and ground.
+			body.visible = str(_row.body.get("motion", "")) == "sky" and contact_age < float(_row.body.get("contact_hold_seconds", 0.0))
 		for trail: MeshInstance3D in _trails:
 			(trail.material_override as StandardMaterial3D).albedo_color.a = (1.0 - u) * float((_row.trail as Dictionary).get("opacity", 0.78))
 		if u >= 1.0: queue_free()
@@ -135,8 +148,13 @@ func _update_bodies(t: float) -> void:
 	for i in _bodies.size():
 		var body := _bodies[i]
 		var angle := TAU * float(i) / float(_bodies.size())
-		var spread := float(_params.get("spread", 0.0)) * sin(t * PI)
+		var spread_size := float(_params.get("spread", 0.0))
+		if _bodies.size() > 1:
+			spread_size = maxf(spread_size, float(_params.size) * float(_row.body.get("volley_separation_scale", 2.8)))
+		var spread := spread_size * sin(t * PI)
 		body.position = front + (side * cos(angle) + Vector3.UP * sin(angle)) * spread
+		if _bodies.size() > 1:
+			body.position += direction * (float(i) - float(_bodies.size() - 1) * 0.5) * float(_row.body.get("volley_stagger_m", 0.25)) * sin(t * PI)
 		body.position.y += float(_params.get("arc", 0.0)) * sin(t * PI)
 		match mode:
 			"sky":
@@ -146,12 +164,13 @@ func _update_bodies(t: float) -> void:
 				var contact_t := clampf((t - marker_fraction) / maxf(0.001, 1.0 - marker_fraction), 0.0, 1.0)
 				var height := float((_row.body as Dictionary).get("sky_height", 6.0))
 				var points: Array[Vector3] = []
-				var start := _to + Vector3.UP * height
+				var contact: Vector3 = _context.get("target_ground", _to) if str(_row.body.get("contact_anchor", "target")) == "target_ground" else _to
+				var start := contact + Vector3.UP * height
 				for k in 9:
 					var f := float(k) / 8.0
-					points.append(start.lerp(_to, f * contact_t) + side * sin(f * TAU * 3.0) * float(_params.size) * sin(f * PI))
+					points.append(start.lerp(contact, f * contact_t) + side * sin(f * TAU * 3.0) * float(_params.size) * sin(f * PI))
 				body.position = Vector3.ZERO
-				body.mesh = GEOMETRY.ribbon(points, float(_params.size) * 0.22, _colour)
+				body.mesh = GEOMETRY.bolt(points, float(_params.size) * float(_row.body.get("stroke_width_scale", 0.34)), _colour, _row.body)
 			"chain", "beam":
 				var points: Array[Vector3] = []
 				for k in 10:
@@ -200,19 +219,39 @@ func _update_bodies(t: float) -> void:
 		if str((_row.body as Dictionary).get("shape", "")) == "vortex": body.rotation.y = t * TAU
 		for component: Node in body.get_children():
 			if component is Node3D: component.rotation.y = _elapsed * float(component.get_meta("spin_rate", 0.0))
-	if not _bodies.is_empty():
-		_history.append(_bodies[0].position if mode not in ["sky", "chain", "beam"] else front)
+		var trail_head := body.position if mode not in ["sky", "chain", "beam"] else front
+		if mode == "sky":
+			var contact: Vector3 = _context.get("target_ground", _to) if str(_row.body.get("contact_anchor", "target")) == "target_ground" else _to
+			var start := contact + Vector3.UP * float(_row.body.get("sky_height", 6.0))
+			trail_head = start.lerp(contact, clampf((t - float(_row.body.get("marker_fraction", 0.65))) / maxf(0.001, 1.0 - float(_row.body.get("marker_fraction", 0.65))), 0.0, 1.0))
+		_append_trail_point(i, trail_head)
+
+func _append_trail_point(index: int, point: Vector3) -> void:
+	var history: Array[Vector3] = _histories[index]
+	var spacing := maxf(0.025, float(_row.trail.get("sample_spacing_m", 0.14)) * float(_params.trail))
+	if history.is_empty(): history.append(point); return
+	var distance: float = history.back().distance_to(point)
+	if distance < spacing: return
+	var start: Vector3 = history.back()
+	var steps := mini(32, floori(distance / spacing))
+	for i in steps:
+		history.append(start.lerp(point, float(i + 1) / float(steps)))
 
 func _update_trail() -> void:
 	var samples := floori(float(BUDGET.allocation(_lease).get("trail", 0)) / float(maxi(1, _trails.size())))
-	while _history.size() > maxi(1, samples): _history.pop_front()
 	var profile: Dictionary = _row.trail
-	for layer in _trails.size():
-		var trail := _trails[layer]
-		trail.visible = samples >= 2 and _history.size() >= 2
+	for trail: MeshInstance3D in _trails:
+		var layer := int(trail.get_meta("layer", 0))
+		var body_index := int(trail.get_meta("body_index", 0))
+		var history: Array[Vector3] = _histories[body_index]
+		while history.size() > maxi(1, samples): history.pop_front()
+		trail.visible = samples >= 2 and history.size() >= 2
 		if trail.visible:
-			var colour := _colour.lerp(Color.WHITE, 0.7) if layer == 1 else _colour
-			var points: Array[Vector3] = _history.duplicate()
+			var base_colour := Color(str(profile.get("colour", _params.colour)))
+			var colour := base_colour.lerp(Color.WHITE, 0.7) if layer == 1 else base_colour
+			var points: Array[Vector3] = history.duplicate()
+			var max_length := float(profile.get("max_length_m", 2.4)) * float(_params.trail)
+			while points.size() > 2 and points.front().distance_to(points.back()) > max_length: points.pop_front()
 			var style := str(profile.get("style", "air"))
 			var amplitude := float(profile.get("wave_amplitude", 0.05)) * float(_params.size)
 			var frequency := float(profile.get("wave_frequency", 3.0))
@@ -226,7 +265,8 @@ func _update_trail() -> void:
 					"foam", "spray", "bubble": points[i].y += sin(phase) * amplitude
 					"dust": points[i].y -= amplitude * (1.0 - f)
 					_: points[i].y += sin(phase) * amplitude * sin(f * PI)
-			trail.mesh = GEOMETRY.ribbon(points, float(profile.get("width", 0.08)) * float(_params.trail) * (0.48 if layer == 1 else 1.0), colour)
+			var width := float(profile.get("width", 0.08)) * float(_params.trail) * (0.48 if layer == 1 else 1.0)
+			trail.mesh = GEOMETRY.plume(points, width, colour, _elapsed * 8.0) if style == "flame" else GEOMETRY.ribbon(points, width, colour)
 
 func _build_impact() -> void:
 	if _marker != null: _marker.visible = false
@@ -237,11 +277,24 @@ func _build_impact() -> void:
 	var scale_factor := float(_params.size) * float(_params.impact_scale)
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
+	if str(profile.get("shape", "")) == "fire_bloom": core.material_override = GEOMETRY.authored_material("fire_bloom", profile, _colour)
+	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
+	for layer: Dictionary in profile.get("layers", []):
+		var scale := float(layer.get("size_scale", 1.0))
+		var part := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), scale_factor * scale, layer),
+			Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.6)), bool(layer.get("lit", false)))
+		if str(layer.get("shape", "")) == "fire_bloom": part.material_override = GEOMETRY.authored_material("fire_bloom", layer, Color(str(layer.get("colour", _params.colour))))
+		part.set_meta("base_opacity", float(layer.get("opacity", 0.6)))
+		part.reparent(_impact, false)
+		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
+		part.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2])) * scale_factor
 	if bool(_row.impact_layer):
 		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
+		if str(profile.get("secondary_shape", "")) == "fire_bloom": secondary.material_override = GEOMETRY.authored_material("fire_bloom", profile, _colour)
+		secondary.set_meta("base_opacity", 0.65)
 		secondary.reparent(_impact, false)
-		secondary.rotation.x = PI * 0.5
+		secondary.rotation.x = float(profile.get("secondary_rotation_x", PI * 0.5))
 	var count := int(BUDGET.allocation(_lease).get("impact", 0))
 	if count > 0:
 		# One draw call for all manually integrated CPU motes. No GPU-particle
@@ -252,7 +305,7 @@ func _build_impact() -> void:
 		multimesh.instance_count = count
 		_motes = MultiMeshInstance3D.new()
 		_motes.multimesh = multimesh
-		_motes.material_override = GEOMETRY.material(_colour, 0.86)
+		_motes.material_override = GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone")
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)
 	for i in count:
@@ -266,10 +319,14 @@ func _update_impact(u: float, delta: float) -> void:
 	var profile: Dictionary = _row.impact
 	for child: Node in _impact.get_children():
 		if child is MeshInstance3D:
-			var material := child.material_override as StandardMaterial3D
-			material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-			material.albedo_color.a = (1.0 - u) * float(profile.get("opacity", 0.82))
-	var growth := lerpf(0.35, float(profile.get("grow", 2.0)), u)
+			var alpha := (1.0 - u) * float(child.get_meta("base_opacity", profile.get("opacity", 0.82)))
+			if child.material_override is ShaderMaterial:
+				(child.material_override as ShaderMaterial).set_shader_parameter("opacity", alpha)
+			elif child.material_override is StandardMaterial3D:
+				var material := child.material_override as StandardMaterial3D
+				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+				material.albedo_color.a = alpha
+	var growth := lerpf(float(profile.get("initial_grow", 0.35)), float(profile.get("grow", 2.0)), u)
 	for child: Node in _impact.get_children():
 		if child is Node3D and child != _motes: child.scale = Vector3.ONE * growth
 	if _motes != null:
@@ -287,6 +344,7 @@ func _cue(name: String) -> String:
 func _contact_position() -> Vector3:
 	var body: Dictionary = _row.body
 	if str(body.get("motion", "")) == "self": return _from
+	if str(body.get("contact_anchor", "")) == "target_ground": return _context.get("target_ground", _to)
 	if str(body.get("motion", "")) == "target" and str(body.get("shape", "")) == "spike":
 		return _context.get("target_ground", _to)
 	return _to
