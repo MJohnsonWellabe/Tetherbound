@@ -644,7 +644,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_foundations_state(args)
 		"legacy_physical_crossings_fixture":
 			var regression := str(args.get("regression", ""))
-			var enabled := regression in ["veridian_same_five", "water_return"] \
+			var enabled := regression in ["veridian_same_five", "water_return", "cloudreach_midride_rejoin"] \
 				and FOUNDATIONS_ORDER.set_test_overrides({"legacy_physical_crossings": true})
 			out = {"verdict": "PASS" if enabled else "FAIL", "detail": "disclosed retired crossing fixture: " + regression}
 		"save_character_here":
