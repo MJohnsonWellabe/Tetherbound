@@ -1,0 +1,179 @@
+{
+  "source": "9507b405b75a3e4be3f84780853dfa40b7aba889",
+  "pair": "giant/giant",
+  "observed_frame": 55,
+  "physical_obb_intersection": false,
+  "separating_axis_gaps_m": [
+    0.6199650838480508,
+    0.6833152230581305,
+    0.6199641694425146,
+    0.6833153870623576
+  ],
+  "actual_overlap": 0.00961901340916331,
+  "actual_yaw": -21.502305985662403,
+  "actual_pitch": -30,
+  "continuous_fixed_pitch_pass_count": 119,
+  "nearest_fixed_pitch_candidates": [
+    {
+      "yaw": -17.252305985662403,
+      "pitch": -30,
+      "distance": 14.549181588664418,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -17.002305985662403,
+      "pitch": -30,
+      "distance": 14.556319675250617,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -16.752305985662403,
+      "pitch": -30,
+      "distance": 14.56332388705239,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -16.502305985662403,
+      "pitch": -30,
+      "distance": 14.570194090719637,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -16.252305985662403,
+      "pitch": -30,
+      "distance": 14.576930155453583,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -16.002305985662403,
+      "pitch": -30,
+      "distance": 14.583531953009272,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -15.752305985662403,
+      "pitch": -30,
+      "distance": 14.589999357697993,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -15.502305985662403,
+      "pitch": -30,
+      "distance": 14.596332246389679,
+      "overlap": 0.0
+    }
+  ],
+  "coarse_search_origin_yaw": -6.502305985662403,
+  "model_margin_m": 0.35,
+  "model_minimum_arm_m": 2.0,
+  "distance_cap_m": 39.5,
+  "nearest_model_constrained_candidates": [
+    {
+      "yaw": -9.002305985662403,
+      "distance": 14.73824474347923,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -9.252305985662403,
+      "distance": 14.710629252661805,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -9.502305985662403,
+      "distance": 14.707691753934784,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -9.752305985662403,
+      "distance": 14.704617498517157,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -10.002305985662403,
+      "distance": 14.701406544938312,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -10.252305985662403,
+      "distance": 14.698058954330179,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -10.502305985662403,
+      "distance": 14.69457479042606,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -10.752305985662403,
+      "distance": 14.690954119559413,
+      "body_room_m": null,
+      "pitch": -30.0,
+      "overlap": 0.0
+    }
+  ],
+  "bounded_pitch_yaw_candidates": [
+    {
+      "yaw": -16.502305985662403,
+      "pitch": -30,
+      "distance": 14.570194090719637,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -11.502305985662403,
+      "pitch": -30,
+      "distance": 14.679273767494387,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -16.502305985662403,
+      "pitch": -32.5,
+      "distance": 14.46729166881899,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -16.502305985662403,
+      "pitch": -27.5,
+      "distance": 14.646313098471039,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -6.502305985662403,
+      "pitch": -30,
+      "distance": 15.267056954220553,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -11.502305985662403,
+      "pitch": -32.5,
+      "distance": 14.580375752095609,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -11.502305985662403,
+      "pitch": -27.5,
+      "distance": 14.7511807293795,
+      "overlap": 0.0
+    },
+    {
+      "yaw": -16.502305985662403,
+      "pitch": -35,
+      "distance": 14.337801713377791,
+      "overlap": 0.0
+    }
+  ],
+  "scope": "Pure offline measured-corner geometry diagnosis only; world/model sweep feasibility must be queried by production rig. Actual bad frame remains FAIL; no native result inferred."
+}

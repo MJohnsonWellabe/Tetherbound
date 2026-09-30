@@ -1474,6 +1474,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	if manual:
 		local["orbit_candidates_deg"] = [0.0]
 		local["allow_pair_side_views"] = false
+		local["orbit_refinement_step_deg"] = 0.0
 	var weight := 1.0-exp(-maxf(float(fight.get("lag",4.0)),0.01)*delta)
 	_update_combat_top_band(cfg.get("hud_safe",{}) as Dictionary,weight)
 	var clear: Dictionary = cfg.get("body_clear",{})

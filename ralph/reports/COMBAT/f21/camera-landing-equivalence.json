@@ -3,7 +3,7 @@
   "integration_base": "8b7707c3dd333acb67bf2925a99366ce36e04a5b",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
-  "status": "F21#4 NOT MET: executed9507 live r3 native1, five pairs pass/four fail. All nine300tick/54PNG records preserved.",
+  "status": "F21#4 NOT MET. R3 nativeFAIL fully preserved; adaptive intermediate-angle source and explicit canonical hitstop receipt await source/native/blind gates.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
@@ -21,7 +21,7 @@
   "camera_cut_before_capture": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
   "live_capture_pending": {
     "mode": "--matrix-live",
-    "source_status": "Changed-approach successor frozen by containing commit, unexecuted; both6155 and984ee nativeFAIL retained. No engine grant implied.",
+    "source_status": "Containing commit freezes successor after actual9507 failure; no engine launch or acceptance implied.",
     "physics_boundaries_per_pair": 300,
     "settling_physics_boundaries": 120,
     "observed_physics_boundaries": 180,
@@ -37,7 +37,7 @@
       179
     ],
     "invariants": "Complete pass requires all9 cases,300 physics samples/case,6 nonblank1920x1080 PNG/case on distinct draws with requested+actual tick metadata, >=6 scored render records/case, strict0 overlap/in-frame/live simulation on EVERY scored render, physical movement and actual quick action. If skipped milestones cannot all be captured within interval, fail; no held-lifecycle escape.",
-    "output_plan": "If ROOT grants: fresh D:/tetherbound/combat-camera-live-r3/frames and isolated D:/tetherbound/combat-camera-live-r3-user APPDATA/LOCALAPPDATA; Low Compatibility1920x1080. One existing smoke parser, sole meaningful regression, then one graphical live matrix.",
+    "output_plan": "If ROOT grants: fresh combat-camera-live-r4/frames and combat-camera-live-r4-user isolated APPDATA/LOCALAPPDATA, same single smoke parser/sole regression/one LowCompatibility1920x1080 full live9matrix.",
     "asset_import_status": "No new assets. Existing cache ran984ee Low native successfully to a truthful7-caseFAIL. No import requested unless actual parser requires a missing/invalid necessary cache, coordinated with ROOT.",
     "scope": "Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise BEFORE each pair only. No rescale, freeze, invulnerability, mid-interval HP/resource grants or earned acquisition claim."
   },
@@ -185,45 +185,46 @@
     "source_identity": "The containing commit freezes these bytes. External launch must verify actual clean HEAD and before/after hashes; no source claim derives from a script argument alone.",
     "files": {
       "data/config/camera.json": {
-        "raw_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3",
-        "git_lf_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3"
+        "raw_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+        "git_lf_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9"
       },
       "scripts/combat/combat_manager.gd": {
-        "raw_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5",
-        "git_lf_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5"
+        "raw_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+        "git_lf_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a"
       },
       "scripts/combat/fight_camera.gd": {
-        "raw_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897",
-        "git_lf_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897"
+        "raw_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+        "git_lf_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306"
       },
       "scripts/player/camera_rig.gd": {
         "raw_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
         "git_lf_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398"
       },
       "tests/smoke_combat_camera.gd": {
-        "raw_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588",
-        "git_lf_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588"
+        "raw_sha256": "4501a4221879674425f063117a368114545d61770abc225bf17b51c43a536ac4",
+        "git_lf_sha256": "4501a4221879674425f063117a368114545d61770abc225bf17b51c43a536ac4"
       },
       "tests/test_fight_camera.gd": {
-        "raw_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a",
-        "git_lf_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a"
+        "raw_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "git_lf_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d"
       }
     },
-    "diagnosis": "Source984ee actual complete nine-pair run failed7 cases.314 scored draws/149bad; read-only15-axis SAT on actual eight model-transformed corners found0 OBB intersections. Small/small observed48 requested9.5m clear but actual lens2m; observed51 spring3.6855m with cached hit2.9035m matching preceding spring. Giant-foe lenses similarly collapsed2..2.48m. This does not justify changing bodies/collision/scale.",
+    "diagnosis": "9507 r3 completed nine300tick/54PNG cases, native1/fourFAIL. Giant/giant55 SAT is disjoint (.61996/.68332m gaps); coarse yaw grid skips a model-unblocked/zero-overlap interval. Same-pitch/model-constrained offline pose yaw-9.0023deg/distance14.738m is feasible in pure geometry; world sweep native proof remains required. Four live=false rows occur at accepted contact; production hitstop disables body physics. Original receipt lacks individual flags and remains FAIL.",
     "production_changes": [
       "Rig calls its scoped fight composer after actor physics, ordinary look/tracking/follow and impact roll, before the current draw. Target changes clear this callback for aim/exit/conversation.",
       "Read-only pose probes reuse existing spherical casts, world mask/exclusions/margin, vertical/lateral/pivot sweeps and oriented actual foe guard. Pure solver projects the returned constrained lens transform, including live roll and Camera3D offsets.",
       "Keep a newly probed current-yaw/follow view when it is framed and clear; otherwise select nearest scored constrained safe orbit. Manual grace restricts candidates to current yaw. Existing distance cap and literal zero-overlap equation remain.",
-      "Apply only the scored rig/Camera3D presentation pose for this draw, replacing the stale SpringArm physics child placement. Subsequent SpringArm physics continues normally. No actor movement, collision/size changes, AI pause, HP/cost/authority or input-map edits."
+      "Apply only the scored rig/Camera3D presentation pose for this draw, replacing the stale SpringArm physics child placement. Subsequent SpringArm physics continues normally. No actor movement, collision/size changes, AI pause, HP/cost/authority or input-map edits.",
+      "After all coarse candidates fail, refine within configured15deg of the best coarse angle in2.5deg steps; at most12 extra candidates, same pitch, same constraints/zero-overlap/cap. Manual grace explicitly disables refinement. No new body/AI/HP/input behavior."
     ],
-    "capture_delta": "Existing live driver and all strict assertions retained. Flush only its two scheduled physical trigger edges before manager physics; raw r2 small/small was READY with action strength0 through120..122. Godot4.7 parse_input_event buffers by default, so slow draws can defer both edges. Actual next run must still observe a real quick action. Requested/selected transforms and constraint lengths now serialized numerically, not Variant strings.",
+    "capture_delta": "Keep all original per-view framing/zero-overlap/input/lifecycle assertions. Explicitly record individual simulation/hitstop fields. A body may qualify only through current same-manager same-body bounded canonical hitstop with positive HP and prior physics enabled; held/fainted/ended/stale bodies or stopped manager still fail. Original r3 FAIL unchanged, no retroactive reclassification.",
     "primary_source_checks": {
       "input_buffer_and_flush": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/input/input.cpp#L1410-L1468",
       "camera_adjusted_transform_offsets": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/3d/camera_3d.cpp#L247-L259"
     },
-    "regression": "Same existing rotated-long-model regression now also refuses a requested clear fit when a read-only constraint probe returns a0.2m lens. No method/assertion removed; one added assertion, total expected19 in this sole selected method. No broad suite needed for this source change.",
+    "regression": "Same sole existing rotated-model method retains19 assertions and adds5 exact native giant/giant55 body-constrained coarse-fail/refined-pass/zero-overlap/cap+budget/unchanged-pitch assertions; expected24. Input fixture is all16 original measured model corners, exact46deg lens and39.5m cap; actual world sweep remains native-only.",
     "source_limitations": [
-      "Unparsed/unexecuted new source. Native same-frame actual geometry, controller controls and nine live pairs may still fail; no acceptance from source presence.",
+      "Unparsed/unexecuted adaptive source. Exact native actual camera/world sweep/hitstop and fresh dynamic blind judgment remain required; F21#4 NOT MET.",
       "Safety correction can change camera pose promptly when smooth follow is invalid; dynamic pixel readability and correction quality need fresh independent blind judgment.",
       "Scene query work is bounded by existing angular/distance search but FPS/Medium/Ally/F21#5 remain unproved.",
       "Staged actual roster/start poses and setup baselines are disclosed; no earned campaign/acquisition or full-craft claim."
@@ -263,7 +264,7 @@
     "same_source_before_after": true,
     "processes_exited": "ROOT wrapper terminal confirms native ended; engine queue now belongs ROOT/M1."
   },
-  "next_approach": "After two failed live attempts, replace the requested-pose/lagged-arm approach with current-draw constrained-pose scoring after actual actor physics, follow and impact roll. Preserve zero overlap, real sizes, AI, collision and input.",
+  "next_approach": "Refine only a failed coarse constrained orbit around its measured best angle, preserving same pitch/world/model guard/cap; distinguish bounded canonical contact hitstop from inactive simulation using recorded live state.",
   "historical_fix_r2": {
     "source_identity": "The commit containing this manifest freezes the listed byte hashes; the external runner pins actual git HEAD and tracked cleanliness before and after execution.",
     "files": {
@@ -324,6 +325,54 @@
       "normal/giant",
       "giant/normal",
       "giant/giant"
+    ]
+  },
+  "historical_fix_r3": {
+    "source_identity": "The containing commit freezes these bytes. External launch must verify actual clean HEAD and before/after hashes; no source claim derives from a script argument alone.",
+    "files": {
+      "data/config/camera.json": {
+        "raw_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3",
+        "git_lf_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3"
+      },
+      "scripts/combat/combat_manager.gd": {
+        "raw_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5",
+        "git_lf_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5"
+      },
+      "scripts/combat/fight_camera.gd": {
+        "raw_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897",
+        "git_lf_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897"
+      },
+      "scripts/player/camera_rig.gd": {
+        "raw_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "git_lf_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398"
+      },
+      "tests/smoke_combat_camera.gd": {
+        "raw_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588",
+        "git_lf_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588"
+      },
+      "tests/test_fight_camera.gd": {
+        "raw_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a",
+        "git_lf_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a"
+      }
+    },
+    "diagnosis": "Source984ee actual complete nine-pair run failed7 cases.314 scored draws/149bad; read-only15-axis SAT on actual eight model-transformed corners found0 OBB intersections. Small/small observed48 requested9.5m clear but actual lens2m; observed51 spring3.6855m with cached hit2.9035m matching preceding spring. Giant-foe lenses similarly collapsed2..2.48m. This does not justify changing bodies/collision/scale.",
+    "production_changes": [
+      "Rig calls its scoped fight composer after actor physics, ordinary look/tracking/follow and impact roll, before the current draw. Target changes clear this callback for aim/exit/conversation.",
+      "Read-only pose probes reuse existing spherical casts, world mask/exclusions/margin, vertical/lateral/pivot sweeps and oriented actual foe guard. Pure solver projects the returned constrained lens transform, including live roll and Camera3D offsets.",
+      "Keep a newly probed current-yaw/follow view when it is framed and clear; otherwise select nearest scored constrained safe orbit. Manual grace restricts candidates to current yaw. Existing distance cap and literal zero-overlap equation remain.",
+      "Apply only the scored rig/Camera3D presentation pose for this draw, replacing the stale SpringArm physics child placement. Subsequent SpringArm physics continues normally. No actor movement, collision/size changes, AI pause, HP/cost/authority or input-map edits."
+    ],
+    "capture_delta": "Existing live driver and all strict assertions retained. Flush only its two scheduled physical trigger edges before manager physics; raw r2 small/small was READY with action strength0 through120..122. Godot4.7 parse_input_event buffers by default, so slow draws can defer both edges. Actual next run must still observe a real quick action. Requested/selected transforms and constraint lengths now serialized numerically, not Variant strings.",
+    "primary_source_checks": {
+      "input_buffer_and_flush": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/input/input.cpp#L1410-L1468",
+      "camera_adjusted_transform_offsets": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/3d/camera_3d.cpp#L247-L259"
+    },
+    "regression": "Same existing rotated-long-model regression now also refuses a requested clear fit when a read-only constraint probe returns a0.2m lens. No method/assertion removed; one added assertion, total expected19 in this sole selected method. No broad suite needed for this source change.",
+    "source_limitations": [
+      "Unparsed/unexecuted adaptive source. Exact native actual camera/world sweep/hitstop and fresh dynamic blind judgment remain required; F21#4 NOT MET.",
+      "Safety correction can change camera pose promptly when smooth follow is invalid; dynamic pixel readability and correction quality need fresh independent blind judgment.",
+      "Scene query work is bounded by existing angular/distance search but FPS/Medium/Ally/F21#5 remain unproved.",
+      "Staged actual roster/start poses and setup baselines are disclosed; no earned campaign/acquisition or full-craft claim."
     ]
   }
 }

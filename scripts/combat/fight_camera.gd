@@ -187,4 +187,36 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 				best = candidate
 			if passed: return candidate
 			if distance >= maximum: break
+	# A coarse orbit can straddle a narrow clear interval: one neighbour is
+	# body-blocked and the other overlaps in projection. Refine only after the
+	# complete coarse search fails, keeping the same constrained lens query.
+	var refine_step := float(config.get("orbit_refinement_step_deg",0.0))
+	var refine_span := float(config.get("orbit_refinement_span_deg",0.0))
+	var refine_cap := clampi(int(config.get("orbit_refinement_max_candidates",12)),0,12)
+	if best.is_empty() or offsets.size()<2 or not is_finite(refine_step) \
+		or not is_finite(refine_span) or refine_step<=0.0 or refine_span<=0.0 or refine_cap==0:
+		return best
+	refine_step = clampf(refine_step,0.5,15.0)
+	refine_span = clampf(refine_span,refine_step,30.0)
+	var refined_offsets: Array = []
+	for index: int in mini(60,int(floor(refine_span/refine_step))):
+		for direction: float in [-1.0,1.0]:
+			var refined := float(best.yaw_offset_deg)+direction*refine_step*float(index+1)
+			if not offsets.has(refined): refined_offsets.append(refined)
+	refined_offsets.sort_custom(func(a: Variant,b: Variant) -> bool: return absf(float(a)) < absf(float(b)))
+	if refined_offsets.size()>refine_cap: refined_offsets.resize(refine_cap)
+	if refined_offsets.is_empty(): return best
+	var refined_config := config.duplicate()
+	refined_config["orbit_candidates_deg"] = refined_offsets
+	refined_config["allow_pair_side_views"] = false
+	refined_config["orbit_refinement_step_deg"] = 0.0
+	var refined_fit := solve(ally,foe,yaw,pitch,vertical_fov_deg,aspect,base_distance,
+		refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose)
+	if not refined_fit.is_empty() and (bool(refined_fit.get("pass",false)) \
+		or (bool(refined_fit.framed) and not bool(best.framed)) \
+		or (bool(refined_fit.framed)==bool(best.framed) and float(refined_fit.overlap)<float(best.overlap))):
+		refined_fit["orbit_refined"] = true
+		refined_fit["coarse_yaw_offset_deg"] = best.yaw_offset_deg
+		refined_fit["refinement_candidate_count"] = refined_offsets.size()
+		return refined_fit
 	return best

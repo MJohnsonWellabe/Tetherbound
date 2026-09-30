@@ -104,6 +104,53 @@ func test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_l
 	var constrained := FIT.solve(a,b,PI*0.75,deg_to_rad(-25),68,16.0/9.0,9.5,FIT.config(),false,points_a,points_b,clipped_probe)
 	assert_false(bool(constrained.get("pass",false)),"requested clear fit cannot bypass an actual clipped lens constraint")
 
+	# Exact measured native9507 giant/giant observed55. Bodies were SAT-
+	# disjoint, but coarse yaw neighbours were respectively body-blocked and
+	# projected-overlapping. World sweeps remain a separate native obligation.
+	var native_ally := PackedVector3Array([
+		Vector3(23.6987113952637,1.2938756942749,-40.1333312988281),
+		Vector3(24.2533416748047,1.2938756942749,-44.9994659423828),
+		Vector3(23.6987113952637,7.09387588500977,-40.1333312988281),
+		Vector3(24.2533416748047,7.09387588500977,-44.9994659423828),
+		Vector3(18.9748802185059,1.2938756942749,-40.671745300293),
+		Vector3(19.5295124053955,1.2938756942749,-45.5378799438477),
+		Vector3(18.9748802185059,7.09387588500977,-40.671745300293),
+		Vector3(19.5295124053955,7.09387588500977,-45.5378799438477),
+	])
+	var native_foe := PackedVector3Array([
+		Vector3(29.7458400726318,0.621477842330933,-42.5906524658203),
+		Vector3(24.9101886749268,0.621477842330933,-43.367301940918),
+		Vector3(29.7458400726318,6.42147827148438,-42.5906524658203),
+		Vector3(24.9101886749268,6.42147827148438,-43.367301940918),
+		Vector3(28.9919033050537,0.621477842330933,-37.8964157104492),
+		Vector3(24.1562519073486,0.621477842330933,-38.6730651855469),
+		Vector3(28.9919033050537,6.42147827148438,-37.8964157104492),
+		Vector3(24.1562519073486,6.42147827148438,-38.6730651855469),
+	])
+	var ally_box := AABB(native_ally[0],Vector3.ZERO)
+	var foe_box := AABB(native_foe[0],Vector3.ZERO)
+	for corner: Vector3 in native_ally: ally_box = ally_box.expand(corner)
+	for corner: Vector3 in native_foe: foe_box = foe_box.expand(corner)
+	var foe_edges := [native_foe[1]-native_foe[0],native_foe[2]-native_foe[0],native_foe[4]-native_foe[0]]
+	var foe_size := Vector3(foe_edges[0].length(),foe_edges[1].length(),foe_edges[2].length())
+	var actual_foe_box := AABB(-foe_size*.5,foe_size)
+	var actual_foe_pose := Transform3D(Basis(foe_edges[0].normalized(),foe_edges[1].normalized(),foe_edges[2].normalized()),foe_box.get_center())
+	var model_probe := func(point: Vector3, probe_basis: Basis, requested: float) -> Dictionary:
+		var room := FIT.oriented_body_limit(point,point+probe_basis.z*requested,actual_foe_box,actual_foe_pose,.35,2.0)
+		var allowed := minf(requested,room)
+		return {"pivot":point,"distance":allowed,"transform":Transform3D(probe_basis,point+probe_basis.z*allowed),"model_room":room}
+	var native_cfg := FIT.config().duplicate(true)
+	native_cfg["max_distance_m"] = 39.5
+	native_cfg["orbit_refinement_step_deg"] = 0.0
+	var coarse := FIT.solve(ally_box,foe_box,deg_to_rad(-6.502305985662403),deg_to_rad(-30),46,16.0/9.0,9.5,native_cfg,false,native_ally,native_foe,model_probe)
+	assert_false(bool(coarse.get("pass",false)),"original actual-body constrained coarse search remains a truthful failure")
+	native_cfg["orbit_refinement_step_deg"] = float(FIT.config().orbit_refinement_step_deg)
+	var refined := FIT.solve(ally_box,foe_box,deg_to_rad(-6.502305985662403),deg_to_rad(-30),46,16.0/9.0,9.5,native_cfg,false,native_ally,native_foe,model_probe)
+	assert_true(bool(refined.get("pass",false)),"bounded intermediate yaw separates the same actual measured bodies: "+str(refined))
+	assert_eq(float(refined.get("overlap",1.0)),0.0,"neither body nor zero-overlap requirement is reduced")
+	assert_true(float(refined.distance)<=39.5 and int(refined.get("refinement_candidate_count",100))<=12,"same distance cap and bounded extra candidate budget")
+	assert_almost_eq(float(refined.pitch),deg_to_rad(-30),.000001,"refinement leaves actual player pitch unchanged")
+
 func _body(height: float, feet: Vector3) -> AABB:
 	var width := height * 0.7
 	return AABB(feet - Vector3(width*0.5,0,width*0.5), Vector3(width,height,width))

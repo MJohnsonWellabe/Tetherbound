@@ -358,8 +358,23 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 				# Retain the actual final/aborted view too, even if this draw
 				# follows boundary300 or an encounter ending in that interval.
 				var observed_frame := int(ctx.clock)-120
-				var live := _manager.is_physics_processing() and _ally.is_physics_processing() \
-					and _wild.is_physics_processing() and bool(_wild.get("engaged")) and _rig.is_processing()
+				# Canonical hitstop deliberately disables actor physics for a
+				# bounded interval; its live manager releases the same bodies.
+				# A held actor, faint, stale binding or stopped manager still fails.
+				var stop_left := float(_manager.get("_hitstop_left"))
+				var hitstop: Dictionary = MATH.config().get("hitstop",{})
+				var stop_max := maxf(float(hitstop.get("quick_seconds",0.03)),
+					maxf(float(hitstop.get("charged_seconds",0.07)),float(hitstop.get("stagger_crit_seconds",0.12))))
+				var manager_live := _manager.is_physics_processing() and int(_manager.get("state"))==1
+				var bounded_stop := manager_live and is_finite(stop_left) and stop_left>0.0 and stop_left<=stop_max+0.000001 \
+					and _manager.get("_ally_body")==_ally and _manager.get("_wild")==_wild
+				var ally_stop := bounded_stop and bool(_ally.get("_combat_hitstop_active")) \
+					and bool(_ally.get("_combat_hitstop_physics_was_active")) and int(ally_instance.get("hp"))>0
+				var foe_stop := bounded_stop and bool(_wild.get("_combat_hitstop_active")) \
+					and bool(_wild.get("_combat_hitstop_physics_was_active")) and int(foe_instance.get("hp"))>0
+				var ally_live := _ally.is_physics_processing() or ally_stop
+				var foe_live := _wild.is_physics_processing() or foe_stop
+				var live := manager_live and ally_live and foe_live and bool(_wild.get("engaged")) and _rig.is_processing()
 				var a_bounds: AABB = _manager.call("_body_world_bounds",_ally)
 				var b_bounds: AABB = _manager.call("_body_world_bounds",_wild)
 				var a_points: PackedVector3Array = _manager.call("_body_world_corners",_ally)
@@ -382,6 +397,15 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 				if observed_frame >= 0 and not good: passed = false
 				render_samples.append({"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),
 					"observed_frame":observed_frame,"ticks_ms":Time.get_ticks_msec(),"live":live,"measured_pair":measured_pair,
+					"simulation":{"manager_physics":_manager.is_physics_processing(),"rig_process":_rig.is_processing(),
+						"manager_state":int(_manager.get("state")),"ally_hp":int(ally_instance.get("hp")),"foe_hp":int(foe_instance.get("hp")),
+						"ally_physics":_ally.is_physics_processing(),"foe_physics":_wild.is_physics_processing(),
+						"ally_hitstop_active":bool(_ally.get("_combat_hitstop_active")),"foe_hitstop_active":bool(_wild.get("_combat_hitstop_active")),
+						"ally_physics_before_hitstop":bool(_ally.get("_combat_hitstop_physics_was_active")),
+						"foe_physics_before_hitstop":bool(_wild.get("_combat_hitstop_physics_was_active")),
+						"same_actor_binding":_manager.get("_ally_body")==_ally and _manager.get("_wild")==_wild,
+						"hitstop_remaining_seconds":stop_left,"hitstop_maximum_seconds":stop_max,
+						"bounded_hitstop":bounded_stop,"ally_accepted_hitstop":ally_stop,"foe_accepted_hitstop":foe_stop},
 					"ally_bounds":_bounds_record(a_bounds),"foe_bounds":_bounds_record(b_bounds),"ally_model_corners":a_corners,"foe_model_corners":b_corners,
 					"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),"framed":framed,"overlap":overlap,
 					"world_aabb_ally_rect":_rect_record(axis_a),"world_aabb_foe_rect":_rect_record(axis_b),
