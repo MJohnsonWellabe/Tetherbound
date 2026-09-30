@@ -1,6 +1,6 @@
 {
   "baseline": "94b81b02c532ced5ab4914a2164c3d131486059e",
-  "candidate": "32d4b9e36adc53afd48fd0392dc0056460cdb27e",
+  "candidate": "3cbf772550d6fd3bff5115a76e95ce7993aa35ae + tests/test_satchel.gd reviewed RD35 patch",
   "members": 667,
   "membership_identical": true,
   "new_files": [],
@@ -28,6 +28,38 @@
       "new_methods": [
         "test_current_portable_character_without_equipment_clears_previous_worn_state",
         "test_v1_portable_character_is_refused_without_touching_file_or_worn_state"
+      ]
+    },
+    {
+      "path": "tests/test_satchel.gd",
+      "shard": 2,
+      "baseline_methods": [
+        "test_a_version_1_save_migrates_all_the_way_to_an_empty_death_satchels_list",
+        "test_a_version_3_save_migrates_to_an_empty_death_satchels_list",
+        "test_multiple_registrations_each_get_their_own_increasing_index",
+        "test_register_death_satchel_records_position_and_an_empty_state",
+        "test_restore_on_an_empty_saved_state_leaves_an_empty_but_valid_satchel",
+        "test_restore_preserves_tool_durability_exactly",
+        "test_restore_rehydrates_a_saved_state_array_exactly",
+        "test_save_then_load_round_trips_death_satchels"
+      ],
+      "current_methods": [
+        "test_multiple_registrations_each_get_their_own_increasing_index",
+        "test_register_death_satchel_records_position_and_an_empty_state",
+        "test_restore_on_an_empty_saved_state_leaves_an_empty_but_valid_satchel",
+        "test_restore_preserves_tool_durability_exactly",
+        "test_restore_rehydrates_a_saved_state_array_exactly",
+        "test_save_then_load_round_trips_death_satchels",
+        "test_v1_helper_defaults_satchels_but_actual_load_refuses_without_mutation",
+        "test_v3_helper_defaults_satchels_but_actual_load_refuses_without_mutation"
+      ],
+      "retired_expectations_replaced": [
+        "test_a_version_1_save_migrates_all_the_way_to_an_empty_death_satchels_list",
+        "test_a_version_3_save_migrates_to_an_empty_death_satchels_list"
+      ],
+      "new_methods": [
+        "test_v1_helper_defaults_satchels_but_actual_load_refuses_without_mutation",
+        "test_v3_helper_defaults_satchels_but_actual_load_refuses_without_mutation"
       ]
     },
     {
@@ -762,5 +794,5 @@
       "tests/test_world_save_format.gd"
     ]
   },
-  "reuse": "Historical shard 1: 1279 tests, 1278 pass, one obsolete portable v1 actual-load expectation failed. All five corrected portable tests passed in rd36-affected.txt; session snapshot changed paths pass there too; schema numeric enum passes runtime-numeric-enum.txt. Shard 1 is never labeled green. No test exclusions."
+  "reuse": "RD36: all 667 files executed in four assigned shards, no exclusions. Historical shard1 red:1279tests1772891assertions1failed; corrected/new five portable and two snapshot guards green in affected20/342/0, numeric schema9/226/0. Historical shard2 red:1406tests1139833assertions3failed; satchel8methods PASS in affected10/80/1 (sole ledger failure), exact sparse evidence dirs restored persistently then ledger2/28/0. Reuse unchanged passing methods, never label historical red shard green. Shard3 1297/32215/0 native0 isolated1fb; shard4 still active isolated1fb. No production source changes after32d4, satchel patch belongs shard2 only."
 }

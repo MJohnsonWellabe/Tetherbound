@@ -9,8 +9,8 @@ extends "res://tests/test_case.gd"
 ## `death_satchel.gd::restore()` rehydrating from a save file's `state` array
 ## (as opposed to `build()`'s live `drain()` array — different source shape,
 ## same result), and a full `save_game.gd` round trip of a `death_satchels`
-## entry, including the VERSION 3 -> 4 migration default for a save written
-## before this shipped.
+## entry. Historical migration helpers retain their empty-satchel defaults;
+## real v1/v3 reads now exercise RD-35 refusal with live state and disk intact.
 ##
 ## Pure logic throughout, no scene tree: `player_death.gd`'s own
 ## `sync_state_to_game`/`restore_from_game` walk `get_tree()`'s groups and are
@@ -170,44 +170,62 @@ func test_save_then_load_round_trips_death_satchels() -> void:
 	assert_eq(state[1], null)
 
 
-func test_a_version_3_save_migrates_to_an_empty_death_satchels_list() -> void:
-	# No death satchel can exist in a save written before this system did --
-	# same "nothing to migrate FROM" answer save_game.gd's own VERSION 1 -> 2
-	# migration gives `map`.
+func test_v3_helper_defaults_satchels_but_actual_load_refuses_without_mutation() -> void:
+	var legacy := {
+		"version": 3, "day": 5, "party": [], "inventory": [],
+		"placed_buildings": [], "satiety": 100.0, "map": {}, "progression": {},
+	}
+	# The historical pure helper remains covered; its result is never passed
+	# through the production reader as an independently authored current save.
+	var migrated: Dictionary = saver.call("_migrate_to_current", legacy.duplicate(true), 3, 0)
+	assert_eq(migrated.get("death_satchels"), [])
+	assert_eq(int(migrated.get("day", 0)), 5, "the historical helper preserves the old day")
+	assert_eq(int(migrated.get("version", 0)), SAVE_GAME.RESET_MAX_VERSION)
+	_assert_legacy_load_refusal(legacy)
+
+
+func test_v1_helper_defaults_satchels_but_actual_load_refuses_without_mutation() -> void:
+	var legacy := {"version": 1, "day": 2, "party": [], "inventory": [], "placed_buildings": []}
+	var migrated: Dictionary = saver.call("_migrate_to_current", legacy.duplicate(true), 1, 0)
+	assert_eq(migrated.get("death_satchels"), [])
+	assert_eq(int(migrated.get("day", 0)), 2)
+	assert_eq(int(migrated.get("version", 0)), SAVE_GAME.RESET_MAX_VERSION)
+	_assert_legacy_load_refusal(legacy)
+
+
+func _assert_legacy_load_refusal(legacy: Dictionary) -> void:
 	var path: String = saver.slot_path(0)
-	DirAccess.make_dir_recursive_absolute(TEST_DIR)
+	assert_eq(DirAccess.make_dir_recursive_absolute(TEST_DIR), OK)
 	var file := FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(JSON.stringify({
-		"version": 3,
-		"day": 5,
-		"party": [],
-		"inventory": [],
-		"placed_buildings": [],
-		"satiety": 100.0,
-		"map": {},
-		"progression": {},
-	}))
-	file = null
-
+	assert_true(file != null)
+	if file == null:
+		return
+	file.store_string(JSON.stringify(legacy))
+	file.close()
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var modified := FileAccess.get_modified_time(path)
 	var read := FakeGame.new()
-	assert_true(saver.load_slot(read, 0))
-	assert_eq(read.death_satchels, [])
-	assert_eq(read.day, 5, "an unrelated VERSION 3 field must survive the migration untouched")
-
-
-func test_a_version_1_save_migrates_all_the_way_to_an_empty_death_satchels_list() -> void:
-	var path: String = saver.slot_path(0)
-	DirAccess.make_dir_recursive_absolute(TEST_DIR)
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(JSON.stringify({
-		"version": 1,
-		"day": 2,
-		"party": [],
-		"inventory": [],
-		"placed_buildings": [],
-	}))
-	file = null
-
-	var read := FakeGame.new()
-	assert_true(saver.load_slot(read, 0))
-	assert_eq(read.death_satchels, [])
+	read.day = 23
+	read.satiety = 61.5
+	read.inventory = INVENTORY.new(db)
+	read.inventory.add("wood", 7)
+	read.local = SPLIT_FIXTURE.IdHolder.new()
+	read.local.character_id = "arriving-satchel-owner"
+	read.death_satchels = [{"position": [4.0, 1.0, -8.0], "state": [{"id": "wood", "n": 3}]}]
+	var before: Dictionary = saver.call("snapshot", read).duplicate(true)
+	var worlds: RefCounted = saver.get("_worlds")
+	var characters: RefCounted = saver.get("_characters")
+	var world_ids: Array = worlds.call("list_ids").duplicate()
+	var character_ids: Array = characters.call("list_ids").duplicate()
+	assert_false(bool(saver.load_slot(read, 0)), "RD-35 refuses actual old reads before applying state")
+	var result: Dictionary = saver.get("last_load_result")
+	assert_eq(result.get("code"), "incompatible_old_version")
+	assert_true(str(result.get("message", "")).contains("older version"))
+	assert_true(str(result.get("message", "")).contains("Start a new game"))
+	assert_eq(saver.call("snapshot", read), before, "refusal preserves every arriving live field")
+	assert_eq(read.local.character_id, "arriving-satchel-owner")
+	assert_eq(read.inventory.count("wood"), 7)
+	assert_eq(FileAccess.get_file_as_bytes(path), bytes, "old document is not overwritten")
+	assert_eq(FileAccess.get_modified_time(path), modified)
+	assert_eq(worlds.call("list_ids"), world_ids, "refusal creates no world document")
+	assert_eq(characters.call("list_ids"), character_ids, "refusal creates no portable character")
