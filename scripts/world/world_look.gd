@@ -109,7 +109,9 @@ func refresh_graphics() -> void:
 	if _cycle != null:
 		_apply_blended(_cycle.hour_at(_elapsed_seconds))
 	GRAPHICS_PREFS.apply_viewport(get_viewport())
-	GRAPHICS_PREFS.apply_camera(get_viewport().get_camera_3d())
+	var viewport := get_viewport()
+	if viewport != null:
+		GRAPHICS_PREFS.apply_camera(viewport.get_camera_3d())
 
 
 ## Real time passing, not gameplay -- there is no pause here on purpose: the
@@ -209,7 +211,9 @@ func set_clock_frozen(frozen: bool) -> void:
 func _process(delta: float) -> void:
 	# Cameras can change after ready (combat/travel/capture). Quality is local
 	# presentation; it must apply even when this clock is frozen.
-	GRAPHICS_PREFS.apply_camera(get_viewport().get_camera_3d())
+	var viewport := get_viewport()
+	if viewport != null:
+		GRAPHICS_PREFS.apply_camera(viewport.get_camera_3d())
 	if _cycle == null:
 		return
 	if _clock_frozen:
@@ -1191,4 +1195,6 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# Last: time/weather must not overwrite device quality choices.
 	GRAPHICS_PREFS.apply_environment(env)
 	GRAPHICS_PREFS.apply_viewport(get_viewport())
-	GRAPHICS_PREFS.apply_camera(get_viewport().get_camera_3d())
+	var viewport := get_viewport()
+	if viewport != null:
+		GRAPHICS_PREFS.apply_camera(viewport.get_camera_3d())
