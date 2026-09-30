@@ -1,7 +1,0 @@
-Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-
-only test_utility_effects.gd::test_ultimate_meter: 1 of 675 test files
-  ok    test_utility_effects.gd :: test_ultimate_meter_credits_host_debit_once_and_keeps_uid_meter_across_switch_rejoin
-  ok    test_utility_effects.gd :: test_ultimate_meter_refuses_fake_gain_and_bounded_history_never_evicts_replays
-
-2 tests, 110 assertions, 0 failed

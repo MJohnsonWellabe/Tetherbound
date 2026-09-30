@@ -45,8 +45,6 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## T3-COMBAT. Only for `combat.json`'s `effect_banner` block; this file resolves
 ## no damage and reads no other part of that config.
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
-const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
-var _damage_numbers: Array[Label] = []
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
@@ -323,7 +321,6 @@ func _ready() -> void:
 		_manager.connect("exited", _on_exited)
 		_manager.connect("attack_missed", _on_missed)
 		_manager.connect("hit_effectiveness", _on_hit_effectiveness)
-		_manager.connect("impact_confirmed", _on_impact_confirmed)
 		# T3-COMBAT. `entered` fires once per fight, and a trainer battle opens a
 		# fresh one for every creature its trainer sends out — so each new
 		# opponent gets told about, and none of them inherits the previous
@@ -1632,35 +1629,3 @@ func _tick_xp(delta: float) -> void:
 		_xp_line.text = ""
 		return
 	_xp_left -= delta
-
-func _on_impact_confirmed(on_enemy: bool, receipt: Dictionary, world_position: Vector3) -> void:
-	var cfg: Dictionary = HIT_FEEDBACK.config().get("numbers", {})
-	if not bool(cfg.get("enabled", true)): return
-	var mode := str(cfg.get("mode", "on"))
-	if mode == "off" or (mode == "own_only" and not bool(receipt.get("own_hit", true))): return
-	var camera := get_viewport().get_camera_3d()
-	if camera == null or camera.is_position_behind(world_position): return
-	for index in range(_damage_numbers.size() - 1, -1, -1):
-		if not is_instance_valid(_damage_numbers[index]): _damage_numbers.remove_at(index)
-	var maximum := maxi(1, int(cfg.get("max_live", 12)))
-	while _damage_numbers.size() >= maximum:
-		var oldest := _damage_numbers.pop_front() as Label
-		if is_instance_valid(oldest): oldest.queue_free()
-	var spec := HIT_FEEDBACK.number_style(receipt, on_enemy)
-	var number := Label.new()
-	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	number.text = str(spec.get("text", ""))
-	number.modulate.a = float(spec.get("opacity", 1.0))
-	number.add_theme_font_size_override("font_size", int(spec.get("font_px", 22)))
-	number.add_theme_color_override("font_color", Color(str(spec.get("colour", "#f2f0df"))))
-	number.add_theme_color_override("font_outline_color", Color(str(spec.get("outline", "#151c23"))))
-	number.add_theme_constant_override("outline_size", int(cfg.get("outline_px", 3)))
-	$Root.add_child(number)
-	number.reset_size()
-	number.position = camera.unproject_position(world_position) - number.size * 0.5
-	_damage_numbers.append(number)
-	var duration := maxf(0.001, float(cfg.get("duration_seconds", 0.8)))
-	var tween := number.create_tween().set_parallel(true)
-	tween.tween_property(number, "position:y", number.position.y - float(cfg.get("rise_px", 56.0)), duration)
-	tween.tween_property(number, "modulate:a", 0.0, duration)
-	tween.chain().tween_callback(number.queue_free)

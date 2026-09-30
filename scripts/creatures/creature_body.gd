@@ -266,11 +266,6 @@ var _requested: Vector3 = Vector3.ZERO
 var _requested_speed: float = 0.0
 var _requested_handling: float = 1.0
 
-## Accepted host status only. Bound to the live UID and host body generation;
-## incoming packet fields cannot create this binding.
-var _combat_movement_owner: Dictionary = {}
-var _combat_movement_status: Dictionary = {}
-
 ## Attack lunges and knockbacks, decaying. Separate from `velocity` so being hit
 ## mid-stride reads as a shove rather than as a cancelled input.
 var _impulse: Vector3 = Vector3.ZERO
@@ -340,8 +335,6 @@ var _combat_flinch_tween: Tween = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
 var _combat_hitstop_active := false
-var _combat_manager_hitstop_requested := false
-var _combat_timed_hitstop_count := 0
 var _combat_hitstop_physics_was_active := true
 
 ## CREATURE-LEGIBILITY-0903. The ground-contact shadow quad, built lazily on
@@ -1795,58 +1788,6 @@ func base_speed() -> float:
 	return _speed
 
 
-func bind_combat_movement_owner(creature_uid: String, generation: int) -> bool:
-	if creature_uid.is_empty() or creature_uid.length() > 160 or generation < 1: return false
-	if not _combat_movement_owner.is_empty():
-		if generation < int(_combat_movement_owner.generation): return false
-		if generation == int(_combat_movement_owner.generation):
-			return creature_uid == str(_combat_movement_owner.creature_uid)
-	_combat_movement_owner = {"creature_uid": creature_uid, "generation": generation}
-	_combat_movement_status = {}
-	return true
-
-
-## Relative lease from an accepted host status, not a remote absolute clock.
-## Duplicate revisions may shorten but never extend/reactivate the deadline.
-func apply_combat_movement_status(creature_uid: String, generation: int, revision: int,
-		multiplier: float, remaining_seconds: float) -> bool:
-	if _combat_movement_owner.is_empty() \
-		or creature_uid != str(_combat_movement_owner.creature_uid) \
-		or generation != int(_combat_movement_owner.generation) or revision < 0 \
-		or not is_finite(multiplier) or not is_finite(remaining_seconds): return false
-	var limits: Dictionary = MATH.config().get("utility_limits", {})
-	var raw_maximum: Variant = limits.get("maximum_movement_multiplier")
-	var raw_seconds: Variant = limits.get("maximum_movement_lease_seconds")
-	if not (raw_maximum is int or raw_maximum is float) \
-		or not (raw_seconds is int or raw_seconds is float): return false
-	var maximum := float(raw_maximum)
-	var maximum_seconds := float(raw_seconds)
-	if not is_finite(maximum) or maximum < 1.0 or not is_finite(maximum_seconds) \
-		or maximum_seconds <= 0.0 or multiplier < 0.0 or multiplier > maximum \
-		or remaining_seconds < 0.0 or remaining_seconds > maximum_seconds: return false
-	var previous_revision := int(_combat_movement_status.get("revision", -1))
-	if revision < previous_revision: return false
-	var expires_at_ms := Time.get_ticks_msec() + int(remaining_seconds * 1000.0)
-	if revision == previous_revision:
-		if float(_combat_movement_status.multiplier) != multiplier: return false
-		expires_at_ms = mini(expires_at_ms, int(_combat_movement_status.expires_at_ms))
-	_combat_movement_status = {"revision": revision, "multiplier": multiplier,
-		"expires_at_ms": expires_at_ms}
-	return true
-
-
-func combat_movement_multiplier(now_ms: int = -1) -> float:
-	if _combat_movement_owner.is_empty() or _combat_movement_status.is_empty(): return 1.0
-	var current_ms := Time.get_ticks_msec() if now_ms < 0 else now_ms
-	return float(_combat_movement_status.multiplier) \
-		if current_ms < int(_combat_movement_status.expires_at_ms) else 1.0
-
-
-func reset_combat_movement_owner() -> void:
-	_combat_movement_owner = {}
-	_combat_movement_status = {}
-
-
 func request_move(direction: Vector3, speed: float = -1.0) -> void:
 	# A stationary controller may keep submitting a zero request while the body
 	# rests. Only an actual locomotion request stands the creature back up.
@@ -1959,15 +1900,10 @@ func _physics_process(delta: float) -> void:
 		# velocity on the first ordinary frame so friction cannot add a long tail.
 		horizontal = Vector3.ZERO
 		_combat_burst_just_finished = false
-	elif combat_movement_multiplier() <= 0.0:
-		# Root stops ordinary locomotion and its inertial tail. The existing
-		# protected burst, impulse, gravity and environment paths remain;
-		# no tell interruption or immunity is introduced by a movement status.
-		horizontal = Vector3.ZERO
 	elif _requested.length() < 0.01:
 		horizontal = horizontal.move_toward(Vector3.ZERO, _friction * delta)
 	else:
-		horizontal = horizontal.move_toward(_requested * _requested_speed * combat_movement_multiplier(), _acceleration * delta)
+		horizontal = horizontal.move_toward(_requested * _requested_speed, _acceleration * delta)
 		_turn_towards(_requested, delta)
 
 	_impulse = _impulse.move_toward(Vector3.ZERO, _impulse_damping * _impulse.length() * delta)
@@ -2038,7 +1974,7 @@ func play_hit() -> void:
 ## Combat's hit reaction is deliberately on the visual pivot, never the
 ## CharacterBody: the recoil cannot move collision or change whether the next
 ## attack connects. An authored hit clip still plays underneath it.
-func play_combat_flinch(away: Vector3 = Vector3.ZERO, impact: Dictionary = {}) -> void:
+func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	play_hit()
 	if _model == null or not is_inside_tree():
 		return
@@ -2049,20 +1985,12 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO, impact: Dictionary = {}) -
 	_combat_flinch_rest_position = _model.position
 	_combat_flinch_rest_rotation = _model.rotation
 	var local_away := global_basis.inverse() * away.normalized()
-	var profile := impact
-	if profile.is_empty():
-		profile = preload("res://scripts/combat/hit_feedback.gd").config().get("weights", {}).get("light", {})
-	var recoil := Vector3(local_away.x * float(profile.get("recoil_m", 0.0)), float(profile.get("recoil_up_m", 0.0)), local_away.z * float(profile.get("recoil_m", 0.0)))
+	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	var out_seconds := float(profile.get("reaction_out_seconds", 0.0))
-	var back_seconds := float(profile.get("reaction_back_seconds", 0.0))
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, out_seconds).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(float(profile.get("recoil_degrees", 0.0))), out_seconds)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, back_seconds).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, back_seconds)
-	# An existing host lease also owns a newly created delayed reaction tween.
-	if _combat_hitstop_active and not MOTION_PREFS.reduced_motion():
-		_combat_flinch_tween.pause()
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
 
 
 ## Hitstop freezes locomotion and animation on this creature only. The manager
@@ -2072,23 +2000,6 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO, impact: Dictionary = {}) -
 ## and the manager's clock pause, so timing and positions are unchanged, and
 ## skips only the visual freeze: the animation and flinch keep playing.
 func set_combat_hitstop(active: bool) -> void:
-	_combat_manager_hitstop_requested = active
-	_apply_combat_hitstop(active or _combat_timed_hitstop_count > 0)
-
-
-## Shared host simulation has no local player's clock to release a freeze.
-## Independent timed leases prevent one manager releasing an overlapping hit.
-func begin_combat_impact_hitstop(seconds: float) -> void:
-	if seconds <= 0.0 or not is_inside_tree():
-		return
-	_combat_timed_hitstop_count += 1
-	_apply_combat_hitstop(true)
-	await get_tree().create_timer(seconds, false).timeout
-	_combat_timed_hitstop_count = maxi(0, _combat_timed_hitstop_count - 1)
-	_apply_combat_hitstop(_combat_manager_hitstop_requested or _combat_timed_hitstop_count > 0)
-
-
-func _apply_combat_hitstop(active: bool) -> void:
 	if active == _combat_hitstop_active:
 		return
 	_combat_hitstop_active = active

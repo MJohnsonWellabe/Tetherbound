@@ -27,28 +27,6 @@ var moves: RefCounted = null
 var tms: RefCounted = null
 var items: RefCounted = null
 
-func test_tm_stages_knowledge_without_equipping_or_recrediting_mastery() -> void:
-	var creature := preload("res://scripts/creatures/creature_instance.gd").from_species("cindercub", SPECIES.definition("cindercub"))
-	var before_quick: String = creature.move_quick
-	var before_charged: String = creature.move_charged
-	var before_known: Array = creature.known_moves.duplicate()
-	var proposed := TEACHING.stage_tm_knowledge(creature, "tm_fireball", tms, moves)
-	assert_true(bool(proposed.get("ok", false)))
-	assert_false(bool(proposed.get("replayed", true)))
-	assert_true((proposed.get("known_moves", []) as Array).has("fireball"))
-	assert_eq(creature.known_moves, before_known, "stage neither spends nor publishes before the transaction commits")
-	assert_eq(creature.move_quick, before_quick)
-	assert_eq(creature.move_charged, before_charged, "learning a TM cannot equip a field loadout")
-	assert_true(creature.move_mastery_uses.is_empty())
-	assert_true(creature.move_mastery_receipts.is_empty())
-	creature.known_moves = proposed.known_moves
-	var repeated := TEACHING.stage_tm_knowledge(creature, "tm_fireball", tms, moves)
-	assert_true(bool(repeated.get("ok", false)))
-	assert_true(bool(repeated.get("replayed", false)), "transaction retries must not spend a second disc")
-	assert_eq(repeated.known_moves, creature.known_moves)
-	var secondary := preload("res://scripts/creatures/creature_instance.gd").from_species("ashtusk", SPECIES.definition("ashtusk"))
-	assert_false(bool(TEACHING.stage_tm_knowledge(secondary, "tm_fireball", tms, moves).get("ok", true)), "secondary fire is not primary-type TM permission")
-
 
 func before_each() -> void:
 	moves = MOVE_DB.new()
@@ -221,22 +199,3 @@ func test_teaching_the_same_tm_twice_is_a_pure_function_of_the_creature() -> voi
 
 	assert_eq(str(mudsnout.get("move_charged")), "stone_rush")
 	assert_eq(str(burrowback.get("move_charged")), "stone_rush")
-
-
-func test_fireball_tm_teaches_only_primary_fire_without_mutating_species_defaults() -> void:
-	var cub: RefCounted = SPECIES.spawn("cindercub")
-	var original_quick := str(cub.get("move_quick"))
-	var original_charged := str(cub.get("move_charged"))
-	assert_true(items.has("tm_fireball"))
-	assert_eq(items.kind("tm_fireball"), "tm")
-	assert_eq(tms.move_id("tm_fireball"), "fireball")
-	assert_eq(moves.slot("fireball"), "charged")
-	assert_true(TEACHING.teach(cub, "tm_fireball", tms, moves))
-	assert_eq(str(cub.get("move_charged")), "fireball")
-	assert_eq(str(cub.get("move_quick")), original_quick)
-	var fresh_cub: RefCounted = SPECIES.spawn("cindercub")
-	assert_eq(str(fresh_cub.get("move_charged")), original_charged, "teaching one creature never rewrites the species loadout")
-	var tusk: RefCounted = SPECIES.spawn("ashtusk")
-	var before := str(tusk.get("move_charged"))
-	assert_false(TEACHING.teach(tusk, "tm_fireball", tms, moves), "secondary fire does not satisfy the existing primary-type TM rule")
-	assert_eq(str(tusk.get("move_charged")), before)

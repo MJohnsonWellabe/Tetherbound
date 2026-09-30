@@ -150,13 +150,6 @@
       ],
       "tier": "critical",
       "why": "On the road 60m before Warder Ness at the checkpoint: the last basic supply before the waystop decision, found before the fight it supports."
-    },
-    {
-      "id": "b5_tm_fireball_scorched_pocket",
-      "item": "tm_fireball",
-      "pos": [175.0, 7360.0],
-      "tier": "detour",
-      "why": "Team Tether's scorched-pocket training spill, off the road near the authored fire-creature habitat: a charged Fireball TM found through ordinary pickup authority."
     }
   ]
 }

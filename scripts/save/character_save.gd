@@ -185,10 +185,6 @@ static func _flag_ids(raw: Variant) -> Array:
 func write(character_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
 	if character_id.is_empty():
 		return false
-	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(payload.get("party",[]),payload.get("redesign_character",{})).is_empty():
-		return false
-	payload = payload.duplicate(true)
-	payload["redesign_character"] = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(payload.get("party",[]),payload.get("redesign_character",preload("res://scripts/data/redesign_state.gd").defaults("character")))
 	var contract := preload("res://scripts/data/redesign_state.gd")
 	if not contract.validate("character", payload.get("redesign_character", contract.defaults("character")), contract.uids(payload.get("party", []))).is_empty():
 		return false
@@ -268,7 +264,6 @@ func read(character_id: String) -> Dictionary:
 		return {}
 	var contract := preload("res://scripts/data/redesign_state.gd")
 	var errors := contract.validate("character", data.get("redesign_character", contract.defaults("character")), contract.uids(data.get("party", [])))
-	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
 	if not errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That character contains invalid data.", "errors": errors}
 		return {}

@@ -25,7 +25,6 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## T3-COMBAT. The same stat config `combat_manager.gd` resolves damage against,
 ## so the prediction below is built from the numbers the fight actually used.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
-const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 
 ## Long enough for the terrain to load, collision to build, and the director to
 ## place both creatures.
@@ -69,9 +68,6 @@ var _last_press_was_quick: bool = false
 ## Snapshotted while both fighters are still standing, because the numbers the
 ## prediction needs are gone by the time the fight has been won.
 var _fight_snapshot: Dictionary = {}
-var _launch_frames: Dictionary = {}
-var _impact_ids: Dictionary = {}
-var _number_observations := 0
 
 
 func _init() -> void:
@@ -113,11 +109,6 @@ func _run() -> void:
 	# directions, which is what it needs.
 	_the_type_chart_reaches_a_real_fight()
 	await _fight_to_a_finish()
-	if _impact_ids.size() != _hits_on_enemy + _hits_on_ally:
-		_fail("each actual landed hit must emit exactly one immutable impact receipt")
-	if _number_observations != _impact_ids.size():
-		_fail("each on-screen landed hit must create its actual configured HUD number")
-	print("F21 receipt/actual HUD number witnesses: %d/%d" % [_impact_ids.size(), _number_observations])
 	_the_advantage_was_worth_what_the_chart_promised()
 	await _hp_is_not_auto_healed_after_the_fight()
 	await _exploration_is_restored()
@@ -194,19 +185,9 @@ func _collect_nodes() -> bool:
 	_manager.connect("hit_landed", func(on_enemy: bool, amount: float) -> void:
 		if on_enemy:
 			_hits_on_enemy += 1
+			_damage_on_enemy.append([amount, _last_press_was_quick])
 		else:
 			_hits_on_ally += 1)
-	_manager.connect("attack_launched", func(on_enemy: bool, launch: Dictionary, presentation: Node3D) -> void:
-		var target := _manager.call("enemy") as RefCounted if on_enemy else _manager.call("active_creature") as RefCounted
-		var observed := {"frame": Engine.get_physics_frames(), "seconds": float(launch.travel_seconds), "started_usec": Time.get_ticks_usec(), "arrived": false, "hp": float(target.hp) if target != null else -1.0}
-		_launch_frames[str(launch.action_id)] = observed
-		if presentation != null:
-			presentation.connect("arrived", func() -> void:
-				observed["arrived"] = true
-				if _impact_ids.has(str(launch.action_id)): _fail("gameplay impact preceded actual presentation arrival: " + str(launch.action_id))
-				print("F21 actual visible arrival %s elapsed_wall=%.3f target_hp=%.3f" % [str(launch.action_id), float(Time.get_ticks_usec() - int(observed.started_usec)) / 1000000.0, float(target.hp) if target != null else -1.0]))
-		print("F21 actual launch %s travel=%.3f frame=%d" % [str(launch.action_id), float(launch.travel_seconds), Engine.get_physics_frames()]))
-	_manager.connect("impact_confirmed", _observe_impact)
 	# T3-TYPECHART. Every verdict the fight actually emitted, so
 	# `_the_type_chart_reaches_a_real_fight` below can check them against an
 	# independent lookup instead of trusting one code path to grade itself.
@@ -938,33 +919,6 @@ func _press(action: String) -> void:
 
 func _fail(message: String) -> void:
 	_failures.append(message)
-
-
-func _observe_impact(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
-	var action_id := str(receipt.get("action_id", ""))
-	if not receipt.is_read_only() or _impact_ids.has(action_id):
-		_fail("impact receipt mutable or repeated: " + action_id)
-	_impact_ids[action_id] = true
-	if on_enemy: _damage_on_enemy.append([float(receipt.damage), str(receipt.slot) == "quick"])
-	if not _launch_frames.has(action_id):
-		_fail("landed hit has no frozen launch schedule: " + action_id)
-	else:
-		var launch: Dictionary = _launch_frames[action_id]
-		var elapsed := float(Engine.get_physics_frames() - int(launch.frame)) / float(Engine.physics_ticks_per_second)
-		# Presentation accumulates process delta, not the capped fixed physics
-		# steps under a slow headless world. Observe the actual node arrival.
-		if float(launch.seconds) > 0.0 and not bool(launch.arrived):
-			_fail("gameplay impact preceded actual visible travel: " + action_id)
-		print("F21 actual impact %s elapsed_physics=%.3f elapsed_wall=%.3f damage=%.3f weight=%s hitstop=%.3f knockback=%.3f" % [action_id, elapsed, float(Time.get_ticks_usec() - int(launch.started_usec)) / 1000000.0, float(receipt.damage), str(receipt.weight), float(receipt.hitstop_seconds), float(receipt.knockback_m)])
-	var hud := _world.get_node_or_null(^"CombatHUD")
-	var expected: Dictionary = HIT_FEEDBACK.number_style(receipt, on_enemy)
-	if hud != null:
-		var numbers: Array = hud.get("_damage_numbers")
-		for number: Label in numbers:
-			if is_instance_valid(number) and number.text == str(expected.text):
-				_number_observations += 1
-				return
-	_fail("real HUD number missing for impact " + action_id)
 
 
 func _report() -> void:

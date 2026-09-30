@@ -1,0 +1,146 @@
+{
+  "criterion": "F21#4",
+  "integration_base": "f8ffb2b333f69de2ab423a003621db43a4c757a3",
+  "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
+  "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
+  "status": "implementation plus partial evidence; no full criterion MET from held stills",
+  "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
+  "proof_reuse": "Exact camera code/config and measured models preserve the existing static nine-pair native/code-blind composition evidence. Existing physical orbit/movement/switch/aim/exit proof covers the original encounter pair, not moving all nine pairs. Current-main native integration and a moving nine-pair witness remain needed before full F21#4 closure.",
+  "functions": {
+    "_take_camera": {
+      "observed_sha256": "e90458e41e3b813f5873f2de8958eee046f3396749794c7fef8cbc8ef6c46cba",
+      "cut_sha256": "e90458e41e3b813f5873f2de8958eee046f3396749794c7fef8cbc8ef6c46cba",
+      "equal": true
+    },
+    "_combat_camera_profile": {
+      "observed_sha256": "fbeff085029d30c5cb2400fa72d1be1176a1ba37643b3b74ebd08aa3cea6afe1",
+      "cut_sha256": "fbeff085029d30c5cb2400fa72d1be1176a1ba37643b3b74ebd08aa3cea6afe1",
+      "equal": true
+    },
+    "_update_combat_camera_framing": {
+      "observed_sha256": "3f1cb511646c576cf9ef875ad7c7bc429161623b693ae3222f71c97075773eb3",
+      "cut_sha256": "3f1cb511646c576cf9ef875ad7c7bc429161623b693ae3222f71c97075773eb3",
+      "equal": true
+    },
+    "_release_camera": {
+      "observed_sha256": "1896d932c6314b6ac740e0a046b36ca710cdbfea0a1710e17a01bbbd08d9830e",
+      "cut_sha256": "1896d932c6314b6ac740e0a046b36ca710cdbfea0a1710e17a01bbbd08d9830e",
+      "equal": true
+    },
+    "_update_fight_camera_matrix": {
+      "observed_sha256": "680466fcbfc6ace61742cbe201eea5380215046f19e95a461cf321497f9eb708",
+      "cut_sha256": "680466fcbfc6ace61742cbe201eea5380215046f19e95a461cf321497f9eb708",
+      "equal": true
+    },
+    "_body_world_bounds": {
+      "observed_sha256": "e03609c01e56a2caa757faa4758454520d3afa7b7d7eed79abb5b13a12132598",
+      "cut_sha256": "e03609c01e56a2caa757faa4758454520d3afa7b7d7eed79abb5b13a12132598",
+      "equal": true
+    },
+    "_combat_shoulder_offset": {
+      "observed_sha256": "bfb584c3dfb1baf3d35ddcd8214d8f5804014edf4d73e340d97e5c1edab095ef",
+      "cut_sha256": "bfb584c3dfb1baf3d35ddcd8214d8f5804014edf4d73e340d97e5c1edab095ef",
+      "equal": true
+    },
+    "_update_combat_top_band": {
+      "observed_sha256": "c82770116599b5d9f55302dbfd741688410ecf86ff943ebee1408a9f4304f6c6",
+      "cut_sha256": "c82770116599b5d9f55302dbfd741688410ecf86ff943ebee1408a9f4304f6c6",
+      "equal": true
+    },
+    "_update_combat_body_clear": {
+      "observed_sha256": "3589419ed6718cbe908b80e1f84ec7693ff4d1dae0892ed90d7e37fe0316ad42",
+      "cut_sha256": "3589419ed6718cbe908b80e1f84ec7693ff4d1dae0892ed90d7e37fe0316ad42",
+      "equal": true
+    },
+    "_physics_process": {
+      "observed_sha256": "b2aa852b83f2501e57b690d484dce5e42c0f073199f61b903103b5509aeca112",
+      "cut_sha256": "b2aa852b83f2501e57b690d484dce5e42c0f073199f61b903103b5509aeca112",
+      "equal": true
+    }
+  },
+  "whole_files": {
+    "scripts/player/camera_rig.gd": {
+      "observed_sha256": "b7bd778a5ce87566a23d35994aa3e3159991841a84cc2851637e4e74da58a7b8",
+      "cut_sha256": "b7bd778a5ce87566a23d35994aa3e3159991841a84cc2851637e4e74da58a7b8",
+      "equal": true
+    },
+    "scripts/combat/fight_camera.gd": {
+      "observed_sha256": "258ae8dd48ce614bd51f3a053d2308f0c0e2698bc073e5d4b369ef0cee7c5d39",
+      "cut_sha256": "258ae8dd48ce614bd51f3a053d2308f0c0e2698bc073e5d4b369ef0cee7c5d39",
+      "equal": true
+    },
+    "data/config/camera.json": {
+      "observed_sha256": "57e32fdbde4f78debd29ca7cc5987d4fb816e09f0358c791daa505884f1b897d",
+      "cut_sha256": "57e32fdbde4f78debd29ca7cc5987d4fb816e09f0358c791daa505884f1b897d",
+      "equal": true
+    },
+    "tests/test_fight_camera.gd": {
+      "observed_sha256": "6a46c002ddc675310a1993959adc85eb912a7c44999d297f3d085d1a5f5d36fe",
+      "cut_sha256": "6a46c002ddc675310a1993959adc85eb912a7c44999d297f3d085d1a5f5d36fe",
+      "equal": true
+    },
+    "tests/smoke_combat_camera.gd": {
+      "observed_sha256": "5c98d9255dce5ab8d75742e96876e07219dbc8c551fb56ba0c2f752702c9340d",
+      "cut_sha256": "5c98d9255dce5ab8d75742e96876e07219dbc8c551fb56ba0c2f752702c9340d",
+      "equal": true
+    }
+  },
+  "dependencies": {
+    "data/config/combat.json": {
+      "observed_sha256": "0f0c0628db779e6a0926379eb32f4cd0be40140aebfdc7585ec14ec275fb9d56",
+      "cut_sha256": "0f0c0628db779e6a0926379eb32f4cd0be40140aebfdc7585ec14ec275fb9d56",
+      "equal": true,
+      "scope": "camera block only"
+    },
+    "data/config/art.json": {
+      "observed_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+      "cut_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+      "equal": true,
+      "scope": "whole file normalized Git LF"
+    },
+    "data/creatures/species.json": {
+      "observed_sha256": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+      "cut_sha256": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+      "equal": true,
+      "scope": "whole file normalized Git LF"
+    },
+    "scripts/creatures/follower_creature.gd": {
+      "observed_sha256": "5dbed5313df65e44dda68ab324d4f64daed6efebb048751cd22f8c64b646ae83",
+      "cut_sha256": "5dbed5313df65e44dda68ab324d4f64daed6efebb048751cd22f8c64b646ae83",
+      "equal": true,
+      "scope": "whole file normalized Git LF"
+    },
+    "scripts/creatures/creature_body.gd": {
+      "observed_sha256": "892614be410c551121df3c36421978e2bf9b6a0ab9f9f92fdd0fc03c62999cfe",
+      "cut_sha256": "7096f76c289c61570abafea82c44c7b3782f78fde8d9bd77d8ed59637de7ca3d",
+      "equal": false,
+      "scope": "whole file normalized Git LF"
+    },
+    "scripts/ui/graphics_prefs.gd": {
+      "observed_sha256": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7",
+      "cut_sha256": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7",
+      "equal": true,
+      "scope": "whole file normalized Git LF"
+    },
+    "scenes/world/meadows_playground.tscn": {
+      "observed_sha256": "c79cda6e773f1a8c75ea69fc954991d3712c97bdbbfc5ae6af95701c0143a812",
+      "cut_sha256": "c79cda6e773f1a8c75ea69fc954991d3712c97bdbbfc5ae6af95701c0143a812",
+      "equal": true,
+      "scope": "whole file normalized Git LF"
+    }
+  },
+  "missing": [
+    "moving small/normal/giant nine-pair production player-path framing witness",
+    "fresh current-main runtime integration",
+    "independent dynamic visual verdict if new moving footage is used"
+  ],
+  "not_claimed": [
+    "F21#5",
+    "full visual craft bar",
+    "Medium FPS",
+    "Ally device",
+    "earned creature/campaign acquisition"
+  ],
+  "dependency_difference": "CreatureBody differs by the excluded impact-feedback/movement lease prototype. The held matrix disabled body physics; exact render-bounds callers, art/catalog/model inputs and rig/solver/config are retained. This difference is not used to transfer a moving nine-pair result.",
+  "existing_moving_input_evidence": "Observed native-fullscreen.txt includes retained physical-input encounter/orbit/manual grace, varying separation, creature switch, aim/cancel and exit assertions after the held matrix was restored. It does not cover movement of every staged nine-pair body combination."
+}

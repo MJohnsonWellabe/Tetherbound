@@ -510,7 +510,6 @@ func refresh_combat_profile() -> void:
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
 	engaged = value
 	_opponent = opponent
-	reset_combat_movement_owner()
 	# Engagement boundaries can occur while this body is stationary: ordinary
 	# teardown calls false, while a failed catch breakout reactivates with true
 	# directly after absorb suspended physics. Neither path may carry a timed
@@ -631,11 +630,6 @@ func _tick_combat(delta: float) -> void:
 ## where it can no longer hit anything.
 func combat_config() -> Dictionary:
 	return _selected_attack if not _selected_attack.is_empty() else _spaced_config()
-
-
-func bind_combat_movement_owner(creature_uid: String, generation: int) -> bool:
-	if not engaged or instance == null or str(instance.get("uid")) != creature_uid: return false
-	return super.bind_combat_movement_owner(creature_uid, generation)
 
 
 func _selected_heading_is_locked() -> bool:
@@ -1222,12 +1216,6 @@ func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	if _animator != null:
 		_animator.call("cancel_hold")
 	return true
-
-
-## Pure transaction preview. A refused host character CAS must not consume
-## the existing one-hit critical window or disturb its recovery deadline.
-func stagger_critical_ready() -> bool:
-	return _staggered and _stagger_critical_ready
 
 
 func consume_stagger_critical() -> bool:

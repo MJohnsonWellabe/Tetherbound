@@ -47,8 +47,6 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
-const LOADOUT_SERVICE := preload("res://scripts/creatures/loadout_service.gd")
-const LOADOUT_PANEL := preload("res://scripts/ui/loadout_panel.gd")
 
 ## Reserved `build_index` range for authored camp beds.
 ##
@@ -69,8 +67,6 @@ const AUTHORED_BED_INDEX_CEILING := -10
 var _spec: Dictionary = {}
 var _craft_panel: CanvasLayer = null
 var _bed: Node3D = null
-var _loadout_panel: CanvasLayer = null
-var _loadout_station_key: String = ""
 
 
 ## `spec` is one cluster's `rest` block. Positions are WORLD metres [x, z], the
@@ -121,17 +117,6 @@ func build(spec: Dictionary) -> void:
 		craft_prompt.call("configure", str(spec.get("craft_label", "Craft")), radius, true)
 		craft_prompt.connect("activated", _on_craft)
 		add_child(craft_prompt)
-		# Explicit authored forward-camp opt-in only. RestPoint is also used
-		# by non-camp story recovery points; those are not implicit Altars.
-		if bool(spec.get("loadout", false)):
-			_loadout_station_key = LOADOUT_SERVICE.register_station(craft_prompt, "forward_camp", radius)
-			if not _loadout_station_key.is_empty():
-				var loadout_prompt: Node3D = INTERACTABLE.new()
-				loadout_prompt.name = "LoadoutInteractable"
-				loadout_prompt.position = craft_prompt.position + Vector3(0.0, 0.0, 0.7)
-				loadout_prompt.call("configure", "Change loadout", radius, true)
-				loadout_prompt.connect("activated", _on_loadout)
-				add_child(loadout_prompt)
 
 	_build_creature_bed(spec.get("creature_bed", {}))
 
@@ -183,13 +168,6 @@ func _on_craft() -> void:
 		_craft_panel = CRAFT_PANEL.new()
 		get_tree().root.add_child(_craft_panel)
 	_craft_panel.call("open")
-
-func _on_loadout() -> void:
-	if _loadout_station_key.is_empty(): return
-	if _loadout_panel == null or not is_instance_valid(_loadout_panel):
-		_loadout_panel = LOADOUT_PANEL.new()
-		get_tree().root.add_child(_loadout_panel)
-	_loadout_panel.call("open", _loadout_station_key)
 
 
 ## Walks up for whatever owns the terrain, exactly like `props.gd` does -- this

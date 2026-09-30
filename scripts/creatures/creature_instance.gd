@@ -14,7 +14,6 @@ extends RefCounted
 ## the scene node that draws it — which is what M4's party will need.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
-const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 ## RG19-spec/D68. Condition (rested/fed/happy) arithmetic. Preloadable from
@@ -173,14 +172,6 @@ var levels_gained_with_you: int = 0
 ## and every caller that reads these must treat "" as "no move", not crash.
 var move_quick: String = ""
 var move_charged: String = ""
-## F23 character-scope fields; only host commit/edit paths mutate them.
-var move_utility: String = ""
-var move_ultimate: String = ""
-var known_moves: Array[String] = []
-var move_mastery_uses: Dictionary = {}
-var move_mastery_receipts: Dictionary = {}
-var loadout_revision: int = 0
-var loadout_last_edit: Dictionary = {}
 
 ## G-2 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md). This individual's behaviour
 ## override when it fights AS AN OPPONENT, carried here for the same reason
@@ -294,8 +285,6 @@ static func from_species(
 	var moves: Dictionary = definition.get("moves", {})
 	instance.move_quick = str(moves.get("quick", ""))
 	instance.move_charged = str(moves.get("charged", ""))
-	instance.move_utility = str(moves.get("utility", ""))
-	instance.move_ultimate = str(moves.get("ultimate", ""))
 
 	instance.iv_hp = float(iv_rolls[0]) if iv_rolls.size() > 0 else 0.5
 	instance.iv_attack = float(iv_rolls[1]) if iv_rolls.size() > 1 else 0.5
@@ -332,8 +321,6 @@ static func from_species(
 	# creature_condition.json itself when the caller has no condition config in
 	# hand, which every existing caller of this function does not.
 	CONDITION.start(instance)
-	# New/caught initial loadout only; later unlocks do not auto-edit a fight.
-	TEACHING.initialize_loadout(instance, definition)
 	return instance
 
 
@@ -572,13 +559,6 @@ func set_level(new_level: int, cfg: Dictionary) -> void:
 	xp = 0
 	_apply_level_stats(cfg)
 	hp = max_hp
-	# This API is the existing pre-fight spawn/story jump. Caught above an
-	# unlock arrives knowing it; picking its initial utility is not a field edit.
-	TEACHING.refresh_known_moves(self)
-	if move_utility.is_empty():
-		var row: Dictionary = TEACHING.learnsets().get(species_id,{})
-		var first := str(row.get("first_utility",""))
-		if known_moves.has(first): move_utility = first
 
 
 ## PROGRESSION-VISIBLE (prompt 73, D76): this is the single place XP arrives
@@ -604,7 +584,6 @@ func gain_xp(amount: int, cfg: Dictionary) -> int:
 		"amount": amount, "xp": xp, "xp_to_next": xp_to_next(cfg), "level": level,
 	})
 	if levels_gained > 0:
-		TEACHING.refresh_known_moves(self)
 		_announce_level_up(old_level, before, cfg, "xp")
 	return levels_gained
 
@@ -630,7 +609,6 @@ func gain_levels(count: int, cfg: Dictionary) -> int:
 	var before := _stat_snapshot()
 	level = target
 	_apply_level_stats(cfg)
-	TEACHING.refresh_known_moves(self)
 	_announce_level_up(old_level, before, cfg, "candy")
 	return gained
 
