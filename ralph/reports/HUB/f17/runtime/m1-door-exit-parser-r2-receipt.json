@@ -1,0 +1,16 @@
+{
+  "source": "0c8fcb49ce795b242609767ca762867f72fecd44",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--check-only",
+    "--script",
+    "res://tests/helpers/fresh_opening_segment.gd"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\village-m1-profile-r2",
+  "native_exit": 0,
+  "elapsed_seconds": 0.7029999999795109,
+  "scope": "Existing genuine fresh-save prefix only: title through tournament; no later biome claim."
+}

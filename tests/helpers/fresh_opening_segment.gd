@@ -56,6 +56,7 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 	# that point otherwise pushes the capsule into the farmhouse wall.
 	var started_frame := Engine.get_physics_frames()
 	var house := _world.get_node_or_null(^"GrandpaHouse") as Node3D
+	var left_farmhouse := false
 	if house != null:
 		var door: Vector3 = house.call("marker", "door")
 		var front := door - house.global_position
@@ -75,11 +76,40 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 				return false
 			print("live farmhouse exit cleared by controller: door=%s player=%s floor=%s" % [
 				door, _player.global_position, _player.is_on_floor()])
+			left_farmhouse = true
+	# After two failed direct/detour approaches, follow the actual painted
+	# field approach instead of cutting across the farmhouse/apron. The road
+	# comes from the same authored terrain config that builds the scene.
+	var field_route: Array[Vector3] = []
+	if left_farmhouse:
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+		if not raw is Dictionary or not raw.get("paths") is Dictionary \
+				or not raw.paths.get("routes") is Array:
+			_stop_left_stick()
+			return false
+		var matches := 0
+		for route: Variant in raw.paths.routes:
+			if not route is Dictionary or route.get("label") != "Practice Meadow":
+				continue
+			matches += 1
+			if not route.get("points") is Array:
+				return false
+			for point: Variant in route.points:
+				if not point is Array or point.size() != 2 \
+						or not (point[0] is int or point[0] is float) \
+						or not (point[1] is int or point[1] is float) \
+						or not is_finite(float(point[0])) or not is_finite(float(point[1])):
+					return false
+				field_route.append(Vector3(float(point[0]), _player.global_position.y, float(point[1])))
+		if matches != 1 or field_route.is_empty():
+			return false
+		print("live catch uses authored Practice Meadow field approach: ", field_route)
 	# Walk with the obstacle-aware navigator, as the prompt approach above does.
 	# A straight push stalled 7-9 m short against the work-area workbench
 	# whenever the tutorial Bramblebun had wandered behind it (2 of 16 local
 	# runs; colliders Props/work_area/Workbench_Collision + Terrain).
 	var nav := EARNED_NAV.new(_tree, _player, _rig, _earned_walk_stick)
+	var road_index := 0
 	var remaining := maxi(0, budget - int(Engine.get_physics_frames() - started_frame))
 	for _frame in remaining:
 		if not is_instance_valid(target) or not bool(target.call("is_alive")):
@@ -104,7 +134,18 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 				await _tree.physics_frame
 			_fail("exact wild offer did not enter combat after Interact")
 			return false
-		nav.step(target.global_position)
+		if road_index < field_route.size():
+			var offset := field_route[road_index] - _player.global_position
+			offset.y = 0.0
+			if offset.length() <= 0.8 and _player.is_on_floor():
+				print("live catch field approach %d/%d reached by controller: %s" % [
+					road_index + 1, field_route.size(), _player.global_position])
+				road_index += 1
+				nav.reset()
+		if road_index < field_route.size():
+			nav.step(field_route[road_index])
+		else:
+			nav.step(target.global_position)
 		await _tree.physics_frame
 	_stop_left_stick()
 	var colliders: Array[String] = []
