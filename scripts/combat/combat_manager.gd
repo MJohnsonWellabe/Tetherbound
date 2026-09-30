@@ -21,6 +21,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 ## is here (`_active_index` into `_party`) so M4 adds members rather than
 ## restructuring this file.
 
+const FIGHT_CAMERA := preload("res://scripts/combat/fight_camera.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
@@ -174,6 +175,8 @@ var _arena: Node3D = null
 ## has something to ease FROM; reset to 0.0 whenever the camera is fully
 ## released so a later fight does not inherit a wide frame from this one's end.
 var _camera_framing_extra: float = 0.0
+## Latest requested size-matrix geometry, not proof of the collision-constrained rendered frame.
+var _fight_camera_solution: Dictionary = {}
 ## F04#7: the eased pivot height (`camera.framing.height_follow`) and the eased
 ## clear-orbit swing (`camera.framing.clear_orbit`). 0 means "not yet started";
 ## both reset with `_camera_framing_extra` when the camera is released.
@@ -1182,6 +1185,8 @@ func _take_camera() -> void:
 		var tracking: Dictionary = ((MATH.config().get("camera", {}) as Dictionary) \
 			.get("tracking", {}) as Dictionary).duplicate()
 		tracking.merge(_opponent_camera("tracking"), true)
+		if bool(FIGHT_CAMERA.config().get("enabled", false)):
+			tracking["dead_zone_deg"] = float(FIGHT_CAMERA.config().get("tracking_dead_zone_deg", 1.0))
 		# F14#0 C3: an opponent's own `camera_composition_yaw_deg` (a trainer
 		# team member's combat override) wins over both blocks above.
 		var authored_yaw := opponent_composition_yaw_deg(_wild)
@@ -1230,6 +1235,12 @@ func _combat_camera_profile() -> Dictionary:
 	var distance := float(profile.get("distance", 6.0))
 	profile["shoulder_offset"] = _combat_shoulder_offset(
 		distance, float(profile.get("pitch_start_deg", -25.0)))
+	var fight := FIGHT_CAMERA.config()
+	if bool(fight.get("enabled", false)) and is_instance_valid(_ally_body) and is_instance_valid(_wild):
+		var pair := FIGHT_CAMERA.pair_profile(_body_world_bounds(_ally_body), _body_world_bounds(_wild), fight)
+		# Applied once on takeover, never accumulated each frame or over manual pitch.
+		profile["pitch_start_deg"] = float(profile.get("pitch_start_deg", -25.0)) + float(pair.get("pitch_offset_deg", 0.0))
+		profile["shoulder_offset"] = 0.0
 	return profile
 
 
@@ -1400,6 +1411,8 @@ func _update_combat_camera_framing(delta: float) -> void:
 	# must not fight either of them for `_distance`.
 	if _camera_rig.get("_target") != _ally_body:
 		return
+	if _update_fight_camera_matrix(delta):
+		return
 	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
 	var base_distance := float(cfg.get("distance", 6.0))
 	var framing: Dictionary = cfg.get("framing", {}) as Dictionary
@@ -1434,6 +1447,59 @@ func _update_combat_camera_framing(delta: float) -> void:
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 	_update_combat_top_band(cfg.get("hud_safe", {}) as Dictionary, weight)
 	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+
+
+## Local composition only. Host damage, actor scale, input and aim are unchanged.
+## The pure requested solution is then constrained by the rig's real world sweeps.
+func _update_fight_camera_matrix(delta: float) -> bool:
+	var fight := FIGHT_CAMERA.config()
+	if not bool(fight.get("enabled", false)) or not is_instance_valid(_wild) \
+			or not _camera_rig.has_method("set_framing_pivot_offset"):
+		_fight_camera_solution = {}
+		if _camera_rig.has_method("set_framing_pivot_offset"):
+			_camera_rig.call("set_framing_pivot_offset", Vector3.ZERO)
+		return false
+	var ally := _body_world_bounds(_ally_body)
+	var foe := _body_world_bounds(_wild)
+	if ally.size.is_zero_approx() or foe.size.is_zero_approx(): return false
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null: return false
+	var viewport := camera.get_viewport().get_visible_rect().size
+	var cfg: Dictionary = MATH.config().get("camera", {})
+	var manual := float(_camera_rig.get("_tracking_manual_left")) > 0.0
+	var neutral: Variant = _camera_rig.call("_tracking_neutral_yaw")
+	var yaw := float(_camera_rig.get("yaw")) if manual or neutral == null else float(neutral)
+	var local := fight.duplicate()
+	if manual: local["orbit_candidates_deg"] = [0.0]
+	var solution := FIGHT_CAMERA.solve(ally, foe, yaw, float(_camera_rig.get("pitch")),
+		camera.fov, viewport.x / maxf(viewport.y, 1.0), float(cfg.get("distance", 6.0)), local, false)
+	if solution.is_empty(): return false
+	_fight_camera_solution = solution
+	var weight := 1.0 - exp(-maxf(float(fight.get("lag", 4.0)), 0.01) * delta)
+	var offset: Vector3 = solution.pivot - _ally_body.global_position - Vector3.UP * float(_camera_rig.get("_height"))
+	var live_offset: Vector3 = _camera_rig.call("framing_pivot_offset")
+	_camera_rig.call("set_framing_pivot_offset", live_offset.lerp(offset, weight))
+	# Fit the current live orbit too while neutral correction is still easing.
+	var current_fit := FIGHT_CAMERA.required_distance(ally, foe, (_camera_rig as Node3D).global_position,
+		(_camera_rig as Node3D).global_basis.orthonormalized(), camera.fov,
+		viewport.x / maxf(viewport.y, 1.0), float(fight.get("frame_fill", 0.82)), float(fight.get("near_clearance_m", 0.5)))
+	var wanted := minf(maxf(float(solution.distance), current_fit), float(fight.get("max_distance_m", 48.0)))
+	_camera_rig.set("_distance", lerpf(float(_camera_rig.get("_distance")), wanted, weight))
+	_camera_rig.set("_shoulder", 0.0)
+	if not manual and _camera_rig.has_method("set_clearance_extra"):
+		var current := float(_camera_rig.call("clearance_extra"))
+		_camera_rig.call("set_clearance_extra", move_toward(current, float(solution.yaw_offset_deg),
+			maxf(float(fight.get("orbit_speed_deg_s", 90.0)), 1.0) * delta))
+	_update_combat_top_band(cfg.get("hud_safe", {}) as Dictionary, weight)
+	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+	# Measure the ACTUAL current camera as well; requested fit must not be
+	# mistaken for a pass when a wall, manual look or smoothing prevents it.
+	var actual_ally := FIGHT_CAMERA.project_box(ally, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
+	var actual_foe := FIGHT_CAMERA.project_box(foe, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
+	_fight_camera_solution["actual_framed"] = bool(actual_ally.get("in_frame", false)) and bool(actual_foe.get("in_frame", false))
+	_fight_camera_solution["actual_overlap"] = FIGHT_CAMERA.overlap_ratio(actual_ally.rect, actual_foe.rect) \
+		if bool(actual_ally.get("valid", false)) and bool(actual_foe.get("valid", false)) else 1.0
+	return true
 
 
 ## F14#0 C3 (Aquaryn): a tall opponent standing uphill of the ally rode up
@@ -2549,7 +2615,7 @@ func _resolve_player_strike() -> void:
 	var launch := HIT_FEEDBACK.launch("%s:solo:%d" % [_encounter_id, _impact_serial],
 		_encounter_id, str(creature.get("uid")), str(_enemy.get("uid")), move_id,
 		"quick" if bool(frozen_move.get("is_quick", false)) else "charged", muzzle, target,
-		PROJECTILE.travel_seconds(muzzle, target, frozen_move.get("vfx", {})), _impact_generation, _wild.global_position)
+		PROJECTILE.travel_seconds(muzzle, target, frozen_move.get("vfx", {})), _impact_generation, _wild.global_position, _body_world_bounds(_wild))
 	present_host_attack_launch(launch)
 	if float(launch.travel_seconds) > 0.0:
 		await get_tree().create_timer(float(launch.travel_seconds), false).timeout
@@ -3021,7 +3087,7 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 	var target: Vector3 = target_body.call("centre")
 	var launch := HIT_FEEDBACK.launch("%s:enemy:%d" % [_encounter_id, _impact_serial],
 		_encounter_id, str(_enemy.get("uid")), str(card.get("creature_uid", "")),
-		move_id, "quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), 0, target_body.global_position)
+		move_id, "quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), 0, target_body.global_position, _body_world_bounds(target_body))
 	var impact := _new_impact(move_id, "quick", damage, type_mult, false, facing, target_body, str(launch.action_id), str(card.get("creature_uid", "")))
 	impact = HIT_FEEDBACK.with_launch(impact, launch, _moves.move(move_id).get("vfx", {}))
 	var payload := {"damage": damage, "type_mult": type_mult, "move_id": move_id,
@@ -3718,7 +3784,7 @@ func _on_enemy_strike() -> void:
 	var muzzle := origin + facing * (float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.0)
 	var launch := HIT_FEEDBACK.launch("%s:solo-enemy:%d" % [_encounter_id, _impact_serial],
 		_encounter_id, str(_enemy.get("uid")), str(creature.get("uid")), move_id,
-		"quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), _impact_generation, _ally_body.global_position)
+		"quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), _impact_generation, _ally_body.global_position, _body_world_bounds(_ally_body))
 	present_host_attack_launch(launch, _wild, false)
 	if float(launch.travel_seconds) > 0.0:
 		get_tree().create_timer(float(launch.travel_seconds), false).timeout.connect(

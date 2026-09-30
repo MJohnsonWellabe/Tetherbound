@@ -2449,7 +2449,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		encounter_id, str(card.get("creature_uid", "")), str(opponent.get("uid")),
 		str(intent.get("move_id", "")), slot, muzzle, target,
 		MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
-		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position)
+		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position, _host_visual_bounds(wild))
 	if float(launch.travel_seconds) <= 0.0:
 		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false)
 	delta["scheduled"] = true
@@ -2507,6 +2507,14 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [verdict])
 	if bool(rolled.get("killed", false)): _finalize_shared_host_fight(encounter_id, "won")
 	return verdict
+
+
+## Frozen render envelope only; never collision/reach/damage authority.
+func _host_visual_bounds(body: Node3D) -> AABB:
+	if _manager == null or not _manager.has_method("_body_world_bounds") or not is_instance_valid(body):
+		return AABB()
+	var bounds: Variant = _manager.call("_body_world_bounds", body)
+	return bounds if bounds is AABB else AABB()
 
 
 func _publish_host_attack_launch(encounter_id: String, author: int, launch: Dictionary) -> void:

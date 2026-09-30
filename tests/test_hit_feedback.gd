@@ -177,3 +177,15 @@ func test_host_defensive_pause_unions_overlap_and_outgoing_hits_extend_stagger()
 	var incoming := FEEDBACK.resolve_defence_hit(overlap, 50.0, 1.0, 20, 0.03, cfg)
 	assert_eq(overlap.stagger_until_ms, 700, "new stagger waits the remaining 80ms, not just its new 30ms")
 	assert_almost_eq(incoming.stagger_left, 0.6, 0.00001)
+
+func test_launch_freezes_real_visual_bounds_without_affecting_host_schedule() -> void:
+	var box := AABB(Vector3(4,2,8), Vector3(3,5,4))
+	var launch := FEEDBACK.launch("fight:2:5", "fight", "own", "wild", "fireball", "charged", Vector3.ZERO, Vector3.ONE, 0.25, 4, Vector3(4,0,8), box)
+	assert_true(launch.is_read_only())
+	assert_true((launch.target_visual_bounds as Dictionary).is_read_only())
+	assert_eq(launch.target_visual_bounds.position, box.position)
+	assert_eq(launch.target_visual_bounds.size, box.size)
+	assert_eq(launch.travel_seconds, 0.25, "envelope never changes the accepted host arrival")
+	assert_true(FEEDBACK.launch_matches(launch,"fight","own","wild",4))
+	box.size = Vector3.ONE
+	assert_eq(launch.target_visual_bounds.size, Vector3(3,5,4), "later body changes cannot rewrite frozen presentation context")
