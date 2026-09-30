@@ -390,7 +390,7 @@
   },
   {
    "lane": "tb/lookdev",
-   "now": "F26 source c6c39e6bd, evidence 2fbeff38d pushed: 19 focused Settings checks/native 0 and fresh-process Forward+ persistence pass; F26#2 independent candidate PASS, unlanded pending F16.",
+   "now": "F26#1/#2 independently strict MET as candidates; actual persistent presets + reference-backed look bar. Water Low/Medium/High native PASS (3/12 route cases); remaining material, blind visual, route and owner Ally gates open. Landing PR follows F16 actual main b2ea.",
    "next": "Work order in CODEX_START_HERE §6: F26"
   },
   {
@@ -533,7 +533,7 @@
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "840ede55d pushed with Medium/High same-Forward+ route batch. Guard source 358bc68b5 independently passed; executed Water Low 1186526b9: 201 frames, two 1920-wide PNGs, native exit 0, raw VISUAL/lookdev/routes/water-low-r1 proof. One of twelve F26#4 routes witnessed; new batch review and native runtime remain open. F26#2 candidate independently passed, unlanded."
+   "checkpoint": "8090a70ce source; strict F26#1 /root/combat MET and #2 /root/vfx MET. Water Low 201 / Medium234 / High182 frames actual native PASS, three cases only. Native Medium/High share a mounted Forward+ world; evidence and limitations retained. Preparing bounded graphics PR; actual main credit only after merge."
   }
  ]
 }

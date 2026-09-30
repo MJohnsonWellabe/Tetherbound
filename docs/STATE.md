@@ -33,7 +33,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | `tb/reorder` | F19, F20 | waits on F16, F18 |
 | `tb/combat` | F21–F24 | prototype complete; independent F16 review; edits after F16 |
 | `tb/vfx` | F25, F35 | prototype complete; independent schema/carrier review; edits after F16 |
-| `tb/lookdev` | F26 | prototype complete; Wave 1 ready after F16 |
+| `tb/lookdev` | F26 | Persistent presets and reference-backed look bar: #1/#2 strict candidate MET (combat/VFX), graphics PR follows landed F16. Water native Low/Medium/High 3/12 routes; material/matrix/Ally gates open. Evidence VISUAL/lookdev/recheck-presets.md. |
 | `tb/training` | F27–F30, F37 | Wave 2 |
 | `tb/homestead` | F31–F34 | Wave 2 |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |

@@ -1430,51 +1430,51 @@
    "title": "Renderer and look development (Palworld + Valheim bar)",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/lookdev",
-   "pct": 0,
+   "pct": 46,
    "counts": {
-    "met": 0,
+    "met": 2,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
-    "blocked": 0,
+    "in_progress": 3,
+    "not_started": 0,
+    "blocked": 1,
     "failing": 0
    },
    "criteria": [
     {
      "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "VISUAL/lookdev/routes/water-forward-r1; Water Medium/High actual Forward+ native exits 0",
+     "gap": "Village/Hall and the other three biomes still need actual material coverage; F17 layout is being built."
     },
     {
      "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "ralph/reports/VISUAL/lookdev/recheck-presets.md: /root/combat strict MET at 8090a70ce; 19 production Settings pad checks + fresh-process persistence and actual Low/Medium/High GPU Water camera ranges. Shortcuts disclosed in the recheck.",
+     "gap": ""
     },
     {
      "text": "Each biome has a documented look bar (sky, fog, sun shafts, time-of-day grade, weather mood) with reference boards in ART_DIRECTION.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "docs/design/ART_DIRECTION.md §4.1; ralph/reports/VISUAL/lookdev/graphics-presets-candidate.md: /root/vfx independent strict MET, restored biome A+B references inspected. Written target only; absent external reference images disclosed.",
+     "gap": ""
     },
     {
      "text": "A code-blind judge rates each biome's frame matrix as meeting the new bar on High and Medium.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "ART_DIRECTION §4.1 full-bar target and source-reviewed capture adapters in VISUAL/lookdev/computer-route-candidate.md",
+     "gap": "Complete High/Medium frame matrices and independent code-blind full-bar verdicts remain open."
     },
     {
      "text": "Computer captures at 1920×1080 record frame time per preset for a scripted route in each biome.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "VISUAL/lookdev/routes/water-low-r1 and water-forward-r1: 3/12 actual native route cases, 201/234/182 frames at 1920x1080, independent receipt checks",
+     "gap": "Remaining nine biome/preset cases open; no complete matrix claim."
     },
     {
      "text": "Owner ROG Ally test: Medium handheld holds ≥30 fps (40 preferred) on the scripted route; Forward+ becomes the default only after this passes (owner-dependent).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "blocked",
+     "evidence": "Conservative Compatibility default retained under RD-25; status.json owner_needs",
+     "gap": "Owner Ally Medium 15 W/1920x1080 scripted route test required once a test build is ready. Recommended: keep Compatibility default until at least 30 fps, 40 preferred."
     }
    ]
   },
