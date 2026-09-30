@@ -206,7 +206,9 @@ func _capture_size_matrix() -> void:
 			cases.append({"pair":pair,"measured_pair":measured_pair,"ally_species":kinds[ally_class],"foe_species":kinds[foe_class],
 				"ally_bounds":_bounds_record(ally_bounds),"foe_bounds":_bounds_record(foe_bounds),"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),
 				"framed":framed,"overlap":overlap,"pass":passed,"png":filename,"pixels":pixels,"physics_interval_ms":samples,"spring_length":_rig.spring_length,
-				"resolution":[image.get_width(),image.get_height()] if image != null else [],"actual_camera_position":_point_record(_camera.global_position)})
+				"resolution":[image.get_width(),image.get_height()] if image != null else [],"actual_camera_position":_point_record(_camera.global_position),
+				"requested_solution":_camera_solution_record(),"actual_rig_yaw":float(_rig.yaw),"actual_rig_pivot":_point_record(_rig.global_position),
+				"requested_pivot_offset":_point_record(_rig.framing_pivot_offset()),"manual_grace_seconds":float(_rig.get("_tracking_manual_left"))})
 			case_index += 1
 	_manager.set("_party",saved_party)
 	_manager.set("_enemy",saved_enemy)
@@ -229,6 +231,16 @@ func _capture_size_matrix() -> void:
 			"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))
 		output.close()
 	for frame: int in 30: await physics_frame
+
+func _camera_solution_record() -> Dictionary:
+	var solution: Dictionary = (_manager.get("_fight_camera_solution") as Dictionary).duplicate(true)
+	for key: String in ["pivot"]:
+		if solution.get(key) is Vector3: solution[key] = _point_record(solution[key])
+	for key: String in ["ally_rect","foe_rect"]:
+		if solution.get(key) is Rect2:
+			var rect: Rect2 = solution[key]
+			solution[key] = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
+	return solution
 
 ## Refuse uniform opaque or transparent frames as evidence. This is only a
 ## bounded capture-validity guard; it does not judge art or actor readability.

@@ -79,7 +79,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	# short body and a tall neighbour. Include the actual pair's side-on view;
 	# manual grace and obstruction handling remain at the caller.
 	var line := foe.get_center() - ally.get_center()
-	if Vector2(line.x,line.z).length_squared() > 0.0001:
+	if bool(config.get("allow_pair_side_views",true)) and Vector2(line.x,line.z).length_squared() > 0.0001:
 		var side_yaw := atan2(line.x,line.z) + PI * .5
 		for side: float in [side_yaw, side_yaw + PI]:
 			var offset := rad_to_deg(wrapf(side-yaw,-PI,PI))
@@ -89,10 +89,15 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var distance_steps := clampi(int(config.get("separation_distance_steps",8)),1,12)
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
 	var best: Dictionary = {}
+	# Reserve separation beyond the exact AABB edge so the live tracker can
+	# ease toward its chosen angle without spending its dead zone in overlap.
+	var guard := maxf(0.0,float(config.get("separation_guard_m",0.0)))
+	var guarded_ally := ally.grow(guard)
+	var guarded_foe := foe.grow(guard)
 	for raw: Variant in offsets:
 		var offset := float(raw)
 		var basis := Basis.from_euler(Vector3(start_pitch, yaw + deg_to_rad(offset), 0.0))
-		var minimum := maxf(base_distance + float(profile.get("distance_offset_m", 0.0)), required_distance(ally, foe, point, basis,
+		var minimum := maxf(base_distance + float(profile.get("distance_offset_m", 0.0)), required_distance(guarded_ally, guarded_foe, point, basis,
 			vertical_fov_deg, aspect, float(config.get("frame_fill", 0.82)), float(config.get("near_clearance_m", 0.5))))
 		# Framing alone does not separate projected boxes. Search bounded
 		# distances as well, preserving native size and the hard distance cap.
@@ -103,7 +108,11 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			var b := project_box(foe, transform, vertical_fov_deg, aspect, 0.05)
 			if not bool(a.get("valid", false)) or not bool(b.get("valid", false)): continue
 			var overlap := overlap_ratio(a.rect, b.rect)
-			var passed := bool(a.in_frame) and bool(b.in_frame) and overlap <= float(config.get("max_actor_overlap", 0.0))
+			var guarded_a := project_box(guarded_ally,transform,vertical_fov_deg,aspect,0.05)
+			var guarded_b := project_box(guarded_foe,transform,vertical_fov_deg,aspect,0.05)
+			var clear := bool(guarded_a.get("valid",false)) and bool(guarded_b.get("valid",false)) \
+				and overlap_ratio(guarded_a.rect,guarded_b.rect)<=float(config.get("max_actor_overlap",0.0))
+			var passed := bool(a.in_frame) and bool(b.in_frame) and clear
 			var framed := bool(a.in_frame) and bool(b.in_frame)
 			var candidate := {"pair": profile.pair, "pivot": point, "distance": distance, "pitch": start_pitch,
 				"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect, "pass": passed, "framed": framed}

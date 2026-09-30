@@ -33,6 +33,16 @@ func test_pivot_uses_actual_body_midpoint_and_class_boundaries() -> void:
 	var expected := a.get_center().lerp(b.get_center(), float(cfg.midpoint_bias)) + Vector3.UP * float(profile.height_offset_m)
 	assert_eq(FIT.pivot(a, b, cfg, profile), expected, "composition follows the two rendered bounds, never arena origin")
 
+func test_manual_orbit_cannot_be_replaced_by_an_appended_side_view() -> void:
+	var cfg := FIT.config().duplicate(true)
+	cfg["orbit_candidates_deg"] = [0.0]
+	cfg["allow_pair_side_views"] = false
+	var a := _body(8.0,Vector3.ZERO)
+	var b := _body(2.0,Vector3(0,0,-6))
+	var fit := FIT.solve(a,b,0.0,deg_to_rad(-30),68.0,16.0/9.0,9.5,cfg,false)
+	assert_eq(float(fit.yaw_offset_deg),0.0,"manual look keeps its exact requested yaw even when that composition overlaps")
+	assert_true(float(fit.distance)<=float(cfg.max_distance_m),"a separation request never exceeds the configured hard cap")
+
 func test_impossible_and_near_plane_frames_never_report_a_pass() -> void:
 	var cfg := FIT.config().duplicate(true)
 	cfg["max_distance_m"] = 0.2

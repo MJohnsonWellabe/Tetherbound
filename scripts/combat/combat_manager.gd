@@ -1471,7 +1471,11 @@ func _update_fight_camera_matrix(delta: float) -> bool:
 	var neutral: Variant = _camera_rig.call("_tracking_neutral_yaw")
 	var yaw := float(_camera_rig.get("yaw")) if manual or neutral == null else float(neutral)
 	var local := fight.duplicate()
-	if manual: local["orbit_candidates_deg"] = [0.0]
+	var existing_max := float(cfg.get("distance",6.0)) + maxf(0.0,float((cfg.get("framing",{}) as Dictionary).get("max_extra_distance",0.0)))
+	local["max_distance_m"] = minf(float(fight.get("max_distance_m",48.0)),existing_max)
+	if manual:
+		local["orbit_candidates_deg"] = [0.0]
+		local["allow_pair_side_views"] = false
 	var solution := FIGHT_CAMERA.solve(ally, foe, yaw, float(_camera_rig.get("pitch")),
 		camera.fov, viewport.x / maxf(viewport.y, 1.0), float(cfg.get("distance", 6.0)), local, false)
 	if solution.is_empty(): return false
@@ -1484,7 +1488,7 @@ func _update_fight_camera_matrix(delta: float) -> bool:
 	var current_fit := FIGHT_CAMERA.required_distance(ally, foe, (_camera_rig as Node3D).global_position,
 		(_camera_rig as Node3D).global_basis.orthonormalized(), camera.fov,
 		viewport.x / maxf(viewport.y, 1.0), float(fight.get("frame_fill", 0.82)), float(fight.get("near_clearance_m", 0.5)))
-	var wanted := minf(maxf(float(solution.distance), current_fit), float(fight.get("max_distance_m", 48.0)))
+	var wanted := minf(maxf(float(solution.distance), current_fit), float(local.max_distance_m))
 	_camera_rig.set("_distance", lerpf(float(_camera_rig.get("_distance")), wanted, weight))
 	_camera_rig.set("_shoulder", 0.0)
 	if not manual and _camera_rig.has_method("set_clearance_extra"):
