@@ -1,0 +1,174 @@
+{
+  "binary_git_and_live_second_reads_equal": true,
+  "sealed": true,
+  "changed_paths": [
+    "tests/helpers/gate_a_npc_gather_segment.gd",
+    "tests/helpers/meadows_earned_team_segment.gd",
+    "tests/helpers/opening_geometry_navigator.gd"
+  ],
+  "patch_sha256": "1a3d6ff40f69824a5151b0f127827064495da7a1792fe73a2fa62f0f998bf2a7",
+  "recovery_sha256": "e77a998416591adfc41183d8176375882c250f69e92de1a7bd05d6f0d10cd004",
+  "effective_permissions": {
+    "approval_policy": "never",
+    "sandbox_mode": "danger-full-access"
+  },
+  "branch": "tb/hub",
+  "commit": "8316c68826c95d7d3249088954294babdb504864",
+  "utc": "2026-09-30T21:12:48.4665878Z",
+  "prior_sealed_fail": {
+    "path": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\routing-v3-sealed\\review-routing-v3-sealed.txt",
+    "sha256": "cbf7fd68f927c38b85ca7a516ac480550e9d418238543a6fa784370c93eb51d1"
+  },
+  "sources": [
+    {
+      "sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\tests\\helpers\\gate_a_npc_gather_segment.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\tests\\helpers\\gate_a_npc_gather_segment.gd",
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "working_sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "bytes": 42423
+    },
+    {
+      "sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\tests\\helpers\\meadows_earned_team_segment.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\tests\\helpers\\meadows_earned_team_segment.gd",
+      "path": "tests/helpers/meadows_earned_team_segment.gd",
+      "working_sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "bytes": 50000
+    },
+    {
+      "sha256": "d472c80d61e6acba253f9ed7c4e1ceaf9d9f6a46266b561b6f51748c7d1072c3",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\tests\\helpers\\opening_geometry_navigator.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\tests\\helpers\\opening_geometry_navigator.gd",
+      "path": "tests/helpers/opening_geometry_navigator.gd",
+      "working_sha256": "d472c80d61e6acba253f9ed7c4e1ceaf9d9f6a46266b561b6f51748c7d1072c3",
+      "bytes": 26995
+    },
+    {
+      "sha256": "5adc1e81ebd2e32609226d9b2bfb0915b10b9eee15a036b1b6f9da5654f3cb1b",
+      "supporting_checkout_eol_only": true,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\AGENTS.md",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\AGENTS.md",
+      "path": "AGENTS.md",
+      "working_sha256": "0e3f2b1a387ffe7ab4666c3b6ac6f0aa086af92ad6bc2b64509ea57931051035",
+      "bytes": 17690
+    },
+    {
+      "sha256": "24ca531e6beb908dcdbcbe6eb7065d4e5b191c9b4053cf72c710f8f63b759118",
+      "supporting_checkout_eol_only": true,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\CODEX_START_HERE.md",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\CODEX_START_HERE.md",
+      "path": "CODEX_START_HERE.md",
+      "working_sha256": "4e146b79671d746cbca47a1ae87747715a4d8d90e4fa0f2baa43abe38c4ec2a5",
+      "bytes": 91147
+    },
+    {
+      "sha256": "5dca735e571b5de266b48510f1dbd376a6ff3c8943a97d694b28cbfd4dbbbb4f",
+      "supporting_checkout_eol_only": true,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\project.godot",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\project.godot",
+      "path": "project.godot",
+      "working_sha256": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a",
+      "bytes": 21209
+    },
+    {
+      "sha256": "0581055e91554a259f5d2059bb216bd27404a96418be7d8168e27b6edb5507de",
+      "supporting_checkout_eol_only": true,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\scenes\\player\\player.tscn",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\scenes\\player\\player.tscn",
+      "path": "scenes/player/player.tscn",
+      "working_sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+      "bytes": 1439
+    },
+    {
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\scripts\\player\\player_controller.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\scripts\\player\\player_controller.gd",
+      "path": "scripts/player/player_controller.gd",
+      "working_sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+      "bytes": 43509
+    },
+    {
+      "sha256": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\scripts\\world\\grandpa_house.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\scripts\\world\\grandpa_house.gd",
+      "path": "scripts/world/grandpa_house.gd",
+      "working_sha256": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+      "bytes": 43387
+    },
+    {
+      "sha256": "498abf2ea10103001f68ed0f9dabf16141653ed8ff74476c142028967d90a6d9",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\scripts\\world\\village_door.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\scripts\\world\\village_door.gd",
+      "path": "scripts/world/village_door.gd",
+      "working_sha256": "498abf2ea10103001f68ed0f9dabf16141653ed8ff74476c142028967d90a6d9",
+      "bytes": 4583
+    },
+    {
+      "sha256": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241",
+      "supporting_checkout_eol_only": true,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\scripts\\world\\playground_world.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\scripts\\world\\playground_world.gd",
+      "path": "scripts/world/playground_world.gd",
+      "working_sha256": "20c4dca965c67f62b7e6115a109918d87d59accbff45cca90663190daa91dbea",
+      "bytes": 122478
+    },
+    {
+      "sha256": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\tests\\helpers\\stick_navigator.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\tests\\helpers\\stick_navigator.gd",
+      "path": "tests/helpers/stick_navigator.gd",
+      "working_sha256": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+      "bytes": 42441
+    },
+    {
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "supporting_checkout_eol_only": false,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\data\\config\\terrain_playground.json",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\data\\config\\terrain_playground.json",
+      "path": "data/config/terrain_playground.json",
+      "working_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "bytes": 258199
+    },
+    {
+      "sha256": "24688edacadb6f368e4c62fed73bc923c3da98949fb841b67b15f7ea2f7aee9b",
+      "supporting_checkout_eol_only": true,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\data\\config\\village.json",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\data\\config\\village.json",
+      "path": "data/config/village.json",
+      "working_sha256": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+      "bytes": 12217
+    },
+    {
+      "sha256": "5e60ebd341184fe5946f115f6c9494c5d0163df08e69c5e0ae33d662f114c3b3",
+      "supporting_checkout_eol_only": true,
+      "working_local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\working-bytes\\data\\config\\building_prefabs.json",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\current\\data\\config\\building_prefabs.json",
+      "path": "data/config/building_prefabs.json",
+      "working_sha256": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36",
+      "bytes": 266862
+    },
+    {
+      "tree": "parent",
+      "sha256": "ea1c2b7f76a7014b569477fce80948f6bd63470347ea18ff529604a5d98acbea",
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\parent\\tests\\helpers\\gate_a_npc_gather_segment.gd",
+      "bytes": 42891
+    },
+    {
+      "tree": "parent",
+      "sha256": "d0ae23f17c75189b1b62f813182999d7ecd123a4e7b06a2a7fd77dfd880b9f4c",
+      "path": "tests/helpers/meadows_earned_team_segment.gd",
+      "local": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\parent\\tests\\helpers\\meadows_earned_team_segment.gd",
+      "bytes": 49674
+    }
+  ],
+  "parent": "39ad0773577c54a798322ea5d0ef3aef8255a2da"
+}

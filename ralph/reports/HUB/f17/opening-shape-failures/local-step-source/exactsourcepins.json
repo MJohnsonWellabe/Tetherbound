@@ -1,0 +1,74 @@
+{
+  "commit": "dff2f6c7a4111cb26d36ae22c0428b97180799fb",
+  "parent": "a605f9969dea6ecc3abf566326aeedb68094db33",
+  "branch": "tb/hub",
+  "pushed_ref_matches": true,
+  "effective_permissions": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never"
+  },
+  "sources": [
+    {
+      "parent_sha256": "0805365e35c0b5bbbeff026a923608b9bbcfd3769fb6e05e893cca0fe7f49ae8",
+      "current_sha256": "5b781f8401018c9030058874692c1f3c7bd6ebf427dbec741f61c81f1d201fc0",
+      "two_binary_git_reads_equal": true,
+      "parent_bytes": 27001,
+      "live_checkout_matches": true,
+      "path": "tests/helpers/opening_geometry_navigator.gd",
+      "unchanged_since_typed_ceiling_in_parent": true,
+      "current_bytes": 27106
+    },
+    {
+      "parent_sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "current_sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "two_binary_git_reads_equal": true,
+      "parent_bytes": 42423,
+      "live_checkout_matches": true,
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "unchanged_since_typed_ceiling_in_parent": true,
+      "current_bytes": 42423
+    },
+    {
+      "parent_sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "current_sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "two_binary_git_reads_equal": true,
+      "parent_bytes": 50000,
+      "live_checkout_matches": true,
+      "path": "tests/helpers/meadows_earned_team_segment.gd",
+      "unchanged_since_typed_ceiling_in_parent": true,
+      "current_bytes": 50000
+    }
+  ],
+  "exact_changed_paths": [
+    "tests/helpers/opening_geometry_navigator.gd"
+  ],
+  "insertions": 7,
+  "deletions": 5,
+  "all_helper_bytes_outside_choose_unchanged": true,
+  "reverse_choose_parent_sha256": "0805365e35c0b5bbbeff026a923608b9bbcfd3769fb6e05e893cca0fe7f49ae8",
+  "patch_sha256": "28e3e5ae2ca63f5c4d912b88372661aae65835103bc856088ac4be83e4aa5aec",
+  "prior_evidence_preserved": [
+    {
+      "expected": "1c3eefef257a8212e07cdc82a5014073d71a8e38f9a17dd79f669d3253c21cc0",
+      "path": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\strict-review.txt"
+    },
+    {
+      "expected": "90f3d7be1768abb77f0dc7ccad103c754411ebccf74cb95622b9eace1835fd39",
+      "path": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\successor-ceiling-cb2c\\strict-review.txt"
+    },
+    {
+      "expected": "ef1e2a8ef8fce5d984362a052c5b88991118f2409858f4689768aca38cf35131",
+      "path": "D:\\tetherbound\\m1-shape-r1\\parser.txt"
+    }
+  ],
+  "prior_r2_native_sha256": "c284f680401f71e5f4a91938b0a313ce4b6ef77b9017f26771ebc7107f238286",
+  "prior_r2_parser_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+  "prior_r2_receipt_sha256": "3c203545913e5f816832c51151ba4992d7acab1a2e9ffbe28439ff81b419aad0",
+  "prior_r2_native_errors": 3,
+  "prior_r2_native_script_errors": 0,
+  "prior_r2_parser_errors": 0,
+  "prior_r2_native_exit": 1,
+  "prior_r2_native_elapsed_s": 248.0,
+  "prior_r2_parser_elapsed_s": 11.172000000020489,
+  "utc": "2026-09-30T22:00:57.6069826Z"
+}
