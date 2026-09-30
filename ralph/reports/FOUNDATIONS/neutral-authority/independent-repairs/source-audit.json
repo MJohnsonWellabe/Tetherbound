@@ -1,0 +1,50 @@
+{
+  "pin": "786d016e14e12d4784dc26708d8e05dd27bb6636",
+  "historical_original_blob": "37d3921630e8af2e2c2623b8afaa674ea0525245",
+  "historical_original_bin_sha256": "c156f5385982b2d23b84b15d17b0a97c0a4edc141b6ea54c4cca04fbba37dfd4",
+  "historical_fixture_all_record_fields_exact": true,
+  "decoded_original_record": {
+    "layer": "trees",
+    "order": 320,
+    "model": "res://assets/environment/stylized_nature/CommonTree_2.gltf",
+    "position": [
+      45.44734573364258,
+      -0.18858742713928223,
+      -62.50096893310547
+    ],
+    "yaw": 4.354415416717529,
+    "scale": 1.598110499382019,
+    "normal": null,
+    "kept": true
+  },
+  "all_three_prompt_test_bodies_unchanged": true,
+  "single_Fireball_pickup_row_matches_a16ebb_and_all_prior_JSON_preserved": true,
+  "eight_description_graft_only_all99rows_and_TM_preserved": true,
+  "all12village_test_methods_retained": true,
+  "four_story_crest_relic_test_bodies_exactly_unchanged": true,
+  "all11nonmanifest_repair_paths_byte_equal_390": true,
+  "original_failed_method_markers_per_shard": [
+    6,
+    3,
+    15,
+    5
+  ],
+  "original_script_error_markers_per_shard": [
+    6,
+    0,
+    7,
+    0
+  ],
+  "source_blocker": "P2 rail endpoint-only checks miss interior crossing (6.15m collider vs 5.2m street). No source PASS until corrected.",
+  "assembly_all35_path_hashes_exact": true,
+  "assembly_hash_path_count": 35,
+  "savegame_entire_prepared_journal_validation_writers_outside_two_party_codecs_byte_unchanged": true,
+  "teaching_only_two_legacy_initialization_guards_all_strict_preflight_carrier_rules_unchanged": true,
+  "moves_slot_test_only_enum_extension_every_other_assertion_byte_unchanged": true,
+  "farming_map_prompt_all_original_test_methods_retained": true,
+  "chapter_reward_original_test_methods_retained": true,
+  "immutable_initial390_and_sealed786_captures_preserved": true,
+  "HEAD_at_audit_end": "f56f592028e6144b6e7aeba49c6ef5952ecee866",
+  "selected_affected_native_union_pending": true,
+  "verdict": "SOURCE FAIL at786: whole-rail regression guard misses interior crossing; other bounded source checks passed with runtime gaps disclosed"
+}

@@ -1,0 +1,5 @@
+{
+  "vitals_receipts_per_character_limit": 16384,
+  "owner_save_retry_seconds": 2.0,
+  "owner_vitals_retry_limit": 64
+}

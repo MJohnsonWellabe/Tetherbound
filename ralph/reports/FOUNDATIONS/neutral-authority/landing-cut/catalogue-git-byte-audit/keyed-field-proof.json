@@ -1,0 +1,186 @@
+{
+  "main": "e060aca21d1218ccc1ccd647a92e54a04224234e",
+  "cut": "3a66e74fd160f5b31b1f9ed17df23989a077ad6d",
+  "read_method": "subprocess.check_output git cat-file blob; strict explicit UTF-8 decode; no shell text redirection/PowerShell decoding",
+  "item_main_sha256": "16d7394713a57a37212a2417d8cd5f399db9ef523478975d29cba6e79d54cadc",
+  "item_cut_sha256": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff",
+  "item_cut_equals_actual_scoped05d_bytes": true,
+  "existing_item_count": 98,
+  "cut_item_count": 99,
+  "old_item_order_preserved": true,
+  "all_existing_item_fields_equal_after_removing_exact_eight_added_descriptions": true,
+  "changed_existing_fields": [
+    {
+      "item": "essence_ground",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Ground Essence at the Altar to pay for a ground creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    },
+    {
+      "item": "essence_water",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Water Essence at the Altar to pay for a water creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    },
+    {
+      "item": "essence_air",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Air Essence at the Altar to pay for an air creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    },
+    {
+      "item": "essence_electric",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Electric Essence at the Altar to pay for an electric creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    },
+    {
+      "item": "essence_fire",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Fire Essence at the Altar to pay for a fire creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    },
+    {
+      "item": "essence_dark",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Dark Essence at the Altar to pay for a dark creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    },
+    {
+      "item": "essence_ice",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Ice Essence at the Altar to pay for an ice creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    },
+    {
+      "item": "essence_psychic",
+      "field": "description",
+      "operation": "added",
+      "value": "Spend Psychic Essence at the Altar to pay for a psychic creature's next level, up to its current cap. Dual-type creatures may pay with either of their types."
+    }
+  ],
+  "added_item": "tm_fireball",
+  "added_item_canonical_sha256": "73c2aade38e964d386d696283351e6231b9266d41d6ea16c4af61da1c245e5cd",
+  "all_nonitems_metadata_equal": true,
+  "nonitems_metadata_count": 25,
+  "nonitems_metadata_canonical_sha256": "03519df9fbeaf77dcb8471f6b8b926719919ca1587682796ed9d90dcad520d34",
+  "requested_fifteen_description_restorations": [
+    {
+      "item": "wood",
+      "equal": true,
+      "main_utf8_value": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u2014 walls, tools and campfires all start here.",
+      "cut_utf8_value": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u2014 walls, tools and campfires all start here."
+    },
+    {
+      "item": "ironwood",
+      "equal": true,
+      "main_utf8_value": "Close-grained wood cut from the old-growth stands on the Rise's flank, so dense a fresh-cut round barely floats. It is still wood \u2014 the axe is still the tool \u2014 but it takes twice the swinging, and what it braces does not give.",
+      "cut_utf8_value": "Close-grained wood cut from the old-growth stands on the Rise's flank, so dense a fresh-cut round barely floats. It is still wood \u2014 the axe is still the tool \u2014 but it takes twice the swinging, and what it braces does not give."
+    },
+    {
+      "item": "potion_large",
+      "equal": true,
+      "main_utf8_value": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go \u2014 the thing you carry into a gauntlet where there is no time to stop and pour three.",
+      "cut_utf8_value": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go \u2014 the thing you carry into a gauntlet where there is no time to stop and pour three."
+    },
+    {
+      "item": "field_sigil",
+      "equal": true,
+      "main_utf8_value": "A heavy bronze disc struck with Team Tether's mark and the ploughed-furrow device of the high pasture posting. A captain carries one, and hands it over when they lose \u2014 the officers' own rule, and they keep it.",
+      "cut_utf8_value": "A heavy bronze disc struck with Team Tether's mark and the ploughed-furrow device of the high pasture posting. A captain carries one, and hands it over when they lose \u2014 the officers' own rule, and they keep it."
+    },
+    {
+      "item": "saddle_frame",
+      "equal": true,
+      "main_utf8_value": "A rigid frame built to take real weight, its joints braced with worked rootstone rather than plain wood. Not a saddle yet \u2014 just the part that has to be right before the rest of one is worth building.",
+      "cut_utf8_value": "A rigid frame built to take real weight, its joints braced with worked rootstone rather than plain wood. Not a saddle yet \u2014 just the part that has to be right before the rest of one is worth building."
+    },
+    {
+      "item": "orb_basic",
+      "equal": true,
+      "main_utf8_value": "A plain, unmarked sphere from Grandpa's old pack \u2014 no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb.",
+      "cut_utf8_value": "A plain, unmarked sphere from Grandpa's old pack \u2014 no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb."
+    },
+    {
+      "item": "potion_small",
+      "equal": true,
+      "main_utf8_value": "A small dose that restores 50 HP to one creature. It only works on a creature \u2014 for you, it's soup and rest, same as always.",
+      "cut_utf8_value": "A small dose that restores 50 HP to one creature. It only works on a creature \u2014 for you, it's soup and rest, same as always."
+    },
+    {
+      "item": "revive",
+      "equal": true,
+      "main_utf8_value": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength \u2014 a proper rest is still what finishes the job.",
+      "cut_utf8_value": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength \u2014 a proper rest is still what finishes the job."
+    },
+    {
+      "item": "good_candy",
+      "equal": true,
+      "main_utf8_value": "Wrapped and a little sticky, found rather than bought. Feed it to a creature and that creature is one level further along, no fight required \u2014 the addendum's exploration-reward candy, three tiers of the same wrapper.",
+      "cut_utf8_value": "Wrapped and a little sticky, found rather than bought. Feed it to a creature and that creature is one level further along, no fight required \u2014 the addendum's exploration-reward candy, three tiers of the same wrapper."
+    },
+    {
+      "item": "great_candy",
+      "equal": true,
+      "main_utf8_value": "The blue-wrapped tier \u2014 a tougher detour or a stronger encounter earned it. Two levels on the creature that eats it, no fight required.",
+      "cut_utf8_value": "The blue-wrapped tier \u2014 a tougher detour or a stronger encounter earned it. Two levels on the creature that eats it, no fight required."
+    },
+    {
+      "item": "speed_mushroom",
+      "equal": true,
+      "main_utf8_value": "Blue-capped, found clustered at tree bases and rocks. The same timed-buff mechanism a tonic already uses \u2014 the world reward version of one.",
+      "cut_utf8_value": "Blue-capped, found clustered at tree bases and rocks. The same timed-buff mechanism a tonic already uses \u2014 the world reward version of one."
+    },
+    {
+      "item": "wild_mushroom",
+      "equal": true,
+      "main_utf8_value": "Red-capped, broad and unmistakable. A short attack buff \u2014 the least specialised of the three, general-purpose foraging.",
+      "cut_utf8_value": "Red-capped, broad and unmistakable. A short attack buff \u2014 the least specialised of the three, general-purpose foraging."
+    },
+    {
+      "item": "knife",
+      "equal": true,
+      "main_utf8_value": "Short, sharp, and built for stripping \u2014 one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly.",
+      "cut_utf8_value": "Short, sharp, and built for stripping \u2014 one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly."
+    },
+    {
+      "item": "hoe",
+      "equal": true,
+      "main_utf8_value": "A broad flat blade on a long shaft, for turning matted meadow sod into soil loose enough to take seed. It is no use on a tree, a rock or a creature \u2014 the only thing it is for is the ground in front of a farmhouse.",
+      "cut_utf8_value": "A broad flat blade on a long shaft, for turning matted meadow sod into soil loose enough to take seed. It is no use on a tree, a rock or a creature \u2014 the only thing it is for is the ground in front of a farmhouse."
+    },
+    {
+      "item": "tm_stone_rush",
+      "equal": true,
+      "main_utf8_value": "A flat grey disc that hums faintly when a ground-type creature is near. Hold it out and the creature takes the shape of the move straight off it \u2014 once. The disc goes dull afterwards.",
+      "cut_utf8_value": "A flat grey disc that hums faintly when a ground-type creature is near. Hold it out and the creature takes the shape of the move straight off it \u2014 once. The disc goes dull afterwards."
+    }
+  ],
+  "pickup_main_sha256": "04463157397340eb638e4af2561a20bb2364db2c07513d2bca31d360644796f9",
+  "pickup_cut_sha256": "148ccc9f97d70ed2fe1d4d322464729672c4c2802333a187f572620b94d29e40",
+  "pickup_cut_equals_actual_scoped05d_bytes": true,
+  "old_pickup_count": 15,
+  "old_pickup_rows_order_and_metadata_equal": true,
+  "sole_new_pickup": {
+    "id": "b5_tm_fireball_scorched_pocket",
+    "item": "tm_fireball",
+    "pos": [
+      175.0,
+      7360.0
+    ],
+    "tier": "detour",
+    "why": "Team Tether's scorched-pocket training spill, off the road near the authored fire-creature habitat: a charged Fireball TM found through ordinary pickup authority."
+  },
+  "original_description_method": "func test_every_item_has_a_non_empty_description() -> void:\n\tvar items := _items()\n\tfor item_id: String in items.keys():\n\t\tvar item := items[item_id] as Dictionary\n\t\tvar description := str(item.get(\"description\", \"\"))\n\t\tassert_false(description.is_empty(), \"item '%s' has no description\" % item_id)\n\n\n",
+  "original_method_source_unchanged": true,
+  "all_99_descriptions_string_nonempty": true,
+  "reviewer_extraction_counterexample": {
+    "item": "wood",
+    "reviewer_main": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u00e2\u20ac\u201d walls, tools and campfires all start here.",
+    "actual_git_main": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u2014 walls, tools and campfires all start here.",
+    "actual_git_cut": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u2014 walls, tools and campfires all start here.",
+    "reviewer_main_differs_from_its_named_git_blob": true
+  },
+  "source_change": "None. Proposed fifteen restorations and six comment/pickup metadata restorations already equal main in actual Git blobs. Do not graft corrupted extracted text.",
+  "runtime_claim": "No new engine/check. Original scoped ItemDB and pickup bytes remain exactly equal; independent reviewer must correct extraction and decide gate."
+}

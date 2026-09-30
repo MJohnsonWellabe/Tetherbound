@@ -26,10 +26,11 @@ extends RefCounted
 ## This is compatibility, not authentication. A modified client can claim any
 ## fingerprint; the host still validates every transaction on its own state.
 
-## v6: the hello carries `build`; hosts refuse a missing or different build,
-## goodbye/held-seat and host_closing semantics. A v6 client never dials a v5
-## Steam lobby, and a v5 client is refused by a v6 host as too old.
-const WIRE_PROTOCOL := "tetherbound-invite-v6"
+## v7: hello requires a validated portable-character authority projection;
+## older peers are refused before registry admission or snapshot preparation.
+## Typed actor-vitals journal/receipt RPCs share this required wire contract.
+## Save schema remains v28; this marker only versions network compatibility.
+const WIRE_PROTOCOL := "tetherbound-invite-v7"
 const CONTENT_ROOT := "res://data"
 const CONTENT_EXTENSION := "json"
 ## Hex digits of the content hash shown to players. Long enough to tell builds

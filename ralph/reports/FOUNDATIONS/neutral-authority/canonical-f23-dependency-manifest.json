@@ -1,0 +1,257 @@
+{
+  "source": "ce12aae9d9205b0829df7acd2a2b082e32de4a73",
+  "scope": "F23 canonical instance/typed portable preflight and authored move eligibility only; supporting WIP, no live combat or Session activation",
+  "paths": [
+    {
+      "path": "scripts/creatures/creature_instance.gd",
+      "git_blob": "042a5d113c80f0b066f378b89966242785a81d41",
+      "sha256_git_bytes": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "0b899a44f4e4e1ba41cee9e7f128e74bf662aba2c4e884c6c2012783b239c428",
+          "identical": true
+        },
+        "origin/main": {
+          "sha256_git_bytes": "202ee40889cd872d5ec3cbe3d59ad3df619bed9a2e3b65656970b74084dbca49",
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "scripts/creatures/teaching.gd",
+      "git_blob": "ea52250aec6d4376fdd0b36d8e6a39dbf2655d67",
+      "sha256_git_bytes": "b329abd6c96a94d37d31e6908fafa4554373d0119856157d4eaa84ac53f61267",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "b5a00af6eed051a4d56c1b844d3ff8bd081467e45c7866a5d017fc8c0c9ac5d0",
+          "identical": false
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "b5a00af6eed051a4d56c1b844d3ff8bd081467e45c7866a5d017fc8c0c9ac5d0",
+          "identical": false
+        },
+        "origin/main": {
+          "sha256_git_bytes": "1879c0cee3183689c04f5e4ba74d6240572314e9801ba97b6fa50ba0ad1125b9",
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "scripts/creatures/move_mastery.gd",
+      "git_blob": "3eca151deaa82062539750522e5f5c2938de4ca6",
+      "sha256_git_bytes": "7993a8350276fcb63e82e84e827f00dde42847e18d2aa29f57416efe6c9355c2",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "d460f10471b31a4e446aabc7a45bc9857c4a3a1e756c3e5bd204d408ababbd86",
+          "identical": false
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "d460f10471b31a4e446aabc7a45bc9857c4a3a1e756c3e5bd204d408ababbd86",
+          "identical": false
+        },
+        "origin/main": {
+          "sha256_git_bytes": null,
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "data/config/move_mastery.json",
+      "git_blob": "616f750cae81be437d8a35b7a41de3743db7fcac",
+      "sha256_git_bytes": "b80f37c11385f217cbab302b52802092a36655fa25b20ec3e7aafdf948865e06",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "b80f37c11385f217cbab302b52802092a36655fa25b20ec3e7aafdf948865e06",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "b80f37c11385f217cbab302b52802092a36655fa25b20ec3e7aafdf948865e06",
+          "identical": true
+        },
+        "origin/main": {
+          "sha256_git_bytes": null,
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "data/moves/learnsets.json",
+      "git_blob": "a794ed984db588bce5eef0b08197aee5bdaf4b24",
+      "sha256_git_bytes": "f5e149572b3fbb102811fb3b477b461735280308d0e7a588de00ac843d4c5bc9",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "f5e149572b3fbb102811fb3b477b461735280308d0e7a588de00ac843d4c5bc9",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "f5e149572b3fbb102811fb3b477b461735280308d0e7a588de00ac843d4c5bc9",
+          "identical": true
+        },
+        "origin/main": {
+          "sha256_git_bytes": null,
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "data/moves/moves.json",
+      "git_blob": "bfe11ac44e062a1508f9aed0a31bc2b320ec1871",
+      "sha256_git_bytes": "b67f0eddeef4ccaf0fc1c517d53ce8a6536bd1bd92cdae4c4d91f329cb66d886",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "7de5f30a292daa13f1c89ed644d4152a0aff6e71d48c68baaadf5558289791df",
+          "identical": false
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "7de5f30a292daa13f1c89ed644d4152a0aff6e71d48c68baaadf5558289791df",
+          "identical": false
+        },
+        "origin/main": {
+          "sha256_git_bytes": "02bb6a0bac1826be9a27bb9c4b1fa018ba85e9c142d0cc2b0c19d011c64dfe14",
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "data/moves/tms.json",
+      "git_blob": "e738099fa90220683938d4e4927765b5cfedce3b",
+      "sha256_git_bytes": "c7f55456b4b77833e7cea1305cec9fcf2a7dc90d202a8e64025c92f7092a1dc6",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "c7f55456b4b77833e7cea1305cec9fcf2a7dc90d202a8e64025c92f7092a1dc6",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "c7f55456b4b77833e7cea1305cec9fcf2a7dc90d202a8e64025c92f7092a1dc6",
+          "identical": true
+        },
+        "origin/main": {
+          "sha256_git_bytes": "459973f3d790cea9c6c9d43d9f2433516cffa5f2bae71f4f2bcb68a1e1cf403c",
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "data/schema/character_state.schema.json",
+      "git_blob": "f7292cf4b7fe8840b55cc5e39cb2a38cbb591686",
+      "sha256_git_bytes": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+          "identical": true
+        },
+        "origin/main": {
+          "sha256_git_bytes": "2adaa65032ccf5c3f36cbc1100d960de26e0538043c3ac8dd45ca6ee22821c7c",
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "git_blob": "179cb0bf7579369d93c90f8d156610a05f5f113b",
+      "sha256_git_bytes": "70b7084ec5e45d00d14ca8d9ec9490f21159d6a8872359a4d2a1693d2e59dfdc",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "70b7084ec5e45d00d14ca8d9ec9490f21159d6a8872359a4d2a1693d2e59dfdc",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "528a8d759a81791e1aece68ab299b22a5930932cec6ee258a3859dbf175356a0",
+          "identical": false
+        },
+        "origin/main": {
+          "sha256_git_bytes": "ae55e0a8a9c4f1fc694de559da08cfc1104864f2bb5f4bae522b0c5985ed0879",
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "scripts/save/character_save.gd",
+      "git_blob": "d2cd30df3b5e3ee350264e383a9b688a0bf9a53c",
+      "sha256_git_bytes": "d0d0272ca7c47c28444e114df068e5cd82bdc1cef059c97e7e036d789d2e6c7c",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "d0d0272ca7c47c28444e114df068e5cd82bdc1cef059c97e7e036d789d2e6c7c",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "514f089c017eaf4fe26d4df642e30f759fb94d0b66426905fa2610a721faee92",
+          "identical": false
+        },
+        "origin/main": {
+          "sha256_git_bytes": "b460c691e727306dd2fc4f6d823d3d04c7c2bff3ace85605d31c4c0b86b279a5",
+          "identical": false
+        }
+      }
+    },
+    {
+      "path": "autoload/player_state.gd",
+      "git_blob": "5be5d554a5babb912ce464e3f640709ab1fe44b2",
+      "sha256_git_bytes": "e3be7612f71f0f28ea29a37ae3ddc98913153f4f30983b0b9ea8f8290d1b3b65",
+      "baselines": {
+        "4f4ff1ebdddfd1a4666fc6e802e6fed02c5c491c": {
+          "sha256_git_bytes": "e3be7612f71f0f28ea29a37ae3ddc98913153f4f30983b0b9ea8f8290d1b3b65",
+          "identical": true
+        },
+        "273231a942068b5312b125d8f78a69e269af4913": {
+          "sha256_git_bytes": "d9a4d4cd9ea0073400a1c7d009c12362be7ef4867678772f1c939515bccf5401",
+          "identical": false
+        },
+        "origin/main": {
+          "sha256_git_bytes": "733cbbefe741b38c398af092bbbd667b8fc7e5176976b9f6533666e1729c9d3b",
+          "identical": false
+        }
+      }
+    }
+  ],
+  "shared_serializer_paths": [
+    "scripts/save/save_game.gd",
+    "scripts/save/character_save.gd",
+    "autoload/player_state.gd"
+  ],
+  "unchanged_transitive_readers": [
+    {
+      "path": "scripts/creatures/move_db.gd",
+      "sha256_git_bytes": "9eae060a43a49a550e259bf6f3cbd73bc7c3ddc37e76329580102933cd882b9d",
+      "identical_to_origin_main": true
+    },
+    {
+      "path": "scripts/creatures/tm_db.gd",
+      "sha256_git_bytes": "bd9e61e22555d983010c37e005f86e53685eca1c4ea629d818296c79bdcbadc6",
+      "identical_to_origin_main": true
+    },
+    {
+      "path": "scripts/creatures/creature_species.gd",
+      "sha256_git_bytes": "22be0364b448437e0afc075c2141b709fd6ad1be22dfc85d34435290d30591e3",
+      "identical_to_origin_main": true
+    },
+    {
+      "path": "scripts/creatures/water_species_catalog.gd",
+      "sha256_git_bytes": "b83a8cb37377a3f48715b28c77c1050621a4eb71b7b7f0046e021fc53052259f",
+      "identical_to_origin_main": true
+    },
+    {
+      "path": "scripts/data/redesign_state.gd",
+      "sha256_git_bytes": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed",
+      "identical_to_origin_main": true
+    },
+    {
+      "path": "scripts/combat/combat_math.gd",
+      "sha256_git_bytes": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9",
+      "identical_to_origin_main": true
+    },
+    {
+      "path": "data/creatures/species.json",
+      "sha256_git_bytes": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+      "identical_to_origin_main": true
+    }
+  ]
+}

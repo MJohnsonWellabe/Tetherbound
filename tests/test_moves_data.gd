@@ -89,7 +89,7 @@ func test_every_move_has_a_display_name() -> void:
 func test_every_move_has_a_valid_slot() -> void:
 	for id: Variant in moves.move_ids():
 		var slot: String = moves.slot(str(id))
-		assert_true(slot == "quick" or slot == "charged",
+		assert_true(slot in ["quick", "charged", "utility", "ultimate"],
 			"move '%s' has an unrecognised slot '%s'" % [id, slot])
 
 

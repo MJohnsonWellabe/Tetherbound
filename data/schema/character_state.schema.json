@@ -624,7 +624,18 @@
                 "static_snap",
                 "voltaic_whip",
                 "thunder_break",
-                "stormfall"
+                "stormfall",
+                "snare",
+                "slow_field",
+                "shove",
+                "dash_strike",
+                "veil",
+                "heal_pulse",
+                "bramble_trap",
+                "hearten",
+                "sap",
+                "quake_ring",
+                "fireball"
               ]
             },
             "minItems": 0,
@@ -688,7 +699,18 @@
                   "static_snap",
                   "voltaic_whip",
                   "thunder_break",
-                  "stormfall"
+                  "stormfall",
+                  "snare",
+                  "slow_field",
+                  "shove",
+                  "dash_strike",
+                  "veil",
+                  "heal_pulse",
+                  "bramble_trap",
+                  "hearten",
+                  "sap",
+                  "quake_ring",
+                  "fireball"
                 ]
               },
               "charged": {
@@ -746,7 +768,18 @@
                   "static_snap",
                   "voltaic_whip",
                   "thunder_break",
-                  "stormfall"
+                  "stormfall",
+                  "snare",
+                  "slow_field",
+                  "shove",
+                  "dash_strike",
+                  "veil",
+                  "heal_pulse",
+                  "bramble_trap",
+                  "hearten",
+                  "sap",
+                  "quake_ring",
+                  "fireball"
                 ]
               },
               "utility": {
@@ -804,7 +837,18 @@
                   "static_snap",
                   "voltaic_whip",
                   "thunder_break",
-                  "stormfall"
+                  "stormfall",
+                  "snare",
+                  "slow_field",
+                  "shove",
+                  "dash_strike",
+                  "veil",
+                  "heal_pulse",
+                  "bramble_trap",
+                  "hearten",
+                  "sap",
+                  "quake_ring",
+                  "fireball"
                 ]
               },
               "ultimate": {
@@ -862,7 +906,18 @@
                   "static_snap",
                   "voltaic_whip",
                   "thunder_break",
-                  "stormfall"
+                  "stormfall",
+                  "snare",
+                  "slow_field",
+                  "shove",
+                  "dash_strike",
+                  "veil",
+                  "heal_pulse",
+                  "bramble_trap",
+                  "hearten",
+                  "sap",
+                  "quake_ring",
+                  "fireball"
                 ]
               }
             },
@@ -1864,6 +1919,215 @@
                   "rank"
                 ],
                 "additionalProperties": false
+              },
+              "snare": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "slow_field": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "shove": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "dash_strike": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "veil": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "heal_pulse": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "bramble_trap": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "hearten": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "sap": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "quake_ring": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "fireball": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [],
@@ -1871,6 +2135,825 @@
           },
           "best": {
             "type": "boolean"
+          },
+          "mastery_receipts": {
+            "type": "object",
+            "properties": {
+              "pebble_toss": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "stone_rush": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "bramble_whip": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "warren_charge": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "root_nibble": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "rootquake": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "pack_bite": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "trailblaze_pounce": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "burrow_strike": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "tremor_roll": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "hoofbeat": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "verdant_burst": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "antler_slam": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ripple_jab": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "undertow": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "splash_snap": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "riptide_rush": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "shell_bash": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "tail_splash": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "gale_peck": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "sky_rend": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "talon_dive": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "storm_strike": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "quick_flit": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "night_swoop": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "gust_burst": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "rock_throw": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "stone_spike": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "earth_fist": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "earthshatter": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "aqua_shot": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "tidal_burst": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "riptide_lance": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "leviathan_surge": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "wind_blade": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "aerial_flash": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "cyclone": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "heavenfall": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "shadow_nip": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "gloom_surge": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "spark_bite": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "arc_lash": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ember_bite": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "cinder_burst": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "mind_ripple": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "rift_pulse": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "frost_claw": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "glacier_break": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "static_snap": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "voltaic_whip": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "thunder_break": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "stormfall": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "snare": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "slow_field": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "shove": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "dash_strike": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "veil": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "heal_pulse": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "bramble_trap": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "hearten": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "sap": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "quake_ring": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "fireball": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              }
+            },
+            "additionalProperties": false
+          },
+          "loadout_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "loadout_last_edit": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "edit_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "creature_uid": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "expected_revision": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "quick": {
+                    "type": "string",
+                    "enum": [
+                      "",
+                      "pebble_toss",
+                      "stone_rush",
+                      "bramble_whip",
+                      "warren_charge",
+                      "root_nibble",
+                      "rootquake",
+                      "pack_bite",
+                      "trailblaze_pounce",
+                      "burrow_strike",
+                      "tremor_roll",
+                      "hoofbeat",
+                      "verdant_burst",
+                      "antler_slam",
+                      "ripple_jab",
+                      "undertow",
+                      "splash_snap",
+                      "riptide_rush",
+                      "shell_bash",
+                      "tail_splash",
+                      "gale_peck",
+                      "sky_rend",
+                      "talon_dive",
+                      "storm_strike",
+                      "quick_flit",
+                      "night_swoop",
+                      "gust_burst",
+                      "rock_throw",
+                      "stone_spike",
+                      "earth_fist",
+                      "earthshatter",
+                      "aqua_shot",
+                      "tidal_burst",
+                      "riptide_lance",
+                      "leviathan_surge",
+                      "wind_blade",
+                      "aerial_flash",
+                      "cyclone",
+                      "heavenfall",
+                      "shadow_nip",
+                      "gloom_surge",
+                      "spark_bite",
+                      "arc_lash",
+                      "ember_bite",
+                      "cinder_burst",
+                      "mind_ripple",
+                      "rift_pulse",
+                      "frost_claw",
+                      "glacier_break",
+                      "static_snap",
+                      "voltaic_whip",
+                      "thunder_break",
+                      "stormfall",
+                      "snare",
+                      "slow_field",
+                      "shove",
+                      "dash_strike",
+                      "veil",
+                      "heal_pulse",
+                      "bramble_trap",
+                      "hearten",
+                      "sap",
+                      "quake_ring",
+                      "fireball"
+                    ]
+                  },
+                  "charged": {
+                    "type": "string",
+                    "enum": [
+                      "",
+                      "pebble_toss",
+                      "stone_rush",
+                      "bramble_whip",
+                      "warren_charge",
+                      "root_nibble",
+                      "rootquake",
+                      "pack_bite",
+                      "trailblaze_pounce",
+                      "burrow_strike",
+                      "tremor_roll",
+                      "hoofbeat",
+                      "verdant_burst",
+                      "antler_slam",
+                      "ripple_jab",
+                      "undertow",
+                      "splash_snap",
+                      "riptide_rush",
+                      "shell_bash",
+                      "tail_splash",
+                      "gale_peck",
+                      "sky_rend",
+                      "talon_dive",
+                      "storm_strike",
+                      "quick_flit",
+                      "night_swoop",
+                      "gust_burst",
+                      "rock_throw",
+                      "stone_spike",
+                      "earth_fist",
+                      "earthshatter",
+                      "aqua_shot",
+                      "tidal_burst",
+                      "riptide_lance",
+                      "leviathan_surge",
+                      "wind_blade",
+                      "aerial_flash",
+                      "cyclone",
+                      "heavenfall",
+                      "shadow_nip",
+                      "gloom_surge",
+                      "spark_bite",
+                      "arc_lash",
+                      "ember_bite",
+                      "cinder_burst",
+                      "mind_ripple",
+                      "rift_pulse",
+                      "frost_claw",
+                      "glacier_break",
+                      "static_snap",
+                      "voltaic_whip",
+                      "thunder_break",
+                      "stormfall",
+                      "snare",
+                      "slow_field",
+                      "shove",
+                      "dash_strike",
+                      "veil",
+                      "heal_pulse",
+                      "bramble_trap",
+                      "hearten",
+                      "sap",
+                      "quake_ring",
+                      "fireball"
+                    ]
+                  },
+                  "utility": {
+                    "type": "string",
+                    "enum": [
+                      "",
+                      "pebble_toss",
+                      "stone_rush",
+                      "bramble_whip",
+                      "warren_charge",
+                      "root_nibble",
+                      "rootquake",
+                      "pack_bite",
+                      "trailblaze_pounce",
+                      "burrow_strike",
+                      "tremor_roll",
+                      "hoofbeat",
+                      "verdant_burst",
+                      "antler_slam",
+                      "ripple_jab",
+                      "undertow",
+                      "splash_snap",
+                      "riptide_rush",
+                      "shell_bash",
+                      "tail_splash",
+                      "gale_peck",
+                      "sky_rend",
+                      "talon_dive",
+                      "storm_strike",
+                      "quick_flit",
+                      "night_swoop",
+                      "gust_burst",
+                      "rock_throw",
+                      "stone_spike",
+                      "earth_fist",
+                      "earthshatter",
+                      "aqua_shot",
+                      "tidal_burst",
+                      "riptide_lance",
+                      "leviathan_surge",
+                      "wind_blade",
+                      "aerial_flash",
+                      "cyclone",
+                      "heavenfall",
+                      "shadow_nip",
+                      "gloom_surge",
+                      "spark_bite",
+                      "arc_lash",
+                      "ember_bite",
+                      "cinder_burst",
+                      "mind_ripple",
+                      "rift_pulse",
+                      "frost_claw",
+                      "glacier_break",
+                      "static_snap",
+                      "voltaic_whip",
+                      "thunder_break",
+                      "stormfall",
+                      "snare",
+                      "slow_field",
+                      "shove",
+                      "dash_strike",
+                      "veil",
+                      "heal_pulse",
+                      "bramble_trap",
+                      "hearten",
+                      "sap",
+                      "quake_ring",
+                      "fireball"
+                    ]
+                  }
+                },
+                "required": [
+                  "edit_id",
+                  "creature_uid",
+                  "expected_revision",
+                  "quick",
+                  "charged",
+                  "utility"
+                ],
+                "additionalProperties": false
+              }
+            ]
           }
         },
         "required": [

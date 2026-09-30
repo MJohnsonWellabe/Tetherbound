@@ -389,7 +389,7 @@ func make_creature(species_id: String, nickname: String = "") -> RefCounted:
 ## `character_save.gd` and this call goes with them.
 func save_data() -> Dictionary:
 	var saver: RefCounted = SAVE_GAME.new()
-	return {
+	var data := {
 		"redesign_character": redesign_character.duplicate(true),
 		"character_id": character_id,
 		"display_name": display_name,
@@ -409,10 +409,21 @@ func save_data() -> Dictionary:
 		"realm_maps": map_payloads(),
 		"flags": flags.save_data() if flags != null else {},
 	}
+	var teaching := preload("res://scripts/creatures/teaching.gd")
+	if teaching.party_loadout_errors(data.party,data.redesign_character).is_empty():
+		data.redesign_character = teaching.character_loadout_mirror(data.party,data.redesign_character)
+	return data
 
 
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state.
 func load_data(data: Dictionary) -> void:
+	if not preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(data.get("satchel_escrow", {}), str(data.get("character_id", character_id))).is_empty() \
+			or not preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(data.get("satchel_escrow", {}), str(data.get("character_id", character_id))).is_empty():
+		push_error("Typed portal escrow refused before applying personal state.")
+		return
+	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true).is_empty():
+		push_error("Character move loadout refused before applying personal state.")
+		return
 	var redesign: Variant = data.get("redesign_character", REDESIGN_STATE.defaults("character"))
 	var redesign_errors := REDESIGN_STATE.validate("character", redesign, REDESIGN_STATE.uids(data.get("party", [])))
 	if not redesign_errors.is_empty():
@@ -425,7 +436,7 @@ func load_data(data: Dictionary) -> void:
 	chosen_character = str(data.get("chosen_character", "trainer"))
 	if chosen_character.is_empty():
 		chosen_character = "trainer"
-	loader.call("_array_to_party", data.get("party", []), party)
+	loader.call("_array_to_party", data.get("party", []), party,redesign_character)
 	party.call("restore_tournament_selection", data.get("tournament_selection", []))
 	loader.call("_array_to_inventory", data.get("inventory", []), inventory)
 	if equipment != null:
