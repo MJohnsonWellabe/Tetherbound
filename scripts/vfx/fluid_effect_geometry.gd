@@ -73,11 +73,15 @@ static func _surface_quad(mesh: ImmediateMesh, points: Array, uv: Array) -> void
 	_surface_triangle(mesh,points[0],points[2],points[3],[uv[0],uv[2],uv[3]])
 
 static func _surface_triangle(mesh: ImmediateMesh, a: Vector3,b: Vector3,c: Vector3,uv: Array) -> void:
-	var normal := (b-a).cross(c-a).normalized()
+	# The tube/curl/crystal parameter loops advance around, then along the
+	# surface. Reverse that inward winding so physical light reaches the
+	# exterior; cull-disabled material alone would hide incorrect normals.
+	var normal := (c-a).cross(b-a).normalized()
 	if normal.is_zero_approx(): return
-	var points: Array[Vector3] = [a, b, c]
+	var points: Array[Vector3] = [a, c, b]
+	var uv_order: Array[int] = [0, 2, 1]
 	for i in 3:
 		mesh.surface_set_normal(normal)
-		mesh.surface_set_uv(uv[i])
+		mesh.surface_set_uv(uv[uv_order[i]])
 		mesh.surface_set_color(Color.WHITE)
 		mesh.surface_add_vertex(points[i])
