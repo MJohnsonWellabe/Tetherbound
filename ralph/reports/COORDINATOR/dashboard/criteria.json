@@ -959,12 +959,12 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 57,
+   "pct": 61,
    "counts": {
     "met": 4,
-    "not_started": 3,
     "partial": 0,
-    "in_progress": 0,
+    "in_progress": 1,
+    "not_started": 2,
     "blocked": 0,
     "failing": 0
    },
@@ -995,9 +995,9 @@
     },
     {
      "text": "The M1 opening chain (starter, practice catch, camp, three-bed readiness, three tournament rounds) still completes on the new layout.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Active source only: 1e3ead1b7f; sealed opening v3 patch38b0f9/helper7c0e3b, external routing outputs. Actual M1 r4 native1/354.5 s failed wood gather at the farmhouse wall. Coherent physical routing correction is in independent source review.",
+     "gap": "Earned starter/catch/camp/three-bed readiness/three-round M1 completion; no new native retry until the sealed route gate passes."
     },
     {
      "text": "Host and guest see the same layout, arch states and shrine states after join and reload.",
@@ -1271,12 +1271,12 @@
    "title": "Move loadout: three slots, ultimate, learnsets and mastery",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 0,
+   "pct": 12,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 3,
+    "not_started": 3,
     "blocked": 0,
     "failing": 0
    },
@@ -1289,21 +1289,21 @@
     },
     {
      "text": "Every species has a learnset unlocking moves at levels and breakthroughs; TMs still work under the primary-type rule.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Active source only: f506adb306; tetherbound-tm-knowledge-player-path/outputs/v1, CLI01a0f3ac-1eb5. Learnsets/primary-type TM knowledge and explicit legacy initialization are being coded against the single admitted registry; external helper drafts only.",
+     "gap": "Actual teach/known-move ownership, legacy initialization, consumable debit and durable owner-save/rejoin composition; no draft acceptance."
     },
     {
      "text": "At least ten utility moves exist (dash-strike, heal pulse, trap and others) and every role can equip at least two.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Active source only: f506adb306; production-vitals-r2 ignored caller drafts. Authored utilities and host incoming/heal two-phase callers are being integrated; activation stays closed until durable typed CAS is coherent.",
+     "gap": "Actual utility equip/use, cost/HP refusal and owner-save loss/rejoin proof; pure/parser proof does not establish the live path."
     },
     {
      "text": "Loadouts change at the Altar or a forward camp and persist through save/reload and two-peer rejoin.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Active source only: f506adb306; loadout service/panel and receipt-only owner ACK source. Saved station loadouts are being integrated with one host-admitted roster, exact CAS and prepared personal writes.",
+     "gap": "Real registered station/reach/encounter guard and two-peer save-failure/rejoin reconciliation; remote commit remains closed."
     },
     {
      "text": "Move mastery ranks 1\u20135 rise with use; each rank raises damage and upgrades the move's effect tier; mastery persists.",
@@ -1377,21 +1377,21 @@
    "title": "Move effects library (real pebbles, fireballs, lightning)",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/vfx",
-   "pct": 0,
+   "pct": 4,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 1,
+    "not_started": 5,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Active source only: 8fae061e36. Authored effect family work is active; R17 selected stone18 native checks passed. R14 identity passed while full craft failed; library remains OFF.",
+     "gap": "Complete real bodies/trails/impacts/sounds for the configured archetypes plus current runtime/visual integration; no all-family craft claim."
     },
     {
      "text": "Every move in data/moves/moves.json maps to an archetype with parameters; a test fails on an unmapped move.",
@@ -1432,11 +1432,11 @@
    "lane": "tb/lookdev",
    "pct": 71,
    "counts": {
-    "in_progress": 1,
     "met": 4,
-    "blocked": 1,
     "partial": 0,
+    "in_progress": 1,
     "not_started": 0,
+    "blocked": 1,
     "failing": 0
    },
    "criteria": [
@@ -1461,8 +1461,8 @@
     {
      "text": "A code-blind judge rates each biome's frame matrix as meeting the new bar on High and Medium.",
      "status": "in_progress",
-     "evidence": "ART_DIRECTION \u00a74.1 full-bar target and source-reviewed capture adapters in VISUAL/lookdev/computer-route-candidate.md",
-     "gap": "Complete High/Medium frame matrices and independent code-blind full-bar verdicts remain open."
+     "evidence": "Active source only: main9806bef7bc; exclusive full-bar CLI01a0f3ac-1e5e. New exclusive art/shader/WorldLook source writer is working from current main; Cloudreach Medium/High full visual bar remains FAIL.",
+     "gap": "Fresh High/Medium biome matrices and passing code-blind full-bar verdicts; material/preset/route MET does not satisfy this criterion."
     },
     {
      "text": "Computer captures at 1920\u00d71080 record frame time per preset for a scripted route in each biome.",
@@ -1483,12 +1483,12 @@
    "title": "Type essence and chosen leveling",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 17,
+   "pct": 21,
    "counts": {
     "met": 1,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 1,
+    "not_started": 4,
     "blocked": 0,
     "failing": 0
    },
@@ -1513,9 +1513,9 @@
     },
     {
      "text": "At the Altar the player spends essence to raise a chosen creature's level up to its cap; dual types may use either essence; starters level through their type.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Active source only: 0e89dbb79a. Altar spending UI and detached level/cap/dual-type spend candidates are active; the items-only criterion is already landed.",
+     "gap": "Actual host-admitted essence debit/level grant, cap refusals, atomic owner persistence and ordinary Altar player path."
     },
     {
      "text": "Release payouts and essence spends cannot duplicate through reconnect or reload (two-peer test).",
@@ -1742,12 +1742,12 @@
    "title": "Materials, attuned nodes and essence farming",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 0,
+   "pct": 4,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 1,
+    "not_started": 5,
     "blocked": 0,
     "failing": 0
    },
@@ -1760,9 +1760,9 @@
     },
     {
      "text": "The Forge refines Rootiron, Tidesteel, Skyglass and Stormglass plate.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Active source only: f4176d27c2; Forge actor work in the owned checkout. Manual Forge actor/refining source is being coded; canonical stock/catalog and durable world/personal settlement remain unconnected.",
+     "gap": "Real mounted Forge tap/start/range-cancel transactions for all four refined sets, no duplicate costs/yields and durable owner-save settlement."
     },
     {
      "text": "One or two type-essence nodes per type sit in each biome, mostly off-route, and respawn on a configured timer.",

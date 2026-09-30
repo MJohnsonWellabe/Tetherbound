@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | F16 main. Neutral289 source/parser PASS; units1 red6+hidden aborts,2/3 running; vitals4 PASS, callers OFF. |
-| `tb/hub` | F17, F18 | #0–#3 main109. M1r4 wood-wall FAIL; routev2 SOURCEFAIL/change approach. F18 held. |
+| `tb/foundations` | F16 | F16 main; f56 SOURCE PASS. Full batch red29/13 script errors; four vitals methods PASS, affected repairs pending/OFF. |
+| `tb/hub` | F17, F18 | #0–#3 main; active #4 M1 v3 sealed38b source review, r4 wall FAIL retained. F18 held. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 858b resolver SOURCE PASS/OFF; save compatibility draft. Incoming/heal/loadout authority integration open. |
-| `tb/vfx` | F25, F35 | 9a6 ShadowBolt WIP; R17 selected18 native PASS; R14 blind craft FAIL/identity PASS, OFF. |
-| `tb/lookdev` | F26 | #0/#1/#2/#4 main109. f220 material strict MET/censuses0; Cloud full craft FAIL/#3 and Ally/default #5 open. |
-| `tb/training` | F27–F30, F37 | #0 items main;2229 capXP/Master/chest source, legacy XP unwired; spend/runtime open. |
-| `tb/homestead` | F31–F34 | 510273 OFF greenhouse/Pearl/refining SOURCE PASS; mount guard/durable settlement open. |
+| `tb/combat` | F21–F24 | Active F23#1/#2/#3 f506: TM/utilities/loadouts; host durability/rejoin incomplete, callers closed. |
+| `tb/vfx` | F25, F35 | Active F25#0 8fae; R17 stone18 PASS, R14 craft FAIL/identity PASS; library OFF. |
+| `tb/lookdev` | F26 | #0/#1/#2/#4 main109. Active #3 CLI from9806; Cloud full bar FAIL, #5 owner-gated. |
+| `tb/training` | F27–F30, F37 | #0 main; active F27#3 Altar UI/spend0e89, authority/runtime open. |
+| `tb/homestead` | F31–F34 | Active F32#1 Forge f417; mounted transactions/owner settlement open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
