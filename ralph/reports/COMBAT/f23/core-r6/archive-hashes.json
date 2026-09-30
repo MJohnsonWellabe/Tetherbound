@@ -1,0 +1,30 @@
+{
+  "focused.txt": {
+    "raw_sha256": "fdcebbde03bf6e2d2fd19ceb5ddceaa5590aaa6059906ef284ef5b18a05f5bf3",
+    "git_lf_sha256": "1095c2a065995c48bc15dfd60c9717d3e561ab035a5e8bb09c2c71374bbf0491"
+  },
+  "loadout-parser.txt": {
+    "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+  },
+  "mastery-parser.txt": {
+    "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+  },
+  "receipt.json": {
+    "raw_sha256": "2d40795f2e551a7db4ed9ccf7e455060e0a7182e38c877695dcd2d8fbd6bd304",
+    "git_lf_sha256": "92a6746ba6d3f9c5e0442e12ea2ba4a98b078bb80ea0eab2b35182942246c77d"
+  },
+  "tm-parser.txt": {
+    "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+  },
+  "transaction-parser.txt": {
+    "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "git_lf_sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+  },
+  "transaction.txt": {
+    "raw_sha256": "ba8bcc731c7b8cc17bc7019bc831c441a940766157eccb83436ead1733d84831",
+    "git_lf_sha256": "0d718e331f8af5f70a1bae2757c6f5f0124a8ff9be03b06ae09251a37716e3f1"
+  }
+}

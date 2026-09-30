@@ -1,0 +1,4 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+F23 production transaction: 16 assertions, 0 failed
+ALL CHECKS PASSED: initialized manager rollback/saturation/damage floor

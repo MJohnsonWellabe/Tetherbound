@@ -1,0 +1,113 @@
+{
+  "scope": "Named F23 parsers, nine mastery methods +one new TM staging method, initialized manager/synthetic-body 16 assertion smoke; no world boot/real player/remote admission/rejoin/owner save proof",
+  "runs": [
+    {
+      "source": "8ec26219d968496a320c91828b33295c7f0e33af",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "scripts/world/rest_point.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r6-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 1.172000000020489,
+      "log": "D:\\tetherbound\\combat-f23-core-r6\\loadout-parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "8ec26219d968496a320c91828b33295c7f0e33af",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "tests/test_move_mastery.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r6-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 1.7809999999590218,
+      "log": "D:\\tetherbound\\combat-f23-core-r6\\mastery-parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "8ec26219d968496a320c91828b33295c7f0e33af",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "tests/test_moves.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r6-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 0.5,
+      "log": "D:\\tetherbound\\combat-f23-core-r6\\tm-parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "8ec26219d968496a320c91828b33295c7f0e33af",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--check-only",
+        "--script",
+        "tests/smoke_move_mastery_transaction.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r6-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 1.7810000000754371,
+      "log": "D:\\tetherbound\\combat-f23-core-r6\\transaction-parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "source": "8ec26219d968496a320c91828b33295c7f0e33af",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_move_mastery.gd,test_moves.gd::test_tm_stages_knowledge_without_equipping_or_recrediting_mastery"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r6-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 4.297000000020489,
+      "log": "D:\\tetherbound\\combat-f23-core-r6\\focused.txt",
+      "raw_sha256": "fdcebbde03bf6e2d2fd19ceb5ddceaa5590aaa6059906ef284ef5b18a05f5bf3"
+    },
+    {
+      "source": "8ec26219d968496a320c91828b33295c7f0e33af",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--script",
+        "tests/smoke_move_mastery_transaction.gd"
+      ],
+      "profile": "D:\\tetherbound\\combat-f23-core-r6-home",
+      "native_exit": 0,
+      "invalid_proof": false,
+      "elapsed_seconds": 4.093999999924563,
+      "log": "D:\\tetherbound\\combat-f23-core-r6\\transaction.txt",
+      "raw_sha256": "ba8bcc731c7b8cc17bc7019bc831c441a940766157eccb83436ead1733d84831"
+    }
+  ]
+}
