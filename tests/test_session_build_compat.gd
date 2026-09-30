@@ -21,7 +21,7 @@ func test_identical_fingerprint_is_admitted() -> void:
 func test_wire_protocol_marker_is_pinned() -> void:
 	# Changing this is a deliberate compatibility break: bump it together with
 	# the RPC surface and update this line in the same change.
-	assert_eq(FINGERPRINT.WIRE_PROTOCOL, "tetherbound-invite-v6")
+	assert_eq(FINGERPRINT.WIRE_PROTOCOL, "tetherbound-invite-v7")
 
 
 func test_current_fingerprint_matches_itself_and_names_every_part() -> void:
@@ -42,6 +42,12 @@ func test_missing_or_malformed_fingerprint_is_refused_not_admitted() -> void:
 
 
 func test_each_mismatch_names_what_differs() -> void:
+	var old_peer := _local()
+	old_peer["wire_protocol"] = "tetherbound-invite-v6"
+	var old_verdict := FINGERPRINT.compare(_local(), old_peer)
+	assert_false(bool(old_verdict.ok), "old portable-admission contract cannot join")
+	assert_eq(old_verdict.code, "incompatible_version")
+	assert_true(str(old_verdict.reason).contains("host tetherbound-invite-v7, yours tetherbound-invite-v6"))
 	var theirs := _local()
 	theirs["wire_protocol"] = FINGERPRINT.WIRE_PROTOCOL + "-older"
 	var verdict := FINGERPRINT.compare(_local(), theirs)

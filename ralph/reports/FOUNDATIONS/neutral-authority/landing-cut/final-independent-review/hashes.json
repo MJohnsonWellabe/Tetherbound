@@ -1,0 +1,8 @@
+{
+  "reviewed_head": "6ca56b04d7b14c1976312e39c8cfff1870409469",
+  "files": {
+    "strict-review.txt": "8d6d536e6ff636f67fd00a728397b9a3b2cc58eba3854ad1bc0bd224b9318a7b",
+    "review.json": "72501975ac9c2ce7c24bf874f84caac1aecc1d1a8ac052fb528b9f0e6f64cbd7"
+  },
+  "archive": "Lossless original bytes; final packaging commit changes only these evidence artifacts and the allocated Foundation STATE line, not any of 29 core paths."
+}

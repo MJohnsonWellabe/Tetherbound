@@ -1,0 +1,20 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_save_format.gd::test_a_species_the_catalogue_forgot_keeps_what_the_save_said,test_save_format.gd::test_save_then_load_round_trips_creature_progression_and_moves,test_save_format.gd::test_duplicate_saved_uids_are_reminted_and_invalidate_selection,test_save_format.gd::test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_flags,test_vegetation_human_prompt_height.gd,test_moves_data.gd::test_every_move_has_a_valid_slot,test_item_icons.gd::test_every_item_has_a_non_empty_description,test_chapter_rewards.gd::test_every_tm_in_the_game_can_actually_be_obtained,test_farming.gd::test_farm_json_places_beds_where_r7_6_allows,test_map_baker.gd::test_authored_route_survives_coarse_terrain_sampling: 7 of 670 test files
+  ok    test_chapter_rewards.gd :: test_every_tm_in_the_game_can_actually_be_obtained
+  ok    test_farming.gd :: test_farm_json_places_beds_where_r7_6_allows
+  ok    test_item_icons.gd :: test_every_item_has_a_non_empty_description
+  ok    test_map_baker.gd :: test_authored_route_survives_coarse_terrain_sampling
+  ok    test_moves_data.gd :: test_every_move_has_a_valid_slot
+[save] minted character id 'character-e5f44389dd26b8cb5939b9211de7f32c' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_a_species_the_catalogue_forgot_keeps_what_the_save_said
+[save] minted character id 'character-b9f04747f6d8c9d9a53e522d073ebdf6' for slot 0 (no existing locator)
+  ok    test_save_format.gd :: test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_flags
+  ok    test_save_format.gd :: test_duplicate_saved_uids_are_reminted_and_invalidate_selection
+[save] minted character id 'character-285181aee2eb9ecc53e74c6ada933ab8' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_creature_progression_and_moves
+  ok    test_vegetation_human_prompt_height.gd :: test_exact_failed_baked_tree_spawns_reachable_prompt_without_radius_change
+  ok    test_vegetation_human_prompt_height.gd :: test_measured_large_stone_spawns_a_reachable_human_height_prompt
+  ok    test_vegetation_human_prompt_height.gd :: test_visual_scale_does_not_scale_the_human_interaction_anchor
+
+12 tests, 287 assertions, 0 failed

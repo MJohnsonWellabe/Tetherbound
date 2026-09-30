@@ -1,0 +1,227 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ERROR: Resource file not found: res:// (expected type: unknown)
+   at: _load (core/io/resource_loader.cpp:325)
+ERROR: Error loading resource: ''.
+   at: load (core/core_bind.cpp:82)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+ERROR: Terrain3D#1864:_grab_camera:155: Cannot find the active camera. Set it manually with Terrain3D.set_camera(). Stopping _physics_process()
+   at: push_error (core/variant/variant_utility.cpp:1023)
+stormwood terrain: 29580 route texels painted as 'path' (247 ms)
+stormwood terrain: region 1/108 (-5, 0)
+stormwood terrain: region 2/108 (-4, 0)
+stormwood terrain: region 3/108 (-3, 0)
+stormwood terrain: region 4/108 (-2, 0)
+stormwood terrain: region 5/108 (-1, 0)
+stormwood terrain: region 6/108 (0, 0)
+stormwood terrain: region 7/108 (1, 0)
+stormwood terrain: region 8/108 (2, 0)
+stormwood terrain: region 9/108 (3, 0)
+stormwood terrain: region 10/108 (-5, 1)
+stormwood terrain: region 11/108 (-4, 1)
+stormwood terrain: region 12/108 (-3, 1)
+stormwood terrain: region 13/108 (-2, 1)
+stormwood terrain: region 14/108 (-1, 1)
+stormwood terrain: region 15/108 (0, 1)
+stormwood terrain: region 16/108 (1, 1)
+stormwood terrain: region 17/108 (2, 1)
+stormwood terrain: region 18/108 (3, 1)
+stormwood terrain: region 19/108 (-5, 2)
+stormwood terrain: region 20/108 (-4, 2)
+stormwood terrain: region 21/108 (-3, 2)
+stormwood terrain: region 22/108 (-2, 2)
+stormwood terrain: region 23/108 (-1, 2)
+stormwood terrain: region 24/108 (0, 2)
+stormwood terrain: region 25/108 (1, 2)
+stormwood terrain: region 26/108 (2, 2)
+stormwood terrain: region 27/108 (3, 2)
+stormwood terrain: region 28/108 (-5, 3)
+stormwood terrain: region 29/108 (-4, 3)
+stormwood terrain: region 30/108 (-3, 3)
+stormwood terrain: region 31/108 (-2, 3)
+stormwood terrain: region 32/108 (-1, 3)
+stormwood terrain: region 33/108 (0, 3)
+stormwood terrain: region 34/108 (1, 3)
+stormwood terrain: region 35/108 (2, 3)
+stormwood terrain: region 36/108 (3, 3)
+stormwood terrain: region 37/108 (-5, 4)
+stormwood terrain: region 38/108 (-4, 4)
+stormwood terrain: region 39/108 (-3, 4)
+stormwood terrain: region 40/108 (-2, 4)
+stormwood terrain: region 41/108 (-1, 4)
+stormwood terrain: region 42/108 (0, 4)
+stormwood terrain: region 43/108 (1, 4)
+stormwood terrain: region 44/108 (2, 4)
+stormwood terrain: region 45/108 (3, 4)
+stormwood terrain: region 46/108 (-5, 5)
+stormwood terrain: region 47/108 (-4, 5)
+stormwood terrain: region 48/108 (-3, 5)
+stormwood terrain: region 49/108 (-2, 5)
+stormwood terrain: region 50/108 (-1, 5)
+stormwood terrain: region 51/108 (0, 5)
+stormwood terrain: region 52/108 (1, 5)
+stormwood terrain: region 53/108 (2, 5)
+stormwood terrain: region 54/108 (3, 5)
+stormwood terrain: region 55/108 (-5, 6)
+stormwood terrain: region 56/108 (-4, 6)
+stormwood terrain: region 57/108 (-3, 6)
+stormwood terrain: region 58/108 (-2, 6)
+stormwood terrain: region 59/108 (-1, 6)
+stormwood terrain: region 60/108 (0, 6)
+stormwood terrain: region 61/108 (1, 6)
+stormwood terrain: region 62/108 (2, 6)
+stormwood terrain: region 63/108 (3, 6)
+stormwood terrain: region 64/108 (-5, 7)
+stormwood terrain: region 65/108 (-4, 7)
+stormwood terrain: region 66/108 (-3, 7)
+stormwood terrain: region 67/108 (-2, 7)
+stormwood terrain: region 68/108 (-1, 7)
+stormwood terrain: region 69/108 (0, 7)
+stormwood terrain: region 70/108 (1, 7)
+stormwood terrain: region 71/108 (2, 7)
+stormwood terrain: region 72/108 (3, 7)
+stormwood terrain: region 73/108 (-5, 8)
+stormwood terrain: region 74/108 (-4, 8)
+stormwood terrain: region 75/108 (-3, 8)
+stormwood terrain: region 76/108 (-2, 8)
+stormwood terrain: region 77/108 (-1, 8)
+stormwood terrain: region 78/108 (0, 8)
+stormwood terrain: region 79/108 (1, 8)
+stormwood terrain: region 80/108 (2, 8)
+stormwood terrain: region 81/108 (3, 8)
+stormwood terrain: region 82/108 (-5, 9)
+stormwood terrain: region 83/108 (-4, 9)
+stormwood terrain: region 84/108 (-3, 9)
+stormwood terrain: region 85/108 (-2, 9)
+stormwood terrain: region 86/108 (-1, 9)
+stormwood terrain: region 87/108 (0, 9)
+stormwood terrain: region 88/108 (1, 9)
+stormwood terrain: region 89/108 (2, 9)
+stormwood terrain: region 90/108 (3, 9)
+stormwood terrain: region 91/108 (-5, 10)
+stormwood terrain: region 92/108 (-4, 10)
+stormwood terrain: region 93/108 (-3, 10)
+stormwood terrain: region 94/108 (-2, 10)
+stormwood terrain: region 95/108 (-1, 10)
+stormwood terrain: region 96/108 (0, 10)
+stormwood terrain: region 97/108 (1, 10)
+stormwood terrain: region 98/108 (2, 10)
+stormwood terrain: region 99/108 (3, 10)
+stormwood terrain: region 100/108 (-5, 11)
+stormwood terrain: region 101/108 (-4, 11)
+stormwood terrain: region 102/108 (-3, 11)
+stormwood terrain: region 103/108 (-2, 11)
+stormwood terrain: region 104/108 (-1, 11)
+stormwood terrain: region 105/108 (0, 11)
+stormwood terrain: region 106/108 (1, 11)
+stormwood terrain: region 107/108 (2, 11)
+stormwood terrain: region 108/108 (3, 11)
+Terrain3DRegion#9980:save:226: Writing region (-1, 0) to res://data/terrain/stormwood/terrain3d-01_00.res
+Terrain3DRegion#4368:save:226: Writing region (-1, 1) to res://data/terrain/stormwood/terrain3d-01_01.res
+Terrain3DRegion#8756:save:226: Writing region (-1, 2) to res://data/terrain/stormwood/terrain3d-01_02.res
+Terrain3DRegion#3144:save:226: Writing region (-1, 3) to res://data/terrain/stormwood/terrain3d-01_03.res
+Terrain3DRegion#7532:save:226: Writing region (-1, 4) to res://data/terrain/stormwood/terrain3d-01_04.res
+Terrain3DRegion#1920:save:226: Writing region (-1, 5) to res://data/terrain/stormwood/terrain3d-01_05.res
+Terrain3DRegion#6308:save:226: Writing region (-1, 6) to res://data/terrain/stormwood/terrain3d-01_06.res
+Terrain3DRegion#0696:save:226: Writing region (-1, 7) to res://data/terrain/stormwood/terrain3d-01_07.res
+Terrain3DRegion#5084:save:226: Writing region (-1, 8) to res://data/terrain/stormwood/terrain3d-01_08.res
+Terrain3DRegion#9472:save:226: Writing region (-1, 9) to res://data/terrain/stormwood/terrain3d-01_09.res
+Terrain3DRegion#3860:save:226: Writing region (-1, 10) to res://data/terrain/stormwood/terrain3d-01_10.res
+Terrain3DRegion#8248:save:226: Writing region (-1, 11) to res://data/terrain/stormwood/terrain3d-01_11.res
+Terrain3DRegion#0652:save:226: Writing region (-2, 0) to res://data/terrain/stormwood/terrain3d-02_00.res
+Terrain3DRegion#5040:save:226: Writing region (-2, 1) to res://data/terrain/stormwood/terrain3d-02_01.res
+Terrain3DRegion#9428:save:226: Writing region (-2, 2) to res://data/terrain/stormwood/terrain3d-02_02.res
+Terrain3DRegion#3816:save:226: Writing region (-2, 3) to res://data/terrain/stormwood/terrain3d-02_03.res
+Terrain3DRegion#8204:save:226: Writing region (-2, 4) to res://data/terrain/stormwood/terrain3d-02_04.res
+Terrain3DRegion#2592:save:226: Writing region (-2, 5) to res://data/terrain/stormwood/terrain3d-02_05.res
+Terrain3DRegion#6980:save:226: Writing region (-2, 6) to res://data/terrain/stormwood/terrain3d-02_06.res
+Terrain3DRegion#1368:save:226: Writing region (-2, 7) to res://data/terrain/stormwood/terrain3d-02_07.res
+Terrain3DRegion#5756:save:226: Writing region (-2, 8) to res://data/terrain/stormwood/terrain3d-02_08.res
+Terrain3DRegion#0144:save:226: Writing region (-2, 9) to res://data/terrain/stormwood/terrain3d-02_09.res
+Terrain3DRegion#4532:save:226: Writing region (-2, 10) to res://data/terrain/stormwood/terrain3d-02_10.res
+Terrain3DRegion#8920:save:226: Writing region (-2, 11) to res://data/terrain/stormwood/terrain3d-02_11.res
+Terrain3DRegion#1324:save:226: Writing region (-3, 0) to res://data/terrain/stormwood/terrain3d-03_00.res
+Terrain3DRegion#5712:save:226: Writing region (-3, 1) to res://data/terrain/stormwood/terrain3d-03_01.res
+Terrain3DRegion#0100:save:226: Writing region (-3, 2) to res://data/terrain/stormwood/terrain3d-03_02.res
+Terrain3DRegion#4488:save:226: Writing region (-3, 3) to res://data/terrain/stormwood/terrain3d-03_03.res
+Terrain3DRegion#8876:save:226: Writing region (-3, 4) to res://data/terrain/stormwood/terrain3d-03_04.res
+Terrain3DRegion#3264:save:226: Writing region (-3, 5) to res://data/terrain/stormwood/terrain3d-03_05.res
+Terrain3DRegion#7652:save:226: Writing region (-3, 6) to res://data/terrain/stormwood/terrain3d-03_06.res
+Terrain3DRegion#2040:save:226: Writing region (-3, 7) to res://data/terrain/stormwood/terrain3d-03_07.res
+Terrain3DRegion#6428:save:226: Writing region (-3, 8) to res://data/terrain/stormwood/terrain3d-03_08.res
+Terrain3DRegion#0816:save:226: Writing region (-3, 9) to res://data/terrain/stormwood/terrain3d-03_09.res
+Terrain3DRegion#5204:save:226: Writing region (-3, 10) to res://data/terrain/stormwood/terrain3d-03_10.res
+Terrain3DRegion#9592:save:226: Writing region (-3, 11) to res://data/terrain/stormwood/terrain3d-03_11.res
+Terrain3DRegion#2424:save:226: Writing region (-4, 0) to res://data/terrain/stormwood/terrain3d-04_00.res
+Terrain3DRegion#6384:save:226: Writing region (-4, 1) to res://data/terrain/stormwood/terrain3d-04_01.res
+Terrain3DRegion#0772:save:226: Writing region (-4, 2) to res://data/terrain/stormwood/terrain3d-04_02.res
+Terrain3DRegion#5160:save:226: Writing region (-4, 3) to res://data/terrain/stormwood/terrain3d-04_03.res
+Terrain3DRegion#9548:save:226: Writing region (-4, 4) to res://data/terrain/stormwood/terrain3d-04_04.res
+Terrain3DRegion#3936:save:226: Writing region (-4, 5) to res://data/terrain/stormwood/terrain3d-04_05.res
+Terrain3DRegion#8324:save:226: Writing region (-4, 6) to res://data/terrain/stormwood/terrain3d-04_06.res
+Terrain3DRegion#2712:save:226: Writing region (-4, 7) to res://data/terrain/stormwood/terrain3d-04_07.res
+Terrain3DRegion#7100:save:226: Writing region (-4, 8) to res://data/terrain/stormwood/terrain3d-04_08.res
+Terrain3DRegion#1488:save:226: Writing region (-4, 9) to res://data/terrain/stormwood/terrain3d-04_09.res
+Terrain3DRegion#5876:save:226: Writing region (-4, 10) to res://data/terrain/stormwood/terrain3d-04_10.res
+Terrain3DRegion#0264:save:226: Writing region (-4, 11) to res://data/terrain/stormwood/terrain3d-04_11.res
+Terrain3DRegion#8101:save:226: Writing region (-5, 0) to res://data/terrain/stormwood/terrain3d-05_00.res
+Terrain3DRegion#7196:save:226: Writing region (-5, 1) to res://data/terrain/stormwood/terrain3d-05_01.res
+Terrain3DRegion#1584:save:226: Writing region (-5, 2) to res://data/terrain/stormwood/terrain3d-05_02.res
+Terrain3DRegion#5972:save:226: Writing region (-5, 3) to res://data/terrain/stormwood/terrain3d-05_03.res
+Terrain3DRegion#0360:save:226: Writing region (-5, 4) to res://data/terrain/stormwood/terrain3d-05_04.res
+Terrain3DRegion#4748:save:226: Writing region (-5, 5) to res://data/terrain/stormwood/terrain3d-05_05.res
+Terrain3DRegion#9136:save:226: Writing region (-5, 6) to res://data/terrain/stormwood/terrain3d-05_06.res
+Terrain3DRegion#3524:save:226: Writing region (-5, 7) to res://data/terrain/stormwood/terrain3d-05_07.res
+Terrain3DRegion#7912:save:226: Writing region (-5, 8) to res://data/terrain/stormwood/terrain3d-05_08.res
+Terrain3DRegion#2300:save:226: Writing region (-5, 9) to res://data/terrain/stormwood/terrain3d-05_09.res
+Terrain3DRegion#6688:save:226: Writing region (-5, 10) to res://data/terrain/stormwood/terrain3d-05_10.res
+Terrain3DRegion#1076:save:226: Writing region (-5, 11) to res://data/terrain/stormwood/terrain3d-05_11.res
+Terrain3DRegion#9235:save:226: Writing region (0, 0) to res://data/terrain/stormwood/terrain3d_00_00.res
+Terrain3DRegion#3634:save:226: Writing region (0, 1) to res://data/terrain/stormwood/terrain3d_00_01.res
+Terrain3DRegion#8033:save:226: Writing region (0, 2) to res://data/terrain/stormwood/terrain3d_00_02.res
+Terrain3DRegion#2410:save:226: Writing region (0, 3) to res://data/terrain/stormwood/terrain3d_00_03.res
+Terrain3DRegion#6809:save:226: Writing region (0, 4) to res://data/terrain/stormwood/terrain3d_00_04.res
+Terrain3DRegion#1205:save:226: Writing region (0, 5) to res://data/terrain/stormwood/terrain3d_00_05.res
+Terrain3DRegion#5624:save:226: Writing region (0, 6) to res://data/terrain/stormwood/terrain3d_00_06.res
+Terrain3DRegion#0024:save:226: Writing region (0, 7) to res://data/terrain/stormwood/terrain3d_00_07.res
+Terrain3DRegion#4412:save:226: Writing region (0, 8) to res://data/terrain/stormwood/terrain3d_00_08.res
+Terrain3DRegion#8800:save:226: Writing region (0, 9) to res://data/terrain/stormwood/terrain3d_00_09.res
+Terrain3DRegion#3188:save:226: Writing region (0, 10) to res://data/terrain/stormwood/terrain3d_00_10.res
+Terrain3DRegion#7576:save:226: Writing region (0, 11) to res://data/terrain/stormwood/terrain3d_00_11.res
+Terrain3DRegion#8924:save:226: Writing region (1, 0) to res://data/terrain/stormwood/terrain3d_01_00.res
+Terrain3DRegion#3312:save:226: Writing region (1, 1) to res://data/terrain/stormwood/terrain3d_01_01.res
+Terrain3DRegion#7700:save:226: Writing region (1, 2) to res://data/terrain/stormwood/terrain3d_01_02.res
+Terrain3DRegion#2088:save:226: Writing region (1, 3) to res://data/terrain/stormwood/terrain3d_01_03.res
+Terrain3DRegion#6476:save:226: Writing region (1, 4) to res://data/terrain/stormwood/terrain3d_01_04.res
+Terrain3DRegion#0864:save:226: Writing region (1, 5) to res://data/terrain/stormwood/terrain3d_01_05.res
+Terrain3DRegion#5252:save:226: Writing region (1, 6) to res://data/terrain/stormwood/terrain3d_01_06.res
+Terrain3DRegion#9640:save:226: Writing region (1, 7) to res://data/terrain/stormwood/terrain3d_01_07.res
+Terrain3DRegion#4028:save:226: Writing region (1, 8) to res://data/terrain/stormwood/terrain3d_01_08.res
+Terrain3DRegion#8416:save:226: Writing region (1, 9) to res://data/terrain/stormwood/terrain3d_01_09.res
+Terrain3DRegion#2804:save:226: Writing region (1, 10) to res://data/terrain/stormwood/terrain3d_01_10.res
+Terrain3DRegion#7192:save:226: Writing region (1, 11) to res://data/terrain/stormwood/terrain3d_01_11.res
+Terrain3DRegion#8348:save:226: Writing region (2, 0) to res://data/terrain/stormwood/terrain3d_02_00.res
+Terrain3DRegion#2736:save:226: Writing region (2, 1) to res://data/terrain/stormwood/terrain3d_02_01.res
+Terrain3DRegion#7124:save:226: Writing region (2, 2) to res://data/terrain/stormwood/terrain3d_02_02.res
+Terrain3DRegion#1512:save:226: Writing region (2, 3) to res://data/terrain/stormwood/terrain3d_02_03.res
+Terrain3DRegion#5900:save:226: Writing region (2, 4) to res://data/terrain/stormwood/terrain3d_02_04.res
+Terrain3DRegion#0288:save:226: Writing region (2, 5) to res://data/terrain/stormwood/terrain3d_02_05.res
+Terrain3DRegion#4676:save:226: Writing region (2, 6) to res://data/terrain/stormwood/terrain3d_02_06.res
+Terrain3DRegion#9064:save:226: Writing region (2, 7) to res://data/terrain/stormwood/terrain3d_02_07.res
+Terrain3DRegion#3452:save:226: Writing region (2, 8) to res://data/terrain/stormwood/terrain3d_02_08.res
+Terrain3DRegion#7840:save:226: Writing region (2, 9) to res://data/terrain/stormwood/terrain3d_02_09.res
+Terrain3DRegion#2228:save:226: Writing region (2, 10) to res://data/terrain/stormwood/terrain3d_02_10.res
+Terrain3DRegion#6616:save:226: Writing region (2, 11) to res://data/terrain/stormwood/terrain3d_02_11.res
+Terrain3DRegion#7772:save:226: Writing region (3, 0) to res://data/terrain/stormwood/terrain3d_03_00.res
+Terrain3DRegion#2160:save:226: Writing region (3, 1) to res://data/terrain/stormwood/terrain3d_03_01.res
+Terrain3DRegion#6548:save:226: Writing region (3, 2) to res://data/terrain/stormwood/terrain3d_03_02.res
+Terrain3DRegion#0936:save:226: Writing region (3, 3) to res://data/terrain/stormwood/terrain3d_03_03.res
+Terrain3DRegion#5324:save:226: Writing region (3, 4) to res://data/terrain/stormwood/terrain3d_03_04.res
+Terrain3DRegion#9712:save:226: Writing region (3, 5) to res://data/terrain/stormwood/terrain3d_03_05.res
+Terrain3DRegion#4100:save:226: Writing region (3, 6) to res://data/terrain/stormwood/terrain3d_03_06.res
+Terrain3DRegion#8488:save:226: Writing region (3, 7) to res://data/terrain/stormwood/terrain3d_03_07.res
+Terrain3DRegion#2876:save:226: Writing region (3, 8) to res://data/terrain/stormwood/terrain3d_03_08.res
+Terrain3DRegion#7264:save:226: Writing region (3, 9) to res://data/terrain/stormwood/terrain3d_03_09.res
+Terrain3DRegion#1652:save:226: Writing region (3, 10) to res://data/terrain/stormwood/terrain3d_03_10.res
+Terrain3DRegion#6040:save:226: Writing region (3, 11) to res://data/terrain/stormwood/terrain3d_03_11.res

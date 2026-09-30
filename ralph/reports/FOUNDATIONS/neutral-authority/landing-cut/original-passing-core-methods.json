@@ -1,0 +1,990 @@
+{
+  "source": "289efe0d8d76d9c27e2efecb465e47246b32f454",
+  "count": 173,
+  "method_selection": "Explicit session/admission/split/save/schema/player/world/vitals existing test files; no failed methods or duplicate-UID false-ok reused",
+  "methods": [
+    {
+      "method": "test_actor_vitals_authority.gd :: test_lost_ack_cumulative_recovery_and_latest_ack_reject_foreign_healthy_reseed",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_actor_vitals_authority.gd"
+    },
+    {
+      "method": "test_actor_vitals_authority.gd :: test_owner_write_loss_keeps_accepted_hp_and_requires_real_retry_write",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_actor_vitals_authority.gd"
+    },
+    {
+      "method": "test_actor_vitals_authority.gd :: test_prepared_writer_never_flushes_a_reentrant_replacement_fallback",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_actor_vitals_authority.gd"
+    },
+    {
+      "method": "test_actor_vitals_authority.gd :: test_private_stage_world_failure_restores_hp_revision_and_replay_history",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_actor_vitals_authority.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_corrupt_clock_falls_back_to_no_carried_hour",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_fresh_slot_has_nothing_to_load",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_half_fought_bracket_survives_a_save",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_loaded_creature_can_level_up_without_its_stats_collapsing",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_loaded_creature_survives_its_next_level_up",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_pre_clock_save_loads_with_no_carried_hour_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_pre_condition_save_loads_at_the_configured_start_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_pre_gamef4_save_migrates_base_stats_from_species_json_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_save_predating_rolled_populations_loads_the_authored_world_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_save_with_no_base_stats_reconstructs_them_from_species",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_version_newer_than_this_build_is_refused",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_a_won_tournament_cannot_be_reloaded_into_a_second_payout",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_completed_cloudreach_legacy_water_rewards_retarget_once_on_flat_load",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_condition_survives_a_save",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_flags",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_every_readable_save_version_actually_loads",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_has_slot_reflects_what_was_actually_written",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_load_on_a_corrupt_file_returns_false_and_leaves_the_game_untouched",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_load_on_a_missing_slot_returns_false_and_leaves_the_game_untouched",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_malformed_player_pose_falls_back_as_one_unit",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_party_codec_preserves_uid_and_ordered_tournament_selection",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_and_load_reject_an_out_of_range_slot",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_repairs_missing_base_stats_from_species_json_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_replaces_whatever_party_the_loading_game_already_had",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_a_non_shiny_creature_too",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_a_placed_buildings_rotation",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_a_placed_buildings_state_payload",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_base_stats_and_survives_a_level_up",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_building_yaw",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_farm_plots",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_felled_vegetation",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_individuality_and_traits",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_inventory_slot_positions",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_map_discovery",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_permanently_harvested_vegetation",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_placed_buildings",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_player_pose",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_progression_flags",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_realm_and_active_heart",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_satiety_through_live_vitals",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_satiety_through_the_fallback_field",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_shiny",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_the_day_counter",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_the_party",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_the_selected_character_body",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_the_world_seed",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_save_then_load_round_trips_tool_durability",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_slot_count_is_between_three_and_five",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_slot_info_reports_day_and_party_size_without_touching_the_caller",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_slots_are_independent_of_each_other",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_the_board_reads_the_same_bracket_after_a_reload",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_the_hour_survives_a_save_and_reload",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_v10_save_migrates_with_nothing_felled_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_v26_migration_keeps_progression_and_defaults_unregistered",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_v2_save_migrates_with_a_fresh_progression_store_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_v4_save_migrates_with_average_individuality_and_no_traits_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_v5_save_migrates_with_shiny_false_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_v9_save_migrates_with_nothing_harvested_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_version_11_save_loads_without_inventing_a_player_pose_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_save_format.gd :: test_version_twenty_five_pending_escrow_migrates_without_inventing_provenance_refused_by_redesign",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_save_format.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_durable_schema_rejects_unknown_fields_ids_and_unowned_uid",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_eight_slots_have_exactly_four_live_and_four_sealed",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_every_authored_contract_validates",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_foreign_unknown_ids_and_wrong_slot_pairs_refuse",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_missing_defaults_or_schema_refuses_with_structured_failure",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_missing_unknown_and_duplicate_ids_fail_in_every_table",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_numeric_enum_accepts_runtime_integer_without_string_or_boolean_coercion",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_registry_declares_scope_transactions_and_every_schema_field",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_schema_redesign.gd :: test_station_attachment_slot_contract_refuses_wrong_slots_through_loader",
+      "original_log": "unit-shard-1.txt",
+      "test_source": "tests/test_schema_redesign.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_a_fresh_player_starts_in_the_meadows_with_an_empty_bar",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_alpha_pins_ride_inside_the_realm_map_rather_than_at_the_top_level",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_assign_refuses_an_out_of_range_slot_and_a_refused_kind",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_assigning_an_item_already_on_the_bar_moves_it_rather_than_copying_it",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_autofill_takes_usable_things_in_bag_order_and_skips_materials",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_load_data_of_an_empty_dictionary_is_a_working_fresh_player",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_load_data_survives_garbage_in_every_field",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_make_creature_builds_from_species_json_and_refuses_an_unknown_species",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_map_for_builds_one_map_per_realm_and_reuses_it",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_map_for_refuses_a_realm_with_no_implemented_map",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_map_returns_the_map_of_the_realm_this_player_is_standing_in",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_old_player_payload_loads_unregistered_with_fresh_valid_creature_ids",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_ordered_tournament_selection_round_trips_with_creature_identity",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_reset_empties_the_player_but_keeps_the_flag_store_and_the_feed",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_save_data_carries_no_world_key",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_save_data_carries_the_player_half_and_redesign_carrier",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_save_then_load_round_trips_everything",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_skills_are_personal_survive_save_and_reset_without_historical_xp",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_the_bar_holds_tools_consumables_and_food_and_refuses_raw_materials",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_the_two_realm_maps_describe_two_differently_shaped_worlds",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_player_state.gd :: test_two_players_hold_two_separate_flag_stores_and_two_separate_feeds",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_player_state.gd"
+    },
+    {
+      "method": "test_session_build_compat.gd :: test_content_hash_is_order_independent_and_sensitive_to_bytes_and_paths",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_build_compat.gd"
+    },
+    {
+      "method": "test_session_build_compat.gd :: test_current_fingerprint_matches_itself_and_names_every_part",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_build_compat.gd"
+    },
+    {
+      "method": "test_session_build_compat.gd :: test_each_mismatch_names_what_differs",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_build_compat.gd"
+    },
+    {
+      "method": "test_session_build_compat.gd :: test_identical_fingerprint_is_admitted",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_build_compat.gd"
+    },
+    {
+      "method": "test_session_build_compat.gd :: test_missing_or_malformed_fingerprint_is_refused_not_admitted",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_build_compat.gd"
+    },
+    {
+      "method": "test_session_build_compat.gd :: test_token_is_the_short_display_form",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_build_compat.gd"
+    },
+    {
+      "method": "test_session_build_compat.gd :: test_wire_protocol_marker_is_pinned",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_build_compat.gd"
+    },
+    {
+      "method": "test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_snapshot.gd"
+    },
+    {
+      "method": "test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_snapshot.gd"
+    },
+    {
+      "method": "test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_snapshot.gd"
+    },
+    {
+      "method": "test_session_snapshot.gd :: test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_snapshot.gd"
+    },
+    {
+      "method": "test_session_snapshot.gd :: test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_snapshot.gd"
+    },
+    {
+      "method": "test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_snapshot.gd"
+    },
+    {
+      "method": "test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one",
+      "original_log": "unit-shard-2.txt",
+      "test_source": "tests/test_session_snapshot.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_a_client_save_writes_no_world_file",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_a_corrupt_world_file_reads_as_nothing_to_load",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_a_host_save_writes_a_world_file_at_the_partitioned_path",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_a_missing_world_reads_as_nothing_to_load",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_a_newer_than_this_build_world_file_refuses",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_a_scratch_save_writes_no_world_no_character_and_renames_nobody",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_only_world_scope_flags_land_in_the_world_file",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_resaving_a_world_keeps_its_created_at_and_moves_last_played",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_save_world_refuses_on_a_client_and_refuses_an_empty_id",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_split_world_state_marker_prevents_a_second_water_retarget",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_split_world_state_preserves_later_legitimate_water_reward",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_split_world_state_repairs_only_legacy_cloudreach_water_entitlements",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_the_real_saver_writes_worlds_under_the_d100_directory",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_the_slot_owns_the_world_id_so_a_new_game_does_not_overwrite_the_old_world",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_the_state_payload_loads_straight_into_a_world_state",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_the_world_file_carries_no_character_key",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_the_world_file_carries_the_world_half_and_its_envelope",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_the_world_file_values_are_the_ones_the_game_held",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_world_save_format.gd :: test_version_one_world_refuses_without_changing_reward_journal",
+      "original_log": "unit-shard-3.txt",
+      "test_source": "tests/test_world_save_format.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_backup_rename_refusal_leaves_canonical_untouched",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_canonical_wins_over_leftover_previous",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_character_half_failure_rolls_slot_and_world_back_to_same_generation",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_commit_refusal_rolls_back_original_bytes",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_corrupt_canonical_falls_back_for_slot_listing_loading_and_existence",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_corrupt_canonical_falls_back_for_world_and_multiplayer_character_readers",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_corrupt_canonical_without_valid_backup_is_not_listed_as_a_save",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_create_and_replace_unicode_document",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_current_corrupt_canonical_recovers_and_loads_without_rewriting_files",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_delete_removes_canonical_and_backup_for_every_save_store",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_failed_commit_over_corrupt_canonical_preserves_valid_previous",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_flush_failure_preserves_previous",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_interrupted_replacement_reloads_through_all_save_readers",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_pre_redesign_slot_without_previous_refuses_without_mutation",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_real_directory_collision_refuses_commit_without_deleting_directory",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_rollback_refusal_retains_readable_previous_and_next_write_recovers",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_short_first_write_does_not_publish_partial_save",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_short_write_preserves_previous_and_reports_failure",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_atomic_save_file.gd :: test_successful_split_commit_finishes_all_retained_backups",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_atomic_save_file.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_a_flag_survives_the_split_on_whichever_side_it_belongs",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_an_empty_dictionary_partitions_and_merges_without_a_crash",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_every_v22_key_is_owned_by_exactly_one_half",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_garbage_in_the_progression_payload_does_not_abort_the_partition",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_partitioning_and_merging_a_v22_dictionary_is_lossless",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_the_derived_keys_come_back_from_the_realm_maps_and_not_from_thin_air",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_the_round_trip_holds_for_a_trainer_standing_in_the_other_realm",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_the_two_halves_share_no_state_key",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_split_key_coverage_equals_v22.gd :: test_the_world_half_includes_environment_and_durable_journals",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_split_key_coverage_equals_v22.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_a_fresh_world_is_day_one_with_an_unset_clock_and_nothing_recorded",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_a_nan_or_negative_clock_becomes_the_unset_sentinel",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_advance_day_returns_the_new_day_and_moves_the_revision",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_each_registration_returns_its_own_index",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_farm_plot_at_grows_the_array_on_demand_and_refuses_a_negative_index",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_load_data_of_an_empty_dictionary_is_a_working_fresh_world",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_load_data_survives_garbage_in_every_field",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_register_building_stamps_the_realm_it_was_told",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_register_death_satchel_defaults_to_no_owner_and_the_realm_it_was_given",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_register_death_satchel_records_an_owner_and_a_realm_when_given_them",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_reset_empties_the_world_but_keeps_the_flag_store_object",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_save_data_carries_no_player_key",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_save_data_carries_the_world_half_and_redesign_carrier",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_save_data_hands_back_copies_not_the_live_arrays",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    },
+    {
+      "method": "test_world_state.gd :: test_save_then_load_round_trips_everything",
+      "original_log": "unit-shard-4.txt",
+      "test_source": "tests/test_world_state.gd"
+    }
+  ],
+  "test_source_audit": {
+    "tests/test_actor_vitals_authority.gd": {
+      "path": "tests/test_actor_vitals_authority.gd",
+      "cut_git_sha256": "084afd03fba21264b16220c5bc86b79e156d21bcf98cd9149a5ce13c22a8510d",
+      "canonical_lf_sha256": "084afd03fba21264b16220c5bc86b79e156d21bcf98cd9149a5ce13c22a8510d",
+      "equals_main": false,
+      "main_absent": true,
+      "batch289_canonical_lf_sha256": "084afd03fba21264b16220c5bc86b79e156d21bcf98cd9149a5ce13c22a8510d",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "084afd03fba21264b16220c5bc86b79e156d21bcf98cd9149a5ce13c22a8510d",
+      "equals_scoped05d": true
+    },
+    "tests/test_save_format.gd": {
+      "path": "tests/test_save_format.gd",
+      "cut_git_sha256": "43e5d9fdb2c19a327a75f9398248f4e60551be2e960757bf2c4611d31abf40d8",
+      "canonical_lf_sha256": "43e5d9fdb2c19a327a75f9398248f4e60551be2e960757bf2c4611d31abf40d8",
+      "main_canonical_lf_sha256": "43e5d9fdb2c19a327a75f9398248f4e60551be2e960757bf2c4611d31abf40d8",
+      "equals_main": true,
+      "batch289_canonical_lf_sha256": "43e5d9fdb2c19a327a75f9398248f4e60551be2e960757bf2c4611d31abf40d8",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "43e5d9fdb2c19a327a75f9398248f4e60551be2e960757bf2c4611d31abf40d8",
+      "equals_scoped05d": true
+    },
+    "tests/test_schema_redesign.gd": {
+      "path": "tests/test_schema_redesign.gd",
+      "cut_git_sha256": "92f431dfde3808a67a44e5b446ed729f77cd19e881aa7fa7aaa40d66f48d1642",
+      "canonical_lf_sha256": "92f431dfde3808a67a44e5b446ed729f77cd19e881aa7fa7aaa40d66f48d1642",
+      "main_canonical_lf_sha256": "92f431dfde3808a67a44e5b446ed729f77cd19e881aa7fa7aaa40d66f48d1642",
+      "equals_main": true,
+      "batch289_canonical_lf_sha256": "92f431dfde3808a67a44e5b446ed729f77cd19e881aa7fa7aaa40d66f48d1642",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "92f431dfde3808a67a44e5b446ed729f77cd19e881aa7fa7aaa40d66f48d1642",
+      "equals_scoped05d": true
+    },
+    "tests/test_player_state.gd": {
+      "path": "tests/test_player_state.gd",
+      "cut_git_sha256": "d9206829d0b2c455919984cbc5b255a7a3a1bcb26a691d103f5462dd53623cdd",
+      "canonical_lf_sha256": "d9206829d0b2c455919984cbc5b255a7a3a1bcb26a691d103f5462dd53623cdd",
+      "main_canonical_lf_sha256": "d9206829d0b2c455919984cbc5b255a7a3a1bcb26a691d103f5462dd53623cdd",
+      "equals_main": true,
+      "batch289_canonical_lf_sha256": "d9206829d0b2c455919984cbc5b255a7a3a1bcb26a691d103f5462dd53623cdd",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "d9206829d0b2c455919984cbc5b255a7a3a1bcb26a691d103f5462dd53623cdd",
+      "equals_scoped05d": true
+    },
+    "tests/test_session_build_compat.gd": {
+      "path": "tests/test_session_build_compat.gd",
+      "cut_git_sha256": "7ed06f9da398d37411782e5de7c2b1f72c9a717efb2393194fe568918c99767f",
+      "canonical_lf_sha256": "7ed06f9da398d37411782e5de7c2b1f72c9a717efb2393194fe568918c99767f",
+      "main_canonical_lf_sha256": "3fc894f056e874c6c5f64d41e8ccdd6150f71f0127cc6e8746fd852493874fbc",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "7ed06f9da398d37411782e5de7c2b1f72c9a717efb2393194fe568918c99767f",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "7ed06f9da398d37411782e5de7c2b1f72c9a717efb2393194fe568918c99767f",
+      "equals_scoped05d": true
+    },
+    "tests/test_session_snapshot.gd": {
+      "path": "tests/test_session_snapshot.gd",
+      "cut_git_sha256": "52d8299aa7c188934ef3086efb1f54fe7506a738c98126b35584092ae6fcf731",
+      "canonical_lf_sha256": "52d8299aa7c188934ef3086efb1f54fe7506a738c98126b35584092ae6fcf731",
+      "main_canonical_lf_sha256": "7cb9bb35d0abc77e921ae6b037eadb270f2f519181d54d80bf563f790a556210",
+      "equals_main": false,
+      "batch289_canonical_lf_sha256": "52d8299aa7c188934ef3086efb1f54fe7506a738c98126b35584092ae6fcf731",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "52d8299aa7c188934ef3086efb1f54fe7506a738c98126b35584092ae6fcf731",
+      "equals_scoped05d": true
+    },
+    "tests/test_world_save_format.gd": {
+      "path": "tests/test_world_save_format.gd",
+      "cut_git_sha256": "022b36d8cf3de1d76590f29a9adaf3e76f3be401655006085b70a46abf42ff8d",
+      "canonical_lf_sha256": "022b36d8cf3de1d76590f29a9adaf3e76f3be401655006085b70a46abf42ff8d",
+      "main_canonical_lf_sha256": "022b36d8cf3de1d76590f29a9adaf3e76f3be401655006085b70a46abf42ff8d",
+      "equals_main": true,
+      "batch289_canonical_lf_sha256": "022b36d8cf3de1d76590f29a9adaf3e76f3be401655006085b70a46abf42ff8d",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "022b36d8cf3de1d76590f29a9adaf3e76f3be401655006085b70a46abf42ff8d",
+      "equals_scoped05d": true
+    },
+    "tests/test_atomic_save_file.gd": {
+      "path": "tests/test_atomic_save_file.gd",
+      "cut_git_sha256": "9c22a78792ebe154294ed8e2eb452b219f386750c1408c180a6a4918939ed4b6",
+      "canonical_lf_sha256": "9c22a78792ebe154294ed8e2eb452b219f386750c1408c180a6a4918939ed4b6",
+      "main_canonical_lf_sha256": "9c22a78792ebe154294ed8e2eb452b219f386750c1408c180a6a4918939ed4b6",
+      "equals_main": true,
+      "batch289_canonical_lf_sha256": "9c22a78792ebe154294ed8e2eb452b219f386750c1408c180a6a4918939ed4b6",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "9c22a78792ebe154294ed8e2eb452b219f386750c1408c180a6a4918939ed4b6",
+      "equals_scoped05d": true
+    },
+    "tests/test_split_key_coverage_equals_v22.gd": {
+      "path": "tests/test_split_key_coverage_equals_v22.gd",
+      "cut_git_sha256": "5d1af380a9ecf2fac6df14992a35042cda9bc2b03c9dd2895ff693d421b7abbe",
+      "canonical_lf_sha256": "5d1af380a9ecf2fac6df14992a35042cda9bc2b03c9dd2895ff693d421b7abbe",
+      "main_canonical_lf_sha256": "5d1af380a9ecf2fac6df14992a35042cda9bc2b03c9dd2895ff693d421b7abbe",
+      "equals_main": true,
+      "batch289_canonical_lf_sha256": "5d1af380a9ecf2fac6df14992a35042cda9bc2b03c9dd2895ff693d421b7abbe",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "5d1af380a9ecf2fac6df14992a35042cda9bc2b03c9dd2895ff693d421b7abbe",
+      "equals_scoped05d": true
+    },
+    "tests/test_world_state.gd": {
+      "path": "tests/test_world_state.gd",
+      "cut_git_sha256": "79cebd3543e3fa8cccc9ad05693997212e7e38e0b7c532fc7e6075a049304315",
+      "canonical_lf_sha256": "79cebd3543e3fa8cccc9ad05693997212e7e38e0b7c532fc7e6075a049304315",
+      "main_canonical_lf_sha256": "79cebd3543e3fa8cccc9ad05693997212e7e38e0b7c532fc7e6075a049304315",
+      "equals_main": true,
+      "batch289_canonical_lf_sha256": "79cebd3543e3fa8cccc9ad05693997212e7e38e0b7c532fc7e6075a049304315",
+      "equals_batch289": true,
+      "scoped05d_canonical_lf_sha256": "79cebd3543e3fa8cccc9ad05693997212e7e38e0b7c532fc7e6075a049304315",
+      "equals_scoped05d": true
+    }
+  },
+  "log_sha256": {
+    "unit-shard-1.txt": "3eaefe2a990a16b9a32dbf56f5f8208b0a78d131d24cc2ca7341a3c0fbe401fc",
+    "unit-shard-2.txt": "76e7adde9d3d5434249fdb5d519f1e11d3eadd00593b24153013ae501fb0a522",
+    "unit-shard-3.txt": "ae7f929dbc135eb3890575c9eaa33cd6ef5696789970f092ab14a0a14c8d6232",
+    "unit-shard-4.txt": "378bd8097370e85701d9f9b31d78f0bad91e76a17c91b03e4196b587ea0a1284"
+  }
+}

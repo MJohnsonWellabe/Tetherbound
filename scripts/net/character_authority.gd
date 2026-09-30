@@ -1,0 +1,614 @@
+extends RefCounted
+
+## One host-held admitted-character record for keys and the combat roster.
+## Explicit portable fields only; no packet may replace an admitted baseline.
+## Session guards host calls and transport identity; the portable owner alone
+## persists its character. World receipts remain the durable portal ledger.
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const REDESIGN := preload("res://scripts/data/redesign_state.gd")
+const RULES := preload("res://scripts/world/death_satchel_rules.gd")
+const PORTAL := preload("res://scripts/net/portal_escrow_validation.gd")
+const REWARD := preload("res://scripts/net/reward_delivery.gd")
+const FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow"]
+var _records: Dictionary = {}
+var _world_instance := ""
+var _portal_stages: Dictionary = {}
+var _portal_stage_sequence := 0
+var _loadout_pending: Dictionary = {}
+var _vitals_pending: Dictionary = {}
+var _vitals_seen: Dictionary = {}
+var _vitals_stages: Dictionary = {}
+var _vitals_stage_sequence := 0
+
+
+func bind_world(world_instance: String) -> bool:
+	if world_instance.is_empty():
+		return false
+	if world_instance != _world_instance:
+		if not _portal_stages.is_empty() or not _loadout_pending.is_empty() or not _vitals_pending.is_empty():
+			return false
+		_records.clear()
+		_portal_stages.clear()
+		_vitals_seen.clear()
+		_world_instance = world_instance
+	return true
+
+
+static func portable_projection(personal: Dictionary) -> Dictionary:
+	var rows: Dictionary = {}
+	var vitals: Dictionary = {}
+	var escrow: Variant = personal.get("satchel_escrow", {})
+	if escrow is Dictionary:
+		for key: Variant in escrow:
+			var row: Variant = escrow[key]
+			if str(key).begins_with(PORTAL.KIND + ":") or (row is Dictionary and row.get("kind") == PORTAL.KIND):
+				rows[key] = row.duplicate(true) if row is Dictionary else row
+			if str(key).begins_with("actor_vitals:") or (row is Dictionary and row.get("kind") == "actor_vitals"):
+				vitals[key] = row.duplicate(true) if row is Dictionary else row
+	return {"character_id": personal.get("character_id"), "party": personal.get("party"),
+		"redesign_character": personal.get("redesign_character"), "inventory": personal.get("inventory"),
+		"portal_escrow": rows, "vitals_escrow": vitals}
+
+
+static func errors(raw: Variant, expected_character: String) -> Array[String]:
+	if not raw is Dictionary or not (raw.size() == FIELDS.size() or (raw.size() == FIELDS.size() - 1 and not raw.has("vitals_escrow"))):
+		return ["admission requires the exact portable authority fields"]
+	for key: String in FIELDS:
+		if key == "vitals_escrow" and not raw.has(key):
+			continue # Additive v28 projection; the saved carrier already existed.
+		if not raw.has(key):
+			return ["missing portable authority field " + key]
+	if expected_character.is_empty() or raw.character_id != expected_character:
+		return ["portable authority belongs to another character"]
+	var failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)
+	failures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))
+	if raw.party is Array:
+		for row: Variant in raw.party:
+			if not row is Dictionary:
+				continue # Teaching supplies the row-shape refusal.
+			var hp: Variant = row.get("hp")
+			var maximum: Variant = row.get("max_hp")
+			if not (hp is int or hp is float) or not (maximum is int or maximum is float) \
+					or not is_finite(float(hp)) or not is_finite(float(maximum)) or float(maximum) <= 0.0 \
+					or float(hp) < 0.0 or float(hp) > float(maximum) or not row.get("fainted") is bool \
+					or row.fainted != (float(hp) == 0.0):
+				failures.append("invalid admitted creature vitals")
+	if not RULES.valid_slots(raw.inventory):
+		failures.append("invalid admitted inventory")
+	elif raw.inventory.size() != preload("res://autoload/inventory.gd").SLOT_COUNT:
+		failures.append("admitted inventory must retain every slot")
+	else:
+		for stack: Variant in raw.inventory:
+			if stack != null and not bool(RULES.db().call("has", str(stack.id))):
+				failures.append("unknown admitted item " + str(stack.id))
+	if not raw.portal_escrow is Dictionary:
+		failures.append("portal escrow must be a typed object")
+	else:
+		for key: Variant in raw.portal_escrow:
+			var row: Variant = raw.portal_escrow[key]
+			if not PORTAL.valid_row(row, expected_character) or str(key) != str(row.get("receipt", "")):
+				failures.append("invalid admitted portal journal")
+	failures.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(raw.get("vitals_escrow", {}), expected_character))
+	return failures
+
+
+func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionary:
+	if _world_instance.is_empty():
+		return {"ok": false, "code": "world_not_bound"}
+	var failures := errors(raw, character_id)
+	if not failures.is_empty():
+		return {"ok": false, "code": "invalid_character", "errors": failures}
+	if _records.has(character_id):
+		# Rejoin cannot overwrite newer earned authority. The caller receives the
+		# existing record for subsequent roster/debit admission and reconciliation.
+		return {"ok": true, "already_seeded": true, "revision": revision(character_id), "state": state(character_id)}
+	_records[character_id] = {"revision": 0, "state": raw.duplicate(true)}
+	_records[character_id].state["vitals_escrow"] = raw.get("vitals_escrow", {}).duplicate(true)
+	return {"ok": true, "already_seeded": false, "revision": 0, "state": state(character_id)}
+
+
+func state(character_id: String) -> Dictionary:
+	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
+
+
+func revision(character_id: String) -> int:
+	return int(_records[character_id].revision) if _records.has(character_id) else -1
+
+
+## Session alone projects the actual local host PlayerState here. Remote
+## packets never reach this arm: their baseline is retained by admission. This
+## tracks host-earned party/gifts without taking a client's proposed refresh.
+func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
+	if _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_pending.has(character_id):
+		return {"ok": true, "revision": revision(character_id), "state": state(character_id), "pending_transaction": true}
+	var seeded := seed_admitted_character(raw, character_id)
+	if not bool(seeded.get("ok", false)) or not bool(seeded.get("already_seeded", false)):
+		return seeded
+	var current := state(character_id)
+	var candidate := raw.duplicate(true)
+	candidate["vitals_escrow"] = raw.get("vitals_escrow", {}).duplicate(true)
+	# A failed owner settlement still leaves the durable world debit committed.
+	# Preserve its host entitlement while the actual local key remains pending
+	# for atomic personal retry, rather than minting a second host-owned key.
+	for receipt: String in current.redesign_character.transaction_receipts:
+		if receipt.begins_with(PORTAL.KIND + ":") and not candidate.redesign_character.transaction_receipts.has(receipt):
+			candidate.redesign_character.transaction_receipts.append(receipt)
+	for biome: String in current.redesign_character.portal_unlocks:
+		if not candidate.redesign_character.portal_unlocks.has(biome):
+			candidate.redesign_character.portal_unlocks.append(biome)
+	if equivalent(current, candidate):
+		return {"ok": true, "revision": revision(character_id), "state": current}
+	var failures := errors(candidate, character_id)
+	if not failures.is_empty():
+		return {"ok": false, "code": "invalid_local_character", "errors": failures}
+	_records[character_id] = {"revision": revision(character_id) + 1, "state": candidate}
+	return {"ok": true, "revision": revision(character_id), "state": state(character_id)}
+
+
+## Only accepted host HP-contact code supplies the staged maps. There is no
+## RPC or arbitrary snapshot replacement arm for a client's proposed rank.
+func commit_creature_mastery(character_id: String, uid: String, expected_revision: int,
+		expected_uses: Dictionary, expected_receipts: Dictionary, next_uses: Dictionary,
+		next_receipts: Dictionary) -> Dictionary:
+	if _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_stages.has(character_id):
+		return {"ok": false, "code": "transaction_busy", "revision": revision(character_id)}
+	if expected_revision < 0 or revision(character_id) != expected_revision:
+		return {"ok": false, "code": "stale_revision", "revision": revision(character_id)}
+	var candidate := state(character_id)
+	var owned: Dictionary = {}
+	for row: Dictionary in candidate.party:
+		if str(row.uid) == uid:
+			owned = row
+			break
+	if owned.is_empty() or not equivalent(owned.get("move_mastery_uses", {}), expected_uses) \
+			or not equivalent(owned.get("move_mastery_receipts", {}), expected_receipts):
+		return {"ok": false, "code": "stale_creature", "revision": expected_revision}
+	owned.move_mastery_uses = next_uses.duplicate(true)
+	owned.move_mastery_receipts = next_receipts.duplicate(true)
+	candidate.redesign_character = TEACHING.character_loadout_mirror(candidate.party, candidate.redesign_character)
+	var failures := errors(candidate, character_id)
+	if not failures.is_empty():
+		return {"ok": false, "code": "invalid_mastery", "errors": failures, "revision": expected_revision}
+	# Existing credits are immutable. A host contact allocation adds exactly one
+	# unique receipt/use; its frozen rank is read before reaching this method.
+	var added := 0
+	for move: Variant in expected_uses:
+		if not next_uses.has(move) or float(next_uses[move]) < float(expected_uses[move]):
+			return {"ok": false, "code": "mastery_regression", "revision": expected_revision}
+	for move: Variant in expected_receipts:
+		if not next_receipts.get(move) is Array:
+			return {"ok": false, "code": "mastery_regression", "revision": expected_revision}
+		var old_history: Array = expected_receipts[move]
+		var next_history: Array = next_receipts[move]
+		if next_history.size() < old_history.size():
+			return {"ok": false, "code": "mastery_regression", "revision": expected_revision}
+		for index: int in old_history.size():
+			if next_history[index] != old_history[index]:
+				return {"ok": false, "code": "mastery_regression", "revision": expected_revision}
+	for move: Variant in next_uses:
+		var difference := float(next_uses[move]) - float(expected_uses.get(move, 0))
+		if not is_finite(difference) or difference < 0 or difference != floor(difference):
+			return {"ok": false, "code": "invalid_mastery", "revision": expected_revision}
+		added += int(difference)
+	if added != 1:
+		return {"ok": false, "code": "one_contact_required", "revision": expected_revision}
+	_records[character_id] = {"revision": expected_revision + 1, "state": candidate}
+	return {"ok": true, "revision": expected_revision + 1, "state": state(character_id)}
+
+
+## The registered live station caller stages only the three editable slots.
+## An accepted edit remains locked until the portable owner has atomically
+## saved this exact revision. Disconnect/rejoin returns the retained pending
+## edit; a later packet cannot replace or undo that accepted host baseline.
+func commit_creature_loadout(character_id: String, uid: String, expected_revision: int,
+		expected_loadout_revision: int, expected_last_edit: Dictionary, next_loadout: Dictionary,
+		next_loadout_revision: int, next_edit_receipt: Dictionary) -> Dictionary:
+	if _portal_stages.has(character_id) or _vitals_stages.has(character_id):
+		return {"ok": false, "code": "transaction_busy", "revision": revision(character_id)}
+	if _loadout_pending.has(character_id):
+		var pending: Dictionary = _loadout_pending[character_id]
+		if pending.uid == uid and equivalent(pending.receipt, next_edit_receipt):
+			return {"ok": true, "duplicate": true, "revision": revision(character_id),
+				"state": state(character_id), "pending_owner_save": true}
+		return {"ok": false, "code": "owner_save_pending", "revision": revision(character_id)}
+	if expected_revision < 0 or revision(character_id) != expected_revision:
+		return {"ok": false, "code": "stale_revision", "revision": revision(character_id)}
+	if next_loadout.size() != 3 or next_loadout_revision != expected_loadout_revision + 1:
+		return {"ok": false, "code": "invalid_loadout", "revision": expected_revision}
+	var candidate := state(character_id)
+	var owned: Dictionary = {}
+	for row: Dictionary in candidate.party:
+		if str(row.uid) == uid:
+			owned = row
+			break
+	if owned.is_empty() or int(owned.get("loadout_revision", 0)) != expected_loadout_revision \
+			or not equivalent(owned.get("loadout_last_edit", {}), expected_last_edit):
+		return {"ok": false, "code": "stale_creature", "revision": expected_revision}
+	var receipt_keys := ["edit_id", "expected_revision", "creature_uid", "quick", "charged", "utility"]
+	if next_edit_receipt.size() != receipt_keys.size():
+		return {"ok": false, "code": "invalid_edit_receipt", "revision": expected_revision}
+	for key: String in receipt_keys:
+		if not next_edit_receipt.has(key):
+			return {"ok": false, "code": "invalid_edit_receipt", "revision": expected_revision}
+	if next_edit_receipt.get("creature_uid") != uid \
+			or not equivalent(next_edit_receipt.get("expected_revision"), expected_loadout_revision):
+		return {"ok": false, "code": "invalid_edit_receipt", "revision": expected_revision}
+	for slot: String in ["quick", "charged", "utility"]:
+		if not next_loadout.get(slot) is String or next_edit_receipt.get(slot) != next_loadout[slot]:
+			return {"ok": false, "code": "invalid_loadout", "revision": expected_revision}
+		owned["move_" + slot] = next_loadout[slot]
+	owned.loadout_revision = next_loadout_revision
+	owned.loadout_last_edit = next_edit_receipt.duplicate(true)
+	# The whole-document preflight checks known moves, exact slot roles and the
+	# canonical mirror. No ultimate/known/mastery/relic/inventory fields changed.
+	candidate.redesign_character = TEACHING.character_loadout_mirror(candidate.party, candidate.redesign_character)
+	var failures := errors(candidate, character_id)
+	if not failures.is_empty():
+		return {"ok": false, "code": "invalid_loadout", "errors": failures, "revision": expected_revision}
+	_records[character_id] = {"revision": expected_revision + 1, "state": candidate}
+	_loadout_pending[character_id] = {"uid": uid, "receipt": next_edit_receipt.duplicate(true),
+		"loadout_revision": next_loadout_revision, "character_revision": expected_revision + 1}
+	return {"ok": true, "duplicate": false, "revision": expected_revision + 1,
+		"state": state(character_id), "pending_owner_save": true}
+
+
+## Transport rebinds character identity. This only releases an action lock,
+## never imports owner data or spends/refunds anything. Replayed old ACKs
+## cannot acknowledge a newer edit. The owner sends it only after SaveCharacter.
+func acknowledge_creature_loadout(character_id: String, uid: String,
+		loadout_revision: int, edit_receipt: Dictionary) -> bool:
+	var pending: Variant = _loadout_pending.get(character_id)
+	if not pending is Dictionary or pending.uid != uid \
+			or int(pending.loadout_revision) != loadout_revision \
+			or not equivalent(pending.receipt, edit_receipt):
+		return false
+	_loadout_pending.erase(character_id)
+	return true
+
+
+func pending_creature_loadout(character_id: String) -> Dictionary:
+	return _loadout_pending[character_id].duplicate(true) if _loadout_pending.has(character_id) else {}
+
+
+## Prepare an explicit owned-key debit without changing the admitted record.
+## The existing synchronous transaction promotes it invisibly before SaveWorld,
+## rolls it back if that save fails, and publishes/settles the owner only after
+## success. A pending stage excludes other writers until its explicit finish.
+func stage_portal_debit(character_id: String, biome: String, receipt: String,
+		accepted_deliveries: Array = []) -> Dictionary:
+	if _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_stages.has(character_id):
+		return {"ok": false, "code": "transaction_busy"}
+	var candidate := state(character_id)
+	if candidate.is_empty() or not PORTAL.KEYS.has(biome) \
+			or receipt != PORTAL.receipt(biome, character_id):
+		return {"ok": false, "code": "not_admitted"}
+	var personal: Dictionary = candidate.redesign_character
+	if personal.transaction_receipts.has(receipt):
+		return {"ok": true, "duplicate": true, "revision": revision(character_id)}
+	var slot := -1
+	for index: int in candidate.inventory.size():
+		var stack: Variant = candidate.inventory[index]
+		if stack is Dictionary and stack.id == PORTAL.KEYS[biome]:
+			if slot >= 0 or int(stack.n) != 1:
+				return {"ok": false, "code": "invalid_owned_key"}
+			slot = index
+	var keys := protected_keys(character_id, accepted_deliveries)
+	if int(keys.get(PORTAL.KEYS[biome], 0)) != 1:
+		return {"ok": false, "code": "missing_owned_key"}
+	if slot >= 0:
+		candidate.inventory[slot] = null
+	if biome != "biome5" and not personal.portal_unlocks.has(biome):
+		personal.portal_unlocks.append(biome)
+	personal.transaction_receipts.append(receipt)
+	var failures := errors(candidate, character_id)
+	if not failures.is_empty():
+		return {"ok": false, "code": "invalid_debit", "errors": failures}
+	_portal_stage_sequence += 1
+	var token := "%s:%d" % [_world_instance, _portal_stage_sequence]
+	_portal_stages[character_id] = {"token": token, "world_instance": _world_instance,
+		"revision": revision(character_id), "state": candidate, "before": _records[character_id].duplicate(true), "committed": false}
+	# The caller can carry only the frozen stage identity, not a replacement
+	# inventory/party payload to the promotion seam.
+	return {"ok": true, "duplicate": false, "character_id": character_id,
+		"token": token, "revision": revision(character_id)}
+
+
+## Protected keys cannot leave via drops, death, sale or trade. Later grants
+## come only from the existing host world journal after its acceptance save;
+## no client acknowledgement packet supplies an item/quantity/source baseline.
+## This is a detached view of this same admitted record and world receipts,
+## not a second mutable inventory ledger.
+func protected_keys(character_id: String, accepted_deliveries: Array = []) -> Dictionary:
+	var owned := state(character_id)
+	var result: Dictionary = {}
+	if owned.is_empty():
+		return result
+	for biome: String in PORTAL.KEYS:
+		var item: String = PORTAL.KEYS[biome]
+		if owned.redesign_character.transaction_receipts.has(PORTAL.receipt(biome, character_id)):
+			result[item] = 0
+			continue
+		var count := 0
+		for stack: Variant in owned.inventory:
+			if stack is Dictionary and stack.id == item:
+				count += int(stack.n)
+		# An admitted baseline can already contain this same accepted gift. Its
+		# world proof adds entitlement only when that baseline lacks the key.
+		if count == 0:
+			var seen: Dictionary = {}
+			for raw: Variant in accepted_deliveries:
+				if not raw is Dictionary or raw.get("status") != "accepted" \
+						or raw.get("character_id") != character_id \
+						or raw.get("world_namespace") != _world_instance:
+					continue
+				var id: String = REWARD.delivery_id(_world_instance, str(raw.get("source", "")), character_id)
+				if id.is_empty() or raw.get("delivery_id") != id or seen.has(id) \
+						or not RULES.valid_slots(raw.get("stacks")):
+					continue
+				seen[id] = true
+				for stack: Variant in raw.stacks:
+					if stack is Dictionary and stack.id == item:
+						count += int(stack.n)
+		result[item] = count
+	return result
+
+
+func commit_portal_debit(stage: Dictionary) -> bool:
+	if not bool(stage.get("ok", false)):
+		return false
+	if bool(stage.get("duplicate", false)):
+		return false # No promotion is needed for an already committed receipt.
+	var character_id := str(stage.get("character_id", ""))
+	var frozen: Variant = _portal_stages.get(character_id)
+	if not frozen is Dictionary or stage.get("token") != frozen.token \
+			or frozen.world_instance != _world_instance \
+			or int(frozen.revision) != revision(character_id):
+		return false
+	var candidate: Variant = frozen.state
+	if not errors(candidate, character_id).is_empty():
+		return false
+	_records[character_id] = {"revision": revision(character_id) + 1, "state": candidate.duplicate(true)}
+	frozen.committed = true
+	return true
+
+
+## Synchronous world-save failure rolls back the hidden admitted debit too.
+## The frozen token cannot restore another transaction or a later revision.
+func finish_portal_debit(stage: Dictionary, world_saved: bool) -> bool:
+	var character_id := str(stage.get("character_id", ""))
+	var frozen: Variant = _portal_stages.get(character_id)
+	if not frozen is Dictionary or stage.get("token") != frozen.token:
+		return false
+	if bool(frozen.committed) and not world_saved:
+		if revision(character_id) != int(frozen.revision) + 1:
+			return false
+		_records[character_id] = frozen.before.duplicate(true)
+	_portal_stages.erase(character_id)
+	return true
+
+
+## Internal host settlement only. A later accepted absolute value supersedes
+## owner-save pending data without freezing combat. This is retained memory,
+## not a durable handoff until the existing world journal saves successfully.
+func commit_creature_vitals(character_id: String, uid: String, expected_revision: int,
+		expected_hp: float, expected_fainted: bool, next_hp: float, next_fainted: bool,
+		receipt: Dictionary) -> Dictionary:
+	if _portal_stages.has(character_id) or _vitals_stages.has(character_id):
+		return {"ok": false, "code": "transaction_busy"}
+	if not valid_vitals_receipt(receipt, uid):
+		return {"ok": false, "code": "invalid_vitals_receipt"}
+	var key: String = receipt.receipt_id
+	var old: Variant = _vitals_seen.get(character_id, {}).get(key)
+	if old is Dictionary:
+		if not equivalent(old.receipt, receipt) or not equivalent(old.hp, next_hp) or old.fainted != next_fainted:
+			return {"ok": false, "code": "receipt_conflict"}
+		return {"ok": true, "duplicate": true, "revision": revision(character_id),
+			"state": state(character_id), "pending_owner_save": true, "durable": bool(old.get("durable", false)),
+			"accepted": old.duplicate(true)}
+	var config: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/character_authority.json")
+	var limit: Variant = config.get("vitals_receipts_per_character_limit") if config is Dictionary else null
+	if not (limit is int or limit is float) or not is_finite(float(limit)) or float(limit) < 1.0 \
+			or float(limit) != floor(float(limit)) or float(limit) > 1000000.0 \
+			or _vitals_seen.get(character_id, {}).size() >= int(limit):
+		return {"ok": false, "code": "vitals_history_capacity", "revision": revision(character_id)}
+	if expected_revision < 0 or revision(character_id) != expected_revision:
+		return {"ok": false, "code": "stale_revision", "revision": revision(character_id)}
+	var candidate := state(character_id)
+	var owned: Dictionary = {}
+	for row: Dictionary in candidate.party:
+		if row.uid == uid:
+			owned = row
+			break
+	if owned.is_empty() or not equivalent(owned.get("hp"), expected_hp) or owned.get("fainted") != expected_fainted:
+		return {"ok": false, "code": "stale_vitals"}
+	var maximum: Variant = owned.get("max_hp")
+	if not (maximum is int or maximum is float) or not is_finite(float(maximum)) or float(maximum) <= 0.0 \
+			or not is_finite(expected_hp) or not is_finite(next_hp) or next_hp < 0.0 or next_hp > float(maximum) \
+			or next_fainted != (next_hp == 0.0) or (expected_fainted and not next_fainted):
+		return {"ok": false, "code": "invalid_vitals"}
+	# The caller supplies only HP/faint. No maximum/party/move/inventory import.
+	owned.hp = next_hp
+	owned.fainted = next_fainted
+	var failures := errors(candidate, character_id)
+	if not failures.is_empty():
+		return {"ok": false, "code": "invalid_character", "errors": failures}
+	_records[character_id] = {"revision": expected_revision + 1, "state": candidate}
+	if not _vitals_pending.has(character_id):
+		_vitals_pending[character_id] = {}
+	if not _vitals_seen.has(character_id):
+		_vitals_seen[character_id] = {}
+	var accepted := {"uid": uid, "hp": next_hp, "fainted": next_fainted,
+		"max_hp": maximum, "receipt": receipt.duplicate(true), "character_revision": expected_revision + 1,
+		"expected_hp": expected_hp, "expected_fainted": expected_fainted, "durable": false}
+	_vitals_pending[character_id][uid] = accepted
+	_vitals_seen[character_id][key] = accepted.duplicate(true)
+	return {"ok": true, "duplicate": false, "revision": expected_revision + 1,
+		"state": state(character_id), "pending_owner_save": true, "durable": false,
+		"accepted": accepted.duplicate(true)}
+
+
+## Freeze only a synchronous world-save transaction. This private token is
+## never accepted from a network packet. The old record, latest owner pending
+## settlement and replay history all roll back together on world-write failure.
+func stage_creature_vitals(character_id: String, uid: String, expected_revision: int,
+		expected_hp: float, expected_fainted: bool, next_hp: float, next_fainted: bool,
+		receipt: Dictionary) -> Dictionary:
+	if _vitals_stages.has(character_id):
+		return {"ok": false, "code": "transaction_busy"}
+	var before := {"record": _records.get(character_id, {}).duplicate(true),
+		"pending": _vitals_pending.get(character_id, {}).duplicate(true),
+		"seen": _vitals_seen.get(character_id, {}).duplicate(true)}
+	var result := commit_creature_vitals(character_id, uid, expected_revision,
+		expected_hp, expected_fainted, next_hp, next_fainted, receipt)
+	if not bool(result.get("ok", false)) or bool(result.get("duplicate", false)):
+		return result
+	_vitals_stage_sequence += 1
+	result["token"] = _vitals_stage_sequence
+	result["character_id"] = character_id
+	_vitals_stages[character_id] = {"token": result.token, "before": before,
+		"uid": uid, "receipt_id": str(receipt.receipt_id), "revision": result.revision}
+	return result
+
+
+func finish_creature_vitals(stage: Dictionary, world_saved: bool) -> bool:
+	var character := str(stage.get("character_id", ""))
+	var frozen: Variant = _vitals_stages.get(character)
+	if not frozen is Dictionary or stage.get("token") != frozen.token \
+			or revision(character) != int(frozen.revision):
+		return false
+	if not world_saved:
+		_records[character] = frozen.before.record.duplicate(true)
+		if frozen.before.pending.is_empty():
+			_vitals_pending.erase(character)
+		else:
+			_vitals_pending[character] = frozen.before.pending.duplicate(true)
+		if frozen.before.seen.is_empty():
+			_vitals_seen.erase(character)
+		else:
+			_vitals_seen[character] = frozen.before.seen.duplicate(true)
+	else:
+		_vitals_seen[character][frozen.receipt_id].durable = true
+		_vitals_pending[character][frozen.uid].durable = true
+	_vitals_stages.erase(character)
+	return true
+
+
+## The private stage token selects the frozen result. Never trust a caller's
+## mutable accepted dictionary when constructing the durable world journal.
+func staged_creature_vitals(stage: Dictionary) -> Dictionary:
+	var character := str(stage.get("character_id", ""))
+	var frozen: Variant = _vitals_stages.get(character)
+	if not frozen is Dictionary or stage.get("token") != frozen.token \
+			or revision(character) != int(frozen.revision):
+		return {}
+	return _vitals_pending.get(character, {}).get(frozen.uid, {}).duplicate(true)
+
+
+static func valid_vitals_receipt(receipt: Dictionary, uid: String) -> bool:
+	var keys := ["receipt_id", "encounter_id", "creature_uid", "body_generation", "vitals_revision"]
+	if receipt.size() != keys.size():
+		return false
+	for key: String in keys:
+		if not receipt.has(key):
+			return false
+	for key: String in ["receipt_id", "encounter_id", "creature_uid"]:
+		if not receipt[key] is String or receipt[key].is_empty() or receipt[key].length() > 160:
+			return false
+	for key: String in ["body_generation", "vitals_revision"]:
+		var value: Variant = receipt[key]
+		if not (value is int or value is float) or not is_finite(float(value)) \
+				or float(value) < 1.0 or float(value) != floor(float(value)) or float(value) > 2147483647.0:
+			return false
+	return receipt.creature_uid == uid
+
+
+func pending_creature_vitals(character_id: String) -> Dictionary:
+	return _vitals_pending.get(character_id, {}).duplicate(true)
+
+
+## Reconstruct only this world's discriminated pending absolute values before
+## admitting a character to act. An accepted historical row supplies a revision
+## high-water only: it cannot overwrite newer portability from another world.
+func recover_durable_vitals(character_id: String, deliveries: Dictionary) -> Dictionary:
+	var candidate := state(character_id)
+	if candidate.is_empty() or _portal_stages.has(character_id) or _vitals_stages.has(character_id):
+		return {"ok": false, "code": "authority_not_ready"}
+	var actor := preload("res://scripts/net/actor_vitals_delivery.gd")
+	var high_water := revision(character_id)
+	var pending: Dictionary = _vitals_pending.get(character_id, {}).duplicate(true)
+	var seen: Dictionary = _vitals_seen.get(character_id, {}).duplicate(true)
+	for raw: Variant in deliveries.values():
+		if not raw is Dictionary or raw.get("kind") != "actor_vitals" \
+				or raw.get("character_id") != character_id:
+			continue
+		if not actor.valid(raw, character_id, _world_instance) or raw.status == "settled":
+			return {"ok": false, "code": "malformed_durable_vitals"}
+		high_water = maxi(high_water, int(raw.character_revision))
+		if raw.status == "accepted":
+			continue
+		var owned: Dictionary = {}
+		for row: Dictionary in candidate.party:
+			if row.uid == raw.creature_uid:
+				owned = row
+				break
+		if owned.is_empty() or not actor.personal_baseline_matches(owned, raw,
+			candidate.get("vitals_escrow", {}).get(raw.delivery_id)):
+			return {"ok": false, "code": "unsettled_vitals_conflict"}
+		owned.hp = float(raw.hp)
+		owned.fainted = bool(raw.fainted)
+		var accepted := {"uid": str(raw.creature_uid), "hp": raw.hp, "fainted": raw.fainted,
+			"max_hp": raw.max_hp, "receipt": raw.receipt.duplicate(true),
+			"character_revision": raw.character_revision, "expected_hp": raw.expected_hp,
+			"expected_fainted": raw.expected_fainted, "durable": true}
+		pending[raw.creature_uid] = accepted
+		seen[raw.receipt.receipt_id] = accepted.duplicate(true)
+	var config: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/character_authority.json")
+	var limit: Variant = config.get("vitals_receipts_per_character_limit") if config is Dictionary else null
+	if not (limit is int or limit is float) or not is_finite(float(limit)) \
+			or float(limit) != floor(float(limit)) or float(limit) < 1.0 \
+			or float(limit) > 1000000.0 or seen.size() > int(limit):
+		return {"ok": false, "code": "vitals_history_capacity"}
+	var failures := errors(candidate, character_id)
+	if not failures.is_empty():
+		return {"ok": false, "code": "invalid_character", "errors": failures}
+	_records[character_id] = {"revision": high_water, "state": candidate}
+	if not pending.is_empty():
+		_vitals_pending[character_id] = pending
+	if not seen.is_empty():
+		_vitals_seen[character_id] = seen
+	return {"ok": true, "revision": high_water, "state": state(character_id),
+		"pending_owner_save": not pending.is_empty()}
+
+
+## Owner save ACK releases only the exact newest absolute settlement. The
+## retained baseline and replay history survive ACK and disconnect/rejoin.
+func acknowledge_creature_vitals(character_id: String, uid: String,
+		character_revision: int, receipt: Dictionary) -> bool:
+	var pending: Variant = _vitals_pending.get(character_id, {}).get(uid)
+	if not pending is Dictionary or int(pending.character_revision) != character_revision \
+			or not equivalent(pending.receipt, receipt):
+		return false
+	_vitals_pending[character_id].erase(uid)
+	if _vitals_pending[character_id].is_empty():
+		_vitals_pending.erase(character_id)
+	return true
+
+
+static func equivalent(left: Variant, right: Variant) -> bool:
+	if (left is int or left is float) and (right is int or right is float):
+		return is_finite(float(left)) and is_finite(float(right)) and float(left) == float(right)
+	if left is Dictionary and right is Dictionary:
+		if left.size() != right.size():
+			return false
+		for key: Variant in left:
+			if not right.has(key) or not equivalent(left[key], right[key]):
+				return false
+		return true
+	if left is Array and right is Array:
+		if left.size() != right.size():
+			return false
+		for index: int in left.size():
+			if not equivalent(left[index], right[index]):
+				return false
+		return true
+	return typeof(left) == typeof(right) and left == right

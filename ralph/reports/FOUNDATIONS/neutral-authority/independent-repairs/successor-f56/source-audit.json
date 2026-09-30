@@ -1,0 +1,16 @@
+{
+  "pin": "f56f592028e6144b6e7aeba49c6ef5952ecee866",
+  "parent": "786d016e14e12d4784dc26708d8e05dd27bb6636",
+  "delta_paths_exact": [
+    "ralph/reports/FOUNDATIONS/neutral-authority/assembly.json",
+    "tests/test_village_street_0912.gd"
+  ],
+  "patch_sha256": "b153fc5b472ad5486b7ee4806e4351721b1967c00c66888989507b97cd82d355",
+  "test_sha256": "d5bde2cb66d71971025eec1d059037bc81441277c018d0642d45edfbe3108691",
+  "assembly_sha256": "630f1d81e6e9faaa474d184d711731eebb411fc2f97fde18c901260db8b20e89",
+  "all_other34assemblyhashes_preserved": true,
+  "all12_test_methods_and11_nonfence_test_bodies_preserved": true,
+  "reviewed_correction": "Whole-segment intersection or minimum all4 endpoint-to-segment distances, finite road endpoints included; actual authored halfwidth and each actual collider halfthickness/offset; regression counterexamples retained",
+  "verdict": "SOURCE PASS for sealed f56 successor, affected native checks pending",
+  "HEAD_after_capture": "f56f592028e6144b6e7aeba49c6ef5952ecee866"
+}

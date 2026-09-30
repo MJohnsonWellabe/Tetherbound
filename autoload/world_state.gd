@@ -281,6 +281,11 @@ func save_data() -> Dictionary:
 ## the same contract `map_state.gd` and `progression_state.gd` already give
 ## `save_game.gd`.
 func load_data(data: Dictionary) -> void:
+	var vitals_errors := preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(
+		data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")))
+	if not vitals_errors.is_empty():
+		push_error("World actor vitals refused: %s" % "; ".join(vitals_errors))
+		return
 	var redesign: Variant = data.get("redesign_world", REDESIGN_STATE.defaults("world"))
 	var redesign_errors := REDESIGN_STATE.validate("world", redesign)
 	if not redesign_errors.is_empty():
@@ -385,9 +390,20 @@ func apply_delta(delta: Dictionary) -> int:
 
 func _apply_op(op: Dictionary) -> bool:
 	match str(op.get("op", "")):
+		"actor_vitals_journal", "actor_vitals_accept":
+			if not preload("res://scripts/net/actor_vitals_delivery.gd").valid_world_op(op, reward_deliveries, reward_delivery_namespace):
+				return false
+			if op.op == "actor_vitals_journal":
+				reward_deliveries[op.delivery_id] = op.delivery.duplicate(true)
+			else:
+				reward_deliveries[op.delivery_id].status = "accepted"
+			revision += 1
+			return true
 		"reward_delivery_accept":
 			var accept_id := str(op.get("delivery_id", ""))
 			var accept_character := str(op.get("character_id", ""))
+			if accept_id.begins_with("actor_vitals:"):
+				return false
 			var accepted: Variant = reward_deliveries.get(accept_id)
 			if not accepted is Dictionary or str((accepted as Dictionary).get("status", "")) != "pending" \
 					or str((accepted as Dictionary).get("character_id", "")) != accept_character:
@@ -398,6 +414,8 @@ func _apply_op(op: Dictionary) -> bool:
 		"reward_delivery_journal":
 			var delivery: Variant = op.get("delivery", {})
 			var id := str(op.get("delivery_id", ""))
+			if id.begins_with("actor_vitals:") or (delivery is Dictionary and delivery.get("kind") == "actor_vitals"):
+				return false
 			if id.is_empty() or not delivery is Dictionary:
 				return false
 			var delivery_namespace := str((delivery as Dictionary).get("world_namespace", ""))

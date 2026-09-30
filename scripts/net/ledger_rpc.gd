@@ -1,4 +1,5 @@
 extends Node
+const ACTOR_VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 
 ## Stage B Wave 3 lane 3.A. THE LEDGER TRANSPORT: intents up, deltas down.
 ##
@@ -70,6 +71,8 @@ signal delta_applied(delta: Dictionary)
 signal intent_refused(kind: String, code: String, reason: String, detail: Dictionary)
 
 var ledger: RefCounted = null
+var _actor_vitals_publications: Dictionary = {}
+var _actor_vitals_session_id := Crypto.new().generate_random_bytes(16).hex_encode()
 const SATCHEL_ESCROW := preload("res://scripts/net/satchel_escrow.gd")
 const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
@@ -473,6 +476,160 @@ func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
 ## A realm authority has already committed and durably journaled these ops.
 ## Keep publication identical to ordinary ledger commits, including local
 ## player application. Never exposed as a remotely callable commit shortcut.
+## Internal host door only, never a packet intent. WorldState application is
+## pure; no delta publication or portable save occurs inside this prepared CAS.
+func journal_actor_vitals_prepared(peer_id: int, character: String, accepted: Dictionary) -> Dictionary:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or ledger == null \
+			or ledger.get("world") != game.get("world") or character.is_empty() \
+			or character != _registered_character(peer_id):
+		return {"ok": false, "code": "not_admitted", "durable": false}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	var world_namespace := str(world.get("reward_delivery_namespace"))
+	var world_id := str(world.get("world_id"))
+	if saver == null or not saver.has_method("save_world_prepared") \
+			or bool(saver.call("fallback_busy")) or world_namespace.is_empty() or world_id.is_empty():
+		return {"ok": false, "code": "world_not_prepared", "durable": false}
+	var id := ACTOR_VITALS.delivery_id(world_namespace, character, str(accepted.get("uid", "")))
+	var row := ACTOR_VITALS.next_record(world_id, world_namespace, _actor_vitals_session_id,
+		character, str(accepted.get("uid", "")), float(accepted.get("max_hp", -1.0)),
+		float(accepted.get("expected_hp", -1.0)), bool(accepted.get("expected_fainted", false)),
+		float(accepted.get("hp", -1.0)), bool(accepted.get("fainted", false)),
+		int(accepted.get("character_revision", -1)), accepted.get("receipt", {}),
+		world.get("reward_deliveries").get(id))
+	if row.is_empty():
+		return {"ok": false, "code": "invalid_vitals_journal", "durable": false}
+	var before: Dictionary = world.call("save_data")
+	var before_revision := int(world.get("revision"))
+	var before_seq := int(ledger.get("seq"))
+	var verdict: Dictionary = ledger.call("commit_actor_vitals_delivery", row, peer_id)
+	if not bool(verdict.get("ok", false)):
+		return verdict
+	if not bool(saver.call("save_world_prepared", game, world_id)):
+		world.call("load_data", before)
+		world.set("revision", before_revision)
+		ledger.set("seq", before_seq)
+		return {"ok": false, "code": "journal_failed", "durable": false}
+	# Only this detached publication token is transient. The absolute row is
+	# already in the existing durable world document and remains recovery truth.
+	_actor_vitals_publications[id] = {"peer": peer_id, "row": row.duplicate(true),
+		"delta": verdict.delta.duplicate(true)}
+	return {"ok": true, "durable": true, "delivery_id": id,
+		"journal_revision": row.journal_revision, "receipt": row.receipt.duplicate(true)}
+
+
+## The exact actor is committed before this door. Losing this call or a
+## disconnect never refunds accepted HP: reconcile the existing durable row.
+func publish_actor_vitals(peer_id: int, character: String, uid: String, receipt: Dictionary) -> bool:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or ledger == null \
+			or character.is_empty() or character != _registered_character(peer_id):
+		return false
+	var world: RefCounted = game.get("world")
+	var id := ACTOR_VITALS.delivery_id(str(world.get("reward_delivery_namespace")), character, uid)
+	var pending: Variant = _actor_vitals_publications.get(id)
+	var latest: Variant = world.get("reward_deliveries").get(id)
+	if not pending is Dictionary or int(pending.peer) != peer_id \
+			or not ACTOR_VITALS.valid(latest, character, str(world.get("reward_delivery_namespace"))) \
+			or not ACTOR_VITALS.equivalent(latest, pending.row) \
+			or not ACTOR_VITALS.equivalent(latest.receipt, receipt):
+		return false
+	_actor_vitals_publications.erase(id)
+	publish_journaled_delta(pending.delta)
+	return true
+
+
+func _process_actor_vitals(delivery: Dictionary) -> void:
+	var game := _game()
+	if game == null or not _character_writes_ready() \
+			or str(game.get("local").character_id) != str(delivery.get("character_id", "")):
+		return
+	var result := ACTOR_VITALS.apply_owner(game, delivery)
+	if not bool(result.get("ok", false)):
+		return # Exact world journal stays pending; real bool-save retries later.
+	if bool(game.call("is_host")):
+		_accept_actor_vitals(str(delivery.delivery_id), int(delivery.journal_revision), delivery.receipt, _local_peer_id())
+	elif _can_rpc():
+		rpc_id(HOST_PEER_ID, "_rpc_actor_vitals_ack", str(delivery.delivery_id), int(delivery.journal_revision), delivery.receipt)
+
+
+## The fully validated snapshot is applied, but readiness/final snapshot ACK
+## remain closed until each pending owned absolute value actually saves. This
+## explicit receipt path does not enable ordinary pre-handshake autosaves.
+func reconcile_actor_vitals_before_ready() -> bool:
+	var game := _game()
+	if game == null or game.get("local") == null or game.get("world") == null:
+		return false
+	var character := str(game.get("local").character_id)
+	if character.is_empty():
+		return false
+	var world: RefCounted = game.get("world")
+	for raw: Variant in world.get("reward_deliveries").values():
+		if not raw is Dictionary or raw.get("kind") != "actor_vitals" \
+				or raw.get("character_id") != character or raw.get("status") != "pending":
+			continue
+		var result := ACTOR_VITALS.apply_owner(game, raw)
+		if not bool(result.get("ok", false)):
+			return false
+		if bool(game.call("is_host")):
+			if not _accept_actor_vitals(str(raw.delivery_id), int(raw.journal_revision), raw.receipt, _local_peer_id()):
+				return false
+		elif _can_rpc():
+			if rpc_id(HOST_PEER_ID, "_rpc_actor_vitals_ack", str(raw.delivery_id), int(raw.journal_revision), raw.receipt) != OK:
+				return false
+		else:
+			return false
+	return true
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_actor_vitals_ack(id: String, revision: int, receipt: Dictionary) -> void:
+	var game := _game()
+	if game != null and bool(game.call("is_host")):
+		_accept_actor_vitals(id, revision, receipt, multiplayer.get_remote_sender_id())
+
+
+func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_id: int) -> bool:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or ledger == null:
+		return false
+	var world: RefCounted = game.get("world")
+	var character := _registered_character(peer_id)
+	# valid(..., owner="") intentionally means shape-only elsewhere. An ACK
+	# transport must never use that optional argument as admitted ownership.
+	if character.is_empty():
+		return false
+	var row: Variant = world.get("reward_deliveries").get(id)
+	if not row is Dictionary or row.get("character_id") != character \
+			or not ACTOR_VITALS.valid(row, character, str(world.get("reward_delivery_namespace"))) \
+			or not ACTOR_VITALS.equivalent(row.journal_revision, revision) \
+			or not ACTOR_VITALS.equivalent(row.receipt, receipt):
+		return false
+	if row.status == "accepted":
+		return true # Existing accepted world write is the durable duplicate proof.
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or not saver.has_method("save_world_prepared") or bool(saver.call("fallback_busy")):
+		return false
+	var before: Dictionary = world.call("save_data")
+	var before_revision := int(world.get("revision"))
+	var before_seq := int(ledger.get("seq"))
+	var verdict: Dictionary = ledger.call("accept_actor_vitals_delivery", id, character, revision, receipt, peer_id)
+	if not bool(verdict.get("ok", false)):
+		return false
+	if not bool(saver.call("save_world_prepared", game, str(world.get("world_id")))):
+		world.call("load_data", before)
+		world.set("revision", before_revision)
+		ledger.set("seq", before_seq)
+		return false
+	var session: Node = game.get("session")
+	if session == null or not bool(session.call("host_ack_creature_vitals", peer_id,
+		str(row.creature_uid), int(row.character_revision), receipt)):
+		return false # Accepted world row remains authoritative recovery truth.
+	publish_journaled_delta(verdict.delta)
+	return true
+
+
 func publish_journaled_delta(delta: Dictionary) -> void:
 	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
 		return
@@ -597,6 +754,9 @@ func _apply_player_ops(delta: Dictionary) -> void:
 	for raw: Variant in WORLD_LEDGER.player_ops_for(delta, _local_peer_id()):
 		var op := raw as Dictionary
 		match str(op.get("op", "")):
+			"actor_vitals_settle":
+				if op.get("delivery") is Dictionary:
+					_process_actor_vitals(op.delivery)
 			"reward_delivery":
 				var delivery: Variant = op.get("delivery", {})
 				if delivery is Dictionary and _character_writes_ready():
@@ -641,8 +801,12 @@ func reconcile_reward_deliveries() -> void:
 	if character_id.is_empty():
 		return
 	# A reconnect learns pending host receipts from the admitted world snapshot.
+	for raw: Variant in game.get("world").reward_deliveries.values():
+		if raw is Dictionary and raw.get("kind") == "actor_vitals" and raw.get("status") == "pending":
+			_process_actor_vitals(raw)
 	for delivery: Dictionary in REWARD_DELIVERY.pending_for_character(game.get("world"), character_id):
-		_process_reward_delivery(delivery)
+		if delivery.get("kind") != "actor_vitals":
+			_process_reward_delivery(delivery)
 	# Once accepted, the portable character escrow remains the source of truth
 	# until a full bag has room, including while visiting another world.
 	for raw: Variant in game.get("local").satchel_escrow.values():

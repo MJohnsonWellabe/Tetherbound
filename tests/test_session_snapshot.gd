@@ -5,6 +5,7 @@ const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
 const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const GAME_STATE := preload("res://autoload/game_state.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+const WORLD_STATE := preload("res://autoload/world_state.gd")
 
 class AckSession extends "res://scripts/net/session.gd":
 	var acknowledgement_calls := 0
@@ -14,10 +15,12 @@ class AckSession extends "res://scripts/net/session.gd":
 
 
 class GameStub extends Node:
+	var world: RefCounted = WORLD_STATE.new()
 	var events: Array = []
 	var applied_snapshot: Dictionary = {}
 
 	func apply_world_snapshot(snapshot: Dictionary) -> void:
+		world.call("load_data", snapshot)
 		applied_snapshot = snapshot.duplicate(true)
 		events.append("snapshot")
 
