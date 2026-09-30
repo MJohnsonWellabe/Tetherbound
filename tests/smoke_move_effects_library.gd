@@ -25,9 +25,13 @@ func _run() -> void:
 		if arg == "--medium": _medium = true
 	if _batch not in ["identities", "library", "profile", "clock"]:
 		push_error("Unknown effect batch"); quit(1); return
+	if _batch in ["identities", "profile"] and DisplayServer.get_name() == "headless":
+		push_error("Identity/performance evidence requires a native display"); quit(1); return
 	_scenarios = JSON.parse_string(FileAccess.get_file_as_string("res://assets/vfx/proof_scenarios.json"))
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
 	_moves = data.moves
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_out)):
+		push_error("Use a fresh output directory; existing evidence preserved"); quit(1); return
 	if DirAccess.make_dir_recursive_absolute(_out) != OK:
 		push_error("Cannot create output"); quit(1); return
 	root.size = Vector2i(1920, 1080)
@@ -104,6 +108,8 @@ func _run() -> void:
 			await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
 	var report := {"scope": "production_effect_nodes_synthetic_arena", "batch": _batch,
 		"renderer": RenderingServer.get_current_rendering_method(), "resolution": [root.size.x, root.size.y],
+		"display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
+		"engine": Engine.get_version_info(),
 		"medium_features": _medium, "cases": _records, "failures": _failures,
 		"limits": ["No combat/damage authority exercised", "Wall-frame intervals include CPU/GPU/present/OS scheduling",
 			"No Ally or four-creature-fight acceptance claim", "Identity duration slowed for readable frames; host timing requires separate player witness"]}
@@ -170,7 +176,13 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				# inputs; the private results record retains the mapping.
 				var path := _out.path_join("sequence-%02d-%s.png" % [_records.size(), phase])
 				if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
-				captured[phase] = elapsed
+				var captured_elapsed := float(Time.get_ticks_usec() - started) / 1000000.0
+				captured[phase] = {"wall_seconds": captured_elapsed, "arrivals": arrivals[0],
+					"nominal_travel_fraction": _scenarios.capture_phases[phase]}
+				if phase == "flight" and int(arrivals[0]) > 0:
+					_failures.append("Flight frame reached after contact " + encounter)
+				if phase != "flight" and int(arrivals[0]) != simultaneous:
+					_failures.append("Contact/impact frame taken before arrival " + encounter)
 		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0: break
 	if int(arrivals[0]) != simultaneous: _failures.append("Missing arrival " + encounter)
 	if peak > int(LIBRARY.config().encounter_particle_cap): _failures.append("Budget overflow " + encounter)

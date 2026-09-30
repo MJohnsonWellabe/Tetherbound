@@ -300,6 +300,9 @@ func _play_launch() -> void:
 	AUDIO.play_file_at(path, str(_row.archetype) + ":" + name, _from, "SFX", float((_row.sound as Dictionary).get("gain_db", -7.0)))
 
 func _play_impact() -> void:
+	# An accepted combat receipt can own the one classified contact cue. This
+	# frozen presentation value never authorizes damage or depends on lifetime.
+	if str(_context.get("impact_audio_owner", "renderer")) == "receipt": return
 	var name := "impact_mastery" if int(_row.mastery_rank) >= 5 else "impact"
 	var path := _cue(name)
 	if path.is_empty(): return
