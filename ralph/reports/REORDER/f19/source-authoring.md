@@ -42,7 +42,37 @@ transactions with reconnect/reload, all four legendary offer branches, and
 earned saves. Dependency landing holds remain F16+F18 for F19 and F18+F19 for
 F20. F16 is landed; F18 is not. No PR has been opened.
 
-Current real-path gaps: boss payouts still use legacy world key/relic flags;
+The `4c3e9d791d` checkpoint adds exact `boss_hand_offs` rows to existing
+chapter rewards and an unconnected pure `EncounterRewards.chapter_grants`
+projector. Canonical typed keys remain separate from ItemDB SKUs; relics use
+existing personal `relics_held`/`relics_hung` biome ids. Foundation owns the
+protected admitted-participant delivery journal and acknowledgement. The
+projector cannot yet replace a live payout until that arm is implemented.
+
+`80a4babddf` closes the actual Stormheart volunteer's hardcoded level gap:
+`stormwood_ending.gd` reads Dynamo captive level 55, with fallback 55, and
+the chapter's final-encounter metadata agrees. The acceptance pin covers the
+actual read. It remains unrun.
+
+The subsequent F20 source prototype gates Grandpa on this exact personal
+receipt: `home_return_after_stormwood:<world-instance>:<character-id>:<host-ticket>`.
+Foundation will author it only after successful durable Home arrival for the
+same admitted character who already holds or has hung the Stormwood relic.
+The consumer requires matching character identity and Meadows, never a host
+world's ahead flags. The producer is not yet implemented or proved.
+Dialogue substitutes current names, a retained starter-exclusive species
+from the actual opening roster or an honest absent status, earned companion
+counters or an honest no-history fallback, and existing personal chapter
+answers. An accepted offer does not imply that companion is still retained.
+Credits retain the existing character save/rollback and once-only receipts.
+The old tests now explicitly use synthetic receipt fixtures for isolated
+consumer and disk-persistence checks; **they are not earned route/arrival
+proof**. No test has run. Tidewake's chapter result no longer qualifies a
+character for homecoming.
+
+Remaining real-path gaps: live boss payouts still use legacy world key flags;
 chapter entry/reward clauses still reference physical-crossing entitlements;
-Tidewake still invites the old ending. Those require owned runtime handoff
-changes and F18's portal transactions before this data can be accepted.
+protected participant grants and Home travel remain unconnected; fifth-arch
+effects, all four legendary capacity/choice branches, personal objective
+eligibility, disconnect/reload and earned route saves remain unproved.
+Those require owned runtime handoffs and F18's transactions before landing.

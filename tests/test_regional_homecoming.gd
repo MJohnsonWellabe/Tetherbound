@@ -11,6 +11,11 @@ class Member:
 	extends RefCounted
 	var nickname: String = ""
 	var display_name: String = ""
+	var species_id: String = ""
+	var landmarks_visited_together := 0
+	var battles_fought := 0
+	var rest_nights_together := 0
+	var feeds_together := 0
 
 	func _init(display: String, nick: String = "") -> void:
 		display_name = display
@@ -30,6 +35,7 @@ class LocalStub:
 	var character_id := "character-homecoming"
 	var flags: RefCounted = PROGRESSION.new()
 	var realm := "meadows"
+	var redesign_character: Dictionary = {"transaction_receipts": []}
 
 
 class WorldStub:
@@ -70,12 +76,15 @@ func test_runtime_hooks_compile() -> void:
 	panel.free()
 
 
-func test_current_world_unlocks_homecoming_for_a_behind_character() -> void:
+func test_ahead_world_does_not_unlock_homecoming_without_personal_return() -> void:
 	var game := GameStub.new()
 	assert_eq(HOMECOMING.conversation_id(game), "")
-	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	game.world.flags.set_flag("water_currents_restored")
+	game.world.flags.set_flag("stormwood:long_storm_ended")
+	assert_eq(HOMECOMING.conversation_id(game), "", "an ahead world is not a personal ending receipt")
+	_home_return(game)
 	assert_eq(HOMECOMING.conversation_id(game), "regional_homecoming_0",
-		"no personal opening flag is required in an ahead world")
+		"the protected personal return invites this character")
 	game.local.flags.set_flag(HOMECOMING.SEEN_FLAG)
 	assert_eq(HOMECOMING.conversation_id(game), HOMECOMING.REPEAT_ID)
 
@@ -90,7 +99,7 @@ func test_live_party_names_use_nickname_then_display_name_and_cap_at_five() -> v
 	assert_eq(HOMECOMING.party_names(party), ["Pip", "Brooktail", "Sky", "Mosshell", "Sunny"])
 	var game := GameStub.new()
 	game.party = party
-	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	_home_return(game)
 	assert_eq(HOMECOMING.conversation_id(game), "regional_homecoming_5")
 	assert_eq(HOMECOMING.substitutions(game).get("party_5"), "Sunny")
 	assert_false(HOMECOMING.substitutions(game).has("party_6"))
@@ -148,7 +157,7 @@ func test_close_is_finished_but_only_last_line_is_completed() -> void:
 
 func test_failed_character_save_rolls_back_and_retry_commits() -> void:
 	var game := GameStub.new()
-	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	_home_return(game)
 	game.save_system.result = false
 	assert_false(HOMECOMING.complete(game, "character-homecoming"))
 	assert_false(game.local.flags.has(HOMECOMING.SEEN_FLAG))
@@ -169,7 +178,7 @@ func test_homecoming_seen_is_player_scoped() -> void:
 
 func test_completion_rechecks_realm_and_character_identity() -> void:
 	var game := GameStub.new()
-	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	_home_return(game)
 	game.local.realm = "water"
 	assert_false(HOMECOMING.complete(game, "character-homecoming"))
 	game.local.realm = "meadows"
@@ -179,13 +188,13 @@ func test_completion_rechecks_realm_and_character_identity() -> void:
 	assert_eq(game.save_system.calls, 0)
 
 
-func test_regional_credits_require_homecoming_current_world_and_pending_receipt() -> void:
+func test_regional_credits_require_personal_return_homecoming_and_pending_receipt() -> void:
 	var game := GameStub.new()
 	assert_false(HOMECOMING.credits_available(game))
 	assert_false(HOMECOMING.credits_pending(game))
-	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	_home_return(game)
 	assert_false(HOMECOMING.credits_available(game),
-		"the shared Water result does not manufacture a personal credits receipt")
+		"the personal travel receipt alone does not acknowledge the conversation")
 	game.local.flags.set_flag(HOMECOMING.SEEN_FLAG)
 	assert_true(HOMECOMING.credits_available(game))
 	assert_true(HOMECOMING.credits_pending(game))
@@ -196,11 +205,11 @@ func test_regional_credits_require_homecoming_current_world_and_pending_receipt(
 
 func test_regional_credits_save_is_idempotent_and_player_local() -> void:
 	var game := _credits_game()
-	var world_before: bool = game.world.flags.has(HOMECOMING.WORLD_FLAG)
+	var world_before: bool = game.world.flags.has("stormwood:long_storm_ended")
 	var party_before: int = game.party.members().size()
 	assert_true(HOMECOMING.complete_credits(game, "character-homecoming"))
 	assert_true(game.local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG))
-	assert_eq(game.world.flags.has(HOMECOMING.WORLD_FLAG), world_before)
+	assert_eq(game.world.flags.has("stormwood:long_storm_ended"), world_before)
 	assert_eq(game.party.members().size(), party_before)
 	assert_false(HOMECOMING.credits_pending(game))
 	assert_eq(game.save_system.calls, 1)
@@ -213,12 +222,12 @@ func test_regional_credits_save_is_idempotent_and_player_local() -> void:
 
 func test_regional_credits_save_failure_rolls_back_and_retries() -> void:
 	var game := _credits_game()
-	var world_before: bool = game.world.flags.has(HOMECOMING.WORLD_FLAG)
+	var world_before: bool = game.world.flags.has("stormwood:long_storm_ended")
 	var party_before: int = game.party.members().size()
 	game.save_system.result = false
 	assert_false(HOMECOMING.complete_credits(game, "character-homecoming"))
 	assert_false(game.local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG))
-	assert_eq(game.world.flags.has(HOMECOMING.WORLD_FLAG), world_before)
+	assert_eq(game.world.flags.has("stormwood:long_storm_ended"), world_before)
 	assert_eq(game.party.members().size(), party_before)
 	assert_eq(game.save_system.calls, 1)
 	assert_eq(game.messages, [HOMECOMING.CREDITS_SAVE_FAILURE_NOTICE])
@@ -237,7 +246,7 @@ func test_regional_credits_refuse_changed_character_realm_or_world_without_mutat
 	assert_false(HOMECOMING.complete_credits(game, "character-homecoming"))
 	assert_eq(game.save_system.calls, 0)
 	game.local.realm = "meadows"
-	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG, false)
+	game.local.redesign_character.transaction_receipts.clear()
 	assert_false(HOMECOMING.complete_credits(game, "character-homecoming"))
 	assert_false(game.local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG))
 	assert_eq(game.save_system.calls, 0)
@@ -245,7 +254,7 @@ func test_regional_credits_refuse_changed_character_realm_or_world_without_mutat
 
 func _credits_game() -> GameStub:
 	var game := GameStub.new()
-	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	_home_return(game)
 	game.local.flags.set_flag(HOMECOMING.SEEN_FLAG)
 	return game
 
@@ -264,3 +273,49 @@ func test_terminal_consent_decline_is_not_completion_but_accept_is() -> void:
 	runner.advance()
 	runner.confirm(true)
 	assert_eq(completed, ["tournament_halda_signup"])
+
+
+## Synthetic contract fixture: tests the receipt consumer, not actual Home travel.
+func _home_return(game: GameStub) -> void:
+	game.local.redesign_character.transaction_receipts.append(
+		HOMECOMING.HOME_RETURN_PREFIX + "unit-world:" + game.local.character_id + ":unit-host-ticket")
+
+
+func test_return_receipt_is_bound_to_its_character_and_requires_complete_identity() -> void:
+	var game := GameStub.new()
+	game.local.redesign_character.transaction_receipts = [
+		HOMECOMING.HOME_RETURN_PREFIX + "world:other-character:ticket",
+		HOMECOMING.HOME_RETURN_PREFIX + "world:" + game.local.character_id + ":",
+		HOMECOMING.HOME_RETURN_PREFIX + ":" + game.local.character_id + ":ticket",
+	]
+	assert_false(HOMECOMING.eligible(game))
+	_home_return(game)
+	assert_true(HOMECOMING.eligible(game))
+	var other := GameStub.new()
+	assert_false(HOMECOMING.eligible(other), "another peer does not inherit the return")
+
+
+func test_starter_and_memory_are_read_from_current_creatures_only() -> void:
+	var party := PartyStub.new()
+	var starter := Member.new("Terrapup", "Pip")
+	starter.species_id = "terrapup"
+	starter.landmarks_visited_together = 3
+	party.rows = [starter]
+	assert_true(HOMECOMING.starter_status(party).contains("Pip"))
+	assert_true(HOMECOMING.bond_memory(party).contains("3 landmarks"))
+	party.rows.clear()
+	assert_true(HOMECOMING.starter_status(party).contains("no longer travelling"))
+	assert_false(HOMECOMING.starter_status(party).contains("Pip"))
+	assert_false(HOMECOMING.bond_memory(party).contains("3 landmarks"))
+
+
+func test_chapter_choices_use_personal_answers_and_do_not_resurrect_companions() -> void:
+	var game := GameStub.new()
+	game.local.flags.set_flag("legendary_refused")
+	game.local.flags.set_flag("cloudreach:legendary_joined")
+	game.local.flags.set_flag("stormwood:legendary_answer:claim-a:refused")
+	var choices := HOMECOMING.chapter_choices(game.local.flags)
+	assert_true(choices.contains("Veridian stay behind"))
+	assert_true(choices.contains("welcome Solmane"))
+	assert_true(choices.contains("Stormheart choose its own road"))
+	assert_false(choices.contains("came home"), "an accepted offer does not imply a retained creature")

@@ -1,8 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## F15 ending invariants (ACCEPTANCE §6.1, WORLD §6.5). The homecoming and the
+## F20 ending invariants (ACCEPTANCE §6.1, WORLD §6.5). The homecoming and the
 ## credits are a player-local acknowledgement, nothing more: they must not add
-## a fifth realm key, promise a sequel, claim every force was freed, resurrect
+## an extra key during the acknowledgement, promise a sequel, claim every force was freed, resurrect
 ## a released companion, or hand out anything a second time.
 ##
 ## Driven the same way `test_regional_homecoming.gd` drives it (runner +
@@ -25,9 +25,8 @@ const WATER_DIALOGUE_PATH := "res://data/dialogue/water.json"
 const HOMECOMING_SCRIPT_PATH := "res://scripts/story/regional_homecoming.gd"
 const CREDITS_SCRIPT_PATH := "res://scripts/ui/regional_credits.gd"
 
-## The three keys this four-chapter pass earns: Meadows->Cloudreach,
-## Cloudreach->Stormwood, Stormwood->Water. A fourth chapter's ending has no
-## door to open, so a fifth entry would be an invented next realm.
+## Historical world-flag keys retained for compatibility. F16/F18 typed portal
+## keys are separate identifiers; the Home acknowledgement cannot grant either.
 const EXPECTED_REALM_KEYS: Array[String] = [
 	"realm_key_cloudreach", "realm_key_stormwood", "realm_key_water",
 ]
@@ -43,7 +42,7 @@ const EXPECTED_REALM_KEYS: Array[String] = [
 ## "adventure continues", "next adventure" = a sequel sting; "all eight",
 ## "eight forces", "every force", "all forces", "all the forces",
 ## "forces are free", "forces were freed" = a cosmology-wide victory claim;
-## "fifth key", "fifth realm" = an invented next door.
+## F20 allows a fifth key and dormant arch; opening another chapter remains forbidden.
 ## WORLD §6.5 also forbids inventing a count of unresolved forces: any number
 ## word or digit, or "remain/remaining/other/rest of the", next to "forces".
 const FORCE_COUNT_PATTERN := "(\\b(one|two|three|four|five|six|seven|eight|nine|\\d+)\\s+(more\\s+|other\\s+|remaining\\s+)?forces?\\b)|(\\bforces?\\s+(remain|still|yet)\\b)|(\\b(remaining|other|rest of the)\\s+forces?\\b)"
@@ -54,7 +53,6 @@ const FORBIDDEN_PHRASES: Array[String] = [
 	"next chapter", "fifth chapter", "chapter five", "chapter 5",
 	"all eight", "eight forces", "every force", "all forces", "all the forces",
 	"forces are free", "forces were freed",
-	"fifth key", "fifth realm",
 ]
 
 ## The only player flags either acknowledgement is documented to write.
@@ -88,15 +86,15 @@ class GameStub:
 		messages.append(message)
 
 
-# --- 1: no fifth key ---------------------------------------------------------
+# --- 1: acknowledgement grants no key ---------------------------------------------------------
 
-func test_only_three_realm_keys_are_declared() -> void:
+func test_legacy_world_key_flags_remain_the_three_compatibility_ids() -> void:
 	var scopes: Dictionary = _json(FLAG_SCOPES_PATH)
 	var found: Array[String] = []
 	_collect_realm_key_strings(scopes, found)
 	found.sort()
 	assert_eq(found, EXPECTED_REALM_KEYS,
-		"flag_scopes.json declares exactly the three chapter keys and no fifth")
+		"historical world-flag key identifiers remain compatible; typed portal keys are separate")
 
 
 func test_ending_sources_never_name_a_realm_key() -> void:
@@ -278,20 +276,23 @@ func test_released_companion_is_not_named_by_grandpa() -> void:
 
 # --- helpers -------------------------------------------------------------------
 
-## A Meadows character in a world whose currents are restored, carrying a
+## A Meadows character with a synthetic post-Stormwood Home receipt, carrying a
 ## non-trivial inventory, party progress and skill XP so "unchanged" means
 ## something.
 func _ending_game(members: Array) -> GameStub:
 	var game := GameStub.new()
 	var world: RefCounted = WORLD_STATE.new()
 	world.world_id = "world-ending-invariants"
-	world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	world.flags.set_flag("stormwood:long_storm_ended")
 	world.flags.set_flag("water_captain_nerissa_defeated")
 	world.flags.set_flag("realm_key_water")
 	var local: RefCounted = PLAYER_STATE.new()
 	local.configure(ITEM_DB.new())
 	local.character_id = "character-ending-invariants"
 	local.realm = "meadows"
+	# Synthetic consumer fixture; this is not an earned Home travel witness.
+	local.redesign_character.transaction_receipts.append(
+		HOMECOMING.HOME_RETURN_PREFIX + "unit-world:" + local.character_id + ":unit-host-ticket")
 	local.flags.set_flag("opening_free_play")
 	assert_eq(local.inventory.add("wood", 7), 0)
 	assert_eq(local.inventory.add("stone", 3), 0)

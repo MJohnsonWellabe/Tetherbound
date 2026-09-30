@@ -1,10 +1,11 @@
 extends RefCounted
 
-## The small, character-local transaction behind Grandpa's Water homecoming.
-## Eligibility is a fact of the current world; acknowledgement belongs only to
-## the portable character who stood through the conversation and saved it.
+## Grandpa acknowledges this portable character's actual return after Stormwood.
+## Travel owns the protected arrival receipt; this module only reads it and
+## saves this character's conversation and credits acknowledgement.
 
-const WORLD_FLAG := "water_currents_restored"
+const HOME_RETURN_PREFIX := "home_return_after_stormwood:"
+const OPENING_PATH := "res://data/config/opening.json"
 const SEEN_FLAG := "homecoming_seen"
 const CREDITS_SEEN_FLAG := "regional_credits_seen"
 const INITIAL_PREFIX := "regional_homecoming_"
@@ -26,12 +27,21 @@ static func conversation_id(game: Object) -> String:
 static func eligible(game: Object) -> bool:
 	if game == null:
 		return false
-	var world: Variant = game.get("world")
 	var local: Variant = game.get("local")
-	if world == null or local == null or local.get("realm") != "meadows":
+	if game.get("world") == null or local == null or local.get("realm") != "meadows":
 		return false
-	var flags: Variant = world.get("flags")
-	return flags != null and flags.has_method("has") and bool(flags.call("has", WORLD_FLAG))
+	var personal: Variant = local.get("redesign_character")
+	if not personal is Dictionary:
+		return false
+	var id := character_id(game)
+	if id.is_empty():
+		return false
+	for raw: Variant in personal.get("transaction_receipts", []):
+		var pieces := str(raw).split(":")
+		if pieces.size() == 4 and pieces[0] == HOME_RETURN_PREFIX.trim_suffix(":") \
+				and not pieces[1].is_empty() and pieces[2] == id and not pieces[3].is_empty():
+			return true
+	return false
 
 
 static func is_initial(id: String) -> bool:
@@ -46,7 +56,84 @@ static func substitutions(game: Object) -> Dictionary:
 	var names := party_names(_party(game))
 	for index in names.size():
 		out["party_%d" % (index + 1)] = names[index]
+	out["starter_status"] = starter_status(_party(game))
+	out["bond_memory"] = bond_memory(_party(game))
+	out["chapter_choices"] = chapter_choices(_player_flags(game))
 	return out
+
+
+static func starter_status(party: Object) -> String:
+	var opening: Variant = JSON.parse_string(FileAccess.get_file_as_string(OPENING_PATH))
+	var starters: Array = (opening.get("starters", {}) as Dictionary).get("species", []) \
+		if opening is Dictionary else []
+	for member: Object in _members(party):
+		if starters.has(str(member.get("species_id"))):
+			return "%s, the companion you chose here, is still beside you." % _name(member)
+	# The absent starter's chosen species/name is not stored in this module.
+	# Do not invent its identity or say it rejoined the current party.
+	return "Your first companion is no longer travelling with you. That beginning still matters."
+
+
+static func bond_memory(party: Object) -> String:
+	for member: Object in _members(party):
+		var name := _name(member)
+		for counter: String in ["landmarks_visited_together", "battles_fought", "rest_nights_together", "feeds_together"]:
+			var raw: Variant = member.get(counter)
+			var count := int(raw) if raw is int or raw is float else 0
+			if count <= 0:
+				continue
+			match counter:
+				"landmarks_visited_together":
+					return "You and %s reached %d landmarks together. Those places belong to your story." % [name, count]
+				"battles_fought":
+					return "%s stood beside you through %d battles. I remember when you were only setting out." % [name, count]
+				"rest_nights_together":
+					return "You gave %s a bed through %d nights. A journey is made of quiet care, too." % [name, count]
+				"feeds_together":
+					return "You fed %s %d times along the way. I'm glad you looked after each other." % [name, count]
+	# A newly replaced team may have no earned counters. Never invent a battle,
+	# landmark or night's rest to fill the emotional beat.
+	return "You brought this company home. There is room here to make more memories together."
+
+
+static func chapter_choices(flags: Object) -> String:
+	var lines: Array[String] = []
+	if flags == null or not flags.has_method("has"):
+		return "The companions you met had their own wishes. Their invitations were yours to answer."
+	for row: Array in [
+		["legendary_joined", "legendary_refused", "Veridian"],
+		["cloudreach:legendary_joined", "cloudreach:legendary_refused", "Solmane"],
+	]:
+		if bool(flags.call("has", row[0])):
+			lines.append("You chose to welcome %s on your travels." % row[2])
+		elif bool(flags.call("has", row[1])):
+			lines.append("You let %s stay behind when it offered to follow." % row[2])
+	if bool(flags.call("has", "stormwood:legendary_offer_accepted")):
+		lines.append("You welcomed the Stormheart when it offered to join you.")
+	elif flags.has_method("all_set"):
+		for raw: Variant in flags.call("all_set"):
+			var flag := str(raw)
+			if flag.begins_with("stormwood:legendary_answer:") and flag.ends_with(":refused"):
+				lines.append("You let the Stormheart choose its own road.")
+				break
+	return " ".join(lines) if not lines.is_empty() else \
+		"The companions you met had their own wishes. Their invitations were yours to answer."
+
+
+static func _members(party: Object) -> Array[Object]:
+	var out: Array[Object] = []
+	if party == null or not party.has_method("members"):
+		return out
+	for raw: Variant in party.call("members"):
+		if raw is Object and out.size() < MAX_PARTY:
+			out.append(raw)
+	return out
+
+
+static func _name(member: Object) -> String:
+	var raw: Variant = member.get("nickname")
+	var nickname := str(raw).strip_edges() if raw is String else ""
+	return nickname if not nickname.is_empty() else str(member.get("display_name"))
 
 
 static func party_names(party: Object) -> Array[String]:
@@ -69,14 +156,14 @@ static func party_names(party: Object) -> Array[String]:
 	return out
 
 
-## Set, save, and roll back as one player-local transaction. The world fact is
-## only the invitation to talk; it is never rewritten here.
+## Set, save, and roll back as one player-local transaction. The protected
+## travel receipt is never rewritten here.
 static func complete(game: Object, expected_character_id: String) -> bool:
 	return _save_player_flag(game, expected_character_id, SEEN_FLAG, SAVE_FAILURE_NOTICE)
 
 
 ## Credits are a local continuation of a homecoming this portable character
-## already saved. The current world's Water outcome remains the invitation:
+## already saved. The character's actual Home return remains the invitation:
 ## joining an ahead world does not manufacture a personal ending receipt.
 static func credits_available(game: Object) -> bool:
 	if not eligible(game):
