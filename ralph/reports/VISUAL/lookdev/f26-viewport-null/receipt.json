@@ -1,0 +1,17 @@
+{
+  "source_sha256_before": "5b7b429d5f7e8472d986209f1e3954d3904a9bcdd35fb3183008b78c371c7b8b",
+  "source_sha256_after": "5b7b429d5f7e8472d986209f1e3954d3904a9bcdd35fb3183008b78c371c7b8b",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_night_shadow_contract.gd"
+  ],
+  "native_exit_code": 0,
+  "elapsed_seconds": 12.212,
+  "scope": "One existing night-shadow test, headless, isolated profile, no import/render/export"
+}

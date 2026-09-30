@@ -1,0 +1,14 @@
+Independent source verdict: SOURCE PASS for the exact three WorldLook viewport-null guards. No runtime/test-pass claim.
+
+Pinned basis: 3b17882907a3c28cd3809780230841fe737839c4.
+Frozen patch SHA256 b8099cd5108999a77389c6a4645b4924580fbe3e3dafe62ba2b4ad8d5fc6c71c.
+Modified scripts/world/world_look.gd raw SHA256 5b7b429d5f7e8472d986209f1e3954d3904a9bcdd35fb3183008b78c371c7b8b.
+Every context/count in exactly one path and three hunks was independently reconstructed against the pinned basis, matching the supplied source after LF normalization. Patch/source remained stable during capture. Frozen base/modified source, patch, pinned GraphicsPrefs/test witnesses and source-audit.json are beside this report.
+
+Only code change: each former GRAPHICS_PREFS.apply_camera(get_viewport().get_camera_3d()) is replaced with a local get_viewport() and a viewport != null guard before obtaining/applying its current camera. Replacing those three exact new blocks with the old line restores the entire pinned WorldLook source, so no other gameplay/environment/clock/weather/renderer/camera-selection logic changed.
+
+refresh_graphics still blends the current clock first, applies viewport preferences and then camera preferences. _process still applies current-camera quality before _cycle/_clock_frozen early returns, so cameras changing during frozen captures/combat/travel continue to receive their existing policy in-tree. _apply_environment still finishes with environment, viewport and camera quality in that order, after time/weather values. No new early return skips environment or clock work when off-tree.
+
+Pinned scripts/ui/graphics_prefs.gd:212-214 already refuses null viewport; :244-246 already refuses null Camera3D. Existing in-tree behavior therefore calls the same camera helper on the same viewport's active camera, including its supported no-current-camera/null case. Off-tree behavior now omits only the invalid viewport dereference; it neither creates/selects another viewport/camera nor changes quality configuration.
+
+Pinned test_night_shadow_contract.gd creates an unattached fixture and exercises production apply_time against relative WorldEnvironment/Sun children, consistent with the reported off-tree failure mechanism. The reported seven crashes are owner/lane evidence, not independently reproduced here. This review executed no engine/parser/test/GPU/import/export or Git mutation and edited no tracked source. It establishes source correctness only; the affected existing named check may supply runtime verification through the owning lane's selected batch. No gameplay/visual acceptance row is closed by this narrow source verdict.
