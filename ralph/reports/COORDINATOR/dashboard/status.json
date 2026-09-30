@@ -2,7 +2,7 @@
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 104 of 280. Original:95/101; redesign:9/179. F16 all five, F26#1/#2 and F17#0 landed main. F17#2 independently MET in this feature PR; its main credit applies at landing.",
+  "Criteria met: 104 of 280. Original:95/101; redesign:9/179. F16 all five, F26#1/#2 and F17#0/#2 landed main. F17#1 strict DAY NO/NIGHT NO remains failing; no additional candidate credit.",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -370,7 +370,7 @@
   },
   {
    "lane": "tb/hub",
-   "now": "F17#0 landed. F17#2 strict MET: eight signed arches/eight pedestals, actual16 controller approaches native0/242.640s; source verifies sealed dark material. Candidate until this PR lands. F17#1 strict DAY NO/NIGHT NO remains failed; five other F17 criteria open. F18 and combat prototype preserved outside this landing cut.",
+   "now": "F17#0/#2 landed main380e466a15: straight road/topology and sixteen physical Hall approaches independently MET. F17#1 strict DAY NO/NIGHT NO remains failing; five remaining criteria open. Actual native-family Hall frontage/stale canopy correction source WIP, fresh capture unproved. F18 dependency hold; single-registry authority work continues.",
    "next": "Ordinary day/night house/arch/pedestal paths, M1 chain, two-peer layout/states and code-blind visual bar; F18 protected-key/channel/transaction drafts advance."
   },
   {
@@ -518,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T10:34:00Z",
+ "last_lane_refresh": "2026-09-30T11:25:03Z",
  "lane_activity": [
   {
    "lane": "tb/foundations / tb/hub",
-   "checkpoint": "At this refresh main has 103/280; only F17#0 is landed. F17#2 independently strict MET on candidate9131: all16 physical Hall approaches native0/242.640s, dark reserved material source verified; headless structural limits disclosed. F17#1 actual2a1 two same-pose original1920 images native0/215.078s, fresh strict DAY NO/NIGHT NO: Hall indistinct/occluded. F18#0 strict candidate MET, unchanged logic10/67/0 and actual protected gift/death/reload native0; dependency hold. Session/portal CAS remains ignored draft. Reorder4c3 authors corrected chapter tables and unconnected participant key/relic projector, no runtime/MET."
+   "checkpoint": "At this refresh main has104/280 via PR480/380e466a15: F17#0/#2 landed; all16 physical Hall approaches native0/242.640s. F17#1 strict DAY NO/NIGHT NO retained/failing. Hub a4b484cbea corrects stale tournament presentation pose and adds native-family Hall frontage/lanterns; source only, fresh capture unproved. F18#0 candidate MET/dependency hold; portable10/67/0 and real opening gift/death/reload native0 retained. One Session admission/portal/CAS draft and read-only traveler getters WIP. Reorder5c681 fifth-arch presentation data only, transaction consumer unbuilt."
   },
   {
    "lane": "tb/combat",
-   "checkpoint": "Combat fc9b99fa1a corrects power-before-damage-floor within host mastery CAS/frozen-rank source, named checks active/unclaimed. Coherent5126 portable validation has fresh source PASS and7methods/700assertions/0 native0, transitive parser0; initial fixture parser red retained. Original host feedback replay4f4 native0/all assertions, earlier label red and wrapper cp1252 error retained. Actual Low nine-pair zero-overlap/controls native0 and narrow blind PASS; whole craft and guest replay remain open. No F21–24 MET."
+   "checkpoint": "Combat130d7c6100 host mastery CAS/power-floor WIP: nine-method run is RED despite ok markers because actual-host-debit SCRIPT ERROR aborted before assertions; shutdown leak errors retained. Prior coherent portable7/700/0 and transitive parser0 remain valid; no host-debit PASS claimed. Actual Low nine-pair zero-overlap/controls native0 plus narrow blind PASS and host feedback4f4 native0 retained. Loadout stateless service drafts await same registry CAS/ACK/rejoin, typed capture/release/evolution ownership arms unbuilt. All F21–24 criteria open. d7e moves all16 aborted assertions verbatim to an initialized mini-smoke with count16 gate; source only, minimum retry queued."
   },
   {
    "lane": "tb/vfx",
-   "checkpoint": "VFX b500 actual r7 game47e: exact new PNG import native0/5.531s, original12cases/36PNG native0/23.734s, zero failures/native errors, arrivals/clocks/ending leases PASS. Canceled broad import4294967295/492.734s retained; scoped asset approach preserves all assertions. Fresh blind sampled Fireball explosion identity FAIL/all-four full craft FAIL; sampled ranks1/3/5 PASS only. Prior reds and world integration gaps retained. Library flag off/all F25 open."
+   "checkpoint": "VFX r7 original12cases/36PNG native0/23.734s, scoped PNG import0/5.531s retained; fresh blind Fireball explosion identity/all-four full craft FAIL, sampled ranks1/3/5 narrow PASS; library flag off/all F25 open. R8 explosion shader/material/config86dc has independent SOURCE PASS; import sidecar8ab pinned, original12cases/36PNG native0/21.344s, all12 arrivals once/endleases0/noERROR; nine new Fireball originals await fresh blind judgment. No fresh full-craft, world integration or criterion acceptance claim; all rejected rounds and canceled broad import preserved."
   },
   {
    "lane": "tb/lookdev",
-   "checkpoint": "Lookdev971 archives Cloudreach3 native0 and independent receipt PASS, current8of12 preset routes. Existing landed renderer fix and Meadows Forward+Medium506/High481 Hall route proof retained. Prior native stack failures preserved. Only F26#1/#2 MET; remaining biome/preset matrix, code-blind material/atmosphere, actual Ally15W and device bars open. No new acceptance or performance-bar claim."
+   "checkpoint": "Lookdev Stormwood3 at81148 native0/noERROR: Low11021frames mean13.74ms, Medium5895/25.75ms, High4601/32.97ms; six original1920 images/raw archive queued. Current11/12 routes. MeadowsLow81148 native1/1274frames/0waypoints: actual Grandpa opening dialogue held locomotion, noERROR; raw failure preserved. d5e0c30 pre-mount seven explicit opening fixture flags has independent SOURCE PASS; corrected Low native route running on d5e at this refresh. Only F26#1/#2 landed; whole matrix/visual/Ally/device criteria remain open."
   }
  ]
 }
