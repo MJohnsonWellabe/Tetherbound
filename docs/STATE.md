@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | F16 main; f56 SOURCE PASS. Full batch red29/13 script errors; four vitals methods PASS, affected repairs pending/OFF. |
-| `tb/hub` | F17, F18 | #0–#3 main; active #4 M1 v3 sealed38b source review, r4 wall FAIL retained. F18 held. |
-| `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | Active F23#1/#2/#3 f506: TM/utilities/loadouts; host durability/rejoin incomplete, callers closed. |
-| `tb/vfx` | F25, F35 | Active F25#0 8fae; R17 stone18 PASS, R14 craft FAIL/identity PASS; library OFF. |
-| `tb/lookdev` | F26 | #0/#1/#2/#4 main109. Active #3 CLI from9806; Cloud full bar FAIL, #5 owner-gated. |
-| `tb/training` | F27–F30, F37 | #0 main; active F27#3 Altar UI/spend0e89, authority/runtime open. |
-| `tb/homestead` | F31–F34 | Active F32#1 Forge f417; mounted transactions/owner settlement open. |
+| `tb/foundations` | F16 | Neutral e4eb checkpoint; narrow authority landing. Broad RED retained; scoped12/287 +Storm8/86 PASS. |
+| `tb/hub` | F17, F18 | #0-#3 main; M1 r4 native/v3 source FAIL retained. Unfinished correction held; F18 open. |
+| `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
+| `tb/combat` | F21–F24 | Camera cut recovering from0fde99; static9 PASS, moving-player/source binding open. F23 held. |
+| `tb/vfx` | F25, F35 | 8fae preserved/held; R17 stone PASS, R14 craft FAIL; library OFF. |
+| `tb/lookdev` | F26 | #0/#1/#2/#4 main. ade7b cliff OFF/held; full bar open; Ally owner-gated. |
+| `tb/training` | F27–F30, F37 | #0 main; Altar0e89 preserved/held; durable player path open. |
+| `tb/homestead` | F31–F34 | 499e8 preserved/held; Forge +Den080c source PASS, mounted durable path open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
