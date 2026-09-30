@@ -69,7 +69,12 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 			else:
 				# The workshop's installed open arch is the actual front module,
 				# not an invented doorway tuple or a scripted opening.
-				var arches := building.find_children("Wall_Arch*", "Node3D", true, false)
+				# Count prefab modules, not the imported root plus its same-named
+				# descendant mesh. Both belong to one physical authored arch.
+				var arches: Array[Node3D] = []
+				for child: Node in building.get_children():
+					if child is Node3D and str(child.name).begins_with("Wall_Arch"):
+						arches.append(child)
 				if arches.size() != 1:
 					return _services_fail("workshop must have one actual open arch")
 				target = arches[0].global_position + building.global_basis.z.normalized() * 1.5
