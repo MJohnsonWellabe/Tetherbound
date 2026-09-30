@@ -54,15 +54,25 @@ static func scope_inputs_match(inputs: Variant) -> bool:
 
 
 static func read_village_scope(path: String, selection: Array) -> Dictionary:
-	if path.is_empty() or not FileAccess.file_exists(path) or selection != VILLAGE_REGIONS:
+	if path.is_empty() or not FileAccess.file_exists(path) or not same_regions(selection, VILLAGE_REGIONS):
 		return {}
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not raw is Dictionary or raw.get("kind") != "F17_reviewed_village_only" \
 			or raw.get("baseline") != VILLAGE_BASE or raw.get("approved_source") != VILLAGE_SOURCE \
-			or raw.get("regions") != VILLAGE_REGIONS or not scope_inputs_match(raw.get("inputs")):
+			or not same_regions(raw.get("regions"), VILLAGE_REGIONS) or not scope_inputs_match(raw.get("inputs")):
 		return {}
 	return {"source_inputs":raw.inputs.duplicate(true), "scope_sha256":FileAccess.get_sha256(path),
 		"approved_source":VILLAGE_SOURCE,"baseline":VILLAGE_BASE}
+
+
+static func same_regions(left: Variant, right: Variant) -> bool:
+	if not valid_region_selection(left) or not valid_region_selection(right) or left.size() != right.size():
+		return false
+	for index: int in left.size():
+		for axis: int in 2:
+			if int(left[index][axis]) != int(right[index][axis]):
+				return false
+	return true
 
 
 

@@ -106,6 +106,9 @@ func test_regional_promotion_rolls_back_and_keeps_untouched_generation_bytes() -
 	assert_false(TERRAIN.valid_region_selection([]))
 	assert_false(TERRAIN.valid_region_selection([[0, 0], [0, 0]]))
 	assert_false(TERRAIN.valid_region_selection([[0.5, 0]]))
+	assert_true(TERRAIN.same_regions(JSON.parse_string('[[-1,-1],[-1,0],[0,-1],[0,0]]'),TERRAIN.VILLAGE_REGIONS),
+		"JSON integral floats represent the same reviewed cells")
+	assert_false(TERRAIN.same_regions([[-1.5,-1],[-1,0],[0,-1],[0,0]],TERRAIN.VILLAGE_REGIONS))
 	assert_false(BAKE.valid_world_selection([[9, 0]], {"min_x": -512, "max_x": 512, "min_z": -512, "max_z": 512}, 256))
 
 

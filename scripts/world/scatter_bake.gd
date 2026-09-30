@@ -604,7 +604,14 @@ static func write_regions(world_name: String, by_layer: Dictionary, drained: Dic
 	if DirAccess.make_dir_recursive_absolute(stage) != OK:
 		return {"ok": false, "code": "stage_failed"}
 	var files: Array[String] = []
-	var catalog: Array = prior.get("regions", []).duplicate(true)
+	var prior_catalog: Variant = prior.get("regions", [])
+	if not TERRAIN_BAKE.valid_region_selection(prior_catalog):
+		return {"ok": false, "code": "invalid_base_catalog"}
+	# JSON numbers are floats. Canonicalize before Array.has so an existing
+	# cell cannot be appended again solely because the new selection uses ints.
+	var catalog: Array = []
+	for pair: Array in prior_catalog:
+		catalog.append([int(pair[0]), int(pair[1])])
 	for pair: Array in selection:
 		var region := Vector2i(int(pair[0]), int(pair[1]))
 		var name := _region_path(world_name, region).get_file()
