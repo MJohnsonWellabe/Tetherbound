@@ -1,9 +1,9 @@
 {
   "_comment": "R7.6. The berry farm beside Grandpa's house: where the beds are, and the three numbers that decide whether farming is worth walking back for. Placed by scripts/world/playground_world.gd, drawn by scripts/world/farm_plot.gd, ruled by scripts/world/farm_logic.gd. CLAUDE.md: data that will clearly vary lives here, never in gameplay code. ALL TUNABLE.",
-  "_comment_scope": "GAME_DESIGN.md §21 is the whole specification and it is four lines long -- 'Meadows only needs berries initially. Plant -> wait -> harvest. No watering chores.' §32 excludes *deep* farming. So there is no water key, no soil key, no fertiliser key and no second crop in this file, and adding one is a design change rather than a tuning pass.",
+  "_comment_scope": "RD-05 / HOMESTEAD §5.3: berries and eight type crops share manual till, sow, host-day growth and pick. No watering, fertiliser, blight, theft, offline output or automatic harvest. Host ledger commits plot changes and inventory costs/payouts atomically; this table alone does not activate a new crop consumer.",
   "_comment_placement": "F17: farmhouse [2,14], east door begins the village road. Existing six plots translate by [+24,+30] with the house; crop, yield, grow days and ownership remain unchanged.",
   "_comment_grid": "Two rows of three at 2.4m centres. Six beds because it is enough that a rest is worth taking and few enough that tilling the farm is one errand, not an afternoon. Spacing comfortably exceeds the prompt radius (farm_plot.gd's PROMPT_RADIUS, 2.0m), so standing at one bed the arbiter's nearest-wins rule (prompt_arbiter.gd::choose_index) picks the one you are actually on rather than the one behind it. Was 2.0m centres at z -10.6/-8.6 until the visual pass: at that pitch, and hard against the house's south wall, the six beds rendered as one continuous band of planting rather than as six plots, and the farmhouse ate the frame. Moved out to z -9.0/-6.6 (still ~4m clear of the wall line at z=-13, still 9.7m from the pad centre and well inside its 14m full-flatten radius) and opened up, so the rows read as rows from the door.",
-  "_comment_grow_days": "In-game DAYS (autoload/game_state.gd::day, advanced only by scripts/build/camp.gd's rest), not seconds. One day, so R7.6's done-when -- 'harvest berries from it on a later day' -- is exactly one sleep away rather than a week of them. Raise it if the farm turns out to trivialise the berry economy; there is no other lever here on purpose.",
+  "_comment_grow_days": "Host in-game days only, never elapsed wall time. Existing berries grow in 1 day; type crops grow in 2 days. Readiness derives from planted_on_day and ripe_on_day in durable world plot state.",
   "_comment_yield": "Berries per bed, against the 3 a wild bush gives (data/config/harvest.json). Deliberately only one more: the farm's advantage over walking to a bush is that it is at home and six beds ripen together, not that a bed out-yields the wild by a multiple. recipes_ironwood.json:58 keeps berries in the Ridge Tonic cost 'so the berry plots stay worth walking to at Band 4' -- this is the plot that line was written for, and a 3x yield would make that sentence false in the other direction.",
   "grow_days": 1,
   "yield": 4,
@@ -46,5 +46,138 @@
         23.4
       ]
     }
-  ]
+  ],
+  "_comment_native_types": "Starting value from Meadows spawn-table entry tier weights: ground 675, air 475, water 264, dark 50, electric 25, fire 14, ice 7 (spawn_tables.json + species.json). Ground and Air grow outside; all other types need the Farm Greenhouse.",
+  "default_crop": "berries",
+  "native_types": [
+    "ground",
+    "air"
+  ],
+  "greenhouse": {
+    "buildable_id": "greenhouse",
+    "station": "farm",
+    "scope": "world",
+    "allows_off_biome_types": true,
+    "automatic_harvest": false
+  },
+  "crop_order": [
+    "berries",
+    "ground",
+    "water",
+    "air",
+    "electric",
+    "fire",
+    "dark",
+    "ice",
+    "psychic"
+  ],
+  "crops": {
+    "berries": {
+      "name": "Berries",
+      "type": "",
+      "seed_item": "berry_seeds",
+      "grow_days": 1,
+      "outputs": {
+        "berries": 4
+      },
+      "sow_label": "Sow berry seeds",
+      "harvest_label": "Pick berries"
+    },
+    "ground": {
+      "name": "Rootbud",
+      "type": "ground",
+      "seed_item": "seed_ground",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_ground": 2,
+        "essence_ground": 3
+      },
+      "sow_label": "Sow rootbud seeds",
+      "harvest_label": "Pick rootbud"
+    },
+    "water": {
+      "name": "Tidebud",
+      "type": "water",
+      "seed_item": "seed_water",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_water": 2,
+        "essence_water": 3
+      },
+      "sow_label": "Sow tidebud seeds",
+      "harvest_label": "Pick tidebud"
+    },
+    "air": {
+      "name": "Galebloom",
+      "type": "air",
+      "seed_item": "seed_air",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_air": 2,
+        "essence_air": 3
+      },
+      "sow_label": "Sow galebloom seeds",
+      "harvest_label": "Pick galebloom"
+    },
+    "electric": {
+      "name": "Sparkstem",
+      "type": "electric",
+      "seed_item": "seed_electric",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_electric": 2,
+        "essence_electric": 3
+      },
+      "sow_label": "Sow sparkstem seeds",
+      "harvest_label": "Pick sparkstem"
+    },
+    "fire": {
+      "name": "Emberbloom",
+      "type": "fire",
+      "seed_item": "seed_fire",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_fire": 2,
+        "essence_fire": 3
+      },
+      "sow_label": "Sow emberbloom seeds",
+      "harvest_label": "Pick emberbloom"
+    },
+    "dark": {
+      "name": "Duskcap",
+      "type": "dark",
+      "seed_item": "seed_dark",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_dark": 2,
+        "essence_dark": 3
+      },
+      "sow_label": "Sow duskcap seeds",
+      "harvest_label": "Pick duskcap"
+    },
+    "ice": {
+      "name": "Frostbloom",
+      "type": "ice",
+      "seed_item": "seed_ice",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_ice": 2,
+        "essence_ice": 3
+      },
+      "sow_label": "Sow frostbloom seeds",
+      "harvest_label": "Pick frostbloom"
+    },
+    "psychic": {
+      "name": "Mindleaf",
+      "type": "psychic",
+      "seed_item": "seed_psychic",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_psychic": 2,
+        "essence_psychic": 3
+      },
+      "sow_label": "Sow mindleaf seeds",
+      "harvest_label": "Pick mindleaf"
+    }
+  }
 }

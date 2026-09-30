@@ -4593,5 +4593,18 @@
       "charged": false,
       "grade": ""
     }
-  ]
+  ],
+  "renewable": {
+    "clock": "host_world_day",
+    "scope": "world",
+    "material_respawn_days": 2,
+    "tier": 4,
+    "materials": [
+      "stormglass",
+      "thunderwood",
+      "conductor_vine",
+      "glowmoss",
+      "voltcap"
+    ]
+  }
 }

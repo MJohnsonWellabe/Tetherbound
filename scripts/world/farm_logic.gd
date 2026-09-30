@@ -2,11 +2,12 @@ extends RefCounted
 
 ## What one farm plot is doing, and what changes it.
 ##
-## R7.6. `GAME_DESIGN.md` §21 scopes Meadows farming to four words -- "plant,
-## wait, harvest", berries only, "no watering chores" -- and §32 excludes
-## *deep* farming. So there is no irrigation, no fertiliser, no soil quality
-## and no crop varieties in here, and adding any of them is a design change,
-## not a follow-up.
+## R7.6's berry loop is preserved. RD-05 / HOMESTEAD §5.3 adds eight type
+## crops and a Greenhouse gate, using the same manual plant/wait/pick cycle.
+## There is no irrigation, fertiliser, soil quality or automatic harvest.
+## These rules only stage detached results; the host ledger owns seed costs,
+## plot revisions and inventory payouts together. A client cannot commit one
+## of these candidates by itself.
 ##
 ## Pure and node-free on purpose (docs/decisions/D02): `scripts/world/
 ## farm_plot.gd` is the Node3D that draws a plot and offers its prompt, and
@@ -72,7 +73,14 @@ static func sanitised(value: Variant) -> Dictionary:
 	var state := str(plot.get("state", FALLOW))
 	if not [FALLOW, TILLED, SOWN, RIPE].has(state):
 		return fresh()
-	return {"state": state, "ripe_on_day": int(plot.get("ripe_on_day", 0))}
+	var clean := {"state": state, "ripe_on_day": int(plot.get("ripe_on_day", 0))}
+	# Older berry plots remain byte-shaped as before. A typed plot must keep
+	# its selected crop across ripening, save/load and rejoin reconciliation.
+	if plot.get("crop_id") is String and not str(plot["crop_id"]).is_empty():
+		clean["crop_id"] = str(plot["crop_id"])
+	if plot.has("planted_on_day"):
+		clean["planted_on_day"] = int(plot["planted_on_day"])
+	return clean
 
 
 ## The plot as of `day`. A sown plot whose ripening day has arrived is ripe;
@@ -167,3 +175,89 @@ static func sown(plot: Dictionary, day: int, grow_days: int) -> Dictionary:
 ## keeps a five-plot farm from being worse than walking to a wild bush.
 static func harvested(plot: Dictionary) -> Dictionary:
 	return {"state": TILLED, "ripe_on_day": 0}
+
+
+## F32: definitions come from the HOST's farm.json, never from the intent.
+## An unknown crop is refused rather than silently becoming berries.
+static func crop_definition(config: Dictionary, crop_id: String) -> Dictionary:
+	var crops: Variant = config.get("crops", {})
+	if not crops is Dictionary:
+		return {}
+	var raw: Variant = crops.get(crop_id)
+	if not raw is Dictionary:
+		return {}
+	var definition: Dictionary = raw
+	if str(definition.get("seed_item", "")).is_empty() \
+			or int(definition.get("grow_days", 0)) < 1:
+		return {}
+	var outputs: Variant = definition.get("outputs")
+	if not outputs is Dictionary or outputs.is_empty():
+		return {}
+	for item: Variant in outputs:
+		if not item is String or str(item).is_empty() \
+				or not (typeof(outputs[item]) in [TYPE_INT, TYPE_FLOAT]) \
+				or float(outputs[item]) != float(int(outputs[item])) or int(outputs[item]) < 1:
+			return {}
+	return definition.duplicate(true)
+
+
+## Native crops work outside; other types need the one Farm Greenhouse.
+## Presence is supplied by the host's built-world state, not a client flag.
+static func can_grow(config: Dictionary, crop_id: String, greenhouse_built: bool) -> bool:
+	var definition := crop_definition(config, crop_id)
+	if definition.is_empty():
+		return false
+	var type_id := str(definition.get("type", ""))
+	if type_id.is_empty():
+		return crop_id == str(config.get("default_crop", "berries"))
+	var native: Variant = config.get("native_types", [])
+	return greenhouse_built or (native is Array and native.has(type_id))
+
+
+## Ordered, deterministic choices for a bounded tap-driven crop selector.
+## Seed counts are read from the actor's inventory; this spends nothing.
+static func available_crops(config: Dictionary, seed_counts: Dictionary,
+		greenhouse_built: bool) -> Array[String]:
+	var result: Array[String] = []
+	var order: Variant = config.get("crop_order", [])
+	if not order is Array:
+		return result
+	for raw_id: Variant in order:
+		if not raw_id is String or result.has(raw_id):
+			continue
+		var crop_id := str(raw_id)
+		var definition := crop_definition(config, crop_id)
+		if can_grow(config, crop_id, greenhouse_built) \
+				and int(seed_counts.get(str(definition.get("seed_item", "")), 0)) > 0:
+			result.append(crop_id)
+	return result
+
+
+## Host-only staging seam. The caller checks proximity, actor identity,
+## expected plot revision, seed inventory and greenhouse state before the
+## ledger commits this new plot and one seed debit as a single transaction.
+static func planted_crop(plot: Dictionary, day: int, crop_id: String,
+		config: Dictionary, greenhouse_built: bool) -> Dictionary:
+	if day < 1 or state_of(plot, day) != TILLED \
+			or not can_grow(config, crop_id, greenhouse_built):
+		return {}
+	var definition := crop_definition(config, crop_id)
+	var candidate := sown(plot, day, int(definition["grow_days"]))
+	candidate["crop_id"] = crop_id
+	candidate["planted_on_day"] = day
+	return candidate
+
+
+## One manual harvest pays every output atomically. No partial attuned/
+## essence payout if the inventory is full; no wall-clock/offline growth.
+## The definition is looked up from saved crop identity in host config.
+static func harvest_candidate(plot: Dictionary, day: int, config: Dictionary) -> Dictionary:
+	if day < 1 or state_of(plot, day) != RIPE:
+		return {}
+	var clean := sanitised(plot)
+	var crop_id := str(clean.get("crop_id", config.get("default_crop", "berries")))
+	var definition := crop_definition(config, crop_id)
+	if definition.is_empty():
+		return {}
+	return {"plot": harvested(clean), "crop_id": crop_id,
+		"outputs": (definition["outputs"] as Dictionary).duplicate(true)}

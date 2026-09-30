@@ -7005,5 +7005,19 @@
       "evidence_status": "analytic_approach_only_not_baked_or_walked",
       "yield": 2
     }
-  ]
+  ],
+  "renewable": {
+    "clock": "host_world_day",
+    "scope": "world",
+    "material_respawn_days": 2,
+    "tier": 2,
+    "materials": [
+      "driftwood",
+      "reed_fiber",
+      "reef_stone",
+      "sluice_metal",
+      "tide_bloom",
+      "tide_pearl"
+    ]
+  }
 }
