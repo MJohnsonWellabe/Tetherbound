@@ -1,0 +1,64 @@
+F28 content authoring scope and evidence
+
+Exact owned files: data/config/masters.json and data/recipes/feasts.json.
+New owned scripts/creatures/breakthrough.gd validates authored recipe tables
+and provides detached cook/feed intent plans only, always ready_to_commit:false
+and with no state/save/item/cap mutation. Both disabled flags refuse gameplay
+plans; unknown output SKUs, unknown recipe, wrong type, missing personal recipe,
+missing attachment tier, material/capacity deficit and absent admitted creature
+mirror refuse. It does not manufacture caught-above-cap history or compose
+ultimate/traits/learnset/evolution/Dive effects; those are named commit needs.
+This new source is unparsed/unexecuted and needs the same later scoped batch.
+No F29 source, learnset, creature roster/evolution field, actor asset, terrain,
+shared state, Session, ItemDB consumer or runtime station changed.
+F27/F31 activation dependencies remain held; both data files are disabled and
+explicitly unmounted/unregistered proposals. This is source work, not a claim
+that a Master arena, feast or breakthrough currently exists in play.
+
+Five Master profiles use canonical master_t1..master_t5 IDs and tier levels
+from F16; named Orin/Briar/Maris/Vale/Sorrel with installed cast keys quarryman,
+ranger, field researcher, wandering trainer, alpha tracker. No new acquisition
+or model generation. Creature candidates match BOSSES 4.13: Burrowback, Ashtusk,
+Cannonback, Stormcapra, Voltarach fallback. Future Stormwood bear remains off
+until the actual approved F29 asset/scale/provenance/code-blind gate passes.
+
+Off-route location/access/signpost intent matches WORLD/BOSSES: Quarry before
+Warrens/Vance, Ironwood ridge before Sigil/Hald, Gull Rest by human swim before
+Veilfall, High Perches by Fly before Veyra, rod-protected Capacitor Grove before
+Deepwood. None has a mounted coordinate, actor, collision or normal-player
+reach proof yet. Timings/questions are authored from the owning Master table;
+there is no claim that the combat director consumes these profiles yet.
+
+1v1 rules pick one conscious actual owned UID, no switches/flee/extra allies,
+no capture or human damage. Tether Commands stay, tag-switch combo does not.
+Sequential per-character co-op duels preserve TRAINING 12 Q3 conservative
+default; observers earn nothing. First winning character earns its own recipe
+and two Tether Candy once through a personal chest; a full inventory retains
+its claim. No win automatically lifts a cap. Loss can retry without a timer
+or extra penalty. Host result/admission/journal/promotion is not implemented by
+these data rows and must precede activation.
+
+Five feast recipe families use exact F16 IDs, cap breaks 10/20/30/40/50 ->
+20/30/40/50/60 and the correct biome materials. Kitchen attachment tiers are
+1/1/2/3/4; L20 still uses Meadows, avoiding a Tidewake-material gate before the
+Warden. Costs are provisional tunables, not a passed supply/time ledger. The
+Tidewake list does not require Dive or a mount. All lists require one matching
+attuned type; dual types accept either. Only the home Kitchen cooks feasts;
+personal Master recipe plus actual host attachment tier is required.
+
+Type binding is explicit in 40 proposed outputs feast_t<N>_<type>, not generic
+untyped feast_t<N> stacks. Inventory merges by ID, so relying on arbitrary
+per-stack type metadata alone would permit mixed-type merging/feed ambiguity.
+Two optional Mudsnout/ground T2 outputs add one Heartstone or Sunstone for the
+corresponding evolution candidate; the regular stay variant needs neither.
+These 42 output SKUs require exact catalogue allocation/registration before
+the recipes can load. They are NOT yet added to items.json. F29 evolve/stay
+mechanics remain separate and unimplemented; this file does not activate them.
+
+Static authoring check PASS: JSON parses; five IDs/canonical tier/biome/Kitchen
+mappings and all eight type choices match F16, all cast/species keys exist, all
+input SKUs exist including the already-registered Water proposals, exactly 42
+distinct output proposals, and both enable flags are false. No test suite,
+native/import/render/GPU/full-CI executed. Ingredient reachability, fights,
+ordinary cook/feed/cap lift, receipt duplication and controller proof remain
+UNPROVEN. All F28 rows remain OPEN (#1/#2/#3/#5 advanced as data only).
