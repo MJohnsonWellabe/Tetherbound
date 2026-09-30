@@ -1313,6 +1313,19 @@ static func _actor_vitals_view(actor: Dictionary) -> Dictionary:
 	return out
 
 
+## Detached render/wire projection. Battle HP is visible; internal replay and
+## settlement history, departed rows and durable handoff state stay on host.
+static func presentation_snapshot(rec: Dictionary) -> Dictionary:
+	var out := rec.duplicate(true)
+	out.erase("retained_actor_participants")
+	for participant: Dictionary in (out.get("participants", {}) as Dictionary).values():
+		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():
+			actor.erase("receipts")
+			actor.erase("settlement_receipt")
+			actor.erase("settled_revision")
+	return out
+
+
 ## Called only after a typed host release/evolution ownership commit. Pending
 ## HP must first reach the durable registry; discarding it is never a release.
 func remove_actor_vitals(encounter_id: String, peer_id: int, creature_uid: String) -> bool:

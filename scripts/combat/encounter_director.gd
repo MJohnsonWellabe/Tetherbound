@@ -2921,15 +2921,17 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 ## authoritative, so this is the only broadcast a participant's HUD needs.
 func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
-	var rec: Dictionary = _encounter_host.call("record", encounter_id)
-	# Presentation metadata on this accepted-hit snapshot only; not save state.
-	if not resolved_impact.is_empty(): rec["resolved_impact"] = resolved_impact.duplicate()
-	if rec.is_empty():
+	var authoritative: Dictionary = _encounter_host.call("record", encounter_id)
+	if authoritative.is_empty():
 		_release_tournament_roster(encounter_id)
 		return
+	_refresh_shared_record_presentation(authoritative)
+	var rec := ENCOUNTER_HOST_SCRIPT.presentation_snapshot(authoritative)
+	# Presentation metadata belongs to this one accepted snapshot. It cannot
+	# persist on host truth or carry private replay/durable-settlement history.
+	if not resolved_impact.is_empty(): rec["resolved_impact"] = resolved_impact.duplicate()
 	if str(rec.get("phase", "")) == "done" and not _tournament_roster_stays_frozen(encounter_id):
 		_release_tournament_roster(encounter_id)
-	_refresh_shared_record_presentation(rec)
 	var locally_bound := _local_bound_encounter_id() == encounter_id
 	var terminal_author := str(rec.get("phase", "")) == "done" \
 		and author_peer_id != 0
@@ -4732,7 +4734,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		_note_trainer_participants(str(rec["encounter_id"]))
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
-			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [rec])
+			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [ENCOUNTER_HOST_SCRIPT.presentation_snapshot(rec)])
 
 
 func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: int) -> void:
