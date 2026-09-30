@@ -212,4 +212,44 @@ production-target synthetic arena remain a scope limit. The target has no
 encounter, AI or HP authority; travel remains slowed0.7seconds. There is no
 High/Medium, earned mastery/player, four-creature performance, Ally, audio,
 continuous motion or multiplayer HP acceptance here. A fresh code-blind verdict
-is pending. The library stays flag-off and all F25 criteria remain open.
+is now archived in `native-identities-r5/strict-review.txt`. The library stays
+flag-off and all F25 criteria remain open.
+
+## R5 fresh blind verdict and assertion-only guard correction
+
+Independent `/root/vfx_blind_r5` viewed all36 frames and three restored owner
+references before mapping. Allfour literal identities and sampled1/3/5 visual
+upgrades PASS. The burning orb/trail/basic fiery explosion cloud is present.
+Full effect craft remains UNMET: flat circular luminous cores, diffuse puffy
+impacts with floor bands, weak stone trails/no fragments, thin angular bolts
+and washed-out creature detail. Integrated real-world atmosphere is UNPROVEN
+by the synthetic arena, not judged failed. The archival report is explicitly a
+faithful parent relay: original verbatim agent text is unavailable in current
+context. It includes the exact three-reference inventory supplied by root.
+
+`/root/combat` independently read the guard patch, actual body geometry and
+retained positions. The group envelope double-counted already-applied volley
+spread/stagger when checking individual bodies. Its replacement retains full
+shape/layer radius plus clearance; corrected clear margins are1.398/1.515/1.646m
+at1/3/5. Group shutter selection and all36 PNGs are unchanged. Applied only the
+assertion/diagnostic fix, with `guard-recheck.txt` preserving the independent
+limits. Original native1/two failed checks remain unchanged; no rerun invented.
+
+## Changed content approach after repeated finish failures
+
+Current source replaces the uniform Fireball core with advected hot channels,
+cuts irregular holes into flame expansion, and puts localized impact children
+at the frozen measured surface. The parent contact node/endpoints/arrival and
+host gameplay are unchanged. Fewer puffs leave more lease slots for directed
+embers or tumbling textured stone chips; dust uses lit granular alpha instead
+of the shared glowing flame material. Raised irregular dust-card edges avoid
+the shared floor-clipping band. Tapered corona surrounds a narrow electric core.
+The source also folds in rolling wave/stream/faceted ice/mist-cone geometry and
+installed project-waterfall flow/foam math with explicit provenance. Ordinary
+leases remain42, library24, mapping53, ranksfive. Flag stays off.
+
+Only JSON mapping/budget/source-whitespace contracts were checked for this
+slice. No native parse/import, movement, visual, audio or performance checks ran
+while another lane held the engine. Rolling-wave ground height is still frozen
+to target ground; slope-path presentation remains open. Persistent status
+verbs and earned mastery are not implemented by this presentation slice.

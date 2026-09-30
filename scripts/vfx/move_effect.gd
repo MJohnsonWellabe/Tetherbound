@@ -63,7 +63,7 @@ func _ready() -> void:
 	for i in int(_params.count):
 		var body := _mesh_node(GEOMETRY.shape(str(profile.shape), float(_params.size), profile),
 			_colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
-		if str(profile.shape) in ["stone", "flame_orb", "burning_core"]:
+		if str(profile.shape) in ["stone", "flame_orb", "burning_core", "water_stream", "rolling_wave", "ice_crystal", "flame_volume", "mist_cone"]:
 			body.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 			body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if str(profile.shape) == "stone" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		if str(profile.get("motion", "")) == "sky": body.material_override = GEOMETRY.authored_material("ion_filament", profile, _colour)
@@ -232,8 +232,13 @@ func _update_bodies(t: float) -> void:
 				body.position = _from
 				body.rotation.y = angle + t * TAU
 			_:
-				if str((_row.body as Dictionary).get("shape", "")) in ["shard", "cone", "crescent"]: body.quaternion = Quaternion(Vector3.UP, direction)
+				if str((_row.body as Dictionary).get("shape", "")) in ["shard", "cone", "crescent", "ice_crystal"]: body.quaternion = Quaternion(Vector3.UP, direction)
 		if str((_row.body as Dictionary).get("shape", "")) == "vortex": body.rotation.y = t * TAU
+		if str(_row.body.get("shape", "")) == "rolling_wave":
+			var planar := Vector3(direction.x, 0.0, direction.z).normalized()
+			if not planar.is_zero_approx(): body.quaternion = Quaternion(Vector3.FORWARD, planar)
+			var ground: Vector3 = _context.get("target_ground", _to)
+			body.position.y = ground.y + float(_params.size) * 0.05
 		for component: Node in body.get_children():
 			if component is Node3D: component.rotation.y = _elapsed * float(component.get_meta("spin_rate", 0.0))
 		var trail_head := body.position if mode not in ["sky", "chain", "beam"] else front
@@ -286,7 +291,8 @@ func _update_trail() -> void:
 			var camera := get_viewport().get_camera_3d()
 			var camera_position := camera.global_position if camera != null else _from + Vector3(0, 5, 14)
 			trail.mesh = GEOMETRY.flowing_ribbon(points, width, camera_position)
-			(trail.material_override as ShaderMaterial).set_shader_parameter("flame_colour", colour)
+			var colour_uniform := "dust_colour" if style == "dust" else "flame_colour"
+			(trail.material_override as ShaderMaterial).set_shader_parameter(colour_uniform, colour)
 
 func _build_impact() -> void:
 	if _marker != null: _marker.visible = false
@@ -295,28 +301,33 @@ func _build_impact() -> void:
 	_impact.position = _contact_position()
 	var profile: Dictionary = _row.impact
 	var scale_factor := float(_params.size) * float(_params.impact_scale)
+	# Only child presentation geometry moves to the measured surface. The
+	# frozen contact endpoint, arrived clock and host gameplay stay unchanged.
+	var surface_offset := _impact_visual_origin(profile) - _contact_position()
 	var core := _mesh_node(GEOMETRY.shape(str(profile.get("shape", "ring")), scale_factor, profile),
 		_colour.lerp(Color.WHITE, float(profile.get("heat", 0.45))), float(profile.get("opacity", 0.82)))
-	if str(profile.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
+	if str(profile.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam"]: core.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
 	core.set_meta("base_opacity", float(profile.get("opacity", 0.82)))
 	core.reparent(_impact, false)
+	core.position = surface_offset
 	for layer: Dictionary in profile.get("layers", []):
 		var scale := float(layer.get("size_scale", 1.0))
 		var part := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), scale_factor * scale, layer),
 			Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.6)), bool(layer.get("lit", false)))
-		if str(layer.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
+		if str(layer.get("shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam"]: part.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
 		part.set_meta("base_opacity", float(layer.get("opacity", 0.6)))
 		part.reparent(_impact, false)
 		var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
-		part.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2])) * scale_factor
+		part.position = surface_offset + Vector3(float(offset[0]), float(offset[1]), float(offset[2])) * scale_factor
 		if bool(layer.get("at_ground", false)):
 			var ground: Vector3 = _context.get("target_ground", _to)
 			part.position.y = ground.y - _contact_position().y + scale_factor * float(layer.get("ground_lift_scale", 0.3))
 	if bool(_row.impact_layer):
 		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
-		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "soft_dust", "soft_ember"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
+		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "soft_dust", "soft_ember", "soft_foam"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
 		secondary.set_meta("base_opacity", 0.65)
 		secondary.reparent(_impact, false)
+		secondary.position = surface_offset
 		secondary.rotation.x = float(profile.get("secondary_rotation_x", PI * 0.5))
 	var impact_slots := int(BUDGET.allocation(_lease).get("impact", 0))
 	var puff_count := mini(impact_slots, maxi(0, int(profile.get("puff_count", 0))))
@@ -327,23 +338,41 @@ func _build_impact() -> void:
 		# fallback dependency and no per-mote Node or material allocations.
 		var multimesh := MultiMesh.new()
 		multimesh.transform_format = MultiMesh.TRANSFORM_3D
+		multimesh.use_custom_data = true
 		multimesh.mesh = GEOMETRY.shape(str(profile.get("mote_shape", "orb")), float(profile.get("mote_size", 0.045)))
 		multimesh.instance_count = count
 		_motes = MultiMeshInstance3D.new()
 		_motes.multimesh = multimesh
 		_motes.material_override = GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone")
-		if str(profile.get("mote_shape", "")) == "soft_ember":
-			_motes.material_override = GEOMETRY.authored_material("soft_ember", profile, Color(str(profile.get("mote_colour", _params.colour))))
+		if str(profile.get("mote_shape", "")) in ["soft_ember", "stone", "ice_crystal"]:
+			_motes.material_override = GEOMETRY.authored_material(str(profile.mote_shape), profile, Color(str(profile.get("mote_colour", _params.colour))))
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)
 	for i in count:
-		var start := Vector3(_rng.randf_range(-0.08, 0.08), _rng.randf_range(-0.03, 0.08), _rng.randf_range(-0.08, 0.08)) * scale_factor
+		var start := surface_offset + Vector3(_rng.randf_range(-0.08, 0.08), _rng.randf_range(-0.03, 0.08), _rng.randf_range(-0.08, 0.08)) * scale_factor
 		_mote_positions.append(start)
 		var varied_basis := Basis.from_euler(Vector3(_rng.randf() * TAU, _rng.randf() * TAU, _rng.randf() * TAU)).scaled(Vector3.ONE * _rng.randf_range(0.55, 1.45))
 		_mote_bases.append(varied_basis)
 		_motes.multimesh.set_instance_transform(i, Transform3D(varied_basis, start))
+		_motes.multimesh.set_instance_custom_data(i, Color(_rng.randf(), 0, 0, 0))
 		var direction := Vector3(_rng.randf_range(-1.0, 1.0), _rng.randf_range(0.2, 1.0), _rng.randf_range(-1.0, 1.0)).normalized()
+		var backscatter := (_from - _to).normalized()
+		direction = (direction + backscatter * float(profile.get("mote_backscatter", 0.0))).normalized()
 		_velocities.append(direction * float(profile.get("speed", 3.8)) * _rng.randf_range(0.65, 1.25))
+
+func _impact_visual_origin(profile: Dictionary) -> Vector3:
+	var contact := _contact_position()
+	if str(profile.get("visual_anchor", "")) != "contact_surface": return contact
+	var raw_bounds: Variant = _context.get("target_visual_bounds", {})
+	if not raw_bounds is Dictionary: return contact
+	var raw_position: Variant = raw_bounds.get("position", null)
+	var raw_size: Variant = raw_bounds.get("size", null)
+	if not raw_position is Vector3 or not raw_size is Vector3: return contact
+	var position: Vector3 = raw_position
+	var size: Vector3 = raw_size
+	if not position.is_finite() or not size.is_finite() or size.x <= 0.0 or size.y <= 0.0 or size.z <= 0.0: return contact
+	var intersection: Variant = AABB(position, size).intersects_segment(_from, _to)
+	return intersection as Vector3 if intersection is Vector3 else contact
 
 func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 	# Puffs and chips share the exact reserved impact slots; never add particles
@@ -357,10 +386,12 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 		valid_bounds = (raw_size as Vector3).is_finite() and (raw_position as Vector3).is_finite() and (raw_size as Vector3).x > 0.0 and (raw_size as Vector3).y > 0.0 and (raw_size as Vector3).z > 0.0
 	var radius := scale_factor * float(profile.get("puff_radius_scale", 1.5))
 	_puff_extent = Vector3.ONE * radius
+	_puff_origin = _impact_visual_origin(profile) - _contact_position()
 	if valid_bounds:
 		var size: Vector3 = raw_size
 		_puff_extent = _puff_extent.max(size * float(profile.get("target_envelope_scale", 0.55)))
-		_puff_origin = (raw_position as Vector3) + size * 0.5 - _contact_position()
+		if str(profile.get("visual_anchor", "")) != "contact_surface":
+			_puff_origin = (raw_position as Vector3) + size * 0.5 - _contact_position()
 	var multimesh := MultiMesh.new()
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.use_custom_data = true
@@ -375,14 +406,18 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 	_impact.add_child(_puffs)
 	if bool(profile.get("puff_at_ground", false)):
 		var ground: Vector3 = _context.get("target_ground", _to)
-		_puff_origin.y = ground.y - _contact_position().y + scale_factor * 0.4
+		# Lift the visible noisy card edge rather than clipping every puff at
+		# the same floor height, which produces a straight horizontal band.
+		var card_radius := scale_factor * float(profile.get("puff_size_scale", 1.5)) * float(profile.get("card_extent_scale", 3.2)) * 0.5
+		_puff_origin.y = ground.y - _contact_position().y + card_radius * float(profile.get("puff_ground_clearance_scale", 0.75))
 	for i in count:
 		var angle := float(i) * 2.399963
 		var y := 1.0 - 2.0 * (float(i) + 0.5) / float(count)
 		var radial := sqrt(maxf(0.0, 1.0 - y * y))
 		var direction := Vector3(cos(angle) * radial, y, sin(angle) * radial)
-		if bool(profile.get("puff_at_ground", false)): direction.y = absf(direction.y) * 0.18
+		if bool(profile.get("puff_at_ground", false)): direction.y = absf(direction.y) * 0.55
 		else: direction.y = direction.y * 0.65 + 0.3
+		direction += (_from - _to).normalized() * float(profile.get("puff_backscatter", 0.0))
 		_puff_directions.append(direction)
 		_puff_scales.append(_rng.randf_range(0.72, 1.18))
 		multimesh.set_instance_custom_data(i, Color(_rng.randf(), 0, 0, 0))
@@ -415,6 +450,9 @@ func _update_impact(u: float, delta: float) -> void:
 	for i in _mote_positions.size():
 		_velocities[i].y -= float(profile.get("gravity", 5.0)) * delta
 		_mote_positions[i] += _velocities[i] * delta
+		var tumble := float(profile.get("mote_tumble_radians", 0.0))
+		if tumble > 0.0:
+			_mote_bases[i] = _mote_bases[i].rotated(Vector3(0.7, 0.3, 0.6).normalized(), tumble * delta * (1.0 + float(i % 3) * 0.3))
 		var ground: Vector3 = _context.get("target_ground", _to)
 		var floor_y := ground.y - _contact_position().y + float(profile.get("mote_size", 0.045))
 		if bool(profile.get("settle_on_ground", false)) and _mote_positions[i].y < floor_y:

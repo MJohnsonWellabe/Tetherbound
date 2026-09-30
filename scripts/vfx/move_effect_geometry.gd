@@ -4,6 +4,10 @@ const FIRE_SHADER := preload("res://assets/vfx/shaders/fire_body.gdshader")
 const FIRE_CORE_SHADER := preload("res://assets/vfx/shaders/fire_core.gdshader")
 const ION_SHADER := preload("res://assets/vfx/shaders/ion_filament.gdshader")
 const STONE_SHADER := preload("res://assets/vfx/shaders/stone_body.gdshader")
+const FLUID := preload("res://scripts/vfx/fluid_effect_geometry.gd")
+const FLOW_SHADER := preload("res://assets/vfx/shaders/flowing_water.gdshader")
+const ICE_SHADER := preload("res://assets/vfx/shaders/ice_crystal.gdshader")
+const DUST_SHADER := preload("res://assets/vfx/shaders/dust_plume.gdshader")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
 ## Forward+. No screen-space distortion or GPU particles are required.
@@ -21,9 +25,15 @@ static func material(colour: Color, opacity: float = 1.0, lit: bool = false) -> 
 
 static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 	match kind:
+		"water_stream", "flame_volume", "mist_cone":
+			return FLUID.water_stream(size, profile)
+		"rolling_wave":
+			return FLUID.rolling_wave(size, profile)
+		"ice_crystal":
+			return FLUID.ice_crystal(size, profile)
 		"stone":
 			return stone(size, profile)
-		"flame_orb", "fire_bloom", "soft_dust", "soft_ember":
+		"flame_orb", "fire_bloom", "soft_dust", "soft_ember", "soft_foam":
 			var card := QuadMesh.new()
 			card.size = Vector2.ONE * size * float(profile.get("card_extent_scale", 3.2))
 			return card
@@ -60,6 +70,26 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 
 static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
 	var out := ShaderMaterial.new()
+	if kind == "soft_dust" or (kind == "soft_trail" and str(profile.get("style", "")) == "dust"):
+		out.shader = DUST_SHADER
+		out.set_shader_parameter("dust_colour", colour)
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.58)))
+		out.set_shader_parameter("billboard", kind == "soft_dust")
+		out.set_shader_parameter("trail", kind == "soft_trail")
+		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 2.1)))
+		return out
+	if kind in ["water_stream", "rolling_wave"]:
+		out.shader = FLOW_SHADER
+		out.set_shader_parameter("water_colour", colour)
+		out.set_shader_parameter("foam_colour", Color(str(profile.get("foam_colour", "#d1edf2"))))
+		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.76)))
+		out.set_shader_parameter("wave", kind == "rolling_wave")
+		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.0)))
+		return out
+	if kind == "ice_crystal":
+		out.shader = ICE_SHADER
+		out.set_shader_parameter("ice_colour", colour)
+		return out
 	if kind == "ion_filament":
 		out.shader = ION_SHADER
 		out.set_shader_parameter("ion_colour", colour)
@@ -71,15 +101,15 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff2b2"))))
 		out.set_shader_parameter("flame_colour", colour)
 		return out
-	if kind in ["flame_orb", "fire_bloom", "soft_dust", "soft_ember", "soft_trail"]:
+	if kind in ["flame_orb", "fire_bloom", "soft_dust", "soft_ember", "soft_trail", "soft_foam", "flame_volume", "mist_cone"]:
 		out.shader = FIRE_SHADER
 		out.set_shader_parameter("hot_colour", Color(str(profile.get("hot_colour", "#fff3a6"))))
 		out.set_shader_parameter("flame_colour", colour)
 		out.set_shader_parameter("ember_colour", Color(str(profile.get("ember_colour", "#7b4106"))))
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 1.0)))
-		out.set_shader_parameter("billboard", kind != "soft_trail")
-		out.set_shader_parameter("dust", kind == "soft_dust" or bool(profile.get("dust", false)))
-		out.set_shader_parameter("effect_mode", 1 if kind == "soft_trail" else (2 if kind in ["fire_bloom", "soft_dust"] else (3 if kind == "soft_ember" else 0)))
+		out.set_shader_parameter("billboard", kind not in ["soft_trail", "flame_volume", "mist_cone"])
+		out.set_shader_parameter("dust", kind in ["soft_dust", "soft_foam", "mist_cone"] or bool(profile.get("dust", false)))
+		out.set_shader_parameter("effect_mode", 1 if kind in ["soft_trail", "flame_volume", "mist_cone"] else (2 if kind in ["fire_bloom", "soft_dust", "soft_foam"] else (3 if kind == "soft_ember" else 0)))
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 2.4)))
 		return out
 	if kind == "stone":
@@ -232,7 +262,7 @@ static func _bolt_segment(mesh: ImmediateMesh, from: Vector3, to: Vector3, width
 	for axis: Vector3 in [side, other]:
 		# Continuous soft corona and white core come from UV across the actual
 		# depth-tested filament, not a hard opaque golden rectangular strip.
-		_uv_quad(mesh, from - axis * width, from + axis * width, to + axis * width, to - axis * width, 0.0, 1.0)
+		_uv_quad(mesh, from - axis * width, from + axis * width, to + axis * width * 0.58, to - axis * width * 0.58, 0.0, 1.0)
 
 static func sigil(size: float, profile: Dictionary) -> ImmediateMesh:
 	var mesh := ImmediateMesh.new()

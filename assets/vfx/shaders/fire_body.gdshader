@@ -47,14 +47,14 @@ void fragment() {
         float across = abs(p.x + swirl * (1.0 - front));
         float width = mix(0.16, 0.92, smoothstep(0.0, 1.0, front));
         mask = (1.0 - smoothstep(width * 0.18, width, across)) * smoothstep(0.0, 0.22, front);
-        mask *= mix(0.32, 1.0, billow);
+        mask *= smoothstep(0.18, 0.78, billow);
         heat = clamp(front * 0.68 + (1.0 - across) * 0.32 + (billow - 0.5) * 0.25, 0.0, 1.0);
     } else {
         float radius = length(p * vec2(1.0, effect_mode == 0 ? 0.91 : 1.0));
-        float edge = 0.75 + (billow - 0.5) * (effect_mode == 3 ? 0.04 : 0.24);
-        mask = 1.0 - smoothstep(edge * 0.30, edge, radius);
+        float edge = 0.69 + (billow - 0.5) * (effect_mode == 3 ? 0.04 : 0.40);
+        mask = 1.0 - smoothstep(edge * 0.42, edge, radius);
         heat = clamp(1.0 - radius * 0.90 + (billow - 0.5) * 0.48, 0.0, 1.0);
-        if (effect_mode == 2) mask *= mix(0.5, 1.0, billow);
+        if (effect_mode == 2) mask *= smoothstep(0.19, 0.70, billow);
     }
     vec3 colour = mix(ember_colour.rgb, flame_colour.rgb, smoothstep(0.06, 0.62, heat));
     colour = mix(colour, hot_colour.rgb, smoothstep(0.63, 0.96, heat));
