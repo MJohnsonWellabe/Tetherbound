@@ -926,19 +926,19 @@
      "text": "Save schema bumped past v27; loading any v27-or-older save shows a clear 'older version, start a new game' message, never crashes and never overwrites the old file (unit test with a v27 fixture).",
      "status": "in_progress",
      "evidence": "",
-     "gap": "WIP cf702dc0e, merged docs main at 2014963ea. Focused 166 tests/2240 assertions/0 failures and title refusal-to-New-Game/autosave witness inspected. Final candidate re-check, expanded focused regressions and four full unit shards remain; no MET claim."
+     "gap": "Candidate 94b81b02c independently re-checked MET; exact title refusal/file preservation evidence and focused regressions pass. Required broad F16 batch validation, full-ci and main landing remain; board count unchanged."
     },
     {
      "text": "Data schemas exist and validate for type essences, material tiers (8 slots, 4 live), stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, level caps (10–100); a schema test fails on a missing or unknown id.",
      "status": "in_progress",
      "evidence": "",
-     "gap": "Schemas and loaders implemented in supporting WIP; independent missing/unknown-ID and identity invariants strengthened after review. Final candidate runtime and strict re-check remain."
+     "gap": "All 14 schema/catalog pairs independently re-checked MET on 94b81b02c, including six real-loader station slot rejection cases. Batch validation and main landing remain."
     },
     {
      "text": "Biome order is one config list (meadows, tidewake, cloudreach, stormwood, then four reserved slots); a test proves no gameplay code hard-codes the old Meadows→Cloudreach→Stormwood→Water order.",
      "status": "in_progress",
      "evidence": "",
-     "gap": "Central order accessor and actual map/journal/credits/shrine consumers implemented. New production shrine placement and shipping-code scan tests await focused runtime/re-check. Narrative reorder remains F19/F20."
+     "gap": "Central eight-slot order and actual map/journal/credits/shrine consumers independently re-checked MET on 94b81b02c; production shrine and source-scan tests pass. Batch validation/main landing remain; F19/F20 campaign narrative still open."
     },
     {
      "text": "Every new durable field declares scope (world or character) and transaction semantics in the flag-scope registry; a two-peer save/reload round trip preserves them.",

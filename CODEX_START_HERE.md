@@ -85,6 +85,7 @@ Ground rules (unchanged unless §1 says otherwise):
 | RD-33 | **Material tiers reuse existing items** (§3.4). |
 | RD-34 | **This plan supersedes Phase 1 and Phase 2.** Still-valid open rows fold into the new features. Obsolete ones close as "superseded by owner redesign 2026-09-29" with the replacing criterion cited. |
 | RD-35 | **Saves reset.** v27-and-older saves are refused with a clear message. This is an owner override of the migration hard rule, for this redesign only. Migration discipline resumes for every later change. |
+| RD-36 | **Minimum necessary testing; batch validation (owner, 2026-09-29).** Prioritize content and code generation. Run only checks needed for acceptance or to prevent substantial rework; batch them across coherent changes and reuse passing evidence when the relevant source and path are unchanged. This supersedes the per-criterion full-suite repetition and strict one-criterion work queue. Related criteria may share a reviewable implementation/validation batch, but each retains its own evidence and independent verdict. Save preservation, multiplayer authority/transactions, required real player paths, code-blind visual judgments and named acceptance proofs remain required. Never skip, disable or quarantine tests to get green. |
 
 Carry-over owner rules that still apply: five owned total, catch only in wild combat,
 starters exclusive, per-participant legendary offers, light satiety with no starvation
@@ -897,13 +898,20 @@ same criteria, numbered from zero (`F27#3`).
 - Each lane: `tb/<lane>`, branched from current `main`, reused for all its landings. After
   each landing, merge `origin/main` back in.
 
-### 7.2 Landing a criterion (self-landing, no human gate)
-1. Implement. Unit-test the logic and exercise the actual player path.
+### 7.2 Landing a criterion or coherent batch (self-landing, no human gate)
+1. Implement content and code first. Under RD-36, use existing focused checks where sufficient;
+   add tests only for required acceptance or substantial rework risk. Exercise the required actual
+   player path. Related criteria may share a bounded batch and its necessary checks.
 2. **Independent strict re-check:** a read-only sub-agent scores the evidence against the
    criterion wording. It closes only on MET. Disclose shortcuts (fixture starts, teleports,
    harness input) in the evidence text.
-3. Merge `origin/main`. Run the unit suite once on the merged head
-   (`godot --headless --path . --import`, then `--script tests/run_tests.gd -- --shard=I/4`, 4 shards).
+3. Merge `origin/main`. Choose the smallest necessary validation set for the batch, recording
+   the covered risks, source SHA and any reused evidence. Run the full unit suite once per coherent
+   batch when acceptance explicitly requires it or broad save/autoload/shared-system changes risk
+   substantial rework (`--script tests/run_tests.gd -- --shard=I/4`, 4 shards, no exclusions).
+   Import only when the cache is absent or affected assets/scripts require it. Do not repeat a
+   passing suite for each criterion, evidence-only commit or docs update; after a fix, rerun only
+   affected checks unless the change creates wider uncertainty. Required CI still runs on the PR.
 4. Update the board row (`status`, `evidence`, `gap`), STATE §0 (one line), then open the PR with
    the template, `tools/check_pr_traceability.mjs`, and auto-merge. **Label every PR that touches
    code, data, scenes or tests `full-ci`.** `ci.yml` runs no build or test jobs on an unlabelled PR, so an
