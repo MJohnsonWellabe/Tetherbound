@@ -4,6 +4,7 @@ const FIRE_SHADER := preload("res://assets/vfx/shaders/fire_body.gdshader")
 const FIRE_CORE_SHADER := preload("res://assets/vfx/shaders/fire_core.gdshader")
 const ION_SHADER := preload("res://assets/vfx/shaders/ion_filament.gdshader")
 const STONE_SHADER := preload("res://assets/vfx/shaders/stone_body.gdshader")
+const STONE_TEXTURE := preload("res://assets/environment/terrain/stylised/rock_scree_Color.png")
 const FLUID := preload("res://scripts/vfx/fluid_effect_geometry.gd")
 const FLOW_SHADER := preload("res://assets/vfx/shaders/flowing_water.gdshader")
 const ICE_SHADER := preload("res://assets/vfx/shaders/ice_crystal.gdshader")
@@ -105,7 +106,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		return out
 	if kind == "soft_dust" or (kind == "soft_trail" and str(profile.get("style", "")) == "dust"):
 		out.shader = DUST_SHADER
-		out.set_shader_parameter("dust_colour", colour)
+		out.set_shader_parameter("dust_colour", Color(str(profile.dust_colour)) if profile.has("dust_colour") else colour)
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.58)))
 		out.set_shader_parameter("billboard", kind == "soft_dust")
 		out.set_shader_parameter("trail", kind == "soft_trail")
@@ -155,6 +156,11 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.shader = STONE_SHADER
 		out.set_shader_parameter("stone_colour", Color(str(profile.get("stone_colour", "#71614b"))))
 		out.set_shader_parameter("mineral_colour", Color(str(profile.get("mineral_colour", "#bca67d"))))
+		out.set_shader_parameter("surface_texture", STONE_TEXTURE)
+		out.set_shader_parameter("authored_surface", bool(profile.get("authored_surface", false)))
+		out.set_shader_parameter("surface_scale", float(profile.get("surface_scale", 1.35)))
+		out.set_shader_parameter("texture_blend", float(profile.get("texture_blend", 0.52)))
+		out.set_shader_parameter("surface_roughness", float(profile.get("surface_roughness", 0.88)))
 		return out
 	return material(colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
 
