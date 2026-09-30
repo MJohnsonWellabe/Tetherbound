@@ -1,6 +1,6 @@
 {
  "generated_at": "2026-09-26 09:08 UTC",
- "main_sha": "8f5dd6ed2",
+ "main_sha": "e2de59571",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
   {
@@ -916,17 +916,17 @@
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 1,
+    "not_started": 4,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Save schema bumped past v27; loading any v27-or-older save shows a clear 'older version, start a new game' message, never crashes and never overwrites the old file (unit test with a v27 fixture).",
-     "status": "not_started",
+     "status": "in_progress",
      "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "gap": "tb/foundations implementing v28 refusal and title New Game affordance from e2de59571; fixture, real title path, independent strict re-check and four-shard suite still required. No criterion closure claimed."
     },
     {
      "text": "Data schemas exist and validate for type essences, material tiers (8 slots, 4 live), stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, level caps (10–100); a schema test fails on a missing or unknown id.",
