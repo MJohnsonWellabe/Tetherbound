@@ -116,17 +116,18 @@ static func allowed_saved_moves(saved: Dictionary, character: Dictionary) -> Arr
 			var move := str(defaults[slot])
 			if not move.is_empty() and not allowed.has(move): allowed.append(move)
 	var tms := preload("res://scripts/creatures/tm_db.gd").load_default()
-	var primary := str(species.get(id,{}).get("type",saved.get("creature_type","")))
 	for tm: String in tms.tm_ids():
-		if tms.is_compatible(tm,primary):
-			var move: String = tms.move_id(tm)
-			if not allowed.has(move): allowed.append(move)
+		for ancestor: String in ancestry:
+			var primary := str(species.get(ancestor,{}).get("type",saved.get("creature_type","")))
+			if tms.is_compatible(tm,primary):
+				var move: String = tms.move_id(tm)
+				if not allowed.has(move): allowed.append(move)
 	return allowed
 
 ## Detached whole-party preflight shared by all save/import paths. Existing
 ## v28 rows without the additive fields remain valid; a partial new document
 ## refuses before a caller can mutate appearance, inventory or one party row.
-static func party_loadout_errors(entries: Variant, character: Variant = {}) -> Array[String]:
+static func party_loadout_errors(entries: Variant, character: Variant = {}, compare_carrier: bool = false) -> Array[String]:
 	var errors: Array[String] = []
 	if not entries is Array or not character is Dictionary:
 		errors.append("party loadout payload must be an array and character an object")
@@ -150,13 +151,35 @@ static func party_loadout_errors(entries: Variant, character: Variant = {}) -> A
 		var staged := stage_saved_loadout(saved,allowed_saved_moves(saved,character),moves)
 		if not bool(staged.get("ok",false)):
 			errors.append("party[%d]: %s" % [index,str(staged.get("reason","invalid_loadout"))])
+			continue
+		var record: Variant = character.get("creatures",{}).get(str(saved.get("uid","")),{})
+		if compare_carrier and record is Dictionary and record.has("mastery_receipts"):
+			var expected: Dictionary = character_loadout_mirror([saved],character).creatures.get(str(saved.get("uid","")),{})
+			for field: String in ["known_moves","loadout","mastery_receipts"]:
+				if record.get(field)!=expected.get(field): errors.append("party[%d]: divergent move carrier %s" % [index,field])
+			if not record.get("loadout_revision") is int and not record.get("loadout_revision") is float:
+				errors.append("party[%d]: invalid mirrored revision" % index)
+			elif float(record.loadout_revision)!=float(expected.loadout_revision):
+				errors.append("party[%d]: divergent mirrored revision" % index)
+			if not _same_edit_receipt(record.get("loadout_last_edit"),expected.get("loadout_last_edit")):
+				errors.append("party[%d]: divergent mirrored edit receipt" % index)
+			var actual_mastery: Variant = record.get("mastery",{})
+			if not actual_mastery is Dictionary or actual_mastery.size()!=expected.mastery.size():
+				errors.append("party[%d]: divergent mirrored mastery" % index)
+			else:
+				for move: String in expected.mastery:
+					var actual: Variant = actual_mastery.get(move,{})
+					if not actual is Dictionary or not MASTERY._whole_nonnegative(actual.get("uses")) or not MASTERY._whole_nonnegative(actual.get("rank")):
+						errors.append("party[%d]: invalid mirrored mastery" % index)
+					elif int(actual.uses)!=int(expected.mastery[move].uses) or int(actual.rank)!=int(expected.mastery[move].rank):
+						errors.append("party[%d]: divergent mirrored mastery" % index)
 	return errors
 
 ## Admission is stricter than the tolerant local v28 reader: a remote host
 ## must bind existing canonical UIDs and never mint replacements for a packet.
 ## Call only after the portable envelope and typed character carrier validate.
 static func admitted_party_errors(entries: Variant, character: Variant) -> Array[String]:
-	var errors := party_loadout_errors(entries,character)
+	var errors := party_loadout_errors(entries,character,true)
 	if not errors.is_empty(): return errors
 	if entries.size()>5:
 		return ["admitted party exceeds five owned creatures"]
@@ -204,6 +227,14 @@ static func character_loadout_mirror(entries: Array, character: Dictionary) -> D
 	result.creatures = records
 	return result
 
+static func _same_edit_receipt(a: Variant, b: Variant) -> bool:
+	if not a is Dictionary or not b is Dictionary or a.size()!=b.size(): return false
+	for key: Variant in b:
+		if key=="expected_revision":
+			if not MASTERY._whole_nonnegative(a.get(key)) or not MASTERY._whole_nonnegative(b.get(key)) or int(a[key])!=int(b[key]): return false
+		elif a.get(key)!=b[key]: return false
+	return true
+
 static func refresh_known_moves(creature: RefCounted, completed_tiers: Array = []) -> void:
 	var known: Array[String] = []
 	for old: String in creature.get("known_moves"): known.append(old)
@@ -240,6 +271,7 @@ static func stage_loadout_edit(creature: RefCounted, request: Dictionary, host_c
 	var expected: Variant = request.get("expected_revision")
 	if not (expected is int or expected is float) or not is_finite(float(expected)) or float(expected) < 0.0 \
 			or floor(float(expected)) != float(expected): return {"ok":false,"reason":"invalid_revision"}
+	if not request.get("edit_id") is String: return {"ok":false,"reason":"invalid_edit_id"}
 	var edit_id := str(request.get("edit_id",""))
 	if edit_id.is_empty() or edit_id.length() > 64: return {"ok":false,"reason":"invalid_edit_id"}
 	var canonical := {"edit_id":edit_id,"expected_revision":int(expected),"creature_uid":uid}
@@ -248,7 +280,7 @@ static func stage_loadout_edit(creature: RefCounted, request: Dictionary, host_c
 		canonical[slot] = request[slot]
 	var last: Dictionary = creature.get("loadout_last_edit")
 	if str(last.get("edit_id","")) == edit_id:
-		if last != canonical: return {"ok":false,"reason":"edit_id_collision"}
+		if not _same_edit_receipt(last,canonical): return {"ok":false,"reason":"edit_id_collision"}
 		return {"ok":true,"replayed":true,"revision":int(creature.get("loadout_revision"))}
 	if int(expected) != int(creature.get("loadout_revision")): return {"ok":false,"reason":"stale_revision"}
 	if not ["altar","forward_camp"].has(str(host_context.get("station_kind",""))): return {"ok":false,"reason":"wrong_station"}

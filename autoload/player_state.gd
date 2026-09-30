@@ -413,7 +413,7 @@ func save_data() -> Dictionary:
 
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state.
 func load_data(data: Dictionary) -> void:
-	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{})).is_empty():
+	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true).is_empty():
 		push_error("Character move loadout refused before applying personal state.")
 		return
 	var redesign: Variant = data.get("redesign_character", REDESIGN_STATE.defaults("character"))

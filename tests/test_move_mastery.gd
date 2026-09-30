@@ -126,6 +126,9 @@ func test_whole_party_preflight_refuses_later_bad_row_and_mirror_preserves_other
 	assert_eq(preserved.creatures[creature.uid].cap_level,30)
 	assert_eq(preserved.creatures[creature.uid].breakthroughs,[1,2])
 	assert_eq(preserved.creatures[creature.uid].taught_traits,{"1":"hardy"},"move mirror preserves other lane's earned records")
+	assert_true(TEACHING.party_loadout_errors(before,preserved,true).is_empty())
+	preserved.creatures[creature.uid].loadout.quick = "stone_rush"
+	assert_false(TEACHING.party_loadout_errors(before,preserved,true).is_empty(),"a contradictory persisted carrier refuses, never becomes a second authority")
 	assert_eq(character.creatures,{},"detached projection leaves live carrier untouched")
 	var identity := MASTERY.new_action_identity("encounter:1:hit:1")
 	assert_true(identity!=MASTERY.new_action_identity("encounter:1:hit:1"),"a recreated manager's counter cannot collide in the same process; callers freeze one allocation per accepted action")
@@ -180,6 +183,8 @@ func test_station_edit_stages_compare_and_swap_and_refuses_wrong_scope_or_replay
 	creature.loadout_last_edit = staged.receipt.duplicate(true)
 	assert_true(TEACHING.stage_loadout_edit(creature,request,context,moves).replayed,
 		"same committed request receives original revision without a second mutation")
+	creature.loadout_last_edit.expected_revision = 0.0
+	assert_true(TEACHING.stage_loadout_edit(creature,request,context,moves).replayed,"whole-number JSON floats preserve committed CAS retry")
 	var colliding := request.duplicate(true)
 	colliding.quick = "stone_rush"
 	assert_false(TEACHING.stage_loadout_edit(creature,colliding,context,moves).ok,"same edit identity cannot name a different command")

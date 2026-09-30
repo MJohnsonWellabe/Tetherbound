@@ -268,7 +268,7 @@ func read(character_id: String) -> Dictionary:
 		return {}
 	var contract := preload("res://scripts/data/redesign_state.gd")
 	var errors := contract.validate("character", data.get("redesign_character", contract.defaults("character")), contract.uids(data.get("party", [])))
-	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{})))
+	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
 	if not errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That character contains invalid data.", "errors": errors}
 		return {}

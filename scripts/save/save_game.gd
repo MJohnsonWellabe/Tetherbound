@@ -648,7 +648,7 @@ static func _redesign_payload(owner: Variant, scope: String) -> Dictionary:
 static func _redesign_errors(data: Dictionary) -> Array[String]:
 	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")))
 	errors.append_array(REDESIGN_STATE.validate("character", data.get("redesign_character", REDESIGN_STATE.defaults("character")), REDESIGN_STATE.uids(data.get("party", []))))
-	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{})))
+	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
 	return errors
 
 
@@ -1918,7 +1918,7 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 	if party == null or typeof(entries) != TYPE_ARRAY:
 		return
 	var teaching := preload("res://scripts/creatures/teaching.gd")
-	if not teaching.party_loadout_errors(entries,character).is_empty():
+	if not teaching.party_loadout_errors(entries,character,true).is_empty():
 		return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
