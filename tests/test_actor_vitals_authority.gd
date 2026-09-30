@@ -98,6 +98,80 @@ func _receipt(uid: String, ordinal: int) -> Dictionary:
 	return {"receipt_id": "host_process:hit_%d" % ordinal, "encounter_id": "encounter_a",
 		"creature_uid": uid, "body_generation": 1, "vitals_revision": ordinal}
 
+
+func test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes() -> void:
+	var player := _player()
+	var portable := _portable(player)
+	assert_true(AUTHORITY.equipment_errors(portable.equipment).is_empty())
+	assert_true(AUTHORITY.heart_selection_errors(portable.realm_hearts).is_empty())
+	assert_eq(portable.equipment.size(), 5, "actual PlayerEquipment supplies five empty slots")
+	assert_eq(portable.realm_hearts.active_id, "", "fresh actual personal selection is inactive")
+	assert_true(AUTHORITY.errors(portable, "owner_a").is_empty())
+	var old: Dictionary = player.save_data()
+	old.erase("equipment")
+	old.erase("realm_hearts")
+	var restored := PLAYER.new()
+	restored.configure(ITEMS.new())
+	restored.load_data(old)
+	assert_true(AUTHORITY.errors(_portable(restored), "owner_a").is_empty(), "old28 missing saved carriers use actual PlayerState defaults")
+	player.inventory.add("travel_pack", 1)
+	assert_true(player.equipment.equip_from_inventory("travel_pack", player.inventory))
+	portable = _portable(player)
+	assert_eq(portable.equipment.backpack, "travel_pack")
+	assert_true(AUTHORITY.errors(portable, "owner_a").is_empty(), "actual owned armor ID uses the authored backpack slot")
+	var invalid := portable.duplicate(true)
+	invalid.erase("equipment")
+	assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "missing received carrier is not a legacy saved default")
+	for id: Variant in ["potion_small", "hide_helm", "unknown_pack", 3]:
+		invalid = portable.duplicate(true)
+		invalid.equipment.backpack = id
+		assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "refuse wrong kind/slot/unknown/non-string equipment")
+	invalid = portable.duplicate(true)
+	invalid.equipment.erase("helmet")
+	invalid.equipment["weapon"] = ""
+	assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "same-size foreign slot cannot replace a real slot")
+	for selection: Variant in [{}, {"active_id": 4}, {"active_id": "biome5"}, {"active_id": "", "power": 9}]:
+		invalid = portable.duplicate(true)
+		invalid.realm_hearts = selection
+		assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "selection carries no client power or reserved ID")
+	invalid = portable.duplicate(true)
+	invalid["defence"] = 99999
+	assert_false(AUTHORITY.errors(invalid, "owner_a").is_empty(), "client-derived stat totals never enter the portable authority shape")
+
+
+func test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power() -> void:
+	var player := _player()
+	player.inventory.add("travel_pack", 1)
+	assert_true(player.equipment.equip_from_inventory("travel_pack", player.inventory))
+	# Typed storage fixture, not an earned relic: legacy selection cannot power
+	# the actor even when the portable array claims that relic is hung.
+	player.hearts.load_data({"active_id": "water"})
+	player.redesign_character.relics_hung = ["tidewake"]
+	var portable := _portable(player)
+	var authority := AUTHORITY.new()
+	assert_true(authority.bind_world("namespace_a"))
+	assert_true(authority.seed_admitted_character(portable, "owner_a").ok)
+	var original := authority.state("owner_a")
+	var actor := authority.actor_stat_state("owner_a")
+	assert_eq(actor.equipment.backpack, "travel_pack")
+	assert_eq(actor.realm_hearts.active_id, "")
+	assert_true(actor.redesign_character.relics_hung.is_empty())
+	assert_eq(original.realm_hearts.active_id, "water", "actual portable legacy choice is retained")
+	assert_eq(original.redesign_character.relics_hung, ["tidewake"], "typed storage is not rewritten")
+	actor.equipment.backpack = ""
+	actor.party[0].uid = "foreign_actor"
+	assert_true(AUTHORITY.equivalent(authority.state("owner_a"), original), "detached read cannot mutate the admitted party or worn IDs")
+	assert_true(authority.actor_stat_state("foreign_owner").is_empty())
+	var fresh_rejoin := _portable(_player())
+	assert_true(authority.seed_admitted_character(fresh_rejoin, "owner_a").already_seeded)
+	assert_true(AUTHORITY.equivalent(authority.state("owner_a"), original), "new peer/roster/gear cannot replace stable admitted identity")
+	player.inventory.add("hide_helm", 1)
+	assert_true(player.equipment.equip_from_inventory("hide_helm", player.inventory))
+	assert_true(authority.refresh_host_local(_portable(player), "owner_a").ok)
+	assert_eq(authority.state("owner_a").equipment.helmet, "", "a later local save read is not an equipped-gear authority CAS")
+	assert_eq(authority.state("owner_a").equipment.backpack, "travel_pack")
+	assert_eq(player.save_data().realm_hearts.active_id, "water", "inactive combat view never edits the portable source")
+
 func _row(portable: Dictionary, ordinal: int, hp: float, previous: Variant = null) -> Dictionary:
 	var owned: Dictionary = portable.party[0]
 	return ACTOR.next_record("world_a", "namespace_a", "session_a", "owner_a", owned.uid,

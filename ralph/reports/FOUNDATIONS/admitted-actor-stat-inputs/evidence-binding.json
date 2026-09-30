@@ -1,0 +1,52 @@
+{
+  "tested_source": "edcff2556f9050b69325a05887f5d2e632f38e10",
+  "merged_docs_main": "252b973d3516cf99d10309cadfdd88d92c8d6126",
+  "tested_five_paths_byte_identical": {
+    "scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/build_fingerprint.gd": "c780d838c73ca7d36c4ca94cdeb20a4a53cbcbb6ed709b05c257099a9cf409d6",
+    "tests/test_actor_vitals_authority.gd": "5707a6725ed677059420a48447fa5d685ac1ec0ecefc498fc9a696eb525cd2cc",
+    "tests/test_session_build_compat.gd": "fd79e1aba1614b38d75b82908e4d86dd416201708c65a8eeabb4f8d3cd3c0242"
+  },
+  "native_result": "4 methods /49 assertions /0 failed; native0;5.031s;0 ERROR/SCRIPT ERROR",
+  "lossless_artifacts": [
+    {
+      "path": "ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/independent-review/strict-review.txt",
+      "original_path": "D:\\tetherbound\\redesign-foundations\\.tmp\\independent-admitted-actor-stat-inputs-r1\\strict-review.txt",
+      "sha256": "8b15d0d72f397e3a5f83cd8bc8837f5db93ba589644ef07d9b9d04ded6783e14",
+      "bytes": 1616
+    },
+    {
+      "path": "ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/independent-review/review.json",
+      "original_path": "D:\\tetherbound\\redesign-foundations\\.tmp\\independent-admitted-actor-stat-inputs-r1\\review.json",
+      "sha256": "e4c53fcea9ab721f334a3df1aa8e73d375d9273e97bda4b148fabcbf1512a14b",
+      "bytes": 10630
+    },
+    {
+      "path": "ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/independent-review/source.patch",
+      "original_path": "D:\\tetherbound\\redesign-foundations\\.tmp\\independent-admitted-actor-stat-inputs-r1\\source.patch",
+      "sha256": "a1e941c99c77fd1db694c1488391111b4fa589db530cb0e3919eccd059e1beeb",
+      "bytes": 21619
+    },
+    {
+      "path": "ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/independent-review/preserved-OFF-consumer.gd.txt",
+      "original_path": "D:\\tetherbound\\redesign-foundations\\.tmp\\independent-admitted-actor-stat-inputs-r1\\preserved-OFF-consumer.gd",
+      "sha256": "2324f57f5bca2b95906d8e72cbcbca4a31a70abe5dd2c051560572ee30c57feb",
+      "bytes": 373966
+    },
+    {
+      "path": "ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/native/native.txt",
+      "original_path": "D:\\tetherbound\\admitted-inputs-r1\\native.txt",
+      "sha256": "89349c24c464a3dcfafe3df3af7fb7b172a378fbdb5d661ea5ada9b65587718b",
+      "bytes": 900
+    },
+    {
+      "path": "ralph/reports/FOUNDATIONS/admitted-actor-stat-inputs/native/receipt.json",
+      "original_path": "D:\\tetherbound\\admitted-inputs-r1\\receipt.json",
+      "sha256": "b0c3a7ef7aa7d245227d9bbdbbef95e5df6d85d1f71f4829c18ec292b2c984a2",
+      "bytes": 2717
+    }
+  ],
+  "source_delta_after_native": "None in five source/test paths. One provenance label typo, evidence and one foundation STATE line only.",
+  "scope": "Independent source PASS plus exactly four named method native proof; no actual player/RPC/solo/caller/gear-update/relic/owner-saveACK/rejoin acceptance; no F23/F24 MET."
+}

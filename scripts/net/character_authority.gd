@@ -9,7 +9,9 @@ const REDESIGN := preload("res://scripts/data/redesign_state.gd")
 const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const PORTAL := preload("res://scripts/net/portal_escrow_validation.gd")
 const REWARD := preload("res://scripts/net/reward_delivery.gd")
-const FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow"]
+const EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
+const BIOMES := preload("res://scripts/data/biome_order.gd")
+const FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
 var _records: Dictionary = {}
 var _world_instance := ""
 var _portal_stages: Dictionary = {}
@@ -47,7 +49,52 @@ static func portable_projection(personal: Dictionary) -> Dictionary:
 				vitals[key] = row.duplicate(true) if row is Dictionary else row
 	return {"character_id": personal.get("character_id"), "party": personal.get("party"),
 		"redesign_character": personal.get("redesign_character"), "inventory": personal.get("inventory"),
-		"portal_escrow": rows, "vitals_escrow": vitals}
+		"portal_escrow": rows, "vitals_escrow": vitals,
+		"equipment": personal.get("equipment", empty_equipment()),
+		"realm_hearts": personal.get("realm_hearts", {"active_id": ""})}
+
+
+## Only the portable codec's legitimate absent-field defaults. A received
+## hello must carry both fields explicitly; malformed present values never
+## become empty gear or an inactive selection through this projection.
+static func empty_equipment() -> Dictionary:
+	var slots: Dictionary = {}
+	for slot: String in EQUIPMENT.SLOTS:
+		slots[slot] = ""
+	return slots
+
+
+static func equipment_errors(raw: Variant) -> Array[String]:
+	if not raw is Dictionary or raw.size() != EQUIPMENT.SLOTS.size():
+		return ["admitted equipment requires exactly the five personal slots"]
+	for slot: String in EQUIPMENT.SLOTS:
+		if not raw.has(slot) or not raw[slot] is String:
+			return ["invalid admitted equipment slot " + slot]
+		var id: String = raw[slot]
+		if id.is_empty():
+			continue
+		var items := RULES.db()
+		if not bool(items.call("has", id)):
+			return ["unknown admitted equipment " + id]
+		var definition: Dictionary = items.call("definition", id)
+		if definition.get("kind") != "armor" or definition.get("armor_slot") != slot:
+			return ["admitted equipment belongs to another slot"]
+		if definition.has("tether_pouch_tier"):
+			var tier: Variant = definition.tether_pouch_tier
+			if slot != "backpack" or not (tier is int or tier is float) \
+					or not is_finite(float(tier)) or float(tier) != floor(float(tier)) \
+					or float(tier) < 1.0 or float(tier) > 4.0:
+				return ["invalid authored admitted pouch tier"]
+	return []
+
+
+static func heart_selection_errors(raw: Variant) -> Array[String]:
+	if not raw is Dictionary or raw.size() != 1 or not raw.get("active_id") is String:
+		return ["admitted realm hearts require only the personal active_id"]
+	var id: String = raw.active_id
+	if not id.is_empty() and not BIOMES.runtime_ids(false).has(id):
+		return ["unknown admitted realm heart selection"]
+	return []
 
 
 static func errors(raw: Variant, expected_character: String) -> Array[String]:
@@ -62,6 +109,8 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
 		return ["portable authority belongs to another character"]
 	var failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)
 	failures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))
+	failures.append_array(equipment_errors(raw.equipment))
+	failures.append_array(heart_selection_errors(raw.realm_hearts))
 	if raw.party is Array:
 		for row: Variant in raw.party:
 			if not row is Dictionary:
@@ -111,6 +160,21 @@ func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
 
 
+## Actual combat consumers use this detached view of the SAME admitted row.
+## RealmHeartState currently activates from merged world flags; those cannot
+## prove this traveler's personal relic hang. Keep the portable legacy choice
+## and typed hung array in state(), but expose no power until a protected
+## personal grant/hang producer exists. Empty selection yields baseline 1.0.
+## No per-request stats, cloned ownership registry or inferred receipt here.
+func actor_stat_state(character_id: String) -> Dictionary:
+	var personal := state(character_id)
+	if personal.is_empty():
+		return {}
+	personal.realm_hearts = {"active_id": ""}
+	personal.redesign_character.relics_hung = []
+	return personal
+
+
 func revision(character_id: String) -> int:
 	return int(_records[character_id].revision) if _records.has(character_id) else -1
 
@@ -127,6 +191,11 @@ func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
 	var current := state(character_id)
 	var candidate := raw.duplicate(true)
 	candidate["vitals_escrow"] = raw.get("vitals_escrow", {}).duplicate(true)
+	# Gear/selection are captured once at actual admission. This local save
+	# projection is not an equip CAS and cannot refresh a command profile on a
+	# later hit. Future host-authorized gear changes need their typed doorway.
+	candidate["equipment"] = current.equipment.duplicate(true)
+	candidate["realm_hearts"] = current.realm_hearts.duplicate(true)
 	# A failed owner settlement still leaves the durable world debit committed.
 	# Preserve its host entitlement while the actual local key remains pending
 	# for atomic personal retry, rather than minting a second host-owned key.
