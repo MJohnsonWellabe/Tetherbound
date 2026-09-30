@@ -2,7 +2,7 @@
  "updated": "2026-09-30T02:56:39Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16–F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 102 of 280. Original: 95/101; redesign: 7/179. F16 all five and F26#1/#2 independently MET and landed main via #467/#470 (39840191c).",
+  "Criteria met: 103 of 280. Original:95/101; redesign:8/179. F16 all five and F26#1/#2 landed main; F17#0 road/topology independently MET in this feature PR, with main credit applied at landing.",
   "Wave 0 complete on main: F16 schema28/refusal-preservation, catalogs, central order, populated two-peer persistence and actual Grandpa opening. Necessary batch covers5422/5422 current methods; selected full CI 36667090983 and final required CI 36670808563 passed, with docs-only evidence reuse under RD37. Wave 1 hub, combat, VFX and lookdev implementation is active.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
@@ -370,8 +370,8 @@
   },
   {
    "lane": "tb/hub",
-   "now": "F17 source6f083d1d4 pushed against landed F16. Warm import native0; focused geometry44/3982/4red preserved, exact Hall/sign/berry geometry fixes underway. Runtime/player/visual gates remain open.",
-   "next": "Finish affected geometry correction, refresh village terrain, controller/peer paths and code-blind Hall/village judging; F18 authority draft advances."
+   "now": "F17#0 strict MET: straight road/eight houses/homestead/Hall; actual scoped regional generation preserves312 outside files/harvest IDs. Geometry18/3437/0, regional5/65/0, affected13-method PASS union, physical Hallwalk and mandatory worldboot native0. Historical reds and existing dummy material-null class retained; six other F17 criteria open.",
+   "next": "Ordinary day/night house/arch/pedestal paths, M1 chain, two-peer layout/states and code-blind visual bar; F18 protected-key/channel/transaction drafts advance."
   },
   {
    "lane": "tb/reorder",

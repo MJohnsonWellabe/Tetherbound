@@ -161,7 +161,7 @@ static mem 1581 MB   nodes 183458
 cpu        process 28.56 ms   physics 9.61 ms
 3d scale   1.00  (1920 x 1920)   msaa 1
 vsync      -1      max_fps 0
- | gl_compatibility | driver 
+ | gl_compatibility | driver
 
 top costs  ms/s   per call   rate
   HUD                      43.4    1.24 ms   35.0 Hz
