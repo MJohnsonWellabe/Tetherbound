@@ -1,6 +1,6 @@
 # F16 integrated batch evidence
 
-Owner RD-36 authorizes one related implementation/validation batch, source-aware reuse and affected rechecks. It supersedes a repeated full suite for each criterion. Main `82eda1835c4d2ad9027cf2041c5cbc30898fa423` is merged into the candidate; it changes only documentation after the runtime source checkpoint.
+Owner RD-36 authorizes one related implementation/validation batch, source-aware reuse and affected rechecks. It supersedes a repeated full suite for each criterion. Main `7dc89a96fe058ec44007f68dbcf8557d5e5eb785` is merged into the candidate; subsequent main changes contain only documentation/status after the runtime source checkpoint.
 
 F16#0–#2 independent strict reports are preserved separately, pinned to `94b81b02c532ced5ab4914a2164c3d131486059e`. Their source paths retain the reviewed contract. The later schema enum repair additionally accepts equivalent runtime integer/parsed JSON float values and retains rejection of strings, booleans and fractional values. `runtime-numeric-enum.txt` records 9 schema tests / 226 assertions / zero failures / native 0. `rd36-affected.txt` records 20 tests / 342 assertions / zero failures / native 0 for equipment, schema and snapshot guards. The independent bounded source recheck on `b50a8a218695eb9e53c42dd2c1d37441f453d8bb` found no concrete new blocker.
 
@@ -15,3 +15,19 @@ F16#4 actual title proof on `e457754ddeb2ba401aeae0f31cc44e444051ffa0`: `title-g
 Required named world boot: `playground-final.txt`, same source checkpoint, native 0 and smoke OK. Distinct ERROR set is exactly `ERROR: Parameter "material" is null.` from dummy renderer material inspection during tool use; zero SCRIPT ERROR lines. This exact pre-existing error is documented in WORKFLOW. No F16 material or art source changed, and this evidence does not claim a clean rendering log.
 
 Broad batch: `unit-shard-1-initial.txt` records all 167 assigned files out of the 667-file suite, 1279 tests / 1772891 assertions / one failed test / native 1. The failed old-v1 portable-load expectation is replaced with refusal/file/live preservation, and its original current-schema invariant is retained as an additional test; all five portable tests pass in the affected runtime. The historical red shard is not labeled green. Passing unchanged cases are reused under RD-36; new affected schema and snapshot behavior is checked separately. Shards 2–4, independent final #3/#4 verdicts, CI and main landing remain integration requirements until their artifacts are recorded.
+
+
+Final required four-shard batch (all 667 files, zero exclusions):
+
+| Run | Source / isolation | Tests | Assertions | Failed | Native exit |
+|---|---|---:|---:|---:|---:|
+| Historical shard 1 | 94b primary | 1279 | 1772891 | 1 | 1 |
+| Historical shard 2 | 32d4 primary | 1406 | 1139833 | 3 | 1 |
+| Shard 3 | 1fb detached frozen checkout / separate APPDATA | 1297 | 32215 | 0 | 0 |
+| Shard 4 | 1fb same detached frozen checkout / separate APPDATA | 1439 | 1110672 | 0 | 0 |
+
+RD-36 source-aware corrections reuse passing unchanged methods; historical red shards remain explicitly red. Shard1's obsolete portable v1 expectation is corrected with refusal plus current-format empty-equipment coverage; all five portable methods and the two added snapshot guards pass in `rd36-affected.txt`. Shard2's two obsolete satchel reads retain the direct retired-helper empty-satchel/day invariants, while actual reads assert refusal/live/disk/identity preservation. All eight satchel methods pass in `unit-shard-2-affected-initial.txt` (10 tests / 80 assertions / native1, sole ledger failure). The ledger failure arose from inherited sparse checkout excluding four historical proof directories. Manually restored blobs were re-pruned by the docs-only merge; after two failures the approach changed to persistent exact-directory sparse cones. No historical proof or ledger test was edited. `unit-shard-2-ledger-final.txt` then passes both ledger methods, 2 tests / 28 assertions / native0. No unnecessary full-shard repeat was run.
+
+`unit-membership-reuse.json` records unchanged 667-file membership, the four exact changed test files and shard assignments, all old/current method names, and passing witness coverage derived from current `func test_*` declarations against actual `ok file :: method` markers in the retained logs. Every one of 5422 current test methods has a passing witness; zero methods are unmapped. Separate frozen checkout source is unchanged after both isolated runs. Satchel is a primary-only shard2 test patch, so it cannot invalidate isolated shard3/4. No production source changed after32d4. Dummy renderer and resource-leak messages, expected negative-control errors and actual closed-peer messages remain preserved; this is zero failed assertions after affected repairs, not a claim of error-free engine logs.
+
+The independent final F16#3 report accepts the populated peer roundtrip and separately probed coordinator readiness delta. F16#4 opening is independently accepted; its final full-suite verdict follows the above exact source-aware coverage. All failed logs and the two-attempt approach changes are preserved. No test was skipped, disabled or quarantined.

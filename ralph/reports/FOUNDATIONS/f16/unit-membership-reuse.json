@@ -1,6 +1,6 @@
 {
   "baseline": "94b81b02c532ced5ab4914a2164c3d131486059e",
-  "candidate": "3cbf772550d6fd3bff5115a76e95ce7993aa35ae + tests/test_satchel.gd reviewed RD35 patch",
+  "candidate": "4e1b3f1fc68a25f6cc8d890cde03655b8262211b",
   "members": 667,
   "membership_identical": true,
   "new_files": [],
@@ -794,5 +794,21 @@
       "tests/test_world_save_format.gd"
     ]
   },
-  "reuse": "RD36: all 667 files executed in four assigned shards, no exclusions. Historical shard1 red:1279tests1772891assertions1failed; corrected/new five portable and two snapshot guards green in affected20/342/0, numeric schema9/226/0. Historical shard2 red:1406tests1139833assertions3failed; satchel8methods PASS in affected10/80/1 (sole ledger failure), exact sparse evidence dirs restored persistently then ledger2/28/0. Reuse unchanged passing methods, never label historical red shard green. Shard3 1297/32215/0 native0 isolated1fb; shard4 still active isolated1fb. No production source changes after32d4, satchel patch belongs shard2 only."
+  "reuse": "RD36: all 667 files executed in four assigned shards, no exclusions. Historical shard1 red:1279tests1772891assertions1failed; corrected/new five portable and two snapshot guards green in affected20/342/0, numeric schema9/226/0. Historical shard2 red:1406tests1139833assertions3failed; satchel8methods PASS in affected10/80/1 (sole ledger failure), exact sparse evidence dirs restored persistently then ledger2/28/0. Reuse unchanged passing methods, never label historical red shard green. Shard3 1297/32215/0 native0 isolated1fb; shard4 still active isolated1fb. No production source changes after32d4, satchel patch belongs shard2 only. Final shard4:1439tests1110672assertions0failed native0. Both frozen isolated runs have unchanged gameplay/test source. Main7dc docs merged; only primary satchel test patch after isolated1fb affects shard2, checked directly. All current methods have passing witnesses across required batch and affected corrections.",
+  "coverage": {
+    "current_test_methods": 5422,
+    "current_methods_with_passing_witness": 5422,
+    "missing_passing_methods": [],
+    "proof_logs": [
+      "unit-shard-1-initial.txt",
+      "unit-shard-2-initial.txt",
+      "unit-shard-3.txt",
+      "unit-shard-4.txt",
+      "rd36-affected.txt",
+      "runtime-numeric-enum.txt",
+      "unit-shard-2-affected-initial.txt",
+      "unit-shard-2-ledger-final.txt"
+    ],
+    "no_skips_disabled_or_quarantine": true
+  }
 }

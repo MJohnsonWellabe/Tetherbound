@@ -335,6 +335,8 @@ var _combat_flinch_tween: Tween = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
 var _combat_hitstop_active := false
+var _combat_manager_hitstop_requested := false
+var _combat_timed_hitstop_count := 0
 var _combat_hitstop_physics_was_active := true
 
 ## CREATURE-LEGIBILITY-0903. The ground-contact shadow quad, built lazily on
@@ -1974,7 +1976,7 @@ func play_hit() -> void:
 ## Combat's hit reaction is deliberately on the visual pivot, never the
 ## CharacterBody: the recoil cannot move collision or change whether the next
 ## attack connects. An authored hit clip still plays underneath it.
-func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
+func play_combat_flinch(away: Vector3 = Vector3.ZERO, impact: Dictionary = {}) -> void:
 	play_hit()
 	if _model == null or not is_inside_tree():
 		return
@@ -1985,12 +1987,17 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	_combat_flinch_rest_position = _model.position
 	_combat_flinch_rest_rotation = _model.rotation
 	var local_away := global_basis.inverse() * away.normalized()
-	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
+	var profile := impact
+	if profile.is_empty():
+		profile = preload("res://scripts/combat/hit_feedback.gd").config().get("weights", {}).get("light", {})
+	var recoil := Vector3(local_away.x * float(profile.get("recoil_m", 0.0)), float(profile.get("recoil_up_m", 0.0)), local_away.z * float(profile.get("recoil_m", 0.0)))
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
-	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+	var out_seconds := float(profile.get("reaction_out_seconds", 0.0))
+	var back_seconds := float(profile.get("reaction_back_seconds", 0.0))
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position + recoil, out_seconds).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(float(profile.get("recoil_degrees", 0.0))), out_seconds)
+	_combat_flinch_tween.tween_property(_model, "position", _combat_flinch_rest_position, back_seconds).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_model, "rotation:x", _combat_flinch_rest_rotation.x, back_seconds)
 
 
 ## Hitstop freezes locomotion and animation on this creature only. The manager
@@ -2000,6 +2007,23 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 ## and the manager's clock pause, so timing and positions are unchanged, and
 ## skips only the visual freeze: the animation and flinch keep playing.
 func set_combat_hitstop(active: bool) -> void:
+	_combat_manager_hitstop_requested = active
+	_apply_combat_hitstop(active or _combat_timed_hitstop_count > 0)
+
+
+## Shared host simulation has no local player's clock to release a freeze.
+## Independent timed leases prevent one manager releasing an overlapping hit.
+func begin_combat_impact_hitstop(seconds: float) -> void:
+	if seconds <= 0.0 or not is_inside_tree():
+		return
+	_combat_timed_hitstop_count += 1
+	_apply_combat_hitstop(true)
+	await get_tree().create_timer(seconds, false).timeout
+	_combat_timed_hitstop_count = maxi(0, _combat_timed_hitstop_count - 1)
+	_apply_combat_hitstop(_combat_manager_hitstop_requested or _combat_timed_hitstop_count > 0)
+
+
+func _apply_combat_hitstop(active: bool) -> void:
 	if active == _combat_hitstop_active:
 		return
 	_combat_hitstop_active = active
