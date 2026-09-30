@@ -1,0 +1,97 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+CATALOGUE BOOT meadows load begin t=46111
+CATALOGUE BOOT meadows instantiate begin t=125978
+CATALOGUE BOOT meadows attach begin t=126060
+[shell_build] MeadowsPlayground begin:forward_upload total=0ms slice=0ms
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1172)
+       [1] _ready (res://scripts/world/playground_world.gd:798)
+       [2] _mount_production_world (res://tools/catalogue_survey.gd:279)
+       [3] _run (res://tools/capture_lookdev_route.gd:80)
+[shell_build] MeadowsPlayground complete:terrain_node total=2118ms slice=2118ms
+CATALOGUE BOOT meadows attached t=133503
+[shell_build] MeadowsPlayground complete:terrain_data total=85331ms slice=27461ms
+[shell_build] MeadowsPlayground complete:terrain_collision total=86577ms slice=375ms
+[shell_build] MeadowsPlayground complete:ground_materials total=89059ms slice=2355ms
+[playground] spawned at 0.0, 2.9, 0.0
+[shell_build] MeadowsPlayground complete:player_placed total=93511ms slice=45ms
+[scatter bake] load phases (ms): read[256 regions, 388608 placements, 431161 skipped]=15277 reorder[16 layers]=19592
+[vegetation] grass field is on; 431161 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=36636 mark_harvestable=167 group_by_model=665 register_mesh_assets=9505 build_batches_total=27268 (of which harvest_points[56469 nodes]=9191, initial_collision_stream[51385 solid]=1497) update_mmis=8556
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(33818572488791) region_map=1024 entries
+[playground] scattered 387220 props in 36 batches (56469 harvestable, 0 already chopped, 389/51385 collision resident)
+[shell_build] MeadowsPlayground complete:vegetation total=185695ms slice=5587ms
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 32 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] breathe (res://scripts/world/shell_build_budget.gd:232)
+[props] placed 434 props in 54 clusters (6 usable rest points)

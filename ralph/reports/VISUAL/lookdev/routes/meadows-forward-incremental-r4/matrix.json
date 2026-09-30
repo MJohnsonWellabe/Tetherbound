@@ -1,0 +1,106 @@
+{
+  "source_commit": "424ca00d876ecb5b4f751e4732e3b1c15d28a2a1",
+  "route_config_sha256": "03eecf6f598218f22d43401c43db1a61ee0753e4cf5d9cca819dac983d2b0041",
+  "started_utc": "2026-09-30T08:55:39.684872+00:00",
+  "cases": [
+    {
+      "biome": "meadows",
+      "preset": "Medium",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=meadows",
+        "--preset=Medium,High",
+        "--source-commit=424ca00d876ecb5b4f751e4732e3b1c15d28a2a1",
+        "--output=D:/tetherbound/lookdev-forward-incremental-r4/meadows-medium-high"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-forward-incremental-r4\\home-meadows-medium-high",
+      "elapsed_seconds": 325.31200000003446,
+      "process_presets": [
+        "Medium",
+        "High"
+      ],
+      "case_index": 0,
+      "scene_reused_across_presets": true,
+      "raw_log": "D:\\tetherbound\\lookdev-forward-incremental-r4\\meadows-medium-high.log",
+      "receipt": "D:\\tetherbound\\lookdev-forward-incremental-r4\\meadows-medium-high\\medium\\route.json",
+      "receipt_error": "",
+      "sample_count": 506,
+      "wall_frame_ms": {
+        "mean": 40.41327075098815,
+        "p50": 40.224999999999994,
+        "p95": 45.006750000000004,
+        "p99": 46.443200000000004,
+        "maximum": 97.609
+      }
+    },
+    {
+      "biome": "meadows",
+      "preset": "High",
+      "complete": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "native_errors": [],
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_lookdev_route.gd",
+        "--",
+        "--biome=meadows",
+        "--preset=Medium,High",
+        "--source-commit=424ca00d876ecb5b4f751e4732e3b1c15d28a2a1",
+        "--output=D:/tetherbound/lookdev-forward-incremental-r4/meadows-medium-high"
+      ],
+      "isolated_home": "D:\\tetherbound\\lookdev-forward-incremental-r4\\home-meadows-medium-high",
+      "elapsed_seconds": 325.31200000003446,
+      "process_presets": [
+        "Medium",
+        "High"
+      ],
+      "case_index": 1,
+      "scene_reused_across_presets": true,
+      "raw_log": "D:\\tetherbound\\lookdev-forward-incremental-r4\\meadows-medium-high.log",
+      "receipt": "D:\\tetherbound\\lookdev-forward-incremental-r4\\meadows-medium-high\\high\\route.json",
+      "receipt_error": "",
+      "sample_count": 481,
+      "wall_frame_ms": {
+        "mean": 42.67701039501039,
+        "p50": 42.424,
+        "p95": 49.397,
+        "p99": 52.734199999999994,
+        "maximum": 247.006
+      }
+    }
+  ],
+  "requested_cases": [
+    {
+      "biome": "meadows",
+      "preset": "Medium"
+    },
+    {
+      "biome": "meadows",
+      "preset": "High"
+    }
+  ],
+  "scope": "Computer production-scene render routes. No earned campaign, blinded visual approval, Hall proof or owner Ally result.",
+  "complete": true,
+  "all_twelve_route_cases_complete": false
+}

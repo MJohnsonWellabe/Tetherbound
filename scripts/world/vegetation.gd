@@ -263,6 +263,11 @@ const HARVEST_REMOVE_RADIUS := 0.05
 ## not the ground under the tree.
 var _field: RefCounted = null
 
+## Preserve the native Forward+ build's bounded uploads when later local
+## removals/healing refresh the instancer. A destructive rebuild recreates
+## every unchanged cell buffer, including the whole world during water clears.
+var _region_render_uploads := false
+
 ## The live Terrain3D node passed to `build()`, and the three sub-objects the
 ## instancer swap needs from it.
 ## D97 / Wave 6 lane 6.A. "The visual half of vegetation", skipped -- what
@@ -475,6 +480,7 @@ func _load_performance_overrides() -> void:
 ## the same frame, so nothing about a real build changes.
 func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_load_performance_overrides()
+	_region_render_uploads = _uses_region_render_uploads(slicer)
 	for child in get_children():
 		child.queue_free()
 	_placed = 0
@@ -649,10 +655,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 		await _build_batch(model, by_model[model], slicer)
 		await _breathe(slicer)
 	var t_batches1 := Time.get_ticks_msec()
-	# One rebuild of the instancer's live MultiMeshInstance3Ds after every
-	# batch is queued, not one per model -- `add_transforms()` below is
-	# called with `update=false` for exactly this reason.
-	if not simulation_only:
+	# Native solo Forward+ materializes each existing region/model below.
+	# A final destructive rebuild would queue every GPU buffer again in one
+	# native call, defeating those bounded uploads. Other build modes retain
+	# their existing single rebuild.
+	if not simulation_only and not _uses_region_render_uploads(slicer):
 		_instancer.call("update_mmis", true)
 	var t_mmis1 := Time.get_ticks_msec()
 	_warn_about_shared_models(by_layer)
@@ -1470,13 +1477,8 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 			_spawn_harvest_point(placement)
 			_t_harvest_ms += Time.get_ticks_msec() - t_h0
 
-	# `update=false`: one bulk native call per model instead of one per
-	# placement (the MultiMesh path's `set_instance_transform` loop, ~23.7k
-	# individual calls today and the measured cause of the boot-time cost
-	# this swap exists to remove), and `update_mmis(true)` runs once after
-	# every model in `build()`'s loop rather than once per model here.
 	if not simulation_only:
-		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
+		await _submit_render_transforms(mesh_id, transforms, colours, slicer)
 
 	var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
 	for spot: Vector3 in displayed_positions:
@@ -1490,6 +1492,55 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 	var t_c0 := Time.get_ticks_msec()
 	_add_collision(model_path, placements)
 	_t_collision_ms += Time.get_ticks_msec() - t_c0
+
+
+## The locked Terrain3D API can materialize one region/model through
+## add_transforms(update=true). Its global update_mmis(true) otherwise creates
+## tens of thousands of cell buffers in one indivisible native call. World
+## loop yields cannot subdivide that call; partition the existing transforms
+## instead, keeping each region's original transform/colour order intact.
+func _uses_region_render_uploads(slicer: RefCounted) -> bool:
+	return slicer != null and slicer.has_method("needs_render_release") \
+			and bool(slicer.call("needs_render_release"))
+
+
+## Terrain3D removes empty cells immediately and marks changed nonempty cells
+## for refresh. update_mmis(false) preserves the other cells and their buffers;
+## Compatibility and network builds retain their existing rebuild behavior.
+func _refresh_render_instances() -> void:
+	_instancer.call("update_mmis", not _region_render_uploads)
+
+
+func _submit_render_transforms(mesh_id: int, transforms: Array[Transform3D],
+		colours: PackedColorArray, slicer: RefCounted) -> void:
+	if not _uses_region_render_uploads(slicer):
+		_instancer.call("add_transforms", mesh_id, transforms, colours, false)
+		return
+	var by_region: Dictionary = {}
+	var region_colours: Dictionary = {}
+	var asset: Object = _assets.call("get_mesh_asset", mesh_id)
+	var height_offset := float(asset.get("height_offset"))
+	for i in transforms.size():
+		var xf: Transform3D = transforms[i]
+		# Match add_transforms' own adjusted region selection, including a
+		# sloped model's authored height offset. The native call still owns
+		# conversion to region space and all placement validation.
+		var adjusted := xf.origin + xf.basis.y * height_offset
+		var region: Vector2i = _data.call("get_region_location", adjusted)
+		if not by_region.has(region):
+			var bucket: Array[Transform3D] = []
+			by_region[region] = bucket
+			region_colours[region] = PackedColorArray()
+		(by_region[region] as Array[Transform3D]).append(xf)
+		if not colours.is_empty():
+			var palette: PackedColorArray = region_colours[region]
+			palette.append(colours[i])
+			region_colours[region] = palette
+	for region: Vector2i in by_region:
+		_instancer.call("add_transforms", mesh_id, by_region[region], region_colours[region], true)
+		# Always release this bounded native upload, even if its CPU work
+		# happened to finish inside the time-slice budget.
+		await slicer.call("step", "scatter_upload:%d:%d,%d" % [mesh_id, region.x, region.y])
 
 
 ## One real gather point on the world's own scattered vegetation (R2.3) --
@@ -2125,7 +2176,7 @@ func restore_drained(within: Array = []) -> int:
 	# instancer's live MultiMeshInstance3Ds need exactly one rebuild after
 	# all of this healing's models are queued, same as `build()`'s own loop.
 	if _instancer != null:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	_regrown += _placed - before
 	_drained = held
 	return _placed - before
@@ -2288,7 +2339,7 @@ func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = tru
 		"raycast_height": 10.0,
 	})
 	if update:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 
 
 ## Drops this placement's `CollisionShape3D` (if one was resident) and
@@ -2601,7 +2652,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			removed += 1
 		_instance_positions[mesh_id_value] = kept
 	if removed > 0 and _instancer != null:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	# A fight ring opened here later must not put these back.
 	for i in _soft_occluder_positions.size():
 		var soft: Vector3 = _soft_occluder_positions[i]
@@ -2747,7 +2798,7 @@ func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
 		_forget_instance_position(_soft_occluder_mesh_ids[i], spot)
 		_soft_occluder_state[i] = SOFT_HIDDEN_BY_FIGHT
 	if removed:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	return hidden
 
 
@@ -2792,7 +2843,7 @@ func restore_fight_occluders(token: PackedInt32Array) -> int:
 		_instance_positions[mesh_id] = known
 		_instancer.call("add_transforms", mesh_id, transforms, PackedColorArray(), false)
 	if restored > 0:
-		_instancer.call("update_mmis", true)
+		_refresh_render_instances()
 	return restored
 
 

@@ -1443,8 +1443,8 @@
     {
      "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
      "status": "in_progress",
-     "evidence": "VISUAL/lookdev/routes/water-forward-r1; Water Medium/High actual Forward+ native exits 0",
-     "gap": "Village/Hall and the other three biomes still need actual material coverage; F17 layout is being built."
+     "evidence": "VISUAL/lookdev/routes/meadows-forward-incremental-r4: actual native0 Medium/High village/Hall route at424ca00d; Water Forward receipts retained.",
+     "gap": "Cloudreach/Stormwood native material coverage and independent missing-material visual review remain open."
     },
     {
      "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
@@ -1467,8 +1467,8 @@
     {
      "text": "Computer captures at 1920×1080 record frame time per preset for a scripted route in each biome.",
      "status": "in_progress",
-     "evidence": "VISUAL/lookdev/routes/water-low-r1 and water-forward-r1: 3/12 actual native route cases, 201/234/182 frames at 1920x1080, independent receipt checks",
-     "gap": "Remaining nine biome/preset cases open; no complete matrix claim."
+     "evidence": "VISUAL/lookdev/routes/meadows-forward-incremental-r4: native0 Medium506/High481frames at1920x1080 on integrated Hall route; Water3cases retained, total5/12 current cases.",
+     "gap": "Integrated MeadowsLow and all3 Cloudreach/Stormwood cases remain open; old MeadowsLow legacy route is retained history."
     },
     {
      "text": "Owner ROG Ally test: Medium handheld holds ≥30 fps (40 preferred) on the scripted route; Forward+ becomes the default only after this passes (owner-dependent).",
