@@ -1,0 +1,2 @@
+# Preserve the original reviewer JSON bytes, including CRLF.
+original-review-*.json -text whitespace=cr-at-eol
