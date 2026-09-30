@@ -18,9 +18,9 @@ extends Node3D
 ## creature standing still while the opponent's health dropped, with no visible
 ## cause anywhere between them.
 ##
-## The `arrived` signal is how the impact stays honest. `combat_manager.gd`
-## holds its impact burst until this fires, so the flash goes off when the bolt
-## gets there rather than the instant the button was pressed.
+## Host-scheduled launches use the same idle timer domain as combat's separate
+## authoritative timer. `arrived` reports local presentation contact only;
+## removing this node or its callback cannot authorize or cancel damage.
 ##
 ## ## Why meshes and not GPUParticles3D
 ##
@@ -140,7 +140,7 @@ func _ready() -> void:
 	_redraw(0.0)
 
 
-## The PHYSICS clock, not `_process`, and for the reason `impact_flash.gd:136`
+## Non-host preview callers retain the PHYSICS clock, and for the reason `impact_flash.gd:136`
 ## and `telegraph_glow.gd` both already record in their own headers: a
 ## sub-second effect driven by real frame time is gone inside a SINGLE frame
 ## under the software renderer every visual verdict on this project is made
