@@ -29,13 +29,13 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | All five criteria strict MET and landed main b2ea1455a via #467; 5422/5422 batch pass witnesses, selected full CI and final required CI passed. Evidence and shortcuts: ralph/reports/FOUNDATIONS/f16. |
-| `tb/hub` | F17, F18 | #0–#3 main107; services360 native0/448.703s strict MET, r1/r2 reds retained. M1/co-op/craft open; F18 held. |
+| `tb/hub` | F17, F18 | #0–#3 main107; services360 strict MET. M1 a6fb native1 farmhouse-wall stall; door-clear fix pending. F18 held. |
 | `tb/reorder` | F19, F20 | F16 landed; waits on F18 |
-| `tb/combat` | F21–F24 | 15af loadout ACK source; c9c5 vitals/movement4/79/0+parsers. Prior10/734+16 native0; aborted9-method red retained. |
-| `tb/vfx` | F25, F35 | edd109 native queued; capacity failed before edits/engine. R8 ranks1/3/5 PASS/full craft FAIL; library off/F25 open. |
-| `tb/lookdev` | F26 | #1/#2/#4 main106; full12 native1920 strict MET (VISUAL/lookdev/twelve-route-result.md). Cloud M/H48 full-bar FAIL; #0/#3/#5 open. |
-| `tb/training` | F27–F30, F37 | c4a80 essence/release/candy source; authority/runtime open, no MET. |
-| `tb/homestead` | F31–F34 | bbe906 site/farm source; mounts uncalled, authority open, no MET. |
+| `tb/combat` | F21–F24 | 2b34 actor/status5/68/0+parsers. Prior10/734+16 native0; aborted9 red retained. Durable HP/loadout open. |
+| `tb/vfx` | F25, F35 | 89a075 r14 unit27/light18 PASS, smallstones lease FAIL/native1;36PNG retained, blind pending; flag off/F25 open. |
+| `tb/lookdev` | F26 | #1/#2/#4 main107; full12 strict MET. ff0395 trainer/Water native0, Storm census active; Cloud craft FAIL/#0/#3/#5 open. |
+| `tb/training` | F27–F30, F37 | 0f9d3 review; essence/candy source, authority/runtime open; no MET. |
+| `tb/homestead` | F31–F34 | 6f37f5 review; site/farm source, durable resolver/milestone open; no MET. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
