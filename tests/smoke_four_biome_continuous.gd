@@ -83,6 +83,10 @@ func _init() -> void:
 
 
 func _run() -> void:
+	if not OS.get_cmdline_user_args().has("--legacy-order-diagnostic"):
+		await (load("res://tests/helpers/f49_campaign_journey.gd") as GDScript).new().run(self)
+		return
+	print("LEGACY ORDER DIAGNOSTIC: physical crossings and old ending; never F49 campaign proof")
 	started_ms = Time.get_ticks_msec()
 	# `--world-seed=N` pins the rolled world for this process, the same override
 	# `TB_WORLD_SEED` gives, for runners that cannot set the environment.
@@ -298,7 +302,7 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 	# The rebuilt world stood the placed camp back up from the save; re-find
 	# its beds and bedroll by their saved placement index for the bracket's
 	# recovery (the pre-reload nodes are gone).
-	if OS.get_cmdline_user_args().has("--reload-at-transitions") and not _refind_camp(camp, bed_marks, roll_mark):
+	if _reload_required() and not _refind_camp(camp, bed_marks, roll_mark):
 		_finish(false)
 		return false
 	if OS.get_cmdline_user_args().has("--through-rest"):
@@ -395,8 +399,8 @@ func _stage_stormwood_to_water(game: Node) -> bool:
 	return await _checkpoint_boundary(game, "water_arrived")
 
 
-func _stage_water_to_ending(game: Node) -> void:
-	var water_opening := WATER_OPENING.new()
+func _stage_water_to_ending(game: Node, chapter_only: bool = false) -> void:
+	var water_opening: RefCounted = (load("res://tests/helpers/f49_tidewake_opening.gd") as GDScript).new() if chapter_only else WATER_OPENING.new()
 	if not _accepted(await water_opening.run(self, live["world"], game), "passed"):
 		return
 	live["player"] = water_opening.player
@@ -451,6 +455,9 @@ func _stage_water_to_ending(game: Node) -> void:
 		return
 	reached = "tidewake_ending_earned"
 	if local_chains != null and not await _saved_chain_completion(game):
+		return
+	if chapter_only:
+		# F49 continues to Cloudreach; Tidewake settles only its chapter here.
 		return
 	# A DRY RUN (declared Water fixture) never counts as a completed campaign.
 	campaign_complete = not dry_run
@@ -781,7 +788,7 @@ func _meadows_after_bridge(game: Node) -> bool:
 		if _resumed_past(label):
 			continue
 		var segment: RefCounted = (stage[0] as GDScript).new()
-		if stage[0] == HALL and OS.get_cmdline_user_args().has("--reload-at-transitions"):
+		if stage[0] == HALL and _reload_required():
 			# M2: save/reload with the three earned Sigils carried, before the gate.
 			segment.set("before_gate", func() -> bool: return await _reload_transition(game, "sigils_earned"))
 		var result: Dictionary = await segment.run(self, live["world"], game)
@@ -918,7 +925,7 @@ func _accepted(result: Dictionary, success_key: String) -> bool:
 ## rebuilt world. Every flag and the party's UIDs must come back exactly.
 ## Without the flag this is a no-op, so the CI path is unchanged.
 func _reload_transition(game: Node, label: String) -> bool:
-	if not OS.get_cmdline_user_args().has("--reload-at-transitions"):
+	if not _reload_required():
 		return true
 	var progression: RefCounted = game.get("progression")
 	var party: RefCounted = game.get("party")
@@ -988,6 +995,12 @@ func _reload_transition(game: Node, label: String) -> bool:
 	if player == null:
 		failures.append("RELOAD %s: the rebuilt world has no Player" % label)
 	return failures.is_empty()
+
+
+func _reload_required() -> bool:
+	# M2 reload obligations are mandatory on F49's default campaign path.
+	return OS.get_cmdline_user_args().has("--reload-at-transitions") \
+		or not OS.get_cmdline_user_args().has("--legacy-order-diagnostic")
 
 
 ## Recovery state per member, keyed by UID: HP (0.1 precision, as saved),
@@ -1075,12 +1088,12 @@ func _finish(prefix_passed: bool) -> void:
 	print("FRESH CAMPAIGN RESULT %s" % JSON.stringify({
 		"requested_prefix_passed": prefix_passed,
 		"reached": reached,
-		"campaign_complete": campaign_complete and failures.is_empty(),
+		"campaign_complete": campaign_complete and failures.is_empty() and not OS.get_cmdline_user_args().has("--legacy-order-diagnostic"),
 		# `resumed_from`: the reload-transition label or chapter boundary this run
 		# resumed at ("" for a new game); `resume` carries the details. Any resume
 		# or DRY RUN is debug/piecewise evidence, never an uninterrupted closes run.
 		"resumed_from": resumed_from if not resumed_from.is_empty() else resume_boundary,
-		"counts_as_proof": resumed_from.is_empty() and resume_boundary.is_empty() and not dry_run,
+		"counts_as_proof": campaign_complete and failures.is_empty() and resumed_from.is_empty() and resume_boundary.is_empty() and not dry_run and not OS.get_cmdline_user_args().has("--legacy-order-diagnostic"),
 		"scratch": scratch,
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"cumulative_elapsed_seconds": prior_elapsed_seconds + (Time.get_ticks_msec() - started_ms) / 1000.0,
