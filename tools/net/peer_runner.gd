@@ -3584,7 +3584,9 @@ static func _stage_trainer_hp_ceiling(director: Node, manager: Node,
 		var rec: Dictionary = authority.call("record", encounter_id)
 		if str(rec.get("phase", "")) != "active":
 			return {"ok": true}
-		if str(rec.get("kind", "")) != "trainer" \
+		# The production opener classifies Warden's trainer-owned fight as boss.
+		# Require that exact classification as well as the existing body bindings.
+		if str(rec.get("kind", "")) != str(director.call("_encounter_kind", true)) \
 				or director.get("_engaged_with") != opponent or manager.get("_enemy") != creature:
 			return {"ok": false, "why": "shared trainer HP fixture is not bound to this opponent"}
 		var row: Dictionary = rec.get("opponent", {})
