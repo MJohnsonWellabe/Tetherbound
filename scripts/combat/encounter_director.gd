@@ -7233,13 +7233,20 @@ func _tick_wild_victory_settlement(encounter_id: String, delta: float) -> void:
 		var pending: Variant = _session.call("admitted_pending_vitals", int(deployment.peer_id))
 		if not pending is Dictionary or not pending.is_empty():
 			return
-	var adapter: Script = load(WILD_VICTORY_ADAPTER_PATH)
-	var result: Variant = adapter.call("submit_frozen_source", self, original)
+	var result: Variant = {"ok": true, "durable": true, "resolved": true}
+	if not bool(runtime.get_meta(&"wild_victory_training_resolved", false)):
+		var adapter: Script = load(WILD_VICTORY_ADAPTER_PATH)
+		result = adapter.call("submit_frozen_source", self, original)
 	runtime.set_meta(&"wild_victory_result", result.duplicate(true) if result is Dictionary else {})
 	var retries: Dictionary = MATH.config().get("patterns", {}).get("settlement", {})
 	runtime.set_meta(&"wild_victory_retry_left_s", float(retries.get("retry_s", 1.0)))
 	if result is Dictionary and result.get("ok") == true and result.get("durable") == true \
 			and result.get("resolved") == true:
+		runtime.set_meta(&"wild_victory_training_resolved", true)
+		# Research consumes the same retained actual killing-hit source after
+		# F27 settles. Keep that lifetime until its separate personal ACK settles.
+		var research: Dictionary = preload("res://scripts/creatures/research_actions.gd").defeated_source(_session, original)
+		if research.get("resolved") != true: return
 		runtime.set_meta(&"wild_victory_resolved", true)
 		if bool(runtime.get_meta(&"dispose_after_wild_victory", false)):
 			_dispose_shared_host_fight(encounter_id, false)
