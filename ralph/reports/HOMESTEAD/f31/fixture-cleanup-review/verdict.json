@@ -1,0 +1,34 @@
+{
+  "source_commit": "46ad6e84ec88a095e99e204bf64624aa5a588c0e",
+  "predecessor": "6634be1bac4f0cb1fdcd5bd502a168647f447830",
+  "verdict": "PASS_FOR_BOUNDED_FIXTURE_CLEANUP_SOURCE",
+  "scope": ["tests/test_build_placer_preview.gd"],
+  "open_P1_P2_findings": [],
+  "manifest_git_and_working_hashes_match": true,
+  "diff_check": "PASS",
+  "parser_status": "No concrete parser risk found by source inspection; no engine parsing run.",
+  "source_observations": [
+    "All ten case allocations now call _new_game; the sole remaining FakeGame.new call is inside that factory.",
+    "Factory appends each new bare Node to typed Array[FakeGame] before returning it.",
+    "after_each synchronously frees each still-valid fixture and then clears the tracking array. No tree membership or future queue_free frame is required.",
+    "Existing tests/run_tests.gd calls before_each, each test method, then after_each before judging stored assertion failures. Existing TestCase assertions record failures and continue, so failed assertions also reach cleanup.",
+    "All twelve original case bodies, assertions and test data are exactly preserved after substituting only the ten factory calls. Runner source is unchanged.",
+    "The one-path delta changes fixture lifetime only; no production source, shared binding or feature flag changes."
+  ],
+  "returned_ROOT_evidence": {
+    "head": "ba773cb5e8a22677043edf3b1fe7aa271eb4824e",
+    "raw_log_sha256": "3c19146f420b6850379da586eb35aad7ae84f411d135f21dfb369b2f43a8bc8b",
+    "raw_hash_independently_verified": true,
+    "assertions": "32 tests, 321 assertions, 0 failed",
+    "cleanup": "FAIL: ten bare Node leaks, GDScript reference count ten, native class leak; orphan StringName identifies tests/test_build_placer_preview.gd.FakeGame.",
+    "attribution": "This pattern matches the ten prior unfreed FakeGame allocations. Source repair addresses that lifetime gap; actual clean exit is not proven by this review."
+  },
+  "reviewer_engine_import_check_only_ci_or_unit_runs": false,
+  "clean_runtime_claim": false,
+  "ROOT_followup": "OPEN: compose successor and verify affected preview test cleanup using ROOT-owned engine/test run.",
+  "flags": "OFF; unchanged",
+  "acceptance_credit": 0,
+  "acceptance_F31_0_through_6": "OPEN",
+  "runtime_visual_acceptance": "OPEN",
+  "reviewer_writes": "Ignored .tmp/f31-fixture-cleanup-review evidence only."
+}

@@ -1,0 +1,38 @@
+{
+  "kind": "bounded_returned_fixture_cleanup_repair",
+  "source_commit": "46ad6e84ec88a095e99e204bf64624aa5a588c0e",
+  "predecessor_package": "6634be1bac4f0cb1fdcd5bd502a168647f447830",
+  "branch": "tb/f31",
+  "files": [
+    {
+      "path": "tests/test_build_placer_preview.gd",
+      "before_git_sha256": "a1e9e583054b3b6e3cabb35e8b1dc23c4d1995fcba832d6c8bd1db77341d8a7d",
+      "after_git_sha256": "6a1d708bd34495d4660c470f22a615c8d3a339dfc655edb2cf2ed56c3bc4023f",
+      "working_sha256": "0b25a8c2e538c95a843089b90eb5bb78373a33aae66bfafa94156a5063336cad",
+      "after_git_blob_oid": "3b41122df1524901d0f0a4635ae880d1a5adad7c"
+    }
+  ],
+  "cheap_source_checks": {
+    "all_twelve_case_bodies_unchanged_except_factory": true,
+    "all_ten_bare_allocations_routed_through_factory": true,
+    "fixture_registered_before_return": true,
+    "synchronous_valid_fixture_free_then_clear": true,
+    "runner_invokes_after_each": true,
+    "source_delta_exact_one_path": true
+  },
+  "returned_ROOT_batch": {
+    "head": "ba773cb5e8a22677043edf3b1fe7aa271eb4824e",
+    "selection": "test_build_catalogue.gd,test_chapter_content_map.gd,test_build_placer_preview.gd,test_item_db_station_catalogue.gd",
+    "assertions": "32 tests, 321 assertions, 0 failed",
+    "overall_verdict": "CLEANUP_FAIL; no clean PASS claimed",
+    "leaks": "10 bare FakeGame Nodes plus GDScript and native class = 12 leaked instances",
+    "raw_log_sha256": "3c19146f420b6850379da586eb35aad7ae84f411d135f21dfb369b2f43a8bc8b"
+  },
+  "root_engine_followup": "Affected test_build_placer_preview.gd cleanup must be verified by ROOT; no engine or tests run in F31 worktree",
+  "shared_writes": false,
+  "flags": "unchanged OFF",
+  "acceptance_credit": 0,
+  "runtime_visual_acceptance": "OPEN",
+  "independent_review": "PASS_FOR_BOUNDED_FIXTURE_CLEANUP_SOURCE on 46ad6e84ec88a095e99e204bf64624aa5a588c0e; no bounded P1/P2; existing reviewer reused",
+  "review_evidence": "fixture-cleanup-review/verdict.json"
+}
