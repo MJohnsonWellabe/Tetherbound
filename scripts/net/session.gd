@@ -1275,10 +1275,21 @@ func _rpc_goodbye() -> void:
 	var sender := multiplayer.get_remote_sender_id()
 	if bool(_registry.call("has", sender)):
 		_departing_peers[sender] = true
+		# Retire existing scene senders while this endpoint still has channels.
+		# ENet removes it only on a later poll; cached Sync visibility must not
+		# keep targeting the disconnecting endpoint in that interval.
+		if realm_transition != null:
+			realm_transition.call("_refresh_scopes")
 		# Close from this side, after the goodbye has been read, so the
 		# leaving client's disconnect cannot discard it. See GOODBYE_LINGER_S.
 		if _peer != null:
 			_peer.disconnect_peer(sender)
+
+
+## The existing goodbye lifetime, read by the scene replication coordinator.
+## It is not an admission, world-readiness or held-seat decision.
+func peer_is_departing(peer_id: int) -> bool:
+	return bool(_departing_peers.get(peer_id, false))
 
 
 ## Returns whether a goodbye went out. The caller then tears the session down

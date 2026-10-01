@@ -1,0 +1,273 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=15788 control_port=60743 home=D:\tetherbound\hall-agreement-native-r4\net/home-0 log=D:\tetherbound\hall-agreement-native-r4\net/peer-0.log
+coordinator: launched peer 1 (client) pid=11600 control_port=60744 home=D:\tetherbound\hall-agreement-native-r4\net/home-1 log=D:\tetherbound\hall-agreement-native-r4\net/peer-1.log
+coordinator: peer 0 hello: {"enet_port":34201.0,"godot_version":"4.7-stable (official)","main_sha":"784b5cee71a4","peer":0.0,"pid":15788.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/hall-agreement-native-r4/net/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":34202.0,"godot_version":"4.7-stable (official)","main_sha":"784b5cee71a4","peer":1.0,"pid":11600.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/hall-agreement-native-r4/net/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: distinct actual host/guest user profiles
+PASS: peer 0 production_host: title fresh identity 'HallHost'/trainer entered 'MeadowsPlayground' and hosted udp/34201 after 0 frames; real mounted world released and admitted host stable30 frames
+PASS: peer 1 production_join: title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:34201 as peer 722126429 after 105 frames
+PASS: joined peer 0 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 0 runtime helper bytes pinned
+PASS: peer 0 uses this run's exclusive helper
+PASS: joined peer 1 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 1 runtime helper bytes pinned
+PASS: peer 1 uses this run's exclusive helper
+PASS: joined peer 0 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 0 runtime helper bytes pinned
+PASS: peer 0 uses this run's exclusive helper
+PASS: joined peer 1 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 1 runtime helper bytes pinned
+PASS: peer 1 uses this run's exclusive helper
+PASS: joined host revision/epoch/producer pin survives cross-peer capture
+PASS: joined guest revision/epoch/producer pin survives cross-peer capture
+PASS: joined actual server/client roles
+PASS: joined actual ENet admitted peer IDs
+PASS: joined separate admitted stable characters
+PASS: joined replicated admission/realm maps agree
+PASS: joined host-authoritative world identity agrees
+PASS: joined host-authoritative display state agrees
+PASS: joined actual village/Hall transforms, mesh trees, visible text/material/arch/shrine producers agree
+PASS: joined host disclosed fresh locked portal state
+PASS: joined host disclosed fresh empty shrine state
+PASS: joined host reserved fifth arch remains sealed
+PASS: joined host actual home state open
+PASS: joined host visible state text matches home
+PASS: joined host signed visible membrane home
+PASS: joined host actual surface emission home
+PASS: joined host actual tidewake state locked
+PASS: joined host visible state text matches tidewake
+PASS: joined host signed visible membrane tidewake
+PASS: joined host actual surface emission tidewake
+PASS: joined host actual cloudreach state locked
+PASS: joined host visible state text matches cloudreach
+PASS: joined host signed visible membrane cloudreach
+PASS: joined host actual surface emission cloudreach
+PASS: joined host actual stormwood state locked
+PASS: joined host visible state text matches stormwood
+PASS: joined host signed visible membrane stormwood
+PASS: joined host actual surface emission stormwood
+PASS: joined host actual biome5 state sealed
+PASS: joined host visible state text matches biome5
+PASS: joined host signed visible membrane biome5
+PASS: joined host actual surface emission biome5
+PASS: joined host actual biome6 state sealed
+PASS: joined host visible state text matches biome6
+PASS: joined host signed visible membrane biome6
+PASS: joined host actual surface emission biome6
+PASS: joined host actual biome7 state sealed
+PASS: joined host visible state text matches biome7
+PASS: joined host signed visible membrane biome7
+PASS: joined host actual surface emission biome7
+PASS: joined host actual biome8 state sealed
+PASS: joined host visible state text matches biome8
+PASS: joined host signed visible membrane biome8
+PASS: joined host actual surface emission biome8
+PASS: joined host empty shrine meadows
+PASS: joined host actual empty pedestal and biome sign meadows
+PASS: joined host empty shrine tidewake
+PASS: joined host actual empty pedestal and biome sign tidewake
+PASS: joined host empty shrine cloudreach
+PASS: joined host actual empty pedestal and biome sign cloudreach
+PASS: joined host empty shrine stormwood
+PASS: joined host actual empty pedestal and biome sign stormwood
+PASS: joined host empty shrine biome5
+PASS: joined host actual empty pedestal and biome sign biome5
+PASS: joined host empty shrine biome6
+PASS: joined host actual empty pedestal and biome sign biome6
+PASS: joined host empty shrine biome7
+PASS: joined host actual empty pedestal and biome sign biome7
+PASS: joined host empty shrine biome8
+PASS: joined host actual empty pedestal and biome sign biome8
+PASS: joined guest disclosed fresh locked portal state
+PASS: joined guest disclosed fresh empty shrine state
+PASS: joined guest reserved fifth arch remains sealed
+PASS: joined guest actual home state open
+PASS: joined guest visible state text matches home
+PASS: joined guest signed visible membrane home
+PASS: joined guest actual surface emission home
+PASS: joined guest actual tidewake state locked
+PASS: joined guest visible state text matches tidewake
+PASS: joined guest signed visible membrane tidewake
+PASS: joined guest actual surface emission tidewake
+PASS: joined guest actual cloudreach state locked
+PASS: joined guest visible state text matches cloudreach
+PASS: joined guest signed visible membrane cloudreach
+PASS: joined guest actual surface emission cloudreach
+PASS: joined guest actual stormwood state locked
+PASS: joined guest visible state text matches stormwood
+PASS: joined guest signed visible membrane stormwood
+PASS: joined guest actual surface emission stormwood
+PASS: joined guest actual biome5 state sealed
+PASS: joined guest visible state text matches biome5
+PASS: joined guest signed visible membrane biome5
+PASS: joined guest actual surface emission biome5
+PASS: joined guest actual biome6 state sealed
+PASS: joined guest visible state text matches biome6
+PASS: joined guest signed visible membrane biome6
+PASS: joined guest actual surface emission biome6
+PASS: joined guest actual biome7 state sealed
+PASS: joined guest visible state text matches biome7
+PASS: joined guest signed visible membrane biome7
+PASS: joined guest actual surface emission biome7
+PASS: joined guest actual biome8 state sealed
+PASS: joined guest visible state text matches biome8
+PASS: joined guest signed visible membrane biome8
+PASS: joined guest actual surface emission biome8
+PASS: joined guest empty shrine meadows
+PASS: joined guest actual empty pedestal and biome sign meadows
+PASS: joined guest empty shrine tidewake
+PASS: joined guest actual empty pedestal and biome sign tidewake
+PASS: joined guest empty shrine cloudreach
+PASS: joined guest actual empty pedestal and biome sign cloudreach
+PASS: joined guest empty shrine stormwood
+PASS: joined guest actual empty pedestal and biome sign stormwood
+PASS: joined guest empty shrine biome5
+PASS: joined guest actual empty pedestal and biome sign biome5
+PASS: joined guest empty shrine biome6
+PASS: joined guest actual empty pedestal and biome sign biome6
+PASS: joined guest empty shrine biome7
+PASS: joined guest actual empty pedestal and biome sign biome7
+PASS: joined guest empty shrine biome8
+PASS: joined guest actual empty pedestal and biome sign biome8
+PASS: peer 1 hall_leave_guest: production client leave saved its own portable character; production reader confirmed disk payload
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 0 frames (0.0 s)
+PASS: peer 0 hall_reload_host: production autosave + title Load; scene and Hall rebuilt from host save
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:34201 as peer 1451910185 after 102 frames
+PASS: reloaded peer 0 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 0 runtime helper bytes pinned
+PASS: peer 0 uses this run's exclusive helper
+PASS: reloaded peer 1 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 1 runtime helper bytes pinned
+PASS: peer 1 uses this run's exclusive helper
+PASS: reloaded peer 0 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 0 runtime helper bytes pinned
+PASS: peer 0 uses this run's exclusive helper
+PASS: reloaded peer 1 independent capture: 30 independently stable admitted frames; captured real scene producers
+PASS: peer 1 runtime helper bytes pinned
+PASS: peer 1 uses this run's exclusive helper
+PASS: reloaded host revision/epoch/producer pin survives cross-peer capture
+PASS: reloaded guest revision/epoch/producer pin survives cross-peer capture
+PASS: reloaded actual server/client roles
+PASS: reloaded actual ENet admitted peer IDs
+PASS: reloaded separate admitted stable characters
+PASS: reloaded replicated admission/realm maps agree
+PASS: reloaded host-authoritative world identity agrees
+PASS: reloaded host-authoritative display state agrees
+PASS: reloaded actual village/Hall transforms, mesh trees, visible text/material/arch/shrine producers agree
+PASS: reloaded host disclosed fresh locked portal state
+PASS: reloaded host disclosed fresh empty shrine state
+PASS: reloaded host reserved fifth arch remains sealed
+PASS: reloaded host actual home state open
+PASS: reloaded host visible state text matches home
+PASS: reloaded host signed visible membrane home
+PASS: reloaded host actual surface emission home
+PASS: reloaded host actual tidewake state locked
+PASS: reloaded host visible state text matches tidewake
+PASS: reloaded host signed visible membrane tidewake
+PASS: reloaded host actual surface emission tidewake
+PASS: reloaded host actual cloudreach state locked
+PASS: reloaded host visible state text matches cloudreach
+PASS: reloaded host signed visible membrane cloudreach
+PASS: reloaded host actual surface emission cloudreach
+PASS: reloaded host actual stormwood state locked
+PASS: reloaded host visible state text matches stormwood
+PASS: reloaded host signed visible membrane stormwood
+PASS: reloaded host actual surface emission stormwood
+PASS: reloaded host actual biome5 state sealed
+PASS: reloaded host visible state text matches biome5
+PASS: reloaded host signed visible membrane biome5
+PASS: reloaded host actual surface emission biome5
+PASS: reloaded host actual biome6 state sealed
+PASS: reloaded host visible state text matches biome6
+PASS: reloaded host signed visible membrane biome6
+PASS: reloaded host actual surface emission biome6
+PASS: reloaded host actual biome7 state sealed
+PASS: reloaded host visible state text matches biome7
+PASS: reloaded host signed visible membrane biome7
+PASS: reloaded host actual surface emission biome7
+PASS: reloaded host actual biome8 state sealed
+PASS: reloaded host visible state text matches biome8
+PASS: reloaded host signed visible membrane biome8
+PASS: reloaded host actual surface emission biome8
+PASS: reloaded host empty shrine meadows
+PASS: reloaded host actual empty pedestal and biome sign meadows
+PASS: reloaded host empty shrine tidewake
+PASS: reloaded host actual empty pedestal and biome sign tidewake
+PASS: reloaded host empty shrine cloudreach
+PASS: reloaded host actual empty pedestal and biome sign cloudreach
+PASS: reloaded host empty shrine stormwood
+PASS: reloaded host actual empty pedestal and biome sign stormwood
+PASS: reloaded host empty shrine biome5
+PASS: reloaded host actual empty pedestal and biome sign biome5
+PASS: reloaded host empty shrine biome6
+PASS: reloaded host actual empty pedestal and biome sign biome6
+PASS: reloaded host empty shrine biome7
+PASS: reloaded host actual empty pedestal and biome sign biome7
+PASS: reloaded host empty shrine biome8
+PASS: reloaded host actual empty pedestal and biome sign biome8
+PASS: reloaded guest disclosed fresh locked portal state
+PASS: reloaded guest disclosed fresh empty shrine state
+PASS: reloaded guest reserved fifth arch remains sealed
+PASS: reloaded guest actual home state open
+PASS: reloaded guest visible state text matches home
+PASS: reloaded guest signed visible membrane home
+PASS: reloaded guest actual surface emission home
+PASS: reloaded guest actual tidewake state locked
+PASS: reloaded guest visible state text matches tidewake
+PASS: reloaded guest signed visible membrane tidewake
+PASS: reloaded guest actual surface emission tidewake
+PASS: reloaded guest actual cloudreach state locked
+PASS: reloaded guest visible state text matches cloudreach
+PASS: reloaded guest signed visible membrane cloudreach
+PASS: reloaded guest actual surface emission cloudreach
+PASS: reloaded guest actual stormwood state locked
+PASS: reloaded guest visible state text matches stormwood
+PASS: reloaded guest signed visible membrane stormwood
+PASS: reloaded guest actual surface emission stormwood
+PASS: reloaded guest actual biome5 state sealed
+PASS: reloaded guest visible state text matches biome5
+PASS: reloaded guest signed visible membrane biome5
+PASS: reloaded guest actual surface emission biome5
+PASS: reloaded guest actual biome6 state sealed
+PASS: reloaded guest visible state text matches biome6
+PASS: reloaded guest signed visible membrane biome6
+PASS: reloaded guest actual surface emission biome6
+PASS: reloaded guest actual biome7 state sealed
+PASS: reloaded guest visible state text matches biome7
+PASS: reloaded guest signed visible membrane biome7
+PASS: reloaded guest actual surface emission biome7
+PASS: reloaded guest actual biome8 state sealed
+PASS: reloaded guest visible state text matches biome8
+PASS: reloaded guest signed visible membrane biome8
+PASS: reloaded guest actual surface emission biome8
+PASS: reloaded guest empty shrine meadows
+PASS: reloaded guest actual empty pedestal and biome sign meadows
+PASS: reloaded guest empty shrine tidewake
+PASS: reloaded guest actual empty pedestal and biome sign tidewake
+PASS: reloaded guest empty shrine cloudreach
+PASS: reloaded guest actual empty pedestal and biome sign cloudreach
+PASS: reloaded guest empty shrine stormwood
+PASS: reloaded guest actual empty pedestal and biome sign stormwood
+PASS: reloaded guest empty shrine biome5
+PASS: reloaded guest actual empty pedestal and biome sign biome5
+PASS: reloaded guest empty shrine biome6
+PASS: reloaded guest actual empty pedestal and biome sign biome6
+PASS: reloaded guest empty shrine biome7
+PASS: reloaded guest actual empty pedestal and biome sign biome7
+PASS: reloaded guest empty shrine biome8
+PASS: reloaded guest actual empty pedestal and biome sign biome8
+PASS: host rebuilt village/Hall producers persist across disk Load
+PASS: guest rebuilt village/Hall producers persist across saved-character rejoin
+PASS: same host world identity after production disk Load
+PASS: same host character after production disk Load
+PASS: same saved guest character admitted after host reload
+PASS: production title returning-guest reader loaded portable character from disk
+PASS: host scene rebuilt
+PASS: host Hall rebuilt
+PASS: guest scene rebuilt on rejoin
+PASS: guest Hall rebuilt on rejoin
+F17#5 actual admitted ENet + host title Load + guest saved rejoin; legal fresh locked/empty state only. Nondefault states unproved.
+coordinator: ERROR: smoke budget exceeded
+FAIL: ERROR: smoke budget exceeded
