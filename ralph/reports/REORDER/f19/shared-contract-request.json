@@ -1,0 +1,83 @@
+{
+  "feature": "F19",
+  "workspace": "D:/tetherbound/feature-f19",
+  "branch": "tb/f19",
+  "baseline": "5c2c964ebaa8e25f933355324725be324218bc44",
+  "phase": "owned_curve_content_implemented_shared_integration_required",
+  "criteria_status": {
+    "F19#0": "config done; F18 sign/F20 credits binding pending",
+    "F19#1": "owned curve and explicit teams done; outside-owner live levels + queued engine pin pending",
+    "F19#2": "boss_handoffs content defined; canonical boss transaction consumer required",
+    "F19#3": "gate scan being authored; no engine run",
+    "F19#4": "offers require canonical stable boss participant transaction; proof pending",
+    "F19#5": "earned current-schema boundaries require ROOT ordinary route; historical fixtures preserved, never fabricated"
+  },
+  "f18_contract": {
+    "curve_source": "res://data/config/chapter_curve.json",
+    "field": "biomes[canonical_biome].recommended_level",
+    "recommendations": {
+      "tidewake": 20,
+      "cloudreach": 31,
+      "stormwood": 42
+    },
+    "items": [
+      "tidewake_portal_key",
+      "cloudreach_portal_key",
+      "stormwood_portal_key",
+      "fifth_portal_key"
+    ],
+    "level_is_guidance_only": true,
+    "alias": "tidewake canonical maps to runtime water through BiomeOrder"
+  },
+  "f20_contract": {
+    "finale_boss": "captain_marrow_dynamo_core",
+    "finale_key": "fifth_portal_key",
+    "ending_biome": "stormwood",
+    "order_source": "res://data/config/biome_order.json",
+    "required_homecoming": "Home Key after Stormwood, Tidewake dock closes own chapter"
+  },
+  "root_shared_requests": [
+    {
+      "path": "scripts/net/encounter_rewards.gd + encounter_director/cloudreach/dynamo accepted victory call sites",
+      "contract": "Read chapter_rewards.boss_handoffs only from accepted host boss completion; durable participant IDs captured before defeat flag. Reuse RewardDelivery/WorldLedger/LedgerRpc portable escrow; no solo direct-pay fallback on failed journal. Key and personal relic entitlement each participant; none for spectators; retain disconnected participant stable ID. Save must succeed before ACK; duplicates/rejoin same receipt, full inventory pending."
+    },
+    {
+      "path": "data/config/stormwood_dynamo.json",
+      "delta": {
+        "captive.placeholder_species": "fulgocobra",
+        "captive.level": 55
+      },
+      "note": "Preserve nickname the Stormheart; existing Legendary, no roster expansion."
+    },
+    {
+      "path": "data/config/water_veilfall.json",
+      "delta": {
+        "guardian_level": 33
+      }
+    },
+    {
+      "path": "data/config/water_alpha.json",
+      "delta": {
+        "level": 27
+      }
+    },
+    {
+      "path": "data/config/cloudreach_solmane_climax.json",
+      "delta": {
+        "legendary.level": 44
+      },
+      "note": "Need confirm exact object path; existing Solmane field level34."
+    },
+    {
+      "path": "scripts/world/crossing_hall.gd",
+      "contract": "Sign recommendations use chapter_curve.biomes; no min_level condition. ROOT/F18 writer."
+    },
+    {
+      "path": "tests/smoke_four_biome_continuous.gd + current M1 helpers",
+      "contract": "ROOT owns. New continuous earned path must portal Meadows -> Tidewake -> Cloudreach -> Stormwood; collect real boss/portal save receipts, no injected grants or fake earning."
+    }
+  ],
+  "godot_runs_launched": 0,
+  "owner_needs": [],
+  "landing_gate": "F16 main; F18 actual landing and named proof required; do not merge prematurely"
+}
