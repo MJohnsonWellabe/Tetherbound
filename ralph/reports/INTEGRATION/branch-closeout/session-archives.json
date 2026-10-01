@@ -155,6 +155,25 @@
       "source_contained_at": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
       "tracked_clean": true,
       "untracked_source": []
+    },
+    {
+      "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+      "feature": "F17",
+      "head": "6edcdd507074b8ab8d85cd56c086bfd2b2bb20bc",
+      "confirmed_archived": true,
+      "tracked_clean": true,
+      "source_contained_at": "eb854927e0",
+      "untracked_evidence": "Lossless 41-file diagnostic archive in current-repairs-3fcc09; original worktree retained"
+    },
+    {
+      "thread_id": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+      "feature": "F29",
+      "head": "6f8ee829c5bd670b411b66a676e3b3d57484733b",
+      "confirmed_archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "source_contained_at": "eb854927e0",
+      "reason": "All assigned independent source/native receipt reviews complete; restore same reviewer when needed"
     }
   ],
   "next_batch_archives": "Ten confirmed R2 archives and exact source reachability are retained on tb/integration-next in ralph/reports/R2-consolidation; six source-only R3 sessions started from the consolidated R2 source. No R3 CI started."
