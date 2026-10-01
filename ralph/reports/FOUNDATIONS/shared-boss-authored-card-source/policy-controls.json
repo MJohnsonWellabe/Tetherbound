@@ -1,0 +1,480 @@
+{
+  "source_pin": "7a76a506beccd51aa04b81ab743b1140e33bfeb2",
+  "checks": [
+    {
+      "name": "retained immutable return native-return.json",
+      "passed": true
+    },
+    {
+      "name": "retained immutable return NET_RUN.json.gz",
+      "passed": true
+    },
+    {
+      "name": "retained immutable return source-and-runtime-receipt.json.gz",
+      "passed": true
+    },
+    {
+      "name": "retained immutable return native-0.log.gz",
+      "passed": true
+    },
+    {
+      "name": "retained immutable return native-1.log.gz",
+      "passed": true
+    },
+    {
+      "name": "retained immutable return native-2.log.gz",
+      "passed": true
+    },
+    {
+      "name": "retained immutable return native-3.log.gz",
+      "passed": true
+    },
+    {
+      "name": "actual fresh source pin",
+      "passed": true
+    },
+    {
+      "name": "actual assertion FAIL without timeout",
+      "passed": true
+    },
+    {
+      "name": "actual elapsed 231.828 seconds",
+      "passed": true
+    },
+    {
+      "name": "all 3253 actual source hashes frozen",
+      "passed": true
+    },
+    {
+      "name": "actual handles absent",
+      "passed": true
+    },
+    {
+      "name": "actual ten failures agree with NET_RUN",
+      "passed": true
+    },
+    {
+      "name": "actual no fatal error",
+      "passed": true
+    },
+    {
+      "name": "actual full raw log digest 0",
+      "passed": true
+    },
+    {
+      "name": "actual strict clean log 0",
+      "passed": true
+    },
+    {
+      "name": "actual old protected starter refusal absent 0",
+      "passed": true
+    },
+    {
+      "name": "actual full raw log digest 1",
+      "passed": true
+    },
+    {
+      "name": "actual strict clean log 1",
+      "passed": true
+    },
+    {
+      "name": "actual old protected starter refusal absent 1",
+      "passed": true
+    },
+    {
+      "name": "actual full raw log digest 2",
+      "passed": true
+    },
+    {
+      "name": "actual strict clean log 2",
+      "passed": true
+    },
+    {
+      "name": "actual old protected starter refusal absent 2",
+      "passed": true
+    },
+    {
+      "name": "actual full raw log digest 3",
+      "passed": true
+    },
+    {
+      "name": "actual strict clean log 3",
+      "passed": true
+    },
+    {
+      "name": "actual old protected starter refusal absent 3",
+      "passed": true
+    },
+    {
+      "name": "actual owned fixture passes for both peers",
+      "passed": true
+    },
+    {
+      "name": "actual absent guest body and binding retained",
+      "passed": true
+    },
+    {
+      "name": "one guarded authored knowledge insertion quick",
+      "passed": true
+    },
+    {
+      "name": "one guarded authored knowledge insertion charged",
+      "passed": true
+    },
+    {
+      "name": "one explanatory constructor comment",
+      "passed": true
+    },
+    {
+      "name": "complete constructor file inverse",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/save/water_capture_codec.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/creatures/teaching.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/creatures/creature_instance.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/creatures/move_mastery.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/save/save_game.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/combat/combat_manager.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/creatures/shared_opponent_proxy.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control tests/test_stormwood_hosted_combat.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control tests/smoke_net_shared_boss.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control tests/helpers/net_original_starter_fixture.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control tools/net/peer_runner.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control tests/test_multiplayer_identity_0912.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control tests/helpers/net_harness.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control scripts/net/session.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/config/trainers.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/config/bands/band5_stronghold_approach/trainers.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/config/combat.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/config/multiplayer.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/config/progression.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/moves/learnsets.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/moves/moves.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/moves/tms.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control data/creatures/species.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged policy/control project.godot",
+      "passed": true
+    },
+    {
+      "name": "actual authored five-member roster",
+      "passed": true
+    },
+    {
+      "name": "authored override is a valid slot 0/quick",
+      "passed": true
+    },
+    {
+      "name": "authored override compatible with canonical TM eligibility 0/quick",
+      "passed": true
+    },
+    {
+      "name": "candidate override knowledge complete 0",
+      "passed": true
+    },
+    {
+      "name": "candidate knowledge unique 0",
+      "passed": true
+    },
+    {
+      "name": "authored override is a valid slot 1/quick",
+      "passed": true
+    },
+    {
+      "name": "authored override compatible with canonical TM eligibility 1/quick",
+      "passed": true
+    },
+    {
+      "name": "candidate override knowledge complete 1",
+      "passed": true
+    },
+    {
+      "name": "candidate knowledge unique 1",
+      "passed": true
+    },
+    {
+      "name": "authored override is a valid slot 2/quick",
+      "passed": true
+    },
+    {
+      "name": "authored override compatible with canonical TM eligibility 2/quick",
+      "passed": true
+    },
+    {
+      "name": "candidate override knowledge complete 2",
+      "passed": true
+    },
+    {
+      "name": "candidate knowledge unique 2",
+      "passed": true
+    },
+    {
+      "name": "authored override is a valid slot 3/quick",
+      "passed": true
+    },
+    {
+      "name": "authored override compatible with canonical TM eligibility 3/quick",
+      "passed": true
+    },
+    {
+      "name": "candidate override knowledge complete 3",
+      "passed": true
+    },
+    {
+      "name": "candidate knowledge unique 3",
+      "passed": true
+    },
+    {
+      "name": "authored override is a valid slot 4/quick",
+      "passed": true
+    },
+    {
+      "name": "authored override compatible with canonical TM eligibility 4/quick",
+      "passed": true
+    },
+    {
+      "name": "candidate override knowledge complete 4",
+      "passed": true
+    },
+    {
+      "name": "candidate knowledge unique 4",
+      "passed": true
+    },
+    {
+      "name": "first host override absent before correction",
+      "passed": true
+    },
+    {
+      "name": "second host override absent before correction",
+      "passed": true
+    },
+    {
+      "name": "codec gates real encoding through strict validity",
+      "passed": true
+    },
+    {
+      "name": "codec invokes canonical semantic preflight",
+      "passed": true
+    },
+    {
+      "name": "equipped unknown move refuses",
+      "passed": true
+    },
+    {
+      "name": "director publishes actual NPC codec",
+      "passed": true
+    },
+    {
+      "name": "director fallback spawns a fresh local instance",
+      "passed": true
+    },
+    {
+      "name": "existing continuation requires installed host UID",
+      "passed": true
+    },
+    {
+      "name": "two complete changed pipeline schedules",
+      "passed": true
+    },
+    {
+      "name": "actual merged NPC loader",
+      "passed": true
+    },
+    {
+      "name": "real NPC constructor",
+      "passed": true
+    },
+    {
+      "name": "real strict codec",
+      "passed": true
+    },
+    {
+      "name": "real host normalizer",
+      "passed": true
+    },
+    {
+      "name": "real host same-ID round replacement",
+      "passed": true
+    },
+    {
+      "name": "real director card decoding",
+      "passed": true
+    },
+    {
+      "name": "real director snapshot callback",
+      "passed": true
+    },
+    {
+      "name": "real manager resolution clock",
+      "passed": true
+    },
+    {
+      "name": "real terminal closure",
+      "passed": true
+    },
+    {
+      "name": "negative unknown move preflight",
+      "passed": true
+    },
+    {
+      "name": "negative slot preflight",
+      "passed": true
+    },
+    {
+      "name": "deferred native entry",
+      "passed": true
+    },
+    {
+      "name": "unknown exit fails",
+      "passed": true
+    },
+    {
+      "name": "strict native ERROR scan",
+      "passed": true
+    },
+    {
+      "name": "strict native leak scan",
+      "passed": true
+    },
+    {
+      "name": "finite new child cap",
+      "passed": true
+    },
+    {
+      "name": "actual PID cleanup",
+      "passed": true
+    },
+    {
+      "name": "complete changed pipeline assertion count",
+      "passed": true
+    },
+    {
+      "name": "visual-only body double does not override record/card/manager methods",
+      "passed": true
+    },
+    {
+      "name": "readonly ROOT patch application preimages",
+      "passed": true
+    },
+    {
+      "name": "production/test patch exact path scope",
+      "passed": true
+    }
+  ],
+  "native_executed_here": false,
+  "unchanged_controls": [
+    "scripts/save/water_capture_codec.gd",
+    "scripts/creatures/teaching.gd",
+    "scripts/creatures/creature_instance.gd",
+    "scripts/creatures/move_mastery.gd",
+    "scripts/save/save_game.gd",
+    "scripts/combat/encounter_director.gd",
+    "scripts/combat/combat_manager.gd",
+    "scripts/net/encounter_host.gd",
+    "scripts/creatures/shared_opponent_proxy.gd",
+    "tests/test_stormwood_hosted_combat.gd",
+    "tests/smoke_net_shared_boss.gd",
+    "tests/helpers/net_original_starter_fixture.gd",
+    "tools/net/peer_runner.gd",
+    "tests/test_multiplayer_identity_0912.gd",
+    "tests/helpers/net_harness.gd",
+    "scripts/net/session.gd",
+    "data/config/trainers.json",
+    "data/config/bands/band5_stronghold_approach/trainers.json",
+    "data/config/combat.json",
+    "data/config/multiplayer.json",
+    "data/config/progression.json",
+    "data/moves/learnsets.json",
+    "data/moves/moves.json",
+    "data/moves/tms.json",
+    "data/creatures/species.json",
+    "project.godot"
+  ],
+  "changed_production": [
+    "scripts/world/trainer_npc.gd"
+  ],
+  "changed_test": [
+    "tests/test_shared_boss_authored_pipeline.gd"
+  ],
+  "limits": [
+    "56 new controlled native pipeline assertions are source only until ROOT runs them.",
+    "Original two-peer default smoke is still required; no inferred packet ordering or timeout waiver."
+  ]
+}

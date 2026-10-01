@@ -1,0 +1,24 @@
+{
+  "source_pin": "7a76a506beccd51aa04b81ab743b1140e33bfeb2",
+  "source_checks": 109,
+  "native_executed_here": false,
+  "patch": {
+    "path": "D:\\tetherbound\\redesign-foundations\\.tmp\\shared-boss-7a76\\authored-card.patch",
+    "bytes": 13002,
+    "sha256": "962f1e2f7bc94b16fcca7ad6c69706c4e41093f7bf15ac0bb8893eb6921687ee"
+  },
+  "paths": [
+    {
+      "path": "scripts/world/trainer_npc.gd",
+      "sha256_lf": "ad7b8c82dec2e01874cff8d1a8db35b6e973e6f76437a529aa5909d890cb148c",
+      "blob": "da05d8babe8d7e6e76d1a240dde61324ab2706ca"
+    },
+    {
+      "path": "tests/test_shared_boss_authored_pipeline.gd",
+      "sha256_lf": "a9499adf2a9093b9f77d544be7470a9477059227bfdb69cc1829be34a2445847",
+      "blob": "e1a008af0ad3f32a3fdd61eb8eb3ccb8fbe1eb68"
+    }
+  ],
+  "readonly_root_head": "42e3767be8f620934d7a313dc100516874fdecb2",
+  "readonly_root_apply_check": true
+}

@@ -1,0 +1,117 @@
+{
+  "pin": "7a76a506beccd51aa04b81ab743b1140e33bfeb2",
+  "derivation": [
+    {
+      "species_id": "burrowback",
+      "level": 18,
+      "authored_override": {
+        "quick": "rock_throw"
+      },
+      "knowledge_before": [
+        "burrow_strike",
+        "tremor_roll",
+        "ultimate_ground_wall",
+        "shove",
+        "quake_ring"
+      ],
+      "knowledge_after": [
+        "burrow_strike",
+        "tremor_roll",
+        "ultimate_ground_wall",
+        "shove",
+        "quake_ring",
+        "rock_throw"
+      ]
+    },
+    {
+      "species_id": "galecrest",
+      "level": 18,
+      "authored_override": {
+        "quick": "wind_blade"
+      },
+      "knowledge_before": [
+        "talon_dive",
+        "storm_strike",
+        "ultimate_air_charger",
+        "dash_strike",
+        "hearten"
+      ],
+      "knowledge_after": [
+        "talon_dive",
+        "storm_strike",
+        "ultimate_air_charger",
+        "dash_strike",
+        "hearten",
+        "wind_blade"
+      ]
+    },
+    {
+      "species_id": "brooktail",
+      "level": 19,
+      "authored_override": {
+        "quick": "aqua_shot"
+      },
+      "knowledge_before": [
+        "tail_splash",
+        "riptide_rush",
+        "ultimate_water_charger",
+        "dash_strike",
+        "hearten"
+      ],
+      "knowledge_after": [
+        "tail_splash",
+        "riptide_rush",
+        "ultimate_water_charger",
+        "dash_strike",
+        "hearten",
+        "aqua_shot"
+      ]
+    },
+    {
+      "species_id": "meadowhart",
+      "level": 19,
+      "authored_override": {
+        "quick": "rock_throw"
+      },
+      "knowledge_before": [
+        "hoofbeat",
+        "verdant_burst",
+        "ultimate_ground_diver",
+        "veil",
+        "heal_pulse"
+      ],
+      "knowledge_after": [
+        "hoofbeat",
+        "verdant_burst",
+        "ultimate_ground_diver",
+        "veil",
+        "heal_pulse",
+        "rock_throw"
+      ]
+    },
+    {
+      "species_id": "tuskroot",
+      "level": 20,
+      "authored_override": {
+        "quick": "rock_throw"
+      },
+      "knowledge_before": [
+        "root_nibble",
+        "rootquake",
+        "ultimate_tuskroot",
+        "shove",
+        "quake_ring"
+      ],
+      "knowledge_after": [
+        "root_nibble",
+        "rootquake",
+        "ultimate_tuskroot",
+        "shove",
+        "quake_ring",
+        "rock_throw"
+      ]
+    }
+  ],
+  "cause": "Authored NPC slot override absent from constructor knowledge -> strict codec empty card -> legacy species fallback UID -> existing exact-card continuation guard does not arm.",
+  "classification": "Pinned source/data derivation. Candidate real codec/record tests and original native smoke remain pending ROOT."
+}

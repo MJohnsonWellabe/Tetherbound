@@ -775,8 +775,15 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 		var charged := str((moves as Dictionary).get("charged", ""))
 		if quick != "":
 			creature.move_quick = quick
+			if not creature.known_moves.has(quick):
+				creature.known_moves.append(quick)
 		if charged != "":
 			creature.move_charged = charged
+			if not creature.known_moves.has(charged):
+				creature.known_moves.append(charged)
+		# Authored equipment is also knowledge on this NPC instance. The owned
+		# card codec otherwise refuses the slot and a guest spawns a new UID
+		# instead of mirroring the host's actual trainer creature.
 	# G-2: the entry's optional per-creature behaviour override, read beside
 	# `moves` because it is the same kind of thing -- this individual fights
 	# differently, and nothing about the species changes.
