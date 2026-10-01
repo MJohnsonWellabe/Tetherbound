@@ -1,0 +1,55 @@
+{
+  "classification": "INDEPENDENT SOURCE/EVIDENCE PASS; NO ADMISSION OR CRITERION CREDIT",
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "reviewed_head": "b1ce96a8ec0134e48a507e22aa18a7009ba8bcfc",
+  "parent": "45d8cb66046d58b92af609adfd05b1b495c12a0a",
+  "tree": "ad00aedffff4bc5007bd6a3ef14c067ace6b966d",
+  "checks": {
+    "binding_and_source": 4590,
+    "independent_exact_rational": 53,
+    "targeted_provenance_and_API": 2
+  },
+  "paths": 29,
+  "sealed_paths": 28,
+  "manifest_sha256": "e70ef751b4521565dd541903687fcca95f2c8e4c02d9c9a88d5cdd067586a0aa",
+  "seal_sha256": "aada570a71bb9064e9b5bf55b1f4ca48e13de2aace1f2990f848bbc7ca32535a",
+  "native_engine_source_commit": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+  "findings": [
+    "All 14 pinned upstream files freshly fetched in RAM and byte-identical; no logical runtime, admission or GDScript source change.",
+    "Recorded nominal capsule/Box pair initial overlap is exactly 72877/268435456 m; nominal conservative identity-geometry interval is 0.210452825–0.332523137 mm, below unchanged 1 mm skin.",
+    "Arithmetic virtual full-capsule rise of 0.399947166 mm clears this pair only. It was neither queried nor written to the body.",
+    "Original raw recovery of 1.063227654 mm, later reported depth of 0.208258629 mm and initial overlap are distinct. Original refusal remains authoritative.",
+    "Capsule dimensions were read from the matched CapsuleShape3D Resource; actual native PhysicsServer3D capsule shape data was not separately compared.",
+    "GodotPhysics3D is the conditional source-derived normal DEFAULT; failed original PRE lacks live direct-space-state backend identity.",
+    "Hidden broadphase cap is 2048 shape proxies before masks, exclusions and narrowphase; fewer than 8 returned hits do not prove completeness.",
+    "Native body collision-exception getter is not GDScript-bound; no public body shape disabled-state getter. Node observations cannot prove low-level parity.",
+    "Complete primitive/initial-world/filter/exception/disabled-state/native-clearance witness remains absent. No diagnostic patch or admission change is approved by this evidence-only merge.",
+    "R19 native tree failure is byte-identical to ROOT original. No corridor graph or source-supported route is implemented."
+  ],
+  "originals": {
+    "earned_head": "7e487af97357d1357b6594c2e314c15b8f19d63d",
+    "parser_exit": 0,
+    "native_exit": 1,
+    "campaign_seconds": 196.495,
+    "requested_prefix_passed": false,
+    "route_observation_exercised": false,
+    "errors_retained": 3,
+    "source_files": 2180,
+    "closure_unchanged": true,
+    "closure_sha256": "f899914a564e47430169de6012988a9528be4a448d1411b67abd7615791ef189",
+    "native_log_sha256": "feccf36f0470fc1a095d6b3aaeb8e9b346ffe13742f049929b1bec27248c1a2a",
+    "receipt_sha256": "dfed9541b69b2682442ce229bac5593237715e620622a80aacafbeb42af5f908",
+    "tree_native_log_sha256": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7"
+  },
+  "limits": "F17#4 OPEN; R9 general replacement HOLD; source evidence does not retire native failure. Whole-body zero-margin alternative also failed source completeness review and was not implemented.",
+  "ci": {
+    "pushed_head": "91c3e4a344489dd4fb38f461769fcd98d2bdf150",
+    "run_id": 36882902951,
+    "run_number": 6170,
+    "status": "live",
+    "jobs_first_page_only": true,
+    "changes_conclusion": "success",
+    "criteria_met": 110,
+    "criteria_total": 280
+  }
+}
