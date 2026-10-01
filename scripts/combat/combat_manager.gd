@@ -2715,7 +2715,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	if impact.is_empty():
 		shot = PROJECTILE.launch(host, muzzle, target, vfx)
 	elif not bool(impact.get("presentation_launched", false)):
-		shot = PROJECTILE.call("launch", host, muzzle, target, vfx, impact)
+		shot = PROJECTILE.launch(host, muzzle, target, vfx, impact)
 	if shot != null:
 		var landing: Vector3 = target
 		shot.connect("arrived", func() -> void:
@@ -2875,7 +2875,7 @@ func _shared_hit_feedback() -> Script:
 
 func _confirm_host_contact(action_id: String) -> void:
 	if not action_id.is_empty() and _shared_hit_feedback() != null:
-		PROJECTILE.call("confirm_impact", get_tree(), action_id)
+		PROJECTILE.confirm_impact(get_tree(), action_id)
 
 
 func _admit_host_feedback(history: Dictionary, value: Dictionary, commit: bool = true) -> bool:
@@ -2921,7 +2921,7 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 	if not _admit_host_feedback(_seen_launch_actions, launch): return
 	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
 	var move: Dictionary = _moves.move(str(launch.get("move_id", "")))
-	var presentation: Node3D = PROJECTILE.call("launch", parent,
+	var presentation: Node3D = PROJECTILE.launch(parent,
 		launch.get("from", striker.global_position), launch.get("to", target_body.global_position),
 		move.get("vfx", {}), launch)
 	attack_launched.emit(on_enemy, launch, presentation)
