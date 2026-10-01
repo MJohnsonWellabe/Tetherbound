@@ -1,0 +1,47 @@
+{
+  "status": "Source-gate candidate only; no real player path/native/transaction/acceptance proof",
+  "baseline": "49b93d9b9a7ce439c130b759aabe3ba45ef3bc5b",
+  "actual_source_owner_mapping": {
+    "Training": "Four owned successor paths; existing Altar consumer stays exact r2",
+    "Combat": "encounter_director.gd/combat_manager.gd/shared runtime mount/authority/presentation; interface proposal only",
+    "Foundation": "Session/CharacterAuthority/LedgerRpc/WorldState/SaveGame and explicit defeat namespace/typed intent; no edits by Training"
+  },
+  "ordinary_rate": {
+    "config": "wild_victory_xp_mode=ordinary",
+    "behavior": "Full award uses validated existing raw formula; bench uses existing party_share. Typed cap prevents banking; actual level/stat/move/victory effects staged in same record as earned canonical essence and receipt. No second gain_xp/credit_battle/condition caller.",
+    "hybrid_activation": "After actual wild earning + mounted Altar spend + ordinary route proof; later mode=hybrid uses existing 0.35 tunable. Mode in frozen intent/signature means original pending/replay preserves original rate."
+  },
+  "schema_delta": {
+    "old": "Unactivated prototype eight-field wild intent",
+    "new": "Nine fields: event_id,world_namespace,encounter_id,enemy_uid,enemy_record,active_uid,eligible_uids,kind,xp_mode",
+    "reason": "Initial real path must preserve ordinary XP and future reduced mode must not reprice/duplicate original pending reward. Same existing defeat receipt namespace/event identity, sixteen-field world training carrier and canonical transaction_receipts; no new portable top-level field/store.",
+    "compatibility": "Previous eight-field prototype evidence remains immutable; no accepted eight-field main producer observed. Refuse ambiguous old draft input. Any external accepted old event requires explicit verified original-mode recovery; no fabricated migration/payout."
+  },
+  "owned_capture_api": {
+    "capture_accepted_defeat(director,encounter_id,actualAcceptedVerdict)": "Validates actual canonical director/runtime/ledger object residency, current actual Session/world readiness, actual dead codec/card/body generation, accepted bool ok/hit/killed/positive damage and current participant deployments. Returns detached immutable source with source_id,xp_mode,world identity,original epoch,record,enemy,accepted,deployments. No debit/save/RPC.",
+    "submit_frozen_source(director,ORIGINALfrozenSource)": "Host-internal delegation to actual Session producer only; caller retains source before call, returned failure does not authorize source deletion.",
+    "Essence.stage_captured_host_victory(fullSameRegistryState,authenticatedChar,revision,recipientPeer,ORIGINALfrozenSource,cfg,progressionCfg,canonicalMoves,mirror)": "One participant candidate via actual accepted kill and nine-field host event. Foundation authenticates stable character and admission first, never masked actor_stat_state or raw join character."
+  },
+  "foundation_interfaces": {
+    "_host_wild_training_context()->Dictionary": "Actual SAME registry/journal/owner writer/recovery capability. Exact ready bool; world_id/world_namespace from actual world; session_id runtime epoch from existing Altar producer. false/missing stays unavailable. Must work in standalone solo without claiming active ENet session.",
+    "_commit_host_wild_victory(ORIGINALfrozenCapture)->Dictionary": "Private host-only producer, no RPC/client currency claim. Freeze authenticated recipients/current canonical per-peer baseline and mode/source; serialize same private registry stage per character and same16-field journal/owner bool-save/exact ACK/second host bool-write guards as Altar. Recompute via stage_captured_host_victory. Root/Combat retain source until all intended participants are durably prepared or valid original recovery retained. Preserve full eight-field record and canonical learned moves.",
+    "receipt_schema": "Owning REDESIGN validator must explicitly admit defeat; do not masquerade as essence_spend/care or bypass state validation.",
+    "failed_write_full_bag": "Full bag refuses atomic candidate before journal; keep earned source/identity and authenticated recipients. Allow safe precommit inventory cleanup and retry same event. Failed/unknown journal/owner/ACK reuses exact original source/world row, no refund/local fallback/drop/respawn rebuild. Registry busy serializes existing conflicts, not starvation/deadlock."
+  },
+  "combat_interface_proposal": {
+    "accepted_hook": "Main49 _host_strike at actual set_opponent_hp following rolled merge, before set_phase/_host_after_encounter_change/_finalize_shared_host_fight and before returning terminal author verdict: capture once, retain actual runtime source, hand to Foundation, suppress every legacy wildcard reward caller for this canonical encounter from its START. Renderer may finish while source remains retained; writer failure cannot switch to legacy.",
+    "solo": "Main49 _is_host requires active session and _open_encounter_if_networked rejects solo. Combat must narrowly route opted-in wild solo through actual EncounterHost open/runtime/submit accepted strike and defeat ledger, using Foundation ready solo context. Do not fabricate dead ledger or broadly enable network spawn/RPC guards. Apply local authority to runtime AI/telegraph/route callbacks, deployment, cleanup and catch/disengage as well; two-line open-gate change alone is insufficient.",
+    "CombatManager": "Introduce explicit immutable per-encounter canonical wild reward binding set by trusted director at encounter open/authorized host adoption; suppress _award_victory before _victory_awarded and all gain_xp/battle/condition/history writes on BOTH _perform_player_strike author and apply_encounter_record nonauthor paths. Catch/trainer/legacy scenes retain their existing mode until independently migrated. Real accepted typed owner result may populate last_xp_award/UI once but never awards again.",
+    "lost_terminal_notification": "Original retained runtime source/participant mapping precedes done broadcast or resolved author verdict. After host journal, reconnect reads existing world row and original event/mode. Do not rebuild with new epoch/body/recipient/active UID.",
+    "source_release": "Retain source through full bag, host save failure and participant disconnect; when every participant has durable journal/recovery carrier, normal ecology may respawn; once completion authored gifts serialize behind pending guard. Actual runtime must not forget earned source before transfer to existing durable carrier."
+  },
+  "unproved_boundaries": [
+    "Standalone actual authority runtime mount",
+    "remote snapshot vs actual deployed UID after switches",
+    "all-fainted/detached departed participant handling",
+    "actual bool IO/full bag recovery and central exclusions",
+    "feed/UI once after typed application",
+    "actual earned/Altar/ordinary route/controller/co-op"
+  ],
+  "minimal_required_future_proof": "After combined independent source gate: actual solo kill->earned essence->actual Altar spend; two participants tag-switch/fainted bench/no nonparticipant payout/typed cap; same event replay, host/owner write failure, lost ACK/rejoin/full bag; named ordinary route. No suites or engine in this authoring slice."
+}
