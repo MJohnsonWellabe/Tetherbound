@@ -1,0 +1,37 @@
+{
+  "verdict": "Independent SOURCE PASS; actual complete fresh prefix still required",
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "reviewed_root": "b541b563cfd5f00fc4a44a838eb939df01058ead",
+  "author_head": "cc7ca14e428b74dea165725c49c5fc5ad9d3dfde",
+  "integration_head": "c24f0867a65cf9b1c767dcf04b1eba7e19606cc1",
+  "patch_sha256": "c00b7cc4b425f87e6248c128851215aae7b94ab95a9087189eee82078052a64d",
+  "manifest_sha256": "4ae4a7a5e1c31e3b57cfa021819e3a86286be391b2a1741b02eea6f010d24da7",
+  "seal_sha256": "75f72802269a46909e25f4f155b397c7e629f3395710fd17e3d907e77be5f029",
+  "source_results_sha256": "2716a86829ec114c0457e6cb476661084cfe0b9495f91ab64c7502fca70c12c9",
+  "verification": "41 sealed raw files and Git blobs, one logical source plus42 evidencepaths; independent exact hunk reconstruction and reversal restores every original gather byte. Only stone road hint removed, original actual selectedgoal/one1800frames/1.55m/reset/native guards/gear/actions/arbiter/payout/earned assertions unchanged. No measurement/controller/diagnostic changes.",
+  "provenance_caveats": "28 archived ROOT inputs match raw/current immutable logical content; six HUB differences CRLF only. Ten geometry assets are current raw ROOT/HUB snapshots; only18 inputs covered by prior runtime receipt. Retained initial authorSOURCEFAIL reflects ten false asset-coverage assertions; corrected metadata does not alter source/guards.",
+  "geometry": {
+    "actual_wood_xz": [
+      -8,
+      8
+    ],
+    "actual_selected_stone_xz": [
+      -18,
+      6
+    ],
+    "segment_length_m": 10.19803902718557,
+    "corridor_m": 2.201,
+    "house_distance_m": 5.556977595779922,
+    "fence_distance_m": 12.727922061357857,
+    "production_prop_centreline_distances_m": {
+      "Bench": 12.977108847066951,
+      "FarmCrate": 12.334227966546612,
+      "Bucket": 15.248397552925896,
+      "Stool": 13.682804247512108
+    },
+    "minimum_clearance_after_corridor_m": 10.133227966546611,
+    "reviewer_correction": "Production props.gd computes worldAABB then inverse-transforms its AABB; rotated props produce larger boxes than raw mesh OBBs. Immutable packet original distances are corrected here; source unchanged.",
+    "negative_control": "Former first PracticeMeadow leg fromwood toward[20,14] intersects farmhouse envelope. No actual floor-loss cause inferred."
+  },
+  "runtime_scope": "Seven existing tests/25 assertions PASS at integratedHEAD, raw3061bfb1b68b71a87c4b837523e65e6068b0991cbb6a77d2b351cdec393c88c1. Source geometry and units do not prove terrain/vegetation/native traversal/timing/save/earned/visual/CI/main. F17#4 OPEN and all previous native failures retained."
+}
