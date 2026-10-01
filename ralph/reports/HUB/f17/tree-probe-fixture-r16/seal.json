@@ -1,0 +1,109 @@
+{
+  "classification": "AUTHOR SOURCE AND IMMUTABLE RECORD CANDIDATE ONLY; NATIVE/PARSER UNRUN; F17#4 OPEN",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "manifest.json": {
+      "bytes": 6517,
+      "sha256": "f0d6a882efeb8fde7b564540b9725b879aa5f85143b8262d0de20c042d0b1f1d"
+    },
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 6409,
+      "sha256": "20fb06ee67d8d668495324c5517e94361d84f04a68e76002f713da7578b5f603"
+    },
+    "prior-failure/smoke.log": {
+      "bytes": 12823,
+      "sha256": "81219368f42c3e3090230b3d82b44994d222aeb1d1e25b678ce452213f1c9ab5"
+    },
+    "production/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "production/data/config/vegetation.json": {
+      "bytes": 240087,
+      "sha256": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df"
+    },
+    "production/data/scatter/playground/region_0_-1.bin": {
+      "bytes": 434805,
+      "sha256": "25cd556cdd008fa464bde19ba8828f86fb21c16056fc5a6c1a296b33c02b595c"
+    },
+    "production/scenes/player/player.tscn": {
+      "bytes": 1478,
+      "sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7"
+    },
+    "production/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "production/scripts/world/interaction_arbiter.gd": {
+      "bytes": 19816,
+      "sha256": "e602c42c44734a2f65d499e059d1f7310939fe42a054938f573a4c9892ad5206"
+    },
+    "production/scripts/world/playground_heightfield.gd": {
+      "bytes": 95972,
+      "sha256": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf"
+    },
+    "production/scripts/world/scatter_bake.gd": {
+      "bytes": 34161,
+      "sha256": "ab3c64339ef63b20d301f9b0c17d53b91a001360d9fee441ebb65cbae269eb6e"
+    },
+    "production/scripts/world/vegetation.gd": {
+      "bytes": 142445,
+      "sha256": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a"
+    },
+    "production/scripts/world/vegetation_harvest_point.gd": {
+      "bytes": 12750,
+      "sha256": "0b4fbc85deeb63e9b1132e1401acfd36fb5ea5eea52aa48486b793df81c0dd87"
+    },
+    "proposal/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 6593,
+      "sha256": "8c3e3f87385748cc1ad808fed87416327e3ab8fba4ef358083eed9df70ad4d33"
+    },
+    "records/current.bin": {
+      "bytes": 434805,
+      "sha256": "25cd556cdd008fa464bde19ba8828f86fb21c16056fc5a6c1a296b33c02b595c"
+    },
+    "records/pre-promotion.bin": {
+      "bytes": 443876,
+      "sha256": "c156f5385982b2d23b84b15d17b0a97c0a4edc141b6ea54c4cca04fbba37dfd4"
+    },
+    "records/probe-introduction-vegetation.gd": {
+      "bytes": 118287,
+      "sha256": "a74e055005bac8b471e86852dc20c606a63f3a057cb8421c68e2979b48fa0ba8"
+    },
+    "records/probe-introduction-vegetation.json": {
+      "bytes": 239729,
+      "sha256": "d890c1d04c8601721950114719f251ea820a84a6f525e7bd6b3772a6293a08f8"
+    },
+    "records/probe-introduction.bin": {
+      "bytes": 464874,
+      "sha256": "ee114759e2593e3e3053a1a2581b5511dcd8249b0870b9b45eacaf835838a64a"
+    },
+    "repair.patch": {
+      "bytes": 690,
+      "sha256": "ffedf5ad11e1431e6bbc7548d7948f870e14850c3675f92fe532cadefbf508a8"
+    },
+    "review-context.txt": {
+      "bytes": 3645,
+      "sha256": "c85618679493d8f831fa292dce2bfe8e9e09a5a520ea4385d71d27e9b8dc31d3"
+    },
+    "root-failed/region_0_-1.bin": {
+      "bytes": 434805,
+      "sha256": "25cd556cdd008fa464bde19ba8828f86fb21c16056fc5a6c1a296b33c02b595c"
+    },
+    "root-failed/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 6409,
+      "sha256": "20fb06ee67d8d668495324c5517e94361d84f04a68e76002f713da7578b5f603"
+    },
+    "source-check.py": {
+      "bytes": 10608,
+      "sha256": "9f6fdd40f4f8dc1c434950e4646a9fa6109b06cfd7529f5f9b85a9f7f5dc3527"
+    },
+    "source-results.json": {
+      "bytes": 8403,
+      "sha256": "4e9be34dfafe6fe9fff1feba97f357e79c2b73ba76420176db410f0ab7465574"
+    }
+  }
+}
