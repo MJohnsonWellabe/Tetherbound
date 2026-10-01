@@ -18,6 +18,7 @@ static var _reduced := false
 ## setting: 100% plays the camera impulses exactly as combat.json tunes them
 ## (the charged-hit roll is 0.65°). Reduced motion overrides it to nothing.
 static var _shake_percent := 100
+static var _rumble_percent := 100
 
 
 static func reduced_motion() -> bool:
@@ -49,6 +50,18 @@ static func camera_shake_scale() -> float:
 	return 0.0 if _reduced else float(_shake_percent) / 100.0
 
 
+static func rumble_percent() -> int:
+	return _rumble_percent
+
+static func set_rumble_percent(value: int) -> void:
+	_rumble_percent = clampi(value, 0, 100)
+	if _rumble_percent == 0:
+		for device: int in Input.get_connected_joypads(): Input.stop_joy_vibration(device)
+
+static func rumble_scale() -> float:
+	return float(_rumble_percent) / 100.0
+
+
 ## Read from the settings object's `accessibility` section. A missing or
 ## malformed section leaves the default (off).
 static func load_from(prefs: RefCounted) -> void:
@@ -59,6 +72,7 @@ static func load_from(prefs: RefCounted) -> void:
 		return
 	_reduced = bool((stored as Dictionary).get("reduced_motion", false))
 	set_camera_shake_percent(int((stored as Dictionary).get("camera_shake_percent", 100)))
+	set_rumble_percent(int((stored as Dictionary).get("rumble_percent", 100)))
 
 
 ## Write back into `prefs.accessibility`. The caller saves.
@@ -69,4 +83,5 @@ static func store_to(prefs: RefCounted) -> void:
 	var out: Dictionary = (table as Dictionary).duplicate() if typeof(table) == TYPE_DICTIONARY else {}
 	out["reduced_motion"] = _reduced
 	out["camera_shake_percent"] = _shake_percent
+	out["rumble_percent"] = _rumble_percent
 	prefs.set("accessibility", out)
