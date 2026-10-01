@@ -72,6 +72,26 @@ class SmokeRunnerTests(unittest.TestCase):
                 process.kill()
                 process.wait()
 
+    def test_pending_cancellation_during_spawn_is_delivered_after_handler_install(self):
+        # Send the signal at the exact formerly unprotected boundary, after
+        # native spawn returns and before run() can install its handlers.
+        source = """
+import importlib.util,os,signal,subprocess,sys
+spec=importlib.util.spec_from_file_location('smoke_runner',sys.argv[1])
+module=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+original=module.subprocess.Popen
+def spawn(*args,**kwargs):
+    process=original(*args,**kwargs)
+    os.kill(os.getpid(),signal.SIGTERM)
+    return process
+module.subprocess.Popen=spawn
+raise SystemExit(module.run([sys.executable,'-u','-c','import time; time.sleep(60)']))
+"""
+        result = subprocess.run([sys.executable, "-u", "-c", source, str(RUNNER)],
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=5)
+        self.assertEqual(result.returncode, 128 + signal.SIGTERM)
+
 
 if __name__ == "__main__":
     if os.name != "posix":
