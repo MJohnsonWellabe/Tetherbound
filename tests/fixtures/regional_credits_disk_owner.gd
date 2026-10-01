@@ -34,6 +34,20 @@ func menu() -> CanvasLayer:
 	return real_game.call("menu") as CanvasLayer
 
 
+## Persistent transport polls and UI readers still ask /root/Game while this
+## facade is mounted. Keep those answers on the actual autoload/session.
+func is_host() -> bool:
+	return bool(real_game.call("is_host"))
+
+
+func is_multi_peer() -> bool:
+	return bool(real_game.call("is_multi_peer"))
+
+
+func last_input_was_gamepad() -> bool:
+	return bool(real_game.call("last_input_was_gamepad"))
+
+
 func regional_ending_context() -> Dictionary:
 	delegate.local = real_game.get("local")
 	delegate.world = real_game.get("world")
