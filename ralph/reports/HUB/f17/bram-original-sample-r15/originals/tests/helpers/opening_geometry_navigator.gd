@@ -1175,8 +1175,6 @@ var _observed_slide_depth := 0.0
 var _observed_live: PhysicsTestMotionResult3D
 var _recorded_frame := -1
 var _recorded_failure := false
-var _production_check_is_post := false
-var _failed_pre_sample: Dictionary = {}
 
 
 func _production_contract() -> bool:
@@ -1210,7 +1208,6 @@ func _observed_live_clear() -> bool:
 	if _observed_live == null:
 		return false
 	if _observed_live.get_travel().length() > _body.safe_margin + CONTACT_EPS:
-		_capture_failed_pre_sample()
 		_stop_geometry("deep actual overlap: zero-motion recovery exceeds unchanged skin")
 		return false
 	for index in _observed_live.get_collision_count():
@@ -1228,7 +1225,6 @@ func _observed_live_clear() -> bool:
 
 func _production_live_check(post: bool) -> bool:
 	var began: int = Time.get_ticks_usec()
-	_production_check_is_post = post
 	_observed_live = null
 	var clear: bool = _observed_live_clear()
 	_production_live_phase = (&"post" if post else &"pre") if _observed_live != null else &"unavailable"
@@ -1237,92 +1233,6 @@ func _production_live_check(post: bool) -> bool:
 	else:
 		_production_live_pre_us = Time.get_ticks_usec() - began
 	return clear
-
-
-## Failure evidence only: the first rejected PRE pose, never a new admission.
-## Keep the original body-motion result and spend the same bounded query budget.
-func _capture_failed_pre_sample() -> void:
-	if not _production_steering or _production_check_is_post or _queries != 1 or not _failed_pre_sample.is_empty():
-		return
-	var began := Time.get_ticks_usec()
-	var pose := _body.global_transform
-	_failed_pre_sample = {"acceptance": false, "phase": "original_pre",
-		"trigger": "zero-motion recovery exceeds unchanged skin", "complete": false,
-		"configured_backend": str(ProjectSettings.get_setting("physics/3d/physics_engine", "<unset>")),
-		"server_class": PhysicsServer3D.get_class(), "backend_identity_proven": false,
-		"body_pose": _failed_sample_transform(pose), "query_mask": _body.collision_mask,
-		"query_margin": 0.0, "query_motion": [0.0, 0.0, 0.0],
-		"excluded_self_only": str(_body_rid), "queries_before": _queries,
-		"capsule": {"rid": str(_cap.shape.get_rid()), "radius": _cap.shape.radius,
-			"height": _cap.shape.height},
-		"query_pose": _failed_sample_transform(pose * _body.shape_owner_get_transform(_owner)),
-		"raw_pairs_are_not_a_penetration_certificate": true}
-	if _queries + 2 > MAX_QUERIES_FRAME or _total_queries + 2 > MAX_QUERIES_LIFETIME:
-		_failed_pre_sample["skipped"] = "insufficient unchanged query allowance"
-		return
-	var query := PhysicsShapeQueryParameters3D.new()
-	query.shape = _body.shape_owner_get_shape(_owner, 0)
-	query.transform = pose * _body.shape_owner_get_transform(_owner)
-	query.collision_mask = _body.collision_mask
-	query.margin = 0.0
-	query.motion = Vector3.ZERO
-	query.collide_with_bodies = true
-	query.collide_with_areas = false
-	query.exclude = [_body_rid]
-	if not _registered_body_contract() or not _spend():
-		return
-	var space := _body.get_world_3d().direct_space_state
-	var pairs: Array[Vector3] = space.collide_shape(query, CONTACTS)
-	var raw_pairs: Array = []
-	for point: Vector3 in pairs:
-		raw_pairs.append(_contact_vector(point))
-	_failed_pre_sample["collide_shape_points"] = raw_pairs
-	_failed_pre_sample["pair_limit"] = CONTACTS
-	_failed_pre_sample["pair_limit_reached"] = pairs.size() >= CONTACTS * 2
-	if not _registered_body_contract() or Time.get_ticks_usec() > _deadline:
-		_failed_pre_sample["incomplete"] = "registration/deadline after collide_shape"
-		return
-	if not _spend():
-		return
-	var rest: Dictionary = space.get_rest_info(query)
-	_failed_pre_sample["rest_info"] = {} if rest.is_empty() else {
-		"rid": str(rest.get("rid", RID())), "collider_id": rest.get("collider_id", 0),
-		"shape": rest.get("shape", -1), "point": _contact_vector(rest.get("point", Vector3.ZERO)),
-		"normal": _contact_vector(rest.get("normal", Vector3.ZERO))}
-	if not _registered_body_contract() or Time.get_ticks_usec() > _deadline:
-		_failed_pre_sample["incomplete"] = "registration/deadline after get_rest_info"
-		return
-	var geometry: Array = []
-	for index in _observed_live.get_collision_count():
-		var rid := _observed_live.get_collider_rid(index)
-		var shape_index := _observed_live.get_collider_shape(index)
-		if not rid.is_valid() or shape_index < 0 or shape_index >= PhysicsServer3D.body_get_shape_count(rid):
-			geometry.append({"index": index, "unavailable": true})
-			continue
-		var shape := PhysicsServer3D.body_get_shape(rid, shape_index)
-		var shape_type := PhysicsServer3D.shape_get_type(shape)
-		# Mesh/heightfield shape data can be huge. Capture bounded primitive data.
-		var data: Variant = PhysicsServer3D.shape_get_data(shape) if shape_type in [
-			PhysicsServer3D.SHAPE_BOX, PhysicsServer3D.SHAPE_CAPSULE,
-			PhysicsServer3D.SHAPE_SPHERE, PhysicsServer3D.SHAPE_CYLINDER] else "<unsupported bounded geometry>"
-		var body_pose: Transform3D = PhysicsServer3D.body_get_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM)
-		var local_pose := PhysicsServer3D.body_get_shape_transform(rid, shape_index)
-		geometry.append({"index": index, "rid": str(rid), "shape_index": shape_index,
-			"path": _production_collider_path(_observed_live.get_collider(index)),
-			"shape_rid": str(shape), "shape_type": shape_type,
-			"shape_data": _contact_vector(data) if data is Vector3 else str(data),
-			"body_pose": _failed_sample_transform(body_pose),
-			"shape_local_pose": _failed_sample_transform(local_pose),
-			"shape_world_pose": _failed_sample_transform(body_pose * local_pose)})
-	_failed_pre_sample["original_motion_contact_geometry"] = geometry
-	_failed_pre_sample["queries_after"] = _queries
-	_failed_pre_sample["elapsed_us"] = Time.get_ticks_usec() - began
-	_failed_pre_sample["complete"] = _registered_body_contract() and Time.get_ticks_usec() <= _deadline
-
-
-func _failed_sample_transform(pose: Transform3D) -> Dictionary:
-	return {"origin": _contact_vector(pose.origin), "basis_x": _contact_vector(pose.basis.x),
-		"basis_y": _contact_vector(pose.basis.y), "basis_z": _contact_vector(pose.basis.z)}
 
 
 func _production_stop_input() -> void:
@@ -1662,8 +1572,6 @@ func _production_record() -> Dictionary:
 			"heading": _contact_vector(_production_heading_vector), "retry_choice": _avoid_retry},
 		"slide_contacts_are_capped_prefix": true,
 		"diagnostic_output_outside_physics_cap": true}
-	if not _failed_pre_sample.is_empty():
-		record["failed_original_pre_sample"] = _failed_pre_sample
 	_tick.records.append(record)
 	if not _tick.flush_pending:
 		_tick.flush_pending = true

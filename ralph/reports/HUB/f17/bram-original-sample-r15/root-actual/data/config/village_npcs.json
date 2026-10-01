@@ -1,0 +1,559 @@
+{
+  "_comment": "R7.2. Villagers standing in the square, placed by scripts/world/village_npcs.gd the same way opening.json places the opening's cast: data describes, code places. `config_key` names a block in data/config/art.json (a tint on Grandpa's or the trainer's rig, never KayKit's Ranger — see art.json's own comment on those keys). `greeting` names a conversation id in data/dialogue/village.json; the prompt label is always \"Greet <name>\", built by the placer rather than stored here, so it can never accidentally contain \"talk\" or \"choose\" — tests/smoke_opening.gd finds Grandpa and the starters by exactly those substrings.",
+  "_comment_greeting_when": "OF30. `greeting` is what a villager says by default and never stops being that. `greeting_when` is an OPTIONAL, ORDERED list of branches checked ahead of it, each `{ if_flag | unless_flag, conversation }` against autoload/progression_state.gd -- first match wins, no match falls through to `greeting`. Deliberately additive: a villager who gains a role gains a list entry, and nobody's greeting is ever replaced (D39's dual-role rule -- SC12 adds Tam's battle offer as a THIRD entry here, and OF31 gives Mira and Oskar their own lists, without touching this one). Either key may hold a single flag id or an array of them, all of which must hold. No `and`/`or`/`not` beyond that, and no nesting: this is a lookup table, not a quest engine (spec sec19 bans one, and progression_state.gd's own header says so twice).",
+  "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam are the Meadows' three Band-1 trainers (spec sec3, D39's dual-role rule made real): once each one's vendor/gift branch has actually been spent, greeting them again offers a CHALLENGE conversation instead -- and keeps offering it, every greeting, for as long as their defeat flag (`defeated_mira`/`defeated_oskar`/`defeated_tam`, encounter_director.gd's SB9 write) is unset. The challenge's last line carries `battle:<trainer_id>` (sequence_director.gd), the same fight `data/config/trainers.json`'s matching `placed_by: \"village_npcs\"` entry runs. Once beaten, a `_beaten` conversation takes over as their permanent steady state and is inserted ABOVE their old standing vendor branch -- Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their old standing branch always did, so the store/swap stays reachable forever even though the old branch entry below it is now unreachable in practice (kept verbatim rather than deleted, per D39: a vendor branch is never rewritten, only superseded). Tam has no such branch to carry -- his gifts are one-time and both already spent by the time he is challengeable -- so his `_beaten` line is flavour only.",
+  "_comment_positions": "OWNER-0912 / C3 V-6/V-7. The opening street keeps exactly five functional people inside the village boundary: Mira in her south-leg shop, Oskar at the creature pen behind it, Tam at his workshop bay, Bram in the west-leg inn and Halda at the tournament board. Grandpa remains in his house and is not counted. Every other installed villager is retained and resited to a role on the authored Meadows route rather than deleted. The same VillageNPCs placer owns all world-space positions, so moving a person beyond the village fence does not require another spawning system.",
+  "villagers": [
+    {
+      "name": "Mira",
+      "prompt_height_m": 1.5,
+      "_why_prompt_height": "F01#2 (village walk day r2, render.yml 36365090624): standing at her counter 2.3 m away, the greet prompt's waist-height sight ray hit the counter, so only the shop door's Close Door was offered. village_npcs.gd lifts her prompt point to 1.5 m, above the counter top. TUNABLE.",
+      "config_key": "villager_farmer",
+      "position": [
+        26,
+        0.6
+      ],
+      "facing_deg": 0,
+      "greeting": "village_mira",
+      "greeting_when": [
+        {
+          "if_flag": [
+            "legendary_freed",
+            "mira_shop_open"
+          ],
+          "conversation": "village_mira_freed",
+          "_why": "SG46, spec §9's 'villagers acknowledge the victory'. FIRST in the list on purpose and safely: `legendary_freed` is the last flag the chapter sets, everything below it has already been spent by then, and this branch's own conversation carries the same `shop:goods:mira` effect her beaten and standing branches carry so nothing that was reachable before the Warden becomes unreachable after him (D39's rule -- a vendor branch is never lost, only ever carried forward). Additive as always: the standing greeting is untouched. Paired with `mira_shop_open` so a player who never opened the stall still gets that one-time introduction (and its starting float) rather than losing it to this branch."
+        },
+        {
+          "unless_flag": "opening:mira_visited",
+          "conversation": "village_mira_shop_intro",
+          "_why": "F02#6 (2026-09-27, coordinator grant): gated on the PLAYER-scope `opening:mira_visited` the same conversation sets, not the WORLD-scope `mira_shop_open`, so every character in a co-op world gets their own first visit -- tools, starting float and fiber bundle -- once. OF31/D39. The shop opening: she explains the front room, hands over the starting float on the same line that says so, and ends by opening the store. Sets `mira_shop_open` (world) and `opening:mira_visited` (this character), and the latter is what stops this entry matching after that character's first visit."
+        },
+        {
+          "if_flag": "mira_shop_open",
+          "unless_flag": "defeated_mira",
+          "conversation": "village_mira_challenge",
+          "_why": "SC12/SC13. Her Band-1 challenge -- the introduction (spec sec3). Offered every greeting once the shop has opened, for as long as she is unbeaten. Ends on `battle:trainer_mira`."
+        },
+        {
+          "if_flag": [
+            "captive_rescued",
+            "mira_shop_open"
+          ],
+          "unless_flag": "legendary_freed",
+          "conversation": "village_mira_road",
+          "_why": "T5-STORY-2. Home stays relevant (MEADOWS_EXIT_CRITERION F3). Measured gap: tools/_probe_story_drive.gd walked the chapter's own flags against a live village and every villager said the IDENTICAL thing at every rung from the tournament to the ending -- the whole back half of a three-to-four-hour chapter, with nothing at home acknowledging South Bridge, the quarry, the warrens, the relay, the captains or the Hall. The only mid-chapter change in the entire village was the rescued ranger appearing.\n\n`captive_rescued` is the beat that sends someone home (relay.json: 'I'll walk to your village'), so it is the one a shopkeeper would have heard about. Paired with `mira_shop_open` for the same reason her ending branch is: a player who never opened the stall must still get that one-time introduction. `unless legendary_freed` so the ending branch above still wins outright rather than relying on list order alone.\n\nPlaced immediately ABOVE her `defeated_mira` branch and BELOW her challenge branch, which is the placement that costs nothing: while she is unbeaten the challenge still matches first (it is higher and `unless defeated_mira`), and once beaten this supersedes her repeat-visit line for this window only. Carries `shop:goods:mira`, per D39 -- a vendor branch is never lost, only carried forward."
+        },
+        {
+          "if_flag": "defeated_mira",
+          "conversation": "village_mira_beaten",
+          "_why": "SC13/D39. Her permanent steady state once beaten -- carries the SAME `shop:goods:mira` effect the standing branch below always has, so the store stays reachable forever. Ahead of that branch in the list for exactly that reason."
+        },
+        {
+          "if_flag": "mira_shop_open",
+          "conversation": "village_mira_shop",
+          "_why": "OF31/D39. The ORIGINAL standing vendor branch, left exactly as OF31 wrote it (D39: a vendor branch is never rewritten). Superseded in practice by the two entries above it once she becomes challengeable -- while unbeaten the challenge branch matches first, and once beaten `village_mira_beaten` above already carries this branch's own shop: effect -- but the entry itself is kept rather than deleted."
+        }
+      ],
+      "_why": "OF31 plus OWNER-0912. Mira remains behind her own counter at cottage_a local [0,-1.4]. Transforming that authored interior point through the shop's new [18,4], -90 degree pose places her at [19.4,4], facing its west street doorway instead of being left in the old shell."
+    },
+    {
+      "name": "Oskar",
+      "hair": {
+        "visible": true,
+        "color": "#2f2320",
+        "_comment": "Near-black brown -- the darkest of the four. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
+      "config_key": "villager_keeper",
+      "position": [
+        62,
+        20
+      ],
+      "facing_deg": 0,
+      "greeting": "village_oskar",
+      "greeting_when": [
+        {
+          "if_flag": [
+            "legendary_freed",
+            "oskar_trade_open"
+          ],
+          "conversation": "village_oskar_freed",
+          "_why": "SG46, spec §9's 'villagers acknowledge the victory'. FIRST in the list on purpose and safely: `legendary_freed` is the last flag the chapter sets, everything below it has already been spent by then, and this branch's own conversation carries the same `shop:creatures:oskar` effect his beaten and standing branches carry so nothing that was reachable before the Warden becomes unreachable after him (D39's rule -- a vendor branch is never lost, only ever carried forward). Additive as always: the standing greeting is untouched. Paired with `oskar_trade_open` for the same reason Mira's is paired with hers: a one-time introduction must not be swallowed by the ending."
+        },
+        {
+          "unless_flag": "oskar_trade_open",
+          "conversation": "village_oskar_trade_intro",
+          "_why": "OF31/D39. The swap explained once: his creatures for yours, no coins, and never your last one. Sets `oskar_trade_open`."
+        },
+        {
+          "if_flag": "oskar_trade_open",
+          "unless_flag": "defeated_oskar",
+          "conversation": "village_oskar_challenge",
+          "_why": "SC12/SC13/SC14. His Band-1 challenge -- the gate (spec sec3): a sturdier team than Mira's, and the fight the South Bridge Key is won from. Offered every greeting once the swap is open, for as long as he is unbeaten. Ends on `battle:trainer_oskar`."
+        },
+        {
+          "if_flag": [
+            "south_bridge_open",
+            "oskar_trade_open"
+          ],
+          "unless_flag": "legendary_freed",
+          "conversation": "village_oskar_bridge",
+          "_why": "T5-STORY-2, same measured gap as Mira's entry above. `south_bridge_open` because the key that opened it was HIS -- his own `village_oskar_challenge` line already says Team Tether took it off his belt in the spring -- and the game never let him find out it had come back. Same placement rule and same reasoning: above `defeated_oskar`, below the challenge, below the ending, carrying `shop:creatures:oskar` so the pen is never lost."
+        },
+        {
+          "if_flag": "defeated_oskar",
+          "conversation": "village_oskar_beaten",
+          "_why": "SC13/D39. His permanent steady state once beaten -- precedes, and carries the same `shop:creatures:oskar` effect, the standing swap branch below has always had, so the pen stays reachable forever. Ahead of that branch in the list for exactly that reason -- 'the swap branch still fires' because this entry now fires it."
+        },
+        {
+          "if_flag": "oskar_trade_open",
+          "conversation": "village_oskar_trade",
+          "_why": "OF31/D39. The ORIGINAL standing swap branch, left exactly as OF31 wrote it (D39: a vendor branch is never rewritten). Superseded in practice by the two entries above it once he becomes challengeable, the same shape as Mira's own standing branch."
+        }
+      ],
+      "_why": "OWNER-0912. Oskar stays outdoors in the six-metre-deep creature pen behind Mira's shop, between the cottage's east wall and the rear rail. He faces west toward the shop and street; his swap prompt now belongs to a visible pen instead of the old ring between two unrelated cottages."
+    },
+    {
+      "name": "Tam",
+      "config_key": "villager_smith",
+      "position": [
+        26,
+        20
+      ],
+      "facing_deg": 0,
+      "greeting": "village_tam",
+      "greeting_when": [
+        {
+          "unless_flag": "tam_tools_given",
+          "conversation": "village_tam_tools",
+          "_why": "FIRST-HOUR-FUN. Mira's required opening visit provides the starter tools and the Basic Orb pattern; Tam remains the later smith handover for the knife and torch. `tam_tools_given` is written on the line that grants those tools, so the handover cannot be repeated."
+        },
+        {
+          "if_flag": "legendary_freed",
+          "conversation": "village_tam_freed",
+          "_why": "SG46, spec §9. Placed AFTER his two one-time gift branches rather than first: both of Tam's gifts are one-shot and a player who reached the stronghold without collecting them must still be able to, which a first-position branch would block forever. Flavour only, like his `_beaten` lines -- he has no vendor effect to carry."
+        },
+        {
+          "if_flag": [
+            "tam_tools_given",
+            "recipe_orb_basic"
+          ],
+          "unless_flag": "defeated_tam",
+          "conversation": "village_tam_challenge",
+          "_why": "SC12/SC13. His Band-1 challenge -- the switching lesson (spec sec3): two creatures of different types. Offered every greeting once BOTH of his one-time gifts are spent, for as long as he is unbeaten. Ends on `battle:trainer_tam`."
+        },
+        {
+          "if_flag": [
+            "hall_approach_open",
+            "tam_tools_given"
+          ],
+          "unless_flag": "legendary_freed",
+          "conversation": "village_tam_hall",
+          "_why": "T5-STORY-2, same measured gap. `hall_approach_open` is set by playground_world.gd once all three captain sigils are held, so this fires at the exact moment the player is equipped to walk at the stronghold -- the chapter's last time home before the Hall, and a smith is the one villager who would read a sigil on sight. Paired with `tam_tools_given` so his one-time handover can never be swallowed by this branch, the same guard his own gift branches already rely on. No effect to carry: his `defeated_tam` entry's own `_why` records that he has no standing vendor branch."
+        },
+        {
+          "if_flag": "defeated_tam",
+          "conversation": "village_tam_beaten",
+          "_why": "SC13. His permanent steady state once beaten. Flavour only, unlike Mira's and Oskar's -- he has no standing vendor branch to carry forward; both his gifts are one-time and already spent by the time he is even challengeable."
+        }
+      ],
+      "_why": "OWNER-0912. Tam stands just outside the workshop's broad east-facing bay on the south street, looking toward arriving players. The tool handover, smith role and placed_by village_npcs fight now happen at his actual building instead of on the old west-leg ring."
+    },
+    {
+      "name": "Quarry Foreman",
+      "hair": {
+        "visible": true,
+        "color": "#74512f",
+        "_comment": "Mid chestnut, between Oskar's near-black and Bram's straw. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
+      "config_key": "villager_quarryman",
+      "position": [
+        392.0,
+        1792.0
+      ],
+      "facing_deg": 26.0,
+      "greeting": "village_quarry_foreman",
+      "_why": "OWNER-0912 / C3 V-7. On the Old Quarry floor by the conduit head, where a quarry foreman has a visible job and can explain what Team Tether is drawing from the seams. His camp-hammer handoff moved to Tam so the opening build rung remains available before South Bridge.",
+      "greeting_when": [
+        {
+          "if_flag": "legendary_freed",
+          "conversation": "village_quarry_foreman_freed",
+          "_why": "SG46. The foreman's ground is the one D45 says stays baked and partly unhealed, so he is the character who says so out loud -- the honest remainder spoken by the person standing on it. His first `greeting_when` list; the standing greeting is untouched and is still the fallback."
+        }
+      ]
+    },
+    {
+      "name": "Sela",
+      "_name_was": "\"Rescued Ranger\" until SE27, which gave the placeholder a rescue to be rescued FROM and therefore a name to be greeted by. Same entry, same rig, same position -- only the label and the two additions below changed, so the prompt reads \"Greet Sela\" rather than \"Greet Rescued Ranger\", which was always a description rather than a name.",
+      "config_key": "villager_ranger",
+      "position": [
+        -348.0,
+        505.0
+      ],
+      "facing_deg": 75.0,
+      "greeting": "village_rescued_ranger",
+      "place_when": [
+        {
+          "if_flag": "captive_rescued",
+          "_why": "SE27/SG46, spec §14. She is Team Tether's prisoner at the relay station until the player frees her (data/config/relay_site.json places that body), and only then does she come to the village. Before SE27 she stood here from the first frame of a new save, which meant a rescued NPC existed before there was a rescue. village_npcs.gd re-reads this gate whenever the flag store changes, so she walks into an already-built square rather than waiting for a reload."
+        }
+      ],
+      "greeting_when": [
+        {
+          "if_flag": "captive_rescued",
+          "conversation": "village_rescued_ranger_home",
+          "_why": "SE27/D39. Her post-rescue lines, ADDED above the standing greeting rather than replacing it -- `village_rescued_ranger` stays exactly as NP3 wrote it and is still the fallback, which is what a capture tool or a bare test scene with no flag store will get. In an actual game this branch always matches, because `place_when` above means she is not standing here at all unless the same flag is set."
+        }
+      ],
+      "_why": "OWNER-0912 / C3 V-7. After rescue Sela returns to the Pond ranger station, a ranger's actual workplace, instead of adding a conditional sixth body to the opening street."
+    },
+    {
+      "name": "Kell",
+      "hair": {
+        "visible": true,
+        "color": "#a49e99",
+        "_comment": "Pale grey -- the oldest-reading of the four. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
+      "_comment": "R8.6 / SG46's 'at least one outward spoke gains new dialogue'. She stands at the STORM ROAD's end -- the spoke SG44 reconnects -- and only after `legendary_freed`. Placed from this file rather than from severed_spokes.gd deliberately: that script carries a hard rule that a spoke never explains itself with UI text, and it still does not. Nothing is added to the road, the blocker or the sign; a PERSON walked out to look at a horizon that changed, and she is met the way every other person in the chapter is met. The road past her is exactly as impassable while she talks as it was in hour one, which tests/smoke_boss.gd re-proves after the flag.",
+      "config_key": "villager_keeper",
+      "position": [
+        184.2,
+        52.6
+      ],
+      "_comment_position": "At the storm road's own end (terrain_playground.json's spokes.routes[1] finishes at [185.5,49.7]), a couple of metres off the roadbed so she is beside the way rather than standing in it -- the same rule stronghold.json's trainer offsets follow.",
+      "facing_deg": 15.0,
+      "_comment_facing": "Down the road's own outward bearing: she is looking at the thing she is talking about.",
+      "greeting": "spoke_traveller_storm_road",
+      "place_when": [
+        {
+          "if_flag": "legendary_freed",
+          "_why": "SE27's mechanism, reused exactly: she does not exist in the world before the machinery fails. village_npcs.gd re-reads this whenever the flag store's revision moves, so she is standing there on the walk home rather than after a reload."
+        }
+      ],
+      "_comment_config_key": "CLAUDE.md/§21: no new human generation and no new model. `villager_keeper` is the NP4 villager_male base already standing in the square (Oskar's), reused as-is -- she is a villager who walked twenty minutes out of town to look at a horizon, not a new archetype. art.json's own note records that this base has no separable hair mesh, so there is no per-material differentiator to give her; CLAUDE.md's stated fallback for exactly that case is that identical NPCs beat an ugly whole-body hue shift."
+    },
+    {
+      "name": "Bram",
+      "hair": {
+        "visible": true,
+        "color": "#9c8450",
+        "_comment": "Dark blond/straw -- the only light-warm head on this rig. N14-ROUTED-FOLLOWUPS, 2026-09-05, second half of N04-DIALOGUE-PORTRAITS's routed finding: 'several male NPCs currently all share one undifferentiated plate'. N04 built the mask-by-region hair recolour for the female rig and its brief scoped it there; `tools/_bake_villager_male_hair_mask.py` now bakes the same mask for `villager_male_lod0.glb`, and `character_model.gd::_apply_hair` reaches it on a rig that has NO separated hair mesh. This rig's two previous differentiators are both recorded in art.json as tried and reverted -- a whole-body tint ('looks stupid', owner playtest) and a per-material belt pouch (rendered in the wrong place) -- so a per-person hair colour on the painted fringe is the first one that reaches the face without touching it. No new mesh, no new humanoid, no Meshy spend: the mask is a region of the rig's OWN texture. Colours chosen by measurement, not by eye -- CIE76 deltaE across the four, worst pair 21.38, against the 6.83 that N04's judge flagged as 'the same person at speaking distance' on the female rig."
+      },
+      "config_key": "villager_keeper",
+      "position": [
+        44,
+        -2.39
+      ],
+      "facing_deg": 0,
+      "greeting": "village_bram",
+      "greeting_when": [
+        {
+          "unless_flag": "bram_shop_open",
+          "conversation": "village_bram_shop_intro",
+          "_why": "R7.9/D39, same shape as OF31's Mira: the inn's own shop opening, told once, ending by opening the store. Sets `bram_shop_open`, so this entry stops matching after the first visit."
+        },
+        {
+          "if_flag": "bram_shop_open",
+          "conversation": "village_bram_shop",
+          "_why": "R7.9/D39. The standing vendor branch, same pattern as `village_mira_shop`."
+        }
+      ],
+      "_why_main_street": "OPTION-B (owner 2026-09-29): the inn moved to [-2.5,-6] at yaw 90, so the same bar_position() transform (local [0,0,-4.39]) puts Bram at [-6.89,-6.0] facing 90 toward the doorway on the green. Older notes below describe the retired [-1.5,-2] pose.",
+      "_why": "R7.9 plus OWNER-0912 village visual acceptance repair. Bram stays at inn_interior.gd::bar_position() (local [0,0,-4.39]) after the inn moves to [-1.5,-2] at yaw 180; that exact transform places him at [-1.5,2.39] behind the bar rather than leaving his interaction body in the retired shell.",
+      "_why_facing_0911": "INN-BRAM-REPROOF established that the installed villager rig's visible face is local +Z (`Vector3.BACK` in Godot). The repaired inn's 180-degree placement faces its doorway north toward the west street, so Bram uses the same 180-degree yaw to face arriving patrons across his counter.",
+      "_why_vendor": "D39's dual-role pattern is a vendor branch AND a later trainer branch; this ships only the vendor half, matching the design ralph/NOTES.md's own R7.9 entry recorded and the same scope call OF31 made for Mira before SC12 later added her challenge. A trainer branch needs a balanced team, a level, a reward and a `trainers.json` entry under `placed_by: \"village_npcs\"`, which risks the balance assertions `test_trainers_data.gd` runs across the whole roster -- real, separate scope, left open rather than guessed at."
+    },
+    {
+      "name": "Halda",
+      "_comment": "TOURNAMENT-1. The tournament marshal -- the person who signs the player into the bracket and opens each of the three fought rounds. A villager entry on the `villager_ranger` rig with her own hair colour, not a new humanoid: CLAUDE.md and spec sec21 both say a new person is a per-material variant on a rig that is already installed, and a marshal is exactly that case. She is a NON-COMPETITOR by design -- Mira, Tam and Oskar are all in the draw, so the person running it cannot be one of them.",
+      "config_key": "villager_ranger",
+      "hair": {
+        "visible": true,
+        "color": "#63636e",
+        "_comment": "Iron grey, distinct from farmer (#5c3a22), smith (#8a8578), ranger (#7a3c22) and Bryn (#c9a86a) so the sixth body on this rig does not read as one of the others wandered north out of the square.",
+        "_comment_hue_spacing_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N04-DIALOGUE-PORTRAITS's routed finding. Once N04 made the per-NPC hair colour actually VISIBLE on the plates (the mask-by-region recolour), its blind judge measured three pairs still close enough to read as the same person at speaking distance -- deltaE at 72px: ranger/Rae 5.4, Tam/Halda 8.9, Mira/Rae 8.3. N04's own framing: these were 'chosen when they were invisible'. Spread here by VALUE inside each colour's own family, not by picking new hues -- the family each of these people belongs to was a deliberate call and is not being reopened. Measured as CIE76 deltaE on the raw swatches (the judge's at-72px numbers are the same ordering, compressed by the render): the closest pair goes 8.45 -> 15.19, and the bar is the 15.19 that ranger-vs-Mira already sat at WITHOUT being flagged. Every pair now meets it. Halda: #8f8f96 -> #63636e. Hue is identical (240 degrees) and this is still the iron grey the line above describes -- value 0.59 -> 0.43 and saturation 0.05 -> 0.10, i.e. iron rather than pewter. Darkening HER rather than the smith's silver because Tam's #8a8578 is the lighter, warmer of the two, and separating a grey pair is a value job: vs Tam 12.21 -> 19.44."
+      },
+      "position": [
+        88.5,
+        46.5
+      ],
+      "facing_deg": 215,
+      "_why_here": "The tournament ground: the open north field behind the square, inside the same 14m vegetation clearing at [13, 9] that Bryn's practice arena already uses, 5.0m from the bracket board at [20, 15] and 10.8m from Bryn himself -- more than the two challenge prompts' radii added together, so she never contests his. Facing 215 degrees turns her back toward the square, so she is looking at whoever walks up from the well.",
+      "greeting": "tournament_halda",
+      "greeting_when": [
+        {
+          "if_flag": "tournament_won",
+          "conversation": "tournament_halda_champion",
+          "_why": "FIRST in the list: once the tournament is won, every branch below it is spent and this is her permanent steady state. It is also the line the owner directive asks for -- the one that says a Meadowhart can be ridden and what the saddle costs. The pattern itself is granted by the final round's own `reward.flags`, not by this conversation, so a champion who never walks back here still has it."
+        },
+        {
+          "if_flag": [
+            "tournament_semi_won",
+            "tournament_final_at_ring"
+          ],
+          "unless_flag": "tournament_won",
+          "conversation": "tournament_final_begin",
+          "_why": "TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle'. Above the plain `tournament_final` branch so once the player has heard Oskar's ring-entrance banter (which sets `tournament_final_at_ring` and starts nothing), every later greeting goes straight to the explicit begin-the-round line, which is the one that ends on `battle:tournament_final_oskar`."
+        },
+        {
+          "if_flag": "tournament_semi_won",
+          "unless_flag": "tournament_won",
+          "conversation": "tournament_final",
+          "_why": "Round 3's ring-entrance banter. Sets `tournament_final_at_ring` and starts nothing -- `tournament_final_begin` above is what opens the fight, once the player greets her again. Stays offered for as long as the final is unwon -- which is what makes a loss retryable: nothing is consumed by losing, so the player heals their team and greets her again, landing straight back on the begin branch above."
+        },
+        {
+          "if_flag": [
+            "tournament_quarter_won",
+            "tournament_semi_at_ring"
+          ],
+          "unless_flag": "tournament_semi_won",
+          "conversation": "tournament_semi_begin",
+          "_why": "TOURNAMENT-FLOW-0903. Round 2's own begin branch, same shape and same reason as the final's above."
+        },
+        {
+          "if_flag": "tournament_quarter_won",
+          "unless_flag": "tournament_semi_won",
+          "conversation": "tournament_semi",
+          "_why": "Round 2's ring-entrance banter. Sets `tournament_semi_at_ring` and starts nothing; ends on `battle:tournament_semi_tam` only through `tournament_semi_begin` above."
+        },
+        {
+          "if_flag": [
+            "tournament_entered",
+            "tournament_quarter_at_ring"
+          ],
+          "unless_flag": "tournament_quarter_won",
+          "conversation": "tournament_quarter_begin",
+          "_why": "TOURNAMENT-FLOW-0903. Round 1's own begin branch, same shape and same reason as the other two above."
+        },
+        {
+          "if_flag": "tournament_entered",
+          "unless_flag": "tournament_quarter_won",
+          "conversation": "tournament_quarter",
+          "_why": "Round 1's ring-entrance banter. Sets `tournament_quarter_at_ring` and starts nothing; ends on `battle:tournament_quarter_mira` only through `tournament_quarter_begin` above."
+        },
+        {
+          "unless_flag": [
+            "opening:tournament_registered",
+            "tournament_team_ready"
+          ],
+          "conversation": "tournament_halda_register",
+          "_why": "FIRST-HOUR-FUN-REBUILD, narrowed by TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 2: 'even after I had everything, I had to talk to the starter several times'). Used to fire on ANY unregistered first meeting regardless of how ready the team already was, forcing a throwaway registration talk before the readiness branches below could ever be reached even when every one of them already held. Now also requires the team NOT be team-ready, so a player who built and trained a full roster before ever walking up to Halda skips this branch entirely and lands directly on whichever readiness branch actually names their state -- sign-up if everything holds, camp/condition/train otherwise. Every one of those branches now also writes `opening:tournament_registered` itself (data/dialogue/bands/band1_lower_meadows.json), so the opening's own handoff still fires no matter which branch is the player's first."
+        },
+        {
+          "if_flag": [
+            "tournament_team_ready",
+            "tournament_training_ready",
+            "tournament_condition_ready",
+            "home_built",
+            "creature_bed_built",
+            "creature_bed_built_2",
+            "creature_bed_built_3",
+            "player_slept_at_home"
+          ],
+          "unless_flag": "tournament_entered",
+          "conversation": "tournament_halda_signup",
+          "_why": "FIRST-HOUR-FUN-REBUILD sign-up. The complete five-creature team, strength and volatile rested/fed/happy state still come from tournament.gd. `home_built` is the save-compatible compact Camp requirement owned by home_progress; all three Creature Bed milestones prove the physical preparation for the selected three; `player_slept_at_home` proves the player actually rested/recovered at camp. No Workbench or house architecture flag is required. The conversation's last line sets `tournament_entered`."
+        },
+        {
+          "if_flag": [
+            "tournament_team_ready",
+            "tournament_training_ready",
+            "tournament_condition_ready"
+          ],
+          "unless_flag": "tournament_entered",
+          "conversation": "tournament_halda_camp",
+          "_why": "FIRST-HOUR-FUN-REBUILD. A ready five-creature team without the camp/bed/recovery proof gets one concrete next step instead of falling back to generic banter. This branch is below sign-up and above the ordinary condition branch, so it never interrupts an entered bracket."
+        },
+        {
+          "if_flag": [
+            "tournament_team_ready",
+            "tournament_training_ready"
+          ],
+          "unless_flag": [
+            "tournament_condition_ready",
+            "tournament_entered"
+          ],
+          "conversation": "tournament_halda_condition",
+          "_why": "RG19-spec/D68. Trained, but not in shape: the owner's own entry rule is that entrants are 'well rested, well fed, and happy'. Told as a reason rather than a locked door -- the line names rest, food and care, and the team screen shows which creature is short of which. Sits ABOVE the train branch so a team that is levelled but hungry hears about the food rather than about levels, and below sign-up so a ready team never sees it. `unless_flag` includes `tournament_entered` so a player who has already signed up is never sent back out to feed somebody mid-bracket."
+        },
+        {
+          "if_flag": "tournament_team_ready",
+          "unless_flag": "tournament_training_ready",
+          "conversation": "tournament_halda_train",
+          "_why": "You have the bodies, they are not ready. Told as a reason rather than as a locked door -- she names what to go and do, which is the whole difference between an entry condition and a wall."
+        },
+        {
+          "unless_flag": "tournament_team_ready",
+          "conversation": "tournament_halda_closed",
+          "_why": "After registration, the team-size reminder. The threshold is tournament.json's five-creature cap-aligned value; the dialogue says five rather than carrying a second gameplay number."
+        }
+      ]
+    },
+    {
+      "name": "Wilhelm",
+      "config_key": "innkeeper",
+      "position": [
+        341.0,
+        932.0
+      ],
+      "facing_deg": -160.0,
+      "greeting": "village_innkeeper",
+      "_why": "OWNER-0912 / C3 V-7. Host at the first Trail Camp fire, where an innkeeper on the road has a reason to be present without crowding Bram's inn."
+    },
+    {
+      "name": "Corin",
+      "config_key": "trader",
+      "position": [
+        -150.0,
+        4232.0
+      ],
+      "facing_deg": 12.0,
+      "greeting": "village_trader",
+      "_why": "OWNER-0912 / C3 V-7. A peddler waiting at Old Mill Crossing, where stopped traffic gives the trader a reason to stand."
+    },
+    {
+      "name": "Ada",
+      "config_key": "craftsperson",
+      "position": [
+        -262.0,
+        2258.0
+      ],
+      "facing_deg": 35.0,
+      "greeting": "village_craftsperson",
+      "_why": "OWNER-0912 / C3 V-7. Salvaging at the abandoned ranger camp, where a craftsperson has an authored work context."
+    },
+    {
+      "name": "Garrick",
+      "config_key": "farmer",
+      "position": [
+        -45.0,
+        185.0
+      ],
+      "facing_deg": 20.0,
+      "greeting": "village_farmer",
+      "_why": "OWNER-0912 / C3 V-7. At the Long Field farmstead on the Band 1 road, so the first face beyond the fence belongs to the landscape instead of the village crowd."
+    },
+    {
+      "name": "Old Perrin",
+      "config_key": "local_historian",
+      "position": [
+        -378.0,
+        352.0
+      ],
+      "facing_deg": 65.0,
+      "greeting": "village_local_historian",
+      "_why": "OWNER-0912 / C3 V-7. At the Rise crest overlook by the dead tree, where the local historian can read the seven severed roads in the landscape."
+    },
+    {
+      "name": "Tobin",
+      "config_key": "lost_traveler",
+      "position": [
+        -28.0,
+        1298.0
+      ],
+      "facing_deg": 180.0,
+      "greeting": "village_lost_traveler",
+      "greeting_when": [
+        {
+          "if_flag": "road_gate_open",
+          "unless_flag": [
+            "south_bridge_team_prompt_heard",
+            "south_bridge_open"
+          ],
+          "conversation": "village_south_bridge_team_prompt",
+          "_why": "OWNER-0912 Tier 1 #3. The road gate proves the player is actually on the village-to-bridge leg; the personal heard flag makes the lesson one-shot, and an already-open bridge retires advice about preparing to cross it."
+        }
+      ],
+      "_why": "OWNER-0912 / C3 V-7. Turned back on the South Bridge approach, where his one-time warning now explicitly tells an under-levelled trainer to level and bond with the team before the checkpoint."
+    },
+    {
+      "name": "Nessa",
+      "config_key": "inn_helper",
+      "position": [
+        62,
+        7
+      ],
+      "facing_deg": 180,
+      "greeting": "village_nessa_overlook",
+      "greeting_when": [
+        {
+          "unless_flag": "nessa_overlook_gift_taken",
+          "conversation": "village_nessa_overlook_gift",
+          "_why": "OWNER-0912 Tier 3 #1. A personal payoff flag makes the carried-food gift one per trainer, while the ordinary overlook line remains available afterward."
+        }
+      ],
+      "_why": "OWNER-0912 Tier 3 #1. Nessa remains outside the opening-village population: she has stopped with an inn supply load at the off-road look-back bench in band1 props order 1054. Her line identifies the real village roofs as the distant subject and pays the detour once."
+    },
+    {
+      "name": "Maren",
+      "config_key": "field_researcher",
+      "position": [
+        66,
+        7
+      ],
+      "facing_deg": -71.6,
+      "greeting": "village_field_researcher",
+      "_why": "T1-CREATURE-RIG. At the ranger station by the pond crossing (village.json's `ranger_station`, empty since Sela moved to the square) -- a field researcher's own logical desk. Probed 4.71m clear of the station's footprint, ground present (the pond-route shoulder), off every path."
+    },
+    {
+      "name": "Sorrel",
+      "config_key": "alpha_tracker",
+      "position": [
+        -390.0,
+        524.0
+      ],
+      "facing_deg": -59.0,
+      "greeting": "village_alpha_tracker",
+      "_why": "T1-CREATURE-RIG. By the mill crossing, watching the water where the pond route's wild ecology is thickest -- probed 7.35m clear of the mill's own footprint, ground present, off every path, 52.33m from Maren so the pond-crossing pair reads as two people, not one doubled."
+    },
+    {
+      "name": "Lark",
+      "config_key": "courier",
+      "position": [
+        -32.0,
+        4062.0
+      ],
+      "facing_deg": 15.0,
+      "greeting": "village_courier",
+      "_why": "OWNER-0912 / C3 V-7. On the near-bank river walk, where a stopped courier makes the broken crossing legible as a lived problem."
+    },
+    {
+      "name": "Ren",
+      "config_key": "former_tether_member",
+      "position": [
+        334.0,
+        5704.0
+      ],
+      "facing_deg": -80.0,
+      "greeting": "village_former_tether_member",
+      "_why": "OWNER-0912 / C3 V-7. At the Band 4 wind-ridge rest point, where a former Tether member can explain consoles, guards and Sigils before the hierarchy closes in."
+    },
+    {
+      "name": "Rae",
+      "config_key": "villager_farmer",
+      "hair": {
+        "visible": true,
+        "color": "#a8663f",
+        "_comment_hue_spacing_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N04-DIALOGUE-PORTRAITS's routed finding. Once N04 made the per-NPC hair colour actually VISIBLE on the plates (the mask-by-region recolour), its blind judge measured three pairs still close enough to read as the same person at speaking distance -- deltaE at 72px: ranger/Rae 5.4, Tam/Halda 8.9, Mira/Rae 8.3. N04's own framing: these were 'chosen when they were invisible'. Spread here by VALUE inside each colour's own family, not by picking new hues -- the family each of these people belongs to was a deliberate call and is not being reopened. Measured as CIE76 deltaE on the raw swatches (the judge's at-72px numbers are the same ordering, compressed by the render): the closest pair goes 8.45 -> 15.19, and the bar is the 15.19 that ranger-vs-Mira already sat at WITHOUT being flagged. Every pair now meets it. Rae: #7a4a2c -> #a8663f. Hue 23.1 -> 22.3 degrees and saturation 0.64 -> 0.62 are unchanged to within rounding; only VALUE moves, 0.48 -> 0.66, so she is the light auburn of the three browns rather than the middle one. She was in TWO of the three flagged pairs (with the ranger at 5.4 and with Mira at 8.3), so moving her alone answers both: vs ranger 8.45 -> 17.68, vs Mira 11.21 -> 27.04."
+      },
+      "position": [
+        -205.0,
+        1185.0
+      ],
+      "facing_deg": 70.0,
+      "greeting": "meadowhart_herd_greeting",
+      "greeting_when": [
+        {
+          "unless_flag": "band1_meadowhart_herd_found",
+          "conversation": "meadowhart_herd_sighting",
+          "_why": "MEADOWS-DETOUR. Rae's first conversation now reveals and directs the request only. The branch remains available until the real herd visit sets `band1_meadowhart_herd_found`, so leaving before reaching the herd cannot lose the directions or pay the reward early."
+        }
+      ],
+      "_why": "Rae stands off the spine before the South Bridge approach and points down-road to the existing order-1005 Meadowhart pair. The herd's live position has moved since Rae was authored, so this entry deliberately carries no copied herd coordinate; `meadowhart_herd_visit.gd` resolves order 1005 from the merged spawn data. She is not the herd's owner or ranger, just someone who stops to watch it, matching the rule that not every optional beat needs a formal quest-giver. Her own pad remains the ground-checked site from tools/_probe_activities_sites.gd (worst local slope 6.2 degrees over 3m)."
+    }
+  ],
+  "_comment_tournament_1": "TOURNAMENT-1. Halda, the tournament marshal, is the seventh entry and the first villager whose whole `greeting_when` list is a progression LADDER rather than a vendor/gift pair. That is deliberately the existing mechanism and not a new one: every tournament state is one flag (or a small AND of them), so the ordered-branch reader `village_npcs.greeting_for()` already written for Mira answers all of them without a line of new code. Order matters and is checked by tests/test_tournament.gd -- champion first, then each round's own begin-the-round branch ahead of its ring-entrance banter (TOURNAMENT-FLOW-0903), newest round first, then registration, then sign-up, then the three not-ready explanations.",
+  "_comment_t1_creature_rig": "T1-CREATURE-RIG, 2026-08-30. Placed 12 of the 15 civilian bodies T3-INSTALL generated, rigged, animated and installed at assets/characters/<slug>/ but never stood up anywhere (docs/specs/ASSET_LEDGER.md's T3-INSTALL entry calls this 'the single largest remaining install opportunity in the game'). The remaining 3 -- young_trainer, rival_trainer, wandering_trainer -- were placed in data/config/bands/band1_lower_meadows/trainers.json as standalone battles, and T3-LADDER removed those three entries the same day: see that file's `_comment_t3_ladder` for the measurement. Their bodies are still built and installed (data/config/art.json), and they remain three of the fifteen with nowhere to stand, because a band folder has no civilian placement of its own. Every position here was checked with tools/_probe_civilian_placement.gd (playground_heightfield.gd's real analytic terrain plus building_prefabs.json's own module-extent formula for footprint clearance, the same method village_npcs.json's own `_comment_positions` describes) -- not eyeballed. Evidence: ralph/reports/T1-CREATURE-RIG/shots/. AMENDED BY OWNER-0902-VILLAGE-POPULATION-REGRESSION: 2 of the 12 (Nessa, Fenn) were unplaced the same way T3-LADDER unplaced its own three -- see that entry below. 10 of the fifteen now stand; the remaining 5 (young_trainer, rival_trainer, wandering_trainer, Nessa, Fenn) keep their installed bodies/dialogue for later reuse.",
+  "_comment_owner_0912_nessa_reuse": "Supersedes only the current-placement claim in the historical 09-02 note below: OWNER-0912 Tier 3 reuses Nessa outside the opening-village boundary at the look-back overlook. The opening street remains at five functional villagers; Fenn remains unplaced.",
+  "_comment_owner_0902_population_regression": "OWNER-0902-VILLAGE-POPULATION-REGRESSION, 2026-09-02. Owner playtest 2026-09-02 item 5 (archive/owner/OWNER_PLAYTEST_2026-09-02.md): 'still too many characters in the village', reopening the SAME complaint OWNER-0901-VILLAGE-POPULATION (commit 8edfcf58) had just closed the same day it was raised. First ruled out the named risk from the 09-01 record (a same-day BACKLOG-E1-VILLAGE-DAYTIME collision that added NPCs back on top of the fix): 9f06bc4d landed BEFORE 8edfcf58 that same window, its own diff touches only props.json/terrain_playground.json/vegetation.json/scatter bakes, and `git log -- data/config/village_npcs.json` shows no commit after 8edfcf58 touched this file until this one -- nobody re-added anyone. The regression is that 8edfcf58 never actually changed the village's population: `git diff 8edfcf58^ 8edfcf58 -- data/config/village_npcs.json` is three position/facing/`_why` edits (Garrick, Old Perrin, Lark, each moved 12-21m but kept inside data/config/village_boundary.json's own outline by its own math) and nothing else -- same 21 named entries before and after, same 15 always-present bodies standing inside the village fence before and after. A point-in-polygon count against that outline (script in tools/_probe_village_population_count.gd) proves it: 15 always-placed civilians inside the boundary both before and after 8edfcf58, +1 more (Sela) once `captive_rescued`. Repositioning within an already-crowded fence was never going to read as fewer people, because it wasn't fewer people.\n\nThis time: actually reduce the count, not just its distribution. Of the 15, six are load-bearing (Mira/Oskar/Tam: shop+trainer; Quarry Foreman: the camp hammer gift OW9 depends on; Bram: the inn shop; Halda: the tournament marshal TOURNAMENT-1 depends on) and the rest are T1-CREATURE-RIG flavour with no `effect:` anywhere in their data/dialogue/village.json entries (checked directly, not assumed). Of those flavour nine, two are pure duplicates of a role an already-placed, load-bearing NPC already covers in their own dialogue: Nessa ('Wilhelm handles the front, I handle whatever's on fire') is a second inn body standing 8m from Wilhelm who is himself 8m from Bram, and Fenn ('Oskar swaps them, I look after them in between') stands 5m from Oskar doing the thing Oskar's own dialogue already says Oskar does. Corin, Ada, Garrick, Old Perrin, Lark and Ren each cover a niche nothing else does (trader, craftsperson, farmer, historian, courier, ex-Tether informant) and are NOT cut here -- cutting them would be losing unique content, not thinning a duplicate, and 8edfcf58 already spread three of them (Garrick/Perrin/Lark) toward the fence.\n\nUnplaced Nessa and Fenn from the `villagers` array below (not deleted: their rigs stay installed at assets/characters/, matching T3-LADDER's own precedent of removing a placement entry while keeping the asset for later reuse; data/dialogue/village.json's `village_inn_helper`/`village_creature_caretaker` entries are left in place, unreachable rather than deleted, the same D39 rule this file's own vendor branches already follow). Wilhelm is NOT touched: tools/probe_interact_approach.gd, tools/probe_interact_flake.gd and tools/probe_interact_lag.gd all hard-require a node named Wilhelm in the built VillageNPCs to measure the still-open Tier-1 interact-reliability regression (2026-09-01 playtest item 3) -- removing him would have silently broken three unrelated probes for a different open game-breaker.\n\nMeasured result (tools/_probe_village_population_count.gd, since no Godot binary this session -- same method every other 09-01/09-02 fix in this file used): always-present civilians inside the village boundary go from 15 to 13, a real headcount drop verifiable independent of position, not a third round of the same shuffle."
+}

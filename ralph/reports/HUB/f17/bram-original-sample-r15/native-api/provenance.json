@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/doc/classes/PhysicsDirectSpaceState3D.xml",
+    "path": "native-api/PhysicsDirectSpaceState3D.xml",
+    "sha256": "a425439c1bb93006c927956d0c7b48f323a6a98904112272d4b8caedd11589ef"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/doc/classes/PhysicsServer3D.xml",
+    "path": "native-api/PhysicsServer3D.xml",
+    "sha256": "d29aaf4bcd5708ee6e98888763a32777d8f9d5cc549db85225215726d8f1f04d"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/doc/classes/PhysicsShapeQueryParameters3D.xml",
+    "path": "native-api/PhysicsShapeQueryParameters3D.xml",
+    "sha256": "a69ea6bd9ae877c9d3e993985fed8591060349c323abe08c206365fa697bfa37"
+  }
+]
