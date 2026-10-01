@@ -22,6 +22,24 @@ func _levels(team: Array) -> Array:
 	return out
 
 
+## JSON numbers are floats in Godot. Compare exact integral values without
+## truncating a fractional or malformed authored bound into a passing level.
+func _assert_band(actual: Variant, expected: Array, context: String = "") -> void:
+	assert_true(actual is Array, context)
+	if not actual is Array:
+		return
+	assert_eq(actual.size(), expected.size(), context)
+	if actual.size() != expected.size():
+		return
+	for index in expected.size():
+		var value: Variant = actual[index]
+		assert_true(value is int or value is float, context)
+		if not (value is int or value is float):
+			continue
+		assert_true(is_finite(float(value)) and float(value) == floorf(float(value)), context)
+		assert_eq(float(value), float(expected[index]), context)
+
+
 func test_exact_four_biome_bands_and_advisory_levels() -> void:
 	assert_eq(ORDER.ids(false), ["meadows", "tidewake", "cloudreach", "stormwood"])
 	var expected: Dictionary = {
@@ -34,9 +52,9 @@ func test_exact_four_biome_bands_and_advisory_levels() -> void:
 	for id: String in expected:
 		var row: Dictionary = biomes.get(id, {})
 		var bands: Array = expected[id]
-		assert_eq(row.get("team", []), bands[0], id + " team")
-		assert_eq(row.get("wild", []), bands[1], id + " wild")
-		assert_eq(row.get("boss", []), bands[2], id + " boss")
+		_assert_band(row.get("team", []), bands[0], id + " team")
+		_assert_band(row.get("wild", []), bands[1], id + " wild")
+		_assert_band(row.get("boss", []), bands[2], id + " boss")
 		assert_eq(int(row.get("recommended_level", 0)), int(bands[0][0]), id + " sign recommendation")
 
 
@@ -49,7 +67,7 @@ func test_meadows_resolver_uses_authored_bounds_and_finishes_at_22() -> void:
 		assert_eq(CURVE.team_band_at(start_z, cfg), [int(region.team.enter), int(region.team.exit)], str(region.id))
 		start_z = float(region.z_to)
 	assert_eq(CURVE.team_band_at(7400.0, cfg), [18, 22])
-	assert_eq(CURVE.wild_band_at(7400.0, cfg), [16, 20])
+	_assert_band(CURVE.wild_band_at(7400.0, cfg), [16, 20])
 
 
 func test_finale_teams_survive_production_band_and_storm_translation() -> void:
