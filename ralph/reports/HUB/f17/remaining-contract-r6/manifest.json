@@ -1,0 +1,53 @@
+{
+  "base_commit": "fedffb65ba9cddb14aa0b18e22aca54c5199ddd6",
+  "changed_paths": [
+    "tests/test_road_creature_visibility.gd",
+    "tests/test_gate_a_npc_gather_segment_contract.gd"
+  ],
+  "classification": "SOURCE ONLY; F17#4 OPEN; original failure retained",
+  "root_execution_source": "12a2ede365be2bf0a65b30c9bfb5ab1221b3d670",
+  "historical_baseline_source": "a6ae37c1ef4190d3bca0b57423c627bf25d5a039",
+  "files": {
+    "originals/tests/test_road_creature_visibility.gd": {
+      "bytes": 12928,
+      "sha256": "694c5b6e6c92e6a16fcdb5a0911c9ff8c1244c35d3976043c952d81e7e37743c"
+    },
+    "proposal/tests/test_road_creature_visibility.gd": {
+      "bytes": 13143,
+      "sha256": "b6c766de974b747f907a516768f34e28e7695a252b830b14bff59bedf10d5357"
+    },
+    "originals/tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "bytes": 3290,
+      "sha256": "0ab7b57faea992564767e0b44705ac8ced58ee922856bbe860652d086a205e49"
+    },
+    "proposal/tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "bytes": 3470,
+      "sha256": "09562adaad68e7226d3656ffdc445661fa47f8e89f82d2ac2c8463a2135d408f"
+    },
+    "inputs/visibility-model.gd": {
+      "bytes": 14191,
+      "sha256": "d0929f6b1bab3266a702dbdabc38f5b0d692fcee51e53e8631b109e0d26ae4b3"
+    },
+    "inputs/current-terrain.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "inputs/gather-helper.gd": {
+      "bytes": 42713,
+      "sha256": "414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d"
+    },
+    "inputs/historical-terrain.json": {
+      "bytes": 252066,
+      "sha256": "9ef236d3ca0a5486b8ff3a9d77edae61ccc2211a38c836bb1ede2f3fe46e491d"
+    },
+    "prior-failure/tests.log": {
+      "bytes": 54612,
+      "sha256": "e501bc5c006a7b61a82ecb8e0d6eeecb78455d1f48c11a6d1430e35bf725286f"
+    }
+  },
+  "unchanged_runtime_sha256": {
+    "tests/helpers/gate_a_npc_gather_segment.gd": "414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d",
+    "tests/helpers/opening_geometry_navigator.gd": "6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55",
+    "tools/gate_f/road_creature_visibility_model.gd": "d0929f6b1bab3266a702dbdabc38f5b0d692fcee51e53e8631b109e0d26ae4b3"
+  }
+}
