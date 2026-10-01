@@ -155,6 +155,10 @@ static func effect_tier(base: Dictionary, rank: int, breakthroughs: int = 0) -> 
 	var tier := clampi(breakthroughs, 0, 5)
 	result["effect_tier"] = step + 1
 	result["breakthrough_tier"] = tier
+	# F25 composes ordinary visual tiers from the frozen rank exactly once.
+	# Signature growth remains here; signatures never carry this owner tag.
+	if breakthroughs == 0 and str(base.get("mastery_owner", "")) == "f25":
+		return result
 	result["count"] = maxi(1, int(base.get("count", 1))) + step + tier
 	result["size"] = float(base.get("size", 1.0)) * power_multiplier(step + 1) * (1.0 + float(config().get("damage_per_rank", 0.0)) * tier)
 	result["impact_scale"] = float(base.get("impact_scale", 1.0)) * power_multiplier(step + 1)
@@ -188,11 +192,24 @@ static func stage_meter_landed(actor: Dictionary, frozen: Dictionary, actual_deb
 	var gain: Variant = gains.get(slot, 0)
 	if not _whole_nonnegative(gain) or (slot == "ultimate" and int(gain) != 0):
 		return {"ok": false, "code": "invalid_meter_config"}
+	# F33 host preparation enriches this SAME frozen accepted action once.
+	# The producer copies its trusted gear-config cap into meter_config; an
+	# absent cap permits only the unchanged default multiplier of one.
+	var gear_cap: Variant = meter_config.get("gear_gain_multiplier_cap", 1.0)
+	var gear_gain: Variant = frozen.get("gear_ultimate_gain_multiplier", 1.0)
+	if not (gear_cap is int or gear_cap is float) or not is_finite(float(gear_cap)) \
+			or float(gear_cap) < 1.0:
+		return {"ok": false, "code": "invalid_meter_config"}
+	if not (gear_gain is int or gear_gain is float) or not is_finite(float(gear_gain)) \
+			or float(gear_gain) < 1.0 or float(gear_gain) > float(gear_cap):
+		return {"ok": false, "code": "invalid_gear_gain"}
+	var effective_gain := float(gain) * float(gear_gain)
+	if not is_finite(effective_gain): return {"ok": false, "code": "invalid_gear_gain"}
 	var before: Variant = actor.get("ultimate_meter", 0.0)
 	if not (before is int or before is float) or not is_finite(float(before)) \
 			or float(before) < 0.0 or float(before) > float(maximum): return {"ok": false, "code": "invalid_meter"}
 	var next := actor.duplicate(true)
-	next["ultimate_meter"] = minf(float(maximum), float(before) + float(gain))
+	next["ultimate_meter"] = minf(float(maximum), float(before) + effective_gain)
 	var credited: Dictionary = receipt.duplicate(true)
 	credited["meter_credited"] = true
 	return {"ok": true, "actor": next, "accepted_receipt": credited}
@@ -281,6 +298,12 @@ static func stage_action_outcome(creature: RefCounted, frozen: Dictionary, host:
 		var status_scale := effects.power_multiplier(status, str(actor.creature_uid), int(host.now_ms)) \
 			* effects.damage_taken_multiplier(status, str(host.target_uid), int(host.now_ms))
 		if not is_finite(status_scale) or status_scale < 1.0: return {"ok": false, "code": "invalid_status"}
+		var bonus_cap: Variant = combat_config.get("damage", {}).get("max_bonus_product", 1.6)
+		if not (bonus_cap is int or bonus_cap is float) or not is_finite(float(bonus_cap)) \
+				or float(bonus_cap) < 1.0: return {"ok": false, "code": "invalid_damage_config"}
+		# COMBAT §3 caps encounter effects together. Frozen mastery,
+		# breakthrough and canonical gear power remain outside this product.
+		status_scale = minf(status_scale, float(bonus_cap))
 		damage = math.rolled_damage(base_power * float(frozen.get("power_multiplier", 1.0)) * status_scale,
 			float(host.attack), float(host.target_defence), float(host.roll), float(frozen.get("power", 1.0)), type_scale)
 		if slot == "ultimate" and host.get("named") == true:

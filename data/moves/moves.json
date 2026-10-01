@@ -26,7 +26,8 @@
         "speed": 20.0,
         "spread": 0.0,
         "trail": 1.2,
-        "impact_scale": 1.3
+        "impact_scale": 1.3,
+        "mastery_owner": "f25"
       }
     },
     "pebble_toss": {
@@ -50,7 +51,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "stone_throw"
+        "archetype": "stone_throw",
+        "mastery_owner": "f25"
       }
     },
     "stone_rush": {
@@ -74,7 +76,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "bramble_whip": {
@@ -98,7 +101,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "warren_charge": {
@@ -122,7 +126,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "root_nibble": {
@@ -146,7 +151,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "rootquake": {
@@ -170,7 +176,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "quake_ring"
+        "archetype": "quake_ring",
+        "mastery_owner": "f25"
       }
     },
     "pack_bite": {
@@ -194,7 +201,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "trailblaze_pounce": {
@@ -218,7 +226,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "burrow_strike": {
@@ -242,7 +251,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "area",
-        "archetype": "root_stone_spikes"
+        "archetype": "root_stone_spikes",
+        "mastery_owner": "f25"
       }
     },
     "tremor_roll": {
@@ -266,7 +276,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "hoofbeat": {
@@ -290,7 +301,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "verdant_burst": {
@@ -314,7 +326,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "root_stone_spikes"
+        "archetype": "root_stone_spikes",
+        "mastery_owner": "f25"
       }
     },
     "antler_slam": {
@@ -338,7 +351,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "ripple_jab": {
@@ -362,7 +376,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "undertow": {
@@ -386,7 +401,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tidal_wave"
+        "archetype": "tidal_wave",
+        "mastery_owner": "f25"
       }
     },
     "splash_snap": {
@@ -410,7 +426,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "riptide_rush": {
@@ -434,7 +451,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "shell_bash": {
@@ -458,7 +476,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "tail_splash": {
@@ -482,7 +501,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "bubble_volley"
+        "archetype": "bubble_volley",
+        "mastery_owner": "f25"
       }
     },
     "gale_peck": {
@@ -506,7 +526,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "sky_rend": {
@@ -530,7 +551,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "wind_blade"
+        "archetype": "wind_blade",
+        "mastery_owner": "f25"
       }
     },
     "talon_dive": {
@@ -554,7 +576,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "storm_strike": {
@@ -578,7 +601,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "quick_flit": {
@@ -602,7 +626,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "night_swoop": {
@@ -626,7 +651,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "gust_burst": {
@@ -650,7 +676,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tornado"
+        "archetype": "tornado",
+        "mastery_owner": "f25"
       }
     },
     "rock_throw": {
@@ -674,7 +701,8 @@
         "trail": 1.0,
         "impact_scale": 1.3,
         "kind": "projectile",
-        "archetype": "stone_throw"
+        "archetype": "stone_throw",
+        "mastery_owner": "f25"
       }
     },
     "stone_spike": {
@@ -698,7 +726,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "root_stone_spikes"
+        "archetype": "root_stone_spikes",
+        "mastery_owner": "f25"
       }
     },
     "earth_fist": {
@@ -722,7 +751,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "earthshatter": {
@@ -746,7 +776,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "quake_ring"
+        "archetype": "quake_ring",
+        "mastery_owner": "f25"
       }
     },
     "aqua_shot": {
@@ -770,7 +801,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "water_jet"
+        "archetype": "water_jet",
+        "mastery_owner": "f25"
       }
     },
     "tidal_burst": {
@@ -794,7 +826,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tidal_wave"
+        "archetype": "tidal_wave",
+        "mastery_owner": "f25"
       }
     },
     "riptide_lance": {
@@ -818,7 +851,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "water_jet"
+        "archetype": "water_jet",
+        "mastery_owner": "f25"
       }
     },
     "leviathan_surge": {
@@ -842,7 +876,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tidal_wave"
+        "archetype": "tidal_wave",
+        "mastery_owner": "f25"
       }
     },
     "wind_blade": {
@@ -866,7 +901,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "wind_blade"
+        "archetype": "wind_blade",
+        "mastery_owner": "f25"
       }
     },
     "aerial_flash": {
@@ -890,7 +926,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "cyclone": {
@@ -914,7 +951,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "tornado"
+        "archetype": "tornado",
+        "mastery_owner": "f25"
       }
     },
     "heavenfall": {
@@ -938,7 +976,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "wind_blade"
+        "archetype": "wind_blade",
+        "mastery_owner": "f25"
       }
     },
     "shadow_nip": {
@@ -962,7 +1001,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "gloom_surge": {
@@ -986,7 +1026,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "shadow_bolt"
+        "archetype": "shadow_bolt",
+        "mastery_owner": "f25"
       }
     },
     "spark_bite": {
@@ -1010,7 +1051,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "arc_lash": {
@@ -1034,7 +1076,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "chain_lightning"
+        "archetype": "chain_lightning",
+        "mastery_owner": "f25"
       }
     },
     "ember_bite": {
@@ -1058,7 +1101,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "area",
-        "archetype": "ember_burst"
+        "archetype": "ember_burst",
+        "mastery_owner": "f25"
       }
     },
     "cinder_burst": {
@@ -1082,7 +1126,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "flame_cone"
+        "archetype": "flame_cone",
+        "mastery_owner": "f25"
       }
     },
     "mind_ripple": {
@@ -1106,7 +1151,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "psychic_pulse"
+        "archetype": "psychic_pulse",
+        "mastery_owner": "f25"
       }
     },
     "rift_pulse": {
@@ -1130,7 +1176,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "psychic_pulse"
+        "archetype": "psychic_pulse",
+        "mastery_owner": "f25"
       }
     },
     "frost_claw": {
@@ -1154,7 +1201,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "glacier_break": {
@@ -1178,7 +1226,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "static_snap": {
@@ -1202,7 +1251,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "voltaic_whip": {
@@ -1226,7 +1276,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "chain_lightning"
+        "archetype": "chain_lightning",
+        "mastery_owner": "f25"
       }
     },
     "thunder_break": {
@@ -1250,7 +1301,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "sky_lightning"
+        "archetype": "sky_lightning",
+        "mastery_owner": "f25"
       }
     },
     "stormfall": {
@@ -1274,7 +1326,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "sky_lightning"
+        "archetype": "sky_lightning",
+        "mastery_owner": "f25"
       }
     },
     "snare": {
@@ -1311,7 +1364,8 @@
         "speed": 24.0,
         "spread": 0.42,
         "trail": 1.0,
-        "impact_scale": 1.2
+        "impact_scale": 1.2,
+        "mastery_owner": "f25"
       }
     },
     "slow_field": {
@@ -1348,7 +1402,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.0,
-        "impact_scale": 0.55
+        "impact_scale": 0.55,
+        "mastery_owner": "f25"
       }
     },
     "shove": {
@@ -1385,7 +1440,8 @@
         "speed": 24.0,
         "spread": 0.55,
         "trail": 0.75,
-        "impact_scale": 1.0
+        "impact_scale": 1.0,
+        "mastery_owner": "f25"
       }
     },
     "dash_strike": {
@@ -1423,7 +1479,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.35,
-        "impact_scale": 1.0
+        "impact_scale": 1.0,
+        "mastery_owner": "f25"
       }
     },
     "veil": {
@@ -1461,7 +1518,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.25,
-        "impact_scale": 0.6
+        "impact_scale": 0.6,
+        "mastery_owner": "f25"
       }
     },
     "heal_pulse": {
@@ -1497,7 +1555,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 0.8,
-        "impact_scale": 0.7
+        "impact_scale": 0.7,
+        "mastery_owner": "f25"
       }
     },
     "bramble_trap": {
@@ -1538,7 +1597,8 @@
         "speed": 24.0,
         "spread": 0.85,
         "trail": 0.7,
-        "impact_scale": 1.1
+        "impact_scale": 1.1,
+        "mastery_owner": "f25"
       }
     },
     "hearten": {
@@ -1575,7 +1635,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.05,
-        "impact_scale": 0.8
+        "impact_scale": 0.8,
+        "mastery_owner": "f25"
       }
     },
     "sap": {
@@ -1611,7 +1672,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.0,
-        "impact_scale": 0.75
+        "impact_scale": 0.75,
+        "mastery_owner": "f25"
       }
     },
     "quake_ring": {
@@ -1649,7 +1711,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 0.7,
-        "impact_scale": 0.7
+        "impact_scale": 0.7,
+        "mastery_owner": "f25"
       }
     },
     "ultimate_terrapup": {
@@ -1676,7 +1739,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -1711,7 +1774,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "water_wave",
+        "archetype": "tidal_wave",
         "colour": "#64cddd",
         "count": 4,
         "size": 1.6,
@@ -1746,7 +1809,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "wind_blades",
+        "archetype": "wind_blade",
         "colour": "#beddf0",
         "count": 4,
         "size": 1.6,
@@ -1781,7 +1844,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -1816,7 +1879,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -1851,7 +1914,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -1886,7 +1949,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -1921,7 +1984,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -1956,7 +2019,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "water_wave",
+        "archetype": "tidal_wave",
         "colour": "#64cddd",
         "count": 4,
         "size": 1.6,
@@ -1991,7 +2054,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "water_wave",
+        "archetype": "tidal_wave",
         "colour": "#64cddd",
         "count": 4,
         "size": 1.6,
@@ -2026,7 +2089,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "water_wave",
+        "archetype": "tidal_wave",
         "colour": "#64cddd",
         "count": 4,
         "size": 1.6,
@@ -2061,7 +2124,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "wind_blades",
+        "archetype": "wind_blade",
         "colour": "#beddf0",
         "count": 4,
         "size": 1.6,
@@ -2096,7 +2159,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "wind_blades",
+        "archetype": "wind_blade",
         "colour": "#beddf0",
         "count": 4,
         "size": 1.6,
@@ -2131,7 +2194,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -2166,7 +2229,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "boulder",
+        "archetype": "stone_throw",
         "colour": "#c1a078",
         "count": 4,
         "size": 1.6,
@@ -2271,7 +2334,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "dark_wave",
+        "archetype": "shadow_bolt",
         "colour": "#9e80ca",
         "count": 4,
         "size": 1.6,
@@ -2306,7 +2369,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "ice_spikes",
+        "archetype": "ice_shard_volley",
         "colour": "#a8dcf0",
         "count": 4,
         "size": 1.6,
@@ -2341,7 +2404,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "water_wave",
+        "archetype": "tidal_wave",
         "colour": "#64cddd",
         "count": 4,
         "size": 1.6,
@@ -2376,7 +2439,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "water_wave",
+        "archetype": "tidal_wave",
         "colour": "#64cddd",
         "count": 4,
         "size": 1.6,
@@ -2411,7 +2474,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "water_wave",
+        "archetype": "tidal_wave",
         "colour": "#64cddd",
         "count": 4,
         "size": 1.6,
@@ -2586,7 +2649,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "wind_blades",
+        "archetype": "wind_blade",
         "colour": "#beddf0",
         "count": 4,
         "size": 1.6,
@@ -2621,7 +2684,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "wind_blades",
+        "archetype": "wind_blade",
         "colour": "#beddf0",
         "count": 4,
         "size": 1.6,
@@ -2656,7 +2719,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "wind_blades",
+        "archetype": "wind_blade",
         "colour": "#beddf0",
         "count": 4,
         "size": 1.6,
@@ -2691,7 +2754,7 @@
       },
       "vfx": {
         "kind": "area",
-        "archetype": "wind_blades",
+        "archetype": "wind_blade",
         "colour": "#beddf0",
         "count": 4,
         "size": 1.6,
