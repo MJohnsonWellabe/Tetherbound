@@ -252,5 +252,24 @@ static func can_be_caught(is_fainted: bool, already_owned: bool) -> bool:
 	return not is_fainted and not already_owned
 
 
+## F24 host catch resolver supplies the active status from the SAME canonical
+## wild actor/generation and commander's character. This never changes legality
+## or rolls again: add the bounded bonus before the existing single decision.
+## Trainer-owned and fainted targets remain refusals at every entry point.
+static func resolve_snared(
+	species_rate: float, hp_fraction: float, orb_id: String,
+	offset: float, body_radius: float, roll: float, skill_bonus: float,
+	is_fainted: bool, already_owned: bool, snare_bonus: float
+) -> Dictionary:
+	if not can_be_caught(is_fainted, already_owned):
+		return {"refused": true, "caught": false, "chance": 0.0, "shakes": 0}
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	var bound := float(commands.config().get("snare_bounds", {}).get("maximum_catch_bonus", 0.0))
+	var bonus := clampf(snare_bonus, 0.0, bound) if is_finite(snare_bonus) else 0.0
+	if not commands.enabled(): bonus = 0.0
+	var skill := maxf(skill_bonus, 0.0) if is_finite(skill_bonus) else 0.0
+	return resolve(species_rate, hp_fraction, orb_id, offset, body_radius, roll, skill + bonus)
+
+
 static func starting_stock() -> int:
 	return int(config().get("orbs", {}).get("starting_stock", 15))

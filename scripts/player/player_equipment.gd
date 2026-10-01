@@ -78,6 +78,29 @@ func equipped_in(slot: String) -> String:
 	return str(_equipped.get(slot, ""))
 
 
+## F24 pouch occupies the existing backpack slot. HOMESTEAD supplies armor
+## definitions with command_pouch_tier 1..4; this reader never equips a new
+## slot, creates supplies or changes inventory/save transactions. The host
+## freezes this result at encounter admission from the admitted owner record.
+func command_pouch_tier() -> int:
+	if _items == null:
+		return 0
+	var id := equipped_in("backpack")
+	if id.is_empty() or not bool(_items.call("has", id)):
+		return 0
+	var row: Dictionary = _items.call("definition", id)
+	var tier: Variant = row.get("command_pouch_tier", 0)
+	if row.get("kind") != "armor" or row.get("armor_slot") != "backpack" \
+			or not (tier is int or tier is float) or not is_finite(float(tier)) \
+			or float(tier) != floorf(float(tier)) or float(tier) < 0 or float(tier) > 4:
+		return 0
+	return int(tier)
+
+
+func command_pouch_profile() -> Dictionary:
+	return preload("res://scripts/combat/tether_commands.gd").tier_profile(command_pouch_tier())
+
+
 ## Bag-facing transaction. Inventory has no callbacks or awaits: removing the
 ## selected identity and returning the old piece completes before observers poll.
 ## Preflight on a copy preserves every slot and revision when a swap cannot fit.
