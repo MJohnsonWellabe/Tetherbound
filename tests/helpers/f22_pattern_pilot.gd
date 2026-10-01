@@ -80,14 +80,14 @@ func _visible_observation() -> Dictionary:
 	var label := "ready"
 	if action == MANAGER.Action.WINDUP:
 		label = "quick_windup" if bool(move.get("is_quick", true)) else "charged_windup"
-	elif action == MANAGER.Action.RECOVER:
+	elif action == MANAGER.Action.RECOVERY:
 		label = "recovery"
 	var towards := _ally.global_position - _wild.global_position
 	towards.y = 0.0
 	var step := towards.normalized().cross(Vector3.UP) * 3.0
 	var end := _wild.global_position + step
 	var arena: Node3D = _wild.get("arena") as Node3D
-	var safe := arena != null and Vector2(end.x - arena.global_position.x,
+	var safe: bool = arena != null and Vector2(end.x - arena.global_position.x,
 		end.z - arena.global_position.z).length() + _wild.body_radius() <= float(arena.get("radius")) \
 		and not _wild.test_move(_wild.global_transform, step)
 	return {"action": label, "creature_uid": str(_manager.active_creature().get("uid")),

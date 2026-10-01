@@ -650,10 +650,10 @@ func _run() -> void:
 			# rendered pair's contact floor. Feet-to-centre against a fixed 4 m
 			# gate can reject a legally spaced pair through all 28 attempts.
 			var geometry: Dictionary = {}
-			for row: Dictionary in fresh_view.get("strike_geometry", []):
-				if bool(row.get("is_local", false)) == (mover == 0) \
-						and str(row.get("encounter_id", "")) == str(fresh.get("id", "")):
-					geometry = row
+			for geometry_row: Dictionary in fresh_view.get("strike_geometry", []):
+				if bool(geometry_row.get("is_local", false)) == (mover == 0) \
+						and str(geometry_row.get("encounter_id", "")) == str(fresh.get("id", "")):
+					geometry = geometry_row
 					break
 			last_gap = float(geometry.get("distance_m", INF))
 			print("[shared-boss geometry] pilot=%d %s" % [mover, JSON.stringify(geometry)])

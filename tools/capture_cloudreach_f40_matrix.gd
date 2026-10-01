@@ -85,7 +85,7 @@ func _capture_row(row: Dictionary) -> void:
 	await super._capture_row(row)
 	if _records.size() == count:
 		return
-	var record := _records.back()
+	var record: Dictionary = _records.back()
 	record["frame_process_ms"] = Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
 	record["frame_physics_ms"] = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0
 	# Never count an airborne/downstairs capture as a usable upper-perch frame.
