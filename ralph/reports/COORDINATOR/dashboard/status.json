@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-30T23:04:20Z",
+ "updated": "2026-10-01T00:03:37Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
   "Criteria met: 109 of 280. Original:95/101; redesign:14/179. F16 all5, F17#0\u2013#3, F26#0/#1/#2/#4 and F27#0 landed by this cut. F26 material path strict MET; full visual bar and Ally/default gates remain open. F17 M1/co-op/full craft remain open.",
@@ -365,12 +365,12 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "PR500 main7dcd actor lifetime/Heal core: independent source/packaging PASS and scoped3/73 native PASS. Runtime OFF; real caller/owner-ACK/rejoin still open. Building mounted Altar producer on same full admitted registry/typed existing journal.",
+   "now": "PR500 main7dcd actor lifetime/Heal core PASS, runtime OFF. Altar93aee evidence-only14-path proposal: consumer/buildable/actor-lineage/remote state gaps open. Actual Hall departure fourENet errors source fix active; no new criterion credit.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
    "lane": "tb/hub",
-   "now": "F17#0-#3 main. M1 r3 local-step route FAIL before Mira; guards retained. Contact diagnostic r1 readiness FAIL after147s world build, one readiness-only confirmation queued. Real host/guest Hall witness R2 type-only successor awaits independent source gate/native.",
+   "now": "F17#0-#3 main. Actual M1 contactR4 FAIL before Mira: paired shallow Terrain floor-cone refusal measured; narrow correction independently reviewed. HallR4 all263 functional comparisons PASS then nativeFAIL budget plus4hostENet errors. Separate immutable-record finalizer coding under RD36; no MET yet.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
@@ -380,7 +380,7 @@
   },
   {
    "lane": "tb/combat",
-   "now": "F21#4 r3 actual five-pair PASS/four FAIL retained. Adaptive refinement bf9 source gate PASS; parser clean and1/24 regression PASS, ONE full live nine-pair retry RUNNING. Incoming HP caller ignored packet active; Heal/remote readiness OFF until canonical seams pass.",
+   "now": "F21#4 bf9 all9 numeric pairs PASS; independent54PNG review seven readability FAIL and all9 broader craft FAIL, archived375fe2. Exact HUD/foreground successor source gate PASS, parser/native next. Incoming HP R4 ignored, Heal/remote readiness OFF.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
@@ -395,12 +395,12 @@
   },
   {
    "lane": "tb/training",
-   "now": "F27#0 main. Mounted Altar consumer/async quote contract4839 frozen, independent review active; Foundation implementing actual producer. XP reduction held until earned essence/spend ordinary path passes.",
+   "now": "F27#0 main. Altar4839 consumer SOURCE HOLD: unknown terminal result and missing progression prerequisite fixes active. Foundation14-path producer ignored; actual earned essence/spend proof absent. XP reduction held.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
    "lane": "tb/homestead",
-   "now": "499e8 preserved/held. Forge/Den080c source PASS; actual mounted durable path/buildable Altar dependency open.",
+   "now": "499e8 preserved/held. Forge/Den080c source PASS; new4-path Altar homeplot/buildable proposal frozen ignored, actual host placement-cost transaction dependency OPEN.",
    "next": "Resume preserved code after the shared integration lands and ROOT allocates a bounded player path."
   },
   {
@@ -492,7 +492,7 @@
  "wip": [
   "F16 evidence3e9837302: all five independently strict MET; full populated ENet persistence and actual Grandpa opening preserved. Required667-file batch plus RD36 affected corrections maps5422/5422 current methods to passing witnesses. Historical red logs retained; sparse historical proofs restored exactly, satchel retired-helper coverage kept. Full-ci/main landing gates publication; no future mechanic/visual/device claim.",
   "OWNER RD-37 supersedes automatic full-ci for any code/data/scene/test change. Units/full CI are exceptional: explicit acceptance or integration risk that scoped checks cannot cover. Reuse valid proof; a process-only green never proves engine behavior. Advance independent next tasks on lane branches while checks/CI run, against pushed dependency candidates if needed; land only after dependencies. Never skip/disable/quarantine tests or remove a selected label to evade red. F16#4 explicitly names the full unit suite; its already-running batch remains required, with affected repairs only.",
-  "Exact ownership: Foundation Altar net/save producer; Combat camera/actual HP caller; Training essence/Altar UI; ROOT opening/board. Hall and Altar consumers have independent read-only reviewers. Other preserved writers held. All Godot/import/render/export serialized; only camera witness active.",
+  "Exact ownership: Foundation Altar/net-save + Hall departure; Combat camera/HP/HUD; Training essence/Altar UI; Homestead buildable ignored; ROOT opening/board. Independent read-only source/criterion reviews. All Godot/import/render/export serialized by ROOT; next camera proof awaits frozen commit.",
   "Proof shortcuts disclosed: authored v27 and populated carrier fixtures, isolated profiles, direct load/picker/Steam/name callbacks, physical injected joypad taps and loft-to-Grandpa teleport. Grandpa conversation actually observed all six authored lines. Peer rejoin clears memory in the same processes, without OS restart; JSON numeric normalization compares full payloads. Peer host logged two closed-channel sends at disconnect; original coordinator fallback error retained, startup isolation corrected with an independently probed one-frame readiness wait. Named playground has only the established material-null native error set, no SCRIPT ERROR. Future gameplay transaction verbs and device/visual evidence are not claimed.",
   "REDESIGN: start Wave 0 (F16) per CODEX_START_HERE \u00a76. The pre-redesign WIP items below are history; each maps to a redesign feature per CODEX_START_HERE \u00a77.5 and STATE \u00a70.",
   "Tidewake Phase 2d P2-008 remains open after owner-directed wind-down: eight native before/after pairs are tracked in ralph/reports/VISUAL/phase2/tidewake/fixes/P2-008/phase2d-review; local shore symptom 8/8 clear, full photo/Bar A/Bar B/Palworld-quality 0/8. Resume from phase2d-shore-profile-review.md's view table and failed-probe/pickup sections. Next: coordinated dune habitat and Veilfall main-mass art with route/terrain validation, then re-score all eight fixed views code-blind. Do not start the rest of the visual queue or claim regional acceptance from this checkpoint.",
@@ -518,19 +518,19 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-09-30T23:04:20Z",
+ "last_lane_refresh": "2026-10-01T00:03:37Z",
  "lane_activity": [
   {
    "lane": "Shared authority \u00b7 tb/foundations",
-   "checkpoint": "PR500 main7dcd actor lifetime/Heal core: independent source/packaging PASS and scoped3/73 native PASS. Runtime OFF; real caller/owner-ACK/rejoin still open. Building mounted Altar producer on same full admitted registry/typed existing journal. Original broad batch RED retained; final core strict PASS reuses source-bound evidence. No new acceptance credit."
+   "checkpoint": "PR500 main7dcd actor lifetime/Heal core PASS, runtime OFF. Altar93aee evidence-only14-path proposal: consumer/buildable/actor-lineage/remote state gaps open. Actual Hall departure fourENet errors source fix active; no new criterion credit. Original broad batch RED retained; final core strict PASS reuses source-bound evidence. No new acceptance credit."
   },
   {
    "lane": "F21#4 \u00b7 tb/combat",
-   "checkpoint": "F21#4 r3 actual five-pair PASS/four FAIL retained. Adaptive refinement bf9 source gate PASS; parser clean and1/24 regression PASS, ONE full live nine-pair retry RUNNING. Incoming HP caller ignored packet active; Heal/remote readiness OFF until canonical seams pass. Camera source/capture cuts preserve native sizes. Full visual-craft bar and F21#5 remain unproved."
+   "checkpoint": "F21#4 bf9 all9 numeric pairs PASS; independent54PNG review seven readability FAIL and all9 broader craft FAIL, archived375fe2. Exact HUD/foreground successor source gate PASS, parser/native next. Incoming HP R4 ignored, Heal/remote readiness OFF. Camera source/capture cuts preserve native sizes. Full visual-craft bar and F21#5 remain unproved."
   },
   {
    "lane": "F17#4 \u00b7 ROOT on tb/hub",
-   "checkpoint": "F17#0-#3 main. M1 r3 local-step route FAIL before Mira; guards retained. Contact diagnostic r1 readiness FAIL after147s world build, one readiness-only confirmation queued. Real host/guest Hall witness R2 type-only successor awaits independent source gate/native."
+   "checkpoint": "F17#0-#3 main. Actual M1 contactR4 FAIL before Mira: paired shallow Terrain floor-cone refusal measured; narrow correction independently reviewed. HallR4 all263 functional comparisons PASS then nativeFAIL budget plus4hostENet errors. Separate immutable-record finalizer coding under RD36; no MET yet."
   },
   {
    "lane": "Preserved targets \u00b7 other lanes",
@@ -541,32 +541,32 @@
   {
    "criterion": "F21#4",
    "lane": "tb/combat",
-   "source": "bf9df4536c; r3 five-pass/four-fail retained",
-   "state": "adaptive refinement native nine-pair retry RUNNING after clean parser/1regression24assertions; unaccepted"
+   "source": "bf9df4536c numericPASS; blindFAIL archived375fe2; readabilityR2 patch54b722",
+   "state": "sevenpair readabilityFAIL/all9 craftFAIL; source-gated HUD/foreground successor freezing before native; OPEN"
   },
   {
    "criterion": "F23 actual actor incoming HP/Heal",
    "lane": "tb/combat",
-   "source": "PR500 main7dcd core; incoming ignored c7f1c1 packet",
-   "state": "actual caller coding; host-only readiness/lifecycle gaps open, Heal/remote OFF; no criterion credit"
+   "source": "PR500 main7dcd core; incoming ignored R4 bb015121",
+   "state": "actual caller source coding; same actor/defence ownership and remote readiness open; Heal/remote OFF; no credit"
   },
   {
    "criterion": "F17#4",
    "lane": "tb/hub",
-   "source": "784b5cee; actual M1 r3 FAIL retained",
-   "state": "measuring actual failed floor predicate; contact r1 readiness FAIL, readiness-only confirming probe queued"
+   "source": "784b5cee; actualM1 contactR4 FAIL; ignoredfixb05d1655",
+   "state": "actual pairedfloor contact measured; narrow livegrounded correction independent source gate; originalFAIL retained"
   },
   {
    "criterion": "F17#5",
    "lane": "tb/hub",
-   "source": "Hall witness R2 dcdb7a75, type-only successor",
-   "state": "independent strict source/scope review; actual ENet/save/rejoin witness pending"
+   "source": "actualHallR4 0485c7b7 on784b5;263 functionalPASS, native2",
+   "state": "budgetfinalizationFAIL plus4hostENeterrors retained; independent RD36 recordreuse eligible, immutable finalizer coding; no MET"
   },
   {
    "criterion": "F27#2/#3 mounted Altar",
-   "lane": "tb/training + tb/foundations",
-   "source": "4839e34 frozen consumer/schema; main7dcd producer baseline",
-   "state": "UI independent review and actual same-registry host producer coding in parallel; XP reduction held"
+   "lane": "tb/training + tb/foundations + tb/homestead",
+   "source": "4839e34 consumerHOLD;93aee5 evidence-only14-path producer; ignored4-path buildable",
+   "state": "consumer unknownresult/prerequisites fixes; canonicalactor lineage/remoteowner state/actualhostplacementcost gaps; XP reduction held"
   }
  ],
  "preserved_work": [

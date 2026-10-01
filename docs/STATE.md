@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | PR500 main; actor/Heal3/73 PASS, runtime OFF. Altar net/save producer coding; callers OPEN. |
-| `tb/hub` | F17, F18 | #0-#3 main; M1r3 FAIL. Contact readiness confirmation queued; Hall R2 strict review. F18 OPEN. |
+| `tb/foundations` | F16 | PR500 main, OFF. Altar93aee ignored; caller/lineage gaps. Hall departure fix coding. |
+| `tb/hub` | F17, F18 | #0-#3 main; M1R4 FAIL, pairedfloor fix review. Hall263PASS/nativeFAIL, finalizer coding. |
 | `tb/reorder` | F19, F20 | 567798 preserved; F18/F19 held, F20 open. |
-| `tb/combat` | F21–F24 | R3 five-pass/four-fail; bf9 adaptive retry RUNNING. Actual incoming caller coding; Heal/remote OFF. |
+| `tb/combat` | F21–F24 | bf9 numeric9PASS/blind7FAIL+craft9FAIL. Readability successor sourcePASS; caller OFF. |
 | `tb/vfx` | F25, F35 | 8fae held; stone PASS/full craft FAIL; OFF. |
 | `tb/lookdev` | F26 | #0/#1/#2/#4 main; cliff OFF; full bar/Ally open. |
-| `tb/training` | F27–F30, F37 | #0 main; Altar4839 consumer review + host producer coding; XP reduction held. |
-| `tb/homestead` | F31–F34 | 499e8 held; Forge/Den source PASS; mounted/buildable Altar path open. |
+| `tb/training` | F27–F30, F37 | #0 main; Altar4839 consumerHOLD fixes; producer ignored, XP held. |
+| `tb/homestead` | F31–F34 | 499e8 held; Altar4-path proposal frozen; host placement-cost transaction OPEN. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
