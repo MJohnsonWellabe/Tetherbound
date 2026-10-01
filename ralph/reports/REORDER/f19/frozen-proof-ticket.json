@@ -2,7 +2,7 @@
   "feature": "F19",
   "name": "F19_CURVE_READERS_01",
   "branch": "tb/f19",
-  "source": "a495b5284a38a54ffe8a24b17b44a456e8977375",
+  "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a",
   "frozen_source_files": [
     {
       "path": "data/config/bands/band3_the_river_lock/trainers.json",
@@ -18,11 +18,11 @@
     },
     {
       "path": "data/config/chapter_curve.json",
-      "sha256": "1f3824a477c95c4075b4c17d6569d0e558cf687db2affb57e3f1a899ba1a9bb2"
+      "sha256": "6ea2511cacd3a7c23371290454ca45f94d59415daab64141a835fdec9a023466"
     },
     {
       "path": "data/config/chapter_rewards.json",
-      "sha256": "432630bd4454b1b1705b55179c39c046275aa60a01c9f15a298d197c40022d26"
+      "sha256": "066ddab332ccf3ef7bb90ce0f40b572a4faec8e4783e71e763462688d493c5bf"
     },
     {
       "path": "data/config/cloudreach_chapter.json",
@@ -58,11 +58,11 @@
     },
     {
       "path": "tests/test_f19_curve.mjs",
-      "sha256": "27537d08480eafddfa17256ff0805b2d834d0e0ba061b74bb1cba61334d2f397"
+      "sha256": "3f1e08894dbd8b390fa7a3590587830a1c283a1e0ebc76c882181e0ca7b7da6e"
     },
     {
       "path": "tests/test_f19_gate_scan.mjs",
-      "sha256": "a7d714808fd1b88705d5dcb986e3af5959fe3fa39a619959eba434c4ead04a94"
+      "sha256": "9b55da4ee4189ad4548d072f2c28fbf90807e391adaeb0804196f8517117a086"
     },
     {
       "path": "tests/test_stormwood_encounters_data.gd",
@@ -102,17 +102,17 @@
         "result": "PASS",
         "scope": "content only; no engine, earning, transaction or legendary-offer proof"
       },
-      "source": "a495b5284a38a54ffe8a24b17b44a456e8977375"
+      "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a"
     },
     {
       "command": "node tests/test_f19_gate_scan.mjs",
       "observed": {
         "proof": "F19-authored-gate-scan",
-        "gate_fields": 1165,
+        "gate_fields": 1272,
         "result": "PASS",
         "scope": "JSON prerequisite fields; runtime route proof still required"
       },
-      "source": "a495b5284a38a54ffe8a24b17b44a456e8977375"
+      "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a"
     }
   ],
   "full_ci_selected": false,

@@ -1,0 +1,91 @@
+{
+  "feature": "F19#5",
+  "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a",
+  "current_reset_max_version": 27,
+  "save_metadata_rows": 13,
+  "redesign_eligible_rows": 0,
+  "fixture_source_delta": [],
+  "criterion": "OPEN",
+  "scope": "read-only artifact metadata audit; no production save/load or earning witness",
+  "action": "Preserve historical artifacts. ROOT must generate and reproduce current-schema earned boundaries through actual ordinary-input route after F18 production. Never edit old state or version stamps into a new earned fixture.",
+  "rows": [
+    {
+      "path": "tests/fixtures/earned_saves/c1_arrival/save/characters/character-afb79936a9ddebd411e54dfa2817d5b0/character.json",
+      "version": 6,
+      "source_sha256": "743372bef422de9f51891efee55f30747decb35157a3320381323cb71d920b5c",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/c1_arrival/save/slot_0.json",
+      "version": 27,
+      "source_sha256": "fa47a816d36dd9aae2da2b2584f2ccd872b6e21326efeae42982722828eb4322",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/c1_arrival/save/slot_1.json",
+      "version": 27,
+      "source_sha256": "ec8dc85e1bdaaa2085176950d2c5a9a812ad77b107bd72d0e924674c1fbed7cc",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/c1_arrival/save/worlds/slot-0/world.json",
+      "version": 2,
+      "source_sha256": "467f8dcc2ae575fa8c982e84ac4730d903f2ba6d32a251890e3e46816c6eeb87",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/c1_arrival/save/worlds/slot-1/world.json",
+      "version": 2,
+      "source_sha256": "b155fc771d32206ecd9fcb2fc52fd2e170d7ccfd34e6e2a8e34194d88a173154",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/c1_flight_trained/save/characters/character-afb79936a9ddebd411e54dfa2817d5b0/character.json",
+      "version": 6,
+      "source_sha256": "e62e53545743880750122498b6a79ab501f5982c651d907fc36d490411d7d02d",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/c1_flight_trained/save/slot_1.json",
+      "version": 27,
+      "source_sha256": "fb7630e6cf2b6983a7a35f85c1eeee9f97eb38e283335826cb8fa0a2b43129d4",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/c1_flight_trained/save/worlds/slot-1/world.json",
+      "version": 2,
+      "source_sha256": "4194126043fa69f50e286c84d06d05bf996ffab42b0cf46e907b1fe54104dfbc",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/seed4_hall/save/characters/character-afb79936a9ddebd411e54dfa2817d5b0/character.json",
+      "version": 6,
+      "source_sha256": "6c2e9ebda9af494e8504a0212b1ab0d93b4414ff876372a62c2a22540942875f",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/seed4_hall/save/slot_0.json",
+      "version": 27,
+      "source_sha256": "06b0a67e0c1a06c28ff9ebfbbcd8d67b34ae62bf6f140a328e4a2231fe1b13b3",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/seed4_hall/save/slot_1.json",
+      "version": 27,
+      "source_sha256": "c05f81d123391f51af6eca937120144b2e90ba32cc760000a8ab2efdefc7e1a3",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/seed4_hall/save/worlds/slot-0/world.json",
+      "version": 2,
+      "source_sha256": "f3b47d3c5e35d436345e6bb293121410ce6a21217224979194f7a5c722e7c862",
+      "eligible_for_redesign_fixture": false
+    },
+    {
+      "path": "tests/fixtures/earned_saves/checkpoints/seed4_hall/save/worlds/slot-1/world.json",
+      "version": 2,
+      "source_sha256": "39feb6f098da34a71350aed61217156365ba22e9c34c5a182a8ebe4c23cabd33",
+      "eligible_for_redesign_fixture": false
+    }
+  ]
+}
