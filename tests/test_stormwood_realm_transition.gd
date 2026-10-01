@@ -14,7 +14,7 @@ class Director extends "res://scripts/combat/encounter_director.gd":
 	func _is_host() -> bool:
 		return true
 	func _host_after_encounter_change(_id: String, _author: int = 0,
-			_terminal_catcher: int = 0) -> void:
+			_terminal_catcher: int = 0, _resolved_impact: Dictionary = {}) -> void:
 		pass
 
 class RecordingSession extends "res://scripts/net/session.gd":
