@@ -214,6 +214,8 @@ func confirm_presentation_impact() -> void:
 
 func reconcile_actor(current: Dictionary) -> void:
 	# Called from the existing registry/body lifecycle owner, never a peer card.
+	if current.get("character_id") != _context.actor_binding.get("character_id") \
+			or current.get("encounter_id") != _context.actor_binding.get("encounter_id"): return
 	if bool(current.get("fainted", false)):
 		cancel_presentation()
 		return
