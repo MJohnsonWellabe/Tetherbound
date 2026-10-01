@@ -17,7 +17,29 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_participants": return await _participants(tree, args)
 		"f48_watch_portal": return _watch_portal(tree)
 		"f48_arm_boundary": return _arm_boundary(tree, args)
+		"f48_start_case": return _start_case(tree, args)
 	return _result(false, "Unknown F48 action: " + action)
+
+static func _start_case(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var case_id := str(args.get("case", ""))
+	if case_id.is_empty() or case_id != case_id.validate_filename(): return _result(false, "Invalid independent matrix case identity")
+	var game := tree.root.get_node_or_null(^"Game")
+	if game == null or game.session == null or game.session.call("is_active"):
+		return _result(false, "Original saved inputs can be restored only outside a session")
+	var observer: Variant = tree.get_meta("f48_boundary_armed", null)
+	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
+	if observer is Callable and writer != null and writer.is_connected("transaction_boundary", observer):
+		writer.disconnect("transaction_boundary", observer)
+	for key: StringName in tree.get_meta_list():
+		if str(key).begins_with("f48_witness_") or str(key) in ["f48_boundary_armed", "f48_boundary_fired", "f48_boss_encounter"]:
+			tree.remove_meta(key)
+	tree.set_meta("f48_portal_results", [])
+	if not tree.has_meta("f48_matrix_output_base"):
+		tree.set_meta("f48_matrix_output_base", OS.get_environment("TB_PROOF_OUT"))
+	var base := str(tree.get_meta("f48_matrix_output_base"))
+	if base.is_empty(): return _result(false, "No independent matrix output root")
+	OS.set_environment("TB_PROOF_OUT", base.path_join("cases").path_join(case_id))
+	return _result(true, "Fresh detached proof case; only proof observers cleared, original saves load next")
 
 static func _result(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
@@ -47,7 +69,7 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var ack_path := path + ".ack.json"
 	if FileAccess.file_exists(path) or FileAccess.file_exists(ack_path) or FileAccess.file_exists(path + ".resume.json"):
 		return _result(false, "Boundary token already exists; fresh output required")
-	var world_ref := weakref(game.world)
+	var world_ref: WeakRef = weakref(game.world)
 	var namespace_id := str(game.world.reward_delivery_namespace)
 	var epoch := str(game.session.call("_altar_current_epoch"))
 	var previous_receipts: Array[String] = []
