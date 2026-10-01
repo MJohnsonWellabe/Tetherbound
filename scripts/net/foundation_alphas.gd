@@ -122,16 +122,15 @@ static func unusual_weather(delta: Dictionary) -> bool:
 func _seconds(site: Dictionary) -> int:
 	var clock := _realm_look(site)
 	if clock == null: return -1
-	var elapsed := float(clock.call("elapsed_seconds"))
-	var cycle: RefCounted = clock.get("_cycle")
-	if cycle == null: return -1
-	var length := float(cycle.get("day_length_seconds"))
 	var world: RefCounted = session().call("_game").world
-	if not is_finite(elapsed) or elapsed < 0.0 or not is_finite(length) or length <= 0.0 or world.day < 1: return -1
-	# elapsed_seconds is a within-day clock restored modulo day length.
-	# Include the durable day so a three-day timer survives ordinary reloads.
-	return (int(world.day) - 1) * int(RULES.config().day_seconds) \
-		+ int(floorf(fposmod(elapsed, length) / length * int(RULES.config().day_seconds)))
+	return day_seconds(int(world.day))
+
+static func day_seconds(day: int) -> int:
+	if day < 1: return -1
+	# WorldLook's midnight and Game's advance_day use different phases, and
+	# resume realigns the look. Only the existing durable day owns cooldown
+	# progress; three configured days mean three actual advance_day events.
+	return (day - 1) * int(RULES.config().day_seconds)
 
 func _region(peer: Dictionary) -> String:
 	var owner := session()
