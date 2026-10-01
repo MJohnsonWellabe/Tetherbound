@@ -1,0 +1,54 @@
+{
+  "checks": [
+    {
+      "folder": "returned-unit-b42e92f90f22-aae7e721",
+      "verdict": "FAIL:3cases188assertions1failure at equivalent+PI/-PI rotation assertion; returned Foundation, successor f7c467 awaiting independent review.",
+      "files": [
+        {
+          "name": "returned-unit-b42e92f90f22-aae7e721-tests.log.gz",
+          "raw_sha256": "89e38301a2a1c773b616804c33b3e78e19ecc29671583201dc37eded36048d26",
+          "raw_bytes": 15138
+        },
+        {
+          "name": "returned-unit-b42e92f90f22-aae7e721-result.json.gz",
+          "raw_sha256": "290c52ada2b5593ae55e00dc3cb545dc23e1cc5ff79f293a69791926ff4c1a23",
+          "raw_bytes": 531
+        }
+      ]
+    },
+    {
+      "folder": "returned-smoke-b90fa9576b9b-_probe_scatter_tree_prompt_height",
+      "verdict": "FAIL: exact baked tree placement absent before native fixture construction; retained; stale fixture after F17 village bake, probe repair returned F17.",
+      "files": [
+        {
+          "name": "returned-smoke-b90fa9576b9b-_probe_scatter_tree_prompt_height-smoke.log.gz",
+          "raw_sha256": "81219368f42c3e3090230b3d82b44994d222aeb1d1e25b678ce452213f1c9ab5",
+          "raw_bytes": 12823
+        },
+        {
+          "name": "returned-smoke-b90fa9576b9b-_probe_scatter_tree_prompt_height-result.json.gz",
+          "raw_sha256": "b17af2dab582a83b39949a6c359dcde7ed971b47de98d233dfc6c4fd8f39845b",
+          "raw_bytes": 399
+        }
+      ]
+    },
+    {
+      "folder": "opening-parser-r15-fb186f6a7a72",
+      "verdict": "PASS: original90s parser exit0/12.672s/zero errors; R15 source independently reviewed265checks; native diagnostic/campaign unexecuted.",
+      "files": [
+        {
+          "name": "opening-parser-r15-fb186f6a7a72-parser.log.gz",
+          "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+          "raw_bytes": 73
+        },
+        {
+          "name": "opening-parser-r15-fb186f6a7a72-result.json.gz",
+          "raw_sha256": "838f378b824fc60019106ecda3fe7fce4a4b4a6f870388e620e8c8c668e38804",
+          "raw_bytes": 369
+        }
+      ]
+    }
+  ],
+  "main": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "criterion_status": "Unchanged:110/280 MET; full earned campaign/main acceptance OPEN; no speedup claim"
+}
