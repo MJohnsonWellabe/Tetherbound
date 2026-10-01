@@ -2738,7 +2738,7 @@
       "ultimate": "ultimate_solmane"
     },
     "stormursa": {
-      "reserved": true,
+      "reserved": false,
       "source_evolution": "staticub",
       "role_family": "WALL",
       "first_utility": "shove",
@@ -3291,7 +3291,7 @@
         },
         {
           "level": 1,
-          "move_id": "ultimate_ground_wall"
+          "move_id": "ultimate_water_wall"
         },
         {
           "level": 5,
@@ -3323,7 +3323,7 @@
         }
       ],
       "source_roster": "water_roster.json#species/mosshell",
-      "ultimate": "ultimate_ground_wall"
+      "ultimate": "ultimate_water_wall"
     },
     "water_abyssal_guardian": {
       "target_role": "legendary_burst_controller",

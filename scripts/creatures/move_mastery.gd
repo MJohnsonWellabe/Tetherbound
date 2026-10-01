@@ -15,6 +15,11 @@ static var _registered_moves: Dictionary = {}
 
 class OwnedRecord extends RefCounted:
 	var uid: String = ""
+	var species_id: String = ""
+	var move_quick: String = ""
+	var move_charged: String = ""
+	var move_utility: String = ""
+	var move_ultimate: String = ""
 	var known_moves: Array[String] = []
 	var move_mastery_uses: Dictionary = {}
 	var move_mastery_receipts: Dictionary = {}
@@ -24,6 +29,9 @@ class OwnedRecord extends RefCounted:
 static func owned_record(row: Dictionary) -> RefCounted:
 	var record := OwnedRecord.new()
 	record.uid = str(row.get("uid", ""))
+	record.species_id = str(row.get("species_id", ""))
+	for slot: String in ["quick", "charged", "utility", "ultimate"]:
+		record.set("move_" + slot, str(row.get("move_" + slot, "")))
 	for id: String in row.get("known_moves", []): record.known_moves.append(id)
 	record.move_mastery_uses = (row.get("move_mastery_uses", {}) as Dictionary).duplicate(true)
 	record.move_mastery_receipts = (row.get("move_mastery_receipts", {}) as Dictionary).duplicate(true)
@@ -162,9 +170,15 @@ static func stage_meter_landed(actor: Dictionary, frozen: Dictionary, actual_deb
 		return {"ok": false, "code": "not_landed"}
 	for key: String in ["character_id", "creature_uid", "encounter_id", "generation"]:
 		if actor.get(key) != binding.get(key): return {"ok": false, "code": "stale_actor"}
-	var action := int(binding.get("action", -1))
-	if action < 1 or action <= int(actor.get("last_meter_action", 0)):
-		return {"ok": false, "code": "replayed_action"}
+	# Projectile arrivals may reorder. The existing accepted hit transaction
+	# owns its exact action receipt; marking that receipt permits every unique
+	# arrival without introducing another ledger or a high-water shortcut.
+	var receipt: Variant = frozen.get("accepted_receipt")
+	if not receipt is Dictionary or receipt.get("action_id") != frozen.get("action_id") \
+			or receipt.get("attacker_uid") != actor.get("creature_uid") \
+			or receipt.get("generation") != actor.get("generation") \
+			or receipt.get("landed") != true or receipt.get("meter_credited") != false:
+		return {"ok": false, "code": "invalid_or_replayed_receipt"}
 	var maximum: Variant = meter_config.get("max")
 	var gains: Variant = meter_config.get("landed_gain")
 	if not _whole_nonnegative(maximum) or int(maximum) < 1 or not gains is Dictionary:
@@ -179,8 +193,9 @@ static func stage_meter_landed(actor: Dictionary, frozen: Dictionary, actual_deb
 			or float(before) < 0.0 or float(before) > float(maximum): return {"ok": false, "code": "invalid_meter"}
 	var next := actor.duplicate(true)
 	next["ultimate_meter"] = minf(float(maximum), float(before) + float(gain))
-	next["last_meter_action"] = action
-	return {"ok": true, "actor": next}
+	var credited: Dictionary = receipt.duplicate(true)
+	credited["meter_credited"] = true
+	return {"ok": true, "actor": next, "accepted_receipt": credited}
 
 ## The firing CAS consumes full meter inside the accepted action transaction.
 ## A refusal or IO rollback leaves the exact old row available for retry.
@@ -201,6 +216,95 @@ static func stage_ultimate_spend(actor: Dictionary, frozen: Dictionary, meter_co
 	next["ultimate_meter"] = 0.0
 	next["last_ultimate_action"] = action
 	return {"ok": true, "actor": next}
+
+## Full detached arrival plan, consumed inside the existing host HP/effect
+## transaction. Its owning caller freezes/rechecks every value from the SAME
+## live encounter and admitted record; this helper authenticates no dictionary.
+## Includes actual HP debit, utility receipt, mastery and meter as one candidate.
+## The producer retains the original plan while a writer/owner ACK is pending.
+static func stage_action_outcome(creature: RefCounted, frozen: Dictionary, host: Dictionary,
+		combat_config: Dictionary) -> Dictionary:
+	var effects := preload("res://scripts/combat/utility_effects.gd")
+	var math := preload("res://scripts/combat/combat_math.gd")
+	var chart := preload("res://scripts/combat/type_chart.gd")
+	if creature == null or not host.get("actor") is Dictionary or not frozen.get("actor_binding") is Dictionary:
+		return {"ok": false, "code": "invalid_actor"}
+	var actor: Dictionary = host.actor
+	var accepted: Variant = frozen.get("accepted_receipt")
+	if not accepted is Dictionary or accepted.get("action_id") != frozen.get("action_id") \
+		or accepted.get("attacker_uid") != creature.get("uid") \
+		or accepted.get("generation") != actor.get("generation") \
+		or accepted.get("meter_credited") != false:
+		return {"ok": false, "code": "invalid_or_replayed_receipt"}
+	for key: String in ["character_id", "creature_uid", "encounter_id", "generation"]:
+		if actor.get(key) != frozen.actor_binding.get(key): return {"ok": false, "code": "stale_actor"}
+	if str(actor.get("creature_uid", "")) != str(creature.get("uid")) \
+		or not effects._number(actor.get("hp"), 0.001, INF): return {"ok": false, "code": "fainted"}
+	for key: String in ["source_position", "target_position", "facing"]:
+		if not effects._point(host.get(key)): return {"ok": false, "code": "invalid_geometry"}
+	if host.get("target_role") != "opponent" or host.get("hostile") != true \
+		or (host.facing as Vector3).length_squared() <= 0.000001:
+		return {"ok": false, "code": "invalid_target"}
+	if not effects._number(host.get("target_hp"), 0.001, INF) \
+		or not effects._number(host.get("target_max_hp"), float(host.target_hp), INF) \
+		or not effects._number(host.get("attack"), 1.0, INF) \
+		or not effects._number(host.get("target_defence"), 1.0, INF) \
+		or not effects._number(host.get("roll"), 0.0, 1.0) \
+		or not _whole_nonnegative(host.get("now_ms")) \
+		or not effects._identity(host.get("target_uid")) or host.target_uid == creature.get("uid"):
+		return {"ok": false, "code": "invalid_target"}
+	var slot := str(frozen.get("slot", ""))
+	if not ["quick", "charged", "utility", "ultimate"].has(slot): return {"ok": false, "code": "invalid_slot"}
+	var connected := math.move_connects(frozen, host.source_position, host.facing, host.target_position)
+	var utility: Dictionary = {}
+	var status: Dictionary = host.get("utility_state", {})
+	if slot == "utility":
+		var effect_host := {"encounter_id": actor.encounter_id, "generation": actor.generation,
+			"action_id": frozen.action_id, "source_uid": actor.creature_uid,
+			"target_uid": actor.creature_uid if frozen.utility.scope == "self" else host.target_uid,
+			"source_position": host.source_position,
+			"target_position": host.source_position if frozen.utility.scope == "self" else host.target_position,
+			"target_point": host.target_position, "source_hp": actor.hp, "source_max_hp": actor.max_hp,
+			"target_hp": host.target_hp, "hostile": true, "geometry_connected": connected,
+			"target_is_boss": host.get("named", false), "target_is_heavy_boss": host.get("heavy_boss", false)}
+		utility = effects.stage_application(status, frozen.move_id, frozen, effect_host,
+			int(host.now_ms), int(combat_config.get("utility", {}).get("receipt_limit", 0)))
+		if utility.get("ok") != true: return utility
+		status = utility.state
+	var next_actor := actor.duplicate(true)
+	var damage := 0.0
+	var mastery := {"ok": false, "reason": "not_landed"}
+	var base_power := float(frozen.get("base_power", combat_config.get("player_" + slot, {}).get("power", 0.0)))
+	if connected and base_power > 0.0:
+		var type_scale := chart.multiplier_dual(str(frozen.get("type", "")),
+			str(host.get("target_type", "")), str(host.get("target_secondary_type", "")))
+		damage = math.rolled_damage(base_power * float(frozen.get("power_multiplier", 1.0)),
+			float(host.attack), float(host.target_defence), float(host.roll), float(frozen.get("power", 1.0)), type_scale)
+		if slot == "ultimate" and host.get("named") == true:
+			damage = minf(damage, float(host.target_max_hp) * float(combat_config.get("ultimate", {}).get("max_fraction_of_named_hp", 0.0)))
+		damage = clampf(damage, 0.0, float(host.target_hp))
+		if damage > 0.0:
+			mastery = stage_landed_use(creature, {"action_id": frozen.action_id,
+				"move_id": frozen.move_id, "attacker_uid": actor.creature_uid,
+				"target_uid": host.target_uid, "target_hp_before": host.target_hp, "applied_damage": damage})
+			var landed := frozen.duplicate(true)
+			landed["accepted_receipt"] = accepted.duplicate(true)
+			landed.accepted_receipt["landed"] = true
+			var meter := stage_meter_landed(next_actor, landed, damage, combat_config.get("ultimate", {}))
+			if meter.get("ok") != true: return meter
+			next_actor = meter.actor
+			accepted = meter.accepted_receipt
+	elif utility.get("ok") == true:
+		mastery = stage_accepted_effect(creature, utility.receipt)
+	# A saturated rank5 is valid and must not refuse the actual action.
+	if mastery.get("ok") != true and mastery.get("reason") not in ["not_landed", "saturated"]:
+		return {"ok": false, "code": "invalid_mastery"}
+	if utility.get("ok") == true and str(utility.receipt.kind) == "heal": next_actor.hp = utility.receipt.hp_after
+	return {"ok": true, "actor": next_actor, "utility_state": status, "utility": utility, "accepted_receipt": accepted,
+		"mastery": mastery, "damage": damage, "target_hp_after": float(host.target_hp) - damage,
+		"target_hp_before": host.target_hp, "killed": float(host.target_hp) - damage <= 0.0,
+		"action_id": frozen.action_id, "move_id": frozen.move_id, "slot": slot,
+		"mastery_rank": frozen.mastery_rank, "vfx": frozen.vfx}
 
 ## Call inside the existing host HP transaction after commit, from the actual
 ## manager/director Node. Incoming network requests cannot supply this authority.

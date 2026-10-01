@@ -335,6 +335,11 @@ static func admitted_party_errors(entries: Variant, character: Variant) -> Array
 		seen[uid] = true
 		if not saved.get("species_id") is String or not species.has(str(saved.species_id)):
 			errors.append("admitted party[%d] has unknown species" % index)
+		# Detached construction and tolerant old local rows may be incomplete;
+		# a canonical owned admission may never remove its required verbs.
+		for slot: String in ["quick", "charged", "ultimate"]:
+			if not saved.get("move_" + slot) is String or str(saved.get("move_" + slot, "")).is_empty():
+				errors.append("admitted party[%d] has no %s move" % [index, slot])
 	return errors
 
 ## Typed carrier projection at a serialization boundary. The live instance is
