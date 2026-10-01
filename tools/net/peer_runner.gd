@@ -219,8 +219,11 @@ var _probe: RefCounted = null
 var _physics_count := 0
 ## Test-only trainer-driver observations: four bounded heartbeat samples, never
 ## part of world state, a verdict or an authority/input decision.
+var _trainer_fight_command_budget_frames := NET_STEP_BUDGET_FRAMES
 var _trainer_fight_progress: Dictionary = {}
 var _trainer_fight_samples: Array[Dictionary] = []
+var _trainer_fight_killing_verdict: Dictionary = {}
+var _trainer_fight_observed_encounter_id := ""
 var _trainer_fight_director: Node = null
 var _trainer_fight_manager: Node = null
 ## Spike advice #1: a Dictionary state box, not bare locals, for everything a
@@ -541,9 +544,15 @@ func _send_heartbeat() -> void:
 ## driver loop: its added writes only copy locals/count already-taken branches.
 ## All strings are capped; no bodies, party arrays or refusal payloads escape.
 func _trainer_fight_heartbeat_observation() -> Dictionary:
+	var sampled_ms := Time.get_ticks_msec()
+	var peer_elapsed_ms := sampled_ms - int(_trainer_fight_progress.get("started_ms", sampled_ms))
+	var nominal_allowance_ms := float(_trainer_fight_progress.get("nominal_command_allowance_ms", 0.0))
+	# Retention only: the coordinator clock/send time is unknown to this peer.
+	# Freeze the four earlier samples so finish() cannot replace them afterward.
+	var retention_open := float(peer_elapsed_ms) < nominal_allowance_ms
 	var director_valid := is_instance_valid(_trainer_fight_director)
 	var manager_valid := is_instance_valid(_trainer_fight_manager)
-	if bool(_trainer_fight_progress.get("running", false)) and director_valid and manager_valid:
+	if bool(_trainer_fight_progress.get("running", false)) and director_valid and manager_valid and retention_open:
 		var director := _trainer_fight_director
 		var manager := _trainer_fight_manager
 		var opponent: Variant = manager.call("enemy_body")
@@ -554,12 +563,15 @@ func _trainer_fight_heartbeat_observation() -> Dictionary:
 		var active: Variant = manager.call("active_creature")
 		var refusal: Dictionary = manager.get("last_encounter_refusal")
 		var encounter_id := str(manager.call("encounter_id"))
+		var record: Dictionary = director.call("encounter_record")
 		var host: RefCounted = director.get("_encounter_host")
 		var authority: Dictionary = host.call("strike_authority_state", encounter_id,
 			_local_peer_id_or_host()) if host != null else {}
 		var sample := _trainer_fight_progress.duplicate()
 		sample.merge({
-			"sampled_ms": Time.get_ticks_msec(), "physics_frame": _physics_count,
+			"sampled_ms": sampled_ms, "physics_frame": _physics_count,
+			"in_flight_inject_physics_frames": _physics_count - int(_trainer_fight_progress["inject_started_physics_frame"])
+				if int(_trainer_fight_progress["inject_started_physics_frame"]) >= 0 else 0,
 			"process_frame": Engine.get_process_frames(),
 			"trainer_active": bool(director.call("trainer_battle_active")),
 			"queued_opponents": int(director.call("trainer_creatures_left")),
@@ -569,6 +581,14 @@ func _trainer_fight_heartbeat_observation() -> Dictionary:
 			"enemy_species": str(opponent.get("species_id")).left(96) if enemy_valid else "",
 			"enemy_hp": float(instance.get("hp")) if instance != null else -1.0,
 			"enemy_max_hp": float(instance.get("max_hp")) if instance != null else -1.0,
+			"enemy_fainted": bool(instance.get("fainted")) if instance != null else null,
+			"manager_state": int(manager.get("state")), "resolve_timer": float(manager.get("_resolve_timer")),
+			"resolve_outcome": str(manager.get("_outcome")).left(32),
+			"encounter_phase": str(record["phase"]).left(48) if record.has("phase") else null,
+			"encounter_seq": int(record["seq"]) if record.has("seq") else null,
+			"killing_signal_scope_known": not _trainer_fight_observed_encounter_id.is_empty(),
+			"killing_verdict": _trainer_fight_killing_verdict.duplicate(true)
+				if not _trainer_fight_killing_verdict.is_empty() else {"known": false, "author_peer_id": null, "verdict": null},
 			"active_hp": float(active.get("hp")) if active != null else -1.0,
 			"active_fainted": bool(active.get("fainted")) if active != null else false,
 			"manager_action": int(manager.get("_action")),
@@ -588,7 +608,38 @@ func _trainer_fight_heartbeat_observation() -> Dictionary:
 			_trainer_fight_samples.pop_front()
 	return {"running": bool(_trainer_fight_progress.get("running", false)),
 		"director_valid": director_valid, "manager_valid": manager_valid,
+		"peer_elapsed_ms": peer_elapsed_ms, "nominal_command_allowance_ms": nominal_allowance_ms,
+		"retention_closed": not retention_open, "timing_basis": "peer_driver_start",
+		"coordinator_deadline_known": false,
 		"samples": _trainer_fight_samples.duplicate()}
+
+
+## Existing read-only completion signal, not a submitted attack or a verdict
+## rewrite. Keep one bounded killing row; a missing signal/field stays unknown.
+func _trainer_fight_note_killing_verdict(intent: Dictionary, peer_id: int, verdict: Dictionary) -> void:
+	if not bool(_trainer_fight_progress.get("running", false)) or _trainer_fight_observed_encounter_id.is_empty() \
+			or str(intent.get("encounter_id", "")) != _trainer_fight_observed_encounter_id:
+		return
+	var delta: Dictionary = verdict.get("delta", {})
+	if delta.get("killed") != true:
+		return
+	var impact: Dictionary = delta.get("impact", {})
+	_trainer_fight_killing_verdict = {
+		"scope": "last_observed_kill_in_bound_encounter", "current_opponent_kill_known": false,
+		"known": true, "signal_ms": Time.get_ticks_msec(), "author_peer_id": peer_id,
+		"encounter_id": str(intent["encounter_id"]).left(96) if intent.has("encounter_id") else null,
+		"intent_action": int(intent["action"]) if intent.has("action") else null,
+		"action_id": str(impact["action_id"]).left(96) if impact.has("action_id") else null,
+		"target_uid": str(impact["target_uid"]).left(96) if impact.has("target_uid") else null,
+		"verdict": {
+			"ok": bool(verdict["ok"]) if verdict.has("ok") else null,
+			"pending": bool(verdict["pending"]) if verdict.has("pending") else null,
+			"kind": str(verdict["kind"]).left(48) if verdict.has("kind") else null,
+			"code": str(verdict["code"]).left(96) if verdict.has("code") else null,
+			"killed": true, "hp": float(delta["hp"]) if delta.has("hp") else null,
+			"accepted_action": int(delta["accepted_action"]) if delta.has("accepted_action") else null,
+		},
+	}
 
 
 # --- step vocabulary --------------------------------------------------------
@@ -597,6 +648,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
 	_trainer_fight_progress.clear()
 	_trainer_fight_samples.clear()
+	_trainer_fight_killing_verdict.clear()
+	_trainer_fight_observed_encounter_id = ""
 	var args: Dictionary = (msg.get("args", {}) as Dictionary)
 	var before := _physics_count
 	var out: Dictionary
@@ -696,9 +749,13 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"trainer_battle":
 			return await _step_trainer_battle(args)
 		"win_trainer_battle":
+			_trainer_fight_command_budget_frames = int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 			var trainer_result: Dictionary = await _step_win_trainer_battle(args)
 			if not _trainer_fight_progress.is_empty():
 				_trainer_fight_progress["running"] = false
+			if is_instance_valid(_trainer_fight_director) and _trainer_fight_director.is_connected(
+					"host_strike_finished", _trainer_fight_note_killing_verdict):
+				_trainer_fight_director.disconnect("host_strike_finished", _trainer_fight_note_killing_verdict)
 			_trainer_fight_director = null
 			_trainer_fight_manager = null
 			return trainer_result
@@ -3673,14 +3730,23 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 	var stop_at := int(args.get("stop_when_creatures_left", -1))
 	_trainer_fight_director = director
 	_trainer_fight_manager = manager
+	_trainer_fight_observed_encounter_id = str(manager.call("encounter_id"))
 	_trainer_fight_progress = {
 		"running": true, "started_ms": Time.get_ticks_msec(),
 		"started_physics_frame": _physics_count, "started_process_frame": Engine.get_process_frames(),
+		# Mirrors the existing command wall allowance for observation retention;
+		# this neither checks nor changes any execution deadline or driver budget.
+		"nominal_command_budget_frames": _trainer_fight_command_budget_frames,
+		"nominal_command_allowance_ms": float(_trainer_fight_command_budget_frames) * (1000.0 / 60.0) + 5000.0,
 		"budget_frames": budget, "stride": stride, "driver_frames": frames,
+		"completed_inject_physics_frames": 0, "inject_started_physics_frame": -1,
 		"swings": swings, "creatures_seen": 0, "not_fighting_checks": 0,
 		"not_fighting_streak": 0, "missing_body_checks": 0, "quick_not_ready_checks": 0,
 		"phase": "wait_physics", "submitted_action_at_start": int(director.get("_encounter_action")),
 	}
+	if director.has_signal("host_strike_finished") and not director.is_connected(
+			"host_strike_finished", _trainer_fight_note_killing_verdict):
+		director.connect("host_strike_finished", _trainer_fight_note_killing_verdict)
 	while bool(director.call("trainer_battle_active")) and frames < budget:
 		_trainer_fight_progress["phase"] = "wait_physics"
 		await physics_frame
@@ -3766,10 +3832,13 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		# whole production path -- manager, host arbitration, verdict,
 		# faint -- runs.
 		_trainer_fight_progress["phase"] = "inject_quick"
+		_trainer_fight_progress["inject_started_physics_frame"] = _physics_count
 		var pressed := await _inject("combat_quick", 1)
 		if not bool(pressed.get("ok", false)):
 			return {"verdict": "ERROR", "detail": "press 'combat_quick' could not be injected: %s"
 				% str(pressed.get("why", ""))}
+		_trainer_fight_progress["completed_inject_physics_frames"] += _physics_count - int(_trainer_fight_progress["inject_started_physics_frame"])
+		_trainer_fight_progress["inject_started_physics_frame"] = -1
 		frames += 3
 		swings += 1
 		_trainer_fight_progress["driver_frames"] = frames
