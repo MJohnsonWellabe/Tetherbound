@@ -22,6 +22,7 @@ var _elapsed := 0.0
 var _arrival := 0.0
 var _duration := 0.0
 var _did_arrive := false
+var _did_notify := false
 var _cancelled := false
 var _clock: SceneTreeTimer
 var _budget: Script
@@ -89,6 +90,11 @@ func _ready() -> void:
 		_build_motes(colour, opacity)
 	_update_parts()
 	_play_launch_cue()
+	if _arrival == 0.0:
+		# Host-contact actions already arrived. Build contact at birth, but let
+		# the caller attach its observer after launch returns before notifying.
+		_finish_presentation()
+		return
 	# The same idle timer class used by F25. A separate host timer/accepted
 	# receipt owns damage. Tree pause freezes presentation; hitstop does not.
 	_clock = get_tree().create_timer(_arrival, false)
@@ -146,12 +152,14 @@ func _update_parts() -> void:
 	var end := _duration
 	if bool(_context.peer_view): end = minf(end, _arrival + float(peer.get("aftermath_seconds", 0.65)))
 	var visible_now := _elapsed <= end
+	var visual_arrival := maxf(_arrival, 0.001)
+	var visual_elapsed := maxf(_elapsed, visual_arrival) if _did_arrive else _elapsed
 	for i in _nodes.size():
 		var motion := str(_parts[i].get("motion", ""))
 		var ground := motion in ["jaw_charge", "jaw_clamp", "ground_skip", "settle", "antler_bud", "antler_rise", "root_canopy", "root_curl", "root_rush", "root_sink", "grove_fold", "forge_compress", "forge_open", "paw_plant", "paw_stamp", "sky_ground", "ground_drain", "shelter", "shelter_gather"]
 		var from: Vector3 = _context.source_ground if ground else _from
 		var to: Vector3 = _context.target_ground if ground else _to
-		var pose: Transform3D = CHOREOGRAPHY.pose(_parts[i], _elapsed, _arrival, _duration,
+		var pose: Transform3D = CHOREOGRAPHY.pose(_parts[i], visual_elapsed, visual_arrival, _duration,
 			from, to, int(_context.seed))
 		_nodes[i].transform = _clear_side_lane(pose, _nodes[i].mesh.get_aabb(), _parts[i], from, to)
 		_nodes[i].visible = visible_now and _nodes[i].basis.determinant() > 0.0000001
@@ -206,6 +214,13 @@ func _finish_presentation() -> void:
 	_did_arrive = true
 	_elapsed = _arrival
 	_update_parts()
+	if _arrival == 0.0:
+		call_deferred("_notify_arrival")
+	else: _notify_arrival()
+
+func _notify_arrival() -> void:
+	if _did_notify or _cancelled or is_queued_for_deletion(): return
+	_did_notify = true
 	arrived.emit()
 	presentation_arrived.emit(_context)
 

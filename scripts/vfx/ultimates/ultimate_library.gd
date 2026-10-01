@@ -44,6 +44,7 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	var binding: Variant = spec.get("actor_binding")
 	var current: Variant = context.get("current_actor")
 	if not binding is Dictionary or not current is Dictionary or not same_binding(binding, current): return null
+	if bool(current.get("fainted", false)): return null
 	var action := str(spec.get("action_id", ""))
 	if action.is_empty() or action.length() > 256: return null
 	var rank: Variant = spec.get("mastery_rank")
@@ -55,7 +56,7 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	var travel: Variant = context.get("travel_seconds")
 	if not (duration is int or duration is float) or not (travel is int or travel is float): return null
 	if not is_finite(float(duration)) or not is_finite(float(travel)) \
-			or float(duration) < 2.0 or float(duration) > 3.0 or float(travel) <= 0.0 or float(travel) >= float(duration): return null
+			or float(duration) < 2.0 or float(duration) > 3.0 or float(travel) < 0.0 or float(travel) >= float(duration): return null
 	var recipient := str(context.get("recipient_character_id", ""))
 	if recipient.is_empty(): return null
 	var source_ground: Variant = context.get("source_ground")
