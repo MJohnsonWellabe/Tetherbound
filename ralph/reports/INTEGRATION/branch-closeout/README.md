@@ -8,4 +8,12 @@ Overlap resolutions preserve the reviewed newer F19/F20/F23/F25/F28/F30/F31/F32 
 
 The combat merge combines delayed contact timing with F22 armour and killing-hit capture. Its independent review found missing local switch invalidation and untrusted character identity; both have been returned to the existing F22 conversation. Foundations is completing the shared schema/catalogue and live owner installation on its existing branch. This draft is not ready to land until its combined validation passes.
 
+## First combined validation and repairs
+
+Godot 4.7 import on `146366df0e672ec8fade7d0b82104c65396a68c4` reported Game/WorldState compilation failures. The run was stopped during asset import after retaining its failure log. A focused WorldState parser check identified the primary syntax error at line 556: `namespace` is a reserved parameter name. This failure was returned to Foundations for repair on the same branch; the preload graph alone is not a failure verdict.
+
+F22 supplied exact patch `4d7dda12487f6684a2469548e36d2b36f6f2772c8efc479e7456d372278daa17`. Root reviewed its actual CombatManager voluntary/auto-faint signal path, admitted Session identity lookup and solo fallback, then applied it with four behavior regressions. A further focused parser check found `Action.RECOVER` in the F22 observer while the real enum and transition use `RECOVERY`; the observer reference is corrected. Its dependencies still fail compilation, so the regressions remain unrun. The F24 inferred receipt type failure at `tether_commands.gd:298` was returned to the existing F24 branch. A missing local imported flame texture is an unfinished asset-cache condition, not an F25 source failure.
+
+No new criterion has passed or closed from these checks. One combined CI selection remains reserved for the repaired candidate.
+
 `included-heads.tsv` pins the source heads represented in the candidate. Runtime evidence and repair outcomes will be added here on the exact tested head. Process-only CI green does not establish engine or criterion acceptance.

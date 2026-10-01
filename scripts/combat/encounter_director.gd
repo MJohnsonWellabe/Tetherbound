@@ -561,7 +561,7 @@ func _ready() -> void:
 		push_error("encounter director needs a player and a combat manager")
 		set_process(false)
 		return
-	_manager.connect("exited", _on_combat_exited)
+	_connect_combat_manager_signals()
 
 	# `_ready` runs while the parent is still setting up its children, and
 	# add_child() is refused during that. One frame is enough to be out of it.
@@ -1474,7 +1474,7 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 ## returning guest has dialled, it only holds the announcement for
 ## `_resend_waiting_deployment()`; nothing below changes single-player behaviour.
 func _announce_deployment(creature: RefCounted) -> void:
-	_note_deployment_identity(_local_peer_id(), _local_character_id(), str(creature.get("uid")))
+	_note_deployment_identity(_local_peer_id(), _strike_authority_character(_local_peer_id()), str(creature.get("uid")))
 	# Snapshot the personal relic revision carried by this card. Without this,
 	# the next idle frame mistakes the initial deployment for a shrine change
 	# and sends the identical reliable announcement twice.
@@ -1516,6 +1516,7 @@ func _resend_waiting_deployment() -> void:
 
 ## The mirror: this process put its creature away.
 func _announce_recall() -> void:
+	_note_deployment_identity(_local_peer_id(), _strike_authority_character(_local_peer_id()), "")
 	_deployment_waiting_for_receiver = false
 	if not _is_multi_peer():
 		return
@@ -1548,6 +1549,11 @@ func _rpc_creature_recalled() -> void:
 func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 	if peer_id == 0:
 		return
+	var character_id := _strike_authority_character(peer_id)
+	if character_id.is_empty():
+		return
+	row = row.duplicate(true)
+	row["character_id"] = character_id
 	var creature_uid := str(row.get("creature_uid", ""))
 	_prune_tournament_rosters()
 	for encounter_id: Variant in _tournament_rosters_by_encounter:
@@ -1555,7 +1561,7 @@ func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 		if by_peer.has(peer_id) and not (by_peer[peer_id] as Array).has(creature_uid):
 			return
 	var previous: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
-	_note_deployment_identity(peer_id, str(row.get("character_id", "")), creature_uid)
+	_note_deployment_identity(peer_id, character_id, creature_uid)
 	_deployed_by[peer_id] = row.duplicate(true)
 	# A relic swap changes only the card. Preserve the already-replicated body;
 	# despawning it here would make activating Livewire flash the companion out
@@ -1570,8 +1576,7 @@ func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 
 
 func _host_clear_deployed(peer_id: int) -> void:
-	var previous: Dictionary = _deployed_by.get(peer_id, {})
-	_note_deployment_identity(peer_id, str(previous.get("character_id", "")), "")
+	_note_deployment_identity(peer_id, _strike_authority_character(peer_id), "")
 	_deployed_by.erase(peer_id)
 	_despawn_creature_proxy(peer_id)
 
@@ -2436,6 +2441,11 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	# The move the peer NAMED, built from the host's own numbers and the host's
 	# own two body radii. A peer cannot post itself a longer reach.
 	var card: Dictionary = _creature_card_for(peer_id)
+	var attacker_binding := _strike_actor_binding(encounter_id, peer_id, striker)
+	if attacker_binding.is_empty():
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "not_participant", "reason": "Your deployed creature is no longer current.",
+			"pending": false, "delta": {}}
 	var slot := str(intent.get("slot", "quick"))
 	var move: Dictionary = COMBAT_MANAGER.host_move_profile(
 		damage_engine.get("_moves") as RefCounted,
@@ -2484,7 +2494,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		str(intent.get("move_id", "")), slot, muzzle, target,
 		MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
 		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position, _host_visual_bounds(wild)).duplicate(true)
-	launch["attacker_binding"] = _strike_actor_binding(encounter_id, peer_id, striker)
+	launch["attacker_binding"] = attacker_binding
 	launch.make_read_only()
 	if float(launch.travel_seconds) <= 0.0:
 		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false)
@@ -5207,22 +5217,35 @@ func _fight_party() -> Array[RefCounted]:
 	return out
 
 
-func _on_combat_exited(outcome: String) -> void:
-	# A voluntary combat switch reuses the same body but changes which live
-	# CreatureInstance it represents. Carry that choice back into exploration
-	# before any wild/trainer exit path runs; otherwise the body remains skinned
-	# as the incoming creature while this director and Game.party still call the
-	# old one active, and the next encounter silently pilots mismatched data.
+func _connect_combat_manager_signals() -> void:
+	if not _manager.is_connected("exited", _on_combat_exited):
+		_manager.connect("exited", _on_combat_exited)
+	if not _manager.is_connected("creature_switched", _on_combat_creature_switched):
+		_manager.connect("creature_switched", _on_combat_creature_switched)
+
+
+func _on_combat_creature_switched(_index: int) -> void:
+	# Both voluntary switches and trainer auto-faint reuse this body. Observe
+	# every accepted identity change before an older projectile can arrive.
 	var deployed: RefCounted = _manager.call("active_creature") as RefCounted
-	if deployed != null and deployed != _ally:
-		_ally = deployed
-		var party := _party()
-		if party != null and not bool(deployed.get("fainted")) \
-				and not bool(deployed.get("resting")):
-			var members: Array = party.call("members")
-			var party_index := members.find(deployed)
-			if party_index >= 0 and party.call("active") != deployed:
-				party.call("set_active", party_index)
+	if deployed == null or deployed == _ally:
+		return
+	_ally = deployed
+	_announce_deployment(deployed)
+
+
+func _on_combat_exited(outcome: String) -> void:
+	# Keep exploration's active party in sync even when the switch signal
+	# already updated the director's deployment during the fight.
+	_on_combat_creature_switched(-1)
+	var deployed: RefCounted = _manager.call("active_creature") as RefCounted
+	var party := _party()
+	if deployed != null and party != null and not bool(deployed.get("fainted")) \
+			and not bool(deployed.get("resting")):
+		var members: Array = party.call("members")
+		var party_index := members.find(deployed)
+		if party_index >= 0 and party.call("active") != deployed:
+			party.call("set_active", party_index)
 
 	# R8.1: a round of a trainer battle resolves on its own terms — the next
 	# creature may still be coming, and exploration must not come back if it
@@ -6951,7 +6974,7 @@ func _f22_visible_observation(wild: Node3D) -> Dictionary:
 		label = "charged_windup" if not bool(move.get("is_quick", true)) else "quick_windup"
 		if str(move.get("slot", "")) == "ultimate":
 			label = "ultimate_windup"
-	elif action == COMBAT_MANAGER.Action.RECOVER:
+	elif action == COMBAT_MANAGER.Action.RECOVERY:
 		label = "recovery"
 	var delta := _ally_body.global_position - wild.global_position
 	delta.y = 0.0
@@ -7195,13 +7218,23 @@ func _note_deployment_identity(peer_id: int, character_id: String, uid: String) 
 	_deployment_identity[peer_id] = {"character_id": character_id, "creature_uid": uid,
 		"generation": int(previous.get("generation", 0)) + 1}
 
+func _strike_authority_character(peer_id: int) -> String:
+	if _session != null and _session.has_method("_authority_character"):
+		return str(_session.call("_authority_character", peer_id))
+	# Existing local solo scenes can precede Session setup; guests never fall
+	# back to a character claim from their deployment packet.
+	return _local_character_id() if peer_id == _local_peer_id() else ""
+
+
 func _strike_actor_binding(encounter_id: String, peer_id: int, body: Node3D) -> Dictionary:
 	if not is_instance_valid(body): return {}
+	var character_id := _strike_authority_character(peer_id)
 	var card := _creature_card_for(peer_id)
 	var deployment: Dictionary = _deployment_identity.get(peer_id, {})
+	if character_id.is_empty() or character_id != str(deployment.get("character_id", "")): return {}
 	var record: Dictionary = _encounter_host.call("record", encounter_id) if _encounter_host != null else {}
 	var participant: Dictionary = (record.get("participants", {}) as Dictionary).get(peer_id, {})
-	var binding := {"character_id": str(deployment.get("character_id", "")),
+	var binding := {"character_id": character_id,
 		"creature_uid": str(card.get("creature_uid", "")),
 		"deployment_generation": int(deployment.get("generation", 0)),
 		"actor_generation": int(participant.get("actor_generation", 0)),
