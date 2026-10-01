@@ -1,7 +1,8 @@
 extends SceneTree
 
-## F15 / T3: "Credits occur once and reload resumes a safe completed world with
-## local requests, without a fifth key or invented sequel prompt."
+## F20 isolated ending persistence: credits occur once and reload preserves the
+## safe completed-world state. The explicit receipt fixture below is synthetic;
+## this smoke does not prove an earned Stormwood win or actual Home Key travel.
 ##
 ##   godot --headless --path . --script tests/smoke_regional_credits_reload.gd
 ##
@@ -64,15 +65,16 @@ func _run() -> void:
 	var character_id := HOMECOMING.character_id(_game)
 	_check(not character_id.is_empty(), "portable character id was minted")
 
-	# Explicit completed-Tidewake fixture: the world's currents are restored and
-	# it still holds the Water key Stormwood granted. One Local Request is
+	# Explicit completed-Stormwood fixture. One Local Request is
 	# revealed so "local requests remain" is a visible row, not an empty list.
 	var world_flags: RefCounted = _game.get("world").flags
-	for flag: String in ["water_captain_nerissa_defeated", "water_currents_restored",
+	for flag: String in ["stormwood:long_storm_ended", "water_captain_nerissa_defeated", "water_currents_restored",
 			"realm_key_water", "realm_gate_water_unlocked"]:
 		world_flags.set_flag(flag)
 	_game.get("progression").set_flag("old_champion_met")
 	var local: RefCounted = _game.get("local")
+	var return_receipt := HOMECOMING.HOME_RETURN_PREFIX + "reload-fixture:" + character_id + ":synthetic-ticket"
+	local.redesign_character.transaction_receipts.append(return_receipt)
 	var party: RefCounted = local.party
 	for row: Array in [["terrapup", "Pip"], ["brooktail", "Rill"], ["mosshell", "Shelby"]]:
 		var creature: RefCounted = local.make_creature(str(row[0]), str(row[1]))
@@ -123,7 +125,8 @@ func _run() -> void:
 	_check(HOMECOMING.character_id(_game) == character_id, "same portable character reloaded")
 	_check(local.flags.has(HOMECOMING.SEEN_FLAG), "homecoming receipt survived reload")
 	_check(local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG), "credits receipt survived reload")
-	_check(_game.get("world").flags.has(HOMECOMING.WORLD_FLAG), "restored currents survived reload")
+	_check(_game.get("world").flags.has("stormwood:long_storm_ended"), "completed Stormwood world fact survived reload")
+	_check(local.redesign_character.transaction_receipts.has(return_receipt), "personal Home return receipt survived reload")
 	_check(not HOMECOMING.credits_pending(_game), "credits do not replay after reload")
 	_check(HOMECOMING.conversation_id(_game) == HOMECOMING.REPEAT_ID,
 		"Grandpa offers only the repeat greeting after reload")

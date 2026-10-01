@@ -19,13 +19,39 @@ func before_each() -> void:
 	log_reader = QUEST_LOG.new()
 
 
-func test_regional_return_feed_follows_receipts_and_current_world_in_every_realm() -> void:
+## Explicit canonical personal fixture for this pure presentation contract.
+## It is not an earned route, arrival or admitted-participant proof.
+class CanonicalTravelerFixture:
+	extends "res://autoload/progression_state.gd"
+	var character := "unit-traveler"
+	var held: Array[String] = []
+	var hung: Array[String] = []
+	var receipts: Array[String] = []
+
+	func traveler_character_id() -> String:
+		return character
+
+	func traveler_relics_held() -> Array[String]:
+		return held.duplicate()
+
+	func traveler_relics_hung() -> Array[String]:
+		return hung.duplicate()
+
+	func traveler_transaction_receipts() -> Array[String]:
+		return receipts.duplicate()
+
+
+func test_regional_return_feed_follows_personal_entitlements_in_every_realm() -> void:
 	for realm_id: String in ["water", "stormwood", "cloudreach", "meadows"]:
-		progression = PROGRESSION_STATE.new()
+		progression = CanonicalTravelerFixture.new()
 		log_reader.set_realm(realm_id)
+		progression.set_flag("water_currents_restored")
+		progression.set_flag("stormwood:long_storm_ended")
 		var chapter_rows: Array = log_reader.main_entries(progression)
 		var local_rows: Array = log_reader.local_entries(progression)
-		progression.set_flag("water_currents_restored")
+		assert_ne(log_reader.tracked_id(progression), "regional_return_home",
+			"an ahead world alone cannot invite this traveler home")
+		progression.held.append("stormwood")
 		var before: Dictionary = progression.save_data().duplicate(true)
 		var rows: Array = log_reader.main_entries(progression)
 		assert_eq(rows.size(), 2)
@@ -33,12 +59,28 @@ func test_regional_return_feed_follows_receipts_and_current_world_in_every_realm
 		assert_eq(log_reader.current_index(progression), 0)
 		assert_eq(log_reader.guided_entries(progression).size(), 1)
 		assert_eq(log_reader.tracked_text(progression), rows[0].label)
-		assert_eq(log_reader.tracked_hint(progression), rows[0].how)
-		assert_eq(log_reader.tracked_beacon(progression).id, log_reader.tracked_id(progression))
+		assert_true(log_reader.tracked_hint(progression).contains("Home Arch"))
+		assert_true(log_reader.tracked_hint(progression).contains("village road"))
+		assert_true(log_reader.tracked_beacon(progression).is_empty(),
+			"before actual Home return no Grandpa beacon is presented")
 		for row: Dictionary in rows:
 			assert_eq(row.scope, "player")
 		assert_eq(log_reader.local_entries(progression), local_rows)
 		assert_eq(progression.save_data(), before, "reading guidance must not grant completion")
+		progression.held.clear()
+		progression.hung.append("stormwood")
+		assert_eq(log_reader.tracked_id(progression), "regional_return_home",
+			"hanging a relic keeps the personal return invitation")
+		progression.hung.clear()
+		progression.receipts.append("home_return_after_stormwood:other-world:other-character:ticket")
+		assert_eq(log_reader.main_entries(progression), chapter_rows,
+			"a foreign character's receipt does not qualify this traveler")
+		progression.receipts.append("home_return_after_stormwood:other-world:unit-traveler:ticket")
+		assert_eq(log_reader.tracked_id(progression), "regional_return_home",
+			"the same character's actual arrival receipt remains portable across worlds")
+		if realm_id == "meadows":
+			assert_true(log_reader.tracked_hint(progression).contains("Grandpa"))
+			assert_eq(log_reader.tracked_beacon(progression).id, "regional_return_home")
 		progression.set_flag("homecoming_seen")
 		assert_eq(log_reader.tracked_id(progression), "regional_finish_homecoming")
 		assert_eq(log_reader.current_index(progression), 1)
@@ -49,9 +91,11 @@ func test_regional_return_feed_follows_receipts_and_current_world_in_every_realm
 		assert_eq(log_reader.tracked_id(progression), "")
 		assert_true(log_reader.tracked_beacon(progression).is_empty())
 		assert_eq(log_reader.current_index(progression), -1)
-		progression.set_flag("water_currents_restored", false)
-		assert_eq(log_reader.main_entries(progression), chapter_rows,
-			"portable ending receipts must not suppress another world's chapter")
+		var other := CanonicalTravelerFixture.new()
+		other.set_flag("water_currents_restored")
+		other.set_flag("stormwood:long_storm_ended")
+		assert_eq(log_reader.main_entries(other), chapter_rows,
+			"another guest has neither this character's relic nor ending receipt")
 
 
 func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:

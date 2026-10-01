@@ -133,7 +133,7 @@
       ],
       "radius": 10.0,
       "alpha": {
-        "level_bonus": 4,
+        "level_bonus": 4, "level_ceiling": 20,
         "scale": 1.35
       },
       "_why_alpha": "FIRST-HOUR-FUN-REBUILD. This solitary Burrowback is the ironwood pocket's elder: visibly larger and four levels above the Band 4 roll so the optional cover-side encounter reads as a deliberate escalation before combat, without introducing a duplicate starter or a new creature mesh.",
@@ -1136,7 +1136,7 @@
       ],
       "radius": 8.0,
       "alpha": {
-        "level_bonus": 4,
+        "level_bonus": 4, "level_ceiling": 20,
         "scale": 1.3
       },
       "_why_alpha": "T3-BAND4. The tree-line grove (harvest.json orders 4011-4013) is the 'the ground itself just changed' moment ralph/reports/finding-post-tournament-cadence-2026-08-29.md asks for at the band3/4 seam, and docs/owner/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 11's test is 'could a reasonable player see something here and think I might want that instead of one of mine'. Meadowhart is spec section 3's named riding creature (docs/specs/MEADOWS_PROGRESSION_SPEC.md Band 4 'Riding unlock') -- a visibly larger, four-level elder standing alone at the exact point the region changes gives that temptation a face on sight, not a stat sheet. Not a starter and not a duplicate of the ordinary herd already at (60,0,6230): solitary, in cover at the grove rather than in the open pasture. Catchable because it is wild, never trainer-owned. MEASURED: 1.9m off the spine, well inside the corridor probe's own 30m notice radius -- the first siting pass (-30,4880) missed distance-to-spine and sat 75.8m off it, corrected here.",
@@ -1158,7 +1158,7 @@
       ],
       "respawn_seconds": 600.0,
       "alpha": {
-        "level_bonus": 4,
+        "level_bonus": 4, "level_ceiling": 20,
         "scale": 1.0
       },
       "_why_alpha": "T3-ENCOUNTER, closing a gap T3-CREATURES left: its band 2 and band 3 alphas both carry a `_why_alpha` and this one carries only `_why`, so tests/test_wild_alphas.gd's siting-rationale check failed on it alone. The rationale itself was never missing -- it is in `_why` above. Stated here in the key the test reads: this is the chapter's SECOND Stormtrail and the western one, on an exposed ridge 1380m from the band 3 Relay individual and in a different level band, so the brief's 'only one Stormtrail should normally occupy a local spawn cluster' holds by geography. The alpha block gives it +4 over band 4's own roll rather than an absolute level; its SIZE comes from the species (1.45m against Trailpup's 1.28m, +13%) and the block is deliberately scale 1.0 so the owner's 15-25% band is not applied twice.",
@@ -1175,7 +1175,7 @@
       ],
       "radius": 12.0,
       "alpha": {
-        "level_bonus": 4,
+        "level_bonus": 4, "level_ceiling": 20,
         "scale": 1.55
       },
       "_why": "T5-CADENCE / HIGHFIELD-HERO-R8-0912. The existing herd bull of the Highfield is the second beat inside T4-REGIONS' 1161m dead run (arc 1703, on the eastern sweep). R7 proved the real alpha only 11-28m from the served stands but found it visually indistinguishable from ordinary Meadowhart. The bounded 1.55 alpha multiplier strengthens this one authored individual's existing gameplay-sized silhouette and its production alpha aura/rim; species, count, centre, radius, level bonus and encounter path are unchanged.",

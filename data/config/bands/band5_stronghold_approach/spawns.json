@@ -42,7 +42,7 @@
         "_why_nameplate_depth": "VERIFIER full-bar judge (#356 5859347449): from the road the label clipped into the canopy of the woods between the road and the pack (hall_03). Raising it to 9 m did not clear those trees (tried and reverted, #356 5859702428), so alpha_pins.gd gained an opt-in `no_depth_test`. It is OFF here (coordinator ruling #356 5859741412 chose option (c): move the pack to a road sightline and keep the label depth-tested). The pack now stands on that sightline (`_why_f03_0_tight`), so the label stays depth-tested.",
         "_why_nameplate": "F03#0 re-walk: the fight plate named the leader, but walking up the road nothing in the world did -- a floating name over the leader (a constant on-screen size like the combat plate, warm like its aura) reads from the road on approach and is hidden past 140 m so the pack does not clutter the skyline.",
         "_why_presentation": "F03#0 lure (coordinator grant, 2026-09-26): the code-blind judge read the leader as a plain \"Galecrest Lv19\" that blended into its pack. alpha_pins.gd dresses the live body: nameplate/plate \"Alpha Galecrest\" (the species stays underneath) and a warm aura light, the Warrens Elder's treatment.",
-        "level_bonus": 4,
+        "level_bonus": 4, "level_ceiling": 20,
         "scale": 1.5,
         "completion_reward": {
           "title": "Alpha Galecrest",
@@ -254,7 +254,7 @@
       "_why": "west flank of the last stretch before the Hall, the densest ordinary cluster in the band's second half",
       "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before.",
       "alpha": {
-        "level_bonus": 2,
+        "level_bonus": 2, "level_ceiling": 20,
         "scale": 1.3,
         "combat": {
           "telegraph": 0.85,

@@ -60,7 +60,8 @@ const OFFER_ACCEPT_EFFECT := "stormheart:accept"
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 const LEGENDARY_NAME := "the Stormheart"
-const LEGENDARY_LEVEL := 44
+const LEGENDARY_LEVEL := 55
+const DYNAMO_CONFIG_PATH := "res://data/config/stormwood_dynamo.json"
 const CORE_POSITION := Vector3(-100.0, 262.21, 5470.0)
 const OFFER_RADIUS_M := 14.0
 const VIEW_RADIUS_M := 18.0
@@ -668,7 +669,7 @@ func _refresh_presentation() -> void:
 		var revealed := _has(WATERWARD_FLAG) or _aftermath_announced
 		_view_prompt.set("enabled", _has(OFFER_FLAG) and not bool(world.get("simulation_only")))
 		_view_prompt.set("actionable", not revealed)
-		_view_prompt.set("label", "Waterward route charted" if revealed else "Look beyond the broken storm")
+		_view_prompt.set("label", "Stormwood aftermath acknowledged" if revealed else "Look beyond the broken storm")
 	if _waterward_sea != null:
 		_waterward_sea.visible = _has(OFFER_FLAG)
 
@@ -734,14 +735,14 @@ func _build_waterward_view() -> void:
 	_view_prompt = INTERACTABLE.new()
 	_view_prompt.name = "WaterwardView"
 	_view_prompt.position = Vector3(0.0, 1.4, 17.0)
-	_view_prompt.call("configure", "Look beyond the broken storm", VIEW_RADIUS_M, false)
+	_view_prompt.call("configure", "Look over the cleared sky", VIEW_RADIUS_M, false)
 	_view_prompt.connect("activated", _on_waterward_view)
 	add_child(_view_prompt)
 	if bool(world.get("simulation_only")):
 		return
-	# The view remains a horizon and has no collision. The deliberate gate on
-	# this same platform is built separately and stays sealed until this view
-	# grants the one-time key.
+	# The view is a quiet aftermath horizon with no collision. The protected
+	# boss payout owns the fifth key; this existing view event closes the chapter
+	# and directs the traveler home through the Hall.
 	_waterward_sea = MeshInstance3D.new()
 	_waterward_sea.name = "DistantWaterwardSea"
 	var plane := PlaneMesh.new()
@@ -770,11 +771,19 @@ func _build_water_gate() -> void:
 func _make_legendary() -> RefCounted:
 	var creature: RefCounted = TRAINER_NPC.creature_for({
 		"species": LEGENDARY_SPECIES,
-		"level": LEGENDARY_LEVEL,
+		"level": legendary_level(),
 	})
 	if creature != null:
 		creature.set("nickname", LEGENDARY_NAME)
 	return creature
+
+
+static func legendary_level() -> int:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(DYNAMO_CONFIG_PATH))
+	if not raw is Dictionary:
+		return LEGENDARY_LEVEL
+	var captive: Variant = raw.get("captive", {})
+	return int(captive.get("level", LEGENDARY_LEVEL)) if captive is Dictionary else LEGENDARY_LEVEL
 
 
 ## The party holds this claim's own Stormheart (by its uid, so levelling or

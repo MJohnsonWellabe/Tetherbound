@@ -74,8 +74,8 @@ static func wild_band_at(z: float, cfg: Dictionary) -> Array:
 	return band if band.size() >= 2 else []
 
 
-## The team level band `[enter, exit]` the chapter expects at `z`. Measured, not
-## wished for -- see chapter_curve.json's `_comment_measurement`. Nothing in the
+## The authored team level target `[enter, exit]` at `z`. Earned levels remain
+## unmeasured until F27/F47 -- see chapter_curve.json's `_comment_measurement`. Nothing in the
 ## game reads this to gate anything (prompt 57: no level-lock UI, no player
 ## scaling); it exists so a regional package and
 ## `tests/test_chapter_curve.gd` can check authored content against the same

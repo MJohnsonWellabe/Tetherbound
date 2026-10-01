@@ -1066,7 +1066,7 @@
       "species": "mudsnout",
       "chamber": "mouth",
       "count": 1,
-      "level": 9,
+      "level": 11,
       "aggressive": true,
       "offset": [
         1.8,
@@ -1077,7 +1077,7 @@
       "species": "burrowback",
       "chamber": "hall",
       "count": 1,
-      "level": 10,
+      "level": 12,
       "aggressive": true,
       "offset": [
         -5.0,
@@ -1088,7 +1088,7 @@
       "species": "mudsnout",
       "chamber": "warren",
       "count": 1,
-      "level": 10,
+      "level": 12,
       "aggressive": true,
       "offset": [
         0.0,
@@ -1100,7 +1100,7 @@
       "species": "trailpup",
       "chamber": "vault",
       "count": 1,
-      "level": 13,
+      "level": 15,
       "_comment_admission": "The optional Elder is deliberately manual: the global aggressive notice radius reaches through the den-to-vault doorway, which begins a fight in the throat before the player and retained companion enter this room. The normal E prompt lets the player step into the vault and choose the encounter without adding a chamber-specific aggression system.",
       "aggressive": false,
       "offset": [
@@ -1142,7 +1142,7 @@
   "_comment_guardian_combat_profile": "WALL (G-3's table) plus G-9's own two additions. WALL is `enemy` defaults (power 8, telegraph 0.55, recovery 0.75, chase_speed 4.6, reposition_distance 4.0) with `telegraph 0.85`, `recovery 1.1`, `power x1.5` (8 x 1.5 = 12), `chase_speed 3.4`, `reposition_distance 2.5` -- slow, heavy, stands its ground, a long and expensive punish window. G-9 adds `lunge 6.5` and `cone_degrees 72` so the swing the player actually sees matches Earth Fist's own authored arc (`_comment_guardian_move` above: '0.62s windup and a 72-degree cone... directional, so a player who reads the windup can step around it') rather than the generic enemy's 90-degree cone and 3.4 lunge. Every key not named here falls back to `combat.json`'s `enemy` block untouched, per G-2's own merge rule. WHAT THE FIGHT IS SUPPOSED TO FEEL LIKE, for the coordinator to check their merge against: the guardian should read as slow and grounded rather than fast -- it does not chase eagerly (chase_speed 3.4 against the field's 4.6) and it does not circle back in quickly after a swing (reposition_distance 2.5, tighter than the field's 4.0, so it plants and waits rather than repositioning far). Its telegraph should be VISIBLY longer than a den resident's before this pass (0.85s against the residents' unmodified 0.55s, a 0.30s gap -- G-9's own floor, met exactly rather than padded past it) so a player who has learned to read the field's 0.55s tell gets a beat more warning here, not less. The hit itself should read as heavy and worth stepping out of -- power 12 against the field's 8 is a full one-and-a-half step up, meeting G-9's own 1.4x-over-a-den-resident floor with margin -- but the WALL profile's long 1.1s recovery is deliberately the throw window G-10 requires: a player who steps around the swing gets a real, generous opening to either land a hit or throw an orb, so the guardian reads as dangerous to fight carelessly and never reads as unfairly fast or as a wall nothing can get through. `lunge 6.5` (up from the field's 3.4) means that when it does commit, the reach is real -- in the den's own ~6m of clearance (this file's `_comment_chambers_heights`), that is most of the room, so 'stepping around it' is a real spatial decision inside a tight chamber, not merely dodging a jab. TUNABLE, but changing these numbers changes what G-9's own fails-if bar is checked against -- re-derive with `combat_math.base_damage` before retuning power.",
   "guardian": {
     "species": "burrowback",
-    "level": 14,
+    "level": 16,
     "chamber": "den",
     "offset": [
       3.0,

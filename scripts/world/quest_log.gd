@@ -136,15 +136,15 @@ func main_entries(progression: RefCounted) -> Array:
 	return _entries(_active_main(progression), progression)
 
 
-## Once this world has restored Tidewake, the same two portable receipts guide
-## its owner across every already-authored return gate. This replaces the
-## current realm feed temporarily; it adds no quest state of its own.
+## The canonical traveler owns the invitation to return. An ahead world alone
+## cannot replace a guest's chapter feed with another character's ending.
+## No state is created here: the merged reader exposes detached personal data.
 func _active_main(progression: RefCounted) -> Array:
 	if progression == null or _regional_ending.is_empty():
 		return _main
-	var required := str(_regional_ending.get("required_world_flag", ""))
+	var phase := _regional_ending_phase(progression)
 	var supported: Variant = _regional_ending.get("supported_realms", [])
-	if required.is_empty() or not bool(progression.call("has", required)) \
+	if phase.is_empty() \
 			or not supported is Array or not (supported as Array).has(_realm_id):
 		return _main
 	var out: Array = []
@@ -158,8 +158,27 @@ func _active_main(progression: RefCounted) -> Array:
 			var presentation: Variant = (by_realm as Dictionary).get(_realm_id, {})
 			if presentation is Dictionary:
 				row.merge(presentation as Dictionary, true)
+		if phase == "return_home":
+			row["how"] = "Use your Home Key to return to the Crossing Hall's Home Arch, then follow the village road to Grandpa."
+			row.erase("beacon")
 		out.append(row)
 	return out
+
+
+func _regional_ending_phase(progression: RefCounted) -> String:
+	for method: String in ["traveler_character_id", "traveler_relics_held",
+			"traveler_relics_hung", "traveler_transaction_receipts"]:
+		if not progression.has_method(method):
+			return ""
+	var id := str(progression.call("traveler_character_id"))
+	if id.is_empty():
+		return ""
+	var receipts: Array = progression.call("traveler_transaction_receipts")
+	if preload("res://scripts/story/regional_homecoming.gd").has_return_receipt(id, receipts):
+		return "arrived"
+	var held: Array = progression.call("traveler_relics_held")
+	var hung: Array = progression.call("traveler_relics_hung")
+	return "return_home" if held.has("stormwood") or hung.has("stormwood") else ""
 
 
 static func _read_data(path: String) -> Dictionary:
