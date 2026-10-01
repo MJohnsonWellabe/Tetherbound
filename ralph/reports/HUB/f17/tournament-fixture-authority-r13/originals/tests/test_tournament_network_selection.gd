@@ -17,11 +17,6 @@ class FakeManager extends Node:
 		return fighting
 
 
-class GuestSession extends Node:
-	func _authority_character(peer_id: int) -> String:
-		return "guest" if peer_id == 2 else ""
-
-
 class FailingPresentationDirector extends DIRECTOR:
 	var party_override: RefCounted = null
 	var body_calls := 0
@@ -72,8 +67,6 @@ func test_tournament_roster_accepts_exactly_three_unique_durable_ids() -> void:
 
 func test_frozen_roster_rejects_an_outside_deployment_without_replacing_current() -> void:
 	var director := DIRECTOR.new()
-	var session := GuestSession.new()
-	director._session = session
 	director._encounter_host = ENCOUNTER_HOST.new(1)
 	var record: Dictionary = director._encounter_host.open(1, "meadows", "trainer",
 		{"species_id": "bramblebun", "owner_npc": "tournament_quarter_mira"})
@@ -82,7 +75,6 @@ func test_frozen_roster_rejects_an_outside_deployment_without_replacing_current(
 	director._freeze_tournament_roster(encounter_id, 2, ids)
 	director._host_set_deployed(2, {"creature_uid": ids[0], "species_id": "terrapup",
 		"shiny": false, "character_id": "guest", "card": {}})
-	assert_true(director._deployed_by.has(2), "session authority must admit the guest before roster assertions")
 	assert_eq(str((director._deployed_by[2] as Dictionary).creature_uid), ids[0])
 	director._host_set_deployed(2, {"creature_uid": _uid(), "species_id": "terrapup",
 		"shiny": false, "character_id": "guest", "card": {}})
@@ -98,7 +90,6 @@ func test_frozen_roster_rejects_an_outside_deployment_without_replacing_current(
 	assert_eq(str((director._deployed_by[2] as Dictionary).creature_uid), replacement,
 		"a closed round must not leave a roster that blocks later deployments")
 	director.free()
-	session.free()
 
 
 func test_tournament_record_detection_uses_the_authored_round_identity() -> void:

@@ -1,0 +1,134 @@
+{
+  "classification": "AUTHOR SOURCE ONLY; ROOT NAMED ENGINE TEST REQUIRED; F17#4 OPEN",
+  "passed": true,
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "passed": true
+    },
+    {
+      "name": "frozen originals/tests/test_tournament_network_selection.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen prior-failure/ci6165-110344653258.log",
+      "passed": true
+    },
+    {
+      "name": "frozen proposal/tests/test_tournament_network_selection.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen repair.patch",
+      "passed": true
+    },
+    {
+      "name": "frozen review-context.txt",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/net/session.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/tests/test_director_projectile_deployment_binding.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen source-check.py",
+      "passed": true
+    },
+    {
+      "name": "unchanged live production/helper scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged live production/helper scripts/net/session.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged live production/helper scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged live production/helper tests/helpers/gate_a_opening_drive.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged live production/helper tests/helpers/fresh_opening_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged live production/helper tests/test_fresh_opening_target.gd",
+      "passed": true
+    },
+    {
+      "name": "live proposal byte exact",
+      "passed": true
+    },
+    {
+      "name": "one bounded fixture insertion 0",
+      "passed": true
+    },
+    {
+      "name": "one bounded fixture insertion 1",
+      "passed": true
+    },
+    {
+      "name": "one bounded fixture insertion 2",
+      "passed": true
+    },
+    {
+      "name": "one bounded fixture insertion 3",
+      "passed": true
+    },
+    {
+      "name": "entire original test source otherwise exact",
+      "passed": true
+    },
+    {
+      "name": "same complete test method list",
+      "passed": true
+    },
+    {
+      "name": "all original assertions retained in sequence",
+      "passed": true
+    },
+    {
+      "name": "one added admission assertion",
+      "passed": true
+    },
+    {
+      "name": "no asynchronous or skipped fixture",
+      "passed": true
+    },
+    {
+      "name": "actual production guard requires canonical owner before row insertion",
+      "passed": true
+    },
+    {
+      "name": "canonical Session API observed",
+      "passed": true
+    },
+    {
+      "name": "guest never falls back to claimed packet character",
+      "passed": true
+    },
+    {
+      "name": "same established fixture boundary",
+      "passed": true
+    },
+    {
+      "name": "actual CI missing deployment row error",
+      "passed": true
+    },
+    {
+      "name": "CI misleading ok does not count as acceptance",
+      "passed": true
+    }
+  ]
+}

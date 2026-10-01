@@ -1,0 +1,53 @@
+{
+  "classification": "AUTHOR SOURCE CANDIDATE ONLY; F17#4 OPEN",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "manifest.json": {
+      "bytes": 2520,
+      "sha256": "92b22780da98949a8c1044cc41211de0361606faa639333b5cff1b97a048c015"
+    },
+    "originals/tests/test_tournament_network_selection.gd": {
+      "bytes": 8216,
+      "sha256": "a0fb3353619b0cc1ad1690ab61545433133440bf72749e13256e9afaed8b97a2"
+    },
+    "prior-failure/ci6165-110344653258.log": {
+      "bytes": 902452,
+      "sha256": "6aa22f8f9759f4fdfce3fdb1fce372037582ca809f71d5f08304c8ff76b7b3ce"
+    },
+    "proposal/tests/test_tournament_network_selection.gd": {
+      "bytes": 8534,
+      "sha256": "ea954887511edb996537b073a66d20aae95dca23689bda94c2ce5f7a18a18845"
+    },
+    "repair.patch": {
+      "bytes": 2066,
+      "sha256": "1d94fd735f51b6e7cdc0b30b78417638a2a4c87b3acb4e9e3bf2889218c32742"
+    },
+    "review-context.txt": {
+      "bytes": 2186,
+      "sha256": "85b02f903e8f4414316f5eb58a32da1bd0da29deb45d6298517b41fa4acb41f6"
+    },
+    "root-actual/scripts/combat/encounter_director.gd": {
+      "bytes": 355711,
+      "sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162"
+    },
+    "root-actual/scripts/net/session.gd": {
+      "bytes": 158617,
+      "sha256": "02fb845febabe456887c0170aa2b933704c80ec6a21a3870328317ea76d7e7fa"
+    },
+    "root-actual/tests/test_director_projectile_deployment_binding.gd": {
+      "bytes": 7915,
+      "sha256": "e6a2b2e3e6a0b8e01882a062c7768e01651ac7f203d15ef995bb186ab2c42d4b"
+    },
+    "source-check.py": {
+      "bytes": 3801,
+      "sha256": "893d57eb0428311c1d9cd609f228c86c3f6dd869fcb7f4f49a041dd765f26445"
+    },
+    "source-results.json": {
+      "bytes": 3192,
+      "sha256": "36f9f0f5c3a930f2b9c6f9365182c996aebd626a5249e91bf41422953b646ca1"
+    }
+  }
+}

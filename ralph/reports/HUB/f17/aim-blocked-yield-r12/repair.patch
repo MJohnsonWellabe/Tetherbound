@@ -1,0 +1,127 @@
+diff --git a/tests/helpers/fresh_opening_segment.gd b/tests/helpers/fresh_opening_segment.gd
+index f18fd4c4d1..79455a6a3d 100644
+--- a/tests/helpers/fresh_opening_segment.gd
++++ b/tests/helpers/fresh_opening_segment.gd
+@@ -6,6 +6,7 @@ extends "res://tests/helpers/gate_a_opening_drive.gd"
+ const EARNED_NAV := preload("res://tests/helpers/stick_navigator.gd")
+ const AIM_COMMIT_CANCEL := preload("res://tests/helpers/aim_commit_cancel.gd")
+ var _aim_receipt_signatures: Dictionary = {}
++var _aim_requires_movement := false
+ 
+ 
+ func _walk_to_earned_prompt(target: Node3D, budget: int) -> bool:
+@@ -450,9 +451,11 @@ func _aim_readiness_receipt(stage: String) -> void:
+ 	print("AIM READINESS %s %s" % [stage, payload])
+ 
+ 
+-## Transient failures stay inside the inherited convergence timer. The final
+-## dispatch check above remains the strict, failure-reporting refusal.
++## Transient alignment failures stay inside the inherited convergence timer.
++## A settled blocked shot yields to its existing movement recovery, still false.
++## The final dispatch check above remains the strict, failure-reporting refusal.
+ func _aim_readiness_ready() -> bool:
++	_aim_requires_movement = false
+ 	var throw: Node = _combat.call("throw_aim") if _combat != null else null
+ 	if throw == null or not bool(_combat.call("is_aiming")):
+ 		return false
+@@ -460,5 +463,15 @@ func _aim_readiness_ready() -> bool:
+ 		return false
+ 	var current: Dictionary = throw.call("launch_assist_diagnostics")
+ 	var preview: Dictionary = throw.call("aim_report")
++	if not preview.is_empty():
++		_aim_requires_movement = (
++			(bool(current.get("eligible", false)) and bool(preview.get("trajectory_blocked", false)))
++			or (str(current.get("reason", "")) == "line_of_sight_blocked"
++			and bool(current.get("inside_body", false))))
+ 	return bool(current.get("eligible", false)) and not preview.is_empty() \
+ 		and not bool(preview.get("trajectory_blocked", false))
++
++
++## Read the same post-process/post-physics sample; this adds no native query.
++func _aim_readiness_requires_movement() -> bool:
++	return _aim_requires_movement
+diff --git a/tests/helpers/gate_a_opening_drive.gd b/tests/helpers/gate_a_opening_drive.gd
+index ec7d45d380..95b41aed9a 100644
+--- a/tests/helpers/gate_a_opening_drive.gd
++++ b/tests/helpers/gate_a_opening_drive.gd
+@@ -868,6 +868,8 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
+ 		if to.length() < 0.01:
+ 			if await _released_aim_is_ready():
+ 				return true
++			if _aim_readiness_requires_movement():
++				return false
+ 			continue
+ 		var forward := -camera.global_transform.basis.z
+ 		var wanted := to.normalized()
+@@ -888,6 +890,8 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
+ 			# steering inside this same deadline.
+ 			if await _released_aim_is_ready():
+ 				return true
++			if _aim_readiness_requires_movement():
++				return false
+ 			_aim_has_history = false
+ 			continue
+ 		# One deflection, split across the two axes by the direction of the
+@@ -933,6 +937,12 @@ func _aim_readiness_ready() -> bool:
+ 	return _shot_is_eligible()
+ 
+ 
++## A settled physical obstruction can yield to the existing bounded movement
++## recovery. It remains a failed aim; ordinary callers keep their timer behavior.
++func _aim_readiness_requires_movement() -> bool:
++	return false
++
++
+ ## How far to push the stick this sample, measured rather than assumed.
+ ##
+ ## T2-FLAKE. This replaces a fixed response curve -- full deflection above six
+diff --git a/tests/test_fresh_opening_target.gd b/tests/test_fresh_opening_target.gd
+index 266860d9ce..7c1c7c66a8 100644
+--- a/tests/test_fresh_opening_target.gd
++++ b/tests/test_fresh_opening_target.gd
+@@ -131,6 +131,45 @@ func test_transient_readiness_uses_current_verdict_and_clear_preview_without_fai
+ 	throw.free()
+ 
+ 
++func test_settled_obstruction_requests_movement_without_admitting_a_throw() -> void:
++	var throw := ThrowVerdict.new()
++	var combat := AimingCombat.new()
++	combat.aim = throw
++	var opening := Probe.new()
++	opening._combat = combat
++	throw.current = {"eligible": true, "reason": "eligible", "inside_body": true}
++	throw.preview["trajectory_blocked"] = true
++	assert_false(opening._aim_readiness_ready(), "the observed camera-eligible blocked arc remains refused")
++	assert_true(opening._aim_readiness_requires_movement())
++	assert_false(opening._final_throw_verdict_ready(), "movement intent cannot grant launch admission")
++	throw.current = {"eligible": false, "reason": "line_of_sight_blocked", "inside_body": true}
++	throw.preview["trajectory_blocked"] = false
++	assert_false(opening._aim_readiness_ready())
++	assert_true(opening._aim_readiness_requires_movement(), "an aligned blocked sight line also needs another position")
++	throw.current["inside_body"] = false
++	assert_false(opening._aim_readiness_ready())
++	assert_false(opening._aim_readiness_requires_movement(), "an off-body reticle still needs steering")
++	throw.current = {"eligible": true, "reason": "eligible", "inside_body": true}
++	assert_true(opening._aim_readiness_ready())
++	assert_false(opening._aim_readiness_requires_movement(), "a new clear sample erases prior blockage")
++	throw.preview["trajectory_blocked"] = true
++	assert_false(opening._aim_readiness_ready())
++	assert_true(opening._aim_readiness_requires_movement())
++	throw._guard = 0.1
++	assert_false(opening._aim_readiness_ready())
++	assert_false(opening._aim_readiness_requires_movement(), "entry guard cannot reuse a prior obstruction")
++	throw._guard = 0.0
++	throw.preview = {}
++	assert_false(opening._aim_readiness_ready())
++	assert_false(opening._aim_readiness_requires_movement(), "absent preview supplies no settled obstruction")
++	throw.preview = {"trajectory_blocked": true}
++	combat.aiming = false
++	assert_false(opening._aim_readiness_ready())
++	assert_false(opening._aim_readiness_requires_movement(), "ended aim cannot reuse a prior obstruction")
++	combat.free()
++	throw.free()
++
++
+ func test_aim_recovery_walks_round_a_blocked_line_at_throwing_range() -> void:
+ 	assert_eq(OPENING.aim_recovery(7.3, "line_of_sight_blocked"), "reposition",
+ 		"a blocked line at a comfortable range is answered by moving, not re-aiming in place")

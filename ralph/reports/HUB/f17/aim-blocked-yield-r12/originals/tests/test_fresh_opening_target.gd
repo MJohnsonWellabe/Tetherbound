@@ -131,45 +131,6 @@ func test_transient_readiness_uses_current_verdict_and_clear_preview_without_fai
 	throw.free()
 
 
-func test_settled_obstruction_requests_movement_without_admitting_a_throw() -> void:
-	var throw := ThrowVerdict.new()
-	var combat := AimingCombat.new()
-	combat.aim = throw
-	var opening := Probe.new()
-	opening._combat = combat
-	throw.current = {"eligible": true, "reason": "eligible", "inside_body": true}
-	throw.preview["trajectory_blocked"] = true
-	assert_false(opening._aim_readiness_ready(), "the observed camera-eligible blocked arc remains refused")
-	assert_true(opening._aim_readiness_requires_movement())
-	assert_false(opening._final_throw_verdict_ready(), "movement intent cannot grant launch admission")
-	throw.current = {"eligible": false, "reason": "line_of_sight_blocked", "inside_body": true}
-	throw.preview["trajectory_blocked"] = false
-	assert_false(opening._aim_readiness_ready())
-	assert_true(opening._aim_readiness_requires_movement(), "an aligned blocked sight line also needs another position")
-	throw.current["inside_body"] = false
-	assert_false(opening._aim_readiness_ready())
-	assert_false(opening._aim_readiness_requires_movement(), "an off-body reticle still needs steering")
-	throw.current = {"eligible": true, "reason": "eligible", "inside_body": true}
-	assert_true(opening._aim_readiness_ready())
-	assert_false(opening._aim_readiness_requires_movement(), "a new clear sample erases prior blockage")
-	throw.preview["trajectory_blocked"] = true
-	assert_false(opening._aim_readiness_ready())
-	assert_true(opening._aim_readiness_requires_movement())
-	throw._guard = 0.1
-	assert_false(opening._aim_readiness_ready())
-	assert_false(opening._aim_readiness_requires_movement(), "entry guard cannot reuse a prior obstruction")
-	throw._guard = 0.0
-	throw.preview = {}
-	assert_false(opening._aim_readiness_ready())
-	assert_false(opening._aim_readiness_requires_movement(), "absent preview supplies no settled obstruction")
-	throw.preview = {"trajectory_blocked": true}
-	combat.aiming = false
-	assert_false(opening._aim_readiness_ready())
-	assert_false(opening._aim_readiness_requires_movement(), "ended aim cannot reuse a prior obstruction")
-	combat.free()
-	throw.free()
-
-
 func test_aim_recovery_walks_round_a_blocked_line_at_throwing_range() -> void:
 	assert_eq(OPENING.aim_recovery(7.3, "line_of_sight_blocked"), "reposition",
 		"a blocked line at a comfortable range is answered by moving, not re-aiming in place")
