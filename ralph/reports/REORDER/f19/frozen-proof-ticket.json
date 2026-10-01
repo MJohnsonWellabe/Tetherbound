@@ -2,7 +2,7 @@
   "feature": "F19",
   "name": "F19_CURVE_READERS_01",
   "branch": "tb/f19",
-  "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a",
+  "source": "8fd1dab219d6887c577f294a17771623a6622eba",
   "frozen_source_files": [
     {
       "path": "data/config/bands/band3_the_river_lock/trainers.json",
@@ -30,7 +30,7 @@
     },
     {
       "path": "data/config/realm_hearts.json",
-      "sha256": "093bd9b1e8df0ed2f9ab13ab088ff08a219d2777d7698d08b674f2619c55e9c4"
+      "sha256": "b50d16ac88deed90d781b6e3628a51b597f66893a9174228acdea8e5c117b2a2"
     },
     {
       "path": "data/config/stormwood_encounters.json",
@@ -117,5 +117,16 @@
   ],
   "full_ci_selected": false,
   "reason": "RD36/RD37 narrow data batch; required engine and player-path proofs retained separately",
-  "owner_needs": []
+  "owner_needs": [],
+  "reused_evidence": {
+    "checked_source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a",
+    "current_source": "8fd1dab219d6887c577f294a17771623a6622eba",
+    "reason": "comment/evidence-only delta; no broad or default rerun under RD36/RD37",
+    "changed_source_files": [
+      {
+        "path": "data/config/realm_hearts.json",
+        "reason": "comment-only target/current distinction; JSON gameplay values identical"
+      }
+    ]
+  }
 }
