@@ -3,6 +3,19 @@
   "_comment": "P2-037 candidate: ground the visual bark skirt without altering the tree's position, decks, ascent, rails, collision or entrance split. Full landmark identity and native comparison remain open.",
   "ground_shell_base": true,
   "bark_embed_m": 0.5,
+  "core_finish": {
+    "enabled": false,
+    "_comment": "F41/P2-037 visual-only candidate. Narrow forked charge behind the existing ascent, restrained local light and a cooled persistent scar after release. Requires native High/Medium approach/interior judgment.",
+    "colour": "#b2d8ea",
+    "emission": "#8bbbd7",
+    "energy": 1.35,
+    "width_m": 0.32,
+    "branch_width_m": 0.16,
+    "light_energy": 0.9,
+    "light_range_m": 24.0,
+    "cooled_colour": "#455568",
+    "cooled_energy": 0.08
+  },
   "ancient_trunk": {
     "enabled": false,
     "_comment": "P2-037: articulated outer bark and split crown tips around the unchanged inner clearance. Visual geometry and UVs only; native comparison required.",
