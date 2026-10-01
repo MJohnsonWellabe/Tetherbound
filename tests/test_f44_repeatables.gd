@@ -168,6 +168,8 @@ func test_first_alpha_roll_is_durable_without_invented_resolution_and_rejects_fo
 	assert_false(born.record.has("required_departures"))
 	assert_true(STATE.validate("world", born.state, [], "world_a").is_empty())
 	assert_false(STATE.validate("world", born.state, [], "world_b").is_empty())
+	assert_false(STATE.validate("world", born.state, [], "").is_empty())
+	assert_true(STATE.validate("world", before, [], "").is_empty())
 	var reload: Dictionary = JSON.parse_string(JSON.stringify(born.state))
 	assert_true(STATE.validate("world", reload, [], "world_a").is_empty())
 	assert_eq(ALPHA.retained_spawn(reload, id), born.record.spawn_traits)

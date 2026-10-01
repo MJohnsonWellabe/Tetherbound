@@ -10,7 +10,7 @@ static func defaults(scope: String) -> Dictionary:
 		return {}
 	return value.duplicate(true)
 
-static func validate(scope: String, value: Variant, owned_uids: Array = [], world_namespace: String = "") -> Array[String]:
+static func validate(scope: String, value: Variant, owned_uids: Array = [], world_namespace: Variant = null) -> Array[String]:
 	var raw_schema: Variant = DATA.json("res://data/schema/%s_state.schema.json" % scope)
 	if not raw_schema is Dictionary:
 		return ["Redesign %s schema is missing or malformed" % scope]
@@ -43,7 +43,7 @@ static func validate(scope: String, value: Variant, owned_uids: Array = [], worl
 			if provenance.size() != 4 or provenance.get("kind") != "wild" or provenance.get("spawn_id") != id \
 				or provenance.get("spawn_generation") != row.generation \
 				or not provenance.get("world_namespace") is String or provenance.world_namespace.is_empty() \
-				or (not world_namespace.is_empty() and provenance.world_namespace != world_namespace):
+				or (world_namespace != null and provenance.world_namespace != world_namespace):
 				errors.append("alpha provenance changed %s" % id)
 			var seen: Array = []
 			for trait_row: Variant in packet.rolled_traits:
