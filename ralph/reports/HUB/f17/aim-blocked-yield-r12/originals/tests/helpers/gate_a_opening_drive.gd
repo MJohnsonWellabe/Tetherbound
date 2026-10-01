@@ -868,8 +868,6 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 		if to.length() < 0.01:
 			if await _released_aim_is_ready():
 				return true
-			if _aim_readiness_requires_movement():
-				return false
 			continue
 		var forward := -camera.global_transform.basis.z
 		var wanted := to.normalized()
@@ -890,8 +888,6 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 			# steering inside this same deadline.
 			if await _released_aim_is_ready():
 				return true
-			if _aim_readiness_requires_movement():
-				return false
 			_aim_has_history = false
 			continue
 		# One deflection, split across the two axes by the direction of the
@@ -935,12 +931,6 @@ func _released_aim_is_ready() -> bool:
 
 func _aim_readiness_ready() -> bool:
 	return _shot_is_eligible()
-
-
-## A settled physical obstruction can yield to the existing bounded movement
-## recovery. It remains a failed aim; ordinary callers keep their timer behavior.
-func _aim_readiness_requires_movement() -> bool:
-	return false
 
 
 ## How far to push the stick this sample, measured rather than assumed.

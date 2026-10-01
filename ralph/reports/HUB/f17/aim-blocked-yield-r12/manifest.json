@@ -1,0 +1,110 @@
+{
+  "classification": "AUTHOR SOURCE CANDIDATE ONLY; F17#4 OPEN",
+  "base_commit": "6efd879fb113c43fe25384ee2ef9cb77ec607ff3",
+  "root_failure_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+  "executed_closure_sha256": "02dfb62f2d7cb334294ce0c326c507ee90340761f52440c045c6e820c7bb8f91",
+  "root_snapshot_current_head": "41f03d7f4f7b2cf7687fab4ddbe418a8245196b9",
+  "changed_paths": [
+    "tests/helpers/gate_a_opening_drive.gd",
+    "tests/helpers/fresh_opening_segment.gd",
+    "tests/test_fresh_opening_target.gd"
+  ],
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "originals/tests/helpers/fresh_opening_segment.gd": {
+      "bytes": 19706,
+      "sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a"
+    },
+    "originals/tests/helpers/gate_a_opening_drive.gd": {
+      "bytes": 72553,
+      "sha256": "36681ba1e791f90842195ceff73cabb5b3109cf74e865e4ea4846140816f7370"
+    },
+    "originals/tests/test_fresh_opening_target.gd": {
+      "bytes": 4936,
+      "sha256": "1dd1965ff7d88a0ca9e9ea90ba093fcfb6849e9f424dde7c0b5443a3012c8b4f"
+    },
+    "prior-failure/native.log": {
+      "bytes": 89267,
+      "sha256": "32e0e1d221aa96fb47f204ea01e11e723755c5ef24c88ec59077cd4784e97912"
+    },
+    "prior-failure/parser.log": {
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    "prior-failure/receipt.json": {
+      "bytes": 496501,
+      "sha256": "f187dc3b05680ac10e3ce70a175c1b4cb4140021319494786b642eae16a95d1b"
+    },
+    "proposal/tests/helpers/fresh_opening_segment.gd": {
+      "bytes": 20289,
+      "sha256": "5bd2ea999b87d1071bc23ad1786be39c4e23f0f08d00bd34682cdcfeedd791fb"
+    },
+    "proposal/tests/helpers/gate_a_opening_drive.gd": {
+      "bytes": 72895,
+      "sha256": "b95d7865129722abb4b010a379a2473cd3d0457d14f202acc5e11233a79689d3"
+    },
+    "proposal/tests/test_fresh_opening_target.gd": {
+      "bytes": 7026,
+      "sha256": "5e64bf948d1f8ccdc8bf4e9d68f98d3d01e374e607190e347c9a738d3ad63902"
+    },
+    "repair.patch": {
+      "bytes": 6204,
+      "sha256": "105cc54542aa71a4db7b35a635533ac4d9819e34dea929c5f321c9eff44e6a6b"
+    },
+    "review-context.txt": {
+      "bytes": 3789,
+      "sha256": "422cedeb6df49d7daff9337b930f81d2502c17f78916dc52b6c89ee6d92373a5"
+    },
+    "root-actual/scripts/combat/combat_manager.gd": {
+      "bytes": 244351,
+      "sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a"
+    },
+    "root-actual/scripts/combat/throw_aim.gd": {
+      "bytes": 55214,
+      "sha256": "ccd67132f11daa5758cde60c5eedeef0d126e9233e88bae4ba27452026ead2fd"
+    },
+    "root-actual/scripts/combat/throw_preview.gd": {
+      "bytes": 21497,
+      "sha256": "16af71b164169257754cd6bbe92b527a89c2ca67abe64b1090f6d81fca2ed898"
+    },
+    "root-actual/scripts/creatures/wild_creature.gd": {
+      "bytes": 56837,
+      "sha256": "fd452d77146ded93abb31ad5f266e96aa95dea3d0c0bfc5b9b907edb753df915"
+    },
+    "root-actual/tests/helpers/gate_a_material_route.gd": {
+      "bytes": 57478,
+      "sha256": "da57860ece2e45cd679dae1cceea5ce93c9f23829ce29bc0e227130c4ef610be"
+    },
+    "root-actual/tests/helpers/stick_navigator.gd": {
+      "bytes": 42441,
+      "sha256": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345"
+    },
+    "source-check.py": {
+      "bytes": 7621,
+      "sha256": "c7ff6a5ce497cfa1a6eb6b278a526dce48b7e9b7f45ac7c72688523fa0005c1d"
+    }
+  },
+  "protected_hub_sha256": {
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d",
+    "tests/test_gate_a_npc_gather_segment_contract.gd": "3c2a81db5fe378fe009ebcdd3794cea5e9b89edb8b876044042cbd771238c3d7",
+    "tests/helpers/gate_a_material_route.gd": "da57860ece2e45cd679dae1cceea5ce93c9f23829ce29bc0e227130c4ef610be",
+    "scripts/combat/throw_aim.gd": "ccd67132f11daa5758cde60c5eedeef0d126e9233e88bae4ba27452026ead2fd",
+    "scripts/combat/throw_preview.gd": "16af71b164169257754cd6bbe92b527a89c2ca67abe64b1090f6d81fca2ed898",
+    "scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "scripts/creatures/wild_creature.gd": "fd452d77146ded93abb31ad5f266e96aa95dea3d0c0bfc5b9b907edb753df915"
+  },
+  "root_input_executed_sha256": {
+    "scripts/combat/combat_manager.gd": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a",
+    "scripts/combat/throw_aim.gd": "ccd67132f11daa5758cde60c5eedeef0d126e9233e88bae4ba27452026ead2fd",
+    "scripts/combat/throw_preview.gd": "16af71b164169257754cd6bbe92b527a89c2ca67abe64b1090f6d81fca2ed898",
+    "scripts/creatures/wild_creature.gd": "fd452d77146ded93abb31ad5f266e96aa95dea3d0c0bfc5b9b907edb753df915",
+    "tests/helpers/gate_a_material_route.gd": "da57860ece2e45cd679dae1cceea5ce93c9f23829ce29bc0e227130c4ef610be",
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345"
+  },
+  "validation": "No local Godot/parser/import/render/CI run; existing ROOT reviewer and named engine test required, then original-budget fresh campaign from title."
+}

@@ -6,7 +6,6 @@ extends "res://tests/helpers/gate_a_opening_drive.gd"
 const EARNED_NAV := preload("res://tests/helpers/stick_navigator.gd")
 const AIM_COMMIT_CANCEL := preload("res://tests/helpers/aim_commit_cancel.gd")
 var _aim_receipt_signatures: Dictionary = {}
-var _aim_requires_movement := false
 
 
 func _walk_to_earned_prompt(target: Node3D, budget: int) -> bool:
@@ -451,11 +450,9 @@ func _aim_readiness_receipt(stage: String) -> void:
 	print("AIM READINESS %s %s" % [stage, payload])
 
 
-## Transient alignment failures stay inside the inherited convergence timer.
-## A settled blocked shot yields to its existing movement recovery, still false.
-## The final dispatch check above remains the strict, failure-reporting refusal.
+## Transient failures stay inside the inherited convergence timer. The final
+## dispatch check above remains the strict, failure-reporting refusal.
 func _aim_readiness_ready() -> bool:
-	_aim_requires_movement = false
 	var throw: Node = _combat.call("throw_aim") if _combat != null else null
 	if throw == null or not bool(_combat.call("is_aiming")):
 		return false
@@ -463,15 +460,5 @@ func _aim_readiness_ready() -> bool:
 		return false
 	var current: Dictionary = throw.call("launch_assist_diagnostics")
 	var preview: Dictionary = throw.call("aim_report")
-	if not preview.is_empty():
-		_aim_requires_movement = (
-			(bool(current.get("eligible", false)) and bool(preview.get("trajectory_blocked", false)))
-			or (str(current.get("reason", "")) == "line_of_sight_blocked"
-			and bool(current.get("inside_body", false))))
 	return bool(current.get("eligible", false)) and not preview.is_empty() \
 		and not bool(preview.get("trajectory_blocked", false))
-
-
-## Read the same post-process/post-physics sample; this adds no native query.
-func _aim_readiness_requires_movement() -> bool:
-	return _aim_requires_movement

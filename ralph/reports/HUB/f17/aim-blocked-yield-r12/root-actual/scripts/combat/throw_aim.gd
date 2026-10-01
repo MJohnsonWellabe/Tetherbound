@@ -1,0 +1,1242 @@
+extends Node
+
+## Aiming and throwing an orb.
+##
+## Combat is piloted, so the player is driving their creature when they decide to
+## throw. Pressing Throw hands camera and control back to the TRAINER for a
+## real-time over-the-shoulder aim, and hands them forward again on release.
+##
+## That swap is the design, not an implementation detail. Your creature is left
+## undefended while you aim and the opponent does not stop attacking it, so
+## throwing costs you something. Without that cost, throwing is free and the
+## right play is to throw constantly between attacks, which is the version of
+## catching that answers no question worth asking.
+##
+## Split out of combat_manager.gd, which already owns the fight. This owns the
+## aim: the camera profile, the reticle, the orb, and the stock.
+
+const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
+const ORB_SCENE := preload("res://scenes/combat/orb.tscn")
+
+signal aim_entered()
+signal aim_exited()
+## The orb landed on the target. `offset` is metres off centre of mass.
+signal orb_struck(target: Node3D, offset: float)
+## The orb landed nowhere. Carries the sentence to show the player, because
+## "the orb went wide" was printed for every miss regardless of what happened.
+signal orb_missed(message: String)
+## A throw was refused, with a reason the HUD can show. "I pressed it and
+## nothing happened" is otherwise indistinguishable from a dropped input.
+signal throw_refused(reason: String)
+
+enum State { IDLE, AIMING, THROWN }
+
+## How far down the camera's centre ray the aim point sits when the reticle is
+## not over the target. Roughly arena width: far enough that the throw reads as
+## going where you pointed, near enough that it is not effectively parallel.
+const AIM_REACH := 12.0
+
+## The soft aim magnet's band, in multiples of the target's body WIDTH (twice
+## its radius). Inside `AIM_PULL_INNER` the aim point is fully pulled onto the
+## creature; past `AIM_PULL_OUTER` it is not pulled at all; between them it
+## smoothsteps. See `_aim_direction()` for the owner directive these came from
+## and for why the falloff must stay smooth.
+const AIM_PULL_INNER := 1.0
+const AIM_PULL_OUTER := 2.5
+## Creature scale makes the target easier to hit, but it must not turn a throw
+## aimed plainly away from the creature into a lock. This angular ceiling keeps
+## the assist a near-reticle correction even for the largest bodies.
+const AIM_PULL_MAX_DEGREES := 35.0
+
+var state: State = State.IDLE
+
+var _player: Node3D = null
+## Bodies a thrown orb passes through instead of stopping on -- BP2's "your own
+## creature and trainer intercept your orbs, and the orb is spent". Pushed in by
+## `combat_manager.gd` when the fight gets its ally, because this node knows the
+## trainer and the target but has no reason to know who is fighting for them.
+var _pass_through: Array[Node3D] = []
+var _target: Node3D = null
+var _camera_rig: Node = null
+var _orb: Node3D = null
+
+var _windup: float = 0.0
+var _cooldown: float = 0.0
+var _guard: float = 0.0
+var _thrown_orb_id: String = ""
+
+## Stage B lane 4.C. The launch PARAMETERS of the throw that is in the air,
+## recorded at the instant of release: `{"launch_point", "direction", "orb_id"}`.
+##
+## `docs/specs/MP_ENCOUNTER_PROTOCOL.md` §8. In a session the host re-derives the
+## orb's closest approach itself, with `orb.gd::closest_approach_ahead(
+## launch_point, direction, host_target_position)` and its OWN position for the
+## creature -- so what the thrower has to send is the two values that describe
+## the shot it took, and nothing about where the shot ended up. They are
+## recorded here rather than recomputed by the caller because `_release()` is
+## the one place they exist: `origin` has already had `_spawn_forward` added to
+## it and `forward` has already been through `_launch_direction()`'s assist, and
+## a caller re-deriving either would be re-deriving a different throw.
+##
+## `orb_id` rides along for R4.9's reason, restated by §8: the satchel has
+## already lost that orb by the time the strike resolves, so the host must be
+## told which one was actually spent rather than re-querying "best available".
+var _last_launch: Dictionary = {}
+
+var _speed: float = 17.0
+var _gravity: float = 14.0
+var _spawn_height: float = 1.5
+var _spawn_forward: float = 0.6
+var _release_windup: float = 0.18
+var _throw_cooldown: float = 0.9
+var _launch_assist_reticle_fraction: float = 1.0
+var _launch_assist_max_seconds: float = 0.85
+var _launch_assist_max_target_speed: float = 4.5
+var _launch_assist_max_distance: float = 2.6
+## Terrain clearance for the launch (see "terrain-aware arcs" below).
+var _orb_radius: float = 0.6
+var _clearance: Dictionary = clearance_from_config({})
+var _aim_surface_min_ahead: float = 1.0
+
+
+## Pure screen-ray/body geometry, shared with the controller regression. A
+## yaw/pitch tolerance cannot prove that a distant reticle is inside a body.
+static func reticle_body_geometry(
+	eye: Vector3, forward: Vector3, centre: Vector3, radius: float, fraction: float
+) -> Dictionary:
+	var normal := forward.normalized()
+	var along := (centre - eye).dot(normal)
+	var offset := (eye + normal * along).distance_to(centre)
+	var allowed := maxf(0.0, radius * fraction)
+	return {
+		"in_front": along > 0.0,
+		"reticle_offset": offset,
+		"reticle_radius": allowed,
+		"inside_body": along > 0.0 and offset <= allowed,
+	}
+
+
+static func first_hit_belongs_to_target(collider: Node, target: Node) -> bool:
+	return collider == target or (collider != null and target != null and target.is_ancestor_of(collider))
+
+## A launch-time assist is committed with the button press, not recomputed
+## after the wind-up. Otherwise a circling creature can leave the reticle in
+## those 0.18 seconds and turn a correctly lined-up controller throw into a
+## miss before the orb even leaves the trainer's hand. INF means the reticle
+## was not genuinely on the visible target, so the physical wide throw stays
+## completely unassisted.
+var _committed_assist_point := Vector3.INF
+var _released_assist_point := Vector3.INF
+
+## Last `launch_assist_diagnostics()` result, refreshed once per physics tick
+## while aiming. Read by `combat_manager.gd::catch_chance_now()` so the number
+## the reticle shows is the number the throw would actually resolve at -- see
+## that function's header for why it used to be neither.
+var _aim_report: Dictionary = {}
+
+
+## The live aim, for a caller that needs to know where this throw would land
+## rather than whether an assist is legal. Empty between aims.
+func aim_report() -> Dictionary:
+	return _aim_report if state == State.AIMING else {}
+
+
+func _ready() -> void:
+	var cfg: Dictionary = CATCH.config().get("throw", {})
+	_speed = float(cfg.get("speed", _speed))
+	_gravity = float(cfg.get("gravity", _gravity))
+	_spawn_height = float(cfg.get("spawn_height", _spawn_height))
+	_spawn_forward = float(cfg.get("spawn_forward", _spawn_forward))
+	_release_windup = float(cfg.get("release_windup", _release_windup))
+	_throw_cooldown = float(cfg.get("cooldown", _throw_cooldown))
+	_launch_assist_reticle_fraction = float(cfg.get(
+		"launch_assist_reticle_fraction", _launch_assist_reticle_fraction))
+	_launch_assist_max_seconds = float(cfg.get(
+		"launch_assist_max_seconds", _launch_assist_max_seconds))
+	_launch_assist_max_target_speed = float(cfg.get(
+		"launch_assist_max_target_speed", _launch_assist_max_target_speed))
+	_launch_assist_max_distance = float(cfg.get(
+		"launch_assist_max_distance", _launch_assist_max_distance))
+	_orb_radius = float(cfg.get("radius", _orb_radius))
+	_clearance = clearance_from_config(cfg)
+	_aim_surface_min_ahead = float(cfg.get("aim_surface_min_ahead", _aim_surface_min_ahead))
+	set_physics_process(false)
+
+
+## Called by the combat manager when a fight opens.
+func arm(player: Node3D, target: Node3D, camera_rig: Node) -> void:
+	_player = player
+	_target = target
+	_camera_rig = camera_rig
+	state = State.IDLE
+	_windup = 0.0
+	_cooldown = 0.0
+	_committed_assist_point = Vector3.INF
+	set_physics_process(true)
+
+
+func disarm() -> void:
+	if state == State.AIMING:
+		_leave_aim()
+	_despawn_orb()
+	state = State.IDLE
+	set_physics_process(false)
+	# Belt-and-braces alongside `_leave_aim()`'s own call below: `disarm()` is
+	# the combat manager's general "stop whatever the throw was doing" path
+	# and can fire while `state` is THROWN (orb already in flight, catch
+	# still resolving) as well as AIMING, so `_leave_aim()` alone would miss
+	# restoring the lock in that case.
+	_set_trainer_movable(false)
+
+
+func is_aiming() -> bool:
+	return state == State.AIMING
+
+
+func is_busy() -> bool:
+	return state != State.IDLE
+
+
+## Orbs live in the satchel, not here.
+##
+## `stock` used to be a plain int seeded from catching.json's
+## `orbs.starting_stock` and refilled whenever the practice creature respawned —
+## the M3-only placeholder that config block warned about. Grandpa now hands
+## the starting orbs over in the opening (`give:orb_basic` in
+## data/dialogue/opening.json), every throw spends one from the real
+## inventory, and running out means finding or crafting more.
+##
+## R4.9: more than one tier can now live in the satchel at once, so `stock`
+## is the total across every tier `catching.json` names — a player carrying
+## only `orb_greater` is not "out of orbs".
+func stock() -> int:
+	var counts := _orb_counts()
+	var total := 0
+	for id: String in counts:
+		total += int(counts[id])
+	return total
+
+
+## The tier a throw right now would actually use: the strongest one the
+## player is carrying. Empty string means no legal throw — `try_begin_aim`'s
+## `stock() <= 0` refusal already covers that case before this is ever asked.
+func current_orb_id() -> String:
+	return CATCH.best_orb(_orb_counts())
+
+
+func _orb_counts() -> Dictionary:
+	var inventory := _inventory()
+	var counts := {}
+	if inventory == null:
+		return counts
+	for id: String in CATCH.orb_ids():
+		counts[id] = int(inventory.call("count", id))
+	return counts
+
+
+## Spends whichever tier `current_orb_id()` names, and remembers it as
+## `_thrown_orb_id` for the resolve step -- the catch odds a throw resolves
+## at must match the orb actually spent, not whatever is left in the satchel
+## after it (which can already be a weaker tier).
+func _spend_orb() -> bool:
+	var inventory := _inventory()
+	if inventory == null:
+		return false
+	var id := current_orb_id()
+	if id.is_empty():
+		return false
+	if not bool(inventory.call("remove", id, 1)):
+		return false
+	_thrown_orb_id = id
+	return true
+
+
+## The tier actually spent by the most recent successful throw. Set once, by
+## `_spend_orb()`, and read once, by the resolve step -- never recomputed
+## after the spend, which could silently pick a different (weaker) tier than
+## the one the orb in flight actually is.
+func thrown_orb_id() -> String:
+	return _thrown_orb_id
+
+
+## The launch parameters of the throw currently in the air (see `_last_launch`).
+## Empty before the first release of the session. A copy, so a consumer that
+## stuffs it into an intent dictionary cannot reach back into this node's state.
+func last_launch() -> Dictionary:
+	return _last_launch.duplicate()
+
+
+func _inventory() -> RefCounted:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; the trainer has no satchel to throw from")
+		return null
+	return game.get("inventory")
+
+
+func _physics_process(delta: float) -> void:
+	_cooldown = maxf(0.0, _cooldown - delta)
+	_guard = maxf(0.0, _guard - delta)
+
+	if state == State.AIMING:
+		_tick_aiming(delta)
+
+
+func _tick_aiming(delta: float) -> void:
+	_update_preview()
+	# Refreshed on the PHYSICS tick and cached, not recomputed by the HUD's
+	# draw frame: `launch_assist_diagnostics()` casts a ray, and
+	# `combat_hud.gd` now reads this every frame it draws the capture reticle.
+	# One ray per physics tick is the same cost the throw already pays; one per
+	# draw frame is not.
+	_aim_report = launch_assist_diagnostics()
+	# The arc's own verdict travels with the report, so the HUD can say what the
+	# picture says -- see `throw_preview.gd::update_arc()` for the disagreement
+	# a render caught between the two.
+	var previewing := _preview != null and is_instance_valid(_preview)
+	_aim_report["trajectory_hits_target"] = previewing \
+		and bool(_preview.get("trajectory_hits_target"))
+	_aim_report["trajectory_offset"] = float(_preview.get("trajectory_offset")) \
+		if previewing else INF
+	_aim_report["trajectory_blocked"] = previewing and bool(_preview.get("trajectory_blocked"))
+	_aim_report["trajectory_blocker"] = str(_preview.get("trajectory_blocker")) if previewing else ""
+
+	# Backing out is free and spends nothing, INCLUDING during the release
+	# wind-up — the orb is only spent in _release() itself. The cancel used to
+	# be unreachable once the wind-up started (the early return sat above it),
+	# which turned a mis-press into a guaranteed spent orb 0.18s later.
+	if _guard <= 0.0 and (Input.is_action_just_pressed("combat_run")
+			or Input.is_action_just_pressed("menu_cancel")):
+		_leave_aim()
+		return
+
+	if _windup > 0.0:
+		_windup -= delta
+		if _windup <= 0.0:
+			_release()
+		return
+	if _guard > 0.0:
+		return
+
+	# CONTROLLER-MAP: interact (X) is the pad's throw button now -- `combat_throw`
+	# kept its keyboard F and lost its pad binding when the orb became a hotbar
+	# item. `combat_quick` stays because the aim opens on the same press that
+	# releases it and a player already holding the attack trigger expects that.
+	if Input.is_action_just_pressed("combat_throw") \
+			or Input.is_action_just_pressed("interact") \
+			or Input.is_action_just_pressed("combat_quick"):
+		_commit_launch_assist()
+		_windup = _release_windup
+
+
+## Try to enter aim mode. Returns false with a reason on the signal when the
+## throw cannot happen, so the refusal is always explained.
+func try_begin_aim(target_can_be_caught: bool, refusal: String) -> bool:
+	if state != State.IDLE or _cooldown > 0.0:
+		return false
+	if stock() <= 0:
+		throw_refused.emit("no orbs left")
+		return false
+	if not target_can_be_caught:
+		throw_refused.emit(refusal)
+		return false
+
+	state = State.AIMING
+	# The button that opens the aim is also the button that releases it, and
+	# `is_action_just_pressed` stays true for the whole frame. Same guard as the
+	# one that stops engaging a fight from being read as the first attack of it.
+	_guard = 0.15
+	_windup = 0.0
+	_apply_aim_camera()
+	# Owner playtest report, second round: "when you go to throw should fully
+	# control the character again so you can move him and throw." This file's
+	# own header already documented the INTENT ("hands camera and control
+	# back to the TRAINER") but only the camera swap was ever wired up --
+	# encounter_director.gd disables the trainer's locomotion for the whole
+	# fight (D07: "the trainer stands where they engaged"), and nothing here
+	# ever turned it back on for the one window D07 did not anticipate: a
+	# real-time aim explicitly meant to be a repositionable over-the-shoulder
+	# shot, not a static reticle. This is a deliberate, owner-directed
+	# amendment to D07's stationary-trainer sub-rule, scoped to exactly the
+	# aim/throw window -- general combat still holds the trainer still.
+	_set_trainer_movable(true)
+	_acquire_target()
+	aim_entered.emit()
+	return true
+
+
+## OWNER DIRECTIVE 2026-08-28 §2a.2: "when you go into throwing, it needs to aim
+## you onto the creature."
+##
+## Entering the aim used to leave the camera wherever exploration had left it,
+## which on a controller means the player raises the orb and then has to hunt
+## for the creature with the right stick before they can even start aiming --
+## and the aim camera has just swung to an over-the-shoulder profile with a
+## 1.45m shoulder offset, so the view they hunt from is not the view they had.
+## The frames from `smoke_catching.gd`'s own fights show the cost: four consecutive
+## commits with `reason=reticle_outside_body`, and the run's first throw logged
+## the target 7.5m off the screen ray.
+##
+## So raising the orb ACQUIRES. The rig's yaw and pitch are pointed at the
+## target's centre of mass from the eye the aim camera is about to use.
+##
+## WHICH target: the one the fight is already about. `arm()` is handed exactly
+## one `_target` by `combat_manager.gd` when the fight opens, and catching is
+## only available inside a fight, so there is no nearest-creature search to get
+## wrong and no ambiguity when several creatures are in range -- the encounter
+## already chose. That is a deliberately narrower rule than a free-roam lock-on
+## would need, and it is the right one here: it can never acquire a creature the
+## player is not fighting.
+##
+## Snapped rather than glided. The camera is already cutting to a different
+## profile on this same frame, so a glide would be a second motion on top of a
+## cut and would read as drift rather than as acquisition.
+func _acquire_target() -> void:
+	if _camera_rig == null or _player == null:
+		return
+	if _target == null or not is_instance_valid(_target) or not _target.has_method("centre"):
+		return
+	var centre: Vector3 = _target.call("centre")
+	var eye := _player.global_position + Vector3.UP * _spawn_height
+	var to_target := centre - eye
+	if to_target.length_squared() < 0.0001:
+		return
+	# `camera_rig.gd` measures yaw the same way the player's own facing does:
+	# atan2(-x, -z). Taken from `smoke_catching.gd::_aim_camera_along()`, which
+	# is the existing caller that already had to know this.
+	_camera_rig.set("yaw", atan2(-to_target.x, -to_target.z))
+	var flat := Vector2(to_target.x, to_target.z).length()
+	if flat > 0.01:
+		var cfg: Dictionary = CATCH.config().get("aim", {})
+		var pitch := atan2(to_target.y, flat)
+		_camera_rig.set("pitch", clampf(
+			pitch,
+			deg_to_rad(float(cfg.get("pitch_min_deg", -35.0))),
+			deg_to_rad(float(cfg.get("pitch_max_deg", 20.0)))
+		))
+	return
+
+
+func _apply_aim_camera() -> void:
+	if _camera_rig == null or not _camera_rig.has_method("set_target"):
+		return
+	_camera_rig.call("set_target", _player, CATCH.config().get("aim", {}))
+
+
+func _set_trainer_movable(movable: bool) -> void:
+	if _player != null and _player.has_method("set_locomotion_enabled"):
+		_player.call("set_locomotion_enabled", movable)
+
+
+func _leave_aim() -> void:
+	_aim_report = {}
+	state = State.IDLE
+	_windup = 0.0
+	_committed_assist_point = Vector3.INF
+	_hide_preview()
+	_set_trainer_movable(false)
+	aim_exited.emit()
+
+
+## --- the arc ---------------------------------------------------------------
+
+const PREVIEW := preload("res://scripts/combat/throw_preview.gd")
+var _preview: Node3D = null
+
+
+## Redraw the predicted arc from EXACTLY the numbers _release() would use this
+## frame — same origin, same _launch_direction, same speed. One code path, so the
+## promise on screen and the flight of the orb cannot drift apart.
+func _update_preview() -> void:
+	if _player == null:
+		return
+	if _preview == null or not is_instance_valid(_preview):
+		_preview = PREVIEW.new()
+		_preview.name = "ThrowPreview"
+		_player.get_parent().add_child(_preview)
+	var camera := _aim_camera()
+	var origin := _player.global_position + Vector3.UP * _spawn_height
+	_refresh_committed_assist_point(origin)
+	var forward := _launch_direction(camera, origin)
+	origin += forward * _spawn_forward
+	_preview.call("update_arc", origin, forward, _speed, _target, _sight_exclusions())
+	_slow_the_stick_near_the_target(camera)
+
+
+## Fine aim: while the camera's centre line passes near the creature, the look
+## stick slows further (`aim.near_target_scale`), so the last few degrees of
+## the line-up do not overshoot. Cleared with full speed the moment the
+## reticle leaves the creature's neighbourhood, and reset wholesale by every
+## set_target when the aim ends.
+func _slow_the_stick_near_the_target(camera: Camera3D) -> void:
+	if _camera_rig == null or not _camera_rig.has_method("set_look_scale") or camera == null:
+		return
+	var scale_value := 1.0
+	if _target != null and is_instance_valid(_target) and _target.has_method("centre"):
+		var eye := camera.global_position
+		var forward := -camera.global_transform.basis.z
+		var centre: Vector3 = _target.call("centre")
+		var along := (centre - eye).dot(forward)
+		if along > 0.0:
+			var body := 1.0
+			if _target.has_method("body_radius"):
+				body = float(_target.call("body_radius")) * 2.0
+			var off_line := (eye + forward * along).distance_to(centre)
+			if off_line <= body:
+				scale_value = float(CATCH.config().get("aim", {}).get("near_target_scale", 0.6))
+	# The player's aim-assistance strength (UX §8) scales the slowdown away.
+	scale_value = lerpf(1.0, scale_value, LOOK_PREFS.aim_assist_strength())
+	_camera_rig.call("set_look_scale", scale_value)
+
+
+func _hide_preview() -> void:
+	if _preview != null and is_instance_valid(_preview):
+		_preview.call("hide_arc")
+
+
+## Throw at whatever the reticle is over.
+##
+## NOT parallel to the camera. The aim camera sits about a metre and a half off
+## to one side so the trainer's body does not cover the crosshair, and an orb
+## thrown along the camera's forward from the trainer's hand travels a line
+## that is offset by exactly that much — it lands a body's width to the side of
+## everything the player aimed at, consistently, and reads as the game ignoring
+## the input.
+##
+## So the aim is a point: where the camera's centre ray reaches, and then a
+## direction from the hand to that point. The reticle is a promise, and this is
+## what keeps it.
+func _release() -> void:
+	# A throw that cannot physically arrive is not a throw, and it must not cost
+	# an orb.
+	#
+	# Found in the Gate B continuous run, 2026-08-23. After a breakout the fight
+	# stayed armed while the creature ended up twenty-five metres away, and the
+	# game happily took the press every time: reticle ON the body, `eligible`,
+	# launch assist applied -- and the orb hit the ground eighteen metres short,
+	# because at `speed` 17 under `gravity` 14 the furthest a thrown orb can
+	# reach is v²/g, about twenty metres. Nineteen consecutive orbs were spent
+	# on throws that were never capable of landing.
+	#
+	# That is the owner's "I never know if I was close" at its worst: the
+	# reticle is a promise this file makes everywhere else, and here the game
+	# was showing it over a target the orb could not physically get to.
+	#
+	# Gated on the committed assist point rather than on the target's distance,
+	# so it refuses only when the player is genuinely LOCKED ON to a creature
+	# out of reach. Deliberately lobbing an orb at the ground in front of you is
+	# still a legal throw.
+	if _committed_assist_point != Vector3.INF:
+		var hand := _player.global_position + Vector3.UP * _spawn_height
+		if not within_ballistic_reach(hand, _committed_assist_point, _speed, _gravity):
+			print("catch launch: refused out_of_range distance=%.2f max=%.2f" % [
+				hand.distance_to(_committed_assist_point), _speed * _speed / maxf(_gravity, 0.01),
+			])
+			throw_refused.emit("too far to throw — get closer")
+			_leave_aim()
+			return
+	if not _spend_orb():
+		# G3-OPENING-FIX-0904. The one refusal in this function that used to
+		# say nothing: the range check three lines up and every other
+		# refusal in this file emit `throw_refused` so a press that does
+		# nothing is never indistinguishable from a dropped input (see the
+		# file header and `try_begin_aim()`'s own "no orbs left" refusal).
+		# This path was the exception -- reachable if the satchel's last
+		# orb of the spent tier is removed by something else between the
+		# aim opening and the release (another system touching the
+		# inventory mid-aim), and it left `_leave_aim()` as the only
+		# visible effect: state returns to IDLE with no explanation, which
+		# a retried throw right after a miss can read as "the second orb
+		# never left the hand".
+		throw_refused.emit("no orbs left")
+		_leave_aim()
+		return
+	state = State.THROWN
+	# The throw is out of your hands, so the trainer stops being one.
+	#
+	# `_enter_aim()` hands the trainer locomotion and `_leave_aim()` takes it
+	# back, but a RELEASED throw goes through neither: it keeps the aim camera
+	# on purpose ("watching your own orb arc away is the shot") and sets state
+	# directly. So the trainer stayed a live walking actor through the flight
+	# AND the whole catch resolution -- and the Gate B run of 2026-08-23 caught
+	# what that costs. Trainer at z=-37.5 when the orb left their hand, 3.34m
+	# from the Bramblebun; trainer at z=-20.4 by the breakout, seventeen metres
+	# away, while the creature had not moved at all. Every subsequent throw was
+	# then made from twenty-five metres, out of the orb's physical range.
+	#
+	# It also breaks the resolution as a shot: the camera is in close on the
+	# orb for those seconds and the trainer was jogging out of the county.
+	_set_trainer_movable(false)
+	# The preview is a promise about a throw that has now been made. Left
+	# undrawn-but-visible, its last frame — the arc line and the landing disc —
+	# hung frozen in the world through the flight and the whole catch
+	# resolution, which a captured frame showed plainly.
+	_hide_preview()
+
+	var camera := _aim_camera()
+	var origin := _player.global_position + Vector3.UP * _spawn_height
+	var forward := _launch_direction(camera, origin)
+	origin += forward * _spawn_forward
+	_released_assist_point = _committed_assist_point
+	if _committed_assist_point != Vector3.INF:
+		var low := _ballistic_direction(origin - forward * _spawn_forward,
+			_committed_assist_point, forward)
+		if not low.is_equal_approx(forward):
+			print("catch launch: clearance raised pitch=%.1f->%.1f deg" % [
+				rad_to_deg(asin(clampf(low.y, -1.0, 1.0))),
+				rad_to_deg(asin(clampf(forward.y, -1.0, 1.0))),
+			])
+	var throw_range := -1.0
+	if _target != null and is_instance_valid(_target) and _target.has_method("centre"):
+		throw_range = origin.distance_to(_target.call("centre"))
+	print("catch launch: release assist=%s predicted=%s range=%.2f from=(%.2f, %.2f, %.2f) dir=(%.2f, %.2f, %.2f)" % [
+		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point),
+		throw_range, origin.x, origin.y, origin.z, forward.x, forward.y, forward.z,
+	])
+
+	_despawn_orb()
+	_orb = ORB_SCENE.instantiate()
+	_player.get_parent().add_child(_orb)
+	_orb.connect("struck", _on_struck)
+	_orb.connect("missed", _on_missed)
+	# The trainer goes in the list here rather than at the call site: the orb
+	# leaves the trainer's own hand, so without this a throw could register as
+	# hitting the person who threw it.
+	var ignore: Array[Node3D] = [_player]
+	for body: Node3D in _pass_through:
+		if body != null and is_instance_valid(body):
+			ignore.append(body)
+	_last_launch = {
+		"launch_point": [origin.x, origin.y, origin.z],
+		"direction": [forward.x, forward.y, forward.z],
+		"orb_id": _thrown_orb_id,
+	}
+	_orb.call("launch", origin, forward, _speed, _target, ignore)
+	# The trainer throws rather than standing there. Their model is on a child
+	# node, so this reaches past the body to the thing that animates.
+	var body: Node = _player.get_node_or_null(^"Model")
+	if body != null and body.has_method("play_throw"):
+		body.call("play_throw")
+
+	aim_exited.emit()
+	_committed_assist_point = Vector3.INF
+
+
+## Snapshot the assist at the instant the player commits. The eligibility
+## window is intentionally narrower than the existing soft magnetic pull: the
+## centre ray must be inside the target's inner half-body and the target must
+## have an unobstructed line from the camera. This is launch prediction for a
+## good aim, not a lock-on that rescues a wide or blocked throw.
+func _commit_launch_assist() -> void:
+	_committed_assist_point = Vector3.INF
+	var diagnostics := launch_assist_diagnostics()
+	_log_launch_assist("commit", diagnostics)
+	if not bool(diagnostics.get("eligible", false)) and str(diagnostics.get("reason", "")) == "assist_off":
+		return
+	var camera := _aim_camera()
+	if camera == null or _target == null or not is_instance_valid(_target) \
+			or not _target.visible or not _target.has_method("centre"):
+		return
+	var eye := camera.global_position
+	var camera_forward := -camera.global_transform.basis.z
+	var centre: Vector3 = _target.call("centre")
+	var along := (centre - eye).dot(camera_forward)
+	if along <= 0.0:
+		return
+	var radius := 0.5
+	if _target.has_method("body_radius"):
+		radius = float(_target.call("body_radius"))
+	var nearest := eye + camera_forward * along
+	if nearest.distance_to(centre) > radius * _launch_assist_reticle_fraction:
+		return
+	if not _target_is_visible(eye, centre):
+		return
+
+	var origin := _player.global_position + Vector3.UP * _spawn_height
+	var initial := (centre - origin).normalized()
+	origin += initial * _spawn_forward
+	var target_velocity := Vector3.ZERO
+	if _target is CharacterBody3D:
+		target_velocity = launch_target_velocity((_target as CharacterBody3D).velocity)
+	_committed_assist_point = predict_launch_point(
+		origin, centre, target_velocity, _speed, _gravity, _release_windup,
+		_launch_assist_max_seconds, _launch_assist_max_target_speed,
+		_launch_assist_max_distance)
+
+
+## Eligibility belongs to the player's release press, but the target can change
+## direction during the deliberate wind-up. Refreshing its *one fixed launch
+## point* immediately before the orb exists avoids aiming at a stale future
+## position. This never re-checks or widens the commit-time reticle/LOS gate and
+## never changes an orb after launch.
+func _refresh_committed_assist_point(origin: Vector3) -> void:
+	if _committed_assist_point == Vector3.INF or _target == null \
+			or not is_instance_valid(_target) or not _target.has_method("centre"):
+		return
+	var target_velocity := Vector3.ZERO
+	if _target is CharacterBody3D:
+		target_velocity = launch_target_velocity((_target as CharacterBody3D).velocity)
+	_committed_assist_point = predict_launch_point(
+		origin, _target.call("centre"), target_velocity, _speed, _gravity, 0.0,
+		_launch_assist_max_seconds, _launch_assist_max_target_speed,
+		_launch_assist_max_distance)
+
+
+## Commit-time facts from the actual screen-centre ray and first physics hit.
+## This is deliberately read-only: it makes why a legal assist did or did not
+## apply observable without widening the visible-body/LOS eligibility rule.
+func launch_assist_diagnostics() -> Dictionary:
+	var report: Dictionary = {
+		"eligible": false,
+		"first_hit": "unavailable",
+		"line_of_sight": false,
+		"reason": "unavailable",
+	}
+	if LOOK_PREFS.aim_assist_percent() <= 0:
+		# Aim assistance switched off: no launch lead, and the reticle's
+		# catch chance must not assume one.
+		report["reason"] = "assist_off"
+		return report
+	var camera := _aim_camera()
+	if camera == null or _player == null or _target == null or not is_instance_valid(_target) \
+			or not _target.visible or not _target.has_method("centre"):
+		return report
+	var eye := camera.global_position
+	var centre: Vector3 = _target.call("centre")
+	var radius := float(_target.call("body_radius")) if _target.has_method("body_radius") else 0.5
+	var geometry := reticle_body_geometry(
+		eye, -camera.global_transform.basis.z, centre, radius, _launch_assist_reticle_fraction)
+	report.merge(geometry, true)
+	if not bool(report["in_front"]):
+		report["reason"] = "behind"
+		return report
+	var world := _player.get_world_3d()
+	if world == null:
+		report["reason"] = "no_world"
+		return report
+	var query := PhysicsRayQueryParameters3D.create(eye, centre)
+	query.collide_with_areas = false
+	# The same exclusions the orb itself flies with -- see `_sight_exclusions()`.
+	query.exclude = _sight_exclusions()
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
+	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
+	var collider := hit.get("collider") as Node
+	if collider != null:
+		report["first_hit"] = collider.name
+	report["line_of_sight"] = first_hit_belongs_to_target(collider, _target)
+	if not bool(report["inside_body"]):
+		report["reason"] = "reticle_outside_body"
+	elif not bool(report["line_of_sight"]):
+		report["reason"] = "line_of_sight_blocked"
+	else:
+		report["eligible"] = true
+		report["reason"] = "eligible"
+	return report
+
+
+func _log_launch_assist(stage: String, report: Dictionary) -> void:
+	print("catch launch: %s eligible=%s reticle=%.3f/%.3f first_hit=%s los=%s reason=%s" % [
+		stage,
+		bool(report.get("eligible", false)),
+		float(report.get("reticle_offset", -1.0)),
+		float(report.get("reticle_radius", -1.0)),
+		str(report.get("first_hit", "unavailable")),
+		bool(report.get("line_of_sight", false)),
+		str(report.get("reason", "unavailable")),
+	])
+
+
+func _format_assist_point(point: Vector3) -> String:
+	return "none" if point == Vector3.INF else "(%.2f, %.2f, %.2f)" % [point.x, point.y, point.z]
+
+
+func _target_is_visible(eye: Vector3, centre: Vector3) -> bool:
+	var world := _player.get_world_3d() if _player != null else null
+	if world == null:
+		return false
+	var query := PhysicsRayQueryParameters3D.create(eye, centre)
+	query.collide_with_areas = false
+	query.exclude = _sight_exclusions()
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
+	var hit: Dictionary = world.direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return true
+	var collider := hit.get("collider") as Node
+	return collider == _target or (collider != null and _target.is_ancestor_of(collider))
+
+
+## What this ray is allowed to ignore, and why the list is not just the trainer.
+##
+## OP-0830-5. `_release()` hands the orb an ignore list built from `_player` plus
+## `_pass_through` -- which `combat_manager.gd` sets to the player's OWN creature
+## -- so an orb flies straight through your creature and hits the target behind
+## it. The eligibility check did not, so a creature standing between the camera
+## and the thing it is fighting reported `line_of_sight_blocked` and the assist
+## was refused, on a throw the physics would have delivered perfectly.
+##
+## That is not a rare geometry. Combat is piloted: your creature is *supposed* to
+## be in the opponent's face, which is exactly where it occludes it. It showed up
+## in `tests/smoke_catching.gd`'s own launch log before this lane existed (one of
+## four commits in a real fight refused for it) and again in the OP-0830-5
+## measurement run.
+##
+## The ray and the orb now agree about what is solid. This does not widen the
+## assist: a reticle genuinely off the body is still ineligible, and anything
+## that is not the trainer or the trainer's creature still blocks.
+func _sight_exclusions() -> Array[RID]:
+	var out: Array[RID] = []
+	if _player is CollisionObject3D:
+		out.append((_player as CollisionObject3D).get_rid())
+	for body: Node3D in _pass_through:
+		if body != null and is_instance_valid(body) and body is CollisionObject3D:
+			out.append((body as CollisionObject3D).get_rid())
+	return out
+
+
+func _launch_direction(camera: Camera3D, origin: Vector3) -> Vector3:
+	if _committed_assist_point != Vector3.INF:
+		var fallback := -_player.global_transform.basis.z
+		if camera != null:
+			fallback = -camera.global_transform.basis.z
+		return _terrain_clear_direction(origin, _committed_assist_point, fallback)
+	return _aim_direction(camera, origin)
+
+
+## Where the reticle is pointing, converted into a direction from the hand.
+##
+## The aim point is taken along the camera's centre ray. It prefers the actual
+## target when the reticle is near it, so a throw lined up on the creature is
+## thrown at the creature rather than at a spot behind it — the alternative is a
+## fixed reach that is wrong at every distance except one.
+func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
+	if camera == null:
+		return -_player.global_transform.basis.z
+
+	var eye := camera.global_position
+	var forward := -camera.global_transform.basis.z
+	# THROW-AIM-SLOPE: where the centre ray meets the world, not a fixed reach
+	# that ends inside whatever slope the ray met first. See
+	# `surface_aim_point()`.
+	var aim_point := _surface_aim_point(eye, forward, origin)
+
+	if _target != null and is_instance_valid(_target) and _target.has_method("centre"):
+		var centre: Vector3 = _target.call("centre")
+		var along := (centre - eye).dot(forward)
+		if along > 0.0:
+			# How far the target sits from the camera's centre line. The pull
+			# toward the creature is piecewise: a guaranteed full lock while
+			# the ray is within half a body-width (a reticle ON the creature
+			# means the creature — smoke_catching's whole aim strategy leans on
+			# this, and so does a player's), then a smoothstep falloff out to a
+			# full body-width. The old assist was binary over the whole width,
+			# which made the aim jump discontinuously as the reticle swept
+			# past — the "grabbed the stick" feel from the playtest.
+			var nearest := eye + forward * along
+			var body := 1.0
+			if _target.has_method("body_radius"):
+				body = float(_target.call("body_radius")) * 2.0
+			# OWNER DIRECTIVE 2026-08-28 §2a.3, the second half of "aim assist
+			# needs to be stronger". This is the SOFT pull -- how much a
+			# near-miss reticle is drawn toward the creature before the throw is
+			# even committed -- and it is separate from the launch assist above,
+			# which is a hard lead granted only inside the reticle window.
+			#
+			# The band was `body * 0.5` to `body`, i.e. full pull only inside
+			# half a body-width and nothing at all past one. `AIM_PULL_INNER`
+			# and `AIM_PULL_OUTER` widen both ends: full pull out to a whole
+			# body-width, tapering to nothing at two and a half. The falloff
+			# stays a smoothstep for the reason the note above records -- the
+			# binary version made the aim jump as the reticle swept past, the
+			# "grabbed the stick" feel from an earlier playtest -- so this is a
+			# larger, gentler magnet, not a snap.
+			var pull := aim_pull_weight(nearest.distance_to(centre), body, along) \
+				* LOOK_PREFS.aim_assist_strength()
+			aim_point = aim_point.lerp(centre, pull)
+			# A full lock on a creature the camera can see is a throw AT the
+			# creature, so the preview must draw the arc the committed assist
+			# will actually fly -- otherwise it shows the low arc burying itself
+			# in a crest right up to the press, then switches.
+			if pull >= 0.999 and _target_is_visible(eye, centre):
+				return _terrain_clear_direction(origin, centre, forward)
+
+	# BALLISTIC, not a straight line. This is the fix for the throw mechanic's
+	# deepest problem, found by instrumenting the smoke test: the aim used to
+	# return the straight direction at the aim point, and the orb flies a
+	# parabola — at speed 17 under gravity 14 it drops 2.4m over an 11m throw
+	# and 4m over 14m, so every locked-on throw beyond ~9m sailed under its
+	# target. The snap window hid it at close range and nothing hid it past
+	# that; "the orb went wide" was almost always "the orb fell short". The
+	# reticle is a promise, so the launch direction is now the solved arc that
+	# LANDS on the aim point. Out of ballistic range (~20m flat at current
+	# numbers) falls back to the straight line, which visibly falls short —
+	# with the arc preview drawing exactly that truth.
+	return _ballistic_direction(origin, aim_point, forward)
+
+
+## --- terrain-aware arcs ------------------------------------------------------
+##
+## THROW-AIM-SLOPE. The assist solved the low ballistic arc to the target in
+## EMPTY space. The aim camera rides higher than the trainer's hand, so on
+## rising ground the eye sees a creature standing beyond a crest that the hand's
+## low arc flies straight into: world seed 1376461701's tutorial catch lost three
+## consecutive assisted orbs that way (`reason=ground`, closest approach 1.27 m
+## against a 1.27 m envelope -- the orb struck the rise just short of the
+## predicted point). The preview drew exactly that truth, and the assist threw
+## it anyway.
+##
+## So the committed assist, and an aim locked on a visible creature, now fly the
+## candidate arc against the real collision world before trusting it. The default
+## low arc is kept untouched whenever it already reaches -- which is every throw
+## on open ground -- and only when it meets something first does the solve step
+## the launch pitch upward (same speed, same gravity, same heading) to the lowest
+## arc that reaches the target's envelope first. No arc clears inside the ceiling:
+## the default stands, and the preview keeps showing the player why.
+
+## Physics ticks between two probe rays. The orb integrates at the physics rate;
+## a chord over three ticks sags g*(3*dt)^2/8, about 4.4 mm below the flight at 60 Hz,
+## far inside any margin here, and cuts the rays a candidate costs to a third.
+const ARC_PROBE_STRIDE := 3
+
+
+## The terrain-clearance knobs from catching.json's `throw` section, in one
+## place so the runtime and the tests read the same numbers.
+static func clearance_from_config(cfg: Dictionary) -> Dictionary:
+	return {
+		"step_deg": float(cfg.get("launch_assist_clearance_step_deg", 1.0)),
+		"max_pitch_deg": float(cfg.get("launch_assist_clearance_max_pitch_deg", 45.0)),
+		"hit_fraction": float(cfg.get("launch_assist_clearance_hit_fraction", 0.8)),
+		"max_flight": float(cfg.get("max_flight_time", 4.0)),
+	}
+
+
+## The launch direction toward `point` that the orb can actually fly. Returns
+## `ballistic_direction()`'s low arc unchanged when that arc reaches the target's
+## envelope before meeting any collision (or when there is no world to ask);
+## otherwise the lowest higher-pitched arc, in `step_deg` steps up to the high
+## root or `max_pitch_deg`, whose flight enters `hit_fraction` of the envelope
+## first. `exclude` is what the orb itself flies through (trainer, own creature,
+## target). `envelope` is `body_radius + orb radius`, orb.gd's hit test.
+static func assisted_launch_direction(
+	space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+	hand: Vector3, point: Vector3, fallback: Vector3,
+	speed: float, gravity: float, spawn_forward: float,
+	envelope: float, clearance: Dictionary
+) -> Vector3:
+	var low := ballistic_direction(hand, point, fallback, speed, gravity)
+	if space == null or envelope <= 0.0 or speed <= 0.0 or gravity <= 0.0:
+		return low
+	var flat := Vector2(point.x - hand.x, point.z - hand.z)
+	var reach := flat.length()
+	if reach < 0.01:
+		return low
+	var s2 := speed * speed
+	var disc := s2 * s2 - gravity * (gravity * reach * reach + 2.0 * (point.y - hand.y) * s2)
+	if disc < 0.0:
+		# Out of reach: `_release()`'s range guard owns that refusal.
+		return low
+	var radius := envelope * clampf(float(clearance.get("hit_fraction", 0.8)), 0.05, 1.0)
+	if arc_reaches(space, exclude, hand, low, point, speed, gravity, spawn_forward,
+			radius, float(clearance.get("max_flight", 4.0))):
+		return low
+	var horizontal := Vector3(flat.x, 0.0, flat.y) / reach
+	var low_pitch := atan((s2 - sqrt(disc)) / (gravity * reach))
+	var high_pitch := atan((s2 + sqrt(disc)) / (gravity * reach))
+	var ceiling := minf(high_pitch, deg_to_rad(float(clearance.get("max_pitch_deg", 45.0))))
+	var step := deg_to_rad(maxf(float(clearance.get("step_deg", 1.0)), 0.1))
+	var pitch := low_pitch + step
+	while pitch <= ceiling + 0.00001:
+		var candidate := horizontal * cos(pitch) + Vector3.UP * sin(pitch)
+		if arc_reaches(space, exclude, hand, candidate, point, speed, gravity, spawn_forward,
+				radius, float(clearance.get("max_flight", 4.0))):
+			return candidate
+		pitch += step
+	return low
+
+
+## Whether an orb launched from `hand` along `direction` enters `radius` of
+## `point` before its flight meets any collision. Mirrors `orb.gd::_tick_flight()`:
+## spawned `spawn_forward` along the direction, semi-implicit Euler at the physics
+## rate (closed form: p_n = p0 + v0*n*dt - g*dt^2*n(n+1)/2), target test before
+## the ground ray on each step.
+static func arc_reaches(
+	space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+	hand: Vector3, direction: Vector3, point: Vector3,
+	speed: float, gravity: float, spawn_forward: float,
+	radius: float, max_flight: float
+) -> bool:
+	var dir := direction.normalized()
+	var start := hand + dir * spawn_forward
+	var velocity := dir * speed
+	var dt := 1.0 / float(maxi(Engine.physics_ticks_per_second, 1))
+	var last := int(ceil(maxf(max_flight, 0.0) / dt))
+	var heading := Vector2(dir.x, dir.z)
+	var beyond := Vector2(point.x - hand.x, point.z - hand.z).length() + radius
+	var previous := start
+	var n := 0
+	while n < last:
+		n = mini(n + ARC_PROBE_STRIDE, last)
+		var position := start + velocity * (dt * n) \
+			+ Vector3.DOWN * (gravity * dt * dt * float(n * (n + 1)) * 0.5)
+		if Geometry3D.get_closest_point_to_segment(point, previous, position) \
+				.distance_to(point) <= radius:
+			return true
+		if _terrain_blocks(space, exclude, previous, position):
+			return false
+		# Every arc here heads straight at the point, so once it is further out
+		# than the point plus the radius it can only move away.
+		if heading.length() > 0.001 \
+				and Vector2(position.x - hand.x, position.z - hand.z).length() > beyond:
+			return false
+		previous = position
+	return false
+
+
+## Whether static world geometry lies on the segment. The clearance lift is a
+## TERRAIN rule: a creature or trainer body (CharacterBody3D) in the way is
+## not something to arc over -- the orb meets it and the occlusion preview
+## reports it as the blocker (smoke_throw_preview_occlusion) -- so such hits
+## are stepped past and only the world behind them counts.
+static func _terrain_blocks(space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+		from: Vector3, to: Vector3) -> bool:
+	var skip: Array[RID] = exclude.duplicate()
+	for _attempt in 8:
+		var query := PhysicsRayQueryParameters3D.create(from, to)
+		query.collide_with_areas = false
+		query.exclude = skip
+		query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
+		var hit := space.intersect_ray(query)
+		if hit.is_empty():
+			return false
+		if not (hit.get("collider") is CharacterBody3D):
+			return true
+		skip.append(hit["rid"])
+	return false
+
+
+## Where the reticle's aim point actually is: the first collision down the
+## camera's centre ray, or `reach` along it when nothing is in the way. The old
+## fixed reach put the aim point INSIDE any ground the ray met first -- on a
+## slope, metres into the hill behind the surface the player is looking at --
+## and the arc was solved to that buried point. A hit closer than `min_ahead`
+## in front of the hand (the ray catching ground at the trainer's own feet, or
+## behind them, with the camera pitched steeply down) keeps the old reach, so a
+## steep look can never turn the throw backwards.
+static func surface_aim_point(
+	space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+	eye: Vector3, forward: Vector3, reach: float, hand: Vector3, min_ahead: float
+) -> Vector3:
+	var far := eye + forward * reach
+	if space == null:
+		return far
+	var query := PhysicsRayQueryParameters3D.create(eye, far)
+	query.collide_with_areas = false
+	query.exclude = exclude
+	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return far
+	var surface: Vector3 = hit["position"]
+	var level := Vector3(forward.x, 0.0, forward.z)
+	if level.length() < 0.01:
+		return far
+	if (surface - hand).dot(level.normalized()) < min_ahead:
+		return far
+	return surface
+
+
+func _space_state() -> PhysicsDirectSpaceState3D:
+	if _player == null or not is_instance_valid(_player):
+		return null
+	var world := _player.get_world_3d()
+	return world.direct_space_state if world != null else null
+
+
+## What the orb flies through: the trainer, the trainer's own creature, and the
+## target it is thrown at (orb.gd's `_excluded_rids()` plus `_release()`'s list).
+func _flight_exclusions() -> Array[RID]:
+	var out := _sight_exclusions()
+	if _target != null and is_instance_valid(_target) and _target is CollisionObject3D:
+		out.append((_target as CollisionObject3D).get_rid())
+	return out
+
+
+func _terrain_clear_direction(origin: Vector3, point: Vector3, fallback: Vector3) -> Vector3:
+	var body_radius := 0.5
+	if _target != null and is_instance_valid(_target) and _target.has_method("body_radius"):
+		body_radius = float(_target.call("body_radius"))
+	return assisted_launch_direction(_space_state(), _flight_exclusions(), origin, point,
+		fallback, _speed, _gravity, _spawn_forward, body_radius + _orb_radius, _clearance)
+
+
+func _surface_aim_point(eye: Vector3, forward: Vector3, origin: Vector3) -> Vector3:
+	return surface_aim_point(_space_state(), _flight_exclusions(), eye, forward, AIM_REACH,
+		origin, _aim_surface_min_ahead)
+
+
+## Pure form of the soft magnet so its body-size and angular contracts can be
+## proved without a camera or a live fight.
+static func aim_pull_weight(off_line: float, body_width: float, along: float) -> float:
+	if along <= 0.0 or body_width <= 0.0:
+		return 0.0
+	var outer := minf(body_width * AIM_PULL_OUTER,
+		along * tan(deg_to_rad(AIM_PULL_MAX_DEGREES)))
+	var inner := minf(body_width * AIM_PULL_INNER,
+		outer * AIM_PULL_INNER / AIM_PULL_OUTER)
+	if outer <= 0.001:
+		return 0.0
+	return 1.0 - smoothstep(inner, outer, off_line)
+
+
+## The low-arc launch direction that lands a projectile of `_speed` under
+## `_gravity` on `point`. Falls back to the straight line when the point is
+## unreachable at this speed.
+func _ballistic_direction(origin: Vector3, point: Vector3, fallback: Vector3) -> Vector3:
+	return ballistic_direction(origin, point, fallback, _speed, _gravity)
+
+
+static func ballistic_direction(
+	origin: Vector3, point: Vector3, fallback: Vector3, speed: float, gravity: float
+) -> Vector3:
+	var flat := Vector2(point.x - origin.x, point.z - origin.z)
+	var reach := flat.length()
+	if reach < 0.01:
+		return fallback
+	var rise := point.y - origin.y
+	var s2 := speed * speed
+	var disc := s2 * s2 - gravity * (gravity * reach * reach + 2.0 * rise * s2)
+	var horizontal := Vector3(flat.x, 0.0, flat.y) / reach
+	if disc < 0.0:
+		var direct := point - origin
+		return direct.normalized() if direct.length() > 0.01 else fallback
+	# The smaller root is the low, fast arc; the high lob spends its flight
+	# time hanging in the air over a moving creature.
+	var pitch_tan := (s2 - sqrt(disc)) / (gravity * reach)
+	return (horizontal + Vector3.UP * pitch_tan).normalized()
+
+
+## Constant-velocity launch prediction used only after the reticle/visibility
+## gate above. Two iterations are enough because the Meadows combatants move at
+## walking speed while the orb flies at 17m/s. Every input is bounded so a
+## pathological velocity can never turn this mild lead into a snap across the
+## arena.
+static func predict_launch_point(
+	origin: Vector3, centre: Vector3, target_velocity: Vector3,
+	speed: float, gravity: float, windup: float, max_seconds: float,
+	max_target_speed: float, max_distance: float
+) -> Vector3:
+	var velocity := target_velocity
+	if velocity.length() > max_target_speed:
+		velocity = velocity.normalized() * max_target_speed
+	var predicted := centre
+	for _iteration in 2:
+		var fallback := (predicted - origin).normalized()
+		var direction := ballistic_direction(origin, predicted, fallback, speed, gravity)
+		var horizontal_speed := Vector2(direction.x, direction.z).length() * speed
+		var horizontal_distance := Vector2(
+			predicted.x - origin.x, predicted.z - origin.z).length()
+		var flight := horizontal_distance / maxf(horizontal_speed, 0.01)
+		var horizon := clampf(maxf(0.0, windup) + flight, 0.0, max_seconds)
+		predicted = centre + velocity * horizon
+	var lead := predicted - centre
+	if lead.length() > max_distance:
+		lead = lead.normalized() * max_distance
+	return centre + lead
+
+
+## CharacterBody3D keeps a small downward velocity while grounded to maintain
+## contact. Catch prediction is planar: that bookkeeping must never be treated
+## as a falling target during the release windup.
+## Whether an orb launched at `speed` under `gravity` can physically LAND on
+## `point`. This is the same discriminant `ballistic_direction()` solves: when
+## it goes negative there is no launch angle that reaches, and that function
+## quietly falls back to the straight line -- which drops short by however far
+## out of range the point was. Nothing used to ask the question before spending
+## the orb.
+static func within_ballistic_reach(
+	origin: Vector3, point: Vector3, speed: float, gravity: float
+) -> bool:
+	var flat := Vector2(point.x - origin.x, point.z - origin.z)
+	var reach := flat.length()
+	if reach < 0.01:
+		return true
+	var rise := point.y - origin.y
+	var s2 := speed * speed
+	return s2 * s2 - gravity * (gravity * reach * reach + 2.0 * rise * s2) >= 0.0
+
+
+static func launch_target_velocity(body_velocity: Vector3) -> Vector3:
+	return Vector3(body_velocity.x, 0.0, body_velocity.z)
+
+
+func _aim_camera() -> Camera3D:
+	if _camera_rig == null:
+		return null
+	return _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+
+
+func _on_struck(target: Node3D, offset: float) -> void:
+	state = State.IDLE
+	_cooldown = _throw_cooldown
+	print("catch launch: strike assist=%s predicted=%s offset=%.3f" % [
+		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point), offset,
+	])
+	orb_struck.emit(target, offset)
+
+
+func _on_missed(reason: String, closest: float, needed: float) -> void:
+	state = State.IDLE
+	_cooldown = _throw_cooldown
+	print("catch launch: miss assist=%s predicted=%s reason=%s closest=%.2f" % [
+		_released_assist_point != Vector3.INF, _format_assist_point(_released_assist_point),
+		reason, closest,
+	])
+	_despawn_orb()
+	orb_missed.emit(miss_message(reason, closest, needed))
+
+
+## What a miss tells the player.
+##
+## Static and pure so the wording is testable without a flight. Every branch
+## carries the gap in metres: the difference between a throw that grazed and a
+## throw that was never near is the whole of "am I getting better at this", and
+## the old single string erased it.
+static func miss_message(reason: String, closest: float, needed: float) -> String:
+	if closest == INF or closest < 0.0:
+		return "the orb went wide"
+	var gap := maxf(0.0, closest - needed)
+	if gap < 0.05:
+		# Rounding "0.005m" to "0.0m" printed a miss that read as a bug. A throw
+		# this close missed by less than the message can express, so it says so.
+		return "so close — a hand's width wide"
+	if gap <= 0.35:
+		return "so close — %.1fm wide" % gap
+	if reason == "ground":
+		return "the orb hit the ground — %.1fm wide" % gap
+	if reason == "flight_time":
+		return "the orb sailed past — %.1fm wide" % gap
+	return "the orb went wide — %.1fm" % gap
+
+
+func _despawn_orb() -> void:
+	if _orb != null and is_instance_valid(_orb):
+		_orb.queue_free()
+	_orb = null
+
+
+## The orb that is currently resting on the ground after a strike, so the catch
+## resolution can wobble it. Null at every other time.
+func resting_orb() -> Node3D:
+	return _orb if _orb != null and is_instance_valid(_orb) else null
+
+
+func clear_orb() -> void:
+	_despawn_orb()
+
+
+## Who this trainer's orbs fly past. Set by `combat_manager.gd` each fight.
+func set_pass_through(bodies: Array) -> void:
+	_pass_through.clear()
+	for body: Variant in bodies:
+		if body is Node3D and is_instance_valid(body):
+			_pass_through.append(body as Node3D)
