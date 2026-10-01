@@ -1,0 +1,13 @@
+{
+  "scope": "Read-only source identity verification of F23 sole-writer successor; no runtime/acceptance PASS",
+  "f23_game_source": "71bf3746bd63668e945095d895a91b61c8f57d01",
+  "f23_head_observed": "cb1b250f7201841755e6ab268a71eb3588bd8000",
+  "moves_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+  "moves_equal_exact_ignored_f25_proposal": true,
+  "moves": 94,
+  "ordinary_utility_owner_tags": 63,
+  "ultimate_ids": 31,
+  "mastery_producer_owner_gate_present": true,
+  "f23_independent_source_verdict": "PASS reported by F23; our separate file equality verification above",
+  "activation": "OFF; canonical acceptedaction producer still absent; allF25criteriaNOTMET"
+}
