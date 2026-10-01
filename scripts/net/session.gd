@@ -193,6 +193,30 @@ func foundation_record_personal_flags(delta: Dictionary) -> void:
 			var character := _authority_character(peer)
 			if not character.is_empty(): _character_authority.call("record_personal_flag", character, str(op.get("id", "")), op.get("value", true) == true)
 
+## The actual host ending calls this only after its original claim saves.
+## Guests cannot replace a flag dictionary or choose another claim/character.
+func foundation_stormwood_answer(source: Node, peer: int, claim: Dictionary) -> bool:
+	if not is_host() or not is_instance_valid(source) or source.get_script() != preload("res://scripts/world/stormwood_ending.gd") \
+		or _game() == null or _game().session != self or source.get("session") != self \
+		or source.get("world") != _portal_world_node("stormwood") or source.get("_foundation_world_binding") == null \
+		or source.get("_foundation_world_binding").get_ref() != _game().world: return false
+	var character := _authority_character(peer)
+	if character.is_empty() or admitted_character_state(peer).is_empty() or claim.get("settled") != true \
+		or not claim.get("kept") is bool or source.call("_saved_state").get("claims", {}).get(character, {}) != claim: return false
+	var id := preload("res://scripts/world/stormwood_ending.gd").claim_id(claim)
+	var kept: bool = claim.kept
+	if id.is_empty() or not _game().world.flags.call("has", preload("res://scripts/world/stormwood_ending.gd").resolution_flag(kept, character)): return false
+	var flags: Dictionary = _character_authority.call("personal_flags", character)
+	var marker := "stormwood:regional_outcome:%s:%s" % [id, "accepted" if kept else "refused"]
+	var has_original := false
+	for flag: String in flags:
+		if flag.begins_with("stormwood:regional_outcome:"): has_original = true
+	for flag: String in ["stormwood:legendary_ceremony_settled", preload("res://scripts/world/stormwood_ending.gd").answer_flag(id, kept)]:
+		_character_authority.call("record_personal_flag", character, flag, true)
+	if not has_original: _character_authority.call("record_personal_flag", character, marker, true)
+	if kept: _character_authority.call("record_personal_flag", character, "stormwood:legendary_offer_accepted", true)
+	return true
+
 func _foundation_personal_view(peer: int) -> Dictionary:
 	if admitted_character_state(peer).is_empty(): return {}
 	var character := _authority_character(peer)
