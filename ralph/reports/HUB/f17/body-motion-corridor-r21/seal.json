@@ -1,0 +1,32 @@
+{
+  "scope": "byte exact; seal excludes itself",
+  "files": {
+    ".gitattributes": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c",
+    "body-motion-analysis.json": "9237fa5e8254f70d4a591a3d7c2e206bf9c1d20e8da3f1194c8663bacf4c80c1",
+    "manifest.json": "a6b6867445cc1946017e06fb655efd923f705178ca3ec14c030d82abc95c2ef3",
+    "native-source/core/math/math_defs.h": "db5046323f7cc8a6d6340c0303c0bd02e399768a8b11b2df8b88654540eb3fdd",
+    "native-source/modules/godot_physics_3d/godot_body_3d.h": "b0ba9328eb19ed31902624d04495b11ec6f11dd3ec5f65301613013d43e304af",
+    "native-source/modules/godot_physics_3d/godot_collision_object_3d.h": "dc0fafea48a774cc60f1266f8639a7722952359e16186180b6f6117e7dec62b5",
+    "native-source/modules/godot_physics_3d/godot_physics_server_3d.cpp": "3d0abb21d322589d7f6ffa5850e3a3ac75897ce66559a747e2297d15a721fe83",
+    "native-source/modules/godot_physics_3d/godot_space_3d.cpp": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a",
+    "native-source/modules/godot_physics_3d/godot_space_3d.h": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae",
+    "native-source/provenance.json": "0ed7b5d5d43992829374fd59edce2d1b01e6e8f75c98ee6fb976a7a092ebc139",
+    "originals/data/config/movement.json": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+    "originals/data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "originals/project.godot": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a",
+    "originals/scenes/player/player.tscn": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+    "originals/scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "originals/scripts/world/playground_heightfield.gd": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf",
+    "originals/scripts/world/vegetation.gd": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a",
+    "originals/tests/helpers/opening_geometry_navigator.gd": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2",
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": "ee760573c753b40eebc1e029f2f9f29255b3166cc179bc3d06e4b5e43d0faeb9",
+    "r20-frozen/failed-sample.json": "26b76149254a50077ab76232776d061da7d29d995a1d889cd49872acb810e48a",
+    "r20-frozen/source-results.json": "45331883f6b16c4dea3720838ff214820bbcacbe2968b5c5515357c324c2170e",
+    "r20-frozen/tree-failed/result.json": "2ae87037e7cdd43ca6f9a8d4264545d15378d34c9f902ebdd50a4523aa6117ca",
+    "r20-frozen/tree-failed/smoke.log": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7",
+    "review-context.txt": "93fc79582c7eff1d6f8936cf46f6c11e31971b094d783ce004cdc5fcd310c6c8",
+    "source-check.py": "9ddc42af5cb9176e08888ee4a3aee1d1c129433caecce002e1df698d4ae70fd3",
+    "source-results.json": "027fe37da6510809d7dc290d5e1cbc322dab60cbd5e90b10b7cb62482461925b",
+    "tree-corridor-analysis.json": "bf75b36063847f9404e15708656884218197f7d5dde062c659df232017f2740a"
+  }
+}

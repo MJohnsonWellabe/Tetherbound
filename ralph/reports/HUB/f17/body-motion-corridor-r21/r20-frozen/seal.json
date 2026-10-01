@@ -1,0 +1,33 @@
+{
+  "scope": "byte-exact evidence; seal excludes itself",
+  "files": {
+    ".gitattributes": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c",
+    "failed-sample.json": "26b76149254a50077ab76232776d061da7d29d995a1d889cd49872acb810e48a",
+    "manifest.json": "e70ef751b4521565dd541903687fcca95f2c8e4c02d9c9a88d5cdd067586a0aa",
+    "native-source/main/main.cpp": "2fa6ef2736aa28e2feced47ca872bce1a95e3e6c56bb6002a96660a008df8992",
+    "native-source/modules/godot_physics_3d/config.py": "f5307daa7374fe6cba2f1944308a53bc3c149c8c4cefb0c208b0becddc780a52",
+    "native-source/modules/godot_physics_3d/godot_shape_3d.cpp": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75",
+    "native-source/modules/godot_physics_3d/godot_shape_3d.h": "0bb868854b2038bfb229da2a605820b927873568cadb11864e68c0c31d5c2c6d",
+    "native-source/modules/godot_physics_3d/godot_space_3d.cpp": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a",
+    "native-source/modules/godot_physics_3d/godot_space_3d.h": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae",
+    "native-source/modules/godot_physics_3d/register_types.cpp": "669abbb907027d09b52cf04bca67813265b2adf3e90a7476962e4d991a800b27",
+    "native-source/modules/jolt_physics/config.py": "f5307daa7374fe6cba2f1944308a53bc3c149c8c4cefb0c208b0becddc780a52",
+    "native-source/modules/jolt_physics/register_types.cpp": "6d4a023ca7e0f90ccdec4954bb9e5ea8f7af4c0c412c2baf9fc48cd845516b20",
+    "native-source/modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.h": "84832de8adacc878ca5fbc870e024f047a7f5e5f49927d09805113b49aa1283f",
+    "native-source/provenance.json": "5dcec7e9e68f1e0a54a2edb551c867ce6055fd025e7d0bdb75812c5daa7f3570",
+    "native-source/scene/resources/3d/box_shape_3d.cpp": "fa760ef3177ec3e943c4bd772bc267812865899ec5834cb25ff3bc2115b74fb1",
+    "native-source/scene/resources/3d/capsule_shape_3d.cpp": "b1842cdca5ca795f5bfca154a0907bbf6da1edecb9c620ce63b1c7da403783e1",
+    "native-source/servers/physics_3d/physics_server_3d.cpp": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f",
+    "native-source/servers/physics_3d/physics_server_3d.h": "f41afb9aec4dbcd308a661f9ec46d8a19313b7196e2700b54af40bcfe9805105",
+    "originals/project.godot": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a",
+    "originals/tests/helpers/opening_geometry_navigator.gd": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2",
+    "review-context.txt": "93f4e80f78644a07f06cbb0d62745fe4adbb1d2cf84ce56ad0cdf0a5a86bd39f",
+    "root-failed/native.log": "feccf36f0470fc1a095d6b3aaeb8e9b346ffe13742f049929b1bec27248c1a2a",
+    "root-failed/parser.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "root-failed/receipt.json": "dfed9541b69b2682442ce229bac5593237715e620622a80aacafbeb42af5f908",
+    "source-check.py": "d6fc78369644b82767aeb7c73f42f225480d9567545ef73a33487cca413214f8",
+    "source-results.json": "45331883f6b16c4dea3720838ff214820bbcacbe2968b5c5515357c324c2170e",
+    "tree-failed/result.json": "2ae87037e7cdd43ca6f9a8d4264545d15378d34c9f902ebdd50a4523aa6117ca",
+    "tree-failed/smoke.log": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7"
+  }
+}
