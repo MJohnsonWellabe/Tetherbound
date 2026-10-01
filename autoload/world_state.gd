@@ -280,7 +280,18 @@ func save_data() -> Dictionary:
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state,
 ## the same contract `map_state.gd` and `progression_state.gd` already give
 ## `save_game.gd`.
+static func foundation_world_errors(rows: Variant, namespace: String, instance: String, buildings: Variant) -> Array[String]:
+	if not rows is Dictionary or not buildings is Array: return ["Invalid Foundation world carrier"]
+	var failures := preload("res://scripts/net/foundation_event.gd").errors(rows, namespace, instance)
+	failures.append_array(preload("res://scripts/build/forward_camp_rules.gd").saved_errors(buildings))
+	return failures
+
 func load_data(data: Dictionary) -> void:
+	var foundation_failures := foundation_world_errors(data.get("reward_deliveries", {}),
+		str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", []))
+	if not foundation_failures.is_empty():
+		push_error("World foundation source refused: %s" % "; ".join(foundation_failures))
+		return
 	var portal_failures := portal_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")))
 	if not portal_failures.is_empty():
 		push_error("World portal journal refused: %s" % "; ".join(portal_failures))
@@ -428,7 +439,7 @@ func _apply_op(op: Dictionary) -> bool:
 		"reward_delivery_accept":
 			var accept_id := str(op.get("delivery_id", ""))
 			var accept_character := str(op.get("character_id", ""))
-			if accept_id.begins_with("actor_vitals:") or accept_id.begins_with("creature_training:") or accept_id.begins_with("altar_building:"):
+			if accept_id.begins_with("actor_vitals:") or accept_id.begins_with("creature_training:") or accept_id.begins_with("altar_building:") or accept_id.begins_with("foundation_event:"):
 				return false
 			var accepted: Variant = reward_deliveries.get(accept_id)
 			if not accepted is Dictionary or str((accepted as Dictionary).get("status", "")) != "pending" \
@@ -440,7 +451,7 @@ func _apply_op(op: Dictionary) -> bool:
 		"reward_delivery_journal":
 			var delivery: Variant = op.get("delivery", {})
 			var id := str(op.get("delivery_id", ""))
-			if id.begins_with("actor_vitals:") or id.begins_with("creature_training:") or id.begins_with("altar_building:") or (delivery is Dictionary and delivery.get("kind") in ["actor_vitals", "creature_training", "altar_building"]):
+			if id.begins_with("actor_vitals:") or id.begins_with("creature_training:") or id.begins_with("altar_building:") or id.begins_with("foundation_event:") or (delivery is Dictionary and delivery.get("kind") in ["actor_vitals", "creature_training", "altar_building", "foundation_event"]):
 				return false
 			if id.is_empty() or not delivery is Dictionary:
 				return false
@@ -454,6 +465,28 @@ func _apply_op(op: Dictionary) -> bool:
 			if reward_delivery_namespace.is_empty():
 				reward_delivery_namespace = delivery_namespace
 			reward_deliveries[id] = (delivery as Dictionary).duplicate(true)
+			revision += 1
+			return true
+		"foundation_event_journal":
+			var row: Variant = op.get("delivery")
+			if not preload("res://scripts/net/foundation_event.gd").valid(row, reward_delivery_namespace, world_id) \
+				or op.get("delivery_id") != row.delivery_id or reward_deliveries.has(row.delivery_id): return false
+			reward_deliveries[row.delivery_id] = row.duplicate(true)
+			revision += 1
+			return true
+		"foundation_shrine_display":
+			var row: Variant = reward_deliveries.get(op.get("delivery_id", ""))
+			if not training_row_valid(row, reward_delivery_namespace, world_id) or row.get("action") != "relic_hang" \
+				or row.receipt != op.get("receipt") or row.intent.biome != op.get("biome"): return false
+			redesign_world.shrine_display[row.intent.biome] = true
+			revision += 1
+			return true
+		"foundation_dock_departure":
+			var row: Variant = reward_deliveries.get(op.get("delivery_id", ""))
+			if not training_row_valid(row, reward_delivery_namespace, world_id) or row.get("action") != "dock_conclusion" \
+				or row.receipt != op.get("receipt") or row.intent.world_namespace != reward_delivery_namespace \
+				or not flags.call("has", "water_currents_restored"): return false
+			flags.call("set_flag", "water_civilian_departure_complete", true)
 			revision += 1
 			return true
 		"satchel_add":
@@ -487,12 +520,16 @@ func _apply_op(op: Dictionary) -> bool:
 			return true
 		"building_add":
 			if op.get("id") == "altar" and not _altar_building_op_bound(op, false): return false
+			if op.get("id") == "forward_camp" and not _foundation_camp_op_bound(op, false): return false
 			# Through `register_building()`, not a hand-built Dictionary: the
 			# shape of a placed-building record keeps exactly one construction
 			# site, so a delta and a solo placement can never disagree about it.
-			register_building(str(op.get("id", "")), _op_position(op.get("position")),
+			var placed_index := register_building(str(op.get("id", "")), _op_position(op.get("position")),
 				float(op.get("yaw_deg", 0.0)), bool(op.get("paid", true)),
 				str(op.get("realm", "meadows")), str(op.get("uid", "")))
+			if op.get("id") == "forward_camp" and placed_index >= 0:
+				placed_buildings[placed_index].character_id = op.character_id
+				placed_buildings[placed_index].txn_id = op.txn_id
 			return true
 		"building_arch_link":
 			var index := building_index_of(str(op.get("uid", "")))
@@ -520,6 +557,11 @@ func _apply_op(op: Dictionary) -> bool:
 				index = int(op.get("index", -1))
 			if index < 0 or index >= placed_buildings.size():
 				return false
+			if placed_buildings[index].get("id") == "forward_camp":
+				if not _foundation_camp_op_bound(op, true): return false
+				placed_buildings[index].removed = true
+				revision += 1
+				return true
 			placed_buildings.remove_at(index)
 			revision += 1
 			return true
@@ -550,10 +592,27 @@ func _op_position(raw: Variant) -> Vector3:
 		return Vector3(float(a[0]), float(a[1]), float(a[2]))
 	return Vector3.ZERO
 
+func _foundation_camp_op_bound(op: Dictionary, removing: bool) -> bool:
+	const E = preload("res://scripts/creatures/essence.gd")
+	var character := str(op.get("character_id", ""))
+	var row: Variant = reward_deliveries.get(E.training_delivery_id(reward_delivery_namespace, character))
+	if not training_row_valid(row, reward_delivery_namespace, world_id) or row.get("action") != "camp_build" \
+		or row.status != "pending" or row.intent.get("action") != ("pack" if removing else "place") \
+		or row.intent.get("action_id") != op.get("txn_id") \
+		or not E._equivalent(placed_buildings, row.host_context.world_before): return false
+	var plan := preload("res://scripts/net/foundation_actions.gd").camp_plan(row.before, int(row.character_revision) - 1, row.intent, row.host_context)
+	if plan.get("ok") != true or plan.record.uid != op.get("uid"): return false
+	if removing: return building_index_of(plan.record.uid) >= 0
+	for field: String in ["id", "uid", "realm", "position", "yaw_deg", "paid", "character_id", "txn_id"]:
+		if not E._equivalent(op.get(field), plan.record.get(field)): return false
+	return int(next_building_uid) == row.host_context.next_building_uid
+
 
 ## Canonical validation for the discriminated EXISTING world carrier; the
 ## same guard runs for split/flat reads, snapshots, typed ops and both saves.
 static func training_row_valid(row: Variant, world_namespace: String, expected_world: String = "") -> bool:
+	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 3:
+		return not world_namespace.is_empty() and preload("res://scripts/net/foundation_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", world_namespace, expected_world)
 	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 2:
 		return not world_namespace.is_empty() and preload("res://scripts/net/character_action_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", world_namespace, expected_world)
 	if row is Dictionary and row.get("kind") == "altar_building": return altar_build_row_valid(row, world_namespace, expected_world)

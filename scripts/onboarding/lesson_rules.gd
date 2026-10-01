@@ -1,0 +1,84 @@
+extends RefCounted
+
+## Read only. Availability comes from this character's real state, never world
+## ending markers, a host's progress, or synthetic opening completion.
+const DATA := preload("res://scripts/data/redesign_data.gd")
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
+const PREFIX := "opening:lesson:"
+
+static func config() -> Dictionary:
+	var raw: Variant = DATA.json("res://data/config/onboarding.json")
+	return raw if raw is Dictionary else {}
+
+static func available(id: String, player: RefCounted) -> bool:
+	if player == null: return false
+	var state: Dictionary = player.get("redesign_character")
+	var inventory: RefCounted = player.get("inventory")
+	var flags: RefCounted = player.get("flags")
+	match id:
+		"home_key":
+			return flags.call("has", "home_key_given") == true and inventory.call("count", "home_key") == 1
+		"homestead":
+			return flags.call("has", PREFIX + "trigger:home_return") == true
+		"altar":
+			for essence: Dictionary in DATA.json("res://data/schema/essences.json"):
+				if inventory.call("count", str(essence.id)) > 0: return true
+		"masters":
+			var party: RefCounted = player.get("party")
+			for index: int in party.call("size"):
+				var creature: RefCounted = party.call("at", index)
+				var mirror: Dictionary = state.get("creatures", {}).get(str(creature.get("uid")), {})
+				if int(creature.get("level")) == 10 and BREAKTHROUGH.level_cap(mirror.get("breakthroughs", [])) == 10: return true
+		"feasts": return not state.get("feast_recipes", []).is_empty()
+		"traits": return not state.get("release_receipts", []).is_empty()
+		"portals":
+			for key: String in ["tidewake_portal_key", "cloudreach_portal_key", "stormwood_portal_key"]:
+				if inventory.call("count", key) > 0: return true
+			return not state.get("portal_unlocks", []).is_empty()
+		"shrines": return not state.get("relics_held", []).is_empty() or not state.get("relics_hung", []).is_empty()
+	return false
+
+static func due(player: RefCounted) -> Dictionary:
+	for row: Dictionary in config().get("lessons", []):
+		if available(str(row.id), player) and player.get("flags").call("has", PREFIX + str(row.id)) != true:
+			return row.duplicate(true)
+	return {}
+
+static func guidance(player: RefCounted) -> Dictionary:
+	if config().get("enabled") != true or player == null: return {}
+	# Preserve the required opening's one next action. Tutorials don't replace
+	# naming, real catch, Mira's kit or the tournament readiness chain.
+	if player.get("flags").call("has", "tournament_entered") != true: return {}
+	var state: Dictionary = player.get("redesign_character")
+	var party: RefCounted = player.get("party")
+	for index: int in party.call("size"):
+		var creature: RefCounted = party.call("at", index)
+		var mirror: Dictionary = state.get("creatures", {}).get(str(creature.get("uid")), {})
+		var cap := BREAKTHROUGH.level_cap(mirror.get("breakthroughs", []))
+		if int(creature.get("level")) != cap: continue
+		for master: Dictionary in BREAKTHROUGH.masters().get("masters", []):
+			if int(master.cap_level) != cap: continue
+			var row := _row("masters")
+			row["goal_realm"] = preload("res://scripts/data/biome_order.gd").runtime_id(str(master.biome))
+			row["goal_at"] = [master.position[0], master.position[2]]
+			row["goal"] = "Challenge %s for the L%d feast recipe." % [str(master.name), cap]
+			if state.get("master_wins", []).has(master.id): row["goal"] = "Open %s's recipe chest." % str(master.name)
+			if state.get("feast_recipes", []).has(master.feast_id):
+				row["goal"] = "Cook the L%d feast at home, then feed your capped creature." % cap
+				row["goal_realm"] = "meadows"
+				row["goal_at"] = [2, 14]
+			return row
+	var inventory: RefCounted = player.get("inventory")
+	for biome: String in ["tidewake", "cloudreach", "stormwood"]:
+		if inventory.call("count", biome + "_portal_key") > 0 and not state.get("portal_unlocks", []).has(biome):
+			var row := _row("portals")
+			row["goal"] = "Use your %s key at its signed arch in the Crossing Hall." % biome.capitalize()
+			return row
+	for relic: String in state.get("relics_held", []):
+		if not state.get("relics_hung", []).has(relic): return _row("shrines")
+	return {}
+
+static func _row(id: String) -> Dictionary:
+	for row: Dictionary in config().get("lessons", []):
+		if row.id == id: return row.duplicate(true)
+	return {}

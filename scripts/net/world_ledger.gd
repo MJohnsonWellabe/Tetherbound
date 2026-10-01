@@ -115,6 +115,12 @@ var _storage_revisions: Dictionary = {}
 ## `transfer_item`/`drop_item` is refused rather than duplicating a stack.
 var _seen_txns: Dictionary = {}
 
+func commit_foundation_event(row: Dictionary) -> Dictionary:
+	if world == null or not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): return {"ok": false}
+	if world.reward_deliveries.has(row.delivery_id):
+		return {"ok": world.reward_deliveries[row.delivery_id] == row, "duplicate": true}
+	return _commit([{"op": "foundation_event_journal", "scope": "world", "delivery_id": row.delivery_id, "delivery": row.duplicate(true)}], "foundation_event", 1, "")
+
 
 func _init(world_state: RefCounted = null) -> void:
 	world = world_state
@@ -245,6 +251,8 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
 	match kind:
+		"ripplet_sunken_claim":
+			return _ripplet_sunken_claim(intent, peer_id, realm)
 		"stormwood_disable_rod":
 			return _stormwood_disable_rod(intent, peer_id, realm)
 		"stormwood_harvest":
@@ -462,6 +470,8 @@ func _stormwood_disable_rod(intent: Dictionary, peer_id: int, realm: String) -> 
 ## the right shape, it just had no single writer.
 func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var flag := str(intent.get("flag", ""))
+	if flag.begins_with("cache:ripplet:"):
+		return _refuse("claim_pickup", peer_id, "typed_claim_required", "Dive to gather this sunken find.")
 	if flag.is_empty():
 		return _refuse("claim_pickup", peer_id, "malformed", "That find has no identity to record.")
 	if _flag_set(flag):
@@ -472,6 +482,25 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 	if not item.is_empty():
 		ops.append(_item_grant(peer_id, item, count))
 	return _commit(ops, "claim_pickup", peer_id, realm)
+
+func _ripplet_sunken_claim(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	var actor: Dictionary = intent.get("_ripplet_actor", {})
+	if realm != "water" or actor.get("peer") != peer_id:
+		return _refuse("ripplet_sunken_claim", peer_id, "wrong_actor", "Reach the sunken find first.")
+	var result: Dictionary = preload("res://scripts/world/ripplet_sunken_rules.gd").evaluate(intent, actor, world.flags, world.day)
+	if not result.get("ok", false): return _refuse("ripplet_sunken_claim", peer_id, "refused", str(result.reason))
+	var namespace := str(world.reward_delivery_namespace)
+	if namespace.is_empty() or str(world.world_id).is_empty(): return _refuse("ripplet_sunken_claim", peer_id, "world_not_ready", "Save this world before gathering.")
+	var ops: Array = [_world_flag("water", str(result.key))]
+	if not str(result.previous).is_empty(): ops.append(_world_flag("water", str(result.previous), false))
+	for item: String in result.outputs:
+		var source := str(result.key) + ":" + item if result.outputs.size() > 1 else str(result.key)
+		var delivery := REWARD_DELIVERY.make_record(str(world.world_id), namespace, source, str(result.character_id), item, int(result.outputs[item]))
+		if delivery.is_empty() or world.reward_deliveries.has(str(delivery.delivery_id)):
+			return _refuse("ripplet_sunken_claim", peer_id, "already_taken", "Someone already gathered this find.")
+		ops.append({"op":"reward_delivery_journal", "scope":"world", "realm":"water", "delivery_id":delivery.delivery_id, "delivery":delivery})
+		ops.append({"op":"reward_delivery", "scope":"player", "realm":"water", "peers":[peer_id], "delivery":delivery})
+	return _commit(ops, "ripplet_sunken_claim", peer_id, "water")
 
 
 ## A hand-authored harvest node (`harvest_node.gd`). Gone, not resting: the same
@@ -539,6 +568,7 @@ func _deplete_vegetation(intent: Dictionary, peer_id: int, realm: String) -> Dic
 ## placed-building record has one construction site and cannot drift.
 func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var id := str(intent.get("id", ""))
+	if id == "forward_camp": return _refuse("place_building",peer_id,"camp_transaction_required","Forward camps need the host's paid kit transaction.")
 	if id == "altar": return _refuse("place_building", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
 	if id.is_empty():
 		return _refuse("place_building", peer_id, "malformed", "That structure has no identity to record.")
@@ -634,6 +664,7 @@ func _dismantle(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	if index < 0 or index >= buildings.size():
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
 	var record: Dictionary = buildings[index] as Dictionary
+	if record.get("id") == "forward_camp": return _refuse("dismantle",peer_id,"camp_transaction_required","Pack up the camp through its host kit transaction.")
 	if record.get("id") == "altar": return _refuse("dismantle", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
 	if str(record.get("realm", "meadows")) != realm:
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
@@ -709,6 +740,8 @@ func _storage_txn(intent: Dictionary, peer_id: int, realm: String) -> Dictionary
 
 func _set_world_flag(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var id := str(intent.get("id", ""))
+	if id.begins_with("cache:ripplet:"):
+		return _refuse("set_world_flag", peer_id, "typed_claim_required", "Sunken finds use their own claim receipt.")
 	if id.is_empty():
 		return _refuse("set_world_flag", peer_id, "malformed", "That world change has no identity to record.")
 	var value := bool(intent.get("value", true))
@@ -1280,6 +1313,10 @@ func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionar
 	# One gate for every intent kind that writes a world flag: an owned receipt
 	# can only be written (or cleared) by the character it names.
 	for op: Variant in ops:
+		if op is Dictionary and str(op.get("op", "")) == "flag" \
+				and str(op.get("scope", "")) == "world" \
+				and str(op.get("id", "")).begins_with("cache:ripplet:") and kind != "ripplet_sunken_claim":
+			return _refuse(kind, peer_id, "typed_ripplet_claim", "Reach that find with your diving Ripplet.")
 		if op is Dictionary and str((op as Dictionary).get("op", "")) == "flag" \
 				and str((op as Dictionary).get("scope", "")) == "world" \
 				and not owned_flag_allowed(str((op as Dictionary).get("id", "")), peer_id, _actor_character):
@@ -1307,12 +1344,30 @@ func _refuse(kind: String, peer_id: int, code: String, reason: String) -> Dictio
 
 ## Internal host typed door; _commit_intent never accepts these op names.
 func commit_creature_training_delivery(row: Dictionary, peer_id: int) -> Dictionary:
+	if row.get("version") == 3 and row.get("action") == "camp_build": return _commit_foundation_camp(row, peer_id)
 	var op := {"op": "creature_training_journal", "scope": "world", "delivery_id": row.get("delivery_id"), "delivery": row.duplicate(true)}
 	if world == null or not preload("res://autoload/world_state.gd").training_world_op_valid(op,
 		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
 		return _refuse("creature_training", peer_id, "invalid_training", "That training decision is invalid.")
-	return _commit([op, {"op": "creature_training_settle", "scope": "player", "peers": [peer_id],
-		"delivery": row.duplicate(true)}], "creature_training", peer_id, "meadows")
+	var ops: Array = [op]
+	if row.get("action") == "relic_hang": ops.append({"op": "foundation_shrine_display", "scope": "world", "delivery_id": row.delivery_id, "receipt": row.receipt, "biome": row.intent.biome})
+	if row.get("action") == "dock_conclusion": ops.append({"op": "foundation_dock_departure", "scope": "world", "delivery_id": row.delivery_id, "receipt": row.receipt})
+	ops.append({"op": "creature_training_settle", "scope": "player", "peers": [peer_id], "delivery": row.duplicate(true)})
+	return _commit(ops, "creature_training", peer_id, "meadows")
+
+func _commit_foundation_camp(row: Dictionary, peer: int) -> Dictionary:
+	if world == null or not preload("res://autoload/world_state.gd").training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+		or row.status != "pending" or not preload("res://scripts/creatures/essence.gd")._equivalent(world.placed_buildings, row.host_context.world_before) \
+		or int(world.next_building_uid) != row.host_context.next_building_uid: return {"ok": false, "code": "camp_world_changed"}
+	var plan := preload("res://scripts/net/foundation_actions.gd").camp_plan(row.before, int(row.character_revision) - 1, row.intent, row.host_context)
+	if plan.get("ok") != true: return plan
+	var building_op: Dictionary = plan.record.duplicate(true) if row.intent.action == "place" else {"uid": plan.record.uid, "realm": plan.record.realm}
+	building_op.op = "building_add" if row.intent.action == "place" else "building_remove"
+	building_op.scope = "world"
+	building_op.character_id = row.character_id
+	building_op.txn_id = row.intent.action_id
+	return _commit([{"op": "creature_training_journal", "scope": "world", "delivery_id": row.delivery_id, "delivery": row},
+		building_op, {"op": "creature_training_settle", "scope": "player", "peers": [peer], "delivery": row}], "camp_build", peer, plan.record.realm)
 
 
 func accept_creature_training_delivery(id: String, character: String, journal_revision: int,

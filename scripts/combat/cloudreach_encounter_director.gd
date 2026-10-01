@@ -909,7 +909,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	if not _rider_off_for_admission():
 		return false
 	var started := super.begin_trainer_battle(spec, trainer)
-	if started:
+	if started and not spec.has("rematch"):
 		trainer_started.emit(str(spec["id"]))
 		trainer_opposition_changed.emit(str(spec["id"]), TRAINERS.team_of(spec).size(), TRAINERS.team_of(spec).size())
 	return started
@@ -918,19 +918,21 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 func _on_trainer_round_ended(outcome: String) -> void:
 	var id := trainer_battle_id()
 	var total := TRAINERS.team_of(_trainer_spec).size()
-	if outcome == "won":
+	if outcome == "won" and not _trainer_spec.has("rematch"):
 		trainer_opposition_changed.emit(id, _trainer_queue.size(), total)
 	super._on_trainer_round_ended(outcome)
 
 
 func _finish_trainer_battle(won: bool) -> void:
 	var id := trainer_battle_id()
+	var rematch := _trainer_spec.has("rematch")
 	super._finish_trainer_battle(won)
-	if not won and not id.is_empty():
+	if not won and not id.is_empty() and not rematch:
 		trainer_lost.emit(id)
 
 
 func _record_trainer_defeat(spec: Dictionary) -> void:
+	if spec.has("rematch"): return
 	var progression := _progression()
 	if progression == null or bool(progression.call("has", str(spec.get("defeat_flag", "")))):
 		return

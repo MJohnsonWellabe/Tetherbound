@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": false,
+  "day_seconds": 600,
+  "respawn_days": 3,
+  "requires_all_region_departures": true,
+  "trait_profiles": {
+    "alpha": {
+      "count_weights": [
+        0,
+        10,
+        40,
+        50
+      ],
+      "rarity_weights": [
+        25,
+        45,
+        30
+      ]
+    },
+    "alpha_unusual": {
+      "count_weights": [
+        0,
+        5,
+        30,
+        65
+      ],
+      "rarity_weights": [
+        15,
+        45,
+        40
+      ]
+    }
+  },
+  "sites": {
+    "wild_once_1900": {
+      "id": "wild_once_1900",
+      "biome": "meadows",
+      "region_id": "band1_lower_meadows",
+      "source": "res://data/config/bands/band1_lower_meadows/spawns.json",
+      "source_order": 1900,
+      "original_completion_flag": "wild_once_1900"
+    },
+    "wild_once_2006": {
+      "id": "wild_once_2006",
+      "biome": "meadows",
+      "region_id": "band2_stone_and_root",
+      "source": "res://data/config/bands/band2_stone_and_root/spawns.json",
+      "source_order": 2006,
+      "original_completion_flag": "wild_once_2006"
+    },
+    "wild_once_2011": {
+      "id": "wild_once_2011",
+      "biome": "meadows",
+      "region_id": "band2_stone_and_root",
+      "source": "res://data/config/bands/band2_stone_and_root/spawns.json",
+      "source_order": 2011,
+      "original_completion_flag": "wild_once_2011"
+    },
+    "wild_once_2012": {
+      "id": "wild_once_2012",
+      "biome": "meadows",
+      "region_id": "band2_stone_and_root",
+      "source": "res://data/config/bands/band2_stone_and_root/spawns.json",
+      "source_order": 2012,
+      "original_completion_flag": "wild_once_2012"
+    },
+    "wild_once_2100": {
+      "id": "wild_once_2100",
+      "biome": "meadows",
+      "region_id": "band2_stone_and_root",
+      "source": "res://data/config/bands/band2_stone_and_root/spawns.json",
+      "source_order": 2100,
+      "original_completion_flag": "wild_once_2100"
+    },
+    "wild_once_3002": {
+      "id": "wild_once_3002",
+      "biome": "meadows",
+      "region_id": "band3_the_river_lock",
+      "source": "res://data/config/bands/band3_the_river_lock/spawns.json",
+      "source_order": 3002,
+      "original_completion_flag": "wild_once_3002"
+    },
+    "wild_once_3100": {
+      "id": "wild_once_3100",
+      "biome": "meadows",
+      "region_id": "band3_the_river_lock",
+      "source": "res://data/config/bands/band3_the_river_lock/spawns.json",
+      "source_order": 3100,
+      "original_completion_flag": "wild_once_3100"
+    },
+    "wild_once_3102": {
+      "id": "wild_once_3102",
+      "biome": "meadows",
+      "region_id": "band3_the_river_lock",
+      "source": "res://data/config/bands/band3_the_river_lock/spawns.json",
+      "source_order": 3102,
+      "original_completion_flag": "wild_once_3102"
+    },
+    "wild_once_3103": {
+      "id": "wild_once_3103",
+      "biome": "meadows",
+      "region_id": "band3_the_river_lock",
+      "source": "res://data/config/bands/band3_the_river_lock/spawns.json",
+      "source_order": 3103,
+      "original_completion_flag": "wild_once_3103"
+    },
+    "wild_once_4001": {
+      "id": "wild_once_4001",
+      "biome": "meadows",
+      "region_id": "band4_upper_meadows_ironwood",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "source_order": 4001,
+      "original_completion_flag": "wild_once_4001"
+    },
+    "wild_once_4007": {
+      "id": "wild_once_4007",
+      "biome": "meadows",
+      "region_id": "band4_upper_meadows_ironwood",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "source_order": 4007,
+      "original_completion_flag": "wild_once_4007"
+    },
+    "wild_once_4075": {
+      "id": "wild_once_4075",
+      "biome": "meadows",
+      "region_id": "band4_upper_meadows_ironwood",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "source_order": 4075,
+      "original_completion_flag": "wild_once_4075"
+    },
+    "wild_once_4100": {
+      "id": "wild_once_4100",
+      "biome": "meadows",
+      "region_id": "band4_upper_meadows_ironwood",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "source_order": 4100,
+      "original_completion_flag": "wild_once_4100"
+    },
+    "wild_once_4101": {
+      "id": "wild_once_4101",
+      "biome": "meadows",
+      "region_id": "band4_upper_meadows_ironwood",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "source_order": 4101,
+      "original_completion_flag": "wild_once_4101"
+    },
+    "wild_once_5001": {
+      "id": "wild_once_5001",
+      "biome": "meadows",
+      "region_id": "band5_stronghold_approach",
+      "source": "res://data/config/bands/band5_stronghold_approach/spawns.json",
+      "source_order": 5001,
+      "original_completion_flag": "wild_once_5001"
+    },
+    "wild_once_5015": {
+      "id": "wild_once_5015",
+      "biome": "meadows",
+      "region_id": "band5_stronghold_approach",
+      "source": "res://data/config/bands/band5_stronghold_approach/spawns.json",
+      "source_order": 5015,
+      "original_completion_flag": "wild_once_5015"
+    },
+    "hollows_alpha": {
+      "id": "hollows_alpha",
+      "biome": "stormwood",
+      "region_id": "glowmoss_hollows",
+      "source": "res://data/config/stormwood_encounters.json",
+      "original_completion_flag": "stormwood:named:hollows_alpha:cleared"
+    },
+    "capacitor_alpha": {
+      "id": "capacitor_alpha",
+      "biome": "stormwood",
+      "region_id": "conductor_run",
+      "source": "res://data/config/stormwood_encounters.json",
+      "original_completion_flag": "stormwood:named:capacitor_alpha:cleared"
+    },
+    "crown_guardian": {
+      "id": "crown_guardian",
+      "biome": "stormwood",
+      "region_id": "hollow_crown",
+      "source": "res://data/config/stormwood_encounters.json",
+      "original_completion_flag": "stormwood:named:crown_guardian:cleared"
+    },
+    "old_rodfolk_hall_guardian": {
+      "id": "old_rodfolk_hall_guardian",
+      "biome": "stormwood",
+      "region_id": "deepwood",
+      "source": "res://data/config/stormwood_encounters.json",
+      "original_completion_flag": "stormwood:named:old_rodfolk_hall_guardian:cleared"
+    },
+    "blackwater_elder": {
+      "id": "blackwater_elder",
+      "biome": "stormwood",
+      "region_id": "deepwood",
+      "source": "res://data/config/stormwood_encounters.json",
+      "original_completion_flag": "stormwood:named:blackwater_elder:cleared"
+    },
+    "glass_field_alpha": {
+      "id": "glass_field_alpha",
+      "biome": "stormwood",
+      "region_id": "dynamo",
+      "source": "res://data/config/stormwood_encounters.json",
+      "original_completion_flag": "stormwood:named:glass_field_alpha:cleared"
+    },
+    "water_lantern_shell_sentinel": {
+      "id": "water_lantern_shell_sentinel",
+      "biome": "tidewake",
+      "region_id": "lantern_cove",
+      "source": "res://data/config/water_encounters.json",
+      "original_completion_flag": "water_named_lantern_shell_sentinel_resolved"
+    },
+    "water_gull_basalt_claw": {
+      "id": "water_gull_basalt_claw",
+      "biome": "tidewake",
+      "region_id": "gull_rest",
+      "source": "res://data/config/water_encounters.json",
+      "original_completion_flag": "water_named_gull_basalt_claw_resolved"
+    },
+    "water_brine_root_watcher": {
+      "id": "water_brine_root_watcher",
+      "biome": "tidewake",
+      "region_id": "brine_steps",
+      "source": "res://data/config/water_encounters.json",
+      "original_completion_flag": "water_named_brine_root_watcher_resolved"
+    },
+    "water_drowned_garden_songweaver": {
+      "id": "water_drowned_garden_songweaver",
+      "biome": "tidewake",
+      "region_id": "drowned_garden",
+      "source": "res://data/config/water_encounters.json",
+      "original_completion_flag": "water_named_drowned_garden_songweaver_resolved"
+    },
+    "water_deep_watch_tidecoil": {
+      "id": "water_deep_watch_tidecoil",
+      "biome": "tidewake",
+      "region_id": "deep_watch",
+      "source": "res://data/config/water_encounters.json",
+      "original_completion_flag": "water_named_deep_watch_tidecoil_resolved"
+    },
+    "water_aquaryn_alpha": {
+      "id": "water_aquaryn_alpha",
+      "biome": "tidewake",
+      "region_id": "tidal_cradle",
+      "source": "res://data/config/water_alpha.json",
+      "original_completion_flag": "water_aquaryn_resolved"
+    }
+  },
+  "cloudreach_disposition": "No named alpha in existing authored Cloudreach source; no new encounter invented."
+}

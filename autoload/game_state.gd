@@ -833,6 +833,14 @@ func _mount_session() -> void:
 	session = SESSION.new()
 	session.name = "Session"
 	add_child(session)
+	var loadout_service: Node = preload("res://scripts/ui/foundation_loadout_service.gd").new()
+	loadout_service.name = "FoundationLoadoutService"
+	add_child(loadout_service)
+	loadout_service.call("configure", session)
+	preload("res://scripts/ui/altar_service.gd").attach(self).call("configure_loadout_ui", loadout_service)
+	var composition: Node = preload("res://scripts/net/foundation_composition.gd").new()
+	composition.name = "FoundationComposition"
+	session.add_child(composition)
 	# D103/lane 3.A. The ledger transport is mounted here, with the session,
 	# rather than by whichever consumer happens to submit the first intent.
 	# Its RPCs only resolve because every process holds it at the identical
@@ -980,7 +988,10 @@ func _input(event: InputEvent) -> void:
 func advance_day() -> int:
 	if not is_host():
 		return day
-	return int(world.call("advance_day"))
+	var advanced := int(world.call("advance_day"))
+	# The real host morning/rest lifecycle alone advances the saved board clock.
+	world.redesign_world.bounty_day = int(world.redesign_world.bounty_day) + 1
+	return advanced
 
 
 ## R7.6. The state of farm bed `index`, or a fresh fallow one.
@@ -2509,6 +2520,9 @@ func can_craft(id: String) -> bool:
 ## `inventory.remove` is itself all-or-nothing per ingredient -- see its own
 ## comment on why a craft must never eat half its cost and then fail.
 func craft(id: String) -> bool:
+	# F34 must never fall through the retired local craft debit. The actual
+	# Workbench producer uses the admitted character journal and stage_craft.
+	if id == "forward_camp_kit": return false
 	if session != null and session.has_method("_owner_training_mutation_blocked") and session.call("_owner_training_mutation_blocked", local) == true: return false
 	if not can_craft(id):
 		return false
@@ -2991,6 +3005,15 @@ func portal_character_state() -> Dictionary:
 func home_key_refusal() -> String:
 	return str(session.call("home_key_refusal")) if session != null else "The Home Key is not ready yet."
 
+func use_home_key() -> bool:
+	if local == null or local.inventory.count("home_key") != 1 or session == null: return false
+	var key := get_node_or_null(^"HomeKey")
+	if key == null:
+		key = preload("res://scripts/world/home_key.gd").new()
+		key.name = "HomeKey"
+		add_child(key)
+	return key.call("use") == true
+
 ## Appended to Game. Only the mounted opening director may call these local
 ## producer doors. They are not RPCs and do not accept an imported roster.
 func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:
@@ -3039,6 +3062,106 @@ func original_starter_uid() -> String:
 			if uid.is_empty() or uid.contains(":") or (not found.is_empty() and found != uid): return ""
 			found = uid
 	return found
+
+
+var _regional_ack_intents: Dictionary = {}
+
+## Read the owner's saved decisions; a shared finale flag alone grants nothing.
+func regional_ending_context() -> Dictionary:
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	if session == null or local == null or world == null or party == null \
+		or not ending.valid_party(party) or original_starter_uid().is_empty(): return {}
+	var flags: Dictionary = local.flags.call("save_data")
+	var outcome := ""
+	var storm_answer := ""
+	var originals: Array[String] = []
+	var answers: Array[String] = []
+	for flag: String in flags.get("flags", []):
+		if flag.begins_with("stormwood:regional_outcome:"): originals.append(flag)
+		if flag.begins_with("stormwood:legendary_answer:"): answers.append(flag)
+	if originals.size() > 1: return {}
+	# Legacy data has no original marker. Only a single actual saved answer is
+	# unambiguous; a roster or arbitrary ordering cannot select an old outcome.
+	if originals.is_empty() and answers.size() != 1: return {}
+	var selected := answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
+	if not answers.has(selected): return {}
+	for flag: String in [selected]:
+		if not flag.begins_with("stormwood:legendary_answer:"): continue
+		var answer := flag.get_slice(":", flag.get_slice_count(":") - 1)
+		if answer not in ["accepted", "refused"]: return {}
+		outcome = flag
+		storm_answer = answer
+	if outcome.is_empty() or not local.flags.call("has", "stormwood:legendary_ceremony_settled") \
+		or not world.flags.call("has", ending.WORLD_FLAG): return {}
+	var choices: Array[String] = []
+	for biome: String in ["meadows", "water", "cloudreach"]:
+		var prefix := "" if biome == "meadows" else biome + ":"
+		var joined: bool = local.flags.call("has", prefix + "legendary_joined")
+		var refused: bool = local.flags.call("has", prefix + "legendary_refused")
+		if joined or refused: choices.append(biome + (":accepted" if joined else ":refused"))
+	choices.append("stormwood:" + storm_answer)
+	var home := ""
+	var home_seen := false
+	var credits_seen := false
+	for receipt: String in local.redesign_character.transaction_receipts:
+		if receipt.begins_with("craft:home_return_" + world.reward_delivery_namespace + "_") and receipt.ends_with(":" + local.character_id): home = receipt
+		if receipt == "craft:regional_ending_homecoming_seen:" + local.character_id: home_seen = true
+		if receipt == "craft:regional_ending_regional_credits_seen:" + local.character_id: credits_seen = true
+	var player := find_player() as CharacterBody3D
+	var at_farm := false
+	var farm_source: Node = null
+	var scene := get_tree().current_scene
+	if player != null and current_realm == "meadows" and scene != null:
+		for source: Node in scene.find_children("*", "Node", true, false):
+			if source.get_script() == null or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": continue
+			var prompt: Node3D = source.get("_grandpa_prompt")
+			if is_instance_valid(prompt) and player.global_position.distance_to(prompt.global_position) <= float(prompt.get("radius")):
+				at_farm = true
+				farm_source = source
+	var safety: Dictionary = session.call("_host_portal_context", session.call("local_peer_id"))
+	var safe := not safety.is_empty()
+	for hazard: String in ["combat", "swimming", "flying", "downed"]:
+		if safety.get(hazard) != false: safe = false
+	var owner := preload("res://scripts/ui/input_owner.gd").current(get_tree())
+	var ending_owner := false
+	if farm_source != null and owner != null:
+		var panel: Node = farm_source.get("_dialogue")
+		var credits: Node = farm_source.get("_regional_credits")
+		ending_owner = (owner == panel or owner == farm_source) \
+			and str(farm_source.get("_f18_opening_conversation_id")).begins_with("regional_homecoming_")
+		if owner == credits and credits != null:
+			ending_owner = credits.get("_expected_character_id") == local.character_id and credits.get("_expected_world") == world
+	if safety.get("cutscene") == true and not ending_owner: safe = false
+	if safety.get("dialogue") == true and not ending_owner: safe = false
+	return {"version": 1, "world_instance_id": world.reward_delivery_namespace,
+		"session_epoch": session.call("_altar_current_epoch"), "character_id": local.character_id,
+		"outcome_id": outcome, "accepted_outcome": true, "home_return_receipt": home,
+		"party_revision": party.get("revision"), "party_signature": ending.party_signature(party),
+		"starter_uid": original_starter_uid(), "chapter_choices": choices,
+		"homecoming_seen": home_seen, "regional_credits_seen": credits_seen,
+		"realm": current_realm, "at_farm": at_farm, "safe": safe, "durable_home_return": not home.is_empty()}
+
+
+func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	if session == null or ending.acknowledgement_intent(ending.context(self), str(intent.get("stage", ""))) != intent: return {"status": "refused"}
+	var view: Dictionary = session.call("homestead_personal_view")
+	if view.is_empty(): return {"status": "refused"}
+	_regional_ack_intents[intent.transaction_id] = intent.duplicate(true)
+	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	return regional_ending_ack_result(intent.transaction_id)
+
+
+func regional_ending_ack_result(transaction_id: String) -> Dictionary:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty() or session == null: return {"status": "refused"}
+	var row: Dictionary = session.call("_owner_training_row")
+	var decision: Dictionary = session.call("_training_decision", session.call("local_peer_id"), row)
+	if row.get("action") != "regional_ack" or row.get("intent") != intent \
+		or decision.get("ok") != true or decision.get("saved") != true: return {"status": "pending"}
+	var result := intent.duplicate(true)
+	result.merge({"status": "committed", "durable": true}, true)
+	return result
 
 
 func grant_home_key_from_opening(source: Node) -> bool:

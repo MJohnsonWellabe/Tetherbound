@@ -315,6 +315,20 @@ func _stand_up_ground_cover() -> void:
 	# The existing field also follows camera changes and player-built floors.
 	var cover := GROUND_COVER.new()
 	cover.name = "StormwoodGroundCover"
+	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	if bool(finish.get("enabled", false)):
+		var profile: Dictionary = GROUND_COVER.config().duplicate(true)
+		for key: String in finish.get("grass", {}):
+			profile[key] = finish.grass[key]
+		for tier: Dictionary in profile.get("cover_tiers", []):
+			var overrides: Dictionary = finish.get("tiers", {}).get(str(tier.get("name", "")), {})
+			for key: String in overrides:
+				tier[key] = overrides[key]
+		var textures: Array = []
+		var terrain_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+		for texture: Dictionary in terrain_config.textures:
+			textures.append(str(texture.name))
+		cover.configure_profile(profile, textures, GROUND_COVER.authored_footprints())
 	add_child(cover)
 	cover.bind(_terrain, get_node("CameraRig/Camera3D") as Camera3D)
 	var settlements: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_settlements.json"))

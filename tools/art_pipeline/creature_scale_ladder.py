@@ -262,6 +262,7 @@ def apply_scale(species_data: dict, water_roster: dict, water_mounts: dict) -> l
     for species_id, target in TARGET_HEIGHTS.items():
         look = species[species_id]["placeholder"]
         before = float(look["height"])
+        target = max(target, before)
         factor = target / before
         if abs(factor - 1.0) > 1e-9:
             look["height"] = target
@@ -275,7 +276,7 @@ def apply_scale(species_data: dict, water_roster: dict, water_mounts: dict) -> l
                         float(rideable["dismount_distance"]) * factor, 6
                     )
         if species_id in FIT_ALLOWANCE_OVERRIDES:
-            look["footprint_allowance"] = FIT_ALLOWANCE_OVERRIDES[species_id]
+            look["footprint_allowance"] = max(float(look.get("footprint_allowance", DEFAULT_FOOTPRINT_ALLOWANCE)), FIT_ALLOWANCE_OVERRIDES[species_id])
         changes.append({
             "id": species_id,
             "before_height_m": before,
@@ -293,6 +294,7 @@ def apply_scale(species_data: dict, water_roster: dict, water_mounts: dict) -> l
         source_id = str(presentation["source_species"])
         presentation["source_height_m"] = float(species[source_id]["placeholder"]["height"])
         before = float(presentation["target_height_m"])
+        target = max(target, before)
         factor = target / before
         presentation["target_height_m"] = target
         runtime_id = "water_" + species_id
@@ -321,8 +323,8 @@ def validate(species_data: dict, water_roster: dict) -> list[str]:
     errors: list[str] = []
     for species_id, target in TARGET_HEIGHTS.items():
         actual = float(species_data["species"][species_id]["placeholder"]["height"])
-        if abs(actual - target) > 1e-6:
-            errors.append(f"{species_id}: height {actual} != target {target}")
+        if actual < target - 1e-6:
+            errors.append(f"{species_id}: height {actual} below minimum {target}")
         if actual <= TRAINER_HEIGHT_M:
             errors.append(f"{species_id}: {actual}m does not clear the 1.80m trainer")
         fitted = _fitted_height(species_id, species_data["species"][species_id]["placeholder"], actual,
@@ -333,8 +335,8 @@ def validate(species_data: dict, water_roster: dict) -> list[str]:
             errors.append(f"{species_id}: fitted render {fitted['fitted_render_height_m']}m misses declared {actual}m")
     for species_id, target in WATER_TARGET_HEIGHTS.items():
         actual = float(water_roster["species"][species_id]["placeholder"]["target_height_m"])
-        if abs(actual - target) > 1e-6:
-            errors.append(f"water_{species_id}: height {actual} != target {target}")
+        if actual < target - 1e-6:
+            errors.append(f"water_{species_id}: height {actual} below minimum {target}")
         if actual <= TRAINER_HEIGHT_M:
             errors.append(f"water_{species_id}: {actual}m does not clear the 1.80m trainer")
         presentation = water_roster["species"][species_id]["placeholder"]

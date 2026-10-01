@@ -259,13 +259,14 @@ static func acknowledgement_intent(expected: Dictionary, flag: String) -> Dictio
 		return {}
 	for field: String in CONTEXT_FIELDS:
 		if field == "party_revision":
-			if not expected.get(field) is int or int(expected[field]) < 0:
+			if not preload("res://scripts/creatures/traits.gd").integer(expected.get(field), 0, 9007199254740991):
 				return {}
 		elif not expected.get(field) is String or str(expected[field]).strip_edges().is_empty():
 			return {}
 	var intent := {"kind": "regional_ending_ack", "version": 1, "stage": flag}
 	for field: String in CONTEXT_FIELDS:
 		intent[field] = expected.get(field)
+	intent.party_revision = int(expected.party_revision)
 	# Global per-character acknowledgement; changing host cannot replay credits.
 	intent["transaction_id"] = "regional_ending:%s:%s" % [expected.get("character_id", ""), flag]
 	return intent

@@ -1,0 +1,9 @@
+{
+  "scripts\\build\\forward_camp.gd": "95c004fa709a97fea7da51ec42ff0c88dd4c5171084848477b0a563b3daeb717",
+  "scripts\\build\\forward_camp_actions.gd": "079bd5a05e54b6cca01c7d5e48e3443155632377a509fa1ce28ff06d707763d1",
+  "scripts\\build\\forward_camp_host.gd": "9bc062281c5b0d4e907c0fa4ae47165e6f1a494d42d442283140d0036c44e381",
+  "scripts\\build\\forward_camp_rules.gd": "105fdac00ef8364aa9569cac91e0a75089ec4b1b64e6decde7d0b78cb451cb01",
+  "tests\\test_forward_camp.gd": "38f02247ad5faf5ebfda1ea495b6c69810931caa0db076915ffe3e5e5d06dddb",
+  "tools\\capture_forward_camp.gd": "031ca7529a4b35f699333af77d94fc352f6241451789ae7cfd91c291f2bea011",
+  "tools\\check_forward_camps.py": "600e682947868628ec97cef56e11d2e20c9f324242cf9e9ba083fe05db2ff68c"
+}

@@ -185,6 +185,7 @@ func _spawn(spec: Dictionary, positions: Dictionary = {}, facings: Dictionary = 
 	var npc: Node3D = NPC.new()
 	npc.name = display_name
 	npc.set_meta("trainer_id", id)
+	npc.set_meta("foundation_trainer_spec", spec.duplicate(true))
 	add_child(npc)
 	if not bool(npc.call("setup_from_config", model_config(spec), _player)):
 		push_error("trainer '%s' has no model; nothing will stand there" % id)
@@ -784,6 +785,11 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 		# Authored equipment is also knowledge on this NPC instance. The owned
 		# card codec otherwise refuses the slot and a guest spawns a new UID
 		# instead of mirroring the host's actual trainer creature.
+		# F44 supplies these on its combat-only copy. Ordinary authored trainer
+		# entries retain their current defaults and pattern behavior.
+		for slot: String in ["utility", "ultimate"]:
+			if not str(moves.get(slot, "")).is_empty():
+				creature.set("move_" + slot, str(moves[slot]))
 	# G-2: the entry's optional per-creature behaviour override, read beside
 	# `moves` because it is the same kind of thing -- this individual fights
 	# differently, and nothing about the species changes.

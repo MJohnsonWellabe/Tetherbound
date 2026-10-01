@@ -12,6 +12,7 @@ const FIELDS := ["version", "kind", "delivery_id", "world_id", "world_namespace"
 
 static func valid(raw: Variant, schema_check: Callable,
 		character: String = "", world_namespace: String = "", world: String = "") -> bool:
+	if raw is Dictionary and raw.get("version") == 3: return load("res://scripts/net/foundation_delivery.gd").valid(raw, schema_check, character, world_namespace, world)
 	if not raw is Dictionary or raw.size() != FIELDS.size(): return false
 	for field: String in FIELDS:
 		if not raw.has(field): return false
@@ -23,6 +24,8 @@ static func valid(raw: Variant, schema_check: Callable,
 	if raw.delivery_id != ESSENCE.training_delivery_id(raw.world_namespace, raw.character_id) or raw.action_id != raw.receipt.sha256_text(): return false
 	if not raw.intent is Dictionary or not raw.host_context is Dictionary or not raw.before is Dictionary or not raw.after is Dictionary: return false
 	if raw.host_context.get("source_key") != raw.source_key or raw.before.get("character_id") != raw.character_id or raw.after.get("character_id") != raw.character_id: return false
+	if raw.action in ["rematch_win", "research_event"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
+		or raw.host_context.get("session_id") != raw.session_id): return false
 	# Re-run the exact canonical callback against the frozen pre-decision full
 	# record. An imported balance, alternative trait seed or changed choice
 	# cannot turn a saved row or packet into a different accepted operation.
@@ -41,7 +44,7 @@ static func make_record(world: String, world_namespace: String, epoch: String,
 	if not character is String or not ESSENCE._integer(accepted.get("character_revision"), 1, 2147483647): return {}
 	var journal_revision := 1
 	if previous != null:
-		var previous_valid := valid(previous, schema_check, character, world_namespace, world) if previous is Dictionary and previous.get("version") == VERSION else ESSENCE.training_row_valid(previous, character, world_namespace)
+		var previous_valid: bool = load("res://autoload/world_state.gd").training_row_valid(previous, world_namespace, world)
 		if not previous_valid or previous.world_id != world or previous.status != "accepted" or int(previous.character_revision) >= int(accepted.character_revision): return {}
 		journal_revision = int(previous.journal_revision) + 1
 	var row := {"version": VERSION, "kind": KIND,

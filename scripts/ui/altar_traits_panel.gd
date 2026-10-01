@@ -2,6 +2,8 @@ extends CanvasLayer
 
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
+const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
+const SCREEN := preload("res://scripts/ui/system_screen.gd")
 var _service: Node
 var _station := ""
 var _root: PanelContainer
@@ -17,25 +19,41 @@ var _release: Button
 var _quote: Dictionary = {}
 var _shown := false
 var _closing := false
+var _mouse_before := Input.MOUSE_MODE_VISIBLE
+var return_to := Callable()
+var _opened_context: Dictionary = {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 90
 	add_to_group(INPUT_OWNER.GROUP)
 	_root = PanelContainer.new()
-	_root.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	_root.position = Vector2(100,60)
-	_root.custom_minimum_size = Vector2(700,640)
+	var candidate := SCREEN.config().get("enabled") == true
+	if candidate:
+		_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		var inset := int(SCREEN.config().get("safe_margin", 48))
+		_root.offset_left = inset
+		_root.offset_top = inset
+		_root.offset_right = -inset
+		_root.offset_bottom = -inset
+		_root.theme = load("res://assets/ui/theme/tetherbound_theme.tres")
+		_root.add_theme_stylebox_override("panel", TOKENS.panel_box(TOKENS.BG_DEEP, TOKENS.BORDER))
+	else:
+		_root.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		_root.position = Vector2(100,60)
+		_root.custom_minimum_size = Vector2(700,640)
 	add_child(_root)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(700,640)
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	if not candidate: scroll.custom_minimum_size = Vector2(700,640)
 	scroll.follow_focus = true
 	_root.add_child(scroll)
 	_body = VBoxContainer.new()
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_body.add_theme_constant_override("separation",12)
 	scroll.add_child(_body)
-	_line("Altar · Traits and Seeds",26)
+	_line("Altar · Traits and Seeds",TOKENS.FONT_TITLE if candidate else 26)
 	_line("Teach your companions. Releasing a caught creature is permanent.",20)
 	_creature = _choice("Companion")
 	_creature.item_selected.connect(func(_index: int) -> void: _refresh())
@@ -53,37 +71,49 @@ func _line(text: String, size: int) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.add_theme_font_size_override("font_size",size)
+	label.add_theme_font_size_override("font_size",maxi(size,TOKENS.FONT_READ) if SCREEN.config().get("enabled") == true else size)
 	_body.add_child(label)
 	return label
 
 func _choice(title: String) -> OptionButton:
 	_line(title,20)
 	var button := OptionButton.new()
-	button.custom_minimum_size.y = 38
-	button.add_theme_font_size_override("font_size",20)
+	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 38
+	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
 	_body.add_child(button)
 	return button
 
 func _button(title: String, callback: Callable) -> Button:
 	var button := Button.new()
 	button.text = title
-	button.add_theme_font_size_override("font_size",20)
-	button.custom_minimum_size.y = 40
+	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
+	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 40
 	button.pressed.connect(callback)
 	_body.add_child(button)
 	return button
 
 func open(service: Node, station_key: String) -> bool:
-	if not is_instance_valid(service): return false
+	if not is_instance_valid(service) or _closing or (not _shown and INPUT_OWNER.current(get_tree()) != null): return false
+	for method: String in ["quote","submit","busy","creature_choices"]:
+		if not service.has_method(method): return false
+	if not service.has_signal("action_completed"): return false
+	if is_instance_valid(_service) and _service != service and _service.is_connected("action_completed",_completed):
+		_service.disconnect("action_completed",_completed)
 	_service = service
 	_station = station_key
 	if not _service.is_connected("action_completed",_completed): _service.connect("action_completed",_completed)
+	var previous_uid := str(_selected(_creature)) if _creature.item_count > 0 else ""
 	_creature.clear()
 	for row: Dictionary in _service.call("creature_choices"):
 		_creature.add_item(row.name)
 		_creature.set_item_metadata(_creature.item_count-1,row.uid)
+		if row.uid == previous_uid: _creature.select(_creature.item_count-1)
 	if _creature.item_count == 0: return false
+	if not _shown:
+		_opened_context = SCREEN.character_context(get_node_or_null(^"/root/Game"))
+		_mouse_before = Input.mouse_mode
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		INPUT_OWNER.set_world_hud_visible(get_tree(),false)
 	_shown = true
 	_closing = false
 	_root.show()
@@ -92,19 +122,42 @@ func open(service: Node, station_key: String) -> bool:
 	return true
 
 func close() -> void:
+	if not _shown: return
+	INPUT_OWNER.suppress_pause_reopen(get_tree())
 	_shown = false
 	_closing = true
 	_root.hide()
+	_release_presentation()
+
+func _release_presentation() -> void:
+	if not is_inside_tree(): return
+	remove_from_group(INPUT_OWNER.GROUP)
+	if INPUT_OWNER.current(get_tree()) == null:
+		Input.mouse_mode = _mouse_before
+		INPUT_OWNER.set_world_hud_visible(get_tree(),true)
+	add_to_group(INPUT_OWNER.GROUP)
+
+func _exit_tree() -> void:
+	if _shown:
+		_shown = false
+		_closing = false
+		_release_presentation()
+	if is_instance_valid(_service) and _service.is_connected("action_completed",_completed):
+		_service.disconnect("action_completed",_completed)
 
 func owns_input() -> bool:
 	return _shown or _closing
 
 func _process(_delta: float) -> void:
-	if _closing and not Input.is_action_pressed("ui_cancel") and not Input.is_action_pressed("ui_accept"):
+	if _shown and SCREEN.character_context(get_node_or_null(^"/root/Game")) != _opened_context:
+		return_to = Callable()
+		close()
+	if _closing and not Input.is_action_pressed("ui_cancel") and not Input.is_action_pressed("menu_cancel") and not Input.is_action_pressed("ui_accept"):
 		_closing = false
+		if return_to.is_valid(): return_to.call_deferred()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _shown and event.is_action_pressed("ui_cancel"):
+	if _shown and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("menu_cancel")):
 		close()
 		get_viewport().set_input_as_handled()
 
@@ -158,7 +211,7 @@ func _submit_release() -> void:
 	# Explicit named second tap confirms a permanent roster removal.
 	if not _release.has_meta("confirmed_uid") or _release.get_meta("confirmed_uid") != _selected(_creature):
 		_release.set_meta("confirmed_uid",_selected(_creature))
-		_release.text = "Confirm permanent release of %s" % _creature.get_item_text(_creature.selected)
+		_release.text = "Release %s? This can't be undone. A confirms; B leaves." % _creature.get_item_text(_creature.selected)
 		return
 	_release.remove_meta("confirmed_uid")
 	_submit(_intent("release",str(_selected(_distil)),-1,""))

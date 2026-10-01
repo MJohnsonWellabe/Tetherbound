@@ -18,6 +18,18 @@ const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const READOUT := preload("res://scripts/ui/creature_training_readout.gd")
 const PARTY := preload("res://autoload/party.gd")
+const DETAILS := preload("res://scripts/ui/companion_details_panel.gd")
+const TRAIT_SERVICE := preload("res://scripts/ui/altar_traits_service.gd")
+var _details_panel: CanvasLayer
+var _loadout_ui_service: Node
+
+func configure_loadout_service(service: Node) -> bool:
+	if not is_instance_valid(service): return false
+	for method: String in ["quote_loadout", "submit_loadout", "reconcile_loadout"]:
+		if not service.has_method(method): return false
+	if not service.has_signal("loadout_completed"): return false
+	_loadout_ui_service = service
+	return true
 
 var _service: Node = null
 var _station_key := ""
@@ -66,7 +78,7 @@ func open(station_key: String) -> bool:
 	var first: RefCounted = party.call("at", 0)
 	if first == null: return false
 	_station_key = station_key
-	_creature_uid = str(first.get("uid"))
+	if _creature() == null: _creature_uid = str(first.get("uid"))
 	_status = "Choose who grows, then choose their essence or a Tether Candy."
 	_mouse_before = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -109,6 +121,7 @@ func _exit_tree() -> void:
 		_release_presentation()
 	if is_instance_valid(_service) and _service.is_connected("essence_spend_completed", _on_completed):
 		_service.disconnect("essence_spend_completed", _on_completed)
+	if is_instance_valid(_details_panel): _details_panel.queue_free()
 
 
 func _process(_delta: float) -> void:
@@ -119,6 +132,11 @@ func _process(_delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _open: return
+	if DETAILS.config().get("enabled") == true and _pending_id.is_empty() \
+			and (event.is_action_pressed("menu_tab_left") or event.is_action_pressed("menu_tab_right")):
+		_open_details("Loadout" if event.is_action_pressed("menu_tab_right") else "Gear")
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("menu_cancel") or event.is_action_pressed("ui_cancel"):
 		close()
 		get_viewport().set_input_as_handled()
@@ -180,8 +198,8 @@ func _message(code: String) -> String:
 func _button(parent: Node, text: String, callback: Callable, enabled: bool = true) -> Button:
 	var button := Button.new()
 	button.text = text
-	button.custom_minimum_size.y = 48
-	button.add_theme_font_size_override("font_size", TOKENS.FONT_BODY)
+	button.custom_minimum_size.y = 66 if DETAILS.config().get("enabled") == true else 48
+	button.add_theme_font_size_override("font_size", TOKENS.FONT_PROMPT if DETAILS.config().get("enabled") == true else TOKENS.FONT_BODY)
 	button.disabled = not enabled or not _pending_id.is_empty()
 	button.focus_mode = Control.FOCUS_ALL
 	button.pressed.connect(callback)
@@ -193,7 +211,7 @@ func _label(parent: Node, text: String, size: int = TOKENS.FONT_BODY) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.add_theme_font_size_override("font_size", size)
+	label.add_theme_font_size_override("font_size", maxi(size, TOKENS.FONT_READ) if DETAILS.config().get("enabled") == true else size)
 	parent.add_child(label)
 	return label
 
@@ -208,6 +226,7 @@ func _rebuild(prefer_payment: bool = false) -> void:
 		_root.queue_free()
 	_root = Control.new()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	if DETAILS.config().get("enabled") == true: _root.theme = load("res://assets/ui/theme/tetherbound_theme.tres")
 	add_child(_root)
 	var dim := ColorRect.new()
 	dim.color = Color(0, 0, 0, .65)
@@ -225,6 +244,12 @@ func _rebuild(prefer_payment: bool = false) -> void:
 	panel.add_child(layout)
 	_label(layout, "Altar · Chosen leveling", TOKENS.FONT_TITLE)
 	_label(layout, _status)
+	if DETAILS.config().get("enabled") == true:
+		var tabs := HBoxContainer.new()
+		layout.add_child(tabs)
+		for tab: String in ["Loadout", "Mastery", "Gear"]:
+			_button(tabs, tab, _open_details.bind(tab))
+		_button(tabs, "Traits / Release", _open_traits)
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columns.add_theme_constant_override("separation", 24)
@@ -282,7 +307,7 @@ func _rebuild(prefer_payment: bool = false) -> void:
 		var readout := READOUT.inspect_owned(player, selected)
 		if not str(readout.essence_text).is_empty(): _label(choices, readout.essence_text)
 		if not str(readout.trait_text).is_empty(): _label(choices, readout.trait_text)
-	_label(layout, "A Choose / Raise level · B Leave")
+	_label(layout, "A Choose / Raise level · LB/RB Tabs · B Leave" if DETAILS.config().get("enabled") == true else "A Choose / Raise level · B Leave")
 	TOKENS.make_text_legible(_root)
 	_wire_focus(roster_buttons, payment_buttons, selected_roster)
 	if selected_roster != null: first = selected_roster
@@ -333,6 +358,38 @@ func _select_creature(uid: String) -> void:
 	_creature_uid = uid
 	_refresh_quote()
 	_rebuild(true)
+
+func _open_details(tab: String) -> void:
+	if not _pending_id.is_empty(): return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or _creature() == null: return
+	if not is_instance_valid(_details_panel):
+		_details_panel = DETAILS.new()
+		_details_panel.set("return_to", _return_from_details)
+		_details_panel.set("level_route", _return_from_details)
+		_details_panel.set("traits_route", _open_traits)
+		game.add_child(_details_panel)
+	if is_instance_valid(_loadout_ui_service):
+		_details_panel.call("configure_loadout_service", _loadout_ui_service, _station_key)
+	close()
+	_closing = false # The child owns the handoff and its closing edge.
+	if _details_panel.call("open", game, _creature_uid, tab) != true: open(_station_key)
+
+func _return_from_details() -> void:
+	if is_inside_tree() and _station_available(_station_key): open(_station_key)
+
+func _open_traits() -> void:
+	if not _pending_id.is_empty(): return
+	var service := TRAIT_SERVICE.attach(get_node_or_null(^"/root/Game"))
+	if service == null: return
+	service.call("configure_return_route", _return_from_details)
+	close()
+	_closing = false
+	if service.call("open", _station_key) != true:
+		_closing = false
+		if open(_station_key):
+			_status = "Traits are unavailable at this Altar."
+			_rebuild()
 
 
 func _spend(payment_item: String) -> void:

@@ -14,10 +14,16 @@ const PROOF_STEPS := preload("res://tools/net/proof_steps.gd")
 const STORMWOOD_STEPS := preload("res://tools/net/proof_steps_stormwood.gd")
 ## The Tidewake lane's reward-pocket claim steps (F13#2), in their own file.
 const TIDEWAKE_POCKET_STEPS := preload("res://tools/net/proof_steps_tidewake_pockets.gd")
+const F37_STEPS := preload("res://tools/net/proof_steps_f37.gd")
+const F48_STEPS := preload("res://tools/net/proof_steps_f48.gd")
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
+	if action.begins_with("f48_"):
+		return await F48_STEPS.step(self, action, msg.get("args", {}))
+	if action.begins_with("f37_"):
+		return await F37_STEPS.step(self, action, msg.get("args", {}))
 	var stormwood := STORMWOOD_STEPS.handles(action)
 	var pockets := TIDEWAKE_POCKET_STEPS.handles(action)
 	if not stormwood and not pockets and not PROOF_STEPS.handles(action):

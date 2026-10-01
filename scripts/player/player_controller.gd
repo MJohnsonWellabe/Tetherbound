@@ -1,4 +1,7 @@
 extends CharacterBody3D
+## Read-only completion witness from the ordinary movement step.
+var _foundation_ground_contact_generation := 0
+var _foundation_ground_contact_position := Vector3(INF, INF, INF)
 
 ## Third-person locomotion: walk, sprint, jump, stamina, fall damage.
 ##
@@ -286,6 +289,8 @@ func _physics_process(delta: float) -> void:
 	apply_environment_velocity_modifiers(delta)
 	var falling_speed := -velocity.y
 	move_and_slide()
+	_foundation_ground_contact_generation += 1
+	_foundation_ground_contact_position = global_position
 	finish_environment_velocity_step()
 	_try_step_up(planned_motion)
 	_unwedge(planned_motion, before, delta)

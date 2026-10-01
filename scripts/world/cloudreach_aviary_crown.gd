@@ -12,6 +12,8 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 		stone: Material, trim: Material) -> Node3D:
 	if not bool(spec.get("enabled", false)):
 		return null
+	if parent.has_node("AviaryCrownArcade"):
+		return parent.get_node("AviaryCrownArcade") as Node3D
 	var root := Node3D.new()
 	root.name = "AviaryCrownArcade"
 	parent.add_child(root)
@@ -21,10 +23,18 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 	var clear_height := float(spec.get("clear_height_m", 5.4))
 	var inner_radius := (width - post * 2.0) * 0.5
 	var spring_y := clear_height - inner_radius
-	var base_y := float(drum.get("height_m", 9.0)) + 0.2
-	var rx := float(drum.get("radius_x_m", 27.0))
-	var rz := float(drum.get("radius_z_m", 27.0))
-	for raw: Variant in drum.get("pier_angles_deg", []):
+	var base_y := float(drum.get("height_m", 9.0)) + float(spec.get("base_offset_m", 0.2))
+	var inset := float(spec.get("radial_inset_m", 0.0))
+	var rx := float(drum.get("radius_x_m", 27.0)) - inset
+	var rz := float(drum.get("radius_z_m", 27.0)) - inset
+	var angles: Array = drum.get("pier_angles_deg", []).duplicate()
+	var bay_count := int(spec.get("bay_count", 0))
+	if bay_count > 0:
+		angles.clear()
+		for index in bay_count:
+			angles.append(float(index) * 360.0 / float(bay_count))
+	var bay_index := 0
+	for raw: Variant in angles:
 		var angle := deg_to_rad(float(raw))
 		var bay := Node3D.new()
 		bay.name = "CrownBay%d" % int(raw)
@@ -47,6 +57,11 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 				inner_radius, inner_radius + post, depth, spring_y, 0.0)
 			arch.material_override = stone
 			bay.add_child(arch)
+		# The whole crown has a masonry rhythm. Practical lights are bounded,
+		# rather than one overlapping OmniLight in every decorative bay.
+		bay_index += 1
+		if (bay_index - 1) % maxi(1, int(spec.get("lantern_every", 1))) != 0:
+			continue
 		PARTS._install_prop(bay, PARTS.WALL_LANTERN, "CrownLantern",
 			Vector3(-(width - post) * 0.5, 0.65, depth * 0.5 + 0.02),
 			float(spec.get("lantern_height_m", 1.4)), 0.0, false)

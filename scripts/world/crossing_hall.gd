@@ -7,6 +7,7 @@ const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
+const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -28,6 +29,10 @@ func build(config: Dictionary) -> bool:
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
 	_build_frontage()
+	var catalog := CATALOG_PRESENTATION.new()
+	catalog.name = "MeadowsCatalogPresentation"
+	add_child(catalog)
+	catalog.build("hall")
 	refresh_from_game()
 	set_process(true)
 	return true
@@ -128,6 +133,15 @@ func _build_pedestal(entry: Dictionary) -> void:
 	arrival.position = Vector3(0, .05, 1.8)
 	slot.add_child(arrival)
 	_pedestals[str(entry.biome)] = slot
+	var prompt := preload("res://scripts/world/interactable.gd").new()
+	prompt.configure("Hang your %s relic" % ORDER.display_name(str(entry.biome)), float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
+	prompt.connect("activated", func() -> void:
+		var game := get_node_or_null(^"/root/Game")
+		var session: Node = game.get("session") if game != null else null
+		if session != null:
+			var verdict: Dictionary = session.call("request_relic_hang", str(entry.biome))
+			if verdict.get("ok") != true: game.call("push_world_message", str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))))
+	slot.add_child(prompt)
 
 
 func _add_model(parent: Node3D, path: String) -> void:

@@ -56,6 +56,7 @@ const ROW_HEIGHT := 80
 const LIST_VISIBLE_HEIGHT := 6 * ROW_HEIGHT + 5 * 8
 
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const CAMP_RULES := preload("res://scripts/build/forward_camp_rules.gd")
 const STATION_NEXT := preload("res://scripts/build/station_next_upgrade.gd")
 var _station: Node3D
 var _station_mode := false
@@ -171,6 +172,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	outer.add_child(_upgrade_label)
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size=Vector2(780,210 if _station.get_meta("building_id","") == "forge" else 80)
+	scroll.follow_focus = true
 	if not _gear_cfg.is_empty() and _station.get_meta("building_id","") in ["workbench","altar"]: scroll.custom_minimum_size.y=210
 	if _station.get_meta("building_id","") in ["farm","den"]: scroll.custom_minimum_size.y=460
 	var viewport_height := get_viewport().get_visible_rect().size.y
@@ -181,6 +183,16 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	scroll.add_child(controls)
 	var id: String = str(_station.get_meta("building_id",""))
 	match id:
+		"forward_camp":
+			var info := Label.new()
+			info.text="Travel meals and field kits only. Feasts: homestead Kitchen. Tier gear and refining: homestead Forge."
+			info.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+			controls.add_child(info)
+			if _station.get("camp_part") == "workbench":
+				_station_button(controls,"Edit creature move loadouts",func() -> void:
+					var source := _station
+					close()
+					source.call("open_loadouts"))
 		"kitchen": _station_button(controls,"Cook learned Ascension Feasts",_open_feasts)
 		"forge":
 			_refining_label=Label.new()
@@ -291,8 +303,8 @@ func _gear_name(id: String) -> String:
 ## substitute its player, guessed proximity or world revision for this seam.
 func _gear_context(view: Dictionary) -> Dictionary:
 	if not is_instance_valid(_station) or not is_instance_valid(_producer) or game == null \
-			or game.get("session") != _producer or not _producer.has_method("homestead_station_context"): return {}
-	var raw: Variant = _producer.call("homestead_station_context",_station)
+			or game.get("session") != _producer or not _producer.has_method("homestead_gear_context"): return {}
+	var raw: Variant = _producer.call("homestead_gear_context",_station,int(view.get("registry_revision", -1)))
 	if not raw is Dictionary: return {}
 	var revision: Variant = view.get("registry_revision")
 	var id := str(_station.get_meta("building_id",""))
@@ -554,6 +566,9 @@ func _known_ids() -> Array:
 	var db := _items()
 	for raw: Variant in ids:
 		var recipe: Dictionary = db.call("recipe",str(raw))
+		if station_id == CAMP_RULES.ID:
+			if CAMP_RULES.recipe(str(raw),recipe,str(_station.get("camp_part"))).get("ok") == true: result.append(raw)
+			continue
 		if recipe.has("personal_gear_tier") or _gear_cfg.get("recipes",{}).has(str(raw)):
 			if _gear_rules == null or _gear_rules.call("recipe_known",_station_view(),recipe,_gear_cfg) != true: continue
 		var route := STATION_RULES.recipe_route(cfg,str(raw),recipe)
@@ -960,6 +975,11 @@ func _process(delta: float) -> void:
 func _craft(id: String) -> void:
 	if not _station_intent.is_empty() or (_station_mode and not is_instance_valid(_station)): return
 	if is_instance_valid(_station):
+		if _station.get_meta("building_id","") == CAMP_RULES.ID:
+			var legal := CAMP_RULES.recipe(id,_items().call("recipe",id),str(_station.get("camp_part")))
+			if legal.get("ok") != true:
+				_status.text=legal.reason
+				return
 		_station_action("station_craft", {"recipe_id":id})
 		return
 	# Once enabled, home station recipes cannot fall through the campfire's
@@ -995,6 +1015,9 @@ func _poll() -> void:
 			var route := STATION_RULES.recipe_route(STATION_RULES.config(),id,_items().call("recipe",id))
 			var cfg := STATION_RULES.config()
 			var tier := STATION_RULES.effective_tier(cfg,game.get("placed_buildings"),str(_station.get_meta("building_uid", "")))
+			if _station.get_meta("building_id","") == CAMP_RULES.ID:
+				route=CAMP_RULES.recipe(id,_items().call("recipe",id),str(_station.get("camp_part")))
+				tier={"ok":CAMP_RULES.record(game.get("placed_buildings"),str(_station.get_meta("building_uid",""))).get("ok") == true,"effective_tier":0}
 			affordable = affordable and _station_intent.is_empty() and tier.get("ok") == true and route.get("ok") == true and int(tier.get("effective_tier",0)) >= int(route.get("required_tier",9))
 		var colour := UITokens.SUCCESS if affordable else UITokens.DANGER
 		if i < _cost_labels.size():

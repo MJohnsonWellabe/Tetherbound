@@ -8,8 +8,11 @@ const FEASTS := preload("res://scripts/creatures/breakthrough.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const BOUNTIES := preload("res://scripts/world/bounty_board.gd")
+const REMATCH := preload("res://scripts/repeatables/rematch_rules.gd")
+const RESEARCH := preload("res://scripts/creatures/research_log.gd")
 const RECORD_FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
-const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release"]
+const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win", "research_event", "research_claim"]
 
 
 static func stage(current: Dictionary, revision: int, action: String,
@@ -25,7 +28,13 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if not before_errors is Array or not before_errors.is_empty(): return deny("invalid_admitted_character")
 	var proposal: Dictionary
 	var callback_before := current
-	if action in ["trait_teach", "trait_release"]:
+	if action in RESEARCH.ACTIONS:
+		proposal = RESEARCH.stage(current, revision, action, intent, context)
+	elif action in BOUNTIES.ACTIONS:
+		proposal = BOUNTIES.stage(current, revision, action, intent, context)
+	elif action == "rematch_win":
+		proposal = REMATCH.stage(current, revision, intent, context)
+	elif action in ["trait_teach", "trait_release"]:
 		if context.get("station_id") != "altar" or context.get("homestead") != true or context.get("in_combat") != false:
 			return deny("actual_altar_required")
 		if not TRAITS.intent_valid(intent) or intent.action != ("teach" if action == "trait_teach" else "release"):

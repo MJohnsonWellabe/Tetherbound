@@ -1,5 +1,5 @@
 {
-  "_comment": "D99 / docs/specs/MP_STATE_SEAM.md \u00c2\u00a73. Every story flag id is world or player. A flag matching nothing here is a test failure (tests/test_flag_scopes.gd), never a default: defaulting an unknown id to world makes a friend's tutorial already done, and defaulting it to player leaves a gate closed for the friend who did not open it. Resolution is exact id first, then the LONGEST matching prefix, then nothing (autoload/progression_state.gd::scope_of).",
+  "_comment": "D99 / docs/specs/MP_STATE_SEAM.md §3. Every story flag id is world or player. A flag matching nothing here is a test failure (tests/test_flag_scopes.gd), never a default: defaulting an unknown id to world makes a friend's tutorial already done, and defaulting it to player leaves a gate closed for the friend who did not open it. Resolution is exact id first, then the LONGEST matching prefix, then nothing (autoload/progression_state.gd::scope_of).",
   "_comment_prefixes": "A prefix ends with ':' or '_' so it can never swallow an unrelated id. Longest-prefix wins, so 'opening:beat:' resolves ahead of 'opening:' even though both are player.",
   "_comment_rule": "world = something happened to THE WORLD once (a boss fell, a gate opened, a pickup was taken, a relay went dark, a shop opened, an NPC was met). player = a tutorial beat, a personal readiness check, or a personal payoff (items handed over, a saddle fitted on YOUR creature, YOUR camp, YOUR legendary). Home and creature-bed flags are player flags GRANTED TO EVERY CONNECTED PEER when the world gains the pieces (D99); until Wave 3's grant_player_flag exists, solo writes them to the local store exactly as today.",
   "_why_lost_creature_rue_returned": "F03: world scope. The player leads Juno's freed Meadowhart home; once she stands beside Juno that is true for every peer, and band4_lost_creature completes on it (data/config/lost_companion_reunion.json).",
@@ -154,7 +154,8 @@
       "stormward_route_revealed",
       "cloudreach_reward_retargeted_stormwood",
       "cloudreach:legendary_freed",
-      "cloudreach:legendary_settled"
+      "cloudreach:legendary_settled",
+      "water_civilian_departure_complete"
     ],
     "prefixes": [
       "reward:trainer:warrens_cleared:xp:",
@@ -211,7 +212,9 @@
       "regional_credits_seen",
       "cloudreach:legendary_joined",
       "cloudreach:legendary_refused",
-      "home_key_given"
+      "home_key_given",
+      "water:legendary_joined",
+      "water:legendary_refused"
     ],
     "prefixes": [
       "legendary_answer_world:",
@@ -224,7 +227,8 @@
       "creature_bed_built_",
       "oskar_swap_taken_",
       "stormwood:legendary_answer:",
-      "cloudreach:legendary_answer_world:"
+      "cloudreach:legendary_answer_world:",
+      "stormwood:regional_outcome:"
     ]
   },
   "_why_cloudreach_solmane": "Owner ruling 2026-09-27 (#356 5858140459): Solmane is Cloudreach's freed legendary, offered to each Veyra participant through stronghold_climax.gd with cloudreach:-prefixed receipts (data/config/cloudreach_solmane_climax.json). World: the freeing and settle, and per-character resolution receipts. Player: each character's own joined/refused answer and the world it was given in.",
@@ -348,6 +352,12 @@
       "authority": "host validates; owning peer persists character",
       "transaction": "domain:<character_id>:<sequence>; host validates; atomically debit/grant; replay no mutation",
       "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.research": {
+      "scope": "character",
+      "authority": "host-confirmed actual encounter sight/cast/catch/defeat; stable admitted participants",
+      "transaction": "research_event replay digest includes world namespace/session/original event/species/kind; research_claim pays canonical type essence and research:<species>:<task>:<character_id> in one existing character_action prepared journal; no release mutation",
+      "persistence": "optional additive v28 carrier; absent is empty; independent species history/event receipts/titles survives release, reload and other worlds; host bool-save, owner bool-save, exact ACK and accepted world save precede readiness"
     },
     "redesign_character.research_receipts": {
       "scope": "character",

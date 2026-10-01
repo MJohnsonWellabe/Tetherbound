@@ -1239,5 +1239,9 @@
     "unlocks": "Grow non-native type crops",
     "_comment": "Single Farm building, no attachment track. Authored F32 costs; source candidate OFF."
   },
+  "forward_camp": {
+    "maximum_per_character_per_biome": 1,
+    "_scope": "World placed_buildings tagged with stable placing character; any peer may use services. F34 runtime gate and geometry live in forward_camps.json."
+  },
   "attachment_maximum_height_difference_m": 0.5
 }

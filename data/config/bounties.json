@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": false,
+  "board_key": "halda_bounty_board",
+  "board_count": 3,
+  "speaker": "Halda",
+  "introduction": "Three notices, just for you. I change them each morning. Bring deliveries here when you're ready; the rewards are yours once the job is done.",
+  "host_poll_seconds": 1.0,
+  "interaction_radius_m": 3.6,
+  "maximum_receipts": 4096,
+  "morning_policy": "host_day_rollover",
+  "world_hop_policy": "reanchor_without_rotation",
+  "templates": [
+    {
+      "id": "meadows_catch_trait",
+      "biome": "meadows",
+      "kind": "catch_trait",
+      "title": "Catch a creature with bold",
+      "rewards": [
+        {
+          "id": "essence_ground",
+          "n": 8
+        },
+        {
+          "id": "stone",
+          "n": 3
+        }
+      ],
+      "trait": "bold"
+    },
+    {
+      "id": "meadows_defeat_alpha",
+      "biome": "meadows",
+      "kind": "defeat_alpha",
+      "title": "Defeat an alpha",
+      "rewards": [
+        {
+          "id": "essence_ground",
+          "n": 14
+        },
+        {
+          "id": "stone",
+          "n": 3
+        }
+      ]
+    },
+    {
+      "id": "meadows_material_delivery",
+      "biome": "meadows",
+      "kind": "material_delivery",
+      "title": "Deliver 6 wood",
+      "rewards": [
+        {
+          "id": "essence_ground",
+          "n": 8
+        },
+        {
+          "id": "stone",
+          "n": 3
+        }
+      ],
+      "item": "wood",
+      "count": 6
+    },
+    {
+      "id": "meadows_rematch",
+      "biome": "meadows",
+      "kind": "rematch",
+      "title": "Win a trainer rematch",
+      "rewards": [
+        {
+          "id": "essence_ground",
+          "n": 8
+        },
+        {
+          "id": "stone",
+          "n": 3
+        },
+        {
+          "id": "tether_candy",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "id": "tidewake_catch_trait",
+      "biome": "tidewake",
+      "kind": "catch_trait",
+      "title": "Catch a creature with sturdy",
+      "rewards": [
+        {
+          "id": "essence_water",
+          "n": 8
+        },
+        {
+          "id": "reef_stone",
+          "n": 3
+        }
+      ],
+      "trait": "sturdy"
+    },
+    {
+      "id": "tidewake_defeat_alpha",
+      "biome": "tidewake",
+      "kind": "defeat_alpha",
+      "title": "Defeat an alpha",
+      "rewards": [
+        {
+          "id": "essence_water",
+          "n": 14
+        },
+        {
+          "id": "reef_stone",
+          "n": 3
+        }
+      ]
+    },
+    {
+      "id": "tidewake_material_delivery",
+      "biome": "tidewake",
+      "kind": "material_delivery",
+      "title": "Deliver 6 driftwood",
+      "rewards": [
+        {
+          "id": "essence_water",
+          "n": 8
+        },
+        {
+          "id": "reef_stone",
+          "n": 3
+        }
+      ],
+      "item": "driftwood",
+      "count": 6
+    },
+    {
+      "id": "tidewake_rematch",
+      "biome": "tidewake",
+      "kind": "rematch",
+      "title": "Win a trainer rematch",
+      "rewards": [
+        {
+          "id": "essence_water",
+          "n": 8
+        },
+        {
+          "id": "reef_stone",
+          "n": 3
+        },
+        {
+          "id": "tether_candy",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "id": "cloudreach_catch_trait",
+      "biome": "cloudreach",
+      "kind": "catch_trait",
+      "title": "Catch a creature with calm",
+      "rewards": [
+        {
+          "id": "essence_air",
+          "n": 8
+        },
+        {
+          "id": "cloudberry",
+          "n": 3
+        },
+        {
+          "id": "trait_seed_calm",
+          "n": 1
+        }
+      ],
+      "trait": "calm"
+    },
+    {
+      "id": "cloudreach_defeat_alpha",
+      "biome": "cloudreach",
+      "kind": "defeat_alpha",
+      "title": "Defeat an alpha",
+      "rewards": [
+        {
+          "id": "essence_air",
+          "n": 14
+        },
+        {
+          "id": "cloudberry",
+          "n": 3
+        }
+      ]
+    },
+    {
+      "id": "cloudreach_material_delivery",
+      "biome": "cloudreach",
+      "kind": "material_delivery",
+      "title": "Deliver 6 gale fiber",
+      "rewards": [
+        {
+          "id": "essence_air",
+          "n": 8
+        },
+        {
+          "id": "cloudberry",
+          "n": 3
+        }
+      ],
+      "item": "gale_fiber",
+      "count": 6
+    },
+    {
+      "id": "cloudreach_rematch",
+      "biome": "cloudreach",
+      "kind": "rematch",
+      "title": "Win a trainer rematch",
+      "rewards": [
+        {
+          "id": "essence_air",
+          "n": 8
+        },
+        {
+          "id": "cloudberry",
+          "n": 3
+        },
+        {
+          "id": "tether_candy",
+          "n": 1
+        }
+      ]
+    },
+    {
+      "id": "stormwood_catch_trait",
+      "biome": "stormwood",
+      "kind": "catch_trait",
+      "title": "Catch a creature with bold",
+      "rewards": [
+        {
+          "id": "essence_electric",
+          "n": 8
+        },
+        {
+          "id": "glowmoss",
+          "n": 3
+        },
+        {
+          "id": "trait_seed_bold",
+          "n": 1
+        }
+      ],
+      "trait": "bold"
+    },
+    {
+      "id": "stormwood_defeat_alpha",
+      "biome": "stormwood",
+      "kind": "defeat_alpha",
+      "title": "Defeat an alpha",
+      "rewards": [
+        {
+          "id": "essence_electric",
+          "n": 14
+        },
+        {
+          "id": "glowmoss",
+          "n": 3
+        }
+      ]
+    },
+    {
+      "id": "stormwood_material_delivery",
+      "biome": "stormwood",
+      "kind": "material_delivery",
+      "title": "Deliver 6 thunderwood",
+      "rewards": [
+        {
+          "id": "essence_electric",
+          "n": 8
+        },
+        {
+          "id": "glowmoss",
+          "n": 3
+        }
+      ],
+      "item": "thunderwood",
+      "count": 6
+    },
+    {
+      "id": "stormwood_rematch",
+      "biome": "stormwood",
+      "kind": "rematch",
+      "title": "Win a trainer rematch",
+      "rewards": [
+        {
+          "id": "essence_electric",
+          "n": 8
+        },
+        {
+          "id": "glowmoss",
+          "n": 3
+        },
+        {
+          "id": "tether_candy",
+          "n": 1
+        }
+      ]
+    }
+  ]
+}

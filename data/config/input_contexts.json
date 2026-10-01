@@ -104,6 +104,35 @@
       "actions": ["map_zoom_in", "map_zoom_out", "map_realm_prev", "map_realm_next"]
     },
 
+    "lesson": {
+      "_comment": "F46 skippable prompt. One input_owner surface; no world actions, closed press retained through release.",
+      "actions": ["ui_accept", "menu_confirm", "menu_cancel"]
+    },
+    "altar": {
+      "_comment": "F42 input_owner modal; world/combat verbs are silent.",
+      "actions": ["ui_accept", "menu_confirm", "menu_cancel", "menu_tab_left", "menu_tab_right"]
+    },
+
+    "station": {
+      "_comment": "F42 input_owner modal; world/combat verbs are silent.",
+      "actions": ["ui_accept", "menu_confirm", "menu_cancel"]
+    },
+
+    "gear": {
+      "_comment": "F42 input_owner modal; world/combat verbs are silent.",
+      "actions": ["ui_accept", "menu_confirm", "menu_cancel", "menu_tab_left", "menu_tab_right"]
+    },
+
+    "research": {
+      "_comment": "F42 input_owner modal; world/combat verbs are silent.",
+      "actions": ["ui_accept", "menu_confirm", "menu_cancel", "menu_tab_left", "menu_tab_right"]
+    },
+
+    "bounty_board": {
+      "_comment": "F42 input_owner modal; world/combat verbs are silent.",
+      "actions": ["ui_accept", "menu_confirm", "menu_cancel"]
+    },
+
     "narrative_modal": {
       "_comment": "dialogue_panel.gd, name_prompt.gd and starter_picker.gd. All three own input through input_owner.gd, all three are answered with interact / confirm / cancel.",
       "actions": ["interact", "ui_accept", "menu_confirm", "menu_cancel"]

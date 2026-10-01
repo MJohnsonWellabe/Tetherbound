@@ -3,6 +3,95 @@
   "$id": "tetherbound/character_state",
   "type": "object",
   "properties": {
+    "research": {
+      "description": "Optional additive personal history; absence means no earned events. Party release never removes this carrier. All writes use existing character_action atomic registry/journal.",
+      "properties": {
+        "species": {
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "seen": {
+                "type": "boolean"
+              },
+              "tasks": {
+                "additionalProperties": {
+                  "type": "integer",
+                  "maximum": 999,
+                  "minimum": 0
+                },
+                "type": "object"
+              },
+              "caught": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "seen",
+              "caught",
+              "tasks"
+            ]
+          },
+          "type": "object"
+        },
+        "event_receipts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "minLength": 64,
+            "type": "string"
+          },
+          "maxItems": 4096
+        },
+        "titles": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "meadows",
+              "tidewake",
+              "cloudreach",
+              "stormwood"
+            ],
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "species",
+        "event_receipts",
+        "titles"
+      ]
+    },
+    "bounties": {
+      "description": "Optional additive v28 carrier; absent means no board issued. Existing saves retain all fields. Only host transactions issue or change a board.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchor_world": {"type": "string"},
+        "anchor_day": {"type": "integer", "minimum": 0, "maximum": 2147483646},
+        "cycle": {"type": "integer", "minimum": 0, "maximum": 2147483646},
+        "slots": {
+          "type": "array", "minItems": 0, "maxItems": 3, "uniqueItems": true,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "properties": {
+              "instance": {"type": "string", "minLength": 64},
+              "template": {"type": "string", "minLength": 1},
+              "complete": {"type": "boolean"}
+            },
+            "required": ["instance", "template", "complete"]
+          }
+        }
+      },
+      "required": ["anchor_world", "anchor_day", "cycle", "slots"],
+      "oneOf": [
+        {"properties": {"anchor_world": {"const": ""}, "anchor_day": {"const": 0}, "cycle": {"const": 0}, "slots": {"maxItems": 0}}},
+        {"properties": {"anchor_world": {"minLength": 1}, "anchor_day": {"minimum": 1}, "cycle": {"minimum": 1}, "slots": {"minItems": 3}}}
+      ]
+    },
     "portal_unlocks": {
       "type": "array",
       "items": {
@@ -4211,6 +4300,34 @@
           "loadout",
           "mastery",
           "best"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "rematch_cooldowns": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "world_namespace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "paid_at_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "next_eligible_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "world_namespace",
+          "paid_at_seconds",
+          "next_eligible_seconds"
         ],
         "additionalProperties": false
       }

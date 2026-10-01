@@ -59,6 +59,7 @@ const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_
 ## playground. Separate because scatter_bake.gd fingerprints vegetation.json
 ## whole, and a colour must not mark a placement bake stale.
 const PRESENTATION_RETINT_PATH := "res://data/config/vegetation_presentation.json"
+const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const RIDGELINE_CLOVER_MODELS: Array[String] = [
 	"res://assets/environment/stylized_nature/Clover_1.gltf",
 	"res://assets/environment/stylized_nature/Clover_2.gltf",
@@ -631,8 +632,12 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 		# point everything is grouped by model and the layer a placement came
 		# from is gone.
 		_layer_placed[layer_name] = (by_layer[layer_name] as Array).size()
+		var layer_cfg: Dictionary = _vegetation_config().get("layers", {}).get(layer_name, {})
 		for entry: Variant in (by_layer[layer_name] as Array):
 			var placement: Dictionary = entry
+			if _realm_config.is_empty() and not bool(layer_cfg.get("collides", false)) \
+					and CATALOG_PRESENTATION.suppress_cover(layer_name, placement):
+				continue
 			var model := str(placement["model"])
 			if not by_model.has(model):
 				by_model[model] = []

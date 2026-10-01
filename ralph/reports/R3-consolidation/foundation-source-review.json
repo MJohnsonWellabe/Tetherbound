@@ -1,0 +1,24 @@
+{
+  "source_checkpoint": "665c6e73229f5fcec94777ff6cc4f91c364c6bdf",
+  "reviewed_preceding_checkpoint": "bd24fb36bb2bf0bbb1078bb9293f001e6223d029",
+  "dock_driver_checkpoint": "0843bacd342149ca82db1d7edf54949b1dc21267",
+  "independent_reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "verdict": "Reviewed checkpoint source consolidated; complete R3 production composition remains unfinished.",
+  "bounded_source_review": "80 checks/31 immutable pins: refusal callback ownership, per-claim night, fresh ordinary move_and_slide contact generation, current-world HomeReturn binding and earned ordinary dock continuation pass. Original f7/f5 findings retained in Git history.",
+  "new_bounty_fix": "Existing 64-hex issued board identity and exact retained event/source binding reviewed separately before merge.",
+  "source_pins": {
+    "scripts/net/foundation_event.gd": "9596c42270689a8db1266f4fc6e431c5269e5f846c4ce17a0cbdddbe3be7048c",
+    "scripts/net/foundation_portal_arrival.gd": "fb726b46d5802f1c7f05394e86ca52fcadad48fc9da4346b2f37b5f6a8fb8dc1",
+    "scripts/net/water_capture_claims.gd": "900c0850f01a5b15fd65d734f94642db4510d862e882972d8b1cae5e9c5ab8bc",
+    "scripts/player/player_controller.gd": "c8dc79e653ef6c380002cdc1fc9f204f0f5cb8c2d49c759a77e346d6a1926607",
+    "tests/helpers/f49_campaign_journey.gd": "7c304f4e4c1a8f890fe58b4655f8b1a6ef5d58a8b865a0ebb8d9eab2a3ae5f2b"
+  },
+  "remaining_source_limits": [
+    "Authenticated guest travel and grounded split owner-save/ACK consumer",
+    "Guest Master and remaining Master/boss/alpha rematch production composition",
+    "Authenticated guest ending acknowledgements",
+    "Executable F48 ordinary-input profiles and actual write/delivery/owner-write/ACK loss boundaries"
+  ],
+  "runtime_proof": "UNRUN: no NEXT engine/parser/native/export/CI. No acceptance or main credit.",
+  "archive": "Foundation remains active for unfinished source work; all ten R2 and five R3 feature authors stay archived with exact source preserved."
+}

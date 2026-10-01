@@ -72,13 +72,45 @@ func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionar
 		# Rejoin cannot overwrite newer earned authority. The caller receives the
 		# existing record for subsequent roster/debit admission and reconciliation.
 		return {"ok": true, "already_seeded": true, "revision": revision(character_id), "state": state(character_id)}
-	_records[character_id] = {"revision": 0, "state": raw.duplicate(true)}
+	_replace_record(character_id, 0, raw.duplicate(true))
 	_records[character_id].state["vitals_escrow"] = raw.get("vitals_escrow", {}).duplicate(true)
 	return {"ok": true, "already_seeded": false, "revision": 0, "state": state(character_id)}
 
 
+func _replace_record(character: String, next_revision: int, next_state: Dictionary) -> void:
+	var carried := _records.get(character, {}).has("personal_flags")
+	var flags := personal_flags(character)
+	_records[character] = {"revision": next_revision, "state": next_state}
+	if carried: _records[character].personal_flags = flags
+
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
+
+## Admission-time portable flags, held on the existing character registry row.
+## Subsequent updates come only from host-authored personal ledger flag ops.
+func seed_personal_flags(character: String, raw: Variant) -> bool:
+	if not _records.has(character) or not personal_flags_valid(raw): return false
+	if _records[character].has("personal_flags"): return true
+	_records[character].personal_flags = {}
+	for flag: String in raw.flags: _records[character].personal_flags[flag] = true
+	return true
+
+static func personal_flags_valid(raw: Variant) -> bool:
+	if not raw is Dictionary or raw.size() != 1 or not raw.get("flags") is Array: return false
+	var seen := {}
+	for flag: Variant in raw.flags:
+		if not flag is String or flag.is_empty() or seen.has(flag) or preload("res://autoload/progression_state.gd").scope_of(flag) != "player": return false
+		seen[flag] = true
+	return true
+
+func personal_flags(character: String) -> Dictionary:
+	return _records.get(character, {}).get("personal_flags", {}).duplicate(true)
+
+func record_personal_flag(character: String, flag: String, value: bool) -> void:
+	if not _records.has(character) or preload("res://autoload/progression_state.gd").scope_of(flag) != "player": return
+	if not _records[character].has("personal_flags"): _records[character].personal_flags = {}
+	if value: _records[character].personal_flags[flag] = true
+	else: _records[character].personal_flags.erase(flag)
 
 
 ## Actual combat consumers use this detached view of the SAME admitted row.
@@ -132,7 +164,7 @@ func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
 	var failures := errors(candidate, character_id)
 	if not failures.is_empty():
 		return {"ok": false, "code": "invalid_local_character", "errors": failures}
-	_records[character_id] = {"revision": revision(character_id) + 1, "state": candidate}
+	_replace_record(character_id, revision(character_id) + 1, candidate)
 	return {"ok": true, "revision": revision(character_id), "state": state(character_id)}
 
 
@@ -184,7 +216,7 @@ func commit_creature_mastery(character_id: String, uid: String, expected_revisio
 		added += int(difference)
 	if added != 1:
 		return {"ok": false, "code": "one_contact_required", "revision": expected_revision}
-	_records[character_id] = {"revision": expected_revision + 1, "state": candidate}
+	_replace_record(character_id, expected_revision + 1, candidate)
 	return {"ok": true, "revision": expected_revision + 1, "state": state(character_id)}
 
 
@@ -238,7 +270,7 @@ func commit_creature_loadout(character_id: String, uid: String, expected_revisio
 	var failures := errors(candidate, character_id)
 	if not failures.is_empty():
 		return {"ok": false, "code": "invalid_loadout", "errors": failures, "revision": expected_revision}
-	_records[character_id] = {"revision": expected_revision + 1, "state": candidate}
+	_replace_record(character_id, expected_revision + 1, candidate)
 	_loadout_pending[character_id] = {"uid": uid, "receipt": next_edit_receipt.duplicate(true),
 		"loadout_revision": next_loadout_revision, "character_revision": expected_revision + 1}
 	return {"ok": true, "duplicate": false, "revision": expected_revision + 1,
@@ -364,7 +396,7 @@ func commit_portal_debit(stage: Dictionary) -> bool:
 	var candidate: Variant = frozen.state
 	if not errors(candidate, character_id).is_empty():
 		return false
-	_records[character_id] = {"revision": revision(character_id) + 1, "state": candidate.duplicate(true)}
+	_replace_record(character_id, revision(character_id) + 1, candidate.duplicate(true))
 	frozen.committed = true
 	return true
 
@@ -430,7 +462,7 @@ func commit_creature_vitals(character_id: String, uid: String, expected_revision
 	var failures := errors(candidate, character_id)
 	if not failures.is_empty():
 		return {"ok": false, "code": "invalid_character", "errors": failures}
-	_records[character_id] = {"revision": expected_revision + 1, "state": candidate}
+	_replace_record(character_id, expected_revision + 1, candidate)
 	if not _vitals_pending.has(character_id):
 		_vitals_pending[character_id] = {}
 	if not _vitals_seen.has(character_id):
@@ -569,7 +601,7 @@ func recover_durable_vitals(character_id: String, deliveries: Dictionary) -> Dic
 	var failures := errors(candidate, character_id)
 	if not failures.is_empty():
 		return {"ok": false, "code": "invalid_character", "errors": failures}
-	_records[character_id] = {"revision": high_water, "state": candidate}
+	_replace_record(character_id, high_water, candidate)
 	if not pending.is_empty():
 		_vitals_pending[character_id] = pending
 	if not seen.is_empty():
@@ -644,7 +676,7 @@ func stage_creature_training(character: String, action: String, action_id: Strin
 	_training_stages[character] = {"token": token, "record": _records[character].duplicate(true),
 		"accepted": accepted.duplicate(true)}
 	# Hidden promotion: no yield/signal/publication before prepared world save.
-	_records[character] = {"revision": expected_revision + 1, "state": next.duplicate(true)}
+	_replace_record(character, expected_revision + 1, next.duplicate(true))
 	return accepted
 
 
@@ -706,10 +738,10 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 	var projected := RECORD_RULES.training_projection(current, row, ESSENCE.training_projection)
 	if not equivalent(projected, row.before) and not equivalent(projected, row.after):
 		return {"ok": false, "code": "unsettled_training_conflict"}
-	for field: String in ["party", "inventory", "redesign_character"]:
+	for field: String in ["party", "inventory", "redesign_character", "equipment"]:
 		current[field] = row.after[field].duplicate(true)
 	if not errors(current, character).is_empty(): return {"ok": false, "code": "invalid_training_candidate"}
-	_records[character] = {"revision": int(row.character_revision), "state": current}
+	_replace_record(character, int(row.character_revision), current)
 	_training_pending[character] = {"receipt": row.receipt, "character_revision": row.character_revision}
 	return {"ok": true, "pending": true}
 
@@ -744,7 +776,7 @@ func stage_altar_building(character: String, proposal: Dictionary) -> Dictionary
 	var token := Crypto.new().generate_random_bytes(16).hex_encode()
 	actual.token = token
 	_training_stages[character] = {"token": token, "record": _records[character].duplicate(true), "accepted": actual.duplicate(true)}
-	_records[character] = {"revision": actual.character_revision, "state": actual.state.duplicate(true)}
+	_replace_record(character, actual.character_revision, actual.state.duplicate(true))
 	return actual
 
 
@@ -780,7 +812,7 @@ func recover_durable_portals(character_id: String, deliveries: Dictionary) -> Di
 		if raw.biome != "biome5" and not candidate.redesign_character.portal_unlocks.has(raw.biome):
 			candidate.redesign_character.portal_unlocks.append(raw.biome)
 	if not errors(candidate, character_id).is_empty(): return {"ok": false, "code": "invalid_portal_recovery"}
-	if not equivalent(current, candidate): _records[character_id] = {"revision": revision(character_id) + 1, "state": candidate}
+	if not equivalent(current, candidate): _replace_record(character_id, revision(character_id) + 1, candidate)
 	return {"ok": true, "revision": revision(character_id)}
 
 
@@ -808,7 +840,8 @@ func stage_character_action(character: String, expected_revision: int,
 		return {"ok": false, "code": "transaction_busy", "durable": false}
 	if expected_revision < 0 or expected_revision >= 2147483647 or revision(character) != expected_revision:
 		return {"ok": false, "code": "stale_revision", "revision": revision(character), "durable": false}
-	var proposal := CHARACTER_ACTIONS.stage(state(character), expected_revision, action,
+	var action_rules: Script = preload("res://scripts/net/foundation_actions.gd") if action in preload("res://scripts/net/foundation_actions.gd").ACTIONS else CHARACTER_ACTIONS
+	var proposal := action_rules.stage(state(character), expected_revision, action,
 		original_intent, host_context, errors)
 	if proposal.get("ok") != true: return proposal.duplicate(true)
 	# A callback is re-staged inside the actual canonical registry. It cannot
@@ -823,5 +856,5 @@ func stage_character_action(character: String, expected_revision: int,
 	# Hidden promotion: the existing finish_creature_training rolls back all
 	# canonical state on failed world save, or retains the original owner
 	# pending action until exact bool-owner-save/ACK and second world save.
-	_records[character] = {"revision": expected_revision + 1, "state": accepted.state.duplicate(true)}
+	_replace_record(character, expected_revision + 1, accepted.state.duplicate(true))
 	return accepted

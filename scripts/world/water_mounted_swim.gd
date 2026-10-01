@@ -73,8 +73,20 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 	if fighting:
 		state.pause_for_combat()
 	var flow: Vector3 = Vector3.ZERO if fighting else world.current_at(actor.global_position)
+	if mounted and str(actor.species_id) == "ripplet":
+		var game := get_node("/root/Game")
+		var current: Dictionary = world.currents.sample(actor.global_position)
+		var guarded := current.has("seal")
+		for dock: Dictionary in world.config.get("docks", []):
+			if str(current.id).begins_with(str(dock.get("outbound_edge", "")) + "_") \
+				and not str(dock.get("unlock_flag", "")).is_empty() and not game.world.flags.has(str(dock.unlock_flag)): guarded = true
+		if not guarded:
+			flow *= float(preload("res://scripts/player/ripplet_traversal.gd").config().current_multiplier)
 	actor.velocity += flow
 	var origin := float(SPECIES.definition(str(actor.species_id)).get("water_mount_geometry", {}).get("surface_origin_offset_m", -0.7))
+	var diving: bool = mounted and str(actor.species_id) == "ripplet" and bool(riding.diving)
+	if diving:
+		origin -= float(preload("res://scripts/player/ripplet_traversal.gd").config().dive_depth_m)
 	actor.velocity.y = (world.field.water_level() + origin - actor.global_position.y) * float(_rules.human.vertical_follow_rate)
 	if mounted:
 		if human.state.mode != STATE.Mode.MOUNTED and not fighting:
@@ -82,7 +94,7 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 		var game := get_node("/root/Game")
 		var change := state.advance(state.owner_peer_id, delta,
 			_instance.swim_stamina_fraction * float(_species.stamina_capacity), float(_species.stamina_capacity),
-			float(_species.stamina_drain_per_s), float(_rules.mount.drowning_damage_per_s), game.local.skills.efficiency("swimming"))
+			float(_species.stamina_drain_per_s), 0.0 if diving else float(_rules.mount.drowning_damage_per_s), game.local.skills.efficiency("swimming"))
 		_instance.swim_stamina_fraction = maxf(0.0, _instance.swim_stamina_fraction - float(change.stamina_spent) / float(_species.stamina_capacity))
 		human.state.stamina_fraction = state.stamina_fraction
 		human.state.drowning = state.drowning
@@ -97,6 +109,6 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 			direction = (camera.call("planar_basis") as Basis) * direction
 		if activity != null:
 			activity.record_movement("swimming", actor.global_position - _last_position - flow * delta,
-				direction, delta, float(_species.speed_mps), fighting)
+				direction, delta, float(riding.ride_speed_now()), fighting)
 	actor.set_meta("water_aquatic", state.snapshot())
 	_last_position = actor.global_position

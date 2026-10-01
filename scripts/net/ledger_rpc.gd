@@ -1,4 +1,19 @@
 extends Node
+signal transaction_boundary(observation: Dictionary)
+
+## Exact identity at the real writer edge, for ROOT's deterministic loss
+## witnesses. This is observation only; it cannot ACK, save or grant anything.
+func _observe_training_boundary(row: Dictionary, phase: String) -> void:
+	transaction_boundary.emit({"phase": phase, "kind": row.kind, "action": row.action,
+		"character_id": row.character_id, "world_namespace": row.world_namespace,
+		"session_id": row.session_id, "delivery_id": row.delivery_id, "receipt": row.receipt,
+		"journal_revision": row.journal_revision, "character_revision": row.character_revision})
+
+func _observe_portal_boundary(row: Dictionary, phase: String, epoch: String) -> void:
+	transaction_boundary.emit({"phase": phase, "kind": row.kind, "action": "portal_key",
+		"character_id": row.character_id, "world_namespace": row.world_instance_id,
+		"session_id": epoch, "delivery_id": row.receipt, "receipt": row.receipt,
+		"biome": row.biome, "key_slot": row.key_slot})
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -84,6 +99,31 @@ const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 var _satchel_retry_at: Dictionary = {}
 var _satchel_poll := 0.0
 var _reward_retry_at: Dictionary = {}
+
+## Host-internal append, before personal actions/terminal source cleanup.
+## A failed atomic world write restores the same ledger state and sequence.
+func journal_foundation_event(source: String, duties: Array) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or game.call("is_host") != true or ledger == null: return {"ok": false, "durable": false}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
+	var row := preload("res://scripts/net/foundation_event.gd").make(world, game.get("session").call("_altar_current_epoch"), source, duties)
+	if row.is_empty(): return {"ok": false, "durable": false}
+	var before: Dictionary = world.call("save_data")
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var result: Dictionary = ledger.call("commit_foundation_event", row)
+	if result.get("ok") != true: return {"ok": false, "durable": false}
+	if result.get("duplicate") != true:
+		if saver.call("save_world_prepared", game, world.world_id) != true:
+			world.call("load_data", before)
+			world.revision = revision
+			ledger.seq = sequence
+			return {"ok": false, "durable": false}
+		publish_journaled_delta(result.delta)
+	return {"ok": true, "durable": true, "delivery_id": row.delivery_id}
 
 func _process(delta: float) -> void:
 	_satchel_poll -= delta
@@ -297,7 +337,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		if session == null: return _pending(intent, false, "Altar building is not ready yet.")
 		return session.call("host_altar_building", peer_id, altar.request)
 	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
-	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear"]
+	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -323,6 +363,16 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if kind == "river_nest_clear":
 		intent = intent.duplicate(true)
 		intent["_doss_actor"] = _water_actor_context(peer_id, intent)
+	if kind == "ripplet_sunken_claim":
+		intent = intent.duplicate(true)
+		intent["_ripplet_actor"] = {}
+		var root := get_tree().current_scene
+		var service := root.get_node_or_null("RippletWaterService") if root != null else null
+		if service == null:
+			for node: Node in get_tree().get_nodes_in_group("ripplet_water_service"):
+				service = node
+				break
+		if service != null: intent["_ripplet_actor"] = service.actor_context(peer_id, str(intent.get("creature_uid", "")))
 	# Every kind can write world flags, so every intent carries the admitted
 	# identity; a claimed `_actor_character_id` is always overwritten.
 	intent = with_host_actor(intent, _registered_character(peer_id))
@@ -347,7 +397,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		# Reward and dock publication always require a durable world file. Death-
 		# satchel fixtures historically allow an unnamed session, so preserve only
 		# that legacy path.
-		if kind in ["reward_grant", "water_dock_action", "river_nest_clear"] or not world_id.is_empty():
+		if kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
 			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
@@ -364,6 +414,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 						if kind == "water_dock_action" else (
 							"The world could not save Doss's repair. Your items remain safe." \
 							if kind == "river_nest_clear" else "The world could not save this satchel move. Your items remain safe."))
+				if kind == "ripplet_sunken_claim": failure_reason = "The sunken find could not save. Nothing was claimed."
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
 					"code": "journal_failed", "reason": failure_reason,
 					"world_instance_id": SATCHEL_ESCROW.world_instance(ledger.world),
@@ -371,7 +422,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	# A host recipient can durably ACK while its player op is applied. Publish
 	# the pending journal first so its later acceptance delta cannot overtake it
 	# on the same reliable ledger channel.
-	if kind in ["reward_grant", "river_nest_clear"]:
+	if kind in ["reward_grant", "river_nest_clear", "ripplet_sunken_claim"]:
 		delta_applied.emit(delta)
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)
@@ -756,6 +807,8 @@ func _rpc_reward_delivery_ack(delivery_id: String) -> void:
 ## same question of the same code rather than re-deriving "did both peers get
 ## it" in the test file.
 func _apply_player_ops(delta: Dictionary) -> void:
+	var flag_game := _game()
+	if flag_game != null and flag_game.get("session") != null: flag_game.get("session").call("foundation_record_personal_flags", delta)
 	var game := _game()
 	if game == null:
 		return
@@ -1023,14 +1076,15 @@ func journal_creature_training_prepared(peer: int, character: String, accepted: 
 		return {"ok": false, "durable": false, "code": "world_not_prepared"}
 	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
 	var row: Dictionary
-	if accepted.get("action") in preload("res://scripts/net/character_action_rules.gd").ACTIONS:
+	if accepted.get("action") in preload("res://scripts/net/character_action_rules.gd").ACTIONS or accepted.get("action") in preload("res://scripts/net/foundation_actions.gd").ACTIONS:
 		# No candidate from an intent/RPC can enter this arm. The same hidden
 		# registry's private token must still bind its exact accepted stage.
 		var owner_session: Node = game.get("session")
 		if owner_session == null or owner_session.call("character_action_stage_matches", peer, accepted) != true:
 			return {"ok": false, "durable": false, "code": "action_stage_changed"}
-		row = preload("res://scripts/net/character_action_delivery.gd").make_record(
-			world.world_id, world.reward_delivery_namespace, str(owner_session.call("_altar_current_epoch")),
+		var codec: Script = preload("res://scripts/net/foundation_delivery.gd") if accepted.get("action") in preload("res://scripts/net/foundation_actions.gd").ACTIONS else preload("res://scripts/net/character_action_delivery.gd")
+		row = codec.make_record(
+			world.world_id, world.reward_delivery_namespace, str(owner_session.call("foundation_event_stage_epoch", accepted)),
 			accepted, world.reward_deliveries.get(id), preload("res://scripts/net/character_record_rules.gd").errors)
 	else:
 		row = ESSENCE.next_training_delivery(world.world_id, world.reward_delivery_namespace,
@@ -1065,6 +1119,9 @@ func publish_creature_training(peer: int, character: String, receipt: String) ->
 	if pending.is_empty() or pending.peer != peer or not WORLD_STATE.training_row_valid(latest,
 		world.reward_delivery_namespace, world.world_id) or latest.receipt != receipt \
 		or not ESSENCE._equivalent(latest, pending.row): return false
+	_observe_training_boundary(latest, "after_host_write_before_delivery")
+	# Observers may interrupt a process; never publish a replaced decision.
+	if not ESSENCE._equivalent(world.reward_deliveries.get(id), latest): return false
 	_training_publications.erase(id)
 	publish_journaled_delta(pending.delta)
 	return true
@@ -1090,9 +1147,11 @@ func _process_creature_training(row: Dictionary) -> void:
 	if session.call("_altar_current_epoch") == "": return
 	var outcome: Dictionary
 	if row.kind == "altar_building": outcome = session.call("apply_altar_building_owner", row)
-	elif row.get("version") == 2: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
+	elif row.get("version") in [2, 3]: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
 	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if outcome.get("ok") != true or outcome.get("saved") != true: return
+	_observe_training_boundary(row, "after_owner_write_before_ack")
+	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return
 	if bool(game.call("is_host")):
 		_accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id())
 	elif _can_rpc():
@@ -1319,6 +1378,8 @@ func publish_portal_delivery(peer: int, character: String, receipt: String) -> b
 	var world: RefCounted = game.get("world")
 	var row: Variant = world.reward_deliveries.get(receipt)
 	if not PORTAL_DELIVERY.valid(row, character, world.reward_delivery_namespace): return false
+	_observe_portal_boundary(row, "after_host_write_before_delivery", str(game.get("session").call("_altar_current_epoch")))
+	if not PORTAL_DELIVERY.equivalent(world.reward_deliveries.get(receipt), row): return false
 	var publication: Dictionary = _portal_publications.get(receipt, {})
 	if not publication.is_empty():
 		if publication.peer != peer or publication.character != character: return false
@@ -1361,6 +1422,9 @@ func _process_portal_delivery(row: Dictionary, generation: String = "") -> void:
 	if not PORTAL_DELIVERY.equivalent(canonical, row): return
 	var result := PORTAL_DELIVERY.settle_owner(game, row.duplicate(true))
 	if result.get("ok") != true: return
+	_observe_portal_boundary(row, "after_owner_write_before_ack", current_generation)
+	if game.get("world") != world or game.get("local") != player or session.call("_altar_current_epoch") != current_generation \
+		or not PORTAL_DELIVERY.equivalent(world.reward_deliveries.get(row.receipt), row): return
 	var now := Time.get_ticks_msec()
 	if now < int(_portal_retry_at.get(row.receipt, 0)): return
 	_portal_retry_at[row.receipt] = now + 1000

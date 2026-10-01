@@ -1,0 +1,65 @@
+{
+  "head": "84c24d285490153626c3d94e4a810c761a2d5a15",
+  "base": "078aa3a097fec263e739d6815a58333923ef0067",
+  "branch": "tb/integration-next",
+  "source_only": true,
+  "branches": [
+    {
+      "branch": "tb/r2-f34",
+      "head": "58af606bc2472f3c7cbff60db338682ea07920f8",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f36",
+      "head": "0cd742a9bcbffdeb85b34ac314cb67fca83fe4a6",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f37",
+      "head": "cf55c524fd870c0f5709b3b1dc1c620a11541509",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f38",
+      "head": "15b1c08742f644e699919c578dce7ce74ad3f3ff",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f39",
+      "head": "1484892bce43ea27832db17c88c3c989d5b06f7d",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f40",
+      "head": "0749ae6f696014f3e1be6cdc6e8194e592fe783f",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f41",
+      "head": "8e11808bfea6119369f7067acc3f81003f1ddd3a",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f42",
+      "head": "a8f87d773aa18ef7d731b089c433be8aca30d8b1",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f43",
+      "head": "04732f694a7ac912fc9aacf3cacee1ec48085e04",
+      "contained": true
+    },
+    {
+      "branch": "tb/r2-f44",
+      "head": "9d47624554881905aac6914c1233faae527cf4e9",
+      "contained": true
+    }
+  ],
+  "conflict_resolution": {
+    "scripts/data/redesign_state.gd": "Retain both F43 bounty and F44 rematch/alpha validations.",
+    "scripts/net/character_action_rules.gd": "Union bounty/rematch action list and retain both canonical stage adapters."
+  },
+  "native_validation": "NOT RUN; author flags retained; current batch must be green on main before next batch CI/landing.",
+  "criteria_credit": 0,
+  "archive_authorization": "Owner requested archive after committed source is on consolidated branches; reopen attributable failures during next CI."
+}

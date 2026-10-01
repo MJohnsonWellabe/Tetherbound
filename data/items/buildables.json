@@ -772,5 +772,13 @@
         }
       ]
     }
+  ],
+  "forward_camp_buildables": [
+    {
+      "id": "forward_camp", "name": "Forward camp", "category": "survival",
+      "blurb": "One kit places a sheltered team bed, cookpot and field workbench. Pack up your old camp before placing another in this biome.",
+      "thumbnail": "res://assets/ui/icons/buildables/tent.png",
+      "cost": [{"id":"forward_camp_kit","n":1}]
+    }
   ]
 }
