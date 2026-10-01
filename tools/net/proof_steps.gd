@@ -238,6 +238,31 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var saver: Variant = game.get("save_system") if game != null else null
 	if saver == null:
 		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	if args.get("portable_only") == true:
+		# An admitted guest may have only its authentic portable character.
+		# Restore through the production CharacterSave owner; do not fabricate
+		# a slot/world locator, alter fields or manufacture a host-owned world.
+		var source_characters := from.path_join("characters")
+		var schema_root := source_characters.path_join("redesign-v28")
+		var source_root := schema_root if DirAccess.dir_exists_absolute(schema_root) else source_characters
+		var directory := DirAccess.open(source_root)
+		if directory == null: return {"verdict": "FAIL", "detail": "No actual portable characters under " + from}
+		var candidates: Array[String] = []
+		for id: String in directory.get_directories():
+			if FileAccess.file_exists(source_root.path_join(id).path_join("character.json")) \
+				or FileAccess.file_exists(source_root.path_join(id).path_join("character.json.gz")): candidates.append(id)
+		if candidates.size() != 1:
+			return {"verdict": "FAIL", "detail": "Portable input must contain exactly one original character"}
+		var session: Node = game.get("session")
+		if session == null or session.call("is_active"):
+			return {"verdict": "FAIL", "detail": "Portable captured input loads only outside an active session"}
+		if _copy_tree(source_characters, OS.get_user_data_dir().path_join("characters"), true) == 0:
+			return {"verdict": "FAIL", "detail": "Could not copy actual portable character carrier"}
+		var characters: RefCounted = saver.call("characters")
+		if characters == null or characters.call("apply", game, candidates[0]) != true:
+			return {"verdict": "FAIL", "detail": "Production CharacterSave refused captured portable input"}
+		return {"verdict": "PASS", "detail": "Restored only authentic portable character through production owner; no world or locator copied",
+			"data": {"character_id": candidates[0], "portable_only": true, "world_copied": false}}
 	var slot := int(args.get("slot", 0))
 	var form := ""
 	if DirAccess.dir_exists_absolute(from) and args.has("slot") \

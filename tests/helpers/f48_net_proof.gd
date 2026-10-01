@@ -164,9 +164,9 @@ func _admit(steps: Array, saves: Array, peers: int) -> void:
 	for peer: int in peers:
 		if not saves[peer] is String or not DirAccess.dir_exists_absolute(saves[peer]):
 			_profile_errors.append("Missing actual saved input for peer %d" % peer)
-		steps.append(_entry(peer, "load_save", {"from": saves[peer]}, "DISCLOSED saved-input setup; not earned full-loop acceptance"))
+		steps.append(_entry(peer, "load_save", {"from": saves[peer], "portable_only": peer > 0}, "DISCLOSED saved-input setup; original guest character only, no borrowed world"))
 	steps.append(_entry(0, "host"))
-	for peer: int in range(1, peers): steps.append(_entry(peer, "production_join", {"returning_route": true}))
+	for peer: int in range(1, peers): steps.append(_entry(peer, "production_join", {"returning_route": true, "character": {"character_id": "$character%d" % peer}}))
 	steps.append(_entry("all", "expect_peers", {"count": peers}))
 	steps.append(_entry("all", "f48_witness", {"remember": "admitted"}))
 
@@ -266,7 +266,7 @@ func _boss(steps: Array, peers: int) -> void:
 	steps.append(_entry("all", "f48_witness", {"remember": "boss_settled"}))
 	for peer: int in range(1, peers):
 		steps.append(_entry(peer, "leave"))
-		steps.append(_entry(peer, "production_join", {"returning_route": true}))
+		steps.append(_entry(peer, "production_join", {"returning_route": true, "character": {"character_id": "$character%d" % peer}}))
 		steps.append(_entry(peer, "f48_assert", {"boss_rewards": true, "since": "boss_settled", "unchanged": REPLAY_FIELDS}))
 
 func _behind(steps: Array) -> void:
@@ -287,7 +287,7 @@ func _behind(steps: Array) -> void:
 	steps.append(_entry(1, "f48_assert", honest))
 	steps.append(_entry(1, "f48_witness", {"remember": "behind_arrived"}))
 	steps.append(_entry(1, "leave"))
-	steps.append(_entry(1, "production_join", {"returning_route": true}))
+	steps.append(_entry(1, "production_join", {"returning_route": true, "character": {"character_id": "$character1"}}))
 	var rejoined := honest.duplicate(true)
 	rejoined.since = "behind_arrived"
 	rejoined.erase("behind_arrival")
@@ -315,7 +315,7 @@ func _transactions(steps: Array, operation: String = "", boundary: String = "", 
 	steps.append(_entry(1, "restart_peer", {"scene": "title"}, "F48 hard process kill; no Session.leave or autosave"))
 	if not case_id.is_empty(): steps.append(_entry(1, "f48_start_case", {"case": case_id}, "Restore detached case directory in fresh guest process"))
 	steps.append(_entry(0, "expect_peers", {"count": 1}))
-	steps.append(_entry(1, "production_join", {"returning_route": true}))
+	steps.append(_entry(1, "production_join", {"returning_route": true, "pick_saved": true, "character": {"character_id": "$character1"}}, "Fresh process selects the original actual saved character through the real title picker"))
 	steps.append(_entry("all", "expect_peers", {"count": 2}))
 	# A process-local before witness is gone after a real kill. Copy its DETACHED
 	# evidence into the fresh process metadata, never into the production state.
@@ -354,7 +354,19 @@ func _restart_peer(i: int, scene: String) -> Dictionary:
 	return result
 
 func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
-	if entry.get("action") != "f48_boundary_transaction": return await super._run_entry(index, peer, entry)
+	if entry.get("action") != "f48_boundary_transaction":
+		var passed: bool = await super._run_entry(index, peer, entry)
+		if passed and entry.get("action") == "load_save":
+			# Before admission the generic resolver can learn no active registry
+			# identity. Pin the actual production loader's character result now;
+			# later host admission/rejoin must still report that original identity.
+			var loaded: Dictionary = _peers[peer].get("last_verdict", {}).get("data", {})
+			var character_id := str(loaded.get("character_id", ""))
+			if character_id.is_empty():
+				check(false, "Actual saved-input character identity missing before admission")
+				return false
+			_characters[peer] = character_id
+		return passed
 	var args: Dictionary = entry.args
 	var pid := int(_peers[peer].get("pid", -1))
 	var character := str(_characters.get(peer, ""))
