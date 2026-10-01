@@ -6828,7 +6828,7 @@ func _f22_visible_observation(wild: Node3D) -> Dictionary:
 		label = "charged_windup" if not bool(move.get("is_quick", true)) else "quick_windup"
 		if str(move.get("slot", "")) == "ultimate":
 			label = "ultimate_windup"
-	elif action == COMBAT_MANAGER.Action.RECOVER:
+	elif action == COMBAT_MANAGER.Action.RECOVERY:
 		label = "recovery"
 	var delta := _ally_body.global_position - wild.global_position
 	delta.y = 0.0
