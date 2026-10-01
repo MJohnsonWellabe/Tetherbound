@@ -1,0 +1,22 @@
+{
+  "subject": "stormursa",
+  "working_name": "Stormursa",
+  "authorization": "CODEX_START_HERE RD-28; ART_DIRECTION 7.2; ACCEPTANCE F29#3",
+  "status": "queued_for_ROOT_no_reference_or_mesh_generated",
+  "generation_provider": "Meshy",
+  "meshy_task_id": "",
+  "reference_inspected": false,
+  "rig_pass": false,
+  "animation_pass": false,
+  "scale_pass": false,
+  "full_art_bar_pass": false,
+  "height_m": null,
+  "reference": null,
+  "model": null,
+  "judge_medium": null,
+  "judge_high": null,
+  "before_after": null,
+  "preparation_scripts": [],
+  "license": "Use existing Meshy license only; output rights and redistribution must be recorded after actual generation. No new purchase.",
+  "default_enabled": false
+}
