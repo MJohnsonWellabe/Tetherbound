@@ -134,7 +134,7 @@ static func effective_ids(creature: Variant, cfg: Dictionary = {}) -> Array[Stri
 	var rules := config() if cfg.is_empty() else cfg
 	var result: Array[String] = []
 	if creature == null: return result
-	var initialized := creature.get("traits_initialized") == true
+	var initialized: bool = creature.get("traits_initialized") == true
 	if initialized:
 		var rolled: Variant = creature.get("rolled_traits")
 		var taught: Variant = creature.get("taught_traits")

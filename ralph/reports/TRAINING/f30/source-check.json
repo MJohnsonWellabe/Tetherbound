@@ -27,7 +27,7 @@
   },
   "shared_paths": 20,
   "owned_hashes": {
-    "scripts/creatures/traits.gd": "a0ae6b1a7a18963eee36791fd4677f72f2a0b04fc433c42469dc213b05af7c3f",
+    "scripts/creatures/traits.gd": "b60c4b159aab539e7f223f3d507041bc6d0f331d5db6ab64526920e16b1ad899",
     "scripts/creatures/trait_actor_projection.gd": "b88ea23957b93b240a2103bb5bb2200a02bb7232f12b544a0fc85e187ff15285",
     "scripts/creatures/trait_db.gd": "16c49ddb38bff242fe653c7f5514ab844b7c93ed196fb9801243623ff36a6b55",
     "scripts/creatures/trait_spawn_hooks.gd": "c78ce6cf2833ec9439c1142e2f23325c6ded0c787e3f14814ed84961449ef24d",
