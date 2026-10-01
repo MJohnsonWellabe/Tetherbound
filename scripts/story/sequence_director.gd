@@ -201,6 +201,7 @@ var _beat: String = ""
 var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
 var _homecoming_character_id: String = ""
+var _homecoming_context: Dictionary = {}
 var _regional_credits: CanvasLayer = null
 var _bed_prompt: Node3D = null
 ## The house, if this world built one — SA2's door gate lives on it (a
@@ -609,7 +610,7 @@ func _drain_effects() -> void:
 	# Preserve the actual spoken effect and following beats until the world
 	# journal is durable. Closing the panel cannot consume its only source.
 	var opening_game := _effect_game()
-	var finite_gift_enabled := opening_game != null and opening_game.get("session") != null and opening_game.get("session").call("portal_runtime_ready") == true
+	var finite_gift_enabled: bool = opening_game != null and opening_game.get("session") != null and opening_game.get("session").call("portal_runtime_ready") == true
 	if effects.has("home_key:grant") and finite_gift_enabled:
 		if Time.get_ticks_msec() < _f18_home_key_retry_at:
 			_f18_pending_effects = effects.duplicate()
@@ -1708,9 +1709,14 @@ func _start_conversation(id: String) -> bool:
 		var game := get_node_or_null(^"/root/Game")
 		var values := REGIONAL_HOMECOMING.substitutions(game) \
 			if REGIONAL_HOMECOMING.is_initial(id) else {}
+		# Bind the spoken roster and owner context before dialogue starts; an
+		# acknowledgement must never adopt a later party/world/session.
+		var expected_context: Dictionary = REGIONAL_HOMECOMING.context(game)
+		if expected_context.is_empty(): return false
 		var started := bool(_dialogue.call("start", id, {}, values))
 		if started:
 			_homecoming_character_id = REGIONAL_HOMECOMING.character_id(game)
+			_homecoming_context = expected_context.duplicate(true)
 		return started
 	var opened := bool(_dialogue.call("start", id))
 	if opened: _f18_opening_conversation_id = id
@@ -1724,9 +1730,17 @@ func _on_dialogue_completed(id: String) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	var expected_character_id := _homecoming_character_id
 	var expected_world: Object = game.get("world") as Object if game != null else null
-	var should_open := REGIONAL_HOMECOMING.complete(game, expected_character_id) \
-		if initial else REGIONAL_HOMECOMING.credits_pending(game)
+	var expected_context := _homecoming_context.duplicate(true)
+	# Consume this presentation before yielding so a later conversation cannot
+	# have its identity cleared by completion of the earlier acknowledgement.
 	_homecoming_character_id = ""
+	_homecoming_context = {}
+	var should_open: bool = false
+	if initial:
+		should_open = await REGIONAL_HOMECOMING.complete(game, expected_character_id, expected_context)
+	else:
+		should_open = REGIONAL_HOMECOMING.context_matches(game, expected_context) \
+			and REGIONAL_HOMECOMING.credits_pending(game)
 	if should_open:
 		call_deferred("_open_regional_credits", expected_character_id, expected_world)
 
@@ -1741,13 +1755,8 @@ func _open_regional_credits(expected_character_id: String, expected_world: Objec
 		_regional_credits = REGIONAL_CREDITS.new()
 		_regional_credits.name = "RegionalCredits"
 		get_parent().add_child(_regional_credits)
-		_regional_credits.connect("acknowledged", _on_regional_credits_acknowledged)
 	_regional_credits.call("open_for", expected_character_id, expected_world)
 
-
-func _on_regional_credits_acknowledged(expected_character_id: String) -> void:
-	var game := get_node_or_null(^"/root/Game")
-	REGIONAL_HOMECOMING.complete_credits(game, expected_character_id)
 
 
 ## --- beats 4 and 5: the choice, and the name ------------------------------------------
@@ -1792,7 +1801,7 @@ func _adopt(index: int, chosen: String) -> void:
 		return
 
 	var game := _effect_game()
-	var typed_adoption := game != null and game.get("session") != null and (game.get("session").call("config").get("redesign_ending_runtime_enabled", false) == true or game.get("session").call("portal_runtime_ready") == true)
+	var typed_adoption: bool = game != null and game.get("session") != null and (game.get("session").call("config").get("redesign_ending_runtime_enabled", false) == true or game.get("session").call("portal_runtime_ready") == true)
 	var added := bool(game.call("commit_original_starter", self, _encounter.call("ally_instance"), chosen)) if typed_adoption else _give_to_party(_encounter.call("ally_instance"), chosen)
 	if not added:
 		if typed_adoption:
