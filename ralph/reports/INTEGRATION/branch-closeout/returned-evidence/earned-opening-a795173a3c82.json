@@ -4453,5 +4453,10 @@
     "run_number": 6165,
     "head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
     "last_observed": "LIVE: changes checkout in progress. No CI result or main acceptance inferred."
+  },
+  "independent_failure_verification": {
+    "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "verdict": "PASS: retained actual FAILURE and exact parser/native hashes, all2180 unchanged runtime pins, actual blockers and zero save markers verified; no runtime acceptance",
+    "raw_receipt_sha256": "f187dc3b05680ac10e3ce70a175c1b4cb4140021319494786b642eae16a95d1b"
   }
 }
