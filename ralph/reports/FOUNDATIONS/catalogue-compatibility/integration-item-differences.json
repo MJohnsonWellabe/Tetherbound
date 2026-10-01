@@ -1,0 +1,909 @@
+{
+  "integration_source": "4ce1d9130a8f691b5780234ec546673a703615e6",
+  "foundation_parent": "f6ecb0569b6aa6def4c9689359c761bb83d2f079",
+  "foundation_item_count": 129,
+  "integration_item_count": 155,
+  "foundation_items_blob": "37e57d3902b2245a8a0ed6edfb3de17f98f8c66a",
+  "integration_items_blob": "ad15f18a094cb392517f251f79320a18f1395605",
+  "r13_sealed_source": "a62b644fcea55ed85413e570b59b4a0a3eb2b02e",
+  "r13_items_blob": "37e57d3902b2245a8a0ed6edfb3de17f98f8c66a",
+  "r15": "HELD ignored/unpushed; not included in this repair",
+  "paths": [
+    "items.attack_tonic.world_model",
+    "items.attack_tonic.world_model_grounded",
+    "items.attack_tonic.world_model_reward_scale",
+    "items.attack_tonic.world_model_scale",
+    "items.attuned_air",
+    "items.attuned_dark",
+    "items.attuned_electric",
+    "items.attuned_fire",
+    "items.attuned_ground",
+    "items.attuned_ice",
+    "items.attuned_psychic",
+    "items.attuned_water",
+    "items.cloudreach_portal_key",
+    "items.elixir_guard.world_model",
+    "items.elixir_guard.world_model_grounded",
+    "items.elixir_guard.world_model_reward_scale",
+    "items.elixir_guard.world_model_scale",
+    "items.elixir_might.world_model",
+    "items.elixir_might.world_model_grounded",
+    "items.elixir_might.world_model_reward_scale",
+    "items.elixir_might.world_model_scale",
+    "items.elixir_vigour.world_model",
+    "items.elixir_vigour.world_model_grounded",
+    "items.elixir_vigour.world_model_reward_scale",
+    "items.elixir_vigour.world_model_scale",
+    "items.fifth_portal_key",
+    "items.hide_boots.blurb",
+    "items.hide_boots.description",
+    "items.hide_boots.name",
+    "items.hide_helm.blurb",
+    "items.hide_helm.description",
+    "items.hide_helm.name",
+    "items.hide_leggings.blurb",
+    "items.hide_leggings.description",
+    "items.hide_leggings.name",
+    "items.hide_vest.blurb",
+    "items.hide_vest.description",
+    "items.hide_vest.name",
+    "items.home_key",
+    "items.rootiron_ingot",
+    "items.seed_air",
+    "items.seed_dark",
+    "items.seed_electric",
+    "items.seed_fire",
+    "items.seed_ground",
+    "items.seed_ice",
+    "items.seed_psychic",
+    "items.seed_water",
+    "items.skyglass_ingot",
+    "items.stoneguard_brew.world_model",
+    "items.stoneguard_brew.world_model_grounded",
+    "items.stoneguard_brew.world_model_reward_scale",
+    "items.stoneguard_brew.world_model_scale",
+    "items.stormglass_plate",
+    "items.stormwood_portal_key",
+    "items.swift_tonic.world_model",
+    "items.swift_tonic.world_model_grounded",
+    "items.swift_tonic.world_model_reward_scale",
+    "items.swift_tonic.world_model_scale",
+    "items.tide_pearl",
+    "items.tidesteel_ingot",
+    "items.tidewake_portal_key"
+  ],
+  "field_comparison": [
+    {
+      "path": "items.attack_tonic.world_model",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": "res://assets/props/stat_draughts/attack_tonic.tscn"
+      }
+    },
+    {
+      "path": "items.attack_tonic.world_model_grounded",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": true
+      }
+    },
+    {
+      "path": "items.attack_tonic.world_model_reward_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 1.0
+      }
+    },
+    {
+      "path": "items.attack_tonic.world_model_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 0.8
+      }
+    },
+    {
+      "path": "items.attuned_air",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Air",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#b5d6b9",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "An air ingredient for Ascension Feasts.",
+          "description": "Gathered from air essence nodes or Galebloom crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.attuned_dark",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Dark",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#9b88b8",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "A dark ingredient for Ascension Feasts.",
+          "description": "Gathered from dark essence nodes or Duskcap crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.attuned_electric",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Electric",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#e5cb73",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "An electric ingredient for Ascension Feasts.",
+          "description": "Gathered from electric essence nodes or Sparkstem crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.attuned_fire",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Fire",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#e79b60",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "A fire ingredient for Ascension Feasts.",
+          "description": "Gathered from fire essence nodes or Emberbloom crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.attuned_ground",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Ground",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#b39b68",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "A ground ingredient for Ascension Feasts.",
+          "description": "Gathered from ground essence nodes or Rootbud crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.attuned_ice",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Ice",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#a6d9dd",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "An ice ingredient for Ascension Feasts.",
+          "description": "Gathered from ice essence nodes or Frostbloom crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.attuned_psychic",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Psychic",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#c6a2d6",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "A psychic ingredient for Ascension Feasts.",
+          "description": "Gathered from psychic essence nodes or Mindleaf crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.attuned_water",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Attuned Water",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#66b8d9",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "A water ingredient for Ascension Feasts.",
+          "description": "Gathered from water essence nodes or Tidebud crops. An Ascension Feast uses an ingredient matching the creature's type."
+        }
+      }
+    },
+    {
+      "path": "items.cloudreach_portal_key",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Cloudreach Portal Key",
+          "kind": "key",
+          "stack": 1,
+          "colour": "#d0e1da",
+          "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+          "blurb": "Opens the Cloudreach arch in the Crossing Hall.",
+          "description": "Earned by a participant in the Tidewake climax. Used once at the Cloudreach arch; its unlock follows your character.",
+          "portal_biome": "cloudreach",
+          "droppable": false,
+          "sellable": false,
+          "tradeable": false,
+          "death_satchel": false,
+          "protected_key": true,
+          "scope": "character"
+        }
+      }
+    },
+    {
+      "path": "items.elixir_guard.world_model",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": "res://assets/props/stat_draughts/elixir_guard.tscn"
+      }
+    },
+    {
+      "path": "items.elixir_guard.world_model_grounded",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": true
+      }
+    },
+    {
+      "path": "items.elixir_guard.world_model_reward_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 1.0
+      }
+    },
+    {
+      "path": "items.elixir_guard.world_model_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 0.8
+      }
+    },
+    {
+      "path": "items.elixir_might.world_model",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": "res://assets/props/stat_draughts/elixir_might.tscn"
+      }
+    },
+    {
+      "path": "items.elixir_might.world_model_grounded",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": true
+      }
+    },
+    {
+      "path": "items.elixir_might.world_model_reward_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 1.0
+      }
+    },
+    {
+      "path": "items.elixir_might.world_model_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 0.8
+      }
+    },
+    {
+      "path": "items.elixir_vigour.world_model",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": "res://assets/props/stat_draughts/elixir_vigour.tscn"
+      }
+    },
+    {
+      "path": "items.elixir_vigour.world_model_grounded",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": true
+      }
+    },
+    {
+      "path": "items.elixir_vigour.world_model_reward_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 1.0
+      }
+    },
+    {
+      "path": "items.elixir_vigour.world_model_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 0.8
+      }
+    },
+    {
+      "path": "items.fifth_portal_key",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Fifth Portal Key",
+          "kind": "key",
+          "stack": 1,
+          "colour": "#c1c5bd",
+          "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+          "blurb": "The fifth arch stirs, but its way remains sealed.",
+          "description": "Earned by a participant in the Stormwood finale. Used once at the fifth arch. It stirs, but it is not ready yet.",
+          "portal_biome": "biome5",
+          "droppable": false,
+          "sellable": false,
+          "tradeable": false,
+          "death_satchel": false,
+          "protected_key": true,
+          "scope": "character"
+        }
+      }
+    },
+    {
+      "path": "items.hide_boots.blurb",
+      "foundation": {
+        "value": "Thick-soled hide boots. Softer on the ankles than bare feet."
+      },
+      "integration": {
+        "value": "Thick-soled woven boots with padding around the ankles."
+      }
+    },
+    {
+      "path": "items.hide_boots.description",
+      "foundation": {
+        "value": "Thick-soled and double-stitched at the ankle. Not built for speed -- built so the ground stops being the first thing you feel when you land wrong."
+      },
+      "integration": {
+        "value": "Woven uppers and fiber padding support the ankle. Thick soles cushion the trainer's steps and rough landings."
+      }
+    },
+    {
+      "path": "items.hide_boots.name",
+      "foundation": {
+        "value": "Hide Boots"
+      },
+      "integration": {
+        "value": "Padded Boots"
+      }
+    },
+    {
+      "path": "items.hide_helm.blurb",
+      "foundation": {
+        "value": "Boiled hide over the crown. Takes the edge off a bad fall."
+      },
+      "integration": {
+        "value": "Fiber padding over the crown. Takes the edge off a bad fall."
+      }
+    },
+    {
+      "path": "items.hide_helm.description",
+      "foundation": {
+        "value": "Stiffened hide, shaped over a form and left to dry hard. It will not stop a real blow -- nothing here is meant to, the trainer never fights -- but a knock on the head from a bad landing lands softer wearing it."
+      },
+      "integration": {
+        "value": "Layers of woven fiber cushion the crown during a hard landing. Made for the trainer's journeys and environmental hazards."
+      }
+    },
+    {
+      "path": "items.hide_helm.name",
+      "foundation": {
+        "value": "Hide Helm"
+      },
+      "integration": {
+        "value": "Padded Helm"
+      }
+    },
+    {
+      "path": "items.hide_leggings.blurb",
+      "foundation": {
+        "value": "Hide wrapped over the thighs and knees."
+      },
+      "integration": {
+        "value": "Woven fiber padding over the thighs and knees."
+      }
+    },
+    {
+      "path": "items.hide_leggings.description",
+      "foundation": {
+        "value": "Wrapped and buckled over the thighs and knees, the joints that take the worst of a hard landing on uneven ground."
+      },
+      "integration": {
+        "value": "Fiber padding wraps the thighs and knees, cushioning the joints during a hard landing on uneven ground."
+      }
+    },
+    {
+      "path": "items.hide_leggings.name",
+      "foundation": {
+        "value": "Hide Leggings"
+      },
+      "integration": {
+        "value": "Padded Leggings"
+      }
+    },
+    {
+      "path": "items.hide_vest.blurb",
+      "foundation": {
+        "value": "Layered hide over the chest and back. The biggest piece of the set."
+      },
+      "integration": {
+        "value": "Layered fiber padding over the chest and back."
+      }
+    },
+    {
+      "path": "items.hide_vest.description",
+      "foundation": {
+        "value": "Two layers of hide laced over the ribs and shoulder blades, the largest single piece a trainer can wear and the one that does the most against a fall's own jolt."
+      },
+      "integration": {
+        "value": "Two layers of woven fiber cushion the ribs and shoulder blades, taking some of the jolt out of a hard landing."
+      }
+    },
+    {
+      "path": "items.hide_vest.name",
+      "foundation": {
+        "value": "Hide Vest"
+      },
+      "integration": {
+        "value": "Padded Vest"
+      }
+    },
+    {
+      "path": "items.home_key",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Home Key",
+          "kind": "key",
+          "stack": 1,
+          "colour": "#b8f6df",
+          "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+          "blurb": "One tap brings you to the Crossing Hall. Free, with no cooldown.",
+          "description": "Grandpa's gift. Raise it for two seconds to return to the home arch. Finish fights and conversations, reach solid ground and land before using it.",
+          "use_action": "home_key",
+          "quick_bindable": true,
+          "droppable": false,
+          "sellable": false,
+          "tradeable": false,
+          "death_satchel": false,
+          "protected_key": true,
+          "scope": "character"
+        }
+      }
+    },
+    {
+      "path": "items.rootiron_ingot",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Rootiron Ingot",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#a6a076",
+          "icon": "res://assets/ui/icons/items/stone.png",
+          "blurb": "Meadows metal refined at the Forge for Rootiron gear.",
+          "description": "Refined from Rootstone and Ironwood. A Meadows tier material used to craft gear at the homestead."
+        }
+      }
+    },
+    {
+      "path": "items.seed_air",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Galebloom Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#b5d6b9",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Galebloom at the Farm for air ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Galebloom grows as in-game days pass; pick it by hand when ripe."
+        }
+      }
+    },
+    {
+      "path": "items.seed_dark",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Duskcap Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#9b88b8",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Duskcap at the Farm for dark ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Duskcap grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+        }
+      }
+    },
+    {
+      "path": "items.seed_electric",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Sparkstem Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#e5cb73",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Sparkstem at the Farm for electric ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Sparkstem grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+        }
+      }
+    },
+    {
+      "path": "items.seed_fire",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Emberbloom Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#e79b60",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Emberbloom at the Farm for fire ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Emberbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+        }
+      }
+    },
+    {
+      "path": "items.seed_ground",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Rootbud Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#b39b68",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Rootbud at the Farm for ground ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Rootbud grows as in-game days pass; pick it by hand when ripe."
+        }
+      }
+    },
+    {
+      "path": "items.seed_ice",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Frostbloom Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#a6d9dd",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Frostbloom at the Farm for ice ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Frostbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+        }
+      }
+    },
+    {
+      "path": "items.seed_psychic",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Mindleaf Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#c6a2d6",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Mindleaf at the Farm for psychic ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Mindleaf grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+        }
+      }
+    },
+    {
+      "path": "items.seed_water",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Tidebud Seeds",
+          "kind": "resource",
+          "stack": 50,
+          "colour": "#66b8d9",
+          "icon": "res://assets/ui/icons/items/berries.png",
+          "blurb": "Sow Tidebud at the Farm for water ingredients and essence.",
+          "description": "Plant by hand in a tilled homestead plot. Tidebud grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+        }
+      }
+    },
+    {
+      "path": "items.skyglass_ingot",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Skyglass Ingot",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#b4cadc",
+          "icon": "res://assets/ui/icons/items/stone.png",
+          "blurb": "Cloudreach glass refined at the Forge for Skyglass gear.",
+          "description": "Refined from Cliffglass Ore and Windworn Heartwood. A Cloudreach tier material used to craft gear at the homestead."
+        }
+      }
+    },
+    {
+      "path": "items.stoneguard_brew.world_model",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": "res://assets/props/stat_draughts/stoneguard_brew.tscn"
+      }
+    },
+    {
+      "path": "items.stoneguard_brew.world_model_grounded",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": true
+      }
+    },
+    {
+      "path": "items.stoneguard_brew.world_model_reward_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 1.0
+      }
+    },
+    {
+      "path": "items.stoneguard_brew.world_model_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 0.8
+      }
+    },
+    {
+      "path": "items.stormglass_plate",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Stormglass Plate",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#b6add2",
+          "icon": "res://assets/ui/icons/items/stone.png",
+          "blurb": "Stormwood glass refined at the Forge for Stormglass gear.",
+          "description": "Refined from Stormglass and Thunderwood. A Stormwood tier material used to craft gear at the homestead."
+        }
+      }
+    },
+    {
+      "path": "items.stormwood_portal_key",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Stormwood Portal Key",
+          "kind": "key",
+          "stack": 1,
+          "colour": "#b5a9e2",
+          "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+          "blurb": "Opens the Stormwood arch in the Crossing Hall.",
+          "description": "Earned by a participant in the Cloudreach climax. Used once at the Stormwood arch; its unlock follows your character.",
+          "portal_biome": "stormwood",
+          "droppable": false,
+          "sellable": false,
+          "tradeable": false,
+          "death_satchel": false,
+          "protected_key": true,
+          "scope": "character"
+        }
+      }
+    },
+    {
+      "path": "items.swift_tonic.world_model",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": "res://assets/props/stat_draughts/swift_tonic.tscn"
+      }
+    },
+    {
+      "path": "items.swift_tonic.world_model_grounded",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": true
+      }
+    },
+    {
+      "path": "items.swift_tonic.world_model_reward_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 1.0
+      }
+    },
+    {
+      "path": "items.swift_tonic.world_model_scale",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": 0.8
+      }
+    },
+    {
+      "path": "items.tide_pearl",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Tide Pearl",
+          "kind": "resource",
+          "stack": 30,
+          "colour": "#b4d6dc",
+          "icon": "res://assets/ui/icons/items/stone.png",
+          "blurb": "A smooth pearl gathered in Tidewake for homestead crafts.",
+          "description": "A pearl found in Tidewake's shallows. Used at the homestead to make Pearl charms. Gathered by hand."
+        }
+      }
+    },
+    {
+      "path": "items.tidesteel_ingot",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Tidesteel Ingot",
+          "kind": "material",
+          "stack": 50,
+          "colour": "#83b9ba",
+          "icon": "res://assets/ui/icons/items/stone.png",
+          "blurb": "Tidewake metal refined at the Forge for Tidesteel gear.",
+          "description": "Refined from Sluice Metal and Reef Stone. A Tidewake tier material used to craft gear at the homestead."
+        }
+      }
+    },
+    {
+      "path": "items.tidewake_portal_key",
+      "foundation": {
+        "absent": true
+      },
+      "integration": {
+        "value": {
+          "name": "Tidewake Portal Key",
+          "kind": "key",
+          "stack": 1,
+          "colour": "#69bfc5",
+          "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+          "blurb": "Opens the Tidewake arch in the Crossing Hall.",
+          "description": "Earned by a participant in the Meadows climax. Used once at the Tidewake arch; its unlock follows your character.",
+          "portal_biome": "tidewake",
+          "droppable": false,
+          "sellable": false,
+          "tradeable": false,
+          "death_satchel": false,
+          "protected_key": true,
+          "scope": "character"
+        }
+      }
+    }
+  ],
+  "foundation_only_items": [],
+  "integration_only_items": [
+    "attuned_air",
+    "attuned_dark",
+    "attuned_electric",
+    "attuned_fire",
+    "attuned_ground",
+    "attuned_ice",
+    "attuned_psychic",
+    "attuned_water",
+    "cloudreach_portal_key",
+    "fifth_portal_key",
+    "home_key",
+    "rootiron_ingot",
+    "seed_air",
+    "seed_dark",
+    "seed_electric",
+    "seed_fire",
+    "seed_ground",
+    "seed_ice",
+    "seed_psychic",
+    "seed_water",
+    "skyglass_ingot",
+    "stormglass_plate",
+    "stormwood_portal_key",
+    "tide_pearl",
+    "tidesteel_ingot",
+    "tidewake_portal_key"
+  ],
+  "disposition": "Integration already preserves 155 identities (Foundation base has 129). Use exact integration document and retain all scalar wording/model metadata. Only allocated two TM fields differ from integration."
+}

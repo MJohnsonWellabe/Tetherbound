@@ -23,7 +23,9 @@
       "aggressive": false,
       "moves": {
         "quick": "pebble_toss",
-        "charged": "stone_rush"
+        "charged": "stone_rush",
+        "utility": "",
+        "ultimate": "ultimate_terrapup"
       },
       "best_creature": {
         "id": "shell_guard",
@@ -57,11 +59,25 @@
           "max_height_ratio": 0.85,
           "min_ground_offset_m": -0.22,
           "max_ground_offset_m": 0.08,
-          "max_torso_contact_offset_m": 0.20,
-          "model_rotation_deg": [0.0, 0.0, 0.0],
-          "model_position_offset": [0.0, 1.0302, 0.0],
+          "max_torso_contact_offset_m": 0.2,
+          "model_rotation_deg": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "model_position_offset": [
+            0.0,
+            1.0302,
+            0.0
+          ],
           "bones": {
-            "root": {"rotation_deg": [0.0, 0.0, 0.0]}
+            "root": {
+              "rotation_deg": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            }
           }
         },
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
@@ -85,7 +101,8 @@
         "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
         "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
         "_comment_role": "Your partner, and therefore the one that must never be lost in a frame \u2014 so it gets the most saturated character in the pack."
-      }
+      },
+      "learnset": "terrapup"
     },
     "ripplet": {
       "display_name": "Ripplet",
@@ -99,7 +116,9 @@
       "aggressive": false,
       "moves": {
         "quick": "ripple_jab",
-        "charged": "undertow"
+        "charged": "undertow",
+        "utility": "",
+        "ultimate": "ultimate_ripplet"
       },
       "best_creature": {
         "id": "riptide_focus",
@@ -126,7 +145,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "ripplet"
     },
     "galewisp": {
       "display_name": "Galewisp",
@@ -140,7 +160,9 @@
       "aggressive": false,
       "moves": {
         "quick": "gale_peck",
-        "charged": "sky_rend"
+        "charged": "sky_rend",
+        "utility": "",
+        "ultimate": "ultimate_galewisp"
       },
       "wind": {
         "_comment": "Light reserve, fast recovery: Galewisp can keep moving but must pace repeated commitments.",
@@ -172,7 +194,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "galewisp"
     },
     "bramblebun": {
       "display_name": "Bramblebun",
@@ -186,7 +209,9 @@
       "aggressive": false,
       "moves": {
         "quick": "bramble_whip",
-        "charged": "warren_charge"
+        "charged": "warren_charge",
+        "utility": "",
+        "ultimate": "ultimate_ground_current"
       },
       "best_creature": {
         "id": "bramble_ward",
@@ -225,7 +250,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "bramblebun"
     },
     "mudsnout": {
       "display_name": "Mudsnout",
@@ -244,7 +270,9 @@
       "_comment_evolution": "R4.6: the evolution SYSTEM is real now (scripts/creatures/evolution.gd), gated by data/config/progression.json's `evolution.mudsnout` block (level/bond/item). `evolves_into` is what that block's `target` resolves through when no variant applies. D71/T3-SUNSTONE: the owner directed a second destination -- 'evolve a Mudsnout using [a sunstone] to get the Ashtusk' -- so `evolves_into_variants` (item_id -> target) sits BESIDE `evolves_into` rather than replacing it with a map. That is deliberate, not a shortcut: progression.json's evolution.mudsnout block and every case in tests/test_evolution.gd already assume `evolves_into` is a single string, and the Heartstone->Tuskroot path needed zero changes to keep working exactly as before -- see ralph/reports/SUNSTONE_DESIGN_2026-08-30.md for why replacing the string with a map was rejected. `evolution.gd::requirements()` picks a branch by which catalyst the player is actually holding; holding neither keeps `evolves_into`'s target as the reported default, holding both refuses with a reason naming the ambiguity rather than silently choosing.",
       "moves": {
         "quick": "root_nibble",
-        "charged": "rootquake"
+        "charged": "rootquake",
+        "utility": "",
+        "ultimate": "ultimate_ground_wall"
       },
       "best_creature": {
         "id": "root_instinct",
@@ -272,7 +300,10 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "mudsnout",
+      "evolution_breaks_level": 20,
+      "evolution_trigger": "breakthrough_feast"
     },
     "trailpup": {
       "display_name": "Trailpup",
@@ -285,7 +316,9 @@
       "aggressive": false,
       "moves": {
         "quick": "pack_bite",
-        "charged": "trailblaze_pounce"
+        "charged": "trailblaze_pounce",
+        "utility": "",
+        "ultimate": "ultimate_ground_charger"
       },
       "best_creature": {
         "id": "trail_drive",
@@ -312,7 +345,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "trailpup"
     },
     "burrowback": {
       "display_name": "Burrowback",
@@ -325,7 +359,9 @@
       "aggressive": false,
       "moves": {
         "quick": "burrow_strike",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_ground_wall"
       },
       "best_creature": {
         "id": "burrow_plating",
@@ -365,7 +401,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "burrowback"
     },
     "meadowhart": {
       "display_name": "Meadowhart",
@@ -378,7 +415,9 @@
       "aggressive": false,
       "moves": {
         "quick": "hoofbeat",
-        "charged": "verdant_burst"
+        "charged": "verdant_burst",
+        "utility": "",
+        "ultimate": "ultimate_ground_diver"
       },
       "best_creature": {
         "id": "steady_heart",
@@ -405,7 +444,11 @@
           "knee_forward_m": 0.22,
           "stirrup_forward_m": 0.03,
           "limb_radius_m": 0.095,
-          "boot_size_m": [0.16, 0.16, 0.27],
+          "boot_size_m": [
+            0.16,
+            0.16,
+            0.27
+          ],
           "trouser_colour": "#52677d",
           "boot_colour": "#593823"
         },
@@ -431,7 +474,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "meadowhart"
     },
     "tuskroot": {
       "display_name": "Tuskroot",
@@ -446,7 +490,9 @@
       "_comment_evolution": "Tuskroot is no longer a base creature you meet in the wild \u2014 the owner's Meadows Wild Canon Pack makes it the evolved form of Mudsnout, and the ONLY evolution in the biome (docs/decisions/D13). R4.6 built the evolution SYSTEM (scripts/creatures/evolution.gd, data/config/progression.json's `evolution` block); a caught Mudsnout can now actually become this. The pair's heights (Mudsnout 0.95m -> Tuskroot 2.15m after D69's widening) are held apart by D17 and tests/test_evolution_links.gd: the evolved form must always be the larger one.",
       "moves": {
         "quick": "root_nibble",
-        "charged": "rootquake"
+        "charged": "rootquake",
+        "utility": "",
+        "ultimate": "ultimate_tuskroot"
       },
       "best_creature": {
         "id": "tusk_momentum",
@@ -483,7 +529,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "tuskroot"
     },
     "paddlenewt": {
       "display_name": "Paddlenewt",
@@ -496,7 +543,9 @@
       "aggressive": false,
       "moves": {
         "quick": "splash_snap",
-        "charged": "riptide_rush"
+        "charged": "riptide_rush",
+        "utility": "",
+        "ultimate": "ultimate_water_current"
       },
       "best_creature": {
         "id": "paddle_surge",
@@ -522,7 +571,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "paddlenewt"
     },
     "mosshell": {
       "display_name": "Mosshell",
@@ -535,7 +585,9 @@
       "aggressive": false,
       "moves": {
         "quick": "shell_bash",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_water_wall"
       },
       "wind": {
         "_comment": "Deep reserve, slow recovery: the inverse of Galewisp's Wind profile.",
@@ -565,7 +617,11 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "mosshell",
+      "evolves_into": "cannonback",
+      "evolution_breaks_level": 30,
+      "evolution_trigger": "breakthrough_feast"
     },
     "brooktail": {
       "display_name": "Brooktail",
@@ -578,7 +634,9 @@
       "aggressive": false,
       "moves": {
         "quick": "tail_splash",
-        "charged": "riptide_rush"
+        "charged": "riptide_rush",
+        "utility": "",
+        "ultimate": "ultimate_water_charger"
       },
       "best_creature": {
         "id": "brook_current",
@@ -603,7 +661,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "brooktail"
     },
     "galecrest": {
       "display_name": "Galecrest",
@@ -616,7 +675,9 @@
       "aggressive": true,
       "moves": {
         "quick": "talon_dive",
-        "charged": "storm_strike"
+        "charged": "storm_strike",
+        "utility": "",
+        "ultimate": "ultimate_air_charger"
       },
       "best_creature": {
         "id": "storm_instinct",
@@ -644,7 +705,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "galecrest"
     },
     "duskhush": {
       "display_name": "Duskhush",
@@ -657,7 +719,9 @@
       "aggressive": false,
       "moves": {
         "quick": "quick_flit",
-        "charged": "night_swoop"
+        "charged": "night_swoop",
+        "utility": "",
+        "ultimate": "ultimate_air_diver"
       },
       "best_creature": {
         "id": "dusk_veil",
@@ -683,7 +747,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "duskhush"
     },
     "pipwing": {
       "display_name": "Pipwing",
@@ -697,7 +762,9 @@
       "aggressive": false,
       "moves": {
         "quick": "quick_flit",
-        "charged": "gust_burst"
+        "charged": "gust_burst",
+        "utility": "",
+        "ultimate": "ultimate_air_charger"
       },
       "best_creature": {
         "id": "quickwing_flutter",
@@ -724,7 +791,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "pipwing"
     },
     "reedwing": {
       "display_name": "Reedwing",
@@ -738,7 +806,9 @@
       "aggressive": false,
       "moves": {
         "quick": "tail_splash",
-        "charged": "sky_rend"
+        "charged": "sky_rend",
+        "utility": "",
+        "ultimate": "ultimate_water_current"
       },
       "best_creature": {
         "id": "reed_glide",
@@ -764,7 +834,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "reedwing"
     },
     "veridian": {
       "display_name": "Veridian Stag",
@@ -778,7 +849,9 @@
       "aggressive": true,
       "moves": {
         "quick": "hoofbeat",
-        "charged": "antler_slam"
+        "charged": "antler_slam",
+        "utility": "",
+        "ultimate": "ultimate_veridian"
       },
       "best_creature": {
         "id": "antler_bulwark",
@@ -819,7 +892,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "veridian"
     },
     "nightburrow": {
       "display_name": "Nightburrow",
@@ -835,7 +909,9 @@
       "aggressive": true,
       "moves": {
         "quick": "burrow_strike",
-        "charged": "gloom_surge"
+        "charged": "gloom_surge",
+        "utility": "",
+        "ultimate": "ultimate_ground_diver"
       },
       "best_creature": {
         "id": "shadowplate",
@@ -862,7 +938,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "nightburrow"
     },
     "stormtrail": {
       "display_name": "Stormtrail",
@@ -878,7 +955,9 @@
       "aggressive": true,
       "moves": {
         "quick": "spark_bite",
-        "charged": "trailblaze_pounce"
+        "charged": "trailblaze_pounce",
+        "utility": "",
+        "ultimate": "ultimate_ground_charger"
       },
       "best_creature": {
         "id": "storm_charge",
@@ -905,7 +984,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "stormtrail"
     },
     "riftfrill": {
       "display_name": "Riftfrill",
@@ -921,7 +1001,9 @@
       "aggressive": false,
       "moves": {
         "quick": "splash_snap",
-        "charged": "rift_pulse"
+        "charged": "rift_pulse",
+        "utility": "",
+        "ultimate": "ultimate_water_current"
       },
       "best_creature": {
         "id": "rift_focus",
@@ -948,7 +1030,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "riftfrill"
     },
     "ashtusk": {
       "display_name": "Ashtusk",
@@ -967,7 +1050,9 @@
       "aggressive": true,
       "moves": {
         "quick": "ember_bite",
-        "charged": "rootquake"
+        "charged": "rootquake",
+        "utility": "",
+        "ultimate": "ultimate_ashtusk"
       },
       "best_creature": {
         "id": "basalt_hide",
@@ -994,7 +1079,8 @@
           "hit": "hit",
           "faint": "faint"
         }
-      }
+      },
+      "learnset": "ashtusk"
     },
     "sparkit": {
       "display_name": "Sparkit",
@@ -1007,7 +1093,9 @@
       "aggressive": false,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_charger"
       },
       "best_creature": {
         "id": "static_charge",
@@ -1031,7 +1119,8 @@
           "faint": "faint"
         },
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
-      }
+      },
+      "learnset": "sparkit"
     },
     "cindercub": {
       "display_name": "Cindercub",
@@ -1045,7 +1134,9 @@
       "aggressive": false,
       "moves": {
         "quick": "ember_bite",
-        "charged": "rootquake"
+        "charged": "rootquake",
+        "utility": "",
+        "ultimate": "ultimate_fire_wall"
       },
       "best_creature": {
         "id": "ember_hide",
@@ -1069,7 +1160,8 @@
           "faint": "faint"
         },
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
-      }
+      },
+      "learnset": "cindercub"
     },
     "shadelet": {
       "display_name": "Shadelet",
@@ -1082,7 +1174,9 @@
       "aggressive": false,
       "moves": {
         "quick": "shadow_nip",
-        "charged": "gloom_surge"
+        "charged": "gloom_surge",
+        "utility": "",
+        "ultimate": "ultimate_dark_diver"
       },
       "best_creature": {
         "id": "shadow_step",
@@ -1106,7 +1200,8 @@
           "faint": "faint"
         },
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
-      }
+      },
+      "learnset": "shadelet"
     },
     "frostclaw": {
       "display_name": "Frostclaw",
@@ -1119,7 +1214,9 @@
       "aggressive": true,
       "moves": {
         "quick": "frost_claw",
-        "charged": "glacier_break"
+        "charged": "glacier_break",
+        "utility": "",
+        "ultimate": "ultimate_ice_current"
       },
       "best_creature": {
         "id": "cold_burst",
@@ -1143,7 +1240,8 @@
           "faint": "faint"
         },
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
-      }
+      },
+      "learnset": "frostclaw"
     },
     "cannonback": {
       "display_name": "Cannonback",
@@ -1155,7 +1253,9 @@
       "aggressive": false,
       "moves": {
         "quick": "splash_snap",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_cannonback"
       },
       "best_creature": {
         "id": "cannonback_edge",
@@ -1179,7 +1279,11 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "cannonback",
+      "evolution_source": "mosshell",
+      "wild_evolution_form": true,
+      "evolves_from": "mosshell"
     },
     "riptusk": {
       "display_name": "Riptusk",
@@ -1191,7 +1295,9 @@
       "aggressive": true,
       "moves": {
         "quick": "splash_snap",
-        "charged": "undertow"
+        "charged": "undertow",
+        "utility": "",
+        "ultimate": "ultimate_water_wall"
       },
       "best_creature": {
         "id": "riptusk_edge",
@@ -1215,7 +1321,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "riptusk"
     },
     "mirejaw": {
       "display_name": "Mirejaw",
@@ -1227,7 +1334,9 @@
       "aggressive": true,
       "moves": {
         "quick": "ripple_jab",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_water_diver"
       },
       "best_creature": {
         "id": "mirejaw_edge",
@@ -1251,7 +1360,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "mirejaw"
     },
     "aquaryn": {
       "display_name": "Aquaryn",
@@ -1263,7 +1373,9 @@
       "aggressive": false,
       "moves": {
         "quick": "ripple_jab",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_water_charger"
       },
       "best_creature": {
         "id": "aquaryn_edge",
@@ -1287,7 +1399,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: the model itself succeeded after 2 redos (a crop bug fed the wrong section of the reference board, causing a floating leg then a multi-leg pileup before a correctly-cropped board fixed it), but rig_quadruped.py's bone-heat weighting then failed to converge on the corrected mesh (100% of vertices left unweighted). Fixed via strip_textures.py -> cleanup_mesh.py (voxel-remesh to one manifold donor) -> rig_quadruped.py on the clean donor (0 unweighted) -> skin_transfer.py (nearest-face weight transfer onto the real textured mesh, 0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "aquaryn"
     },
     "torrentoad": {
       "display_name": "Torrentoad",
@@ -1299,7 +1412,9 @@
       "aggressive": false,
       "moves": {
         "quick": "splash_snap",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_water_charger"
       },
       "best_creature": {
         "id": "torrentoad_edge",
@@ -1325,7 +1440,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "torrentoad"
     },
     "cragclaw": {
       "display_name": "Cragclaw",
@@ -1337,7 +1453,9 @@
       "aggressive": false,
       "moves": {
         "quick": "shell_bash",
-        "charged": "undertow"
+        "charged": "undertow",
+        "utility": "",
+        "ultimate": "ultimate_water_wall"
       },
       "best_creature": {
         "id": "cragclaw_edge",
@@ -1361,7 +1479,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "cragclaw"
     },
     "riverdrake": {
       "display_name": "Riverdrake",
@@ -1373,7 +1492,9 @@
       "aggressive": true,
       "moves": {
         "quick": "ripple_jab",
-        "charged": "riptide_rush"
+        "charged": "riptide_rush",
+        "utility": "",
+        "ultimate": "ultimate_water_charger"
       },
       "best_creature": {
         "id": "riverdrake_edge",
@@ -1397,7 +1518,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "riverdrake"
     },
     "sirenseal": {
       "display_name": "Sirenseal",
@@ -1409,7 +1531,9 @@
       "aggressive": false,
       "moves": {
         "quick": "splash_snap",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_water_current"
       },
       "best_creature": {
         "id": "sirenseal_edge",
@@ -1433,7 +1557,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "sirenseal"
     },
     "mangrove_monitor": {
       "display_name": "Mangrove Monitor",
@@ -1445,7 +1570,9 @@
       "aggressive": true,
       "moves": {
         "quick": "ripple_jab",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_water_charger"
       },
       "best_creature": {
         "id": "mangrove_monitor_edge",
@@ -1469,7 +1596,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "mangrove_monitor"
     },
     "tidecoil": {
       "display_name": "Tidecoil",
@@ -1481,7 +1609,9 @@
       "aggressive": true,
       "moves": {
         "quick": "ripple_jab",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_water_current"
       },
       "best_creature": {
         "id": "tidecoil_edge",
@@ -1505,7 +1635,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "tidecoil"
     },
     "abyssal_guardian": {
       "display_name": "Abyssal Guardian",
@@ -1517,7 +1648,9 @@
       "aggressive": true,
       "moves": {
         "quick": "splash_snap",
-        "charged": "tremor_roll"
+        "charged": "tremor_roll",
+        "utility": "",
+        "ultimate": "ultimate_abyssal_guardian"
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1541,7 +1674,8 @@
         "id": "legendary_presence",
         "kind": "prestige",
         "value": 0.3
-      }
+      },
+      "learnset": "abyssal_guardian"
     },
     "voltwig": {
       "display_name": "Voltwig",
@@ -1553,7 +1687,9 @@
       "aggressive": false,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_current"
       },
       "best_creature": {
         "id": "voltwig_edge",
@@ -1577,7 +1713,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "voltwig"
     },
     "mosshock": {
       "display_name": "Mosshock",
@@ -1589,7 +1726,9 @@
       "aggressive": false,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_diver"
       },
       "best_creature": {
         "id": "mosshock_edge",
@@ -1614,7 +1753,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "mosshock"
     },
     "staticub": {
       "display_name": "Staticub",
@@ -1626,7 +1766,9 @@
       "aggressive": false,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_wall"
       },
       "best_creature": {
         "id": "staticub_edge",
@@ -1650,7 +1792,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "staticub"
     },
     "voltarach": {
       "display_name": "Voltarach",
@@ -1662,7 +1805,9 @@
       "aggressive": true,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_wall"
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1686,7 +1831,8 @@
         "id": "alpha_dominance",
         "kind": "prestige",
         "value": 0.2
-      }
+      },
+      "learnset": "voltarach"
     },
     "fulgocobra": {
       "display_name": "Fulgocobra",
@@ -1698,7 +1844,9 @@
       "aggressive": true,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_fulgocobra"
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -1722,7 +1870,8 @@
         "id": "legendary_presence",
         "kind": "prestige",
         "value": 0.3
-      }
+      },
+      "learnset": "fulgocobra"
     },
     "stormraven": {
       "display_name": "Stormraven",
@@ -1734,7 +1883,9 @@
       "aggressive": true,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_charger"
       },
       "best_creature": {
         "id": "stormraven_edge",
@@ -1758,7 +1909,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "stormraven"
     },
     "pebbik": {
       "display_name": "Pebbik",
@@ -1770,7 +1922,9 @@
       "aggressive": false,
       "moves": {
         "quick": "talon_dive",
-        "charged": "gust_burst"
+        "charged": "gust_burst",
+        "utility": "",
+        "ultimate": "ultimate_air_current"
       },
       "best_creature": {
         "id": "pebbik_edge",
@@ -1794,7 +1948,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "pebbik"
     },
     "craghorn": {
       "display_name": "Craghorn",
@@ -1806,7 +1961,9 @@
       "aggressive": false,
       "moves": {
         "quick": "gale_peck",
-        "charged": "sky_rend"
+        "charged": "sky_rend",
+        "utility": "",
+        "ultimate": "ultimate_air_wall"
       },
       "best_creature": {
         "id": "craghorn_edge",
@@ -1830,7 +1987,11 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "craghorn",
+      "evolves_into": "stormcapra",
+      "evolution_breaks_level": 40,
+      "evolution_trigger": "breakthrough_feast"
     },
     "stormbrush": {
       "display_name": "Stormbrush",
@@ -1842,7 +2003,9 @@
       "aggressive": false,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_current"
       },
       "best_creature": {
         "id": "stormbrush_edge",
@@ -1866,7 +2029,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: modelled and reviewed clean earlier, but rig_quadruped.py's bone-heat weighting failed to converge on the raw retexture output (100% of vertices left unweighted -- the mesh rigged without erroring but every vertex was flagged as unweighted, which tears on the first animation frame). Fixed via strip_textures.py (drop texture nodes to get a rigging donor) -> cleanup_mesh.py (voxel-remesh to one manifold donor; the default --voxel-divisor 220 still failed 100% unweighted, --voxel-divisor 110 succeeded at 0 unweighted -- the dense spiky geometry needed a coarser voxel) -> rig_quadruped.py on the clean donor -> skin_transfer.py (nearest-face weight transfer onto the real textured mesh, 0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable (no tearing at the joints) before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "stormbrush"
     },
     "tanglevolt": {
       "display_name": "Tanglevolt",
@@ -1878,7 +2042,9 @@
       "aggressive": true,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_current"
       },
       "best_creature": {
         "id": "tanglevolt_edge",
@@ -1902,7 +2068,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: same failure and fix as stormbrush's comment above -- rig_quadruped.py's bone-heat weighting left 100% of vertices unweighted on the raw mesh; strip_textures.py -> cleanup_mesh.py (clean manifold donor) -> rig_quadruped.py on the donor (0 unweighted) -> skin_transfer.py onto the real textured mesh (0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "tanglevolt"
     },
     "thundertunnel": {
       "display_name": "Thundertunnel",
@@ -1914,7 +2081,9 @@
       "aggressive": false,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_wall"
       },
       "best_creature": {
         "id": "thundertunnel_edge",
@@ -1938,7 +2107,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: took 4 model generations to land (the first two produced a duplicated/fused second body, traced to a reference crop that grabbed the whole multi-mole turnaround panel instead of one isolated creature; a 4th generation from a better-cropped board, requested by the owner, fixed the duplication). Same bone-heat failure and fix chain as stormbrush -- 100% unweighted on the raw mesh, --voxel-divisor 220 cleanup still failed 100% unweighted, --voxel-divisor 110 succeeded at 0 unweighted -- then skin_transfer.py onto the real textured mesh (0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable (single coherent body, no tearing) before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "thundertunnel"
     },
     "glimmermoth": {
       "display_name": "Glimmermoth",
@@ -1950,7 +2120,9 @@
       "aggressive": false,
       "moves": {
         "quick": "spark_bite",
-        "charged": "arc_lash"
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_electric_diver"
       },
       "best_creature": {
         "id": "glimmermoth_edge",
@@ -1974,7 +2146,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: modelled and reviewed clean earlier, but rig_quadruped.py refuses this body plan outright (a compact insect torso with 4 legs, 2 wings and 2 antennae doesn't separate into the 4 clean leg-quadrant clusters the script requires, so it exits rather than guessing). Fixed by rigging with rig_glider.py instead, directly on the mesh -- 0.1% unweighted, judged negligible and left as-is rather than chasing the last fraction of a vertex -- then animate_quadruped.py, which already auto-detects a glider skeleton by bone name and produced clips with no new animator script needed. Verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "glimmermoth"
     },
     "stormcapra": {
       "display_name": "Stormcapra",
@@ -1986,7 +2159,9 @@
       "aggressive": true,
       "moves": {
         "quick": "gale_peck",
-        "charged": "storm_strike"
+        "charged": "storm_strike",
+        "utility": "",
+        "ultimate": "ultimate_stormcapra"
       },
       "best_creature": {
         "id": "stormcapra_edge",
@@ -2010,7 +2185,11 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "stormcapra",
+      "evolution_source": "craghorn",
+      "wild_evolution_form": true,
+      "evolves_from": "craghorn"
     },
     "skyrill": {
       "display_name": "Skyrill",
@@ -2022,7 +2201,9 @@
       "aggressive": false,
       "moves": {
         "quick": "talon_dive",
-        "charged": "night_swoop"
+        "charged": "night_swoop",
+        "utility": "",
+        "ultimate": "ultimate_air_charger"
       },
       "best_creature": {
         "id": "skyrill_edge",
@@ -2046,7 +2227,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "skyrill"
     },
     "aeriex": {
       "display_name": "Aeriex",
@@ -2058,7 +2240,9 @@
       "aggressive": false,
       "moves": {
         "quick": "gale_peck",
-        "charged": "storm_strike"
+        "charged": "storm_strike",
+        "utility": "",
+        "ultimate": "ultimate_air_charger"
       },
       "best_creature": {
         "id": "aeriex_edge",
@@ -2082,7 +2266,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "aeriex"
     },
     "ribbonray": {
       "display_name": "Ribbonray",
@@ -2094,7 +2279,9 @@
       "aggressive": false,
       "moves": {
         "quick": "talon_dive",
-        "charged": "gust_burst"
+        "charged": "gust_burst",
+        "utility": "",
+        "ultimate": "ultimate_air_current"
       },
       "best_creature": {
         "id": "ribbonray_edge",
@@ -2118,7 +2305,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "ribbonray"
     },
     "breezetail": {
       "display_name": "Breezetail",
@@ -2130,7 +2318,9 @@
       "aggressive": false,
       "moves": {
         "quick": "gale_peck",
-        "charged": "storm_strike"
+        "charged": "storm_strike",
+        "utility": "",
+        "ultimate": "ultimate_air_current"
       },
       "best_creature": {
         "id": "breezetail_edge",
@@ -2154,7 +2344,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "breezetail"
     },
     "cloudfang": {
       "display_name": "Cloudfang",
@@ -2166,7 +2357,9 @@
       "aggressive": true,
       "moves": {
         "quick": "quick_flit",
-        "charged": "sky_rend"
+        "charged": "sky_rend",
+        "utility": "",
+        "ultimate": "ultimate_air_diver"
       },
       "best_creature": {
         "id": "cloudfang_edge",
@@ -2190,7 +2383,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "cloudfang"
     },
     "cliffspike": {
       "display_name": "Cliffspike",
@@ -2202,7 +2396,9 @@
       "aggressive": false,
       "moves": {
         "quick": "quick_flit",
-        "charged": "storm_strike"
+        "charged": "storm_strike",
+        "utility": "",
+        "ultimate": "ultimate_air_wall"
       },
       "best_creature": {
         "id": "cliffspike_edge",
@@ -2226,7 +2422,8 @@
           "faint": "faint"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
-      }
+      },
+      "learnset": "cliffspike"
     },
     "tempestwing": {
       "display_name": "Tempestwing",
@@ -2238,7 +2435,9 @@
       "aggressive": true,
       "moves": {
         "quick": "quick_flit",
-        "charged": "gust_burst"
+        "charged": "gust_burst",
+        "utility": "",
+        "ultimate": "ultimate_air_current"
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -2262,7 +2461,8 @@
         "id": "alpha_dominance",
         "kind": "prestige",
         "value": 0.2
-      }
+      },
+      "learnset": "tempestwing"
     },
     "solmane": {
       "display_name": "Solmane",
@@ -2274,7 +2474,9 @@
       "aggressive": false,
       "moves": {
         "quick": "quick_flit",
-        "charged": "sky_rend"
+        "charged": "sky_rend",
+        "utility": "",
+        "ultimate": "ultimate_solmane"
       },
       "placeholder": {
         "colour": "#8899aa",
@@ -2298,7 +2500,8 @@
         "id": "legendary_presence",
         "kind": "prestige",
         "value": 0.3
-      }
+      },
+      "learnset": "solmane"
     }
   },
   "_comment_aspect_variants": "T3-CREATURES, from docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md and the ten reference boards in docs/art/reference/creature-expansion-2026-08-30/. The four entries below are ASPECT VARIANTS -- the brief's own third category, kept deliberately separate from the other two (its 'Shiny vs Alpha vs Elemental Variant' section). A SHINY is the same species with the same typing and a rare colourway and MUST NEVER change typing; that stays data/creatures/shiny_colourways.json and encounter_director's shiny draw, both untouched by this lane. An ALPHA is an exceptional INDIVIDUAL of a species, bigger and higher-level, and stays the per-cluster `alpha` block on a spawns.json entry. An ASPECT variant is a creature whose environmental exposure changed its TYPING and its appearance -- and typing is a species-table property in this build, read by creature_instance.from_species from here and nowhere else, so an aspect variant has to be a row in this table. `variant_of` records the canon claim the brief makes ('This is NOT a new species unless later decided otherwise... internally it may remain a Paddlenewt variant'): these are the same animal, and that field is what a codex, a research log, or a later decision to merge one back into its base species would read. Two of the four are ALSO alphas exactly as the brief directs (Nightburrow, Stormtrail), and that is expressed the ordinary way -- their spawn entries carry an `alpha` block -- so the two concepts compose instead of colliding. All four reuse their base species' MESH on purpose. The other five creatures in the brief need meshes that do not exist yet and are deliberately NOT in this table, because smoke_art.gd requires every entry here to name a model that exists (this file's own _comment_wild_roster already states that rule); they are authored in full in data/creatures/species_pending.json, which nothing loads.",

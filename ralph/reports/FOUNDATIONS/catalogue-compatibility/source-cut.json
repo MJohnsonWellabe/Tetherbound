@@ -1,0 +1,108 @@
+{
+  "foundation_parent": "f6ecb0569b6aa6def4c9689359c761bb83d2f079",
+  "integration_source": "4ce1d9130a8f691b5780234ec546673a703615e6",
+  "integration_species_blob": "35b3f5435f05ffbb71bcc00ea1525c2aad878fea",
+  "f23_candidate_origin": "14f09e26c3b94638dd88fb1bf48feb0b61a77061",
+  "f23_species_blob": "35b3f5435f05ffbb71bcc00ea1525c2aad878fea",
+  "files": [
+    {
+      "path": "data/creatures/species.json",
+      "before_sha256": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+      "after_sha256": "e8b8bf8ab07818952a2261d552540a94a14549e7661a27d8a86f182eb0caa968"
+    },
+    {
+      "path": "data/items/items.json",
+      "before_sha256": "ed308f6ac59e57881a3fcecada032fb6d3e69e3b4711cbdf56b08ceda9fe8324",
+      "after_sha256": "bcf67b7bdf175885eb2891c5facf43f8bcbd110fec75f7a2cfa534b0d5354fc0"
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormursa/source/species_candidate.json",
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "7fd90a436b73ed76d109596505024426354c156ab9aaa2daa691bbfd5d14a353"
+    }
+  ],
+  "preserved_integrated_dependencies": [
+    {
+      "path": "assets/creatures/tetherbound/stormursa/source/provenance.json",
+      "sha256": "a8955bd8687f54a0b51bf0bf12920dae3437cc81f3b48c1c086fcbade0097fee",
+      "blob_oid": "fe1143d88142a6285b1980b52c09c1c6bcac224a"
+    },
+    {
+      "path": "assets/creatures/tetherbound/stormursa/source/reference_brief.json",
+      "sha256": "fc26cb8b0a3f744883a02af63c51e4e25f5beea9bffe86e53bf4f3db587963fc",
+      "blob_oid": "eb533be00e4edce8bab2919bbec083a0bff25e89"
+    },
+    {
+      "path": "assets/props/tm_orb/tm_orb.glb",
+      "sha256": "f1c578b3e74c3bb1de3344ba484c94a1551cb39ddf4ec1b28238ea47a561060e",
+      "blob_oid": "6eeb5668a2ca18c457c58e3878d10e50b55bfbd3"
+    },
+    {
+      "path": "data/config/combat.json",
+      "sha256": "cbbc3558e81f0b66e1137400d3e7e52bc1c05774ff0cd694ef6cb5af64edab73",
+      "blob_oid": "75b60568b078b47a488fef0cd9aee1add88de85e"
+    },
+    {
+      "path": "data/moves/learnsets.json",
+      "sha256": "308b2d1c82c19b135f361089bda61eb3a18777db9e7bb02e57fd01c355c8afc5",
+      "blob_oid": "8fa23c678c10116738786730e3765842cdc572c7"
+    },
+    {
+      "path": "data/moves/moves.json",
+      "sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+      "blob_oid": "7b66fdcc0401d04104465aef0c6947627099f019"
+    },
+    {
+      "path": "data/schema/evolution_lines.json",
+      "sha256": "92d454f613c82c7b68c70021a6bdfc41926bfaa28062dc58f676824644c51d66",
+      "blob_oid": "e0f6be5ae2525811215578dfec034fca5f1189e0"
+    },
+    {
+      "path": "scripts/world/tm_pickup.gd",
+      "sha256": "d59da5b5ce14bcd5871bcbd1dc56695d93f7cb29c0c59477e1f425ff59425a60",
+      "blob_oid": "71c4835e41efeab884d97d4170c97afe75ff636a"
+    }
+  ],
+  "comparisons_sha256": "596a55c410e307217361c8e8bfa93ceb78b96c7592492567f4c5c359fbdb2410",
+  "candidate_provider": "NONE: source artifact has no active loader; existing species provider path unchanged",
+  "runtime_activation": false,
+  "engine_or_ci_run": false,
+  "integration_patch_sha256": "146cf507e7f1e35fd66e3f7bdc5d98c3f4c93e72ca5ad3a14613aaf18099662e",
+  "untouched_original_archives": {
+    "integration": "D:\\tetherbound\\redesign-foundations\\.tmp\\catalogue-compatibility-r1\\integration-before",
+    "foundation_parent": "D:\\tetherbound\\redesign-foundations\\.tmp\\catalogue-compatibility-r1\\before"
+  },
+  "config_gate_bindings": [
+    {
+      "path": "data/config/gear.json",
+      "sha256": "9d74ba1b3c8778847832ca697d522c93097a965be9848c261858c44558652fb8",
+      "values": {
+        "feature_flags.runtime_enabled": false,
+        "feature_flags.network_enabled": false,
+        "feature_flags.visual_enabled": false
+      }
+    },
+    {
+      "path": "data/config/traits.json",
+      "sha256": "e8c1a8c991dba8a3a7301c30ac51728db64452b3f7c93ee1dd89770c9f54192b",
+      "values": {
+        "runtime_enabled": false
+      }
+    },
+    {
+      "path": "data/items/f32_materials.json",
+      "sha256": "4b7f4e2fe705632495f69eb1f8ac5545547e947ecb1418a4aeee8897345d20ff",
+      "values": {
+        "runtime_enabled": false
+      }
+    },
+    {
+      "path": "data/config/stations.json",
+      "sha256": "2f0fcbef760483af8a8c946b9c918dc7a61599cebf5d81d36b8bcc5b142e1913",
+      "values": {
+        "runtime_enabled": false
+      }
+    }
+  ],
+  "status": "SOURCE_FIELD_COMPARISONS_PASS; runtime/CI unrun; all criteria OPEN"
+}

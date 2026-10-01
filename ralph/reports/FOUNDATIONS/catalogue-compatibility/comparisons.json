@@ -1,0 +1,27 @@
+{
+  "status": "PASS_SOURCE_COMPARISON_NO_ENGINE",
+  "active_species_before": 58,
+  "active_species_after": 57,
+  "item_identities_preserved": 155,
+  "candidate_complete_row_equal": true,
+  "candidate_staticub_fields_equal": true,
+  "candidate_runtime_enabled": false,
+  "all_other_integrated_species_fields_equal": true,
+  "all_other_item_fields_equal": true,
+  "local_and_integrated_items_semantically_equal": false,
+  "foundation_item_identities_preserved_in_integration": true,
+  "integration_item_differences_sha256": "0e3b57e43b48b986f2462ca62796f3388b10017c097769dc3ab256652b2fa2e0",
+  "species_changed_paths": [
+    "species.cannonback.evolves_from",
+    "species.staticub.evolution_breaks_level",
+    "species.staticub.evolution_enabled",
+    "species.staticub.evolution_trigger",
+    "species.staticub.evolves_into",
+    "species.stormcapra.evolves_from",
+    "species.stormursa"
+  ],
+  "items_changed_paths": [
+    "items.tm_fireball.world_model",
+    "items.tm_fireball.world_model_scale"
+  ]
+}
