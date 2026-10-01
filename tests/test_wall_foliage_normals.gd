@@ -34,7 +34,7 @@ func test_repeated_prefab_placements_retain_modules_until_composer_release() -> 
 	]}})
 	var first: Node3D = prefabs.call("instantiate", "cache_vines")
 	# No strong test reference: keeping the scene alive is the composer's job.
-	var module_ref := weakref(load(VINE))
+	var module_ref: WeakRef = weakref(load(VINE))
 	assert_true(module_ref.get_ref() != null, "placement retains the imported scene for cache reuse")
 	if module_ref.get_ref() == null:
 		first.free()
