@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack"]
+const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -43,7 +43,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"camp_rest": proposal = preload("res://scripts/build/forward_camp_actions.gd").stage_team_bed(current, revision, intent, context, true)
 		"camp_build": proposal = camp_plan(current, revision, intent, context)
 		"relic_hang", "boss_relic": proposal = _relic(current, action, intent, context)
-		"portal_arrival", "regional_ack": proposal = _acknowledgement(current, action, intent, context)
+		"portal_arrival", "regional_ack", "dock_conclusion": proposal = _acknowledgement(current, action, intent, context)
 	if proposal.get("ok") != true: return proposal
 	if not schema_check.call(proposal.state, current.character_id).is_empty(): return deny("invalid_station_candidate")
 	return {"ok": true, "action": action, "character_id": current.character_id,
@@ -58,6 +58,11 @@ static func _acknowledgement(current: Dictionary, action: String, intent: Dictio
 			or context.get("grounded_arrival") != true or context.get("permit_id") != intent.permit_id \
 			or context.get("realm") != intent.realm or context.get("entry_id") != intent.entry_id: return deny("actual_grounded_permit_required")
 		receipt = "craft:portal_arrival_%s:%s" % [intent.permit_id, current.character_id]
+	elif action == "dock_conclusion":
+		if intent.size() != 3 or intent.get("character_id") != current.character_id \
+			or intent.get("dock_id") != "first_shore_to_reedhaven_dock" or intent.get("world_namespace") != context.get("world_namespace") \
+			or context.get("civilian_departure_ready") != true or context.get("realm") != "water": return deny("actual_civilian_departure_required")
+		receipt = "craft:water_dock_departure:%s" % current.character_id
 	else:
 		var ending := preload("res://scripts/story/regional_homecoming.gd")
 		if context.get("earned_ending_ack") != true or ending.acknowledgement_intent(intent, str(intent.get("stage", ""))) != intent \

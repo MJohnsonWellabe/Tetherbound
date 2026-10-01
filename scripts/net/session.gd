@@ -53,7 +53,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
 		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
 	if envelope.op == "personal_view": return _foundation_personal_view(peer)
-	if envelope.op in ["portal_arrival", "boss_relic"]: return _foundation_refusal("host_producer_required")
+	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion"]: return _foundation_refusal("host_producer_required")
 	if envelope.op == "master_duel":
 		if envelope.intent.size() != 2 or not envelope.intent.get("master_id") is String or not envelope.intent.get("creature_uid") is String: return _foundation_refusal("invalid_duel_intent")
 		var site := _foundation_master_site(peer, envelope.intent.master_id, false)
@@ -204,6 +204,26 @@ func homestead_personal_view() -> Dictionary:
 	if is_host(): return _foundation_personal_view(local_peer_id())
 	_foundation_send("personal_view", "homestead_view", {}, -1)
 	return _foundation_personal_cache.duplicate(true)
+
+func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionary:
+	if not is_host() or not is_instance_valid(source) or source.get_script() == null \
+		or source.get_script().resource_path != "res://scripts/world/water_chapter.gd" \
+		or source.get("_game") != _game() or source.get("_dock_pending") != original \
+		or config().get("redesign_ending_runtime_enabled") != true: return FOUNDATION_ACTIONS.deny("actual_dock_producer_required")
+	var character := _authority_character(local_peer_id())
+	var world: RefCounted = _game().get("world")
+	if original.get("character_id") != character or original.get("world_namespace") != world.reward_delivery_namespace: return FOUNDATION_ACTIONS.deny("dock_context_changed")
+	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+	if row.get("action") == "dock_conclusion" and row.get("intent") == original:
+		return _foundation_decision(local_peer_id(), row)
+	if source.call("dock_departure_ready") != true or _altar_peer_in_combat(local_peer_id()): return FOUNDATION_ACTIONS.deny("dock_departure_not_ready")
+	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+		"source_key": original.dock_id, "world_namespace": world.reward_delivery_namespace, "realm": "water",
+		"in_range": true, "in_combat": false, "civilian_departure_ready": true, "foundation_runtime_authorized": true}
+	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), local_peer_id(), character,
+		context.expected_revision, "dock_conclusion", original, context)
+	if result.get("durable") != true: return result
+	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
 
 func request_research_claim(intent: Dictionary) -> Dictionary:
 	return _foundation_send("research_claim", "research_journal", intent, -1)

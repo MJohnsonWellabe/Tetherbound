@@ -281,6 +281,12 @@ func save_data() -> Dictionary:
 ## the same contract `map_state.gd` and `progression_state.gd` already give
 ## `save_game.gd`.
 func load_data(data: Dictionary) -> void:
+	var foundation_failures := preload("res://scripts/net/foundation_event.gd").errors(
+		_dictionary(data.get("reward_deliveries", {})), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")))
+	foundation_failures.append_array(preload("res://scripts/build/forward_camp_rules.gd").saved_errors(_array(data.get("placed_buildings", []))))
+	if not foundation_failures.is_empty():
+		push_error("World foundation source refused: %s" % "; ".join(foundation_failures))
+		return
 	var portal_failures := portal_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")))
 	if not portal_failures.is_empty():
 		push_error("World portal journal refused: %s" % "; ".join(portal_failures))
@@ -468,6 +474,14 @@ func _apply_op(op: Dictionary) -> bool:
 			if not training_row_valid(row, reward_delivery_namespace, world_id) or row.get("action") != "relic_hang" \
 				or row.receipt != op.get("receipt") or row.intent.biome != op.get("biome"): return false
 			redesign_world.shrine_display[row.intent.biome] = true
+			revision += 1
+			return true
+		"foundation_dock_departure":
+			var row: Variant = reward_deliveries.get(op.get("delivery_id", ""))
+			if not training_row_valid(row, reward_delivery_namespace, world_id) or row.get("action") != "dock_conclusion" \
+				or row.receipt != op.get("receipt") or row.intent.world_namespace != reward_delivery_namespace \
+				or not flags.call("has", "water_currents_restored"): return false
+			flags.call("set_flag", "water_civilian_departure_complete", true)
 			revision += 1
 			return true
 		"satchel_add":

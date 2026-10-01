@@ -3074,13 +3074,21 @@ func regional_ending_context() -> Dictionary:
 	var flags: Dictionary = local.flags.call("save_data")
 	var outcome := ""
 	var storm_answer := ""
-	var ordered: Array = flags.get("flags", []).duplicate()
-	ordered.sort()
-	for flag: String in ordered:
+	var originals: Array[String] = []
+	var answers: Array[String] = []
+	for flag: String in flags.get("flags", []):
+		if flag.begins_with("stormwood:regional_outcome:"): originals.append(flag)
+		if flag.begins_with("stormwood:legendary_answer:"): answers.append(flag)
+	if originals.size() > 1: return {}
+	# Legacy data has no original marker. Only a single actual saved answer is
+	# unambiguous; a roster or arbitrary ordering cannot select an old outcome.
+	if originals.is_empty() and answers.size() != 1: return {}
+	var selected := answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
+	if not answers.has(selected): return {}
+	for flag: String in [selected]:
 		if not flag.begins_with("stormwood:legendary_answer:"): continue
 		var answer := flag.get_slice(":", flag.get_slice_count(":") - 1)
 		if answer not in ["accepted", "refused"]: return {}
-		if not outcome.is_empty(): continue
 		outcome = flag
 		storm_answer = answer
 	if outcome.is_empty() or not local.flags.call("has", "stormwood:legendary_ceremony_settled") \

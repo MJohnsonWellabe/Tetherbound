@@ -450,8 +450,10 @@ func _retain_research(encounter_id: String, peer: int, kind: String, species: St
 	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
 	source.world_namespace = _session.call("_game").get("world").reward_delivery_namespace
 	source.session_id = _session.call("_altar_current_epoch")
-	if not _foundation_pending_sources.has(source): _foundation_pending_sources.append(source)
-	var result: Dictionary = _session.call("foundation_research_source", self, encounter_id, peer, kind, source.source_id, species, move_id, night)
+	var retained := retained_research_source(source.source_id)
+	if not retained.is_empty(): source = retained
+	else: _foundation_pending_sources.append(source)
+	var result: Dictionary = _session.call("foundation_research_source", self, source.encounter_id, source.peer, source.kind, source.source_id, source.species, source.move_id, source.night)
 	if result.get("durable") == true: _foundation_pending_sources.erase(source)
 	return result.get("durable") == true
 
@@ -2928,11 +2930,14 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			return refused
 	if caught:
 		var look := get_tree().get_first_node_in_group("day_cycle")
-		if look != null and look.get("_cycle") is RefCounted:
+		if not runtime.has_meta("foundation_catch_night") and look != null and look.get("_cycle") is RefCounted:
 			var cycle: RefCounted = look.get("_cycle")
 			var dark: bool = cycle.call("is_dark", cycle.call("hour_at", float(look.get("_elapsed_seconds"))))
-			if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", dark):
-				return {"ok": false, "pending": true, "code": "capture_event_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
+			runtime.set_meta("foundation_catch_night", dark)
+		if not runtime.has_meta("foundation_catch_night") and preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
+			return {"ok": false, "pending": true, "code": "capture_clock_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
+		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null)):
+			return {"ok": false, "pending": true, "code": "capture_event_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 	_catch_arbiter.call("release", encounter_id, peer_id)
 	if caught:
 		_encounter_host.call("set_phase", encounter_id, "done")

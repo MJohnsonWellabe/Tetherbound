@@ -1351,6 +1351,7 @@ func commit_creature_training_delivery(row: Dictionary, peer_id: int) -> Diction
 		return _refuse("creature_training", peer_id, "invalid_training", "That training decision is invalid.")
 	var ops: Array = [op]
 	if row.get("action") == "relic_hang": ops.append({"op": "foundation_shrine_display", "scope": "world", "delivery_id": row.delivery_id, "receipt": row.receipt, "biome": row.intent.biome})
+	if row.get("action") == "dock_conclusion": ops.append({"op": "foundation_dock_departure", "scope": "world", "delivery_id": row.delivery_id, "receipt": row.receipt})
 	ops.append({"op": "creature_training_settle", "scope": "player", "peers": [peer_id], "delivery": row.duplicate(true)})
 	return _commit(ops, "creature_training", peer_id, "meadows")
 
