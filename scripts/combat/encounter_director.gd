@@ -2636,11 +2636,14 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		_capture_wild_victory_source(encounter_id, verdict)
 	_emit_f22_accepted_hit(encounter_id, peer_id, striker, delta, move, str(launch.slot))
 	if bool(rolled.get("killed", false)):
+		# This opponent's round is done for every participant, including observers
+		# of a guest's kill. The trainer director resumes the same record when
+		# its next creature steps up; the author still resolves from its verdict.
 		if publication.get("tracked") == true:
 			if not _encounter_host.call("publish_move_action_terminal", encounter_id, peer_id,
-					str(publication.action_id), "done" if runtime != null else "resolving"): return verdict
+					str(publication.action_id), "done"): return verdict
 		else:
-			_encounter_host.call("set_phase", encounter_id, "done" if runtime != null else "resolving")
+			_encounter_host.call("set_phase", encounter_id, "done")
 	# Reconcile observer contact before the reliable absolute-HP snapshot.
 	_host_publish_peer_impact(encounter_id, peer_id, impact)
 	_host_after_encounter_change(encounter_id, peer_id, 0, impact)
