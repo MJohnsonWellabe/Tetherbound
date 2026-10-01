@@ -975,7 +975,7 @@ func _on_graphics_restart() -> void:
 
 func _accessibility_lane() -> Array[Control]:
 	var out: Array[Control] = []
-	for control: Control in [_reduced_motion_button, _shake_button, _look_sensitivity_button,
+	for control: Control in [_reduced_motion_button, _shake_button, _rumble_slider, _look_sensitivity_button,
 			_invert_x_button, _invert_y_button, _aim_assist_button, _text_size_button,
 			_dialogue_bg_button]:
 		if control != null:
@@ -1260,6 +1260,8 @@ var _look_max := LOOK_PREFS.FALLBACK_MAX_PERCENT
 var _look_step := 10
 var _shake_button: Button = null
 var _shake_label := "Camera shake"
+var _rumble_slider: HSlider = null
+var _rumble_label: Label = null
 var _invert_x_button: Button = null
 var _invert_x_label := "Invert horizontal look"
 var _invert_y_button: Button = null
@@ -1303,6 +1305,24 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	_look_min = int(access.get("look_sensitivity_min_percent", LOOK_PREFS.FALLBACK_MIN_PERCENT))
 	_look_max = int(access.get("look_sensitivity_max_percent", LOOK_PREFS.FALLBACK_MAX_PERCENT))
 	_look_step = maxi(1, int(access.get("look_sensitivity_step_percent", 10)))
+	var rumble_row := HBoxContainer.new()
+	rumble_row.add_theme_constant_override("separation", 16)
+	list.add_child(rumble_row)
+	_rumble_label = Label.new()
+	_rumble_label.custom_minimum_size = Vector2(360, 56)
+	_rumble_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_rumble_label.add_theme_font_size_override("font_size", 22)
+	rumble_row.add_child(_rumble_label)
+	_rumble_slider = HSlider.new()
+	_rumble_slider.custom_minimum_size = Vector2(320, 56)
+	_rumble_slider.min_value = 0
+	_rumble_slider.max_value = 100
+	_rumble_slider.step = _look_step
+	_rumble_slider.focus_mode = Control.FOCUS_ALL
+	_rumble_slider.set_value_no_signal(MOTION_PREFS.rumble_percent())
+	_rumble_slider.focus_entered.connect(func() -> void: _keep_visible(_rumble_slider))
+	_rumble_slider.value_changed.connect(_on_rumble_changed)
+	rumble_row.add_child(_rumble_slider)
 	_look_sensitivity_label = str(access.get("look_sensitivity_label", _look_sensitivity_label))
 	_look_sensitivity_button = _settings_row(list)
 	_invert_x_label = str(access.get("invert_look_x_label", _invert_x_label))
@@ -1395,6 +1415,7 @@ func _poll_accessibility() -> void:
 ## volume rows are (`_poll_audio()`): `_input` belongs to the rebind capture.
 func _poll_look() -> void:
 	_poll_shake()
+	_poll_rumble()
 	_poll_dialogue_text()
 	if _look_sensitivity_button == null:
 		return
@@ -1456,6 +1477,30 @@ func _poll_shake() -> void:
 	_shake_button.add_theme_color_override("font_color",
 		COLOUR_QUIET if percent == 0 or MOTION_PREFS.reduced_motion() else
 		(COLOUR_DEFAULT if percent == 100 else COLOUR_CHANGED))
+
+
+## Device-local UX §18 control. Native slider input handles both pad left/right
+## and mouse; the existing vertical focus chain keeps it reachable and visible.
+func _on_rumble_changed(value: float) -> void:
+	MOTION_PREFS.set_rumble_percent(int(round(value)))
+	var bindings: RefCounted = _bindings()
+	var saved := false
+	if bindings != null:
+		MOTION_PREFS.store_to(bindings)
+		saved = bool(bindings.call("save"))
+	if not saved:
+		say("Rumble changed for this session only — the settings file could not be written.")
+	_poll_rumble()
+
+
+func _poll_rumble() -> void:
+	if _rumble_slider == null or _rumble_label == null:
+		return
+	var percent := MOTION_PREFS.rumble_percent()
+	_rumble_slider.set_value_no_signal(percent)
+	_rumble_label.text = "  Rumble:  %s" % ("Off" if percent == 0 else "%d%%" % percent)
+	_rumble_label.add_theme_color_override("font_color",
+		COLOUR_QUIET if percent == 0 else COLOUR_DEFAULT)
 
 
 func _on_text_size() -> void:

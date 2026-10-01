@@ -1,0 +1,62 @@
+{
+  "base_commit": "3cfd5348c083365b9ac235378e95c53d683d635a",
+  "check": "bounded source/config preservation; no engine or visual proof",
+  "config_paths_changed": [
+    "/move_library/archetypes/fireball/body/deformation",
+    "/move_library/archetypes/fireball/body/edge_softness",
+    "/move_library/archetypes/fireball/body/emission_strength",
+    "/move_library/archetypes/fireball/body/flow_speed",
+    "/move_library/archetypes/fireball/body/layers/0/breakup_strength",
+    "/move_library/archetypes/fireball/body/layers/1/breakup_strength",
+    "/move_library/archetypes/fireball/body/layers/2/breakup_strength",
+    "/move_library/archetypes/fireball/body/layers/3/breakup_strength",
+    "/move_library/archetypes/fireball/body/layers/4/breakup_strength",
+    "/move_library/archetypes/fireball/body/opacity",
+    "/move_library/archetypes/fireball/body/surface_scale",
+    "/move_library/archetypes/fireball/trail/breakup_strength",
+    "/move_library/archetypes/fireball/trail/emission_strength",
+    "/move_library/archetypes/fireball/trail/hot_colour"
+  ],
+  "shared_shader_users": [
+    "fireball"
+  ],
+  "library_enabled": false,
+  "preserved": [
+    {
+      "path": "assets/vfx/textures/flame_tongue_v2.png",
+      "sha256": "27b0cf8c2feda7d7a2bb292dac2dbfe5c1cc5cd8286d8aba07a7ea92973b6210"
+    },
+    {
+      "path": "assets/vfx/textures/flame_tongue_v2.png.import",
+      "sha256": "2fd25e0d1fde903d635461e8b7fb572b11419c8f868cdaff011e07b081ed9d39"
+    },
+    {
+      "path": "assets/vfx/textures/flame_tongue_v2.provenance.json",
+      "sha256": "b7d0a14e24b307c727439a732ad402c006e8cb01e8e929f02a52587d6af90b27"
+    },
+    {
+      "path": "assets/vfx/shaders/fire_explosion.gdshader",
+      "sha256": "2ee497f8817bac87397e9655897712ebf9f1eef35ce47a59afa0155249f2813b"
+    },
+    {
+      "path": "scripts/vfx/move_effect.gd",
+      "sha256": "67bccfadfdce790ef9c139d235637eea5a56eed703bd6b6863d22e9437c6049f"
+    },
+    {
+      "path": "scripts/vfx/move_effect_library.gd",
+      "sha256": "9fca716969bf873068ca016fc90f6ca63ba2aac622b731f9070f54562c2c642e"
+    },
+    {
+      "path": "scripts/combat/move_projectile.gd",
+      "sha256": "e103fce23bb599c470348f1c3cb1b2ab909a49a5eddb0805ee2de8c622435d41"
+    }
+  ],
+  "unproved": [
+    "Godot shader compilation",
+    "visual craft",
+    "animated motion",
+    "integrated world and HP/audio",
+    "four-creature Medium performance",
+    "all F25 acceptance rows"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "base_commit": "8fae061e36879c475fb61240566d016f795bf114",
+  "scope": "Later source-only candidate; not folded into frozen R24 capture pins; no native/craft PASS",
+  "changed_method": "move_effect_geometry.authored_material",
+  "only_profile_changed": "sky_lightning body and impact fringe material",
+  "all_effect_geometry_methods_and_timing_counts_unchanged": true,
+  "branch_count_path_hold_core_width_emission_mastery_budget_light_audio_unchanged": true,
+  "other_electrical_defaults": "Original sway .06/.12, corona power1.55, vein gain1.0 retained",
+  "active_cues_unchanged": 175,
+  "library_enabled": false,
+  "shader_sha256_lf": "3ea9784371471be4abbbf9f131672d3ca2bee177876c9b9cd7986bf974e9b436",
+  "frozen_proofs": [
+    "R14 original RED intact",
+    "R17 selected PASS intact",
+    "R24 before9a6dbc823c / after05ccfe3b34 unchanged"
+  ],
+  "limits": [
+    "No engine/parser/visual/real-player/HP or performance proof",
+    "Branch overlap remains a possible full-bar failure; reduced fringe alone is insufficient"
+  ]
+}

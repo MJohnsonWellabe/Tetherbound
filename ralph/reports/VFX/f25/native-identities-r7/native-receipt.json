@@ -1,0 +1,52 @@
+{
+  "source_commit": "47e5d01d049089b3ab14b7cef04a4153586887ac",
+  "scope": "Original broad import was deliberately stopped and its native receipt/raw log retained. This import project contains only the exact original PNG at the identical res:// path, preserving available original import parameters. Generated importer cache is environment evidence, not source/gameplay replacement. Original 12-case/36-frame native witness follows; no tests bypassed.",
+  "asset_sha256": "27b0cf8c2feda7d7a2bb292dac2dbfe5c1cc5cd8286d8aba07a7ea92973b6210",
+  "steps": [
+    {
+      "name": "one-PNG import",
+      "native_exit": 0,
+      "elapsed_seconds": 5.531,
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--rendering-method",
+        "gl_compatibility",
+        "--path",
+        "D:\\tetherbound\\vfx-r7-texture-import",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "log": "D:\\tetherbound\\vfx-identities-native-r7-scoped-import.log",
+      "errors": []
+    },
+    {
+      "name": "identities",
+      "native_exit": 0,
+      "elapsed_seconds": 23.734,
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-vfx",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "res://tests/smoke_move_effects_library.gd",
+        "--",
+        "--batch=identities",
+        "--out=D:/tetherbound/vfx-identities-native-r7"
+      ],
+      "log": "D:\\tetherbound\\vfx-identities-native-r7.log",
+      "errors": []
+    }
+  ],
+  "generated_import_cache": [
+    {
+      "cache_path": ".godot/imported/flame_tongue_v2.png-33618f57f3419b6ce31c6bc7f565b529.ctex",
+      "sha256": "774b1fd0ffff1d1abaab065cabb26f81c57235127f3bc0f3499691f88306e631"
+    }
+  ]
+}

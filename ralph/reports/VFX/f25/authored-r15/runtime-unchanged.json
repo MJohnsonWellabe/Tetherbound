@@ -1,0 +1,44 @@
+{
+  "base_commit": "89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e",
+  "scope": "Inactive source recipes/generator and external masters; active runtime matches frozen R14 source",
+  "active_cues_unchanged": 175,
+  "runtime_paths_unchanged": [
+    "data/config/audio.json",
+    "data/config/vfx.json",
+    "data/moves/moves.json",
+    "tests/test_move_effects.gd",
+    "tests/smoke_move_effects_library.gd",
+    "scripts/vfx/move_effect.gd",
+    "scripts/vfx/move_effect_geometry.gd",
+    "scripts/vfx/move_effect_library.gd",
+    "scripts/vfx/move_effect_budget.gd",
+    "assets/vfx/shaders/fire_core.gdshader",
+    "assets/vfx/shaders/fire_explosion.gdshader",
+    "assets/vfx/shaders/flame_tongue.gdshader",
+    "assets/vfx/shaders/stone_body.gdshader",
+    "assets/vfx/shaders/ion_filament.gdshader"
+  ],
+  "families": [
+    "stone_throw",
+    "stone_boulder",
+    "fireball",
+    "sky_lightning"
+  ],
+  "roles": [
+    "launch",
+    "travel",
+    "launch_travel",
+    "impact",
+    "launch_mastery",
+    "launch_travel_mastery",
+    "impact_mastery"
+  ],
+  "library_enabled": false,
+  "gpu_or_engine_run": false,
+  "unproved": [
+    "audible quality",
+    "native/game/device audio or truepeak/LUFS mix",
+    "all F25 acceptance rows"
+  ],
+  "source_masters_rendered": 28
+}

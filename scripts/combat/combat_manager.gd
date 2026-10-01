@@ -21,6 +21,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 ## is here (`_active_index` into `_party`) so M4 adds members rather than
 ## restructuring this file.
 
+const FIGHT_CAMERA := preload("res://scripts/combat/fight_camera.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
@@ -29,6 +30,7 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 ## W09-VFX (CL-A2): the hit spark, body flash, KO puff, catch sparkle and
 ## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
 const VFX := preload("res://scripts/vfx/combat_vfx.gd")
@@ -51,6 +53,7 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 ## keying rather than species-against-species. Pure config reader, no scene
 ## tree, same shape as PROGRESSION above.
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 
@@ -58,7 +61,14 @@ signal entered()
 signal exited(outcome: String)
 signal state_changed()
 signal hit_landed(on_enemy: bool, amount: float)
+## Host-resolved impact presentation; never an HP or authority callback.
+signal impact_confirmed(on_enemy: bool, receipt: Dictionary, world_position: Vector3)
+signal attack_launched(on_enemy: bool, launch: Dictionary, presentation: Node3D)
+## Synchronous witness of the first actual absolute snapshot HP assignment.
+signal host_snapshot_hp_applied(action_id: String, before: float, after: float)
 signal staggered(on_enemy: bool)
+## Last local pad that actually supplied input; observers never rumble it.
+var _feedback_device := -1
 ## T3-TYPECHART. The type verdict for the hit `hit_landed` is about to report:
 ## 1 advantaged, -1 disadvantaged, 0 neutral. Emitted IMMEDIATELY BEFORE
 ## `hit_landed` for the same hit, and only for hits that actually landed.
@@ -165,6 +175,8 @@ var _arena: Node3D = null
 ## has something to ease FROM; reset to 0.0 whenever the camera is fully
 ## released so a later fight does not inherit a wide frame from this one's end.
 var _camera_framing_extra: float = 0.0
+## Latest requested size-matrix geometry, not proof of the collision-constrained rendered frame.
+var _fight_camera_solution: Dictionary = {}
 ## F04#7: the eased pivot height (`camera.framing.height_follow`) and the eased
 ## clear-orbit swing (`camera.framing.clear_orbit`). 0 means "not yet started";
 ## both reset with `_camera_framing_extra` when the camera is released.
@@ -227,6 +239,10 @@ var _burst_awaiting_host := false
 ## for a new hosted trainer round while the physical body is reused, so replay
 ## memory belongs here/EncounterHost rather than on CreatureBody.
 var _last_burst_action := 0
+var _impact_serial := 0
+var _seen_impact_actions: Dictionary = {}
+var _seen_launch_actions: Dictionary = {}
+var _impact_generation := 0
 
 ## An attack press made during wind-up, recovery or cooldown, kept alive for
 ## `flow.input_buffer` seconds and fired the moment the creature is ready. Without
@@ -383,6 +399,8 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	_catch_finish_requires_host = false
 	_catch_presentation_last_ms = 0
 	_last_burst_action = 0
+	_seen_impact_actions.clear()
+	_seen_launch_actions.clear()
 
 
 func unbind_encounter() -> void:
@@ -392,6 +410,8 @@ func unbind_encounter() -> void:
 	_catch_awaiting_host = false
 	_burst_awaiting_host = false
 	_last_burst_action = 0
+	_seen_impact_actions.clear()
+	_seen_launch_actions.clear()
 
 
 ## The record this fight is rendering, or "" solo. Read by the director and by
@@ -573,6 +593,7 @@ func begin(
 	_action = Action.READY
 	_action_timer = 0.0
 	_pending_move = {}
+	_impact_generation += 1
 	_quick_cooldown = 0.0
 	_charged_cooldown = 0.0
 	_initialize_wind()
@@ -580,6 +601,8 @@ func begin(
 	_hitstop_left = 0.0
 	_burst_awaiting_host = false
 	_last_burst_action = 0
+	_seen_impact_actions.clear()
+	_seen_launch_actions.clear()
 	_buffered_attack = ""
 	_buffer_left = 0.0
 	_resolve_timer = 0.0
@@ -1162,6 +1185,8 @@ func _take_camera() -> void:
 		var tracking: Dictionary = ((MATH.config().get("camera", {}) as Dictionary) \
 			.get("tracking", {}) as Dictionary).duplicate()
 		tracking.merge(_opponent_camera("tracking"), true)
+		if bool(FIGHT_CAMERA.config().get("enabled", false)):
+			tracking["dead_zone_deg"] = float(FIGHT_CAMERA.config().get("tracking_dead_zone_deg", 1.0))
 		# F14#0 C3: an opponent's own `camera_composition_yaw_deg` (a trainer
 		# team member's combat override) wins over both blocks above.
 		var authored_yaw := opponent_composition_yaw_deg(_wild)
@@ -1210,6 +1235,12 @@ func _combat_camera_profile() -> Dictionary:
 	var distance := float(profile.get("distance", 6.0))
 	profile["shoulder_offset"] = _combat_shoulder_offset(
 		distance, float(profile.get("pitch_start_deg", -25.0)))
+	var fight := FIGHT_CAMERA.config()
+	if bool(fight.get("enabled", false)) and is_instance_valid(_ally_body) and is_instance_valid(_wild):
+		var pair := FIGHT_CAMERA.pair_profile(_body_world_bounds(_ally_body), _body_world_bounds(_wild), fight)
+		# Applied once on takeover, never accumulated each frame or over manual pitch.
+		profile["pitch_start_deg"] = float(profile.get("pitch_start_deg", -25.0)) + float(pair.get("pitch_offset_deg", 0.0))
+		profile["shoulder_offset"] = 0.0
 	return profile
 
 
@@ -1380,6 +1411,8 @@ func _update_combat_camera_framing(delta: float) -> void:
 	# must not fight either of them for `_distance`.
 	if _camera_rig.get("_target") != _ally_body:
 		return
+	if _update_fight_camera_matrix(delta):
+		return
 	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
 	var base_distance := float(cfg.get("distance", 6.0))
 	var framing: Dictionary = cfg.get("framing", {}) as Dictionary
@@ -1414,6 +1447,59 @@ func _update_combat_camera_framing(delta: float) -> void:
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 	_update_combat_top_band(cfg.get("hud_safe", {}) as Dictionary, weight)
 	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+
+
+## Local composition only. Host damage, actor scale, input and aim are unchanged.
+## The pure requested solution is then constrained by the rig's real world sweeps.
+func _update_fight_camera_matrix(delta: float) -> bool:
+	var fight := FIGHT_CAMERA.config()
+	if not bool(fight.get("enabled", false)) or not is_instance_valid(_wild) \
+			or not _camera_rig.has_method("set_framing_pivot_offset"):
+		_fight_camera_solution = {}
+		if _camera_rig.has_method("set_framing_pivot_offset"):
+			_camera_rig.call("set_framing_pivot_offset", Vector3.ZERO)
+		return false
+	var ally := _body_world_bounds(_ally_body)
+	var foe := _body_world_bounds(_wild)
+	if ally.size.is_zero_approx() or foe.size.is_zero_approx(): return false
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null: return false
+	var viewport := camera.get_viewport().get_visible_rect().size
+	var cfg: Dictionary = MATH.config().get("camera", {})
+	var manual := float(_camera_rig.get("_tracking_manual_left")) > 0.0
+	var neutral: Variant = _camera_rig.call("_tracking_neutral_yaw")
+	var yaw := float(_camera_rig.get("yaw")) if manual or neutral == null else float(neutral)
+	var local := fight.duplicate()
+	if manual: local["orbit_candidates_deg"] = [0.0]
+	var solution := FIGHT_CAMERA.solve(ally, foe, yaw, float(_camera_rig.get("pitch")),
+		camera.fov, viewport.x / maxf(viewport.y, 1.0), float(cfg.get("distance", 6.0)), local, false)
+	if solution.is_empty(): return false
+	_fight_camera_solution = solution
+	var weight := 1.0 - exp(-maxf(float(fight.get("lag", 4.0)), 0.01) * delta)
+	var offset: Vector3 = solution.pivot - _ally_body.global_position - Vector3.UP * float(_camera_rig.get("_height"))
+	var live_offset: Vector3 = _camera_rig.call("framing_pivot_offset")
+	_camera_rig.call("set_framing_pivot_offset", live_offset.lerp(offset, weight))
+	# Fit the current live orbit too while neutral correction is still easing.
+	var current_fit := FIGHT_CAMERA.required_distance(ally, foe, (_camera_rig as Node3D).global_position,
+		(_camera_rig as Node3D).global_basis.orthonormalized(), camera.fov,
+		viewport.x / maxf(viewport.y, 1.0), float(fight.get("frame_fill", 0.82)), float(fight.get("near_clearance_m", 0.5)))
+	var wanted := minf(maxf(float(solution.distance), current_fit), float(fight.get("max_distance_m", 48.0)))
+	_camera_rig.set("_distance", lerpf(float(_camera_rig.get("_distance")), wanted, weight))
+	_camera_rig.set("_shoulder", 0.0)
+	if not manual and _camera_rig.has_method("set_clearance_extra"):
+		var current := float(_camera_rig.call("clearance_extra"))
+		_camera_rig.call("set_clearance_extra", move_toward(current, float(solution.yaw_offset_deg),
+			maxf(float(fight.get("orbit_speed_deg_s", 90.0)), 1.0) * delta))
+	_update_combat_top_band(cfg.get("hud_safe", {}) as Dictionary, weight)
+	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+	# Measure the ACTUAL current camera as well; requested fit must not be
+	# mistaken for a pass when a wall, manual look or smoothing prevents it.
+	var actual_ally := FIGHT_CAMERA.project_box(ally, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
+	var actual_foe := FIGHT_CAMERA.project_box(foe, camera.get_camera_transform(), camera.fov, viewport.x / maxf(viewport.y, 1.0), camera.near)
+	_fight_camera_solution["actual_framed"] = bool(actual_ally.get("in_frame", false)) and bool(actual_foe.get("in_frame", false))
+	_fight_camera_solution["actual_overlap"] = FIGHT_CAMERA.overlap_ratio(actual_ally.rect, actual_foe.rect) \
+		if bool(actual_ally.get("valid", false)) and bool(actual_foe.get("valid", false)) else 1.0
+	return true
 
 
 ## F14#0 C3 (Aquaryn): a tall opponent standing uphill of the ally rode up
@@ -2459,9 +2545,9 @@ func _consume_player_stagger_critical() -> bool:
 	return true
 
 
-func _play_combat_flinch(body: Node3D, away: Vector3) -> void:
+func _play_combat_flinch(body: Node3D, away: Vector3, impact: Dictionary = {}) -> void:
 	if body.has_method("play_combat_flinch"):
-		body.call("play_combat_flinch", away)
+		body.call("play_combat_flinch", away, impact)
 	else:
 		body.call("play_hit")
 
@@ -2518,7 +2604,26 @@ func _resolve_player_strike() -> void:
 	var facing: Vector3 = _ally_body.call("facing")
 	var target: Vector3 = _wild.call("centre")
 
-	_perform_player_strike(MATH.move_connects(_pending_move, origin, facing, target))
+	var connected := MATH.move_connects(_pending_move, origin, facing, target)
+	if not connected:
+		_perform_player_strike(false)
+		return
+	_impact_serial += 1
+	var move_id := str(creature.move_quick if bool(_pending_move.get("is_quick", false)) else creature.move_charged)
+	var frozen_move := _pending_move.duplicate(true)
+	var muzzle := origin + facing * (float(_ally_body.call("body_radius")) if _ally_body.has_method("body_radius") else 0.0)
+	var launch := HIT_FEEDBACK.launch("%s:solo:%d" % [_encounter_id, _impact_serial],
+		_encounter_id, str(creature.get("uid")), str(_enemy.get("uid")), move_id,
+		"quick" if bool(frozen_move.get("is_quick", false)) else "charged", muzzle, target,
+		PROJECTILE.travel_seconds(muzzle, target, frozen_move.get("vfx", {})), _impact_generation, _wild.global_position, _body_world_bounds(_wild))
+	present_host_attack_launch(launch)
+	if float(launch.travel_seconds) > 0.0:
+		await get_tree().create_timer(float(launch.travel_seconds), false).timeout
+	if state != State.ACTIVE or not is_instance_valid(_wild) or not is_instance_valid(_ally_body): return
+	var current := active_creature()
+	if current == null or _enemy == null or not HIT_FEEDBACK.launch_matches(launch,
+		_encounter_id, str(current.get("uid")), str(_enemy.get("uid")), _impact_generation): return
+	_perform_player_strike(true, -1.0, false, false, false, {}, frozen_move, launch)
 
 
 ## Facing was locked when the wind-up began, so a striker whose opponent
@@ -2584,9 +2689,20 @@ func _submit_strike_intent() -> void:
 ## A refusal never arrives here -- it goes to `_note_encounter_refusal()` -- so
 ## this function is only ever the performance of a decision already made.
 func apply_host_strike_verdict(payload: Dictionary) -> void:
+	if bool(payload.get("scheduled", false)):
+		if state == State.ACTIVE:
+			_sync_authoritative_wind(payload)
+			present_host_attack_launch(payload.get("launch", {}) as Dictionary)
+		return
+	var feedback: Dictionary = payload.get("impact", {})
+	if not feedback.is_empty():
+		if _enemy == null or str(feedback.get("target_uid", "")) != str(_enemy.get("uid")): return
+		if not HIT_FEEDBACK.admit(_seen_impact_actions, feedback, false): return
 	if state != State.ACTIVE:
 		return
 	_sync_authoritative_wind(payload)
+	# Accepted host contact reconciles presentation before applying its HP.
+	PROJECTILE.confirm_impact(get_tree(), str(feedback.get("action_id", "")))
 	if payload.has("hp") and _enemy != null:
 		# §3: WRITTEN, not decremented. `take_damage()` here would apply the
 		# host's blow on top of whatever the record broadcast already set, and
@@ -2598,7 +2714,8 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 			float(payload.get("stagger_left", -1.0)))
 	_perform_player_strike(bool(payload.get("hit", false)),
 		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
-		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)))
+		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)),
+		payload.get("impact", {}) as Dictionary)
 
 
 ## The performance of a strike, and -- solo -- the decision too.
@@ -2610,7 +2727,8 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 ## the projectile, the energy gain and the two signals.
 func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		killed_override: bool = false, crit_override: bool = false,
-		stagger_triggered_override: bool = false) -> void:
+		stagger_triggered_override: bool = false, impact_override: Dictionary = {},
+		move_override: Dictionary = {}, launch: Dictionary = {}) -> void:
 	var creature := active_creature()
 	if creature == null or _enemy == null or _ally_body == null or _wild == null:
 		return
@@ -2623,11 +2741,12 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		state_changed.emit()
 		return
 
-	var is_quick: bool = bool(_pending_move.get("is_quick", false))
+	var profile := move_override if not move_override.is_empty() else _pending_move
+	var is_quick: bool = str(impact_override.get("slot", "")) == "quick" if impact_override.has("slot") else bool(profile.get("is_quick", false))
 	var stagger_crit := crit_override
 	if damage_override < 0.0 and _wild.has_method("consume_stagger_critical"):
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
-	var move_id: String = creature.move_quick if is_quick else creature.move_charged
+	var move_id: String = str(impact_override.get("move_id", launch.get("move_id", creature.move_quick if is_quick else creature.move_charged)))
 	var cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
 	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
@@ -2647,7 +2766,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	var killed: bool = killed_override
 	if damage_override < 0.0:
 		damage = MATH.rolled_damage(
-			float(_pending_move.get("power", 9.0)),
+			float(profile.get("power", 9.0)),
 			creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
 			_moves.power(move_id), type_mult
 		)
@@ -2661,15 +2780,20 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
 	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
-	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
+	var impact := impact_override if not impact_override.is_empty() else _new_impact(move_id, "quick" if is_quick else "charged", damage, type_mult, stagger_crit, facing, _wild, str(launch.get("action_id", "")))
+	if not launch.is_empty(): impact = HIT_FEEDBACK.with_launch(impact, launch, _moves.move(move_id).get("vfx", {}))
+	# Session knockback was applied once by the host resolver, including its
+	# listen-server body. Guest proxies never move from presentation callbacks.
+	if damage_override < 0.0:
+		_wild.call("add_impulse", impact.direction, HIT_FEEDBACK.impulse_for(impact))
 	if killed:
 		_wild.call("play_faint")
 	else:
-		_play_combat_flinch(_wild, facing)
+		_play_combat_flinch(_wild, facing, impact)
 	# Ranged moves draw their travel, and the impact waits for it to land. A
 	# melee move has no travel to draw, so `launch` hands back null and the
 	# burst goes off here exactly as it always did.
-	var vfx: Dictionary = _pending_move.get("vfx", {}) as Dictionary
+	var vfx: Dictionary = _moves.move(move_id).get("vfx", {}) if not impact_override.is_empty() else profile.get("vfx", {}) as Dictionary
 	var tint: Variant = Color(str(vfx["colour"])) if vfx.has("colour") else null
 	var host: Node = _arena if _arena != null else _player.get_parent()
 	# The bolt LEAVES the creature rather than starting inside it.
@@ -2687,12 +2811,14 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	var muzzle := origin
 	if _ally_body.has_method("body_radius"):
 		muzzle = origin + facing * float(_ally_body.call("body_radius"))
-	var shot := PROJECTILE.launch(host, muzzle, target, vfx)
+	var shot: Node3D = null
+	if not bool(impact.get("presentation_launched", false)) and launch.is_empty():
+		shot = PROJECTILE.launch(host, muzzle, target, vfx, impact)
 	if shot != null:
 		var landing: Vector3 = target
-		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint, _wild, hit_fraction))
+		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint, _wild, hit_fraction, impact))
 	else:
-		_flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction)
+		_flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction, impact)
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -2702,8 +2828,8 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	hit_effectiveness.emit(true, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
 		_announce_stagger(true)
+	_present_impact(true, impact, _wild)
 	hit_landed.emit(true, damage)
-	_begin_hitstop(_hitstop_seconds(is_quick, stagger_crit))
 	state_changed.emit()
 	if killed:
 		_award_victory()
@@ -2768,13 +2894,22 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		if participants.has(peer_id):
 			_sync_authoritative_wind(participants[peer_id] as Dictionary)
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	var snapshot_impact: Dictionary = rec.get("resolved_impact", {})
+	if state == State.ACTIVE and _enemy != null and not snapshot_impact.is_empty() \
+		and str(snapshot_impact.get("target_uid", "")) == str(_enemy.get("uid")):
+		# The host's accepted receipt travels with this same HP snapshot, so
+		# even the acting guest reconciles contact before the first HP write.
+		PROJECTILE.confirm_impact(get_tree(), str(snapshot_impact.get("action_id", "")))
 	var was_staggered := enemy_is_staggered()
 	if _enemy != null and opponent.has("hp"):
 		var hp_max := maxf(1.0, float(opponent.get("hp_max", _enemy.max_hp)))
 		var hp := clampf(float(opponent["hp"]), 0.0, hp_max)
-		var dropped: bool = hp < float(_enemy.hp) - 0.001
+		var hp_before := float(_enemy.hp)
+		var dropped: bool = hp < hp_before - 0.001
 		_enemy.max_hp = hp_max
 		_enemy.hp = hp
+		if dropped and not snapshot_impact.is_empty():
+			host_snapshot_hp_applied.emit(str(snapshot_impact.get("action_id", "")), hp_before, hp)
 		if dropped and not quiet and _wild != null and hp > 0.0:
 			# Somebody else's blow. The body reacts so a teammate's hits are
 			# visible rather than the bar moving on its own.
@@ -2829,7 +2964,7 @@ func note_caught_by(peer_id: int, species: String) -> void:
 ## `_enemy`, the host's own live instance, so `take_damage()` here IS the record
 ## and there is no second copy of the number to keep in step.
 func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
-		charged: bool = false) -> Dictionary:
+		charged: bool = false, impact_context: Dictionary = {}) -> Dictionary:
 	if _enemy == null:
 		return {}
 	var cfg: Dictionary = PROGRESSION.config()
@@ -2849,13 +2984,21 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
 		if stagger_crit:
 			damage *= _poise_crit_scale()
+	# Presentation completion never decides this independently scheduled host debit.
+	PROJECTILE.confirm_impact(get_tree(), str(impact_context.get("action_id", "")))
 	var killed: bool = _enemy.take_damage(damage)
 	var stagger_triggered := false
 	if not killed and _wild != null and _wild.has_method("apply_poise_damage"):
 		var force_interrupt := charged and enemy_is_winding_up() \
 			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true))
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
-	return {"damage": damage, "killed": killed, "hp": _enemy.hp,
+	var direction: Vector3 = impact_context.get("direction", Vector3.ZERO)
+	var impact := _new_impact(move_id, "charged" if charged else "quick", damage, type_mult, stagger_crit, direction, _wild, str(impact_context.get("action_id", "")))
+	if _wild != null:
+		_wild.call("add_impulse", impact.direction, HIT_FEEDBACK.impulse_for(impact))
+		_host_body_hitstop(_wild, impact)
+	_host_body_hitstop(impact_context.get("striker_body") as Node3D, impact)
+	return {"damage": damage, "killed": killed, "hp": _enemy.hp, "impact": impact,
 		"hp_max": _enemy.max_hp, "type_mult": type_mult,
 		"poise": float(_wild.call("poise_fraction")) * _enemy_poise_max() if _wild != null and _wild.has_method("poise_fraction") else _enemy_poise_max(),
 		"poise_max": _enemy_poise_max(),
@@ -2937,14 +3080,40 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		maxf(1.0, float(card.get("defence", 1.0))),
 		_rng.randf(), _moves.power(move_id), type_mult
 	)
-	_encounter_link.call("host_deliver_enemy_hit", _encounter_id,
-		int(pick.get("peer_id", 0)), {
-			"damage": damage,
-			"type_mult": type_mult,
-			"move_id": move_id,
-			"lunge": float(cfg.get("lunge", 3.4)),
-		})
+	var target_body := pick.get("body") as Node3D
+	if not is_instance_valid(target_body): return true
+	_impact_serial += 1
+	var muzzle := origin + facing * (float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.0)
+	var target: Vector3 = target_body.call("centre")
+	var launch := HIT_FEEDBACK.launch("%s:enemy:%d" % [_encounter_id, _impact_serial],
+		_encounter_id, str(_enemy.get("uid")), str(card.get("creature_uid", "")),
+		move_id, "quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), 0, target_body.global_position, _body_world_bounds(target_body))
+	var impact := _new_impact(move_id, "quick", damage, type_mult, false, facing, target_body, str(launch.action_id), str(card.get("creature_uid", "")))
+	impact = HIT_FEEDBACK.with_launch(impact, launch, _moves.move(move_id).get("vfx", {}))
+	var payload := {"damage": damage, "type_mult": type_mult, "move_id": move_id,
+		"lunge": float(cfg.get("lunge", 3.4)), "impact": impact}
+	var peer_id := int(pick.get("peer_id", 0))
+	if float(launch.travel_seconds) > 0.0:
+		_encounter_link.call("host_deliver_enemy_launch", _encounter_id, peer_id, launch)
+		get_tree().create_timer(float(launch.travel_seconds), false).timeout.connect(
+			_commit_scheduled_enemy_hit.bind(peer_id, payload, launch, target_body), CONNECT_ONE_SHOT)
+	else: _commit_scheduled_enemy_hit(peer_id, payload, launch, target_body)
 	return true
+
+
+func _commit_scheduled_enemy_hit(peer_id: int, payload: Dictionary, launch: Dictionary, target_body: Node3D) -> void:
+	if state != State.ACTIVE or _encounter_link == null or _enemy == null \
+		or not is_instance_valid(_wild) or not is_instance_valid(target_body): return
+	if str(launch.get("encounter_id", "")) != _encounter_id \
+		or str(launch.get("attacker_uid", "")) != str(_enemy.get("uid")): return
+	if not bool(_encounter_link.call("host_enemy_target_current", _encounter_id, peer_id, str(launch.target_uid))): return
+	if _encounter_link.has_method("host_resolve_enemy_hit"):
+		payload = _encounter_link.call("host_resolve_enemy_hit", _encounter_id, peer_id, payload)
+		if payload.is_empty(): return
+	var impact: Dictionary = payload.get("impact", {})
+	_host_body_hitstop(_wild, impact)
+	_host_body_hitstop(target_body, impact)
+	_encounter_link.call("host_deliver_enemy_hit", _encounter_id, peer_id, payload)
 
 
 ## The host's opponent hit THIS player's creature. The decision is already made;
@@ -2961,33 +3130,44 @@ func _incoming_owned_damage(amount: float) -> float:
 	return amount * clampf(float(power.get("incoming_damage_multiplier", 1.0)), 0.0, 1.0)
 
 func apply_host_enemy_hit(payload: Dictionary) -> void:
+	var feedback: Dictionary = payload.get("impact", {})
+	if not feedback.is_empty() and not HIT_FEEDBACK.admit(_seen_impact_actions, feedback, false): return
 	if state != State.ACTIVE or _ally_body == null:
 		return
 	var creature := active_creature()
 	if creature == null:
 		return
-	# Host rolls the base strike; this character's one active relic applies
-	# once at the owning health mutation, also for a host on another island.
-	var damage := _incoming_owned_damage(float(payload.get("damage", 0.0)))
+	if not feedback.is_empty() and str(feedback.get("target_uid", "")) != str(creature.get("uid")): return
+	PROJECTILE.confirm_impact(get_tree(), str(feedback.get("action_id", "")))
+	# The host resolves its own defensive ledger/relic config before delivery.
+	# Preserve the legacy partial-test adapter until every link carries that result.
+	var host_resolved := bool(payload.get("host_resolved_defence", false))
+	var damage := float(payload.get("damage", 0.0)) if host_resolved else _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
-	var stagger_crit := _consume_player_stagger_critical()
-	if stagger_crit:
-		damage *= _poise_crit_scale()
+	var stagger_crit := bool(payload.get("critical", false)) if host_resolved else _consume_player_stagger_critical()
+	if stagger_crit and not host_resolved: damage *= _poise_crit_scale()
 	var killed: bool = creature.take_damage(damage)
-	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
+	var stagger_triggered := false
+	if not killed:
+		if host_resolved: stagger_triggered = _sync_host_player_defence(payload.get("defence", {}))
+		else: stagger_triggered = _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
-	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
+	var impact: Dictionary = payload.get("impact", {})
+	if impact.is_empty():
+		impact = _new_impact(move_id, "quick", damage, float(payload.get("type_mult", 1.0)), stagger_crit, -facing, _ally_body)
+	# Apply the owning body's host-authorized displacement, never client aim.
+	_ally_body.call("add_impulse", impact.direction, HIT_FEEDBACK.impulse_for(impact))
 	if killed:
 		_ally_body.call("play_faint")
 	else:
-		_play_combat_flinch(_ally_body, -facing)
+		_play_combat_flinch(_ally_body, impact.direction, impact)
 	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
-		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
+		_ally_body, damage / maxf(1.0, float(creature.max_hp)), impact)
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
 	if stagger_triggered:
 		_announce_stagger(false)
+	_present_impact(false, impact, _ally_body, damage)
 	hit_landed.emit(false, damage)
-	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
 		CONDITION.note_faint(creature, CONDITION.config())
@@ -3082,6 +3262,15 @@ func _drive_player_creature() -> void:
 		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
 	else:
 		_ally_body.call("request_move", direction)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton and event.pressed:
+		_feedback_device = event.device
+	elif event is InputEventJoypadMotion and absf(event.axis_value) >= 0.3:
+		_feedback_device = event.device
+	elif (event is InputEventKey or event is InputEventMouseButton) and event.is_pressed():
+		_feedback_device = -1
 
 
 func _read_player_input() -> void:
@@ -3590,6 +3779,25 @@ func _on_enemy_strike() -> void:
 		state_changed.emit()
 		return
 
+	var move_id := str(cfg.get("move_id", _enemy.move_quick))
+	_impact_serial += 1
+	var muzzle := origin + facing * (float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.0)
+	var launch := HIT_FEEDBACK.launch("%s:solo-enemy:%d" % [_encounter_id, _impact_serial],
+		_encounter_id, str(_enemy.get("uid")), str(creature.get("uid")), move_id,
+		"quick", muzzle, target, PROJECTILE.travel_seconds(muzzle, target, _moves.move(move_id).get("vfx", {})), _impact_generation, _ally_body.global_position, _body_world_bounds(_ally_body))
+	present_host_attack_launch(launch, _wild, false)
+	if float(launch.travel_seconds) > 0.0:
+		get_tree().create_timer(float(launch.travel_seconds), false).timeout.connect(
+			_finish_solo_enemy_strike.bind(cfg.duplicate(true), launch), CONNECT_ONE_SHOT)
+	else: _finish_solo_enemy_strike(cfg, launch)
+
+
+func _finish_solo_enemy_strike(cfg: Dictionary, launch: Dictionary) -> void:
+	var creature := active_creature()
+	if state != State.ACTIVE or creature == null or _enemy == null \
+		or not is_instance_valid(_wild) or not is_instance_valid(_ally_body): return
+	if not HIT_FEEDBACK.launch_matches(launch, _encounter_id, str(_enemy.get("uid")), str(creature.get("uid")), _impact_generation): return
+	var facing := ((launch.to as Vector3) - (launch.from as Vector3)).normalized()
 	# Ordinary wilds retain their quick-move fallback.  An opt-in named attack
 	# freezes its move id in the body's combat profile at telegraph start, and
 	# that same id owns type, multiplier, VFX and host-delivered damage.
@@ -3617,20 +3825,22 @@ func _on_enemy_strike() -> void:
 		damage *= _poise_crit_scale()
 	var killed: bool = creature.take_damage(damage)
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
-	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
+	var impact := _new_impact(move_id, "quick", damage, type_mult, stagger_crit, facing, _ally_body, str(launch.action_id))
+	impact = HIT_FEEDBACK.with_launch(impact, launch, _moves.move(move_id).get("vfx", {}))
+	_ally_body.call("add_impulse", impact.direction, HIT_FEEDBACK.impulse_for(impact))
 	if killed:
 		_ally_body.call("play_faint")
 	else:
-		_play_combat_flinch(_ally_body, facing)
+		_play_combat_flinch(_ally_body, facing, impact)
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
 	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
-		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
+		_ally_body, damage / maxf(1.0, float(creature.max_hp)), impact)
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
 		_announce_stagger(false)
+	_present_impact(false, impact, _ally_body, damage)
 	hit_landed.emit(false, damage)
-	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
 		# RG19-spec/D68. A creature carried off the field is neither happy nor
@@ -3686,7 +3896,7 @@ func _handle_active_faint() -> void:
 ## and this is the ONE place the spark, the body flash and -- when the blow
 ## emptied the bar -- the KO puff are fired from; `combat_vfx.gd` reads the
 ## struck instance's `fainted` flag here rather than needing a hook of its own.
-func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0) -> void:
+func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0, impact: Dictionary = {}, shake_camera: bool = true) -> void:
 	# Parented into the WORLD, not to this manager. CombatManager is a plain
 	# Node, and a Node3D hung under one is outside the 3D transform chain: the
 	# burst was created correctly twelve times in a row and rendered none of
@@ -3694,7 +3904,7 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
 	VFX.hit(host, where, tint, charged, struck, damage_fraction)
-	_nudge_camera_on_landing(charged)
+	if shake_camera and impact.is_empty(): _nudge_camera_on_landing(charged)
 	var cfg: Dictionary = MATH.config().get("impact", {})
 	if not bool(cfg.get("enabled", true)):
 		return
@@ -3707,13 +3917,15 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 	var colour := Color(str(spec.get("colour", "#ffd27a")))
 	if tint != null:
 		colour = (tint as Color).lerp(colour, 0.35)
+	var style := HIT_FEEDBACK.flash_style(impact)
+	if style.has("colour"): colour = Color(str(style.colour))
 	FLASH.burst(
 		host,
 		where,
 		colour,
-		float(spec.get("radius", 1.5)),
-		float(spec.get("duration", 0.34)),
-		float(spec.get("strength", 1.0)),
+		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
+		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
+		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)),
 		# N14: the attack path reads the same opt-in key from `combat.json`'s own
 		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
 		# in the game draws exactly the spike it always has.
@@ -4223,6 +4435,7 @@ func _begin_resolve(outcome: String) -> void:
 
 
 func _finish() -> void:
+	PROJECTILE.cancel_encounter(get_tree(), _encounter_id)
 	_end_hitstop()
 	state = State.INACTIVE
 	_disconnect_opponent_callbacks(_wild)
@@ -4700,3 +4913,108 @@ func arena_focus() -> Vector3:
 	if _player != null:
 		return _player.global_position
 	return Vector3.ZERO
+
+## Build only from host-resolved damage and the host's physical geometry.
+func _new_impact(move_id: String, slot: String, damage: float, type_mult: float,
+		critical: bool, direction: Vector3, target_body: Node3D,
+		action_id: String = "", target_uid: String = "") -> Dictionary:
+	if action_id.is_empty():
+		_impact_serial += 1
+		action_id = "%s:impact:%d" % [_encounter_id, _impact_serial]
+	var height := float(target_body.call("body_height")) if target_body != null and target_body.has_method("body_height") else 0.0
+	var profile: Dictionary = target_body.call("combat_config") if target_body != null and target_body.has_method("combat_config") else {}
+	if target_uid.is_empty():
+		var target_instance := _enemy if target_body == _wild else active_creature()
+		if target_instance != null: target_uid = str(target_instance.get("uid"))
+	var contact := Vector3.INF
+	if is_instance_valid(target_body):
+		contact = target_body.global_position if str(_moves.move(move_id).get("vfx", {}).get("archetype", "")) == "root_stone_spikes" else target_body.call("centre")
+	return HIT_FEEDBACK.receipt(action_id, move_id, _moves.move(move_id), slot,
+		damage, type_mult, critical, direction, height,
+		float(profile.get("knockback_scale", HIT_FEEDBACK.config().get("default_profile_knockback_scale", 1.0))), target_uid, contact)
+
+func _host_body_hitstop(body: Node3D, impact: Dictionary) -> void:
+	if is_instance_valid(body) and body.has_method("begin_combat_impact_hitstop"):
+		body.call("begin_combat_impact_hitstop", float(impact.get("hitstop_seconds", 0.0)))
+
+
+## Host launch cue: presentation only; the host's independent timer owns HP.
+func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_enemy: bool = true) -> void:
+	var target_body := _wild if on_enemy else _ally_body
+	var target_instance := _enemy if on_enemy else active_creature()
+	if state != State.ACTIVE or not is_instance_valid(target_body) or target_instance == null: return
+	if str(launch.get("encounter_id", "")) != _encounter_id \
+		or str(launch.get("target_uid", "")) != str(target_instance.get("uid")): return
+	if not HIT_FEEDBACK.admit(_seen_launch_actions, launch): return
+	if striker == null: striker = _ally_body if on_enemy else _wild
+	if not is_instance_valid(striker): return
+	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
+	var move: Dictionary = _moves.move(str(launch.get("move_id", "")))
+	var presentation := PROJECTILE.launch(parent, launch.get("from", striker.global_position),
+		launch.get("to", target_body.global_position), move.get("vfx", {}), launch)
+	attack_launched.emit(on_enemy, launch, presentation)
+
+
+func _present_impact(on_enemy: bool, impact: Dictionary, target_body: Node3D, applied_damage: float = -1.0) -> void:
+	if not HIT_FEEDBACK.admit(_seen_impact_actions, impact): return
+	_begin_hitstop(float(impact.get("hitstop_seconds", 0.0)))
+	if str(impact.get("weight", "light")) in ["heavy", "ultimate"]:
+		_nudge_camera_on_landing(true)
+		var rumble := HIT_FEEDBACK.rumble_spec(impact, MOTION_PREFS.rumble_scale())
+		if not rumble.is_empty() and Input.get_connected_joypads().has(_feedback_device):
+			Input.start_joy_vibration(_feedback_device, float(rumble.weak), float(rumble.strong), float(rumble.seconds))
+	var bounds := _body_world_bounds(target_body)
+	var where := bounds.position + Vector3(bounds.size.x * 0.5,
+		bounds.size.y + float(HIT_FEEDBACK.config().get("numbers", {}).get("target_offset_m", 0.0)), bounds.size.z * 0.5)
+	# Transport dictionaries are mutable. Freeze a flat detached presentation
+	# copy so a HUD/VFX listener cannot rewrite the gameplay verdict.
+	var frozen := impact.duplicate()
+	# Preserve the host base receipt; the existing owning-health path applies
+	# its incoming relic multiplier once. Numbers display that actual debit.
+	if applied_damage >= 0.0: frozen["applied_damage"] = applied_damage
+	frozen.make_read_only()
+	impact_confirmed.emit(on_enemy, frozen, where)
+
+## Host-authored peer hit: presentation only, never HP or local player clocks.
+func present_host_peer_impact(impact: Dictionary) -> void:
+	if _wild == null or not is_instance_valid(_wild): return
+	if _enemy == null or str(impact.get("target_uid", "")) != str(_enemy.get("uid")): return
+	if not HIT_FEEDBACK.admit(_seen_impact_actions, impact): return
+	PROJECTILE.confirm_impact(get_tree(), str(impact.get("action_id", "")))
+	# Only the observed actor's presentation receives the frozen host lease.
+	# This never pauses the observing player's combat or resource clocks.
+	_host_body_hitstop(_wild, impact)
+	_flash_at(_wild.call("centre"), str(impact.get("weight", "light")) in ["heavy", "ultimate"],
+		VFX.tint_for_type(_moves.type_of(str(impact.get("move_id", "")))), _wild,
+		float(impact.get("damage", 0.0)) / maxf(1.0, float(_enemy.max_hp)), impact, false)
+	if bool(impact.get("killed", false)):
+		_wild.call("play_faint")
+	elif float(_enemy.hp) > 0.0:
+		_play_combat_flinch(_wild, impact.get("direction", Vector3.ZERO), impact)
+	var bounds := _body_world_bounds(_wild)
+	var where := bounds.position + Vector3(bounds.size.x * 0.5,
+		bounds.size.y + float(HIT_FEEDBACK.config().get("numbers", {}).get("target_offset_m", 0.0)), bounds.size.z * 0.5)
+	var frozen := impact.duplicate()
+	frozen["own_hit"] = false
+	frozen.make_read_only()
+	impact_confirmed.emit(true, frozen, where)
+
+func _sync_host_player_defence(defence: Dictionary) -> bool:
+	var interrupted := _action == Action.WINDUP
+	if interrupted:
+		_pending_move = {}
+		_buffered_attack = ""
+		_buffer_left = 0.0
+	_player_poise = clampf(float(defence.get("poise", _player_poise_max())), 0.0, _player_poise_max())
+	_player_poise_quiet_left = maxf(0.0, float(defence.get("quiet_left", 0.0)))
+	_player_stagger_critical_ready = bool(defence.get("critical_ready", false))
+	if bool(defence.get("staggered", false)):
+		if _action == Action.BURST and _ally_body != null and _ally_body.has_method("cancel_combat_burst"):
+			_ally_body.call("cancel_combat_burst")
+		_action = Action.STAGGER
+		_action_timer = maxf(0.0, float(defence.get("stagger_left", 0.0)))
+		return true
+	if interrupted:
+		_action = Action.READY
+		_action_timer = 0.0
+	return false

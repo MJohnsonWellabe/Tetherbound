@@ -1,0 +1,18 @@
+Reviewer: fresh projectless session 01a0f2ac-f4b2-71a3-91d0-09f41c380ac4.
+Original output:
+C:/Users/mattj/Documents/Codex/2026-09-30/tetherbound-vfx-image-review/outputs/review.txt
+ROOT supplied an exact copy at .tmp/independent-r14-original-image-review.txt.
+Archived review.txt has the same SHA256:
+6aa5ab9508ed2a123d8b2fadc54db56cc6dd3782337d05eb9157470031cd3f4f
+Git text normalization disabled for this raw review to preserve its exact bytes.
+
+Judged source: 89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e, originals at
+D:/tetherbound/vfx-identities-native-r14, archived in native-identities-r14.
+All 36 individual originals and five Palworld plus three Moong references inspected.
+No implementation/history/results/native/GPU/source/prior-judge access.
+No claimed motion judgment; independent report judged still images only.
+All four families: identity and visible escalation PASS, full craft FAIL.
+Animo/Valheim direct comparison, launch, timing, environmental integration and
+actual gameplay/co-op/audio/performance/device criteria remain UNPROVED.
+Native run remains RED for small-stones:r1 lease; visual report never closes it.
+This report is not a verdict on later R16/R17 source changes.

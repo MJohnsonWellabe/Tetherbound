@@ -95,6 +95,9 @@ const ENCOUNTER_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const COMBAT_AI := preload("res://scripts/combat/combat_ai.gd")
 const WILD_VICTORY_ADAPTER_PATH := "res://scripts/creatures/wild_victory_adapter.gd"
+
+const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
+const MOVE_PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
 const OPENING_CONFIG := "res://data/config/opening.json"
 
 ## Where lane 2.A mounts the session: a `Node` child of the `Game` autoload
@@ -273,6 +276,9 @@ var _shared_telegraph_until_ms: int = 0
 ## Host-only, encounter id -> SharedWildHostFight. Unlike `_encounter`, these
 ## authority engines survive the local host leaving or binding another fight.
 var _shared_host_fights: Dictionary = {}
+var _host_defence: Dictionary = {}
+# Transient presentation fencing; this is not a character or damage journal.
+var _deployment_identity: Dictionary = {}
 
 ## Host-side: the peer whose catch is currently being performed, so §8 step 4
 ## can tell everybody ELSE who got it.
@@ -1468,6 +1474,7 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 ## returning guest has dialled, it only holds the announcement for
 ## `_resend_waiting_deployment()`; nothing below changes single-player behaviour.
 func _announce_deployment(creature: RefCounted) -> void:
+	_note_deployment_identity(_local_peer_id(), _local_character_id(), str(creature.get("uid")))
 	# Snapshot the personal relic revision carried by this card. Without this,
 	# the next idle frame mistakes the initial deployment for a shrine change
 	# and sends the identical reliable announcement twice.
@@ -1548,6 +1555,7 @@ func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 		if by_peer.has(peer_id) and not (by_peer[peer_id] as Array).has(creature_uid):
 			return
 	var previous: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
+	_note_deployment_identity(peer_id, str(row.get("character_id", "")), creature_uid)
 	_deployed_by[peer_id] = row.duplicate(true)
 	# A relic swap changes only the card. Preserve the already-replicated body;
 	# despawning it here would make activating Livewire flash the companion out
@@ -1562,6 +1570,8 @@ func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 
 
 func _host_clear_deployed(peer_id: int) -> void:
+	var previous: Dictionary = _deployed_by.get(peer_id, {})
+	_note_deployment_identity(peer_id, str(previous.get("character_id", "")), "")
 	_deployed_by.erase(peer_id)
 	_despawn_creature_proxy(peer_id)
 
@@ -2229,7 +2239,8 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 		"strike_intent":
 			host_strike_started.emit(intent.duplicate(true), peer_id)
 			var verdict := _host_strike(intent, peer_id)
-			host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
+			if not bool((verdict.get("delta", {}) as Dictionary).get("scheduled", false)):
+				host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
 			return verdict
 		"burst_intent":
 			return _host_burst(intent, peer_id)
@@ -2399,6 +2410,9 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
 			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
 			"pending": false, "delta": {}}
+	if _host_peer_staggered(encounter_id, peer_id):
+		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
+			"code": "staggered", "reason": "Your creature is staggered.", "pending": false, "delta": {}}
 	var runtime := _shared_host_fight(encounter_id)
 	var record: Dictionary = _encounter_host.call("record", encounter_id)
 	var striker := deployed_body_for(peer_id)
@@ -2459,28 +2473,106 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_host_after_encounter_change(encounter_id, peer_id)
 		return verdict
 
+	var from: Vector3 = striker.call("centre")
+	var target: Vector3 = wild.call("centre")
+	var direction := (target - from).normalized()
+	var muzzle := from + direction * _body_radius(striker)
+	var opponent := wild.get("instance") as RefCounted
+	if opponent == null: return {"ok": false, "kind": "strike_intent", "code": "unknown_encounter", "delta": {}}
+	var launch := HIT_FEEDBACK.launch("%s:%d:%d" % [encounter_id, peer_id, int(intent.get("action", 0))],
+		encounter_id, str(card.get("creature_uid", "")), str(opponent.get("uid")),
+		str(intent.get("move_id", "")), slot, muzzle, target,
+		MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
+		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position, _host_visual_bounds(wild)).duplicate(true)
+	launch["attacker_binding"] = _strike_actor_binding(encounter_id, peer_id, striker)
+	launch.make_read_only()
+	if float(launch.travel_seconds) <= 0.0:
+		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false)
+	delta["scheduled"] = true
+	delta["launch"] = launch
+	_publish_host_attack_launch(encounter_id, peer_id, launch)
+	_host_after_encounter_change(encounter_id, peer_id)
+	get_tree().create_timer(float(launch.travel_seconds), false).timeout.connect(
+		_finish_host_strike.bind(encounter_id, peer_id, card.duplicate(true), move.duplicate(true), launch, verdict.duplicate(true), true, intent.duplicate(true)), CONNECT_ONE_SHOT)
+	return verdict
+
+
+## This is a host-owned gameplay timer, independent of any effect node.
+## Actor identity/generation, participant admission and phase are rechecked;
+## an accepted action cannot damage a replacement opponent after scene travel.
+func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
+		move: Dictionary, launch: Dictionary, verdict: Dictionary, deliver: bool, intent: Dictionary = {}) -> Dictionary:
+	var runtime := _shared_host_fight(encounter_id)
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	var engine: Node = runtime if runtime != null else _manager
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	var striker := deployed_body_for(peer_id)
+	if not (_is_host() or _owns_canonical_wild(encounter_id)) or not is_instance_valid(engine) or not is_instance_valid(wild) \
+		or not is_instance_valid(striker) or str(record.get("phase", "")) != "active" \
+		or not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id): return {}
+	if not _strike_actor_binding_matches(encounter_id, peer_id, striker, launch.get("attacker_binding", {})): return {}
+	var current_card := _creature_card_for(peer_id)
+	var opponent := wild.get("instance") as RefCounted
+	if opponent == null or not HIT_FEEDBACK.launch_matches(launch, encounter_id,
+		str(current_card.get("creature_uid", "")), str(opponent.get("uid")),
+		int(runtime.get("body_generation")) if runtime != null else 0): return {}
 	var enemy_profile: Dictionary = wild.call("combat_config")
-	var armor := COMBAT_AI.armored_front_scale(enemy_profile, wild.call("centre"),
-		wild.call("facing"), striker.call("centre"))
-	var rolled: Dictionary = damage_engine.call("host_roll_damage", card,
-		str(intent.get("move_id", "")), float(move.get("power", 9.0)) * armor, slot == "charged")
-	if rolled.is_empty():
-		return verdict
+	var armor := COMBAT_AI.armored_front_scale(enemy_profile, wild.call("centre"), wild.call("facing"), striker.call("centre"))
+	var rolled: Dictionary = engine.call("host_roll_damage", card,
+		str(launch.move_id), float(move.get("power", 9.0)) * armor, str(launch.slot) == "charged",
+		{"action_id": str(launch.action_id), "striker_body": striker,
+		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
+	if rolled.is_empty(): return {}
+	var impact: Dictionary = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
+	impact["presentation_launched"] = float(launch.travel_seconds) > 0.0
+	impact["killed"] = bool(rolled.get("killed", false))
+	impact.make_read_only()
+	rolled["impact"] = impact
+	_host_pause_peer_defence(encounter_id, peer_id, impact)
+	var delta: Dictionary = verdict.get("delta", {})
+	delta.erase("scheduled")
+	delta.erase("launch")
 	delta.merge(rolled, true)
 	_encounter_host.call("set_opponent_hp", encounter_id,
 		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)), rolled)
 	if bool(rolled.get("killed", false)):
-		# Actual accepted damage and committed opponent HP, BEFORE any terminal
-		# publication can withdraw participants, retire actors or clear bodies.
+		# Retain the original killing verdict before any terminal publication.
 		_capture_wild_victory_source(encounter_id, verdict)
-	_emit_f22_accepted_hit(encounter_id, peer_id, striker, delta, move, slot)
+	_emit_f22_accepted_hit(encounter_id, peer_id, striker, delta, move, str(launch.slot))
 	if bool(rolled.get("killed", false)):
-		_encounter_host.call("set_phase", encounter_id,
-			"done" if runtime != null else "resolving")
-	_host_after_encounter_change(encounter_id, peer_id)
-	if bool(rolled.get("killed", false)):
-		_finalize_shared_host_fight(encounter_id, "won")
+		_encounter_host.call("set_phase", encounter_id, "done" if runtime != null else "resolving")
+	# Reconcile observer contact before the reliable absolute-HP snapshot.
+	_host_publish_peer_impact(encounter_id, peer_id, impact)
+	_host_after_encounter_change(encounter_id, peer_id, 0, impact)
+	if deliver:
+		host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
+		if peer_id == _local_peer_id(): _deliver_encounter_verdict(verdict)
+		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [verdict])
+	if bool(rolled.get("killed", false)): _finalize_shared_host_fight(encounter_id, "won")
 	return verdict
+
+
+## Frozen render envelope only; never collision/reach/damage authority.
+func _host_visual_bounds(body: Node3D) -> AABB:
+	if _manager == null or not _manager.has_method("_body_world_bounds") or not is_instance_valid(body):
+		return AABB()
+	var bounds: Variant = _manager.call("_body_world_bounds", body)
+	return bounds if bounds is AABB else AABB()
+
+
+func _publish_host_attack_launch(encounter_id: String, author: int, launch: Dictionary) -> void:
+	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		# Publish to the actor before the host timer starts too; returned launch deduplicates.
+		if peer_id == _local_peer_id():
+			if _manager != null and _local_bound_encounter_id() == encounter_id:
+				_manager.call("present_host_attack_launch", launch, deployed_body_for(author))
+		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_attack_launch", [encounter_id, author, launch])
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_attack_launch(encounter_id: String, author: int, launch: Dictionary) -> void:
+	if _manager != null and _local_bound_encounter_id() == encounter_id:
+		_manager.call("present_host_attack_launch", launch, deployed_body_for(author))
 
 
 ## COMBAT-3. The host decides whether the player's spatial burst may begin,
@@ -2493,6 +2585,9 @@ func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
 			"code": "invalid_tournament_roster", "reason": "Only the registered three may fight this round.",
 			"pending": false, "delta": {}}
+	if _host_peer_staggered(encounter_id, peer_id):
+		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
+			"code": "staggered", "reason": "Your creature is staggered.", "pending": false, "delta": {}}
 	var body := deployed_body_for(peer_id)
 	if body == null or not is_instance_valid(body):
 		return {"ok": false, "kind": "burst_intent", "peer": peer_id,
@@ -2736,7 +2831,7 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 		return {}
 	var struck := int(best.get("peer_id", 0))
 	_encounter_host.call("note_struck", encounter_id, struck)
-	return {"peer_id": struck, "card": _creature_card_for(struck)}
+	return {"peer_id": struck, "card": _creature_card_for(struck), "body": deployed_body_for(struck)}
 
 
 func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vector3,
@@ -2758,6 +2853,25 @@ func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vect
 
 
 ## Deliver a blow the host rolled to the peer whose creature took it.
+func host_enemy_target_current(encounter_id: String, peer_id: int, target_uid: String) -> bool:
+	return _is_host() and str(_encounter_host.call("phase", encounter_id)) == "active" \
+		and (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id) \
+		and str(_creature_card_for(peer_id).get("creature_uid", "")) == target_uid
+
+
+func host_deliver_enemy_launch(encounter_id: String, peer_id: int, launch: Dictionary) -> void:
+	if peer_id == _local_peer_id():
+		if _manager != null and _local_bound_encounter_id() == encounter_id:
+			_manager.call("present_host_attack_launch", launch, null, false)
+	elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_enemy_launch", [encounter_id, launch])
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_enemy_launch(encounter_id: String, launch: Dictionary) -> void:
+	if _manager != null and _local_bound_encounter_id() == encounter_id:
+		_manager.call("present_host_attack_launch", launch, null, false)
+
+
 func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> void:
 	if peer_id == _local_peer_id():
 		if _manager != null and _local_bound_encounter_id() == encounter_id:
@@ -2770,8 +2884,10 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 ## The record changed, so everybody in it is told. §3: nothing else is
 ## authoritative, so this is the only broadcast a participant's HUD needs.
 func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
-		terminal_catcher: int = 0) -> void:
+		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
 	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	# Presentation metadata on this accepted-hit snapshot only; not save state.
+	if not resolved_impact.is_empty(): rec["resolved_impact"] = resolved_impact.duplicate()
 	if rec.is_empty():
 		_release_tournament_roster(encounter_id)
 		return
@@ -2815,6 +2931,7 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 func _tick_encounter(delta: float) -> void:
 	if not _is_host() and not _has_canonical_wild_runtime():
 		return
+	_prune_host_defence()
 	var hz := maxf(1.0, float(ENCOUNTER_HOST_SCRIPT.config().get(
 		"shared_opponent_presentation_hz", 10.0)))
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
@@ -6983,3 +7100,118 @@ func _tick_wild_victory_settlement(encounter_id: String, delta: float) -> void:
 		runtime.set_meta(&"wild_victory_resolved", true)
 		if bool(runtime.get_meta(&"dispose_after_wild_victory", false)):
 			_dispose_shared_host_fight(encounter_id, false)
+
+func _host_publish_peer_impact(encounter_id: String, author_peer_id: int, impact: Dictionary) -> void:
+	if not _is_host() or impact.is_empty(): return
+	for participant: int in (_encounter_host.call("participants_of", encounter_id) as Array):
+		if participant == author_peer_id: continue
+		if participant == _local_peer_id():
+			if _manager != null and _local_bound_encounter_id() == encounter_id:
+				_manager.call("present_host_peer_impact", impact)
+		elif _can_encounter_rpc():
+			_send_realm_rpc(participant, "_rpc_encounter_peer_impact", [encounter_id, impact])
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_encounter_peer_impact(encounter_id: String, impact: Dictionary) -> void:
+	if _manager == null or _local_bound_encounter_id() != encounter_id: return
+	_manager.call("present_host_peer_impact", impact)
+
+func host_card_incoming_multiplier(card: Dictionary) -> float:
+	if not is_inside_tree(): return 1.0
+	var game := get_node_or_null(^"/root/Game")
+	if game == null: return 1.0
+	return validate_card_incoming_multiplier(card, game.get("realm_hearts") as RefCounted, game.get("progression") as RefCounted)
+
+static func validate_card_incoming_multiplier(card: Dictionary, hearts: RefCounted, progression: RefCounted) -> float:
+	if hearts == null or progression == null: return 1.0
+	var relic_id := str(card.get("active_relic_id", ""))
+	if relic_id.is_empty() or not bool(hearts.call("is_placed", relic_id, progression)): return 1.0
+	var spec: Dictionary = hearts.call("heart", relic_id)
+	var power: Variant = spec.get("power", {})
+	if not power is Dictionary: return 1.0
+	return clampf(float((power as Dictionary).get("incoming_damage_multiplier", 1.0)), 0.0, 1.0)
+
+func _host_defence_state(encounter_id: String, peer_id: int, target_uid: String) -> Dictionary:
+	var peers: Dictionary = _host_defence.get(encounter_id, {})
+	_host_defence[encounter_id] = peers
+	var state: Dictionary = peers.get(peer_id, {})
+	if str(state.get("target_uid", "")) != target_uid:
+		state = HIT_FEEDBACK.defence_state(target_uid, Time.get_ticks_msec(), HIT_FEEDBACK.MATH.config().get("poise", {}))
+		peers[peer_id] = state
+	return state
+
+func _host_pause_peer_defence(encounter_id: String, peer_id: int, impact: Dictionary) -> void:
+	var target_uid := str(_creature_card_for(peer_id).get("creature_uid", ""))
+	if not host_enemy_target_current(encounter_id, peer_id, target_uid): return
+	var state := _host_defence_state(encounter_id, peer_id, target_uid)
+	HIT_FEEDBACK.pause_defence(state, Time.get_ticks_msec(),
+		float(impact.get("hitstop_seconds", 0.0)), HIT_FEEDBACK.MATH.config().get("poise", {}))
+
+func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> Dictionary:
+	var impact: Dictionary = payload.get("impact", {})
+	var target_uid := str(impact.get("target_uid", ""))
+	if not host_enemy_target_current(encounter_id, peer_id, target_uid): return {}
+	var card := _creature_card_for(peer_id)
+	var state := _host_defence_state(encounter_id, peer_id, target_uid)
+	if not HIT_FEEDBACK.admit(state.actions, impact): return {}
+	var cfg: Dictionary = HIT_FEEDBACK.MATH.config().get("poise", {})
+	var critical := bool(state.critical_ready) and Time.get_ticks_msec() < int(state.stagger_until_ms)
+	var stop := float(HIT_FEEDBACK.config().get("critical_hitstop_seconds", 0.0)) if critical else float(impact.get("hitstop_seconds", 0.0))
+	var defence := HIT_FEEDBACK.resolve_defence_hit(state, float(payload.get("damage", 0.0)),
+		host_card_incoming_multiplier(card), Time.get_ticks_msec(), stop, cfg)
+	var resolved := payload.duplicate()
+	resolved["damage"] = float(defence.damage)
+	resolved["critical"] = bool(defence.critical)
+	resolved["defence"] = defence
+	resolved["host_resolved_defence"] = true
+	resolved["impact"] = HIT_FEEDBACK.with_defence(impact, defence)
+	return resolved
+
+func _host_peer_staggered(encounter_id: String, peer_id: int) -> bool:
+	var peers: Dictionary = _host_defence.get(encounter_id, {})
+	var state: Dictionary = peers.get(peer_id, {})
+	if state.is_empty() or str(state.get("target_uid", "")) != str(_creature_card_for(peer_id).get("creature_uid", "")): return false
+	return Time.get_ticks_msec() < int(state.get("stagger_until_ms", 0))
+
+func _prune_host_defence() -> void:
+	if _encounter_host == null: return
+	for encounter_id: String in _host_defence.keys():
+		if str(_encounter_host.call("phase", encounter_id)) == "done":
+			_host_defence.erase(encounter_id)
+			continue
+		var peers: Dictionary = _host_defence[encounter_id]
+		var participants: Array = _encounter_host.call("participants_of", encounter_id)
+		for peer_id: int in peers.keys():
+			if not participants.has(peer_id): peers.erase(peer_id)
+		if peers.is_empty(): _host_defence.erase(encounter_id)
+
+
+# Card-only refreshes retain this epoch; actual switch, recall and rejoin do not.
+# The legacy path lacks canonical actor generations, so it additionally binds
+# the current body instance and this host-observed deployment lifetime.
+func _note_deployment_identity(peer_id: int, character_id: String, uid: String) -> void:
+	var previous: Dictionary = _deployment_identity.get(peer_id, {})
+	if previous.get("character_id") == character_id and previous.get("creature_uid") == uid: return
+	_deployment_identity[peer_id] = {"character_id": character_id, "creature_uid": uid,
+		"generation": int(previous.get("generation", 0)) + 1}
+
+func _strike_actor_binding(encounter_id: String, peer_id: int, body: Node3D) -> Dictionary:
+	if not is_instance_valid(body): return {}
+	var card := _creature_card_for(peer_id)
+	var deployment: Dictionary = _deployment_identity.get(peer_id, {})
+	var record: Dictionary = _encounter_host.call("record", encounter_id) if _encounter_host != null else {}
+	var participant: Dictionary = (record.get("participants", {}) as Dictionary).get(peer_id, {})
+	var binding := {"character_id": str(deployment.get("character_id", "")),
+		"creature_uid": str(card.get("creature_uid", "")),
+		"deployment_generation": int(deployment.get("generation", 0)),
+		"actor_generation": int(participant.get("actor_generation", 0)),
+		"body_instance_id": body.get_instance_id()}
+	if binding.character_id.is_empty() or binding.creature_uid.is_empty() or binding.deployment_generation < 1: return {}
+	if binding.creature_uid != deployment.get("creature_uid"): return {}
+	binding.make_read_only()
+	return binding
+
+func _strike_actor_binding_matches(encounter_id: String, peer_id: int, body: Node3D, before: Dictionary) -> bool:
+	if before.is_empty(): return false
+	var current := _strike_actor_binding(encounter_id, peer_id, body)
+	return not current.is_empty() and before == current

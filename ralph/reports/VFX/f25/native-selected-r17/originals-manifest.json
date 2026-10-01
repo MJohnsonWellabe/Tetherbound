@@ -1,0 +1,67 @@
+[
+  {
+    "file": ".gitattributes",
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  {
+    "file": "before-native-source-hashes.json",
+    "bytes": 49109,
+    "sha256": "0b5f3d487f07c040a1010957cb09ffa3482c28cc03b58f7b0de4cc10ac891444"
+  },
+  {
+    "file": "identities-motion.avi",
+    "bytes": 4835074,
+    "sha256": "d6e917bc0512ce30b723bf2ba1531757a4ff500fb384f2c203ae681a57c66f22"
+  },
+  {
+    "file": "native-receipt.json",
+    "bytes": 1288,
+    "sha256": "6716fbef79217070862cc874029da352237eb13011722962ac47b5492d6a29cd"
+  },
+  {
+    "file": "native.txt",
+    "bytes": 907,
+    "sha256": "6f2dd0ee15ffc4b0dd473cc64933d4f01c22060cde3be406ef035c08a15e9a15"
+  },
+  {
+    "file": "r17-source-gate.txt",
+    "bytes": 9565,
+    "sha256": "ad2833a16dbce8830b537912aa023324df3ca847c213f5cfb8a29ad72c32bc33"
+  },
+  {
+    "file": "r17-source-hashpins.json",
+    "bytes": 17712,
+    "sha256": "4b87112e8095f475b80e0e1face13ede92cc31361b956fbb590b1e4314f056a9"
+  },
+  {
+    "file": "results.json",
+    "bytes": 3730,
+    "sha256": "d7a70392e6f6a5e9be48da3fdabfa6375017ef9119c685e32ef84b205168b3a3"
+  },
+  {
+    "file": "run_selected.py",
+    "bytes": 5546,
+    "sha256": "99b390ef006ff670a82e40f435351f58088ac59fa6672982533343ffb7461fae"
+  },
+  {
+    "file": "sequence-00-contact.png",
+    "bytes": 76514,
+    "sha256": "27d4ef700169e3d6807ebd5de2581eaa108f724e551aac7089d3c1328f9f2c93"
+  },
+  {
+    "file": "sequence-00-flight.png",
+    "bytes": 82271,
+    "sha256": "d5bf2e001fefb7d5d36ec2ddabd2ed502012aed0ddbcd8f39388c673804a2dc4"
+  },
+  {
+    "file": "sequence-00-impact.png",
+    "bytes": 77871,
+    "sha256": "c2db28d3a24ffad2a32372379d2adf400d357b850a5d6de3d347b4e460ede086"
+  },
+  {
+    "file": "verdict.txt",
+    "bytes": 1330,
+    "sha256": "5096b2fd8843aae6dcdc2099d54c6e108fb98f1d60e98938ac5b801053a9339a"
+  }
+]

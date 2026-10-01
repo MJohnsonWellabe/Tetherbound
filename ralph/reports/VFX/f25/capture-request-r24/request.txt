@@ -1,0 +1,76 @@
+R24 combined bounded visual-capture request — PREPARED, NOT RUN
+
+GPU/engine/import/render/export token is NOT held. Independent read-only source
+gate and fresh explicit ROOT grant are required before this wrapper executes.
+No owner question or approval is needed for the already authorized source work.
+
+Frozen production source pins
+  Before: 9a6dbc823c4a4b05695ac00be51150312fee470f
+  After:  05ccfe3b3449727ddf8a18b070565c0ea22e5314
+Only these exact clean detached sources will run, in the owned redesign-vfx
+checkout/cache, serialized, then restore the pushed tb/vfx branch. Existing R14
+RED and R17 selected PASS remain untouched. Do not fold further content into
+either proof pin; continue later source/drafts separately while this is reviewed.
+
+Capture scope and actual harness
+Derive from the exact existing tests/smoke_move_effects_library.gd in both pins.
+Original harness SHA-256 LF:
+  7df4fc6948ad1e68b9aef338a83de01edd0fe6df160613a71fb80fe7c1753c61
+Derived fixture SHA-256 LF:
+  b887637bcf76b6549d60368b4eafbed0177b86c370c87500d045ea6d06edf759
+Fixture bytes and exact delta are supplied. Tracked tests are not edited. The
+derived copy adds validated named family/rank selectors to the mastery branch,
+with all original 24-family/five-rank defaults and failure checks retained.
+Every _exercise capture, timer, lease, arrival and independent-schedule check is
+byte-unchanged. _transit_shutter adds the stronger exact existing elongated-ice
+prism envelope; camera, origin, target, clearance and minimum shutter are fixed.
+
+One token, two sequential Compatibility native processes at 1920x1080:
+  --batch=mastery
+  --families=fireball,ice_shard_volley,root_stone_spikes
+  --ranks=1,3,5
+Each process captures nine cases, 27 untouched flight/contact/impact PNGs and
+one original fixed-30fps AVI covering the natural effect lifetime/aftermath.
+Total: 18 cases, 54 originals, two motion clips. No full 120-case matrix, unit
+suite, new test, full CI or light-preflight repeat; reuse unchanged R17 18-check
+actual-node light lifecycle and prior 27-assertion light unit evidence.
+
+Fireball/eruption use the harness's actual unchanged mapped move selection.
+Ice has no ordinary mapped move today: the existing library archetype fallback
+is explicitly synthetic, never an invented earned consumer. Pose/model, camera,
+floor/environment, geometry source, seed, clocks and renderer match before/after.
+This is NOT a player-input, HP-authority, co-op, High/Medium world or Ally proof.
+
+Runtime bounds and originals
+Fresh root: D:/tetherbound/vfx-r24-combined-runtime (must not exist).
+Each engine receives a 150s external OWNED process-tree deadline; baseline RED
+stops the request without an automatic retry. Never global Kill/overwrite.
+Prelaunch checkout hashes, fixture hash, source SHA, command, census/cache policy,
+exit code, raw logs, all originals, movie, end leases and restoration are retained.
+The wrapper rejects an occupied slot, detects foreign writers, kills only owned
+PIDs on failure and restores the branch only after owned processes are gone.
+Estimated 30–60s each / 60–120s total, based on the R14 12-case 34.7s and R17
+selected-plus-preflight 16.39s runs; cold materials may vary. Hard cap 150s each.
+Movie fps and synthetic frame times are not real four-creature performance.
+
+Independent code-blind questions, AFTER restoring saved reference boards
+1. Name each elemental/object identity from neutral originals without reading
+   source/config/results/history; identify uncertainty, not inferred labels.
+2. Compare before/after flight, compact contact, burst and movie aftermath at
+   each visible tier. Does ice read as faceted frost rather than striped plastic?
+   Does eruption read as grounded mineral with coherent chips rather than cones
+   and glowing round debris? Does fire have a distinct cooling termination?
+3. Can the hit locus and creature muzzle/front silhouette be read at the largest
+   tier, in motion as well as stills? Does fire still cover too much target?
+4. Does size/count/trail escalation remain visibly clear without source-derived
+   numeric rank labels? Ranks 2/4 and earned mastery remain separately unproved.
+5. Judge the COMPLETE Palworld/Animo appeal and Valheim light/atmosphere bar.
+   Passing one defect, identity or synthetic isolated material is insufficient.
+   The flat synthetic arena cannot supply world integration; mark that obligation
+   UNPROVED/FAIL, with exact reasons, rather than grant a weakened full-craft PASS.
+6. Disclose all shortcuts: posed model, library-only ice, fixed synthetic travel,
+   sample ranks, absent launch raster, no real combat input/audio mix/telemetry.
+
+Keep results private to the lane evidence until ROOT integrates a reviewed PR.
+All F25 criteria stay OPEN and runtime OFF unless actual acceptance evidence
+and an independent strict re-check establish the full wording on main.

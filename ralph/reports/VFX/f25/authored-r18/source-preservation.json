@@ -1,0 +1,72 @@
+{
+  "base_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+  "scope": "Bounded source delta only, no engine/craft/acceptance PASS",
+  "methods": [
+    {
+      "file": "scripts/vfx/move_effect.gd",
+      "changed_methods": [
+        "_build_impact",
+        "_ready"
+      ],
+      "unchanged_methods": [
+        "_append_trail_point",
+        "_build_light",
+        "_build_puffs",
+        "_contact_position",
+        "_cue",
+        "_exit_tree",
+        "_finish_presentation",
+        "_impact_visual_origin",
+        "_mesh_node",
+        "_play_impact",
+        "_play_launch",
+        "_process",
+        "_projectile_position",
+        "_set_opacity",
+        "_update_bodies",
+        "_update_impact",
+        "_update_puffs",
+        "_update_trail",
+        "action_id",
+        "cancel_presentation",
+        "configure",
+        "confirm_presentation_impact",
+        "encounter_id"
+      ]
+    },
+    {
+      "file": "scripts/vfx/move_effect_geometry.gd",
+      "changed_methods": [
+        "authored_material"
+      ],
+      "unchanged_methods": [
+        "_bolt_segment",
+        "_stone_point",
+        "_triangle",
+        "_uv_quad",
+        "band",
+        "bolt",
+        "flowing_ribbon",
+        "glint",
+        "impact_rays",
+        "material",
+        "plume",
+        "quad",
+        "ribbon",
+        "shape",
+        "sigil",
+        "stone",
+        "vortex",
+        "wave"
+      ]
+    }
+  ],
+  "only_profile_changed": "bubble_volley body and impact",
+  "mote_material_consumer": "Existing water_jet bubble motes plus bubble_volley pop beads",
+  "unchanged_profile_data_except_bubble": true,
+  "unchanged_active_cues": 175,
+  "unchanged_duration_parameters_mastery_budgets_sound_mapping_host_endpoints": true,
+  "unchanged_R16_fixture_and_R17_four_family_profiles": true,
+  "library_enabled": false,
+  "new_shader_sha256": "384e4c5e85a29fd7ed43708574be2af38ee17b9c92ec702dbe3506388029a877"
+}

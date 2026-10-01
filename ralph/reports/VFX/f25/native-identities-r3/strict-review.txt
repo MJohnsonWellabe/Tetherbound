@@ -1,0 +1,13 @@
+Independent fresh code-blind r3 final, supplied by the coordinator:
+
+F25#2 FAIL, F25#5 FAIL whole criterion (sampled four effects ranks1/3/5
+visibly scale). Judge saw convincing small stones and single boulder, but
+hard rectangular segmented trails and tiny rigid impacts fail finish.
+Fireball recognizes symbolism but corrugated trail/crumpled solid orb do
+not read as flame; expanding textured sphere, rigid spikes and gray halo
+fail explosion finish. Lightning reads bolt from above but no visible
+target exists, so striking-target wording is unproven. Plain synthetic
+background is a coverage limit, not a verdict on unseen world.
+
+This report applies to executed source a90aa0c05 and the retained r3 PNGs.
+The later source changes are unjudged; no pass is inferred from code.

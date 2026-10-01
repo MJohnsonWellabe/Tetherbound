@@ -1,0 +1,19 @@
+F25 R19 wind-blade content; library OFF and all F25 acceptance rows OPEN.
+Adds original turbulent cool air strands on the existing crescent vertices.
+Explicit air_surface opt-in exists ONLY in wind_blade body/impact data; generic
+slash/crescent/orb materials remain unchanged. No new shader on unrelated shapes.
+The same blade now breaks into restrained cool mist beads on contact, using the
+existing mote draw/slots. No particles, layers, lights or voices are added.
+Compact contact/expansion reuses R17's existing growth handling, with data values
+0.25 initial scale and 0.55 growth exponent; duration/final extent stay unchanged.
+Existing contact-surface presentation anchor applies; host endpoints do not move.
+
+Shader and all colour/flow/frequency/breakup/emission/phase values are configured
+locally. No vertex displacement, UV/topology/scale/path/mastery/count/collision,
+damage, receipt, lease, resource, save or authority alteration. No screen refraction
+or GPU particles. Active cue bank and mapping remain unchanged.
+No engine/GPU/import/render/test/CI run or native/full-craft acceptance claim.
+Root has explicitly kept source/content work moving while the GPU is queued.
+Next frozen checkpoint/actual source pin must be recorded at the GPU grant; old
+R14 RED still remains, R16 lease-clock/R17 four-family staging need their batch.
+Wind/bubble native and actual-path/full-craft proof stay separately OPEN.

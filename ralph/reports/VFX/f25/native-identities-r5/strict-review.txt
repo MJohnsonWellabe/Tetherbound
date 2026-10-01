@@ -1,0 +1,41 @@
+Fresh independent code-blind judge: /root/vfx_blind_r5.
+Archival text: parent-relayed final from /root/vfx_blind_r5. The original
+verbatim agent report is unavailable in current context. This faithful scoped
+relay is not presented as a verbatim quotation.
+
+Image source: a74500624fea0dd05ec1166d4a16c1e0722cea8b.
+Original evidence commit: 856d59d9c0243d91e04c0d8bc5a5d5d31d9650fe.
+Judge read these three restored references first:
+docs/reference/tetherbound-meadows-keyart.png
+docs/reference/palworld-01-boss-fight-forest.jpg
+docs/reference/palworld-03-field-boss-meadow.jpg
+It viewed all 36 original 1920x1080 frames from
+D:/tetherbound/vfx-identities-native-r5 (sequence-00 through sequence-11, each
+-flight.png/-contact.png/-impact.png), without source, results, configuration
+or previous verdicts. It wrote twelve neutral observations before root
+revealed the mapping. Exact image inventory/hashes remain in
+sha256.csv; no frames were omitted or replaced. Native1/two guard failures
+remain in native-final.txt and results.json.
+
+Literal identity PASS for all four sampled effects: Pebble Toss (00-02) shows
+several stones; Rock Throw (03-05) shows one boulder; Fireball (06-08) shows a
+burning orb, trail and a basic fiery explosion cloud; Thunder (09-11) shows a
+downward strike at the target. The Fireball components are actually visible;
+this report does not claim they are absent. Sampled ranks1/3/5 visibly upgrade.
+
+Full effect craft bar remains UNMET: nearly circular flat luminous cores;
+broad soft/puffy diffuse explosions and dust with straight horizontal lower
+bands; minimal directional stone trails and no fragment burst; thin angular
+lightning; strongest plumes wash face/body detail.
+
+Synthetic green/blue environment leaves integrated world and atmosphere
+UNPROVEN; that scope limit is not a failure judgment on the unseen real world.
+Whole F25#2 and F25#5 remain OPEN under the owner's full visual bar. Sampled
+four effects/ranks1/3/5 do not cover all24/ranks2/4/earned mastery paths. No
+continuous-motion, audio or performance acceptance is claimed. Library off.
+
+After repeated full-bar rejections the new source approach uses localized
+articulated flame core/expansion/sparks, irregular textured dust, directional
+stone fragments/trails and tapered electric corona. Frozen target bounds,
+particle leases, host authority/contact timing/model scale remain unchanged.
+That new source is unrendered and has no independent visual verdict yet.

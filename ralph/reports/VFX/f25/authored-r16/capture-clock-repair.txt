@@ -1,0 +1,29 @@
+F25 R16: capture fixture clock repair, not a production lifetime fix.
+
+Native R14 remains RED and its originals/logs/movie are preserved at faa42a1d10.
+Source changes only tests/smoke_move_effects_library.gd:
+- Capture lifetime deadline uses an idle SceneTreeTimer with the same configured
+  travel + impact duration + one-second margin, minimum two seconds.
+- Finite 30-second wall watchdog remains, with explicit failure on expiry.
+- Noncapture profile and clock batches retain the existing wall-time deadline.
+- Reports expose deadline clock/allowance, actual end process frame/wall elapsed.
+- --identity=small-stones:r1 names the one affected capture. Unknown ids/ranks or
+  using this selector with another batch fails; default identities still runs 12.
+- All original arrival/frame/particle-cap/lease-zero/capture checks are preserved.
+- Existing 18-check light preflight is preserved for both complete and selected runs.
+
+No move, mesh, shader, cue, effect, timer authority, budget, HP, player path or
+production config change. No test skipped, disabled, quarantined or assertion weakened.
+No engine validation yet: shared GPU belongs to ROOT/combat queue.
+
+Minimum next proof after a new GPU grant (frozen source, fresh external paths):
+Locked Godot4.7 --path D:/tetherbound/redesign-vfx --rendering-method gl_compatibility
+--resolution 1920x1080 --write-movie <fresh external .avi> --fixed-fps 30
+--script res://tests/smoke_move_effects_library.gd -- --batch=identities
+--identity=small-stones:r1 --out=<fresh external directory>
+Retain sourceSHA/command/raw log/exit/three originals/movie/result/end-slot trace.
+Run only this affected identity; reuse R14's unchanged unit/light/other-case evidence
+subject to independent review. Preserve owned process-tree cleanup/token discipline.
+
+F25 all criteria stay OPEN/library OFF. Full craft and production acceptance remain
+separate required evidence; synthetic movie timing is never real-time performance.

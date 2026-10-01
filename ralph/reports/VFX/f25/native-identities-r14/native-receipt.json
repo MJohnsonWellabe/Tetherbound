@@ -1,0 +1,33 @@
+{
+  "source_commit": "89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-vfx",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1920x1080",
+    "--write-movie",
+    "D:\\tetherbound\\vfx-r14-runtime\\identities-motion.avi",
+    "--fixed-fps",
+    "30",
+    "--script",
+    "res://tests/smoke_move_effects_library.gd",
+    "--",
+    "--batch=identities",
+    "--out=D:/tetherbound/vfx-identities-native-r14"
+  ],
+  "exit_code": 1,
+  "timed_out": false,
+  "elapsed_seconds": 34.703,
+  "tracked_process_ids": [
+    2076,
+    16428
+  ],
+  "owned_orphan_cleanup": [],
+  "godot_processes_remaining": [],
+  "errors": [],
+  "scope": "Selected light lease check or synthetic production-node presentation; no gameplay/HP/performance/full craft proof",
+  "movie_limit": "Godot movie-maker fixed30fps; synthetic0.7s identity travel; not real frame-time, HP or gameplay timing proof"
+}

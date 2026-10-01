@@ -1,0 +1,119 @@
+{
+  "base_commit": "5d67e950fb",
+  "scope": "Source preservation only, no native or visual PASS",
+  "modified_methods": [
+    "_process",
+    "_build_impact",
+    "_update_puffs",
+    "_update_impact"
+  ],
+  "unchanged_methods": [
+    "_append_trail_point",
+    "_build_light",
+    "_build_puffs",
+    "_contact_position",
+    "_cue",
+    "_exit_tree",
+    "_finish_presentation",
+    "_impact_visual_origin",
+    "_mesh_node",
+    "_play_impact",
+    "_play_launch",
+    "_projectile_position",
+    "_ready",
+    "_set_opacity",
+    "_update_bodies",
+    "_update_trail",
+    "action_id",
+    "cancel_presentation",
+    "configure",
+    "confirm_presentation_impact",
+    "encounter_id"
+  ],
+  "config_delta": [
+    {
+      "path": "/move_library/archetypes/stone_throw/impact/growth_power",
+      "before": null,
+      "after": 0.45
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/impact/puff_reveal_power",
+      "before": null,
+      "after": 0.18
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/impact/puff_initial_scale",
+      "before": null,
+      "after": 0.28
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/impact/initial_grow",
+      "before": 0.55,
+      "after": 0.18
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/body/mineral_colour",
+      "before": "#b9aa8b",
+      "after": "#d1c1a2"
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/body/texture_blend",
+      "before": 0.52,
+      "after": 0.38
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/body/stone_colour",
+      "before": "#8b8071",
+      "after": "#aa9981"
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/trail/opacity",
+      "before": 0.68,
+      "after": 0.48
+    },
+    {
+      "path": "/move_library/archetypes/stone_throw/trail/width",
+      "before": 0.24,
+      "after": 0.15
+    },
+    {
+      "path": "/move_library/archetypes/fireball/impact/growth_power",
+      "before": null,
+      "after": 0.42
+    },
+    {
+      "path": "/move_library/archetypes/fireball/impact/puff_reveal_power",
+      "before": null,
+      "after": 0.28
+    },
+    {
+      "path": "/move_library/archetypes/fireball/impact/puff_initial_scale",
+      "before": null,
+      "after": 0.42
+    },
+    {
+      "path": "/move_library/archetypes/fireball/impact/initial_grow",
+      "before": 0.7,
+      "after": 0.26
+    },
+    {
+      "path": "/move_library/archetypes/sky_lightning/impact/growth_power",
+      "before": null,
+      "after": 0.5
+    },
+    {
+      "path": "/move_library/archetypes/sky_lightning/impact/initial_grow",
+      "before": 0.6,
+      "after": 0.2
+    },
+    {
+      "path": "/move_library/archetypes/sky_lightning/body/contact_fade_power",
+      "before": null,
+      "after": 2.4
+    }
+  ],
+  "active_cues_unchanged": 175,
+  "light_cap_budget_frozen_arrival_audio_authority_unchanged": true,
+  "all_other_profiles_unchanged": true,
+  "library_enabled": false
+}

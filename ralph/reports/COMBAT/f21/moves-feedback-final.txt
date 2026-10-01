@@ -1,0 +1,31 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_hit_feedback.gd,test_moves.gd,test_move_effects.gd: 3 of 669 test files
+  ok    test_hit_feedback.gd :: test_critical_effective_resisted_and_ordinary_numbers_differ
+  ok    test_hit_feedback.gd :: test_frozen_launch_rejects_replacement_actors_generation_and_realm
+  ok    test_hit_feedback.gd :: test_giant_and_profile_reductions_apply_once
+  ok    test_hit_feedback.gd :: test_replayed_hits_refuse_but_legitimate_out_of_order_impacts_and_issuers_are_independent
+  ok    test_hit_feedback.gd :: test_weighted_feedback_is_immutable_and_preserves_host_damage
+  ok    test_move_effects.gd :: test_critical_impact_prunes_trails_before_spending_beyond_encounter_cap
+  ok    test_move_effects.gd :: test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist
+  ok    test_move_effects.gd :: test_mastery_grows_presentation_without_changing_arrival_schedule
+  ok    test_move_effects.gd :: test_optional_receipt_is_recursively_frozen_and_detached
+  ok    test_moves.gd :: test_a_tm_item_does_not_stack
+  ok    test_moves.gd :: test_an_unknown_tm_id_degrades_gracefully
+  ok    test_moves.gd :: test_can_learn_false_for_an_unknown_tm
+  ok    test_moves.gd :: test_can_learn_false_for_an_unlisted_type
+  ok    test_moves.gd :: test_can_learn_true_for_a_listed_type
+  ok    test_moves.gd :: test_every_tm_has_a_display_name
+  ok    test_moves.gd :: test_every_tm_has_a_matching_kind_tm_item
+  ok    test_moves.gd :: test_every_tm_has_at_least_one_compatible_type_from_the_known_vocabulary
+  ok    test_moves.gd :: test_every_tm_item_names_the_same_move_its_tm_entry_does
+  ok    test_moves.gd :: test_every_tm_move_id_exists_in_the_move_table
+  ok    test_moves.gd :: test_fireball_tm_teaches_only_primary_fire_without_mutating_species_defaults
+  ok    test_moves.gd :: test_teach_a_charged_tm_replaces_move_charged_and_leaves_move_quick_alone
+  ok    test_moves.gd :: test_teach_a_quick_tm_replaces_move_quick_and_leaves_move_charged_alone
+  ok    test_moves.gd :: test_teach_refuses_an_incompatible_species_and_changes_nothing
+  ok    test_moves.gd :: test_teach_refuses_an_unknown_tm_and_changes_nothing
+  ok    test_moves.gd :: test_teaching_the_same_tm_twice_is_a_pure_function_of_the_creature
+
+25 tests, 922 assertions, 0 failed
+Native Godot exit status: 0

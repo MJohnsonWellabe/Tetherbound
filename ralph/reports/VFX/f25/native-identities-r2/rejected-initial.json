@@ -1,0 +1,564 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"batch": "identities",
+	"cases": [
+		{
+			"arrival_process_frames": [
+				370
+			],
+			"arrival_wall_seconds": [
+				0.783683
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.779772
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.626261
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 1.105583
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "small-stones",
+			"independent_schedule_process_frame": 370,
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 3,
+			"resolved_size": 0.2,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				1014
+			],
+			"arrival_wall_seconds": [
+				0.699094
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.781791
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.624815
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.897547
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "small-stones",
+			"independent_schedule_process_frame": 1014,
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 4,
+			"resolved_size": 0.23,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				1660
+			],
+			"arrival_wall_seconds": [
+				0.693145
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.779675
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.624972
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.875721
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "small-stones",
+			"independent_schedule_process_frame": 1660,
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 4,
+			"resolved_size": 0.26,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				2345
+			],
+			"arrival_wall_seconds": [
+				0.700585
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.784907
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.624891
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.876766
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "large-stone",
+			"independent_schedule_process_frame": 2345,
+			"move_id": "rock_throw",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.7,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				3009
+			],
+			"arrival_wall_seconds": [
+				0.700198
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.78465
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.626228
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.878494
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "large-stone",
+			"independent_schedule_process_frame": 3009,
+			"move_id": "rock_throw",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 1,
+			"resolved_size": 0.805,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				3625
+			],
+			"arrival_wall_seconds": [
+				0.694252
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.78194
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.628218
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.880976
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "large-stone",
+			"independent_schedule_process_frame": 3625,
+			"move_id": "rock_throw",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 1,
+			"resolved_size": 0.91,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				4098
+			],
+			"arrival_wall_seconds": [
+				0.786309
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.779978
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.626362
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.877708
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "burning-orb",
+			"independent_schedule_process_frame": 4098,
+			"move_id": "fireball",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.45,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				4885
+			],
+			"arrival_wall_seconds": [
+				0.855746
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.853648
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.77235
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.934195
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "burning-orb",
+			"independent_schedule_process_frame": 4885,
+			"move_id": "fireball",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 1,
+			"resolved_size": 0.5175,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				5707
+			],
+			"arrival_wall_seconds": [
+				0.701044
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.78047
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.625644
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.876912
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "burning-orb",
+			"independent_schedule_process_frame": 5707,
+			"move_id": "fireball",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 1,
+			"resolved_size": 0.585,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				6460
+			],
+			"arrival_wall_seconds": [
+				0.70133
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.782257
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.625431
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.87778
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "descending-bolt",
+			"independent_schedule_process_frame": 6460,
+			"move_id": "thunder_break",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.24,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				7088
+			],
+			"arrival_wall_seconds": [
+				0.691675
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.797879
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.625085
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.87796
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "descending-bolt",
+			"independent_schedule_process_frame": 7088,
+			"move_id": "thunder_break",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 1,
+			"resolved_size": 0.276,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				7681
+			],
+			"arrival_wall_seconds": [
+				0.693275
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 1.203718
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.629007
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 1.286399
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "descending-bolt",
+			"independent_schedule_process_frame": 7681,
+			"move_id": "thunder_break",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 1,
+			"resolved_size": 0.312,
+			"simultaneous": 1,
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		}
+	],
+	"display": "Windows",
+	"engine": {
+		"build": "official",
+		"hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+		"hex": 263936,
+		"major": 4,
+		"minor": 7,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.7-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [
+		"Contact/impact frame taken before arrival small-stones:r1",
+		"Contact/impact frame taken before arrival burning-orb:r1",
+		"Contact/impact frame taken before arrival burning-orb:r3"
+	],
+	"limits": [
+		"No combat/damage authority exercised",
+		"Wall-frame intervals include CPU/GPU/present/OS scheduling",
+		"No Ally or four-creature-fight acceptance claim",
+		"Identity duration slowed for readable frames; host timing requires separate player witness"
+	],
+	"medium_features": false,
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scope": "production_effect_nodes_synthetic_arena"
+}

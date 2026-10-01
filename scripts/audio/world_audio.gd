@@ -40,6 +40,10 @@ extends Node
 ## layers it does not use.
 
 const CONFIG := preload("res://scripts/audio/audio_manager.gd")
+const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
+const IMPACT_AUDIO := preload("res://scripts/combat/impact_audio.gd")
+const MOVE_EFFECTS := preload("res://scripts/vfx/move_effect_library.gd")
+const MOVES := preload("res://scripts/creatures/move_db.gd")
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 
 ## Node names this looks for in the world. Resolved once in `_ready`; a missing
@@ -515,6 +519,8 @@ func _connect_combat() -> void:
 	_combat.connect("exited", _on_combat_exited)
 	_combat.connect("hit_effectiveness", _on_hit_effectiveness)
 	_combat.connect("hit_landed", _on_hit_landed)
+	if _combat.has_signal("impact_confirmed"):
+		_combat.connect("impact_confirmed", _on_impact_confirmed)
 	_combat.connect("attack_missed", _on_attack_missed)
 	_combat.connect("orb_shook", _on_orb_shook)
 	_combat.connect("catch_resolved", _on_catch_resolved)
@@ -522,6 +528,8 @@ func _connect_combat() -> void:
 
 func _on_combat_entered() -> void:
 	_in_combat = true
+	_audio_receipts.clear()
+	_receipt_audio_frame = -1
 	CONFIG.play("combat_start", "SFX")
 
 
@@ -538,6 +546,10 @@ func _on_combat_exited(outcome: String) -> void:
 ## records the tier and lets the position-carrying one actually play it.
 var _pending_effectiveness: int = 0
 var _pending_on_enemy: bool = true
+var _receipt_audio_frame := -1
+var _receipt_audio_on_enemy := true
+var _audio_receipts: Dictionary = {}
+var _impact_moves: RefCounted = MOVES.new()
 
 
 func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
@@ -546,6 +558,9 @@ func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
 
 
 func _on_hit_landed(on_enemy: bool, _amount: float) -> void:
+	# Receipt presentation precedes the legacy notification for this same hit.
+	# Manually emitted legacy signals in partial worlds retain their fallback.
+	if _receipt_audio_frame == Engine.get_process_frames() and _receipt_audio_on_enemy == on_enemy: return
 	if not on_enemy:
 		# The player's own creature took it. A different sound entirely -- in a
 		# real-time piloted fight the mix's first job is to say who was hit.
@@ -554,6 +569,51 @@ func _on_hit_landed(on_enemy: bool, _amount: float) -> void:
 	var table: Dictionary = CONFIG.section("combat").get("effectiveness_sound", {}) as Dictionary
 	var key := str(_pending_effectiveness) if _pending_on_enemy == on_enemy else "0"
 	CONFIG.play(str(table.get(key, "impact_normal")), "SFX")
+
+
+## One host-result dispatcher owns the impact body and deliberate semantic
+## layers. VFX launch/travel remains independent; its frozen receipt owner
+## suppresses the renderer's contact cue, never its mesh or arrival signal.
+func _on_impact_confirmed(on_enemy: bool, receipt: Dictionary, at: Vector3) -> void:
+	if not HIT_FEEDBACK.admit(_audio_receipts, receipt): return
+	_receipt_audio_frame = Engine.get_process_frames()
+	_receipt_audio_on_enemy = on_enemy
+	var cfg: Dictionary = CONFIG.section("combat").get("impact_feedback", {})
+	if not bool(cfg.get("enabled", true)): return
+	var move: Dictionary = _impact_moves.call("move", str(receipt.get("move_id", "")))
+	at = receipt.get("sound_position", at)
+	var rank := int(receipt.get("mastery_rank", 1))
+	var row := MOVE_EFFECTS.resolve(move.get("vfx", {}), rank)
+	var weight: Dictionary = cfg.get("weight_tuning", {}).get(str(receipt.get("weight", "light")), {})
+	var gain := float(weight.get("gain_db", 0.0))
+	if not bool(receipt.get("own_hit", true)): gain += float(cfg.get("peer_gain_db", 0.0))
+	if float(receipt.get("type_mult", 1.0)) < 1.0: gain += float(cfg.get("resisted_body_gain_db", 0.0))
+	var sounds: Dictionary = row.get("sound", {})
+	var cue := str(sounds.get("impact_mastery" if rank >= 5 else "impact", ""))
+	var path := str(CONFIG.section("move_effect_cues").get(cue, ""))
+	var layers: Array = []
+	if path.is_empty():
+		path = CONFIG.sfx_path(str(cfg.get("fallback_body", "impact_normal")))
+	else:
+		gain += float(sounds.get("gain_db", -7.0))
+	layers.append({"stream": CONFIG.stream(path), "gain_db": gain, "pitch": float(weight.get("pitch", 1.0))})
+	var effectiveness := "effective" if float(receipt.get("type_mult", 1.0)) > 1.0 else "resisted"
+	if float(receipt.get("type_mult", 1.0)) != 1.0:
+		_append_impact_layer(layers, cfg.get("effectiveness_layers", {}).get(effectiveness, {}))
+	if bool(receipt.get("critical", false)): _append_impact_layer(layers, cfg.get("critical_layer", {}))
+	if not on_enemy: _append_impact_layer(layers, cfg.get("receiver_layer", {}))
+	var contact := IMPACT_AUDIO.compose(layers, cfg.get("contact_mix", {}))
+	if contact == null:
+		push_error("Impact contact layers require valid WAV streams.")
+		return
+	CONFIG.play_stream_at(contact, "receipt:" + str(receipt.get("action_id", "")) + ":contact", at)
+
+
+func _append_impact_layer(layers: Array, spec: Dictionary) -> void:
+	var cue := str(spec.get("sound", ""))
+	if cue.is_empty(): return
+	layers.append({"stream": CONFIG.stream(CONFIG.sfx_path(cue)),
+		"gain_db": float(spec.get("gain_db", 0.0)), "pitch": float(spec.get("pitch", 1.0))})
 
 
 func _on_attack_missed(_by_player: bool) -> void:

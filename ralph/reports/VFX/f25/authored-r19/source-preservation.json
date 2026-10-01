@@ -1,0 +1,71 @@
+{
+  "base_commit": "decd7e574446b63d07912274cbd450d68d038de1",
+  "scope": "Bounded source only, no native or acceptance PASS",
+  "methods": [
+    {
+      "file": "scripts/vfx/move_effect.gd",
+      "changed_methods": [
+        "_build_impact",
+        "_ready"
+      ],
+      "unchanged_methods": [
+        "_append_trail_point",
+        "_build_light",
+        "_build_puffs",
+        "_contact_position",
+        "_cue",
+        "_exit_tree",
+        "_finish_presentation",
+        "_impact_visual_origin",
+        "_mesh_node",
+        "_play_impact",
+        "_play_launch",
+        "_process",
+        "_projectile_position",
+        "_set_opacity",
+        "_update_bodies",
+        "_update_impact",
+        "_update_puffs",
+        "_update_trail",
+        "action_id",
+        "cancel_presentation",
+        "configure",
+        "confirm_presentation_impact",
+        "encounter_id"
+      ]
+    },
+    {
+      "file": "scripts/vfx/move_effect_geometry.gd",
+      "changed_methods": [
+        "authored_material"
+      ],
+      "unchanged_methods": [
+        "_bolt_segment",
+        "_stone_point",
+        "_triangle",
+        "_uv_quad",
+        "band",
+        "bolt",
+        "flowing_ribbon",
+        "glint",
+        "impact_rays",
+        "material",
+        "plume",
+        "quad",
+        "ribbon",
+        "shape",
+        "sigil",
+        "stone",
+        "vortex",
+        "wave"
+      ]
+    }
+  ],
+  "only_profile_changed": "wind_blade body and impact",
+  "all_other_profile_data_unchanged": true,
+  "unchanged_duration_extent_parameters_mastery_budgets_sound_mapping_host_endpoints": true,
+  "unchanged_R16_fixture_and_R17_four_family_profiles": true,
+  "active_cues_unchanged": 175,
+  "library_enabled": false,
+  "new_shader_sha256": "fc593a2277102445785983df2588deb25e4c046bd0d81bdcea0b467eb4447ead"
+}

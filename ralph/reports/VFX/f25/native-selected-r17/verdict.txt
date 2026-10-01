@@ -1,0 +1,17 @@
+Frozen runtime source: 33fea6237a14d0a5daf0d2866b1323a49e82d58c
+Independent pre-run source gate: SOURCEPASS, original raw report/hash pins retained.
+Selected native: PASS, exit 0, small-stones:r1, one case, no failures.
+Actual end lease zero before cleanup; peak 42; arrival and independent schedule frame 78.
+End process frame 101; idle allowance 2.42s unchanged; wall watchdog did not expire.
+Unchanged actual-node light/audio preflight: 18/18 checks PASS.
+Source checkout hashes recorded before engine launch and unchanged afterward.
+Three original 1920x1080 phase PNGs and original 103-frame motion AVI retained.
+All Godot processes exited; exclusive GPU token explicitly released; tb/vfx restored.
+No unit repeat, full matrix, full suite or CI run. Reused prior unchanged light unit evidence.
+
+R14 original RED and its 36 originals/movie remain untouched in native-identities-r14.
+The selected run no longer reproduces its lease failure under the reviewed same-clock fixture.
+This does not independently prove the historical failure cause, omitted cases, full craft,
+earned player/HP arrival, multiplayer authority, four-creature Medium performance or final audio.
+All F25 rows remain OPEN; production library stays OFF. Later bubble/wind/observer source
+on the restored branch was not part of this frozen runtime candidate.

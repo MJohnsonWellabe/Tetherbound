@@ -1,0 +1,22 @@
+{
+  "source_commit": "8ab48f204d11c42bff4bbababdee2f11ec3d2d1a",
+  "native_exit": 0,
+  "elapsed_seconds": 21.344,
+  "command": [
+    "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-vfx",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "res://tests/smoke_move_effects_library.gd",
+    "--",
+    "--batch=identities",
+    "--out=D:/tetherbound/vfx-identities-native-r8"
+  ],
+  "timed_out": false,
+  "errors": [],
+  "scope": "Original twelve-case synthetic presentation witness; no imports, assertion changes, combat, HP, world, performance or full craft approval. Original authored PNG/import parameters and generated cache from retained r7 scoped import reused unchanged."
+}

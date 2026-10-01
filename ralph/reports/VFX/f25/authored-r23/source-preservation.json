@@ -1,0 +1,83 @@
+{
+  "base_commit": "e10ec32604947d0722f3d004be273274f28138dd",
+  "scope": "Source preservation only; no parser/native/motion/full-craft or acceptance PASS",
+  "methods": [
+    {
+      "file": "scripts/vfx/move_effect.gd",
+      "changed_methods": [
+        "_build_impact",
+        "_update_impact",
+        "_update_puffs"
+      ],
+      "unchanged_methods": [
+        "_append_trail_point",
+        "_build_light",
+        "_build_puffs",
+        "_contact_position",
+        "_cue",
+        "_exit_tree",
+        "_finish_presentation",
+        "_impact_visual_origin",
+        "_mesh_node",
+        "_play_impact",
+        "_play_launch",
+        "_process",
+        "_projectile_position",
+        "_ready",
+        "_set_opacity",
+        "_update_bodies",
+        "_update_trail",
+        "action_id",
+        "cancel_presentation",
+        "configure",
+        "confirm_presentation_impact",
+        "encounter_id"
+      ]
+    },
+    {
+      "file": "scripts/vfx/move_effect_geometry.gd",
+      "changed_methods": [
+        "authored_material"
+      ],
+      "unchanged_methods": [
+        "_bolt_segment",
+        "_stone_point",
+        "_triangle",
+        "_uv_quad",
+        "band",
+        "bolt",
+        "flowing_ribbon",
+        "glint",
+        "impact_rays",
+        "material",
+        "plume",
+        "quad",
+        "ribbon",
+        "shape",
+        "sigil",
+        "stone",
+        "vortex",
+        "wave"
+      ]
+    }
+  ],
+  "only_profile_changed": "fireball impact thermal material fields and four reduced alpha values",
+  "all_other_profile_fields_unchanged": true,
+  "mesh_instance_particle_light_voice_counts_unchanged": true,
+  "travel_and_impact_duration_mastery_parameters_arrival_host_endpoints_unchanged": true,
+  "frozen_R17_pass_and_original_R14_red_untouched": true,
+  "active_cues_unchanged": 175,
+  "library_enabled": false,
+  "installed_flight_asset": {
+    "path": "assets/vfx/textures/flame_tongue_v2.png",
+    "sha256": "27b0cf8c2feda7d7a2bb292dac2dbfe5c1cc5cd8286d8aba07a7ea92973b6210",
+    "modified": false
+  },
+  "shader_sha256_lf": "242ae5ec91d1b0f3b9f454be1261a85370073d56bab318d9b4696b32a0a7c838",
+  "age_source": "Existing normalized impact u; material only. No new timer, receipt, schedule, resource or HP mutation.",
+  "default_scope": "afterburn_strength=0 and thermal_aftermath=false preserve old material output/update path for other profiles",
+  "limits": [
+    "Full Palworld/Animo appeal and Valheim scene atmosphere remain unproved",
+    "Synthetic captures cannot replace earned-player/host-HP, co-op, real four-creature Medium or device proof"
+  ]
+}

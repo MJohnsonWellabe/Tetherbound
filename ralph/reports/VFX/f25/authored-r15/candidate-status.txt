@@ -1,0 +1,18 @@
+F25 R15 original audio candidate source; runtime cue bank remains unchanged.
+
+Four authored families (stones, boulder, Fireball, sky lightning), seven one-shot
+roles each: 28 actual original synthesized masters at 48 kHz/24-bit mono.
+Masters remain outside every checkout/export path:
+D:/tetherbound/vfx-audio-source-masters-r15
+Reproduce from tracked generator and recipes using a fresh --out directory.
+Each role uses layered noise/modal/transient shaping and zero outer handles;
+mastery adds modal detail, with measured decoded base/mastery RMS matched.
+Source, recipe and per-file SHA256 provenance and decoded PCM receipts attached.
+No new purchases, samples, assets referenced by runtime, imports or active mappings.
+
+Decoded file checks pass: 28/28 format/hash/nonzero/sample-peak/DC/tail checks,
+twelve base/mastery pairs match RMS within 1e-6. This is file-level evidence only.
+Unproven: listening quality, true peak/LUFS, production audio mix and repeat fatigue,
+real encounter audio lifetime/cancel/voice-steal, Ally and independent audio judgment.
+Do not map these candidates until those relevant checks and review pass.
+F25 remains OPEN and the library remains OFF.

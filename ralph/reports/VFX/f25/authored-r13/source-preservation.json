@@ -1,0 +1,65 @@
+{
+  "base_commit": "ac27493b834184174bbc8b122c9d96f0251c05f3",
+  "scope": "Fireball impact material/config only; R9-R12 retained",
+  "config_paths_changed": [
+    "/move_library/archetypes/fireball/impact/curl_scale",
+    "/move_library/archetypes/fireball/impact/grow",
+    "/move_library/archetypes/fireball/impact/heat_warp",
+    "/move_library/archetypes/fireball/impact/layers/0/curl_scale",
+    "/move_library/archetypes/fireball/impact/layers/0/heat_warp",
+    "/move_library/archetypes/fireball/impact/layers/0/opacity",
+    "/move_library/archetypes/fireball/impact/layers/0/porosity",
+    "/move_library/archetypes/fireball/impact/layers/1/curl_scale",
+    "/move_library/archetypes/fireball/impact/layers/1/heat_warp",
+    "/move_library/archetypes/fireball/impact/layers/1/opacity",
+    "/move_library/archetypes/fireball/impact/layers/1/porosity",
+    "/move_library/archetypes/fireball/impact/layers/2/colour",
+    "/move_library/archetypes/fireball/impact/layers/2/opacity",
+    "/move_library/archetypes/fireball/impact/layers/2/size_scale",
+    "/move_library/archetypes/fireball/impact/opacity",
+    "/move_library/archetypes/fireball/impact/porosity",
+    "/move_library/archetypes/fireball/impact/puff_opacity"
+  ],
+  "fire_explosion_users": [
+    "fireball"
+  ],
+  "library_enabled": false,
+  "preserved": [
+    {
+      "path": "scripts/vfx/move_effect.gd",
+      "sha256": "816ac904797bcc98a7e2118b9e2e66a7a8a853a102761932678e72609471a7b5"
+    },
+    {
+      "path": "scripts/vfx/move_effect_library.gd",
+      "sha256": "9fca716969bf873068ca016fc90f6ca63ba2aac622b731f9070f54562c2c642e"
+    },
+    {
+      "path": "scripts/vfx/move_effect_budget.gd",
+      "sha256": "16aa35f1194f0c0747a57408fb39d9002f449bb05de7ae86840c017e3eefe07c"
+    },
+    {
+      "path": "scripts/combat/move_projectile.gd",
+      "sha256": "e103fce23bb599c470348f1c3cb1b2ab909a49a5eddb0805ee2de8c622435d41"
+    },
+    {
+      "path": "assets/vfx/textures/flame_tongue_v2.png",
+      "sha256": "27b0cf8c2feda7d7a2bb292dac2dbfe5c1cc5cd8286d8aba07a7ea92973b6210"
+    },
+    {
+      "path": "assets/vfx/textures/flame_tongue_v2.png.import",
+      "sha256": "2fd25e0d1fde903d635461e8b7fb572b11419c8f868cdaff011e07b081ed9d39"
+    },
+    {
+      "path": "assets/vfx/textures/flame_tongue_v2.provenance.json",
+      "sha256": "b7d0a14e24b307c727439a732ad402c006e8cb01e8e929f02a52587d6af90b27"
+    }
+  ],
+  "unproved": [
+    "shader compilation and visual impact identity/craft",
+    "light budget/lifecycle introduced R12",
+    "motion",
+    "actual encounter HP/audio/world",
+    "four-creature Medium performance",
+    "all F25 acceptance rows"
+  ]
+}
