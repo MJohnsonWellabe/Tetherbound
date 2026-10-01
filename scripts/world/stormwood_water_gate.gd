@@ -34,6 +34,8 @@ func _ready() -> void:
 ## first press consumes/key-opens atomically and the second enters through the
 ## already-authorised physical gate.
 func _on_water_activated() -> void:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		return
 	var game := _game()
 	match state_for(game):
 		STATE_UNLOCKABLE:

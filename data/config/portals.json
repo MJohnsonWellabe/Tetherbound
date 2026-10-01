@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "authority": "host",
+  "scope": {"home_key": "character", "unlock": "character_and_host_world", "travel": "character"},
+  "home_key": {
+    "item_id": "home_key",
+    "opening_conversation": "grandpa_first_catch",
+    "opening_effect": "home_key:grant",
+    "raise_seconds": 2.0,
+    "refusal_interval_seconds": 2.0,
+    "response_timeout_seconds": 12.0,
+    "max_abandoned_begins": 16,
+    "shoulder_degrees": -112.0,
+    "elbow_degrees": -28.0,
+    "pose_ramp_fraction": 0.65,
+    "glow_color": "b8f6df",
+    "glow_energy": 1.4,
+    "glow_range_m": 3.0,
+    "key_shaft_m": 0.18,
+    "key_width_m": 0.012,
+    "key_bow_radius_m": 0.038,
+    "sound_hz_start": 392.0,
+    "sound_hz_end": 784.0,
+    "sound_gain": 0.12,
+    "sound_volume_db": -12.0,
+    "refusals": {
+      "combat": "Not during a fight.",
+      "dialogue": "Finish the conversation first.",
+      "cutscene": "Wait until the scene ends.",
+      "swimming": "Reach solid ground first.",
+      "flight": "Land first.",
+      "downed": "You can't use it while down."
+    }
+  },
+  "arch": {"interaction_radius_m": 3.2, "refresh_seconds": 0.25, "response_timeout_seconds": 12.0},
+  "fifth_stir": {
+    "line": "It stirred, but it is not ready yet.",
+    "glow_seconds": 2.5, "glow_color": "a89ec7", "glow_height_m": 1.3,
+    "glow_energy": 1.5, "resting_energy": 0.25, "glow_range_m": 4.0,
+    "dust_seconds": 1.5, "dust_count": 24, "dust_radius_m": 0.025,
+    "dust_height_m": 0.9, "dust_width_m": 1.1, "dust_speed_mps": 0.35,
+    "hum_hz": 98.0, "hum_gain": 0.08, "hum_volume_db": -15.0,
+    "audio_provenance": "Original transient sine hum, synthesized by portal_arch.gd; no external asset or purchase."
+  },
+  "retired_crossing_reason": "This crossing is retired. Use the Crossing Hall portals.",
+  "arches": [
+    {"id": "home", "biome": "meadows", "key_item": "", "kind": "live", "entry_id": "meadows_entry", "recommended_level": 3},
+    {"id": "tidewake", "biome": "tidewake", "key_item": "tidewake_portal_key", "kind": "live", "entry_id": "water_arrival_from_stormwood", "recommended_level": 20},
+    {"id": "cloudreach", "biome": "cloudreach", "key_item": "cloudreach_portal_key", "kind": "live", "entry_id": "cloudreach_arrival_from_meadows", "recommended_level": 31},
+    {"id": "stormwood", "biome": "stormwood", "key_item": "stormwood_portal_key", "kind": "live", "entry_id": "stormwood_arrival_from_cloudreach", "recommended_level": 42},
+    {"id": "biome5", "biome": "biome5", "key_item": "fifth_portal_key", "kind": "sealed", "entry_id": ""},
+    {"id": "biome6", "biome": "biome6", "key_item": "", "kind": "sealed", "entry_id": ""},
+    {"id": "biome7", "biome": "biome7", "key_item": "", "kind": "sealed", "entry_id": ""},
+    {"id": "biome8", "biome": "biome8", "key_item": "", "kind": "sealed", "entry_id": ""}
+  ]
+}

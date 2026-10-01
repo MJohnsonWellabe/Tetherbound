@@ -38,6 +38,11 @@
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
+        {
+          "text": "Take this Home Key. One tap, and two seconds with it raised, brings you to the Crossing Hall. No cost, no waiting before you can use it again.",
+          "effect": "home_key:grant"
+        },
+        "Finish a fight or a conversation first. Get out of the water, and land if you're flying. Walk from the Hall to our farm whenever your team needs tending.",
         "Before you go anywhere, you need another creature beside you.",
         {
           "text": "Take these Orbs. Head outside, find one you like, and catch it.",

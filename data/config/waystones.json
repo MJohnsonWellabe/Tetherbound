@@ -1,0 +1,527 @@
+{
+  "schema_version": 1,
+  "scope": "character",
+  "authority": "host",
+  "activation": "touch",
+  "_comment": "F18 authored candidate. Anchors below are copied from existing runtime camp/landmark configuration and re-resolved before mounting; offset/arrival placement needs serialized dry-ground, obstruction and native visual proof. No scene node changes durable state.",
+  "tuning": {
+    "touch_radius_m": 2.4,
+    "inspect_radius_m": 3.6,
+    "poll_interval_s": 0.15,
+    "retry_interval_s": 3.0,
+    "ack_timeout_s": 8.0,
+    "message_interval_s": 5.0,
+    "max_support_delta_m": 0.75,
+    "water_min_height_m": 0.6
+  },
+  "presentation": {
+    "model": "res://assets/props/tideglass_shrine/tideglass_shrine.glb",
+    "height_m": 1.8,
+    "max_footprint_m": 3.0,
+    "sink_m": 0.03,
+    "marker_height_m": 1.55,
+    "marker_radius_m": 0.15,
+    "inactive_colour": "#61736c",
+    "active_colour": "#f4d38a",
+    "inactive_energy": 0.0,
+    "active_energy": 1.7,
+    "light_range_m": 7.0,
+    "light_energy": 0.6
+  },
+  "waystones": [
+    {
+      "id": "meadows_trail_camp",
+      "biome": "meadows",
+      "realm_id": "meadows",
+      "display_name": "Trail Camp",
+      "position_xz": [
+        344.3,
+        936.6
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/bands/band1_lower_meadows/props.json",
+        "collection": "clusters",
+        "id": "trail_camp",
+        "id_field": "name",
+        "coordinate_field": "rest.at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "meadows_ranger_camp",
+      "biome": "meadows",
+      "realm_id": "meadows",
+      "display_name": "Quarry Ranger Camp",
+      "position_xz": [
+        -256.4,
+        2260.1
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/bands/band2_stone_and_root/props.json",
+        "collection": "clusters",
+        "id": "ranger_camp",
+        "id_field": "name",
+        "coordinate_field": "rest.at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "meadows_riverwatch",
+      "biome": "meadows",
+      "realm_id": "meadows",
+      "display_name": "Riverwatch Camp",
+      "position_xz": [
+        211.0,
+        3700.0
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/bands/band3_the_river_lock/props.json",
+        "collection": "clusters",
+        "id": "riverwatch_rest",
+        "id_field": "name",
+        "coordinate_field": "rest.at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "meadows_highfield",
+      "biome": "meadows",
+      "realm_id": "meadows",
+      "display_name": "Upper Meadows Camp",
+      "position_xz": [
+        276.7,
+        5652.5
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/bands/band4_upper_meadows_ironwood/props.json",
+        "collection": "clusters",
+        "id": "highfield_stockcamp",
+        "id_field": "name",
+        "coordinate_field": "rest.at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "meadows_sigil_waystop",
+      "biome": "meadows",
+      "realm_id": "meadows",
+      "display_name": "Sigil Gate Waystop",
+      "position_xz": [
+        -23.8,
+        7456.9
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/bands/band5_stronghold_approach/props.json",
+        "collection": "clusters",
+        "id": "the_waystop",
+        "id_field": "name",
+        "coordinate_field": "rest.at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "tidewake_first_shore",
+      "biome": "tidewake",
+      "realm_id": "water",
+      "display_name": "First Shore",
+      "position_xz": [
+        7.0,
+        142.0
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/water_camps.json",
+        "collection": "camps",
+        "id": "water_camp_first_shore",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "tidewake_shellwatch",
+      "biome": "tidewake",
+      "realm_id": "water",
+      "display_name": "Shellwatch",
+      "position_xz": [
+        359.289459228516,
+        971.46923828125
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/water_camps.json",
+        "collection": "camps",
+        "id": "water_camp_shellwatch",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "tidewake_tidal_cradle",
+      "biome": "tidewake",
+      "realm_id": "water",
+      "display_name": "Tidal Cradle",
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/water_camps.json",
+        "collection": "camps",
+        "id": "water_camp_tidal_cradle",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "tidewake_salt_crown",
+      "biome": "tidewake",
+      "realm_id": "water",
+      "display_name": "Salt Crown",
+      "position_xz": [
+        284.932739257813,
+        2128.56884765625
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/water_camps.json",
+        "collection": "camps",
+        "id": "water_camp_salt_crown",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "tidewake_sluice_isle",
+      "biome": "tidewake",
+      "realm_id": "water",
+      "display_name": "Sluice Isle",
+      "position_xz": [
+        672.336120605469,
+        2788.5263671875
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/water_camps.json",
+        "collection": "camps",
+        "id": "water_camp_sluice_isle",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "cloudreach_galefoot_waycamp",
+      "biome": "cloudreach",
+      "realm_id": "cloudreach",
+      "display_name": "Galefoot Waycamp",
+      "position_xz": [
+        -280.0,
+        520.0
+      ],
+      "preferred_y": 180.0,
+      "source": {
+        "path": "res://data/config/cloudreach_chapter.json",
+        "collection": "camping_contract.camps",
+        "id": "galefoot_waycamp",
+        "id_field": "id",
+        "coordinate_field": "position"
+      },
+      "offset_xz": [
+        7.0,
+        0.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "cloudreach_windscar_flight_aerie_camp",
+      "biome": "cloudreach",
+      "realm_id": "cloudreach",
+      "display_name": "Windscar Aerie",
+      "position_xz": [
+        388.0,
+        3258.0
+      ],
+      "preferred_y": 610.0,
+      "source": {
+        "path": "res://data/config/cloudreach_chapter.json",
+        "collection": "camping_contract.camps",
+        "id": "windscar_flight_aerie_camp",
+        "id_field": "id",
+        "coordinate_field": "position"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "cloudreach_cliffhold_commons",
+      "biome": "cloudreach",
+      "realm_id": "cloudreach",
+      "display_name": "Cliffhold Commons",
+      "position_xz": [
+        -340.0,
+        3970.0
+      ],
+      "preferred_y": 830.0,
+      "source": {
+        "path": "res://data/config/cloudreach_chapter.json",
+        "collection": "camping_contract.camps",
+        "id": "cliffhold_commons",
+        "id_field": "id",
+        "coordinate_field": "position"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "cloudreach_summit_bivouac",
+      "biome": "cloudreach",
+      "realm_id": "cloudreach",
+      "display_name": "Summit Bivouac",
+      "position_xz": [
+        132.0,
+        5342.0
+      ],
+      "preferred_y": 1160.0,
+      "source": {
+        "path": "res://data/config/cloudreach_chapter.json",
+        "collection": "camping_contract.camps",
+        "id": "summit_bivouac",
+        "id_field": "id",
+        "coordinate_field": "position"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "stormwood_ashfoot_waycamp",
+      "biome": "stormwood",
+      "realm_id": "stormwood",
+      "display_name": "Ashfoot Waycamp",
+      "position_xz": [
+        -325,
+        466
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/stormwood_camps.json",
+        "collection": "camps",
+        "id": "ashfoot_waycamp",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "stormwood_lantern_pools_camp",
+      "biome": "stormwood",
+      "realm_id": "stormwood",
+      "display_name": "Lantern Pools Camp",
+      "position_xz": [
+        -410,
+        1425
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/stormwood_camps.json",
+        "collection": "camps",
+        "id": "lantern_pools_camp",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "stormwood_still_grove_shelter",
+      "biome": "stormwood",
+      "realm_id": "stormwood",
+      "display_name": "Still Grove Shelter",
+      "position_xz": [
+        -130,
+        2730
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/stormwood_camps.json",
+        "collection": "camps",
+        "id": "still_grove_shelter",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "stormwood_lantern_hollow_waycamp",
+      "biome": "stormwood",
+      "realm_id": "stormwood",
+      "display_name": "Lantern Hollow Waycamp",
+      "position_xz": [
+        -422,
+        3924
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/stormwood_camps.json",
+        "collection": "camps",
+        "id": "lantern_hollow_waycamp",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    },
+    {
+      "id": "stormwood_ember_bivouac",
+      "biome": "stormwood",
+      "realm_id": "stormwood",
+      "display_name": "Ember Bivouac",
+      "position_xz": [
+        -140,
+        5242
+      ],
+      "preferred_y": null,
+      "source": {
+        "path": "res://data/config/stormwood_camps.json",
+        "collection": "camps",
+        "id": "ember_bivouac",
+        "id_field": "id",
+        "coordinate_field": "at"
+      },
+      "offset_xz": [
+        0.0,
+        -7.0
+      ],
+      "arrival_offset_xz": [
+        0.0,
+        -3.0
+      ]
+    }
+  ]
+}
