@@ -1,0 +1,60 @@
+{
+  "scope": "R24 minimal fixture loading correction; SOURCE only",
+  "hub_parent": "7f41bf80a9befcf54ea12de271bd944c933afbd4",
+  "logical_paths": [
+    "tests/test_vegetation_human_prompt_height.gd",
+    "tests/fixtures/scatter_tree_corridor_r23.json"
+  ],
+  "test_original_sha256": "73c06f132eee94a633786d58451c7e878d31fea50784a30be3f9562ce7d3391d",
+  "test_new_sha256": "fb2b90dc7a91b1e42e0a68b2549a8415fb9e4b06a4f0a20daf8227ed92b7b19c",
+  "new_runtime_fixture_sha256": "184e967c295ee6ae4e379248525a9ae239cc9ab424b433bd8319afc1e538128e",
+  "new_runtime_fixture_bytes": 23582,
+  "checks": 48,
+  "native": "UNRUN locally; prior actual unit FAIL preserved; same original180 walk unchanged",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "diagnosis.json": {
+      "bytes": 1840,
+      "sha256": "ac4eba822b316cf232c4a6917a8cc752c7a0aa4952984c2a09cc605d41957d61"
+    },
+    "originals/tests/test_vegetation_human_prompt_height.gd": {
+      "bytes": 9289,
+      "sha256": "73c06f132eee94a633786d58451c7e878d31fea50784a30be3f9562ce7d3391d"
+    },
+    "proposal/tests/fixtures/scatter_tree_corridor_r23.json": {
+      "bytes": 23582,
+      "sha256": "184e967c295ee6ae4e379248525a9ae239cc9ab424b433bd8319afc1e538128e"
+    },
+    "proposal/tests/test_vegetation_human_prompt_height.gd": {
+      "bytes": 9310,
+      "sha256": "fb2b90dc7a91b1e42e0a68b2549a8415fb9e4b06a4f0a20daf8227ed92b7b19c"
+    },
+    "repair.patch": {
+      "bytes": 24564,
+      "sha256": "e8c703b562265abb79ad9264eb6211d7b13b43236bf2b7e9398d8033b1bc3e39"
+    },
+    "source-check.py": {
+      "bytes": 5961,
+      "sha256": "f23552d6baf2b0aafa5897bb3b6d4f7d861a955690746ad62ab92db88b7ebc47"
+    },
+    "source-results.json": {
+      "bytes": 3256,
+      "sha256": "5117705bcbaa24dce5613d38247c63c30f1b2773019a5b7f3b5c9aa533e9f3de"
+    },
+    "unchanged-paths.json": {
+      "bytes": 1066,
+      "sha256": "057c11f574bf8e3dd82f3906c0c3626bc8cf0cb7a72d76de264bebf81dee338a"
+    },
+    "unit-failed/result.json": {
+      "bytes": 1049,
+      "sha256": "c7f9e83c32a8a6eee21660f29888e2877d18e1bbb331d1adc867735dac80062c"
+    },
+    "unit-failed/tests.log": {
+      "bytes": 15931,
+      "sha256": "a23f60c833a370a36ae290a1ab086ce9ae4670af7c82e408e2b774ad281429e1"
+    }
+  }
+}

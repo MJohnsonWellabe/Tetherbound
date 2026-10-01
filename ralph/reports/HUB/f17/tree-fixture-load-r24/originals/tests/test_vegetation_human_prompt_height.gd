@@ -101,10 +101,8 @@ func test_visual_scale_does_not_scale_the_human_interaction_anchor() -> void:
 
 
 func _corridor_geometry() -> Dictionary:
-	var text := FileAccess.get_file_as_string("res://tests/fixtures/scatter_tree_corridor_r23.json")
-	if text.is_empty():
-		return {}
-	var data: Variant = JSON.parse_string(text)
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://ralph/reports/HUB/f17/tree-corridor-r23/native-failed/tree-geometry.json"))
 	return data if data is Dictionary else {}
 
 
