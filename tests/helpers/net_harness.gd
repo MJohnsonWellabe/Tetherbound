@@ -245,6 +245,12 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 	_run_dir = _resolve_run_dir()
 	DirAccess.make_dir_recursive_absolute(_run_dir)
 	_isolate_coordinator()
+	# SceneTree._initialize runs before autoload _ready. Keep the private home
+	# above, then relinquish again after Game finishes reclaiming its new world.
+	var coordinator_game := root.get_node_or_null(^"Game")
+	if coordinator_game != null and not coordinator_game.is_node_ready():
+		await coordinator_game.ready
+	_isolate_coordinator()
 
 	# ENet still needs a predictable port before child argv is built. TCP control
 	# ports do not: reserve OS-selected listeners atomically, before any child.

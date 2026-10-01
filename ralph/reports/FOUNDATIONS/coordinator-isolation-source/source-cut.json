@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "status": "SOURCE_REVIEW_ONLY_NATIVE_PENDING",
+  "root_preimage_head": "90d88dc6b24f9a5e0e705465ac62ba5429a068cf",
+  "foundation_parent_head": "e4655ef7a05a09e2045dac7dc6a347a049cf6c94",
+  "preimages": [
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "root_git_blob": "8d79700b5c17215190ab569614ee6a5380d0a4ea",
+      "preimage_sha256": "031af5ec2d01c97a87e623e107898fa0e220d0b4013efec67000331f0d7a9a9c",
+      "preimage_bytes": 48226,
+      "preimage_local_path": "D:/tetherbound/redesign-foundations/.tmp/coordinator-isolation-source/net_harness.gd.preimage",
+      "candidate_sha256": "c578766ea3a850e2203db860a6e07315bb484158cc26f2e1b067f45c6ecd654d",
+      "candidate_git_blob": "4c51636340bd0fbbbff939ef9afa8e0856830ec5",
+      "candidate_bytes": 48562
+    },
+    {
+      "path": "tests/smoke_net_two_peers_boot.gd",
+      "root_git_blob": "344322a9495494b83c5fddd6427f7ad7fb5faa75",
+      "preimage_sha256": "bc57503b2630d0d334230576ab3462edc7fdf3277db672e136d2fa80ae255620",
+      "preimage_bytes": 5025,
+      "preimage_local_path": "D:/tetherbound/redesign-foundations/.tmp/coordinator-isolation-source/smoke_net_two_peers_boot.gd.preimage",
+      "candidate_sha256": "061939ec5939ebea6a5dcaf352bd8228e9e2ba71f7e149c7591e77e5819cfe7b",
+      "candidate_git_blob": "6b567ce7e40e5b94814e236df50f68bf4c8ce853",
+      "candidate_bytes": 6004
+    }
+  ],
+  "patch": {
+    "path": "D:/tetherbound/redesign-foundations/.tmp/coordinator-isolation-source/coordinator-isolation.patch",
+    "sha256": "27a109c6043e76f730bab64471e2a0804afcb7d421a2b19becfb28d44b137390",
+    "bytes": 2473,
+    "root_apply_check": "PASS_READ_ONLY"
+  },
+  "source_preservation": {
+    "only_insertions": true,
+    "added_lines": {
+      "tests/helpers/net_harness.gd": 6,
+      "tests/smoke_net_two_peers_boot.gd": 16
+    },
+    "original_smoke_check_call_sites": 7,
+    "added_native_check_call_sites": 5,
+    "protected_paths": [
+      {
+        "path": "autoload/game_state.gd",
+        "root_git_blob": "ae8c5948f6670b646c05e7e4564bf2f270c4723a",
+        "root_git_lf_sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156",
+        "root_worktree_sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156",
+        "root_worktree_bytes": 143645,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "scripts/save/save_game.gd",
+        "root_git_blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+        "root_git_lf_sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8",
+        "root_worktree_sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8",
+        "root_worktree_bytes": 109324,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "scripts/net/session.gd",
+        "root_git_blob": "a46bd588cac08cdd0817e5bf355a5f338d7d519f",
+        "root_git_lf_sha256": "02fb845febabe456887c0170aa2b933704c80ec6a21a3870328317ea76d7e7fa",
+        "root_worktree_sha256": "02fb845febabe456887c0170aa2b933704c80ec6a21a3870328317ea76d7e7fa",
+        "root_worktree_bytes": 158617,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "scripts/combat/encounter_director.gd",
+        "root_git_blob": "69dadc148ceba037918e88a776120386f20295e0",
+        "root_git_lf_sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162",
+        "root_worktree_sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162",
+        "root_worktree_bytes": 355711,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "tools/net/peer_runner.gd",
+        "root_git_blob": "9d1e10ebbac1a972fa2fbf8ea9de9ae804652233",
+        "root_git_lf_sha256": "a97758ec9d8419ffc47af7e8d0ddd1943798a4c39a0b439a640c0547021cc52e",
+        "root_worktree_sha256": "a97758ec9d8419ffc47af7e8d0ddd1943798a4c39a0b439a640c0547021cc52e",
+        "root_worktree_bytes": 357861,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "tests/smoke_net_veridian_relic_key.gd",
+        "root_git_blob": "531dcff8342541698589cc3965f02c622e790f64",
+        "root_git_lf_sha256": "50908fce831c1b29a32ddb38064b9279ff3db2268a45cae621876751f6689242",
+        "root_worktree_sha256": "50908fce831c1b29a32ddb38064b9279ff3db2268a45cae621876751f6689242",
+        "root_worktree_bytes": 10598,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "tests/smoke_net_foundations.gd",
+        "root_git_blob": "1750d40324ee1e2cb421e3a3596ca555d88e01ef",
+        "root_git_lf_sha256": "adabfc7d6b9f7381a67be26433bd14061955440b6d0ef65c018319b74b07111b",
+        "root_worktree_sha256": "adabfc7d6b9f7381a67be26433bd14061955440b6d0ef65c018319b74b07111b",
+        "root_worktree_bytes": 5350,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "tests/helpers/net_control_ports.gd",
+        "root_git_blob": "9079b77cd3a31876ecc9f312ccf18be281b193c0",
+        "root_git_lf_sha256": "98f1d92248e5462cf11571e49ad6defa182c7332ea3ae7fc751bddfd071c2867",
+        "root_worktree_sha256": "98f1d92248e5462cf11571e49ad6defa182c7332ea3ae7fc751bddfd071c2867",
+        "root_worktree_bytes": 1260,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "project.godot",
+        "root_git_blob": "d3020b905502f5ce39f9efa484d1e915e9fef70d",
+        "root_git_lf_sha256": "05b3fa1ddc651ef460ef0b28a632a0120ba26fddd8120af4f76c6fc3ced29307",
+        "root_worktree_sha256": "bf2ee2b20bcd71c46937868acc009ae85673748472bd30c90f3f3b4dcf80a147",
+        "root_worktree_bytes": 22187,
+        "root_worktree_equals_git_after_crlf_normalization": true,
+        "foundation_unchanged_from_parent": true
+      }
+    ]
+  },
+  "native_engine_runs_here": 0,
+  "parser_import_render_export_ci_runs_here": 0,
+  "budget_changes": 0,
+  "production_changes": 0
+}
