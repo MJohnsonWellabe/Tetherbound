@@ -389,29 +389,42 @@
       "biome": "meadows",
       "key_item": "tidewake_portal_key",
       "next_biome": "tidewake",
-      "relic_biome": "meadows"
+      "relic_biome": "meadows",
+      "delivery_phase": "accepted_boss_victory",
+      "delivery_requires_world_flags": []
     },
     "water_trainer_nerissa": {
       "biome": "tidewake",
       "key_item": "cloudreach_portal_key",
       "next_biome": "cloudreach",
-      "relic_biome": "water"
+      "relic_biome": "water",
+      "delivery_phase": "accepted_legendary_settlement",
+      "delivery_requires_world_flags": ["water_guardian_settled"]
     },
     "captain_veyra_storm_anchor": {
       "biome": "cloudreach",
       "key_item": "stormwood_portal_key",
       "next_biome": "stormwood",
-      "relic_biome": "cloudreach"
+      "relic_biome": "cloudreach",
+      "delivery_phase": "accepted_boss_victory",
+      "delivery_requires_world_flags": []
     },
     "captain_marrow_dynamo_core": {
       "biome": "stormwood",
       "key_item": "fifth_portal_key",
       "next_biome": "biome5",
-      "relic_biome": "stormwood"
+      "relic_biome": "stormwood",
+      "delivery_phase": "accepted_legendary_settlement",
+      "delivery_requires_world_flags": ["stormwood:legendary_offer_made"]
     }
   },
   "boss_handoff_contract": {
     "authority": "host_accepted_boss_transaction",
+    "participant_capture": "journal_admitted_stable_character_ids_before_boss_defeat_publish",
+    "release_rule": "boss_victory_captures_eligibility_delivery_phase_controls_release",
+    "ceremony_rule": "first_validated_accept_or_refuse_releases_all_captured_participants_without_waiting_for_absent_players",
+    "settlement_validation": "host_controller_accepted_settlement_not_client_flag_or_offer_shown_message",
+    "source_template": "boss_drop:<biome>:<character_id>",
     "eligibility": "stable_character_ids_recorded_as_fight_participants",
     "scope": "portable_character",
     "key_count": 1,

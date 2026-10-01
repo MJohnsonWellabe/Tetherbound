@@ -39,7 +39,7 @@
   "root_shared_requests": [
     {
       "path": "scripts/net/encounter_rewards.gd + encounter_director/cloudreach/dynamo accepted victory call sites",
-      "contract": "Read chapter_rewards.boss_handoffs only from accepted host boss completion; durable participant IDs captured before defeat flag. Reuse RewardDelivery/WorldLedger/LedgerRpc portable escrow; no solo direct-pay fallback on failed journal. Key and personal relic entitlement each participant; none for spectators; retain disconnected participant stable ID. Save must succeed before ACK; duplicates/rejoin same receipt, full inventory pending."
+      "contract": "Accepted host boss victory captures and journals admitted stable participant IDs before defeat publication. chapter_rewards.boss_handoffs.delivery_phase controls actual key/relic release: Warden/Veyra accepted victory; Nerissa only after water_guardian_settled; Marrow only after validated canonical legendary settlement (stormwood:legendary_offer_made is emitted by the accepted first accept/refuse, not merely an offer display). Keep all captured participants, including disconnected IDs. First valid accept OR refusal releases captured boss drops and restores the world without waiting for absent players. Reuse RewardDelivery/WorldLedger/LedgerRpc portable escrow; no solo direct-pay fallback or client flag shortcut on failed journal. Save before publish/ACK; same receipt on replay/rejoin, full inventory pending. Receipt source boss_drop:<biome>:<character_id> inside world-instance namespace."
     },
     {
       "path": "data/config/stormwood_dynamo.json",

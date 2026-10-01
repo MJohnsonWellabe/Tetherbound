@@ -36,6 +36,18 @@ assert.deepEqual(Object.fromEntries(Object.entries(read('chapter_rewards').boss_
   captain_veyra_storm_anchor: ['cloudreach', 'stormwood_portal_key', 'cloudreach', 'stormwood'],
   captain_marrow_dynamo_core: ['stormwood', 'fifth_portal_key', 'stormwood', 'biome5'],
 }, 'authored boss handoff contract (not runtime delivery proof)');
+const handoffs = read('chapter_rewards').boss_handoffs;
+for (const [boss, flags] of [
+  ['water_trainer_nerissa', ['water_guardian_settled']],
+  ['captain_marrow_dynamo_core', ['stormwood:legendary_offer_made']],
+]) {
+  assert.equal(handoffs[boss].delivery_phase, 'accepted_legendary_settlement', `${boss} must defer boss drops until ceremony settlement`);
+  assert.deepEqual(handoffs[boss].delivery_requires_world_flags, flags, `${boss} canonical world settlement marker`);
+}
+for (const boss of ['warden_aldis', 'captain_veyra_storm_anchor']) {
+  assert.equal(handoffs[boss].delivery_phase, 'accepted_boss_victory');
+  assert.deepEqual(handoffs[boss].delivery_requires_world_flags, []);
+}
 
 let previousExit = 0, previousWild = [0, 0];
 const meadowTrainers = [];
@@ -95,7 +107,9 @@ for (const [biome, rows] of tables) {
   const tableMap = new Map(rows.map(r => [r.id, r]));
   const assigned = new Set();
   let previousExit = expected[biome][0][0];
+  const worldIds = new Set(read(biome === 'tidewake' ? 'water_world' : `${biome}_world`).regions.map(r => r.id));
   for (const region of curve.biomes[biome].regional_targets) {
+    assert.ok(worldIds.has(region.region_id), `${biome}:${region.region_id} canonical region`);
     const [entry, exit] = region.team;
     if (!region.optional) {
       assert.equal(entry, previousExit, `${biome}:${region.region_id} contiguous main route`);

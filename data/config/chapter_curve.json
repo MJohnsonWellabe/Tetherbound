@@ -241,7 +241,7 @@
           ]
         },
         {
-          "region_id": "cloudbridge_causeway",
+          "region_id": "broken_causeways",
           "team": [
             34,
             36
@@ -261,7 +261,7 @@
           ]
         },
         {
-          "region_id": "high_roost",
+          "region_id": "high_roost_sky_shrine",
           "team": [
             39,
             41
@@ -283,7 +283,7 @@
           ]
         },
         {
-          "region_id": "storm_anchor_summit",
+          "region_id": "summit_final_stronghold",
           "team": [
             42,
             44
