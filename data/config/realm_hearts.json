@@ -1,5 +1,5 @@
 {
-  "_comment": "RD-10/F19: Meadows -> Tidewake -> Cloudreach -> Stormwood. The existing runtime id water denotes Tidewake. Personal earned/placed entitlements and one active power remain unchanged; legacy physical entry-key metadata is retained until the F18 transition consumer retires it.",
+  "_comment": "RD-10/F19: Meadows -> Tidewake -> Cloudreach -> Stormwood. The existing runtime id water denotes Tidewake. Existing earned/placed flag ids and the one-active power selection are preserved. Personal per-participant relic ownership requires the shared handoff consumer; this config alone does not implement it. Legacy physical entry-key metadata is retained until the F18 transition consumer retires it.",
   "hearts": {
     "meadows": {
       "display_name": "Heart of Meadows",
