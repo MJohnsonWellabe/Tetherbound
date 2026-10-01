@@ -1,0 +1,118 @@
+{
+  "head": "624b1031217b0b2c7c4dc6ea5a8cce0a7c92b946",
+  "candidate": "52d833141b14f330121e2311259c38c426589ce3",
+  "source_review": "F29 SOURCE_PASS157",
+  "unit_review": "F29 bounded native PASS63",
+  "original_probe_review": "F29 independent bounded native PASS88; unchanged source and original budgets verified",
+  "unit": {
+    "native_exit": 0,
+    "summary": [
+      "6 tests, 38 assertions, 0 failed"
+    ],
+    "hp_child": "112 assertions; both actual production trainer and authored Warden boss modes complete, each 3 host arrivals, six-HP ceiling, faint/done; strict child logs clean"
+  },
+  "original_probe": {
+    "verdict": "SCOPED_NATIVE_PASS",
+    "native_exit": 0,
+    "seconds": 305.2030000000959,
+    "original_checks": 41,
+    "strict_logs": 4,
+    "source_count": 3251,
+    "source_unchanged": true,
+    "handles_ended": true,
+    "both_peers_expected_exit": true,
+    "same_state_hash": 3469522044,
+    "battle_observation": "Five opponents, 12 swings, 1060 driver frames",
+    "budgets": "Original 95-second/5400-frame action, cadence, setup and reload/rejoin retained",
+    "proof": "Warden whole-team battle, Cloudreach key, Heart earned/placed, personal Heart activation, host slot reload and guest stable-character rejoin",
+    "limits": "Disclosed synthetic HP6 fixture. No explicit personal XP numerical before/after assertion; saved XP and Warden receipt flags are persisted observations only. No earned campaign, main or criterion credit."
+  },
+  "preserved_failure": "Original cf1 strict fixture binding FAIL retained in tree-r24-and-warden-binding; all earlier raw failures retained",
+  "files": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-624b1031217b-1bb69ea5\\result.json",
+      "sealed": "unit-result.json.gz",
+      "bytes": 414,
+      "sha256": "08fd9700b8f2bdb7ddb2cc6b5d6b91323d5a368bf42bd02f9ecb5965933e15b9"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-624b1031217b-1bb69ea5\\tests.log",
+      "sealed": "unit-tests.log.gz",
+      "bytes": 18302,
+      "sha256": "d72517d2c8ccf1683a5cecbb7bb6ac0991e93548a28d6c3dec73261480a667ca"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-624b1031217b-veridian_relic_key\\receipt.json",
+      "sealed": "net-receipt.json.gz",
+      "bytes": 737165,
+      "sha256": "3c50625b0535445689f89dbb8788966824acd5c39d1d3bfcab35bbca96e16f37"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-624b1031217b-veridian_relic_key\\net-run\\NET_RUN.json",
+      "sealed": "net-net-run-NET_RUN.json.gz",
+      "bytes": 2685,
+      "sha256": "b64bbf0113c474b31167a1f22f697358ef11c6fae4c34541432c47b9a8bf4563"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-624b1031217b-veridian_relic_key\\net-run\\SUMMARY.md",
+      "sealed": "net-net-run-SUMMARY.md.gz",
+      "bytes": 251,
+      "sha256": "58fdb3e95016c12cb8b5e97e87058fb5583df009d535cd8989afc9e4dc1ee097"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-624b1031217b-1bb69ea5\\user\\Godot\\app_userdata\\Tetherbound\\director-guest-trainer-regression-child.log",
+      "sealed": "director-guest-trainer-regression-child.log.gz",
+      "bytes": 577,
+      "sha256": "40e5ef2a65996827b6ea7e69c9b4843bee9f3f61f2102d189fbdd2e88fd8834e"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-624b1031217b-1bb69ea5\\user\\Godot\\app_userdata\\Tetherbound\\director-hp-fixture-regression-child.log",
+      "sealed": "director-hp-fixture-regression-child.log.gz",
+      "bytes": 650,
+      "sha256": "2bf113a692aba5ed433d1d23b35a786b521d620a4fa7b59552c3f6097d067e07"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-624b1031217b-1bb69ea5\\user\\Godot\\app_userdata\\Tetherbound\\director-transport-regression-child.log",
+      "sealed": "director-transport-regression-child.log.gz",
+      "bytes": 129,
+      "sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-624b1031217b-veridian_relic_key\\coordinator.log",
+      "sealed": "net-log-0.gz",
+      "bytes": 6725,
+      "sha256": "82c833ca873a0f961864bc3da6a12bd450e1fba854efc716c2d595139e68b839"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-624b1031217b-veridian_relic_key\\initial-home\\Godot\\app_userdata\\Tetherbound\\logs\\godot.log",
+      "sealed": "net-log-1.gz",
+      "bytes": 6676,
+      "sha256": "7fa7f3edf5cc61de2be2f4a5b2c9a09eb7b8aa50ec09d97e84393a65c7e40d5d"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-624b1031217b-veridian_relic_key\\net-run\\peer-0.log",
+      "sealed": "net-log-2.gz",
+      "bytes": 12892,
+      "sha256": "fab6175d8e9cbdc6a1a9e6e2f01e1197a8a03f28fbd371ed5ebe133d114b6429"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-624b1031217b-veridian_relic_key\\net-run\\peer-1.log",
+      "sealed": "net-log-3.gz",
+      "bytes": 22068,
+      "sha256": "1d06f4cef5a2721bc42fdf2c07fe16a7d24b95c31e21a33d787a49bccd2c4dba"
+    },
+    {
+      "source": "D:\\tetherbound\\feature-f22\\.tmp\\f22-trainer-kind-binding-r1\\source-evidence.json",
+      "sealed": "source-source-evidence.json.gz",
+      "bytes": 7571,
+      "sha256": "98e876e141d4e738e1a949a48144c0c2a8a37a7c3cdf44b47e512d58d8d5cbb4"
+    },
+    {
+      "source": "D:\\tetherbound\\feature-f22\\.tmp\\f22-trainer-kind-binding-r1\\candidate.patch",
+      "sealed": "source-candidate.patch.gz",
+      "bytes": 10424,
+      "sha256": "ce9a99dc8582f325807fc3818858b86b84c823683aead09340341b33f3ac9f90"
+    }
+  ],
+  "no_criterion_credit": true
+}

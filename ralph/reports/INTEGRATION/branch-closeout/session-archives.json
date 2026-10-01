@@ -59,7 +59,9 @@
       "head": "e7829fba3ceec4d31a1bcb45b2e1f4d53a0b94ff",
       "confirmed_archived": true,
       "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
-      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved.",
+      "currently_archived": false,
+      "reopened_reason": "Concrete CI6172 regional credits smoke parser failure; same F20 session reopened for test-only async API alignment. No new session."
     },
     {
       "threadId": "01a0f510-cc96-7090-8e99-bf47054aed88",
@@ -123,5 +125,5 @@
   "latest_archive_ci_run": 36854264014,
   "latest_archive_ci_status": "Actual unit/runtime failures returned to existing owners; shared CI remains unaccepted.",
   "total_confirmed_archived": 13,
-  "currently_archived_count": 12
+  "currently_archived_count": 11
 }
