@@ -130,7 +130,7 @@ Out of scope: skill trees, held-charge skills, arbitrary status stacks and a fif
 | Species id | Type | HP/ATK/DEF | Catch | Quick / charged | Best | Traversal | Target role; first utility |
 |---|---|---:|---:|---|---|---|---|
 | `terrapup` | ground | 120/22/20 | 0.30 | `pebble_toss` / `stone_rush` | S:15% | Ride | balanced bulwark; shove |
-| `ripplet` | water | 110/23/18 | 0.30 | `ripple_jab` / `undertow` | E:12% | — (target: swim mount, Dive at L30) | current duelist; dash |
+| `ripplet` | water | 110/23/18 | 0.30 | `ripple_jab` / `undertow` | E:12% | Surface swim mount; Dive after L30 breakthrough | current duelist; dash |
 | `galewisp` | air | 105/24/17 | 0.30 | `gale_peck` / `sky_rend` | E:15% | — (target: Fly) | mobile ranged scout; veil |
 | `bramblebun` | ground | 95/18/16 | 0.60 | `bramble_whip` / `warren_charge` | S:10% | — | route-denial trapper; snare |
 | `mudsnout` | ground | 100/17/18 | 0.55 | `root_nibble` / `rootquake` | E:10% | — | attrition tank; slow field |
@@ -236,7 +236,7 @@ Feeding the tier's feast to an eligible creature offers **evolve or stay**; stay
 | Ripplet | Surface swim mount, faster than human swimming and able to cross currents; **Dive** (tap toggle, never held) at its L30 breakthrough | Tidewake opening |
 | Galewisp | Fly (held input allowed) | Cloudreach unlock |
 
-**Superseded (owner, 2026-09-29, RD-32):** the Ripplet starter's Teleport promise after Stormwood completion and a Stormglass-arch attunement. The Home Key now provides fast travel (WORLD). Every required water route stays human-swimmable without Ripplet (F37#2). Each promise follows that individual starter and cannot be replaced by catching a duplicate because no duplicate is legally available. TRAINING §9 owns swim/dive progression; acceptance is F37#0–#4. The current Heart of Meadows power, **Meadowstride**, doubles the trainer's maximum stamina (`data/config/realm_hearts.json::max_stamina_multiplier=2.0`); it does not double creature combat Wind.
+The Home Key now provides fast travel (WORLD). Every required water route stays human-swimmable without Ripplet (F37#2). Each promise follows that individual starter and cannot be replaced by catching a duplicate because no duplicate is legally available. TRAINING §9 owns swim/dive progression; acceptance is F37#0–#4. The current Heart of Meadows power, **Meadowstride**, doubles the trainer's maximum stamina (`data/config/realm_hearts.json::max_stamina_multiplier=2.0`); it does not double creature combat Wind.
 
 Galecrest may be a temporary Cloudreach loaner for a trial and authored routed transport. It is never added to the owned five, carries no portable progression, cannot enter combat as a sixth and cannot bypass the party cap or permanently substitute for the Galewisp promise.
 

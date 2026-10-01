@@ -24,7 +24,10 @@ func is_swimming() -> bool:
 
 
 func snapshot() -> Dictionary:
-	return state.snapshot()
+	var result := state.snapshot()
+	var riding := _world.get_node_or_null("RidingController") if _world != null else null
+	result.ripplet_diving = riding != null and riding.has_method("dive_save") and bool(riding.diving)
+	return result
 
 
 func save_data() -> Dictionary:
@@ -42,8 +45,11 @@ func save_data() -> Dictionary:
 		var index: int = party.members().find(director.ally_instance())
 		var body: Node3D = riding.mount_body()
 		if index >= 0:
-			saved.mount = {"party_index": index, "species_id": str(body.species_id),
+			saved.mount = {"party_index": index, "creature_uid": str(director.ally_instance().uid), "species_id": str(body.species_id),
 				"position": [body.global_position.x, body.global_position.y, body.global_position.z]}
+			if riding.has_method("dive_save"):
+				var dive: Dictionary = riding.dive_save()
+				if not dive.is_empty(): saved.mount.dive = dive
 	return saved
 
 
@@ -114,6 +120,7 @@ func _restore_mount() -> void:
 		return
 	var director := _world.get_node_or_null("EncounterDirector")
 	var restored := false
+	var mount_save: Dictionary = _pending_mount.mount.duplicate(true)
 	if director != null:
 		restored = await director.restore_swim_mount(_pending_mount.mount)
 	_pending_mount.clear()
@@ -121,6 +128,9 @@ func _restore_mount() -> void:
 		state.enter_water(true, _world.field.water_level())
 		state.stamina_fraction = director.ally_instance().swim_stamina_fraction
 		state.drowning = state.stamina_fraction <= 0.0
+		var riding := _world.get_node_or_null("RidingController")
+		if mount_save.has("dive") and riding != null and riding.has_method("restore_dive"):
+			riding.restore_dive(mount_save.dive)
 
 
 ## Called by the owner rig instead of its ground integrator, never in addition

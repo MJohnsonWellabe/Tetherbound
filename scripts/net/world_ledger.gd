@@ -245,6 +245,8 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
 	match kind:
+		"ripplet_sunken_claim":
+			return _ripplet_sunken_claim(intent, peer_id, realm)
 		"stormwood_disable_rod":
 			return _stormwood_disable_rod(intent, peer_id, realm)
 		"stormwood_harvest":
@@ -462,6 +464,8 @@ func _stormwood_disable_rod(intent: Dictionary, peer_id: int, realm: String) -> 
 ## the right shape, it just had no single writer.
 func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var flag := str(intent.get("flag", ""))
+	if flag.begins_with("cache:ripplet:"):
+		return _refuse("claim_pickup", peer_id, "typed_claim_required", "Dive to gather this sunken find.")
 	if flag.is_empty():
 		return _refuse("claim_pickup", peer_id, "malformed", "That find has no identity to record.")
 	if _flag_set(flag):
@@ -472,6 +476,25 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 	if not item.is_empty():
 		ops.append(_item_grant(peer_id, item, count))
 	return _commit(ops, "claim_pickup", peer_id, realm)
+
+func _ripplet_sunken_claim(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	var actor: Dictionary = intent.get("_ripplet_actor", {})
+	if realm != "water" or actor.get("peer") != peer_id:
+		return _refuse("ripplet_sunken_claim", peer_id, "wrong_actor", "Reach the sunken find first.")
+	var result: Dictionary = preload("res://scripts/world/ripplet_sunken_rules.gd").evaluate(intent, actor, world.flags, world.day)
+	if not result.get("ok", false): return _refuse("ripplet_sunken_claim", peer_id, "refused", str(result.reason))
+	var namespace := str(world.reward_delivery_namespace)
+	if namespace.is_empty() or str(world.world_id).is_empty(): return _refuse("ripplet_sunken_claim", peer_id, "world_not_ready", "Save this world before gathering.")
+	var ops: Array = [_world_flag("water", str(result.key))]
+	if not str(result.previous).is_empty(): ops.append(_world_flag("water", str(result.previous), false))
+	for item: String in result.outputs:
+		var source := str(result.key) + ":" + item if result.outputs.size() > 1 else str(result.key)
+		var delivery := REWARD_DELIVERY.make_record(str(world.world_id), namespace, source, str(result.character_id), item, int(result.outputs[item]))
+		if delivery.is_empty() or world.reward_deliveries.has(str(delivery.delivery_id)):
+			return _refuse("ripplet_sunken_claim", peer_id, "already_taken", "Someone already gathered this find.")
+		ops.append({"op":"reward_delivery_journal", "scope":"world", "realm":"water", "delivery_id":delivery.delivery_id, "delivery":delivery})
+		ops.append({"op":"reward_delivery", "scope":"player", "realm":"water", "peers":[peer_id], "delivery":delivery})
+	return _commit(ops, "ripplet_sunken_claim", peer_id, "water")
 
 
 ## A hand-authored harvest node (`harvest_node.gd`). Gone, not resting: the same
@@ -709,6 +732,8 @@ func _storage_txn(intent: Dictionary, peer_id: int, realm: String) -> Dictionary
 
 func _set_world_flag(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var id := str(intent.get("id", ""))
+	if id.begins_with("cache:ripplet:"):
+		return _refuse("set_world_flag", peer_id, "typed_claim_required", "Sunken finds use their own claim receipt.")
 	if id.is_empty():
 		return _refuse("set_world_flag", peer_id, "malformed", "That world change has no identity to record.")
 	var value := bool(intent.get("value", true))
@@ -1280,6 +1305,10 @@ func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionar
 	# One gate for every intent kind that writes a world flag: an owned receipt
 	# can only be written (or cleared) by the character it names.
 	for op: Variant in ops:
+		if op is Dictionary and str(op.get("op", "")) == "flag" \
+				and str(op.get("scope", "")) == "world" \
+				and str(op.get("id", "")).begins_with("cache:ripplet:") and kind != "ripplet_sunken_claim":
+			return _refuse(kind, peer_id, "typed_ripplet_claim", "Reach that find with your diving Ripplet.")
 		if op is Dictionary and str((op as Dictionary).get("op", "")) == "flag" \
 				and str((op as Dictionary).get("scope", "")) == "world" \
 				and not owned_flag_allowed(str((op as Dictionary).get("id", "")), peer_id, _actor_character):
