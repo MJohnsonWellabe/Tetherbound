@@ -410,6 +410,12 @@ func apply_delta(delta: Dictionary) -> int:
 
 func _apply_op(op: Dictionary) -> bool:
 	match str(op.get("op", "")):
+		"alpha_cycle":
+			if op.get("world_namespace") != reward_delivery_namespace \
+				or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(op.get("plan"), redesign_world, reward_delivery_namespace): return false
+			redesign_world = op.plan.state.duplicate(true)
+			revision += 1
+			return true
 		"portal_delivery_journal", "portal_delivery_accept":
 			if not portal_op_valid(op, reward_deliveries, reward_delivery_namespace, world_id): return false
 			reward_deliveries[op.receipt] = op.delivery.duplicate(true)

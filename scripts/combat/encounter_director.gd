@@ -804,6 +804,32 @@ const REGROUND_DEPTH_M := 5.0
 
 func _spawn_creatures() -> void:
 	var entries: Array = spawns_config().get("spawns", []) as Array
+	await _spawn_authored_creatures(entries)
+
+func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
+	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	var game := get_node_or_null("/root/Game")
+	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
+	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
+	if site.get("biome") != "meadows" or get_script() != preload("res://scripts/combat/encounter_director.gd"): return
+	for wild: Node3D in _wild_creatures:
+		if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == site_id \
+			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return
+	if has_meta("foundation_alpha_spawning_" + site_id): return
+	var entry: Dictionary = {}
+	for raw: Dictionary in spawns_config().get("spawns", []):
+		if raw.get("order") == site.source_order:
+			entry = raw.duplicate(true)
+			break
+	if entry.is_empty(): return
+	entry.count = 1
+	set_meta("foundation_alpha_spawning_" + site_id, true)
+	await _spawn_authored_creatures([entry], packet)
+	remove_meta("foundation_alpha_spawning_" + site_id)
+
+func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -> void:
+	var repeat_world: RefCounted = get_node("/root/Game").world if not repeat_packet.is_empty() else null
+	var repeat_epoch := str(_session.call("_altar_current_epoch")) if not repeat_packet.is_empty() and _session != null else ""
 	if entries.is_empty():
 		push_error("spawns.json has no spawn table; the meadow will be empty")
 
@@ -885,9 +911,10 @@ func _spawn_creatures() -> void:
 			# (`_make_alpha()`/`_apply_elder()` below). Once it is beaten,
 			# caught or freed, this spot simply spawns one fewer body -- the
 			# rest of an ordinary-population cluster (`n > 0`) is untouched.
-			if n == 0 and once_already_cleared:
+			if n == 0 and once_already_cleared and repeat_packet.is_empty():
 				continue
 			var wild: Node3D = CREATURE_SCENE.instantiate()
+			if not repeat_packet.is_empty(): wild.visible = false
 			# CREATURE-STAGING-0911. A tiny number of authored water shelves are
 			# deliberately too narrow for presentation spacing. Those entries opt
 			# out explicitly rather than weakening the body-aware rule globally.
@@ -948,6 +975,15 @@ func _spawn_creatures() -> void:
 			spot = _out_of_named_trainer_grounds(spot)
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
+				if not repeat_packet.is_empty():
+					wild.queue_free()
+					continue
+			if not repeat_packet.is_empty():
+				var live_game := get_node_or_null("/root/Game")
+				if live_game == null or live_game.world != repeat_world or _session == null or _session.call("_altar_current_epoch") != repeat_epoch \
+					or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(live_game.world.redesign_world, once_id) != repeat_packet:
+					wild.queue_free()
+					continue
 			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
 			# BEFORE populate because gameplay size has to be set before the
 			# capsule is built. See `_apply_elder()` below for the whole shape.
@@ -1052,7 +1088,7 @@ func _spawn_creatures() -> void:
 					# `_on_combat_exited()` can fire the flag and skip its
 					# respawn timer the moment this alpha leaves the field.
 					_once_only[wild] = once_id
-					_configure_once_completion_reward(wild, once_alpha)
+					if repeat_packet.is_empty(): _configure_once_completion_reward(wild, once_alpha)
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
 			# WORLD-LIFE-0903 (BAND1_ROUTE_CONTRACT.md). A cluster's own
 			# `wander_radius` overrides `wild_creature.gd`'s open-meadow default
@@ -1070,6 +1106,18 @@ func _spawn_creatures() -> void:
 				wild_cfg = _apply_elder(wild, elder, wild_cfg)
 				if once_id != "":
 					_once_only[wild] = once_id
+			if n == 0 and not preload("res://scripts/repeatables/alpha_respawns.gd").site(once_id).is_empty():
+				wild.set_meta("foundation_alpha_site", once_id)
+				wild.set_meta("foundation_alpha_generation", int(repeat_packet.captured_from.spawn_generation) if not repeat_packet.is_empty() else 1)
+				wild.set_meta("foundation_alpha_world", weakref(get_node("/root/Game").world))
+				wild.set_meta("foundation_alpha_epoch", _session.call("_altar_current_epoch") if _session != null else "")
+				if not repeat_packet.is_empty():
+					var alpha_instance: RefCounted = wild.get("instance")
+					alpha_instance.set("traits_initialized", true)
+					alpha_instance.set("rolled_traits", repeat_packet.rolled_traits.duplicate())
+					alpha_instance.set("taught_traits", repeat_packet.taught_traits.duplicate(true))
+					wild.set_meta("foundation_alpha_packet", repeat_packet.duplicate(true))
+					wild.visible = true
 			wild.call("configure", wild_cfg)
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
@@ -2969,11 +3017,17 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			_host_after_encounter_change(encounter_id)
 			return refused
 	if caught:
+		if _session.call("foundation_alpha_resolution", self, encounter_id, "catch").get("durable") != true:
+			return {"ok": false, "pending": true, "code": "alpha_resolution_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 		if runtime.get_meta("foundation_catch_night_claim", "") != claim_id:
 			runtime.remove_meta("foundation_catch_night")
 		if not runtime.has_meta("foundation_catch_night") and preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
 			return {"ok": false, "pending": true, "code": "capture_clock_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
-		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null), creature_card):
+		var capture_source := creature_card.duplicate(true)
+		var source_body: Node3D = runtime.call("body")
+		var source_instance: RefCounted = source_body.get("instance")
+		capture_source.rolled_traits = source_instance.get("rolled_traits").duplicate()
+		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null), capture_source):
 			return {"ok": false, "pending": true, "code": "capture_event_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 	_catch_arbiter.call("release", encounter_id, peer_id)
 	if caught:
@@ -7355,6 +7409,7 @@ func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) ->
 			"record": (_encounter_host.call("record", encounter_id) as Dictionary).duplicate(true)})
 		return
 	runtime.set_meta(&"wild_victory_source", capture.duplicate(true))
+	_session.call("foundation_alpha_resolution", self, encounter_id, "defeat")
 	_session.call("foundation_defeat_obligations", self, capture)
 	runtime.set_meta(&"wild_victory_resolved", false)
 	runtime.set_meta(&"wild_victory_retry_left_s", 0.0)
@@ -7385,6 +7440,7 @@ func _tick_wild_victory_settlement(encounter_id: String, delta: float) -> void:
 			or not (_encounter_host.call("pending_actor_vitals", encounter_id) as Array).is_empty():
 		return
 	var original := host_wild_victory_source(encounter_id)
+	if not original.is_empty() and _session.call("foundation_alpha_resolution", self, encounter_id, "defeat").get("durable") != true: return
 	if not original.is_empty() and _session.call("foundation_defeat_obligations", self, original).get("durable") != true: return
 	if original.is_empty() or not _session.has_method("admitted_pending_vitals"):
 		return

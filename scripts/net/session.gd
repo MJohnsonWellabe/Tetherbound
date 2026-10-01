@@ -307,8 +307,14 @@ func foundation_research_source(director: Node, encounter_id: String, peer: int,
 	if duties.is_empty(): return {"ok": true, "durable": true, "disabled": true}
 	return get_node(^"LedgerRpc").call("journal_foundation_event", source_id, duties)
 
+func foundation_alpha_resolution(director: Node, encounter_id: String, outcome: String) -> Dictionary:
+	var producer := get_node_or_null(^"FoundationComposition/Alphas")
+	return producer.call("resolution", director, encounter_id, outcome) if producer != null else {"ok": false, "durable": false}
+
 func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dictionary:
-	if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
+	var research_enabled := preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
+	var bounty_enabled := preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
+	if not research_enabled and not bounty_enabled: return {"ok": true, "durable": true, "disabled": true}
 	if not is_host() or director.get("_session") != self or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
 		or director.call("host_wild_victory_source", str(original.get("record", {}).get("encounter_id", ""))) != original \
 		or original.get("world_namespace") != _game().get("world").reward_delivery_namespace or original.get("session_id") != _altar_current_epoch() \
@@ -319,10 +325,22 @@ func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dict
 		participants.append(participant.character_id)
 	var duties: Array = []
 	for character: String in participants:
-		duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": {
+		if research_enabled: duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": {
 			"source_key": "encounter:" + str(original.record.encounter_id), "event_confirmed": true,
 			"world_namespace": original.world_namespace, "session_id": original.session_id, "event_id": original.source_id,
 			"participants": participants.duplicate(), "species_id": original.enemy_record.species_id, "kind": "defeat", "opponent_defeated": true}})
+		if bounty_enabled:
+			var runtime: Node = director.call("_shared_host_fight", str(original.record.encounter_id))
+			var body: Node3D = runtime.call("body") if runtime != null else null
+			if body == null or preload("res://scripts/repeatables/alpha_respawns.gd").site(str(body.get_meta("foundation_alpha_site", ""))).is_empty(): continue
+			for participant: Dictionary in original.record.participants.values():
+				var instances: Array = participant.get("foundation_bounty_instances", [])
+				if participant.character_id != character or instances.is_empty(): continue
+				duties.append({"character_id": character, "action": "bounty_event", "intent": {}, "context": {
+					"source_key": "halda_bounty_event", "event_confirmed": true, "world_namespace": original.world_namespace,
+					"session_id": original.session_id, "event_id": "defeat:" + str(original.source_id), "participants": participants.duplicate(),
+					"issued_instances": instances.duplicate(), "kind": "defeat_alpha", "biome": preload("res://scripts/data/biome_order.gd").canonical_id(str(original.record.realm)), "traits": []}})
+	if duties.is_empty(): return {"ok": true, "durable": true, "no_duties": true}
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "defeat:" + str(original.source_id), duties)
 
 func foundation_rematch_participant_context(peer: int) -> Dictionary:
@@ -331,7 +349,11 @@ func foundation_rematch_participant_context(peer: int) -> Dictionary:
 	var flags := _foundation_flags(peer)
 	var full: Dictionary = _character_authority.call("state", character)
 	if full.redesign_character.transaction_receipts.has("craft:regional_ending_regional_credits_seen:" + character): flags.regional_credits_seen = true
-	return {"character_id": character, "world_flags": _game().world.flags.call("all_set"), "personal_flags": flags.keys()}
+	var instances: Array[String] = []
+	for slot: Dictionary in full.redesign_character.get("bounties", {}).get("slots", []):
+		if slot.get("complete") != true and not instances.has(str(slot.get("instance", ""))): instances.append(str(slot.instance))
+	return {"character_id": character, "world_flags": _game().world.flags.call("all_set"), "personal_flags": flags.keys(),
+		"bounty_instances": instances}
 
 func foundation_rematch_join_allowed(peer: int, spec: Dictionary) -> bool:
 	var context := foundation_rematch_participant_context(peer)
@@ -354,6 +376,7 @@ func foundation_rematch_outcome(director: Node, spec: Dictionary, won: bool) -> 
 		game.call("_sync_clock_state")
 		if not is_finite(float(game.world.clock_elapsed_seconds)) or float(game.world.clock_elapsed_seconds) < 0: return {"ok": false}
 		var duties: Array = []
+		var source_id := "rematch:%s:%s" % [spec.id, record.encounter_id]
 		for character: String in participants:
 			var admission: Dictionary = director.get("_trainer_foundation_admissions").get(character, {})
 			if admission.get("character_id") != character: return {"ok": false}
@@ -367,7 +390,13 @@ func foundation_rematch_outcome(director: Node, spec: Dictionary, won: bool) -> 
 			if preload("res://scripts/repeatables/rematch_rules.gd").profile(str(spec.id)).kind == "master":
 				duties.back().context.single_creature_duel = true
 				duties.back().context.creature_uid = str(director.get("_master_duel").get("creature_uid", ""))
-		original = {"source_id": "rematch:%s:%s" % [spec.id, record.encounter_id], "duties": duties}
+			if preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true and not admission.get("bounty_instances", []).is_empty():
+				duties.append({"character_id": character, "action": "bounty_event", "intent": {}, "context": {
+					"source_key": "halda_bounty_event", "event_confirmed": true, "world_namespace": game.world.reward_delivery_namespace,
+					"session_id": _altar_current_epoch(), "event_id": source_id, "participants": participants.duplicate(),
+					"issued_instances": admission.bounty_instances.duplicate(), "kind": "rematch",
+					"biome": preload("res://scripts/data/biome_order.gd").canonical_id(str(record.realm)), "traits": []}})
+		original = {"source_id": source_id, "duties": duties}
 		director.set_meta("foundation_rematch_pending", original.duplicate(true))
 	var result: Dictionary = get_node(^"LedgerRpc").call("journal_foundation_event", original.source_id, original.duties)
 	if result.get("durable") == true: director.remove_meta("foundation_rematch_pending")

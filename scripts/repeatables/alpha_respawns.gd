@@ -17,13 +17,14 @@ static func site(id: String) -> Dictionary:
 static func _sites(world: Dictionary) -> Dictionary:
 	return world.get("alpha_cycles", {}).get("sites", {})
 
-static func _plan(world: Dictionary, id: String, record: Dictionary, operation: String) -> Dictionary:
+static func _plan(world: Dictionary, id: String, record: Dictionary, operation: String, source: Dictionary) -> Dictionary:
 	var next := world.duplicate(true)
 	if not next.has("alpha_cycles"): return {}
 	if not next.alpha_cycles.has("sites"): next.alpha_cycles.sites = {}
 	next.alpha_cycles.sites[id] = record.duplicate(true)
 	return {"ok": true, "operation": operation, "site_id": id,
-		"before": world.duplicate(true), "state": next, "record": record.duplicate(true), "durable": false}
+		"before": world.duplicate(true), "state": next, "record": record.duplicate(true),
+		"source": source.duplicate(true), "durable": false}
 
 ## Frozen host region census, not only fighters. Players who disconnect remain
 ## required until their accepted departure; a newly arriving peer blocks spawn
@@ -43,7 +44,8 @@ static func resolve(world: Dictionary, id: String, generation: int, world_second
 	required.sort()
 	return _plan(world, id, {"generation": generation, "status": "waiting", "resolved_at_seconds": world_seconds,
 		"next_eligible_seconds": world_seconds + int(config().respawn_days) * int(config().day_seconds),
-		"required_departures": required, "departed": [], "spawn_traits": {}}, "alpha_resolve")
+		"required_departures": required, "departed": [], "spawn_traits": {}}, "alpha_resolve",
+		{"generation": generation, "world_seconds": world_seconds, "region_characters": required, "outcome": outcome})
 
 static func depart(world: Dictionary, id: String, generation: int, character: String, actual_region: String) -> Dictionary:
 	var row := site(id)
@@ -54,7 +56,8 @@ static func depart(world: Dictionary, id: String, generation: int, character: St
 	var record := old.duplicate(true)
 	record.departed.append(character)
 	record.departed.sort()
-	return _plan(world, id, record, "alpha_depart")
+	return _plan(world, id, record, "alpha_depart", {"generation": generation,
+		"character_id": character, "actual_region": actual_region})
 
 static func spawn(world: Dictionary, id: String, namespace_id: String, world_seconds: int,
 		night: bool, weather: bool) -> Dictionary:
@@ -78,7 +81,33 @@ static func spawn(world: Dictionary, id: String, namespace_id: String, world_sec
 	record.generation = generation
 	record.status = "active"
 	record.spawn_traits = packet
-	return _plan(world, id, record, "alpha_spawn")
+	return _plan(world, id, record, "alpha_spawn", {"world_namespace": namespace_id,
+		"world_seconds": world_seconds, "night": night, "weather": weather})
+
+## Typed world delta: restage the exact detached proposal before the ledger
+## applies it. Ordinary client intents cannot submit this host-only operation.
+static func valid_plan(plan: Variant, current: Dictionary, namespace_id: String) -> bool:
+	if not plan is Dictionary or plan.get("ok") != true or plan.get("durable") != false \
+		or plan.size() != 8 or plan.get("before") != current or not plan.get("source") is Dictionary \
+		or not plan.get("site_id") is String or site(plan.site_id).is_empty(): return false
+	var source: Dictionary = plan.source
+	var canonical: Dictionary = {}
+	match plan.get("operation"):
+		"alpha_resolve":
+			if source.size() != 4 or not TRAITS.integer(source.get("generation"), 1, 2147483647) \
+				or not TRAITS.integer(source.get("world_seconds"), 0, 2147483647) \
+				or not source.get("region_characters") is Array or not source.get("outcome") is String: return false
+			canonical = resolve(current, plan.site_id, int(source.generation), int(source.world_seconds), source.region_characters, source.outcome)
+		"alpha_depart":
+			if source.size() != 3 or not TRAITS.integer(source.get("generation"), 1, 2147483647) \
+				or not source.get("character_id") is String or not source.get("actual_region") is String: return false
+			canonical = depart(current, plan.site_id, int(source.generation), source.character_id, source.actual_region)
+		"alpha_spawn":
+			if source.size() != 4 or source.get("world_namespace") != namespace_id \
+				or not TRAITS.integer(source.get("world_seconds"), 0, 2147483647) \
+				or not source.get("night") is bool or not source.get("weather") is bool: return false
+			canonical = spawn(current, plan.site_id, namespace_id, int(source.world_seconds), source.night, source.weather)
+	return not canonical.is_empty() and canonical == plan
 
 ## Reattaching a saved active generation returns its retained roll. It must not
 ## increment the generation or run resolve/spawn again on load/reconnect.

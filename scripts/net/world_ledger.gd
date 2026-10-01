@@ -121,6 +121,11 @@ func commit_foundation_event(row: Dictionary) -> Dictionary:
 		return {"ok": world.reward_deliveries[row.delivery_id] == row, "duplicate": true}
 	return _commit([{"op": "foundation_event_journal", "scope": "world", "delivery_id": row.delivery_id, "delivery": row.duplicate(true)}], "foundation_event", 1, "")
 
+func commit_alpha_plan(plan: Dictionary) -> Dictionary:
+	if world == null or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(plan, world.redesign_world, world.reward_delivery_namespace): return {"ok": false}
+	return _commit([{"op": "alpha_cycle", "scope": "world", "world_namespace": world.reward_delivery_namespace,
+		"plan": plan.duplicate(true)}], plan.operation, HOST_PEER, "")
+
 
 func _init(world_state: RefCounted = null) -> void:
 	world = world_state

@@ -100,6 +100,35 @@ var _satchel_retry_at: Dictionary = {}
 var _satchel_poll := 0.0
 var _reward_retry_at: Dictionary = {}
 
+## Internal alpha service uses the existing host-world CAS and BOOL writer.
+## No body is published by this method, and no portable reward is granted.
+func commit_alpha_plan(plan: Dictionary) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or game.call("is_host") != true or ledger == null or ledger.world != game.world: return {"ok": false, "durable": false}
+	var world: RefCounted = game.world
+	var saver: RefCounted = game.save_system
+	var session: Node = game.session
+	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
+	var world_id := str(world.world_id)
+	var namespace := str(world.reward_delivery_namespace)
+	var epoch := str(session.call("_altar_current_epoch"))
+	var before: Dictionary = world.call("save_data")
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var result: Dictionary = ledger.call("commit_alpha_plan", plan)
+	if result.get("ok") != true: return {"ok": false, "durable": false, "code": "alpha_stale_plan"}
+	if saver.call("save_world_prepared", game, world_id) != true:
+		world.call("load_data", before)
+		world.revision = revision
+		ledger.seq = sequence
+		return {"ok": false, "durable": false, "code": "alpha_world_save_failed"}
+	if game.world != world or game.save_system != saver or game.session != session \
+		or str(world.world_id) != world_id or str(world.reward_delivery_namespace) != namespace \
+		or str(session.call("_altar_current_epoch")) != epoch: return {"ok": false, "durable": false, "code": "alpha_owner_changed"}
+	publish_journaled_delta(result.delta)
+	return {"ok": true, "durable": true}
+
 ## Host-internal append, before personal actions/terminal source cleanup.
 ## A failed atomic world write restores the same ledger state and sequence.
 func journal_foundation_event(source: String, duties: Array) -> Dictionary:
