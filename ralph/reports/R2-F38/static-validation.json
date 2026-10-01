@@ -25,7 +25,7 @@
     "scripts/world/horizon_ranges.gd": "0b9210b6b601a24673793a4284151fa4577cd850106b08c2f1a96eaba70cedd7",
     "tools/capture_f38_matrix.gd": "4257c0bb0ed79208da2d2d023d0a3098e4c1b50aeeba8d969377f0e5350608fe",
     "tools/capture_f38_fight.gd": "b728da39581f3c721e4f4a8815639c53251841cc1e6828467440d5545c67ac6c",
-    "data/config/meadows_catalog_presentation.json": "ce79e87a773b8b0d067e492ab80b19b3a24b2df9fca02fa09461ea2c8a2b0ba9"
+    "data/config/meadows_catalog_presentation.json": "580b07880e5559f44f8d349e736376508c7b8f0dd0d5c0ce9dcc71c04eb33e84"
   },
   "candidate_placements": 60,
   "pending": [
@@ -50,5 +50,6 @@
     "F36 creature art/scale/pose and relevant pickup-family mesh work; F42 UI; F22 fight/camera/tell presentation.",
     "No edits to F34 camps, F37 traversal, F43 bounties, F44 rematches, save carrier, flags, autoloads, CI or global STATE.",
     "Prior consolidated batch GREEN ON MAIN, then ROOT consolidation/reconciliation of ALL TEN candidates."
-  ]
+  ],
+  "source_hash_basis": "Committed Git blob bytes (LF), independent of Windows checkout line endings"
 }

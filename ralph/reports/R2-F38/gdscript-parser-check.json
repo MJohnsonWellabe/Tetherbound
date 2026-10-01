@@ -43,5 +43,6 @@
       "syntax": "PASS",
       "sha256": "b728da39581f3c721e4f4a8815639c53251841cc1e6828467440d5545c67ac6c"
     }
-  ]
+  ],
+  "source_hash_basis": "Committed Git blob bytes (LF); parser read equivalent Windows working-tree source"
 }
