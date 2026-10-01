@@ -1,0 +1,23 @@
+{
+  "integration_source": "12a2ede365be2bf0a65b30c9bfb5ab1221b3d670",
+  "source_path": "scripts/world/build_stormwood_terrain.gd",
+  "prior_fingerprint": 2236840266,
+  "proposed_fingerprint": 3437044630,
+  "proposed_source_sha256_lf": "08b01690ca925b726cf1b161dbbb67cc6e38b2e295b75d8f498791c6822fba62",
+  "integration_patch_sha256": "006f82fa5cf1ab26b761d6e08bb3998431a7a3afc0d813bbc6dbd4266d89e8dd",
+  "only_change_is_camera_insertion": true,
+  "water_reference_path": "scripts/world/build_water_terrain.gd",
+  "water_reference_source_sha256": "db271c6c7b934e215ca2842b3b6c14cdfd3faba2ce796de762407cad1b10f483",
+  "water_reference_matching_camera_sequence": true,
+  "preserved_dependency_sources": {
+    "data/config/terrain_stormwood.json": "2b56527ce1ab72053cbfe3a0377f34f7e9f44d69294c7eff96e52cee4b88635a",
+    "data/config/stormwood_world.json": "018de59fd7fafc00fa33b3fcf2f4838cee4a4b055f6e0b0716f633104f3a1651",
+    "scripts/world/stormwood_heightfield.gd": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+    "data/config/stormwood_road_surface.json": "d16b3ee1f851c94d816363bae321d460bea827cc0b4d430a190413c488957019",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+  },
+  "failed_bake_log_sha256": "fe9966c2d842d73884a7b6db317b26ba7d5fda65c6b0cf9b21b01734b13322d8",
+  "engine_jobs_run_here": false,
+  "terrain_or_manifest_writes": false,
+  "runtime_verdict": "Pending coordinator real full bake and native channel comparison"
+}
