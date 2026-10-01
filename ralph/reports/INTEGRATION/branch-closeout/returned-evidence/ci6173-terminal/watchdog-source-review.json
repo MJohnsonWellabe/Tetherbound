@@ -1,0 +1,17 @@
+{
+  "source_candidate": "b9391ee21b67589b209fe96711a67f4a33aaa057",
+  "independent_reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "source_verdict": "PASS; exactly three declared paths, unchanged original eight tests/six Veridian scenarios and native assertions",
+  "native_allowance_seconds": 2700,
+  "outer_step_minutes": 46,
+  "job_minutes": 50,
+  "semantics": "Opt-in original45min deadline stops the owned process group and returns124. Native default path and native/fatal failures preserved. Raw bytes retained losslessly in gzip before console prefix cap; original full bytes still scanned for fatal script errors. Artifact uploaded even after native failure.",
+  "local_checks": "Python AST, actionlint1.7.12 and Git whitespace checks PASS",
+  "runtime_proof": "Ten real Linux process-group cases UNRUN locally; existing eight prior Linux PASS remains historical, not a result for these two added cases. Next coherent CI must run all10.",
+  "source_pins": {
+    "workflow": "f735f108592900e0fefc396a1ff2c05a4e480c3a37370e7ff0afab5285ba1883",
+    "runner": "c6253c6062220f9561f59da640e9596a0164e65c12222dcb9cdd267347005138",
+    "tests": "d3bc1cff90031c56e540d1f7e80c042badd5b096b1c9a3fc899ba3a7e9e48333"
+  },
+  "acceptance": "No CI green/main/criterion credit or cancelled-test cause inferred"
+}
