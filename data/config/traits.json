@@ -1,0 +1,314 @@
+{
+  "version": 1,
+  "rarities": {
+    "common": 0.05,
+    "rare": 0.08,
+    "epic": 0.12
+  },
+  "maximum_rolled": 3,
+  "aggregate_effect_limit": 0.3,
+  "bond_reveal_nodes": 5,
+  "slot_breakthrough_tiers": [
+    1,
+    3,
+    5
+  ],
+  "essence_cost_per_slot": 10,
+  "maximum_transaction_receipts": 4096,
+  "profiles": {
+    "ordinary": {
+      "count_weights": [
+        45,
+        38,
+        14,
+        3
+      ],
+      "rarity_weights": [
+        82,
+        16,
+        2
+      ]
+    },
+    "unusual": {
+      "count_weights": [
+        20,
+        38,
+        30,
+        12
+      ],
+      "rarity_weights": [
+        64,
+        29,
+        7
+      ]
+    },
+    "alpha": {
+      "count_weights": [
+        5,
+        20,
+        43,
+        32
+      ],
+      "rarity_weights": [
+        45,
+        40,
+        15
+      ]
+    },
+    "alpha_unusual": {
+      "count_weights": [
+        2,
+        12,
+        40,
+        46
+      ],
+      "rarity_weights": [
+        35,
+        44,
+        21
+      ]
+    }
+  },
+  "traits": {
+    "bold": {
+      "display_name": "Bold",
+      "rarity": "common",
+      "effect": "charged_power",
+      "magnitude": 0.05,
+      "description": "Charged moves deal 5% more damage.",
+      "seed_item": "trait_seed_bold"
+    },
+    "calm": {
+      "display_name": "Calm",
+      "rarity": "common",
+      "effect": "wind_regen",
+      "magnitude": 0.05,
+      "description": "Wind regenerates 5% faster.",
+      "seed_item": "trait_seed_calm"
+    },
+    "sturdy": {
+      "display_name": "Sturdy",
+      "rarity": "common",
+      "effect": "defence",
+      "magnitude": 0.05,
+      "description": "Effective defence increases by 5%.",
+      "seed_item": "trait_seed_sturdy"
+    },
+    "swift": {
+      "display_name": "Swift",
+      "rarity": "common",
+      "effect": "combat_speed",
+      "magnitude": 0.05,
+      "description": "Move 5% faster in combat.",
+      "seed_item": "trait_seed_swift"
+    },
+    "gentle": {
+      "display_name": "Gentle",
+      "rarity": "common",
+      "effect": "healing",
+      "magnitude": 0.05,
+      "description": "Receive 5% more healing.",
+      "seed_item": "trait_seed_gentle"
+    },
+    "stubborn": {
+      "display_name": "Stubborn",
+      "rarity": "common",
+      "effect": "poise",
+      "magnitude": 0.05,
+      "description": "Poise threshold increases by 5%.",
+      "seed_item": "trait_seed_stubborn"
+    },
+    "curious": {
+      "display_name": "Curious",
+      "rarity": "common",
+      "effect": "cooldown",
+      "magnitude": -0.05,
+      "description": "Move cooldowns are 5% shorter.",
+      "seed_item": "trait_seed_curious"
+    },
+    "watchful": {
+      "display_name": "Watchful",
+      "rarity": "common",
+      "effect": "burst_cost",
+      "magnitude": -0.05,
+      "description": "Burst costs 5% less Wind.",
+      "seed_item": "trait_seed_watchful"
+    },
+    "hardy": {
+      "display_name": "Hardy",
+      "rarity": "common",
+      "effect": "max_hp",
+      "magnitude": 0.05,
+      "description": "Maximum HP increases by 5%.",
+      "seed_item": "trait_seed_hardy"
+    },
+    "keen": {
+      "display_name": "Keen",
+      "rarity": "common",
+      "effect": "quick_power",
+      "magnitude": 0.05,
+      "description": "Quick moves deal 5% more damage.",
+      "seed_item": "trait_seed_keen"
+    },
+    "surefoot": {
+      "display_name": "Surefoot",
+      "rarity": "common",
+      "effect": "ride_speed",
+      "magnitude": 0.05,
+      "description": "Ride 5% faster.",
+      "seed_item": "trait_seed_surefoot"
+    },
+    "paddler": {
+      "display_name": "Paddler",
+      "rarity": "common",
+      "effect": "swim_speed",
+      "magnitude": 0.05,
+      "description": "Mounted swimming is 5% faster.",
+      "seed_item": "trait_seed_paddler"
+    },
+    "fierce": {
+      "display_name": "Fierce",
+      "rarity": "rare",
+      "effect": "charged_power",
+      "magnitude": 0.08,
+      "description": "Charged moves deal 8% more damage.",
+      "seed_item": "trait_seed_fierce"
+    },
+    "composed": {
+      "display_name": "Composed",
+      "rarity": "rare",
+      "effect": "wind_regen",
+      "magnitude": 0.08,
+      "description": "Wind regenerates 8% faster.",
+      "seed_item": "trait_seed_composed"
+    },
+    "resolute": {
+      "display_name": "Resolute",
+      "rarity": "rare",
+      "effect": "defence",
+      "magnitude": 0.08,
+      "description": "Effective defence increases by 8%.",
+      "seed_item": "trait_seed_resolute"
+    },
+    "nimble": {
+      "display_name": "Nimble",
+      "rarity": "rare",
+      "effect": "combat_speed",
+      "magnitude": 0.08,
+      "description": "Move 8% faster in combat.",
+      "seed_item": "trait_seed_nimble"
+    },
+    "renewing": {
+      "display_name": "Renewing",
+      "rarity": "rare",
+      "effect": "healing",
+      "magnitude": 0.08,
+      "description": "Receive 8% more healing.",
+      "seed_item": "trait_seed_renewing"
+    },
+    "unshaken": {
+      "display_name": "Unshaken",
+      "rarity": "rare",
+      "effect": "poise",
+      "magnitude": 0.08,
+      "description": "Poise threshold increases by 8%.",
+      "seed_item": "trait_seed_unshaken"
+    },
+    "inventive": {
+      "display_name": "Inventive",
+      "rarity": "rare",
+      "effect": "cooldown",
+      "magnitude": -0.08,
+      "description": "Move cooldowns are 8% shorter.",
+      "seed_item": "trait_seed_inventive"
+    },
+    "vigilant": {
+      "display_name": "Vigilant",
+      "rarity": "rare",
+      "effect": "burst_cost",
+      "magnitude": -0.08,
+      "description": "Burst costs 8% less Wind.",
+      "seed_item": "trait_seed_vigilant"
+    },
+    "current_rider": {
+      "display_name": "Current Rider",
+      "rarity": "rare",
+      "effect": "swim_speed",
+      "magnitude": 0.08,
+      "description": "Mounted swimming is 8% faster.",
+      "seed_item": "trait_seed_current_rider"
+    },
+    "soaring": {
+      "display_name": "Soaring",
+      "rarity": "rare",
+      "effect": "fly_speed",
+      "magnitude": 0.08,
+      "description": "Fly 8% faster.",
+      "seed_item": "trait_seed_soaring"
+    },
+    "precise": {
+      "display_name": "Precise",
+      "rarity": "epic",
+      "effect": "quick_power",
+      "magnitude": 0.12,
+      "description": "Quick moves deal 12% more damage.",
+      "seed_item": "trait_seed_precise"
+    },
+    "ferocious": {
+      "display_name": "Ferocious",
+      "rarity": "epic",
+      "effect": "charged_power",
+      "magnitude": 0.12,
+      "description": "Charged moves deal 12% more damage.",
+      "seed_item": "trait_seed_ferocious"
+    },
+    "radiant": {
+      "display_name": "Radiant",
+      "rarity": "epic",
+      "effect": "ultimate_power",
+      "magnitude": 0.12,
+      "description": "Ultimate moves deal 12% more damage.",
+      "seed_item": "trait_seed_radiant"
+    },
+    "unyielding": {
+      "display_name": "Unyielding",
+      "rarity": "epic",
+      "effect": "defence",
+      "magnitude": 0.12,
+      "description": "Effective defence increases by 12%.",
+      "seed_item": "trait_seed_unyielding"
+    },
+    "tireless": {
+      "display_name": "Tireless",
+      "rarity": "epic",
+      "effect": "wind_regen",
+      "magnitude": 0.12,
+      "description": "Wind regenerates 12% faster.",
+      "seed_item": "trait_seed_tireless"
+    },
+    "fleet": {
+      "display_name": "Fleet",
+      "rarity": "epic",
+      "effect": "combat_speed",
+      "magnitude": 0.12,
+      "description": "Move 12% faster in combat.",
+      "seed_item": "trait_seed_fleet"
+    },
+    "tide_dancer": {
+      "display_name": "Tide Dancer",
+      "rarity": "epic",
+      "effect": "swim_speed",
+      "magnitude": 0.12,
+      "description": "Mounted swimming is 12% faster.",
+      "seed_item": "trait_seed_tide_dancer"
+    },
+    "sky_dancer": {
+      "display_name": "Sky Dancer",
+      "rarity": "epic",
+      "effect": "fly_speed",
+      "magnitude": 0.12,
+      "description": "Fly 12% faster.",
+      "seed_item": "trait_seed_sky_dancer"
+    }
+  }
+}
