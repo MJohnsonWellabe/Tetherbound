@@ -7,8 +7,8 @@ const forbidden = {
   // Swim equipment and Dive belong to Tidewake itself. Their recipe/equipment
   // requirements are not a later-biome route dependency. Required human-swim
   // route coverage remains an engine witness, separately from this field scan.
-  water_: /\bfly\b|fly_|\bwings\b|skyborne|realm_heart_cloudreach|realm_heart_stormwood|\bspark\b|livewire|solmane|stormheart/,
-  cloudreach_: /realm_heart_stormwood|\bspark\b|livewire|stormheart|realm_relic_water_placed|water_guardian_joined|\bdive\b|dive_|swim_mount|swim_saddle/,
+  water_: /\bfly\b|fly_|\bwings\b|skyborne|realm_heart_cloudreach|realm_heart_stormwood|cloudreach:|stormwood:|\bspark\b|livewire|solmane|stormheart|fulgocobra/,
+  cloudreach_: /realm_heart_stormwood|stormwood:|\bspark\b|livewire|stormheart|fulgocobra|realm_relic_water_placed|water_guardian_joined|\bdive\b|dive_|swim_mount|swim_saddle/,
   stormwood_: /realm_relic_water_placed|water_guardian_joined|\bdive\b|dive_|swim_mount|swim_saddle|legendary_joined|solmane_joined|veridian_joined/,
 };
 const violations = [], scanned = [];
@@ -44,6 +44,9 @@ for (const [prefix, gate] of [
   ['water_', {unless_personal_flags: ['realm_heart_cloudreach_placed']}],
   ['water_', {unless_world_flags: ['realm_heart_cloudreach_placed']}],
   ['cloudreach_', {entry_flags: ['realm_heart_stormwood_placed']}],
+  ['water_', {requires_flags: ['cloudreach:legendary_joined']}],
+  ['cloudreach_', {requires_flags: ['stormwood:legendary_offer_accepted']}],
+  ['water_', {required_equipment: {species: 'fulgocobra'}}],
 ]) {
   const found = [];
   walk(gate, 'negative_fixture', prefix, found, []);
