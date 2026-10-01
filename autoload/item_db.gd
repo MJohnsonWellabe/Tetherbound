@@ -48,7 +48,11 @@ func _init(
 	stormwood_recipes_path: String = STORMWOOD_RECIPES_PATH
 ) -> void:
 	_items = _read(items_path).get("items", {})
-	_buildables = _read(buildables_path).get("buildables", [])
+	var catalogue := _read(buildables_path)
+	_buildables = catalogue.get("buildables", [])
+	if buildables_path == BUILDABLES_PATH:
+		_buildables = preload("res://scripts/build/station_rules.gd").active_catalogue(
+			catalogue, _read("res://data/config/stations.json"))
 	_recipes = _read(recipes_path).get("recipes", {})
 	# SD18/SF31: merge the two progression tiers in, base first. A duplicate id
 	# would silently favour whichever file merges last; the three tables are
