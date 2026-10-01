@@ -214,7 +214,9 @@ func confirm_presentation_impact() -> void:
 
 func reconcile_actor(current: Dictionary) -> void:
 	# Called from the existing registry/body lifecycle owner, never a peer card.
-	for key: String in ["character_id", "creature_uid", "encounter_id", "generation", "action"]:
+	# A newer accepted action on the same body must not erase an earlier
+	# airborne visual. Explicit action refusal uses cancel_action separately.
+	for key: String in ["character_id", "creature_uid", "encounter_id", "generation"]:
 		if current.get(key) != _context.actor_binding.get(key):
 			cancel_presentation()
 			return
@@ -231,6 +233,11 @@ func action_id() -> String:
 
 func encounter_id() -> String:
 	return str(_context.get("encounter_id", ""))
+
+func actor_binding() -> Dictionary:
+	# Facade first scopes reconciliation to the same character and encounter;
+	# other participants' effects must never be reconciled against this actor.
+	return (_context.get("actor_binding", {}) as Dictionary).duplicate(true)
 
 func _exit_tree() -> void:
 	var scope := encounter_id()
