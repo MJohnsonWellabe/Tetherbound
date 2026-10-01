@@ -1,0 +1,437 @@
+{
+  "classification": "DIRECTOR NATIVE PASS; EARNED/TREE/WARDEN ACTUAL FAIL; NO CRITERION CREDIT",
+  "source_head": "83d9dada76b6127c26456767ec3b20c9c74fa8fd",
+  "director": {
+    "head": "7a0cea0f39e0e58d167c589772ba2f62fa4d4066",
+    "summary": [
+      "4 tests, 23 assertions, 0 failed"
+    ],
+    "native_child": {
+      "assertions": 32,
+      "failures": []
+    },
+    "independent_original_source_checks": 142,
+    "independent_syntax_successor_checks": 34,
+    "syntax_source": "143cdab02fd2e7ad19eeac4ce70f72dd69a7448e",
+    "original_parse_failure_retained": true
+  },
+  "tree": {
+    "unit_summary": [
+      "5 tests, 37 assertions, 0 failed"
+    ],
+    "native_exit": 1,
+    "source": "45d8cb66046d58b92af609adfd05b1b495c12a0a",
+    "independent_source_checks": 34634,
+    "actual": "Three bounded26-iteration turns within original180 move west/downhill; no trunk contact or activation. Returned to same F17. Pure models/unit PASS do not retire actual FAIL."
+  },
+  "earned": {
+    "head": "7e487af97357d1357b6594c2e314c15b8f19d63d",
+    "source_closure_sha256": "f899914a564e47430169de6012988a9528be4a448d1411b67abd7615791ef189",
+    "source_closure_unchanged": true,
+    "result": {
+      "campaign_complete": false,
+      "checkpoints": [],
+      "counts_as_proof": true,
+      "cumulative_elapsed_seconds": 196.495,
+      "dry_run": false,
+      "elapsed_seconds": 196.495,
+      "failures": [
+        "Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+        "opened door 'Door' but could not walk the 2.2m inward to (27.0, 1.0, 3.0) (stopped 4.4m short)",
+        "could not naturally enter Mira's building"
+      ],
+      "local_chains": [],
+      "reached": "road_gate",
+      "requested_prefix_passed": false,
+      "resume": {},
+      "resumed_from": "",
+      "scratch": "user://four_biome_fresh_13168_13415"
+    },
+    "failed_original_pre_sample": {
+      "acceptance": false,
+      "actual_delta": [],
+      "authored_road_hint": "",
+      "ceiling_frames": 0,
+      "controller_observation_available": false,
+      "controller_wanted_dir": [],
+      "delivered_input": [
+        0.0,
+        0.0
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "failed_original_pre_sample": {
+        "acceptance": false,
+        "backend_identity_proven": false,
+        "body_pose": {
+          "basis_x": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "basis_y": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "basis_z": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            27.3039016723633,
+            0.949728488922119,
+            7.19473075866699
+          ]
+        },
+        "capsule": {
+          "height": 1.79999995231628,
+          "radius": 0.400000005960464,
+          "rid": "RID(266287972352)"
+        },
+        "collide_shape_points": [
+          [
+            27.3039016723633,
+            0.949728488922119,
+            7.19473075866699
+          ],
+          [
+            27.3039016723633,
+            0.949999988079071,
+            7.19473075866699
+          ]
+        ],
+        "complete": true,
+        "configured_backend": "DEFAULT",
+        "elapsed_us": 1109,
+        "excluded_self_only": "RID(10746008174592)",
+        "original_motion_contact_geometry": [
+          {
+            "body_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                27.0,
+                0.849999964237213,
+                7.90000009536743
+              ]
+            },
+            "index": 0,
+            "path": "/root/MeadowsPlayground/Village/doorstep_21/Collision",
+            "rid": "RID(369968482878911)",
+            "shape_data": [
+              2.0,
+              0.0500000007450581,
+              1.0
+            ],
+            "shape_index": 0,
+            "shape_local_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                0.0,
+                0.0500000007450581,
+                0.0
+              ]
+            },
+            "shape_rid": "RID(369972777846202)",
+            "shape_type": 3,
+            "shape_world_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                27.0,
+                0.899999976158142,
+                7.90000009536743
+              ]
+            }
+          }
+        ],
+        "pair_limit": 8,
+        "pair_limit_reached": false,
+        "phase": "original_pre",
+        "queries_after": 3,
+        "queries_before": 1,
+        "query_margin": 0.0,
+        "query_mask": 1,
+        "query_motion": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "query_pose": {
+          "basis_x": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "basis_y": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "basis_z": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            27.3039016723633,
+            1.84972846508026,
+            7.19473075866699
+          ]
+        },
+        "raw_pairs_are_not_a_penetration_certificate": true,
+        "rest_info": {
+          "collider_id": 4582327664188,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.3039016723633,
+            0.949999988079071,
+            7.19473075866699
+          ],
+          "rid": "RID(369968482878911)",
+          "shape": 0
+        },
+        "server_class": "PhysicsServer3D",
+        "trigger": "zero-motion recovery exceeds unchanged skin"
+      },
+      "floor_angle": 0.785399973392487,
+      "frame": 349,
+      "live_contacts": [
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/doorstep_21/Collision",
+          "collider_rid": "RID(369968482878911)",
+          "collider_shape": 0,
+          "depth": 0.000208258628845215,
+          "local_shape": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.3039016723633,
+            0.949999988079071,
+            7.19473075866699
+          ]
+        }
+      ],
+      "live_recovery_travel": [
+        0.0,
+        0.00106322765350342,
+        0.0
+      ],
+      "live_state_phase": "pre",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": true,
+      "on_wall": false,
+      "physics_frame": 3820,
+      "plans": 1,
+      "player": [
+        27.3039016723633,
+        0.949728488922119,
+        7.19473075866699
+      ],
+      "progress_m": 28.7601016880944,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "prediction_motion": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "retry_choice": 0,
+        "source": "none",
+        "wall_normal": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "request": [
+        27.0,
+        0.849999964237213,
+        2.79999995231628
+      ],
+      "requests": 350,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": -1,
+      "slide_motion": [],
+      "slide_point_counts": [],
+      "snap": 0.400000005960464,
+      "stall_frames": 0,
+      "swept_depth": -1.0,
+      "timing": {
+        "callback_cap_us": 10000,
+        "input_flush_us": 0,
+        "live_pre_us": 1231,
+        "pre_us": 1270,
+        "stage": "pre_refused"
+      },
+      "total_queries": 1050,
+      "wall_frames": 0
+    },
+    "limits": "R18 SOURCE4612PASS, parserPASS, but actual earlier Mira guard refusal prevents route diagnostic. Exact registered Box/capsule arithmetic certifies one pair only; native initial-set completeness/backend semantics unproved. R9 general replacement remains HOLD. Errors and original90/5400 limits retained."
+  },
+  "warden": {
+    "head": "83d9dada76b6127c26456767ec3b20c9c74fa8fd",
+    "elapsed_seconds": 256.5780000000959,
+    "original_failure": [
+      "both peers felled the Warden (no verdict)"
+    ],
+    "errors": [],
+    "source_closure_unchanged": true,
+    "observation_source": "31e28029bcfd9c4bd14150e70986db176a038fe2",
+    "independent_source_checks": 757,
+    "sample_driver_age_seconds": [
+      96.301,
+      97.361,
+      98.324,
+      99.316
+    ],
+    "sample_timing_limit": "All four ring samples are after nominal95s actor command age and may describe5s finish/guest teardown. They do not establish a predeadline stalled transition. Existing Foundation investigates retention/accounting; F22 investigates production paths read-only. No deadline/HP/action/payout waiver."
+  },
+  "files": [
+    {
+      "name": "earned-receipt.json.gz",
+      "raw_bytes": 499642,
+      "raw_sha256": "dfed9541b69b2682442ce229bac5593237715e620622a80aacafbeb42af5f908"
+    },
+    {
+      "name": "earned-parser.log.gz",
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "name": "earned-native.log.gz",
+      "raw_bytes": 55077,
+      "raw_sha256": "feccf36f0470fc1a095d6b3aaeb8e9b346ffe13742f049929b1bec27248c1a2a"
+    },
+    {
+      "name": "director-pass-tests.log.gz",
+      "raw_bytes": 18090,
+      "raw_sha256": "e3c6b8a1342d785800b1763c2a0a051709927be0d6e8ed1691a3b36fa5bb2a15"
+    },
+    {
+      "name": "director-pass-result.json.gz",
+      "raw_bytes": 414,
+      "raw_sha256": "1cba16ee5e3729558ff0e42697e572e03fcb8d382f4ed3b9153dc974ac252e79"
+    },
+    {
+      "name": "director-native-child.log.gz",
+      "raw_bytes": 129,
+      "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344"
+    },
+    {
+      "name": "tree-unit-tests.log.gz",
+      "raw_bytes": 13685,
+      "raw_sha256": "5c5f149d53c61e7c24c254a0672d9d2f0be336b02c1734878e77d6ad9c5934a3"
+    },
+    {
+      "name": "tree-unit-result.json.gz",
+      "raw_bytes": 422,
+      "raw_sha256": "bcbecdd0b6dfbbc5b218a2ff440d262a6dcaa3fb865b0c5bf5d3157b4f1748ff"
+    },
+    {
+      "name": "tree-native-smoke.log.gz",
+      "raw_bytes": 23277,
+      "raw_sha256": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7"
+    },
+    {
+      "name": "tree-native-result.json.gz",
+      "raw_bytes": 399,
+      "raw_sha256": "2ae87037e7cdd43ca6f9a8d4264545d15378d34c9f902ebdd50a4523aa6117ca"
+    },
+    {
+      "name": "warden-receipt.json.gz",
+      "raw_bytes": 744971,
+      "raw_sha256": "40422d2bf2d08b568c345da75dea9505d11f40f75b58af81cb260cb738fdafce"
+    },
+    {
+      "name": "warden-coordinator.log.gz",
+      "raw_bytes": 3069,
+      "raw_sha256": "fbb316a73f99e39230210e211d8e668ffd7073691a070118eb4c5e9c593aab6f"
+    },
+    {
+      "name": "warden-net-run_peer-0.log.gz",
+      "raw_bytes": 12211,
+      "raw_sha256": "b8770a84164489c8c42eac2be334d97b32f053911dfa8933993723a237287b9c"
+    },
+    {
+      "name": "warden-net-run_peer-1.log.gz",
+      "raw_bytes": 11326,
+      "raw_sha256": "c653050ae40f3839ce5139cfc93cedd6a7c2a7acfe1c94a84c98c32c8f9e113d"
+    },
+    {
+      "name": "warden-net-run_NET_RUN.json.gz",
+      "raw_bytes": 8672,
+      "raw_sha256": "f3e76bd1852a959e76cc0a24a6ced60a98ce7ab72d7f287dd68e67db11a1470a"
+    },
+    {
+      "name": "warden-net-run_SUMMARY.md.gz",
+      "raw_bytes": 287,
+      "raw_sha256": "00d3c512bf057fe2238a7ae5f61de20cd633d2e9acc767dfb31dc9ad2a66bb3e"
+    },
+    {
+      "name": "warden-initial-home_Godot_app_userdata_Tetherbound_logs_godot.log.gz",
+      "raw_bytes": 3044,
+      "raw_sha256": "4236ce120b87619937c46c0a3886a100ee5de80d1164d0a876b2f13d72d11391"
+    }
+  ]
+}
