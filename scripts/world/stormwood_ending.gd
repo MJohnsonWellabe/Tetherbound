@@ -297,6 +297,19 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 
 
 func _settle_for(peer: int, intent: Dictionary) -> void:
+	# Drain the actual fallback before reading the answer we will freeze. It
+	# may run callbacks, so reacquire claim/character only after the owner fence.
+	var owner_game := get_node("/root/Game")
+	var owner_world: RefCounted = owner_game.get("world")
+	var owner_saver: RefCounted = owner_game.get("save_system")
+	if owner_saver != null and owner_world != null and not str(owner_world.world_id).is_empty():
+		var owner_namespace := str(owner_world.reward_delivery_namespace)
+		var owner_epoch := str(session.call("_altar_current_epoch"))
+		owner_saver.call("finish_fallback")
+		if owner_saver.call("fallback_busy") == true or owner_game.world != owner_world or owner_game.save_system != owner_saver \
+			or owner_game.session != session or owner_world.reward_delivery_namespace != owner_namespace or session.call("_altar_current_epoch") != owner_epoch:
+			_refuse(peer, "The world is still saving. Try the ceremony again.")
+			return
 	var character := _character_for_peer(peer)
 	var state := _saved_state()
 	var claims: Dictionary = state.get("claims", {})
@@ -946,10 +959,11 @@ func _save_world_claim() -> bool:
 	var id := str(world_state.world_id)
 	var namespace := str(world_state.reward_delivery_namespace)
 	var epoch := str(session.call("_altar_current_epoch"))
+	var expected_environment: Dictionary = world_state.realm_environment.duplicate(true)
 	saver.call("finish_fallback")
 	if saver.call("fallback_busy") == true or game.world != world_state or game.save_system != saver \
 		or game.session != session or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace \
-		or session.call("_altar_current_epoch") != epoch: return false
+		or session.call("_altar_current_epoch") != epoch or world_state.realm_environment != expected_environment: return false
 	var saved := saver.call("save_world_prepared", game, id) == true
 	if game.world != world_state or game.save_system != saver or game.session != session \
 		or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace \
