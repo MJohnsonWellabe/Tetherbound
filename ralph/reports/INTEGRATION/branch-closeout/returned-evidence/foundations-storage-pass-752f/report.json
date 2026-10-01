@@ -1,0 +1,94 @@
+{
+  "classification": "ACTUAL ORIGINAL FOUNDATION STORAGE SMOKE PASS / NO MAIN OR CRITERION CREDIT",
+  "head": "752f6d87dc7d3a7216da74b96b5356db49701d02",
+  "source_candidate": "c54be71c979fc58013e8fc99dff1fba40ddac067",
+  "source_review": {
+    "reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "independent_binding_protected_source_checks": 305,
+    "cut_sha256": "28077ef579789a910d7815c5f8006440fb9dd389126e00a2d839f054aa799433"
+  },
+  "native_exit": 0,
+  "elapsed_seconds": 246.23499999998603,
+  "strict_native_errors_or_leaks": 0,
+  "source_before_after_equal": 3250,
+  "all_engine_handles_ended": true,
+  "both_peers_reported_exited": true,
+  "observed_checks": [
+    "PASS: two distinct isolated peer homes",
+    "PASS: peer 0 host : hosting udp/32521 as peer 1",
+    "PASS: peer 0 foundations_state seed: full F16 carrier witness seed",
+    "PASS: peer 0 foundations_state roundtrip: full F16 carrier witness roundtrip",
+    "PASS: peer 0 full-carrier inspection succeeds",
+    "PASS: host populated all 8 world / 14 personal / 9 per-creature fields",
+    "PASS: peer 1 join : joined 127.0.0.1:32521 as peer 158106049 after 20 frames; snapshot applied; 2 peer(s) in registry",
+    "PASS: peer 0 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)",
+    "PASS: peer 1 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)",
+    "PASS: peer 1 foundations_state seed: full F16 carrier witness seed",
+    "PASS: peer 1 foundations_state roundtrip: full F16 carrier witness roundtrip",
+    "PASS: peer 1 full-carrier inspection succeeds",
+    "PASS: guest populated every personal and per-creature field",
+    "PASS: host snapshot carries all 8 world fields",
+    "PASS: personal fixture payloads are distinct",
+    "PASS: stable host and guest identities differ",
+    "PASS: current schema 28 on both peers",
+    "PASS: production durable files exist",
+    "PASS: peer 1 foundations_state forge_world: full F16 carrier witness forge_world",
+    "PASS: peer 0 full-carrier inspection succeeds",
+    "PASS: guest forged world never mutates host live state",
+    "PASS: guest world-save refusal preserves host disk bytes",
+    "PASS: peer 1 leave : client left cleanly after 0 frames",
+    "PASS: peer 1 wipe_character : in-memory character blanked (party 1 -> 0), id 'character-1b858d4483d777761f2050cb519f8beb' kept, file untouched",
+    "PASS: peer 1 foundations_state clear_world: full F16 carrier witness clear_world",
+    "PASS: peer 1 full-carrier inspection succeeds",
+    "PASS: all personal memory erased before rejoin",
+    "PASS: guest world projection erased before rejoin",
+    "PASS: peer 1 production_join : title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:32521 as peer 75722834 after 102 frames",
+    "PASS: peer 0 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)",
+    "PASS: peer 1 expect_peers : registry reports 2 peer(s) after 0 frames (0.0 s)",
+    "PASS: peer 1 full-carrier inspection succeeds",
+    "PASS: peer 0 full-carrier inspection succeeds",
+    "PASS: actual title rejoin keeps named portable identity",
+    "PASS: named-ID disk rejoin restores full personal and per-creature payload",
+    "PASS: rejoin restores host-authoritative full world payload",
+    "PASS: host personal carrier remains its own"
+  ],
+  "sealed_files": [
+    {
+      "file": "native-log-0.gz",
+      "raw_bytes": 3912,
+      "raw_sha256": "28888e7720bd95f691e16df3faf599190462331f454cddb02ea3c5f98235b0fc"
+    },
+    {
+      "file": "native-log-1.gz",
+      "raw_bytes": 3866,
+      "raw_sha256": "7f299ce8c124c1ef01ef8a15b8f798268012ff2bf26bda6cf0294f19c5fa3acd"
+    },
+    {
+      "file": "native-log-2.gz",
+      "raw_bytes": 19309,
+      "raw_sha256": "bc4e395909372eda6bcfb38ab660894215b759da9e2a6c265ed151589bcc2e1a"
+    },
+    {
+      "file": "native-log-3.gz",
+      "raw_bytes": 30533,
+      "raw_sha256": "13da437022c237025244ec538b82dbd62210bc5923c7355b8a8feb03f299eea7"
+    },
+    {
+      "file": "receipt.json.gz",
+      "raw_bytes": 736821,
+      "raw_sha256": "9fb4c2ccc3c24aab8a6e106e33fa9c1d8c0a2e6ef8cc122f1bddd83458c6c91b"
+    },
+    {
+      "file": "NET_RUN.json.gz",
+      "raw_bytes": 2629,
+      "raw_sha256": "e5b45411cea3ca22247800d9f3edef57f88f5cb4f3b753442832f3574b260dac"
+    }
+  ],
+  "limits": [
+    "Disclosed synthetic populated portable/world/creature storage fixture, live loadout setup and unique fixture mastery receipts. This does not claim earned progression or reward hits.",
+    "Original actual Game autosave/reload/host authority, full dictionary equality, negative forged-world rejection and named-ID disk rejoin are exercised. Title joining uses the disclosed direct title callback plus actual ENet; not UI invitation joining/device proof.",
+    "Original fixture9 fields plus3 actual canonical codec keys are seeded before roundtrip. No expected-after-load computation or production validation relaxation.",
+    "Original CI6170 duplicate trait refusal is retained as before evidence. This actual corrected native PASS replaces that fixture failure in scoped local verification; required integration CI on the final pushed head and independent native evidence verification remain pending.",
+    "F16/general feature acceptance, MET, chapters and main remain open."
+  ]
+}

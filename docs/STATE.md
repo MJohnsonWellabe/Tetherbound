@@ -1,67 +1,67 @@
-# State — live status against the release plan
+# State â€” live status against the release plan
 
 Read first; update in place, under 25KB. No dated status/goal/directive/handoff documents. Evidence: `ralph/reports/<LANE>/`; history: Git and `archive/`.
 
 ## 0. Resume here
 
-**Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
+**Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0â€“3, F16â€“F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
 **Board:** [private rendered board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site); source/scoring/republishing: `ralph/reports/COORDINATOR/dashboard/`. **MET110/280:** original95/101, redesign15/179. No chapter accepted; candidates do not count before landing. F16 landed `b2ea1455a` via #467 with selected full CI36667090983 on game source7e3283098 and final gate36670808563; docs-only merge reused that proof. Rolling download remains historical8f5dd6ed2.
 
 **F17#5:** 189source checks, 8actual ENet join/reload captures and immutable finalizer527PASS: `ralph/reports/HUB/f17/hall-agreement-finalizer-r1/`. Original budget/4ENet failures retained; transport/F49 OPEN.
 
-**Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
+**Still-open original criteria and where they go (CODEX_START_HERE Â§7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
 - F10#6 (Stormwood handheld HUD) folds into **F42#2**. The r7 judges contradicted each other (`ralph/reports/STORMWOOD/f10_6/r7/`); small HUD text fails at 7 inches.
-- Cards M2 (blocked at Keeper Hald: no heal-and-retry in `tests/helpers/meadows_earned_hall_segment.gd`), M3, S2 and T2 re-run under **F49** in the new order. Complete: M1, M4, C1, C2, C3, S1, S3, T1, T3 (history; F18–F20 replace their physical-crossing and Tidewake-credits clauses).
+- Cards M2 (blocked at Keeper Hald: no heal-and-retry in `tests/helpers/meadows_earned_hall_segment.gd`), M3, S2 and T2 re-run under **F49** in the new order. Complete: M1, M4, C1, C2, C3, S1, S3, T1, T3 (history; F18â€“F20 replace their physical-crossing and Tidewake-credits clauses).
 
 **Known defects carried into the redesign (each has an owning feature):**
 - Tidewake current direction does not read at 7 inches. Flat water marks, rock wakes and foam darts all failed; the untried idea is standing-wave ridges (`ralph/reports/TIDEWAKE/phase1/t2_current_direction/`). Owner: F39.
 - No Stormwood audio assets (`assets/audio/stormwood/` is empty), so the Surge phases are silent. Owner decision still open (below). Owner: F41 and AUDIO.
 - `smoke_party_strip_reflow` and `smoke_progression_feedback` fail on baseline and are not in CI. Owner: F42.
 - The travelling-lane "locked" visual reads the global `face_lock_fraction` instead of the per-body value (`wild_creature.gd`). Owner: F22.
-- Visual catalog `ralph/reports/VISUAL/phase2/catalog.csv`: 116 rows, 106 with impact >12. Fixed and enabled: P2-032, P2-042, P2-095/096. Open with evidence: P2-008 (Tidewake shore, `fixes/P2-008/phase2d-shore-profile-review.md`), P2-037 (Stormheart tree), P2-021/022 (Cloudreach skyline and crown). `top20.csv` statuses are stale; use `catalog.csv`. Owners: F38–F41 after F26.
+- Visual catalog `ralph/reports/VISUAL/phase2/catalog.csv`: 116 rows, 106 with impact >12. Fixed and enabled: P2-032, P2-042, P2-095/096. Open with evidence: P2-008 (Tidewake shore, `fixes/P2-008/phase2d-shore-profile-review.md`), P2-037 (Stormheart tree), P2-021/022 (Cloudreach skyline and crown). `top20.csv` statuses are stale; use `catalog.csv`. Owners: F38â€“F41 after F26.
 - Flag-off, unjudged: Stormwood `scorched_scars`, Cloudreach towers and occupied terrace, Tidewake Pump Hall kitbash. Enable only on a passing code-blind judge.
 - Fresh containers: the reference boards are skip-worktree. Restore them with `git ls-files -v docs/reference | grep '^S' | cut -c3- | xargs git update-index --no-skip-worktree && git checkout -- docs/reference`.
 
 **Recent owner requests:** faster combat/re-aim #448/#450/#454/#457; sprint #449 (owner pad feel); straight village road #455. Mouse capture awaits real-PC confirmation. Exact prior details: Git history.
 
-**Closeout:** Draft519 sole open PR/shared CI; no new sessions. Previous coordinator paused/checkpoint retained.13archive events/12archived; F22 reopened.14superseded PRs closed/branches retained.131-ref audit includes fetched feature heads; local successors separate. Main30fcc/MET110/280 unchanged. Pushed91c3 CI6170/36882902951: unitshards/exportPASS; core/continuousFAIL, treeFAIL/regionsCANCELLED, ownerCANCELLED; net3 autosave_here refused returnedFoundation; CIterminalFAIL/first-page incomplete. Unit2raw leaks retained. Startup b1c6 PASS16checks/clean; director7a0c PASS23outer+32child; parseFAIL retained. Guest repairc856 SOURCE484PASS: identical native fixture before10failed/79child, after79child/30outer+32transport PASS; first-round exit/scheduling only, fullbattle/tracked path unproved. Road/cache12cases350assertions cleanPASS; prior3354assertions/expected-errors retained. R19tree unit5/37PASS; original83d180nativeFAIL. R22 SOURCE299+4API PASS; actualf192 nativeFAIL/clean but225vertices392triangles/registered metadata complete; corridor returnedF17. Fresh90d routeFAIL262.874s/R18 MiraFAIL196.495s; CI6170 MiraPREBox/POSTTerrainFAIL retained. R20 SOURCE4645PASS namedpair arithmetic only; R21 evidence-only; fullnative clearance/parity unproved/R9HOLD. CIWarden assertionPASS/raw3errors; Warden49d95s noverdict/native1/zeroerrors/3250sourceclosure/handlesended. Corrected6af SOURCE133PASS reusesf2fa394: fourprecutoff samples ACTIVE fourthMeadowhartHP6/onequeued, historicalprior kill only. Slow fight returnedF22; no stalledfaint proof. Evidence: branch-closeout/returned-evidence. Acceptance/criteria/main OPEN; green CI closes no unverified criterion.
+**Closeout:** Draft519 sole PR/shared CI; no new sessions. Prior coordinator paused/checkpoint retained.13archive events/12archived; F22 reopened.14superseded PRs closed; branches retained/26fetchedremoteheads included. Origin/main30fcc/MET110/280 unchanged. Pushed91c3 CI6170 terminalFAIL: unitshards/exportPASS, core/continuous/treeFAIL, net3 autosaveFAIL; regions/owner/veridian-offerCANCELLED. Firstpage incomplete; unit2raw leaks retained. Foundationc54 SOURCE305PASS/actual752f storagePASS246.235s/4cleanlogs/3250sourceclosure/bothended: host+guestautosave/fullcarrier/forgery/namedIDdiskrejoin; syntheticfixture/directtitlecallback disclosed. Warden473 SOURCE83PASS/native866b registry12tests330assertions cleanPASS; originalbadselector retained. TreeR19 unit5/37PASS/original180FAIL; R22 SOURCE299+4API/nativef192FAILbut225vertices392triangles metadata complete; corridorF17pending. Opening90dFAIL262.874s/R18MiraFAIL196.495s/CI6170PREBox+POSTTerrainFAIL retained. R20namedpair-only/R21evidence-only/fullnativeclearance unproved/R9HOLD. CIWarden assertionPASS/raw3ERROR; local49d95sFAIL/4cleanlogs/3250closure/handlesended. Corrected6af SOURCE133+394/precutoffACTIVEfourthHP6/onequeued/historicalkill; no stalledfaint proof. F22 canonicalHPfixture448/callbackf2cc source/nativepending. Independent evidence510/terminal390+2digestPASS. Evidence:branch-closeout/returned-evidence. Main/acceptance/criteria OPEN; green CI closes no unverified criterion.
 
 | Lane | Features | State |
 |---|---|---|
 | `tb/foundations` | F16 | Main/OFF; r5 shared27path SOURCEPASS only. DepartureR3 nativeFAIL155s; Terrain64region preload source, finalmaps unproved. |
-| `tb/hub` | F17, F18 | #0–#3/#5 main. M1R3 wood12-point contactFAIL; physics-aware input successor, bounds retained. F18 PR504 source draft. |
+| `tb/hub` | F17, F18 | #0â€“#3/#5 main. M1R3 wood12-point contactFAIL; physics-aware input successor, bounds retained. F18 PR504 source draft. |
 | `tb/reorder` | F19, F20 | PR505/506 owned-source PASS; shared integration/earned proof held;567798 preserved. |
-| `tb/combat` | F21–F24 | R5/C2/C4 source bc07; oldblind6/fullcraft9FAIL. F22/23/24 PR513/512/511; actualaction producers OFF. |
+| `tb/combat` | F21â€“F24 | R5/C2/C4 source bc07; oldblind6/fullcraft9FAIL. F22/23/24 PR513/512/511; actualaction producers OFF. |
 | `tb/vfx` | F25, F35 | F25 active24archetypes; F35 PR51431ultimates source. Actualarrival/HighMediumjudge OPEN/OFF. |
 | `tb/lookdev` | F26 | #0/#1/#2/#4 main; cliff OFF; full bar/Ally open. |
-| `tb/training` | F27–F30, F37 | F27#0 main; actualpaidAltar/XP sourceOFF. F28/29/30 PR508/507/510; feed/traits/save/art proofs OPEN. |
-| `tb/homestead` | F31–F34 | F31/32/33 PR516/515/518 source; canonical station/material/gear producers and actual proofs OPEN. |
+| `tb/training` | F27â€“F30, F37 | F27#0 main; actualpaidAltar/XP sourceOFF. F28/29/30 PR508/507/510; feed/traits/save/art proofs OPEN. |
+| `tb/homestead` | F31â€“F34 | F31/32/33 PR516/515/518 source; canonical station/material/gear producers and actual proofs OPEN. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
-| `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
+| `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38â€“F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
-| `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43–F49 | Wave 3 |
+| `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43â€“F49 | Wave 3 |
 
 **Ownership:** Foundation alone writes shared saves; F17 repairs opening; existing F29 reviews; ROOT integrates and serializes Godot/GPU. Closed14 superseded PRs: every exact head is in pushedaba5268; only draft519 remains open. Branches/local repairs preserved. 13archive events,12currently archived; no acceptance credit. Audit: branch-closeout/superseded-pr-closures.json. Scoped checks, actual proof, CI and main precede criterion closure; source alone never earns MET.
 
 ### Open owner decisions
 
-Recommended defaults: keep Compatibility until the Ally gate; retain the 30/night cap and Stormursa name; keep Steam packaging off without an AppID; keep the tap-then-tap controller map and §8.1 defaults. Recommend scoped installed-source Stormwood audio with owner listen, Stormheart as final relay, and existing PRODUCT defaults; these decisions remain open. Human play/device proof uses the passing integrated build.
+Recommended defaults: keep Compatibility until the Ally gate; retain the 30/night cap and Stormursa name; keep Steam packaging off without an AppID; keep the tap-then-tap controller map and Â§8.1 defaults. Recommend scoped installed-source Stormwood audio with owner listen, Stormheart as final relay, and existing PRODUCT defaults; these decisions remain open. Human play/device proof uses the passing integrated build.
 
 1. **ROG Ally test (F26#5):** run one Forward+ test build on the Ally (Medium preset, handheld, the scripted route) when `tb/lookdev` posts the checklist here. Forward+ becomes the default only after this passes.
 2. **Meshy credits:** the overnight cap is 30 generations per night (RD-26) unless the owner sets another number.
 3. **Storm bear name:** the working name is *Stormursa* (RD-28).
 4. **Internet co-op proof:** real Steam AppID and partner access, four accounts, at least 2 on separate home networks. `steam_api64.dll` redistribution is approved; packaging (`ship_steam_runtime`) stays off until an AppID exists.
-5. **Stormwood audio:** whether to author the nine missing `assets/audio/stormwood/*.wav` from installed sources under AUDIO §10. Agents cannot listen, so acceptance would rest on spectral and loop checks plus an owner listen.
+5. **Stormwood audio:** whether to author the nine missing `assets/audio/stormwood/*.wav` from installed sources under AUDIO Â§10. Agents cannot listen, so acceptance would rest on spectral and loop checks plus an owner listen.
 6. **Owner play pass (F47/F49):** a human play pass at the end of Wave 3.
 
 7. **Story framing of the final relay:** Tidewake was written as the supply network's final relay. With Stormwood last, the recommended reading is: Stormwood's Stormheart is the final relay; Tidewake's regional link is one of four; the dock exchange stays Tidewake's chapter close. WORLD keeps the current wording conservative until the owner confirms.
-8. **PRODUCT proposals to confirm:** the cut order within owner-decided systems, the "Build the best five" sub-line, a demo that includes the village, the Hall and the first homestead loop, and keeping US$19.99 at 15–25 h.
+8. **PRODUCT proposals to confirm:** the cut order within owner-decided systems, the "Build the best five" sub-line, a demo that includes the village, the Hall and the first homestead loop, and keeping US$19.99 at 15â€“25 h.
 
-9. **Design defaults taken in the doc pass** (conservative, the owner may override): listed in CODEX_START_HERE §8.1.
+9. **Design defaults taken in the doc pass** (conservative, the owner may override): listed in CODEX_START_HERE Â§8.1.
 
-10. **Controller map for the new combat (COMBAT §1, UX §2.2): please confirm.**
+10. **Controller map for the new combat (COMBAT Â§1, UX Â§2.2): please confirm.**
     - The ultimate and commands are tap-then-tap sequences (tap RB, then a face button), not chords, to respect the no-held rule.
     - Orb aim moves to LT and flee to RT.
     - Ordinary consumable use stays free, and the Tether Command item throw only buys an instant throw (default).
@@ -74,14 +74,14 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 
 ## 1. Rulings in force
 
-**Owner redesign (2026-09-29):** CODEX_START_HERE §1 (RD-01..RD-37) is the newest owner direction. Where a ruling below conflicts with it, the RD entry wins, including RD-36's minimum necessary testing and batch validation. Other proof/counting rules remain.
+**Owner redesign (2026-09-29):** CODEX_START_HERE Â§1 (RD-01..RD-37) is the newest owner direction. Where a ruling below conflicts with it, the RD entry wins, including RD-36's minimum necessary testing and batch validation. Other proof/counting rules remain.
 
 **Owner and coordinator, 2026-09-27.** Nothing may contradict these.
-1. **Counting and proofs.** Criteria count at merge; post-batch full CI is a safety net. Disclosed fixtures/declared starts, teleports, flag/party writes, harness fights and skipped sub-parts are allowed (ACCEPTANCE §6.1, WORKFLOW §8), as are earned checkpoints. Held Fly is lawful; tap pulse optional.
+1. **Counting and proofs.** Criteria count at merge; post-batch full CI is a safety net. Disclosed fixtures/declared starts, teleports, flag/party writes, harness fights and skipped sub-parts are allowed (ACCEPTANCE Â§6.1, WORKFLOW Â§8), as are earned checkpoints. Held Fly is lawful; tap pulse optional.
 2. **Solmane.** Like Meadows' Veridian, Cloudreach's legendary is freed after Veyra, with a once-only offer per participant; never wild/catchable. Summit wild tables use tempestwing. **Implemented:** F08#5 met, C3 rerun passed.
-3. **Device profile.** A computer capture at 1920×1080 on Compatibility/`opengl3`, judged code-blind for 7-inch readability. No Ally hardware (#356 5857144944; ACCEPTANCE §6.1).
-4. **Visual bar.** Bars A/B apply to every visual row. "Beauty matters." **Owner update (2026-09-29, RD-24):** Bars A/B are redefined as Palworld/Animo-class creatures and world plus Valheim-class light and atmosphere; every visual fix targets the full bar (ACCEPTANCE §4; F26, F38–F41).
-5. **Build the game, not proof machinery.** Every round is player-visible. The two-strike harness rule applies, and each READY/FINAL post carries a `Balance: game N / tests-tools M` line (WORKFLOW §8).
+3. **Device profile.** A computer capture at 1920Ã—1080 on Compatibility/`opengl3`, judged code-blind for 7-inch readability. No Ally hardware (#356 5857144944; ACCEPTANCE Â§6.1).
+4. **Visual bar.** Bars A/B apply to every visual row. "Beauty matters." **Owner update (2026-09-29, RD-24):** Bars A/B are redefined as Palworld/Animo-class creatures and world plus Valheim-class light and atmosphere; every visual fix targets the full bar (ACCEPTANCE Â§4; F26, F38â€“F41).
+5. **Build the game, not proof machinery.** Every round is player-visible. The two-strike harness rule applies, and each READY/FINAL post carries a `Balance: game N / tests-tools M` line (WORKFLOW Â§8).
 6. **Return route.** The homeward return after Tidewake was exempt from A7 (T3/F15). After the redesign the Stormwood finale leads home by the Home Key, so no return walk exists (RD-22).
 7. **Art split.** Claude may kitbash, dress, shade and light scenes using installed families; new meshes/Meshy stay with Codex. Partly supersedes 2026-09-26 "all art to Codex".
 8. **Capacitor Alpha** does not stagger during the route cue (F10#2 option a). Kept by the owner. A Stormwood storm strike spares a trainer whose creature is in a fight (`stormwood_surge.json` `strike.spare_trainer_in_fight=true`). Also kept by the owner.
@@ -94,10 +94,10 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 11. **Owner decisions, 23:55.**
    - **Meadows named trainers are made harder** until C2 passes: team-wipe rate at or above the 0.25 bar (F04#7). The bar is restated by ruling 12.
    - **Galewisp and ripplet are tuned to match terrapup in skill and strength**, so starter C2 difficulty is even (F10#2, CREATURES).
-   - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD §3.1 spacing; M2).
+   - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD Â§3.1 spacing; M2).
    - **Codex does the Cloudreach aerie art** (F08#3). The Codex lane is shut down; the owner assigns this when the next round of work starts.
    - **Vess, the female officer,** gets the female officer body and portrait. Add a `defeated` clip to `officer_b`.
-12. **Meadows top-fight bar (owner 2026-09-28, F04#7 option c; delegated to the Balance lane, coordinator agreed).** Per top fight and starter, 24 seeds: reader win ≥75%, masher loses its lead every run, reader party cost ≤55% of the masher's. Chapter reading (the lane's reading of the owner's intent, not the owner's words): a masher loses ≥1 named trainer fight in ≥25% of playthroughs; measured 1.00/0.97/0.94, observed 24/24, 24/24, 22/24. Per-fight masher loss: Oreth 100/96/83%, Halder 8/25/29%, Warden 0/4/33%, Hald 0/0/25%, Vance and Vess 0% (L12 pin; DIVER ending). Fixed harness party ends on Trailpup (conservative bias). Owner option: raise the Band 3 pin for Vance for a per-fight 25%. The form applies to Tidewake F14#0 (Tidewake lane measures). COMBAT §7, BOSSES §9, ACCEPTANCE C2.
+12. **Meadows top-fight bar (owner 2026-09-28, F04#7 option c; delegated to the Balance lane, coordinator agreed).** Per top fight and starter, 24 seeds: reader win â‰¥75%, masher loses its lead every run, reader party cost â‰¤55% of the masher's. Chapter reading (the lane's reading of the owner's intent, not the owner's words): a masher loses â‰¥1 named trainer fight in â‰¥25% of playthroughs; measured 1.00/0.97/0.94, observed 24/24, 24/24, 22/24. Per-fight masher loss: Oreth 100/96/83%, Halder 8/25/29%, Warden 0/4/33%, Hald 0/0/25%, Vance and Vess 0% (L12 pin; DIVER ending). Fixed harness party ends on Trailpup (conservative bias). Owner option: raise the Band 3 pin for Vance for a per-fight 25%. The form applies to Tidewake F14#0 (Tidewake lane measures). COMBAT Â§7, BOSSES Â§9, ACCEPTANCE C2.
 
 **Owner, 2026-09-26 (still in force):**
 - The tournament creature grant is a non-starter species; starters stay player-exclusive.
@@ -116,7 +116,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
   - The village and spine roads are widened for the roughly 2 m/texel control map.
   - F03 lure cue option (a); the Juno escort is kept; the X03 beacon is kept; the Xbox B glyph is neutral.
 - **Cloudreach**
-  - The Cliff Circuit keeps a one-time Tavi rematch (ace tier, 90 coins plus great_candy). This differs from WORLD §11's deferred rematch tier.
+  - The Cliff Circuit keeps a one-time Tavi rematch (ace tier, 90 coins plus great_candy). This differs from WORLD Â§11's deferred rematch tier.
   - Waycamp upgrades Galefoot; there is no sixth camp.
   - Windscar's local beat is the aerie-repair supply run.
   - F07#2 keeps both criteria through route XP option (a).
@@ -133,19 +133,19 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 
 ## 2. Product decisions
 
-- **Owner redesign (2026-09-29), CODEX_START_HERE §1:**
-  - Four chapters in the order Meadows → Tidewake → Cloudreach → Stormwood.
-  - A 15–25-hour normal clear with a loop that is fun to grind but optional to repeat. Creature power is the spine; the homestead is its engine.
+- **Owner redesign (2026-09-29), CODEX_START_HERE Â§1:**
+  - Four chapters in the order Meadows â†’ Tidewake â†’ Cloudreach â†’ Stormwood.
+  - A 15â€“25-hour normal clear with a loop that is fun to grind but optional to repeat. Creature power is the spine; the homestead is its engine.
   - Hybrid leveling with type essence, and breakthroughs every 10 levels through Master 1v1s and Ascension Feasts.
   - Three move slots plus an ultimate. Tether Commands, which never deal damage.
   - The Crossing Hall at the end of a single village road, with portals, a Shrine Room, Grandpa's Home Key and waystones.
-  - Ending: the Stormwood finale → Home Key homecoming → credits → the fifth arch stirs.
+  - Ending: the Stormwood finale â†’ Home Key homecoming â†’ credits â†’ the fifth arch stirs.
   - Visual bar: Palworld/Animo plus Valheim. A Forward+ path, pending the owner's Ally test.
   - Saves reset. Eight biomes remain the plan.
 - Keeping the same five through the ending is success. Rewards deepen them (essence, breakthroughs, gear, traits), and catches stay optional. Water's critical path must not require an owned swimmer.
 - No new investment: code and existing tools/assets, including the held Meshy licence. Agents may draft references and submit scoped Meshy work, plus the bounded overnight batch (RD-26) and one new creature, the storm bear (RD-28).
 - Co-op is required through invitation, with no router setup or typed address. LAN or direct-IP alone is insufficient for release.
-- Owner: "personal / friends — I just want it good". PRODUCT price and positioning do not authorize publishing or spending; a commercial launch needs a separate owner decision.
+- Owner: "personal / friends â€” I just want it good". PRODUCT price and positioning do not authorize publishing or spending; a commercial launch needs a separate owner decision.
 - **Legendary rule:** each participant in the freeing fight receives their own once-only offer, bound to their stable character; non-participants get none. Keys and relics follow the same per-participant rule (RD-21).
 
 ## 3. What exists
@@ -153,14 +153,14 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 | Domain | Current fact | Open against the plan |
 |---|---|---|
 | Combat | Wind, poise, burst and quick/charged geometry; per-body named-fight overrides; the hitstop attack buffer. | C2/C3 on named fights (F04#7, F10#2, F14#0/#1), large-body camera framing. |
-| Creatures | 57 base species, individual IVs and bond, and limited evolution. Galecrest was rebuilt from a reference; its `companion_presence` head-tracking override did not land because main lacks that code. | Creature finish for Bars A/B, and attack-pose clipping (AUDIT §A). |
+| Creatures | 57 base species, individual IVs and bond, and limited evolution. Galecrest was rebuilt from a reference; its `companion_presence` head-tracking override did not land because main lacks that code. | Creature finish for Bars A/B, and attack-pose clipping (AUDIT Â§A). |
 | Meadows | Opening, route, activities, Hall and finale. F02 and F05 are fully met; M4 is complete. | F01 walks, F03#0 lures, F04 presentation, Bars A/B. |
 | Cloudreach | Six regions, Fly and remount, six activities (F07 met), Veyra, and Solmane's per-participant offer. C1 is complete. | Aerie art (F08#3, Codex), settlements and cliffs (F08#4, Codex). Owned-carrier Fly closed. |
-| Stormwood | Six-region earned route, Arches, Dynamo, Stormheart/aftermath; F09/F11/S1/S3 MET. | F10#2 C3/F10#6 device OPEN. Stormwood owns unmeasured Deepwood3d5fb0e6 performance, overly bright aftermath, pools_west_loop crossing lit b_pools, b2 curb1.11m and d_giant step0.4–0.67m. Tidewake/F14 C3 owns Compatibility black world from Camera3D.v_offset (`STORMWOOD/f10_6/r3/ab_top_band/`). X03 owns NPC interaction during starting wild fight (`STORMWOOD/s1/phase1_rerun/`). X01 owns CHARGER "missed" with ally inside lane (`STORMWOOD/f10_2/c3_p1/`, W tell4). |
+| Stormwood | Six-region earned route, Arches, Dynamo, Stormheart/aftermath; F09/F11/S1/S3 MET. | F10#2 C3/F10#6 device OPEN. Stormwood owns unmeasured Deepwood3d5fb0e6 performance, overly bright aftermath, pools_west_loop crossing lit b_pools, b2 curb1.11m and d_giant step0.4â€“0.67m. Tidewake/F14 C3 owns Compatibility black world from Camera3D.v_offset (`STORMWOOD/f10_6/r3/ab_top_band/`). X03 owns NPC interaction during starting wild fight (`STORMWOOD/s1/phase1_rerun/`). X01 owns CHARGER "missed" with ally inside lane (`STORMWOOD/f10_2/c3_p1/`, W tell4). |
 | Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Named-fight C3 framing: Aquaryn and Tidecoil pass. Tess and Nerissa are blocked on contact-range occlusion, which needs a shared combat spacing rule. Bars A/B looks go to Phase 2. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |
-| Redesign (F16–F49) | F16 and 15/179 redesign criteria accepted on main; active source drafts remain unproved. Baseline systems and retired physical-crossing history are recorded in Git. | Full ACCEPTANCE §6.2 and F49 remain the done bar. |
+| Redesign (F16â€“F49) | F16 and 15/179 redesign criteria accepted on main; active source drafts remain unproved. Baseline systems and retired physical-crossing history are recorded in Git. | Full ACCEPTANCE Â§6.2 and F49 remain the done bar. |
 | Visual/audio | Compatibility renderer with directional shadows; installed asset families; generated audio managers. | Bars A/B on every visual row; final music and mix. The Codex queue is `ralph/reports/VISUAL/AUDIT.md`. |
 
 ## 4. Risks and evidence boundaries
@@ -170,20 +170,20 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 - **Shared-fight geometry.** The proxy-body divergence behind a guest's non-landing blow is fixed at root (`tests/test_remote_proxy_snap.gd`; MEADOWS-PAYOFFS/proxy-ground-plane). Re-check guest-hit smokes after any follow or collision change.
 - **Legacy receipts.** Ambiguous peer-ID receipts are not auto-recovered. Corrupt legacy saves must stay inspectable without mutating live runs.
 - **Steam packaging.** Windows rolling download lacks GodotSteam until an AppID exists; invitation co-op cannot yet work. Simultaneous two-client ENet disconnect may log a harmless native error.
-- **Visual verdicts.** Software-GL proves composition/scale/colour, not fine lighting/performance. After two rounds without progress, change asset/approach, not tint (ART_DIRECTION §9).
-- **Accepted art:** camp set, pickups, South Bridge gate and lost rigs retain ART_DIRECTION §7 dispositions unless gameplay evidence reopens them.
+- **Visual verdicts.** Software-GL proves composition/scale/colour, not fine lighting/performance. After two rounds without progress, change asset/approach, not tint (ART_DIRECTION Â§9).
+- **Accepted art:** camp set, pickups, South Bridge gate and lost rigs retain ART_DIRECTION Â§7 dispositions unless gameplay evidence reopens them.
 - **Owner reports.** Fresh owner repros reopen ledger-fixed items; first check the played build.
 
 ## 5. Dependencies and still-open design questions
 
-- **Owner resources:** the Steam AppID and partner access, and the four accounts (§0).
+- **Owner resources:** the Steam AppID and partner access, and the four accounts (Â§0).
 - **Meshy:** Meshy runs through Codex on the owner's machine. Claude sessions hold no key.
 - **Design questions** (keep current behaviour conservatively until settled):
   - the wild defeat persistence policy;
   - which replacement subjects the reference/Meshy workflow takes: answered by RD-26, the priority list confirmed in F36 (ART_DIRECTION);
   - a Burrowback contrast treatment that keeps its identity;
   - a grass clump redesign beyond the approved settings.
-- **Validate:** ACCEPTANCE §7 release performance on owner-provided Ally hardware; fair late-catch bond; shared encounter scaling. Failures require retuning, not relaxed bars.
+- **Validate:** ACCEPTANCE Â§7 release performance on owner-provided Ally hardware; fair late-catch bond; shared encounter scaling. Failures require retuning, not relaxed bars.
 
 ## 6. Owner direction carried forward
 
@@ -199,7 +199,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
   - No hour-long CI fan-out.
   - Outside co-op and device proof are required.
 - **Usage/stop direction:** the owner overrode the 10% usage stop rule for P2-008 on 2026-09-29, then explicitly requested landing the work on `main` and stopping for now. The current stop request governs; resume P2-008 only at the owner's direction. Never consume a usage reset automatically.
-- **Owner redesign interview, 2026-09-29:** 35 decisions, recorded as RD-01..RD-35 in CODEX_START_HERE §1. The owner asked that every catalog defect scored above 12 be fixed to the full game bar, "not just passing the defect", so the game looks like something people would play (Valheim, Palworld, Animo, ARK as quality references). Done means the whole plan is done: push consistently, rebuild the dashboard hourly, then burn the criteria down over time.
+- **Owner redesign interview, 2026-09-29:** 35 decisions, recorded as RD-01..RD-35 in CODEX_START_HERE Â§1. The owner asked that every catalog defect scored above 12 be fixed to the full game bar, "not just passing the defect", so the game looks like something people would play (Valheim, Palworld, Animo, ARK as quality references). Done means the whole plan is done: push consistently, rebuild the dashboard hourly, then burn the criteria down over time.
 - Record owner feedback here; it overrides other documents on its subject.
 
 Source review never substitutes for runtime. Existing owners repair failures while ROOT integrates; no new sessions. Full proof/CI/main remain pending.
