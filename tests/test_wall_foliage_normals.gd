@@ -52,9 +52,13 @@ func test_repeated_prefab_placements_retain_modules_until_composer_release() -> 
 		assert_eq(a.transform, b.transform, "duplicate keeps module placement")
 	assert_eq((first.get_child(0) as Node3D).position, Vector3(1.0, 0.0, 0.0))
 	assert_eq((first.get_child(1) as Node3D).position, Vector3(-1.0, 0.0, 0.0))
-	assert_almost_eq(
-		(first.get_child(1) as Node3D).basis.get_rotation_quaternion().angle_to(
-			Basis(Vector3.UP, PI).get_rotation_quaternion()), 0.0)
+	var actual_rotation: Quaternion = (first.get_child(1) as Node3D).basis.get_rotation_quaternion().normalized()
+	var expected_rotation: Quaternion = Basis(Vector3.UP, PI).get_rotation_quaternion().normalized()
+	var relative_rotation: Quaternion = (expected_rotation.inverse() * actual_rotation).normalized()
+	var rotation_error: float = 2.0 * atan2(
+		Vector3(relative_rotation.x, relative_rotation.y, relative_rotation.z).length(),
+		absf(relative_rotation.w))
+	assert_almost_eq(rotation_error, 0.0, 0.0001, "same authored 180-degree rotation")
 	assert_eq((first.get_child(1) as Node3D).scale, Vector3.ONE * 0.5)
 	var original: Node3D = (load(VINE) as PackedScene).instantiate()
 	var source := _first_mesh(original).mesh
