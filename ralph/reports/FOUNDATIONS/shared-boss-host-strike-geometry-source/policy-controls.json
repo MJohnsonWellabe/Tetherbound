@@ -1,0 +1,393 @@
+{
+  "source_pin": "9696b2c3286209b825428ec0b3d8ee548e907503",
+  "checks": [
+    {
+      "name": "exact fresh actual receipt",
+      "passed": true
+    },
+    {
+      "name": "exact fresh actual NET_RUN",
+      "passed": true
+    },
+    {
+      "name": "actual fresh source pin",
+      "passed": true
+    },
+    {
+      "name": "actual native exit 1",
+      "passed": true
+    },
+    {
+      "name": "actual elapsed 273.922 seconds",
+      "passed": true
+    },
+    {
+      "name": "actual full 3254 closure frozen",
+      "passed": true
+    },
+    {
+      "name": "actual four clean logs and absent engine handles",
+      "passed": true
+    },
+    {
+      "name": "actual no fatal/peer command timeout",
+      "passed": true
+    },
+    {
+      "name": "actual one failure",
+      "passed": true
+    },
+    {
+      "name": "actual one swing, 28 placements, unchanged HP, last gap 4.47",
+      "passed": true
+    },
+    {
+      "name": "full actual raw log coordinator.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered retained ROOT raw coordinator.log",
+      "passed": true
+    },
+    {
+      "name": "strict ERROR/leak clean coordinator.log",
+      "passed": true
+    },
+    {
+      "name": "full actual raw log initial-home/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered retained ROOT raw initial-home/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "strict ERROR/leak clean initial-home/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "full actual raw log net-run/peer-0.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered retained ROOT raw net-run/peer-0.log",
+      "passed": true
+    },
+    {
+      "name": "strict ERROR/leak clean net-run/peer-0.log",
+      "passed": true
+    },
+    {
+      "name": "full actual raw log net-run/peer-1.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered retained ROOT raw net-run/peer-1.log",
+      "passed": true
+    },
+    {
+      "name": "strict ERROR/leak clean net-run/peer-1.log",
+      "passed": true
+    },
+    {
+      "name": "actual guest damage and final whole team both pass",
+      "passed": true
+    },
+    {
+      "name": "complete original smoke inverse",
+      "passed": true
+    },
+    {
+      "name": "all original smoke check assertions unchanged",
+      "passed": true
+    },
+    {
+      "name": "all original constants/caps unchanged",
+      "passed": true
+    },
+    {
+      "name": "original 14 swing and 28 placement ceilings unchanged",
+      "passed": true
+    },
+    {
+      "name": "original settle frames unchanged",
+      "passed": true
+    },
+    {
+      "name": "original actual host HP drop still required",
+      "passed": true
+    },
+    {
+      "name": "fixed friendly staging gate unchanged",
+      "passed": true
+    },
+    {
+      "name": "one optional geometry probe output",
+      "passed": true
+    },
+    {
+      "name": "one contact geometry preload",
+      "passed": true
+    },
+    {
+      "name": "complete peer runner inverse",
+      "passed": true
+    },
+    {
+      "name": "existing strike.target implementation and production submission fully unchanged",
+      "passed": true
+    },
+    {
+      "name": "existing earned ownership probe unchanged",
+      "passed": true
+    },
+    {
+      "name": "existing placement step and settle unchanged",
+      "passed": true
+    },
+    {
+      "name": "existing snapshot window read unchanged",
+      "passed": true
+    },
+    {
+      "name": "host-only current fight",
+      "passed": true
+    },
+    {
+      "name": "current bound encounter",
+      "passed": true
+    },
+    {
+      "name": "actual host-deployed body",
+      "passed": true
+    },
+    {
+      "name": "actual host-held card",
+      "passed": true
+    },
+    {
+      "name": "centre origin",
+      "passed": true
+    },
+    {
+      "name": "same rendered production floor",
+      "passed": true
+    },
+    {
+      "name": "same production quick profile",
+      "passed": true
+    },
+    {
+      "name": "same production cone predicate",
+      "passed": true
+    },
+    {
+      "name": "horizontal measurement",
+      "passed": true
+    },
+    {
+      "name": "binding in diagnostics",
+      "passed": true
+    },
+    {
+      "name": "new geometry helper never authorizes/mutates/places",
+      "passed": true
+    },
+    {
+      "name": "existing target derives aim at actual submission origin",
+      "passed": true
+    },
+    {
+      "name": "fixture uses existing target input",
+      "passed": true
+    },
+    {
+      "name": "geometry and local verdict are retained for next actual run",
+      "passed": true
+    },
+    {
+      "name": "all old snapshot tests byte exact",
+      "passed": true
+    },
+    {
+      "name": "two new meaningful geometry cases",
+      "passed": true
+    },
+    {
+      "name": "real host validator comparison",
+      "passed": true
+    },
+    {
+      "name": "out-of-range negative control",
+      "passed": true
+    },
+    {
+      "name": "read-only record control",
+      "passed": true
+    },
+    {
+      "name": "read-only action/cooldown control",
+      "passed": true
+    },
+    {
+      "name": "nonhost control",
+      "passed": true
+    },
+    {
+      "name": "wrong bound fight control",
+      "passed": true
+    },
+    {
+      "name": "terminal close control",
+      "passed": true
+    },
+    {
+      "name": "missing body control",
+      "passed": true
+    },
+    {
+      "name": "unchanged source geometry model permits 4.47 m contact pair",
+      "passed": true
+    },
+    {
+      "name": "unchanged source geometry model still misses 6 m",
+      "passed": true
+    },
+    {
+      "name": "vertical distance can make old fixture falsely reject",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/combat/combat_manager.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/combat/combat_math.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/combat/contact_spacing.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/net/session.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/world/trainer_npc.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/creatures/creature_body.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/creatures/shared_opponent_proxy.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control scripts/save/water_capture_codec.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control tests/helpers/net_original_starter_fixture.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control tests/helpers/net_harness.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control tests/test_stormwood_hosted_combat.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control tests/test_shared_boss_authored_pipeline.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control tests/test_multiplayer_identity_0912.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged control data/config/combat.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged control data/config/multiplayer.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged control data/config/progression.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged control data/config/trainers.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged control data/config/bands/band5_stronghold_approach/trainers.json",
+      "passed": true
+    },
+    {
+      "name": "unchanged control project.godot",
+      "passed": true
+    },
+    {
+      "name": "no production/config/scene/CI edits",
+      "passed": true
+    },
+    {
+      "name": "readonly ROOT patch application check",
+      "passed": true
+    },
+    {
+      "name": "three exact fixture/test paths",
+      "passed": true
+    }
+  ],
+  "unchanged_controls": [
+    "scripts/combat/combat_manager.gd",
+    "scripts/combat/encounter_director.gd",
+    "scripts/combat/combat_math.gd",
+    "scripts/combat/contact_spacing.gd",
+    "scripts/net/encounter_host.gd",
+    "scripts/net/session.gd",
+    "scripts/world/trainer_npc.gd",
+    "scripts/creatures/creature_body.gd",
+    "scripts/creatures/shared_opponent_proxy.gd",
+    "scripts/save/water_capture_codec.gd",
+    "tests/helpers/net_original_starter_fixture.gd",
+    "tests/helpers/net_harness.gd",
+    "tests/test_stormwood_hosted_combat.gd",
+    "tests/test_shared_boss_authored_pipeline.gd",
+    "tests/test_multiplayer_identity_0912.gd",
+    "data/config/combat.json",
+    "data/config/multiplayer.json",
+    "data/config/progression.json",
+    "data/config/trainers.json",
+    "data/config/bands/band5_stronghold_approach/trainers.json",
+    "project.godot"
+  ],
+  "native_executed_here": false,
+  "changed_paths": [
+    "tests/smoke_net_shared_boss.gd",
+    "tools/net/peer_runner.gd",
+    "tests/test_net_boss_snapshot.gd"
+  ],
+  "production_changes": [],
+  "source_formula_controls": {
+    "pair_need_m": 4.6,
+    "range_m": 5.1,
+    "in_range_m": 4.47,
+    "out_of_range_m": 6.0
+  }
+}

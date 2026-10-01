@@ -110,6 +110,7 @@ const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 ## the exact profile and cone predicate that path is about to use.
 const NET_COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const NET_COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
+const NET_CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 const WATER_CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const CATCH_MATH := preload("res://scripts/combat/catch_math.gd")
 const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
@@ -5061,6 +5062,52 @@ static func boss_combat_snapshot(director: Object) -> Dictionary:
 		"my_creature_hp": float(creature.get("hp")) if creature != null else -1.0}
 
 
+## Same centres and body-scaled quick profile as Director._host_strike. This
+## read neither authorizes an action nor advances Wind/cooldown/HP. A rendered
+## pair can stand legally beyond an old fixed four-metre fixture gate.
+static func boss_strike_geometry(director: Object, manager: Object,
+		record: Dictionary) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	if director == null or manager == null or director.call("is_encounter_host") != true \
+			or str(record.get("kind", "")) not in ["trainer", "boss"] \
+			or str(record.get("phase", "")) != "active" \
+			or str(record.get("encounter_id", "")) != str(manager.call("encounter_id")):
+		return rows
+	var opponent: Node3D = manager.call("enemy_body") as Node3D
+	var moves: RefCounted = manager.get("_moves") as RefCounted
+	if not is_instance_valid(opponent) or moves == null:
+		return rows
+	var at: Variant = (record.get("opponent", {}) as Dictionary).get("position", [])
+	if not at is Array or at.size() != 3:
+		return rows
+	var target := Vector3(float(at[0]), float(at[1]), float(at[2]))
+	if not target.is_finite():
+		return rows
+	for raw_peer: Variant in (record.get("participants", {}) as Dictionary).keys():
+		var peer_id := int(raw_peer)
+		var body: Node3D = director.call("deployed_body_for", peer_id) as Node3D
+		var card: Dictionary = director.call("_creature_card_for", peer_id)
+		if not is_instance_valid(body) or card.is_empty():
+			continue
+		var origin: Vector3 = body.call("centre")
+		var pair_floor := NET_CONTACT_SPACING.pair_reach_need(body, opponent)
+		var profile := NET_COMBAT_MANAGER.host_move_profile(moves, "player_quick",
+			str(card.get("move_quick", "")),
+			float(body.call("body_radius")) if body.has_method("body_radius") else 0.5,
+			float(opponent.call("body_radius")) if opponent.has_method("body_radius") else 0.5,
+			float(director.call("host_card_cooldown_multiplier", card)), pair_floor)
+		var toward := Vector3(target.x - origin.x, 0.0, target.z - origin.z)
+		rows.append({"peer_id": peer_id,
+			"is_local": peer_id == int(director.call("_local_peer_id")),
+			"encounter_id": str(record.get("encounter_id", "")), "seq": int(record.get("seq", 0)),
+			"creature_uid": str(card.get("creature_uid", "")),
+			"origin": [origin.x, origin.y, origin.z], "target": [target.x, target.y, target.z],
+			"distance_m": toward.length(), "range_m": float(profile.get("range", 0.0)),
+			"pair_reach_need_m": pair_floor,
+			"can_reach": NET_COMBAT_MATH.move_connects(profile, origin, toward, target)})
+	return rows
+
+
 func _original_starter_ownership(args: Dictionary) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	var director := _encounter_director()
@@ -6034,6 +6081,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				},
 				"local_peer_id": bdirector.call("_local_peer_id"),
 				"my_creature_hp": combat_sample["my_creature_hp"],
+				"strike_geometry": boss_strike_geometry(bdirector, bmanager, brec) \
+					if bargs.get("strike_geometry", false) == true else [],
 				"live": live,
 				"authored": authored,
 				# §10's gate, reported so a scaling assertion that goes red says
