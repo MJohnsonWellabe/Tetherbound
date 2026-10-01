@@ -1,0 +1,93 @@
+{
+  "status": "source_checks_pass_runtime_unrun",
+  "baseline": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "profiles": 93,
+  "alpha_sites": 28,
+  "parsed_files": {
+    "scripts/repeatables/alpha_respawn_service.gd": "644ad77c5ca0bba349bcc9304c3d8483859e3214058623b6f0cb1ea74319b301",
+    "scripts/repeatables/alpha_respawns.gd": "93a6c928a3cc5fa90624a5aa52300411a8d1f4280f0944a7df7757a5d341da6d",
+    "scripts/repeatables/rematch_rules.gd": "c73f17d9e377003829e6f6bfec57f1afe6eecc3dd45ede4617fc9f75410cef17",
+    "scripts/repeatables/rematch_service.gd": "cc7fba73442eb74df989ee4b2ab56ff01e4ee90dbdf3bbd9ff1ef1c0ea88f995",
+    "scripts/net/character_action_rules.gd": "30a8334f1d599e00d4dc5e5a7597a6ae0d8d9c825d0ef5e4d72e077c97936aa2",
+    "scripts/net/character_action_delivery.gd": "63cfe72c6887bb6cea5e6da761dc915778cc4a09a4da3ddd1db8c49e5dfe5b53",
+    "scripts/data/redesign_state.gd": "339ba675b165d76dae950b3b7893c75973f3b5a212c4ab93f1640b37a149b598",
+    "scripts/world/trainer_npc.gd": "dcece0c452f82e62c89034e62ffc7d7c64ee26346db8597dc4f9f20f69661ec0",
+    "scripts/combat/encounter_director.gd": "37e1c31018e3699634912c1da60cafd53bd9bf702e11b0697e502ed6779ab4c5",
+    "scripts/combat/cloudreach_encounter_director.gd": "90bce44c855d23137c96cb4e8976ad9fa7425e9fe70ac4c63571710d260b18e7",
+    "tests/test_f44_repeatables.gd": "95add4b0d8fe11f8082122084ec6c6e3c403ed6e7e9e30b4e1c917a41cda0682",
+    "tools/f44_rematch_witness.gd": "551994008c70f5dfe0c983bfe0c5501d82f3b1cfd6bd9da161682ad885abba7c"
+  },
+  "checks": [
+    "identity references and full roster census",
+    "configured tier/reward item references",
+    "alpha count/rarity improvement",
+    "optional additive carrier fields",
+    "gdtoolkit grammar",
+    "git diff --check"
+  ],
+  "limitations": [
+    "No Godot parse/type check, unit execution, imported scene, real encounter, disk save/rejoin, peer, visual or acceptance proof was run.",
+    "Both runtime gates remain OFF. Shared Session source registration, durable outcome retention/participant reconstruction and alpha world CAS/save/publish closures are unmounted.",
+    "Portable unique receipts are global per trainer/tier/character. Cooldowns use each host-world clock; cross-world hopping remains the existing F47#4 exploit audit, not a new global cap."
+  ],
+  "overlapping_files": [
+    "data/schema/character_state.schema.json",
+    "data/schema/world_state.schema.json",
+    "scripts/data/redesign_state.gd",
+    "scripts/net/character_action_rules.gd",
+    "scripts/net/character_action_delivery.gd",
+    "scripts/world/trainer_npc.gd",
+    "scripts/combat/encounter_director.gd",
+    "scripts/combat/cloudreach_encounter_director.gd"
+  ],
+  "dependencies": {
+    "F16": "authenticated source registration, existing character_training delivery and owner-save/ACK; alpha CAS/world-save; accepted outcome retention before encounter forget",
+    "F19": "current authored teams/levels and boss facts",
+    "F20": "own-character regional_credits_seen",
+    "F22": "canonical patterns and host encounter/vitals; no current repair rewrite",
+    "F23": "learnset utility/ultimate execution",
+    "F28": "actual one-creature Master duel admission and outcome producer",
+    "F30": "host trait registration/catch projection",
+    "F32": "canonical chapter materials",
+    "F42": "board/source interactions mounting RematchService",
+    "F43": "consume settled rematch identity after owner-save/ACK"
+  },
+  "pending_queue": [
+    {
+      "proof": "F44 focused logic",
+      "command": "godot --headless --path D:/tetherbound/r2-f44 --script tests/run_tests.gd -- --only=test_f44_repeatables.gd"
+    },
+    {
+      "proof": "F44 real meadows rematch",
+      "trainer_id": "relay_captain",
+      "command": "godot --path D:/tetherbound/r2-f44 --script tools/f44_rematch_witness.gd -- --biome=meadows --save-dir=D:/tetherbound/r2-f44/.tmp/f44-native/meadows/save-copy --output=D:/tetherbound/r2-f44/ralph/reports/R2-F44/native/meadows",
+      "requires": "ROOT engine slot, mounted host producers, disposable copy of earned post-biome checkpoint (Stormwood own credits), normal title/travel/challenge/combat input; instrument captures start and settlement"
+    },
+    {
+      "proof": "F44 real tidewake rematch",
+      "trainer_id": "water_trainer_yara",
+      "command": "godot --path D:/tetherbound/r2-f44 --script tools/f44_rematch_witness.gd -- --biome=tidewake --save-dir=D:/tetherbound/r2-f44/.tmp/f44-native/tidewake/save-copy --output=D:/tetherbound/r2-f44/ralph/reports/R2-F44/native/tidewake",
+      "requires": "ROOT engine slot, mounted host producers, disposable copy of earned post-biome checkpoint (Stormwood own credits), normal title/travel/challenge/combat input; instrument captures start and settlement"
+    },
+    {
+      "proof": "F44 real cloudreach rematch",
+      "trainer_id": "officer_voss_summit_approach",
+      "command": "godot --path D:/tetherbound/r2-f44 --script tools/f44_rematch_witness.gd -- --biome=cloudreach --save-dir=D:/tetherbound/r2-f44/.tmp/f44-native/cloudreach/save-copy --output=D:/tetherbound/r2-f44/ralph/reports/R2-F44/native/cloudreach",
+      "requires": "ROOT engine slot, mounted host producers, disposable copy of earned post-biome checkpoint (Stormwood own credits), normal title/travel/challenge/combat input; instrument captures start and settlement"
+    },
+    {
+      "proof": "F44 real stormwood rematch",
+      "trainer_id": "officer_maren_verge_rod",
+      "command": "godot --path D:/tetherbound/r2-f44 --script tools/f44_rematch_witness.gd -- --biome=stormwood --save-dir=D:/tetherbound/r2-f44/.tmp/f44-native/stormwood/save-copy --output=D:/tetherbound/r2-f44/ralph/reports/R2-F44/native/stormwood",
+      "requires": "ROOT engine slot, mounted host producers, disposable copy of earned post-biome checkpoint (Stormwood own credits), normal title/travel/challenge/combat input; instrument captures start and settlement"
+    },
+    {
+      "proof": "F44 actual two-peer transaction/save witness",
+      "requires": "Host and guest rematch participation; late observer refusal; loss/retry; full satchel; failed bool world/owner save; disconnect after outcome before ACK; process restart and same-ID new epoch; rejoin; first reward exactly once and repeat at 1199/1200 elapsed world seconds; original keys/relics/offers/aftermath unchanged. Driver requires pending shared runtime binding; no executable proof claimed."
+    },
+    {
+      "proof": "F44 actual alpha respawn/catch witness",
+      "requires": "One host site resolve/catch; both peers leave its principal region; save/reload before/after 1800 elapsed seconds; new generation retained roll; one actual catcher/UID; no copy to other peer; original first defeat/catch rewards unchanged; clock regression, concurrent spawn CAS and publication retry. Driver requires pending shared runtime binding; no executable proof claimed."
+    }
+  ]
+}
