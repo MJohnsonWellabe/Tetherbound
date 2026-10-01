@@ -28,7 +28,7 @@ func _ready() -> void:
 	layer = 90
 	add_to_group(INPUT_OWNER.GROUP)
 	_root = PanelContainer.new()
-	var candidate := SCREEN.config().get("enabled") == true
+	var candidate: bool = SCREEN.config().get("enabled") == true
 	if candidate:
 		_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		var inset := int(SCREEN.config().get("safe_margin", 48))

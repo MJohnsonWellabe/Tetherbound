@@ -82,15 +82,14 @@ func _rebuild() -> void:
 				if def.get("kind") != "ascension_feast" or int(def.breaks_level) != int(card.level): continue
 				var planning := card.duplicate(true)
 				planning.evolution_choices = mirror.get("evolution_choices", {}).duplicate(true)
-				if EVOLUTION.has_method("feast_offer"):
-					var offer: Dictionary = EVOLUTION.feast_offer(planning, int(def.tier))
-					if offer.get("choice_required", false):
-						_button(label + " · " + def.name + " · Stay (permanent this tier)", func() -> void: _feed(uid, item, "stay"))
-						for branch: Dictionary in offer.get("branches", []):
-							if str(branch.get("extra_ingredient", "")) != str(def.get("catalyst", "")): continue
-							var target := str(branch.get("target", branch.get("to_species", "")))
-							_button(label + " · Evolve to " + target, func() -> void: _feed(uid, item, "evolve"))
-						continue
+				var offer: Dictionary = EVOLUTION.feast_offer(planning, int(def.tier))
+				if offer.get("choice_required", false):
+					_button(label + " · " + def.name + " · Stay (permanent this tier)", func() -> void: _feed(uid, item, "stay"))
+					for branch: Dictionary in offer.get("branches", []):
+						if str(branch.get("extra_ingredient", "")) != str(def.get("catalyst", "")): continue
+						var target := str(branch.get("target", branch.get("to_species", "")))
+						_button(label + " · Evolve to " + target, func() -> void: _feed(uid, item, "evolve"))
+					continue
 				_button(label + " · " + def.name, func() -> void: _feed(uid, item, ""))
 	_button("Back", close)
 	for node: Node in _list.get_children():

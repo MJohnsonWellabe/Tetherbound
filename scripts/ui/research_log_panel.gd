@@ -31,7 +31,7 @@ func _rebuild() -> void:
 	status.text = "%s · %d%% complete%s" % [_biome.capitalize(), int(raw.get("completion_percent", 0)),
 		" · " + str(raw.get("title", "")) if int(raw.get("completion_percent", 0)) == 100 else ""]
 	for row: Dictionary in raw.get("species", []):
-		var seen := row.get("seen") == true
+		var seen: bool = row.get("seen") == true
 		var key := str(row.get("species_id", ""))
 		button(body, "%s · %s" % [str(row.get("name", "")) if seen else "Unseen creature", "Caught" if row.get("caught") == true else "Seen" if seen else "Unknown"], _inspect.bind(key), "species:" + key)
 		if not seen or key != _species: continue

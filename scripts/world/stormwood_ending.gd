@@ -254,9 +254,7 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 		# still let the world move on: the freeing's single offer fact must
 		# never wait on a participant who is absent or already resolved.
 		if not _has(OFFER_FLAG):
-			var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
-			if bool(result.get("accepted", false)) or _has(OFFER_FLAG):
-				_save_world_claim()
+			if _commit_world_decision(peer, false, false):
 				_broadcast(_state_event())
 				_refuse(peer, "The Stormheart has seen you. Its bond is for the trainers who fought for it, and they may still answer.")
 				return
@@ -322,33 +320,85 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 		# must not leave an in-memory settled claim that silences all retries.
 		if _save_world_claim(): session.call("foundation_stormwood_answer", self, peer, claim)
 		return
-	var game := get_node("/root/Game")
-	var original_world: RefCounted = game.get("world")
-	var original_environment: Dictionary = original_world.get("realm_environment").duplicate(true)
-	claim["kept"] = bool(intent.get("kept", false))
-	claim["settled"] = true
-	claims[character] = claim
-	state["claims"] = claims
-	_store_state(state)
-	# The first decision records the world's single offer fact; later
-	# participants' decisions are personal and need no second world write.
-	if not _has(OFFER_FLAG):
-		var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
-		if not bool(result.get("accepted", false)) and not _has(OFFER_FLAG):
-			claim["settled"] = false
-			claims[character] = claim
-			state["claims"] = claims
-			_store_state(state)
-			_refuse(peer, "The world could not record the ceremony. Try again.")
-			return
-	_submit_resolution(bool(claim["kept"]), character)
-	var staged_environment: Dictionary = original_world.realm_environment.duplicate(true)
-	if not _save_world_claim():
-		if original_world.realm_environment == staged_environment: original_world.set("realm_environment", original_environment)
+	if not _commit_world_decision(peer, bool(intent.get("kept", false)), true):
 		_refuse(peer, "The world could not save the ceremony. Try again.")
 		return
+	claim = _saved_state().get("claims", {}).get(character, {})
 	session.call("foundation_stormwood_answer", self, peer, claim)
 	_broadcast(_state_event())
+
+## The existing host ledger stages the claim, authored offer flags and exact
+## character resolution as one unpublished world cut. Only the bool writer
+## permits publication; a failed write restores flags, environment and sequence.
+func _commit_world_decision(peer: int, kept: bool, settle: bool) -> bool:
+	if session == null or session.call("is_host") != true: return false
+	var game := _decision_game()
+	if game == null: return false
+	var original: RefCounted = game.world
+	var transport: Node = game.get("ledger")
+	var ledger: RefCounted = transport.get("ledger") if transport != null else null
+	if original == null or ledger == null or ledger.get("world") != original \
+		or _foundation_world_binding == null or _foundation_world_binding.get_ref() != original: return false
+	var character := _character_for_peer(peer)
+	if character.is_empty() or not _has(FREED_FLAG): return false
+	var namespace_id := str(original.reward_delivery_namespace)
+	var instance_id := str(original.world_id)
+	var epoch := str(session.call("_altar_current_epoch"))
+	var saver: RefCounted = game.get("save_system")
+	if saver != null:
+		saver.call("finish_fallback")
+		if saver.call("fallback_busy") == true or game.world != original or game.save_system != saver \
+			or original.reward_delivery_namespace != namespace_id or original.world_id != instance_id \
+			or session.call("_altar_current_epoch") != epoch: return false
+	var state := _saved_state()
+	var claims: Dictionary = state.get("claims", {})
+	if settle:
+		var claim: Dictionary = claims.get(character, {})
+		if claim.is_empty() or claim.get("settled") == true: return false
+		claim = claim.duplicate(true)
+		claim.kept = kept
+		claim.settled = true
+		claims = claims.duplicate(true)
+		claims[character] = claim
+		state.claims = claims
+	var before: Dictionary = original.call("save_data")
+	var revision := int(original.revision)
+	var flags_revision := int(original.flags.get("revision"))
+	var sequence := int(ledger.get("seq"))
+	var storage: Dictionary = ledger.get("_storage_revisions").duplicate(true)
+	var seen: Dictionary = ledger.get("_seen_txns").duplicate(true)
+	var deltas: Array[Dictionary] = []
+	var failed := [false]
+	var writer := func(flag: String) -> Dictionary:
+		var result: Dictionary = ledger.call("commit", {"kind": "set_world_flag", "realm": "stormwood",
+			"id": flag, "value": true, "_actor_character_id": character}, peer)
+		if result.get("ok") != true: failed[0] = true
+		elif not result.get("delta", {}).get("ops", []).is_empty(): deltas.append(result.delta)
+		return result
+	_store_state(state)
+	if not _has(OFFER_FLAG):
+		var authored: Dictionary = _chapter.get("chapter")
+		var offer := preload("res://scripts/world/realm_chapter_progression.gd").dispatch(game.progression,
+			authored, "legendary:offer_shown", writer)
+		if offer.get("accepted") != true or not _has(OFFER_FLAG): failed[0] = true
+	if settle: writer.call(resolution_flag(kept, character))
+	if failed[0] or not _save_world_claim() or game.world != original or ledger.get("world") != original \
+		or game.get("save_system") != saver or original.reward_delivery_namespace != namespace_id \
+		or original.world_id != instance_id or session.call("_altar_current_epoch") != epoch:
+		if game.world == original and ledger.get("world") == original and original.reward_delivery_namespace == namespace_id \
+			and original.world_id == instance_id and session.call("_altar_current_epoch") == epoch:
+			original.call("load_data", before)
+			original.revision = revision
+			original.flags.set("revision", flags_revision)
+			ledger.set("seq", sequence)
+			ledger.set("_storage_revisions", storage)
+			ledger.set("_seen_txns", seen)
+		return false
+	for delta: Dictionary in deltas: transport.call("publish_journaled_delta", delta)
+	return true
+
+func _decision_game() -> Node:
+	return get_node_or_null(^"/root/Game")
 
 
 func _reveal_for(peer: int) -> void:
@@ -965,7 +1015,7 @@ func _save_world_claim() -> bool:
 	if saver.call("fallback_busy") == true or game.world != world_state or game.save_system != saver \
 		or game.session != session or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
 		or session.call("_altar_current_epoch") != epoch or world_state.realm_environment != expected_environment: return false
-	var saved := saver.call("save_world_prepared", game, id) == true
+	var saved: bool = saver.call("save_world_prepared", game, id) == true
 	if game.world != world_state or game.save_system != saver or game.session != session \
 		or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
 		or session.call("_altar_current_epoch") != epoch: return false

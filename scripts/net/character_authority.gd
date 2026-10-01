@@ -78,7 +78,7 @@ func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionar
 
 
 func _replace_record(character: String, next_revision: int, next_state: Dictionary) -> void:
-	var carried := _records.get(character, {}).has("personal_flags")
+	var carried: bool = _records.get(character, {}).has("personal_flags")
 	var flags := personal_flags(character)
 	_records[character] = {"revision": next_revision, "state": next_state}
 	if carried: _records[character].personal_flags = flags
@@ -841,13 +841,13 @@ func stage_character_action(character: String, expected_revision: int,
 	if expected_revision < 0 or expected_revision >= 2147483647 or revision(character) != expected_revision:
 		return {"ok": false, "code": "stale_revision", "revision": revision(character), "durable": false}
 	var action_rules: Script = preload("res://scripts/net/foundation_actions.gd") if action in preload("res://scripts/net/foundation_actions.gd").ACTIONS else CHARACTER_ACTIONS
-	var proposal := action_rules.stage(state(character), expected_revision, action,
+	var proposal: Dictionary = action_rules.stage(state(character), expected_revision, action,
 		original_intent, host_context, errors)
 	if proposal.get("ok") != true: return proposal.duplicate(true)
 	# A callback is re-staged inside the actual canonical registry. It cannot
 	# be substituted by an owner-proposed inventory, cost, cap, seed or party.
 	var token := Crypto.new().generate_random_bytes(16).hex_encode()
-	var accepted := proposal.duplicate(true)
+	var accepted: Dictionary = proposal.duplicate(true)
 	accepted.token = token
 	accepted.action_id = proposal.receipt.sha256_text()
 	accepted.character_revision = expected_revision + 1

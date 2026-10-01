@@ -15,7 +15,7 @@ static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
 			or context.get("expected_revision") != revision: return RULES.deny("character_revision_mismatch")
 	for key: String in ["homestead", "in_range", "in_combat", "recipe_known"]:
 		if not context.get(key) is bool: return RULES.deny("station_context_invalid")
-	var field := context.get("station_kind") == CAMP.ID and context.get("forward_camp") is bool and context.forward_camp == true
+	var field: bool = context.get("station_kind") == CAMP.ID and context.get("forward_camp") is bool and context.forward_camp == true
 	if (context.homestead != true and not field) or context.in_range != true or context.in_combat != false \
 			or context.recipe_known != true: return RULES.deny("craft_not_available")
 	if not context.get("source_key") is String or context.source_key.is_empty(): return RULES.deny("station_context_invalid")

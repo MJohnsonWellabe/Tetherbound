@@ -65,7 +65,7 @@ func _rebuild() -> void:
 		for reward: Dictionary in row.get("rewards", []):
 			rewards.append("%s ×%d" % [str(reward.get("id", "")).replace("_", " ").capitalize(), int(reward.get("n", 0))])
 		line(body, "Reward: " + " · ".join(rewards))
-		var paid := row.get("paid") == true
+		var paid: bool = row.get("paid") == true
 		button(body, "Claimed" if paid else "Deliver and claim" if row.get("kind") == "material_delivery" else "Claim",
 			_claim.bind(instance), instance, not paid and row.get("claimable") == true and not _waiting)
 	if _waiting:
