@@ -1,0 +1,146 @@
+{
+  "scope": "AUTHOR SOURCE AND PAIR-ONLY ARITHMETIC; native failure authoritative",
+  "checks_passed": 79,
+  "checks": [
+    "original native log binding",
+    "original receipt binding",
+    "R19 native failure binding",
+    "actual ROOT head",
+    "closure before equals after",
+    "single exact original PRE record",
+    "diagnostic complete does not assert admission",
+    "first PRE zero input",
+    "registered full shape margin and mask",
+    "original query charge",
+    "original callback bound",
+    "one reported motion BOX",
+    "contact/rest identity agree",
+    "original raw pair caveat",
+    "box unit identity body_pose",
+    "box unit identity shape_local_pose",
+    "box unit identity shape_world_pose",
+    "capsule query unit identity",
+    "finite logged binary32 reconstruct 27.3039016723633",
+    "finite logged binary32 reconstruct 1.84972846508026",
+    "finite logged binary32 reconstruct 7.19473075866699",
+    "finite logged binary32 reconstruct 2.0",
+    "finite logged binary32 reconstruct 0.0500000007450581",
+    "finite logged binary32 reconstruct 1.0",
+    "finite logged binary32 reconstruct 27.0",
+    "finite logged binary32 reconstruct 0.899999976158142",
+    "finite logged binary32 reconstruct 7.90000009536743",
+    "finite logged binary32 reconstruct 1.79999995231628",
+    "finite logged binary32 reconstruct 0.400000005960464",
+    "finite logged binary32 reconstruct 0.00100000004749745",
+    "valid complete capsule",
+    "box half extents positive",
+    "capsule axis projects inside top rectangle",
+    "capsule bottom above box bottom",
+    "segment lower center above top plane",
+    "pair ideal initial penetration below skin",
+    "finite logged binary32 reconstruct 0.849999964237213",
+    "finite logged binary32 reconstruct 0.0500000007450581",
+    "finite logged binary32 reconstruct 0.949999988079071",
+    "box composition discrepancy within envelope",
+    "reported support rounding within envelope",
+    "finite logged binary32 reconstruct 0.949728488922119",
+    "body/capsule bottom parity",
+    "rounding envelope below skin",
+    "quantized virtual rise inside original skin",
+    "virtual full capsule pair envelope clear",
+    "floor collider never excluded from proof",
+    "finite logged binary32 reconstruct 0.00106322765350342",
+    "raw recovery remains above original guard",
+    "post recovery depth differs from initial",
+    "pinned source modules/godot_physics_3d/register_types.cpp",
+    "pinned source modules/jolt_physics/register_types.cpp",
+    "pinned source servers/physics_3d/physics_server_3d.cpp",
+    "pinned source servers/physics_3d/physics_server_3d.h",
+    "pinned source modules/godot_physics_3d/godot_space_3d.cpp",
+    "pinned source modules/godot_physics_3d/godot_space_3d.h",
+    "pinned source modules/godot_physics_3d/godot_shape_3d.cpp",
+    "pinned source modules/godot_physics_3d/godot_shape_3d.h",
+    "pinned source modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.h",
+    "pinned source scene/resources/3d/box_shape_3d.cpp",
+    "pinned source scene/resources/3d/capsule_shape_3d.cpp",
+    "pinned source main/main.cpp",
+    "pinned source modules/godot_physics_3d/config.py",
+    "pinned source modules/jolt_physics/config.py",
+    "Godot compiled default priority0",
+    "Jolt registration does not set default",
+    "manager initial priority-1",
+    "manager priority strict ordering",
+    "DEFAULT startup fallback",
+    "no project engine override",
+    "live class discriminant GodotPhysicsDirectSpaceState3D",
+    "live class discriminant JoltPhysicsDirectSpaceState3D",
+    "exact hidden candidate cap2048",
+    "cull before result filter",
+    "result count does not return cull count",
+    "server BOX half extent source",
+    "capsule complete height source",
+    "strict raw guard retained",
+    "server exception getter is not script-bound"
+  ],
+  "root_engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "body_and_query_bottom": {
+    "fraction": "1991725/2097152",
+    "meters": 0.9497284889221191
+  },
+  "box_top_ideal": {
+    "fraction": "255013677/268435456",
+    "meters": 0.9499999769032001
+  },
+  "box_top_native_rounded": {
+    "fraction": "15938355/16777216",
+    "meters": 0.949999988079071
+  },
+  "box_composition_difference": {
+    "fraction": "3/268435456",
+    "meters": 1.1175870895385742e-08
+  },
+  "initial_pair_penetration": {
+    "fraction": "72877/268435456",
+    "meters": 0.0002714879810810089
+  },
+  "rounding_per_surface_budget": {
+    "fraction": "1/32768",
+    "meters": 3.0517578125e-05
+  },
+  "conservative_pair_depth_interval": [
+    {
+      "fraction": "56493/268435456",
+      "meters": 0.0002104528248310089
+    },
+    {
+      "fraction": "89261/268435456",
+      "meters": 0.0003325231373310089
+    }
+  ],
+  "xz_axis_inside_margins": [
+    {
+      "fraction": "222311/131072",
+      "meters": 1.6960983276367188
+    },
+    {
+      "fraction": "618095/2097152",
+      "meters": 0.29473066329956055
+    }
+  ],
+  "pair_only_virtual_rise": {
+    "fraction": "3355/8388608",
+    "meters": 0.0003999471664428711
+  },
+  "pair_only_virtual_gap_lower": {
+    "fraction": "18099/268435456",
+    "meters": 6.742402911186218e-05
+  },
+  "compiled_default_backend": "GodotPhysics3D; source-derived from pinned official build registration",
+  "live_backend_discriminant_observed": false,
+  "initial_candidate_completeness_proven": false,
+  "all_colliders_certified": false,
+  "native_clearance_witness_run": false,
+  "admission": false,
+  "R9_general_replacement": "HOLD",
+  "F17_4": "OPEN"
+}

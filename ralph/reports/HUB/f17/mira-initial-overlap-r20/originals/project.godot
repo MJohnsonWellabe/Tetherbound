@@ -1,0 +1,488 @@
+; Tetherbound — Godot project settings.
+;
+; Engine is LOCKED to Godot 4 (docs/specs/GAME_DESIGN.md §4). Pinned to 4.7-stable;
+; see docs/decisions/D01-godot-version-and-renderer.md before changing it.
+;
+; Most of this file is the input map. It is here rather than in code because
+; docs/TECHNICAL_ARCHITECTURE.md §Input requires actions, never raw device checks
+; scattered through gameplay. Every action carries a keyboard/mouse binding AND
+; an Xbox-layout gamepad binding, because controller is the primary input and
+; keyboard is the fallback, not the other way round.
+
+config_version=5
+
+[application]
+
+config/name="Tetherbound"
+; F26 device-local override is read before the rendering method is chosen.
+config/project_settings_override="user://graphics_override.cfg"
+config/description="Third-person survival creature-training game. Meadows vertical slice."
+run/main_scene="res://scenes/ui/title_screen.tscn"
+; "GL Compatibility", not "Forward Plus". RB4 switched the shipped renderer
+; (see docs/decisions/D01) and left this tag reading the old value, so the file
+; contradicted itself for two days: this line said Forward+ while
+; rendering/rendering_method below said gl_compatibility.
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[steam]
+
+; GodotSteam 4.20 is optional: stock Godot still supports solo/LAN.
+; AppID comes from the local launcher/environment, never a shared test default.
+initialization/processes/initialize_on_startup=false
+initialization/processes/embed_callbacks=false
+; 4.20 routes channels >= max_channels-1 to lane 0. Four preserves lanes 1/2.
+multiplayer_peer/max_channels=4
+
+[editor]
+
+; Parallel import races file hashing on Windows in this asset-heavy project.
+; Serial import is slower on a cold checkout, but deterministic on the primary platform.
+import/use_multiple_threads=false
+
+[autoload]
+
+; The project's one singleton, and it is meant to stay the only one. It owns the
+; party, the satchel and the day, and it stands up the pause menu so the menu
+; exists in every scene rather than being instanced into each world by hand.
+; See autoload/game_state.gd.
+Game="*res://autoload/game_state.gd"
+
+[display]
+
+; ROG Ally is 1920x1080 at 7 inches. Authoring at native resolution and letting
+; canvas_items stretch handles desktop windows without a second UI layout, and
+; keeps HUD text legible at handheld pixel density.
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[audio]
+
+; T1-AUDIO. res://default_bus_layout.tres is already Godot's default path for
+; this setting, so naming it here changes no behaviour -- it is written out for
+; the same reason the shadow settings below are: a value nobody can find is a
+; value nobody maintains, and the mixer is now something the game depends on
+; rather than an empty Master bus.
+;
+; Six buses: Master, Music, Ambience, SFX, Creatures, UI. The layout is
+; GENERATED, by tools/audio/make_bus_layout.gd -- edit that and rerun it rather
+; than hand-editing the .tres. Per-bus authored levels and the player's own
+; volume settings both live in data/config/audio.json.
+buses/default_bus_layout="res://default_bus_layout.tres"
+
+[input_devices]
+
+; The Ally's sticks rest slightly off-centre. 0.2 is a starting value and is
+; tunable; anything lower produces camera drift on a worn pad.
+pointing/emulate_touch_from_mouse=false
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+; HALL-STAGING-0906 (OP-0905-19, "the hall should be lit by torches"). The
+; Compatibility renderer caps the OMNI lights one mesh may take at this value
+; and silently drops the rest. A Hall room floor is ONE slab per chamber
+; (stronghold.gd::_build_chambers) and the approach room's slab is inside the
+; range of ~13 omnis (its two ambients, four wall torches, the arena pair, the
+; courtyard fill, four yard braziers), so at 8 the wall torches lost the draw
+; on exactly the surface the player stands on: two blind judges read warm
+; ceilings over dead-black floors with "no visible source". 16 lets every
+; practical in a room reach its own floor. The per-object light loop costs a
+; little fragment time only where that many ranges overlap, i.e. indoors.
+limits/opengl/max_lights_per_object=16
+; Same round. The Hall stands ~50 omnis (16 authored, 4 flank, 25 fires, the
+; machine core, the cage, two sentry lamps) inside one compact frustum, so the
+; default 32 renderable lights dropped an arbitrary subset every frame -- the
+; interior torches among them, whichever the sort favoured.
+limits/opengl/max_renderable_lights=64
+; Shadows are the single defect that killed the previous prototype. Godot gives
+; real directional shadows out of the box; these are just the defaults made
+; explicit so nobody has to guess what they were.
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=2
+; SA1, the Ally memory investigation: neither atlas size had ever been set, so
+; both sat at Godot's 4096 desktop default -- roughly 67 MB each, ~134 MB of
+; render target, on a handheld whose VRAM is the same DDR5 the game is already
+; saturating. 2048 halves each side, so a quarter of the memory, and the sun is
+; the only shadow-caster that matters outdoors. Raise it back if shadow edges
+; visibly stair-step on device; that is the trade being made here.
+lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/positional_shadow/atlas_size=2048
+; Was 2 (= MSAA 4x): ~66 MB of extra colour and depth at 1920x1080. Dropped to
+; 1 (= 2x) for the same shared-memory reason. NOT zero, deliberately: R9.4
+; enabled alpha-to-coverage on foliage, which needs MSAA to do anything at all,
+; and the foliage mipmap fix in the same commit as this line is the other half
+; of that problem.
+anti_aliasing/quality/msaa_3d=1
+environment/defaults/default_clear_color=Color(0.23, 0.44, 0.58, 1)
+
+[input]
+
+move_forward={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":87,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":1,"axis_value":-1.0,"script":null)
+]
+}
+move_back={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":83,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":1,"axis_value":1.0,"script":null)
+]
+}
+move_left={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":65,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":0,"axis_value":-1.0,"script":null)
+]
+}
+move_right={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":68,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":0,"axis_value":1.0,"script":null)
+]
+}
+look_up={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":3,"axis_value":-1.0,"script":null)
+]
+}
+look_down={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":3,"axis_value":1.0,"script":null)
+]
+}
+look_left={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":2,"axis_value":-1.0,"script":null)
+]
+}
+look_right={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadMotion,"device":-1,"axis":2,"axis_value":1.0,"script":null)
+]
+}
+jump={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":32,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+]
+}
+sprint={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194325,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
+]
+}
+auto_run={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194329,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":15,"pressed":false,"script":null)
+]
+}
+interact={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":69,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+]
+}
+inventory={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":73,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+]
+}
+map={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":77,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":4,"pressed":false,"script":null)
+]
+}
+map_zoom_in={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":61,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
+]
+}
+map_zoom_out={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":45,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
+; OP-0905-27: the full map's realm selector (scripts/ui/tab_map.gd). LB/RB
+; (button 9/10) already mean "previous/next MENU TAB" (menu_tab_left/right,
+; game_menu.gd) — reusing them here would fire both a realm switch AND a tab
+; change off the same press. L3/R3 (stick click, button 7/8) sit unclaimed
+; while the map tab is open: `sprint`/`camera_recenter` are the same physical
+; buttons in world play, and `backpack_assign`/`backpack_split` reuse them the
+; same context-scoped way for the satchel tab, so tab_map.gd reading them only
+; while it is the shown tab is the established pattern, not a new one.
+map_realm_prev={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":44,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
+]
+}
+map_realm_next={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":46,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
+]
+}
+creature_recall={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":82,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
+]
+}
+hotbar_1={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":49,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+]
+}
+hotbar_2={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":50,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":13,"pressed":false,"script":null)
+]
+}
+hotbar_3={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":51,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
+]
+}
+hotbar_4={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":52,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":14,"pressed":false,"script":null)
+]
+}
+hotbar_5={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":53,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}
+combat_quick={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
+]
+}
+combat_charged={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
+combat_throw={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":70,"pressed":false,"script":null)
+]
+}
+combat_run={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194305,"pressed":false,"script":null)
+]
+}
+party_cycle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":67,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
+]
+}
+build_place={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+]
+}
+build_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":2,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+]
+}
+build_rotate_left={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":4,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
+build_rotate_right={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":5,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":5,"axis_value":1.0,"script":null)
+]
+}
+build_snap_cycle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194325,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":11,"pressed":false,"script":null)
+]
+}
+backpack_drop={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":71,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
+]
+}
+menu_tab_right={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194306,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":10,"pressed":false,"script":null)
+]
+}
+torch_toggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":76,"pressed":false,"script":null)
+]
+}
+backpack_split={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":72,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
+]
+}
+use_tool={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"device":-1,"button_index":1,"pressed":false,"double_click":false,"script":null)
+]
+}
+; CONTROLLER-MAP. L3, not X. X is `interact`, which the satchel tab reads as
+; its Use verb (tab_backpack.gd::USE_ACTION) -- the two are live on the same
+; tab, on the same frame, so sharing X made "use this potion" also mean "put it
+; on the bar". It shipped on Y until this pass, colliding with `inventory` the
+; same way. L3 is the only button a menu leaves free: `sprint` shares the
+; physical button but is world-context and PAUSABLE.
+backpack_assign={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":74,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":7,"pressed":false,"script":null)
+]
+}
+; UI-PAD1. `ui_accept` is a Godot built-in and was NOT listed here, so the
+; engine defaults applied -- and those defaults, in this project, carried no
+; joypad event at all. Dumped from the live InputMap before this change:
+;
+;   ui_accept     -> key, key, key      <- nothing a controller can press
+;   ui_left       -> key, JOY:13, axis:0
+;   menu_confirm  -> key, JOY:0
+;
+; A Godot `Button` activates on `ui_accept`. So focus NAVIGATION worked on a
+; pad and focus ACCEPT did not: every Button-driven screen in a controller-first
+; game could be walked around and never pressed. Verified on the build menu with
+; real InputEventJoypadButton presses -- focus sat on a grid cell and neither A
+; nor X armed a piece.
+;
+; Listing the action here REPLACES the engine defaults rather than adding to
+; them, so the three keyboard events are restated deliberately. Dropping any of
+; them would silently take Enter or Space away from every menu in the game;
+; `tests/test_controls.gd::test_ui_accept_still_answers_the_keyboard` exists to
+; catch exactly that.
+;
+; Sharing joypad A with `menu_confirm` is intentional, not a collision. Enter
+; has always been both on the keyboard, so every screen that polls
+; `menu_confirm` has already been living with this pairing -- see that test
+; file's own note, and `ralph/NOTES.md`.
+ui_accept={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"keycode":4194309,"pressed":false,"script":null)
+, Object(InputEventKey,"device":-1,"keycode":4194310,"pressed":false,"script":null)
+, Object(InputEventKey,"device":-1,"keycode":32,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+]
+}
+menu_confirm={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194309,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":0,"pressed":false,"script":null)
+]
+}
+menu_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194305,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":1,"pressed":false,"script":null)
+]
+}
+build_rotate={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":84,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":12,"pressed":false,"script":null)
+]
+}
+build_open={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
+]
+}
+; HUD-INPUT-0903 (owner playtest 2026-09-03: "there should be a shortcut
+; button to map and to building"). `build_open` itself cannot take a pad
+; button -- D68's fourteen-button map has no free one, and `build_open` is
+; also live while a build ghost is armed (playground_hud.gd's "reopen the
+; catalogue" case), which collides with `build_rotate_left`/`build_rotate_right`
+; on LT/RT there. A SEPARATE action sidesteps that: `build_shortcut` is only
+; ever read in the `world` context (data/config/input_contexts.json), so LT
+; (idle during ordinary exploration -- D68: "LT/RT are idle while no
+; creature is out") is free for it there, and `playground_hud.gd`'s handler
+; gates it through the same `_world_input_allowed()` the build hammer uses,
+; which is already false while a ghost is armed (the arbiter is disabled
+; during placement) -- so a rotate pull can never also reopen the catalogue.
+; Same dual-use argument D35 already established for combat/build sharing
+; these triggers, applied to a third, mutually-exclusive reader. Keyboard B
+; is `build_open`'s own key, restated here rather than left unbound: both
+; actions do the same thing and `_read_world_hotkeys()` handles `build_open`
+; first and returns, so a keyboard press never double-fires; a purely
+; gamepad-only entry would also fail `test_controls.gd`'s "every rebindable
+; action has both halves" check, which no other action on this screen
+; violates.
+build_shortcut={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":66,"pressed":false,"script":null)
+, Object(InputEventJoypadMotion,"device":-1,"axis":4,"axis_value":1.0,"script":null)
+]
+}
+build_dismantle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":88,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":3,"pressed":false,"script":null)
+]
+}
+torch_place={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":80,"pressed":false,"script":null)
+]
+}
+; CONTROLLER-MAP. The pause shell used to open on `menu_cancel`, which is
+; gamepad B -- and B is hotbar slot 1 in the owner's authored map, so the shell
+; needed a button of its own. Menu (button 6) is what the map assigns it. The
+; keyboard half stays Escape, which is also `menu_cancel`'s key, because Escape
+; has always both opened and closed the shell and taking that away would be a
+; regression nobody asked for. `menu_cancel` still CLOSES it.
+game_menu={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194305,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":6,"pressed":false,"script":null)
+]
+}
+; CONTROLLER-MAP. LB's half of "LB tab left, RB tab right". This was
+; `tool_cycle` (keyboard Q / R3) borrowed by data/config/menu.json; `tool_cycle`
+; is retired by the directive, so the verb gets a named action and keeps Q.
+menu_tab_left={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":81,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":9,"pressed":false,"script":null)
+]
+}
+; CONTROLLER-MAP. R3 in the authored map. Keyboard Home, which no other action
+; uses. `scripts/player/camera_rig.gd` swings the yaw back behind the target.
+camera_recenter={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":4194317,"pressed":false,"script":null)
+, Object(InputEventJoypadButton,"device":-1,"button_index":8,"pressed":false,"script":null)
+]
+}
