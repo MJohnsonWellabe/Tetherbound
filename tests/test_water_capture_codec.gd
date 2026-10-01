@@ -95,7 +95,7 @@ func test_repeat_decode_does_not_add_to_any_gameplay_party() -> void:
 func test_complete_legacy_capture_shape_remains_valid_without_loadout_adoption() -> void:
 	var original := populated()
 	original.loadout_initialized = false
-	original.known_moves = []
+	original.known_moves.clear()
 	original.move_mastery_uses = {}
 	original.move_mastery_receipts = {}
 	original.move_utility = ""
