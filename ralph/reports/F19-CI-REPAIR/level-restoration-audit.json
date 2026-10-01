@@ -466,5 +466,33 @@
     "Restore the exact owned Warrens blob after geometry/identity comparison, per ROOT allocation.",
     "Keep candidate false and policy unmounted. No provider hooks or shared gameplay source belongs to this cut.",
     "Compose the existing Foundation test patch with F20 chapter admission/ending ownership; actual route inputs, engagement, margins and negative controls stay unchanged."
-  ]
+  ],
+  "restored_token_totals": {
+    "live": 346,
+    "fixture": 33,
+    "total": 379
+  },
+  "foundation_test_patch_successor": {
+    "data_cut_sha": "077929e9b9673b0f8559490de1df023250c09255",
+    "patch_sha256": "7f99d34cdf78d8d0fe04ed82c7f69d9a41de5479186d3b72ebdf36ce6236cce3",
+    "candidate_captive_level_expected": 55,
+    "live_captive_and_actual_ending_getter_level_expected": 44,
+    "actual_live_dialogue_guard_arrays": {
+      "cloudreach_aila_arrival": [
+        "realm_key_cloudreach",
+        "cloudreach_chapter_started"
+      ],
+      "cloudreach_maela_flight_trial": [
+        "realm_key_cloudreach",
+        "windscar_aerie_prepared"
+      ]
+    },
+    "maela_greeting_prerequisite_unchanged": [
+      "windscar_aerie_prepared"
+    ],
+    "ending_handoff_and_negative_controls_unchanged": true,
+    "source_checks": "PASS: source/expected input reconciliation only; no engine execution",
+    "readonly_apply_check": "PASS --whitespace=error-all against current integration",
+    "godot_parser_and_execution": "NOT RUN: ROOT owns serialized engine/import/CI; runtime evidence remains open"
+  }
 }

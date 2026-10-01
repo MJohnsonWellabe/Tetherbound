@@ -1,5 +1,5 @@
 diff --git a/tests/test_redesign_chapter_curve.gd b/tests/test_redesign_chapter_curve.gd
-index ff39232ec1..2970d66f52 100644
+index ff39232ec1..aa78d8ab83 100644
 --- a/tests/test_redesign_chapter_curve.gd
 +++ b/tests/test_redesign_chapter_curve.gd
 @@ -6,6 +6,7 @@ const ORDER := preload("res://scripts/data/biome_order.gd")
@@ -123,7 +123,24 @@ index ff39232ec1..2970d66f52 100644
  		for key: String in ["alpha", "elder"]:
  			var leader: Dictionary = row.get(key, {})
  			if leader.is_empty():
-@@ -213,12 +251,18 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
+@@ -204,8 +242,14 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
+ 	assert_eq(str(captive.get("placeholder_species", "")), "fulgocobra")
+ 	assert_eq(int(captive.get("level", 0)), 55)
+ 	assert_eq(int((_read("res://data/config/stormwood_chapter.json").get("final_encounter", {}) as Dictionary).get("legendary_level", 0)), 55)
+-	assert_eq(preload("res://scripts/world/stormwood_ending.gd").legendary_level(), 55,
+-		"actual joining companion reads the authored captive level")
++	assert_eq(POLICY.config().get("runtime_enabled"), false, "candidate stays OFF for the actual joining path")
++	var live_dynamo: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_dynamo.json"))
++	assert_true(live_dynamo is Dictionary, "the actual legacy captive remains authored")
++	if live_dynamo is Dictionary:
++		var live_captive: Dictionary = live_dynamo.get("captive", {})
++		assert_eq(float(live_captive.get("level", 0)), 44.0, "OFF live captive keeps the pinned legacy level")
++	assert_eq(preload("res://scripts/world/stormwood_ending.gd").legendary_level(), 44,
++		"OFF actual joining companion reads legacy44; detached candidate55 is not mounted")
+ 	var offer: Dictionary = _read("res://data/config/stormwood_encounters.json").get("legendary_placeholder", {})
+ 	assert_eq(str(offer.get("placeholder_species", "")), "fulgocobra")
+ 	assert_false(bool(offer.get("catchable", true)))
+@@ -213,17 +257,23 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
  	assert_eq(int((_read("res://data/config/cloudreach_solmane_climax.json").get("legendary", {}) as Dictionary).get("level", 0)), 44)
  
  
@@ -146,3 +163,10 @@ index ff39232ec1..2970d66f52 100644
  			for row: Dictionary in act.get("objectives", []):
  				assert_false((row.get("requires_flags", []) as Array).has(old_key))
  	var npc_config := _read("res://data/config/cloudreach_npc_runtime.json")
+-	var expected_guards := {"cloudreach_aila_arrival": ["cloudreach_chapter_started"],
+-		"cloudreach_maela_flight_trial": ["windscar_aerie_prepared"]}
++	var expected_guards := {"cloudreach_aila_arrival": ["realm_key_cloudreach", "cloudreach_chapter_started"],
++		"cloudreach_maela_flight_trial": ["realm_key_cloudreach", "windscar_aerie_prepared"]}
+ 	var guards_found := 0
+ 	for guard: Dictionary in npc_config.get("dialogue_event_guards", []):
+ 		var conversation := str(guard.get("conversation", ""))
