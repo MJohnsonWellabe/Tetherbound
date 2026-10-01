@@ -217,6 +217,12 @@ var _sock: StreamPeerTCP = null
 var _rx_buf := ""
 var _probe: RefCounted = null
 var _physics_count := 0
+## Test-only trainer-driver observations: four bounded heartbeat samples, never
+## part of world state, a verdict or an authority/input decision.
+var _trainer_fight_progress: Dictionary = {}
+var _trainer_fight_samples: Array[Dictionary] = []
+var _trainer_fight_director: Node = null
+var _trainer_fight_manager: Node = null
 ## Spike advice #1: a Dictionary state box, not bare locals, for everything a
 ## signal or an async branch sets and a loop elsewhere reads.
 var _rx_state := {"quit": false, "quit_code": 0}
@@ -519,19 +525,78 @@ func _send_heartbeat() -> void:
 	if player != null:
 		var p: Vector3 = player.global_position
 		pos = [p.x, p.y, p.z]
-	_send({"type": "heartbeat", "frame": Engine.get_process_frames(), "physics_frame": _physics_count,
+	var heartbeat := {"type": "heartbeat", "frame": Engine.get_process_frames(), "physics_frame": _physics_count,
 		"t": Time.get_ticks_msec() / 1000.0, "pos": pos,
 		"context": str(_probe.call("input_context")),
 		"state_hash": _compute_state_hash(),
 		# Wave 2: a real `Session` exists, so this is the real registry --
 		# `[]` only when this process has no session at all.
-		"session_peers": _session_peer_ids()})
+		"session_peers": _session_peer_ids()}
+	if not _trainer_fight_progress.is_empty():
+		heartbeat["trainer_fight"] = _trainer_fight_heartbeat_observation()
+	_send(heartbeat)
+
+
+## Called only by the existing 60-physics-frame heartbeat. No probing from the
+## driver loop: its added writes only copy locals/count already-taken branches.
+## All strings are capped; no bodies, party arrays or refusal payloads escape.
+func _trainer_fight_heartbeat_observation() -> Dictionary:
+	var director_valid := is_instance_valid(_trainer_fight_director)
+	var manager_valid := is_instance_valid(_trainer_fight_manager)
+	if bool(_trainer_fight_progress.get("running", false)) and director_valid and manager_valid:
+		var director := _trainer_fight_director
+		var manager := _trainer_fight_manager
+		var opponent: Variant = manager.call("enemy_body")
+		var body: Variant = director.call("ally_body")
+		var enemy_valid := is_instance_valid(opponent)
+		var body_valid := is_instance_valid(body)
+		var instance: Variant = opponent.get("instance") if enemy_valid else null
+		var active: Variant = manager.call("active_creature")
+		var refusal: Dictionary = manager.get("last_encounter_refusal")
+		var encounter_id := str(manager.call("encounter_id"))
+		var host: RefCounted = director.get("_encounter_host")
+		var authority: Dictionary = host.call("strike_authority_state", encounter_id,
+			_local_peer_id_or_host()) if host != null else {}
+		var sample := _trainer_fight_progress.duplicate()
+		sample.merge({
+			"sampled_ms": Time.get_ticks_msec(), "physics_frame": _physics_count,
+			"process_frame": Engine.get_process_frames(),
+			"trainer_active": bool(director.call("trainer_battle_active")),
+			"queued_opponents": int(director.call("trainer_creatures_left")),
+			"fighting": bool(manager.call("is_fighting")), "quick_ready": bool(manager.call("quick_ready")),
+			"enemy_valid": enemy_valid, "ally_valid": body_valid,
+			"enemy_body": str((opponent as Node3D).name).left(96) if enemy_valid else "",
+			"enemy_species": str(opponent.get("species_id")).left(96) if enemy_valid else "",
+			"enemy_hp": float(instance.get("hp")) if instance != null else -1.0,
+			"enemy_max_hp": float(instance.get("max_hp")) if instance != null else -1.0,
+			"active_hp": float(active.get("hp")) if active != null else -1.0,
+			"active_fainted": bool(active.get("fainted")) if active != null else false,
+			"manager_action": int(manager.get("_action")),
+			"action_timer": float(manager.get("_action_timer")),
+			"quick_cooldown": float(manager.get("_quick_cooldown")),
+			"buffered_attack": str(manager.get("_buffered_attack")).left(32),
+			"submitted_action": int(director.get("_encounter_action")),
+			"encounter_id": encounter_id.left(96),
+			"host_authority_available": host != null,
+			"host_authority": authority,
+			# Retained refusal may predate this step; it is not a per-swing verdict.
+			"retained_refusal": {"kind": str(refusal.get("kind", "")).left(48),
+				"code": str(refusal.get("code", "")).left(96), "reason": str(refusal.get("reason", "")).left(160)},
+		})
+		_trainer_fight_samples.append(sample)
+		if _trainer_fight_samples.size() > 4:
+			_trainer_fight_samples.pop_front()
+	return {"running": bool(_trainer_fight_progress.get("running", false)),
+		"director_valid": director_valid, "manager_valid": manager_valid,
+		"samples": _trainer_fight_samples.duplicate()}
 
 
 # --- step vocabulary --------------------------------------------------------
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
+	_trainer_fight_progress.clear()
+	_trainer_fight_samples.clear()
 	var args: Dictionary = (msg.get("args", {}) as Dictionary)
 	var before := _physics_count
 	var out: Dictionary
@@ -631,7 +696,12 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"trainer_battle":
 			return await _step_trainer_battle(args)
 		"win_trainer_battle":
-			return await _step_win_trainer_battle(args)
+			var trainer_result: Dictionary = await _step_win_trainer_battle(args)
+			if not _trainer_fight_progress.is_empty():
+				_trainer_fight_progress["running"] = false
+			_trainer_fight_director = null
+			_trainer_fight_manager = null
+			return trainer_result
 		"place_stand_in":
 			out = await _step_place_stand_in(args)
 		"party_grant":
@@ -3601,12 +3671,28 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 	## assert scaling at two participants the smoke has to reach a creature that
 	## came out AFTER the join, which is the boss's second.
 	var stop_at := int(args.get("stop_when_creatures_left", -1))
+	_trainer_fight_director = director
+	_trainer_fight_manager = manager
+	_trainer_fight_progress = {
+		"running": true, "started_ms": Time.get_ticks_msec(),
+		"started_physics_frame": _physics_count, "started_process_frame": Engine.get_process_frames(),
+		"budget_frames": budget, "stride": stride, "driver_frames": frames,
+		"swings": swings, "creatures_seen": 0, "not_fighting_checks": 0,
+		"not_fighting_streak": 0, "missing_body_checks": 0, "quick_not_ready_checks": 0,
+		"phase": "wait_physics", "submitted_action_at_start": int(director.get("_encounter_action")),
+	}
 	while bool(director.call("trainer_battle_active")) and frames < budget:
+		_trainer_fight_progress["phase"] = "wait_physics"
 		await physics_frame
 		frames += 1
+		_trainer_fight_progress["driver_frames"] = frames
 		if not bool(manager.call("is_fighting")):
 			# The beat between their creatures. Nothing to do but let it pass.
+			_trainer_fight_progress["phase"] = "not_fighting"
+			_trainer_fight_progress["not_fighting_checks"] += 1
+			_trainer_fight_progress["not_fighting_streak"] += 1
 			continue
+		_trainer_fight_progress["not_fighting_streak"] = 0
 		# Checked BEFORE the ceiling below, so an early stop hands the caller a
 		# creature at full health rather than one already pulled down to it.
 		if stop_at >= 0 and int(director.call("trainer_creatures_left")) <= stop_at:
@@ -3626,8 +3712,11 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		var body: Variant = director.call("ally_body")
 		if opponent == null or not is_instance_valid(opponent) \
 				or body == null or not is_instance_valid(body):
+			_trainer_fight_progress["phase"] = "missing_body"
+			_trainer_fight_progress["missing_body_checks"] += 1
 			continue
 		creatures_seen[str((opponent as Node3D).name)] = true
+		_trainer_fight_progress["creatures_seen"] = creatures_seen.size()
 		# `smoke_boss.gd`'s own allowance, for its own stated reason and with the
 		# same words: "the opponent's HP is pulled low so a level-1 starter can
 		# finish a level-20 ace inside a CI budget: this test is about WIRING,
@@ -3652,10 +3741,14 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 			(body as Node3D).call("place_on_ground", stand)
 		else:
 			(body as Node3D).global_position = stand
+		_trainer_fight_progress["phase"] = "settle_body"
 		for i in 4:
 			await physics_frame
 			frames += 1
+			_trainer_fight_progress["driver_frames"] = frames
 		if not bool(manager.call("quick_ready")):
+			_trainer_fight_progress["phase"] = "quick_not_ready"
+			_trainer_fight_progress["quick_not_ready_checks"] += 1
 			continue
 		# The real BUTTON, not a hand-built `strike_intent`.
 		#
@@ -3672,12 +3765,15 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		# actually finish, so it presses the button a player presses and the
 		# whole production path -- manager, host arbitration, verdict,
 		# faint -- runs.
+		_trainer_fight_progress["phase"] = "inject_quick"
 		var pressed := await _inject("combat_quick", 1)
 		if not bool(pressed.get("ok", false)):
 			return {"verdict": "ERROR", "detail": "press 'combat_quick' could not be injected: %s"
 				% str(pressed.get("why", ""))}
 		frames += 3
 		swings += 1
+		_trainer_fight_progress["driver_frames"] = frames
+		_trainer_fight_progress["swings"] = swings
 	if bool(director.call("trainer_battle_active")):
 		var last_enemy: Variant = manager.call("enemy_body")
 		var last_instance: Variant = last_enemy.get("instance") if last_enemy != null and is_instance_valid(last_enemy) else null
@@ -3695,6 +3791,7 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 					str(last_refusal), str(manager.call("encounter_id"))]}
 	# The payout is committed from `_finish_trainer_battle()` and the deltas
 	# have to cross to the other peer before anybody asks about them.
+	_trainer_fight_progress["phase"] = "settle_payout"
 	for i in maxi(0, int(args.get("settle", 120))):
 		await physics_frame
 	return {"verdict": "PASS", "detail": "battle won in %d frames / %d swings against %d of their creatures"
