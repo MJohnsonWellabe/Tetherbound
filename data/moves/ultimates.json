@@ -4,8 +4,10 @@
   "flag_scope": "local presentation only; every peer consumes accepted host action values",
   "producer": {
     "feature": "F23",
-    "owned_commit": "39ca697f87",
-    "moves_sha256": "3da86de7bd8f45918ce4b9037d7f9bc1cfd0382d512de7a3a2deb0fce6987e6e"
+    "owned_commit": "71bf3746bd63668e945095d895a91b61c8f57d01",
+    "moves_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+    "predecessor_owned_commit": "39ca697f87",
+    "predecessor_moves_sha256": "3da86de7bd8f45918ce4b9037d7f9bc1cfd0382d512de7a3a2deb0fce6987e6e"
   },
   "budget": {
     "effect_mesh_cap": 48,
