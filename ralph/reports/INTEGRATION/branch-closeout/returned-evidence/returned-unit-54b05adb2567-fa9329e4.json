@@ -1,0 +1,11 @@
+{
+  "head": "54b05adb2567cded0b7070c57a94847c1b622979",
+  "exit": 0,
+  "selection": "test_portal_admission_mode.gd,test_realm_world_components.gd,test_map_realm_view.gd,test_map_baker.gd,test_objective_beacon.gd",
+  "summary": [
+    "41 tests, 323 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-54b05adb2567-fa9329e4\\tests.log",
+  "raw_log_sha256": "8cee81fdcc4f2e696673682457f6b7148c11f883d218b6c0147ee85277974358",
+  "scope": "Exact tested source only; no criterion closure, main landing or archive inferred."
+}

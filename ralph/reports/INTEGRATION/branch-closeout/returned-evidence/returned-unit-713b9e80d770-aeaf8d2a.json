@@ -1,0 +1,11 @@
+{
+  "head": "713b9e80d7700b8a46d6ded8bc5511a00bcfe38b",
+  "exit": 0,
+  "selection": "test_band_content.gd,test_band_vegetation.gd,test_farming.gd,test_gate_f_village_passage.gd,test_grandpa_yard_visual_identity.gd,test_inn_interior_visual_identity.gd,test_meadows_south_trail_pulls_0912.gd,test_vegetation_human_prompt_height.gd,test_village_street_0912.gd",
+  "summary": [
+    "69 tests, 3105 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-713b9e80d770-aeaf8d2a\\tests.log",
+  "raw_log_sha256": "5733f6f7c45447a7978d7926e3fb26b859939dfcf1b37622b2df9755f1e8312b",
+  "scope": "Exact tested source only; no criterion closure, main landing or archive inferred."
+}

@@ -1,0 +1,11 @@
+{
+  "head": "edebf0cebbb72faca7a583e11636601832b4444f",
+  "exit": 0,
+  "selection": "test_regional_homecoming.gd,test_homecoming_ending_invariants.gd,test_quest_log.gd,test_stormwood_ending.gd,test_stronghold_dialogue_budget.gd,test_cloudreach_cast_dialogue.gd,test_meadows_cloudreach_handoff.gd",
+  "summary": [
+    "117 tests, 6257 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-edebf0cebbb7-98fbd9a3\\tests.log",
+  "raw_log_sha256": "e54a2a9f91ae43c74cbd9d0a41bc1764cab395a4fc5480c1886e4c336156bd7d",
+  "scope": "Exact tested source only; no criterion closure, main landing or archive inferred."
+}
