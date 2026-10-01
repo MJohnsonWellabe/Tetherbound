@@ -250,7 +250,7 @@ func _case_native_realm_rpc_membership_and_admission() -> void:
 	impact.make_read_only()
 	assert_true(_native_host._send_realm_rpc(guest_id, "_rpc_transport_probe", ["connected"]),
 		"a connected admitted recipient accepts the ordinary dispatch")
-	assert_true(_native_until(func() -> bool: return _native_guest.probes == ["connected"] as Array[String]),
+	assert_true(_native_until(func() -> bool: return _native_guest.probes == (["connected"] as Array[String])),
 		"the RPC actually crossed ENet and reached the remote node")
 	_native_host._publish_host_attack_launch("transport-regression", 1, launch)
 	_native_host._host_publish_peer_impact("transport-regression", 999, impact)
@@ -267,7 +267,7 @@ func _case_native_realm_rpc_membership_and_admission() -> void:
 	(_native_guest.get("_session") as SessionStub).applied = true
 	assert_true(_native_guest._send_realm_rpc(1, "_rpc_transport_probe", ["snapshot-ready"]),
 		"the same connected client may send once its snapshot applies")
-	assert_true(_native_until(func() -> bool: return _native_host.probes == ["snapshot-ready"] as Array[String]),
+	assert_true(_native_until(func() -> bool: return _native_host.probes == (["snapshot-ready"] as Array[String])),
 		"client dispatch reaches the actual host after readiness")
 	_native_transition = _native_host.get_node_or_null(^"/root/Game/Session/RealmTransition")
 	assert_true(_native_transition != null, "the native fixture uses the real scene-admission coordinator")
