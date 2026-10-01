@@ -463,11 +463,41 @@
             "items": {
               "type": "string",
               "enum": [
-                "hardy"
+                "bold",
+                "calm",
+                "sturdy",
+                "swift",
+                "gentle",
+                "stubborn",
+                "curious",
+                "watchful",
+                "hardy",
+                "keen",
+                "surefoot",
+                "paddler",
+                "fierce",
+                "composed",
+                "resolute",
+                "nimble",
+                "renewing",
+                "unshaken",
+                "inventive",
+                "vigilant",
+                "current_rider",
+                "soaring",
+                "precise",
+                "ferocious",
+                "radiant",
+                "unyielding",
+                "tireless",
+                "fleet",
+                "tide_dancer",
+                "sky_dancer"
               ]
             },
             "minItems": 0,
-            "uniqueItems": true
+            "uniqueItems": true,
+            "maxItems": 3
           },
           "taught_traits": {
             "type": "object",
@@ -475,19 +505,106 @@
               "1": {
                 "type": "string",
                 "enum": [
-                  "hardy"
+                  "bold",
+                  "calm",
+                  "sturdy",
+                  "swift",
+                  "gentle",
+                  "stubborn",
+                  "curious",
+                  "watchful",
+                  "hardy",
+                  "keen",
+                  "surefoot",
+                  "paddler",
+                  "fierce",
+                  "composed",
+                  "resolute",
+                  "nimble",
+                  "renewing",
+                  "unshaken",
+                  "inventive",
+                  "vigilant",
+                  "current_rider",
+                  "soaring",
+                  "precise",
+                  "ferocious",
+                  "radiant",
+                  "unyielding",
+                  "tireless",
+                  "fleet",
+                  "tide_dancer",
+                  "sky_dancer"
                 ]
               },
               "2": {
                 "type": "string",
                 "enum": [
-                  "hardy"
+                  "bold",
+                  "calm",
+                  "sturdy",
+                  "swift",
+                  "gentle",
+                  "stubborn",
+                  "curious",
+                  "watchful",
+                  "hardy",
+                  "keen",
+                  "surefoot",
+                  "paddler",
+                  "fierce",
+                  "composed",
+                  "resolute",
+                  "nimble",
+                  "renewing",
+                  "unshaken",
+                  "inventive",
+                  "vigilant",
+                  "current_rider",
+                  "soaring",
+                  "precise",
+                  "ferocious",
+                  "radiant",
+                  "unyielding",
+                  "tireless",
+                  "fleet",
+                  "tide_dancer",
+                  "sky_dancer"
                 ]
               },
               "3": {
                 "type": "string",
                 "enum": [
-                  "hardy"
+                  "bold",
+                  "calm",
+                  "sturdy",
+                  "swift",
+                  "gentle",
+                  "stubborn",
+                  "curious",
+                  "watchful",
+                  "hardy",
+                  "keen",
+                  "surefoot",
+                  "paddler",
+                  "fierce",
+                  "composed",
+                  "resolute",
+                  "nimble",
+                  "renewing",
+                  "unshaken",
+                  "inventive",
+                  "vigilant",
+                  "current_rider",
+                  "soaring",
+                  "precise",
+                  "ferocious",
+                  "radiant",
+                  "unyielding",
+                  "tireless",
+                  "fleet",
+                  "tide_dancer",
+                  "sky_dancer"
                 ]
               }
             },
@@ -561,7 +678,38 @@
                 "hearten",
                 "sap",
                 "quake_ring",
-                "fireball"
+                "fireball",
+                "ultimate_abyssal_guardian",
+                "ultimate_air_charger",
+                "ultimate_air_current",
+                "ultimate_air_diver",
+                "ultimate_air_wall",
+                "ultimate_ashtusk",
+                "ultimate_cannonback",
+                "ultimate_dark_diver",
+                "ultimate_electric_charger",
+                "ultimate_electric_current",
+                "ultimate_electric_diver",
+                "ultimate_electric_wall",
+                "ultimate_fire_wall",
+                "ultimate_fulgocobra",
+                "ultimate_galewisp",
+                "ultimate_ground_charger",
+                "ultimate_ground_current",
+                "ultimate_ground_diver",
+                "ultimate_ground_wall",
+                "ultimate_ice_current",
+                "ultimate_ripplet",
+                "ultimate_solmane",
+                "ultimate_stormcapra",
+                "ultimate_stormursa",
+                "ultimate_terrapup",
+                "ultimate_tuskroot",
+                "ultimate_veridian",
+                "ultimate_water_charger",
+                "ultimate_water_current",
+                "ultimate_water_diver",
+                "ultimate_water_wall"
               ]
             },
             "minItems": 0,
@@ -636,7 +784,38 @@
                   "hearten",
                   "sap",
                   "quake_ring",
-                  "fireball"
+                  "fireball",
+                  "ultimate_abyssal_guardian",
+                  "ultimate_air_charger",
+                  "ultimate_air_current",
+                  "ultimate_air_diver",
+                  "ultimate_air_wall",
+                  "ultimate_ashtusk",
+                  "ultimate_cannonback",
+                  "ultimate_dark_diver",
+                  "ultimate_electric_charger",
+                  "ultimate_electric_current",
+                  "ultimate_electric_diver",
+                  "ultimate_electric_wall",
+                  "ultimate_fire_wall",
+                  "ultimate_fulgocobra",
+                  "ultimate_galewisp",
+                  "ultimate_ground_charger",
+                  "ultimate_ground_current",
+                  "ultimate_ground_diver",
+                  "ultimate_ground_wall",
+                  "ultimate_ice_current",
+                  "ultimate_ripplet",
+                  "ultimate_solmane",
+                  "ultimate_stormcapra",
+                  "ultimate_stormursa",
+                  "ultimate_terrapup",
+                  "ultimate_tuskroot",
+                  "ultimate_veridian",
+                  "ultimate_water_charger",
+                  "ultimate_water_current",
+                  "ultimate_water_diver",
+                  "ultimate_water_wall"
                 ]
               },
               "charged": {
@@ -705,7 +884,38 @@
                   "hearten",
                   "sap",
                   "quake_ring",
-                  "fireball"
+                  "fireball",
+                  "ultimate_abyssal_guardian",
+                  "ultimate_air_charger",
+                  "ultimate_air_current",
+                  "ultimate_air_diver",
+                  "ultimate_air_wall",
+                  "ultimate_ashtusk",
+                  "ultimate_cannonback",
+                  "ultimate_dark_diver",
+                  "ultimate_electric_charger",
+                  "ultimate_electric_current",
+                  "ultimate_electric_diver",
+                  "ultimate_electric_wall",
+                  "ultimate_fire_wall",
+                  "ultimate_fulgocobra",
+                  "ultimate_galewisp",
+                  "ultimate_ground_charger",
+                  "ultimate_ground_current",
+                  "ultimate_ground_diver",
+                  "ultimate_ground_wall",
+                  "ultimate_ice_current",
+                  "ultimate_ripplet",
+                  "ultimate_solmane",
+                  "ultimate_stormcapra",
+                  "ultimate_stormursa",
+                  "ultimate_terrapup",
+                  "ultimate_tuskroot",
+                  "ultimate_veridian",
+                  "ultimate_water_charger",
+                  "ultimate_water_current",
+                  "ultimate_water_diver",
+                  "ultimate_water_wall"
                 ]
               },
               "utility": {
@@ -774,7 +984,38 @@
                   "hearten",
                   "sap",
                   "quake_ring",
-                  "fireball"
+                  "fireball",
+                  "ultimate_abyssal_guardian",
+                  "ultimate_air_charger",
+                  "ultimate_air_current",
+                  "ultimate_air_diver",
+                  "ultimate_air_wall",
+                  "ultimate_ashtusk",
+                  "ultimate_cannonback",
+                  "ultimate_dark_diver",
+                  "ultimate_electric_charger",
+                  "ultimate_electric_current",
+                  "ultimate_electric_diver",
+                  "ultimate_electric_wall",
+                  "ultimate_fire_wall",
+                  "ultimate_fulgocobra",
+                  "ultimate_galewisp",
+                  "ultimate_ground_charger",
+                  "ultimate_ground_current",
+                  "ultimate_ground_diver",
+                  "ultimate_ground_wall",
+                  "ultimate_ice_current",
+                  "ultimate_ripplet",
+                  "ultimate_solmane",
+                  "ultimate_stormcapra",
+                  "ultimate_stormursa",
+                  "ultimate_terrapup",
+                  "ultimate_tuskroot",
+                  "ultimate_veridian",
+                  "ultimate_water_charger",
+                  "ultimate_water_current",
+                  "ultimate_water_diver",
+                  "ultimate_water_wall"
                 ]
               },
               "ultimate": {
@@ -843,7 +1084,38 @@
                   "hearten",
                   "sap",
                   "quake_ring",
-                  "fireball"
+                  "fireball",
+                  "ultimate_abyssal_guardian",
+                  "ultimate_air_charger",
+                  "ultimate_air_current",
+                  "ultimate_air_diver",
+                  "ultimate_air_wall",
+                  "ultimate_ashtusk",
+                  "ultimate_cannonback",
+                  "ultimate_dark_diver",
+                  "ultimate_electric_charger",
+                  "ultimate_electric_current",
+                  "ultimate_electric_diver",
+                  "ultimate_electric_wall",
+                  "ultimate_fire_wall",
+                  "ultimate_fulgocobra",
+                  "ultimate_galewisp",
+                  "ultimate_ground_charger",
+                  "ultimate_ground_current",
+                  "ultimate_ground_diver",
+                  "ultimate_ground_wall",
+                  "ultimate_ice_current",
+                  "ultimate_ripplet",
+                  "ultimate_solmane",
+                  "ultimate_stormcapra",
+                  "ultimate_stormursa",
+                  "ultimate_terrapup",
+                  "ultimate_tuskroot",
+                  "ultimate_veridian",
+                  "ultimate_water_charger",
+                  "ultimate_water_current",
+                  "ultimate_water_diver",
+                  "ultimate_water_wall"
                 ]
               }
             },
@@ -2054,6 +2326,595 @@
                   "rank"
                 ],
                 "additionalProperties": false
+              },
+              "ultimate_abyssal_guardian": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_air_charger": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_air_current": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_air_diver": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_air_wall": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_ashtusk": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_cannonback": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_dark_diver": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_electric_charger": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_electric_current": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_electric_diver": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_electric_wall": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_fire_wall": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_fulgocobra": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_galewisp": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_ground_charger": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_ground_current": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_ground_diver": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_ground_wall": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_ice_current": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_ripplet": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_solmane": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_stormcapra": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_stormursa": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_terrapup": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_tuskroot": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_veridian": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_water_charger": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_water_current": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_water_diver": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
+              },
+              "ultimate_water_wall": {
+                "type": "object",
+                "properties": {
+                  "uses": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                },
+                "required": [
+                  "uses",
+                  "rank"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [],
@@ -2631,6 +3492,285 @@
                 },
                 "maxItems": 300,
                 "uniqueItems": true
+              },
+              "ultimate_abyssal_guardian": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_air_charger": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_air_current": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_air_diver": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_air_wall": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_ashtusk": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_cannonback": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_dark_diver": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_electric_charger": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_electric_current": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_electric_diver": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_electric_wall": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_fire_wall": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_fulgocobra": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_galewisp": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_ground_charger": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_ground_current": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_ground_diver": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_ground_wall": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_ice_current": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_ripplet": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_solmane": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_stormcapra": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_stormursa": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_terrapup": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_tuskroot": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_veridian": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_water_charger": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_water_current": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_water_diver": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
+              },
+              "ultimate_water_wall": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "maxItems": 300,
+                "uniqueItems": true
               }
             },
             "additionalProperties": false
@@ -2727,7 +3867,38 @@
                       "hearten",
                       "sap",
                       "quake_ring",
-                      "fireball"
+                      "fireball",
+                      "ultimate_abyssal_guardian",
+                      "ultimate_air_charger",
+                      "ultimate_air_current",
+                      "ultimate_air_diver",
+                      "ultimate_air_wall",
+                      "ultimate_ashtusk",
+                      "ultimate_cannonback",
+                      "ultimate_dark_diver",
+                      "ultimate_electric_charger",
+                      "ultimate_electric_current",
+                      "ultimate_electric_diver",
+                      "ultimate_electric_wall",
+                      "ultimate_fire_wall",
+                      "ultimate_fulgocobra",
+                      "ultimate_galewisp",
+                      "ultimate_ground_charger",
+                      "ultimate_ground_current",
+                      "ultimate_ground_diver",
+                      "ultimate_ground_wall",
+                      "ultimate_ice_current",
+                      "ultimate_ripplet",
+                      "ultimate_solmane",
+                      "ultimate_stormcapra",
+                      "ultimate_stormursa",
+                      "ultimate_terrapup",
+                      "ultimate_tuskroot",
+                      "ultimate_veridian",
+                      "ultimate_water_charger",
+                      "ultimate_water_current",
+                      "ultimate_water_diver",
+                      "ultimate_water_wall"
                     ]
                   },
                   "charged": {
@@ -2796,7 +3967,38 @@
                       "hearten",
                       "sap",
                       "quake_ring",
-                      "fireball"
+                      "fireball",
+                      "ultimate_abyssal_guardian",
+                      "ultimate_air_charger",
+                      "ultimate_air_current",
+                      "ultimate_air_diver",
+                      "ultimate_air_wall",
+                      "ultimate_ashtusk",
+                      "ultimate_cannonback",
+                      "ultimate_dark_diver",
+                      "ultimate_electric_charger",
+                      "ultimate_electric_current",
+                      "ultimate_electric_diver",
+                      "ultimate_electric_wall",
+                      "ultimate_fire_wall",
+                      "ultimate_fulgocobra",
+                      "ultimate_galewisp",
+                      "ultimate_ground_charger",
+                      "ultimate_ground_current",
+                      "ultimate_ground_diver",
+                      "ultimate_ground_wall",
+                      "ultimate_ice_current",
+                      "ultimate_ripplet",
+                      "ultimate_solmane",
+                      "ultimate_stormcapra",
+                      "ultimate_stormursa",
+                      "ultimate_terrapup",
+                      "ultimate_tuskroot",
+                      "ultimate_veridian",
+                      "ultimate_water_charger",
+                      "ultimate_water_current",
+                      "ultimate_water_diver",
+                      "ultimate_water_wall"
                     ]
                   },
                   "utility": {
@@ -2865,7 +4067,38 @@
                       "hearten",
                       "sap",
                       "quake_ring",
-                      "fireball"
+                      "fireball",
+                      "ultimate_abyssal_guardian",
+                      "ultimate_air_charger",
+                      "ultimate_air_current",
+                      "ultimate_air_diver",
+                      "ultimate_air_wall",
+                      "ultimate_ashtusk",
+                      "ultimate_cannonback",
+                      "ultimate_dark_diver",
+                      "ultimate_electric_charger",
+                      "ultimate_electric_current",
+                      "ultimate_electric_diver",
+                      "ultimate_electric_wall",
+                      "ultimate_fire_wall",
+                      "ultimate_fulgocobra",
+                      "ultimate_galewisp",
+                      "ultimate_ground_charger",
+                      "ultimate_ground_current",
+                      "ultimate_ground_diver",
+                      "ultimate_ground_wall",
+                      "ultimate_ice_current",
+                      "ultimate_ripplet",
+                      "ultimate_solmane",
+                      "ultimate_stormcapra",
+                      "ultimate_stormursa",
+                      "ultimate_terrapup",
+                      "ultimate_tuskroot",
+                      "ultimate_veridian",
+                      "ultimate_water_charger",
+                      "ultimate_water_current",
+                      "ultimate_water_diver",
+                      "ultimate_water_wall"
                     ]
                   }
                 },
@@ -2880,6 +4113,92 @@
                 "additionalProperties": false
               }
             ]
+          },
+          "captured_from": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "wild"
+              },
+              "world_namespace": {
+                "type": "string",
+                "minLength": 1
+              },
+              "spawn_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "spawn_generation": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "kind",
+              "world_namespace",
+              "spawn_id",
+              "spawn_generation"
+            ],
+            "additionalProperties": false
+          },
+          "traits_initialized": {
+            "type": "boolean"
+          },
+          "gear": {
+            "type": "object",
+            "properties": {
+              "harness": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "rootiron_harness",
+                  "rootiron_harness_plus_1",
+                  "rootiron_harness_plus_2",
+                  "rootiron_harness_plus_3",
+                  "tidesteel_harness",
+                  "tidesteel_harness_plus_1",
+                  "tidesteel_harness_plus_2",
+                  "tidesteel_harness_plus_3",
+                  "skyglass_harness",
+                  "skyglass_harness_plus_1",
+                  "skyglass_harness_plus_2",
+                  "skyglass_harness_plus_3",
+                  "stormglass_harness",
+                  "stormglass_harness_plus_1",
+                  "stormglass_harness_plus_2",
+                  "stormglass_harness_plus_3"
+                ]
+              },
+              "charm": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "rootiron_charm",
+                  "rootiron_charm_plus_1",
+                  "rootiron_charm_plus_2",
+                  "rootiron_charm_plus_3",
+                  "tidesteel_charm",
+                  "tidesteel_charm_plus_1",
+                  "tidesteel_charm_plus_2",
+                  "tidesteel_charm_plus_3",
+                  "skyglass_charm",
+                  "skyglass_charm_plus_1",
+                  "skyglass_charm_plus_2",
+                  "skyglass_charm_plus_3",
+                  "stormglass_charm",
+                  "stormglass_charm_plus_1",
+                  "stormglass_charm_plus_2",
+                  "stormglass_charm_plus_3"
+                ]
+              }
+            },
+            "required": [
+              "harness",
+              "charm"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [

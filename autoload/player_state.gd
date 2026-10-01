@@ -424,6 +424,9 @@ func load_data(data: Dictionary) -> void:
 	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true).is_empty():
 		push_error("Character move loadout refused before applying personal state.")
 		return
+	if not SAVE_GAME.trait_party_errors(data.get("party", []), data.get("redesign_character", {})).is_empty():
+		push_error("Character traits refused before applying personal state.")
+		return
 	var redesign: Variant = data.get("redesign_character", REDESIGN_STATE.defaults("character"))
 	var redesign_errors := REDESIGN_STATE.validate("character", redesign, REDESIGN_STATE.uids(data.get("party", [])))
 	if not redesign_errors.is_empty():

@@ -17,6 +17,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
+const TRAITS := preload("res://scripts/creatures/traits.gd")
 ## RG19-spec/D68. Condition (rested/fed/happy) arithmetic. Preloadable from
 ## here without a cycle: creature_condition.gd knows nothing about this class,
 ## it only reads and writes fields on whatever RefCounted it is handed.
@@ -240,6 +241,10 @@ var boost_defence: int = 0
 ## `_apply_level_stats` already uses for stat growth.
 var trait_primary: String = ""
 var trait_secondary: String = ""
+## Runtime projections of the one canonical redesign_character UID row.
+var traits_initialized := false
+var rolled_traits: Array = []
+var taught_traits: Dictionary = {}
 
 ## OF27: "make a version that is a 'shiny' like Pokemon go. Rare and nothing
 ## different than just the colors" (owner report). Purely cosmetic — nothing
@@ -418,7 +423,7 @@ func heal(amount: float) -> float:
 	if fainted:
 		return 0.0
 	var before := hp
-	hp = clampf(hp + maxf(0.0, amount), 0.0, max_hp)
+	hp = clampf(hp + TRAITS.apply_value(self,"healing",maxf(0.0,amount)), 0.0, max_hp)
 	return hp - before
 
 
@@ -471,6 +476,8 @@ func _apply_level_stats(cfg: Dictionary) -> void:
 		* PROGRESSION.individuality_multiplier(iv_hp, cfg) + float(boost_hp)
 	attack = PROGRESSION.stat_at_level(base_attack, level, float(growth.get("attack", 0.0))) \
 		* PROGRESSION.individuality_multiplier(iv_attack, cfg) + float(boost_attack)
+	if traits_initialized:
+		max_hp = TRAITS.apply_value(self,"max_hp",max_hp)
 	defence = PROGRESSION.stat_at_level(base_defence, level, float(growth.get("defence", 0.0))) \
 		* PROGRESSION.individuality_multiplier(iv_defence, cfg) + float(boost_defence)
 	hp = max_hp * fraction
@@ -754,7 +761,7 @@ func effective_defence(cfg: Dictionary, is_best: bool = false, ability: Dictiona
 		* buff_scale("defence")
 	if is_best and str(ability.get("kind", "")) == "survivability":
 		scaled *= 1.0 + float(ability.get("value", 0.0))
-	return scaled
+	return TRAITS.apply_value(self,"defence",scaled)
 
 
 ## --- tonics: timed buffs (the potions board's temporary half) --------------

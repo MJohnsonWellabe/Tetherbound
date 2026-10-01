@@ -1912,7 +1912,7 @@ func _owner_vitals_snapshot_allowed(player: RefCounted, payload: Dictionary) -> 
 				or not payload.get("satchel_escrow") is Dictionary:
 			return false
 		var marker: Variant = payload.satchel_escrow.get(row.delivery_id)
-		var expected := row.duplicate(true)
+		var expected: Dictionary = row.duplicate(true)
 		expected.status = "settled"
 		if not actor.equivalent(marker, expected):
 			return false
@@ -2656,7 +2656,7 @@ func host_altar_building(peer: int, request: Dictionary) -> Dictionary:
 			"position": plan.position.duplicate(true), "yaw_deg": plan.yaw_deg, "paid": true}
 	elif request.get("kind") == "dismantle":
 		if request.size() != 4 or not request.get("uid") is String: return refusal
-		var key := "altar:meadows:" + request.uid
+		var key: String = "altar:meadows:" + request.uid
 		var weak: WeakRef = _altar_stations.get(key)
 		var building := weak.get_ref() as Node3D if weak != null else null
 		if not is_instance_valid(building) or not _altar_station_for_peer(peer, key): return refusal
@@ -2967,7 +2967,7 @@ func _commit_portal_unlock(peer: int, envelope: Dictionary, result: Dictionary) 
 		_portal_reply(peer, envelope, {"ok": false, "reason": "Your protected key is not ready to spend."})
 		return
 	var journal: Dictionary = ledger.call("journal_portal_delivery_prepared", peer, envelope.character_id, result.biome, int(stage.key_slot))
-	var saved := journal.get("ok") == true and journal.get("durable") == true
+	var saved: Variant = journal.get("ok") == true and journal.get("durable") == true
 	host_finish_portal_debit(stage, saved)
 	if not saved:
 		_portal_waiters.erase(receipt)
@@ -3169,7 +3169,7 @@ func _owner_portal_snapshot_allowed(player: RefCounted, payload: Dictionary) -> 
 	for row: Variant in world.reward_deliveries.values():
 		if not row is Dictionary or row.get("kind") != "portal_unlock" or row.get("character_id") != player.character_id or row.get("status") != "pending": continue
 		if not PORTAL_RECEIPT.valid(row, player.character_id, world.reward_delivery_namespace): return false
-		var expected := row.duplicate(true)
+		var expected: Dictionary = row.duplicate(true)
 		expected.status = "settled"
 		if not PORTAL_RECEIPT.equivalent(payload.get("satchel_escrow", {}).get(row.receipt), expected): return false
 		if not payload.get("redesign_character", {}).get("transaction_receipts", []).has(row.receipt): return false
@@ -3218,7 +3218,7 @@ func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefC
 	var original: Variant = _owner_training_retry.get("release_instance")
 	if not original is WeakRef or original.get_ref() == null: return false
 	var survivors: Array = []
-	var expected := row.before.duplicate(true)
+	var expected: Dictionary = row.before.duplicate(true)
 	var removed := -1
 	for index: int in snapshot.members.size():
 		var member: Variant = snapshot.members[index]

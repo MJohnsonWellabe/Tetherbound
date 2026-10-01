@@ -24,6 +24,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	var before_errors: Variant = schema_check.call(current, current.character_id)
 	if not before_errors is Array or not before_errors.is_empty(): return deny("invalid_admitted_character")
 	var proposal: Dictionary
+	var callback_before := current
 	if action in ["trait_teach", "trait_release"]:
 		if context.get("station_id") != "altar" or context.get("homestead") != true or context.get("in_combat") != false:
 			return deny("actual_altar_required")
@@ -31,16 +32,24 @@ static func stage(current: Dictionary, revision: int, action: String,
 			return deny("invalid_trait_intent")
 		# The callback owns seed/cost/stats/provenance and the one release payout.
 		# Never reconstruct its receipt or apply Essence.release a second time.
-		proposal = TRAITS.stage_action(current, current.character_id, intent, revision, ESSENCE.config(), TRAITS.config())
+		# Adopt only this action's selected mirror. Unrelated legacy cards keep
+		# their original marker and stat arithmetic until their own typed action.
+		callback_before = current.duplicate(true)
+		for owned: Dictionary in callback_before.party:
+			if owned.uid == intent.creature_uid:
+				callback_before.redesign_character.creatures[owned.uid] = TRAITS.initialize_legacy_record(owned, callback_before.redesign_character.creatures[owned.uid])
+				if callback_before.redesign_character.creatures[owned.uid].get("traits_initialized") != true:
+					return deny("trait_initialization_required")
+		proposal = TRAITS.stage_action(callback_before, current.character_id, intent, revision, ESSENCE.config(), TRAITS.config())
 	else:
 		# F32 replaced the provisional personal garden producer. It is omitted
 		# here; harvesting needs its actual world-stock reservation transaction.
 		proposal = BREAKTHROUGH.stage(current, revision, action, intent, context,
-			_owned_species_types.bind(current, str(intent.get("creature_uid", ""))), EVOLUTION.prepare_feast_choice, FEASTS.refresh_feast_moves)
+			_owned_species_types.bind(current, str(intent.get("creature_uid", ""))), _prepare_feast_choice.bind(current.redesign_character.creatures), FEASTS.refresh_feast_moves)
 	if proposal.get("ok") != true: return proposal.duplicate(true)
 	if proposal.get("duplicate") == true: return deny("reconcile_original_decision")
 	if not proposal.get("state") is Dictionary or not proposal.get("receipt") is String or proposal.receipt.is_empty(): return deny("invalid_action_proposal")
-	if proposal.has("before") and not ESSENCE._equivalent(proposal.before, current): return deny("action_baseline_changed")
+	if proposal.has("before") and not ESSENCE._equivalent(proposal.before, callback_before): return deny("action_baseline_changed")
 	if proposal.has("intent") and not proposal.has("original_intent") and not ESSENCE._equivalent(proposal.intent, intent): return deny("action_intent_changed")
 	if proposal.has("original_intent") and not ESSENCE._equivalent(proposal.original_intent, intent): return deny("action_intent_changed")
 	if proposal.has("original_revision") and proposal.original_revision != revision: return deny("action_revision_changed")
@@ -102,3 +111,17 @@ static func commit_host_action(registry: RefCounted, prepared_writer: Node, peer
 		"pending_owner_save": true, "published": published, "receipt": accepted.receipt,
 		"action_id": accepted.action_id, "delivery_id": journal.get("delivery_id", ""),
 		"journal_revision": journal.get("journal_revision", 0), "character_revision": accepted.character_revision}
+
+
+static func _prepare_feast_choice(card: Dictionary, tier: int, choice: String,
+		ingredient: String, records: Dictionary) -> Dictionary:
+	var staged := EVOLUTION.prepare_feast_choice(card, tier, choice, ingredient)
+	if staged.get("ok") != true or staged.get("species_patch", {}).is_empty(): return staged
+	var patch: Dictionary = staged.species_patch
+	var maximum := ESSENCE._canonical_trait_maximum(staged.creature, float(patch.max_hp), records)
+	if not is_finite(maximum) or maximum <= 0.0: return deny("invalid_trait_evolution_stats")
+	var fraction := float(card.hp) / float(card.max_hp)
+	patch.max_hp = maximum
+	patch.hp = maximum * fraction
+	staged.creature.merge(patch, true)
+	return staged

@@ -54,8 +54,8 @@ static func equipment_errors(raw: Variant) -> Array[String]:
 		var definition: Dictionary = items.call("definition", id)
 		if definition.get("kind") != "armor" or definition.get("armor_slot") != slot:
 			return ["admitted equipment belongs to another slot"]
-		if definition.has("tether_pouch_tier"):
-			var tier: Variant = definition.tether_pouch_tier
+		if definition.has("command_pouch_tier"):
+			var tier: Variant = definition.command_pouch_tier
 			if slot != "backpack" or not (tier is int or tier is float) \
 					or not is_finite(float(tier)) or float(tier) != floor(float(tier)) \
 					or float(tier) < 1.0 or float(tier) > 4.0:
@@ -84,6 +84,10 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
 		return ["portable authority belongs to another character"]
 	var failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)
 	failures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))
+	var normalized := preload("res://scripts/creatures/traits.gd").normalize_admitted(raw)
+	if normalized.get("redesign_character") is Dictionary and normalized.redesign_character.get("creatures") is Dictionary:
+		for uid: Variant in normalized.redesign_character.creatures:
+			failures.append_array(preload("res://scripts/creatures/traits.gd").trait_state_errors(normalized.redesign_character.creatures[uid]))
 	failures.append_array(equipment_errors(raw.equipment))
 	failures.append_array(heart_selection_errors(raw.realm_hearts))
 	if raw.party is Array:

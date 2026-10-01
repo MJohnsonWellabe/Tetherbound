@@ -198,7 +198,7 @@ static func quote_spend(admitted: Dictionary, character_id: String, uid: String,
 	var payments: Array[Dictionary] = []
 	if int(owned.level) < cap:
 		var cost := level_cost(int(owned.level), cfg, progression_cfg)
-		if cost < 1 or PROGRESSION.staged_next_level(owned, cap, progression_cfg).is_empty():
+		if cost < 1 or PROGRESSION.staged_next_level(owned, cap, progression_cfg, _canonical_trait_maximum.bind(admitted.redesign_character.creatures)).is_empty():
 			return _refuse("invalid_creature")
 		if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
 			return _refuse("receipt_budget")
@@ -260,7 +260,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 		return _refuse("receipt_budget")
 	var inventory := RULES.inventory_from(admitted.inventory)
 	if not inventory.remove(payment_item, cost): return _refuse("insufficient_items")
-	var next_row := PROGRESSION.staged_next_level(owned, cap, progression_cfg)
+	var next_row := PROGRESSION.staged_next_level(owned, cap, progression_cfg, _canonical_trait_maximum.bind(admitted.redesign_character.creatures))
 	if next_row.is_empty(): return _refuse("invalid_creature")
 	next_row = PROGRESSION.staged_training_condition(next_row, 1, false)
 	if next_row.is_empty(): return _refuse("invalid_creature_condition")
@@ -551,7 +551,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	for uid: String in eligible:
 		caps[uid] = creature_cap(admitted.redesign_character, uid)
 	var xp := PROGRESSION.staged_combat_party_xp(admitted.party, host_event.active_uid,
-		eligible, caps, int(host_event.enemy_record.level), progression_cfg, cfg, host_event.xp_mode)
+		eligible, caps, int(host_event.enemy_record.level), progression_cfg, cfg, host_event.xp_mode, _canonical_trait_maximum.bind(admitted.redesign_character.creatures))
 	if xp.is_empty(): return _refuse("invalid_defeat_XP_or_cap")
 	var payout := defeat_payout(host_event.enemy_record, cfg)
 	if payout.is_empty(): return _refuse("invalid_defeat_payout")
@@ -952,3 +952,15 @@ static func stage_release(admitted: Dictionary, character_id: String, uid: Strin
 
 static func _refuse(code: String) -> Dictionary:
 	return {"ok": false, "code": code}
+
+
+## Only an explicitly initialized canonical UID mirror activates new stat
+## math. Old V1 rows keep their original arithmetic and exact saved HP.
+static func _canonical_trait_maximum(card: Dictionary, base: float, records: Dictionary) -> float:
+	var record: Variant = records.get(str(card.get("uid", "")))
+	if not record is Dictionary or record.get("traits_initialized") != true: return base
+	var traits := preload("res://scripts/creatures/traits.gd")
+	if not traits.trait_state_errors(record).is_empty(): return -1.0
+	var snapshot := card.duplicate(true)
+	snapshot.merge(record, true)
+	return traits.apply_value(snapshot, "max_hp", base)

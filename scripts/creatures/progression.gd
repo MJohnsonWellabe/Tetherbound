@@ -96,7 +96,7 @@ static func scaled_party_combat_xp(enemy_level: int, cfg: Dictionary, essence_cf
 ## Detached snapshot math uses the same canonical stat functions as
 ## CreatureInstance._apply_level_stats. Live HP, XP, UI events and saves are
 ## untouched here. The host commits this with the resource debit or neither.
-static func staged_next_level(row: Dictionary, cap: int, cfg: Dictionary) -> Dictionary:
+static func staged_next_level(row: Dictionary, cap: int, cfg: Dictionary, maximum_modifier: Callable = Callable()) -> Dictionary:
 	var level_raw: Variant = row.get("level")
 	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
 			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) < 1 or int(level_raw) >= cap:
@@ -111,6 +111,8 @@ static func staged_next_level(row: Dictionary, cap: int, cfg: Dictionary) -> Dic
 	for stat: String in ["hp", "attack", "defence"]:
 		var value := stat_at_level(float(row["base_" + stat]), int(next.level), float(growth.get(stat, 0.0))) \
 			* individuality_multiplier(float(row["iv_" + stat]), cfg) + float(row.get("boost_" + stat, 0))
+		if stat == "hp" and maximum_modifier.is_valid():
+			value = float(maximum_modifier.call(next, value))
 		if not is_finite(value) or value <= 0.0:
 			return {}
 		next["max_hp" if stat == "hp" else stat] = value
@@ -143,7 +145,7 @@ static func _staged_row_valid(row: Dictionary, cfg: Dictionary) -> bool:
 ## Detached participant XP for the host defeat/rest transaction. Caller owns
 ## eligibility, positive award math and the creature's admitted typed cap.
 ## At the cap XP becomes zero; it cannot bank for a later breakthrough.
-static func staged_xp(row: Dictionary, cap: int, amount: int, cfg: Dictionary) -> Dictionary:
+static func staged_xp(row: Dictionary, cap: int, amount: int, cfg: Dictionary, maximum_modifier: Callable = Callable()) -> Dictionary:
 	if cap < 1 or cap > 100 or amount <= 0 or amount > 2147483647: return {}
 	var current := row.duplicate(true)
 	var level_raw: Variant = current.get("level")
@@ -163,7 +165,7 @@ static func staged_xp(row: Dictionary, cap: int, amount: int, cfg: Dictionary) -
 		if needed <= 0: return {}
 		if remaining < needed: break
 		remaining -= needed
-		current = staged_next_level(current, cap, cfg)
+		current = staged_next_level(current, cap, cfg, maximum_modifier)
 		if current.is_empty(): return {}
 	current.xp = 0 if int(current.level) == cap else remaining
 	return current
@@ -214,7 +216,7 @@ static func staged_training_condition(row: Dictionary, levels_gained: int,
 ## the host defeat receipt before promotion. No legacy award caller is changed.
 static func staged_combat_party_xp(party_rows: Array, host_active_uid: String,
 		host_eligible_uids: Array, host_caps: Dictionary, host_enemy_level: int,
-		cfg: Dictionary, essence_cfg: Dictionary, xp_mode: String = "hybrid") -> Dictionary:
+		cfg: Dictionary, essence_cfg: Dictionary, xp_mode: String = "hybrid", maximum_modifier: Callable = Callable()) -> Dictionary:
 	if not xp_mode in ["ordinary", "hybrid"]: return {}
 	if party_rows.is_empty() or party_rows.size() > 5 or host_active_uid.is_empty() \
 			or host_enemy_level < 1 or host_enemy_level > 100 or host_eligible_uids.is_empty(): return {}
@@ -248,7 +250,7 @@ static func staged_combat_party_xp(party_rows: Array, host_active_uid: String,
 		var uid: String = next[index].uid
 		if not eligible.has(uid): continue
 		var amount := full if uid == host_active_uid else share
-		var changed := staged_xp(next[index], int(eligible[uid]), amount, cfg)
+		var changed := staged_xp(next[index], int(eligible[uid]), amount, cfg, maximum_modifier)
 		if changed.is_empty(): return {}
 		var gained := int(changed.level) - int(next[index].level)
 		changed = staged_training_condition(changed, gained, true)

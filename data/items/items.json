@@ -1,12 +1,12 @@
 {
   "_comment": "Every item that can sit in a satchel slot. CLAUDE.md: data that will clearly vary per item lives here, never in gameplay code. scripts/ui and autoload contain no item literals.",
-  "_comment_scope": "MEADOWS_VERTICAL_SLICE.md M8 asks for a minimal starting set. Orbs and the small potion joined it when the opening gained Grandpa's parting gifts and orbs stopped being a placeholder counter in throw_aim.gd \u2014 they are real inventory now, spent from the satchel by every throw. Tools and cooked food are still M8/M9 and deliberately absent rather than stubbed.",
+  "_comment_scope": "MEADOWS_VERTICAL_SLICE.md M8 asks for a minimal starting set. Orbs and the small potion joined it when the opening gained Grandpa's parting gifts and orbs stopped being a placeholder counter in throw_aim.gd — they are real inventory now, spent from the satchel by every throw. Tools and cooked food are still M8/M9 and deliberately absent rather than stubbed.",
   "_comment_heal": "`heal` is what one use restores on a creature, in HP. Present only on consumables that heal; tunable.",
   "_comment_revive": "D40 (OF32, owner: 'Grandpa should give you revives at the beginning too'). `revive` is the fraction of max HP a Revive restores when used on a FAINTED creature (0.5 == half, tunable) -- creature_instance.gd's revive() reads it, not heal(). As of D40, `heal` items (potions) refuse a fainted creature outright instead of un-fainting it; `revive` items are the only thing that clears `fainted` outside of rest (home_recovery.gd/creature beds, which still heal_fully() -- that is rest, not a potion, and stays untouched).",
-  "_comment_stack": "`stack` is the slot cap. GAME_DESIGN.md 19: slot + stack, NO weight limit \u2014 there is no `weight` key here and there must never be one.",
+  "_comment_stack": "`stack` is the slot cap. GAME_DESIGN.md 19: slot + stack, NO weight limit — there is no `weight` key here and there must never be one.",
   "_comment_fiber": "Spelled `fiber`, matching MEADOWS_VERTICAL_SLICE.md section M8 AND the harvest data the gathering work will port from the pre-Godot prototype (git show c45dee5^:src/data/harvest.json), which drops wood, stone, fiber, berries and flint under exactly these ids. The id is what harvesting keys off, so it had to match one of them; it now matches both.",
   "_comment_colour": "`colour` is the slot tile's tint. Placeholder standing in for an icon, and sampled so four resources are told apart at a glance on a 7-inch screen rather than by reading four short words.",
-  "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` \u2014 owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (unscheduled -- R7.6 was re-scoped off fishing and onto the berry farm) are what will read them. R7.6 added a sixth tool, `hoe`, and it is the first one that does NOT appear here: it gates TILLING, a preparation verb, not a gather, so it is named by scripts/world/farm_logic.gd::TILL_TOOL instead of by any resource's `gathered_with`. Berries are still the resource with no `gathered_with`, farmed ones included -- see docs/decisions/D50 for why that was kept deliberately rather than quietly changed the moment berries got a farm.",
+  "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (unscheduled -- R7.6 was re-scoped off fishing and onto the berry farm) are what will read them. R7.6 added a sixth tool, `hoe`, and it is the first one that does NOT appear here: it gates TILLING, a preparation verb, not a gather, so it is named by scripts/world/farm_logic.gd::TILL_TOOL instead of by any resource's `gathered_with`. Berries are still the resource with no `gathered_with`, farmed ones included -- see docs/decisions/D50 for why that was kept deliberately rather than quietly changed the moment berries got a farm.",
   "_comment_durability": "R2.2. `durability` is the number of full-yield gathers a tool survives before it breaks (GAME_DESIGN.md 19: 'have durability', 'repair for free at appropriate station'). Tunable, same for all five for now. A broken tool (0 durability) stops counting as owned for item_db.gd's harvest_yield() gating until repaired -- inventory.gd tracks the current value per-slot, defaulting to this max when a slot carries no durability key of its own (so a freshly-added tool needs no special-cased add-time write). Only `axe`/`pickaxe`/`knife` actually lose durability today, from harvest_node.gd's gather loop; `hammer` and `fishing_rod` carry the field for GAME_DESIGN.md consistency but nothing damages them yet, matching R2.1's own precedent for those two.",
   "_comment_satiety": "D29. `satiety` is how much of player_vitals.gd's satiety meter one use restores (see data/config/vitals.json); `buff` is that same use's optional temporary buff, passed straight through to player_vitals.gd's eat() as-is: { id, stat, amount, duration_s }. Only berries carry it so far. Nothing calls eat() from an eating action yet -- that wiring lands with the HUD pass, per this task's brief.",
   "_comment_creature_food": "RG19-spec/D68. `creature_food` is what one use of this item does for a CREATURE's condition -- `nourishment` restores the fed meter (data/config/creature_condition.json), `happiness` is the mood a fed creature gains, and omitting `happiness` falls back to that file's own `on_feed`. It is a separate key from `satiety` on purpose: berries are both a player's snack and a team's dinner, and the two meters are tuned independently. An item with this key is offered to the party through the backpack's ordinary target picker, exactly as a tonic is.",
@@ -14,51 +14,91 @@
   "_comment_coin": "D39 (OF31, owner: 'Make the villagers so I can trade with them'). The owner chose a simple coin currency, and `coin` is an ORDINARY item in this table for that reason -- it stacks in a satchel slot, shows in the backpack like everything else, saves through the same inventory array, and can be dropped in a death satchel. There is no wallet, no second store and no `coins` field on game_state, and there must never be one: the moment currency lives somewhere else, every screen that shows your things has to learn about it separately. `kind: currency` is descriptive only -- nothing branches on it (item_db.gd's only kind branch is `tool`), it exists so the backpack detail line can say what this is. Prices are NOT here: they are per-vendor and tunable, and live in data/config/trade.json.",
   "_comment_icons": "M-G groundwork. `icon` is a res:// path to a 64px Kenney Game Icons silhouette (see docs/specs/ASSET_LEDGER.md's 'Item + shared UI icons' row for the per-item source mapping and its honest mismatches -- this pack has no literal axe/wood/flask glyphs, so several are the closest available stand-in, same convention as the map icons row). `description` is the fuller inventory-detail text; `blurb` stays as the shorter existing field, both kept side by side rather than one replacing the other. Joined with the UI icon-set vendoring pass in the same commit-to-be.",
   "_comment_rootstone": "SD18. MEADOWS_PROGRESSION_SPEC.md 10: the first of the Meadows' two progression-tier materials, above baseline wood/stone/fiber/berries. `gathered_with: pickaxe` matches the existing stone convention -- Rootstone is a harder seam, not a different gathering verb. SD16 (a sibling item, quarry harvest nodes) owns where it is actually found in the world; this entry only makes it a real, nameable satchel item so SD18's recipes have something to spend. `kind: resource` (same as wood/stone/fiber) rather than a new kind -- nothing branches on kind besides `tool`, so a fourth resource-shaped id needs no new code path.",
-  "_comment_ironwood": "SF31. MEADOWS_PROGRESSION_SPEC.md \u00a73 Band 4 and \u00a710: the SECOND and LAST of the Meadows' two progression-tier materials, above baseline wood/stone/fiber/berries and alongside Rootstone. `gathered_with: axe` because it is wood -- the spec's own note that it 'does not need to literally be iron' cuts both ways, and giving a hardwood a new gathering verb would be a mechanic where the spec asked for a tier. `kind: resource`, same as Rootstone, so no new code path. Where it grows is `data/config/harvest.json`'s `ironwood` nodes (the old-growth stands on the Rise's south-west flank, spec Band 4's 'old-growth forest'); what it buys is `data/recipes/recipes_ironwood.json`, and that file's own header holds the rule this tier is judged by: nothing the stronghold needs may require a THIRD new material.",
-  "_comment_sigils": "SF34, spec \u00a73 Band 4. Three physical items, one per regional captain, each granted through that captain's `reward` block in data/config/trainers.json. `kind: key` and `stack: 1`, exactly like `south_bridge_key` -- they are gate items, and the gate is SB10's `item_gate.gd` requiring all three at once, not a level check and not a UI lock. There is no fourth sigil and no way to buy, craft or find one: beating the captain IS the acquisition.",
+  "_comment_ironwood": "SF31. MEADOWS_PROGRESSION_SPEC.md §3 Band 4 and §10: the SECOND and LAST of the Meadows' two progression-tier materials, above baseline wood/stone/fiber/berries and alongside Rootstone. `gathered_with: axe` because it is wood -- the spec's own note that it 'does not need to literally be iron' cuts both ways, and giving a hardwood a new gathering verb would be a mechanic where the spec asked for a tier. `kind: resource`, same as Rootstone, so no new code path. Where it grows is `data/config/harvest.json`'s `ironwood` nodes (the old-growth stands on the Rise's south-west flank, spec Band 4's 'old-growth forest'); what it buys is `data/recipes/recipes_ironwood.json`, and that file's own header holds the rule this tier is judged by: nothing the stronghold needs may require a THIRD new material.",
+  "_comment_sigils": "SF34, spec §3 Band 4. Three physical items, one per regional captain, each granted through that captain's `reward` block in data/config/trainers.json. `kind: key` and `stack: 1`, exactly like `south_bridge_key` -- they are gate items, and the gate is SB10's `item_gate.gd` requiring all three at once, not a level check and not a UI lock. There is no fourth sigil and no way to buy, craft or find one: beating the captain IS the acquisition.",
   "_comment_armor": "R7.7. GAME_DESIGN.md sec18's five trainer equipment slots (Helmet, Upper body, Lower body, Boots, Backpack) -- 'trainer armor protects the human, not creatures'. `kind: \"armor\"` items are worn, not spent (`stack: 1`, same as a tool), and carry two fields nothing else in this file uses: `armor_slot` (one of the five slot names scripts/player/player_equipment.gd knows) and `defense` (a 0..1 fraction of incoming damage the piece alone soaks, summed across every equipped piece and capped by player_equipment.gd's own MAX_TOTAL_DEFENSE). CLAUDE.md's hard rules bound this on purpose: no shields (this is passive damage reduction, never a block/parry verb), and the human still cannot fight (nothing here is a weapon or adds an attack). The only real damage source the Meadows has today is a fall (player_vitals.gd's own fall-damage curve), so that is the one thing armor reduces so far; GAME_DESIGN.md's 'later biomes require gear' line is explicitly Biome-2 scope and stays unbuilt. Icons are original flat silhouettes (tools/gen_item_icons.py, spec sec21's sanctioned 'simple generated vector icons for game-specific concepts') -- neither vendored Kenney icon pack this project uses has a clothing/armor glyph to reuse.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
     "home_key": {
-      "name": "Home Key", "kind": "key", "stack": 1,
-      "colour": "#b8f6df", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "name": "Home Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#b8f6df",
+      "icon": "res://assets/ui/icons/items/south_bridge_key.png",
       "blurb": "One tap brings you to the Crossing Hall. Free, with no cooldown.",
       "description": "Grandpa's gift. Raise it for two seconds to return to the home arch. Finish fights and conversations, reach solid ground and land before using it.",
-      "use_action": "home_key", "quick_bindable": true,
-      "droppable": false, "sellable": false, "tradeable": false, "death_satchel": false,
-      "protected_key": true, "scope": "character"
+      "use_action": "home_key",
+      "quick_bindable": true,
+      "droppable": false,
+      "sellable": false,
+      "tradeable": false,
+      "death_satchel": false,
+      "protected_key": true,
+      "scope": "character"
     },
     "tidewake_portal_key": {
-      "name": "Tidewake Portal Key", "kind": "key", "stack": 1,
-      "colour": "#69bfc5", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "name": "Tidewake Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#69bfc5",
+      "icon": "res://assets/ui/icons/items/south_bridge_key.png",
       "blurb": "Opens the Tidewake arch in the Crossing Hall.",
       "description": "Earned by a participant in the Meadows climax. Used once at the Tidewake arch; its unlock follows your character.",
-      "portal_biome": "tidewake", "droppable": false, "sellable": false,
-      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+      "portal_biome": "tidewake",
+      "droppable": false,
+      "sellable": false,
+      "tradeable": false,
+      "death_satchel": false,
+      "protected_key": true,
+      "scope": "character"
     },
     "cloudreach_portal_key": {
-      "name": "Cloudreach Portal Key", "kind": "key", "stack": 1,
-      "colour": "#d0e1da", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "name": "Cloudreach Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#d0e1da",
+      "icon": "res://assets/ui/icons/items/south_bridge_key.png",
       "blurb": "Opens the Cloudreach arch in the Crossing Hall.",
       "description": "Earned by a participant in the Tidewake climax. Used once at the Cloudreach arch; its unlock follows your character.",
-      "portal_biome": "cloudreach", "droppable": false, "sellable": false,
-      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+      "portal_biome": "cloudreach",
+      "droppable": false,
+      "sellable": false,
+      "tradeable": false,
+      "death_satchel": false,
+      "protected_key": true,
+      "scope": "character"
     },
     "stormwood_portal_key": {
-      "name": "Stormwood Portal Key", "kind": "key", "stack": 1,
-      "colour": "#b5a9e2", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "name": "Stormwood Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#b5a9e2",
+      "icon": "res://assets/ui/icons/items/south_bridge_key.png",
       "blurb": "Opens the Stormwood arch in the Crossing Hall.",
       "description": "Earned by a participant in the Cloudreach climax. Used once at the Stormwood arch; its unlock follows your character.",
-      "portal_biome": "stormwood", "droppable": false, "sellable": false,
-      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+      "portal_biome": "stormwood",
+      "droppable": false,
+      "sellable": false,
+      "tradeable": false,
+      "death_satchel": false,
+      "protected_key": true,
+      "scope": "character"
     },
     "fifth_portal_key": {
-      "name": "Fifth Portal Key", "kind": "key", "stack": 1,
-      "colour": "#c1c5bd", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "name": "Fifth Portal Key",
+      "kind": "key",
+      "stack": 1,
+      "colour": "#c1c5bd",
+      "icon": "res://assets/ui/icons/items/south_bridge_key.png",
       "blurb": "The fifth arch stirs, but its way remains sealed.",
       "description": "Earned by a participant in the Stormwood finale. Used once at the fifth arch. It stirs, but it is not ready yet.",
-      "portal_biome": "biome5", "droppable": false, "sellable": false,
-      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+      "portal_biome": "biome5",
+      "droppable": false,
+      "sellable": false,
+      "tradeable": false,
+      "death_satchel": false,
+      "protected_key": true,
+      "scope": "character"
     },
     "essence_ground": {
       "name": "Ground Essence",
@@ -257,7 +297,7 @@
       "gathered_with": "axe",
       "icon": "res://assets/ui/icons/items/wood.png",
       "blurb": "Cut from the oaks. Everything early is made of it.",
-      "description": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing \u2014 walls, tools and campfires all start here."
+      "description": "Rough-cut lengths from the meadow's oaks. It is the first thing you gather and the last thing you stop needing — walls, tools and campfires all start here."
     },
     "stone": {
       "name": "Stone",
@@ -328,7 +368,7 @@
       "gathered_with": "axe",
       "icon": "res://assets/ui/icons/items/ironwood.png",
       "blurb": "Upper-Meadows hardwood. Dulls an ordinary axe and outlasts everything you build from it.",
-      "description": "Close-grained wood cut from the old-growth stands on the Rise's flank, so dense a fresh-cut round barely floats. It is still wood \u2014 the axe is still the tool \u2014 but it takes twice the swinging, and what it braces does not give."
+      "description": "Close-grained wood cut from the old-growth stands on the Rise's flank, so dense a fresh-cut round barely floats. It is still wood — the axe is still the tool — but it takes twice the swinging, and what it braces does not give."
     },
     "orb_prime": {
       "name": "Prime Orb",
@@ -349,7 +389,7 @@
       "world_model": "res://assets/props/potion_plant/potion_plant.glb",
       "world_model_scale": 0.55,
       "blurb": "A proper dose, brewed from ironwood bark. For the long fights.",
-      "description": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go \u2014 the thing you carry into a gauntlet where there is no time to stop and pour three."
+      "description": "Bitter resin boiled out of ironwood bark and cut with berry pulp. More than twice a small potion's worth in one go — the thing you carry into a gauntlet where there is no time to stop and pour three."
     },
     "field_sigil": {
       "name": "Field Sigil",
@@ -358,7 +398,7 @@
       "colour": "#a68b45",
       "icon": "res://assets/ui/icons/items/field_sigil.png",
       "blurb": "The Field Captain's own. One of three that turn the Hall approach.",
-      "description": "A heavy bronze disc struck with Team Tether's mark and the ploughed-furrow device of the high pasture posting. A captain carries one, and hands it over when they lose \u2014 the officers' own rule, and they keep it."
+      "description": "A heavy bronze disc struck with Team Tether's mark and the ploughed-furrow device of the high pasture posting. A captain carries one, and hands it over when they lose — the officers' own rule, and they keep it."
     },
     "ridge_sigil": {
       "name": "Ridge Sigil",
@@ -385,7 +425,7 @@
       "colour": "#7a5a3d",
       "icon": "res://assets/ui/icons/items/saddle_frame.png",
       "blurb": "A rootstone-braced skeleton. Wants leather and a creature's back, in that order.",
-      "description": "A rigid frame built to take real weight, its joints braced with worked rootstone rather than plain wood. Not a saddle yet \u2014 just the part that has to be right before the rest of one is worth building."
+      "description": "A rigid frame built to take real weight, its joints braced with worked rootstone rather than plain wood. Not a saddle yet — just the part that has to be right before the rest of one is worth building."
     },
     "saddle": {
       "name": "Riding Saddle",
@@ -403,7 +443,7 @@
       "colour": "#4a7fa3",
       "icon": "res://assets/ui/icons/items/orb_basic.png",
       "blurb": "Plain make, from Grandpa's pack. A good throw matters more than a good orb.",
-      "description": "A plain, unmarked sphere from Grandpa's old pack \u2014 no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb."
+      "description": "A plain, unmarked sphere from Grandpa's old pack — no dial, no fittings, nothing fancy. It works because your throw does the work, not the orb."
     },
     "orb_greater": {
       "name": "Greater Orb",
@@ -425,7 +465,7 @@
       "world_model": "res://assets/props/potion_plant/potion_plant.glb",
       "world_model_scale": 0.35,
       "blurb": "Restores 50 HP to a creature. For you, it's still soup.",
-      "description": "A small dose that restores 50 HP to one creature. It only works on a creature \u2014 for you, it's soup and rest, same as always."
+      "description": "A small dose that restores 50 HP to one creature. It only works on a creature — for you, it's soup and rest, same as always."
     },
     "revive": {
       "name": "Revive",
@@ -437,7 +477,7 @@
       "world_model": "res://assets/props/revive_flower/revive_flower.glb",
       "world_model_scale": 0.4,
       "blurb": "Brings a fainted creature back up, half strength. Nothing else does.",
-      "description": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength \u2014 a proper rest is still what finishes the job."
+      "description": "A denser, costlier draught than a potion, and the only thing that raises a creature back up once it's fainted. It comes back at half its full strength — a proper rest is still what finishes the job."
     },
     "good_candy": {
       "name": "Good Candy",
@@ -449,7 +489,7 @@
       "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
       "world_model_scale": 0.55,
       "blurb": "A found sweet. One creature jumps a level, straight away.",
-      "description": "Wrapped and a little sticky, found rather than bought. Feed it to a creature and that creature is one level further along, no fight required \u2014 the addendum's exploration-reward candy, three tiers of the same wrapper.",
+      "description": "Wrapped and a little sticky, found rather than bought. Feed it to a creature and that creature is one level further along, no fight required — the addendum's exploration-reward candy, three tiers of the same wrapper.",
       "_comment_tier": "docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md section B. One mesh, three tiers by tint/decal at placement time -- ASSET_LEDGER's candy_pickup entry."
     },
     "great_candy": {
@@ -462,7 +502,7 @@
       "world_model": "res://assets/props/candy_pickup/candy_pickup.glb",
       "world_model_scale": 0.6,
       "blurb": "A better find. Two levels, straight away.",
-      "description": "The blue-wrapped tier \u2014 a tougher detour or a stronger encounter earned it. Two levels on the creature that eats it, no fight required.",
+      "description": "The blue-wrapped tier — a tougher detour or a stronger encounter earned it. Two levels on the creature that eats it, no fight required.",
       "_comment_tier": "docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md section B."
     },
     "rare_candy": {
@@ -487,7 +527,7 @@
       "world_model": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
       "world_model_scale": 0.5,
       "blurb": "Gathered, not bought. A quick burst of speed, briefly.",
-      "description": "Blue-capped, found clustered at tree bases and rocks. The same timed-buff mechanism a tonic already uses \u2014 the world reward version of one.",
+      "description": "Blue-capped, found clustered at tree bases and rocks. The same timed-buff mechanism a tonic already uses — the world reward version of one.",
       "creature_buff": {
         "id": "speed_mushroom",
         "stat": "speed",
@@ -521,7 +561,7 @@
       "world_model": "res://assets/props/mushroom_pickup/mushroom_pickup.glb",
       "world_model_scale": 0.5,
       "blurb": "Gathered, not bought. General use, briefly stronger attacks.",
-      "description": "Red-capped, broad and unmistakable. A short attack buff \u2014 the least specialised of the three, general-purpose foraging.",
+      "description": "Red-capped, broad and unmistakable. A short attack buff — the least specialised of the three, general-purpose foraging.",
       "creature_buff": {
         "id": "wild_mushroom",
         "stat": "attack",
@@ -600,7 +640,7 @@
       "colour": "#b0b8bf",
       "icon": "res://assets/ui/icons/items/knife.png",
       "blurb": "Strips fiber in one clean pull.",
-      "description": "Short, sharp, and built for stripping \u2014 one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly.",
+      "description": "Short, sharp, and built for stripping — one clean pull takes fiber off meadow grass that bare hands would only tear at unevenly.",
       "held_model": "res://assets/props/quaternius_survival/Knife.obj",
       "held_offset": [
         0.02,
@@ -625,7 +665,7 @@
       "_comment": "R7.6. The SIXTH tool, and the first that gates something other than a gather: it turns unworked ground into a seedbed (scripts/world/farm_logic.gd::TILL_TOOL) and does nothing else. It deliberately appears in NO item's `gathered_with` -- see docs/decisions/D50 and this file's own `_comment_tools` line, which records berries as the one resource that is never tool-gated. That stayed true: farmed berries are picked bare-handed exactly like wild ones. `durability` matches the other five, and D50's 'harvest returns the bed to TILLED' rule is what keeps a 40-charge hoe from being a permanent tax -- six beds cost six charges once, not six per crop.",
       "_comment_model": "`held_model` and `icon` both reuse the bronze pickaxe. There is no hoe mesh and no hoe glyph in any vendored pack, and D24 forbids sourcing a new prop family for one tool; a bronze mattock head on a shaft is what a hoe looks like at hand scale, and this is the same honest stand-in `hammer` above already makes with the survival pack's axe. Held a little flatter than the pickaxe (-45 rather than -15 on roll) so the two read apart in the hand.",
       "blurb": "Breaks ground into a seedbed. Nothing else.",
-      "description": "A broad flat blade on a long shaft, for turning matted meadow sod into soil loose enough to take seed. It is no use on a tree, a rock or a creature \u2014 the only thing it is for is the ground in front of a farmhouse.",
+      "description": "A broad flat blade on a long shaft, for turning matted meadow sod into soil loose enough to take seed. It is no use on a tree, a rock or a creature — the only thing it is for is the ground in front of a farmhouse.",
       "held_model": "res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf",
       "held_offset": [
         0.02,
@@ -677,7 +717,7 @@
       "colour": "#8a8577",
       "icon": "res://assets/ui/icons/items/tm_stone_rush.png",
       "blurb": "A teaching disc. One creature, one lesson.",
-      "description": "A flat grey disc that hums faintly when a ground-type creature is near. Hold it out and the creature takes the shape of the move straight off it \u2014 once. The disc goes dull afterwards."
+      "description": "A flat grey disc that hums faintly when a ground-type creature is near. Hold it out and the creature takes the shape of the move straight off it — once. The disc goes dull afterwards."
     },
     "tm_burrow_strike": {
       "name": "TM: Burrow Strike",
@@ -1482,12 +1522,372 @@
       "icon": "res://assets/ui/icons/items/stone.png",
       "blurb": "A smooth pearl gathered in Tidewake for homestead crafts.",
       "description": "A pearl found in Tidewake's shallows. Used at the homestead to make Pearl charms. Gathered by hand."
+    },
+    "trait_seed_bold": {
+      "name": "Bold Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "bold",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Charged moves deal 5% more damage.",
+      "description": "Charged moves deal 5% more damage. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_calm": {
+      "name": "Calm Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "calm",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Wind regenerates 5% faster.",
+      "description": "Wind regenerates 5% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_sturdy": {
+      "name": "Sturdy Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "sturdy",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Effective defence increases by 5%.",
+      "description": "Effective defence increases by 5%. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_swift": {
+      "name": "Swift Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "swift",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Move 5% faster in combat.",
+      "description": "Move 5% faster in combat. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_gentle": {
+      "name": "Gentle Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "gentle",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Receive 5% more healing.",
+      "description": "Receive 5% more healing. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_stubborn": {
+      "name": "Stubborn Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "stubborn",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Poise threshold increases by 5%.",
+      "description": "Poise threshold increases by 5%. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_curious": {
+      "name": "Curious Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "curious",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Move cooldowns are 5% shorter.",
+      "description": "Move cooldowns are 5% shorter. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_watchful": {
+      "name": "Watchful Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "watchful",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Burst costs 5% less Wind.",
+      "description": "Burst costs 5% less Wind. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_hardy": {
+      "name": "Hardy Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "hardy",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Maximum HP increases by 5%.",
+      "description": "Maximum HP increases by 5%. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_keen": {
+      "name": "Keen Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "keen",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Quick moves deal 5% more damage.",
+      "description": "Quick moves deal 5% more damage. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_surefoot": {
+      "name": "Surefoot Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "surefoot",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Ride 5% faster.",
+      "description": "Ride 5% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_paddler": {
+      "name": "Paddler Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "paddler",
+      "rarity": "common",
+      "sellable": false,
+      "colour": "#b7c9aa",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Mounted swimming is 5% faster.",
+      "description": "Mounted swimming is 5% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_fierce": {
+      "name": "Fierce Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "fierce",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Charged moves deal 8% more damage.",
+      "description": "Charged moves deal 8% more damage. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_composed": {
+      "name": "Composed Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "composed",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Wind regenerates 8% faster.",
+      "description": "Wind regenerates 8% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_resolute": {
+      "name": "Resolute Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "resolute",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Effective defence increases by 8%.",
+      "description": "Effective defence increases by 8%. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_nimble": {
+      "name": "Nimble Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "nimble",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Move 8% faster in combat.",
+      "description": "Move 8% faster in combat. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_renewing": {
+      "name": "Renewing Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "renewing",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Receive 8% more healing.",
+      "description": "Receive 8% more healing. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_unshaken": {
+      "name": "Unshaken Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "unshaken",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Poise threshold increases by 8%.",
+      "description": "Poise threshold increases by 8%. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_inventive": {
+      "name": "Inventive Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "inventive",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Move cooldowns are 8% shorter.",
+      "description": "Move cooldowns are 8% shorter. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_vigilant": {
+      "name": "Vigilant Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "vigilant",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Burst costs 8% less Wind.",
+      "description": "Burst costs 8% less Wind. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_current_rider": {
+      "name": "Current Rider Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "current_rider",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Mounted swimming is 8% faster.",
+      "description": "Mounted swimming is 8% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_soaring": {
+      "name": "Soaring Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "soaring",
+      "rarity": "rare",
+      "sellable": false,
+      "colour": "#91bedb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Fly 8% faster.",
+      "description": "Fly 8% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_precise": {
+      "name": "Precise Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "precise",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Quick moves deal 12% more damage.",
+      "description": "Quick moves deal 12% more damage. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_ferocious": {
+      "name": "Ferocious Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "ferocious",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Charged moves deal 12% more damage.",
+      "description": "Charged moves deal 12% more damage. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_radiant": {
+      "name": "Radiant Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "radiant",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Ultimate moves deal 12% more damage.",
+      "description": "Ultimate moves deal 12% more damage. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_unyielding": {
+      "name": "Unyielding Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "unyielding",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Effective defence increases by 12%.",
+      "description": "Effective defence increases by 12%. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_tireless": {
+      "name": "Tireless Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "tireless",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Wind regenerates 12% faster.",
+      "description": "Wind regenerates 12% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_fleet": {
+      "name": "Fleet Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "fleet",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Move 12% faster in combat.",
+      "description": "Move 12% faster in combat. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_tide_dancer": {
+      "name": "Tide Dancer Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "tide_dancer",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Mounted swimming is 12% faster.",
+      "description": "Mounted swimming is 12% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
+    },
+    "trait_seed_sky_dancer": {
+      "name": "Sky Dancer Trait Seed",
+      "kind": "trait_seed",
+      "stack": 99,
+      "trait_id": "sky_dancer",
+      "rarity": "epic",
+      "sellable": false,
+      "colour": "#bfacd9",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Fly 12% faster.",
+      "description": "Fly 12% faster. Teach at the Altar in a slot unlocked by an L10, L30 or L50 breakthrough; costs type essence."
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",
   "_comment_torch": "OW12 (owner, 2026-08-16: 'torches need to be a carry able item not placeable one'), which supersedes OF24's placeable torch (see data/items/buildables.json's own retirement note) and OF24's earlier always-on kit torch (scripts/player/torch.gd used to build and attach it unconditionally at spawn, no item required). The torch is now `kind: \"tool\"` like axe/pickaxe/knife -- equipped off the hotbar/backpack the same way, `held_model`/`held_offset`/`held_rotation_deg` reaching the hand through tool_hold.gd's existing generic mechanism rather than a second hand-attachment system. `scripts/player/torch.gd` now owns only the light (the forward-throw SpotLight and the prop's own flickering OmniLight) and stays dark, whatever the hour, unless the torch is the equipped tool -- an unequipped torch is an inert satchel row, same as an unequipped axe. `icon` reuses the existing build-menu torch silhouette (assets/ui/icons/buildables/torch.png) rather than sourcing a new one -- same honest-stand-in convention rootstone/heartstone already use, and D24 forbids a fresh asset for one prop anyway. No `durability`: it gathers nothing, so nothing here wears it down. See docs/decisions/D53 for the full reasoning, including the one gap this task deliberately did not invent a fix for (camp lighting at night, now stranded with the placeable retired).",
   "_comment_elixirs": "D47. `kind: \"elixir\"` is a PERMANENT stat gain spent on one creature, and it is the one thing in this file that is not reversible -- every other consumable heals, feeds or revives. `elixir_stat` is hp/attack/defence and `elixir_points` is raw stat points, capped per creature by data/config/progression.json's `elixirs.cap_per_stat`. They deliberately do NOT appear in Mira's stock (data/config/trade.json): the owner asked for permanent boosters to stay rare, and anything purchasable is only as rare as your coin pile. They belong in the world -- a dungeon, a captain, a stronghold. Their sealed bottle silhouettes distinguish permanent elixirs from temporary tonics; cutout blade, armour and heart marks identify the stat. The icons extend the existing tools/gen_item_icons.py family.",
-  "_comment_saddle": "R6.2. ONE generic saddle for every mount, never a saddle per species \u2014 the backlog brief's own words, 'a generic saddle ... and no species-specific saddle clutter'. Which creature it fits is the CREATURE's business (species.json's `rideable.requires_item`), so a second mount at R8.5 either wants this same saddle or names its own tack there, and either way nothing changes here. `kind: gear` rather than `material`: it is a thing you own and use, like an orb, not a thing you spend. It is never consumed by riding and there is no durability on it \u2014 `scripts/world/riding_controller.gd::_has_tack()` only ever ASKS whether one is in the satchel. Icon deliberately points at `saddle_frame.png`: the frame is what a saddle is built on and the silhouette is right, and CLAUDE.md's asset rules say to source coherently rather than mint a near-duplicate icon for the sake of a distinct filename. A dedicated icon is a clean later swap in this one line. [Moved out of the `items` object: every other entry in there is an item dictionary, and tests/test_item_icons.gd casts each one, so a bare string inside it threw a cast error on three separate tests. Top level is where every other _comment in this file already sits.]",
+  "_comment_saddle": "R6.2. ONE generic saddle for every mount, never a saddle per species — the backlog brief's own words, 'a generic saddle ... and no species-specific saddle clutter'. Which creature it fits is the CREATURE's business (species.json's `rideable.requires_item`), so a second mount at R8.5 either wants this same saddle or names its own tack there, and either way nothing changes here. `kind: gear` rather than `material`: it is a thing you own and use, like an orb, not a thing you spend. It is never consumed by riding and there is no durability on it — `scripts/world/riding_controller.gd::_has_tack()` only ever ASKS whether one is in the satchel. Icon deliberately points at `saddle_frame.png`: the frame is what a saddle is built on and the silhouette is right, and CLAUDE.md's asset rules say to source coherently rather than mint a near-duplicate icon for the sake of a distinct filename. A dedicated icon is a clean later swap in this one line. [Moved out of the `items` object: every other entry in there is an item dictionary, and tests/test_item_icons.gd casts each one, so a bare string inside it threw a cast error on three separate tests. Top level is where every other _comment in this file already sits.]",
   "_comment_tonics": "The potions board's TEMPORARY half (the permanent half is D47's elixirs). A `creature_buff` block is a timed multiplier on ONE creature stat -- applied through creature_instance.gd::apply_buff, ticked down by GameState._process, multiplied into effective_attack/effective_defence (or the combat drive speed), and gone when the clock runs out. Re-drinking refreshes the clock, never stacks the multiplier -- the owner's brief forbade mandatory buff maintenance and stacking is how that ritual is born. NOT saved: a timed buff dying on quit is the honest reading of temporary. Sold by Mira at modest prices -- tonics are the RENEWABLE economy hook, elixirs stay unsold and rare. Board names where the board had them (Swift Tonic, Stoneguard Brew). Their conical flask silhouettes distinguish temporary tonics from permanent elixirs; cutout speed, blade and armour marks identify the effect within the existing icon family.",
   "_comment_t3_activities_board_audit": "T3-ACTIVITIES, closing two findings T3-PICKUPS's handover (2026-08-30) flagged rather than resolved. RE-VERIFIED FIRST, against the live tree rather than trusting the handover's own numbers (per this repo's own 'evidence-backed already fixed is valid' rule): every one of the three elixirs (elixir_might/guard/vigour, all now placed via T3-PICKUPS's item_cache_pickup.gd and T3-REWARD's three captain rewards) and all five armor pieces (hide_helm/vest/leggings/boots, travel_pack, split across T3-REWARD's Warrens reward and T3-PICKUPS's harvest-node scatter) has a real acquisition path today. A repo-wide id-presence scan (band harvest/trainers/props, burrow_warrens.json, trade.json, dialogue) turned up exactly two other item ids with no reference anywhere: `fishing_rod`, whose own blurb already says why ('for water that doesn't exist yet' -- no fishing verb is built, so this is not a bug); and `saddle_frame`, which IS reachable, through `data/recipes/recipes_rootstone.json`'s own recipe -- the scan's file list had simply missed `data/recipes/`. Nothing in the reward ladder is orphaned as of this branch. DECISIONS on the two remaining board findings, made explicitly rather than left silent: (1) the owner board's 'Defense Elixir' appearing in BOTH the PERMANENT and TEMPORARY columns is a labelling duplicate in the board's own concept art, not two items -- `elixir_guard` (permanent) and `stoneguard_brew` (temporary) already cover both real niches the two labels could mean, and nothing further is invented. (2) 'Clarity Draught' stays UNBUILT, on purpose, not merely unimplemented: the temporary tonic row already has one tonic per stat this codebase can actually buff (speed/swift_tonic, attack/attack_tonic, defence/stoneguard_brew -- `creature_instance.gd`'s buff plumbing has no fourth hook), so a Clarity Draught would need either a genuinely new buffable axis (accuracy, catch-chance, status-cure) or a fourth reskin of a stat the board already names elsewhere. The former is a combat-mechanics change on the scale CLAUDE.md's own ask-list reserves for the owner ('changing the type system' is the nearest precedent for 'adding a new kind of buff'), not a reward-routing task's to invent; the latter would not be a real item, only a fourth name for one of the first three. Left for whoever next owns new item/buff design, with the two candidate readings named above so they do not have to be rediscovered."
 }

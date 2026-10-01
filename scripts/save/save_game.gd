@@ -659,6 +659,7 @@ static func _redesign_errors(data: Dictionary, character_id: String = "") -> Arr
 	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")))
 	errors.append_array(REDESIGN_STATE.validate("character", data.get("redesign_character", REDESIGN_STATE.defaults("character")), REDESIGN_STATE.uids(data.get("party", []))))
 	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
+	errors.append_array(trait_party_errors(data.get("party", []), data.get("redesign_character", {})))
 	errors.append_array(preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
@@ -1971,6 +1972,7 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 	var teaching := preload("res://scripts/creatures/teaching.gd")
 	if not teaching.party_loadout_errors(entries,character,true).is_empty():
 		return
+	if not trait_party_errors(entries, character).is_empty(): return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
 	# Read ONCE, outside the loop, for the baseline repair below. Read through
@@ -2067,6 +2069,12 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 		creature.iv_defence = float(d.get("iv_defence", 0.5))
 		creature.trait_primary = str(d.get("trait_primary", ""))
 		creature.trait_secondary = str(d.get("trait_secondary", ""))
+		var trait_record: Variant = character.get("creatures", {}).get(creature.uid)
+		if trait_record is Dictionary:
+			var normalized := preload("res://scripts/creatures/traits.gd").initialize_legacy_record(d, trait_record)
+			# Whole-party detached preflight already validated these exact fields.
+			preload("res://scripts/creatures/traits.gd").project_instance(creature, normalized)
+			creature.traits_initialized = trait_record.get("traits_initialized", false)
 		creature.shiny = bool(d.get("shiny", false))
 		# RG19-spec/D68. Absent on any save older than VERSION 13; the
 		# defaults are creature_condition.json's own starting values, which is
@@ -2087,6 +2095,11 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 		creature.base_attack = float(d.get("base_attack", definition.get("base_attack", 20.0)))
 		creature.base_defence = float(d.get("base_defence", definition.get("base_defence", 20.0)))
 		creature.call("recompute_stats_from_base", progression_cfg)
+		if trait_record is Dictionary:
+			# The modern canonical card already contains intrinsic stat math.
+			# Restore it exactly instead of repricing V1 or applying Hardy twice.
+			for field: String in ["max_hp", "hp", "attack", "defence", "fainted"]:
+				creature.set(field, d[field])
 		party_ref.call("add", creature)
 
 
@@ -2179,3 +2192,30 @@ func _stack_from_json(stack: Variant) -> Variant:
 		# upgrade ever happened.
 		fixed["durability_bonus"] = int(dict.get("durability_bonus"))
 	return fixed
+
+
+## Validate every canonical mirror before any loader clears or mutates state.
+## Legacy codec callers without UID mirrors retain their existing repair path.
+static func trait_party_errors(entries: Variant, character: Variant) -> Array[String]:
+	var errors: Array[String] = []
+	if not entries is Array or not character is Dictionary: return ["invalid trait party"]
+	if not character.has("creatures"): return errors
+	if not character.creatures is Dictionary: return ["invalid trait mirrors"]
+	var traits := preload("res://scripts/creatures/traits.gd")
+	for card: Variant in entries:
+		if not card is Dictionary: return ["invalid trait card"]
+		var uid := str(card.get("uid", ""))
+		# Absence remains the existing legacy codec path. A present malformed
+		# mirror still refuses before any personal or party mutation.
+		if not character.creatures.has(uid): continue
+		var record: Variant = character.creatures[uid]
+		if not record is Dictionary: return ["invalid trait mirror"]
+		errors.append_array(traits.trait_state_errors(traits.initialize_legacy_record(card, record)))
+		for field: String in ["max_hp", "hp", "attack", "defence"]:
+			var value: Variant = card.get(field)
+			if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0:
+				errors.append("invalid saved trait stat " + field)
+		if not card.get("fainted") is bool: errors.append("invalid saved fainted")
+		if errors.is_empty() and (float(card.max_hp) <= 0.0 or float(card.hp) > float(card.max_hp)):
+			errors.append("invalid saved trait HP")
+	return errors
