@@ -156,6 +156,10 @@ static func detach(owner_node: Node3D) -> void:
 ## fallback is for the capture tools and smoke tests, which add the world scene
 ## to `root` by hand and leave `current_scene` null.
 static func _field_for(near: Node3D, create: bool = true) -> Node3D:
+	# Detached props have no world to host the shared field; get_tree() itself
+	# reports an error before returning null when called outside the tree.
+	if not is_instance_valid(near) or not near.is_inside_tree():
+		return null
 	var tree := near.get_tree()
 	if tree == null:
 		return null

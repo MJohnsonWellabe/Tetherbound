@@ -82,7 +82,7 @@ func setup(item_id: String, label: String, model_path: String, model_scale: floa
 	add_child(_prompt)
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	_listen_for_refusals()
-	var game := get_node_or_null(^"/root/Game")
+	var game: Node = get_node_or_null(^"/root/Game") if is_inside_tree() else null
 	if was_taken(game, _item_id, _placement_id, _realm_id):
 		_deactivate()
 
@@ -151,7 +151,7 @@ func _detach_visual_glow() -> void:
 ## `key_pickup.gd::_item_colour()` reads, so two pickup props marking the same
 ## item can never disagree about what colour it is.
 func _item_colour() -> Color:
-	var game := get_node_or_null(^"/root/Game")
+	var game: Node = get_node_or_null(^"/root/Game") if is_inside_tree() else null
 	if game == null:
 		return Color(0.85, 0.72, 0.35)
 	var items: RefCounted = game.get("items")
