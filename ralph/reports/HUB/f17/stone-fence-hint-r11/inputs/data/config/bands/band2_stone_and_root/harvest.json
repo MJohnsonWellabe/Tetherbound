@@ -1,0 +1,354 @@
+{
+  "_comment": "BAND-SPLIT. Band-local nodes for band2_stone_and_root. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 2000-2999, which no other band can collide with; do not renumber an existing one.",
+  "nodes": [
+    {
+      "order": 12,
+      "_comment_sd16": "SD16, spec \u00a73 Band 2 and \u00a710: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
+      "_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five rootstone deposits below move by the same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800), see old_quarry.json), preserving their relative layout on the quarry floor exactly.",
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        394.0,
+        1797.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.15
+    },
+    {
+      "order": 13,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        399.0,
+        1792.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05
+    },
+    {
+      "order": 14,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        406.0,
+        1800.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.25,
+      "_why": "hard against the quarry's own cut face, where the working stopped"
+    },
+    {
+      "order": 15,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        401.0,
+        1809.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.1
+    },
+    {
+      "order": 16,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [
+        395.0,
+        1812.0
+      ],
+      "_why": "B2 (#229): at (393,1802) this deposit stood inside the solid ground behind foundation_0's long wall and the cut face; no ordinary approach came within 3.6m, outside its 2.4m prompt (tests/probe_quarry_floor.gd). Moved onto the open floor SOUTH of that wall, 6.7m from order 15 and 7m from the foundation: the wall (z 1802-1804, open only past x 409) splits the floor, and the earned route visits deposits in order, so 15 -> 16 -> 2020 now stays on one side instead of crossing it twice",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "order": 17,
+      "_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly. BAND2-63-WARRENS then moved the cave again, (-420,2470) -> (-357,2610), because the OW5D site could not be walked through (burrow_warrens.json's `_comment_resiting`); these five moved with it by that same (+63,+140) -- and then were RE-ARRANGED, because the blind visual pass found what a uniform translation had done: one ironwood stood inside the knoll, and three more stood in the doorway corridor, the nearest 8.5m dead in front of the mouth. The frame the critic saw was a full-canopy red tree filling the cave entrance. They are now a stand ringing the site at 34-46m, 26m or more off the doorway axis and outside the authored clearing, so the player walks past ironwood on the way in instead of through it.",
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -321.5,
+        2616.3
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "order": 18,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -320.9,
+        2633.4
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.3
+    },
+    {
+      "order": 19,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -361.1,
+        2576.3
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "order": 20,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -379.3,
+        2569.8
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "model_scale": 0.32
+    },
+    {
+      "order": 21,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -342.2,
+        2645.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "model_scale": 0.28
+    },
+    {
+      "order": 2001,
+      "_comment_mq2b_spoil": "MQ2B. The ridge between the quarry (400,1800) and the ranger camp spur (-150,2210) had no gatherable at all -- 410m of spine with nothing to reach for, the longest uncovered stretch on the band's western half. docs/specs/MEADOWS_MACRO_LAYOUT.md section 5's own words for this band are 'quarried faces, spoil heaps'; ordinary stone read through that phrase rather than inventing a new material. Near the quarry_rim_overlook loop's own rejoin (330,1950), just off the spine.",
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        168.0,
+        2038.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0
+    },
+    {
+      "order": 2002,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        28.0,
+        2118.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.9,
+      "_why": "second of the pair, short of the ranger camp spur's own fork at (-150,2210) -- a beat every 150-250m per the macro-layout's own density budget, not one lonely rock in the middle of 410m"
+    },
+    {
+      "order": 2003,
+      "_comment_mq2b_ridge": "MQ2B. Past the Warrens (-420,2470) the spine runs another ~710m to the band's own end (0,3180) with only the warren_undertrail loop's rejoin (-180,2730) on it -- the 'deeper oak forest' section 5 names for this band, read as gatherable wood the same way the spoil heaps above read as stone. Near the spine's own (-40,2840).",
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -52.0,
+        2852.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22
+    },
+    {
+      "order": 2004,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        76.0,
+        2972.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "model_scale": 0.24,
+      "_why": "second of the pair, between the undertrail rejoin and the band's own end at (0,3180) so the last kilometre before the River Lock is not empty ground"
+    },
+    {
+      "order": 2005,
+      "_comment_mq2b_round4": "MQ2B, OPS15 blind-critic round 3->4. Two rounds of critique named the same thing from two different angles: 'no secondary ground dressing' and '85-95% flat, undetailed grass' in the stretches BETWEEN named landmarks. `harvest.json`'s own coordinator guidance is to spend entries on 'named nodes, ore, berries' rather than wood/stone (that's the scatter's job now). Berries, band1's own model/scale convention (Bush_Common_Flowers.gltf @ 1.2), placed in the trailpup/meadowhart stretch that had nothing between the South Bridge and the quarry.",
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        135.0,
+        1538.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2
+    },
+    {
+      "order": 2006,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        145.0,
+        1543.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.1,
+      "_why": "second of the pair, close enough to the first to read as one thicket rather than two coincidences -- EV7-clusters-fix's own finding about touching vs scattered reads"
+    },
+    {
+      "order": 2007,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        68.0,
+        2965.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.15,
+      "_why": "the late-ridge stretch past the Warrens, beside the deadwood node (order 2004) and the night-gated duskhush spawn -- same reasoning as the pair above, ported to the band's other bare stretch"
+    },
+    {
+      "order": 2008,
+      "item": "fiber",
+      "amount": 3,
+      "label": "Cut fiber",
+      "at": [
+        150.0,
+        1565.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 2009,
+      "item": "fiber",
+      "amount": 3,
+      "label": "Cut fiber",
+      "at": [
+        205.0,
+        1690.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 2010,
+      "item": "fiber",
+      "amount": 3,
+      "label": "Cut fiber",
+      "at": [
+        -420.0,
+        2440.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3
+    },
+    {
+      "order": 2011,
+      "_comment_camp": "BAND2-63, prompt 61's camp-siting checklist: a field camp wants 'nearby basic wood/stone/fiber availability'. The `ranger_camp` clearing (vegetation.json order 2001, -259,2256.5) had none within 250m -- the nearest stone was the order 2002 pair, 300m+ back down the spur. A wood node right at the camp means a player who stops here to build a bed does not have to leave the clearing to feed it.",
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -252.0,
+        2249.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "model_scale": 0.24,
+      "_comment_renumber": "BAND2-63-WARRENS merge: authored on this lane as order 2008, which main independently used for a fiber node while this branch was out. `order` is identity and neither may take the other's, so the later-merged entry moves -- this one. Nothing about the node itself changed."
+    },
+    {
+      "order": 2012,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Strip meadow grass",
+      "at": [
+        -264.0,
+        2264.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "same camp-siting reasoning as the wood node above -- a build needs fiber as often as it needs wood, and this is the only field camp in the band",
+      "_comment_renumber": "BAND2-63-WARRENS merge: authored on this lane as order 2009, which main independently used for a fiber node while this branch was out. `order` is identity and neither may take the other's, so the later-merged entry moves -- this one. Nothing about the node itself changed."
+    },
+    {
+      "order": 2013,
+      "item": "potion_large",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [
+        350.0,
+        1968.0
+      ],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29. On the quarry_rim_overlook loop's own rejoin (330,1950) -- an overlook worth walking out to for the view already, now worth it twice."
+    },
+    {
+      "order": 2014,
+      "item": "revive",
+      "amount": 1,
+      "label": "A stashed revive",
+      "at": [
+        -165.0,
+        2745.0
+      ],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29: a revive wants to sit 'where a fight just went badly or is about to'. On the warren_undertrail loop's own rejoin (-180,2730), just past the Burrow Warrens' second mouth -- the ground where a player who fought their way through the vault and the Guardian first steps back into daylight."
+    },
+    {
+      "order": 2015,
+      "item": "hide_boots",
+      "amount": 1,
+      "label": "A dropped pair of boots",
+      "at": [
+        -165.0,
+        2225.0
+      ],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "T3-REWARD found `hide_boots` fully modelled with zero acquisition path anywhere in the game. Near the ranger camp spur (-150,2210) -- a ranger's own boots, left at the camp. stack:1 gear; a respawning crate is harmless."
+    },
+    {
+      "order": 2016,
+      "item": "stoneguard_brew",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [-345.0, 2585.0],
+      "model": "res://assets/props/stat_draughts/stoneguard_brew.tscn",
+      "model_scale": 0.8,
+      "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: stoneguard_brew was shop-only at Mira's before this pass, no world presence. Just outside the Burrow Warrens mouth (burrow_warrens.json site.at (-357,2610)) -- a defence tonic where a player braces before the Guardian, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
+    },
+    {"order": 2020, "item": "rootstone", "amount": 2, "label": "Prise out rootstone", "at": [381.0, 1824.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 1.1, "_why": "W17-DENSITY-B2-B3. A second Rootstone seam on the quarry floor, 15m south of the first five (orders 12-16): the quarry is where Rootstone is learned (prompt 63) and five nodes were one visit's worth; a second seam among the burrowback nest (spawns 2073) is why the floor is walked twice."},
+    {"order": 2021, "item": "rootstone", "amount": 2, "label": "Prise out rootstone", "at": [413.0, 1820.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf", "model_scale": 1.05, "_why": "W17-DENSITY-B2-B3. The second seam's east stone, on the quarry's cut east wall."},
+    {"order": 2022, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [365.0, 1795.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 1.0, "_why": "W17-DENSITY-B2-B3. Loose stone at the quarry's west lip: ordinary building stone is what a quarry road should offer beside the Rootstone it is famous for."},
+    {"order": 2023, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [421.0, 1789.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.9, "_why": "W17-DENSITY-B2-B3. The east lip's loose stone, the pair to (365,1795)."},
+    {"order": 2024, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [372.0, 1712.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 1.0, "_why": "W17-DENSITY-B2-B3. The rim overlook loop's first leg ((310,1660)->(370,1710)): a gather stop on the loop so it is not only a view."},
+    {"order": 2025, "item": "berries", "amount": 3, "label": "Pick berries", "at": [432.0, 1848.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries on the rim loop's east ledge above the night duskhush (spawns 2074), between the Great Candy at (426,1782) and the rim's south descent."},
+    {"order": 2026, "item": "fiber", "amount": 3, "label": "Cut fiber", "at": [400.0, 1912.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. Fiber on the rim's south descent (loop point (400,1910)) beside the Good Candy at (416,1902): the walk back to the road gathers."},
+    {"order": 2027, "item": "wood", "amount": 4, "label": "Gather deadwood", "at": [305.0, 1982.0], "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf", "model_scale": 0.24, "_why": "W17-DENSITY-B2-B3. Deadwood on the haul road's east verge between the potion crate at (350,1968) and the mudsnout at (240,1950): the road's first wood since the bridge, 400m of haul road had none."},
+    {"order": 2028, "item": "fiber", "amount": 3, "label": "Cut fiber", "at": [185.0, 2062.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. Fiber where the haul road bends at (180,2050), beside the burrowback at (137,2040)."},
+    {"order": 2029, "item": "berries", "amount": 3, "label": "Pick berries", "at": [56.0, 2136.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries in the stone hollow at the spine bend (20,2130), the third gather in one stop with the stone at (28,2118) and the Good Candy at (38,2102): a hollow worth stepping into."},
+    {"order": 2030, "item": "berries", "amount": 3, "label": "Pick berries", "at": [-226.0, 2242.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries on the ranger camp spur beside the trailpup pack (spawns 2075): the spur's camp is the band's rest and had wood and fiber (2011/2012) but nothing to eat."},
+    {"order": 2031, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [-292.0, 2302.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.9, "_why": "W17-DENSITY-B2-B3. Loose stone at the spur's top before the spine's (-310,2320): the camp's own crafting anvil wants stone, and the spur had none."},
+    {"order": 2032, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [-380.0, 2546.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 1.0, "_why": "W17-DENSITY-B2-B3. Loose stone on the undertrail loop's first leg ((-420,2470)->(-380,2540)) beside the Great Candy at (-394,2522)."},
+    {"order": 2033, "item": "fiber", "amount": 3, "label": "Cut fiber", "at": [-254.0, 2670.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. Fiber at the undertrail's east half by the mudsnout (spawns 2077): the second mouth's approach gathers."},
+    {"order": 2034, "item": "wood", "amount": 4, "label": "Gather deadwood", "at": [-202.0, 2714.0], "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf", "model_scale": 0.22, "_why": "W17-DENSITY-B2-B3. Deadwood at the undertrail's rejoin, between the burrowback at (-215,2710) and the revive crate at (-165,2745)."},
+    {"order": 2035, "item": "fiber", "amount": 3, "label": "Cut fiber", "at": [-24.0, 2864.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. Fiber on the spine before Kest, paired with the deadwood at (-52,2852): the walk from the Warrens to the last trainer had two wood nodes and no fiber."},
+    {"order": 2036, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [104.0, 2932.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.9, "_why": "W17-DENSITY-B2-B3. Loose stone at Farro's night watch (95,2900) beside the Speed Shroom at (112,2916): the watch is a place, with something to gather at it."},
+    {"order": 2037, "item": "berries", "amount": 3, "label": "Pick berries", "at": [42.0, 3102.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries on the seam approach by the meadowhart at (47,3034) and the duskhush at (25,3072): the band's last berries before the river."},
+    {"order": 2038, "item": "wood", "amount": 4, "label": "Gather deadwood", "at": [-32.0, 3152.0], "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf", "model_scale": 0.24, "_why": "W17-DENSITY-B2-B3. Deadwood on the seam hill beside the Good Candy at (-42,3132) and the night duskhush (spawns 2080): the band-3 seam is a small stop, not a line."},
+    {"order": 2039, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [62.0, 3172.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 1.0, "_why": "W17-DENSITY-B2-B3. Loose stone at the seam's east side, so a player arriving at the haulage wreck with an empty satchel has stone in hand for the river country."}
+  ]
+}

@@ -1,0 +1,808 @@
+extends Node3D
+
+## One gatherable spot: a visible prop, an interact prompt, and an item that
+## lands in the satchel.
+##
+## The first day's gathering, deliberately NOT the real harvesting system. M8's
+## tools-and-durability loop works the instanced vegetation itself; these are
+## a dozen hand-placed nodes along the tutorial path (data/config/harvest.json)
+## so "gather enough to make camp" is playable today without touching ten
+## thousand MultiMesh instances. When M8 lands, these become the tutorial-only
+## seed spots or disappear — either is fine, nothing else depends on them.
+##
+## D72, owner directive: "When you gather something it shouldn't come back. A
+## bush, a tree, a stone. It should be gone." This used to hide the prop and
+## restore it after `RESPAWN_SECONDS` -- the one gather point in the game that
+## still came back, after `vegetation.gd`'s own trees/rocks (D60/D67) and
+## every other pickup (`key_pickup.gd`, `item_cache_pickup.gd`, `tm_pickup.gd`)
+## had already gone permanent. Same fix, same shape as those three: a
+## `progression` flag keyed by this node's own stable identity, checked in
+## `setup()` and replayed on a mid-session load through the `progression_restore`
+## group (`autoload/game_state.gd::load_game()`), so a save never brings a
+## gathered node back.
+
+const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
+const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
+const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+const RULES := preload("res://scripts/world/scatter_rules.gd")
+## D103 / Stage B lane 3.B. See `_on_gathered()`: this node is spent through the
+## world ledger now, not by writing its own flag and its own satchel line.
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+
+## MAT-BLOCKOUT round 2. A blind critic, told nothing about the round-1
+## retint, still flagged the rootstone deposits: no longer "mint/seafoam"
+## (that defect is gone), but a NEW one -- "a strange faceted 'carved face'
+## ridge pattern and a repeating light/dark checker-like texture... reads as
+## broken or mismatched material, not a rock." That pattern is baked INTO
+## `Rocks_Diffuse.png` itself (a low-poly-to-highpoly bake artefact), and
+## every one of the pack's three Rock_Medium variants shares that exact same
+## file -- checked directly against each glTF's own material JSON. No tint
+## or swap-to-a-sibling-model reaches a defect baked into the one texture
+## all three share; that is a real ceiling in this specific installed file,
+## not a config bug. `terrain_playground.json`'s `rock` material
+## (Rock030_Color/NormalGL.jpg) does not carry this artefact -- it is a real
+## photograph, already used and tuned elsewhere in this project (the Old
+## Quarry's foundations use a sibling stone texture the same critic called
+## "the more naturalistic boulder"; the Burrow Warrens wall uses this exact
+## pair, `burrow_warrens.gd::_material`) -- so the "Rocks" material gets a
+## full texture swap here, not a multiply-tint over the broken one.
+const ROCK_ALBEDO := preload("res://assets/environment/terrain/Rock030_Color.jpg")
+const ROCK_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.jpg")
+const ROCK_UV_SCALE := 0.46
+const ROCK_CEILING_MATERIAL := "Rocks"
+
+## D72. Owned-and-set-once identity for the progression flag below, kept
+## permanently rather than ticking back down — a node this old still gets read
+## by `tests/helpers/gate_a_material_route.gd::_is_unspent()` and
+## `tests/helpers/gate_a_npc_gather_segment.gd::_nearest_authored_node()`
+## through `node.get("_respawn_left")`, and a field that no longer exists reads
+## back as `null`, which `float()` refuses rather than coercing. A gathered
+## node is freed outright (`_deactivate()` below), so those callers' own
+## `is_inside_tree()`/prompt-enabled checks already exclude it; this field only
+## has to keep existing, never has to become true again.
+var _respawn_left: float = 0.0
+
+const FLAG_PREFIX := "harvest_node:"
+
+var _item_id: String = ""
+var _amount: int = 0
+var _label: String = ""
+var _model_path: String = ""
+var _model_scale: float = 1.0
+var _prompt: Node3D = null
+var _visual: Node3D = null
+## D72. This node's own stable identity for the progression flag, derived from
+## `spec` rather than assigned by a caller: authored band nodes
+## (`data/config/bands/<band>/harvest.json`, merged by `band_content.gd`) carry
+## a globally-unique `order`, enforced by that merge itself; a caller with no
+## `order` (`burrow_warrens.gd`'s deposits, this file's own tests) falls back
+## to its item id plus its authored `at`, which is exactly as stable for a
+## fixed, hand-placed spec.
+var _node_id: String = ""
+## D97: the realm this node's RECORD belongs to. Stamped on every intent
+## explicitly; nothing here reads `Game.current_realm`, because from Wave 6 two
+## peers stand in two realms at once. `harvest_node:<id>` is not itself
+## realm-qualified (it never was) -- `order` is globally unique across bands and
+## the fallback carries the authored `at` -- so this only stamps the intent.
+var _realm_id: String = "meadows"
+## True between submitting a `harvest` intent and hearing back, and what this
+## node was going to pay for if it wins: `{"amount": int, "slot": int}`. NOTHING
+## local changes while it is set. The satchel line, the sounds, the tool wear
+## and the `home_materials_gathered` check all wait for the committed delta,
+## which is what makes a lost race cost the loser nothing at all.
+var _fight_hides := 0
+var _claiming := false
+var _claim: Dictionary = {}
+var _taken := false
+## Supplied only by a registered-world mount / replicated internal stock op.
+## New renewable nodes have no legacy fallback while their stock is unknown.
+var _renewable_site_id := ""
+var _renewable_stock: Dictionary = {}
+var _source_service: Node
+
+
+func bind_source_service(service: Node) -> void:
+	_source_service = service
+	if service != null and not service.is_connected("settled", _on_source_settled):
+		service.connect("settled", _on_source_settled)
+
+
+func setup(spec: Dictionary) -> void:
+	_item_id = str(spec.get("item", "wood"))
+	_amount = int(spec.get("amount", 3))
+	_label = str(spec.get("label", "Gather"))
+	_model_path = str(spec.get("model", ""))
+	_model_scale = float(spec.get("model_scale", 1.0))
+	var order: Variant = spec.get("order")
+	_node_id = ("order:%s" % str(order)) if order != null else ("%s@%s" % [_item_id, str(spec.get("at", []))])
+	_realm_id = str(spec.get("realm", "meadows"))
+	_renewable_site_id = str(spec.get("renewable_site_id", ""))
+	var stock: Variant = spec.get("renewable_stock", {})
+	_renewable_stock = stock.duplicate(true) if stock is Dictionary else {}
+	add_to_group("progression_restore")
+
+	_build_visual()
+	if _model_is_a_soft_occluder():
+		add_to_group(FIGHT_RING_OCCLUDER_GROUP)
+	_prompt = INTERACTABLE.new()
+	_prompt.name = "Interactable"
+	_prompt.position = Vector3.UP * 0.6
+	_prompt.call("configure", _label, 2.4, true)
+	_prompt.connect("activated", _on_gathered)
+	add_child(_prompt)
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
+	var game := get_node_or_null(^"/root/Game")
+	if _already_taken(game):
+		_deactivate()
+
+
+## Overridable claim seam (F13#2 `water_scene_pickups.gd::PersonalHarvest`):
+## whether this node is already gathered for the viewer, the intent a gather
+## submits, and whether a committed delta is the one that retires it. The base
+## node is world-once under `harvest_node:<id>`; these defaults are exactly the
+## behaviour this file always had.
+func _already_taken(game: Node) -> bool:
+	if not _renewable_site_id.is_empty():
+		return not _renewable_ready(game)
+	return was_taken(game, _node_id)
+
+
+func _claim_intent(actual_amount: int) -> Dictionary:
+	if not _renewable_site_id.is_empty():
+		var txn := "harvest:%s:%s:%d" % [_realm_id, _renewable_site_id, Time.get_ticks_usec()]
+		_claim["txn_id"] = txn
+		_claim["expected_revision"] = int(_renewable_stock.get("revision", -1))
+		return {"kind": "renewable_harvest", "realm": _realm_id,
+			"site_id": _renewable_site_id, "expected_revision": int(_renewable_stock.get("revision", -1)),
+			"txn_id": txn}
+	return {
+		"kind": "stormwood_harvest" if has_meta("stormwood_harvest_site") else "harvest",
+		"site_id": str(get_meta("stormwood_harvest_site", "")),
+		"realm": _realm_id,
+		"flag": flag_id(_node_id),
+		"item": _item_id,
+		"amount": actual_amount,
+	}
+
+
+func _claim_committed(delta: Dictionary) -> bool:
+	if not _renewable_site_id.is_empty():
+		return not _stock_op(delta).is_empty()
+	return LEDGER_CLAIM.sets_world_flag(delta, flag_id(_node_id))
+
+
+## Stable per-node flag id -- pure, so a route/test can predict it without a
+## live Game autoload, the same seam `key_pickup.gd::flag_id()` and
+## `item_cache_pickup.gd::flag_id()` already give their own callers.
+static func flag_id(node_id: String) -> String:
+	return FLAG_PREFIX + node_id
+
+
+static func was_taken(game: Node, node_id: String) -> bool:
+	if game == null or node_id == "":
+		return false
+	var progression: RefCounted = game.get("progression")
+	return progression != null and bool(progression.call("has", flag_id(node_id)))
+
+
+## RG7's generic reconciliation seam (`autoload/game_state.gd::load_game()`),
+## the same one `key_pickup.gd`/`item_cache_pickup.gd`/`tm_pickup.gd` already
+## answer: a mid-session load must hide/free an already-gathered node the live
+## world still has standing.
+func restore_progression_from_game(game: Node) -> void:
+	if not _renewable_site_id.is_empty():
+		_read_renewable_stock(game)
+		_refresh_renewable_presentation()
+		return
+	if _already_taken(game):
+		_deactivate()
+
+
+## Permanent removal, once gathered or once a load says this node already was:
+## the prompt stops offering, the shared highlight lets go, and the node frees
+## itself -- the same shape `key_pickup.gd::_deactivate()` and
+## `item_cache_pickup.gd::_deactivate()` already use for their own one-time
+## finds.
+func _deactivate() -> void:
+	_taken = true
+	if _prompt != null and is_instance_valid(_prompt):
+		_prompt.call("set_enabled", false)
+	if _visual != null:
+		PICKUP_GLOW.detach(_visual)
+	visible = false
+	if not _renewable_site_id.is_empty():
+		return # Retain the presentation shell; only host stock can restore it.
+	queue_free()
+
+
+## MEADOWS-VISUAL-PASS: a deadwood node built from the same standing dead
+## tree the `deadfall` scatter uses stood in the middle of the survey's fight
+## ring, between the camera and both fighters. `combat_arena.gd` hides every
+## member of this group inside its ring for the fight, the same way it hides
+## that scatter (`vegetation.gd::hide_fight_occluders()`). Only the model is
+## hidden; a harvest node has no collider, and its record and prompt are
+## untouched. Only nodes built from a `bushes`/`deadfall` model join.
+const FIGHT_RING_OCCLUDER_GROUP := "fight_ring_occluder"
+const SOFT_OCCLUDER_LAYERS: Array[String] = ["bushes", "deadfall"]
+
+
+func _model_is_a_soft_occluder() -> bool:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	for layer_name: String in SOFT_OCCLUDER_LAYERS:
+		if ((layers.get(layer_name, {}) as Dictionary).get("models", []) as Array).has(_model_path):
+			return true
+	return false
+
+
+## Counted, so two overlapping rings do not show it while one is still open.
+func set_fight_hidden(hidden: bool) -> void:
+	_fight_hides = maxi(0, _fight_hides + (1 if hidden else -1))
+	if _visual != null and is_instance_valid(_visual) and not _taken:
+		_visual.visible = _fight_hides == 0
+
+
+## Read-only identity for controller-driven evidence and route selection.
+## The harvest implementation keeps its backing fields private; callers that
+## need to choose an actually visible, live node must not reach into them.
+func resource_item() -> String:
+	return _item_id
+
+
+func resource_amount() -> int:
+	return _amount
+
+
+## OF20. Every `model` in data/config/harvest.json is a `.gltf` from the
+## Quaternius stylized-nature kit (see the header above, R9.4), and a glTF
+## imports as a PackedScene, not a bare Mesh (check the `.import` sidecar:
+## `type="PackedScene"`). `load(_model_path)` handed straight to
+## `MeshInstance3D.mesh` was therefore an invalid assignment on every single
+## authored node — none of the twelve ever rendered. Branch on what `load()`
+## actually returns, the same PackedScene-vs-Mesh fork
+## `grandpa_house.gd::_furnish` and `props.gd::_place` already use for this
+## exact pack. A PackedScene gets instantiated and wrapped in a plain Node3D
+## so `_visual` stays a single node whose `.visible` and `.scale` mean "the
+## whole prop" regardless of how many parts the scene's own root has.
+func _build_visual() -> void:
+	if _model_path != "" and ResourceLoader.exists(_model_path):
+		var resource: Resource = load(_model_path)
+		if resource is PackedScene:
+			var wrapper := Node3D.new()
+			wrapper.add_child((resource as PackedScene).instantiate())
+			wrapper.scale = Vector3.ONE * _model_scale
+			_apply_material_fixups(wrapper, _model_path)
+			# GF-B-010's rule, after the retint above rather than instead of
+			# it: a model no vegetation layer claims (most harvest nodes --
+			# wood, berries) keeps its IMPORTED material, and a material that
+			# carries metallic with no metallic texture is a glTF export
+			# omission that renders as a black silhouette in daylight. The
+			# band-1 `log_large` deposit was doing exactly that. See
+			# `imported_materials.gd`'s header. A no-op for anything the
+			# retint already replaced, and for every pack that ships an ORM map.
+			IMPORTED_MATERIALS.make_dielectric(wrapper)
+			_visual = wrapper
+		elif resource is Mesh:
+			var mesh := MeshInstance3D.new()
+			mesh.mesh = resource as Mesh
+			mesh.scale = Vector3.ONE * _model_scale
+			_visual = mesh
+		else:
+			push_warning("harvest model '%s' loaded as neither a Mesh nor a PackedScene; falling back to the box" % _model_path)
+			_visual = _box_visual()
+	else:
+		_visual = _box_visual()
+	add_child(_visual)
+	# OP-0830-3. Attached to `_visual` rather than to `self` on purpose:
+	# `_deactivate()` detaches this by the same reference, so pickup_glow.gd
+	# never carries a highlight for a node whose visual is already gone.
+	# OWNER PLAYTEST 2026-08-30B item 3. `_item_kind()` is what lets one node
+	# type glow for a buried potion and stay dark for a wood/stone/fiber
+	# deposit -- see `pickup_glow.gd::is_glow_kind()`.
+	PICKUP_GLOW.attach(_visual, _item_colour(), -1.0, 1.0, _item_kind())
+
+
+## MAT-BLOCKOUT. The Old Quarry's rootstone deposits (`Rock_Medium_1/3.gltf`,
+## data/config/bands/band2_stone_and_root/harvest.json) instance the SAME
+## models `vegetation.json`'s `rocks` layer scatters across the meadow --
+## and that layer warms them from the pack's native cool grey (measured
+## value 0.46, saturation 0.09 -- "a pale mint/seafoam... hatch-patterned
+## surface" is that native texture, unmodified, not a broken one) toward
+## stone tones (vegetation.gd::_tint_for). This file's own `load()` +
+## `instantiate()` never went through that treatment, because it is a
+## different code path entirely (a single hand-placed node, not a
+## MultiMesh layer) -- so a shared model carried two looks depending on
+## which system placed it. `vegetation.gd::_warn_about_shared_models`
+## exists for exactly this shape of bug.
+##
+## Fixed by reading the identical retint/retexture data every OTHER
+## consumer of these models already uses, rather than inventing a second
+## set of colours here: one source of truth for what a shared model looks
+## like, keyed by its own model path in data/config/vegetation.json's
+## `layers`. A model no vegetation layer claims (most harvest nodes: wood,
+## berries) gets an empty map back and renders exactly as before.
+func _apply_material_fixups(root: Node, model_path: String) -> void:
+	var fixups := _material_fixups_for_model(model_path)
+	var retint: Dictionary = fixups.get("retint", {})
+	var retexture: Dictionary = fixups.get("retexture", {})
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := node as MeshInstance3D
+		var mesh: Mesh = mesh_instance.mesh
+		if mesh == null:
+			continue
+		for surface in mesh.get_surface_count():
+			var source: Material = mesh.surface_get_material(surface)
+			var material_name := "" if source == null else source.resource_name
+			if material_name == ROCK_CEILING_MATERIAL:
+				# MEADOWS-VISUAL-PASS round 5: one stone family. When the
+				# presentation overlay gives the scatter rocks a texture, a
+				# deposit wears the same texture and tint as the boulders beside
+				# it (a blind round counted three rock families: photo, pack and
+				# white). Rock030 stays the fallback.
+				var shared := _presentation_rock_look(model_path)
+				if not shared.is_empty():
+					mesh_instance.set_surface_override_material(surface, _fixed_up_material(
+						source, material_name, str(shared["tint"]), str(shared["texture"])))
+					continue
+				var rock_tint := _harvest_rock_retint(model_path)
+				mesh_instance.set_surface_override_material(surface, _rock_ceiling_material(
+					rock_tint if rock_tint != "" else str(retint.get(material_name, ""))))
+				continue
+			if not retint.has(material_name) and not retexture.has(material_name):
+				continue
+			mesh_instance.set_surface_override_material(surface, _fixed_up_material(
+				source, material_name, str(retint.get(material_name, "")),
+				str(retexture.get(material_name, ""))))
+
+
+## MEADOWS-VISUAL-PASS round 5: the Rock030 swap below needs its own tints,
+## because vegetation.json's rock tints were tuned against the pack texture it
+## replaces (see `harvest_rock_retint` in vegetation_presentation.json). Empty
+## when the overlay does not name this model.
+static var _presentation: Variant = null
+
+
+static func _presentation_overlay() -> Dictionary:
+	if _presentation == null:
+		_presentation = {}
+		var parsed: Variant = JSON.parse_string(
+			FileAccess.get_file_as_string("res://data/config/vegetation_presentation.json"))
+		if parsed is Dictionary:
+			_presentation = parsed
+	return _presentation
+
+
+static func _harvest_rock_retint(model_path: String) -> String:
+	return str((_presentation_overlay().get("harvest_rock_retint", {}) as Dictionary).get(model_path, ""))
+
+
+## {"texture", "tint"} the scatter gives this rock model through the overlay,
+## or {} when the overlay swaps no rock texture.
+static func _presentation_rock_look(model_path: String) -> Dictionary:
+	var overlay := _presentation_overlay()
+	var texture := str((overlay.get("retexture", {}) as Dictionary).get(ROCK_CEILING_MATERIAL, ""))
+	if texture == "":
+		return {}
+	var per_model: Dictionary = (overlay.get("variant_retint", {}) as Dictionary).get(model_path, {})
+	return {"texture": texture, "tint": str(per_model.get(ROCK_CEILING_MATERIAL, ""))}
+
+
+## The first vegetation layer that claims `model_path` in its own `models`
+## list, its `retexture` (texture swaps, layer-wide) merged with its
+## `retint` overridden per-model by `variant_retint` -- the exact precedence
+## `vegetation.gd::_tint_for` applies to the same data. Empty when no layer
+## claims the model, which is the common case for this file's other
+## harvest nodes.
+func _material_fixups_for_model(model_path: String) -> Dictionary:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	for layer_name: String in layers.keys():
+		if layer_name.begins_with("_"):
+			continue
+		var layer: Dictionary = layers[layer_name]
+		var models: Array = layer.get("models", [])
+		if not models.has(model_path):
+			continue
+		var retint: Dictionary = (layer.get("retint", {}) as Dictionary).duplicate()
+		var per_model: Dictionary = (layer.get("variant_retint", {}) as Dictionary).get(model_path, {})
+		for material_name: String in per_model.keys():
+			retint[material_name] = per_model[material_name]
+		return {"retint": retint, "retexture": layer.get("retexture", {})}
+	return {}
+
+
+## Mirrors `vegetation.gd::_tint_for`'s textured branch (same pack, same
+## rule: `albedo_color` MULTIPLIES the texture, so the source art stays and
+## the colour rides over it) without that function's MultiMesh-only concerns
+## (per-instance colour, LOD-preserving mesh duplication) -- this retints one
+## scene-tree instance via `set_surface_override_material`, which touches
+## neither the shared Mesh resource nor any other instance of it.
+func _fixed_up_material(source: Material, material_name: String, colour_hex: String,
+		swap_path: String) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	var standard := source as StandardMaterial3D
+	if standard != null and standard.albedo_texture != null:
+		material.albedo_texture = standard.albedo_texture
+		if swap_path != "":
+			if ResourceLoader.exists(swap_path):
+				material.albedo_texture = load(swap_path) as Texture2D
+			else:
+				push_warning("harvest node asks to swap material to '%s', which does not exist" % swap_path)
+		material.normal_texture = standard.normal_texture
+		material.normal_enabled = standard.normal_enabled
+		material.vertex_color_use_as_albedo = standard.vertex_color_use_as_albedo
+		material.transparency = standard.transparency
+		material.alpha_scissor_threshold = standard.alpha_scissor_threshold
+		material.cull_mode = standard.cull_mode
+		if standard.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
+			material.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
+	material.albedo_color = Color(colour_hex) if colour_hex != "" else Color.WHITE
+	material.roughness = 0.94
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	IMPORTED_MATERIALS.apply_thin_foliage_backlight(material_name, material)
+	return material
+
+
+## MAT-BLOCKOUT round 2, see the header comment on `ROCK_ALBEDO` above: the
+## "Rocks" material's OWN texture carries a baked hatch/facet artefact no
+## tint can remove, so this replaces the texture outright rather than
+## multiplying over it. `uv1_triplanar` needs no authored UVs, so it works on
+## the pack's rock geometry exactly as it does on `burrow_warrens.gd`'s
+## primitive boxes. `colour_hex` (from vegetation.json's existing per-model
+## `variant_retint`, e.g. Rock_Medium_1 vs. _3's tan/brown split) is kept as
+## a multiply over the new photo, so the hue-variety work that round already
+## did survives the texture swap instead of every deposit going one flat
+## colour.
+func _rock_ceiling_material(colour_hex: String) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = ROCK_ALBEDO
+	material.albedo_color = Color(colour_hex) if colour_hex != "" else Color.WHITE
+	material.normal_enabled = true
+	material.normal_texture = ROCK_NORMAL
+	material.normal_scale = 1.6
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * ROCK_UV_SCALE
+	material.roughness = 0.92
+	material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	return material
+
+
+## A low mound in the item's own slot colour: legible from a distance without
+## pretending to be final art. The fallback for a node with no `model` at
+## all, and now also for a `model` that loads as something unusable.
+func _box_visual() -> MeshInstance3D:
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(0.7, 0.35, 0.7)
+	mesh.mesh = box
+	var material := StandardMaterial3D.new()
+	material.albedo_color = _item_colour()
+	material.roughness = 0.9
+	mesh.material_override = material
+	mesh.position = Vector3.UP * 0.18
+	return mesh
+
+
+func _item_colour() -> Color:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return Color(0.6, 0.5, 0.4)
+	var items: RefCounted = game.get("items")
+	return items.call("colour", _item_id) if items != null else Color(0.6, 0.5, 0.4)
+
+
+## `item_db.gd::kind()` for whatever this node hands out -- `"resource"` for
+## wood/stone/fiber/rootstone/ironwood, `"consumable"`/`"gear"` for the
+## potions and orbs the same tutorial band also seeds. Empty (glow-eligible
+## by `pickup_glow.gd::is_glow_kind()`'s default) if there is no Game autoload
+## to ask, same fallback shape as `_item_colour()`.
+func _item_kind() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return ""
+	var items: RefCounted = game.get("items")
+	return str(items.call("kind", _item_id)) if items != null else ""
+
+
+## D103, Stage B lane 3.B. Everything up to the yield is unchanged -- the swing
+## hand-off, the tool gate, the wrong-tool sentence and the full-satchel
+## sentence are all still answered here, because a host cannot see this peer's
+## hand or its satchel and those are the two questions only this peer can
+## answer. What changed is the end: the node no longer adds the item and writes
+## `harvest_node:<id>` itself. It submits a `harvest` INTENT and waits.
+##
+## Nothing local moves until the committed delta lands (`_on_delta_applied()`).
+## That is deliberate and it is the whole race fix: two players pressing the
+## same berry bush inside one round trip produce exactly one payout, and the
+## loser gets the sentence `world_ledger.gd` wrote for it and a bush that is
+## still standing -- not a bush that vanished and paid nothing.
+##
+## Solo behaves exactly as it did: `submit()` on a solo player commits
+## in-process and emits the delta before it returns, so by the time this
+## function ends the satchel has moved and the node is gone, in the same frame
+## as before.
+func _on_gathered(equipped_tool: Variant = null) -> void:
+	if _taken or _claiming:
+		return
+	if not _renewable_site_id.is_empty():
+		_gather_registered_source()
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; gathered %s into nothing" % _item_id)
+		return
+	# OP21-24. A press with a tool in hand swings it; the swing then calls
+	# `gather()` below with the prop that actually swung, which arrives here
+	# with `equipped_tool` set and so cannot re-enter this branch. Bare hands,
+	# the wrong tool and a node outside the swing's reach all fall straight
+	# through to the direct yield, unchanged.
+	if equipped_tool == null and HARVEST_LOGIC.swing_answers_the_prompt(self, game):
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var items: RefCounted = game.get("items")
+	var actual_amount := _amount
+	var required_slot := -1
+	if items != null and inventory != null:
+		# An interaction has no argument and therefore reads the live hand. A
+		# tool swing passes the identity of the prop that actually swung, so a
+		# later equipment change cannot turn a pickaxe impact into an axe hit.
+		var held_tool := str(game.get("equipped_tool")) if equipped_tool == null else str(equipped_tool)
+		var gathered: Dictionary = HARVEST_LOGIC.gather(
+			_item_id, _amount, inventory, items, held_tool)
+		actual_amount = int(gathered["amount"])
+		required_slot = int(gathered["required_slot"])
+
+	if actual_amount <= 0:
+		# The wrong tool for this resource: refused, and the node stays put for
+		# whenever the player comes back with the right one. OF20: say so on
+		# the HUD -- a silent refusal reads as "gathering does nothing at
+		# all," which was the owner's actual bug report, and this rule only
+		# starts firing once OF30 puts tools in a player's hands.
+		if items != null:
+			var required_tool := str(items.call("gathered_with", _item_id))
+			if not required_tool.is_empty():
+				game.call("push_world_message", "Needs a %s." % str(items.call("item_name", required_tool)))
+		return
+	if inventory == null or not bool(inventory.call("has_room_for", _item_id, actual_amount)):
+		# INTERACT-SWEEP-0903: this used to claim "refused, visibly" while doing
+		# nothing a player could actually see -- the prompt staying up is not
+		# feedback about THIS press, it is silence. Now says so, the same as
+		# `item_cache_pickup.gd`/`tm_pickup.gd` already do for their own full-
+		# satchel refusal.
+		game.call("push_world_message", "Satchel is full.")
+		return
+
+	_claiming = true
+	_claim = {"amount": actual_amount, "slot": required_slot}
+	# D72's flag, unchanged in shape and still the node's own identity -- the
+	# ledger takes it as the intent's `flag` rather than learning a second id
+	# scheme, and writes it once, on the host, for every peer.
+	var verdict := LEDGER_CLAIM.submit(self, _claim_intent(actual_amount))
+	if not LEDGER_CLAIM.in_flight(verdict):
+		# `already_taken` (a race this peer lost, arbitrated on the host before
+		# the round trip) or an offline transport. The sentence has already been
+		# shown; the node stays standing, nothing was spent, no tool wore down.
+		_claiming = false
+		_claim = {}
+
+
+## The committed delta. Removal is driven from here on every peer, host and
+## solo included, so the node on screen and the flag in `WorldState` cannot
+## drift apart. The item itself arrived as the delta's `item_grant` player op,
+## applied by `ledger_rpc.gd` moments before this fired -- so this only owes the
+## player the FEEDBACK for a gather that was theirs, and owes a peer who merely
+## watched somebody else gather nothing but the removal.
+func _on_delta_applied(delta: Dictionary) -> void:
+	if not _renewable_site_id.is_empty():
+		var op := _stock_op(delta)
+		if op.is_empty():
+			return
+		var own_claim := _claiming and str(op.get("txn_id", "")) == str(_claim.get("txn_id", ""))
+		set_renewable_stock(op.get("state", {}))
+		if own_claim:
+			var game := get_node_or_null(^"/root/Game")
+			if game != null:
+				var items: RefCounted = game.get("items")
+				var label := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
+				game.call("push_world_message", "Gathered %s." % label)
+				_play_gather_audio(items)
+			_claiming = false
+			_claim = {}
+		return
+	if not _claim_committed(delta):
+		return
+	# The `_taken` guard is deliberately NOT first. On a client `_rpc_delta`
+	# runs `_restore_progression()` -- the same group sweep a mid-session load
+	# uses -- BEFORE it emits `delta_applied`, so this node has already been
+	# deactivated off its own flag by the time we get here. Checking `_taken`
+	# up front would therefore swallow the winner's own "+3 Wood", its gather
+	# sound and its tool wear on every client, and only on clients.
+	if _claiming:
+		_settle()
+		_claiming = false
+		_claim = {}
+	if not _taken:
+		_deactivate()
+
+
+## This peer's own half of a committed gather: what no delta can carry, because
+## a tool's durability and a HUD line live in one player's process. Held back
+## until the commit precisely so a lost race costs nothing -- no wear, no sound,
+## no "+3 Wood" for wood that went to somebody else.
+func _settle() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var items: RefCounted = game.get("items")
+	var actual_amount := int(_claim.get("amount", 0))
+	# GATEB-FLAGS: `home_materials_gathered` (data/progression/objectives.json).
+	# Checked on every successful gather here, not only wood/stone/fiber ones --
+	# home_progress.gd's own threshold check is what actually cares which ids
+	# matter, so this stays one call regardless of which resource just landed.
+	HOME_PROGRESS.maybe_set_materials_gathered(game)
+	# Keep the hand-authored first-day nodes on the same player-facing pickup
+	# contract as felled_resource.gd.  These nodes used to credit the satchel
+	# silently, so the Gate A tool swing visibly happened and the prop vanished
+	# but the player never saw what they received.  Report the amount that was
+	# actually accepted after harvest-yield and capacity rules, never the raw
+	# authored amount.
+	var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
+	game.call("push_world_message", "+%d %s" % [actual_amount, item_name])
+	# T1-AUDIO. Two sounds, because two things happened: the tool worked the
+	# node, and something went into the satchel. Keyed off the resource's own
+	# `gathered_with` tool rather than its id, so a new ore or bush inherits the
+	# right sound with no audio change -- see audio.json's `sfx.gather_sound`.
+	_play_gather_audio(items)
+	# R2.2: only a full-yield gather with the right tool wears it down --
+	# a bare-handed or wrong-tool gather has no tool in play to damage. The
+	# slot was read when the player pressed; it is re-checked here rather than
+	# trusted, because a client's press and its commit are a round trip apart
+	# and the satchel can have been rearranged in between.
+	var required_slot := int(_claim.get("slot", -1))
+	if required_slot >= 0 and inventory != null:
+		inventory.call("damage_tool", required_slot)
+
+
+func _ready() -> void:
+	# So a tool swing can find this without knowing which of the two gather
+	# scripts drew it (`harvest_logic.gd::GROUP`).
+	add_to_group(HARVEST_LOGIC.GROUP)
+	# Also connected in `setup()`; `listen()` is idempotent, and a caller that
+	# sets this node up before adding it to the tree would otherwise never hear
+	# a committed delta.
+	LEDGER_CLAIM.listen(self, _on_delta_applied)
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport != null and not transport.is_connected("intent_refused", _on_renewable_refused):
+		transport.connect("intent_refused", _on_renewable_refused)
+
+
+func _process(_delta: float) -> void:
+	if not _renewable_site_id.is_empty():
+		_read_renewable_stock(get_node_or_null(^"/root/Game"))
+		_refresh_renewable_presentation()
+
+
+func _read_renewable_stock(game: Node) -> void:
+	if _source_service != null and is_instance_valid(_source_service):
+		_renewable_stock = _source_service.call("stock", _realm_id, _renewable_site_id)
+		return
+	if game == null:
+		return
+	var world: Variant = game.get("world")
+	if world is Object and world.has_method("renewable_stock_state"):
+		var stock: Variant = world.call("renewable_stock_state", _realm_id, _renewable_site_id)
+		_renewable_stock = stock.duplicate(true) if stock is Dictionary else {}
+
+
+func _renewable_ready(game: Node) -> bool:
+	return game != null and not _renewable_stock.is_empty() \
+		and int(_renewable_stock.get("revision", -1)) >= 0 \
+		and int(_renewable_stock.get("next_ready_day", -1)) >= 1 \
+		and int(game.get("day")) >= int(_renewable_stock["next_ready_day"])
+
+
+## Read-only presentation reconciliation, called with an internal committed
+## stock record or a host snapshot. It never writes the authoritative world.
+func set_renewable_stock(stock: Dictionary) -> void:
+	_renewable_stock = stock.duplicate(true)
+	_refresh_renewable_presentation()
+
+
+func _refresh_renewable_presentation() -> void:
+	var ready := _renewable_ready(get_node_or_null(^"/root/Game"))
+	if not ready:
+		if not _taken:
+			_deactivate()
+		return
+	if _taken:
+		_taken = false
+		visible = true
+		if _visual != null:
+			_visual.visible = _fight_hides == 0
+			PICKUP_GLOW.attach(_visual, _item_colour(), -1.0, 1.0, _item_kind())
+		if _prompt != null and is_instance_valid(_prompt):
+			_prompt.call("set_enabled", true)
+
+
+func _stock_op(delta: Dictionary) -> Dictionary:
+	for raw: Variant in delta.get("ops", []):
+		if raw is Dictionary and str(raw.get("op", "")) == "renewable_stock_set" \
+				and str(raw.get("scope", "")) == "world" and str(raw.get("realm", "")) == _realm_id \
+				and str(raw.get("site_id", "")) == _renewable_site_id:
+			return raw
+	return {}
+
+
+func _on_renewable_refused(kind: String, _code: String, _reason: String, detail: Dictionary) -> void:
+	if kind == "renewable_harvest" and _claiming \
+			and str(detail.get("txn_id", "")) == str(_claim.get("txn_id", "")):
+		_claiming = false
+		_claim = {}
+
+
+## Typed canonical source path. No item, yield, day, tool slot or world flag
+## crosses the request boundary. No fallback into generic legacy harvest.
+func _gather_registered_source() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if _source_service == null or not is_instance_valid(_source_service) or not _renewable_ready(game):
+		if game != null: game.call("push_world_message", "This resource is not ready.")
+		return
+	var action_id := Crypto.new().generate_random_bytes(16).hex_encode()
+	_claiming = true
+	_claim = {"txn_id": action_id, "expected_revision": int(_renewable_stock.revision)}
+	var result: Dictionary = _source_service.call("submit", "node", {
+		"site_id": _renewable_site_id, "expected_stock_revision": int(_renewable_stock.revision),
+		"action_id": action_id}, self)
+	if not result.get("ok", false) and not result.get("pending", false):
+		_claiming = false
+		_claim = {}
+		if game != null: game.call("push_world_message", str(result.get("reason", "Resource unavailable.")))
+
+
+func _on_source_settled(op: String, source_id: String, action_id: String, verdict: Dictionary) -> void:
+	if op != "node" or source_id != _renewable_site_id: return
+	_read_renewable_stock(get_node_or_null(^"/root/Game"))
+	_refresh_renewable_presentation()
+	if not _claiming or action_id != str(_claim.get("txn_id", "")): return
+	_claiming = false
+	_claim = {}
+	var game := get_node_or_null(^"/root/Game")
+	if game == null: return
+	if verdict.get("resolved") != true:
+		game.call("push_world_message", str(verdict.get("reason", "Gathering is awaiting settlement.")))
+		return
+	var items: RefCounted = game.get("items")
+	game.call("push_world_message", "Gathered %s." % str(items.call("item_name", _item_id)))
+	_play_gather_audio(items)
+
+## Gather this spot, the same as pressing the interact prompt on it.
+##
+## Public so a tool swing (`scripts/player/tool_hold.gd`) can drive the exact
+## same path the prompt drives -- one gather implementation, two ways to reach
+## it, so a swing and a press can never disagree about yield, tool gating,
+## durability or permanence.
+func gather(equipped_tool: Variant = null) -> void:
+	_on_gathered(equipped_tool)
+
+
+
+# --- T1-AUDIO ----------------------------------------------------------------
+
+
+const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
+
+
+## The gather's own sound, plus the pickup that follows it.
+##
+## Positional for the work (the axe is at the tree) and non-positional for the
+## pickup (it is the player's own satchel, and should not get quieter because
+## they harvested at arm's length). Silent for an unmapped tool rather than
+## falling back to a wrong one -- a missing entry in `sfx.gather_sound` should
+## be noticed as a gap, not disguised as a knife.
+func _play_gather_audio(items: Object) -> void:
+	var tool_id := str(items.call("gathered_with", _item_id)) if items != null else ""
+	var table: Dictionary = AUDIO_MANAGER.section("sfx").get("gather_sound", {}) as Dictionary
+	if table.has(tool_id):
+		AUDIO_MANAGER.play_at(str(table[tool_id]), global_position)
+	AUDIO_MANAGER.play("pickup_item")
