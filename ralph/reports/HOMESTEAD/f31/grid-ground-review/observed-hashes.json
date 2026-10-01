@@ -1,0 +1,34 @@
+{
+  "source_commit": "ee097eeffab09ce4b9d120e164412f1f5416a13c",
+  "predecessor": "517d5ff18fbe28d8a71d29fac3d6d4b4f87db2e3",
+  "files": [
+    {
+      "path": "scripts/build/build_placer.gd",
+      "before_git_sha256": "d8ee94aa2d3a112b648d9dbeb572a984b65cfed77d688d41811a958ff36998fe",
+      "before_git_blob_oid": "afa16c7dc848c6db2b52ea592595ec06a63f9fd4",
+      "after_git_sha256": "fc7e0d4efc96979989564235b1eaa811e9a0e158d9305cd2edc1f9b8acb47774",
+      "after_git_blob_oid": "e993c32699c95d1dd44b8aa1c2be711fbb7b6be5",
+      "working_sha256": "59423f87164e024347b9b283cee74a7b40df97ce80befdc95105e820d4a17db8"
+    },
+    {
+      "path": "tests/test_build_placer_preview.gd",
+      "before_git_sha256": "6a1d708bd34495d4660c470f22a615c8d3a339dfc655edb2cf2ed56c3bc4023f",
+      "before_git_blob_oid": "3b41122df1524901d0f0a4635ae880d1a5adad7c",
+      "after_git_sha256": "8529321648c4dc074508688b7b756f3cbde6666554a5eca5826841c9a82e58cc",
+      "after_git_blob_oid": "033e243780ba6a86dfebff11265d6de3fca28ad7",
+      "working_sha256": "1933f0c3e6e5ccdb4fc9bf296dbf22818726666568e10f0e1c1f7031f9bace6d"
+    }
+  ],
+  "static_comparisons": {
+    "production_exact_except_15_line_insert": true,
+    "prior_cases_assertions_and_cleanup_exact": true,
+    "added_cases": 4,
+    "all_cases": 16,
+    "all_14_case_nodes_via_registered_factory": true
+  },
+  "diff_scope": [
+    "scripts/build/build_placer.gd",
+    "tests/test_build_placer_preview.gd"
+  ],
+  "engine_or_unit_tests_run": false
+}
