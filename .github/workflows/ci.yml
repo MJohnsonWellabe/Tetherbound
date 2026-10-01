@@ -199,9 +199,14 @@ jobs:
             /.github/
             /tests/test_release_latest_tag.mjs
             /tools/release_latest_tag.mjs
+            /tests/test_ci_smoke_runner.py
+            /tools/ci/run_godot_smoke.py
 
       - name: Verify rolling release reference helper
         run: node --test tests/test_release_latest_tag.mjs
+
+      - name: Verify aborted script process cleanup
+        run: python3 tests/test_ci_smoke_runner.py
 
       - name: Decide whether anything but documentation changed
         id: filter
@@ -1651,7 +1656,7 @@ jobs:
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_participants.gd
       - name: Verify Stormwood Stormheart accept/refuse choice
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
+        run: timeout 120s python3 tools/ci/run_godot_smoke.py godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
       - name: Verify Stormwood Dynamo Break faint recovery
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_dynamo_break_faint.gd
@@ -1966,7 +1971,7 @@ jobs:
           until [ "$n" -ge "$RETRIES" ]; do
             n=$((n + 1))
             echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+            if python3 tools/ci/run_godot_smoke.py godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
               echo "::endgroup::"
               exit 0
             fi
@@ -3080,7 +3085,7 @@ jobs:
           until [ "$n" -ge "$RETRIES" ]; do
             n=$((n + 1))
             echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+            if python3 tools/ci/run_godot_smoke.py godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
               echo "::endgroup::"
               exit 0
             fi
