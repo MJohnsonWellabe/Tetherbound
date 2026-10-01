@@ -447,8 +447,12 @@ func _retain_research(encounter_id: String, peer: int, kind: String, species: St
 	if _session == null or not _is_host(): return true
 	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
 		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
+	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
+	source.world_namespace = _session.call("_game").get("world").reward_delivery_namespace
+	source.session_id = _session.call("_altar_current_epoch")
+	if not _foundation_pending_sources.has(source): _foundation_pending_sources.append(source)
 	var result: Dictionary = _session.call("foundation_research_source", self, encounter_id, peer, kind, source.source_id, species, move_id, night)
-	if result.get("durable") != true and not _foundation_pending_sources.has(source): _foundation_pending_sources.append(source)
+	if result.get("durable") == true: _foundation_pending_sources.erase(source)
 	return result.get("durable") == true
 
 func _retry_research_sources() -> void:
@@ -459,6 +463,11 @@ func _retry_research_sources() -> void:
 
 func retained_boss_participants() -> Array[String]:
 	return _trainer_character_participants.duplicate()
+
+func retained_research_source(source_id: String) -> Dictionary:
+	for source: Dictionary in _foundation_pending_sources:
+		if source.source_id == source_id: return source.duplicate(true)
+	return {}
 
 ## Uses the existing owned trainer combat manager and its authoritative local
 ## host vitals. The selected UID is the only member passed to that manager.
@@ -2411,7 +2420,7 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	var record: Dictionary = _encounter_host.call("record", encounter_id)
 	if str(record.get("opponent", {}).get("owner_npc", "")).begins_with("master_"):
 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "single_challenger_duel", "pending": false, "delta": {}}
-	var character_id := str(intent.get("character_id", ""))
+	var character_id := str(_session.call("_authority_character", peer_id)) if _session != null else ""
 	var tournament_round := _record_is_tournament(record)
 	var tournament_ids: Array[String] = []
 	var active_uid := str(intent.get("creature_uid", ""))
@@ -7299,6 +7308,7 @@ func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) ->
 			"record": (_encounter_host.call("record", encounter_id) as Dictionary).duplicate(true)})
 		return
 	runtime.set_meta(&"wild_victory_source", capture.duplicate(true))
+	_session.call("foundation_defeat_obligations", self, capture)
 	runtime.set_meta(&"wild_victory_resolved", false)
 	runtime.set_meta(&"wild_victory_retry_left_s", 0.0)
 
@@ -7328,6 +7338,7 @@ func _tick_wild_victory_settlement(encounter_id: String, delta: float) -> void:
 			or not (_encounter_host.call("pending_actor_vitals", encounter_id) as Array).is_empty():
 		return
 	var original := host_wild_victory_source(encounter_id)
+	if not original.is_empty() and _session.call("foundation_defeat_obligations", self, original).get("durable") != true: return
 	if original.is_empty() or not _session.has_method("admitted_pending_vitals"):
 		return
 	for deployment: Dictionary in original.get("deployments", []):
@@ -7346,8 +7357,8 @@ func _tick_wild_victory_settlement(encounter_id: String, delta: float) -> void:
 		runtime.set_meta(&"wild_victory_training_resolved", true)
 		# Research consumes the same retained actual killing-hit source after
 		# F27 settles. Keep that lifetime until its separate personal ACK settles.
-		var research: Dictionary = preload("res://scripts/creatures/research_actions.gd").defeated_source(_session, original)
-		if research.get("resolved") != true: return
+		# The original defeat duties were durably appended before F27 staging.
+		# Their owner-save/ACK retry survives this actor lifetime independently.
 		runtime.set_meta(&"wild_victory_resolved", true)
 		if bool(runtime.get_meta(&"dispose_after_wild_victory", false)):
 			_dispose_shared_host_fight(encounter_id, false)

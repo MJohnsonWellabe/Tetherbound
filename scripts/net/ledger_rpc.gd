@@ -801,6 +801,8 @@ func _rpc_reward_delivery_ack(delivery_id: String) -> void:
 ## same question of the same code rather than re-deriving "did both peers get
 ## it" in the test file.
 func _apply_player_ops(delta: Dictionary) -> void:
+	var flag_game := _game()
+	if flag_game != null and flag_game.get("session") != null: flag_game.get("session").call("foundation_record_personal_flags", delta)
 	var game := _game()
 	if game == null:
 		return

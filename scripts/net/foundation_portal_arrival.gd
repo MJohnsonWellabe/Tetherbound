@@ -23,11 +23,9 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 		# request or client-provided coordinate. Normal transition drains actors.
 		var loaded: bool = await game.call("enter_realm", permit.realm, "", true)
 		if not loaded or not _same_owner(): _refuse("The destination could not load."); return
-	var frames := 0
 	var deadline := Time.get_ticks_msec() + int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.response_timeout_seconds) * 1000.0)
 	while not str(game.call("pending_entry_for", permit.realm)).is_empty() and Time.get_ticks_msec() < deadline:
 		await get_tree().physics_frame
-		frames += 1
 		if not _same_owner(): _refuse("Your travel session changed."); return
 	if not str(game.call("pending_entry_for", permit.realm)).is_empty(): _refuse("The destination has not settled."); return
 	var world_node: Node3D = session.call("_portal_world_node", permit.realm)
@@ -54,17 +52,18 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 		or collision.disabled or actor.global_basis.get_scale() != Vector3.ONE:
 		_refuse("The arrival collision is not ready."); return
 	var radius := (collision.shape as CapsuleShape3D).radius
-	var tolerance := tan(actor.floor_max_angle) * radius
+	var body := actor as CharacterBody3D
+	var tolerance := tan(body.floor_max_angle) * radius
 	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
 		var support := float(world_node.call("ground_height_at", target.x + offset.x, target.z + offset.y))
 		if not is_finite(support) or absf(support - height) > tolerance: _refuse("The arrival anchor is not supported."); return
-	var landing := Vector3(target.x, height + actor.safe_margin, target.z)
+	var landing := Vector3(target.x, height + body.safe_margin, target.z)
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
 	query.transform = collision.global_transform
 	query.transform.origin += landing - actor.global_position
-	query.collision_mask = actor.collision_mask
-	query.exclude = [actor.get_rid()]
+	query.collision_mask = body.collision_mask
+	query.exclude = [body.get_rid()]
 	if not actor.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty():
 		_refuse("The arrival anchor is obstructed."); return
 	actor.global_position = landing
@@ -74,9 +73,9 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 	# A terrain sample is only a proposed landing. The live physics body must
 	# move through its ordinary controller and report actual walkable contact.
 	await get_tree().physics_frame
-	while _same_owner() and not _grounded_actor(actor) and Time.get_ticks_msec() < deadline:
+	while _same_owner() and not _grounded_actor(body) and Time.get_ticks_msec() < deadline:
 		await get_tree().physics_frame
-	if not _same_owner() or not _grounded_actor(actor): _refuse("The arrival has not reached supported ground."); return
+	if not _same_owner() or not _grounded_actor(body): _refuse("The arrival has not reached supported ground."); return
 	_pending.seated = true
 	_save_arrival()
 
@@ -84,6 +83,11 @@ func _grounded_actor(actor: CharacterBody3D) -> bool:
 	return is_instance_valid(actor) and actor.is_on_floor() \
 		and actor.get_floor_normal().angle_to(Vector3.UP) <= actor.floor_max_angle \
 		and _pending.has("anchor") and actor.global_position.distance_to(_pending.anchor) <= float(_pending.radius)
+
+func arrival_binding(envelope: Dictionary, permit: Dictionary) -> bool:
+	return not _pending.is_empty() and _same_owner() and _pending.get("seated") == true \
+		and _pending.envelope == envelope and _pending.permit == permit \
+		and _grounded_actor(_pending.game.get_ref().call("find_player") as CharacterBody3D)
 
 func _process(delta: float) -> void:
 	_retry_left -= delta
@@ -112,6 +116,8 @@ func _save_arrival() -> void:
 	game.call("_capture_player_pose")
 	if saver.call("save_character_prepared", game, _pending.envelope.character_id) != true: return
 	if not _same_owner() or not _grounded_actor(actor): _refuse("Your travel session changed."); return
+	var journal: Dictionary = session.call("foundation_grounded_arrival", self, _pending.envelope, _pending.permit)
+	if journal.get("ok") != true or journal.get("saved") != true: return
 	var envelope: Dictionary = _pending.envelope
 	var peer: int = _pending.peer
 	_pending.clear()

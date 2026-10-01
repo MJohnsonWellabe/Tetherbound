@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic"]
+const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -43,12 +43,30 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"camp_rest": proposal = preload("res://scripts/build/forward_camp_actions.gd").stage_team_bed(current, revision, intent, context, true)
 		"camp_build": proposal = camp_plan(current, revision, intent, context)
 		"relic_hang", "boss_relic": proposal = _relic(current, action, intent, context)
+		"portal_arrival", "regional_ack": proposal = _acknowledgement(current, action, intent, context)
 	if proposal.get("ok") != true: return proposal
 	if not schema_check.call(proposal.state, current.character_id).is_empty(): return deny("invalid_station_candidate")
 	return {"ok": true, "action": action, "character_id": current.character_id,
 		"before": current.duplicate(true), "state": proposal.state.duplicate(true),
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
+
+static func _acknowledgement(current: Dictionary, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
+	var receipt: String
+	if action == "portal_arrival":
+		if intent.size() != 3 or not intent.get("permit_id") is String or not intent.get("realm") is String or not intent.get("entry_id") is String \
+			or context.get("grounded_arrival") != true or context.get("permit_id") != intent.permit_id \
+			or context.get("realm") != intent.realm or context.get("entry_id") != intent.entry_id: return deny("actual_grounded_permit_required")
+		receipt = "craft:portal_arrival_%s:%s" % [intent.permit_id, current.character_id]
+	else:
+		var ending := preload("res://scripts/story/regional_homecoming.gd")
+		if context.get("earned_ending_ack") != true or ending.acknowledgement_intent(intent, str(intent.get("stage", ""))) != intent \
+			or intent.get("character_id") != current.character_id: return deny("earned_ending_context_required")
+		receipt = "craft:regional_ending_%s:%s" % [intent.stage, current.character_id]
+	var next := current.duplicate(true)
+	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
 
 static func _relic(current: Dictionary, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if not intent.get("biome") is String or not preload("res://scripts/data/biome_order.gd").ids(false).has(intent.biome): return deny("invalid_relic")
