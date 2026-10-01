@@ -494,5 +494,112 @@
     "source_checks": "PASS: source/expected input reconciliation only; no engine execution",
     "readonly_apply_check": "PASS --whitespace=error-all against current integration",
     "godot_parser_and_execution": "NOT RUN: ROOT owns serialized engine/import/CI; runtime evidence remains open"
+  },
+  "legacy_off_test_followup": {
+    "root_combined_source_sha": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+    "baseline_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+    "returned_root_engine_batch": {
+      "tests": 130,
+      "assertions": 9089,
+      "failed": 2,
+      "raw_log_path": ".tmp/closeout/returned-unit-06cb7c3f8252-4fb3e513/tests.log",
+      "raw_log_sha256": "c5492689ad3622be64792c1286b1713d93505987b5f38b2c5f3d25ef3cc0fd58",
+      "status": "FAIL; prior batch is not acceptance",
+      "reported_engine_errors_or_leaks": false
+    },
+    "diagnosis": [
+      {
+        "realm": "cloudreach",
+        "current_first_entry": [
+          "realm_key_cloudreach"
+        ],
+        "pinned_and_corrected_first_entry": [
+          "realm_key_cloudreach"
+        ],
+        "pinned_and_corrected_guarded_arrivals": [
+          {
+            "id": "cloudreach_arrive",
+            "requires_flags": [
+              "realm_key_cloudreach"
+            ]
+          }
+        ]
+      },
+      {
+        "realm": "stormwood",
+        "current_first_entry": [],
+        "pinned_and_corrected_first_entry": [
+          "realm_key_stormwood"
+        ],
+        "pinned_and_corrected_guarded_arrivals": [
+          {
+            "id": "stormwood_chapter_started",
+            "requires_flags": [
+              "realm_key_stormwood"
+            ]
+          }
+        ]
+      }
+    ],
+    "actual_off_aftermath_equals_entire_pinned_main_objective": true,
+    "expected_off_aftermath": {
+      "id": "stormwood_waterward_revealed",
+      "flag_id": "stormwood:waterward_revealed",
+      "scope": "world",
+      "label": "Look beyond the broken storm.",
+      "how": "Return to the high platform for the newly clear view of water.",
+      "region_id": "dynamo",
+      "requires_flags": [
+        "stormwood:legendary_offer_made"
+      ],
+      "completion_event": "aftermath:waterward_view",
+      "grants_flags": [
+        "realm_key_water",
+        "waterward_route_revealed",
+        "stormwood:chapter_complete"
+      ],
+      "consumed_grants": {
+        "realm_key_water": "realm_gate_water_unlocked"
+      }
+    },
+    "changed_methods": [
+      "test_inactive_curve_retains_legacy_chapter_arrival_prerequisites",
+      "test_inactive_stormwood_aftermath_retains_legacy_view_and_consumed_key_contract"
+    ],
+    "incremental_patch": {
+      "path": "ralph/reports/F19-CI-REPAIR/test-legacy-off-followup.patch",
+      "sha256": "c1156545bb96887bb23185cc678f0bfb3b538c5b112899d1ff8514794696fd23",
+      "base_source_sha": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+      "readonly_apply_check": "PASS --whitespace=error-all"
+    },
+    "source_guard_patch": {
+      "path": "ralph/reports/F19-CI-REPAIR/stormwood-legacy-arrival-guards.patch",
+      "sha256": "14a8c5df310ea84bb5882abd4289924cafb191c21fdf79baea27a60be10af9de",
+      "base_source_sha": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+      "exact_leaf_paths": [
+        [
+          "acts",
+          0,
+          "entry_flags"
+        ],
+        [
+          "acts",
+          0,
+          "objectives",
+          0,
+          "requires_flags"
+        ]
+      ],
+      "legacy_value": [
+        "realm_key_stormwood"
+      ],
+      "all_other_current_json_fields_preserved": true,
+      "entire_resulting_guard_matrix_equals_main": true,
+      "readonly_apply_check": "PASS --whitespace=error-all"
+    },
+    "full_replacement_patch_sha256": "0c45d203070a85cb1ec17659a09a5b3e3dac0dcdcdb9ff49bf49b74aa2188372",
+    "unchanged_scope": "Every other live data leaf/runtime flag, F20 Aila/Maela guards, candidate targets/strict-number/legendary55+OFF44 assertions and typed handoff negative controls unchanged.",
+    "source_checks": "PASS: exact pinned-main input comparisons and detached two-leaf guard restoration; no assertions dropped or tests skipped",
+    "engine_after_correction": "NOT RUN here; ROOT owns named affected engine checks and runtime route/acceptance gates remain open"
   }
 }
