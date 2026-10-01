@@ -1,0 +1,285 @@
+{
+  "run_id": 36915534683,
+  "job_id": 110549151039,
+  "artifact_id": 11190524116,
+  "artifact_zip_sha256": "0e12fdc0f8c81cfdcb6f822e4b3820e70d077b8b14bacdf29c4c9bbd80330be0",
+  "members": [
+    {
+      "path": "net-shared_boss-20261001T195856Z/peer-0.log",
+      "bytes": 12408,
+      "sha256": "782f929226c59f10b9d7ee5a09af04f7854456d8d3af603a84da9ccb087148a3"
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 12294,
+      "sha256": "be2ee87d9b7373a68fe0029807c3f50dcce312e765ec63b8f9baf9af3fbf453f"
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/peer-1.log",
+      "bytes": 12217,
+      "sha256": "b9cbb8c96d5dd50a0e2f437d4ab0fec75b20a41bc43c19a2fbe4c5985fcbd47f"
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 12103,
+      "sha256": "952b1a73b6c6d38286b78812d9a1fd350c887e5070b902032bd2bad15808cf6f"
+    }
+  ],
+  "full_original_error_and_warning_blocks": [
+    {
+      "path": "net-shared_boss-20261001T195856Z/peer-0.log",
+      "rows": [
+        {
+          "line": 158,
+          "text": "ERROR: the player already has a creature; adopt_starter is not a swap"
+        },
+        {
+          "line": 159,
+          "text": "   at: push_error (core/variant/variant_utility.cpp:1023)"
+        },
+        {
+          "line": 160,
+          "text": "   GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 161,
+          "text": "       [0] adopt_starter (res://scripts/combat/encounter_director.gd:1424)"
+        },
+        {
+          "line": 162,
+          "text": "       [1] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:977)"
+        },
+        {
+          "line": 163,
+          "text": "       [2] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 164,
+          "text": "       [3] _process (res://scripts/story/sequence_director.gd:548)"
+        },
+        {
+          "line": 165,
+          "text": "WARNING: a late arrival could not be given a 'terrapup'"
+        },
+        {
+          "line": 166,
+          "text": "     at: push_warning (core/variant/variant_utility.cpp:1033)"
+        },
+        {
+          "line": 167,
+          "text": "     GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 168,
+          "text": "         [0] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:981)"
+        },
+        {
+          "line": 169,
+          "text": "         [1] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 170,
+          "text": "         [2] _process (res://scripts/story/sequence_director.gd:548)"
+        }
+      ]
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "rows": [
+        {
+          "line": 158,
+          "text": "ERROR: the player already has a creature; adopt_starter is not a swap"
+        },
+        {
+          "line": 159,
+          "text": "   at: push_error (core/variant/variant_utility.cpp:1023)"
+        },
+        {
+          "line": 160,
+          "text": "   GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 161,
+          "text": "       [0] adopt_starter (res://scripts/combat/encounter_director.gd:1424)"
+        },
+        {
+          "line": 162,
+          "text": "       [1] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:977)"
+        },
+        {
+          "line": 163,
+          "text": "       [2] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 164,
+          "text": "       [3] _process (res://scripts/story/sequence_director.gd:548)"
+        },
+        {
+          "line": 165,
+          "text": "WARNING: a late arrival could not be given a 'terrapup'"
+        },
+        {
+          "line": 166,
+          "text": "   at: push_warning (core/variant/variant_utility.cpp:1033)"
+        },
+        {
+          "line": 167,
+          "text": "   GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 168,
+          "text": "       [0] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:981)"
+        },
+        {
+          "line": 169,
+          "text": "       [1] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 170,
+          "text": "       [2] _process (res://scripts/story/sequence_director.gd:548)"
+        }
+      ]
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/peer-1.log",
+      "rows": [
+        {
+          "line": 153,
+          "text": "ERROR: the player already has a creature; adopt_starter is not a swap"
+        },
+        {
+          "line": 154,
+          "text": "   at: push_error (core/variant/variant_utility.cpp:1023)"
+        },
+        {
+          "line": 155,
+          "text": "   GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 156,
+          "text": "       [0] adopt_starter (res://scripts/combat/encounter_director.gd:1424)"
+        },
+        {
+          "line": 157,
+          "text": "       [1] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:977)"
+        },
+        {
+          "line": 158,
+          "text": "       [2] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 159,
+          "text": "       [3] _process (res://scripts/story/sequence_director.gd:548)"
+        },
+        {
+          "line": 160,
+          "text": "WARNING: a late arrival could not be given a 'terrapup'"
+        },
+        {
+          "line": 161,
+          "text": "     at: push_warning (core/variant/variant_utility.cpp:1033)"
+        },
+        {
+          "line": 162,
+          "text": "     GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 163,
+          "text": "         [0] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:981)"
+        },
+        {
+          "line": 164,
+          "text": "         [1] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 165,
+          "text": "         [2] _process (res://scripts/story/sequence_director.gd:548)"
+        }
+      ]
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "rows": [
+        {
+          "line": 153,
+          "text": "ERROR: the player already has a creature; adopt_starter is not a swap"
+        },
+        {
+          "line": 154,
+          "text": "   at: push_error (core/variant/variant_utility.cpp:1023)"
+        },
+        {
+          "line": 155,
+          "text": "   GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 156,
+          "text": "       [0] adopt_starter (res://scripts/combat/encounter_director.gd:1424)"
+        },
+        {
+          "line": 157,
+          "text": "       [1] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:977)"
+        },
+        {
+          "line": 158,
+          "text": "       [2] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 159,
+          "text": "       [3] _process (res://scripts/story/sequence_director.gd:548)"
+        },
+        {
+          "line": 160,
+          "text": "WARNING: a late arrival could not be given a 'terrapup'"
+        },
+        {
+          "line": 161,
+          "text": "   at: push_warning (core/variant/variant_utility.cpp:1033)"
+        },
+        {
+          "line": 162,
+          "text": "   GDScript backtrace (most recent call first):"
+        },
+        {
+          "line": 163,
+          "text": "       [0] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:981)"
+        },
+        {
+          "line": 164,
+          "text": "       [1] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:957)"
+        },
+        {
+          "line": 165,
+          "text": "       [2] _process (res://scripts/story/sequence_director.gd:548)"
+        }
+      ]
+    }
+  ],
+  "actual_saved_characters": [
+    {
+      "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-53116d1e2a973f03b68542dc2833a11f/character.json",
+      "bytes": 2776112,
+      "sha256": "94a22545e14eb4f016cf30ffdcb60319aad721a1984368708b0957ee8b7ad1b0",
+      "character_id": "character-53116d1e2a973f03b68542dc2833a11f",
+      "party": [],
+      "starter_choice_receipts": [],
+      "starter_granted": false
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-16c21ad29983ee6b7b95b29dac457d6f/character.json",
+      "bytes": 2776111,
+      "sha256": "712b0ac4687706da3ade9aeefc6ecbaaff06d3c0e422cd1252b8cdaa715f3e61",
+      "character_id": "character-16c21ad29983ee6b7b95b29dac457d6f",
+      "party": [],
+      "starter_choice_receipts": [],
+      "starter_granted": false
+    }
+  ],
+  "classification": "Intentional adopt_starter protected push_error refusal; caller reached it with an already deployed body and empty Game.party. No SCRIPT ERROR or invalid-property/API-missing exception.",
+  "source_relation": "Legacy deploy_creature fallback creates a canonical species instance/body but never admits it to Game.party. Story catch-up tests empty party and calls adopt_starter again. Remote admission precedes legacy deployment in the original smoke.",
+  "limits": [
+    "No individual RPC/timer ordering observed.",
+    "No cancelled-job causation inferred.",
+    "Candidate native opening/admission timing is unexecuted; original errors remain unretired pending ROOT native."
+  ]
+}

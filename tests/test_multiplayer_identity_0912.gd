@@ -157,3 +157,29 @@ func test_strict_two_peer_proof_uses_production_entry_and_live_state() -> void:
 		"the one-starter proof must exercise catch-up re-arming, not only wait once")
 	assert_false(smoke.contains("\"party_grant\""),
 		"the multiplayer proof may observe the production starter but never fabricate one")
+
+
+func test_original_starter_fixture_requires_one_owned_body_uid_and_real_starter_fact() -> void:
+	var fixture := preload("res://tests/helpers/net_original_starter_fixture.gd")
+	var owned := {
+		"party_size": 1, "party_uids": ["original-uid"], "body_uid": "original-uid",
+		"body_is_owned_instance": true, "body_present": true, "body_ready": true,
+		"body_species": "terrapup", "body_nickname": "Chosen", "starter_granted": true,
+	}
+	assert_true(fixture.owned_original_starter(owned, "Chosen"))
+	for mutation: Dictionary in [
+		{"party_size": 0, "party_uids": []}, # The actual CI6173 deployed-only fallback.
+		{"party_uids": ["other-uid"]},
+		{"party_size": 2, "party_uids": ["original-uid", "extra-starter"]},
+		{"body_is_owned_instance": false},
+		{"body_uid": ""},
+		{"body_species": "unknown-starter"},
+		{"body_ready": false},
+		{"starter_granted": false},
+	]:
+		var refused := owned.duplicate(true)
+		refused.merge(mutation, true)
+		assert_false(fixture.owned_original_starter(refused, "Chosen"),
+			"an invalid ownership composition cannot satisfy original-starter setup")
+	assert_false(fixture.owned_original_starter(owned, "Another"),
+		"another peer's name cannot substitute for this player's chosen starter")
