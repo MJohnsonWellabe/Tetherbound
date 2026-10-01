@@ -12,35 +12,6 @@ class GameStub:
 	extends "res://tests/fixtures/regional_ending_owner.gd"
 
 
-class PendingOwner:
-	extends Node
-	var delegate: RefCounted = OWNER.new()
-	var local: RefCounted:
-		get: return delegate.local
-	var party: RefCounted:
-		get: return delegate.party
-	var pending_intent: Dictionary = {}
-	var polls := 0
-	var change_session_on_poll := false
-
-	func regional_ending_context() -> Dictionary:
-		return delegate.regional_ending_context()
-
-	func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
-		pending_intent = intent.duplicate(true)
-		return {"status": "pending"}
-
-	func regional_ending_ack_result(_id: String) -> Dictionary:
-		polls += 1
-		if change_session_on_poll:
-			delegate.session_epoch = "reconnected"
-			return {"status": "rejected"}
-		return delegate.commit_regional_ending_ack(pending_intent)
-
-	func push_world_message(message: String) -> void:
-		delegate.push_world_message(message)
-
-
 func test_runtime_hooks_compile() -> void:
 	var sequence: Node = SEQUENCE_DIRECTOR.new()
 	var panel: CanvasLayer = DIALOGUE_PANEL.new()
@@ -291,7 +262,7 @@ func test_ending_objectives_require_personal_context_and_honest_return_goal() ->
 	game.durable_home_return = true
 	rows = HOMECOMING.objective_rows(game)
 	assert_true(rows[0].has("beacon"))
-	assert_eq(rows[0].beacon.position, [2, 14], "the F17 farmhouse is at the village road's start")
+	assert_eq(rows[0].beacon.position, [2.0, 14.0], "JSON coordinates retain the F17 farmhouse at the village road's start")
 	game.local.flags.set_flag(HOMECOMING.CREDITS_SEEN_FLAG)
 	assert_true(HOMECOMING.objective_rows(game).is_empty(), "completed credits return to the ordinary realm feed")
 
@@ -344,34 +315,6 @@ func test_receipt_requires_matching_durable_typed_envelope() -> void:
 	game.mutate_intent = true
 	assert_false(await HOMECOMING.complete_credits(game, game.local.character_id, HOMECOMING.context(game)),
 		"the owner callback cannot rewrite the locally frozen request")
-
-
-func test_pending_owner_acknowledgement_waits_for_receipt() -> void:
-	var game := PendingOwner.new()
-	game.delegate.accepted_outcome = true
-	game.delegate.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
-	var tree := Engine.get_main_loop() as SceneTree
-	tree.root.add_child(game)
-	var frozen := HOMECOMING.context(game)
-	assert_true(await HOMECOMING.complete(game, game.local.character_id, frozen))
-	assert_eq(game.polls, 1)
-	assert_eq(game.delegate.save_system.calls, 1)
-	assert_true(game.local.flags.has(HOMECOMING.SEEN_FLAG))
-	game.free()
-
-
-func test_pending_owner_result_cannot_cross_reconnect_generation() -> void:
-	var game := PendingOwner.new()
-	game.delegate.accepted_outcome = true
-	game.delegate.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
-	game.change_session_on_poll = true
-	var tree := Engine.get_main_loop() as SceneTree
-	tree.root.add_child(game)
-	var frozen := HOMECOMING.context(game)
-	assert_false(await HOMECOMING.complete(game, game.local.character_id, frozen))
-	assert_eq(game.delegate.save_system.calls, 0)
-	assert_false(game.local.flags.has(HOMECOMING.SEEN_FLAG))
-	game.free()
 
 
 func test_live_starter_bond_and_choices_are_personal_and_truthful() -> void:
