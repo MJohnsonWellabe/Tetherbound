@@ -78,6 +78,29 @@ func equipped_in(slot: String) -> String:
 	return str(_equipped.get(slot, ""))
 
 
+## F24 pouch occupies the existing backpack slot. HOMESTEAD supplies armor
+## definitions with command_pouch_tier 1..4; this reader never equips a new
+## slot, creates supplies or changes inventory/save transactions. The host
+## freezes this result at encounter admission from the admitted owner record.
+func command_pouch_tier() -> int:
+	if _items == null:
+		return 0
+	var id := equipped_in("backpack")
+	if id.is_empty() or not bool(_items.call("has", id)):
+		return 0
+	var row: Dictionary = _items.call("definition", id)
+	var tier: Variant = row.get("command_pouch_tier", 0)
+	if row.get("kind") != "armor" or row.get("armor_slot") != "backpack" \
+			or not (tier is int or tier is float) or not is_finite(float(tier)) \
+			or float(tier) != floorf(float(tier)) or float(tier) < 0 or float(tier) > 4:
+		return 0
+	return int(tier)
+
+
+func command_pouch_profile() -> Dictionary:
+	return preload("res://scripts/combat/tether_commands.gd").tier_profile(command_pouch_tier())
+
+
 ## Bag-facing transaction. Inventory has no callbacks or awaits: removing the
 ## selected identity and returning the old piece completes before observers poll.
 ## Preflight on a copy preserves every slot and revision when a swap cannot fit.
@@ -142,6 +165,8 @@ func is_slot(name: String) -> bool:
 ## Sum of every equipped piece's own `defense` field, capped at
 ## MAX_TOTAL_DEFENSE. 0.0 with nothing equipped or no item database.
 func total_defense() -> float:
+	if _gear_enabled():
+		return hazard_reduction("fall")
 	if _items == null:
 		return 0.0
 	var total := 0.0
@@ -159,6 +184,9 @@ func total_defense() -> float:
 ## overrides both to zero. Item ids stay in data: a future insulated piece only
 ## needs the same two fields and a valid equipped armour slot.
 func storm_mitigation(full_set_pieces: int) -> Dictionary:
+	if _gear_enabled():
+		return {"pieces": _insulated_pieces(), "full_set": false,
+			"damage_scale": hazard_scale("storm"), "static_scale": static_duration_scale()}
 	var pieces := 0
 	var strike_reduction := 0.0
 	var static_scale := 1.0
@@ -178,3 +206,90 @@ func storm_mitigation(full_set_pieces: int) -> Dictionary:
 	return {"pieces": pieces, "full_set": full_set,
 		"damage_scale": 0.0 if full_set else 1.0 - clampf(strike_reduction, 0.0, 1.0),
 		"static_scale": 0.0 if full_set else static_scale}
+
+
+## F33 hazard arithmetic reads actual worn ItemDB rows. Trainer gear never
+## supplies creature stats or a damage action. Consumer hooks below are used
+## only when the shared source owner connects the real traversal/hazard path.
+const HAZARD_FIELDS := {
+	"fall": "fall_damage_reduction", "storm": "storm_strike_reduction",
+	"drowning": "drowning_damage_reduction", "swim_stamina": "swim_stamina_reduction",
+	"currents": "current_push_reduction", "cold": "cold_penalty_reduction",
+	"terrain": "terrain_damage_reduction"
+}
+
+func hazard_reduction(hazard: String) -> float:
+	if not HAZARD_FIELDS.has(hazard) or _items == null or not _gear_enabled():
+		return 0.0
+	var total := 0.0
+	for slot: String in SLOTS:
+		var id := equipped_in(slot)
+		if id.is_empty():
+			continue
+		var row: Dictionary = _items.call("definition", id)
+		# Existing travel/hide armour retains its fall protection after activation.
+		var raw: Variant = row.get(HAZARD_FIELDS[hazard], row.get("defense", 0.0) if hazard == "fall" else 0.0)
+		if (raw is int or raw is float) and is_finite(float(raw)):
+			total += clampf(float(raw), 0.0, 1.0)
+	var cfg := _gear_config()
+	var cap := float(cfg.get("mitigation_cap", MAX_TOTAL_DEFENSE))
+	return clampf(total, 0.0, clampf(cap, 0.0, MAX_TOTAL_DEFENSE))
+
+func hazard_scale(hazard: String) -> float:
+	return 1.0 - hazard_reduction(hazard)
+
+func mitigate_hazard_damage(damage: float, hazard: String) -> float:
+	if not is_finite(damage) or damage <= 0.0:
+		return 0.0
+	return damage * hazard_scale(hazard)
+
+func current_push(flow: Vector3) -> Vector3:
+	return flow * hazard_scale("currents")
+
+func cold_regen_scale(zone_penalty: float) -> float:
+	# Called only while inside an authored local cold zone. No cold meter.
+	return 1.0 - clampf(zone_penalty, 0.0, 1.0) * hazard_scale("cold")
+
+func local_cold_regen_scale(realm: String, position: Vector3) -> float:
+	if not _gear_enabled():
+		return 1.0
+	var penalty := 0.0
+	for zone: Dictionary in _gear_config().get("cold_zones", []):
+		if zone.get("realm_id") != realm:
+			continue
+		var low: Array = zone.get("min", [])
+		var high: Array = zone.get("max", [])
+		if low.size() != 3 or high.size() != 3:
+			continue
+		if position.x >= float(low[0]) and position.x <= float(high[0]) \
+				and position.y >= float(low[1]) and position.y <= float(high[1]) \
+				and position.z >= float(low[2]) and position.z <= float(high[2]):
+			penalty = maxf(penalty, float(zone.get("stamina_regen_penalty", 0.0)))
+	return cold_regen_scale(penalty)
+
+func static_duration_scale() -> float:
+	if _items == null or not _gear_enabled():
+		return 1.0
+	var result := 1.0
+	for slot: String in SLOTS:
+		var row: Dictionary = _items.call("definition", equipped_in(slot))
+		var raw: Variant = row.get("static_duration_scale", 1.0)
+		if (raw is int or raw is float) and is_finite(float(raw)):
+			result *= clampf(float(raw), 0.0, 1.0)
+	return clampf(result, 1.0 - float(_gear_config().get("mitigation_cap", MAX_TOTAL_DEFENSE)), 1.0)
+
+func _insulated_pieces() -> int:
+	var result := 0
+	if _items != null:
+		for slot: String in SLOTS:
+			var row: Dictionary = _items.call("definition", equipped_in(slot))
+			if row.has("storm_strike_reduction") and row.has("static_duration_scale"):
+				result += 1
+	return result
+
+static func _gear_config() -> Dictionary:
+	var raw: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/gear.json")
+	return raw if raw is Dictionary else {}
+
+static func _gear_enabled() -> bool:
+	return bool(_gear_config().get("feature_flags", {}).get("runtime_enabled", false))
