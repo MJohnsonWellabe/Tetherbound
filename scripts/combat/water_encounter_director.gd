@@ -265,6 +265,19 @@ func _spawn_available_sites() -> void:
 		var plans := site_spawn_plans(site, table,
 			encounter_config.get("named_encounters", []), world_seed())
 		var authored_members: Array = site.get("member_anchors", [])
+		if plans.size() == 1 and not str(plans[0].id).is_empty():
+			var cycle := foundation_alpha_cycle(str(plans[0].id))
+			if cycle.get("status") == "waiting":
+				_site_members[id] = members
+				_site_spawned[id] = true
+				continue
+			if cycle.get("status") == "active":
+				var packet := preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, str(plans[0].id))
+				foundation_publish_alpha(str(plans[0].id), packet)
+				# Successful publication installs the actual member. Failed footing
+				# stays retryable through the existing alpha service.
+				if not _site_members.get(id, []).is_empty(): _site_spawned[id] = true
+				continue
 		# A valid named reservation whose once flag already fired is complete,
 		# not a broken spawn. Settle it as intentionally absent so returning to
 		# the island (or loading a completed save) stays quiet and deterministic.

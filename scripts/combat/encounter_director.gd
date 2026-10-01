@@ -829,8 +829,6 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 	remove_meta("foundation_alpha_spawning_" + site_id)
 
 func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -> void:
-	var repeat_world: RefCounted = get_node("/root/Game").world if not repeat_packet.is_empty() else null
-	var repeat_epoch := str(_session.call("_altar_current_epoch")) if not repeat_packet.is_empty() and _session != null else ""
 	if entries.is_empty():
 		push_error("spawns.json has no spawn table; the meadow will be empty")
 
@@ -907,16 +905,26 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			once_id = "wild_once_%d" % int(spawn.get("order", index))
 		var alpha_site := str(spawn.get("stormwood_named_id", once_id))
 		var once_already_cleared := _once_cleared(once_id)
+		# A saved cycle outranks the legacy first-completion flag. Loading a
+		# waiting cycle cannot recreate generation one before that flag is saved.
+		var spawn_packet := repeat_packet.duplicate(true)
+		var cycle := foundation_alpha_cycle(alpha_site)
+		if spawn_packet.is_empty() and cycle.get("status") == "active":
+			spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
+		if not spawn_packet.is_empty(): set_meta("foundation_alpha_spawning_" + alpha_site, true)
 
 		for n in count:
 			# The named individual is always the cluster's first member
 			# (`_make_alpha()`/`_apply_elder()` below). Once it is beaten,
 			# caught or freed, this spot simply spawns one fewer body -- the
 			# rest of an ordinary-population cluster (`n > 0`) is untouched.
-			if n == 0 and once_already_cleared and repeat_packet.is_empty():
+			if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty())):
 				continue
+			var member_packet: Dictionary = spawn_packet if n == 0 else {}
+			var repeat_world: RefCounted = get_node("/root/Game").world if not member_packet.is_empty() else null
+			var repeat_epoch := str(_session.call("_altar_current_epoch")) if not member_packet.is_empty() and _session != null else ""
 			var wild: Node3D = CREATURE_SCENE.instantiate()
-			if not repeat_packet.is_empty(): wild.visible = false
+			if not member_packet.is_empty(): wild.visible = false
 			# CREATURE-STAGING-0911. A tiny number of authored water shelves are
 			# deliberately too narrow for presentation spacing. Those entries opt
 			# out explicitly rather than weakening the body-aware rule globally.
@@ -977,13 +985,13 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			spot = _out_of_named_trainer_grounds(spot)
 			if not await _stand_on_ground(wild, spot):
 				push_error("no ground under the %s spawn point; it will be unreachable" % species)
-				if not repeat_packet.is_empty():
+				if not member_packet.is_empty():
 					wild.queue_free()
 					continue
-			if not repeat_packet.is_empty():
+			if not member_packet.is_empty():
 				var live_game := get_node_or_null("/root/Game")
 				if live_game == null or live_game.world != repeat_world or _session == null or _session.call("_altar_current_epoch") != repeat_epoch \
-					or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(live_game.world.redesign_world, alpha_site) != repeat_packet:
+					or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(live_game.world.redesign_world, alpha_site) != member_packet:
 					wild.queue_free()
 					continue
 			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
@@ -1090,7 +1098,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 					# `_on_combat_exited()` can fire the flag and skip its
 					# respawn timer the moment this alpha leaves the field.
 					_once_only[wild] = once_id
-					if repeat_packet.is_empty(): _configure_once_completion_reward(wild, once_alpha)
+					if member_packet.is_empty(): _configure_once_completion_reward(wild, once_alpha)
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
 			# WORLD-LIFE-0903 (BAND1_ROUTE_CONTRACT.md). A cluster's own
 			# `wander_radius` overrides `wild_creature.gd`'s open-meadow default
@@ -1109,8 +1117,11 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 				if once_id != "":
 					_once_only[wild] = once_id
 			if n == 0:
-				foundation_register_alpha(wild, alpha_site, repeat_packet)
-				if not repeat_packet.is_empty(): wild.visible = true
+				var registered := foundation_register_alpha(wild, alpha_site, member_packet)
+				if not foundation_alpha_cycle(alpha_site).is_empty() and not registered:
+					wild.queue_free()
+					continue
+				if not member_packet.is_empty(): wild.visible = true
 			wild.call("configure", wild_cfg)
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
@@ -1143,6 +1154,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			if cooldown > 0.0:
 				_wild_respawn[wild] = cooldown
 
+		if not spawn_packet.is_empty(): remove_meta("foundation_alpha_spawning_" + alpha_site)
 		_clusters.append(cluster)
 
 	# Set every cluster's real activation state against the player's actual
@@ -1154,10 +1166,18 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 		# Publishing a repeat generation never adopts another starter.
 		await adopt_starter(default_starter)
 
+func foundation_alpha_cycle(site_id: String) -> Dictionary:
+	var rules := preload("res://scripts/repeatables/alpha_respawns.gd")
+	var game := get_node_or_null("/root/Game")
+	if not _is_host() or rules.config().get("runtime_enabled") != true or game == null or rules.site(site_id).is_empty(): return {}
+	return game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(site_id, {}).duplicate(true)
+
 func foundation_register_alpha(wild: Node3D, site_id: String, packet: Dictionary = {}) -> bool:
 	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
 	if wild == null or site.is_empty() or _session == null: return false
 	var game := get_node("/root/Game")
+	var cycle := foundation_alpha_cycle(site_id)
+	if cycle.get("status") == "waiting" or (cycle.get("status") == "active" and packet.is_empty()): return false
 	if not packet.is_empty() and preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return false
 	wild.set_meta("foundation_alpha_site", site_id)
 	wild.set_meta("foundation_alpha_generation", int(packet.captured_from.spawn_generation) if not packet.is_empty() else 1)
