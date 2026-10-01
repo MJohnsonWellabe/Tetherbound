@@ -150,7 +150,24 @@ func _active_main(progression: RefCounted) -> Array:
 		game = tree.root.get_node_or_null(^"Game") if tree != null else null
 	var ending: Array[Dictionary] = preload("res://scripts/story/regional_homecoming.gd").objective_rows(
 		game, _regional_ending, _realm_id)
-	return ending if not ending.is_empty() else _main
+	if not ending.is_empty(): return ending
+	var lesson := _lesson_guidance()
+	if lesson.is_empty(): return _main
+	# This row is a state-derived presentation, with no invented completion flag.
+	var rows: Array = [{"id": "lesson:" + str(lesson.id), "label": str(lesson.goal), "how": str(lesson.goal), "scope": "player"}]
+	rows.append_array(_main)
+	return rows
+
+func _lesson_guidance() -> Dictionary:
+	var tree := Engine.get_main_loop() as SceneTree
+	var game := tree.root.get_node_or_null(^"Game") if tree != null else null
+	if game == null: return {}
+	# Ending remains the primary goal after the actual personal finale.
+	if not preload("res://scripts/story/regional_homecoming.gd").objective_rows(game, _regional_ending, _realm_id).is_empty(): return {}
+	return preload("res://scripts/onboarding/lesson_rules.gd").guidance(game.get("local"))
+
+func lesson_goal_signature() -> String:
+	return JSON.stringify(_lesson_guidance())
 
 
 static func _read_data(path: String) -> Dictionary:
@@ -417,6 +434,8 @@ func hint_text(entry: Dictionary) -> String:
 ## "" when the chapter is finished or the current rung authors no `how`; a
 ## caller must draw that as nothing, never as a blank line.
 func tracked_hint(progression: RefCounted) -> String:
+	var lesson := _lesson_guidance()
+	if not lesson.is_empty(): return str(lesson.goal)
 	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
@@ -443,6 +462,13 @@ func tracked_hint(progression: RefCounted) -> String:
 ## Once every step is done, the beacon's base `position` is the final action
 ## (the Hall gate for the captains).  No other objective can branch through it.
 func tracked_beacon(progression: RefCounted) -> Dictionary:
+	var lesson := _lesson_guidance()
+	if not lesson.is_empty():
+		# Only point at authored destinations in their actual realm.
+		if lesson.get("goal_realm") != _realm_id: return {}
+		var at: Array = lesson.get("goal_at", [])
+		if at.size() == 2: return {"id": "lesson:" + str(lesson.id), "position": Vector2(float(at[0]), float(at[1])), "display_name": str(lesson.goal)}
+		return {}
 	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
@@ -509,6 +535,8 @@ func tracked_id(progression: RefCounted) -> String:
 ## the chapter's later phases simply have not authored the next one yet, not
 ## a bug.
 func tracked_text(progression: RefCounted) -> String:
+	var lesson := _lesson_guidance()
+	if not lesson.is_empty(): return str(lesson.goal)
 	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue

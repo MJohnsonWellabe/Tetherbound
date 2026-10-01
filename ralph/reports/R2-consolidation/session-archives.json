@@ -1,0 +1,88 @@
+{
+  "owner_authorization": "Archive after source inclusion; source consolidation only, criteria remain OPEN. Reopen for attributable next CI repair.",
+  "consolidated_branch": "tb/integration-next",
+  "pushed_head": "33d3496997",
+  "archived_sessions": [
+    {
+      "feature": "F34",
+      "thread_id": "01a0f880-b92c-7552-b374-b95959c2a6cf",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    },
+    {
+      "feature": "F36",
+      "thread_id": "01a0f880-bd92-74b3-ad99-5c3e498ff5c3",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    },
+    {
+      "feature": "F37",
+      "thread_id": "01a0f881-8523-7261-bc41-6f4a3056abc3",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    },
+    {
+      "feature": "F38",
+      "thread_id": "01a0f882-c46f-7e61-98e4-9c70cb4d5fd2",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 567
+    },
+    {
+      "feature": "F39",
+      "thread_id": "01a0f882-c784-7f91-bc6d-d79566fa7903",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    },
+    {
+      "feature": "F40",
+      "thread_id": "01a0f884-99bb-7660-9de4-b758008ded9b",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    },
+    {
+      "feature": "F41",
+      "thread_id": "01a0f885-798f-7ca0-aee0-7de910483fcc",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    },
+    {
+      "feature": "F42",
+      "thread_id": "01a0f885-7c56-7181-904f-ca92fc353573",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 567
+    },
+    {
+      "feature": "F43",
+      "thread_id": "01a0f886-ed92-7e80-af08-759d56e94267",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    },
+    {
+      "feature": "F44",
+      "thread_id": "01a0f886-f01f-7fd0-9385-00ceb092742f",
+      "archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "retained_untracked_dependencies": 0
+    }
+  ],
+  "criteria_credit": 0
+}

@@ -1,0 +1,17 @@
+{
+  "normalization": "UTF-8 source bytes with CRLF normalized to LF, matching repository text storage",
+  "sha256": {
+    "data/config/research.json": "5c7489602388d892228cf4205ffc2ad111f7f773266cb053a36fda5d17fe684b",
+    "data/progression/flag_scopes.json": "3f5e8159a9b0f75f8da3f5e4bc9730dbb5b240edb54a10de2c7a9c276f2d8a9e",
+    "data/schema/character_state.json": "b7f69496135e51dd39b898f526cecc32eab5d399890da74081aef7a2c864ac84",
+    "data/schema/character_state.schema.json": "e8c9a4ef1c159cefab02f43638b205dff4159e1657528d32945355302c6e677a",
+    "scripts/creatures/research_log.gd": "ae81ebc6916fcd59377a53f6a1f8865abd1e2d35a63419a8d798ae3d105ff048",
+    "scripts/creatures/research_actions.gd": "183bde92c3b1a37faba10fb1a40b900231a98ffe35d806af8294f5c6d1e9b555",
+    "scripts/combat/encounter_director.gd": "3b4e3c4e5a3ec14851ca0a8b5a6a734be77cc965c9149a52cc0e41652d068c65",
+    "scripts/data/redesign_state.gd": "266b78879b2ff6b1e3940ba56a9d492c10907dd548ea1dc27241464d7ef7068e",
+    "scripts/net/character_action_rules.gd": "7a6d272a405aca369524615a0a60e3c8b4a6e9bb5453c40963761b90b6dbcaf5",
+    "scripts/ui/research_log_panel.gd": "7544b1f019d6b49c79f93768a95a33e1212e2c13fe45e0725cf161aea988717c",
+    "scripts/ui/tab_quest_log.gd": "dd342221b34c4bda75b6b16d0325bd4828a480f18319f03c942bd84a8ea37de6",
+    "tests/test_research_log.gd": "00b87869a8440f56bb3d7eabfbbac446ef898fd4b5a94a85f3413b13060b4c34"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "consolidated_branch": "tb/integration-next",
+  "source_baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+  "source_only": true,
+  "ci_deferred_until_prior_batch_green_on_main": true,
+  "archive_policy": "Archive only after exact source HEAD is contained and owned uncommitted source is absent; restore for attributable CI repairs. Source inclusion is not criterion acceptance.",
+  "sessions": [
+    {
+      "thread_id": "01a0f8de-3f53-7a41-bc91-689c49cc3024",
+      "title": "R3 F45 — Research log",
+      "feature": "F45",
+      "checkout": "D:/tetherbound/r3-f45",
+      "branch": "tb/r3-f45",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "status": {
+        "type": "active",
+        "activeFlags": []
+      },
+      "archived": false
+    },
+    {
+      "thread_id": "01a0f8df-d2a5-72b1-b5ce-9fc75530db55",
+      "title": "R3 F46 — New-system onboarding",
+      "feature": "F46",
+      "checkout": "D:/tetherbound/r3-f46",
+      "branch": "tb/r3-f46",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "status": {
+        "type": "active",
+        "activeFlags": []
+      },
+      "archived": false
+    },
+    {
+      "thread_id": "01a0f8e0-c591-77a2-a145-b0510dc61a1c",
+      "title": "R3 F47 — Economy and balance",
+      "feature": "F47",
+      "checkout": "D:/tetherbound/r3-f47",
+      "branch": "tb/r3-f47",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "status": {
+        "type": "active",
+        "activeFlags": []
+      },
+      "archived": false
+    },
+    {
+      "thread_id": "01a0f8e1-9d29-78f2-b3be-6a513313932b",
+      "title": "R3 F48 — Co-op across the new loop",
+      "feature": "F48",
+      "checkout": "D:/tetherbound/r3-f48",
+      "branch": "tb/r3-f48",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "status": {
+        "type": "active",
+        "activeFlags": []
+      },
+      "archived": false
+    },
+    {
+      "thread_id": "01a0f8e2-2fb7-7ae2-9039-4abaa404eb47",
+      "title": "R3 F49 — Integrated campaign and release…",
+      "feature": "F49",
+      "checkout": "D:/tetherbound/r3-f49",
+      "branch": "tb/r3-f49",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "status": {
+        "type": "active",
+        "activeFlags": []
+      },
+      "archived": false
+    },
+    {
+      "thread_id": "01a0f8ec-f553-77d1-8975-10f7fe056137",
+      "title": "R3 Foundation — Wire the remaining production…",
+      "feature": "Foundation",
+      "checkout": "D:/tetherbound/r3-foundation-wiring",
+      "branch": "tb/r3-foundation-wiring",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "status": {
+        "type": "active",
+        "activeFlags": []
+      },
+      "archived": false
+    }
+  ]
+}

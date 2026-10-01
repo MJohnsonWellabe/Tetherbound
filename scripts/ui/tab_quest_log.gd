@@ -29,6 +29,7 @@ extends "res://scripts/ui/menu_tab.gd"
 
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const RESEARCH_PANEL := preload("res://scripts/ui/research_log_panel.gd")
+const RESEARCH_LOG := preload("res://scripts/creatures/research_log.gd")
 var _research_panel: CanvasLayer
 var _research_reader := Callable()
 var _research_button: Button
@@ -40,9 +41,19 @@ func configure_research_view(reader: Callable) -> bool:
 	return true
 
 func _research_view(biome: String) -> Dictionary:
-	if not _research_reader.is_valid(): return {"ready": false}
-	var raw: Variant = _research_reader.call(biome)
-	return raw if raw is Dictionary else {"ready": false}
+	if _research_reader.is_valid():
+		var raw: Variant = _research_reader.call(biome)
+		return raw if raw is Dictionary else {"ready": false}
+	var game := state()
+	var local: RefCounted = game.get("local") if game != null else null
+	if local == null: return {"ready": false}
+	return RESEARCH_LOG.view(local.get("redesign_character"), str(local.get("character_id")), biome)
+
+func _claim_research(species: String, task: String) -> Dictionary:
+	var game := state()
+	var session: Node = game.get("session") if game != null else null
+	if session == null or not session.has_method("request_research_claim"): return {"ok": false, "code": "Research rewards are unavailable."}
+	return session.call("request_research_claim", {"species_id": species, "task_id": task})
 
 func _open_research() -> void:
 	var game := state()
@@ -50,6 +61,7 @@ func _open_research() -> void:
 	if not is_instance_valid(_research_panel):
 		_research_panel = RESEARCH_PANEL.new()
 		_research_panel.set("return_to", _return_to_journal)
+		_research_panel.set("claim_task", _claim_research)
 		game.add_child(_research_panel)
 	menu.call("close")
 	if _research_panel.call("open", _research_view) != true: menu.call("open", "quest_log")
@@ -75,6 +87,7 @@ var _scroll: ScrollContainer = null
 var _main_list: VBoxContainer = null
 var _local_list: VBoxContainer = null
 var _last_progression_revision: int = -1
+var _last_lesson_goal := ""
 
 
 func build() -> void:
@@ -171,8 +184,10 @@ func poll() -> void:
 		return
 	var revision := int(progression.get("revision"))
 	var realm_changed := bool(_log.call("set_realm", str(game.get("current_realm"))))
-	if revision == _last_progression_revision and not realm_changed:
+	var lesson_goal := str(_log.call("lesson_goal_signature"))
+	if revision == _last_progression_revision and not realm_changed and lesson_goal == _last_lesson_goal:
 		return
+	_last_lesson_goal = lesson_goal
 	_last_progression_revision = revision
 	_fill(
 		_main_list,

@@ -1,0 +1,1885 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": false,
+  "maximum_event_receipts": 4096,
+  "maximum_transaction_receipts": 4096,
+  "biomes": {
+    "tidewake": {
+      "title": "Tidewake Naturalist"
+    },
+    "meadows": {
+      "title": "Meadows Naturalist"
+    },
+    "stormwood": {
+      "title": "Stormwood Naturalist"
+    },
+    "cloudreach": {
+      "title": "Cloudreach Naturalist"
+    }
+  },
+  "species": {
+    "abyssal_guardian": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "aeriex": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "storm_strike",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "aquaryn": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "ashtusk": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "rootquake",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Observe three completed move casts",
+          "kind": "cast",
+          "required": 3,
+          "id": "casts"
+        }
+      ]
+    },
+    "bramblebun": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "warren_charge",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "breezetail": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "storm_strike",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "brooktail": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "riptide_rush",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "burrowback": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "cannonback": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "cindercub": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "rootquake",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "cliffspike": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "storm_strike",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "cloudfang": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "sky_rend",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "cragclaw": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "undertow",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "craghorn": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "sky_rend",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "duskhush": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "night_swoop",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "frostclaw": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "glacier_break",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "fulgocobra": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "galecrest": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "storm_strike",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "galewisp": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "sky_rend",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Observe three completed move casts",
+          "kind": "cast",
+          "required": 3,
+          "id": "casts"
+        }
+      ]
+    },
+    "glimmermoth": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "mangrove_monitor": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "meadowhart": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "verdant_burst",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "mirejaw": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "mosshell": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "mosshock": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "mudsnout": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "rootquake",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "nightburrow": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "gloom_surge",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "paddlenewt": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "riptide_rush",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "pebbik": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "gust_burst",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "pipwing": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "gust_burst",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "reedwing": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "sky_rend",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "ribbonray": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "gust_burst",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "riftfrill": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "rift_pulse",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "ripplet": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "undertow",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Observe three completed move casts",
+          "kind": "cast",
+          "required": 3,
+          "id": "casts"
+        }
+      ]
+    },
+    "riptusk": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "undertow",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "riverdrake": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "riptide_rush",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "shadelet": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "gloom_surge",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "sirenseal": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "skyrill": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "night_swoop",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "solmane": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "sky_rend",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "sparkit": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "staticub": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "stormbrush": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "stormcapra": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "storm_strike",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Observe three completed move casts",
+          "kind": "cast",
+          "required": 3,
+          "id": "casts"
+        }
+      ]
+    },
+    "stormraven": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "stormtrail": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "trailblaze_pounce",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "tanglevolt": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "tempestwing": {
+      "biome": "cloudreach",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "gust_burst",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "terrapup": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "stone_rush",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Observe three completed move casts",
+          "kind": "cast",
+          "required": 3,
+          "id": "casts"
+        }
+      ]
+    },
+    "thundertunnel": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "tidecoil": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "torrentoad": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "trailpup": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "trailblaze_pounce",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "tuskroot": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "rootquake",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Observe three completed move casts",
+          "kind": "cast",
+          "required": 3,
+          "id": "casts"
+        }
+      ]
+    },
+    "veridian": {
+      "biome": "meadows",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "antler_slam",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "voltarach": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "voltwig": {
+      "biome": "stormwood",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "arc_lash",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_abyssal_guardian": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "leviathan_surge",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_aquaryn": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "riptide_lance",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_cannonback": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tidal_burst",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_cragclaw": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_mangrove_monitor": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "trailblaze_pounce",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_mirejaw": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "undertow",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_mosshell": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "tremor_roll",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_riptusk": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "riptide_rush",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_riverdrake": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "riptide_rush",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_sirenseal": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "undertow",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_tidecoil": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "leviathan_surge",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    },
+    "water_torrentoad": {
+      "biome": "tidewake",
+      "tasks": [
+        {
+          "reward_count": 5,
+          "label": "Meet this species in an encounter",
+          "kind": "sight",
+          "required": 1,
+          "id": "sight"
+        },
+        {
+          "move": "riptide_rush",
+          "id": "signature",
+          "kind": "cast",
+          "reward_count": 10,
+          "label": "Observe its signature move",
+          "required": 1
+        },
+        {
+          "reward_count": 15,
+          "label": "Defeat three in encounters",
+          "kind": "defeat",
+          "required": 3,
+          "id": "defeats"
+        }
+      ]
+    }
+  }
+}

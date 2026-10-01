@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "F48 reviewed actual-input evidence profile; never an earned-progression adapter",
+  "type": "object",
+  "required": ["provenance", "saves", "routes", "outcomes"],
+  "additionalProperties": false,
+  "properties": {
+    "provenance": {"type": "string", "minLength": 1},
+    "saves": {"type": "array", "minItems": 2, "maxItems": 4, "items": {"type": "string", "minLength": 1}},
+    "routes": {
+      "type": "object",
+      "description": "loop: hub_N,craft_N,portal_N,master_N,feast_cook_N,feast_N,relic_N plus boss routes. boss: boss_prepare_N,boss_start,boss_join_N,boss_fight. behind: host_unlock_tidewake,host_enter_tidewake,behind_enter_tidewake. transactions: TRANSACTION_prepare,TRANSACTION_commit,TRANSACTION_retry. N is actual peer index.",
+      "additionalProperties": {
+        "type": "array", "minItems": 1, "maxItems": 1000,
+        "items": {
+          "type": "object", "required": ["action", "args"], "additionalProperties": false,
+          "properties": {
+            "action": {"enum": ["press", "stick", "move_to", "wait", "f48_button"]},
+            "args": {"type": "object"}
+          }
+        }
+      }
+    },
+    "outcomes": {
+      "type": "object",
+      "description": "Independently reviewed feast_N/release_N/essence_spend_N expectations. Cannot relax fixed counts/costs/receipts. Feast requires creature uid/unchanged level/exact breakthroughs. Release requires original released_uid and exact essence delta. Essence spend requires exact delta and owned UID/level fields in equals.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "equals": {"type": "object"},
+          "item_delta": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer"}},
+          "released_uid": {"type": "string", "minLength": 1},
+          "creature": {
+            "type": "object", "required": ["uid", "level", "breakthroughs"], "additionalProperties": false,
+            "properties": {
+              "uid": {"type": "string", "minLength": 1},
+              "level": {"type": "integer", "minimum": 1, "maximum": 60},
+              "breakthroughs": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1, "maximum": 6}}
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

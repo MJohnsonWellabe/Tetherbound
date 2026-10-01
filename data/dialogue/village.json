@@ -14,6 +14,22 @@
   "_comment_op0905_18": "OP-0905-18 (docs/owner/OWNER_PLAYTEST_2026-09-05.md): 'When and how does the pig evolve?' -- the owner reached the midgame with a Mudsnout and never learned the rule existed. Nothing in the world ever said so out loud; the requirement only ever surfaced in the Team tab's own fine print and evolution.gd's refusal string (see burrow_warrens.json's own `_comment_prize_lead` for that same finding at the Heartstone pickup). Mira is the Meadow Keeper -- 'I look after what grows out there' is already her opening line -- so a fourth line naming what ELSE grows out there, close by a Mudsnout owner on any ordinary greeting, closes the gap without a cutscene or a new system: no rule changes, evolution.mudsnout in progression.json is still the one source of the actual gate.",
   "_comment_hall_approach": "SF34. The Meadows Hall approach gate (scripts/world/playground_world.gd::_build_sigil_gate). Nobody stands at this gate, so the words are a Team Tether notice bolted to the leaf — the same trick road_gate_locked plays with Grandpa's voice, but diegetic here rather than remote narration. The PORTRAIT IS A STAND-IN: the project has exactly two portraits on disk (grandpa, trainer) and neither is a faction notice; tests/test_dialogue_runner.gd requires a real one, so this uses the trainer plate under CLAUDE.md's Prototyping rule and should be replaced when the faction has art of its own. The sealed line never names how many Sigils are missing — the objective tracker counts (data/progression/objectives.json), and saying it twice in two voices is how a count drifts.",
   "conversations": {
+    "lesson_masters": {
+      "speaker": "Tam",
+      "lines": ["One of your creatures has reached level ten. That's its first cap, not the end of its training. Orin Stonewake teaches at the Old Quarry.", "Win your own one-creature duel, open Orin's recipe chest, cook the feast at your Kitchen, and feed it to a creature at that cap. Friends may watch; each trainer earns their own recipe."]
+    },
+    "lesson_feasts": {
+      "speaker": "Tam",
+      "lines": ["That Master recipe makes an Ascension Feast. Your Kitchen needs the biome's materials and an ingredient attuned to the creature's type.", "Feed it at the matching cap to break through. Some creatures can evolve then. Keeping the form you love is a choice too."]
+    },
+    "lesson_portals": {
+      "speaker": "Tam",
+      "lines": ["That portal key belongs at its signed arch in the Crossing Hall. Use it once to unlock that journey permanently.", "Touch waystones while exploring. The Hall's portal returns you to your last activated waystone in that biome, or its entry if you have none. Following a friend never gives you their permanent key."]
+    },
+    "lesson_shrines": {
+      "speaker": "Tam",
+      "lines": ["Bring that relic to its pedestal in the Hall's Shrine Room. Hanging it unlocks the next biome's station attachments for your character.", "You can carry one relic power at a time. The display is shared, but your relics and your choice remain yours."]
+    },
     "village_mira": {
       "speaker": "Mira",
       "portrait": "res://assets/ui/portraits/mira.png",

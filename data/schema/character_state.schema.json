@@ -3,6 +3,68 @@
   "$id": "tetherbound/character_state",
   "type": "object",
   "properties": {
+    "research": {
+      "description": "Optional additive personal history; absence means no earned events. Party release never removes this carrier. All writes use existing character_action atomic registry/journal.",
+      "properties": {
+        "species": {
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "seen": {
+                "type": "boolean"
+              },
+              "tasks": {
+                "additionalProperties": {
+                  "type": "integer",
+                  "maximum": 999,
+                  "minimum": 0
+                },
+                "type": "object"
+              },
+              "caught": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "seen",
+              "caught",
+              "tasks"
+            ]
+          },
+          "type": "object"
+        },
+        "event_receipts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "minLength": 64,
+            "type": "string"
+          },
+          "maxItems": 4096
+        },
+        "titles": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "meadows",
+              "tidewake",
+              "cloudreach",
+              "stormwood"
+            ],
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "species",
+        "event_receipts",
+        "titles"
+      ]
+    },
     "bounties": {
       "description": "Optional additive v28 carrier; absent means no board issued. Existing saves retain all fields. Only host transactions issue or change a board.",
       "type": "object",
