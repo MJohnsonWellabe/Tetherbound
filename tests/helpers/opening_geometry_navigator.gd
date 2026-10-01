@@ -316,6 +316,56 @@ func _foot(pose: Transform3D) -> float:
 	return (pose * _body.shape_owner_get_transform(_owner)).origin.y - _cap.shape.height * 0.5
 
 
+func _paired_floor_skin(hit: PhysicsTestMotionResult3D, index: int, pose: Transform3D) -> bool:
+	# Actual stationary grounded recovery only, after exact unshrunk overlap refusal.
+	# Do not reorient native normals or admit predicted/staged landing contacts.
+	if _contact_staged or pose != _body.global_transform or not _body.is_on_floor() \
+			or hit.get_travel() != Vector3.ZERO or hit.get_collision_safe_fraction() != 1.0 \
+			or hit.get_collision_unsafe_fraction() != 1.0:
+		return false
+	var normal: Vector3 = hit.get_collision_normal(index)
+	var point: Vector3 = hit.get_collision_point(index)
+	var floor_cos: float = cos(_body.floor_max_angle)
+	var skin: float = _body.safe_margin
+	var capsule: CapsuleShape3D = _cap.shape as CapsuleShape3D
+	var radius: float = capsule.radius
+	var center: Vector3 = (pose * _body.shape_owner_get_transform(_owner)).origin \
+			- Vector3.UP * (capsule.height * 0.5 - radius)
+	var shell: float = radius + skin
+	# The opposed normal must point out of the bottom cap, within the same skin.
+	# Its counterpart must point into that cap. A wall/ceiling normal cannot substitute.
+	if normal.dot(Vector3.UP) > -floor_cos or not hit.get_collider_rid(index).is_valid() \
+			or hit.get_collider_shape(index) < 0 \
+			or (center - point + normal * shell).length() > skin + CONTACT_EPS:
+		return false
+	var foot: float = _foot(pose)
+	var ceiling: float = foot + radius * (1.0 - floor_cos) + skin
+	# Diameter squared of a skin-thick spherical cap; no new distance allowance.
+	var patch_diameter_squared: float = 4.0 * (shell * shell - radius * radius)
+	for other in hit.get_collision_count(): # At most seven contacts; no new native query.
+		if other == index or hit.get_collider_rid(other) != hit.get_collider_rid(index) \
+				or hit.get_collider_id(other) != hit.get_collider_id(index) \
+				or hit.get_collider_shape(other) != hit.get_collider_shape(index) \
+				or hit.get_collision_local_shape(other) != _capsule_index:
+			continue
+		var support: Vector3 = hit.get_collision_normal(other)
+		var support_point: Vector3 = hit.get_collision_point(other)
+		var depth: float = hit.get_collision_depth(other)
+		if not support.is_finite() or not support_point.is_finite() or not is_finite(depth) \
+				or depth < -CONTACT_EPS or depth > skin + CONTACT_EPS \
+				or absf(support.length_squared() - 1.0) > 0.001 \
+				or support.dot(Vector3.UP) < floor_cos \
+				or support_point.y < foot - skin - CONTACT_EPS \
+				or support_point.y > ceiling + CONTACT_EPS:
+			continue
+		var separation: Vector3 = point - support_point
+		if (center - support_point - support * shell).length() <= skin + CONTACT_EPS \
+				and separation.length_squared() <= patch_diameter_squared \
+				and absf(support.dot(separation)) <= CONTACT_EPS:
+			return true # Paired live floor skin only; actual controller still owns travel.
+	return false
+
+
 func _floor_contacts(hit: PhysicsTestMotionResult3D, pose: Transform3D, shallow: bool) -> bool:
 	if _contact_enabled:
 		_contact_hit = hit
@@ -335,7 +385,8 @@ func _floor_contacts(hit: PhysicsTestMotionResult3D, pose: Transform3D, shallow:
 				or depth < -CONTACT_EPS or (shallow and depth > _body.safe_margin + CONTACT_EPS) \
 				or hit.get_collision_local_shape(index) != _capsule_index \
 				or absf(normal.length_squared() - 1.0) > 0.001 \
-				or normal.dot(Vector3.UP) < cos(_body.floor_max_angle) \
+				or (normal.dot(Vector3.UP) < cos(_body.floor_max_angle)
+					and (not shallow or not _paired_floor_skin(hit, index, pose))) \
 				or contact.y < _foot(pose) - _body.safe_margin - CONTACT_EPS \
 				or contact.y > ceiling + CONTACT_EPS:
 			if _contact_enabled:

@@ -1,0 +1,242 @@
+{
+  "original_source": "784b5cee71a4ba42b7fd6b5b3b39bea76b67910e",
+  "current_main_integrated_source": "fddef1386f82979ead374c4bc00026a30e47a403",
+  "original_native_exit": 2,
+  "original_failures": [
+    "smoke budget exceeded",
+    "four host ENet channel1/maxchannels0 errors"
+  ],
+  "status": "ORIGINAL FAILED RUN PRESERVED; separate immutable-record finalization and independent literal F17#5 verdict required",
+  "artifacts": [
+    {
+      "original_relative_path": "native.txt",
+      "archive_path": "originals/native.txt.gz",
+      "original_bytes": 16163,
+      "original_sha256": "8aaf117cfc1c0290028a57cf87493d23b968a61143005664f1b2ea0ad7748558",
+      "gzip_bytes": 2233,
+      "gzip_sha256": "ad229e81adb94fc0497376b2dbe2760a338b3ba1fcc1624aae472fd55fdedc8c",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "parser.txt",
+      "archive_path": "originals/parser.txt.gz",
+      "original_bytes": 73,
+      "original_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_bytes": 88,
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\HALL_AGREEMENT.json",
+      "archive_path": "originals/net/HALL_AGREEMENT.json.gz",
+      "original_bytes": 44604226,
+      "original_sha256": "5c6c4dfeee78b5a1a7062df91ad6f3e1749a12d28d67c6faf95462d6897aaca0",
+      "gzip_bytes": 890952,
+      "gzip_sha256": "e8633d8a451195d4953a2e3a1bc2ac61d0a8f95c4bcd54506c8a7ad364806f63",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\NET_RUN.json",
+      "archive_path": "originals/net/NET_RUN.json.gz",
+      "original_bytes": 2518,
+      "original_sha256": "b3770a24fe5a3ee79056d74755ce8222216acd760c218100f72696977e168f0d",
+      "gzip_bytes": 872,
+      "gzip_sha256": "b5c435379bfe60ea88243fc8f469bd03269fffefedca3b78d923a99da4c76982",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\peer-0.log",
+      "archive_path": "originals/net/peer-0.log.gz",
+      "original_bytes": 21410,
+      "original_sha256": "4bff891adf1e8dd0fb05bbba1da26045faad181fea587f9c392b4eb07665c83d",
+      "gzip_bytes": 3603,
+      "gzip_sha256": "ea60e5bc463b895ef6deeaa66535296e6a96d8262c5c89254a8c8388f1c941ae",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\peer-1.log",
+      "archive_path": "originals/net/peer-1.log.gz",
+      "original_bytes": 21184,
+      "original_sha256": "421e02a7c9996401392b5d323c729ed20540da145a1f7bbb962f350110740691",
+      "gzip_bytes": 3587,
+      "gzip_sha256": "dfd83b914f923935096c6d68adf5e6bb14c06f44d3114cfdc566632778637fc8",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\SUMMARY.md",
+      "archive_path": "originals/net/SUMMARY.md.gz",
+      "original_bytes": 255,
+      "original_sha256": "9b08cb6df0f39482c9208516fb5bf7d01fa0482a8bd22cad289576fc448f93b4",
+      "gzip_bytes": 195,
+      "gzip_sha256": "66abc6cf11998d801fe669cdea32095fbf6bd3215ea4942f9f378cb5180b3233",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\boot_log.txt",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/boot_log.txt.gz",
+      "original_bytes": 5117,
+      "original_sha256": "5f9e5b317e37a86b50b77c7dfb4d27f4344e6e2e215f914cb73a900cfcaa5046",
+      "gzip_bytes": 1124,
+      "gzip_sha256": "81462f7c02b36eb97373af57855b80bfadce9e78186bfc79cb0e3db35b653c00",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\cache\\map_meadows.png",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png.gz",
+      "original_bytes": 916609,
+      "original_sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa",
+      "gzip_bytes": 916907,
+      "gzip_sha256": "b7b4690ed4da8dfd9837beadff2d8a8ccd4f5dc30230e40204114d00286e5296",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\cache\\map_meadows.png.key",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key.gz",
+      "original_bytes": 48,
+      "original_sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be",
+      "gzip_bytes": 68,
+      "gzip_sha256": "414a5170038f555d21c914f67ee14ff817a04c08256f4cc7ac4e301af1321794",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-fcf48b83b695596297b6faddd900f0f2\\character.json",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-fcf48b83b695596297b6faddd900f0f2/character.json.gz",
+      "original_bytes": 2773948,
+      "original_sha256": "25c3bb29c91c9945b94bc0a6c9916ad669e8247fe2f944eb9b4bf98dc005b6f3",
+      "gzip_bytes": 4586,
+      "gzip_sha256": "00356ed3cdb2edf56cc4379bb7065aade74682a13c38ed5468eb3ae112fdcc63",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\slot_0.json",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json.gz",
+      "original_bytes": 4187978,
+      "original_sha256": "566f1064509a9c75e2b2f59914acd627053123364af60a631131747f652fbf6d",
+      "gzip_bytes": 6757,
+      "gzip_sha256": "d0a3c6ea6661e901bfe54620fd59117d888beba7ed53def4b8b22512e0cf9664",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\characters\\character-fcf48b83b695596297b6faddd900f0f2\\character.json",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-fcf48b83b695596297b6faddd900f0f2/character.json.gz",
+      "original_bytes": 2773949,
+      "original_sha256": "27730941073423e146bdecf40970ac2b1254f4d7b35b102355f2a0068c5535cd",
+      "gzip_bytes": 4588,
+      "gzip_sha256": "bcb8dea50585ee7c7192215440e62b301f74e7d83d8f512d086ce699cef547a8",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\worlds\\slot-0\\world.json",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json.gz",
+      "original_bytes": 15875,
+      "original_sha256": "58100e28ffbe5d6b605201d9fdac024ea49fed13d55eeb1390a93d42daa29078",
+      "gzip_bytes": 531,
+      "gzip_sha256": "3816d0ebed4bab5e38bff9cff033a5614f806d24efefb7f473bd572cf3d27c71",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-0\\Godot\\app_userdata\\Tetherbound\\worlds\\redesign-v28\\slot-0\\world.json",
+      "archive_path": "originals/net/home-0/Godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json.gz",
+      "original_bytes": 15875,
+      "original_sha256": "b44e6b5065c9bc65a0dd61750e7d0bad24b23db3214bff7d714e54382c79f0e7",
+      "gzip_bytes": 529,
+      "gzip_sha256": "fafe641c8a19f50aac5b5f6e4c5435aad0e65398d31fbb655ca8fbd959426f3d",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-1\\Godot\\app_userdata\\Tetherbound\\boot_log.txt",
+      "archive_path": "originals/net/home-1/Godot/app_userdata/Tetherbound/boot_log.txt.gz",
+      "original_bytes": 5116,
+      "original_sha256": "7bfb3e82871049b41956df7ca0f5e45ba8b56cf577d8b9e47a4f3b5932b6073a",
+      "gzip_bytes": 1116,
+      "gzip_sha256": "77ab7de11966ba483ae0dddd5031e0b96d75877f12ec393382c11f6719af5016",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-1\\Godot\\app_userdata\\Tetherbound\\cache\\map_meadows.png",
+      "archive_path": "originals/net/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png.gz",
+      "original_bytes": 916609,
+      "original_sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa",
+      "gzip_bytes": 916907,
+      "gzip_sha256": "b7b4690ed4da8dfd9837beadff2d8a8ccd4f5dc30230e40204114d00286e5296",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-1\\Godot\\app_userdata\\Tetherbound\\cache\\map_meadows.png.key",
+      "archive_path": "originals/net/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key.gz",
+      "original_bytes": 48,
+      "original_sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be",
+      "gzip_bytes": 68,
+      "gzip_sha256": "414a5170038f555d21c914f67ee14ff817a04c08256f4cc7ac4e301af1321794",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-1\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-53d508260b0d4f129527ae23c797d356\\character.json",
+      "archive_path": "originals/net/home-1/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-53d508260b0d4f129527ae23c797d356/character.json.gz",
+      "original_bytes": 2773947,
+      "original_sha256": "8251ad4d8601c8eda57ee4393dcb1a3344fd38292a97158ca06c61f659bc86bf",
+      "gzip_bytes": 4596,
+      "gzip_sha256": "67f9246f0eb465384af027be9d6aabad2fc33214f9b269bfe139528dfeca3c03",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "net\\home-1\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\characters\\character-53d508260b0d4f129527ae23c797d356\\character.json",
+      "archive_path": "originals/net/home-1/Godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-53d508260b0d4f129527ae23c797d356/character.json.gz",
+      "original_bytes": 2773947,
+      "original_sha256": "3ba4852a9bb2f6909f486a8884cb68b684a9d85eda2c40fd990d04b16a6dd5ee",
+      "gzip_bytes": 4599,
+      "gzip_sha256": "241a36885f6581483c2a6f889ec2f912aefd70d87fcba438ab2e895dc9fc9428",
+      "lossless_roundtrip": true
+    },
+    {
+      "original_relative_path": "receipt.json",
+      "archive_path": "originals/receipt.json.gz",
+      "original_bytes": 13026,
+      "original_sha256": "c05067dbf8a4439fd899981dc2e77642e0f0c7fd2af45ab3fa2c4cbc56b676b1",
+      "gzip_bytes": 3793,
+      "gzip_sha256": "837f01ae5d9d3a3f0d3d3c14e06198eb23604fb408287fbc87680dffdb6bae15",
+      "lossless_roundtrip": true
+    }
+  ],
+  "all_36_runtime_dependency_bytes_equal_current_main_merge": true,
+  "runtime_dependencies": {
+    "autoload/game_state.gd": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+    "autoload/player_state.gd": "403f03fd5ecb162a43e6d0b85b02eaa7da2c45c27e7cde265cc8c3bb20f98400",
+    "autoload/world_state.gd": "fd5b167d8cc9a63cf3b4d27d75d467a4c9908c29a3227f5204f5c66e82fc58a6",
+    "data/config/biome_order.json": "b90bab991b347df3bdc4677526d4bc9101b5c898cca37ebf5ce1d6af5a626f11",
+    "data/config/building_prefabs.json": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36",
+    "data/config/characters.json": "74058e67bd48b235788d868645b6012f810a3251498c97f1deb7284097eca4cd",
+    "data/config/crossing_hall.json": "68cd47367dfe90e09b924833b3f3f4f0dff3f69506bc98569bdeece0590b0376",
+    "data/config/multiplayer.json": "1517b20d91291475e3dc1d8f2a51bb348eefd8a5785c2ac01b09bf0818fdef2f",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+    "data/schema/world_state.json": "4b8ee67cd43c4b3c605ca1798bfe038a633c6da1b429f1e7c493432008c9ea08",
+    "data/schema/world_state.schema.json": "52be2e3bd38dc78e95aee635baff220e48479eba2ce742c16c229057fd4945e6",
+    "project.godot": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a",
+    "scenes/ui/title_screen.tscn": "ccf1d00247bb2e9616518a5538417aa233b8101271f8dd2630771bef0eaf2b52",
+    "scenes/world/meadows_playground.tscn": "58de7013548baabc98909ba8a13ed17fb74b17e8d493ffc60d956c217ccc01ce",
+    "scripts/data/biome_order.gd": "14ee68ebb64371399d3b745c4e52fd552003b59d68ada9121c53d42600a3dcb2",
+    "scripts/data/redesign_data.gd": "3086392d2eeb4cb3fa155b435f9372ee0d54bf9b7c3749be4631c278cafdab99",
+    "scripts/data/redesign_state.gd": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed",
+    "scripts/mp/join_driver.gd": "883e403efe2950a2dd94536f301983bf77d23b59cd698fb8f7d709ef52defa03",
+    "scripts/net/ledger_rpc.gd": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+    "scripts/net/peer_registry.gd": "6c7016958f667579e90058ea49fb0e978caf4ebf75325c3962cfe9a38227fc10",
+    "scripts/net/realm_receiver_history.gd": "3d375b1f31c14b3c704adb8ba5c29b546b76faf5fa8749cfc6475ef96448ee2f",
+    "scripts/net/realm_transition.gd": "56eeeae34bde60450a35500386760d5214d3f830025f3661b6f76def11d17265",
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/snapshot_transfer.gd": "36a0cf907b71a3b6129531b746b48d989163ce5c3fc4959fca7b4be4dc3e5692",
+    "scripts/net/world_ledger.gd": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
+    "scripts/save/character_save.gd": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425",
+    "scripts/save/save_game.gd": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "scripts/save/world_save.gd": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
+    "scripts/ui/title_screen.gd": "35f7bf3a66789a613a47e14fba6159a12ec9cbce0945c76a66b94e1e97940e27",
+    "scripts/world/building_prefabs.gd": "c810de6ea61ea843847e0e4d83ae27de96dff43375b97c41ab71749e7697a9f5",
+    "scripts/world/crossing_hall.gd": "e246ac245110b11eee41a39ab804d34ad1e95226b7d127cc97457b0b084409e3",
+    "scripts/world/village.gd": "7c7732796e25f3982c1cf0b93b46894c78c733145c8737361539c48827deed0b",
+    "tests/helpers/net_control_ports.gd": "98f1d92248e5462cf11571e49ad6defa182c7332ea3ae7fc751bddfd071c2867",
+    "tests/helpers/net_harness.gd": "031af5ec2d01c97a87e623e107898fa0e220d0b4013efec67000331f0d7a9a9c",
+    "tools/net/peer_runner.gd": "a97758ec9d8419ffc47af7e8d0ddd1943798a4c39a0b439a640c0547021cc52e"
+  },
+  "executed_smoke_sha256": "0485c7b7337ad2a239e9f591ebf9acafac7c32082e28bd43603e1e8868f6d390",
+  "executed_peer_sha256": "1446618f362bc9a0f020cf542837692e08c4ccf1b8ea0c41277f2a73f3c38451"
+}
