@@ -2474,7 +2474,7 @@ func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dict
 	if _owner_training_retry.is_empty() or _owner_training_retry.player.get_ref() != player \
 			or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt \
 			or not ESSENCE._equivalent(_owner_training_row(), row) \
-			or not ESSENCE._equivalent(ESSENCE.training_projection(player.call("save_data")), row.after): return false
+			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 	_owner_training_retry.saved = true
 	return true
 
@@ -2485,7 +2485,7 @@ func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -
 	if not _owner_training_mutation_blocked(player): return true
 	var row := _owner_training_row()
 	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
-		and ESSENCE._equivalent(ESSENCE.training_projection(payload), row.after) \
+		and ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
 		and payload.redesign_character.transaction_receipts.has(row.receipt)
 
 
@@ -2497,7 +2497,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 	if not _owner_training_retry.is_empty():
 		if _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
-			or not ESSENCE._equivalent(ESSENCE.training_projection(player.call("save_data")), row.after): return false
+			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
 	if not _altar_spend_request.is_empty() and _altar_spend_request.get("intent", {}).get("spend_id") == row.action_id:
 		var request := _altar_spend_request.duplicate(true)
@@ -3166,3 +3166,14 @@ func _owner_portal_snapshot_allowed(player: RefCounted, payload: Dictionary) -> 
 		for stack: Variant in payload.get("inventory", []):
 			if stack is Dictionary and stack.get("id") == row.item: return false
 	return true
+
+
+## Prepared publisher's host-internal exact-stage gate. Sender resolution and
+## generation come from this Session; no network method exposes a full stage.
+func character_action_stage_matches(peer: int, accepted: Dictionary) -> bool:
+	if not is_host() or _character_authority == null or _altar_current_epoch().is_empty(): return false
+	var character := _authority_character(peer)
+	if character.is_empty() or character != accepted.get("character_id"): return false
+	if accepted.get("action") not in preload("res://scripts/net/character_action_rules.gd").ACTIONS: return false
+	var stage: Variant = _character_authority.call("staged_creature_training", accepted)
+	return stage is Dictionary and not stage.is_empty() and ESSENCE._equivalent(stage, accepted)

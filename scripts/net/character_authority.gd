@@ -40,109 +40,26 @@ func bind_world(world_instance: String) -> bool:
 	return true
 
 
+const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
+
 static func portable_projection(personal: Dictionary) -> Dictionary:
-	var rows: Dictionary = {}
-	var vitals: Dictionary = {}
-	var escrow: Variant = personal.get("satchel_escrow", {})
-	if escrow is Dictionary:
-		for key: Variant in escrow:
-			var row: Variant = escrow[key]
-			if str(key).begins_with(PORTAL.KIND + ":") or (row is Dictionary and row.get("kind") == PORTAL.KIND):
-				rows[key] = row.duplicate(true) if row is Dictionary else row
-			if str(key).begins_with("actor_vitals:") or (row is Dictionary and row.get("kind") == "actor_vitals"):
-				vitals[key] = row.duplicate(true) if row is Dictionary else row
-	return {"character_id": personal.get("character_id"), "party": personal.get("party"),
-		"redesign_character": personal.get("redesign_character"), "inventory": personal.get("inventory"),
-		"portal_escrow": rows, "vitals_escrow": vitals,
-		"equipment": personal.get("equipment", empty_equipment()),
-		"realm_hearts": personal.get("realm_hearts", {"active_id": ""})}
+	return RECORD_RULES.portable_projection(personal)
 
 
-## Only the portable codec's legitimate absent-field defaults. A received
-## hello must carry both fields explicitly; malformed present values never
-## become empty gear or an inactive selection through this projection.
 static func empty_equipment() -> Dictionary:
-	var slots: Dictionary = {}
-	for slot: String in EQUIPMENT.SLOTS:
-		slots[slot] = ""
-	return slots
+	return RECORD_RULES.empty_equipment()
 
 
 static func equipment_errors(raw: Variant) -> Array[String]:
-	if not raw is Dictionary or raw.size() != EQUIPMENT.SLOTS.size():
-		return ["admitted equipment requires exactly the five personal slots"]
-	for slot: String in EQUIPMENT.SLOTS:
-		if not raw.has(slot) or not raw[slot] is String:
-			return ["invalid admitted equipment slot " + slot]
-		var id: String = raw[slot]
-		if id.is_empty():
-			continue
-		var items := RULES.db()
-		if not bool(items.call("has", id)):
-			return ["unknown admitted equipment " + id]
-		var definition: Dictionary = items.call("definition", id)
-		if definition.get("kind") != "armor" or definition.get("armor_slot") != slot:
-			return ["admitted equipment belongs to another slot"]
-		if definition.has("tether_pouch_tier"):
-			var tier: Variant = definition.tether_pouch_tier
-			if slot != "backpack" or not (tier is int or tier is float) \
-					or not is_finite(float(tier)) or float(tier) != floor(float(tier)) \
-					or float(tier) < 1.0 or float(tier) > 4.0:
-				return ["invalid authored admitted pouch tier"]
-	return []
+	return RECORD_RULES.equipment_errors(raw)
 
 
 static func heart_selection_errors(raw: Variant) -> Array[String]:
-	if not raw is Dictionary or raw.size() != 1 or not raw.get("active_id") is String:
-		return ["admitted realm hearts require only the personal active_id"]
-	var id: String = raw.active_id
-	if not id.is_empty() and not BIOMES.runtime_ids(false).has(id):
-		return ["unknown admitted realm heart selection"]
-	return []
+	return RECORD_RULES.heart_selection_errors(raw)
 
 
 static func errors(raw: Variant, expected_character: String) -> Array[String]:
-	if not raw is Dictionary or not (raw.size() == FIELDS.size() or (raw.size() == FIELDS.size() - 1 and not raw.has("vitals_escrow"))):
-		return ["admission requires the exact portable authority fields"]
-	for key: String in FIELDS:
-		if key == "vitals_escrow" and not raw.has(key):
-			continue # Additive v28 projection; the saved carrier already existed.
-		if not raw.has(key):
-			return ["missing portable authority field " + key]
-	if expected_character.is_empty() or raw.character_id != expected_character:
-		return ["portable authority belongs to another character"]
-	var failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)
-	failures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))
-	failures.append_array(equipment_errors(raw.equipment))
-	failures.append_array(heart_selection_errors(raw.realm_hearts))
-	if raw.party is Array:
-		for row: Variant in raw.party:
-			if not row is Dictionary:
-				continue # Teaching supplies the row-shape refusal.
-			var hp: Variant = row.get("hp")
-			var maximum: Variant = row.get("max_hp")
-			if not (hp is int or hp is float) or not (maximum is int or maximum is float) \
-					or not is_finite(float(hp)) or not is_finite(float(maximum)) or float(maximum) <= 0.0 \
-					or float(hp) < 0.0 or float(hp) > float(maximum) or not row.get("fainted") is bool \
-					or row.fainted != (float(hp) == 0.0):
-				failures.append("invalid admitted creature vitals")
-	if not RULES.valid_slots(raw.inventory):
-		failures.append("invalid admitted inventory")
-	elif raw.inventory.size() != preload("res://autoload/inventory.gd").SLOT_COUNT:
-		failures.append("admitted inventory must retain every slot")
-	else:
-		for stack: Variant in raw.inventory:
-			if stack != null and not bool(RULES.db().call("has", str(stack.id))):
-				failures.append("unknown admitted item " + str(stack.id))
-	if not raw.portal_escrow is Dictionary:
-		failures.append("portal escrow must be a typed object")
-	else:
-		for key: Variant in raw.portal_escrow:
-			var row: Variant = raw.portal_escrow[key]
-			if not PORTAL.valid_row(row, expected_character) or str(key) != str(row.get("receipt", "")):
-				failures.append("invalid admitted portal journal")
-	failures.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(raw.get("vitals_escrow", {}), expected_character))
-	return failures
+	return RECORD_RULES.errors(raw, expected_character)
 
 
 func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionary:
@@ -758,7 +675,7 @@ func acknowledge_creature_training(character: String, row: Dictionary) -> bool:
 		return _records.has(character) and state(character).redesign_character.transaction_receipts.has(row.receipt)
 	if pending.receipt != row.receipt or pending.character_revision != row.character_revision \
 			or revision(character) != int(row.character_revision) \
-			or not equivalent(ESSENCE.training_projection(state(character)), row.after):
+			or not equivalent(RECORD_RULES.training_projection(state(character), row, ESSENCE.training_projection), row.after):
 		return false
 	_training_pending.erase(character)
 	return true
@@ -786,7 +703,7 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 	if _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
 			or _vitals_stages.has(character) or _training_stages.has(character):
 		return {"ok": false, "code": "transaction_busy"}
-	var projected := ESSENCE.training_projection(current)
+	var projected := RECORD_RULES.training_projection(current, row, ESSENCE.training_projection)
 	if not equivalent(projected, row.before) and not equivalent(projected, row.after):
 		return {"ok": false, "code": "unsettled_training_conflict"}
 	for field: String in ["party", "inventory", "redesign_character"]:
@@ -806,7 +723,7 @@ func creature_training_pending_matches(character: String, row: Dictionary) -> bo
 	return not pending.is_empty() and pending.get("receipt") == row.get("receipt") \
 		and pending.get("character_revision") == row.get("character_revision") \
 		and revision(character) == int(row.get("character_revision", -1)) \
-		and equivalent(ESSENCE.training_projection(state(character)), row.get("after"))
+		and equivalent(RECORD_RULES.training_projection(state(character), row, ESSENCE.training_projection), row.get("after"))
 
 
 ## The same private stage/pending fence as Altar training. No separate
@@ -874,3 +791,37 @@ func bind_portal_pending_reader(reader: Callable) -> void:
 
 func _portal_mutation_pending(character_id: String) -> bool:
 	return _portal_pending_reader.is_valid() and _portal_pending_reader.call(character_id) == true
+
+
+const CHARACTER_ACTIONS := preload("res://scripts/net/character_action_rules.gd")
+
+## Host-internal synchronous stage. Session derives context from the actual
+## registered source; no network packet contains a source context/candidate.
+## Existing _training_stages/_training_pending and _records remain the only
+## transaction and admitted-character stores. The prepared writer must finish
+## this stage immediately with its real bool world-save result before yielding.
+func stage_character_action(character: String, expected_revision: int,
+		action: String, original_intent: Dictionary, host_context: Dictionary) -> Dictionary:
+	if _portal_mutation_pending(character) or not _records.has(character) or _training_locked(character) \
+			or _portal_stages.has(character) or _loadout_pending.has(character) \
+			or _vitals_pending.has(character) or _vitals_stages.has(character):
+		return {"ok": false, "code": "transaction_busy", "durable": false}
+	if expected_revision < 0 or expected_revision >= 2147483647 or revision(character) != expected_revision:
+		return {"ok": false, "code": "stale_revision", "revision": revision(character), "durable": false}
+	var proposal := CHARACTER_ACTIONS.stage(state(character), expected_revision, action,
+		original_intent, host_context, errors)
+	if proposal.get("ok") != true: return proposal.duplicate(true)
+	# A callback is re-staged inside the actual canonical registry. It cannot
+	# be substituted by an owner-proposed inventory, cost, cap, seed or party.
+	var token := Crypto.new().generate_random_bytes(16).hex_encode()
+	var accepted := proposal.duplicate(true)
+	accepted.token = token
+	accepted.action_id = proposal.receipt.sha256_text()
+	accepted.character_revision = expected_revision + 1
+	_training_stages[character] = {"token": token, "record": _records[character].duplicate(true),
+		"accepted": accepted.duplicate(true)}
+	# Hidden promotion: the existing finish_creature_training rolls back all
+	# canonical state on failed world save, or retains the original owner
+	# pending action until exact bool-owner-save/ACK and second world save.
+	_records[character] = {"revision": expected_revision + 1, "state": accepted.state.duplicate(true)}
+	return accepted
