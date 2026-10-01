@@ -1,0 +1,141 @@
+{
+  "classification": "AUTHOR PROVISIONAL STICK SOURCE CANDIDATE ONLY; R17 NATIVE FAIL; R19 PARSER/UNIT/NATIVE UNRUN; F17#4 OPEN",
+  "base_commit": "df2b120956d2009686a50f8d9574e1c34ae5c4e1",
+  "root_failed_commit": "9b5f18eb8228c6ea67cf6358a485458760586ee8",
+  "changed_paths": [
+    "tools/_probe_scatter_tree_prompt_height.gd",
+    "tests/test_vegetation_human_prompt_height.gd"
+  ],
+  "unchanged_paths": {
+    "scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "scenes/player/player.tscn": {
+      "bytes": 1478,
+      "sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7"
+    },
+    "data/config/movement.json": {
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    "scripts/world/vegetation.gd": {
+      "bytes": 142445,
+      "sha256": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a"
+    },
+    "scripts/world/playground_heightfield.gd": {
+      "bytes": 95972,
+      "sha256": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf"
+    },
+    "scripts/world/vegetation_harvest_point.gd": {
+      "bytes": 12750,
+      "sha256": "0b4fbc85deeb63e9b1132e1401acfd36fb5ea5eea52aa48486b793df81c0dd87"
+    },
+    "scripts/world/interactable.gd": {
+      "bytes": 10760,
+      "sha256": "f4e70c406ca61d210edc4a19335cb57cf74678459eb3f313a2fdd758b53a3e9a"
+    },
+    "scripts/world/interaction_arbiter.gd": {
+      "bytes": 19816,
+      "sha256": "e602c42c44734a2f65d499e059d1f7310939fe42a054938f573a4c9892ad5206"
+    },
+    "data/config/vegetation.json": {
+      "bytes": 240087,
+      "sha256": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df"
+    },
+    "data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "data/scatter/playground/region_0_-1.bin": {
+      "bytes": 434805,
+      "sha256": "25cd556cdd008fa464bde19ba8828f86fb21c16056fc5a6c1a296b33c02b595c"
+    },
+    "tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 76459,
+      "sha256": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2"
+    },
+    "tests/helpers/meadows_earned_team_segment.gd": {
+      "bytes": 52647,
+      "sha256": "46b0f11947bd5124555df074e25d18381586d1f4f713b561624d38c3f81019c8"
+    },
+    "ralph/reports/HUB/f17/tree-approach-trace-r17/seal.json": {
+      "bytes": 2908,
+      "sha256": "397b0e4f04b237611203afe5730179a575be60a62187cf1b1c1d8e608612f053"
+    },
+    "ralph/reports/HUB/f17/team-boundary-refusal-r18/seal.json": {
+      "bytes": 2633,
+      "sha256": "50c015ecf67d441e5103add282eb24e081e3819ed4a5037fc3bc39d4fbef6a3a"
+    }
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "originals/tests/test_vegetation_human_prompt_height.gd": {
+      "bytes": 3615,
+      "sha256": "96b395849b5208a0f2d524c330f12e77db19dab0658262a1a6fa4d40f934b65b"
+    },
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 8585,
+      "sha256": "956c40b2a0d1ac55ce49e1313577e24579238bdd0ec1e51fbe716785b891cb50"
+    },
+    "prior-failure/result.json": {
+      "bytes": 399,
+      "sha256": "a4f8be5ca3af2c6a3f9361302abd367b699b0c0e6e6a95cafa6212a8bf5f03a5"
+    },
+    "prior-failure/smoke.log": {
+      "bytes": 22955,
+      "sha256": "024872c3b2f7fa2007afc99f2d87b705b9e6abc9f09f950cb27cee33e834cb8c"
+    },
+    "proposal/tests/test_vegetation_human_prompt_height.gd": {
+      "bytes": 5005,
+      "sha256": "b919716fa6008baa0cd5059b3538a739e343dd10d4c65eabbb42908e2b7173a1"
+    },
+    "proposal/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 10848,
+      "sha256": "ee760573c753b40eebc1e029f2f9f29255b3166cc179bc3d06e4b5e43d0faeb9"
+    },
+    "repair.patch": {
+      "bytes": 6224,
+      "sha256": "64ad89838e82ee79f29e0f0c33236d16c6066a10b4c9f7f6e97b06a534584360"
+    },
+    "review-context.txt": {
+      "bytes": 5008,
+      "sha256": "c950269a03b0f54b887cb92032dd230c750c8b234e2d5399f4132506cffdda2e"
+    },
+    "root-failed/data/config/movement.json": {
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    "root-failed/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "root-failed/scenes/player/player.tscn": {
+      "bytes": 1439,
+      "sha256": "0581055e91554a259f5d2059bb216bd27404a96418be7d8168e27b6edb5507de"
+    },
+    "root-failed/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "root-failed/scripts/world/playground_heightfield.gd": {
+      "bytes": 95972,
+      "sha256": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf"
+    },
+    "root-failed/tests/test_vegetation_human_prompt_height.gd": {
+      "bytes": 3615,
+      "sha256": "96b395849b5208a0f2d524c330f12e77db19dab0658262a1a6fa4d40f934b65b"
+    },
+    "root-failed/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 8585,
+      "sha256": "956c40b2a0d1ac55ce49e1313577e24579238bdd0ec1e51fbe716785b891cb50"
+    },
+    "source-check.py": {
+      "bytes": 9451,
+      "sha256": "649a09d9d4101cdd98fa0e4297ab513eb2a8709e3182e0498c93206418030efd"
+    }
+  }
+}

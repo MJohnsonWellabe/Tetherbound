@@ -12,8 +12,6 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 # bf0f38b203 removed trees#320. Pin kept trees#886, the closest non-smaller
 # CommonTree_2 in this region by scale (1.598110499382019 -> 1.6529272198677063).
 const TARGET := Vector3(98.15209197998047, 5.79111909866333, -35.932098388671875)
-const BANK_TURN_FRAMES := 26
-const MAX_BANK_TURNS := 3
 var _player: CharacterBody3D
 var _arbiter: Node
 var _prompt: Node3D
@@ -97,32 +95,16 @@ func _run() -> void:
 	# At most nine cached observations; no additional physics query or frame.
 	var approach_trace := [_approach_sample("settled", 0, Vector3.ZERO)]
 	var saw_wall := false
-	var terrain := world.get_node("CanonicalLocalTerrain") as StaticBody3D
-	var bank_left := 0
-	var bank_direction := Vector3.ZERO
-	var bank_turns: Array[Dictionary] = []
 	var touched := false
 	for frame in 180:
 		var offset := TARGET - _player.global_position
 		offset.y = 0
 		offset = offset.normalized()
-		var steering := offset
-		if bank_left == 0 and bank_turns.size() < MAX_BANK_TURNS:
-			var normal := _terrain_bank_normal(offset, terrain)
-			var tangent := bank_tangent(offset, normal, bank_direction)
-			if tangent != Vector3.ZERO:
-				bank_direction = tangent
-				bank_left = BANK_TURN_FRAMES
-				bank_turns.append({"approach_frame": frame + 1, "player": _player.global_position,
-					"cached_normal": normal, "requested_tangent": tangent})
-		if bank_left > 0:
-			steering = bank_direction
-			bank_left -= 1
-		_axis(JOY_AXIS_LEFT_X, steering.x)
-		_axis(JOY_AXIS_LEFT_Y, steering.z)
+		_axis(JOY_AXIS_LEFT_X, offset.x)
+		_axis(JOY_AXIS_LEFT_Y, offset.z)
 		await physics_frame
 		if frame == 0 or (frame + 1) % 30 == 0 or (_player.is_on_wall() and not saw_wall):
-			approach_trace.append(_approach_sample("approach", frame + 1, steering))
+			approach_trace.append(_approach_sample("approach", frame + 1, offset))
 			saw_wall = saw_wall or _player.is_on_wall()
 		for index in _player.get_slide_collision_count():
 			if _player.get_slide_collision(index).get_collider() == trunk:
@@ -141,7 +123,6 @@ func _run() -> void:
 	# Flush outside the moving sample; these observations cannot admit success.
 	for sample: Dictionary in approach_trace:
 		print("APPROACH cached sample=", sample)
-	print("TERRAIN stick turns=", bank_turns, " within_original_180_frames=true")
 	await process_frame
 	var press := InputEventAction.new()
 	press.action = "interact"
@@ -160,38 +141,6 @@ func _run() -> void:
 	world.queue_free()
 	await process_frame
 	quit(0 if success else 1)
-
-func _terrain_bank_normal(wanted: Vector3, terrain: StaticBody3D) -> Vector3:
-	if not _player.is_on_floor() or not _player.is_on_wall():
-		return Vector3.ZERO
-	for index in _player.get_slide_collision_count():
-		var hit := _player.get_slide_collision(index)
-		if hit.get_collider() != terrain:
-			continue
-		var normal := hit.get_normal()
-		if normal.y > 0.0 and normal.y < cos(_player.floor_max_angle) \
-				and Vector3(normal.x, 0.0, normal.z).dot(wanted) < -0.0001:
-			return normal
-	return Vector3.ZERO
-
-
-## A provisional horizontal stick request along an observed wall. Collision,
-## actual trunk contact and the unchanged success conjunction remain decisive.
-static func bank_tangent(wanted: Vector3, normal: Vector3, previous: Vector3 = Vector3.ZERO) -> Vector3:
-	for value: float in [wanted.x, wanted.y, wanted.z, normal.x, normal.y, normal.z,
-			previous.x, previous.y, previous.z]:
-		if not is_finite(value):
-			return Vector3.ZERO
-	var tangent := Vector3(-normal.z, 0.0, normal.x)
-	if tangent.length_squared() < 0.0001 or Vector2(wanted.x, wanted.z).length_squared() < 0.0001:
-		return Vector3.ZERO
-	tangent = tangent.normalized()
-	# Keep the first side through bounded turns; do not oscillate as the bank
-	# normal changes. The first turn retains the most requested target heading.
-	var reference := previous if previous.length_squared() >= 0.0001 else wanted
-	if tangent.dot(reference) < 0.0:
-		tangent = -tangent
-	return tangent
 
 func _approach_sample(stage: String, frame: int, requested_stick: Vector3) -> Dictionary:
 	# physics_frame resumes before the next player step; contact/wanted fields
