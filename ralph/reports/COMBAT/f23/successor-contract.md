@@ -60,3 +60,19 @@ not another engine run from F23. A failed stage must publish no HP, meter,
 mastery or receipt mutation. F25 proof also checks ordinary visual tiers are
 applied once, signatures retain their growth, and all full-row birth/context
 failures produce no visual/hit authority.
+
+F25 final source is a93815e497dfd17f0b4c985797d95ab229ac119f, draft PR517;
+`f25-final-contract.json` records its exact dependency and source-contract hash.
+Production ordinary birth requires BOTH finite Vector3 `source_ground` and
+`target_ground`, `current_actor` including the SAME accepted action at birth,
+and finite `travel_seconds` in 0..3 from the immutable host schedule. Only
+positive finite optional target visual bounds may fall back to contact.
+
+The existing accepted-action owner calls `confirm_impact` before exposing the
+HP/HUD number, then resolves `MoveProjectile.impact_cue(frozen_row)` and plays
+one classified contact cue from that receipt. The renderer's
+`impact_audio_owner=receipt` is a presentation ownership marker, never HP or
+receipt authority. Host source/target generation and alive-state checks,
+cancellation and expiry still own damage. Visual arrival, timeout or node
+removal cannot authorize a hit. This ordering/audio/lifecycle path remains
+an unrun producer proof in the combined ROOT ticket.
