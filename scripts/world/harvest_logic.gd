@@ -111,3 +111,46 @@ static func swing_answers_the_prompt(node: Node3D, game: Node) -> bool:
 	# re-aims a swing that has not hit yet, and refuses one that already has so
 	# this returns false and the caller's own direct yield answers the press.
 	return bool(hold.call("swing_at", node))
+
+
+## F32 renewable stock staging. All arguments except expected_revision come
+## from host catalogue/world state (including the host's journalled seed roll).
+## This never grants an item or edits stock. The ledger still validates actor,
+## realm, phase/prerequisites, proximity, tool and combined inventory capacity,
+## then commits this candidate with a stable character receipt in one write.
+static func renewable_candidate(site: Dictionary, stock: Dictionary, host_day: int,
+		expected_revision: int, seed_roll: float = -1.0) -> Dictionary:
+	var revision := int(stock.get("revision", 0))
+	if expected_revision < 0 or expected_revision != revision:
+		return {"ok": false, "code": "stale_revision", "revision": revision}
+	if host_day < 1 or host_day < int(stock.get("next_ready_day", 1)):
+		return {"ok": false, "code": "not_ready", "revision": revision}
+	var days := int(site.get("respawn_days", 0))
+	if days < 1 or str(site.get("id", "")).is_empty() or str(site.get("realm", "")).is_empty():
+		return {"ok": false, "code": "invalid_catalogue"}
+	var raw_outputs: Variant = site.get("outputs")
+	if not raw_outputs is Dictionary or raw_outputs.is_empty():
+		return {"ok": false, "code": "invalid_catalogue"}
+	var outputs: Dictionary = raw_outputs.duplicate(true)
+	for item: Variant in outputs:
+		if not item is String or str(item).is_empty() \
+				or not (typeof(outputs[item]) in [TYPE_INT, TYPE_FLOAT]) \
+				or not is_finite(float(outputs[item])) \
+				or float(outputs[item]) != float(int(outputs[item])) or int(outputs[item]) < 1:
+			return {"ok": false, "code": "invalid_catalogue"}
+	var seed: Variant = site.get("seed_drop")
+	if seed != null:
+		if not seed is Dictionary or str(seed.get("item", "")).is_empty() \
+				or int(seed.get("amount", 0)) < 1:
+			return {"ok": false, "code": "invalid_catalogue"}
+		var chance := float(seed.get("chance", -1.0))
+		if not is_finite(chance) or chance < 0.0 or chance > 1.0:
+			return {"ok": false, "code": "invalid_catalogue"}
+		if not is_finite(seed_roll) or seed_roll < 0.0 or seed_roll >= 1.0:
+			return {"ok": false, "code": "missing_host_seed_roll"}
+		if seed_roll < chance:
+			var seed_id := str(seed["item"])
+			outputs[seed_id] = int(outputs.get(seed_id, 0)) + int(seed["amount"])
+	return {"ok": true, "site_id": str(site["id"]), "realm": str(site["realm"]),
+		"outputs": outputs, "stock": {"revision": revision + 1,
+			"last_harvest_day": host_day, "next_ready_day": host_day + days}}

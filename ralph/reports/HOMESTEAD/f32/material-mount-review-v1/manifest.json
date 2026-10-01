@@ -1,0 +1,29 @@
+{
+  "base": "510273afd622a8eb02861c39c16e5f83d42b43ac",
+  "patch_sha256": "5dbd344ef41c59a15fe5ddb56822cece766fb8fa2d85076e513de4339e0a8528",
+  "paths": {
+    "data/config/harvest.json": {
+      "before_normalized_lf_sha256": "f4e90520ebe344910758de2986af5692017dc77f34bd83e2ab8b570781c80ed6",
+      "expected_after_normalized_lf_sha256": "2c55815cf0ca8fb705c36d4745bbe8e042d16cf6034ff98efeb67c0d64363c38"
+    },
+    "data/config/water_pickups.json": {
+      "before_normalized_lf_sha256": "fe1691b1b7ee822f339bc5ced55e864594315f4be7de32d5b9119eed69ac3f5d",
+      "expected_after_normalized_lf_sha256": "644ed24641f584202f28ded3966ca3af908c446bdc5e6f665f29bf2c81f04854"
+    },
+    "scripts/world/renewable_site_catalog.gd": {
+      "before_normalized_lf_sha256": "270efb65afee4c760152dc44326bd7caa915466237180d7cba7c620e30ffca60",
+      "expected_after_normalized_lf_sha256": "43d0251bb1950b421d42bb6400b33b30aa7e0eae62ec9f201e2ab5301244e5fc"
+    },
+    "scripts/world/essence_node_mount.gd": {
+      "before_normalized_lf_sha256": "30d9a6a025e7e18869ce167435d3c886268bdb290956ae2e50174617f7055773",
+      "expected_after_normalized_lf_sha256": "e2a35e0fc2d0b43c2619b96eec791e09d95ba44ab43a266e4029775abf65cd05"
+    }
+  },
+  "source_state": "Frozen ignored/unapplied proposal; existing549 definitions and all legacy flags/depletion/revisions unchanged whenOFF; six additional IDs remain unknown.",
+  "water_dry_check_source": "Actual live WaterSurface PlaneMesh global position plus actual ground_height_at/baked terrain and cardinal neighbouring ground. Refuses missing/nonplanar/transformed water. Does not call analytic WaterHeightfield.height_at/water_depth_at. Local dry constraint only, not real-player route or renderer proof.",
+  "requires_independent_source_review_before_apply": true,
+  "runtime_enabled": false,
+  "proof_markers_changed": false,
+  "new_world_stock_or_receipt_service": false,
+  "engine_or_tests_run": false
+}

@@ -1,0 +1,28 @@
+{
+  "review_base": "ba1e41d575836303febc782cdc5176105bcf36c8",
+  "application_parent": "df6c0932a7980f55a697d0926d9356315ae800b5",
+  "reviewer": "independent 28d via ROOT",
+  "application": "Exact approved OFF/unregistered Greenhouse proposal and UNMOUNTED inward-only Tide Pearl candidate; no recipe/crop/node/station activation.",
+  "expected_after_normalized_lf_sha256": {
+    "data/config/farm.json": "00ebfa695cf1cdd0ba875aa05a367157b2255f41ecde50f72dfe8c6f0ed3f7a0",
+    "scripts/world/farm_logic.gd": "1d1236a142245d993f872b432fdafa7c81da6a0808d5106b401253253dd8733c",
+    "data/config/water_pickups.json": "fe1691b1b7ee822f339bc5ced55e864594315f4be7de32d5b9119eed69ac3f5d"
+  },
+  "raw_reports_copied_byte_faithfully": true,
+  "raw_reports_git_eol_normalization_possible": true,
+  "greenhouse_entry_clearance_proven": false,
+  "doorframe_outer_width_m": 1.5739920735359192,
+  "proposed_minimum_clear_width_m": 1.6,
+  "doorframe_outer_width_is_not_clear_opening": true,
+  "terrain_and_player_path_proven": false,
+  "godot_parser_tests_gpu_render_export_run": false,
+  "F32_acceptance_met": [],
+  "F32_open": [
+    "F32#0",
+    "F32#1",
+    "F32#2",
+    "F32#3",
+    "F32#4",
+    "F32#5"
+  ]
+}

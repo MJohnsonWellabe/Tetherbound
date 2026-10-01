@@ -1,0 +1,12 @@
+{
+  "verdict": "SOURCE PASS for dormant source only",
+  "patch_sha256": "f10fff6f2125b05109fdba96fcd58b30f40a6a4f878a31c01f53f0f7c407ae07",
+  "manifest_sha256": "bc4a6147149150ac84afb4b595f514ea36b5d6567239f2b500caf4b419a8a70b",
+  "parent_sha256": "c8a016eec1656b24ffab1f74fdb2b903476eac672309d1e68728444778f0a2d0",
+  "after_sha256": "a84c1aa8955425b5404fd951c72e3a35d3070557f8008d1c2341daa9f0dc0d7f",
+  "exact_one_path_one_hunk_context_counts": true,
+  "guard_byte_equal_reviewed_materialV2_guard": true,
+  "complete_source_after_guard_byte_unchanged": true,
+  "packet_stable": true,
+  "method": "Independent frozen parent and one-hunk reconstruction into ignored evidence. No engine/tests/GPU/Git/tracked mutation."
+}

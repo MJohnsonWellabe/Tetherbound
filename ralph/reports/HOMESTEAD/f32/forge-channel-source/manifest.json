@@ -1,0 +1,49 @@
+{
+  "parent": "f4176d27c211136e97554ed0c051f20a43d8fcf1",
+  "status": "Frozen inactive owned source checkpoint for independent strict review; no production callers or station/recipe/buildable registrations",
+  "owned_source_normalized_lf_sha256": {
+    "scripts/build/station_forge.gd": "dc3519857600b1557ac7af93a47e1fa67e01dce6d040af8e0dc697ee94c135e6",
+    "data/config/stations.json": "bad07cbe9808037abff5cd67b946c63d3f2a60bf80f755c411cd7e7e2859d76d"
+  },
+  "existing_refining_helper_pin": "df6c0932a7980f55a697d0926d9356315ae800b5",
+  "existing_refining_helper_review": "ralph/reports/HOMESTEAD/f32/refining-review-df6c/strict-review.txt",
+  "canonical_refining_config_pin": "acdabd291de004acfc38c91d50a5b2ddb355c0fe",
+  "source_implementation": [
+    "Host-only actual-world ancestry/World3D/body residency and existing built Forge UID/position binding",
+    "Actual host physics elapsed, one completed unit at most per tick, bounded tap-selected amount and no append/queue/held/offline/resume",
+    "Current per-character host-context modal/combat/homestead policy and real body radius revalidated before timer/commit; actual solo pause cancels via always-process watcher",
+    "One host-generated opaque craft:forge ticket per unit, latched before canonical adapter; no inventory/save/receipt implementation in actor",
+    "Exact matched actual-bool pending/ok/durable results; no success for malformed/pending/accepted-unsaved results; unresolved canonical ticket blocks restart, already committed units stay owned and unpaid remainder canceled",
+    "Settles transient state before signal reentrancy, avoids double returned ack when synchronous canonical callback already settled ticket"
+  ],
+  "trusted_internal_adapter_signatures_not_registered_transport": [
+    "canonical_reader(actor:CharacterBody3D,uid:String)->Dictionary {world,character,modal_open:bool,in_combat:bool,plot_allowed:bool}; current authenticated per-actor canonical projections, synchronous read-only/no saves/sideeffects",
+    "canonical_commit(plan:Dictionary,host_unit_ticket:String,actor:CharacterBody3D)->Dictionary {txn_id,character_id,world_id,ok:bool,pending:bool,durable:bool}; owning net service revalidates auth/live channel/registered station/items/inventory CAS and atomically saves debit+oneoutput+stable existing receipt",
+    "station.resolve_pending_unit(verdict:Dictionary)->bool; trusted canonical terminal callback, no RPC/client completion claim"
+  ],
+  "runtime_enabled": false,
+  "canonical_adapter_exists_or_wired_here": false,
+  "new_transport_kind_or_durable_bag_or_inventory_grant": false,
+  "bootstrap_required_attachment_tier": 0,
+  "shared_handoff": {
+    "ignored_path": ".tmp/f31-station-uid-open-draft/station-uid-open.patch",
+    "sha256": "35a874ebd70d98e725d6a9ab4b0d5db557c08ad2e3e32bd70b28df053949e448",
+    "paths": [
+      "scripts/build/build_placer.gd",
+      "scripts/ui/craft_panel.gd",
+      "scripts/build/campfire.gd"
+    ],
+    "applied": false,
+    "scope": "Bind exact existing canonical UID after live committed position in BuildPlacer; optional actualstation panel context for placed Workbench/Campfire; no index authority or invented authored camp source key"
+  },
+  "shortcuts_and_pending_proof": [
+    "Source-only actor with unimplemented/unwired canonical callbacks; strict OFF and missing callbacks refuse, no native execution or parser proof",
+    "Host context reader must provide genuine per-character modal/combat and plot eligibility, not client bools/global host-local-menu guesses for a guest",
+    "Canonical adapter result is trusted interface, not evidence of an actual save/CAS/receipt; false/unknown completion cannot prove ingot delivery",
+    "No Forge geometry, controller amount UI, building blueprint/register/mount or code-blind visual proof in this bounded source checkpoint",
+    "Actual timed present channel/abort/pending/retry/rejoin/inventory-full/savefail/two-peer/4-character and no-automation proofs must be batched at integration with ROOT resource token"
+  ],
+  "engine_parser_tests_gpu_import_render_export_ci_run": false,
+  "acceptance_met": [],
+  "F31_F32_status": "OPEN"
+}

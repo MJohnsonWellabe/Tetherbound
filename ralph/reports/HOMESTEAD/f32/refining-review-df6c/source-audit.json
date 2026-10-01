@@ -1,0 +1,181 @@
+{
+  "review_kind": "independent read-only source review; no GDScript execution or test simulation",
+  "pin": "df6c0932a7980f55a697d0926d9356315ae800b5",
+  "parent": "ba1e41d575836303febc782cdc5176105bcf36c8",
+  "canonical_config_pin": "acdabd291de004acfc38c91d50a5b2ddb355c0fe",
+  "changed_paths": [
+    "scripts/world/homestead_refining.gd"
+  ],
+  "only_new_helper": true,
+  "canonical_config_byte_equal_at_helper_pin": true,
+  "recipe_rows": [
+    {
+      "id": "rootiron_ingot",
+      "tier": 1,
+      "required_attachment_tier": 0,
+      "cost": [
+        {
+          "id": "rootstone",
+          "n": 2
+        },
+        {
+          "id": "ironwood",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "rootiron_ingot",
+        "n": 1
+      },
+      "authored_personal_prerequisites": {
+        "unlocked_by": null,
+        "requires_personal_flags": null
+      }
+    },
+    {
+      "id": "tidesteel_ingot",
+      "tier": 2,
+      "required_attachment_tier": 0,
+      "cost": [
+        {
+          "id": "sluice_metal",
+          "n": 2
+        },
+        {
+          "id": "reef_stone",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "tidesteel_ingot",
+        "n": 1
+      },
+      "authored_personal_prerequisites": {
+        "unlocked_by": null,
+        "requires_personal_flags": null
+      }
+    },
+    {
+      "id": "skyglass_ingot",
+      "tier": 3,
+      "required_attachment_tier": 0,
+      "cost": [
+        {
+          "id": "cliffglass_ore",
+          "n": 2
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "skyglass_ingot",
+        "n": 1
+      },
+      "authored_personal_prerequisites": {
+        "unlocked_by": null,
+        "requires_personal_flags": null
+      }
+    },
+    {
+      "id": "stormglass_plate",
+      "tier": 4,
+      "required_attachment_tier": 0,
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 2
+        },
+        {
+          "id": "thunderwood",
+          "n": 1
+        }
+      ],
+      "output": {
+        "id": "stormglass_plate",
+        "n": 1
+      },
+      "authored_personal_prerequisites": {
+        "unlocked_by": null,
+        "requires_personal_flags": null
+      }
+    }
+  ],
+  "manual_channel": {
+    "seconds_per_unit": 1.5,
+    "radius_m": 3.0,
+    "tap_start": true,
+    "held_input": false,
+    "queue": false,
+    "offline_production": false,
+    "commit_per_unit": true,
+    "pay_unstarted_units": false,
+    "stop_on": [
+      "out_of_radius",
+      "another_modal",
+      "combat"
+    ]
+  },
+  "runtime_reference_search": {
+    "git_grep_exit_code": 1,
+    "stdout": "",
+    "stderr": "",
+    "glob_scope": [
+      "*.gd",
+      "*.tscn",
+      "project.godot"
+    ]
+  },
+  "frozen_sources": [
+    {
+      "path": "scripts/world/homestead_refining.gd",
+      "git_blob": "0e15ee11d425fbf9a10364fca11e4a02a44effe1",
+      "sha256": "4a6623446d0debc76eae359d6d2472c9597618285c461d17714e65fb987a597a",
+      "bytes": 7489
+    },
+    {
+      "path": "data/recipes/recipes_forge.json",
+      "git_blob": "badaec42254e155f397ad3f7614c64c467aba757",
+      "sha256": "ae6c03d7b5ea31da8ca185213e2c34222bf538a4cb8cd9b87d45cacaa3d09941",
+      "bytes": 3822
+    },
+    {
+      "path": "autoload/world_state.gd",
+      "git_blob": "4b09242eb2731834133c25934d5a8c102e0d0a51",
+      "sha256": "5af774cb0c9ae122b9f00796027971209936bc69faacb8fc878202f7cdcab7f7",
+      "bytes": 21789
+    },
+    {
+      "path": "autoload/player_state.gd",
+      "git_blob": "7248dc4e3f276801296f745196be7493b942c6cb",
+      "sha256": "733cbbefe741b38c398af092bbbd667b8fc7e5176976b9f6533666e1729c9d3b",
+      "bytes": 20376
+    },
+    {
+      "path": "autoload/progression_state.gd",
+      "git_blob": "7dccb0e4ce92d8061a80bd01eeaae582f8b6f3f5",
+      "sha256": "74649504e655e3f3301ddc7ccca3042d0f4f7e0ed98e77f5c533fb0cce73632f",
+      "bytes": 6737
+    },
+    {
+      "path": "data/schema/world_state.json",
+      "git_blob": "83e52d5914ce9ba84b4eb7e01e6ecfeeea09517f",
+      "sha256": "4b8ee67cd43c4b3c605ca1798bfe038a633c6da1b429f1e7c493432008c9ea08",
+      "bytes": 191
+    },
+    {
+      "path": "docs/design/HOMESTEAD.md",
+      "git_blob": "ce8348f7612ed40e56d86f16b5baa2fdc63533ef",
+      "sha256": "dff881b327b18b615a738a548cb44730a53d98a8d4a747a669bd72cf47b270bd",
+      "bytes": 22815
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "git_blob": "8f66556389edb06dbfed00b765f815bf5f26e459",
+      "sha256": "fe68fffa864e78d05fc546a18833638161056a42493918db7df6f9b4a98515e3",
+      "bytes": 62617
+    }
+  ],
+  "verdict": "SOURCE PASS for pure inactive one-unit plan only; F32#1 remains OPEN"
+}

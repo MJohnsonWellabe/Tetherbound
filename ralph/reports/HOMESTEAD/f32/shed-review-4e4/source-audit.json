@@ -1,0 +1,114 @@
+{
+  "source_commit": "4e4b90a1ccb3fdcfc6e20d80267b14a1664290ca",
+  "method": "Pinned JSON/source inspection only; no Godot, simulation, unit tests or gameplay proof.",
+  "sha256": {
+    "data/config/shed_drops.json": "ca618457c15b35e366600efa6350b95c590005a8947245bc9a75e4620127e3dc",
+    "scripts/world/shed_drop_rules.gd": "9460e809e93a1373f1c800763434bf7778250f778f60115dc18454ef38fb9272"
+  },
+  "chance": 0.25,
+  "declared_policy": {
+    "manual_tap": true,
+    "clock": "host_world_day",
+    "once_per_owned_uid_per_day": true,
+    "offline_production": false,
+    "automatic_production": false,
+    "compose_with_care_essence": true
+  },
+  "profiles": {
+    "galecrest": {
+      "known_species": true,
+      "type": "air",
+      "known_item": true,
+      "profile": {
+        "item": "skyplume",
+        "wild_amount": 1,
+        "wild_realms": [
+          "cloudreach"
+        ],
+        "den_amount": 1,
+        "source_wording": "A loose highland plume from a won encounter or gentle grooming."
+      },
+      "authored_encounter_matches": [
+        "$[0].entries[2].placeholder_species",
+        "$[2].entries[2].placeholder_species"
+      ],
+      "encounter_source": "data/config/cloudreach_chapter.json:encounter_tables",
+      "item_display_name": "Skyplume",
+      "item_description": "A naturally shed highland plume, never a hunting reward. Bind it with Gale Fiber into soft camp bedding."
+    },
+    "sparkit": {
+      "known_species": true,
+      "type": "electric",
+      "known_item": true,
+      "profile": {
+        "item": "sparkfur",
+        "wild_amount": 1,
+        "wild_realms": [
+          "stormwood"
+        ],
+        "den_amount": 1,
+        "source_wording": "Naturally shed static-bright fur from a won encounter or gentle grooming."
+      },
+      "authored_encounter_matches": [
+        "$.tables[2].roles[2].placeholder_species",
+        "$.tables[3].roles[0].placeholder_species",
+        "$.tables[4].roles[1].placeholder_species",
+        "$.tables[6].roles[1].placeholder_species",
+        "$.tables[7].roles[2].placeholder_species",
+        "$.tables[10].roles[2].placeholder_species",
+        "$.tables[11].roles[1].placeholder_species"
+      ],
+      "encounter_source": "data/config/stormwood_encounters.json",
+      "item_display_name": "Sparkfur",
+      "item_description": "Naturally shed, static-bright fur collected as an encounter reward. It pads insulated gear without adding hunting or butchering."
+    },
+    "staticub": {
+      "known_species": true,
+      "type": "electric",
+      "known_item": true,
+      "profile": {
+        "item": "sparkfur",
+        "wild_amount": 1,
+        "wild_realms": [
+          "stormwood"
+        ],
+        "den_amount": 1,
+        "source_wording": "Naturally shed charged fluff from a won encounter or gentle grooming."
+      },
+      "authored_encounter_matches": [
+        "$.tables[6].roles[0].placeholder_species",
+        "$.tables[8].roles[0].placeholder_species",
+        "$.tables[8].roles[2].placeholder_species",
+        "$.named_encounters[2].placeholder_species"
+      ],
+      "encounter_source": "data/config/stormwood_encounters.json",
+      "item_display_name": "Sparkfur",
+      "item_description": "Naturally shed, static-bright fur collected as an encounter reward. It pads insulated gear without adding hunting or butchering."
+    }
+  },
+  "existing_item_naming_gaps_at_this_pin": {
+    "hide_helm": {
+      "name": "Hide Helm",
+      "description": "Stiffened hide, shaped over a form and left to dry hard. It will not stop a real blow -- nothing here is meant to, the trainer never fights -- but a knock on the head from a bad landing lands softer wearing it.",
+      "scope": "Training owns items.json and has a separate rename candidate; do not duplicate source edits."
+    },
+    "hide_vest": {
+      "name": "Hide Vest",
+      "description": "Two layers of hide laced over the ribs and shoulder blades, the largest single piece a trainer can wear and the one that does the most against a fall's own jolt.",
+      "scope": "Training owns items.json and has a separate rename candidate; do not duplicate source edits."
+    },
+    "hide_leggings": {
+      "name": "Hide Leggings",
+      "description": "Wrapped and buckled over the thighs and knees, the joints that take the worst of a hard landing on uneven ground.",
+      "scope": "Training owns items.json and has a separate rename candidate; do not duplicate source edits."
+    },
+    "hide_boots": {
+      "name": "Hide Boots",
+      "description": "Thick-soled and double-stitched at the ankle. Not built for speed -- built so the ground stops being the first thing you feel when you land wrong.",
+      "scope": "Training owns items.json and has a separate rename candidate; do not duplicate source edits."
+    }
+  },
+  "referencing_files": [
+    "4e4b90a1ccb3fdcfc6e20d80267b14a1664290ca:scripts/world/shed_drop_rules.gd:10:const DATA_PATH := \"res://data/config/shed_drops.json\""
+  ]
+}
