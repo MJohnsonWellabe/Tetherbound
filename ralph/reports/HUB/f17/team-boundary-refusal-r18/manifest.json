@@ -1,0 +1,108 @@
+{
+  "classification": "AUTHOR REFUSAL DIAGNOSTIC SOURCE CANDIDATE ONLY; ACTUAL FRESH NATIVE FAIL; R18 PARSER/NATIVE UNRUN; F17#4 OPEN",
+  "base_commit": "9a90f8536785509648862231bd3f0ee100860744",
+  "root_failed_commit": "90d88dc6b24f9a5e0e705465ac62ba5429a068cf",
+  "changed_paths": [
+    "tests/helpers/meadows_earned_team_segment.gd"
+  ],
+  "unchanged_paths": {
+    "scripts/world/village_boundary.gd": {
+      "bytes": 30001,
+      "sha256": "2ee9484c183adddca8679baa84cdbb8f7faf549dab3a0fd95d9449ebf70eeeca"
+    },
+    "scripts/world/road_gate.gd": {
+      "bytes": 48478,
+      "sha256": "9dcd100dd366ef58bae382e4e4f254ef05d705990486bca491bae820fb4b7a36"
+    },
+    "data/config/village_boundary.json": {
+      "bytes": 19391,
+      "sha256": "2e3ba93eb7212ba4d02a524fc0e9711481a75304808955cfa6e1bceb1b51ce86"
+    },
+    "data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "tests/test_meadows_earned_team_segment.gd": {
+      "bytes": 17596,
+      "sha256": "88a5a220edb90ab892906f7f0911893c4829b0e7c3a5125c7adfaaacf0a2ffde"
+    },
+    "tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 76459,
+      "sha256": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2"
+    },
+    "tests/helpers/fresh_opening_segment.gd": {
+      "bytes": 20289,
+      "sha256": "5bd2ea999b87d1071bc23ad1786be39c4e23f0f08d00bd34682cdcfeedd791fb"
+    },
+    "tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 8585,
+      "sha256": "956c40b2a0d1ac55ce49e1313577e24579238bdd0ec1e51fbe716785b891cb50"
+    },
+    "ralph/reports/HUB/f17/tree-approach-trace-r17/seal.json": {
+      "bytes": 2908,
+      "sha256": "397b0e4f04b237611203afe5730179a575be60a62187cf1b1c1d8e608612f053"
+    },
+    "ralph/reports/HUB/f17/tree-probe-fixture-r16/seal.json": {
+      "bytes": 4193,
+      "sha256": "1766254bd41cf28496ff4ea5a496dfbb9c9b717eeaed5cfd5ded3da7ac2f5c8e"
+    }
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "originals/tests/helpers/meadows_earned_team_segment.gd": {
+      "bytes": 50044,
+      "sha256": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a"
+    },
+    "prior-failure/native.log": {
+      "bytes": 148680,
+      "sha256": "e1d040ee06ac0181bf68b716cf529ad75b1ab83c08bead519dff6ad0d152a130"
+    },
+    "prior-failure/receipt.json": {
+      "bytes": 498899,
+      "sha256": "8f78bd3700db33de436f960e376053431a9a5c7e1e92b99aac80c709c579bd5a"
+    },
+    "proposal/tests/helpers/meadows_earned_team_segment.gd": {
+      "bytes": 52647,
+      "sha256": "46b0f11947bd5124555df074e25d18381586d1f4f713b561624d38c3f81019c8"
+    },
+    "repair.patch": {
+      "bytes": 3576,
+      "sha256": "d78135e3b95e11458631973aa5f7563f9cf42889ba5ed3ce3ac5d94ca68d72f1"
+    },
+    "review-context.txt": {
+      "bytes": 3736,
+      "sha256": "74000b0dc80fccded5b1f3f95772384b522f2b3bc60e508e98de64dbe5d3bd45"
+    },
+    "root-failed/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "root-failed/data/config/village_boundary.json": {
+      "bytes": 19086,
+      "sha256": "6833f920ef97436eb33b0242eb46c63f04f8f37bfe17d75eff0246c4524bd3da"
+    },
+    "root-failed/scripts/world/road_gate.gd": {
+      "bytes": 48478,
+      "sha256": "9dcd100dd366ef58bae382e4e4f254ef05d705990486bca491bae820fb4b7a36"
+    },
+    "root-failed/scripts/world/village_boundary.gd": {
+      "bytes": 30001,
+      "sha256": "2ee9484c183adddca8679baa84cdbb8f7faf549dab3a0fd95d9449ebf70eeeca"
+    },
+    "root-failed/tests/helpers/meadows_earned_team_segment.gd": {
+      "bytes": 50044,
+      "sha256": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a"
+    },
+    "root-failed/tests/test_meadows_earned_team_segment.gd": {
+      "bytes": 17596,
+      "sha256": "88a5a220edb90ab892906f7f0911893c4829b0e7c3a5125c7adfaaacf0a2ffde"
+    },
+    "source-check.py": {
+      "bytes": 6849,
+      "sha256": "79afe51473ef12201f8dd146cea4b0c02e261bd58dd0c3132207d77ecef0cdfe"
+    }
+  }
+}
