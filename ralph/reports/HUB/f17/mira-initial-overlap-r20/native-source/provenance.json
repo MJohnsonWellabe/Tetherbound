@@ -1,0 +1,72 @@
+{
+  "modules/godot_physics_3d/register_types.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/register_types.cpp",
+    "bytes": 3349,
+    "sha256": "669abbb907027d09b52cf04bca67813265b2adf3e90a7476962e4d991a800b27"
+  },
+  "modules/jolt_physics/register_types.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/jolt_physics/register_types.cpp",
+    "bytes": 3377,
+    "sha256": "6d4a023ca7e0f90ccdec4954bb9e5ea8f7af4c0c412c2baf9fc48cd845516b20"
+  },
+  "servers/physics_3d/physics_server_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/servers/physics_3d/physics_server_3d.cpp",
+    "bytes": 69031,
+    "sha256": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f"
+  },
+  "servers/physics_3d/physics_server_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/servers/physics_3d/physics_server_3d.h",
+    "bytes": 41365,
+    "sha256": "f41afb9aec4dbcd308a661f9ec46d8a19313b7196e2700b54af40bcfe9805105"
+  },
+  "modules/godot_physics_3d/godot_space_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_space_3d.cpp",
+    "bytes": 43185,
+    "sha256": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a"
+  },
+  "modules/godot_physics_3d/godot_space_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_space_3d.h",
+    "bytes": 9468,
+    "sha256": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae"
+  },
+  "modules/godot_physics_3d/godot_shape_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_shape_3d.cpp",
+    "bytes": 63744,
+    "sha256": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75"
+  },
+  "modules/godot_physics_3d/godot_shape_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_shape_3d.h",
+    "bytes": 21434,
+    "sha256": "0bb868854b2038bfb229da2a605820b927873568cadb11864e68c0c31d5c2c6d"
+  },
+  "modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.h",
+    "bytes": 6696,
+    "sha256": "84832de8adacc878ca5fbc870e024f047a7f5e5f49927d09805113b49aa1283f"
+  },
+  "scene/resources/3d/box_shape_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/resources/3d/box_shape_3d.cpp",
+    "bytes": 4710,
+    "sha256": "fa760ef3177ec3e943c4bd772bc267812865899ec5834cb25ff3bc2115b74fb1"
+  },
+  "scene/resources/3d/capsule_shape_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/resources/3d/capsule_shape_3d.cpp",
+    "bytes": 6484,
+    "sha256": "b1842cdca5ca795f5bfca154a0907bbf6da1edecb9c620ce63b1c7da403783e1"
+  },
+  "main/main.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/main/main.cpp",
+    "bytes": 210375,
+    "sha256": "2fa6ef2736aa28e2feced47ca872bce1a95e3e6c56bb6002a96660a008df8992"
+  },
+  "modules/godot_physics_3d/config.py": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/config.py",
+    "bytes": 102,
+    "sha256": "f5307daa7374fe6cba2f1944308a53bc3c149c8c4cefb0c208b0becddc780a52"
+  },
+  "modules/jolt_physics/config.py": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/jolt_physics/config.py",
+    "bytes": 102,
+    "sha256": "f5307daa7374fe6cba2f1944308a53bc3c149c8c4cefb0c208b0becddc780a52"
+  }
+}
