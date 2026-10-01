@@ -1,0 +1,292 @@
+{
+  "checks": [
+    {
+      "name": "actual job raw bytes",
+      "passed": true
+    },
+    {
+      "name": "actual merge checkout",
+      "passed": true
+    },
+    {
+      "name": "original second-round pass precedes body failure",
+      "passed": true
+    },
+    {
+      "name": "original missing body and missing network binding both retained",
+      "passed": true
+    },
+    {
+      "name": "original host successful damage and absent guest HUD retained",
+      "passed": true
+    },
+    {
+      "name": "original artifact zip digest",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-53116d1e2a973f03b68542dc2833a11f/character.json",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-16c21ad29983ee6b7b95b29dac457d6f/character.json",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/NET_RUN.json",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/peer-0.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/peer-1.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered original artifact member net-shared_boss-20261001T195856Z/SUMMARY.md",
+      "passed": true
+    },
+    {
+      "name": "sixteen retained original members",
+      "passed": true
+    },
+    {
+      "name": "unretired original adoption error peer 0",
+      "passed": true
+    },
+    {
+      "name": "unretired original adoption error peer 1",
+      "passed": true
+    },
+    {
+      "name": "ROOT immutable selected preimage matches actual source scripts/combat/combat_manager.gd",
+      "passed": true
+    },
+    {
+      "name": "full file inverse scripts/combat/combat_manager.gd",
+      "passed": true
+    },
+    {
+      "name": "exact production function scope scripts/combat/combat_manager.gd",
+      "passed": true
+    },
+    {
+      "name": "only lifecycle fields outside functions",
+      "passed": true
+    },
+    {
+      "name": "ROOT immutable selected preimage matches actual source scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "full file inverse scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "exact production function scope scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged non-function prefix scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "ROOT immutable selected preimage matches actual source scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "full file inverse scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "exact production function scope scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged non-function prefix scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "ROOT immutable selected preimage matches actual source tests/test_stormwood_hosted_combat.gd",
+      "passed": true
+    },
+    {
+      "name": "full file inverse tests/test_stormwood_hosted_combat.gd",
+      "passed": true
+    },
+    {
+      "name": "all existing hosted cases unchanged",
+      "passed": true
+    },
+    {
+      "name": "five appended regression cases",
+      "passed": true
+    },
+    {
+      "name": "original guards/actions/scaling/body API unchanged tests/smoke_net_shared_boss.gd",
+      "passed": true
+    },
+    {
+      "name": "original guards/actions/scaling/body API unchanged tests/helpers/net_harness.gd",
+      "passed": true
+    },
+    {
+      "name": "original guards/actions/scaling/body API unchanged tools/net/peer_runner.gd",
+      "passed": true
+    },
+    {
+      "name": "original guards/actions/scaling/body API unchanged scripts/creatures/shared_opponent_proxy.gd",
+      "passed": true
+    },
+    {
+      "name": "original guards/actions/scaling/body API unchanged scripts/combat/combat_math.gd",
+      "passed": true
+    },
+    {
+      "name": "queue popped before host opens opponent",
+      "passed": true
+    },
+    {
+      "name": "host authors actual remaining queue marker",
+      "passed": true
+    },
+    {
+      "name": "sequence checked before mirror mutation",
+      "passed": true
+    },
+    {
+      "name": "same-generation pose sequence resets only after new configure succeeds",
+      "passed": true
+    },
+    {
+      "name": "installed card UID guards reactivation",
+      "passed": true
+    },
+    {
+      "name": "strict boolean continuation",
+      "passed": true
+    },
+    {
+      "name": "ordinary resolve pause unchanged",
+      "passed": true
+    },
+    {
+      "name": "terminal close withdraws continuation",
+      "passed": true
+    },
+    {
+      "name": "disconnect withdraws actual mirror",
+      "passed": true
+    },
+    {
+      "name": "model: promised boss round at 0.01s resumes same binding",
+      "passed": true
+    },
+    {
+      "name": "model: promised trainer round at 0.01s resumes same binding",
+      "passed": true
+    },
+    {
+      "name": "model: promised boss round at 10.0s resumes same binding",
+      "passed": true
+    },
+    {
+      "name": "model: promised trainer round at 10.0s resumes same binding",
+      "passed": true
+    },
+    {
+      "name": "model: promised gap stays bound",
+      "passed": true
+    },
+    {
+      "name": "model: absent/nonboolean continuation releases False",
+      "passed": true
+    },
+    {
+      "name": "model: absent/nonboolean continuation releases 'true'",
+      "passed": true
+    },
+    {
+      "name": "model: absent/nonboolean continuation releases None",
+      "passed": true
+    },
+    {
+      "name": "model: nonvictory releases lost",
+      "passed": true
+    },
+    {
+      "name": "model: nonvictory releases fled",
+      "passed": true
+    },
+    {
+      "name": "model: wild releases",
+      "passed": true
+    },
+    {
+      "name": "model: wrong card does not resume",
+      "passed": true
+    },
+    {
+      "name": "model: terminal close releases held gap",
+      "passed": true
+    },
+    {
+      "name": "model: disconnect releases held gap",
+      "passed": true
+    },
+    {
+      "name": "read-only ROOT apply check",
+      "passed": true
+    },
+    {
+      "name": "diff whitespace check",
+      "passed": true
+    }
+  ],
+  "passed": 71,
+  "failed": 0,
+  "native": "NOT RUN; ROOT owns original smoke and regression execution.",
+  "authority": "No protocol authority, scaling, HP formula, simulation, driver or deadline changes."
+}

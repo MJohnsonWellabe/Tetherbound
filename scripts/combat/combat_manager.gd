@@ -338,6 +338,12 @@ var _catch_presentation_last_ms := 0
 ## twice cannot walk the health bar backwards.
 var _encounter_seq: int = 0
 
+## A mirrored trainer/boss round can end before the host sends its next member.
+## Keep the admitted fight bound through that gap, without simulating the foe.
+var _shared_trainer_round := 0
+var _shared_trainer_round_continues := false
+var _waiting_shared_trainer_round := false
+
 ## The last refusal this process was given: `{"kind", "code", "reason"}`. Read
 ## by the HUD and by `tools/net/peer_runner.gd`'s probe -- the net smoke asserts
 ## the `friendly_target` refusal WAS issued, not merely that no damage landed.
@@ -400,6 +406,9 @@ func unbind_encounter() -> void:
 	_encounter_link = null
 	_encounter_id = ""
 	_encounter_kind = ""
+	_shared_trainer_round = 0
+	_shared_trainer_round_continues = false
+	_waiting_shared_trainer_round = false
 	_catch_awaiting_host = false
 	_burst_awaiting_host = false
 	_last_burst_action = 0
@@ -599,6 +608,9 @@ func begin(
 	_buffer_left = 0.0
 	_resolve_timer = 0.0
 	_outcome = ""
+	_shared_trainer_round = 0
+	_shared_trainer_round_continues = false
+	_waiting_shared_trainer_round = false
 	_input_guard = float(MATH.config().get("flow", {}).get("input_guard", 0.25))
 	_flee_buffer_left = 0.0
 
@@ -669,6 +681,8 @@ func _release_contact_spacing() -> void:
 func end_shared_opponent_presentation(body: Node3D) -> bool:
 	if not _realm_owned_opponent or body == null or body != _wild:
 		return false
+	_shared_trainer_round_continues = false
+	_waiting_shared_trainer_round = false
 	if state == State.ACTIVE:
 		_begin_resolve("fled")
 		return true
@@ -2251,7 +2265,7 @@ func _physics_process(delta: float) -> void:
 			_tick_active(delta)
 		State.RESOLVING:
 			_resolve_timer -= delta
-			if _resolve_timer <= 0.0:
+			if _resolve_timer <= 0.0 and not _waiting_shared_trainer_round:
 				_finish()
 		_:
 			_refuse_combat_input()
@@ -2935,6 +2949,7 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		if participants.has(peer_id):
 			_sync_authoritative_wind(participants[peer_id] as Dictionary)
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	_apply_shared_trainer_round(opponent)
 	var snapshot_impact: Dictionary = rec.get("resolved_impact", {})
 	if state == State.ACTIVE and _enemy != null and not snapshot_impact.is_empty() \
 		and str(snapshot_impact.get("target_uid", "")) == str(_enemy.get("uid")):
@@ -2972,6 +2987,30 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		if won:
 			_award_victory()
 		_begin_resolve("won" if won else "lost")
+
+
+func _apply_shared_trainer_round(opponent: Dictionary) -> void:
+	if not _realm_owned_opponent or _encounter_kind not in ["trainer", "boss"] or _enemy == null:
+		return
+	var round_number := int(opponent.get("round", 0))
+	var card: Variant = opponent.get("card", {})
+	# The director must have installed this exact host card on the mirror first.
+	if round_number < 1 or not card is Dictionary or card.get("uid") != _enemy.get("uid"):
+		return
+	if round_number > _shared_trainer_round:
+		_shared_trainer_round = round_number
+		_victory_awarded = false
+		if _waiting_shared_trainer_round and state == State.RESOLVING and _outcome == "won":
+			_waiting_shared_trainer_round = false
+			_resolve_timer = 0.0
+			_outcome = ""
+			state = State.ACTIVE
+			_bind_contact_spacing(true)
+	if round_number == _shared_trainer_round:
+		var continues: Variant = opponent.get("round_continues", false)
+		_shared_trainer_round_continues = continues is bool and continues == true
+		if not _shared_trainer_round_continues:
+			_waiting_shared_trainer_round = false
 
 
 func _sync_authoritative_wind(payload: Dictionary) -> void:
@@ -4487,6 +4526,8 @@ func _begin_resolve(outcome: String) -> void:
 	if state == State.RESOLVING:
 		return
 	_outcome = outcome
+	_waiting_shared_trainer_round = outcome == "won" and _realm_owned_opponent \
+		and _encounter_kind in ["trainer", "boss"] and _shared_trainer_round_continues
 	state = State.RESOLVING
 	_end_hitstop()
 	# W12-COMPANION-0904. The result beat: the fight is decided and nothing is

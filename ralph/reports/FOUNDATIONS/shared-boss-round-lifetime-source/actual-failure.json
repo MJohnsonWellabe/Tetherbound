@@ -1,0 +1,265 @@
+{
+  "source_pin": "63429ee77e31341ed82b106ce5489b6479916e3f",
+  "ci_merge": "c6d0670585d2776e4931126f00dedca9d8a2d048",
+  "run_id": 36915534683,
+  "job_id": 110549151039,
+  "raw_job": {
+    "path": "D:\\tetherbound\\redesign-foundations\\.tmp\\shared-boss-ci6173\\original-ci6173-job.log",
+    "bytes": 528416,
+    "sha256": "1173018e179cc173022d61400e88ca51b47d099821cee488ede5753ab6e9bf4f"
+  },
+  "artifact": {
+    "id": 11190524116,
+    "sha256": "0e12fdc0f8c81cfdcb6f822e4b3820e70d077b8b14bacdf29c4c9bbd80330be0",
+    "members": [
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt",
+        "bytes": 2664,
+        "sha256": "59190188bbb55991513f6dc9ac473dc5ea3928ce3d1681af6e7b5032126a5f79"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+        "bytes": 916609,
+        "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+        "bytes": 48,
+        "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-53116d1e2a973f03b68542dc2833a11f/character.json",
+        "bytes": 2776112,
+        "sha256": "94a22545e14eb4f016cf30ffdcb60319aad721a1984368708b0957ee8b7ad1b0"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+        "bytes": 12294,
+        "sha256": "be2ee87d9b7373a68fe0029807c3f50dcce312e765ec63b8f9baf9af3fbf453f"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+        "bytes": 4193792,
+        "sha256": "156d78b29c3f9b6b2ff420718974f75c53985c119bea5791970ba12d311bc5c4"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+        "bytes": 19008,
+        "sha256": "e66b484f660960c164f649d648b8c2d5f0a2b18ed600d1ff22d5bce37b05a7eb"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt",
+        "bytes": 2665,
+        "sha256": "781aa8015de7bd78dc88db7287a815d5f6afbec803e05226d47a4dc4e108f4da"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+        "bytes": 916609,
+        "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+        "bytes": 48,
+        "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-16c21ad29983ee6b7b95b29dac457d6f/character.json",
+        "bytes": 2776111,
+        "sha256": "712b0ac4687706da3ade9aeefc6ecbaaff06d3c0e422cd1252b8cdaa715f3e61"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+        "bytes": 12103,
+        "sha256": "952b1a73b6c6d38286b78812d9a1fd350c887e5070b902032bd2bad15808cf6f"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/NET_RUN.json",
+        "bytes": 3647,
+        "sha256": "f1e26aac3c6e9b74f363a4d194bf053c0bb7b9dee0a7270f71a16b14c2f47bc0"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/peer-0.log",
+        "bytes": 12408,
+        "sha256": "782f929226c59f10b9d7ee5a09af04f7854456d8d3af603a84da9ccb087148a3"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/peer-1.log",
+        "bytes": 12217,
+        "sha256": "b9cbb8c96d5dd50a0e2f437d4ab0fec75b20a41bc43c19a2fbe4c5985fcbd47f"
+      },
+      {
+        "path": "net-shared_boss-20261001T195856Z/SUMMARY.md",
+        "bytes": 1272,
+        "sha256": "d80dcddc962533795288e61c2b3b4e6eba8aaf66601bb20349fcca17d3403cd1"
+      }
+    ]
+  },
+  "actual_rows": [
+    {
+      "line": 5109,
+      "text": "2026-10-01T20:00:51.2510367Z PASS: the two of them put his first creature down and he sent out his second (stopped with 3 of their creatures still queued after 301 frames / 2 swings)"
+    },
+    {
+      "line": 5110,
+      "text": "2026-10-01T20:00:51.2717239Z PASS: it is STILL the one record -- a new round swaps the opponent, never the record ('1:1' -> '1:1')"
+    },
+    {
+      "line": 5111,
+      "text": "2026-10-01T20:00:51.2718601Z PASS: and both peers are still participants in it (got 2)"
+    },
+    {
+      "line": 5112,
+      "text": "2026-10-01T20:00:51.2720075Z PASS: the host has the Warden's SECOND creature on the field (species 'galecrest')"
+    },
+    {
+      "line": 5113,
+      "text": "2026-10-01T20:00:51.2721793Z PASS: and 'galecrest' is one of the Warden's authored five (authored: [\"brooktail\", \"burrowback\", \"galecrest\", \"meadowhart\", \"tuskroot\"])"
+    },
+    {
+      "line": 5114,
+      "text": "2026-10-01T20:00:51.2723500Z scaling gate: { \"director_encounter_id\": \"1:1\", \"encounter_host\": true, \"is_host\": true, \"is_multi_peer\": true }"
+    },
+    {
+      "line": 5115,
+      "text": "2026-10-01T20:00:51.2725258Z live: { \"attack\": 56.98, \"attack_cooldown\": 0.765, \"body_attack_cooldown\": 0.765, \"defence\": 30.525, \"hp\": 212.1, \"level\": 18.0, \"max_hp\": 212.1, \"species_id\": \"galecrest\" }"
+    },
+    {
+      "line": 5116,
+      "text": "2026-10-01T20:00:51.2726902Z authored: { \"attack\": 51.8, \"attack_cooldown\": 0.9, \"defence\": 27.75, \"level\": 18.0, \"max_hp\": 212.1 }"
+    },
+    {
+      "line": 5117,
+      "text": "2026-10-01T20:00:51.2727993Z PASS: the authored creature has real hit points (212.100)"
+    },
+    {
+      "line": 5118,
+      "text": "2026-10-01T20:00:51.2730192Z PASS: \u00a710 / D-MP12: at 2 participants the boss's max_hp is its AUTHORED 212.100, not multiplied (live 212.100; a stat_multiplier of 1.1000 folded into hp would give 233.310)"
+    },
+    {
+      "line": 5119,
+      "text": "2026-10-01T20:00:51.2732846Z PASS: and \u00a73's record -- the number both HUDs draw -- carries that same authored hp_max (record 212.100, authored 212.100)"
+    },
+    {
+      "line": 5120,
+      "text": "2026-10-01T20:00:51.2734472Z PASS: \u00a710: at 2 participants his creature's attack is the authored 51.800 x 1.1000 = 56.980 (live 56.980)"
+    },
+    {
+      "line": 5121,
+      "text": "2026-10-01T20:00:51.2735700Z PASS: and its defence is the authored 27.750 x 1.1000 = 30.525 (live 30.525)"
+    },
+    {
+      "line": 5122,
+      "text": "2026-10-01T20:00:51.2737163Z PASS: his second creature authors a real attack_cooldown (0.900) -- without one this comparison is 0.0 against 0.0 and proves nothing (finding F3)"
+    },
+    {
+      "line": 5123,
+      "text": "2026-10-01T20:00:51.2739238Z PASS: and the BODY swings on the authored 0.900 x 0.8500 = 0.765 (live 0.765) -- read off its own combat config, which is the number the swing timer uses"
+    },
+    {
+      "line": 5124,
+      "text": "2026-10-01T20:00:51.2740847Z PASS: the record's own stamped scaling row agrees with the config (stamped 1.1000, configured 1.1000)"
+    },
+    {
+      "line": 5125,
+      "text": "2026-10-01T20:00:51.2742070Z PASS: and so does its cooldown multiplier (stamped 0.8500, configured 0.8500)"
+    },
+    {
+      "line": 5126,
+      "text": "2026-10-01T20:00:51.2743197Z PASS: and it carries no hp knob at all ([\"attack_cooldown_multiplier\", \"stat_multiplier\"])"
+    },
+    {
+      "line": 5127,
+      "text": "2026-10-01T20:00:51.2991993Z FAIL: peer 1's local stand-in was moved onto where the host holds the boss (this peer has no opponent body to move)"
+    },
+    {
+      "line": 5128,
+      "text": "2026-10-01T20:00:51.2993282Z PASS: the record says the boss is standing at 212.1 hp"
+    },
+    {
+      "line": 5129,
+      "text": "2026-10-01T20:00:53.6595906Z PASS: peer 0 landed a blow on the SHARED boss: 212.1 -> 203.0 on the host, in 1 swing(s) over 1 placement attempt(s); the host last held its creature 3.76 m from the boss"
+    },
+    {
+      "line": 5130,
+      "text": "2026-10-01T20:00:53.6867869Z FAIL: and both peers draw the same boss health bar after it (host 203.028, guest -1.000)"
+    },
+    {
+      "line": 5131,
+      "text": "2026-10-01T20:00:54.5009238Z FAIL: peer 1 swung at the boss (this peer is not in a networked fight)"
+    },
+    {
+      "line": 5132,
+      "text": "2026-10-01T20:00:54.5011509Z FAIL: peer 1 landed a blow on the SHARED boss: 203.0 -> 203.0 on the host, in 1 swing(s) over 1 placement attempt(s); the host last held its creature 3.08 m from the boss"
+    },
+    {
+      "line": 5133,
+      "text": "2026-10-01T20:00:54.8115395Z FAIL: and both peers draw the same boss health bar after it (host 203.028, guest -1.000)"
+    },
+    {
+      "line": 5134,
+      "text": "2026-10-01T20:01:08.1286382Z PASS: the host holds a position for both pilots' creatures (peer 1's (4.221889, 6.172762, 7661.734) / peer 0's (4.221889, 6.171976, 7661.735))"
+    },
+    {
+      "line": 5135,
+      "text": "2026-10-01T20:01:08.1288168Z PASS: the two pilots' creatures are within one swing of each other after 12 attempt(s) (0.00 m of 4.00 m)"
+    },
+    {
+      "line": 5136,
+      "text": "2026-10-01T20:01:08.1289801Z PASS: peer 0's creature is alive to be swung at (125.5 hp)"
+    },
+    {
+      "line": 5137,
+      "text": "2026-10-01T20:01:08.1291005Z FAIL: peer 1's swing at its teammate's creature reached the host (this peer is not in a networked fight)"
+    },
+    {
+      "line": 5138,
+      "text": "2026-10-01T20:01:08.1292649Z FAIL: and the client's own local answer was `pending` -- the host being asked, not a refusal (ok=true pending=false code='')"
+    },
+    {
+      "line": 5139,
+      "text": "2026-10-01T20:01:08.1294059Z FAIL: the host refused it with `friendly_target` in the BOSS fight (got code '', reason '')"
+    },
+    {
+      "line": 5140,
+      "text": "2026-10-01T20:01:08.1295253Z FAIL: and the sentence a player can be shown travelled back to the striker"
+    },
+    {
+      "line": 5141,
+      "text": "2026-10-01T20:01:08.1296662Z FAIL: and it is measured over a window the boss itself did not act in -- `pick_struck` chose peer 1 1 time(s) before and 1 after, over 12 attempt(s)"
+    },
+    {
+      "line": 5142,
+      "text": "2026-10-01T20:01:08.1298234Z PASS: peer 0's creature took nothing from it (125.509 before, 125.509 after)"
+    },
+    {
+      "line": 5143,
+      "text": "2026-10-01T20:01:08.1299803Z PASS: and the boss took nothing from it either -- a refused strike is refused BEFORE any roll (203.028 before, 203.028 after)"
+    }
+  ],
+  "unretired_other_errors": [
+    {
+      "path": "net-shared_boss-20261001T195856Z/peer-0.log",
+      "rows": [
+        {
+          "line": 158,
+          "text": "ERROR: the player already has a creature; adopt_starter is not a swap"
+        }
+      ]
+    },
+    {
+      "path": "net-shared_boss-20261001T195856Z/peer-1.log",
+      "rows": [
+        {
+          "line": 153,
+          "text": "ERROR: the player already has a creature; adopt_starter is not a swap"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Individual RPC arrival and timer ordering are not logged.",
+    "Both source-permitted arrival orders are covered; neither is claimed as observed.",
+    "No attribution to the five cancelled CI6173 jobs; their raw logs are unavailable.",
+    "Original adoption errors remain outside this lifetime repair."
+  ]
+}
