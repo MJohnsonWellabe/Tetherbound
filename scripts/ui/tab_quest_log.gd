@@ -87,6 +87,7 @@ var _scroll: ScrollContainer = null
 var _main_list: VBoxContainer = null
 var _local_list: VBoxContainer = null
 var _last_progression_revision: int = -1
+var _last_lesson_goal := ""
 
 
 func build() -> void:
@@ -183,8 +184,10 @@ func poll() -> void:
 		return
 	var revision := int(progression.get("revision"))
 	var realm_changed := bool(_log.call("set_realm", str(game.get("current_realm"))))
-	if revision == _last_progression_revision and not realm_changed:
+	var lesson_goal := str(_log.call("lesson_goal_signature"))
+	if revision == _last_progression_revision and not realm_changed and lesson_goal == _last_lesson_goal:
 		return
+	_last_lesson_goal = lesson_goal
 	_last_progression_revision = revision
 	_fill(
 		_main_list,

@@ -37,6 +37,7 @@ const DEBUG_TELEPORT_SPOTS_PATH := "res://data/config/debug_teleport_spots.json"
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 const GRAPHICS_SETTINGS := preload("res://scripts/ui/graphics_settings.gd")
 var _graphics: VBoxContainer = null
+var _lesson_buttons: Array[Control] = []
 
 ## How long the global reset stays armed after the first press. Long enough to
 ## make the second press deliberate, short enough that it cannot be a surprise
@@ -109,6 +110,7 @@ var _focus_graph_state: int = -1
 
 
 func build() -> void:
+	_lesson_buttons.clear()
 	for child in get_children():
 		child.queue_free()
 	_rows.clear()
@@ -143,6 +145,7 @@ func build() -> void:
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 14)
 	_scroll.add_child(list)
+	_build_lesson_help(list)
 	_graphics = GRAPHICS_SETTINGS.new()
 	list.add_child(_graphics)
 	_graphics.changed.connect(_on_graphics_changed)
@@ -871,6 +874,24 @@ func _wire_focus_graph(teleport_visible: bool) -> void:
 	# the Gameplay block at the top of this function has just set to itself.
 	# Wiring the volume lane before it would simply be overwritten.
 	_wire_volume_graph()
+	_wire_lesson_graph()
+
+func _wire_lesson_graph() -> void:
+	if _lesson_buttons.is_empty(): return
+	var below: Control = null
+	if is_instance_valid(_graphics):
+		for child: Node in _graphics.get_children():
+			if child is Button and not (child as Button).disabled:
+				below = child as Control
+				break
+	if below == null and not _volume_rows.is_empty(): below = _volume_rows[0].button
+	if below == null and not _rows.is_empty(): below = _rows[0].gamepad
+	if below == null: return
+	for index: int in _lesson_buttons.size():
+		var button := _lesson_buttons[index]
+		_link_vertical(button, _lesson_buttons[maxi(0, index - 1)], _lesson_buttons[index + 1] if index + 1 < _lesson_buttons.size() else below)
+		_link_horizontal_to_self(button)
+	below.focus_neighbor_top = below.get_path_to(_lesson_buttons.back())
 
 
 ## Biome headers always participate while teleport is visible. Only rows under
@@ -998,11 +1019,34 @@ func _link_horizontal_to_self(control: Control) -> void:
 
 
 func first_focus() -> Control:
+	if not _lesson_buttons.is_empty(): return _lesson_buttons[0]
 	if not _rows.is_empty():
 		# Gamepad first (Controller first): the cursor lands where the
 		# left-most, first-drawn column now is.
 		return _rows[0]["gamepad"]
 	return _reset_all_button
+
+func _build_lesson_help(list: VBoxContainer) -> void:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if rules.config().get("enabled") != true: return
+	var heading := Label.new()
+	heading.text = "Help · System lessons"
+	list.add_child(heading)
+	for row: Dictionary in rules.config().get("lessons", []):
+		if not rules.available(str(row.id), state().get("local")): continue
+		var button := Button.new()
+		button.text = str(row.title)
+		button.custom_minimum_size.y = 66
+		button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
+		list.add_child(button)
+		_lesson_buttons.append(button)
+		button.focus_entered.connect(func() -> void: _keep_visible(button))
+		button.pressed.connect(func() -> void:
+			var service := preload("res://scripts/onboarding/lesson_service.gd").attach(state())
+			if service.call("replay", str(row.id)):
+				menu.call("close")
+			else: say("This lesson is available when its system unlocks.")
+		)
 
 
 ## Constant. The row set comes from JSON and does not change while the game

@@ -39,6 +39,7 @@ var realm_id := "meadows"
 var _claimed_map: RefCounted = null
 var _marker_owner: RefCounted = RefCounted.new()
 var _last_realm := ""
+var _last_lesson_goal := ""
 ## Whether a target is resolved; the beam draws only when this is true and no
 ## story payoff holds the screen (`presentation_hold.gd`).
 var _has_target := false
@@ -48,6 +49,7 @@ var combat_manager: Node = null
 
 
 func _ready() -> void:
+	preload("res://scripts/onboarding/lesson_service.gd").attach(get_node_or_null(^"/root/Game"))
 	_log = QUEST_LOG.new()
 	_config = _load_config()
 	_colour = Color.from_string(str(_config.get("colour", "#63E8FF")), Color("63e8ff"))
@@ -77,8 +79,9 @@ func _process(delta: float) -> void:
 	var revision := int(progression.get("revision"))
 	var current_realm := str(game.get("current_realm"))
 	var current_map := _map_for_game(game)
+	var lesson_goal := str(_log.call("lesson_goal_signature"))
 	if revision != _last_progression_revision or current_realm != _last_realm \
-			or current_map != _claimed_map:
+			or current_map != _claimed_map or lesson_goal != _last_lesson_goal:
 		refresh_now()
 	_apply_visibility()
 	_animate_ping()
@@ -88,6 +91,7 @@ func _process(delta: float) -> void:
 ## Public so a focused smoke can force the same update production uses without
 ## waiting for its polling frame.
 func refresh_now() -> void:
+	_last_lesson_goal = str(_log.call("lesson_goal_signature"))
 	var game := get_node_or_null(^"/root/Game")
 	_last_realm = str(game.get("current_realm")) if game != null else ""
 	_claim_map(_map_for_game(game))
