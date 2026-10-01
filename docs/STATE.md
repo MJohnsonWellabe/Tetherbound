@@ -202,4 +202,4 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 - **Owner redesign interview, 2026-09-29:** 35 decisions, recorded as RD-01..RD-35 in CODEX_START_HERE §1. The owner asked that every catalog defect scored above 12 be fixed to the full game bar, "not just passing the defect", so the game looks like something people would play (Valheim, Palworld, Animo, ARK as quality references). Done means the whole plan is done: push consistently, rebuild the dashboard hourly, then burn the criteria down over time.
 - Record owner feedback here; it overrides other documents on its subject.
 
-Source review never substitutes for runtime. R2/R3 feature sources are consolidated; R3 Foundation completes production wiring. Full proof/CI/main remain pending.
+R2/R3 source consolidated; production wiring, runtime proof and main pending.
