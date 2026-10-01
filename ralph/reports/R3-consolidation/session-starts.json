@@ -112,15 +112,16 @@
         "activeFlags": []
       },
       "archived": false,
-      "source_checkpoint_not_yet_consolidated": "36b44f7d48de5132b04f8ab49d9537664e2fd4a8",
-      "source_review": "IN PROGRESS; source checkpoint does not mean implementation or runtime acceptance",
+      "source_checkpoint_not_yet_consolidated": "f7dd0d6978e0b0e26ea1e77316fc14fd999ab59a",
+      "source_review": "CHECKPOINT HOLD: three concrete source defects returned to author; newer source and remaining production work continue",
       "remaining_source_work": [
         "Authenticated guest personal flags and guest Home Key/portal arrival consumer",
         "Old envelope identity revalidation after fallback callbacks, including research claims",
         "Durable original stable-participant research defeat obligations before teardown",
         "Actual final ending context and ordinary Tidewake dock continuation",
         "Executable F48 profiles and actual world-write/delivery/owner-write/ACK boundary observations"
-      ]
+      ],
+      "source_review_evidence": "foundation-source-review.json"
     }
   ],
   "root_source_review": {
@@ -129,6 +130,6 @@
     "F47": "ROOT overlay repair0fa57dec9a independently sourcePASS byF49 atd07ae5c396;15 focused Node checks PASS, original live levels/gates unchanged; no runtime solvency credit",
     "F48": "Witnesses never repair/save observed state; real OS.kill guest restart; actual file/participant/namespace receipts; missing exact loss windows fail",
     "F49": "New-order driver preserves earned helpers and immutable save copies, package evidence verifier is read-only, missing producer/ordinary dock continuation fails explicitly. Runtime/owner/hardware/publication pending",
-    "Foundation": "Checkpoint implements station/loadout/Master input composition, physical arrival support checks, retained sight/cast/catch/Master/boss duties and personal Shrine interaction. Review fixes and remaining production paths are still being coded. Not yet merged or archived; no engine/CI on NEXT."
+    "Foundation": "Independent f7 checkpoint HOLD: gear API mismatch, direct world/snapshot validation gap, catch retry changes original night. Author fixing while completing guest travel/Master/ending, bounty/rematch and F48 profiles. No NEXT engine/CI or criterion acceptance."
   }
 }
