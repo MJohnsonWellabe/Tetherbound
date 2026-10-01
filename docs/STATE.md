@@ -26,7 +26,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Recent owner requests:** faster combat/re-aim #448/#450/#454/#457; sprint #449 (owner pad feel); straight village road #455. Mouse capture awaits real-PC confirmation. Exact prior details: Git history.
 
-**To resume:** CODEX §0/§6; whole-feature visible tasks, push hourly, necessary batched proofs with each criterion strict verdict. PR auto-merge; hourly board; STATE <25KB. Active /goal supersedes older wind-down stop.
+**To resume:** Owner closeout (2026-09-30) supersedes the previous coordinator: consolidate every existing branch into one `tb/integration` PR and one selected validation batch; return failures to the same existing feature conversations. Start no new sessions until current work is on main and its criteria are closed. Archive a conversation only after its criteria are independently verified and landed. Previous coordinator paused and preserved its unfinished checkpoint on `tb/redesign-board`. The integration candidate contains all fourteen feature draft heads and the older lane/source histories; it is not yet on main and receives zero new criterion credit. Shared producers and combat lifetime corrections remain in progress in the existing Foundations/F22 conversations. Evidence: `ralph/reports/INTEGRATION/branch-closeout/`. CODEX §0/§6; STATE <25KB.
 
 | Lane | Features | State |
 |---|---|---|
