@@ -1,6 +1,6 @@
 {
-  "assembled_source_head": "41f2979e42e7ed72f9805f412c5b151d9e237299",
-  "captured_utc": "2026-10-01T08:21:44.434821+00:00",
+  "assembled_source_head": "bdf3d5771985c2d37f35c0c071423729930a018c",
+  "captured_utc": "2026-10-01T11:14:47.032070+00:00",
   "main_head": "30fcc38fc591d5df3a7cfb122b9da58445467021",
   "ref_count": 131,
   "unique_head_count": 110,
@@ -176,11 +176,8 @@
       "head_is_ancestor_of_consolidated": true
     }
   ],
+  "ancestry_check": "Single rev-list reachability union of every captured ref and actual current PR head minus integration HEAD; empty output.",
   "consolidated_pr": 519,
-  "main_landed": false,
-  "selected_remote_full_ci": "Run36820599627 on1fdf20938325 FAILED; next full-ci candidate pending",
-  "criterion_credit_added": 0,
-  "criteria": "110/280 MET unchanged; feature criteria andF17#4OPEN",
-  "sidebar_archives": 5,
-  "scope": "Branch/PR content inclusion only. Exact ancestry does not close gameplay, durable co-op, visual or hardware criteria."
+  "full_ci": "Old1fdf run36820599627 FAILED; repaired candidate pending next selected consolidated run.",
+  "acceptance": "110/280 MET unchanged; six sidebar archives/no acceptance; original earned proof and required gate/main pending."
 }
