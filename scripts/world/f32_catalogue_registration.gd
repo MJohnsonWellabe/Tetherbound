@@ -10,12 +10,13 @@ static func apply_items(items: Dictionary) -> Dictionary:
 	var result := items.duplicate(true)
 	for id: String in source.get("items", {}):
 		var row: Variant = source.items[id]
-		if not row is Dictionary or not row.get("name") is String or not row.get("stack") is int:
+		if not row is Dictionary or not row.get("name") is String or not _positive_integer(row.get("stack")):
 			return items
 		if result.has(id) and result[id] != row:
 			push_error("Conflicting canonical F32 item definition: " + id)
 			return items
 		result[id] = row.duplicate(true)
+		result[id]["stack"] = int(row["stack"])
 	for id: String in source.get("display_overrides", {}):
 		if not result.has(id): return items
 		var replacement: Variant = source.display_overrides[id]
@@ -25,6 +26,11 @@ static func apply_items(items: Dictionary) -> Dictionary:
 				return items
 		result[id].merge(replacement, true)
 	return result
+
+
+static func _positive_integer(value: Variant) -> bool:
+	return typeof(value) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(value)) \
+		and float(value) == floorf(float(value)) and float(value) > 0 and float(value) < 2147483647.0
 
 ## Existing baseline registration census for the literal ten water proposals.
 ## Tests/review callers can compare the actual runtime book without mutation.

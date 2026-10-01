@@ -1271,7 +1271,8 @@
     "body_ground_clearance_m": 0.06,
     "requires_actual_trainer_collision_shape": true,
     "requires_registered_host_site": true,
-    "player_path_proven": false
+    "player_path_proven": false,
+    "maximum_elevation_resolution_m": 45.0
   },
   "presentation_candidate": {
     "enabled": false,

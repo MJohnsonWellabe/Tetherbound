@@ -44,7 +44,9 @@ static func _profile(config: Dictionary, species: String) -> Dictionary:
 ## Hash a structured identity to avoid delimiter collisions between realms,
 ## world instances, encounters, characters and owned creature UIDs.
 static func _receipt(kind: String, identity: Array) -> String:
-	return "shed:" + kind + ":" + JSON.stringify(identity).sha256_text()
+	var signature := JSON.stringify(identity).sha256_text()
+	if kind == "win": return "craft:%s:shed_win:%s" % [str(identity[2]), signature]
+	return "groom:%s:%s" % [str(identity[1]), signature]
 
 
 ## Trusted outcome shape: world_instance_id, encounter_id, realm, kind=wild,

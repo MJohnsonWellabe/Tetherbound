@@ -31,6 +31,9 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 		if verdict.get("ok") != true:
 			_refusals[id] = verdict.get("reason", "Placement unavailable.")
 			continue
+		if realm == "water" and not VALIDATOR._additional_water_dry(world, verdict.position, tuning):
+			_refusals[id] = "Actual baked ground and water surface do not establish a dry resource bed."
+			continue
 		var model := str(spec.get("model", ""))
 		if model.is_empty() or not ResourceLoader.exists(model):
 			_refusals[id] = "Installed model unavailable."

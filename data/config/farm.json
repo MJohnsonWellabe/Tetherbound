@@ -110,7 +110,8 @@
         "offline_production": false,
         "crop_mutation_path": "Existing farm_plot_action host transaction; no new crop state write or free seed/harvest path.",
         "presence_source": "Confirmed canonical world building records in the host realm. UI may read the replicated mirror; it cannot authorize sowing."
-      }
+      },
+      "recipe_known_from_start": true
     },
     "visual_proposal": {
       "enabled": false,

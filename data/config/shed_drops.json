@@ -1,9 +1,11 @@
 {
   "schema_version": 1,
   "status": "authored_proposals_not_runtime_registered",
-  "_comment": "F32#4 / HOMESTEAD §5.4: naturally shed materials, never hunting or butchery. Existing Galecrest appears in Cloudreach's authored wild tables; Sparkit and Staticub appear in Stormwood's. Staticub is an ordinary evolution species, not one of the three exclusive starters. Trusted wild victories and manual Den grooming are the only sources. Combat owns the actual victory producer; training/foundation compose care essence and inventory outputs into one character receipt/CAS. Den runtime remains F31-dependent.",
+  "_comment": "F32#4 / HOMESTEAD \u00c2\u00a75.4: naturally shed materials, never hunting or butchery. Existing Galecrest appears in Cloudreach's authored wild tables; Sparkit and Staticub appear in Stormwood's. Staticub is an ordinary evolution species, not one of the three exclusive starters. Trusted wild victories and manual Den grooming are the only sources. Combat owns the actual victory producer; training/foundation compose care essence and inventory outputs into one character receipt/CAS. Den runtime remains F31-dependent.",
   "wild_win_chance": 0.25,
   "allowed_shed_items": [
+    "fiber",
+    "reed_fiber",
     "skyplume",
     "sparkfur"
   ],
@@ -42,6 +44,24 @@
       ],
       "den_amount": 1,
       "source_wording": "Naturally shed charged fluff from a won encounter or gentle grooming."
+    },
+    "mudsnout": {
+      "item": "fiber",
+      "wild_amount": 1,
+      "wild_realms": [
+        "meadows"
+      ],
+      "den_amount": 1,
+      "source_wording": "Loose naturally shed coat fibers from a won encounter or gentle grooming."
+    },
+    "mosshell": {
+      "item": "reed_fiber",
+      "wild_amount": 1,
+      "wild_realms": [
+        "water"
+      ],
+      "den_amount": 1,
+      "source_wording": "Loose reed strands released from a shell after a won encounter or brushed free by hand."
     }
   },
   "runtime_enabled": false

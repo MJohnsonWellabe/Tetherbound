@@ -96,13 +96,24 @@ static func placement_verdict(world: Node3D, spec: Dictionary,
 		return {"ok": false, "reason": "Node coordinates are invalid."}
 	var x := float(at[0])
 	var z := float(at[1])
-	var ground := float(world.call("ground_height_at", x, z))
+	var preferred_y := float(spec.get("authored_height", NAN))
+	if str(spec.get("realm", "meadows")) == "cloudreach" and is_finite(preferred_y):
+		if not world.has_method("_resource_position") or not world.has_method("ground_height_near"):
+			return {"ok": false, "reason": "Intended Cloudreach surface resolver is unavailable."}
+		var resolved: Variant = world.call("_resource_position", Vector3(x, preferred_y, z))
+		if not resolved is Vector3 or not resolved.is_finite() \
+				or absf(resolved.y - preferred_y) > float(tuning.get("maximum_elevation_resolution_m", 45.0)):
+			return {"ok": false, "reason": "No real route surface at the intended elevation."}
+		x = resolved.x
+		z = resolved.z
+		preferred_y = resolved.y
+	var ground := _ground(world, x, z, preferred_y)
 	if not is_finite(x) or not is_finite(z) or not is_finite(ground):
 		return {"ok": false, "reason": "No finite baked terrain at this candidate."}
 	var step := maxf(0.1, float(tuning.get("slope_sample_m", 0.75)))
 	var maximum := float(tuning.get("maximum_slope_degrees", 35.0))
 	for offset: Vector2 in [Vector2(step, 0), Vector2(-step, 0), Vector2(0, step), Vector2(0, -step)]:
-		var neighbour := float(world.call("ground_height_at", x + offset.x, z + offset.y))
+		var neighbour := _ground(world, x + offset.x, z + offset.y, preferred_y)
 		if not is_finite(neighbour) or rad_to_deg(atan(absf(neighbour - ground) / step)) > maximum:
 			return {"ok": false, "reason": "Candidate slope is not walkable."}
 	var collision: CollisionShape3D
@@ -127,6 +138,12 @@ static func placement_verdict(world: Node3D, spec: Dictionary,
 		return {"ok": false, "reason": "Trainer capsule overlaps a terrain or prop collider."}
 	return {"ok": true, "position": site_position, "body_clearance_proven": true,
 		"ordinary_player_path_proven": false}
+
+
+static func _ground(world: Node3D, x: float, z: float, preferred_y: float) -> float:
+	if is_finite(preferred_y) and world.has_method("ground_height_near"):
+		return float(world.call("ground_height_near", Vector3(x, preferred_y, z)))
+	return float(world.call("ground_height_at", x, z))
 
 
 ## F32 candidate hook: keep the HarvestNode wrapper identity, authority and glow

@@ -27,12 +27,18 @@ static func unit_plan(source: Dictionary, recipe_id: String, station_uid: String
 	var station := _built_forge(host_world.get("placed_buildings"), station_uid, realm)
 	if station.is_empty():
 		return _refusal("missing_station", "Build a Forge at the homestead.")
-	var redesign: Variant = host_world.get("redesign_world")
-	if not redesign is Dictionary or not redesign.get("station_tiers") is Dictionary:
-		return _refusal("invalid_station", "The host's station state is unavailable.")
-	var tier: Variant = redesign["station_tiers"].get("forge", 0)
-	if not _integer(tier, 0) or int(tier) > 8:
-		return _refusal("invalid_station", "The host's Forge tier is unavailable.")
+	# F31 owns paid pose/attachment validation. Resolve the actual Forge UID,
+	# never a cached global tier that belongs to a different Forge in the world.
+	var provider_path := "res://scripts/build/station_rules.gd"
+	if not ResourceLoader.exists(provider_path):
+		return _refusal("invalid_station", "The homestead station service is unavailable.")
+	var provider: Script = load(provider_path)
+	var cfg: Variant = provider.call("config")
+	if not cfg is Dictionary: return _refusal("invalid_station", "The station catalogue is unavailable.")
+	var resolved: Variant = provider.call("effective_tier", cfg, host_world.get("placed_buildings", []), station_uid)
+	if not resolved is Dictionary or resolved.get("ok") != true or not _integer(resolved.get("effective_tier"), 0):
+		return _refusal("invalid_station", "The actual Forge's tier is unavailable.")
+	var tier := int(resolved["effective_tier"])
 	var flags := _personal_flags(host_character.get("flags"))
 	if not bool(flags.get("ok", false)):
 		return _refusal("invalid_actor", "The character's recipe state is unavailable.")

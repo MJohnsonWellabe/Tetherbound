@@ -214,8 +214,18 @@ static func _load() -> void:
 			_fail(realm, "Malformed essence catalogue: " + str(errors))
 			continue
 		for node: Dictionary in ESSENCE.nodes_for(realm, essence):
-			# Delegate essence identity to its owning catalogue, once at load time.
-			_add(realm, ESSENCE.by_id(realm, str(node["id"]), essence), ESSENCE.DATA_PATH)
+			# Every essence placement retains its real material anchor's scope,
+			# gates and intended cliff stratum. Offsets cannot bypass a rootgate
+			# or move a lower-cliff node onto the highest XZ surface.
+			var site := ESSENCE.by_id(realm, str(node["id"]), essence)
+			var anchor: Dictionary = site.get("anchor", {})
+			var parent: Variant = (_sites[realm] as Dictionary).get(str(anchor.get("id", "")))
+			if not parent is Dictionary:
+				_fail(realm, "Unknown essence placement anchor: " + str(site.get("id", "")))
+				continue
+			for key: String in ["requires_flag", "requires_world_flags", "availability", "authored_height"]:
+				if parent.has(key): site[key] = parent[key].duplicate(true) if parent[key] is Array else parent[key]
+			_add(realm, site, ESSENCE.DATA_PATH)
 
 
 static func _load_rows(realm: String, config: Dictionary, source_path: String,

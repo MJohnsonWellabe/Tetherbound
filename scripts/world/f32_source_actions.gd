@@ -105,6 +105,7 @@ static func _node(intent: Dictionary, host: Dictionary) -> Dictionary:
 		if float(roll) < float(seed.chance): outputs[str(seed.item)] = int(seed.amount)
 	var next_stock := stock.duplicate(true)
 	next_stock.revision = int(stock.revision) + 1
+	next_stock.generation = int(stock.generation) + 1
 	next_stock.next_ready_day = int(host.host_day) + int(site.respawn_days)
 	var db := ITEM_DB.new()
 	var required_tool := str(db.gathered_with(str(site.get("item", ""))))
