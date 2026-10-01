@@ -1,0 +1,148 @@
+{
+  "ticket": "F20-INTEGRATED-R1",
+  "source_head": "64540ef8d6a0c64334a2c0795b3fcc46c0140d9e",
+  "branch": "tb/f20",
+  "workspace": "D:/tetherbound/feature-f20",
+  "pr": "https://github.com/MJohnsonWellabe/Tetherbound/pull/506",
+  "owner": "ROOT",
+  "engine_writer": "ROOT ONLY",
+  "status": "queued_after_canonical_shared_composition",
+  "sources": [
+    {
+      "path": "scripts/story/regional_homecoming.gd",
+      "working_tree_sha256": "8ea18816b280f6aa0abbd3882b1510cdfd48f4805a57b97aee80b0a10ea88b60",
+      "git_content_sha256": "f8ac5d427f64cfed5ce1e58c0e9aaf8c685a61d04101e0d8fc16685c93c2e6d5",
+      "git_blob_sha1": "ce188e2aca79c96bd9cffdcaabd76c21870299a4"
+    },
+    {
+      "path": "scripts/ui/regional_credits.gd",
+      "working_tree_sha256": "3e0f7817141beac87e9688dfcb4f738082662a24983981a9d653cb1209161c1c",
+      "git_content_sha256": "3e0f7817141beac87e9688dfcb4f738082662a24983981a9d653cb1209161c1c",
+      "git_blob_sha1": "fb38b4c4f19cbe51c57620da811d83b5cc2c90fe"
+    },
+    {
+      "path": "scripts/world/stormwood_ending.gd",
+      "working_tree_sha256": "de17a0e1b80aa6dafaa8e1ae654ea9a4a34a46bd134c97a868f7fdce6a588863",
+      "git_content_sha256": "de17a0e1b80aa6dafaa8e1ae654ea9a4a34a46bd134c97a868f7fdce6a588863",
+      "git_blob_sha1": "d548759dfbecf297baf76378963baa21d66b17a0"
+    },
+    {
+      "path": "data/dialogue/homecoming.json",
+      "working_tree_sha256": "ae21df471d7cc581d4bbe88b88aeeea6db522dbe2f8acec1924bf244499b6cbe",
+      "git_content_sha256": "ae21df471d7cc581d4bbe88b88aeeea6db522dbe2f8acec1924bf244499b6cbe",
+      "git_blob_sha1": "1dcdd5bc3690f2a18be66c288336b77fe9926a7a"
+    },
+    {
+      "path": "data/config/regional_credits.json",
+      "working_tree_sha256": "a6829912dc87a929b652e349cd03735dfaa377819153f317c148f5dd70cc7a4b",
+      "git_content_sha256": "a6829912dc87a929b652e349cd03735dfaa377819153f317c148f5dd70cc7a4b",
+      "git_blob_sha1": "10c4116c11aea5dac9d400aadc306d9c2d530dc0"
+    },
+    {
+      "path": "data/config/regional_ending_objectives.json",
+      "working_tree_sha256": "3bdbbd18ce5c50c56c7a0540a753ba0fdf18bb9798a45a84b776295775d3d33c",
+      "git_content_sha256": "3bdbbd18ce5c50c56c7a0540a753ba0fdf18bb9798a45a84b776295775d3d33c",
+      "git_blob_sha1": "9e653ed6d65e95aea56e372c5fa3c3b6f5a51cf6"
+    },
+    {
+      "path": "tests/test_regional_homecoming.gd",
+      "working_tree_sha256": "2db6502bfd4b10e40f3735abbaea5a277d47a24c3c2d2c34205f41a75225ad84",
+      "git_content_sha256": "2db6502bfd4b10e40f3735abbaea5a277d47a24c3c2d2c34205f41a75225ad84",
+      "git_blob_sha1": "dfe40e06e71dec32bafb5ce3ba258257b7421c25"
+    },
+    {
+      "path": "tests/test_homecoming_ending_invariants.gd",
+      "working_tree_sha256": "789d116786fa97d1c733a6437b89dfb561a28781bc21764a063e99c4f6ec71ce",
+      "git_content_sha256": "789d116786fa97d1c733a6437b89dfb561a28781bc21764a063e99c4f6ec71ce",
+      "git_blob_sha1": "16fb80f423b4448fb102cc9532724e09687563ed"
+    },
+    {
+      "path": "tests/fixtures/regional_ending_owner.gd",
+      "working_tree_sha256": "e87fb270e875209e7cd22cdb8e59623158a7c8b17abffb1db830c391c810d7f0",
+      "git_content_sha256": "e87fb270e875209e7cd22cdb8e59623158a7c8b17abffb1db830c391c810d7f0",
+      "git_blob_sha1": "f188f596b93ea0e485519baabc5c1658b58e6ffc"
+    },
+    {
+      "path": "ralph/reports/REORDER/f20/receipt-contract.json",
+      "working_tree_sha256": "06b6cc635d13ab7a4886dbbc231b450e35ad0b7c2d6260d815da6b3b95b466ff",
+      "git_content_sha256": "66b48a28e7c965d9e82aff049310b00c16f5c5b892e5b11d5bef21d646844be2",
+      "git_blob_sha1": "d37ae116cd5c5682da968ae109a7c5cf30c54752"
+    }
+  ],
+  "ignored_inputs": [
+    {
+      "path": ".tmp/f20-ending-contract.json",
+      "sha256": "06b6cc635d13ab7a4886dbbc231b450e35ad0b7c2d6260d815da6b3b95b466ff"
+    },
+    {
+      "path": ".tmp/f20-shared-callers.patch",
+      "sha256": "2b3ee9935b0677d99e937c3346d7a91ced1331cc530f83fdfaf182ce28e069ba"
+    }
+  ],
+  "cpu_observed": [
+    "All authored JSON parses",
+    "git diff --check passes",
+    "Shared caller patch git apply --check --recount --unidiff-zero --ignore-space-change passes",
+    "tools/check_pr_traceability.mjs passes for draft description"
+  ],
+  "independent_review": {
+    "reviewer": "/root/f20_strict_source_review",
+    "result": "SOURCE_RECHECK_PASS_ONLY",
+    "criteria": "F20#0-#4 all NOT_MET",
+    "findings_resolved": [
+      "Missing HomeKey instruction/premature farm beacon in Meadows",
+      "Delayed canonical context dropped finale handoff"
+    ]
+  },
+  "composition_prerequisites": [
+    "F18 and F19 real prerequisite gates and landing order remain required",
+    "Foundations must implement canonical finale participant/legendary settlement, persistent original starter identity, post-outcome durable HomeKey arrival lineage, farm/safe live context and global stable-character durable acknowledgement",
+    "Foundations must apply or compose the exact ignored frozen sequence/quest/dock caller patch; no consumer-only coroutine test on the broken existing caller",
+    "F19/ROOT must resolve Stormheart LEGENDARY_LEVEL=44 and all canonical reward/offer ownership outside F20 handoff scope",
+    "Historical smoke_regional_credits_reload.gd uses old Tidewake flags/calls and is not an F20 actual-ending proof"
+  ],
+  "minimal_engine_batch": {
+    "command_suffix": "--script tests/run_tests.gd -- --only=test_regional_homecoming.gd,test_homecoming_ending_invariants.gd",
+    "risk": "Typed/immutable context, nonparticipant refusal, current names/starter/bond/choices, overcap rejection, bool save failure, pending async ack, session/world/party changes, duplicate/global transaction acknowledgement and no extra mutation",
+    "fixture_disclosure": "Synthetic owner contract doubles and synthetic real-store state only. They cannot establish earned gameplay, authority, physical safety, disk durability or co-op acceptance.",
+    "observed": "NOT RUN; ROOT token only"
+  },
+  "actual_named_proofs": [
+    {
+      "name": "F20-TIDEWAKE-CHAPTER-CLOSE",
+      "criteria": [
+        "F20#0"
+      ],
+      "actions": "Earn dock exchange through existing authoritative debit flow; observe civilian resolution and rewritten Meadows/Mira contacts. No homecoming/credits or personal ending receipt from Tidewake alone.",
+      "observed": "NOT RUN"
+    },
+    {
+      "name": "F20-SOLO-HOMEKEY-HOMECOMING-RELOAD",
+      "criteria": [
+        "F20#1",
+        "F20#3"
+      ],
+      "actions": "Earn accepted Stormwood finale outcome; use real HomeKey and grounded Hall arrival; walk to actual farm. Grandpa speaks CURRENT party nicknames/display names, canonical starter kept/released status, a real recorded memory and resolved personal chapter choices. Natural completion durably saves homecoming before overlay; Continue/Skip saves credits once. Reload from actual disk and verify same stable character, live current party, grounded safe pose, normal remaining activities and canonical post-credits endgame entitlement. Disclose any harness inputs/shortcuts; never fabricate an earned fixture.",
+      "observed": "NOT RUN"
+    },
+    {
+      "name": "F20-TWO-PEER-FAILURE-DISCONNECT-RELOAD",
+      "criteria": [
+        "F20#1",
+        "F20#3",
+        "F20#4"
+      ],
+      "actions": "Two separate peers earn own accepted outcomes and actual key returns. Different current rosters/personal offers produce distinct homecoming. Fail owner bool save then retry; disconnect before commit, after durable commit before ACK, and during pending acknowledgement; reload/rejoin. Each stable character retains honest independent receipts, no wrong-context success, no duplicate credits ACK, no rewards/roster changes. Host/guest input remains independent and world unpaused. Also visit ahead world as nonparticipant and prove no ending eligibility.",
+      "observed": "NOT RUN"
+    },
+    {
+      "name": "F18-FIFTH-ARCH-STIR-WITNESS",
+      "criteria": [
+        "F20#2"
+      ],
+      "actions": "Reuse F18-INTEGRATED-R1 actual earned fifth key/biome5 native glow-low hum-dust-one line evidence, durable consumption/personal receipt, trusted other-peer moment and silent reload restoration. Arch never opens, makes no quest/marker/cliffhanger/sequel prompt; first use works before or after credits; repeated spend refused.",
+      "observed": "NOT RUN"
+    }
+  ],
+  "landing_gate": "Keep PR506 draft until actual composed source/runtime evidence and distinct independent strict MET verdict for each criterion, then ROOT board/STATE update and authorized auto-merge after true prerequisites. Process-only CI green is not engine proof. No skipped/disabled/quarantined tests."
+}
