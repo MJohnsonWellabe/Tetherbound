@@ -53,6 +53,14 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
 		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
 	if envelope.op == "personal_view": return _foundation_personal_view(peer)
+	if envelope.op == "wild_capture_quote":
+		var context := _foundation_capture_context(peer, envelope.station_key)
+		if context.is_empty(): return _foundation_refusal("capture_offer_unavailable")
+		var current: Dictionary = _character_authority.call("state", context.character_id)
+		var quote := preload("res://scripts/net/foundation_capture_rules.gd").stage(current, envelope.intent, context)
+		if quote.get("ok") != true: return _foundation_refusal(str(quote.get("code", "capture_choice_refused")))
+		return {"ok": true, "pending_uid": context.creature.uid, "released_uid": envelope.intent.released_uid,
+			"ceremony_id": context.offer_id, "expected_character_revision": context.expected_revision, "payout": quote.payout}
 	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion"]: return _foundation_refusal("host_producer_required")
 	if envelope.op == "master_duel":
 		if envelope.intent.size() != 2 or not envelope.intent.get("master_id") is String or not envelope.intent.get("creature_uid") is String: return _foundation_refusal("invalid_duel_intent")
@@ -117,6 +125,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		var route := preload("res://scripts/build/forward_camp_rules.gd").recipe(str(envelope.intent.get("recipe_id", "")), recipe)
 		if route.get("ok") == true: part = route.part
 	var context := _foundation_build_context(peer, envelope.intent) if envelope.op == "camp_build" else _foundation_source(peer, envelope.station_key, part)
+	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
 	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
 	if envelope.op == "regional_ack":
 		var ending := preload("res://scripts/story/regional_homecoming.gd")
@@ -192,6 +201,30 @@ func foundation_record_personal_flags(delta: Dictionary) -> void:
 		for peer: int in op.get("peers", []):
 			var character := _authority_character(peer)
 			if not character.is_empty(): _character_authority.call("record_personal_flag", character, str(op.get("id", "")), op.get("value", true) == true)
+
+## The actual host ending calls this only after its original claim saves.
+## Guests cannot replace a flag dictionary or choose another claim/character.
+func foundation_stormwood_answer(source: Node, peer: int, claim: Dictionary) -> bool:
+	if not is_host() or not is_instance_valid(source) or source.get_script() != preload("res://scripts/world/stormwood_ending.gd") \
+		or _game() == null or _game().session != self or source.get("session") != self \
+		or source.get("world") != _portal_world_node("stormwood") or source.get("_foundation_world_binding") == null \
+		or source.get("_foundation_world_binding").get_ref() != _game().world: return false
+	var character := _authority_character(peer)
+	if character.is_empty() or admitted_character_state(peer).is_empty() or claim.get("settled") != true \
+		or not claim.get("kept") is bool or source.call("_saved_state").get("claims", {}).get(character, {}) != claim: return false
+	var id := preload("res://scripts/world/stormwood_ending.gd").claim_id(claim)
+	var kept: bool = claim.kept
+	if id.is_empty() or not _game().world.flags.call("has", preload("res://scripts/world/stormwood_ending.gd").resolution_flag(kept, character)): return false
+	var flags: Dictionary = _character_authority.call("personal_flags", character)
+	var marker := "stormwood:regional_outcome:%s:%s" % [id, "accepted" if kept else "refused"]
+	var has_original := false
+	for flag: String in flags:
+		if flag.begins_with("stormwood:regional_outcome:"): has_original = true
+	for flag: String in ["stormwood:legendary_ceremony_settled", preload("res://scripts/world/stormwood_ending.gd").answer_flag(id, kept)]:
+		_character_authority.call("record_personal_flag", character, flag, true)
+	if not has_original: _character_authority.call("record_personal_flag", character, marker, true)
+	if kept: _character_authority.call("record_personal_flag", character, "stormwood:legendary_offer_accepted", true)
+	return true
 
 func _foundation_personal_view(peer: int) -> Dictionary:
 	if admitted_character_state(peer).is_empty(): return {}
@@ -307,8 +340,14 @@ func foundation_research_source(director: Node, encounter_id: String, peer: int,
 	if duties.is_empty(): return {"ok": true, "durable": true, "disabled": true}
 	return get_node(^"LedgerRpc").call("journal_foundation_event", source_id, duties)
 
+func foundation_alpha_resolution(director: Node, encounter_id: String, outcome: String, capture: Dictionary = {}) -> Dictionary:
+	var producer := get_node_or_null(^"FoundationComposition/Alphas")
+	return producer.call("resolution", director, encounter_id, outcome, capture) if producer != null else {"ok": false, "durable": false}
+
 func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dictionary:
-	if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
+	var research_enabled := preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
+	var bounty_enabled := preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
+	if not research_enabled and not bounty_enabled: return {"ok": true, "durable": true, "disabled": true}
 	if not is_host() or director.get("_session") != self or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
 		or director.call("host_wild_victory_source", str(original.get("record", {}).get("encounter_id", ""))) != original \
 		or original.get("world_namespace") != _game().get("world").reward_delivery_namespace or original.get("session_id") != _altar_current_epoch() \
@@ -319,10 +358,22 @@ func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dict
 		participants.append(participant.character_id)
 	var duties: Array = []
 	for character: String in participants:
-		duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": {
+		if research_enabled: duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": {
 			"source_key": "encounter:" + str(original.record.encounter_id), "event_confirmed": true,
 			"world_namespace": original.world_namespace, "session_id": original.session_id, "event_id": original.source_id,
 			"participants": participants.duplicate(), "species_id": original.enemy_record.species_id, "kind": "defeat", "opponent_defeated": true}})
+		if bounty_enabled:
+			var runtime: Node = director.call("_shared_host_fight", str(original.record.encounter_id))
+			var body: Node3D = runtime.call("body") if runtime != null else null
+			if body == null or preload("res://scripts/repeatables/alpha_respawns.gd").site(str(body.get_meta("foundation_alpha_site", ""))).is_empty(): continue
+			for participant: Dictionary in original.record.participants.values():
+				var instances: Array = participant.get("foundation_bounty_instances", [])
+				if participant.character_id != character or instances.is_empty(): continue
+				duties.append({"character_id": character, "action": "bounty_event", "intent": {}, "context": {
+					"source_key": "halda_bounty_event", "event_confirmed": true, "world_namespace": original.world_namespace,
+					"session_id": original.session_id, "event_id": "defeat:" + str(original.source_id), "participants": participants.duplicate(),
+					"issued_instances": instances.duplicate(), "kind": "defeat_alpha", "biome": preload("res://scripts/data/biome_order.gd").canonical_id(str(original.record.realm)), "traits": []}})
+	if duties.is_empty(): return {"ok": true, "durable": true, "no_duties": true}
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "defeat:" + str(original.source_id), duties)
 
 func foundation_rematch_participant_context(peer: int) -> Dictionary:
@@ -331,7 +382,11 @@ func foundation_rematch_participant_context(peer: int) -> Dictionary:
 	var flags := _foundation_flags(peer)
 	var full: Dictionary = _character_authority.call("state", character)
 	if full.redesign_character.transaction_receipts.has("craft:regional_ending_regional_credits_seen:" + character): flags.regional_credits_seen = true
-	return {"character_id": character, "world_flags": _game().world.flags.call("all_set"), "personal_flags": flags.keys()}
+	var instances: Array[String] = []
+	for slot: Dictionary in full.redesign_character.get("bounties", {}).get("slots", []):
+		if slot.get("complete") != true and not instances.has(str(slot.get("instance", ""))): instances.append(str(slot.instance))
+	return {"character_id": character, "world_flags": _game().world.flags.call("all_set"), "personal_flags": flags.keys(),
+		"bounty_instances": instances}
 
 func foundation_rematch_join_allowed(peer: int, spec: Dictionary) -> bool:
 	var context := foundation_rematch_participant_context(peer)
@@ -354,6 +409,7 @@ func foundation_rematch_outcome(director: Node, spec: Dictionary, won: bool) -> 
 		game.call("_sync_clock_state")
 		if not is_finite(float(game.world.clock_elapsed_seconds)) or float(game.world.clock_elapsed_seconds) < 0: return {"ok": false}
 		var duties: Array = []
+		var source_id := "rematch:%s:%s" % [spec.id, record.encounter_id]
 		for character: String in participants:
 			var admission: Dictionary = director.get("_trainer_foundation_admissions").get(character, {})
 			if admission.get("character_id") != character: return {"ok": false}
@@ -367,7 +423,13 @@ func foundation_rematch_outcome(director: Node, spec: Dictionary, won: bool) -> 
 			if preload("res://scripts/repeatables/rematch_rules.gd").profile(str(spec.id)).kind == "master":
 				duties.back().context.single_creature_duel = true
 				duties.back().context.creature_uid = str(director.get("_master_duel").get("creature_uid", ""))
-		original = {"source_id": "rematch:%s:%s" % [spec.id, record.encounter_id], "duties": duties}
+			if preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true and not admission.get("bounty_instances", []).is_empty():
+				duties.append({"character_id": character, "action": "bounty_event", "intent": {}, "context": {
+					"source_key": "halda_bounty_event", "event_confirmed": true, "world_namespace": game.world.reward_delivery_namespace,
+					"session_id": _altar_current_epoch(), "event_id": source_id, "participants": participants.duplicate(),
+					"issued_instances": admission.bounty_instances.duplicate(), "kind": "rematch",
+					"biome": preload("res://scripts/data/biome_order.gd").canonical_id(str(record.realm)), "traits": []}})
+		original = {"source_id": source_id, "duties": duties}
 		director.set_meta("foundation_rematch_pending", original.duplicate(true))
 	var result: Dictionary = get_node(^"LedgerRpc").call("journal_foundation_event", original.source_id, original.duties)
 	if result.get("durable") == true: director.remove_meta("foundation_rematch_pending")
@@ -396,6 +458,7 @@ func _retry_foundation_events() -> void:
 	for raw: Variant in world.reward_deliveries.values():
 		if not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
 		for duty: Dictionary in raw.duties:
+			if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
 			var peer := int(_registry.call("peer_for_character", duty.character_id))
 			if peer < 1 or handled.has(duty.character_id) or admitted_character_state(peer).is_empty(): continue
 			var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
@@ -438,7 +501,8 @@ func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 	var row: Variant = world.reward_deliveries.get(context.get("retained_event", ""))
 	if not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): return _altar_current_epoch()
 	for duty: Dictionary in row.duties:
-		if duty.character_id != accepted.get("character_id") or duty.action != accepted.get("action") or duty.intent != accepted.get("intent"): continue
+		var capture := accepted.get("action") == "wild_capture" and duty.action == "capture_offer" and accepted.intent.get("offer_id") == duty.context.offer_id
+		if duty.character_id != accepted.get("character_id") or (not capture and (duty.action != accepted.get("action") or duty.intent != accepted.get("intent"))): continue
 		var canonical: Dictionary = context.duplicate(true)
 		for field: String in ["character_id", "expected_revision", "in_range", "retained_event", "in_combat", "foundation_runtime_authorized"]: canonical.erase(field)
 		if canonical == duty.context: return row.session_id
@@ -3120,7 +3184,7 @@ func _bind_training_container_guards() -> void:
 			_weak_training_inventory_write_allowed.bind(owner_ref, session_ref))
 	if party is RefCounted and party.has_method("bind_owner_mutation_guard"):
 		party.call("bind_owner_mutation_guard", _weak_training_mutation_blocked.bind(owner_ref, session_ref),
-			_weak_training_release_write_allowed.bind(owner_ref, session_ref), _weak_training_release_rollback_allowed.bind(owner_ref, session_ref))
+			_weak_training_release_write_allowed.bind(owner_ref, session_ref), _weak_training_release_rollback_allowed.bind(owner_ref, session_ref), _weak_capture_roster_allowed.bind(owner_ref, session_ref))
 
 
 func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
@@ -3129,6 +3193,7 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 			or not ESSENCE._equivalent(_owner_training_row(), row) or row.status != "pending": return false
 	if not _owner_training_retry.is_empty() and (_owner_training_retry.player.get_ref() != player \
 		or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt): return false
+	var capture_originals: Variant = _owner_training_retry.get("capture_originals")
 	var released: Variant = _owner_training_retry.get("release_instance")
 	if row.get("version") in [2, 3] and row.get("action") == "trait_release" and released == null:
 		# Bind identity while the real original instance is still owned. A weak
@@ -3139,6 +3204,11 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 	_owner_training_retry = {"player": weakref(player), "world": weakref(world),
 		"delivery_id": row.delivery_id, "journal_revision": row.journal_revision, "receipt": row.receipt,
 		"saved": _owner_training_retry.get("saved", false), "release_instance": released}
+	if capture_originals is Array: _owner_training_retry.capture_originals = capture_originals
+	if row.get("action") == "wild_capture" and not _owner_training_retry.has("capture_originals"):
+		var originals: Array = []
+		for member: RefCounted in player.get("party").call("members"): originals.append(weakref(member))
+		_owner_training_retry.capture_originals = originals
 	_bind_training_container_guards()
 	return true
 
@@ -3894,6 +3964,7 @@ func _owner_training_release_write_allowed(index: int, player: RefCounted) -> bo
 
 
 func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefCounted) -> bool:
+	if _owner_training_install_rollback and _owner_training_row().get("action") == "wild_capture": return _capture_roster_allowed(snapshot.get("members", []), true, player)
 	var row := _owner_training_row()
 	if not _owner_training_install or not _owner_training_install_rollback or row.get("version") not in [2, 3] \
 		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
@@ -3914,3 +3985,45 @@ func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefC
 	if removed < 0 or player.get("party").call("members") != survivors: return false
 	expected.party.remove_at(removed)
 	return ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), expected)
+
+static func _weak_capture_roster_allowed(members: Array, rollback: bool, owner: WeakRef, session_ref: WeakRef) -> bool:
+	return owner.get_ref() != null and session_ref.get_ref() != null and session_ref.get_ref().call("_capture_roster_allowed", members, rollback, owner.get_ref()) == true
+
+func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted) -> bool:
+	var row := _owner_training_row()
+	if not _owner_training_install or rollback != _owner_training_install_rollback or row.get("version") != 3 \
+		or row.get("action") != "wild_capture" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
+	var expected: Array = (row.before if rollback else row.after).party
+	var originals: Array = _owner_training_retry.get("capture_originals", [])
+	if members.size() != expected.size() or members.size() > 5 or originals.size() != row.before.party.size(): return false
+	for index: int in members.size():
+		var member: Variant = members[index]
+		if not member is RefCounted or preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character) != expected[index]: return false
+		var old_index := -1
+		for old: int in row.before.party.size():
+			if row.before.party[old].uid == expected[index].uid: old_index = old
+		if old_index >= 0 and originals[old_index].get_ref() != member: return false
+		if old_index < 0 and (rollback or expected[index].uid != row.host_context.creature.uid): return false
+	return true
+
+func _foundation_capture_context(peer: int, key: String) -> Dictionary:
+	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+		or not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
+	var world: RefCounted = _game().world
+	var character := _authority_character(peer)
+	var actor: Dictionary = get_node(^"LedgerRpc").call("_water_actor_context", peer, {})
+	if actor.get("character_id") != character or not actor.get("position") is Vector3: return {}
+	for row: Variant in world.reward_deliveries.values():
+		if not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): continue
+		for duty: Dictionary in row.duties:
+			if duty.action != "capture_offer" or duty.character_id != character or duty.context.source_key != key or duty.context.realm != actor.get("realm"): continue
+			var context: Dictionary = duty.context.duplicate(true)
+			context.character_id = character
+			context.expected_revision = _character_authority.call("revision", character)
+			context.in_range = true
+			context.in_combat = false
+			context.foundation_runtime_authorized = true
+			context.retained_event = row.delivery_id
+			return context
+	return {}

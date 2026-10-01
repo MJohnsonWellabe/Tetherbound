@@ -39,7 +39,7 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 	if proposal.get("duplicate") != true:
 		# Exact release runs before other mutations, so its bound container guard
 		# checks the actual whole pre-decision owner and original live instance.
-		if plan.release_index >= 0 and party.call("remove_at", plan.release_index) != plan.release_instance:
+		if row.action != "wild_capture" and plan.release_index >= 0 and party.call("remove_at", plan.release_index) != plan.release_instance:
 			session.call("_end_owner_training_install")
 			return _deny("owner_release_refused")
 		for change: Dictionary in plan.changes: change.instance.set(change.field, change.after)
@@ -51,11 +51,19 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 			if not ESSENCE._equivalent(snapshot.inventory[slot], stack):
 				inventory.call("set_slot", slot, stack.duplicate(true) if stack is Dictionary else null)
 		player.set("redesign_character", row.after.redesign_character.duplicate(true))
+		if row.action == "wild_capture" and party.call("install_owner_capture_roster", plan.capture_members) != true:
+			return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_capture_roster_refused")
 		if not ESSENCE._equivalent(current.equipment, row.after.equipment):
 			player.get("equipment").call("load_data", row.after.equipment)
 	var installed: Dictionary = player.call("save_data")
 	if not ESSENCE._equivalent(RECORD.portable_projection(installed), row.after):
 		return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_action_install_conflict") if proposal.get("duplicate") != true else _end_refused(session, "owner_action_install_conflict")
+	if row.action == "wild_capture" and row.intent.keep and proposal.get("duplicate") != true:
+		# The same owner BOOL write includes the ordinary owned-catch skill XP.
+		# A failed write retains this installed state; duplicate retries never
+		# award again, and the saved capture receipt prevents a rejoin replay.
+		var skills: RefCounted = player.get("skills")
+		if skills != null: preload("res://scripts/player/skills_activity.gd").new(skills).record_catch(row.intent.offer_id, true, true)
 	session.call("_end_owner_training_install")
 	if saver.call("save_character_prepared", game, str(player.character_id)) != true:
 		# Saved world entitlement cannot be refunded. Retain this exact installed
@@ -72,6 +80,8 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 
 static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> Dictionary:
 	if members.size() != current.party.size(): return _deny("owner_party_changed")
+	if row.action == "wild_capture" and ESSENCE._equivalent(current, row.after):
+		return {"ok": true, "changes": [], "traits": [], "release_index": -1, "release_instance": null, "capture_members": members}
 	var changes: Array[Dictionary] = []
 	var projections: Array[Dictionary] = []
 	var release_index := -1
@@ -81,7 +91,7 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 		var instance: Variant = members[index]
 		var prior: Dictionary = current.party[index]
 		if not instance is RefCounted or instance.get("uid") != prior.uid: return _deny("owner_party_changed")
-		if row.action == "trait_release" and prior.uid == row.intent.creature_uid and not _has_uid(row.after.party, prior.uid):
+		if ((row.action == "trait_release" and prior.uid == row.intent.creature_uid) or (row.action == "wild_capture" and prior.uid == row.intent.released_uid)) and not _has_uid(row.after.party, prior.uid):
 			if release_index >= 0: return _deny("ambiguous_release")
 			release_index = index
 			release_instance = instance
@@ -106,10 +116,22 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 				if not properties.has(field): return _deny("owner_trait_projection_unavailable")
 				previous[field] = _copy(instance.get(field))
 			projections.append({"instance": instance, "record": mirror, "before": previous})
+	var capture_members: Array = []
+	if row.action == "wild_capture":
+		for member: RefCounted in members:
+			if member != release_instance: capture_members.append(member)
+		if row.intent.keep:
+			if next_index + 1 != row.after.party.size(): return _deny("owner_capture_shape_changed")
+			var card: Dictionary = row.after.party[next_index]
+			if card.uid != row.host_context.creature.uid: return _deny("owner_capture_uid_changed")
+			var newcomer := preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, row.after.redesign_character)
+			if newcomer == null: return _deny("owner_capture_decode_failed")
+			capture_members.append(newcomer)
+			next_index += 1
 	if next_index != row.after.party.size(): return _deny("owner_roster_import_refused")
 	if row.action == "trait_release" and not ESSENCE._equivalent(current, row.after) \
 		and (release_index < 0 or members.size() <= 1 or row.after.party.size() != members.size() - 1): return _deny("owner_release_changed")
-	return {"ok": true, "changes": changes, "traits": projections, "release_index": release_index, "release_instance": release_instance}
+	return {"ok": true, "changes": changes, "traits": projections, "release_index": release_index, "release_instance": release_instance, "capture_members": capture_members}
 
 
 static func _rollback(game: Node, player: RefCounted, world: RefCounted, session: Node,
@@ -126,7 +148,7 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 	player.set("redesign_character", snapshot.redesign_character.duplicate(true))
 	if not ESSENCE._equivalent(snapshot.equipment, row.after.equipment):
 		player.get("equipment").call("load_data", snapshot.equipment)
-	if plan.release_index >= 0 and party_restore(player, roster) != true: return _end_refused(session, "owner_roster_rollback_failed")
+	if (plan.release_index >= 0 or row.action == "wild_capture") and party_restore(player, roster) != true: return _end_refused(session, "owner_roster_rollback_failed")
 	var restored := ESSENCE._equivalent(RECORD.portable_projection(player.call("save_data")), row.before)
 	session.call("_end_owner_training_install")
 	return {"ok": false, "saved": false, "pending": true, "durable": true, "code": code if restored else "owner_rollback_conflict"}

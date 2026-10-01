@@ -280,9 +280,9 @@ func save_data() -> Dictionary:
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state,
 ## the same contract `map_state.gd` and `progression_state.gd` already give
 ## `save_game.gd`.
-static func foundation_world_errors(rows: Variant, namespace: String, instance: String, buildings: Variant) -> Array[String]:
+static func foundation_world_errors(rows: Variant, namespace_id: String, instance: String, buildings: Variant) -> Array[String]:
 	if not rows is Dictionary or not buildings is Array: return ["Invalid Foundation world carrier"]
-	var failures := preload("res://scripts/net/foundation_event.gd").errors(rows, namespace, instance)
+	var failures := preload("res://scripts/net/foundation_event.gd").errors(rows, namespace_id, instance)
 	failures.append_array(preload("res://scripts/build/forward_camp_rules.gd").saved_errors(buildings))
 	return failures
 
@@ -410,6 +410,12 @@ func apply_delta(delta: Dictionary) -> int:
 
 func _apply_op(op: Dictionary) -> bool:
 	match str(op.get("op", "")):
+		"alpha_cycle":
+			if op.get("world_namespace") != reward_delivery_namespace \
+				or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(op.get("plan"), redesign_world, reward_delivery_namespace): return false
+			redesign_world = op.plan.state.duplicate(true)
+			revision += 1
+			return true
 		"portal_delivery_journal", "portal_delivery_accept":
 			if not portal_op_valid(op, reward_deliveries, reward_delivery_namespace, world_id): return false
 			reward_deliveries[op.receipt] = op.delivery.duplicate(true)

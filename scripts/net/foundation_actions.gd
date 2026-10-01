@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion"]
+const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -33,6 +33,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if context.get("foundation_runtime_authorized") != true: return deny("missing_frozen_authorization")
 	var proposal: Dictionary
 	match action:
+		"wild_capture": proposal = preload("res://scripts/net/foundation_capture_rules.gd").stage(current, intent, context)
 		"station_craft":
 			var items := preload("res://scripts/world/death_satchel_rules.gd").db()
 			proposal = STATION.stage_craft(current, revision, intent, context, items.call("recipe", str(intent.get("recipe_id", ""))), true)

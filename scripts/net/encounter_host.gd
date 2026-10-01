@@ -1526,7 +1526,8 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 							or int(actor.get("settled_revision", -1)) != int(actor.get("revision", -2)):
 							return {"ok":false,"code":"retired_actor_lineage_conflict"}
 						continue
-					var releasing: bool = full_action and training.action == "trait_release" and training.intent.creature_uid == uid \
+					var releasing: bool = full_action and ((training.action == "trait_release" and training.intent.creature_uid == uid) \
+						or (training.action == "wild_capture" and training.intent.released_uid == uid)) \
 						and old_party.has(uid) and not next_party.has(uid) and not current_party.has(uid)
 					if releasing:
 						var before_actor: Dictionary = old_party[uid]
@@ -1534,7 +1535,7 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 							or not ACTOR_AUTHORITY.equivalent(actor.max_hp, before_actor.max_hp) \
 							or not ACTOR_AUTHORITY.equivalent(actor.hp, before_actor.hp) or actor.fainted != before_actor.fainted:
 							return {"ok":false,"code":"release_actor_baseline_conflict"}
-						if actor.get("training_retired") == true and actor.get("training_receipt") == training.receipt \
+						if actor.get("training_retired") == true and actor.get("training_receipt") == "release:" + uid \
 							and actor.get("training_character_revision") == training.character_revision: continue
 						high_water = maxi(high_water, int(actor.body_generation))
 						if high_water >= 2147483647: return {"ok":false,"code":"generation_exhausted"}
@@ -1542,7 +1543,7 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 						var retired_actor := actor.duplicate(true)
 						retired_actor.body_generation = high_water
 						retired_actor.body_instance_id = 0
-						retired_actor.training_receipt = training.receipt
+						retired_actor.training_receipt = "release:" + uid
 						retired_actor.training_character_revision = training.character_revision
 						retired_actor.training_retired = true
 						changes.append({"encounter_id": id, "retained": retained, "participant_key": key,

@@ -229,14 +229,12 @@ func _transactions(steps: Array) -> void:
 	if not TRANSACTIONS.has(transaction) or not CUTS.has(cut):
 		_profile_errors.append("Choose --transaction=" + ",".join(TRANSACTIONS) + " and --cut=" + ",".join(CUTS))
 		return
-	# These are required but not observable in this merged producer surface.
-	# Do not relabel a delta or an arbitrary sleep as a disk-before-ACK cut.
-	if cut in ["after_host_write_before_delivery", "after_owner_write_before_ack"]:
-		_profile_errors.append("Actual prerequisite unavailable: exact-identity production observation at " + cut + " for " + transaction)
-		return
 	if transaction in ["craft", "feast", "relic"]: _prerequisites(steps)
 	steps.append_array(_route(transaction + "_prepare", 1))
 	steps.append(_entry(1, "f48_witness", {"remember": "transaction_before"}))
+	if cut in ["after_host_write_before_delivery", "after_owner_write_before_ack"]:
+		steps.append(_entry(1, "f48_boundary_transaction", {"transaction": transaction, "phase": cut,
+			"route": _route(transaction + "_commit", 1)}, "Hard guest death at the original production writer boundary"))
 	if cut == "after_settlement":
 		steps.append_array(_route(transaction + "_commit", 1))
 		steps.append(_entry(1, "wait", {"frames": 180}))
@@ -270,10 +268,56 @@ func _restart_peer(i: int, scene: String) -> Dictionary:
 	var old: Dictionary = _peers[i]
 	var pid := int(old.get("pid", -1))
 	old.quit_sent = true
-	if pid <= 0 or OS.kill(pid) != OK: return {"verdict": "FAIL", "detail": "Could not kill actual guest process"}
+	if pid <= 0 or (OS.is_process_running(pid) and OS.kill(pid) != OK): return {"verdict": "FAIL", "detail": "Could not kill actual guest process"}
 	var deadline := Time.get_ticks_msec() + 10000
 	while OS.is_process_running(pid) and Time.get_ticks_msec() < deadline: await process_frame
 	if OS.is_process_running(pid): return {"verdict": "FAIL", "detail": "Guest process did not die within 10 seconds"}
 	var result: Dictionary = await super._restart_peer(i, scene)
 	if result.get("verdict") == "PASS": result.detail = "HARD CRASH (no graceful save): " + str(result.detail)
 	return result
+
+func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
+	if entry.get("action") != "f48_boundary_transaction": return await super._run_entry(index, peer, entry)
+	var args: Dictionary = entry.args
+	var pid := int(_peers[peer].get("pid", -1))
+	var character := str(_characters.get(peer, ""))
+	var token := "%s_%s_%d" % [args.transaction, args.phase, pid]
+	var path := _proof_out.path_join("f48-boundaries").path_join(token + ".json")
+	var observer_peer := 0 if args.phase == "after_host_write_before_delivery" else peer
+	var armed: Dictionary = await step(observer_peer, "f48_arm_boundary", {"transaction": args.transaction,
+		"phase": args.phase, "guest_pid": pid, "character_id": character, "token": token})
+	if armed.get("verdict") != "PASS":
+		check(false, "F48 boundary arm failed: " + str(armed.get("detail")))
+		return false
+	# Suppress only the expected process exit while this boundary is armed.
+	# The marker and exact pid/identity below are mandatory; unrelated death fails.
+	_peers[peer].quit_sent = true
+	var input_failed := false
+	for route: Dictionary in args.route:
+		var unresolved: Array = []
+		var input: Dictionary = await _resolve(route.args, unresolved)
+		if not unresolved.is_empty(): input_failed = true; break
+		var result: Dictionary = await step(peer, route.action, input, int(route.get("budget_frames", 3000)))
+		if FileAccess.file_exists(path): break
+		if result.get("verdict") != "PASS": input_failed = true; break
+	var deadline := Time.get_ticks_msec() + 10000
+	var evidence: Variant = null
+	while not input_failed and Time.get_ticks_msec() < deadline:
+		evidence = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+		if evidence is Dictionary and evidence.get("kill_failed", false) == true: break
+		if not OS.is_process_running(pid) and evidence is Dictionary \
+			and (args.phase != "after_host_write_before_delivery" or evidence.get("guest_exit_observed") == true): break
+		await process_frame
+		_pump_once()
+	var ok := not input_failed and not OS.is_process_running(pid) and evidence is Dictionary \
+		and evidence.get("guest_pid") == pid and evidence.get("token") == token and evidence.get("phase") == args.phase \
+		and evidence.get("kill_failed", false) != true \
+		and (args.phase != "after_host_write_before_delivery" or evidence.get("guest_exit_observed") == true) \
+		and evidence.get("transaction") == args.transaction and evidence.get("observation", {}).get("character_id") == character \
+		and not str(evidence.get("observation", {}).get("delivery_id", "")).is_empty() \
+		and not str(evidence.get("observation", {}).get("receipt", "")).is_empty()
+	check(ok, "F48 original production boundary and hard guest process death: " + token)
+	_rows.append({"index": index, "peer": peer, "what": "f48_boundary_transaction", "label": entry.get("label", ""),
+		"verdict": "PASS" if ok else "FAIL", "ok": ok, "expect": "PASS", "expect_data": {}, "detail": path})
+	if not ok and OS.is_process_running(pid): _peers[peer].quit_sent = false
+	return ok

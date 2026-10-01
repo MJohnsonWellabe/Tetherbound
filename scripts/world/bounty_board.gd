@@ -29,8 +29,8 @@ static func configuration_errors(raw: Dictionary) -> Array[String]:
 		if not kinds.has(row.kind): kinds.append(row.kind)
 		if row.kind == "catch_trait":
 			var found := false
-			for trait: Dictionary in DATA.json("res://data/schema/traits.json"):
-				if trait.id == row.get("trait"): found = true
+			for trait_row: Dictionary in DATA.json("res://data/schema/traits.json"):
+				if trait_row.id == row.get("trait"): found = true
 			if not found: return ["unknown catch trait"]
 		if row.kind == "material_delivery" and (not RULES.db().has(str(row.get("item", ""))) \
 			or not ESSENCE._integer(row.get("count"), 1, 999)): return ["invalid material delivery"]
@@ -143,7 +143,7 @@ static func stage(current: Dictionary, revision: int, action: String, intent: Di
 			if not context.issued_instances.has(slot.instance) or slot.complete: continue
 			var row := template(slot.template)
 			if row.biome != context.get("biome") or row.kind != context.get("kind"): continue
-			if row.kind == "catch_trait" and (not context.get("traits") is Array or not context.traits.has(row.trait)): continue
+			if row.kind == "catch_trait" and (not context.get("traits") is Array or not context.traits.has(row.get("trait"))): continue
 			if row.kind not in ["catch_trait", "defeat_alpha", "rematch"]: continue
 			slot.complete = true
 			changed = true

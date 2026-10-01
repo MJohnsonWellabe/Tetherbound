@@ -15,17 +15,17 @@ static func make(world: RefCounted, epoch: String, source: String, duties: Array
 static func identity(row: Dictionary) -> String:
 	return "foundation_event:" + JSON.stringify([row.get("world_namespace"), row.get("session_id"), row.get("source_id")]).sha256_text()
 
-static func valid(raw: Variant, namespace: String, world_id: String) -> bool:
+static func valid(raw: Variant, namespace_id: String, world_id: String) -> bool:
 	if not raw is Dictionary or raw.size() != FIELDS.size(): return false
 	for key: String in FIELDS:
 		if not raw.has(key): return false
 	if raw.version != 1 or raw.kind != "foundation_event" or raw.status != "retained" \
-		or raw.world_namespace != namespace or raw.world_id != world_id or raw.delivery_id != identity(raw) \
+		or raw.world_namespace != namespace_id or raw.world_id != world_id or raw.delivery_id != identity(raw) \
 		or not ESSENCE._opaque_id(raw.session_id) or not ESSENCE._opaque_id(raw.source_id) \
 		or not raw.duties is Array or raw.duties.is_empty(): return false
 	for duty: Variant in raw.duties:
 		if not duty is Dictionary or duty.size() != 4 or not duty.get("character_id") is String or duty.character_id.is_empty() \
-			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event"] \
+			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer"] \
 			or not duty.get("intent") is Dictionary or not duty.get("context") is Dictionary: return false
 		if not _duty_valid(duty, raw): return false
 	return true
@@ -55,6 +55,9 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if context.kind == "cast" and not ESSENCE._opaque_id(context.get("move_id")): return false
 		if context.kind == "catch" and (context.get("wild") != true or not context.get("night") is bool): return false
 		if context.kind == "defeat" and context.get("opponent_defeated") != true: return false
+	elif duty.action == "capture_offer":
+		if not intent.is_empty() or load("res://scripts/net/foundation_capture_rules.gd").call("offer_valid", context) != true \
+			or row.source_id != context.source_key or context.world_namespace != row.world_namespace or context.session_id != row.session_id: return false
 	elif duty.action == "bounty_event":
 		if context.source_key != "halda_bounty_event" or context.get("kind") not in ["catch_trait", "defeat_alpha", "rematch"] \
 			or context.event_id != row.source_id \
@@ -62,8 +65,8 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 			or not _strings(context.get("issued_instances")) or not _strings(context.get("traits"), true): return false
 		for instance: String in context.issued_instances:
 			if instance.length() != 64 or not instance.is_valid_hex_number(false): return false
-		for trait: String in context.traits:
-			if not preload("res://scripts/creatures/traits.gd").config().get("traits", {}).has(trait): return false
+		for trait_row: String in context.traits:
+			if not preload("res://scripts/creatures/traits.gd").config().get("traits", {}).has(trait_row): return false
 	elif duty.action == "master_win":
 		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("master_id")) or not ESSENCE._opaque_id(intent.get("creature_uid")) \
 			or not ESSENCE._opaque_id(intent.get("encounter_id")) or context.get("master_id") != intent.master_id \
@@ -74,7 +77,11 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("trainer_id")) or not ESSENCE._opaque_id(intent.get("encounter_id")) \
 			or context.get("encounter_id") != intent.encounter_id or context.get("validated_host_outcome") != "win" \
 			or context.source_key != "boss:" + str(intent.trainer_id): return false
-		var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(intent.trainer_id, str(context.get("realm", "")))
+		# WorldState preflights these rows while loading. Loading the authored
+		# reward router lazily avoids its NPC/Session/WorldLedger preload cycle.
+		var rewards: Script = load("res://scripts/net/encounter_rewards.gd")
+		if rewards == null: return false
+		var handoff: Dictionary = rewards.call("chapter_hand_off", intent.trainer_id, str(context.get("realm", "")))
 		if handoff.is_empty() or handoff.relic_biome != intent.get("biome"): return false
 	elif duty.action == "rematch_win":
 		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("trainer_id")) or not ESSENCE._opaque_id(intent.get("encounter_id")) \
@@ -88,10 +95,10 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if profile.kind == "master" and (context.participants.size() != 1 or context.get("single_creature_duel") != true or not ESSENCE._opaque_id(context.get("creature_uid"))): return false
 	return true
 
-static func errors(rows: Dictionary, namespace: String, world_id: String) -> Array[String]:
+static func errors(rows: Dictionary, namespace_id: String, world_id: String) -> Array[String]:
 	var result: Array[String] = []
 	for key: Variant in rows:
 		var row: Variant = rows[key]
 		if str(key).begins_with("foundation_event:") or (row is Dictionary and row.get("kind") == "foundation_event"):
-			if not valid(row, namespace, world_id) or row.delivery_id != key: result.append("Invalid retained Foundation event")
+			if not valid(row, namespace_id, world_id) or row.delivery_id != key: result.append("Invalid retained Foundation event")
 	return result

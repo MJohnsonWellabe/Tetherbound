@@ -105,10 +105,12 @@ var _legacy_receipts_checked := false
 ## recorded fighters, or for a save from before the list existed the host's
 ## fallback (see `participants_for_claim()`).
 var _participants: Array = []
+var _foundation_world_binding: WeakRef
 
 
 func mount(owner_world: Node3D) -> void:
 	world = owner_world
+	_foundation_world_binding = weakref(get_node("/root/Game").world)
 	hub = world.get_node("StormwoodEncounterHub")
 	session = get_node("/root/Game/Session")
 	_chapter = world.get_node("StormwoodChapter")
@@ -295,6 +297,19 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 
 
 func _settle_for(peer: int, intent: Dictionary) -> void:
+	# Drain the actual fallback before reading the answer we will freeze. It
+	# may run callbacks, so reacquire claim/character only after the owner fence.
+	var owner_game := get_node("/root/Game")
+	var owner_world: RefCounted = owner_game.get("world")
+	var owner_saver: RefCounted = owner_game.get("save_system")
+	if owner_saver != null and owner_world != null and not str(owner_world.world_id).is_empty():
+		var owner_namespace := str(owner_world.reward_delivery_namespace)
+		var owner_epoch := str(session.call("_altar_current_epoch"))
+		owner_saver.call("finish_fallback")
+		if owner_saver.call("fallback_busy") == true or owner_game.world != owner_world or owner_game.save_system != owner_saver \
+			or owner_game.session != session or owner_world.reward_delivery_namespace != owner_namespace or session.call("_altar_current_epoch") != owner_epoch:
+			_refuse(peer, "The world is still saving. Try the ceremony again.")
+			return
 	var character := _character_for_peer(peer)
 	var state := _saved_state()
 	var claims: Dictionary = state.get("claims", {})
@@ -303,7 +318,13 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 		_refuse(peer, "Only a trainer answering the Stormheart can settle its offer.")
 		return
 	if bool(claim.get("settled", false)):
+		# Repeat only the saved original handoff. An ignored failed world write
+		# must not leave an in-memory settled claim that silences all retries.
+		if _save_world_claim(): session.call("foundation_stormwood_answer", self, peer, claim)
 		return
+	var game := get_node("/root/Game")
+	var original_world: RefCounted = game.get("world")
+	var original_environment: Dictionary = original_world.get("realm_environment").duplicate(true)
 	claim["kept"] = bool(intent.get("kept", false))
 	claim["settled"] = true
 	claims[character] = claim
@@ -321,7 +342,12 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 			_refuse(peer, "The world could not record the ceremony. Try again.")
 			return
 	_submit_resolution(bool(claim["kept"]), character)
-	_save_world_claim()
+	var staged_environment: Dictionary = original_world.realm_environment.duplicate(true)
+	if not _save_world_claim():
+		if original_world.realm_environment == staged_environment: original_world.set("realm_environment", original_environment)
+		_refuse(peer, "The world could not save the ceremony. Try again.")
+		return
+	session.call("foundation_stormwood_answer", self, peer, claim)
 	_broadcast(_state_event())
 
 
@@ -931,7 +957,18 @@ func _save_world_claim() -> bool:
 	var world_state: RefCounted = game.get("world")
 	if saver == null or world_state == null or str(world_state.get("world_id")).is_empty():
 		return true
-	var saved := bool(saver.call("save_world", game, str(world_state.get("world_id"))))
+	var id := str(world_state.world_id)
+	var namespace_id := str(world_state.reward_delivery_namespace)
+	var epoch := str(session.call("_altar_current_epoch"))
+	var expected_environment: Dictionary = world_state.realm_environment.duplicate(true)
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or game.world != world_state or game.save_system != saver \
+		or game.session != session or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
+		or session.call("_altar_current_epoch") != epoch or world_state.realm_environment != expected_environment: return false
+	var saved := saver.call("save_world_prepared", game, id) == true
+	if game.world != world_state or game.save_system != saver or game.session != session \
+		or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
+		or session.call("_altar_current_epoch") != epoch: return false
 	if not saved:
 		push_error("Stormwood ending could not persist the reserved legendary ceremony")
 	return saved

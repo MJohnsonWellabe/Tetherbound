@@ -44,10 +44,10 @@ static func validate(scope: String, value: Variant, owned_uids: Array = []) -> A
 				or not provenance.get("world_namespace") is String or provenance.world_namespace.is_empty():
 				errors.append("alpha provenance changed %s" % id)
 			var seen: Array = []
-			for trait: Variant in packet.rolled_traits:
-				if not traits is Dictionary or not trait is String or not traits.get("traits", {}).has(trait) or seen.has(trait):
+			for trait_row: Variant in packet.rolled_traits:
+				if not traits is Dictionary or not trait_row is String or not traits.get("traits", {}).has(trait_row) or seen.has(trait_row):
 					errors.append("invalid alpha trait %s" % id)
-				seen.append(trait)
+				seen.append(trait_row)
 	if scope == "character":
 		# Optional additive personal carrier. Lazy load preserves the existing
 		# Essence -> state dependency without creating a static preload cycle.

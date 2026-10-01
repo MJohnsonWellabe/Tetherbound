@@ -265,6 +265,19 @@ func _spawn_available_sites() -> void:
 		var plans := site_spawn_plans(site, table,
 			encounter_config.get("named_encounters", []), world_seed())
 		var authored_members: Array = site.get("member_anchors", [])
+		if plans.size() == 1 and not str(plans[0].id).is_empty():
+			var cycle := foundation_alpha_cycle(str(plans[0].id))
+			if cycle.get("status") == "waiting":
+				_site_members[id] = members
+				_site_spawned[id] = true
+				continue
+			if cycle.get("status") == "active":
+				var packet := preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, str(plans[0].id))
+				foundation_publish_alpha(str(plans[0].id), packet)
+				# Successful publication installs the actual member. Failed footing
+				# stays retryable through the existing alpha service.
+				if not _site_members.get(id, []).is_empty(): _site_spawned[id] = true
+				continue
 		# A valid named reservation whose once flag already fired is complete,
 		# not a broken spawn. Settle it as intentionally absent so returning to
 		# the island (or loading a completed save) stays quiet and deterministic.
@@ -309,6 +322,7 @@ func _spawn_available_sites() -> void:
 					keep_trainer_corridor_clear(wild as CollisionObject3D,
 						_player as CollisionObject3D)
 				if not str(plan.id).is_empty():
+					foundation_register_alpha(wild, str(plan.id))
 					# Named identity has to reach both the exploration prompt (the
 					# body) and combat/catch presentation (the live instance).
 					wild.set("display_name", str(plan.display_name))
@@ -330,6 +344,47 @@ func _spawn_available_sites() -> void:
 		else:
 			_site_failures[id] = true
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
+
+func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
+	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	var game := get_node_or_null("/root/Game")
+	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
+	for wild: Node3D in _wild_creatures:
+		if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == site_id \
+			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return
+	for site: Dictionary in _wanted_sites.values():
+		if site.get("named_replacement_id") != site_id: continue
+		var plan := named_spawn_plan(site, encounter_config.get("named_encounters", []))
+		if plan.is_empty(): return
+		var original_once := str(plan.opts.get("once_id", ""))
+		var opts: Dictionary = plan.opts.duplicate(true)
+		# The original once flag continues to suppress first rewards. The new
+		# durable generation admits only this fresh authored body and UID.
+		opts.once_id = ""
+		opts.name = "%s_generation_%d" % [site_id, packet.captured_from.spawn_generation]
+		var at := _vector3_of(plan.position)
+		opts.site_anchor = at
+		var wild: Node3D
+		if str(site.get("placement_mode", "ground")) == "water_surface":
+			wild = _spawn_surface_wild(str(plan.species), at, opts, float(site.get("surface_y_m", at.y)), float(site.get("surface_submerge_fraction", 0.28)))
+		else: wild = spawn_wild(str(plan.species), at, opts)
+		if wild == null: return
+		wild.visible = false
+		if not foundation_register_alpha(wild, site_id, packet):
+			_wild_creatures.erase(wild)
+			wild.queue_free()
+			return
+		wild.display_name = str(plan.display_name)
+		wild.get("instance").set("display_name", str(plan.display_name))
+		wild.set_meta("water_named_encounter", site_id)
+		wild.set_meta("water_site_id", str(site.id))
+		wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
+		if plan.get("combat_camera") is Dictionary and not plan.combat_camera.is_empty(): wild.set_meta("combat_camera", plan.combat_camera.duplicate(true))
+		_once_only[wild] = original_once
+		settle_spawn_transform(wild)
+		wild.visible = true
+		_site_members[str(site.id)] = [wild]
+		return
 
 
 ## A wild body enters the tree at the origin and is placed afterwards. For a

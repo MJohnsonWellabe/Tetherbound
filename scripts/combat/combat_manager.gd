@@ -4406,7 +4406,7 @@ func _finish_catch() -> void:
 		_catch_succeeded = bool(confirmation.get("ok", false)) \
 			and bool(confirmation.get("caught", false))
 		if _catch_succeeded:
-			var canonical := CAPTURE_CODEC.decode(confirmation.get("creature", {}))
+			var canonical := CAPTURE_CODEC.decode(confirmation.get("creature", {}), confirmation.get("capture_traits", {}))
 			if canonical == null:
 				_catch_succeeded = false
 				note_encounter_refusal({"kind": "catch_finished", "code": "invalid_capture",

@@ -199,6 +199,14 @@ var _combat: Node = null
 ## if authority ever moves to another peer.
 var _layer: int = 0
 var _mask: int = 0
+## Actual collision-motion causality, matching the local trainer's seam.
+## Pose packets, teleports, riding and free flight never advance this proof.
+var _foundation_ground_contact_generation := 0
+var _foundation_ground_contact_position := Vector3.ZERO
+var _foundation_ground_contact_frame := -1
+var _foundation_ground_contact_world: WeakRef
+var _foundation_ground_contact_epoch := ""
+var _foundation_ground_contact_character := ""
 ## Viewer side only. The remote trainer remains solid to the world, but must
 ## never resolve physics against the local player it is depicting beside.
 ## Resolved lazily because the replica can enter the tree before the local rig.
@@ -696,6 +704,18 @@ func _follow(delta: float) -> void:
 	var to := _render_position - global_position
 	velocity = to / maxf(delta, 0.0001)
 	move_and_slide()
+	_foundation_ground_contact_generation += 1
+	_foundation_ground_contact_position = global_position
+	_foundation_ground_contact_frame = Engine.get_physics_frames()
+	_foundation_ground_contact_world = null
+	_foundation_ground_contact_epoch = ""
+	_foundation_ground_contact_character = ""
+	var contact_game := get_node_or_null("/root/Game")
+	if contact_game != null and contact_game.get("world") != null and contact_game.get("session") != null \
+		and contact_game.session.call("is_host") == true:
+		_foundation_ground_contact_world = weakref(contact_game.world)
+		_foundation_ground_contact_epoch = contact_game.session.call("_altar_current_epoch")
+		_foundation_ground_contact_character = contact_game.session.call("_authority_character", peer_id)
 	_ground_speed = Vector2(velocity.x, velocity.z).length()
 
 
@@ -976,3 +996,29 @@ func is_carried() -> bool:
 
 func animation_state() -> String:
 	return net_anim_state
+
+## Host-side physical observation only. This does not establish the guest's
+## flight/swim/modal lifecycle or authorize travel; those remain separate
+## admission requirements. Readers must bind this exact registered body.
+func foundation_ground_contact() -> Dictionary:
+	var game := get_node_or_null("/root/Game")
+	if game == null or game.get("world") == null or game.get("session") == null or game.session.call("is_host") != true \
+		or _owned_here != false or not is_inside_tree() or not is_physics_processing() \
+		or _foundation_ground_contact_world == null or _foundation_ground_contact_world.get_ref() != game.world \
+		or _foundation_ground_contact_epoch != game.session.call("_altar_current_epoch") \
+		or _foundation_ground_contact_frame != Engine.get_physics_frames() \
+		or _foundation_ground_contact_generation <= 0 or not is_on_floor() \
+		or global_position != _foundation_ground_contact_position or collision_mask == 0: return {}
+	var collision := get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or collision.disabled or not collision.shape is CapsuleShape3D \
+		or scale != Vector3.ONE or collision.scale != Vector3.ONE \
+		or get_floor_normal().angle_to(Vector3.UP) > floor_max_angle: return {}
+	var character: String = game.session.call("_authority_character", peer_id)
+	if character.is_empty() or character != _foundation_ground_contact_character or game.session.call("admitted_character_state", peer_id).is_empty(): return {}
+	var capsule := collision.shape as CapsuleShape3D
+	return {"character_id": character, "peer_id": peer_id, "body_instance_id": get_instance_id(),
+		"world_namespace": game.world.reward_delivery_namespace, "session_epoch": game.session.call("_altar_current_epoch"),
+		"realm": str(get_meta(REPLICATION_SCOPE.BODY_REALM, "")),
+		"generation": _foundation_ground_contact_generation, "physics_frame": _foundation_ground_contact_frame,
+		"position": _foundation_ground_contact_position, "floor_normal": get_floor_normal(),
+		"capsule_height": capsule.height, "capsule_radius": capsule.radius}
