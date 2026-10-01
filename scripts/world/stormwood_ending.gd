@@ -957,16 +957,16 @@ func _save_world_claim() -> bool:
 	if saver == null or world_state == null or str(world_state.get("world_id")).is_empty():
 		return true
 	var id := str(world_state.world_id)
-	var namespace := str(world_state.reward_delivery_namespace)
+	var namespace_id := str(world_state.reward_delivery_namespace)
 	var epoch := str(session.call("_altar_current_epoch"))
 	var expected_environment: Dictionary = world_state.realm_environment.duplicate(true)
 	saver.call("finish_fallback")
 	if saver.call("fallback_busy") == true or game.world != world_state or game.save_system != saver \
-		or game.session != session or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace \
+		or game.session != session or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
 		or session.call("_altar_current_epoch") != epoch or world_state.realm_environment != expected_environment: return false
 	var saved := saver.call("save_world_prepared", game, id) == true
 	if game.world != world_state or game.save_system != saver or game.session != session \
-		or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace \
+		or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
 		or session.call("_altar_current_epoch") != epoch: return false
 	if not saved:
 		push_error("Stormwood ending could not persist the reserved legendary ceremony")

@@ -494,13 +494,13 @@ func _ripplet_sunken_claim(intent: Dictionary, peer_id: int, realm: String) -> D
 		return _refuse("ripplet_sunken_claim", peer_id, "wrong_actor", "Reach the sunken find first.")
 	var result: Dictionary = preload("res://scripts/world/ripplet_sunken_rules.gd").evaluate(intent, actor, world.flags, world.day)
 	if not result.get("ok", false): return _refuse("ripplet_sunken_claim", peer_id, "refused", str(result.reason))
-	var namespace := str(world.reward_delivery_namespace)
-	if namespace.is_empty() or str(world.world_id).is_empty(): return _refuse("ripplet_sunken_claim", peer_id, "world_not_ready", "Save this world before gathering.")
+	var namespace_id := str(world.reward_delivery_namespace)
+	if namespace_id.is_empty() or str(world.world_id).is_empty(): return _refuse("ripplet_sunken_claim", peer_id, "world_not_ready", "Save this world before gathering.")
 	var ops: Array = [_world_flag("water", str(result.key))]
 	if not str(result.previous).is_empty(): ops.append(_world_flag("water", str(result.previous), false))
 	for item: String in result.outputs:
 		var source := str(result.key) + ":" + item if result.outputs.size() > 1 else str(result.key)
-		var delivery := REWARD_DELIVERY.make_record(str(world.world_id), namespace, source, str(result.character_id), item, int(result.outputs[item]))
+		var delivery := REWARD_DELIVERY.make_record(str(world.world_id), namespace_id, source, str(result.character_id), item, int(result.outputs[item]))
 		if delivery.is_empty() or world.reward_deliveries.has(str(delivery.delivery_id)):
 			return _refuse("ripplet_sunken_claim", peer_id, "already_taken", "Someone already gathered this find.")
 		ops.append({"op":"reward_delivery_journal", "scope":"world", "realm":"water", "delivery_id":delivery.delivery_id, "delivery":delivery})

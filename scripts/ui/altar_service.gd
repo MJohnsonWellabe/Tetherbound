@@ -97,11 +97,11 @@ func _context() -> Dictionary:
 	var world: Variant = _game.get("world")
 	if not player is RefCounted or not world is RefCounted: return {}
 	var character: Variant = player.get("character_id")
-	var namespace: Variant = world.get("reward_delivery_namespace")
+	var namespace_id: Variant = world.get("reward_delivery_namespace")
 	var world_id: Variant = world.get("world_id")
-	if not ESSENCE._component(character) or not ESSENCE._opaque_id(namespace) \
+	if not ESSENCE._component(character) or not ESSENCE._opaque_id(namespace_id) \
 			or not ESSENCE._opaque_id(world_id): return {}
-	return {"character_id": character, "world_id": world_id, "world_namespace": namespace}
+	return {"character_id": character, "world_id": world_id, "world_namespace": namespace_id}
 
 
 func station_available(station_key: String) -> bool:
@@ -250,12 +250,12 @@ func _saved_decision_matches(result: Dictionary) -> bool:
 	if result.get("saved") != true or result.get("durable") != true: return false
 	var player: RefCounted = _game.get("local")
 	var world: RefCounted = _game.get("world")
-	var namespace: String = _pending.context.world_namespace
+	var namespace_id: String = _pending.context.world_namespace
 	var character: String = _pending.context.character_id
 	var rows: Variant = world.get("reward_deliveries")
 	if not rows is Dictionary: return false
-	var latest: Variant = rows.get(ESSENCE.training_delivery_id(namespace, character))
-	if not ESSENCE.training_row_valid(latest, character, namespace) or latest.world_id != _pending.context.world_id \
+	var latest: Variant = rows.get(ESSENCE.training_delivery_id(namespace_id, character))
+	if not ESSENCE.training_row_valid(latest, character, namespace_id) or latest.world_id != _pending.context.world_id \
 			or latest.status != "accepted" or not result.get("receipt") is String: return false
 	# Read only the receipt witness and actual UID membership/slot inventory.
 	# PlayerState.save_data builds map payloads; a UI confirmation must not

@@ -111,7 +111,7 @@ func commit_alpha_plan(plan: Dictionary) -> Dictionary:
 	var session: Node = game.session
 	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
 	var world_id := str(world.world_id)
-	var namespace := str(world.reward_delivery_namespace)
+	var namespace_id := str(world.reward_delivery_namespace)
 	var epoch := str(session.call("_altar_current_epoch"))
 	game.call("_sync_clock_state")
 	var before: Dictionary = world.call("save_data")
@@ -125,7 +125,7 @@ func commit_alpha_plan(plan: Dictionary) -> Dictionary:
 		ledger.seq = sequence
 		return {"ok": false, "durable": false, "code": "alpha_world_save_failed"}
 	if game.world != world or game.save_system != saver or game.session != session \
-		or str(world.world_id) != world_id or str(world.reward_delivery_namespace) != namespace \
+		or str(world.world_id) != world_id or str(world.reward_delivery_namespace) != namespace_id \
 		or str(session.call("_altar_current_epoch")) != epoch: return {"ok": false, "durable": false, "code": "alpha_owner_changed"}
 	publish_journaled_delta(result.delta)
 	return {"ok": true, "durable": true}

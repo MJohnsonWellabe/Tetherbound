@@ -280,9 +280,9 @@ func save_data() -> Dictionary:
 ## Tolerant of every missing key -- `load_data({})` is a working fresh state,
 ## the same contract `map_state.gd` and `progression_state.gd` already give
 ## `save_game.gd`.
-static func foundation_world_errors(rows: Variant, namespace: String, instance: String, buildings: Variant) -> Array[String]:
+static func foundation_world_errors(rows: Variant, namespace_id: String, instance: String, buildings: Variant) -> Array[String]:
 	if not rows is Dictionary or not buildings is Array: return ["Invalid Foundation world carrier"]
-	var failures := preload("res://scripts/net/foundation_event.gd").errors(rows, namespace, instance)
+	var failures := preload("res://scripts/net/foundation_event.gd").errors(rows, namespace_id, instance)
 	failures.append_array(preload("res://scripts/build/forward_camp_rules.gd").saved_errors(buildings))
 	return failures
 
