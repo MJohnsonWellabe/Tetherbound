@@ -423,7 +423,9 @@ func heal(amount: float) -> float:
 	if fainted:
 		return 0.0
 	var before := hp
-	hp = clampf(hp + TRAITS.apply_value(self,"healing",maxf(0.0,amount)), 0.0, max_hp)
+	var healing := maxf(0.0, amount)
+	if _traits_runtime_active(): healing = TRAITS.apply_value(self, "healing", healing)
+	hp = clampf(hp + healing, 0.0, max_hp)
 	return hp - before
 
 
@@ -476,7 +478,7 @@ func _apply_level_stats(cfg: Dictionary) -> void:
 		* PROGRESSION.individuality_multiplier(iv_hp, cfg) + float(boost_hp)
 	attack = PROGRESSION.stat_at_level(base_attack, level, float(growth.get("attack", 0.0))) \
 		* PROGRESSION.individuality_multiplier(iv_attack, cfg) + float(boost_attack)
-	if traits_initialized:
+	if _traits_runtime_active():
 		max_hp = TRAITS.apply_value(self,"max_hp",max_hp)
 	defence = PROGRESSION.stat_at_level(base_defence, level, float(growth.get("defence", 0.0))) \
 		* PROGRESSION.individuality_multiplier(iv_defence, cfg) + float(boost_defence)
@@ -761,7 +763,7 @@ func effective_defence(cfg: Dictionary, is_best: bool = false, ability: Dictiona
 		* buff_scale("defence")
 	if is_best and str(ability.get("kind", "")) == "survivability":
 		scaled *= 1.0 + float(ability.get("value", 0.0))
-	return TRAITS.apply_value(self,"defence",scaled)
+	return TRAITS.apply_value(self, "defence", scaled) if _traits_runtime_active() else scaled
 
 
 ## --- tonics: timed buffs (the potions board's temporary half) --------------
@@ -868,3 +870,12 @@ func revealed_trait_secondary(cfg: Dictionary) -> String:
 	if trait_secondary == "":
 		return ""
 	return trait_secondary if PROGRESSION.trait_unlocked(bond_nodes(cfg), cfg) else ""
+
+
+## Durable initialization describes the projection format, not activation.
+## Only the actual authored runtime gate can enable passive numeric effects.
+## Missing/malformed activation retains the exact legacy arithmetic.
+func _traits_runtime_active() -> bool:
+	if not traits_initialized or not TRAITS.runtime_enabled(): return false
+	return TRAITS.trait_state_errors({"traits_initialized": traits_initialized,
+		"rolled_traits": rolled_traits, "taught_traits": taught_traits}).is_empty()
