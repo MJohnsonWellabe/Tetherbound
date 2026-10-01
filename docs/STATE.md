@@ -6,7 +6,9 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Resume (owner redesign, 2026-09-29):** CODEX_START_HERE is the active plan: RD-01..RD-37, Waves 0–3, F16–F49, ownership and run rules. RD-36/RD-37: prioritize code/content; minimum named/risk checks and reuse; no default unit/full-CI per change. Implement next lane branches while checks run; dependency landing order remains. Required acceptance/save/co-op proof and independent review remain. Prior history: `git show 1c3f0b0d:docs/STATE.md`.
 
-**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 109 of 280:** original 95/101, redesign 14/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
+**Board:** [private rendered remote board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site). Source: `ralph/reports/COORDINATOR/dashboard/`; README has scoring and hourly private Site republishing. **Criteria met: 110 of 280:** original 95/101, redesign 15/179. No chapter accepted; candidate verdicts do not count before landing. Goal baseline e2de59571; RD-36 main 08523b641. F16 landed main `b2ea1455a` via #467: selected full CI 36667090983 passed on game source 7e3283098; docs-only merge reused that evidence, final required CI 36670808563 passed. The rolling download remains historical 8f5dd6ed2.
+
+**F17#5 closure:** independent189checks PASS; actual8 ENet join/reload captures + immutable finalizer527PASS. Evidence `ralph/reports/HUB/f17/hall-agreement-finalizer-r1/`; original budgetFAIL/fourENeterrors retained, transport/F49 OPEN.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -22,26 +24,26 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 - Flag-off, unjudged: Stormwood `scorched_scars`, Cloudreach towers and occupied terrace, Tidewake Pump Hall kitbash. Enable only on a passing code-blind judge.
 - Fresh containers: the reference boards are skip-worktree. Restore them with `git ls-files -v docs/reference | grep '^S' | cut -c3- | xargs git update-index --no-skip-worktree && git checkout -- docs/reference`.
 
-**Recent landed owner requests (2026-09-29):** combat pace faster on both sides and power-attack re-aim (#448/#450/#454/#457, `combat.json` `strike_reaim`, `player_pace`); sprint lean and cadence (#449; owner to feel it on a pad); village option B, one straight main street (#455, `tests/test_village_main_street.gd`), which F17 now rebuilds into the road-plus-Crossing-Hall layout. The mouse-capture fix needs the owner to confirm it on a real PC.
+**Recent owner requests:** faster combat/re-aim #448/#450/#454/#457; sprint #449 (owner pad feel); straight village road #455. Mouse capture awaits real-PC confirmation. Exact prior details: Git history.
 
-**To resume work:** read CODEX_START_HERE §0 and your lane's work order. Work on `tb/<lane>` from current main; push hourly. Under RD-36, related criteria share necessary validation and a reviewable PR; each keeps its strict verdict, evidence and board row. Update STATE and auto-merge. Rebuild the board hourly (§7.3). Keep STATE under 25 KB. Current /goal resumes the full redesign and supersedes the older wind-down stop below.
+**To resume:** CODEX §0/§6; whole-feature visible tasks, push hourly, necessary batched proofs with each criterion strict verdict. PR auto-merge; hourly board; STATE <25KB. Active /goal supersedes older wind-down stop.
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | Actor/Heal c5c strict +3/73 native PASS; runtime OFF. Gear PR498 main; actual callers/ACK OPEN. |
-| `tb/hub` | F17, F18 | #0-#3 main; M1 r2 terrain route FAIL. dff local-step source PASS, actual r3 running; F18 OPEN. |
-| `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
-| `tb/combat` | F21–F24 | Live r2 seven-pair FAIL retained;9507 constrained lens frozen/queued; incoming caller draft active. |
-| `tb/vfx` | F25, F35 | 8fae preserved/held; R17 stone PASS, R14 craft FAIL; library OFF. |
-| `tb/lookdev` | F26 | #0/#1/#2/#4 main. ade7b cliff OFF/held; full bar open; Ally owner-gated. |
-| `tb/training` | F27–F30, F37 | #0 main; Altar0e89 preserved/held; durable player path open. |
-| `tb/homestead` | F31–F34 | 499e8 preserved/held; Forge +Den080c source PASS, mounted durable path open. |
+| `tb/foundations` | F16 | PR500 main/OFF. F27 coherent17path ignored; departure r1/r2 buildFAIL, loader source gate. |
+| `tb/hub` | F17, F18 | #0-#3/#5 main. M1 steering native1/253s callback FAIL; visible fix. F18 PR504 draft. |
+| `tb/reorder` | F19, F20 | PR505/506 owned-source PASS; shared integration/earned proof held;567798 preserved. |
+| `tb/combat` | F21–F24 | R2 numericPASS/blind6FAIL+craft9FAIL; R5 source gate. Visible F22/F23 code; caller OFF. |
+| `tb/vfx` | F25, F35 | 8fae held; stone PASS/full craft FAIL; OFF. |
+| `tb/lookdev` | F26 | #0/#1/#2/#4 main; cliff OFF; full bar/Ally open. |
+| `tb/training` | F27–F30, F37 | #0 main; Altar4839 consumerHOLD fixes; producer ignored, XP held. |
+| `tb/homestead` | F31–F34 | 499e8 held; Altar4-path proposal frozen; host placement-cost transaction OPEN. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
 | `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43–F49 | Wave 3 |
 
-**Active ownership:** F16 landed; `tb/hub` owns F17 village/Hall geometry and then F18 portals, with exact pose extensions recorded in HUB evidence. Combat, VFX and lookdev advance Wave 1 in their lanes. Exact extra paths are in board `status.json` WIP. `tb/redesign-board` holds board/STATE writes during this slice. Godot import/render/export writers serialize; distinct-user-dir two-peer headless groups run together. Reference boards restored in the clean board checkout.
+**Active ownership:** visible `tb/f18`, `tb/f19`, `tb/f20` drafts PR504/505/506 have owned-source reviews, zero criterion credit; shared integration/proofs remain. New visible F22/F23/F28/F29/F30 write whole features, then batch validation (owner 2026-09-30; CODEX §7.1). Foundations owns shared authority/saves; ROOT owns Hall/board and one Godot/GPU writer. F17#4 has a visible fix task. Exact task IDs/cuts: board status.json. Reference boards restored.
 
 ### Open owner decisions
 
@@ -158,7 +160,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 | Tidewake | Human swim route (F12 met), eight pockets, six local chains with map leads (F13#3), dock residents and current comets (F13#5), dock exchange, return, Grandpa and credits (F15 met, T3 complete). Veilfall rooms show their pumps, sluices and banners. | Named-fight C3 framing: Aquaryn and Tidecoil pass. Tess and Nerissa are blocked on contact-range occlusion, which needs a shared combat spacing rule. Bars A/B looks go to Phase 2. |
 | Multiplayer | ENet authority, portable characters, ledgers and receipts, the exact-pose rejoin, and an optional default-off Steam lobby path. | Internet relay and four accounts (owner resources), host plus 3, device. |
 | Save | Save version 27 with world format 2 and character format 6; atomic split saves; refusal of corrupt or absent halves without live mutation. | Legacy peer-ID receipt and slot-rename ambiguity (not recovered). |
-| Redesign (F16–F49) | **Nothing built yet.** Partial foundations: bond milestones, the Mudsnout evolution, `good/great/rare_candy`, 5 trainer armor slots, the craft panel, buildables (workbench, storage, creature beds), berry farm plots, TMs (18) and 52 moves with `vfx {kind, colour}` shapes, the realm gates, and the `realm_key_*` flags. | Every F16–F49 criterion (ACCEPTANCE §6.2). |
+| Redesign (F16–F49) | F16 and 15/179 redesign criteria accepted on main; active source drafts remain unproved. Baseline systems and retired physical-crossing history are recorded in Git. | Full ACCEPTANCE §6.2 and F49 remain the done bar. |
 | Visual/audio | Compatibility renderer with directional shadows; installed asset families; generated audio managers. | Bars A/B on every visual row; final music and mix. The Codex queue is `ralph/reports/VISUAL/AUDIT.md`. |
 
 ## 4. Risks and evidence boundaries
@@ -199,3 +201,5 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 - **Usage/stop direction:** the owner overrode the 10% usage stop rule for P2-008 on 2026-09-29, then explicitly requested landing the work on `main` and stopping for now. The current stop request governs; resume P2-008 only at the owner's direction. Never consume a usage reset automatically.
 - **Owner redesign interview, 2026-09-29:** 35 decisions, recorded as RD-01..RD-35 in CODEX_START_HERE §1. The owner asked that every catalog defect scored above 12 be fixed to the full game bar, "not just passing the defect", so the game looks like something people would play (Valheim, Palworld, Animo, ARK as quality references). Done means the whole plan is done: push consistently, rebuild the dashboard hourly, then burn the criteria down over time.
 - Record owner feedback here; it overrides other documents on its subject.
+
+Source pipeline: F18–F20 drafts reviewed; no owned-source result substitutes for runtime. F17#4 steering and departure loading failed; originals retained, approaches changing. Eight feature tasks are visible/pinned; replacement slots keep coding while ROOT integrates.

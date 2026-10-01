@@ -1,0 +1,594 @@
+{
+  "purpose": "Separate RD36 immutable-record metadata proof of literal F17#5, original whole R4 failure retained",
+  "artifacts": [
+    {
+      "original": "build_packets.py",
+      "archive": "build_packets.py.gz",
+      "raw_sha256": "1456ba02428c2c13978ece62836deba62a8ff7c1f69ff230e4c54fabb447c549",
+      "gzip_sha256": "41e9f90d815beb92523f6ceccdf8263f155303c87a428004bef2b95d80952641",
+      "raw_bytes": 11130,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/assessment/prior-runtime-FAIL.json",
+      "archive": "inputs/assessment/prior-runtime-FAIL.json.gz",
+      "raw_sha256": "b17ed1e72ca58ab71c189f20106c6a665679f2b4f0c9569f3b3e6ce5b6b8c56a",
+      "gzip_sha256": "af5e9a8f67a16bcb5028b73358049921f29857ee8eaa2b418c312b34e6a9ea92",
+      "raw_bytes": 18339,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/assessment/review.json",
+      "archive": "inputs/assessment/review.json.gz",
+      "raw_sha256": "8b6bbbe0cf1428a2ba5f50daf5a12f345f507f73d3062609d4ffe7a1de72e216",
+      "gzip_sha256": "0bd87932776ac70ca8bb89673f416a6615b67fb9fd226e046cdd7a81c584d45a",
+      "raw_bytes": 4598,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/assessment/strict-review.txt",
+      "archive": "inputs/assessment/strict-review.txt.gz",
+      "raw_sha256": "4beff9513a3faa28392001eb8e7593437c99e58984b35df11c579dbfe908d54b",
+      "gzip_sha256": "5a5b842ef0d525c5804d818e448ad6cfc31728b917989e86546a530d09a96900",
+      "raw_bytes": 2926,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/native.txt",
+      "archive": "inputs/original/native.txt.gz",
+      "raw_sha256": "8aaf117cfc1c0290028a57cf87493d23b968a61143005664f1b2ea0ad7748558",
+      "gzip_sha256": "ad229e81adb94fc0497376b2dbe2760a338b3ba1fcc1624aae472fd55fdedc8c",
+      "raw_bytes": 16163,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/HALL_AGREEMENT.json",
+      "archive": "inputs/original/net/HALL_AGREEMENT.json.gz",
+      "raw_sha256": "5c6c4dfeee78b5a1a7062df91ad6f3e1749a12d28d67c6faf95462d6897aaca0",
+      "gzip_sha256": "e8633d8a451195d4953a2e3a1bc2ac61d0a8f95c4bcd54506c8a7ad364806f63",
+      "raw_bytes": 44604226,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/boot_log.txt.gz",
+      "raw_sha256": "5f9e5b317e37a86b50b77c7dfb4d27f4344e6e2e215f914cb73a900cfcaa5046",
+      "gzip_sha256": "81462f7c02b36eb97373af57855b80bfadce9e78186bfc79cb0e3db35b653c00",
+      "raw_bytes": 5117,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png.gz",
+      "raw_sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa",
+      "gzip_sha256": "b7b4690ed4da8dfd9837beadff2d8a8ccd4f5dc30230e40204114d00286e5296",
+      "raw_bytes": 916609,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key.gz",
+      "raw_sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be",
+      "gzip_sha256": "414a5170038f555d21c914f67ee14ff817a04c08256f4cc7ac4e301af1321794",
+      "raw_bytes": 48,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-fcf48b83b695596297b6faddd900f0f2/character.json",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-fcf48b83b695596297b6faddd900f0f2/character.json.gz",
+      "raw_sha256": "25c3bb29c91c9945b94bc0a6c9916ad669e8247fe2f944eb9b4bf98dc005b6f3",
+      "gzip_sha256": "00356ed3cdb2edf56cc4379bb7065aade74682a13c38ed5468eb3ae112fdcc63",
+      "raw_bytes": 2773948,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-fcf48b83b695596297b6faddd900f0f2/character.json",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-fcf48b83b695596297b6faddd900f0f2/character.json.gz",
+      "raw_sha256": "27730941073423e146bdecf40970ac2b1254f4d7b35b102355f2a0068c5535cd",
+      "gzip_sha256": "bcb8dea50585ee7c7192215440e62b301f74e7d83d8f512d086ce699cef547a8",
+      "raw_bytes": 2773949,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json.gz",
+      "raw_sha256": "566f1064509a9c75e2b2f59914acd627053123364af60a631131747f652fbf6d",
+      "gzip_sha256": "d0a3c6ea6661e901bfe54620fd59117d888beba7ed53def4b8b22512e0cf9664",
+      "raw_bytes": 4187978,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json.gz",
+      "raw_sha256": "58100e28ffbe5d6b605201d9fdac024ea49fed13d55eeb1390a93d42daa29078",
+      "gzip_sha256": "3816d0ebed4bab5e38bff9cff033a5614f806d24efefb7f473bd572cf3d27c71",
+      "raw_bytes": 15875,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+      "archive": "inputs/original/net/home-0/Godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json.gz",
+      "raw_sha256": "b44e6b5065c9bc65a0dd61750e7d0bad24b23db3214bff7d714e54382c79f0e7",
+      "gzip_sha256": "fafe641c8a19f50aac5b5f6e4c5435aad0e65398d31fbb655ca8fbd959426f3d",
+      "raw_bytes": 15875,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "archive": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/boot_log.txt.gz",
+      "raw_sha256": "7bfb3e82871049b41956df7ca0f5e45ba8b56cf577d8b9e47a4f3b5932b6073a",
+      "gzip_sha256": "77ab7de11966ba483ae0dddd5031e0b96d75877f12ec393382c11f6719af5016",
+      "raw_bytes": 5116,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "archive": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png.gz",
+      "raw_sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa",
+      "gzip_sha256": "b7b4690ed4da8dfd9837beadff2d8a8ccd4f5dc30230e40204114d00286e5296",
+      "raw_bytes": 916609,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "archive": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key.gz",
+      "raw_sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be",
+      "gzip_sha256": "414a5170038f555d21c914f67ee14ff817a04c08256f4cc7ac4e301af1321794",
+      "raw_bytes": 48,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-53d508260b0d4f129527ae23c797d356/character.json",
+      "archive": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-53d508260b0d4f129527ae23c797d356/character.json.gz",
+      "raw_sha256": "8251ad4d8601c8eda57ee4393dcb1a3344fd38292a97158ca06c61f659bc86bf",
+      "gzip_sha256": "67f9246f0eb465384af027be9d6aabad2fc33214f9b269bfe139528dfeca3c03",
+      "raw_bytes": 2773947,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-53d508260b0d4f129527ae23c797d356/character.json",
+      "archive": "inputs/original/net/home-1/Godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-53d508260b0d4f129527ae23c797d356/character.json.gz",
+      "raw_sha256": "3ba4852a9bb2f6909f486a8884cb68b684a9d85eda2c40fd990d04b16a6dd5ee",
+      "gzip_sha256": "241a36885f6581483c2a6f889ec2f912aefd70d87fcba438ab2e895dc9fc9428",
+      "raw_bytes": 2773947,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/NET_RUN.json",
+      "archive": "inputs/original/net/NET_RUN.json.gz",
+      "raw_sha256": "b3770a24fe5a3ee79056d74755ce8222216acd760c218100f72696977e168f0d",
+      "gzip_sha256": "b5c435379bfe60ea88243fc8f469bd03269fffefedca3b78d923a99da4c76982",
+      "raw_bytes": 2518,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/peer-0.log",
+      "archive": "inputs/original/net/peer-0.log.gz",
+      "raw_sha256": "4bff891adf1e8dd0fb05bbba1da26045faad181fea587f9c392b4eb07665c83d",
+      "gzip_sha256": "ea60e5bc463b895ef6deeaa66535296e6a96d8262c5c89254a8c8388f1c941ae",
+      "raw_bytes": 21410,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/peer-1.log",
+      "archive": "inputs/original/net/peer-1.log.gz",
+      "raw_sha256": "421e02a7c9996401392b5d323c729ed20540da145a1f7bbb962f350110740691",
+      "gzip_sha256": "dfd83b914f923935096c6d68adf5e6bb14c06f44d3114cfdc566632778637fc8",
+      "raw_bytes": 21184,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/net/SUMMARY.md",
+      "archive": "inputs/original/net/SUMMARY.md.gz",
+      "raw_sha256": "9b08cb6df0f39482c9208516fb5bf7d01fa0482a8bd22cad289576fc448f93b4",
+      "gzip_sha256": "66abc6cf11998d801fe669cdea32095fbf6bd3215ea4942f9f378cb5180b3233",
+      "raw_bytes": 255,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/parser.txt",
+      "archive": "inputs/original/parser.txt.gz",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_bytes": 73,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/original/receipt.json",
+      "archive": "inputs/original/receipt.json.gz",
+      "raw_sha256": "c05067dbf8a4439fd899981dc2e77642e0f0c7fd2af45ab3fa2c4cbc56b676b1",
+      "gzip_sha256": "837f01ae5d9d3a3f0d3d3c14e06198eb23604fb408287fbc87680dffdb6bae15",
+      "raw_bytes": 13026,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/peer-extension.gd",
+      "archive": "inputs/peer-extension.gd.gz",
+      "raw_sha256": "1446618f362bc9a0f020cf542837692e08c4ccf1b8ea0c41277f2a73f3c38451",
+      "gzip_sha256": "6e55deeaf022d194815fab55b5542ff9cf6f473a8b5417b072f1306e2ecc0a8b",
+      "raw_bytes": 15706,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/r5/tests/smoke_net_crossing_hall_agreement.gd",
+      "archive": "inputs/r5/tests/smoke_net_crossing_hall_agreement.gd.gz",
+      "raw_sha256": "2ee7aef08e7d8e2b20b8f7ff406824cb2f07c19e9113771f0e029c3dd6f5753e",
+      "gzip_sha256": "8ca03518fb8531374c037caf293fc89bbadd9ec4482ae72601e9193aae66cea0",
+      "raw_bytes": 28730,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/.tmp/hall-agreement-r4/proposal/tests/smoke_net_crossing_hall_agreement.gd",
+      "archive": "inputs/source/.tmp/hall-agreement-r4/proposal/tests/smoke_net_crossing_hall_agreement.gd.gz",
+      "raw_sha256": "0485c7b7337ad2a239e9f591ebf9acafac7c32082e28bd43603e1e8868f6d390",
+      "gzip_sha256": "541a1dbe5300a01b2241bc97cd7657a3da87aa356e8c985f3d5a2955e8f45d02",
+      "raw_bytes": 28708,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/autoload/game_state.gd",
+      "archive": "inputs/source/autoload/game_state.gd.gz",
+      "raw_sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+      "gzip_sha256": "2e7e9cbe4fa26325033890aed05e438bd20782c537f93383f57b1150edf84475",
+      "raw_bytes": 135845,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/autoload/player_state.gd",
+      "archive": "inputs/source/autoload/player_state.gd.gz",
+      "raw_sha256": "403f03fd5ecb162a43e6d0b85b02eaa7da2c45c27e7cde265cc8c3bb20f98400",
+      "gzip_sha256": "8f4b4be299e76596e10fd528731c3f3997785ce1d736ff396da5f3d2e1262c23",
+      "raw_bytes": 21315,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/autoload/world_state.gd",
+      "archive": "inputs/source/autoload/world_state.gd.gz",
+      "raw_sha256": "fd5b167d8cc9a63cf3b4d27d75d467a4c9908c29a3227f5204f5c66e82fc58a6",
+      "gzip_sha256": "988032f20ca087ae9b528f851abd342905154723408ff83f5dae5b1ceffd16ca",
+      "raw_bytes": 22704,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/config/biome_order.json",
+      "archive": "inputs/source/data/config/biome_order.json.gz",
+      "raw_sha256": "b90bab991b347df3bdc4677526d4bc9101b5c898cca37ebf5ce1d6af5a626f11",
+      "gzip_sha256": "bbf9a4cf0a75b0e12284559dcd402368291ac31078bead04859eb22e555848e9",
+      "raw_bytes": 442,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/config/building_prefabs.json",
+      "archive": "inputs/source/data/config/building_prefabs.json.gz",
+      "raw_sha256": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36",
+      "gzip_sha256": "bbd3ed1f94794b0505efadbe1476921c437b87446bb547a454f7a98fea27e878",
+      "raw_bytes": 277022,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/config/characters.json",
+      "archive": "inputs/source/data/config/characters.json.gz",
+      "raw_sha256": "74058e67bd48b235788d868645b6012f810a3251498c97f1deb7284097eca4cd",
+      "gzip_sha256": "30f7a59ecaa3e30602591aebedd39eec6ca1dab7f282d2e69bcc5e96802d49a4",
+      "raw_bytes": 2409,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/config/crossing_hall.json",
+      "archive": "inputs/source/data/config/crossing_hall.json.gz",
+      "raw_sha256": "68cd47367dfe90e09b924833b3f3f4f0dff3f69506bc98569bdeece0590b0376",
+      "gzip_sha256": "4419e4bbf6acae2fa889fe25ff7a4969bc03e4c95de85b1b2318029b158e9a05",
+      "raw_bytes": 4721,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/config/multiplayer.json",
+      "archive": "inputs/source/data/config/multiplayer.json.gz",
+      "raw_sha256": "1517b20d91291475e3dc1d8f2a51bb348eefd8a5785c2ac01b09bf0818fdef2f",
+      "gzip_sha256": "4a2979950f3f28660e56f8785d89ff1e87bf3fd875d6b9f5821c834e6cb8e39c",
+      "raw_bytes": 15504,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/config/terrain_playground.json",
+      "archive": "inputs/source/data/config/terrain_playground.json.gz",
+      "raw_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "gzip_sha256": "285f9f6c3298e1f6dd556c4fb3df1fb4ef0ae33a8d0392d915b8e331a6b93836",
+      "raw_bytes": 258199,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/config/village.json",
+      "archive": "inputs/source/data/config/village.json.gz",
+      "raw_sha256": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+      "gzip_sha256": "f776b4aa15f4e1f5e5f99101fc7bda2f097071e51152b57ae72b4ee8fab1fd99",
+      "raw_bytes": 12551,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/schema/world_state.json",
+      "archive": "inputs/source/data/schema/world_state.json.gz",
+      "raw_sha256": "4b8ee67cd43c4b3c605ca1798bfe038a633c6da1b429f1e7c493432008c9ea08",
+      "gzip_sha256": "35c5acc5a5086a007398428bd79ccf7f8a532edf6fa42ba8184f917777dfcf91",
+      "raw_bytes": 191,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/data/schema/world_state.schema.json",
+      "archive": "inputs/source/data/schema/world_state.schema.json.gz",
+      "raw_sha256": "52be2e3bd38dc78e95aee635baff220e48479eba2ce742c16c229057fd4945e6",
+      "gzip_sha256": "562704091db390afa4f55e1d02e740ffdac0cf527d602d32f28e7a822fd5fa20",
+      "raw_bytes": 4743,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/project.godot",
+      "archive": "inputs/source/project.godot.gz",
+      "raw_sha256": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a",
+      "gzip_sha256": "8e2510fa2b39f4a745e469784dc2d156d8058cd948b2abc10ab9ea61ecc98a57",
+      "raw_bytes": 21697,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scenes/ui/title_screen.tscn",
+      "archive": "inputs/source/scenes/ui/title_screen.tscn.gz",
+      "raw_sha256": "ccf1d00247bb2e9616518a5538417aa233b8101271f8dd2630771bef0eaf2b52",
+      "gzip_sha256": "e684ecea1de4f53338534de11506a4b09b0fd0409c9ad56990f6d89b618ced08",
+      "raw_bytes": 339,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scenes/world/meadows_playground.tscn",
+      "archive": "inputs/source/scenes/world/meadows_playground.tscn.gz",
+      "raw_sha256": "58de7013548baabc98909ba8a13ed17fb74b17e8d493ffc60d956c217ccc01ce",
+      "gzip_sha256": "88a05a7aa663994410e20210a8c6e4678f67ea31785c0cf329f02ddf1cd59ea5",
+      "raw_bytes": 8461,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/data/biome_order.gd",
+      "archive": "inputs/source/scripts/data/biome_order.gd.gz",
+      "raw_sha256": "14ee68ebb64371399d3b745c4e52fd552003b59d68ada9121c53d42600a3dcb2",
+      "gzip_sha256": "7a370cea08386772ed4ecc0fb65468f53f8f49dbe6936b5e8406159f73bd8758",
+      "raw_bytes": 2336,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/data/redesign_data.gd",
+      "archive": "inputs/source/scripts/data/redesign_data.gd.gz",
+      "raw_sha256": "3086392d2eeb4cb3fa155b435f9372ee0d54bf9b7c3749be4631c278cafdab99",
+      "gzip_sha256": "ecd7cf071bc052e0c36d1381ecf15aa796fb9ac262d5ff70bffceb3f5d08aa5b",
+      "raw_bytes": 12046,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/data/redesign_state.gd",
+      "archive": "inputs/source/scripts/data/redesign_state.gd.gz",
+      "raw_sha256": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed",
+      "gzip_sha256": "d17a904ca4580f96fcdc0d0c9992497dee8007059c8218967b125fc0d424be4a",
+      "raw_bytes": 2358,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/mp/join_driver.gd",
+      "archive": "inputs/source/scripts/mp/join_driver.gd.gz",
+      "raw_sha256": "883e403efe2950a2dd94536f301983bf77d23b59cd698fb8f7d709ef52defa03",
+      "gzip_sha256": "1c9bcae8ad21b787caf9e3404b74347fcbeb3795be819840ef71fafa8a826d96",
+      "raw_bytes": 11411,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/net/ledger_rpc.gd",
+      "archive": "inputs/source/scripts/net/ledger_rpc.gd.gz",
+      "raw_sha256": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+      "gzip_sha256": "9b9f7e3cf98c3d26d71a720c9a5baa506b42659b35f0e21a5b167fbc115745bb",
+      "raw_bytes": 44893,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/net/peer_registry.gd",
+      "archive": "inputs/source/scripts/net/peer_registry.gd.gz",
+      "raw_sha256": "6c7016958f667579e90058ea49fb0e978caf4ebf75325c3962cfe9a38227fc10",
+      "gzip_sha256": "38f942dbb7a7107d29a0cd46a3feb2b172b9c17db3224dd2553f4f606a4b28aa",
+      "raw_bytes": 10574,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/net/realm_receiver_history.gd",
+      "archive": "inputs/source/scripts/net/realm_receiver_history.gd.gz",
+      "raw_sha256": "3d375b1f31c14b3c704adb8ba5c29b546b76faf5fa8749cfc6475ef96448ee2f",
+      "gzip_sha256": "958987e10f660d9b72960b119dfc97ff60e984011c49a22c4102b9703664a0ae",
+      "raw_bytes": 1006,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/net/realm_transition.gd",
+      "archive": "inputs/source/scripts/net/realm_transition.gd.gz",
+      "raw_sha256": "56eeeae34bde60450a35500386760d5214d3f830025f3661b6f76def11d17265",
+      "gzip_sha256": "08a7cdfe14f2534add41f82ffa488a792402c5a736917ea62d0cd91d1dbafbf9",
+      "raw_bytes": 38407,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/net/session.gd",
+      "archive": "inputs/source/scripts/net/session.gd.gz",
+      "raw_sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+      "gzip_sha256": "0f106ee3cac7c96cb79f48fdffc31730c7e03380c58742158a68224d18658559",
+      "raw_bytes": 83880,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/net/snapshot_transfer.gd",
+      "archive": "inputs/source/scripts/net/snapshot_transfer.gd.gz",
+      "raw_sha256": "36a0cf907b71a3b6129531b746b48d989163ce5c3fc4959fca7b4be4dc3e5692",
+      "gzip_sha256": "0eeae9764a19c309506eb72b16b3dd4031e2860b9fc83eb0343204ef4bf5c5ee",
+      "raw_bytes": 7660,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/net/world_ledger.gd",
+      "archive": "inputs/source/scripts/net/world_ledger.gd.gz",
+      "raw_sha256": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
+      "gzip_sha256": "efb14bfb8df93a99c2f14c96e7fb3ab0e9bce63be42570bba8ebd3caa29597b9",
+      "raw_bytes": 66942,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/save/character_save.gd",
+      "archive": "inputs/source/scripts/save/character_save.gd.gz",
+      "raw_sha256": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425",
+      "gzip_sha256": "bdeec5aec6d9f4988c914f4e3d9123f4cee8bc88dd2319248a746f6bf2eab848",
+      "raw_bytes": 14881,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/save/save_game.gd",
+      "archive": "inputs/source/scripts/save/save_game.gd.gz",
+      "raw_sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+      "gzip_sha256": "e9ca1377242f923aee689541bd863568db8757bb17915cb945ca2341ae8bd701",
+      "raw_bytes": 105636,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/save/world_save.gd",
+      "archive": "inputs/source/scripts/save/world_save.gd.gz",
+      "raw_sha256": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
+      "gzip_sha256": "6baf0e04bd57cd1a59d4bdae03f708eac282b1c4b49e9ced80abd8e5c1cb727d",
+      "raw_bytes": 11374,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/ui/title_screen.gd",
+      "archive": "inputs/source/scripts/ui/title_screen.gd.gz",
+      "raw_sha256": "35f7bf3a66789a613a47e14fba6159a12ec9cbce0945c76a66b94e1e97940e27",
+      "gzip_sha256": "930db995343bdfcd63be5c1c7883d68c1255f071f0ba814ec0484d2008356a83",
+      "raw_bytes": 80425,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/world/building_prefabs.gd",
+      "archive": "inputs/source/scripts/world/building_prefabs.gd.gz",
+      "raw_sha256": "c810de6ea61ea843847e0e4d83ae27de96dff43375b97c41ab71749e7697a9f5",
+      "gzip_sha256": "85a66e20315f4117cce4356b14ab54ef89e243cf01ed5743387f736f8e3c5e7a",
+      "raw_bytes": 23026,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/world/crossing_hall.gd",
+      "archive": "inputs/source/scripts/world/crossing_hall.gd.gz",
+      "raw_sha256": "e246ac245110b11eee41a39ab804d34ad1e95226b7d127cc97457b0b084409e3",
+      "gzip_sha256": "456f2f0e304e558f73021fc0d19b6effc66a01c3639fab2c89b48072d0def33b",
+      "raw_bytes": 10457,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/scripts/world/village.gd",
+      "archive": "inputs/source/scripts/world/village.gd.gz",
+      "raw_sha256": "7c7732796e25f3982c1cf0b93b46894c78c733145c8737361539c48827deed0b",
+      "gzip_sha256": "4956c851401dc6d831d2554fdfc958adc943a23cca1b7f294106fd6ab7220b3d",
+      "raw_bytes": 17281,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/tests/helpers/net_control_ports.gd",
+      "archive": "inputs/source/tests/helpers/net_control_ports.gd.gz",
+      "raw_sha256": "98f1d92248e5462cf11571e49ad6defa182c7332ea3ae7fc751bddfd071c2867",
+      "gzip_sha256": "689ed378cc88e6bf0fd14b013c725546ad1f0192af533ca710c189bd4e5c695b",
+      "raw_bytes": 1260,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/tests/helpers/net_harness.gd",
+      "archive": "inputs/source/tests/helpers/net_harness.gd.gz",
+      "raw_sha256": "031af5ec2d01c97a87e623e107898fa0e220d0b4013efec67000331f0d7a9a9c",
+      "gzip_sha256": "467bd36375cd982805da926df344874f9ad08fac1c2b18fa1340d0e5520ff255",
+      "raw_bytes": 48226,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source/tools/net/peer_runner.gd",
+      "archive": "inputs/source/tools/net/peer_runner.gd.gz",
+      "raw_sha256": "a97758ec9d8419ffc47af7e8d0ddd1943798a4c39a0b439a640c0547021cc52e",
+      "gzip_sha256": "0c2a09ade312923b59d8447c395ca249a16ffab2d2b1069fe680c806bc834755",
+      "raw_bytes": 357861,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source-gate/preserved-r4-sourcePASS.json",
+      "archive": "inputs/source-gate/preserved-r4-sourcePASS.json.gz",
+      "raw_sha256": "0a2dd8a257d3e0a88d708e3a845f1ca07eda9dd8e9fefb34ece9bd1cda2f8272",
+      "gzip_sha256": "20d38a395e3b413c3c6d19192aa029d0a662711a551eb4131d72e30423d542f4",
+      "raw_bytes": 19749,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "inputs/source-gate/preserved-r4-sourcePASS.txt",
+      "archive": "inputs/source-gate/preserved-r4-sourcePASS.txt.gz",
+      "raw_sha256": "a3315bb8dcfd19ad293b89b7d009a6c749f373095a2f2c1bceb71e9f37467375",
+      "gzip_sha256": "7d5c9afde3e519dd1ee9e1301fe7897101b764765b8eec1ea9c791fca6943701",
+      "raw_bytes": 2026,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "proposal/finalize.py",
+      "archive": "proposal/finalize.py.gz",
+      "raw_sha256": "a8731784e83ea5b98803edeafa1bcee6a0dd44cf65484117a0c66ca56a935a75",
+      "gzip_sha256": "812f7181de0c732142eaf10d3c9b4965395ce20708a455c226472b0a540a31b4",
+      "raw_bytes": 23875,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "proposal/input-manifest.json",
+      "archive": "proposal/input-manifest.json.gz",
+      "raw_sha256": "080c34bbeb2f4e1144db2d94ea89d2478a7d05db3aba2b26cc3ccf0d8ca13175",
+      "gzip_sha256": "927ea80137a6c4c33be45fc35beb8f60d53731211c8cceb743d1a8559b7efc2b",
+      "raw_bytes": 76935,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "source-receipt.json",
+      "archive": "source-receipt.json.gz",
+      "raw_sha256": "0156b96cfb0a6a34dda3acf839e8d78ce9630a56271e0b7e87ce633c3958ca91",
+      "gzip_sha256": "9ce17c57dfafea9a5eef44e825b7cb4a14eea7d629f7de36b3865d843f1db8d4",
+      "raw_bytes": 1781,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "freeze.json",
+      "archive": "freeze.json.gz",
+      "raw_sha256": "d417aaf4f5a8c5429f2a632fc3620acfb8333daec9afdf0f0509c7155dfdf8a4",
+      "gzip_sha256": "488911c71bd69d7256f530bf2f64eb0fc72a68c71e9bc47d73c85d5450e001f5",
+      "raw_bytes": 15359,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "source-receipt.json",
+      "archive": "source-receipt.json.gz",
+      "raw_sha256": "0156b96cfb0a6a34dda3acf839e8d78ce9630a56271e0b7e87ce633c3958ca91",
+      "gzip_sha256": "9ce17c57dfafea9a5eef44e825b7cb4a14eea7d629f7de36b3865d843f1db8d4",
+      "raw_bytes": 1781,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "root-source-gate.json",
+      "archive": "root-source-gate.json.gz",
+      "raw_sha256": "3d4fd0771475a1dd5fcc71cc3b2fc17fe2c21328b6cd54a478e22f7957781950",
+      "gzip_sha256": "15e0efbe3cbe3e820189f885ef73f99a8bbdfe5758dbfc933fcf819c862b51be",
+      "raw_bytes": 1504,
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "results/r1/review.json",
+      "archive": "results/r1/review.json.gz",
+      "raw_sha256": "617aeba5368c4dc11ad02ba499360441f0843df4dba23caa41b84e92376ab83d",
+      "gzip_sha256": "0d7b8bd74e8f6346d6d157586107bd805432c8547cc267dc1f81a1f5720f4868",
+      "raw_bytes": 43875,
+      "lossless_roundtrip": true
+    }
+  ],
+  "original_source": "784b5cee71a4ba42b7fd6b5b3b39bea76b67910e",
+  "finalizer_native_exit": 0,
+  "finalizer_elapsed_seconds": 4.9557388,
+  "result_sha256": "617aeba5368c4dc11ad02ba499360441f0843df4dba23caa41b84e92376ab83d",
+  "independent_final_criterion_verdict": "Still required before board credit"
+}

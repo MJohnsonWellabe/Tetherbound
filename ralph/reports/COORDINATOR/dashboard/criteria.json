@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-30T02:56:39Z",
- "main_sha": "82eda1835",
+ "generated_at": "2026-10-01T00:33:51Z",
+ "main_sha": "5c2c964ebaa8e25f933355324725be324218bc44",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
   {
@@ -959,12 +959,12 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 61,
+   "pct": 75,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
     "in_progress": 1,
-    "not_started": 2,
+    "not_started": 1,
     "blocked": 0,
     "failing": 0
    },
@@ -1001,9 +1001,9 @@
     },
     {
      "text": "Host and guest see the same layout, arch states and shrine states after join and reload.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "met",
+     "evidence": "Independent strict F17#5 CRITERION PASS and prepared evidence packaging PASS,189checks: ralph/reports/HUB/f17/hall-agreement-finalizer-r1/independent/ (raw reviewSHA24c58da3). One continuous real ENet title host/guest join, production host boolsave/title Load and saved-character guest rejoin: all8 full actual producer captures/repeats agree; same layout/arch/shrine states. Actual R4 source784b/coordinator0485/peer14466, all36 dependencies equivalent main5c2;74 production assets main-equivalent. Separate RD36 bounded immutable-record finalizer native0/4.956s,527checks, resultSHA617aeba5;75unique resource hashes exact. All21originalR4 outputs and73finalizer artifacts archived losslessly with hashes. Original whole R4 native2/budget and fourhostENet departure errors remain FAILED and preserved, not relabelled. Shortcuts: lawful fresh home-open/three-locked/four-sealed/eight-empty state; headlessLAN loopback/unattendedtitle setup; sameOS scene/Hall rebuild notcoldrestart; metadata notvisual/controller/Steam/mutableF18/F19 proof. F17#4/#6 and transport-clean/F49 remain OPEN. Main credit at this docs PR landing.",
+     "gap": ""
     },
     {
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE \u00a74: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
