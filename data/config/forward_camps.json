@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": false,
+  "_scope": "World placement in placed_buildings; character inventory and receipts use existing admitted carrier. OFF pending Foundation producer, engine/co-op and visual proofs.",
+  "biomes": ["meadows", "tidewake", "cloudreach", "stormwood"],
+  "size_m": [7.2, 2.8, 4.8],
+  "bed_offset": [-2.0, 0.0, 0.0],
+  "cookpot_offset": [2.0, 0.0, -1.1],
+  "workbench_offset": [2.0, 0.0, 1.1],
+  "interaction_radius_m": 2.6,
+  "maximum_place_distance_m": 6.0,
+  "ground_tolerance_m": 0.25,
+  "maximum_slope_rise_m": 0.35,
+  "clearance_m": 2.0,
+  "items": {
+    "forward_camp_kit": {"name": "Forward-camp kit", "kind": "material", "stack": 1, "blurb": "A sheltered team bed, portable cookpot and field workbench. Pack up to recover the kit."}
+  },
+  "recipes": {
+    "forward_camp_kit": {
+      "name": "Forward-camp kit", "station_id": "workbench", "station_tier": 0,
+      "cost": [{"id":"wood","n":8},{"id":"fiber","n":6},{"id":"stone","n":4},{"id":"rootiron_ingot","n":1}],
+      "output": {"id":"forward_camp_kit","n":1},
+      "blurb": "Build at the homestead Workbench. Travel crafting, team rest and move loadout edits in any live biome."
+    }
+  }
+}

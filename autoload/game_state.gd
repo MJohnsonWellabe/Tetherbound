@@ -2509,6 +2509,9 @@ func can_craft(id: String) -> bool:
 ## `inventory.remove` is itself all-or-nothing per ingredient -- see its own
 ## comment on why a craft must never eat half its cost and then fail.
 func craft(id: String) -> bool:
+	# F34 must never fall through the retired local craft debit. The actual
+	# Workbench producer uses the admitted character journal and stage_craft.
+	if id == "forward_camp_kit": return false
 	if session != null and session.has_method("_owner_training_mutation_blocked") and session.call("_owner_training_mutation_blocked", local) == true: return false
 	if not can_craft(id):
 		return false

@@ -5,6 +5,7 @@ extends RefCounted
 const RULES := preload("res://scripts/build/station_rules.gd")
 const BAG := preload("res://scripts/world/death_satchel_rules.gd")
 const STATE := preload("res://scripts/data/redesign_state.gd")
+const CAMP := preload("res://scripts/build/forward_camp_rules.gd")
 
 static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
 		context: Dictionary, canonical_recipe: Dictionary) -> Dictionary:
@@ -14,12 +15,13 @@ static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
 			or context.get("expected_revision") != revision: return RULES.deny("character_revision_mismatch")
 	for key: String in ["homestead", "in_range", "in_combat", "recipe_known"]:
 		if not context.get(key) is bool: return RULES.deny("station_context_invalid")
-	if context.homestead != true or context.in_range != true or context.in_combat != false \
+	var field := context.get("station_kind") == CAMP.ID and context.get("forward_camp") is bool and context.forward_camp == true
+	if (context.homestead != true and not field) or context.in_range != true or context.in_combat != false \
 			or context.recipe_known != true: return RULES.deny("craft_not_available")
 	if not context.get("source_key") is String or context.source_key.is_empty(): return RULES.deny("station_context_invalid")
 	var cfg := RULES.config()
 	if cfg.get("runtime_enabled") != true or cfg.get("craft_runtime_enabled") != true: return RULES.deny("station_disabled")
-	var route := RULES.recipe_route(cfg,intent.recipe_id,canonical_recipe)
+	var route := CAMP.recipe(intent.recipe_id,canonical_recipe,str(context.get("part",""))) if field else RULES.recipe_route(cfg,intent.recipe_id,canonical_recipe)
 	if route.get("ok") != true: return route
 	if context.get("station_id") != route.station_id or not RULES.number(context.get("effective_tier")) \
 			or float(context.effective_tier) != floor(float(context.effective_tier)) \

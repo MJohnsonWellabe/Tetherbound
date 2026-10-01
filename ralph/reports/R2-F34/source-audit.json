@@ -1,0 +1,64 @@
+{
+  "feature": "F34",
+  "baseline": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "branch": "tb/r2-f34",
+  "disposition": "Implemented flag-off owned source candidate; shared producer integration and runtime proofs pending. Not ready to land.",
+  "acceptance_claims": [],
+  "board_read_only_audit": "F34 has five not_started criteria, zero MET. Source audit also found the existing field allowlist and F23 loadout staging; reused rather than replaced.",
+  "implemented": [
+    "Workbench kit recipe: 8 wood, 6 fiber, 4 stone, 1 Rootiron ingot; one kit consumed for the entire camp",
+    "One placed_buildings record, host-minted b UID, stable placing character ID, original transaction ID; one active camp per character per live biome",
+    "Detached character/world placement and owner-only full-kit pack-up stages; inventory-capacity refusal, revision refusal, occupied-team refusal, immutable intent and reconcile-before-source callback adapter",
+    "Sheltered bed, portable cookpot and field Workbench using installed existing assets; typed record restore and duplicate-node refusal",
+    "Nine supported-ground samples, dry Tidewake ground, slope/reach and physics clearance; host and preview share the probe",
+    "Shared travel-recipe allowlist with independent feast/gear/refining/reinforcement refusal and named home station",
+    "All owned companions assigned to one camp bed stage before existing SleepVote/NightRest recovery, rest bonus and autosave; no new overnight reward code",
+    "Camp loadout context delegates to existing F23 Teaching stage; controller menu entry routes to its producer",
+    "Saved-world preflight adapter for additive records; existing worlds without camps need no migration",
+    "Generic local crafting and ordinary ledger placement/dismantle cannot bypass the paid camp path"
+  ],
+  "shared_overlapping_files": [
+    "autoload/game_state.gd",
+    "autoload/item_db.gd",
+    "data/config/stations.json",
+    "data/items/buildables.json",
+    "scripts/build/build_placer.gd",
+    "scripts/build/station_actions.gd",
+    "scripts/net/world_ledger.gd",
+    "scripts/ui/craft_panel.gd"
+  ],
+  "required_shared_integration": [
+    "Frozen Session has no F31 homestead_submit_action or homestead_personal_view implementation. Connect camp station_craft through forward_camp_actions.stage_craft and host-derived source_context with actual personal recipe_known.",
+    "Session must expose forward_camp_available(camp), forward_camp_placement_available(), forward_camp_submit_build(original,placer), and forward_camp_prepare_rest(camp,original). Use forward_camp_host placement_context/context/pack_context and retained-original commit adapter; do not accept these context booleans from a packet.",
+    "Foundation owns the actual existing admitted-character fence and durable writer. Bind reconcile/restage/journal/publish to its carrier; journal both detached inventory and placed_buildings/next_building_uid atomically, rollback failed writes, publish only after save and settle only after owner save+ACK. No alternate camp journal was added.",
+    "Freeze original pending placement/pack/rest IDs and character revisions at Session. Reject altered-ID payloads, serialize simultaneous peers and retain pending decisions through reconnect.",
+    "Preserve character_id and txn_id in the actual building delta and host-world save; existing WorldState building_add currently projects only legacy fields. Invoke forward_camp_rules.saved_errors during whole-save preflight before live application. These shared carrier edits are intentionally left for Foundation consolidation.",
+    "F23 loadout UI producer is absent on this source. Bind open_creature_loadouts(camp,source_key) to the actual F23 editor and registry commit/owner-save/ACK, using forward_camp_host.stage_loadout. The camp grants no essence, traits or mastery services.",
+    "F31 ordinary crafting and F32 Rootiron registration/refining must be reconciled with accepted main and validated before enabling the kit recipe. Current dependencies are flag-off candidates.",
+    "Pending grounded placement review must verify protected spawn/admission/landing/story-control clearance and wet ground outside Tidewake. The conservative physics query includes Areas; actual world collider coverage is unverified."
+  ],
+  "completed_checks": [
+    "Read AGENTS, CODEX_START_HERE RD01-37/F34, STATE baseline, ACCEPTANCE F34, HOMESTEAD and SYSTEMS; inspected multiplayer building/loadout authority contracts",
+    "tools/check_forward_camps.py PASS: canonical kit/material source IDs, gate/limit/biomes, catalogue isolation, preload files, grammar parse of 12 changed/new GDScript files",
+    "JSON parse PASS for forward_camps.json, stations.json and buildables.json",
+    "git diff --check PASS"
+  ],
+  "check_limits": "gdtoolkit grammar parse is not Godot semantic compilation, native execution, earned gameplay, network, device or visual acceptance. Static checker initially referenced an incorrect material file; corrected to existing data/items/f32_materials.json and reran successfully.",
+  "pending_commands": [
+    "godot --headless --path D:/tetherbound/r2-f34 --script tests/run_tests.gd -- --only=test_forward_camp.gd,test_register_building.gd,test_fainting.gd,test_cloudreach_camp_recovery.gd",
+    "godot --headless --path D:/tetherbound/r2-f34 --script tests/smoke_net_sleep_vote.gd",
+    "godot --headless --path D:/tetherbound/r2-f34 --script tests/smoke_build_two_creature_beds.gd",
+    "godot --path D:/tetherbound/r2-f34 --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_forward_camp.gd -- --out=D:/tetherbound/r2-f34/ralph/reports/R2-F34/composition.png",
+    "godot --path D:/tetherbound/r2-f34 --rendering-driver opengl3 --resolution 1920x1080"
+  ],
+  "pending_named_proofs": {
+    "F34-ground-four-biomes": "On the consolidated integrated candidate, earn a kit at a paid Workbench; place and walk through a camp on ordinary valid ground in Meadows, Tidewake, Cloudreach and Stormwood. Refuse water, ledges, slopes, obstacles, protected pads, out-of-range, unopened/reserved biomes and second same-character camp. Capture each valid/invalid ghost and record its committed transform and stock.",
+    "F34-field-refusals": "Controller craft a travel meal and field kit; attempt feast, tier gear, refining, attachments, Charms and essence spend; show the named-home-station reason with zero debit.",
+    "F34-rest-loadout-save": "With five earned creature UIDs, prepare injured/fainted team at camp, complete the night through normal sleep consent, verify trainer/team recovery and one rest bonus, then edit a lawful move loadout and reload/rejoin with identical identities and slots.",
+    "F34-authority-reconnect": "Two actual peers simultaneously place, replay an identical placement/pack request, forge character/realm/cost/terrain fields, disconnect around host save and owner ACK, and rehost/rejoin. Verify one durable world record/one debit, one refund to owner, no half-camp, no character replacement, no client world file, and zero mutation on failed saves/full bag.",
+    "F34-old-camp-regression": "Complete ordinary opening three-creature-bed tournament readiness, an authored realm camp rest and the existing rest bonus. New camp IDs do not satisfy the tournament bed lesson.",
+    "F34-visual": "Composition command is a synthetic studio capture only. Earned per-biome normal-camera day/night captures and controller approach/walking clearance still require shared queue and independent judgment. Compatibility remains default; no Ally result claimed."
+  },
+  "engine_queue": "No Godot/editor/import/render/export/device run started; RENDER_LOCK untouched. All commands above are pending for ROOT's shared queue after current repair.",
+  "landing": "Wait for all ten features and prior consolidated batch GREEN ON MAIN; no individual PR, workflow dispatch, self-landing, MET claim or archive."
+}

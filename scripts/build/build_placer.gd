@@ -76,6 +76,8 @@ const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const FORWARD_CAMP := preload("res://scripts/build/forward_camp.gd")
+const CAMP_RULES := preload("res://scripts/build/forward_camp_rules.gd")
 const STATION_PIECE := preload("res://scripts/build/station_piece.gd")
 const STATION_MENU := preload("res://scripts/build/station_menu.gd")
 const HOME_PLOT := preload("res://scripts/build/home_plot_rules.gd")
@@ -133,6 +135,41 @@ func _station_pose_valid(game: Node, id: String, realm: String, at: Vector3, yaw
 	var world := get_parent() as Node3D
 	if world == null or world.get_world_3d() == null: return STATION_RULES.deny("station_world_invalid")
 	if not world.get_world_3d().direct_space_state.intersect_shape(query,1).is_empty(): return STATION_RULES.deny("station_occupied")
+	return {"ok":true}
+
+## Same host geometry probe used by preview and Foundation's paid stage.
+## Nine footprint samples avoid treating a centre on shore as a dry camp.
+func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: float) -> Dictionary:
+	var cfg := CAMP_RULES.config()
+	var world := get_parent() as Node3D
+	if cfg.get("runtime_enabled") != true: return CAMP_RULES.deny("camp_disabled")
+	if game != _game() or world == null or not is_inside_tree() or world.get_world_3d() == null \
+			or realm != WORLD_RECORDS.active(game) or not at.is_finite() or not is_finite(yaw): return CAMP_RULES.deny("camp_ground")
+	var size: Array = cfg.size_m
+	var base := _ground_height(at)
+	if not is_finite(base) or absf(base-at.y) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
+	for x: float in [-float(size[0])*0.5,0.0,float(size[0])*0.5]:
+		for z: float in [-float(size[2])*0.5,0.0,float(size[2])*0.5]:
+			var sample := at + Basis(Vector3.UP,deg_to_rad(yaw))*Vector3(x,0,z)
+			var height := _ground_height(sample)
+			if not is_finite(height) or absf(height-base) > float(cfg.maximum_slope_rise_m): return CAMP_RULES.deny("camp_ground")
+			sample.y=height
+			if world.has_method("water_depth_at") and float(world.call("water_depth_at",sample)) > 0.0: return CAMP_RULES.deny("camp_ground")
+			if realm == "tidewake" and not world.has_method("water_depth_at"): return CAMP_RULES.deny("camp_ground")
+			# Actual support must exist, independently of analytic terrain height.
+			var ray := PhysicsRayQueryParameters3D.create(sample+Vector3.UP*0.5,sample-Vector3.UP*0.5,1)
+			ray.exclude=_bodies_that_are_not_buildings()
+			var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
+			if hit.is_empty() or (hit.position as Vector3).distance_to(sample) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
+	var shape := BoxShape3D.new()
+	shape.size=Vector3(size[0]+2*float(cfg.clearance_m),size[1],size[2]+2*float(cfg.clearance_m))
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape=shape
+	query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),at+Vector3(0,float(size[1])*0.5+0.05,0))
+	query.collision_mask=3
+	query.collide_with_areas=true
+	query.exclude=_bodies_that_are_not_buildings()
+	if not world.get_world_3d().direct_space_state.intersect_shape(query,1).is_empty(): return CAMP_RULES.deny("camp_ground")
 	return {"ok":true}
 
 
@@ -673,7 +710,10 @@ func _show_ghost(game: Node, armed: String) -> void:
 
 	if _ghost == null or not is_instance_valid(_ghost):
 		_ghost_id = armed
-		if _station_path(armed) and armed != "altar":
+		if armed == CAMP_RULES.ID:
+			_ghost=FORWARD_CAMP.new()
+			_ghost.call("build_ghost")
+		elif _station_path(armed) and armed != "altar":
 			_ghost = STATION_PIECE.new()
 			_ghost.build(armed, true)
 		elif armed == "stormglass_arch":
@@ -839,6 +879,13 @@ func preview_placement(game: Node, armed: String, raw_spot: Vector3,
 				parent_uid = canonical.record.uid
 				_yaw_deg = float(canonical.record.yaw_deg)
 	var result := evaluate_placement(game, armed, source_spot, buildings, Callable(self, "_ground_height"), _yaw_deg)
+	if armed == CAMP_RULES.ID:
+		var plan := validate_forward_camp_ground(game,WORLD_RECORDS.active(game),result.position,_yaw_deg)
+		var producer: Node = game.get("session") as Node
+		if plan.get("ok") != true or producer == null or not producer.has_method("forward_camp_placement_available") \
+				or producer.call("forward_camp_placement_available") != true:
+			result.ok=false
+			result.reason=str(plan.get("reason",CAMP_RULES.deny("camp_unavailable").reason))
 	if _station_path(armed):
 		if not def.is_empty() and not parent_uid.is_empty():
 			source_spot.y = _ground_height(source_spot)
@@ -1003,6 +1050,13 @@ static func _bedroll_has_tent(spot: Vector3, buildings: Array) -> bool:
 ## a fresh placement (not a load) always passes null, since there is nothing
 ## yet to restore.
 func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = -1, state_data: Variant = null) -> Node3D:
+	if id == CAMP_RULES.ID:
+		var rows: Array = game.get("placed_buildings")
+		if index < 0 or index >= rows.size() or not rows[index] is Dictionary: return null
+		var camp := CAMP_RULES.record(rows,str(rows[index].get("uid","")))
+		if camp.get("ok") != true or camp.index != index: return null
+		for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+			if get_parent().is_ancestor_of(node) and node.get_meta(BUILDING_UID_META,"") == camp.record.uid: return null
 	if _station_path(id) and id != "altar":
 		var records: Array = game.get("placed_buildings")
 		if index < 0 or index >= records.size() or not records[index] is Dictionary: return null
@@ -1021,7 +1075,11 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 			if get_parent().is_ancestor_of(node) and node.get_meta(BUILDING_UID_META, "") == altar_record.record.uid:
 				return null
 	var placed: Node3D = null
-	if id == "stormglass_arch":
+	if id == CAMP_RULES.ID:
+		placed=FORWARD_CAMP.new()
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	elif id == "stormglass_arch":
 		placed = STORMWOOD_ARCH_PIECE.new()
 		placed.name = "StormglassArch"
 		get_parent().add_child(placed)
@@ -1096,7 +1154,7 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		if id == "creature_bed" and placed.has_method("set_build_index"):
 			placed.call("set_build_index", index)
 	placed.add_to_group(PLACED_GROUP)
-	if _station_path(id):
+	if _station_path(id) or id == CAMP_RULES.ID:
 		var records: Array = game.get("placed_buildings")
 		if index >= 0 and index < records.size():
 			placed.set_meta(BUILDING_UID_META, str(records[index].get("uid", "")))
@@ -1350,6 +1408,18 @@ func _open_craft_panel() -> void:
 ## complete inside this call, because `submit()` commits in-process and emits
 ## the delta before it returns.
 func _place(game: Node, armed: String) -> void:
+	if armed == CAMP_RULES.ID:
+		var preview := preview_placement(game,armed,_ghost.global_position)
+		var producer: Node = game.get("session") as Node
+		if preview.get("ok") != true or producer == null or not producer.has_method("forward_camp_submit_build"):
+			game.call("push_world_message",str(preview.get("reason",CAMP_RULES.deny("camp_unavailable").reason)))
+			return
+		var at: Vector3 = preview.position
+		var intent := {"action":"place","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),
+			"realm":WORLD_RECORDS.active(game),"position":[at.x,at.y,at.z],"yaw_deg":_yaw_deg}
+		# Producer retains original ID and admission revision through lost ACK.
+		producer.call("forward_camp_submit_build",intent,self)
+		return
 	if _station_path(armed):
 		_place_station(game, armed)
 		return
@@ -1719,6 +1789,12 @@ func _building_uid_at(index: int) -> String:
 ## targeted player-built root (the centre-screen ray does that in production),
 ## which also makes the economic/save transaction independently testable.
 func dismantle_piece(game: Node, target: Node3D) -> bool:
+	if is_instance_valid(target) and target.get_meta(BUILDING_ID_META,"") == CAMP_RULES.ID:
+		var producer: Node = game.get("session") as Node if game != null else null
+		if producer == null or not producer.has_method("forward_camp_submit_build"): return false
+		var result: Variant = producer.call("forward_camp_submit_build",{"action":"pack","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),
+			"uid":str(target.get_meta(BUILDING_UID_META,""))},self)
+		return result is Dictionary and (result.get("ok") == true or result.get("pending") == true)
 	if is_instance_valid(target) and _station_path(str(target.get_meta(BUILDING_ID_META, ""))):
 		return _dismantle_station(game, target)
 	if game == null or target == null or not is_instance_valid(target) \
