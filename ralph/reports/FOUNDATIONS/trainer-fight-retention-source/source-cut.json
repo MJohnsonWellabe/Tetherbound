@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "status": "TEST_ONLY_RETENTION_SOURCE_PROPOSAL_NATIVE_PENDING",
+  "foundation_parent_head": "31e28029bcfd9c4bd14150e70986db176a038fe2",
+  "root_preimage_head": "79555e6869b3ae55e106c3d3875de0f4d01d2a80",
+  "source": {
+    "path": "tools/net/peer_runner.gd",
+    "preimage_git_blob": "12c1deaf7c5b4f168fa9e2841d3be33f0558578c",
+    "preimage_sha256": "cacd5493f4b027c1eca6455872d748484b404b7dfe0eb0b2555c69c495c8946f",
+    "candidate_git_blob": "7b13f62cb6df5fa907992dd9cda40f9eb64a4cf0",
+    "candidate_sha256": "560e68eb1570bc69488f3fcbf411f4044eb3fe8a3b146fbea181d19b047f7690",
+    "preimage_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/peer_runner.gd.preimage"
+  },
+  "patch": {
+    "path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/trainer-fight-retention.patch",
+    "sha256": "148f342cf6dca9161c854071b314071afe8abb7de58fb86de4d14b4481c6ade9",
+    "bytes": 12185,
+    "root_apply_check": "PASS_READ_ONLY"
+  },
+  "static_preservation": {
+    "full_file_observation_inverse": "PASS",
+    "original_trainer_driver_inverse": "PASS",
+    "step_dispatch_inverse": "PASS",
+    "unchanged_existing_functions": 177,
+    "constants_and_driver_awaits_unchanged": "PASS",
+    "retained_samples_limit": 4,
+    "capped_string_sites": 14,
+    "no_sampler_await_send_print": "PASS",
+    "protected_paths_unchanged_from_parent": [
+      "scripts/combat/encounter_director.gd",
+      "scripts/combat/combat_manager.gd",
+      "scripts/net/encounter_host.gd",
+      "autoload/game_state.gd",
+      "scripts/save/save_game.gd",
+      "tools/net/press_inject.gd",
+      "tests/smoke_net_veridian_relic_key.gd",
+      "ralph/reports/FOUNDATIONS/trainer-fight-observation-source/review.md",
+      "ralph/reports/FOUNDATIONS/trainer-fight-observation-source/source-cut.json"
+    ],
+    "sampler_capped_string_sites": 9,
+    "signal_capped_string_sites": 5,
+    "new_callback_no_await_send_print": "PASS",
+    "killing_signal_encounter_scope": "EXACT_START_BINDING_OR_UNKNOWN",
+    "killing_verdict_rows_retained": 1,
+    "full_harness_inverse": "PASS",
+    "harness_step_exact_observation_inverse": "PASS",
+    "harness_report_exact_observation_inverse": "PASS",
+    "no_harness_pumping_send_timeout_return_or_cleanup_change": "PASS",
+    "coordinator_timeout_snapshots_per_peer": 1,
+    "bounded_fight_samples_per_heartbeat": 4,
+    "root_context_bindings": [
+      {
+        "path": "scripts/combat/encounter_director.gd",
+        "root_git_blob": "85d4e7d3a03a0c46b4457146eb139d0bf69504b1",
+        "root_git_lf_sha256": "e41363479614b153dc9206e7c01010579fc7a0f47a73de291a13848757facd0a"
+      },
+      {
+        "path": "scripts/combat/combat_manager.gd",
+        "root_git_blob": "842333b69a967f0935c1cdf257bb8c0762712f81",
+        "root_git_lf_sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a"
+      },
+      {
+        "path": "scripts/net/encounter_host.gd",
+        "root_git_blob": "8e93a2ba23d4fe25293a45f8c6edfeac1361383b",
+        "root_git_lf_sha256": "e4ce9eb2868014d507bdbddceb4c8a55068287593d2f8eab6e0053486126445a"
+      },
+      {
+        "path": "autoload/game_state.gd",
+        "root_git_blob": "ae8c5948f6670b646c05e7e4564bf2f270c4723a",
+        "root_git_lf_sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156"
+      },
+      {
+        "path": "scripts/save/save_game.gd",
+        "root_git_blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+        "root_git_lf_sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8"
+      },
+      {
+        "path": "tools/net/press_inject.gd",
+        "root_git_blob": "f78ce51f126ab62ea543b78b527cb98a3e258db1",
+        "root_git_lf_sha256": "e8f127599591a2d3cca15c3c3a49da76bbb1f8dce3b9947f56b5baca772d6758"
+      },
+      {
+        "path": "tests/helpers/net_harness.gd",
+        "root_git_blob": "4c51636340bd0fbbbff939ef9afa8e0856830ec5",
+        "root_git_lf_sha256": "c578766ea3a850e2203db860a6e07315bb484158cc26f2e1b067f45c6ecd654d"
+      },
+      {
+        "path": "tests/smoke_net_veridian_relic_key.gd",
+        "root_git_blob": "531dcff8342541698589cc3965f02c622e790f64",
+        "root_git_lf_sha256": "50908fce831c1b29a32ddb38064b9279ff3db2268a45cae621876751f6689242"
+      }
+    ]
+  },
+  "actual_failed_attempt_summary_sha256": "63b79858c8d84ebddec6dc6f50d228c73f90d0ef5c897c9b0c703328ec6fd67d",
+  "actual_failed_NET_RUN_sha256": "f3e76bd1852a959e76cc0a24a6ced60a98ce7ab72d7f287dd68e67db11a1470a",
+  "native_engine_parser_import_render_export_ci_runs_here": 0,
+  "production_changes": 0,
+  "budget_action_HP_input_success_changes": 0,
+  "pure_python_policy_controls": {
+    "cases": 19,
+    "sha256": "235ea3e2ca4d27e5de5223c1bbb6861d9a1c689eb9ba1d0abe83c9db7640eb09",
+    "native_execution": false
+  },
+  "preimages": [
+    {
+      "path": "tools/net/peer_runner.gd",
+      "root_git_blob": "12c1deaf7c5b4f168fa9e2841d3be33f0558578c",
+      "preimage_sha256": "cacd5493f4b027c1eca6455872d748484b404b7dfe0eb0b2555c69c495c8946f",
+      "preimage_bytes": 363263,
+      "preimage_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/peer_runner.gd.preimage",
+      "candidate_git_blob": "7b13f62cb6df5fa907992dd9cda40f9eb64a4cf0",
+      "candidate_sha256": "560e68eb1570bc69488f3fcbf411f4044eb3fe8a3b146fbea181d19b047f7690",
+      "candidate_bytes": 368016
+    },
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "root_git_blob": "4c51636340bd0fbbbff939ef9afa8e0856830ec5",
+      "preimage_sha256": "c578766ea3a850e2203db860a6e07315bb484158cc26f2e1b067f45c6ecd654d",
+      "preimage_bytes": 48562,
+      "preimage_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/net_harness.gd.preimage",
+      "candidate_git_blob": "36a287fd385d85d1eca53f01c9273d0287bc9aec",
+      "candidate_sha256": "c3cd3e09b86daf3d4617490a60684b449f5549ab1afc3297bd68caf1fac78b16",
+      "candidate_bytes": 49490
+    }
+  ]
+}

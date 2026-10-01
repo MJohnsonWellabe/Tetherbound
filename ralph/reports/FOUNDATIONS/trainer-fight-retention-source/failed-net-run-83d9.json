@@ -1,0 +1,332 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 360.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 1500.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"both peers felled the Warden (no verdict)"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"control_port": 63156,
+			"exited": false,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34881.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "83d9dada76b6",
+				"peer": 0.0,
+				"pid": 5576.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/net-run/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 965.0,
+				"physics_frame": 4380.0,
+				"pos": [
+					4.30564022064209,
+					6.17194271087646,
+					7657.90771484375
+				],
+				"session_peers": [
+					1.0
+				],
+				"state_hash": 949396019.0,
+				"t": 249.02,
+				"trainer_fight": {
+					"director_valid": true,
+					"manager_valid": true,
+					"running": true,
+					"samples": [
+						{
+							"action_timer": 0.120333333333333,
+							"active_fainted": false,
+							"active_hp": 225.977484652735,
+							"ally_valid": true,
+							"budget_frames": 5160.0,
+							"buffered_attack": "",
+							"creatures_seen": 4.0,
+							"driver_frames": 3064.0,
+							"encounter_id": "1:1",
+							"enemy_body": "TrainerCreature_warden_aldis_4",
+							"enemy_hp": 6.0,
+							"enemy_max_hp": 239.2,
+							"enemy_species": "meadowhart",
+							"enemy_valid": true,
+							"fighting": true,
+							"host_authority": {
+								"accepted_at_ms": 245317.0,
+								"cooldown_ms": 400.0,
+								"deadline_ms": 245717.0,
+								"last_action": 64.0
+							},
+							"host_authority_available": true,
+							"manager_action": 1.0,
+							"missing_body_checks": 0.0,
+							"not_fighting_checks": 285.0,
+							"not_fighting_streak": 0.0,
+							"phase": "inject_quick",
+							"physics_frame": 4200.0,
+							"process_frame": 912.0,
+							"queued_opponents": 1.0,
+							"quick_cooldown": 0.333333333333333,
+							"quick_not_ready_checks": 62.0,
+							"quick_ready": false,
+							"retained_refusal": {
+								"code": "",
+								"kind": "",
+								"reason": ""
+							},
+							"running": true,
+							"sampled_ms": 246005.0,
+							"started_ms": 149704.0,
+							"started_physics_frame": 457.0,
+							"started_process_frame": 263.0,
+							"stride": 20.0,
+							"submitted_action": 64.0,
+							"submitted_action_at_start": 0.0,
+							"swings": 76.0,
+							"trainer_active": true
+						},
+						{
+							"action_timer": 0.187,
+							"active_fainted": false,
+							"active_hp": 242.4,
+							"ally_valid": true,
+							"budget_frames": 5160.0,
+							"buffered_attack": "",
+							"creatures_seen": 4.0,
+							"driver_frames": 3104.0,
+							"encounter_id": "1:1",
+							"enemy_body": "TrainerCreature_warden_aldis_4",
+							"enemy_hp": 6.0,
+							"enemy_max_hp": 239.2,
+							"enemy_species": "meadowhart",
+							"enemy_valid": true,
+							"fighting": true,
+							"host_authority": {
+								"accepted_at_ms": 246698.0,
+								"cooldown_ms": 400.0,
+								"deadline_ms": 247098.0,
+								"last_action": 66.0
+							},
+							"host_authority_available": true,
+							"manager_action": 1.0,
+							"missing_body_checks": 0.0,
+							"not_fighting_checks": 285.0,
+							"not_fighting_streak": 0.0,
+							"phase": "inject_quick",
+							"physics_frame": 4260.0,
+							"process_frame": 920.0,
+							"queued_opponents": 1.0,
+							"quick_cooldown": 0.4,
+							"quick_not_ready_checks": 62.0,
+							"quick_ready": false,
+							"retained_refusal": {
+								"code": "",
+								"kind": "",
+								"reason": ""
+							},
+							"running": true,
+							"sampled_ms": 247065.0,
+							"started_ms": 149704.0,
+							"started_physics_frame": 457.0,
+							"started_process_frame": 263.0,
+							"stride": 20.0,
+							"submitted_action": 66.0,
+							"submitted_action_at_start": 0.0,
+							"swings": 78.0,
+							"trainer_active": true
+						},
+						{
+							"action_timer": -0.0126666666666666,
+							"active_fainted": false,
+							"active_hp": 249.6,
+							"ally_valid": true,
+							"budget_frames": 5160.0,
+							"buffered_attack": "",
+							"creatures_seen": 4.0,
+							"driver_frames": 3150.0,
+							"encounter_id": "1:1",
+							"enemy_body": "TrainerCreature_warden_aldis_4",
+							"enemy_hp": 0.0,
+							"enemy_max_hp": 239.2,
+							"enemy_species": "meadowhart",
+							"enemy_valid": true,
+							"fighting": true,
+							"host_authority": {
+								"accepted_at_ms": 0.0,
+								"cooldown_ms": 0.0,
+								"deadline_ms": 0.0,
+								"last_action": 0.0
+							},
+							"host_authority_available": true,
+							"manager_action": 0.0,
+							"missing_body_checks": 0.0,
+							"not_fighting_checks": 285.0,
+							"not_fighting_streak": 0.0,
+							"phase": "wait_physics",
+							"physics_frame": 4320.0,
+							"process_frame": 937.0,
+							"queued_opponents": 1.0,
+							"quick_cooldown": 0.0,
+							"quick_not_ready_checks": 62.0,
+							"quick_ready": true,
+							"retained_refusal": {
+								"code": "",
+								"kind": "",
+								"reason": ""
+							},
+							"running": true,
+							"sampled_ms": 248028.0,
+							"started_ms": 149704.0,
+							"started_physics_frame": 457.0,
+							"started_process_frame": 263.0,
+							"stride": 20.0,
+							"submitted_action": 67.0,
+							"submitted_action_at_start": 0.0,
+							"swings": 81.0,
+							"trainer_active": true
+						},
+						{
+							"action_timer": -0.0126666666666666,
+							"active_fainted": false,
+							"active_hp": 249.6,
+							"ally_valid": true,
+							"budget_frames": 5160.0,
+							"buffered_attack": "",
+							"creatures_seen": 4.0,
+							"driver_frames": 3204.0,
+							"encounter_id": "1:1",
+							"enemy_body": "TrainerCreature_warden_aldis_4",
+							"enemy_hp": 0.0,
+							"enemy_max_hp": 239.2,
+							"enemy_species": "meadowhart",
+							"enemy_valid": true,
+							"fighting": true,
+							"host_authority": {
+								"accepted_at_ms": 0.0,
+								"cooldown_ms": 0.0,
+								"deadline_ms": 0.0,
+								"last_action": 0.0
+							},
+							"host_authority_available": true,
+							"manager_action": 0.0,
+							"missing_body_checks": 0.0,
+							"not_fighting_checks": 285.0,
+							"not_fighting_streak": 0.0,
+							"phase": "inject_quick",
+							"physics_frame": 4380.0,
+							"process_frame": 965.0,
+							"queued_opponents": 1.0,
+							"quick_cooldown": 0.0,
+							"quick_not_ready_checks": 62.0,
+							"quick_ready": true,
+							"retained_refusal": {
+								"code": "",
+								"kind": "",
+								"reason": ""
+							},
+							"running": true,
+							"sampled_ms": 249020.0,
+							"started_ms": 149704.0,
+							"started_physics_frame": 457.0,
+							"started_process_frame": 263.0,
+							"stride": 20.0,
+							"submitted_action": 67.0,
+							"submitted_action_at_start": 0.0,
+							"swings": 83.0,
+							"trainer_active": true
+						}
+					]
+				},
+				"type": "heartbeat"
+			},
+			"pid": 5576,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"control_port": 63157,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34882.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "83d9dada76b6",
+				"peer": 1.0,
+				"pid": 19416.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/net-run/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 810.0,
+				"physics_frame": 4140.0,
+				"pos": [
+					10.0,
+					6.17109346389771,
+					7650.2001953125
+				],
+				"session_peers": [
+					1.0,
+					2093367065.0
+				],
+				"state_hash": 949396019.0,
+				"t": 244.215,
+				"type": "heartbeat"
+			},
+			"pid": 19416,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "root-veridian_relic_key-83d9dada76b6",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

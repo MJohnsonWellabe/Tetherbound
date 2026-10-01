@@ -755,6 +755,19 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 			return {"id": id, "verdict": "ERROR", "detail": "peer %d exited before a verdict for '%s'"
 				% [peer, action], "frames_used": 0}
 		if Time.get_ticks_msec() > deadline:
+			var observed_ms := Time.get_ticks_msec()
+			var timeout_heartbeat: Variant = p.get("last_heartbeat")
+			var received_s := float(p.get("last_heartbeat_t", 0.0))
+			# One detached copy of our bounded peer heartbeat, before finish()
+			# pumps cleanup frames. Receive age is not the peer's sample age.
+			p["command_timeout_observation"] = {
+				"id": id, "action": action.left(96), "phase": "timeout_before_finish",
+				"coordinator_observed_ms": observed_ms, "coordinator_deadline_ms": deadline,
+				"heartbeat_known": timeout_heartbeat is Dictionary,
+				"heartbeat_received_ms": received_s * 1000.0 if received_s > 0.0 else null,
+				"heartbeat_receive_age_ms": float(observed_ms) - received_s * 1000.0 if received_s > 0.0 else null,
+				"heartbeat": (timeout_heartbeat as Dictionary).duplicate(true) if timeout_heartbeat is Dictionary else null,
+			}
 			p["heartbeat_deferred_until_s"] = 0.0
 			return {"id": id, "verdict": "FAIL", "detail": "no verdict", "frames_used": 0}
 	return {} # unreachable; satisfies static return-path analysis on `while true`
@@ -1063,6 +1076,7 @@ func _write_run_json() -> void:
 			"control_port": p.get("control_port"), "hello": p.get("hello"),
 			"exited": p.get("exited"), "unexpected_exit": p.get("unexpected_exit"),
 			"last_heartbeat": p.get("last_heartbeat"), "hashes": p.get("hashes", []),
+			"command_timeout_observation": p.get("command_timeout_observation"),
 		})
 	var doc := {
 		"run_id": _run_id, "scene": _scene_for_run, "peers": peers_out,
