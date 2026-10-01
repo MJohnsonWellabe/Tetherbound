@@ -155,3 +155,23 @@ func test_alpha_timer_waits_for_all_departures_and_retains_fresh_generation_on_r
 	assert_eq(born.record.spawn_traits.captured_from.spawn_generation, 2)
 	assert_true(ALPHA.resolve(reload, id, 1, 2000, ["character_a"], "defeat").is_empty())
 	assert_true(ALPHA.resolve(reload, id, 2, 1800, ["character_a"], "defeat").is_empty())
+
+func test_first_alpha_roll_is_durable_without_invented_resolution_and_rejects_foreign_world() -> void:
+	var before := STATE.defaults("world")
+	var id := "hollows_alpha"
+	var born := ALPHA.first_spawn(before, id, "world_a", true, true)
+	assert_false(born.is_empty())
+	if born.is_empty(): return
+	assert_true(ALPHA.valid_plan(born, before, "world_a"))
+	assert_false(ALPHA.valid_plan(born, before, "world_b"))
+	assert_false(born.record.has("resolved_at_seconds"))
+	assert_false(born.record.has("required_departures"))
+	assert_true(STATE.validate("world", born.state, [], "world_a").is_empty())
+	assert_false(STATE.validate("world", born.state, [], "world_b").is_empty())
+	var reload: Dictionary = JSON.parse_string(JSON.stringify(born.state))
+	assert_true(STATE.validate("world", reload, [], "world_a").is_empty())
+	assert_eq(ALPHA.retained_spawn(reload, id), born.record.spawn_traits)
+	assert_true(ALPHA.first_spawn(reload, id, "world_a", false, false).is_empty())
+	var resolved := ALPHA.resolve(reload, id, 1, 100, ["character_a"], "catch")
+	assert_false(resolved.is_empty())
+	if not resolved.is_empty(): assert_true(STATE.validate("world", resolved.state, [], "world_a").is_empty())

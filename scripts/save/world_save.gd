@@ -155,7 +155,7 @@ static func scope_flags(v22: Dictionary, scope: String) -> Array:
 func write(world_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
 	if not preload("res://autoload/world_state.gd").foundation_world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id, payload.get("placed_buildings", [])).is_empty(): return false
 	var contract := preload("res://scripts/data/redesign_state.gd")
-	if not contract.validate("world", payload.get("redesign_world", contract.defaults("world"))).is_empty():
+	if not contract.validate("world", payload.get("redesign_world", contract.defaults("world")), [], str(payload.get("reward_delivery_namespace", ""))).is_empty():
 		return false
 	if not preload("res://autoload/world_state.gd").training_world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id, payload.get("placed_buildings", [])).is_empty():
 		return false
@@ -233,7 +233,7 @@ func read(world_id: String) -> Dictionary:
 			world_id, version, VERSION,
 		])
 		return {}
-	var errors := preload("res://scripts/data/redesign_state.gd").validate("world", data.get("redesign_world", preload("res://scripts/data/redesign_state.gd").defaults("world")))
+	var errors := preload("res://scripts/data/redesign_state.gd").validate("world", data.get("redesign_world", preload("res://scripts/data/redesign_state.gd").defaults("world")), [], str(data.get("reward_delivery_namespace", "")))
 	errors.append_array(preload("res://autoload/world_state.gd").foundation_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id, data.get("placed_buildings", [])))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id))
 	errors.append_array(preload("res://autoload/world_state.gd").portal_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id))

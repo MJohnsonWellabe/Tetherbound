@@ -1786,7 +1786,7 @@ func _finalize_snapshot_receive() -> bool:
 	# Reject the whole bootstrap before any world, registry or queued-delta
 	# mutation. WorldState's void loader refusal must never be acknowledged.
 	var redesign_errors := REDESIGN_STATE.validate("world",
-		data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+		data.get("redesign_world", REDESIGN_STATE.defaults("world")), [], str(data.get("reward_delivery_namespace", "")))
 	redesign_errors.append_array(TRAINING_WORLD.foundation_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))
 	redesign_errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(
 		data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))

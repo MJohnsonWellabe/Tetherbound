@@ -38,6 +38,12 @@ func present_from_catch(creature: RefCounted) -> bool:
 	if offer.is_empty() or creature == null or creature.get("uid") != offer.creature.uid: return false
 	return _present(offer, creature)
 
+func owns_pending_capture(creature: RefCounted) -> bool:
+	if creature == null or _active.is_empty() \
+		or creature.get_meta("foundation_capture_offer", "") != _active: return false
+	var offer := _offer(_active, true)
+	return not offer.is_empty() and creature.get("uid") == offer.creature.uid
+
 func _bind_release_service() -> bool:
 	var mounted := false
 	for node: Node in get_tree().root.find_children("*", "Control", true, false):

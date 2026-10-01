@@ -24,9 +24,6 @@ func first_spawn(director: Node, id: String) -> Dictionary:
 	if RULES.config().get("runtime_enabled") != true or owner.call("is_host") != true or site.is_empty() \
 		or not is_instance_valid(director) or director.get("_session") != owner or director.get_script() == null \
 		or not owner.FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {}
-	var realm_id := "water" if site.biome == "tidewake" else str(site.biome)
-	var realm: Node = owner.call("_portal_world_node", realm_id)
-	if realm == null or not realm.is_ancestor_of(director): return {}
 	var world: RefCounted = owner.call("_game").world
 	var epoch := str(owner.call("_altar_current_epoch"))
 	var retained := RULES.retained_spawn(world.redesign_world, id)
@@ -34,21 +31,20 @@ func first_spawn(director: Node, id: String) -> Dictionary:
 	if not world.redesign_world.alpha_cycles.sites.get(id, {}).is_empty(): return {}
 	var key := JSON.stringify([world.reward_delivery_namespace, epoch, id]).sha256_text()
 	if not _first_pending.has(key):
-		var look: Node = null
-		for candidate: Node in get_tree().get_nodes_in_group(&"day_cycle"):
-			if realm.is_ancestor_of(candidate) and candidate.get_script() != null \
-				and candidate.get_script().resource_path == "res://scripts/world/world_look.gd":
-				if look != null: return {}
-				look = candidate
-		# This realm's actual look owns both the day state and applied weather.
-		# An empty weather delta is its existing clear-weather state.
-		if look == null or not look.has_method("is_dark") or not look.get("_weather") is Dictionary: return {}
 		_first_pending[key] = {"world": weakref(world), "director": weakref(director), "epoch": epoch,
-			"world_namespace": world.reward_delivery_namespace, "site_id": id,
-			"night": bool(look.call("is_dark")), "weather": not look.get("_weather").is_empty()}
+			"world_namespace": world.reward_delivery_namespace, "site_id": id}
 	var frozen: Dictionary = _first_pending[key]
 	if frozen.world.get_ref() != world or frozen.director.get_ref() != director or frozen.epoch != epoch \
 		or frozen.world_namespace != world.reward_delivery_namespace: return {}
+	# Initial population is built before shell_build_complete. Retain its
+	# request, then sample the owning look once the normal realm is ready.
+	var realm_id := "water" if site.biome == "tidewake" else str(site.biome)
+	var realm: Node = owner.call("_portal_world_node", realm_id)
+	var look := _realm_look(site)
+	if realm == null or not realm.is_ancestor_of(director) or look == null: return {}
+	if not frozen.has("night"):
+		frozen.night = bool(look.call("is_dark"))
+		frozen.weather = not look.get("_weather").is_empty()
 	var plan := RULES.first_spawn(world.redesign_world, id, frozen.world_namespace, frozen.night, frozen.weather)
 	if plan.is_empty(): return {}
 	var result: Dictionary = _commit(plan)
@@ -94,7 +90,7 @@ func resolution(director: Node, encounter_id: String, outcome: String, capture: 
 	var key := JSON.stringify([world.reward_delivery_namespace, owner.call("_altar_current_epoch"), id, generation]).sha256_text()
 	if _settled.has(key): return {"ok": true, "durable": true}
 	if not _pending.has(key):
-		var seconds := _seconds()
+		var seconds := _seconds(site)
 		var census := _census(site)
 		if seconds < 0 or census.is_empty(): return {"ok": false, "durable": false, "code": "alpha_live_census_clock_required"}
 		_pending[key] = {"world": weakref(world), "world_namespace": world.reward_delivery_namespace,
@@ -102,11 +98,32 @@ func resolution(director: Node, encounter_id: String, outcome: String, capture: 
 			"generation": generation, "seconds": seconds, "characters": census, "outcome": outcome, "capture_offer": capture_row}
 	return _retry(key)
 
-func _seconds() -> int:
-	var clock: Node = get_tree().get_first_node_in_group(&"day_cycle")
-	if clock == null or not clock.has_method("elapsed_seconds"): return -1
+func _realm_look(site: Dictionary) -> Node:
+	var realm_id := "water" if site.get("biome") == "tidewake" else str(site.get("biome", ""))
+	var realm: Node = session().call("_portal_world_node", realm_id)
+	if realm == null: return null
+	var found: Node = null
+	for candidate: Node in get_tree().get_nodes_in_group(&"day_cycle"):
+		if not realm.is_ancestor_of(candidate) or candidate.get_script() == null \
+			or candidate.get_script().resource_path != "res://scripts/world/world_look.gd": continue
+		if found != null: return null
+		found = candidate
+	return found if found != null and found.has_method("is_dark") \
+		and found.has_method("elapsed_seconds") and found.get("_weather") is Dictionary else null
+
+func _seconds(site: Dictionary) -> int:
+	var clock := _realm_look(site)
+	if clock == null: return -1
 	var elapsed := float(clock.call("elapsed_seconds"))
-	return int(floorf(elapsed)) if is_finite(elapsed) and elapsed >= 0.0 else -1
+	var cycle: RefCounted = clock.get("_cycle")
+	if cycle == null: return -1
+	var length := float(cycle.get("day_length_seconds"))
+	var world: RefCounted = session().call("_game").world
+	if not is_finite(elapsed) or elapsed < 0.0 or not is_finite(length) or length <= 0.0 or world.day < 1: return -1
+	# elapsed_seconds is a within-day clock restored modulo day length.
+	# Include the durable day so a three-day timer survives ordinary reloads.
+	return (int(world.day) - 1) * int(RULES.config().day_seconds) \
+		+ int(floorf(fposmod(elapsed, length) / length * int(RULES.config().day_seconds)))
 
 func _region(peer: Dictionary) -> String:
 	var owner := session()
@@ -166,14 +183,12 @@ func _host_context(id: String) -> Dictionary:
 	var host := {"is_host": true, "redesign_world": game.world.redesign_world.duplicate(true),
 		"world_namespace": game.world.reward_delivery_namespace}
 	if not RULES.retained_spawn(host.redesign_world, id).is_empty(): return host
-	var clock: Node = get_tree().get_first_node_in_group(&"day_cycle")
-	var weather: Node = get_tree().get_first_node_in_group(&"weather")
-	var seconds := _seconds()
-	if not _census(site).is_empty() or seconds < 0 or clock == null or not clock.has_method("is_dark") \
-		or weather == null or not weather.has_method("weather"): return {}
+	var clock := _realm_look(site)
+	var seconds := _seconds(site)
+	if not _census(site).is_empty() or seconds < 0 or clock == null: return {}
 	host.world_seconds = seconds
 	host.night = bool(clock.call("is_dark"))
-	host.weather = str(weather.call("weather")) != "clear"
+	host.weather = not clock.get("_weather").is_empty()
 	return host
 
 func _publish(id: String, packet: Dictionary) -> bool:

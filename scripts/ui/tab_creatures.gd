@@ -1958,7 +1958,7 @@ func _maybe_begin_release() -> void:
 			if result.get("ok", false):
 				say("%s joins the belt." % str(pending.call("label")))
 			return
-		if _release_authority_enabled:
+		if _typed_release_required(pending):
 			# Foundation has not mounted typed free-slot capture admission yet.
 			# Keep the actual pending catch intact; an enabled mode cannot grant
 			# it locally or silently accept a volunteer outside the host seam.
@@ -2556,7 +2556,7 @@ func _begin_farewell(index: int) -> void:
 	# close, no tab away"). Same lever the "done" beat below already uses for
 	# the identical reason.
 	menu.call("override_footer", " ")
-	if _release_authority_enabled:
+	if _typed_release_required(_pending_catch()):
 		_release_quote = _quote_release_choice()
 		if _release_quote.is_empty():
 			_farewell_release.disabled = true
@@ -2588,7 +2588,7 @@ func _back_to_choosing() -> void:
 func _do_release() -> void:
 	if _release_stage != "confirm":
 		return
-	if _release_authority_enabled:
+	if _typed_release_required(_pending_catch()):
 		_submit_typed_release()
 		return
 	var game := state()
@@ -2668,6 +2668,15 @@ func _show_release_done(released: RefCounted, newcomer_name: String, payout_text
 ## Pending rebind needs reconcile_release(release_id), querying the original
 ## admitted character's durable decision. resolved:true marks final completion;
 ## unknown/in-flight/owner-save recovery must not settle or mint another id.
+func _typed_release_required(pending: RefCounted) -> bool:
+	if not _release_authority_enabled: return false
+	# A submitted typed decision remains under its original service until its
+	# completion signal. An idle scoped service must not capture later catches.
+	if not _release_request_id.is_empty(): return true
+	if is_instance_valid(_release_service) and _release_service.has_method("owns_pending_capture"):
+		return _release_service.call("owns_pending_capture", pending) == true
+	return true
+
 func configure_release_service(service: Node) -> bool:
 	if (_release_stage != "" and _release_request_id.is_empty()) or not is_instance_valid(service): return false
 	for method: String in ["quote_release", "submit_release", "reconcile_release"]:

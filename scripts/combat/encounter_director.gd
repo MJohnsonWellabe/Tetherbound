@@ -914,7 +914,6 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty():
 			spawn_packet = _session.call("foundation_alpha_first_spawn", self, alpha_site)
 			cycle = foundation_alpha_cycle(alpha_site)
-			if spawn_packet.is_empty(): continue
 		if spawn_packet.is_empty() and cycle.get("status") == "active":
 			spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
 		if not spawn_packet.is_empty(): set_meta("foundation_alpha_spawning_" + alpha_site, true)
@@ -924,7 +923,9 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			# (`_make_alpha()`/`_apply_elder()` below). Once it is beaten,
 			# caught or freed, this spot simply spawns one fewer body -- the
 			# rest of an ordinary-population cluster (`n > 0`) is untouched.
-			if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty())):
+			if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty()) \
+				or (_session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+					and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty() and spawn_packet.is_empty())):
 				continue
 			var member_packet: Dictionary = spawn_packet if n == 0 else {}
 			var repeat_world: RefCounted = get_node("/root/Game").world if not member_packet.is_empty() else null

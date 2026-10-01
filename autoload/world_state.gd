@@ -307,7 +307,7 @@ func load_data(data: Dictionary) -> void:
 		push_error("World actor vitals refused: %s" % "; ".join(vitals_errors))
 		return
 	var redesign: Variant = data.get("redesign_world", REDESIGN_STATE.defaults("world"))
-	var redesign_errors := REDESIGN_STATE.validate("world", redesign)
+	var redesign_errors := REDESIGN_STATE.validate("world", redesign, [], str(data.get("reward_delivery_namespace", "")))
 	if not redesign_errors.is_empty():
 		push_error("World schema refused: %s" % "; ".join(redesign_errors))
 		return
