@@ -1,0 +1,39 @@
+{
+  "parent_training_commit": "bd314fc80813aa35544e40b7c05fb8b4aee4b945",
+  "owned_source_sha256": {
+    "scripts/creatures/traits.gd": "cd4dfc7403ecc5e12c459078e56fbed68e03f3032d2c8c2f92a9141084f9ae96",
+    "scripts/creatures/essence.gd": "084be588afafac3a8c512fa46e980ad50d4c4eaa51745d3311df31f472d60869",
+    "scripts/creatures/progression.gd": "cd5cda6386a7d2eff81e2299759a1b50003866906f2757d4575c79b57955ef78"
+  },
+  "adopted_helper_full_access_next": false,
+  "helper_final_sha256": "6f8dfa491ee2383999214b757901ce2898e5fb4dad7f75a23ea26cfb981a237a",
+  "helper_review_disposition": "Reviewed source-only next packet. Its content pool is unchanged and new bulk is disabled metadata; kept frozen externally while actual transaction generation proceeds. New trait stages are separate owned successor code, not that exact helper output. Numeric/bool hardening and pool-only preview revisions remain for narrow rebase/review. No invented owner-only policy gates adopted.",
+  "additional_engine_unit_ci_gpu_runs": 0,
+  "live_callers_changed": false,
+  "item_catalog_or_shared_files_changed": false,
+  "portable_fields_added": false,
+  "seed_Sku_contract": "trait_seed_<canonical_trait_id>, kind trait_seed, exact matching trait_id, explicit positive finite integer stack; actual registered ItemDB only",
+  "trait_definition_gate": "actual F16 canonical manifest and exact row identity against draft; current registry Hardy only, no automatic admission of 29 proposals",
+  "state_gate": "0-3 unique rolled, extra taught keys 1/2/3 only, completed breakthrough tier 1/3/5, cross-list uniqueness, preserve existing fields; legacy composition not implemented",
+  "teach_intent_fields": [
+    "teach_id",
+    "creature_uid",
+    "slot",
+    "trait_id",
+    "payment_item",
+    "expected_character_revision"
+  ],
+  "teach_receipt": "trait_teach:<character>:<teach_id>:<hash of bound UID/slot/trait/payment/expected revision>",
+  "release_seed_receipt": "existing release:<uid> plus release:<uid>:seed:<chosen-trait hash> in same transaction_receipts; old no-seed releases never pay retrospective seeds",
+  "tuning": "existing traits.json teaching.slots essence_cost and primary-type proposal; no new human approval inferred for dual-type technical debit",
+  "required_integration": [
+    "seed item catalog/schema registration by allocated file owner",
+    "complete trait manifest and coherent identity admission; current canonical source loader pins Hardy only",
+    "actual Altar sender/reach/owned-caught release eligibility",
+    "registered training action expansion beyond current altar_spend/wild_defeat, operation reconstruction, roster-removal/replacement-safe owner application",
+    "same-record derived power rebuild without unintended healing/effect/mapping choice",
+    "typed world acceptance and real bool owner-save/replay/ACK",
+    "actual selected transaction batch and named real-path/per-trait/distribution proofs"
+  ],
+  "acceptance_claim": false
+}

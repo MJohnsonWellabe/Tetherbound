@@ -1,0 +1,36 @@
+{
+  "scope": "Owned detached essence/progression/config only. No shared caller/net/save/build/items/CreatureInstance source changes, no UI packet rewrite, no ordinary XP reduction. Original pushed source remains frozen; lossless ignored successor patch is reviewable.",
+  "producer_entry": "ESSENCE.stage_host_wild_victory(fullAdmittedState,actualCharacterId,actualRegistryRevision,actualPeerId,actualWorldNamespace,currentHostSessionEpoch,actualEncounterHostRecord,actualDeadEnemySnapshot,currentAuthenticatedDeployedUID,cfg,Progression.config(),Teaching.available_moves,Teaching.character_loadout_mirror)->Dictionary",
+  "source_builder": "host_wild_defeat_event uses actual existing record kind=wild, opponent HP=0/owner_npc empty, actual saved enemy UID/species/level/maxHP matched to host opponent capture card, positive actual body generation, host admitted participant character/joined sequence, and CURRENT owned deployment UID. No diagnostic strike receipt, client-supplied kind/HP/card/roster/position, inferred enemy UID, debug record or synthetic solo fallback.",
+  "event_identity": "wild_defeat:<SHA256([world_namespace,session_epoch,realm,encounter_id,body_generation,actual_enemy_uid])>. Freeze once at accepted killing-hit hook; independent of later presentation seq/wind/terminal broadcast. Reconnect/reload recovers ORIGINAL event from existing durable carrier, never rebuilds with a new epoch. Different respawn body/session IDs can earn again, same action per character cannot.",
+  "event_intent_fields": [
+    "event_id",
+    "world_namespace",
+    "encounter_id",
+    "enemy_uid",
+    "enemy_record",
+    "active_uid",
+    "eligible_uids",
+    "kind"
+  ],
+  "recipient_policy": "Each actual admitted fight participant receives its own transaction; no nonparticipant. Eligible creatures are all actual living owned members (max five). Fainted active member receives nothing while living bench still gets its existing reduced share; never choose an invented new active UID to give the full award. All-fainted has no eligible XP recipient and explicitly refuses. Current deployment, not opening participant UID, decides full versus bench after tag switch.",
+  "candidate_fields": "Entire same admitted eight-field state preserved; detached changes only party XP/levels/history/HP fraction/condition/known moves, canonical inventory essence stacks, canonical redesign_character mirror and once-only defeat receipt. No preexisting max/boost/IV/known/mastery history reset, no healing, no default/missing cap invention, no future tier lift.",
+  "growth_math": "Existing raw award and configured 0.35 used exactly once INSIDE detached canonical transaction. Positive eligible full/share awards floor to at least1. Cap stops levels/discards excess XP; victory battle/happiness and gained-level mood use existing CONDITION arithmetic. Actual main xp_award_for, party_share, rest bonuses and every old function byte-preserved.",
+  "typed_result": "stage_core_defeat proposal plus action=wild_defeat, action_id=event_id, intent=original8fieldEvent. Existing commit_host_training/SAME _character_authority private frozen stage, current world.reward_deliveries creature_training pending/accepted row, actual prepared bool world write, owner same-instance apply + bool character write + exact sender/receipt/revision accepted ACK. No alternate inventory/receipt registry or local fallback.",
+  "missing_authority_ownership": {
+    "Foundation": "Extend its single Altar training transaction to explicit host-only wild_defeat reconstruction. Add literal defeat receipt namespace to REDESIGN canonical validator (currently absent); no pretending it is an Altar/care receipt. Reuse SAME eight-field _records stage/pending/mutation guards and typed existing world carrier. Authenticate stable participant char/deployment independently of raw join packet. Add no client wild-defeat reward RPC. Validate caps strictly; cap-only correction is separately packaged for Altar.",
+    "Combat/Director owner": "Current _open_encounter_if_networked skips ALL solo and client-local fights. Create actual host-owned encounter/dead body identity for solo or use an equivalent actual trusted host producer; this helper deliberately refuses absent record. At accepted killing hit (_host_strike after actual set_opponent_hp, before set_phase/terminal _host_after_encounter_change and _finalize_shared_host_fight), freeze host source and actual participant/deployment/roster. Serialize per-participant prepared transaction. Do NOT publish done before awards stage as that currently triggers local gain_xp.",
+    "CombatManager owner": "When actual canonical mode is integrated, suppress _award_victory local XP/battle/history/mood mutation for BOTH killing-author and remote done-record paths. Host/source transaction owns those same effects once. Present actual accepted award/feed after settlement. Current _victory_awarded alone only prevents in-memory double call and cannot prove durable reload/rejoin.",
+    "Foundation and Combat owners": "Retain exact defeated source until each participant is durably journaled; never forget/rebuild it or use full-XP fallback on a refused/unknown proposal. Recovery after host save works from existing typed pending row. Existing once-completion/authored bonus grants must serialize after training settlement or compose through same verified transaction; they cannot mutate owner inventory/condition while training ACK pending.",
+    "Root integration": "Full bag currently refuses detached XP+essence together. Preserve exact source and permit appropriate precommit inventory cleanup/retry without dropping reward or deadlocking mutation locks; no staged acceptance/success and no zero/fallback XP claim. This is an explicit integration failure case, not a unilateral new payout/escrow policy. Stage cannot claim F27#2 until actual bag/reconnect/cap/ordinary-route path passes. Ordinary raw earnings remain active meanwhile."
+  },
+  "minimum_named_proofs_after_independent_gate": [
+    "actual mounted solo wild kill -> earned type essence -> Altar one-level spend with prepared saves",
+    "two participants/current tag switch and fainted active/living bench, no nonparticipant grant, positive full/share, canonical cap",
+    "same immutable event/receipt replay, host world false write, owner false write/lost ACK/rejoin, full bag source retained and cleanup retry",
+    "actual ordinary route ledger including earned essence/spend/breakthrough constraints before reduced path enables"
+  ],
+  "engine_unit_ci_gpu_runs": 0,
+  "acceptance_claim": false,
+  "landing_ready": false
+}

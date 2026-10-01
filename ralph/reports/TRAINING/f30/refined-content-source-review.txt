@@ -1,0 +1,9 @@
+F30 refined disabled draft review. Not an acceptance verdict.
+Patch SHA256: 3a03077d8cba400a8e5feac17503ed4dfe65810e8a9751cbca260f03b93c760b
+Output byte hashes match updated helper provenance. Patch not applied to minimal F27 cut.
+Thirty distinct IDs/effect IDs: 12 Common, 10 Rare, 8 Epic; rarity magnitude bounds respected. Existing hardy canonical row remains unchanged; 29 IDs still registration proposals.
+CORRECTION TO EARLIER REVIEW: canonical_catalog mismatch appends an error, and an existing accumulated-error return runs before later catalogue iteration. The earlier required-guard finding was incorrect and is withdrawn. No source fix is required for that finding.
+Strongest eligible magnitude per scalar target is an explicitly disabled proposal pending COMBAT review; output proposals remain admissible=false. Revised single-effect boundaries avoid incidental extra range/speed/Burst behavior changes.
+Personality mapping is disabled and preserves existing identities/bond threshold pending resolution. Neither this content review nor pending policy proposals authorize live mapping/stacking/teaching.
+All F30 criteria remain OPEN: no gameplay hooks, runtime registration, real effects, catch/Altar UI, stable release/teach transactions or named per-trait tests. No engine, unit/distribution, CI or GPU run.
+Owner-only decisions already identified in STATE should remain owner_needs. Teaching dual-type debit and effect formula order are implementation/design review issues unless they conflict with owner rules; do not invent additional owner approval gates.

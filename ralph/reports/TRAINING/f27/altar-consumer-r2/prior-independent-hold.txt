@@ -1,0 +1,145 @@
+Independent READ-ONLY strict source review — Altar consumer r1
+
+VERDICT: SOURCE HOLD / ACTIVATION BLOCKED. This is a source and contract verdict only.
+No consumer/producer runtime, native acceptance, transaction proof, unit/CI result or
+F27 acceptance is claimed. No absent or mocked producer was approved.
+
+Pins and integrity
+- Consumer evidence worktree HEAD: 4839e34afb9f134bdcdda74e25dd96d4a9f2a0bb.
+- Actual canonical main compared: 7dcd2a8649660553f38702f2de71390efc6f1343.
+- Owned delta is from b00c98678c56f10ab3640ab547af08062afbae68, not a complete
+  main-based implementation. Shared builder delta is from bcbcae5e59d0e13fe20d975b95b2415de6a81872.
+- Source-cut JSON observed SHA256: 409fee82113b34db8a14cf36a2314cf0dfb0f261ec193c8e608169bf068afa02.
+- Embedded owned patch SHA256: 79751d6aaf8a91108173793b90143182a09b8dfbc727ca4e4c98047e7d27e990.
+- Embedded builder patch SHA256: 4ffb80064ccab93ada73bb83bc128c9ff3cf5af36b05ad2a9d0b81d3aca3ff46.
+- Reconstructed all five owned after-files in memory from the stated base and
+  patch. All match the supplied ignored after/ snapshots exactly after LF
+  normalization. Both embedded patch digests match the declared digests.
+- Session, CharacterAuthority, LedgerRpc, SaveGame and build_placer bytes are
+  identical between the stated inspected bcb main and actual 7dcd main.
+- review.json contains individual before/after SHA256 pins, canonical Git-blob
+  pins, final preservation checks and exact Lookdev/training status snapshots.
+
+Concrete findings
+
+R1 — MEDIUM conditional consumer protocol-hardening gap, not an observed producer failure.
+Location: after/scripts/ui/altar_service.gd:254-271; altar_panel.gd:_on_completed.
+Trace: retain a submitted original intent with _pending.durable=false while the
+client has not yet received the world journal. Deliver from the currently bound
+Session a Dictionary {ok:false,resolved:true,code:"decision_unavailable"} for the
+same station/spend/context. _accept_result checks only that ok/resolved are bool;
+with no known durable row it erases _pending at line 268. The panel also clears its
+_pending_id. The original five-field intent is no longer available for reconcile,
+even though the code identifies the decision as unknown; the displayed message
+still says the choice is waiting for confirmation. A pending owner-save failure
+marked resolved:true without durable evidence follows the same path.
+This packet violates the proposed producer schema (unknown must be resolved:false).
+I have NOT proved that any real Session emits it: the training producer is absent.
+Still, the defensive consumer path cannot distinguish a known precommit refusal
+from contradictory/underspecified terminal uncertainty. Before calling the
+consumer independently robust, require the explicit known-precommit refusal shape
+and keep decision_unavailable/awaiting_saved_decision/owner_training_save_failed
+unresolved regardless of an inconsistent resolved bit. Alternatively this must
+remain an explicit producer validation invariant, verified on the actual adapter;
+method-name presence or a dummy success node cannot supply that verification.
+
+R2 — HIGH activation/integration dependency: the narrow patch is not main-complete.
+Locations: essence.gd:196,258,260; canonical main progression.gd; source-cut owned paths.
+Actual main 7dcd has no Progression.staged_next_level/staged_training_condition;
+the Training 4839/b00 source does. Thus applying only this five-file delta to main
+cannot supply those referenced static helpers. The delta also assumes the b00
+Altar/service/Essence baseline. Independently pin/review the required bounded pure
+Training prerequisites; do not solve this by landing the entire Training branch
+or enabling the XP reduction before the ordinary earned essence/Altar route gate.
+This is a concrete dependency counterexample, not a claim of a launched parser failure.
+
+R3 — REQUIRED Foundation boundary; missing producer is declared, not a hidden fallback.
+Actual main Session has no altar_station_available/quote/submit/reconcile methods
+or quote/spend completion signals. Registry has no stage/staged/finish creature
+training, LedgerRpc has no training prepared journal, Session has no owner-training
+retry/save/settle guards. Service._bind_session refuses before opening/submitting;
+Essence.commit_host_training and apply_training_owner refuse missing doors before
+mutation. Homestead's Altar buildable and the proposed two-line builder mount are
+also absent from canonical main. Availability must stay false until the real
+producer, mounted catalogue/plot identity and durable guards all exist.
+
+Important actual-main counterexamples for that producer review:
+(a) Session.admitted_character_state at 1745 returns actor_stat_state; authority
+state at 159 is full, actor_stat_state at 169 clears realm_hearts and relics_hung.
+A character with an earned selection/hung relic would get a masked baseline if
+that combat accessor were reused. Training must use SAME authenticated registry
+state()+revision(), preserving all eight FIELDS, equipment and both escrows.
+(b) WorldLedger generic reward acceptance (1148+) and WorldState generic journal/
+accept branches (402/414) exclude actor_vitals but do not discriminate training.
+A nominal training row cannot acquire typed owner-save/revision proof by going
+through those generic reward doors. Foundation must close that generic path for
+training and implement the typed transition, exact sender/revision ACK, bool
+world write, rollback and settlement path. This review does not infer an existing
+live Altar exploit: the actual Altar capability is currently absent and refused.
+(c) A Session-shaped object returning true or emitting saved:true is not proof of
+prepared owner/world saves or central mutation exclusion. The typed actual main
+SaveGame.save_character_prepared (940) and save_world_prepared (963) return bool;
+Foundation must connect those real results before success and guard all registry,
+Game/condition/inventory/snapshot writer arms while frozen settlement is pending.
+
+Source safeguards that are actually present
+- Mount proposal attaches within _spawn_building, the common placement/restoration
+  path after realm/index/group metadata. Deferred setup sees final placement. It
+  uses existing Interactable/actionable and input_owner, no held gameplay or extra
+  input reader. Local prechecks require actual current-tree Meadows Altar,
+  canonical buildable, committed unremoved array row and captured stable UID.
+  Station key contains UID, not the array index. Unique UID, exact pose/home-plot,
+  actual reach and authenticated sender must still be verified by Foundation.
+- Panel uses actual Game.local party forwarding; owned limit is 1..5, appropriately
+  not exactly five during early play. Pure _owned_index rejects a sixth, duplicate
+  UIDs and unowned initial spends. It stages on the detached actual baseline;
+  no new creature/gear/relic/cap is invented. Current cap is checked before a
+  one-level proposal; type selection is derived from actual species, candy=1.
+- Quote ids are random 16-byte hex; stale id/key/UID/context are rejected, callbacks
+  bind a source Node and require current Game.session. Deadline is authored 8s;
+  an obsolete/expired quote cannot become an expenditure. Solo synchronous signals
+  are handled before interpreting a pending return; panel suppresses reentrant
+  quote rebuild while the request call is running. Host recomputes price/CAS.
+- Spend request has exactly five fields; it is deep-copied before Session call.
+  Two-second retries query the original request rather than submit/reprice/new id.
+  Close keeps the pending ID, Session rebinding keeps _pending, mismatched context
+  cannot settle it, and a conflicting repeat with the same ID remains unresolved.
+- Receipt now binds UID/old level/payment/cost/original expected revision. Duplicate
+  evaluation precedes current revision/level math; stale reconnect cannot mint a
+  fresh debit. Seven-field conflicting history refuses instead of retrogranting.
+- _saved_decision_matches requires saved/durable and accepted current-world typed
+  row plus canonical owner receipt replay matching the original five fields and
+  retention in that accepted row. It reads actual owner membership/inventory/
+  redesign receipt data, not a synthetic level/stat snapshot or save_data UI read.
+  It permits later accepted history retaining the receipt without reinstalling an
+  old party snapshot. This is a read-side witness, not proof of absent producer IO.
+- Owner application validates/recomputes typed before/after, retains a guard before
+  updates, mutates existing creature instances and changed slots only, then calls
+  actual save_character_prepared. A false write retains earned state and original
+  ID for retry. A successful write still needs _mark_owner_training_saved and exact
+  accepted host settlement. Internal owner/host staging returns are not final UI
+  success; host helper explicitly leaves resolved:false/pending_owner_save.
+
+Acceptable limitations and unproved boundaries
+- The consumer is dormant and the builder hook is an unapplied owner-path proposal.
+  No actual mounted Altar interaction/earned route or two-peer/reload proof exists
+  in this cut. Source interfaces do not close F27#3/#4.
+- Consumer context contains stable character/world/namespace and Node identity,
+  not network epoch. Same-Session reconnect epoch/source filtering is explicitly
+  delegated to the missing authenticated Session adapter. Review that adapter;
+  do not equate the current consumer callback fence with an epoch implementation.
+- Consumer original intent is transient across process lifetime. Restart recovery
+  must reconstruct from the existing durable typed world row and canonical receipt
+  before readiness; this is not authority to add a second persisted roster/balance.
+- Known refusal may release a pending intent; unknown/lost ACK never may. Normal
+  resolved:false and known durable failed-save paths preserve it; R1 is the
+  conditional malformed/contradictory terminal case.
+- Old receipt-only history is not a new award. Seven-field unaccepted draft receipt
+  changes and old-UID historical confirmation need explicit compatibility handling
+  if any external accepted history exists; no fake migration/payout is approved.
+- Prompt rendering/controller focus, GDScript parsing, exact live bool IO, async
+  network/rejoin ordering and central exclusions are UNPROVED here.
+
+Only .tmp/altar-consumer-independent-r1/strict-review.txt and review.json were
+written. No tracked/source edits, Git mutations, engine/import/render/export,
+unit/CI, purchases or external messages. Prior Lookdev work was not edited.

@@ -30,6 +30,8 @@ const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const TRAINING_READOUT := preload("res://scripts/ui/creature_training_readout.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
@@ -228,6 +230,9 @@ var _appraisal_pips: Control = null
 var _appraisal_stars: int = 0
 var _detail_traits: Label = null
 var _detail_trait_desc: Label = null
+var _detail_training_cap: Label = null
+var _detail_training_essence: Label = null
+var _detail_training_traits: Label = null
 var _detail_xp: Label = null
 var _detail_xp_bar: ProgressBar = null
 var _move_quick_icon: TextureRect = null
@@ -321,6 +326,13 @@ var _release_land: int = 0
 ## lets `_poll_release()` end the stale stage so the re-presented creature is
 ## staged afresh, focus on its row, instead of leaving the pad on nothing.
 var _release_for: RefCounted = null
+## F27 typed capture/release integration is injected by the character authority
+## owner. Once enabled it never falls back to UI roster mutation on failure.
+var _release_service: Node = null
+var _release_authority_enabled := false
+var _release_request_id := ""
+var _release_quote: Dictionary = {}
+var _release_context: Dictionary = {}
 
 ## The newcomer's row. Deliberately NOT in `_rows`: that array is the five-slot
 ## contract `smoke_menu.gd` asserts on, and a sixth entry there would be the
@@ -844,6 +856,12 @@ func _build_detail() -> Control:
 	_best_caption.add_theme_color_override("font_color", UITokens.WARNING)
 	bond_wrap.add_child(_best_caption)
 
+	# Keep the existing move rows above this extra readout. The existing detail
+	# scroll exposes the authored power/slot information at the same text floor.
+	_detail_training_cap = _training_label(panel)
+	_detail_training_essence = _training_label(panel)
+	_detail_training_traits = _training_label(panel)
+
 	_detail_status = Label.new()
 	_detail_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail_status.add_theme_font_size_override("font_size", UITokens.FONT_READ)
@@ -866,6 +884,17 @@ func _build_detail() -> Control:
 	panel.add_child(_detail_hint)
 
 	return panel
+
+
+func _training_label(parent: Node) -> Label:
+	var label := Label.new()
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.visible = false
+	parent.add_child(label)
+	return label
 
 
 ## R4.6's ceremony: sits in the same slot `_build_detail()`'s panel occupies
@@ -1065,6 +1094,8 @@ func first_focus() -> Control:
 	if _release_stage == "confirm" and _farewell_keep != null:
 		return _farewell_keep
 	if _release_stage == "done" and _farewell_done != null:
+		return _farewell_done
+	if _release_stage == "waiting" and _farewell_done != null:
 		return _farewell_done
 	if _release_stage.begins_with("guardian") and _guardian_focus_target() != null:
 		return _guardian_focus_target()
@@ -1275,6 +1306,12 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_appraisal_pips.queue_redraw()
 		_detail_traits.text = ""
 		_detail_trait_desc.text = ""
+		_detail_training_cap.text = ""
+		_detail_training_essence.text = ""
+		_detail_training_traits.text = ""
+		_detail_training_cap.visible = false
+		_detail_training_essence.visible = false
+		_detail_training_traits.visible = false
 		_detail_xp.text = ""
 		_detail_xp_bar.value = 0.0
 		_move_quick_name.text = ""
@@ -1356,6 +1393,16 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_detail_traits.visible = not _detail_traits.text.is_empty()
 	_detail_trait_desc.visible = not _detail_trait_desc.text.is_empty()
 
+	var game := state()
+	var player: RefCounted = game.get("local") if game != null else null
+	var training := TRAINING_READOUT.inspect_owned(player, creature)
+	_detail_training_cap.text = training.cap_text
+	_detail_training_essence.text = training.essence_text
+	_detail_training_traits.text = training.trait_text
+	_detail_training_cap.visible = not _detail_training_cap.text.is_empty()
+	_detail_training_essence.visible = not _detail_training_essence.text.is_empty()
+	_detail_training_traits.visible = not _detail_training_traits.text.is_empty()
+
 	var xp: int = int(creature.get("xp"))
 	var xp_needed: int = int(creature.call("xp_to_next", cfg))
 	# "EXP", not "XP": kenney_future's capital X is a two-bar glyph almost
@@ -1367,6 +1414,8 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_detail_xp_bar.value = 0.0 if xp_needed <= 0 else clampf(float(xp) / float(xp_needed), 0.0, 1.0) * 100.0
 	if _detail_xp_next != null:
 		_detail_xp_next.text = _xp_next_line(creature, cfg, _inventory())
+		if training.at_cap == true:
+			_detail_xp_next.text = "Current ceiling" if int(training.cap) == 60 else "Breakthrough needed"
 
 	_fill_move_row(
 		str(creature.get("move_quick")), "QUICK", creature_type,
@@ -1848,6 +1897,7 @@ func _poll_release() -> void:
 
 
 func _maybe_begin_release() -> void:
+	if not _release_request_id.is_empty(): return
 	_poll_guardian_decline_result()
 	if _evolution_stage != "" or _renaming != null:
 		return
@@ -1882,6 +1932,12 @@ func _maybe_begin_release() -> void:
 			var result: Dictionary = capture_service.complete_pending_capture(-1)
 			if result.get("ok", false):
 				say("%s joins the belt." % str(pending.call("label")))
+			return
+		if _release_authority_enabled:
+			# Foundation has not mounted typed free-slot capture admission yet.
+			# Keep the actual pending catch intact; an enabled mode cannot grant
+			# it locally or silently accept a volunteer outside the host seam.
+			say("Your catch is waiting for the host to finish saving your team.")
 			return
 		# Room opened between the catch and the ceremony (a load, a future
 		# system). No choice to stage — the newcomer just takes the free
@@ -2410,6 +2466,7 @@ func _water_veilfall() -> Node:
 ## spent here: the party, the newcomer and the seam are all untouched until
 ## `_do_release`.
 func _begin_farewell(index: int) -> void:
+	if not _release_request_id.is_empty(): return
 	var creature := _creature_at(index)
 	if creature == null:
 		return
@@ -2442,6 +2499,8 @@ func _begin_farewell(index: int) -> void:
 
 	_farewell_keep.visible = true
 	_farewell_release.visible = true
+	_farewell_keep.disabled = false
+	_farewell_release.disabled = false
 	_farewell_done.visible = false
 	_farewell_hint.visible = true
 	_detail_panel.visible = false
@@ -2472,6 +2531,14 @@ func _begin_farewell(index: int) -> void:
 	# close, no tab away"). Same lever the "done" beat below already uses for
 	# the identical reason.
 	menu.call("override_footer", " ")
+	if _release_authority_enabled:
+		_release_quote = _quote_release_choice()
+		if _release_quote.is_empty():
+			_farewell_release.disabled = true
+			_farewell_body.text += " Release is unavailable. Your team and items stay unchanged."
+		else:
+			var payout := _release_payout_text(_release_quote.get("payout", []))
+			_farewell_body.text += " " + ("No essence is paid for a newcomer you never kept." if index >= PARTY.MAX_CREATURES else "Release payout: " + payout + ".")
 	_farewell_keep.grab_focus()
 
 
@@ -2495,6 +2562,9 @@ func _back_to_choosing() -> void:
 ## Button and nothing else.
 func _do_release() -> void:
 	if _release_stage != "confirm":
+		return
+	if _release_authority_enabled:
+		_submit_typed_release()
 		return
 	var game := state()
 	var party: RefCounted = _party()
@@ -2529,6 +2599,12 @@ func _do_release() -> void:
 		_release_land = maxi(int(party.call("size")) - 1, 0)
 	game.set("pending_catch", null)
 
+	_show_release_done(released, str(pending.call("label")))
+
+
+## Presentation only, after the existing capture service or new character
+## authority has promoted its roster/inventory/receipt together.
+func _show_release_done(released: RefCounted, newcomer_name: String, payout_text: String = "") -> void:
 	var released_label := str(released.call("label"))
 	var released_species := str(released.get("species_id"))
 	_release_stage = "done"
@@ -2538,10 +2614,12 @@ func _do_release() -> void:
 		_farewell_body.text = "The meadow takes them back. The belt stays as it was."
 	else:
 		_farewell_body.text = "The meadow takes them back. %s settles into the empty holder." % \
-			str(pending.call("label"))
+			newcomer_name
+	if not payout_text.is_empty(): _farewell_body.text += " " + payout_text + " received."
 	_farewell_keep.visible = false
 	_farewell_release.visible = false
 	_farewell_done.visible = true
+	_farewell_done.text = "Back to the belt"
 	_farewell_hint.visible = false
 	# A single space, not "": empty restores the shell's default footer, which
 	# advertises "B  Close" — a button that does nothing while the shell is
@@ -2559,10 +2637,134 @@ func _do_release() -> void:
 	_viewport.call("set_species", released_species, released_shiny)
 
 
+## Service shape: quote_release(pending_uid, released_uid),
+## submit_release(request), release_completed(release_id, result).
+## An empty released_uid declines the unaccepted newcomer, with NO payout.
+## Pending rebind needs reconcile_release(release_id), querying the original
+## admitted character's durable decision. resolved:true marks final completion;
+## unknown/in-flight/owner-save recovery must not settle or mint another id.
+func configure_release_service(service: Node) -> bool:
+	if (_release_stage != "" and _release_request_id.is_empty()) or not is_instance_valid(service): return false
+	for method: String in ["quote_release", "submit_release", "reconcile_release"]:
+		if not service.has_method(method): return false
+	if not service.has_signal("release_completed"): return false
+	if is_instance_valid(_release_service) and _release_service.is_connected("release_completed", _on_release_completed):
+		_release_service.disconnect("release_completed", _on_release_completed)
+	_release_service = service
+	if not service.is_connected("release_completed", _on_release_completed): service.connect("release_completed", _on_release_completed)
+	_release_authority_enabled = true
+	if not _release_request_id.is_empty():
+		service.call("reconcile_release", _release_request_id)
+	return true
+
+
+func _quote_release_choice() -> Dictionary:
+	if not is_instance_valid(_release_service): return {}
+	var pending := _pending_catch()
+	var released := _creature_at(_release_target)
+	if pending == null or released == null or pending != _release_for: return {}
+	var pending_uid := str(pending.get("uid"))
+	var released_uid := "" if _release_target >= PARTY.MAX_CREATURES else str(released.get("uid"))
+	if pending_uid.is_empty() or (_release_target < PARTY.MAX_CREATURES and released_uid.is_empty()): return {}
+	var raw: Variant = _release_service.call("quote_release", pending_uid, released_uid)
+	if not raw is Dictionary or not bool(raw.get("ok", false)) \
+			or raw.get("pending_uid") != pending_uid or raw.get("released_uid") != released_uid \
+			or not raw.get("ceremony_id") is String or str(raw.ceremony_id).is_empty() \
+			or not raw.get("expected_character_revision") is int or int(raw.expected_character_revision) < 0 \
+			or not raw.get("payout") is Array: return {}
+	if released_uid.is_empty():
+		if not raw.payout.is_empty(): return {}
+	elif _release_payout_text(raw.payout).is_empty(): return {}
+	return raw.duplicate(true)
+
+
+func _release_payout_text(raw: Variant) -> String:
+	if not raw is Array or raw.size() > 2: return ""
+	var parts: PackedStringArray = []
+	var seen: Dictionary = {}
+	for stack: Variant in raw:
+		if not stack is Dictionary or not stack.get("id") is String or not stack.get("n") is int \
+				or int(stack.n) < 1 or seen.has(stack.id): return ""
+		var type_id := str(stack.id).trim_prefix("essence_")
+		if ESSENCE.essence_item(type_id) != stack.id: return ""
+		seen[stack.id] = true
+		parts.append("%d %s Essence" % [int(stack.n), type_id.capitalize()])
+	return ", ".join(parts)
+
+
+func _submit_typed_release() -> void:
+	if not _release_request_id.is_empty(): return
+	var current := _quote_release_choice()
+	if current.is_empty() or current != _release_quote:
+		say("Your team or the catch changed. Choose who goes free again.")
+		_back_to_choosing()
+		return
+	var released := _creature_at(_release_target)
+	var pending := _pending_catch()
+	if released == null or pending == null: return
+	_release_request_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	_release_context = {"released": released, "newcomer_name": str(pending.call("label")),
+		"pending_uid": str(current.pending_uid), "released_uid": str(current.released_uid),
+		"payout_text": _release_payout_text(current.payout), "target": _release_target}
+	var request := {"release_id": _release_request_id, "ceremony_id": str(current.ceremony_id),
+		"pending_uid": str(current.pending_uid), "released_uid": str(current.released_uid),
+		"expected_character_revision": int(current.expected_character_revision)}
+	_release_stage = "waiting"
+	_farewell_title.text = "Your choice is on its way."
+	_farewell_body.text = "Waiting for the host to save your team and payout together. You can return to the belt while it finishes."
+	_farewell_keep.visible = false
+	_farewell_release.visible = false
+	_farewell_done.visible = true
+	_farewell_done.text = "Return to the belt"
+	_farewell_hint.visible = false
+	_farewell_done.grab_focus()
+	# Identity and intent only. No client payout/cost/cap or creature snapshot.
+	_release_service.call("submit_release", request)
+
+
+func _on_release_completed(release_id: String, result: Dictionary) -> void:
+	if release_id != _release_request_id or _release_request_id.is_empty(): return
+	if result.get("resolved") != true:
+		say("Your saved choice is still being recovered. Reconnect to continue.")
+		return
+	if bool(result.get("ok", false)):
+		# Completion must follow actual local promotion, not a transport ACK.
+		var party := _party()
+		if party == null: return
+		var owned: Array[String] = []
+		for creature: RefCounted in party.call("members"): owned.append(str(creature.get("uid")))
+		var pending := _pending_catch()
+		if pending != null and str(pending.get("uid")) == str(_release_context.pending_uid):
+			say("Your saved choice is still arriving. Reconnect if it does not finish.")
+			return
+		if not str(_release_context.released_uid).is_empty() \
+				and (owned.has(str(_release_context.released_uid)) or not owned.has(str(_release_context.pending_uid))):
+			say("Your saved choice is still arriving. Reconnect if it does not finish.")
+			return
+	var context := _release_context
+	_release_request_id = ""
+	_release_context = {}
+	_release_quote = {}
+	if not bool(result.get("ok", false)):
+		say("Couldn't finish that choice. Refresh your team before trying again.")
+		if _release_stage == "waiting": _end_release()
+		return
+	if _release_stage == "waiting" and visible and menu != null and bool(menu.call("is_open")):
+		_release_target = int(context.target)
+		_release_land = 0
+		var party := _party()
+		for i: int in int(party.call("size")):
+			if str((party.call("at", i) as RefCounted).get("uid")) == str(context.pending_uid): _release_land = i
+		_show_release_done(context.released, str(context.newcomer_name), str(context.payout_text))
+	else:
+		say("Your release choice is saved." if str(context.payout_text).is_empty() else "Release saved. " + str(context.payout_text) + " received.")
+
+
 func _end_release() -> void:
 	_release_stage = ""
 	_release_for = null
 	_release_target = -1
+	_release_quote = {}
 	menu.call("hold_input", false)
 	menu.call("override_footer", "")
 	_farewell_panel.visible = false

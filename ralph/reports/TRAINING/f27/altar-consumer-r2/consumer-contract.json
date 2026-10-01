@@ -1,0 +1,157 @@
+{
+  "source_base_training": "b00c98678c56f10ab3640ab547af08062afbae68",
+  "foundation_current_main": "7dcd2a8649660553f38702f2de71390efc6f1343",
+  "compatibility": "Session/CharacterAuthority/LedgerRpc/SaveGame/build_placer unchanged between inspected bcb main and 7dcd lifetime/Heal landing. Training source proposal based on existing pushed b00; apply owned patch only, not whole lane diff.",
+  "client_spend_envelope": {
+    "op": "altar_spend",
+    "session_epoch": "String: current authenticated host runtime nonce, echoed after accepted hello; not a new portable field",
+    "world_namespace": "String: current admitted host world namespace",
+    "character_id": "String: expected actual owner ID, mismatch fence only; host derives true ID from remote sender",
+    "station_key": "String: altar:meadows:<actual committed building uid>",
+    "intent": {
+      "spend_id": "String: original cryptographic 32-hex receipt ID",
+      "creature_uid": "String: actual owned UID",
+      "expected_level": "int: displayed current level 1..60",
+      "payment_item": "String: selected type essence item or tether_candy",
+      "expected_character_revision": "int: original admitted revision 0..2147483646"
+    }
+  },
+  "client_spend_fields_forbidden": [
+    "numeric payment cost",
+    "new level",
+    "cap",
+    "recipient override",
+    "proposed inventory/party/traits/stats",
+    "client baseline",
+    "client accepted receipt",
+    "client save success"
+  ],
+  "trusted_host_commit_context": {
+    "peer_id": "Actual RPC sender (local_peer_id for solo)",
+    "character_id": "_authority_character(actual sender), validated admission; SAME _character_authority.state(char), never masked actor_stat_state",
+    "owned_uid": "Resolved row UID from that current full record",
+    "expected_character_revision": "Original intent int compared to SAME registry revision; duplicate reconciles original first",
+    "session_epoch": "Current authenticated runtime epoch checked before evaluating packet; reconcile after reconnect uses NEW current envelope epoch and UNCHANGED original intent",
+    "world_id": "Actual current host world stable ID",
+    "world_namespace": "Actual host world.reward_delivery_namespace",
+    "station_key": "Actual registered/current mounted Node3D matched to canonical unique placed_buildings UID/home plot/reach and current realm",
+    "station_uid": "Canonical placed UID; no numeric array index as durable identity",
+    "payment_item": "Intent selection checked against actual species primary/secondary essence or candy",
+    "essence_type": "Host-derived selected type from actual canonical species; candy is generic",
+    "amount": "Host-derived proposal.payment.n; level_cost(expected_level,config) for type essence, exactly configured candy cost=1; never sent price accepted from client",
+    "level_steps": "Exactly one; canonical cap blocks capped level, no future cap lift",
+    "request_receipt": "spend_id original; canonical receipt binds char/id/UID/oldLevel/payment/cost/original revision",
+    "proposal": "Existing ESSENCE.stage_core_spend(currentFullState,char,currentRevision,originalIntent,cfg,Progression.config(),Teaching.available_moves,Teaching.character_loadout_mirror); recomputed in SAME registry stage, frozen by private token"
+  },
+  "quote_request_envelope": {
+    "op": "altar_quote",
+    "session_epoch": "current runtime epoch",
+    "world_namespace": "current admitted host namespace",
+    "character_id": "expected owner fence; derive true owner from sender",
+    "station_key": "actual mounted key",
+    "owned_uid": "owned roster UID",
+    "quote_id": "new 32-hex correlation id; has no durable reward authority"
+  },
+  "quote_success": {
+    "ok": true,
+    "creature_uid": "matching owned UID",
+    "level": "int current level",
+    "cap": "int actual typed live cap",
+    "expected_character_revision": "int current registry revision",
+    "payments": [
+      {
+        "id": "actual canonical primary/secondary essence item, or tether_candy",
+        "name": "actual ItemDB display name",
+        "cost": "positive int host-computed cost; candy=1",
+        "available": "nonnegative int canonical inventory count"
+      }
+    ]
+  },
+  "quote_pending": {
+    "ok": false,
+    "pending": true,
+    "code": "quote_pending"
+  },
+  "quote_reply": "Reliable host-only response includes envelope epoch/namespace/expected character/station/owned UID/quote_id plus quote result; Session validates source+current epoch/context and emits altar_essence_quote_completed(key,uid,quote_id,result). Stale quote IDs ignored. 8-second UI config timeout leaves no spend.",
+  "reconcile_request_envelope": "Same spend envelope with op altar_reconcile and NEW current network epoch, original unchanged five intent fields. Host reads existing durable decision, not new debit; after earned commit reach/station presence is not required for recovery.",
+  "result_success": {
+    "ok": true,
+    "resolved": true,
+    "durable": true,
+    "saved": true,
+    "receipt": "exact canonical bound original spend receipt",
+    "character_revision": "int original transaction committed revision",
+    "journal_revision": "int exact durable accepted world row revision"
+  },
+  "result_accepted_wait": {
+    "ok": false,
+    "resolved": false,
+    "durable": true,
+    "saved": false,
+    "code": "owner_training_save_failed or awaiting_saved_decision",
+    "receipt": "original accepted receipt when known"
+  },
+  "result_unknown_wait": {
+    "ok": false,
+    "resolved": false,
+    "code": "decision_unavailable"
+  },
+  "result_known_precommit_refusal": {
+    "ok": false,
+    "resolved": true,
+    "durable": false,
+    "saved": false,
+    "code": "canonical known refusal, e.g. insufficient_items/stale_revision/breakthrough_needed/station_unavailable"
+  },
+  "result_delivery": "Reliable current host reply bound to expected owner/context/session epoch/key/spend ID; Session emits altar_essence_spend_completed(key,spend_id,result). UI independently requires actual owner canonical receipt and latest accepted typed world training row retaining it before success.",
+  "ui_methods": [
+    "quote_altar_essence_spend(key,owned_uid,quote_id)->Dictionary",
+    "submit_altar_essence_spend(key,exactFiveIntent)->Dictionary",
+    "reconcile_altar_essence_spend(key,ORIGINALFiveIntent)->Dictionary",
+    "altar_station_available(key)->bool",
+    "_register_altar_station_node(key,actualBuildingNode)->bool",
+    "_unregister_altar_station_node(key,sameNode)->void"
+  ],
+  "ui_signals": [
+    "altar_essence_quote_completed(key:String,owned_uid:String,quote_id:String,result:Dictionary)",
+    "altar_essence_spend_completed(key:String,spend_id:String,result:Dictionary)"
+  ],
+  "durable_carrier": "Existing world.reward_deliveries typed creature_training row: exact existing TRAINING_ROW_FIELDS 16 fields, before/after={party,inventory,redesign_character}, status pending->accepted, actual world/session/character identity/revisions/intent/receipt. Existing canonical redesign_character.transaction_receipts. No new persisted balance/roster/escrow.",
+  "required_save_order": [
+    "finish_fallback before freezing",
+    "SAME admitted registry typed stage token; no owner gameplay mutation yet",
+    "prepared typed world journal + actual save_world_prepared bool; failure rolls BOTH world bookkeeping and frozen full registry back",
+    "finish registry durable stage; THEN publish exact row",
+    "owner validates host/current world/canonical transition and baseline, guards all mutations/snapshots, applies to existing creature refs/inventory/mirror",
+    "actual save_character_prepared bool, including replay; false retains earned state/ID and sends NO ACK",
+    "reliable owner ACK bound to real sender, exact delivery/journal revision/receipt",
+    "host accepts exact row and real bool world save before same registry acknowledge/guard release",
+    "return success only after accepted world result confirms owner save; unknown/lost ACK remains pending"
+  ],
+  "route_gate": "Do not land XP35% until actual earned essence plus this mounted spend path supports ordinary route and pacing proof. Red original tests remain visible, never skipped/quarantined.",
+  "tests_or_engine_runs": 0,
+  "acceptance_claim": false,
+  "supersedes_consumer_source": "4839 owned consumer only; producer contract/durable schema intact",
+  "known_precommit_refusal_consumer": "Requires actual bool ok=false/resolved=true/durable=false/saved=false; finite source whitelist in altar_service._known_precommit_refusal; no receipt/character_revision/journal_revision and no observed durable original or retained historical receipt. Unknown, save/ACK errors, busy/conflicting history, missing/contradictory shapes retain original pending ID and five intent fields.",
+  "uncertain_journal_policy": "journal_failed/training_journal_failed remain unresolved conservatively; Foundation must reconcile original durable/not-durable decision. No new ID/debit and no timeout cancellation.",
+  "progression_prerequisites": [
+    "_staged_row_valid",
+    "raw_xp_award_for",
+    "scaled_combat_xp",
+    "scaled_party_combat_xp",
+    "staged_combat_party_xp",
+    "staged_next_level",
+    "staged_training_condition",
+    "staged_xp"
+  ],
+  "complete_main_owned_paths": [
+    "scripts/ui/altar_service.gd",
+    "scripts/ui/altar_panel.gd",
+    "scripts/ui/altar_station_interaction.gd",
+    "scripts/ui/creature_training_readout.gd",
+    "scripts/creatures/essence.gd",
+    "scripts/creatures/progression.gd",
+    "data/config/essence.json"
+  ],
+  "activation": "Held until actual Foundation producer, Homestead mount and combined actual route/recovery proof; source packet supplies no absent producer or acceptance."
+}

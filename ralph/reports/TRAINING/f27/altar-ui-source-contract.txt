@@ -1,0 +1,24 @@
+F27 Altar UI and F30 creature training readout: owned source checkpoint
+
+Scope: source implementation ready for independent integration review; no criterion closes here.
+
+Production interaction door: preload altar_service.gd; attach(actual Game).open(actual registered station key). The homestead owner must mount this in the real interaction path. No manufactured station, local payment/grant, debug button, save-data read accessor or schema extension is supplied by this UI.
+
+The actual current Game.session must provide ALL of these doors and the signal:
+- altar_station_available(key) -> bool: actual registered Altar, reach, out of combat AND canonical registry/world/owner-write/recovery capability. Pending requests must not make the physical station disappear; action submission enforces busy.
+- quote_altar_essence_spend(key, owned_uid) -> Dictionary: typed display quote from admitted owner, canonical species type and configured costs.
+- submit_altar_essence_spend(key, exact five-field intent) -> Dictionary: sender-bound typed transaction, host bool durable journal, actual owner bool save, exact accepted ACK.
+- reconcile_altar_essence_spend(key, ORIGINAL five-field intent) -> Dictionary: read/recover original operation; never submit, reprice or replace ID.
+- altar_essence_spend_completed(key, spend_id, result:Dictionary).
+
+Intent is exactly spend_id, creature_uid, expected_level, payment_item, expected_character_revision. Costs, balances, caps, traits, XP, recipient, baseline and proposed state are absent. Freeze before calling for synchronous solo results. Only one pending action, stable character/world/namespace context, same original intent on reconnect, current Session signal source fence. Panel close releases existing input_owner/HUD/mouse context without cancellation or new identity. Optional configured two-second recovery read; no retry loop when invalid/missing.
+
+Final success is resolved:true/ok:true/saved:true/durable:true/receipt:String from current actual Session PLUS actual owner's exact original canonical essence receipt PLUS a valid accepted latest training row from this current world retaining that receipt. Receipt matching uses existing stage_spend duplicate handling on read-only actual UID membership, actual slot inventory and actual redesign_character; no fabricated stats, snapshot import, local write or PlayerState.save_data call. A later accepted training row may retain the original receipt. Known pre-submit refusal is terminal; unknown result remains pending; once durable detected a failure is a recovery wait. Missing contracts refuse explicitly.
+
+Panel: actual party only (maximum five), finite integral quote/payment shapes, unique payment IDs, either actual species essence or exactly one Tether Candy, cap ceiling message, explicit controller focus neighbours, focus survives rebuild, existing cancel lifecycle. No held input mechanic added.
+
+Readout: same actual owned CreatureInstance, actual typed cap only, both type-essence balances and Candy, canonical registered trait names/rarities, three recorded taught slots unlocked only by completed tiers 1/3/5. Unknown fields remain unavailable; pending sixth receives no invented history; rolled/taught trait duplicate or malformed shapes are refused. No trait effects, cap lift, new registration or hidden legacy trait grant. Existing move rows, bond reveal, release flow and five row/input behaviour preserved; extra text follows moves in existing scrolling detail at FONT_READ.
+
+Ownership: essence.gd/config, new Altar UI/service, creature training readout, bounded tab_creatures display. Shared Session/Game/Net/Creature and catalogue untouched.
+
+Required independent source review and root integration remain: actual host sender/reach quote/submit/reconcile API and signal, typed training registry/world/owner save/recovery/ACK, homestead real caller, config-history compatibility, named real Altar controller/player path and selected two-peer failure/reconnect/reload batch. Root serializes engine/import/render/export writers. No engine parse, native/unit test, GPU/render/export or CI occurred in this checkpoint. Source checks below are authoring evidence, not behaviour or acceptance proof.

@@ -942,48 +942,48 @@
       }
     },
     "hide_helm": {
-      "name": "Hide Helm",
+      "name": "Padded Helm",
       "kind": "armor",
       "stack": 1,
       "colour": "#7a5a35",
       "armor_slot": "helmet",
       "defense": 0.08,
       "icon": "res://assets/ui/icons/items/armor_helmet.png",
-      "blurb": "Boiled hide over the crown. Takes the edge off a bad fall.",
-      "description": "Stiffened hide, shaped over a form and left to dry hard. It will not stop a real blow -- nothing here is meant to, the trainer never fights -- but a knock on the head from a bad landing lands softer wearing it."
+      "blurb": "Fiber padding over the crown. Takes the edge off a bad fall.",
+      "description": "Layers of woven fiber cushion the crown during a hard landing. Made for the trainer's journeys and environmental hazards."
     },
     "hide_vest": {
-      "name": "Hide Vest",
+      "name": "Padded Vest",
       "kind": "armor",
       "stack": 1,
       "colour": "#8a6a3f",
       "armor_slot": "upper_body",
       "defense": 0.14,
       "icon": "res://assets/ui/icons/items/armor_vest.png",
-      "blurb": "Layered hide over the chest and back. The biggest piece of the set.",
-      "description": "Two layers of hide laced over the ribs and shoulder blades, the largest single piece a trainer can wear and the one that does the most against a fall's own jolt."
+      "blurb": "Layered fiber padding over the chest and back.",
+      "description": "Two layers of woven fiber cushion the ribs and shoulder blades, taking some of the jolt out of a hard landing."
     },
     "hide_leggings": {
-      "name": "Hide Leggings",
+      "name": "Padded Leggings",
       "kind": "armor",
       "stack": 1,
       "colour": "#6b4f30",
       "armor_slot": "lower_body",
       "defense": 0.12,
       "icon": "res://assets/ui/icons/items/armor_leggings.png",
-      "blurb": "Hide wrapped over the thighs and knees.",
-      "description": "Wrapped and buckled over the thighs and knees, the joints that take the worst of a hard landing on uneven ground."
+      "blurb": "Woven fiber padding over the thighs and knees.",
+      "description": "Fiber padding wraps the thighs and knees, cushioning the joints during a hard landing on uneven ground."
     },
     "hide_boots": {
-      "name": "Hide Boots",
+      "name": "Padded Boots",
       "kind": "armor",
       "stack": 1,
       "colour": "#5a4030",
       "armor_slot": "boots",
       "defense": 0.08,
       "icon": "res://assets/ui/icons/items/armor_boots.png",
-      "blurb": "Thick-soled hide boots. Softer on the ankles than bare feet.",
-      "description": "Thick-soled and double-stitched at the ankle. Not built for speed -- built so the ground stops being the first thing you feel when you land wrong."
+      "blurb": "Thick-soled woven boots with padding around the ankles.",
+      "description": "Woven uppers and fiber padding support the ankle. Thick soles cushion the trainer's steps and rough landings."
     },
     "travel_pack": {
       "name": "Travel Pack",
@@ -1269,6 +1269,195 @@
       "world_model_scale": 0.42,
       "blurb": "One electric creature, one lesson.",
       "description": "A gold-lit teaching orb carrying Stormfall. An electric creature can learn this charged move; the orb is spent after the lesson."
+    },
+    "rootiron_ingot": {
+      "name": "Rootiron Ingot",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#a6a076",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Meadows metal refined at the Forge for Rootiron gear.",
+      "description": "Refined from Rootstone and Ironwood. A Meadows tier material used to craft gear at the homestead."
+    },
+    "tidesteel_ingot": {
+      "name": "Tidesteel Ingot",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#83b9ba",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Tidewake metal refined at the Forge for Tidesteel gear.",
+      "description": "Refined from Sluice Metal and Reef Stone. A Tidewake tier material used to craft gear at the homestead."
+    },
+    "skyglass_ingot": {
+      "name": "Skyglass Ingot",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#b4cadc",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Cloudreach glass refined at the Forge for Skyglass gear.",
+      "description": "Refined from Cliffglass Ore and Windworn Heartwood. A Cloudreach tier material used to craft gear at the homestead."
+    },
+    "stormglass_plate": {
+      "name": "Stormglass Plate",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#b6add2",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Stormwood glass refined at the Forge for Stormglass gear.",
+      "description": "Refined from Stormglass and Thunderwood. A Stormwood tier material used to craft gear at the homestead."
+    },
+    "attuned_ground": {
+      "name": "Attuned Ground",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#b39b68",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A ground ingredient for Ascension Feasts.",
+      "description": "Gathered from ground essence nodes or Rootbud crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "attuned_water": {
+      "name": "Attuned Water",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#66b8d9",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A water ingredient for Ascension Feasts.",
+      "description": "Gathered from water essence nodes or Tidebud crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "attuned_air": {
+      "name": "Attuned Air",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#b5d6b9",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "An air ingredient for Ascension Feasts.",
+      "description": "Gathered from air essence nodes or Galebloom crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "attuned_electric": {
+      "name": "Attuned Electric",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#e5cb73",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "An electric ingredient for Ascension Feasts.",
+      "description": "Gathered from electric essence nodes or Sparkstem crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "attuned_fire": {
+      "name": "Attuned Fire",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#e79b60",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A fire ingredient for Ascension Feasts.",
+      "description": "Gathered from fire essence nodes or Emberbloom crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "attuned_dark": {
+      "name": "Attuned Dark",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#9b88b8",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A dark ingredient for Ascension Feasts.",
+      "description": "Gathered from dark essence nodes or Duskcap crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "attuned_ice": {
+      "name": "Attuned Ice",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#a6d9dd",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "An ice ingredient for Ascension Feasts.",
+      "description": "Gathered from ice essence nodes or Frostbloom crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "attuned_psychic": {
+      "name": "Attuned Psychic",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#c6a2d6",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "A psychic ingredient for Ascension Feasts.",
+      "description": "Gathered from psychic essence nodes or Mindleaf crops. An Ascension Feast uses an ingredient matching the creature's type."
+    },
+    "seed_ground": {
+      "name": "Rootbud Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#b39b68",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Rootbud at the Farm for ground ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Rootbud grows as in-game days pass; pick it by hand when ripe."
+    },
+    "seed_water": {
+      "name": "Tidebud Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#66b8d9",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Tidebud at the Farm for water ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Tidebud grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_air": {
+      "name": "Galebloom Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#b5d6b9",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Galebloom at the Farm for air ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Galebloom grows as in-game days pass; pick it by hand when ripe."
+    },
+    "seed_electric": {
+      "name": "Sparkstem Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#e5cb73",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Sparkstem at the Farm for electric ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Sparkstem grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_fire": {
+      "name": "Emberbloom Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#e79b60",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Emberbloom at the Farm for fire ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Emberbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_dark": {
+      "name": "Duskcap Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#9b88b8",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Duskcap at the Farm for dark ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Duskcap grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_ice": {
+      "name": "Frostbloom Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#a6d9dd",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Frostbloom at the Farm for ice ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Frostbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_psychic": {
+      "name": "Mindleaf Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#c6a2d6",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Mindleaf at the Farm for psychic ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Mindleaf grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "tide_pearl": {
+      "name": "Tide Pearl",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#b4d6dc",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "A smooth pearl gathered in Tidewake for homestead crafts.",
+      "description": "A pearl found in Tidewake's shallows. Used at the homestead to make Pearl charms. Gathered by hand."
     }
   },
   "_comment_held": "Tools carry the mesh they appear in the trainer's hand as. Owner playtest: \"the tools exist but you can't pull them out when you're exploring and use them\" -- before this a tool was an inventory row and nothing else, and pressing it on the hotbar only repaired it. `scripts/player/tool_hold.gd` bone-attaches `held_model` to the trainer's hand, using the same BoneAttachment3D pattern the carried torch already uses (scripts/player/torch.gd). `held_offset`/`held_rotation_deg` are the fit in that hand and are TUNABLE. An empty `held_model` means the tool is carried but never drawn -- fishing_rod, which has no water to fish yet and no vendored rod mesh (D24: no new asset families for one prop).",

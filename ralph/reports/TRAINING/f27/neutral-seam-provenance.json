@@ -1,0 +1,49 @@
+{
+  "status": "SOURCE_DRAFT_NOT_PARSED_NOT_APPLIED_NOT_ACCEPTANCE",
+  "base_neutral_commit": "c023214bf718f38410fb90156a490e84713a112f",
+  "training_parent": "710f617078134c858be2509eb8a29ca697852c58",
+  "patch_sha256": "d2745bb220b4e897da2c9f31db0a281d5717cc87419a47745817e1b8cb32a982",
+  "shared_files_foundation_owned": {
+    "scripts/net/character_authority.gd": {
+      "base_sha256": "05795eca422c10c4517f03f436fedd67ba5090839fbe31b22e6af31d5f43f652",
+      "draft_lf_sha256": "2254762e9235731db87dfc479203b3dcb4a68e097a5fddaf4a8586880e66056e"
+    },
+    "scripts/data/redesign_state.gd": {
+      "base_sha256": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed",
+      "draft_lf_sha256": "8141ccd8269028dd582a689b7a67a4fa141f12187a8e3d49371962b5e434cb6e"
+    },
+    "scripts/net/ledger_rpc.gd": {
+      "base_sha256": "3c90fb2fba63d6370d52ba748593f3f1b16033dc0e67ec8a1638e2a1cbd61f07",
+      "draft_lf_sha256": "c76d5d7de04ea96169535c6247110fbb49bc4390b19fa154ce40cbdd9bcb3c63"
+    }
+  },
+  "owned_source_sha256": {
+    "scripts/creatures/essence.gd": "e3f089f4d2183c2935b15121bd11b9c774a1d7fe37996f40c40b5a9b41793e38",
+    "scripts/creatures/progression.gd": "cd5cda6386a7d2eff81e2299759a1b50003866906f2757d4575c79b57955ef78"
+  },
+  "portable_fields_added": false,
+  "live_callers_changed": false,
+  "additional_engine_or_unit_or_ci_runs": 0,
+  "criteria_remain_open": [
+    "F27#1",
+    "F27#2",
+    "F27#3",
+    "F27#4",
+    "F27#5",
+    "F28",
+    "F30"
+  ],
+  "required_foundation_doors": [
+    "WorldState and WorldLedger typed creature_training put/accept validation, snapshot discriminator and exact deltas",
+    "Session actual sender/admitted identity, physical Altar/reach/input/cooldown; frozen actual host defeat and participants",
+    "Session host_pending_creature_training, host_ack_creature_training, recover_durable_training before readiness",
+    "Session _retain_owner_training_retry; _mark_owner_training_saved retains full mutation/readiness guard until _settle_owner_training_accepted confirms exact current durable accepted world row",
+    "Prepared SaveCharacter snapshot guard and legitimate retry/save during held training transaction",
+    "Composition covers pause of ordinary creature condition ticks/care/inventory/party changes during pending training; no duplicate legacy battle/level/mood/feed credit",
+    "Core loader/source fingerprint and changed-config migration policy for reconstructed historical rows",
+    "One necessary integrated native batch plus real Altar/defeat/save/reload/rejoin and two-peer proofs"
+  ],
+  "tracked_patch_artifact": "ralph/reports/TRAINING/f27/neutral-seam-draft-c023.patch.json",
+  "tracked_patch_artifact_sha256": "8fca1a60500bd446935ca9ceae15029e2afaef3c1442a58adddd719e6ab72f55",
+  "authoring_check_disclosure": "Plain unified-diff evidence file triggers whitespace checks on patch context prefixes. Stored exact UTF-8 patch as JSON string, decoded SHA unchanged; production whitespace check passed. No test skipped or disabled."
+}
