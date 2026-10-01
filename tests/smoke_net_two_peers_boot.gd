@@ -27,9 +27,25 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	# Enter directly from _initialize so the real Game autoload has not run
+	# _ready yet. A caller-side frame wait would conceal the harness regression.
+	var coordinator_game := root.get_node_or_null(^"Game")
+	check(coordinator_game != null and not coordinator_game.is_node_ready(),
+		"coordinator launch enters before the real Game autoload is ready")
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
+
+	check(coordinator_game != null and coordinator_game.is_node_ready(),
+		"coordinator Game autoload completed its real _ready")
+	check(coordinator_game != null and not bool(coordinator_game.call("world_save_owned")),
+		"ready coordinator relinquished world-save ownership")
+	var coordinator_home := _run_dir.path_join("home-coordinator")
+	check(OS.get_environment("XDG_DATA_HOME") == coordinator_home,
+		"coordinator retains its private home after spawning both peers")
+	if _is_windows():
+		check(OS.get_environment("APPDATA") == coordinator_home,
+			"Windows coordinator retains its private APPDATA after spawning both peers")
 
 	check(_peers.size() == 2, "coordinator tracked 2 peers")
 
