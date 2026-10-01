@@ -1,0 +1,996 @@
+{
+  "id": "S04",
+  "_comment_record_hz": "Section H's mandatory high-risk list: \"Mandatory for the highest-risk segments: S01+S02 (opening), S04 (tournament), X02 (build), X01 (controller/menu stress), CB-06 + CB-07 + Warden (representative combat), every band handoff +/-60 s (region transitions), X05 (save/load), S10 (finale).\" This segment is on that list, so its baseline is 0.5 Hz rather than the 0.1 Hz journey default. Set by the Gate F coordinator, not a transcription choice. Cost is measured, not assumed: one readback+encode at 1920x1080 is 126.5 ms mean on this container, which at 0.5 Hz amortises to 1.054 ms/frame -- over the ~1 ms/frame line section 3 asks about. Section H requires the density here anyway; the overhead note carries the number so a reader can see what the density cost rather than being told it was free.",
+  "record_hz": 0.5,
+  "title": "Tournament: sign-up -> quarter -> semi -> final -> win -> South Bridge objective",
+  "lane": "journey",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-03, CB-09's journey instance), section E.5 (objectives `tournament_enter` and `tournament_win`), section G (GF-04-TOURN-01/02/03, GF-14-COMBAT-03, GF-14-COMBAT-09) and section H (S04 is one of the mandatory 0.5 Hz continuous-evidence segments).",
+  "_comment_rounds": "data/config/tournament.json's rounds are quarter (Mira), semi (Tam), final (Oskar), all staged at the tournament ground (20,12). Section L.6 T10 is the transition this segment crosses three times: dialogue -> fight -> bracket update, 'bracket advances exactly one round; re-entry offers next round only'.",
+  "evidence_lane": "logic",
+  "capture_lane": "S04C",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S04C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S04C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S04C, which may run BOUNDED record windows around a named state.",
+  "steps": [
+    {
+      "id": "S04-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "Section B: this segment's entry save is `S03-exit`. The three steps below are the handoff's own mechanics: the live save directory is emptied first so the title's Load list has exactly one non-empty slot and auto-focuses it (`title_screen.gd` focuses the FIRST non-empty slot), then slot 4 is seeded from the run directory, then the load is driven through the production title-screen Load path by synthetic input. Section B names the seed and the Load path; the wipe is not named there and is recorded here as an added mechanical step, needed because an autosave left in slot 0 would take the auto-focus and the segment would load the wrong state."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S04-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S04-03",
+      "title": "seed slot 4 from the previous segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S03-exit.json"
+      },
+      "expected": "Section B: 'The next segment boots fresh, restores that file into `user://`, and loads it through the production title-screen Load path'"
+    },
+    {
+      "id": "S04-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S04-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S04-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S04-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Section B: 'driven with synthetic input -- this is itself save/load coverage'. Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S04-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S04-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S04-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-13 (extending RIG-11 to the segments RIG-11's own fix never reached): a load restores the party and deploys nothing -- encounter_director.gd::can_challenge() returns false on a null/undeployed ally before checking whether a trainer is already beaten, so trainer_npc.gd falls back to its 'defeated' conversation line instead of the 'challenge' line that leads to combat. No trainer fight downstream of a load -- including this segment's tournament matches -- can start without this. creature_recall (RB) summons the active creature so this segment's fights can actually start."
+    },
+    {
+      "id": "S04-10",
+      "title": "the team travelled",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 3
+      },
+      "expected": "three entrants, the tournament's `min_party_size`",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S04-11",
+      "title": "the sign-up rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "tournament_enter"
+      },
+      "expected": "Section E.5 objective 14/27 `tournament_enter`, 'Enter the village tournament.'"
+    },
+    {
+      "id": "S04-12",
+      "title": "Section H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: ... S04 (tournament) ...' at 0.5 Hz. The vocabulary has no background-recorder action; the bounded `capture_seq` on the final round below is the closest this vocabulary reaches, and the gap is recorded rather than papered over."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S04-13",
+      "title": "Section E.5 nav note -- tournament_enter",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 14/27 `tournament_enter`. Wording: 'Enter the village tournament.' It names WHAT and a WHERE only as specific as 'the village'. Player-visible information: the painted tournament board stands in the practice arena's own clearing north of the square (data/config/tournament.json's `board`, facing back toward the square so a player walking up from the well reads it head-on), and the player has already fought Bryn on that ground. Route decision: walk north from the square to the cleared arena, because the board is the only thing in the village that names a tournament. Reasoned from GF-03-VILLAGE-02 and GF-18-MAP-01 (both S03). Operator: record whether the board was legible before it was reached, and the time to the decision."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S04-14",
+      "title": "walk to the tournament board",
+      "action": "move_to",
+      "args": {
+        "at": [
+          20.0,
+          15.0
+        ],
+        "budget_frames": 3600,
+        "close_enough": 2.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Reach the tournament board at [20,15] within 2 m, inside its 2.6 m passive status radius.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S04-15",
+      "title": "read the live passive tournament-board status",
+      "action": "wait_until",
+      "args": {
+        "check": "interaction_prompt",
+        "entity": "Tournament",
+        "contains": "Tournament board: the draw is open",
+        "actionable": false,
+        "budget_frames": 120,
+        "poll_frames": 2
+      },
+      "expected": "The visible status belongs to the real Tournament board and names the current bracket state. It is passive: no interact press or dialogue is invented."
+    },
+    {
+      "id": "S04-16",
+      "title": "reading the passive board leaves world input available",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "The production tournament board is a non-actionable statement; reading it opens no dialogue. Marshal Halda owns sign-up and round consent."
+    },
+    {
+      "id": "S04-17",
+      "action": "move_to_entity",
+      "title": "walk to the marshal",
+      "args": {
+        "entity": "Halda",
+        "within": 2.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-02's last stop, the tournament ground (20,12). Marshal Halda takes the sign-up",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). HARNESS DEFECT, not a game defect, and it has been failing every S04 since gate-f-run5-chain (2026-08-30): Halda stands at (23.5, 11.5) (data/config/village_npcs.json, `_why_here`: '5.0m from the bracket board at [20, 15]'). The old stop `move_to (20, 12)` with close_enough 3.0 was already satisfied from the board at (20, 15) -- both runs record 'walked 0.0 m to (20, 12) in 0 walking frames' -- so the player stood ~4.6 m from her, outside interact range, and the fourteen interact presses that followed opened no dialogue (no `dialogue` event in events.jsonl; `tournament_entered` NOT set, S04-24). Reaching a thing, not a coordinate (SEGMENT_SCHEMA.md): `move_to_entity` resolves her by node name and walks until within reach; `interact_with` presses only on a live prompt and names what it could see instead when there is none."
+    },
+    {
+      "id": "S04-18",
+      "action": "interact_with",
+      "title": "talk to the marshal",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true
+      },
+      "expected": "Section E.6.12 is X06's job; here the team arrives ready",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). HARNESS DEFECT, not a game defect, and it has been failing every S04 since gate-f-run5-chain (2026-08-30): Halda stands at (23.5, 11.5) (data/config/village_npcs.json, `_why_here`: '5.0m from the bracket board at [20, 15]'). The old stop `move_to (20, 12)` with close_enough 3.0 was already satisfied from the board at (20, 15) -- both runs record 'walked 0.0 m to (20, 12) in 0 walking frames' -- so the player stood ~4.6 m from her, outside interact range, and the fourteen interact presses that followed opened no dialogue (no `dialogue` event in events.jsonl; `tournament_entered` NOT set, S04-24). Reaching a thing, not a coordinate (SEGMENT_SCHEMA.md): `move_to_entity` resolves her by node name and walks until within reach; `interact_with` presses only on a live prompt and names what it could see instead when there is none."
+    },
+    {
+      "id": "S04-19",
+      "title": "capture GF-04-TOURN-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-04-TOURN-01",
+        "class": "4",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "sign-up dialogue with marshal, tournament ground (20,12)",
+        "intended_proof": "sign-up flow"
+      },
+      "expected": "Section G: sign-up dialogue with marshal, tournament ground (20,12) -- sign-up flow"
+    },
+    {
+      "id": "S04-20",
+      "action": "advance_dialogue_until_closed",
+      "title": "hear the sign-up out",
+      "args": {
+        "max_presses": 12,
+        "settle_frames": 60
+      },
+      "expected": "the marshal's ladder reads the contract flags, which keeps the entry rule in data rather than in a second copy inside her dialogue",
+      "observation": "GATE2-EVIDENCE-0903: advanced by predicate, never by a press count -- `tournament_halda_signup` is two lines and its second carries `flag:tournament_entered`; fourteen blind presses re-greeted her into the next branch of the ladder before this file's asserts could read the flag."
+    },
+    {
+      "id": "S04-21",
+      "title": "the team met the entry size",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_team_ready"
+      },
+      "expected": "`tournament.gd::_write_entry_flags` writes `tournament_team_ready` from data/config/tournament.json's `entry.min_party_size` of 3"
+    },
+    {
+      "id": "S04-22",
+      "title": "the team met the training bar",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_training_ready"
+      },
+      "expected": "`tournament_training_ready` is written from `entry.min_level` of 6, checked against the three strongest. If S03's training rung did not reach it, this FAILs and the shortfall is the finding -- section D's pacing question about how much the ladder actually asks for"
+    },
+    {
+      "id": "S04-23",
+      "title": "the team is in condition",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_condition_ready"
+      },
+      "expected": "`tournament_condition_ready` is the one volatile flag in the store: 'condition is a state of the team TODAY'. S03 slept and fed immediately before sign-up, which is exactly why objectives.json puts those two rungs last"
+    },
+    {
+      "id": "S04-24",
+      "title": "the sign-up took",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_entered"
+      },
+      "expected": "`tournament_entered` closes objective 14/27"
+    },
+    {
+      "id": "S04-25",
+      "action": "move_to_entity",
+      "title": "stand with the marshal for the quarter-final",
+      "args": {
+        "entity": "Halda",
+        "within": 2.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "Halda at (23.5, 11.5) runs every round from the tournament ground",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle') split every round into TWO greetings: the ring-entrance banter (`tournament_quarter`/`_semi`/`_final`, sets `*_at_ring`, starts nothing) and a deliberate second greeting (`*_begin`) whose only line carries the `battle:` effect. A fixed press count cannot express that; this is greet -> advance by predicate -> greet again -> advance by predicate, then `fight_until_resolved` drives the round on the real action machine until the round's own flag is written."
+    },
+    {
+      "id": "S04-25a",
+      "action": "interact_with",
+      "title": "greet the marshal: the quarter-final's ring-entrance banter",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true
+      },
+      "expected": "Mira's ring-entrance line, which sets the round's `*_at_ring` flag and starts nothing"
+    },
+    {
+      "id": "S04-25b",
+      "action": "advance_dialogue_until_closed",
+      "title": "hear Mira out",
+      "args": {
+        "max_presses": 12,
+        "settle_frames": 60
+      },
+      "expected": "the banter closes on its last line; no fight has started yet"
+    },
+    {
+      "id": "S04-25c",
+      "action": "interact_with",
+      "title": "greet the marshal again: begin the quarter-final",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true
+      },
+      "expected": "`tournament_quarter_begin`: 'Ring's yours. Begin the round whenever you're ready.' ends on the `battle:` effect"
+    },
+    {
+      "id": "S04-25d",
+      "action": "advance_dialogue_until_closed",
+      "title": "take the ring",
+      "args": {
+        "max_presses": 6,
+        "settle_frames": 60
+      },
+      "expected": "the begin line closes and the trainer battle stages; a different modal taking input afterwards is the fight, reported not failed"
+    },
+    {
+      "id": "S04-27",
+      "title": "let the quarter-final stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "Section L.6 T05: 'combat cam acquires both combatants at fight start'"
+    },
+    {
+      "id": "S04-28",
+      "title": "combat owns input during the quarter-final",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S04-28f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
+    },
+    {
+      "id": "S04-29",
+      "title": "capture GF-14-COMBAT-03",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-03",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-03: tournament rounds, S04, quarter/semi/final",
+        "intended_proof": "per-case: the tournament rounds read as staged fights"
+      },
+      "expected": "Section G: CB-03: tournament rounds, S04, quarter/semi/final -- per-case: the tournament rounds read as staged fights"
+    },
+    {
+      "id": "S04-30",
+      "action": "fight_until_resolved",
+      "title": "fight the quarter-final",
+      "args": {
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "tournament_quarter_won"
+      },
+      "expected": "the round is fought on the real action machine -- quick attacks while READY, one party_cycle when the pilot drops low -- until both is_fighting() and trainer_battle_active() have been quiet; FAILs if `tournament_quarter_won` is not written",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle') split every round into TWO greetings: the ring-entrance banter (`tournament_quarter`/`_semi`/`_final`, sets `*_at_ring`, starts nothing) and a deliberate second greeting (`*_begin`) whose only line carries the `battle:` effect. A fixed press count cannot express that; this is greet -> advance by predicate -> greet again -> advance by predicate, then `fight_until_resolved` drives the round on the real action machine until the round's own flag is written."
+    },
+    {
+      "id": "S04-31",
+      "title": "let the quarter-final resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "on victory, rewards and control return with no stuck modal, and the bracket advances exactly one round (section L.6 T10)"
+    },
+    {
+      "id": "S04-32",
+      "title": "the quarter-final is won",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_quarter_won"
+      },
+      "expected": "data/config/tournament.json's `quarter` round writes `tournament_quarter_won`"
+    },
+    {
+      "id": "S04-33",
+      "action": "move_to_entity",
+      "title": "stand with the marshal for the semi-final",
+      "args": {
+        "entity": "Halda",
+        "within": 2.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "Halda at (23.5, 11.5) runs every round from the tournament ground",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle') split every round into TWO greetings: the ring-entrance banter (`tournament_quarter`/`_semi`/`_final`, sets `*_at_ring`, starts nothing) and a deliberate second greeting (`*_begin`) whose only line carries the `battle:` effect. A fixed press count cannot express that; this is greet -> advance by predicate -> greet again -> advance by predicate, then `fight_until_resolved` drives the round on the real action machine until the round's own flag is written."
+    },
+    {
+      "id": "S04-33a",
+      "action": "interact_with",
+      "title": "greet the marshal: the semi-final's ring-entrance banter",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true
+      },
+      "expected": "Tam's ring-entrance line, which sets the round's `*_at_ring` flag and starts nothing"
+    },
+    {
+      "id": "S04-33b",
+      "action": "advance_dialogue_until_closed",
+      "title": "hear Tam out",
+      "args": {
+        "max_presses": 12,
+        "settle_frames": 60
+      },
+      "expected": "the banter closes on its last line; no fight has started yet"
+    },
+    {
+      "id": "S04-33c",
+      "action": "interact_with",
+      "title": "greet the marshal again: begin the semi-final",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true
+      },
+      "expected": "`tournament_semi_begin`: 'Ring's yours. Begin the round whenever you're ready.' ends on the `battle:` effect"
+    },
+    {
+      "id": "S04-33d",
+      "action": "advance_dialogue_until_closed",
+      "title": "take the ring",
+      "args": {
+        "max_presses": 6,
+        "settle_frames": 60
+      },
+      "expected": "the begin line closes and the trainer battle stages; a different modal taking input afterwards is the fight, reported not failed"
+    },
+    {
+      "id": "S04-35",
+      "title": "let the semi-final stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "Section L.6 T05: 'combat cam acquires both combatants at fight start'"
+    },
+    {
+      "id": "S04-36",
+      "title": "combat owns input during the semi-final",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S04-36f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
+    },
+    {
+      "id": "S04-37",
+      "action": "fight_until_resolved",
+      "title": "fight the semi-final",
+      "args": {
+        "budget_frames": 9000,
+        "switch_below": 0.35,
+        "until_flag": "tournament_semi_won"
+      },
+      "expected": "the round is fought on the real action machine -- quick attacks while READY, one party_cycle when the pilot drops low -- until both is_fighting() and trainer_battle_active() have been quiet; FAILs if `tournament_semi_won` is not written",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle') split every round into TWO greetings: the ring-entrance banter (`tournament_quarter`/`_semi`/`_final`, sets `*_at_ring`, starts nothing) and a deliberate second greeting (`*_begin`) whose only line carries the `battle:` effect. A fixed press count cannot express that; this is greet -> advance by predicate -> greet again -> advance by predicate, then `fight_until_resolved` drives the round on the real action machine until the round's own flag is written."
+    },
+    {
+      "id": "S04-38",
+      "title": "let the semi-final resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "on victory, rewards and control return with no stuck modal, and the bracket advances exactly one round (section L.6 T10)"
+    },
+    {
+      "id": "S04-39",
+      "title": "the semi-final is won",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_semi_won"
+      },
+      "expected": "data/config/tournament.json's `semi` round writes `tournament_semi_won`"
+    },
+    {
+      "id": "S04-40",
+      "action": "move_to_entity",
+      "title": "stand with the marshal for the final",
+      "args": {
+        "entity": "Halda",
+        "within": 2.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "Halda at (23.5, 11.5) runs every round from the tournament ground",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle') split every round into TWO greetings: the ring-entrance banter (`tournament_quarter`/`_semi`/`_final`, sets `*_at_ring`, starts nothing) and a deliberate second greeting (`*_begin`) whose only line carries the `battle:` effect. A fixed press count cannot express that; this is greet -> advance by predicate -> greet again -> advance by predicate, then `fight_until_resolved` drives the round on the real action machine until the round's own flag is written."
+    },
+    {
+      "id": "S04-40a",
+      "action": "interact_with",
+      "title": "greet the marshal: the final's ring-entrance banter",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true
+      },
+      "expected": "Oskar's ring-entrance line, which sets the round's `*_at_ring` flag and starts nothing"
+    },
+    {
+      "id": "S04-40b",
+      "action": "advance_dialogue_until_closed",
+      "title": "hear Oskar out",
+      "args": {
+        "max_presses": 12,
+        "settle_frames": 60
+      },
+      "expected": "the banter closes on its last line; no fight has started yet"
+    },
+    {
+      "id": "S04-40c",
+      "action": "interact_with",
+      "title": "greet the marshal again: begin the final",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true
+      },
+      "expected": "`tournament_final_begin`: 'Ring's yours. Begin the round whenever you're ready.' ends on the `battle:` effect"
+    },
+    {
+      "id": "S04-40d",
+      "action": "advance_dialogue_until_closed",
+      "title": "take the ring",
+      "args": {
+        "max_presses": 6,
+        "settle_frames": 60
+      },
+      "expected": "the begin line closes and the trainer battle stages; a different modal taking input afterwards is the fight, reported not failed"
+    },
+    {
+      "id": "S04-42",
+      "title": "let the final stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "Section L.6 T05: 'combat cam acquires both combatants at fight start'"
+    },
+    {
+      "id": "S04-43",
+      "title": "combat owns input during the final",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S04-43f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
+    },
+    {
+      "id": "S04-44",
+      "title": "capture GF-04-TOURN-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-04-TOURN-02",
+        "class": "4",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "mid-final-round combat, tournament arena",
+        "intended_proof": "tournament fight staging"
+      },
+      "expected": "Section G: mid-final-round combat, tournament arena -- tournament fight staging"
+    },
+    {
+      "id": "S04-45",
+      "title": "record the final round continuously",
+      "action": "capture_seq",
+      "args": {
+        "id": "S04-SEQ-final",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "hz": 1.0,
+        "seconds": 40,
+        "trigger": "Section H mandatory continuous evidence for S04 (tournament)",
+        "intended_proof": "Forty prescribed frames across a forty-second window beginning in the final; actual combat/aftermath context is recorded per frame while controller play continues.",
+        "background": true
+      },
+      "expected": "All forty S04-SEQ-final-000..039 IDs retain their debt. Nonblocking one-Hz sequence records the final and any ensuing aftermath for at least forty play seconds; S04-52capture verifies completion and context counts."
+    },
+    {
+      "id": "S04-46",
+      "title": "observe a live damage exchange before the prescribed handoff",
+      "action": "combat_checkpoint",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Real incoming and outgoing HP damage during this checkpoint, same living pilot/enemy, and a live voluntary-switch window with a switchable teammate. Stop attacking after a landed hit; fail if the fight disappears."
+    },
+    {
+      "id": "S04-47",
+      "title": "capture GF-14-COMBAT-09",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-09a",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-09: switching under pressure -- the journey instance",
+        "intended_proof": "per-case: party_cycle mid-combat while taking hits; pilot handoff, camera handoff, no input loss"
+      },
+      "expected": "Section G: CB-09: switching under pressure -- the journey instance -- per-case: party_cycle mid-combat while taking hits; pilot handoff, camera handoff, no input loss"
+    },
+    {
+      "id": "S04-48",
+      "title": "CB-09's journey fight is not named by the protocol",
+      "action": "note",
+      "args": {
+        "text": "AMBIGUITY RECORDED: section E.1 CB-09 says 'X04 + at least one journey fight' and never names which journey fight. Transcribed here, in the tournament final, because it is the first fight in the chapter where the player is certain to have three creatures and to be taking hits from a trainer's staged send-out."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S04-48ready",
+      "title": "wait for a live voluntary switch after the pressure capture",
+      "action": "wait_until",
+      "args": {
+        "check": "combat_can_switch",
+        "equals": true,
+        "budget_frames": 180,
+        "poll_frames": 1
+      },
+      "expected": "The live fight still permits a voluntary handoff after capture settling; no switch input is sent into a commitment lock."
+    },
+    {
+      "id": "S04-49",
+      "title": "switch pilot while taking hits",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "verify_switch": true
+      },
+      "expected": "One physical party_cycle tap while combat permits it; verify active creature identity actually changes and combat remains live."
+    },
+    {
+      "id": "S04-50",
+      "title": "observe a live damage exchange before the prescribed handoff",
+      "action": "combat_checkpoint",
+      "args": {
+        "budget_frames": 600
+      },
+      "expected": "Real incoming and outgoing HP damage during this checkpoint, same living pilot/enemy, and a live voluntary-switch window with a switchable teammate. Stop attacking after a landed hit; fail if the fight disappears."
+    },
+    {
+      "id": "S04-51",
+      "title": "verify a second pilot handoff under pressure",
+      "action": "press",
+      "args": {
+        "control": "party_cycle",
+        "hold": "tap",
+        "verify_switch": true
+      },
+      "expected": "One physical party_cycle tap while combat permits it; verify active creature identity actually changes and combat remains live.",
+      "observation": "Prior segment prose claimed both directions, but canonical Gate F Master Protocol CB-09 requires a real mid-combat pilot/camera handoff while taking hits and no input loss; T06 requires coherent HP/cooldown states with combat input throughout. These two forward party_cycle handoffs are recorded as such, without claiming reverse cycling or a return to the original pilot."
+    },
+    {
+      "id": "S04-52",
+      "action": "fight_until_resolved",
+      "title": "finish the final",
+      "args": {
+        "budget_frames": 12000,
+        "switch_below": 0.35,
+        "until_flag": "tournament_won"
+      },
+      "expected": "the round is fought on the real action machine -- quick attacks while READY, one party_cycle when the pilot drops low -- until both is_fighting() and trainer_battle_active() have been quiet; FAILs if `tournament_won` is not written",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). TOURNAMENT-FLOW-0903 (owner playtest 2026-09-03 item 3: 'you enter then you choose to start the battle') split every round into TWO greetings: the ring-entrance banter (`tournament_quarter`/`_semi`/`_final`, sets `*_at_ring`, starts nothing) and a deliberate second greeting (`*_begin`) whose only line carries the `battle:` effect. A fixed press count cannot express that; this is greet -> advance by predicate -> greet again -> advance by predicate, then `fight_until_resolved` drives the round on the real action machine until the round's own flag is written."
+    },
+    {
+      "id": "S04-52capture",
+      "title": "verify the named final evidence window",
+      "action": "capture_seq_complete",
+      "args": {
+        "id": "S04-SEQ-final",
+        "budget_frames": 3000
+      },
+      "expected": "All forty prescribed PNGs are valid and the declared forty-play-second window has elapsed. Report actual combat versus aftermath frames; any remaining wait occurs only after combat, never by idling the fight."
+    },
+    {
+      "id": "S04-53",
+      "title": "let the final resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 8
+      },
+      "expected": "on victory, rewards and control return with no stuck modal, and the bracket advances exactly one round (section L.6 T10)"
+    },
+    {
+      "id": "S04-54",
+      "title": "the final is won",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "tournament_won"
+      },
+      "expected": "data/config/tournament.json's `final` round writes `tournament_won`"
+    },
+    {
+      "id": "S04-55",
+      "title": "capture GF-04-TOURN-03",
+      "action": "capture",
+      "args": {
+        "id": "GF-04-TOURN-03",
+        "class": "4",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "victory/bracket resolution moment, arena",
+        "intended_proof": "payoff presentation"
+      },
+      "expected": "Section G: victory/bracket resolution moment, arena -- payoff presentation"
+    },
+    {
+      "id": "S04-56",
+      "action": "move_to_entity",
+      "title": "return to the marshal after the win",
+      "args": {
+        "entity": "Halda",
+        "within": 2.0,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "optional": true
+      },
+      "expected": "the champion line is hers",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). HARNESS DEFECT, not a game defect, and it has been failing every S04 since gate-f-run5-chain (2026-08-30): Halda stands at (23.5, 11.5) (data/config/village_npcs.json, `_why_here`: '5.0m from the bracket board at [20, 15]'). The old stop `move_to (20, 12)` with close_enough 3.0 was already satisfied from the board at (20, 15) -- both runs record 'walked 0.0 m to (20, 12) in 0 walking frames' -- so the player stood ~4.6 m from her, outside interact range, and the fourteen interact presses that followed opened no dialogue (no `dialogue` event in events.jsonl; `tournament_entered` NOT set, S04-24). Reaching a thing, not a coordinate (SEGMENT_SCHEMA.md): `move_to_entity` resolves her by node name and walks until within reach; `interact_with` presses only on a live prompt and names what it could see instead when there is none."
+    },
+    {
+      "id": "S04-56a",
+      "action": "interact_with",
+      "title": "hear the resolution out",
+      "args": {
+        "entity": "Halda",
+        "check_provider": true,
+        "optional": true
+      },
+      "expected": "Section L.5: the tournament's payoff, and the hand-off to the chapter's first real gate",
+      "observation": "GATE2-EVIDENCE-0903 (2026-09-03). HARNESS DEFECT, not a game defect, and it has been failing every S04 since gate-f-run5-chain (2026-08-30): Halda stands at (23.5, 11.5) (data/config/village_npcs.json, `_why_here`: '5.0m from the bracket board at [20, 15]'). The old stop `move_to (20, 12)` with close_enough 3.0 was already satisfied from the board at (20, 15) -- both runs record 'walked 0.0 m to (20, 12) in 0 walking frames' -- so the player stood ~4.6 m from her, outside interact range, and the fourteen interact presses that followed opened no dialogue (no `dialogue` event in events.jsonl; `tournament_entered` NOT set, S04-24). Reaching a thing, not a coordinate (SEGMENT_SCHEMA.md): `move_to_entity` resolves her by node name and walks until within reach; `interact_with` presses only on a live prompt and names what it could see instead when there is none."
+    },
+    {
+      "id": "S04-56b",
+      "action": "advance_dialogue_until_closed",
+      "title": "hear the champion line out",
+      "args": {
+        "max_presses": 8,
+        "settle_frames": 60
+      },
+      "expected": "`tournament_halda_champion`: three lines, the saddle pattern and the road south"
+    },
+    {
+      "id": "S04-57",
+      "title": "the chapter turns south",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "head_to_south_bridge"
+      },
+      "expected": "Section E.5 objective 16/27 `head_to_south_bridge`, 'Cross the South Bridge into the Lower Meadows.' section B: S04's span ends at the South Bridge objective"
+    },
+    {
+      "id": "S04-56w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S04-58",
+      "title": "revisit the board after winning",
+      "action": "move_to",
+      "args": {
+        "at": [
+          20.0,
+          15.0
+        ],
+        "budget_frames": 3000,
+        "close_enough": 2.0,
+        "answer_prompts": true
+      },
+      "expected": "Reach the tournament board at [20,15] within 2 m, inside its 2.6 m passive status radius.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+    },
+    {
+      "id": "S04-59",
+      "title": "read the live passive tournament-board status",
+      "action": "wait_until",
+      "args": {
+        "check": "interaction_prompt",
+        "entity": "Tournament",
+        "contains": "Tournament board: champion of the Lower Meadows",
+        "actionable": false,
+        "budget_frames": 120,
+        "poll_frames": 2
+      },
+      "expected": "The visible status belongs to the real Tournament board and names the current bracket state. It is passive: no interact press or dialogue is invented."
+    },
+    {
+      "id": "S04-59a",
+      "action": "assert",
+      "title": "reading the passive board leaves world input available",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "The production tournament board is a non-actionable statement; reading it opens no dialogue. Marshal Halda owns sign-up and round consent.",
+      "observation": "2026-09-16: replaces the stale interactive-board/dialogue assumption with the live passive status check immediately above and this world-input assertion. Tournament entry and victory assertions remain unchanged."
+    },
+    {
+      "id": "S04-60",
+      "title": "the segment actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 60.0
+      },
+      "expected": "Section D: the tournament is staged in one place, so this is a small number by design -- but a segment that moved nothing at all would mean the walk to the ground never happened"
+    },
+    {
+      "id": "S04-61",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 420
+      },
+      "expected": "Section C.2",
+      "observation": "CL-H4 / 2.14, N10-HARNESS-TESTS-0905. WAS 480, and before that 1200. The 1200 was transcribed, not derived (it described a ~600 s segment at the schema's own 2 Hz, Section C.2); the 480 that replaced it was derived from a single run -- 520 rows at this assert's own checkpoint -- and sits at 92% of the shortest completion ever recorded for this segment, which is a flake waiting for one slow run. RE-DERIVED BY THE S02-60 METHOD, which is the whole point of this pass: 80% of the SHORTEST healthy completion on record, so the check keeps failing a recorder that stopped without grading pacing (S04-59's distance and S04-62's dead travel do that). Counts taken from every committed S04/telemetry/route.csv under ralph/reports/, filtered exactly as S02-60 filtered: the 2026-08-25/27 pair record 1.61-1.59 rows per play second, a different clock, and are excluded rather than averaged in. Six healthy completions remain -- 526, 528, 575, 623, 637 and 658 rows -- and the shortest is 526 (gate-f-run5-chain; gate-f-run-20260828T183531Z's 528 is the run whose own checkpoint read 520). 80% of 526 is 420.8, so 420. That carries ~20% headroom for run-to-run variance while still failing every broken shape on record, including the 164-row aborted attempt in gate-f-run-20260828T183531Z/S04-superseded-1 and the 1-row boot-only trace a refused segment writes."
+    },
+    {
+      "id": "S04-62",
+      "title": "the tournament ground is not dead ground",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_below",
+        "metres": 60.0
+      },
+      "expected": "Section D's thresholds. Everything in this segment happens inside one clearing"
+    },
+    {
+      "id": "S04-63",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. Section B also branches X04 (combat lab) from this file."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S04-64",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell onto the Satchel tab",
+      "observation": "RIG-14: opened via the map shortcut rather than a bare game_menu press. The pause shell REOPENS ON THE LAST TAB USED, so a fixed press count from an assumed backpack start lands on the wrong tab in any segment that opens the menu more than once -- this segment's own Section E.5 map-navigation notes leave the shell on `menu_map`, so the bare `open_menu` + `times: 5` this step used before landed on `menu_backpack` (5 presses from map wraps past save and back around to backpack), the Save button was never actually focused, and `save_out` then copied out whatever was already seeded in slot 4 under this segment's own name -- the exact mechanism RIG-10 named without yet fixing. `map` is one of only two tabs with a shortcut in data/config/menu.json, so it is the only deterministic starting point available. Matches S03/S06/S08's own working save steps."
+    },
+    {
+      "id": "S04-65",
+      "title": "cycle right to the Save tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "save"
+      },
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press.",
+      "observation": "2026-09-15: supersedes the historical fixed-count navigation. Observe real controller tab transitions until the named tab, accounting for Players and conditional Skills visibility; no tab index or press count is assumed."
+    },
+    {
+      "id": "S04-66",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S04-67",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S04-68",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S04-69",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S04-70",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S04-exit.json"
+      },
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S04-exit.json`"
+    },
+    {
+      "id": "S04-71",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S04-72",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S04 exit save written and copied."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ],
+  "_comment_gate2_evidence_0903": "GATE2-EVIDENCE-0903 (2026-09-03): the marshal stop, the sign-up advance, the three round openings and the round fights were rewritten against the shipped tournament. See the `observation` on S04-17 (Halda's real position; the old stop was satisfied from the board without moving, every S04 since 2026-08-30 failed at S04-24 for it) and on S04-25 (TOURNAMENT-FLOW-0903's two-greeting rounds). Step ids that existed before keep their ids; the greet/advance pairs carry a/b/c/d suffixes; S04-26/34/41 folded into them."
+}

@@ -1,0 +1,5 @@
+** -text -diff
+frozen/** -text -diff
+retained-native-failure/** -text -diff
+historical-tree/** -text -diff
+repair.patch -text -diff

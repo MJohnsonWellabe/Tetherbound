@@ -1,0 +1,453 @@
+{
+  "_comment": "BAND-SPLIT. Band-local trainers for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "trainers": [
+    {
+      "order": 0,
+      "id": "practice_trainer",
+      "name": "Bryn",
+      "_placeholder": "SC12/SC13 replaced R8.1's placeholder role with Mira, Oskar and Tam below (villager-greeting trainers, `placed_by: \"village_npcs\"`) -- but this entry stays. tests/smoke_trainer_battle.gd is the ONE test that drives a trainer through trainer_npc.gd's OWN placement-and-prompt system end to end (a real Terrain3D body, a real 'Challenge Bryn' prompt, a real interact-button press) rather than through a villager's greeting_when/battle: route, and there is no other standalone trainer in the game yet for it to stand up. Deleting Bryn would delete that coverage, not just a placeholder -- so it is kept, and noted here rather than silently left behind. A future standalone trainer (the relay station's, a captain's) can take over this exact role later.",
+      "config_key": "young_trainer",
+      "_comment_body_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated instead of repainting the same two villager rigs. `young_trainer` is one of the 24 NPC-cast bodies (docs/specs/ASSET_LEDGER.md, T1-NPC-CAST) that was installed, rigged, animated and wired into art.json and then stood NOWHERE in the game -- T1-CREATURE-RIG placed it as a new Band 1 battle, T3-LADDER correctly removed that battle for blowing the 24-opponent census ceiling, and the body was stranded rather than reassigned. Reassigning an EXISTING fight spends no census budget and costs no Meshy generation. Bryn is the chapter's first trainer, standing on the practice field north of the square; a dedicated trainer body reads as a trainer there where a repainted farmer did not. The old `hair` override is dropped with the rig: the generated bodies carry their own baked hair, the way every civilian placed in village_npcs.json this week already does.",
+      "position": [
+        78.0,
+        44.0
+      ],
+      "facing_deg": -171.1,
+      "_why_here": "The open north field behind the village square -- inside the square's own 22m vegetation clearing (extended in data/config/vegetation.json so the 11m arena is not fought through a tree), 12m clear of every structure, villager, harvest node and prop, and well outside the bramblebun cluster at [30,-40] so a wild engage prompt never contests the challenge prompt.",
+      "_comment_ecology_0903": "BAND1-ECOLOGY-0903, docs/ROADMAP.md task 2.5. Bryn's reason to be exactly here is ecological as well as historical: her practice ground sits in the gap between the Practice Meadow's own tame bramblebun cluster (order 0, the fight she teaches on) and spawns.json order 12's Galecrest -- the aggressor role, ~95m south, per that entry's own `_why_wall1`/`_why_ow5d`. A new trainer learns to fight on the easy rabbit before ever meeting the hawk that already circles the same field; Bryn is the reason that ordering is safe rather than accidental. See order 12's own `_comment_ecology_0903_temptation` for the other half of this place's authored pair.",
+      "challenge": "trainer_practice_challenge",
+      "defeated": "trainer_practice_defeated",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 2
+        },
+        {
+          "species": "mudsnout",
+          "level": 3
+        }
+      ],
+      "reward": {
+        "coins": 20,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "trainer_defeated_practice",
+      "rechallenge": false
+    },
+    {
+      "order": 1,
+      "id": "trainer_mira",
+      "name": "Mira",
+      "_comment": "SC12/SC13. Spec sec3 Band 1: 'Mira -- Meadow Keeper -- introductory trainer battle, reward: XP + useful early item/TM/recipe.' The introduction -- one creature, low level, a coin purse and a potion. Team level is TUNABLE and this task's to set; SC15 owns the payout table's final numbers.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_farmer",
+      "position": [
+        18.99,
+        -1.01
+      ],
+      "facing_deg": -135.0,
+      "challenge": "village_mira_challenge",
+      "defeated": "village_mira_beaten",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 4
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 10
+          },
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_mira",
+      "rechallenge": false
+    },
+    {
+      "order": 2,
+      "id": "trainer_oskar",
+      "name": "Oskar",
+      "_comment": "SC12/SC13/SC14, amended by TOURNAMENT-1. Spec sec3 Band 1: 'Oskar -- Bridgehand -- moderate trainer battle'. His village challenge -- a real two-creature team, sturdier than Mira's. He NO LONGER hands over `south_bridge_key`: the 2026-08-22 owner directive moves the South Bridge gatekeeper role to a Team Tether grunt (`south_bridge_grunt` below, order 1000) so that Oskar is free to be the tournament's final round. The key is that grunt's reward now, and `gated_crossing.gd`/`south_bridge.gd` read the same item id they always did -- nothing about the gate mechanism changed, only who is standing in front of it.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_keeper",
+      "position": [
+        13.4,
+        -12.0
+      ],
+      "facing_deg": -108.4,
+      "challenge": "village_oskar_challenge",
+      "defeated": "village_oskar_beaten",
+      "team": [
+        {
+          "_why_d72": "D72 (owner playtest 2026-09-03, finding 10): the two starters belong to the opening choice alone, so no other trainer in the chapter may field one. This slot held a starter and now holds the nearest non-starter of the same type already used in this band file, at the same authored level -- index, id, level and reward are untouched. Mirrored in tests/fixtures/band_split_baseline/trainers.json in the same change, per that fixture's TRACKED MIRROR policy.",
+          "species": "meadowhart",
+          "level": 6
+        },
+        {
+          "species": "mosshell",
+          "level": 7
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 15
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_oskar",
+      "rechallenge": false
+    },
+    {
+      "order": 3,
+      "id": "trainer_tam",
+      "name": "Tam",
+      "_comment": "SC12/SC13. Spec sec3 Band 1: 'Tam -- Field Scout -- battle emphasizing switching/type awareness, reward: TM, Orb-related item, or map hint.' The switching lesson -- two creatures of different types, so a one-note team cannot answer both.",
+      "placed_by": "village_npcs",
+      "config_key": "villager_smith",
+      "position": [
+        8.0,
+        -13.6
+      ],
+      "facing_deg": 18.4,
+      "challenge": "village_tam_challenge",
+      "defeated": "village_tam_beaten",
+      "team": [
+        {
+          "species": "pipwing",
+          "level": 5
+        },
+        {
+          "species": "mudsnout",
+          "level": 6
+        }
+      ],
+      "reward": {
+        "items": [
+          {
+            "id": "coin",
+            "count": 12
+          },
+          {
+            "id": "orb_basic",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_tam",
+      "rechallenge": false
+    },
+    {
+      "order": 1000,
+      "id": "south_bridge_grunt",
+      "gate_fight": true,
+      "name": "Tether Grunt",
+      "_comment": "TOURNAMENT-1, owner directive 2026-08-22 section 2: 'The South Bridge gatekeeper becomes a Team Tether grunt (existing rig), freeing Oskar to be a tournament round.' He holds `south_bridge_key` -- the same item `scripts/world/south_bridge.gd` has always asked for -- so Gate 1 is now a Team Tether checkpoint rather than a villager's errand, which is also the first time the player meets the faction as an obstacle rather than as scenery. `rank: grunt` is data/config/npc_ranks.json's existing grunt treatment on a rig that is already installed; CLAUDE.md forbids a new humanoid mesh here and none is used.",
+      "rank": "grunt",
+      "position": [
+        14.0,
+        1314.0
+      ],
+      "facing_deg": 30.0,
+      "_why_here": "Beside the approach road on the village side of the crossing, 16m out from the carve centre at [8, 1330] (terrain_playground.json `crossings.south_bridge`) and turned to face back up the road at whoever is coming. Four clearances, all measured: 9m clear of the carve's zero-depth contour (half_width 3.6 + rim 3.4 = 7.0m), so there is solid ground under him; 17m from the crossing's own clearing centre inside its 20m radius, so no tree stands between him and the road; 9.6m from the locked leaf at [8, 1321.5], more than his 4.2m challenge prompt plus the gate's own 3.6m Interactable, so the two never contest each other; and 6m to the side of the centreline `tests/smoke_traversal.gd` walks a body down, so a placed body cannot become the reason that walk fails.",
+      "_comment_ecology_0903": "BAND1-ECOLOGY-0903, docs/ROADMAP.md task 2.5. The grunt's own reason to be here is already load-bearing (he holds the only South Bridge Key) and untouched by this pass. The place's temptation is spawns.json order 1005, the Meadowhart pair moved to 40m lateral specifically so it is 'seen before it can be fought' -- a player who has just watched a Team Tether checkpoint close the free road ahead sees, on the same approach, a wild herd of the one species the tournament's own mount already made them want. That contrast (a closing gate beside an open temptation) is the bridge approach's whole authored reason, not a coincidence of two unrelated entries sharing an arc.",
+      "challenge": "south_bridge_grunt_challenge",
+      "defeated": "south_bridge_grunt_beaten",
+      "team": [
+        {
+          "species": "mudsnout",
+          "level": 10
+        },
+        {
+          "species": "burrowback",
+          "level": 12
+        }
+      ],
+      "_comment_team": "Above the tournament final (11) and below the Burrow Warrens guardian past the bridge, so the gatekeeper is the hardest thing in Band 1 without being a wall -- tests/test_trainers_data.gd's own `test_no_step_on_the_critical_path_jumps_more_than_four_levels` is the guard on that. TUNABLE.",
+      "reward": {
+        "coins": 25,
+        "items": [
+          {
+            "id": "south_bridge_key",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_south_bridge_grunt",
+      "rechallenge": false,
+      "base": "grunt_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 1001,
+      "id": "tournament_quarter_mira",
+      "gate_fight": true,
+      "name": "Mira",
+      "_comment": "TOURNAMENT-1, round 1 of 3 (owner directive 2026-08-22 section 2). Bracket slot 1 vs slot 2: the player against Mira. Deliberately the SAME PERSON as `trainer_mira` and deliberately a SECOND entry rather than a reuse of that one: her village challenge is already beaten by the time the bracket is drawn (`already_beaten()` would refuse it), and a tournament round is a different fight with different creatures and a different reward. Owner-locked: the fought rounds use Band 1's existing trainers and no new humanoid.",
+      "placed_by": "tournament",
+      "_comment_placed_by": "No placer asks for the group 'tournament', and that is deliberate rather than an oversight: a tournament round has no body of its own to stand up. The person is already in the square as a villager, and the round is opened by the marshal's `battle:` dialogue line, which hands the fight to `encounter_director.begin_trainer_battle(spec, null)` -- the same null-body path `sequence_director.gd` already uses for every villager challenge. `trainer_npc.gd::build()` only ever places rows whose `placed_by` matches the group it was called with, so this row is skipped by every existing placer and no second body appears.",
+      "config_key": "villager_farmer",
+      "position": [
+        85.0,
+        47.0
+      ],
+      "facing_deg": 180.0,
+      "challenge": "tournament_quarter",
+      "defeated": "tournament_quarter_beaten",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 7
+        },
+        {
+          "species": "mudsnout",
+          "level": 8
+        }
+      ],
+      "_comment_team": "One tier above her village team (bramblebun 4), which is the point of a rematch: the introduction trainer, having actually trained. TUNABLE.",
+      "reward": {
+        "coins": 20,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "tournament_quarter_won",
+      "rechallenge": false
+    },
+    {
+      "order": 1002,
+      "id": "tournament_semi_tam",
+      "gate_fight": true,
+      "name": "Tam",
+      "_comment": "TOURNAMENT-1, round 2 of 3. The near half's other quarter-final (Tam vs Fen) is simulated on the board and Tam wins it, so the semi-final is the player against Tam. Same two-types-in-one-team lesson his village battle teaches, levelled for the bracket.",
+      "placed_by": "tournament",
+      "_comment_placed_by": "No placer asks for the group 'tournament', and that is deliberate rather than an oversight: a tournament round has no body of its own to stand up. The person is already in the square as a villager, and the round is opened by the marshal's `battle:` dialogue line, which hands the fight to `encounter_director.begin_trainer_battle(spec, null)` -- the same null-body path `sequence_director.gd` already uses for every villager challenge. `trainer_npc.gd::build()` only ever places rows whose `placed_by` matches the group it was called with, so this row is skipped by every existing placer and no second body appears.",
+      "config_key": "villager_smith",
+      "position": [
+        85.0,
+        47.0
+      ],
+      "facing_deg": 180.0,
+      "challenge": "tournament_semi",
+      "defeated": "tournament_semi_beaten",
+      "team": [
+        {
+          "species": "pipwing",
+          "level": 9
+        },
+        {
+          "species": "mosshell",
+          "level": 9
+        }
+      ],
+      "_comment_team": "Two different types at the same level, the switching lesson at tournament weight. Above Mira's round and below the final, which is the ladder the bracket is supposed to be. TUNABLE.",
+      "reward": {
+        "coins": 25,
+        "items": [
+          {
+            "id": "orb_basic",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "tournament_semi_won",
+      "rechallenge": false
+    },
+    {
+      "order": 1003,
+      "id": "tournament_final_oskar",
+      "gate_fight": true,
+      "name": "Oskar",
+      "_comment": "TOURNAMENT-1, round 3 of 3 -- the final. Owner-locked: 'The final opponent rides a Meadowhart.' Meadowhart is already the authored first mount (data/creatures/species.json, `rideable.requires_item: \"saddle\"`), so the creature the player fights last is the creature the prize is about. Burrowback deliberately stays non-rideable. `reward.flags` carries `recipe_saddle`, which is what actually grants the saddle pattern -- `defeat_flag` is `tournament_won`, the contract flag data/progression/objectives.json's tournament ladder ends on.",
+      "placed_by": "tournament",
+      "_comment_placed_by": "No placer asks for the group 'tournament', and that is deliberate rather than an oversight: a tournament round has no body of its own to stand up. The person is already in the square as a villager, and the round is opened by the marshal's `battle:` dialogue line, which hands the fight to `encounter_director.begin_trainer_battle(spec, null)` -- the same null-body path `sequence_director.gd` already uses for every villager challenge. `trainer_npc.gd::build()` only ever places rows whose `placed_by` matches the group it was called with, so this row is skipped by every existing placer and no second body appears.",
+      "config_key": "villager_keeper",
+      "position": [
+        85.0,
+        47.0
+      ],
+      "facing_deg": 180.0,
+      "challenge": "tournament_final",
+      "defeated": "tournament_final_beaten",
+      "team": [
+        {
+          "species": "mudsnout",
+          "level": 10
+        },
+        {
+          "species": "mosshell",
+          "level": 10
+        },
+        {
+          "species": "meadowhart",
+          "level": 11
+        }
+      ],
+      "_comment_team": "Three creatures, the only three-creature team in Band 1, with the Meadowhart sent out LAST because the send-out order is the team's own order (`encounter_director._send_out_next_creature()` pops the front) and the mount is the thing the final is remembered for. TUNABLE.",
+      "reward": {
+        "coins": 40,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 3
+          }
+        ],
+        "flags": [
+          "recipe_saddle"
+        ]
+      },
+      "defeat_flag": "tournament_won",
+      "rechallenge": false
+    },
+    {
+      "order": 1040,
+      "id": "shepherd_the_rise",
+      "name": "Dara",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 ('the shepherd on the Rise', 'fields two Trailpups, teaches nothing, is a fight you can see coming'). Answers the route contract's own measured finding: beyond the village hub Band 1 fielded ONE on-route trainer (the South Bridge grunt) across 2,270m, with the 2026-09-03 owner playtest naming the open road itself as empty ('nothing outside the village... nothing to do'). This is the first trainer the player meets after leaving the gate -- low-stakes on purpose, a step up from the village practice fight rather than a wall.",
+      "config_key": "villager_ranger",
+      "_comment_body": "T1-CAST reuse, CLAUDE.md: no new humanoid mesh. `villager_ranger` is the same outdoorsy tint Sela/Halda already use -- a person who works outside, which a shepherd is.",
+      "position": [
+        -305.0,
+        360.0
+      ],
+      "facing_deg": 70.0,
+      "_why_here_2026_09_03": "SUPERSEDED for position only by `_why_ecology_0903_composition_move` below; kept because the ARC WINDOW reasoning (inside the route contract's arc 450-900 'Rise', before the Pond's approved-lush content starts, on a real flat shoulder rather than a guess) still holds at the new point, and every clearance number below was re-measured against the new coordinate rather than assumed. Sited by probing the corridor spine (tools/_probe_band1_content_spacing.py's own arc/lateral method) then a real ground grid-search (tools/_probe_world_content_0903.gd / _0903b.gd, playground_heightfield.gd's own height_at()): the ORIGINAL point (arc ~650, [-377,456.8]) measured 5.4 degrees worst-case slope over a 5m pad after a 20x20m grid search from an initial 12.9-degree candidate. Also just past the existing Galecrest pair the contract's Place 2 already describes ('a Galecrest pair that circles and lands near the crest', spawns.json order 1013).",
+      "_why_ecology_0903_composition_move": "BAND1-ECOLOGY-0903, docs/ROADMAP.md task 2.5, implementing docs/specs/BAND1_COMPOSITION_PLAN.md section 5.3 (stand `comp3-rise-overlook-pond`): the blind visual judge found the Rise's one overlook showed the player haze, not the promise of the basin below, and named the fix as putting a person 'in the window' at ~95m from the crest eye (-218,324) rather than down on the basin floor where she cannot be seen from it. Moved from arc~650/[-377,456.8] to arc~540/[-305,360] -- 95m from the crest eye (matches the plan's own measured figure exactly) and still inside the route contract's Rise window, `~50m past the Pond Circuit trailhead`'s SIGNPOST is now the wrong claim (superseded) since she stands well short of it now; the sign still marks the crest itself per the composition plan's own 2.6 note. CLEARANCE, re-measured against the new point rather than carried over: 27.6m from spawns.json order 1015's mudsnout centre ([-305.3,387.6], r14.2 -- 13.4m of real clearance past the cluster's own scatter disc, comfortably past her ~4-5m challenge prompt), 80m+ from order 1016's pipwing, and clear of the discovery cache/marker at [-382.8,355.5] (78m, so she does not crowd the discovery beat). `facing_deg` recomputed for the new point (still 'back up the road toward the gate', per npc_body.gd's own note that this yaw is only the idle pose -- the trainer turns to face the player on approach regardless, so the exact degree is not gameplay-load-bearing). GROUND VERIFICATION NOTE: this session had no Godot binary to re-run the heightfield probe tools named above, so the new point's slope/flatness was NOT independently re-measured here -- only its 2D clearance from every neighbouring authored cluster, which is exact regardless of terrain. The composition plan's own profile table (section 1.4: arc 476-654 is a smooth, continuous 23m descent, not one of the >45-degree rise faces the terrain's own slope limit is reserved for) is the basis for trusting this is walkable; a render pass should confirm before this is called fully done.",
+      "_comment_ecology_0903_temptation": "The Galecrest pair 95m further down the slope (spawns.json order 1013, moved in this same change) is this place's temptation: aggressive, Air-typed, a genuinely harder catch (catch_rate 0.28) than anything the player has met yet, and sited to circle the discovery cache rather than sit in a table. Dara's fight is the one 'you can see coming'; the pair circling past her is the one worth a detour.",
+      "challenge": "shepherd_the_rise_challenge",
+      "defeated": "shepherd_the_rise_defeated",
+      "team": [
+        {
+          "species": "trailpup",
+          "level": 3
+        },
+        {
+          "species": "trailpup",
+          "level": 4
+        }
+      ],
+      "_comment_team": "Two Trailpups per the route contract's own wording. Levels 3-4, just above Bryn's practice pair (2-3) and below Mira's (4) -- the gentle first step past the village gate, within chapter_curve.json's band1 trainer_levels [2,7] (tests/test_chapter_curve.gd).",
+      "reward": {
+        "coins": 15,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_shepherd_the_rise",
+      "rechallenge": false
+    },
+    {
+      "order": 1041,
+      "id": "wanderer_trail_camp",
+      "name": "Gil",
+      "_comment": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 4 ('the wanderer at the trail camp', Mudsnout and Pipwing). The second of the route contract's two new trainers, sited deep enough into the Long Field that the 2,221m stretch beyond the village hub is never more than ~930m from a fight (the mathematical floor for two trainers across that span given the Pond pocket at arc ~770-990 must stay undisturbed and old_champion_bram's own off-route fight at arc 1482 must not be crowded -- see this band's own walk-log evidence) rather than the single 2,221m gap that stood before this pass.",
+      "config_key": "wandering_trainer",
+      "_comment_body": "T1-CAST reuse, CLAUDE.md: no new humanoid mesh. `wandering_trainer` is the same weathered, travelled body old_champion_bram already uses -- a second wanderer on the same road is the honest use of a rig built for exactly this, not a repaint of a villager.",
+      "position": [
+        328.3,
+        905.1
+      ],
+      "facing_deg": 210.0,
+      "_why_here": "arc ~1580 of trail.bands[0], inside the route contract's own 1200-1950 'Long Field' window and ~40m short of the existing trail_camp prop cluster (props.json order 1000, centre ~344,935) -- close enough that the camp's fire and tent are the reason a traveller stopped here, far enough (>=26m from every trail_camp prop and the trailpup/wood-node content around it) that the fight's own clearing does not stand on top of the camp. Refined from the arc/lateral candidate by a real ground grid-search (tools/_probe_world_content_0903b.gd): the first candidate measured 10.1 degrees worst-case slope over a 5m pad, this point 5.4 degrees. Also kept >=110m from old_champion_bram's off-route fight (195,905) so the two optional/authored battles in this stretch of road do not read as clustered.",
+      "challenge": "wanderer_trail_camp_challenge",
+      "defeated": "wanderer_trail_camp_defeated",
+      "team": [
+        {
+          "species": "mudsnout",
+          "level": 6
+        },
+        {
+          "species": "pipwing",
+          "level": 7
+        }
+      ],
+      "_comment_team": "Mudsnout and Pipwing per the route contract's own wording, at the top of chapter_curve.json's band1 trainer_levels [2,7] -- the last ordinary-strength fight before the South Bridge grunt (a gate_fight, exempt from this band and fielding 10-12), so the road's own difficulty keeps climbing right up to the checkpoint rather than flattening out after the Rise.",
+      "reward": {
+        "coins": 22,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_wanderer_trail_camp",
+      "rechallenge": false
+    },
+    {
+      "order": 1010,
+      "id": "old_champion_bram",
+      "name": "Old Bram",
+      "config_key": "wandering_trainer",
+      "_comment_body_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated. The previous entry hung white hair on `villager_farmer` to say 'old' -- and its own comment named the real problem it could not solve, that the only OTHER old body in the game is Grandpa's and 'a second NPC wearing Grandpa's face reads as Grandpa'. `wandering_trainer` answers both: a weathered, bearded, travelled body that is neither Grandpa nor a repainted villager, already installed/rigged/animated (docs/specs/ASSET_LEDGER.md, T1-NPC-CAST) and standing nowhere until now. It also fixes a straight mismatch nobody had caught: `villager_farmer` resolves to `villager_female_lod0.glb`, so the retired champion called Old Bram was wearing the female villager rig, while the same character's own `village_npcs.json` entry uses the male one. Baked hair replaces the override, as with Bryn.",
+      "position": [
+        300.0,
+        983.0
+      ],
+      "_why_f03_0_site": "F03#0 lure, coordinator decision on #356 (option A, 2026-09-27): move the camp to the woodline edge facing the road. The first site (195,905) had 0 clear road sightlines, and the code-blind lure judges failed him readable-on-approach twice (r5, r6). A 21 m move to (190,913) scored 4 hard and 3 soft on the probe, but two rendered walks (west woodland road and east spine) still showed only forest until 11-49 m, off-road. tests/probe_lure_road_visibility.gd --grid=bram:235,900,85,6 ranks (300,983) best on flat ground: 3.8 degree slope, 16 hard and 12 soft clear road samples, 72.8 m from the trail-camp road at (359,939), at the edge of the open field. He stands 83 m from wanderer_trail_camp (the earlier 110 m spacing was a clustering preference, disclosed here). The rest props and fire moved with him; team, reward and dialogue are unchanged.",
+      "facing_deg": 127.0,
+      "_why_here": "Prompt 30's Old Champion, and band1's answer to prompt 62's 'at least one optional thing tempts the player away from direct progress'. Sited by tools/_probe_offroute_site.gd, not by eye: 0.32m of relief over 10m so the battle arena forms on flat ground, 82m lateral from every authored route, and 83m from the spine's own (230,830) bend -- close enough that a player cresting the rise sees a figure sitting alone in a field and wonders, far enough that the road never walks them into him. He is deliberately on the OPPOSITE side of the road from trail_camp at (344,935), so band1's two optional draws are two places rather than one busy corner. Prompt 30 asks that at least some optional content be discoverable through curiosity rather than a quest giver, and that not every secret be pre-labelled; that is why he has no map landmark and nobody in the village points at him.",
+      "challenge": "old_champion_challenge",
+      "defeated": "old_champion_beaten",
+      "rechallenge": false,
+      "team": [
+        {
+          "species": "meadowhart",
+          "level": 6
+        },
+        {
+          "species": "galecrest",
+          "level": 7
+        }
+      ],
+      "_comment_team": "Levels 6-7, at the TOP of chapter_curve.json's band1 trainer band of [2, 7]. The first cut of this entry fielded 11-12 and tests/test_chapter_curve.gd failed it twice, correctly. The reasoning behind 11-12 was that the player meets Bram after winning a level 10-11 tournament final, so an optional fight pitched below that is not worth an 80m detour -- but that reasoning read the curve off the wrong row. The tournament finals are `gate_fight: true` and the curve test EXEMPTS gate fights on purpose; they are the chapter's staged set-piece, not the region's baseline. What band1 actually says is team enter 3, exit 8, so 7 is the strongest ordinary trainer this region is allowed to field and is a fair fight against the level-8 team the curve expects to leave here. GATE_D_LANE_CONTRACT section 3: author TO the curve, never edit it to fit content you wrote. There is a real tension underneath this -- see the coordinator request in archive/ralph/DONE.md -- but it is a curve question and it is not a lane's to settle. Both species are already band1 residents (spawns.json), so the team is drawn from the ecology the player has been meeting. Meadowhart leads because it is the species the tournament champion line already tells the player can be ridden: seeing one fight for somebody else is the setup for wanting one.",
+      "reward": {
+        "coins": 60,
+        "items": [
+          {
+            "id": "orb_greater",
+            "count": 5
+          },
+          {
+            "id": "potion_small",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "_comment_reward": "Prompt 30: useful at the point found, never mandatory, and no new loot economy. Greater orbs are the deliberate choice over a TM -- they are the one item that makes the OTHER optional thing in this band reachable, the elder mosshell in the hollow west of the pond (spawns.json order 1900), which is a level-9 catch a player with basic orbs will probably fail. Beating the champion is how you get equipped to take the elder, and his defeated line is what tells you the elder is there. Two optional pieces that feed each other beat two unrelated icons.",
+      "defeat_flag": "defeated_old_bram",
+      "_comment_flags": "`defeat_flag` is the flag the combat system sets on a win and the one trainers.gd::already_beaten reads; `defeated` beside it is a CONVERSATION id, and the first cut of this entry conflated the two and shipped no defeat flag at all -- tests/test_trainers_data.gd caught it. `rechallenge` is a BOOLEAN, not a conversation id, and the first cut set it to one, which reads as truthy and made Bram infinitely re-fightable. That test's own words for it are 'that is an XP faucet', and an optional trainer who can be farmed is exactly the thing prompt 30's 'rewards persist and are idempotent' rule exists to prevent. `reward.flags` is empty because `defeat_flag` already records the win; a second flag saying the same thing is a second thing to keep in sync."
+    }
+  ],
+  "_comment_tournament": "TOURNAMENT-1. Orders 1000-1003 are this band's tournament block plus the South Bridge gatekeeper, taken from the band's own reserved 1000-1999 range so no other band can collide and no existing entry had to be renumbered. The bracket itself, the entry thresholds and the four simulated opponents live in data/config/tournament.json; only the fights live here.",
+  "_comment_t1_creature_rig": "T1-CREATURE-RIG, 2026-08-30, SUPERSEDED by _comment_t3_ladder below. It appended orders 1020-1022 here -- the 3 Battle-role civilian bodies -- and those three entries have since been removed for pushing the chapter past its own distinct-opponent ceiling. The note is kept because its reasoning about WHERE such a body can stand is still correct and still unsolved: this file is the only placement path outside the village, so any future civilian who belongs in a band rather than the square needs a real band-level placement mechanism rather than a trainer entry with a team bolted on.",
+  "_comment_t3_ladder": "T3-LADDER, 2026-08-30. Removed three battle entries added hours earlier by T1-CREATURE-RIG -- young_trainer (Kip), rival_trainer (Talon), wandering_trainer (Faye). They were authored for an asset reason, not a ladder reason: that lane's own note says they were three of fifteen rigged civilian bodies and these three had 'Battle roles... since they need an authored team rather than a greeting'. Standing a body up outside the village is only possible through this file (a band folder carries harvest, props, spawns, trainers and vegetation and no civilian placement), so a trainer entry was the only slot available -- which is how three rungs got added to the chapter's ladder to give three meshes something to do.\n\nThe consequence was measured, not guessed: with them, the chapter fielded 27 distinct trainer opponents against the 24 that tests/test_chapter_content_map.gd allows, and NINE of them stood in Band 1 alone (Bryn, Mira, Oskar, Tam, the south bridge grunt, Old Bram, plus these three) before the village tournament is counted. That is precisely prompt 59's 'monotonous trainer hallway', in the one band least able to afford it. Removing all three lands the chapter on 24 exactly and touches only the additions that caused the overflow, rather than renaming or thinning encounters that have been played.\n\nThe three rigged bodies remain built and installed; nothing was deleted from the repository. Talon is the one worth bringing back deliberately -- a rival is a real rung, and T1-CREATURE-RIG's own comment already flagged that 'a repeat-appearance rival arc is a story-structure decision outside this lane's scope'. It is a story decision, and it should be authored by whoever is shaping the chapter's escalation, with the census budget accounted for -- not inherited because a mesh existed."
+}

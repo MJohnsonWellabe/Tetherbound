@@ -1,0 +1,1152 @@
+{
+  "base_commit": "c21be258900a2de22ac4eef61cf71f9b55c6e426",
+  "classification": "SOURCE ONLY; F17#4 OPEN; retained native execution FAILED",
+  "changed_paths": [
+    "data/config/village_npcs.json",
+    "tests/fixtures/band_split_baseline/props.json",
+    "tests/fixtures/band_split_baseline/vegetation.json",
+    "tests/helpers/opening_geometry_navigator.gd",
+    "tests/test_band_content.gd",
+    "tests/test_band_vegetation.gd",
+    "tests/test_farming.gd",
+    "tests/test_gate_f_village_passage.gd",
+    "tests/test_grandpa_yard_visual_identity.gd",
+    "tests/test_inn_interior_visual_identity.gd",
+    "tests/test_meadows_south_trail_pulls_0912.gd",
+    "tests/test_vegetation_human_prompt_height.gd",
+    "tests/test_village_street_0912.gd",
+    "tools/gate_f/segments/S03.json",
+    "tools/gate_f/segments/S03C.json",
+    "tools/gate_f/segments/S10e.json"
+  ],
+  "files": [
+    {
+      "path": "frozen/before/data/config/bands/band1_lower_meadows/harvest.json",
+      "bytes": 38543,
+      "sha256": "0e8cbe1a326f698e53accacab7bbb0e40b04dfac0aa746d845ad155b64b73736"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band1_lower_meadows/harvest.json",
+      "bytes": 39170,
+      "sha256": "bc15d97d65091da5871bd9f5be32f29df469abe67446a52879e1be6828c924f2"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band1_lower_meadows/pickups.json",
+      "bytes": 13599,
+      "sha256": "a694ff2318a637fe7336772b4beb2ef5f1332e70de7a2bcc974b53aed74e752c"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band1_lower_meadows/pickups.json",
+      "bytes": 13599,
+      "sha256": "a694ff2318a637fe7336772b4beb2ef5f1332e70de7a2bcc974b53aed74e752c"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band1_lower_meadows/pond_npc.json",
+      "bytes": 2336,
+      "sha256": "5e2771a95cd3046fdc464dc7507d4965ae9fa0aa534f2c13ead435113384e368"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band1_lower_meadows/pond_npc.json",
+      "bytes": 2336,
+      "sha256": "5e2771a95cd3046fdc464dc7507d4965ae9fa0aa534f2c13ead435113384e368"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band1_lower_meadows/props.json",
+      "bytes": 97180,
+      "sha256": "107838edc4b90e370e6dc587c0bcc24f6b82a40d5b7a438336bf9b791efc9776"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band1_lower_meadows/props.json",
+      "bytes": 98741,
+      "sha256": "7948969367b466e38582f273bbfb4e9a1b4f0001355837814198369bea9867d1"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band1_lower_meadows/spawns.json",
+      "bytes": 122123,
+      "sha256": "f2de5c5c82591a8fe71b0ae81e7db159ca499162ed40a5c72e02a40cfadd0ad7"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band1_lower_meadows/spawns.json",
+      "bytes": 122123,
+      "sha256": "f2de5c5c82591a8fe71b0ae81e7db159ca499162ed40a5c72e02a40cfadd0ad7"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band1_lower_meadows/trainers.json",
+      "bytes": 35230,
+      "sha256": "9ed16005d9e22c3f37e654cabbd45837b320c7888cfaebfc0b4c9c8f1b718500"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band1_lower_meadows/trainers.json",
+      "bytes": 35683,
+      "sha256": "b77a0cede4d5dadedc7aab29ccaba9208d762ebcbdf91e6774c71690427bcc1c"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band1_lower_meadows/vegetation.json",
+      "bytes": 58219,
+      "sha256": "497894d689b20a4539b9be0497b4b1f8851b95386c4608c9543b95a17fc44788"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band1_lower_meadows/vegetation.json",
+      "bytes": 59327,
+      "sha256": "70de3bc0102396daafc8123e35e542e6288a38bd2ad79abd1c394b9b5d2d5e18"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band2_stone_and_root/harvest.json",
+      "bytes": 21953,
+      "sha256": "7d7a417f5543a18bfa806019996a32f52abd009fb0e6e74c52db8dbeaa0da949"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band2_stone_and_root/harvest.json",
+      "bytes": 21953,
+      "sha256": "7d7a417f5543a18bfa806019996a32f52abd009fb0e6e74c52db8dbeaa0da949"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band2_stone_and_root/pickups.json",
+      "bytes": 10378,
+      "sha256": "0adcbb3ae6419cb9759acc2d2c627dfbd529844331c303d08af1181bfeb31647"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band2_stone_and_root/pickups.json",
+      "bytes": 10378,
+      "sha256": "0adcbb3ae6419cb9759acc2d2c627dfbd529844331c303d08af1181bfeb31647"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band2_stone_and_root/props.json",
+      "bytes": 27482,
+      "sha256": "842a81ef18f92e1b912a0b4713c0209d7390c2489e24d510d63bb2e11e20d64b"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band2_stone_and_root/props.json",
+      "bytes": 27482,
+      "sha256": "842a81ef18f92e1b912a0b4713c0209d7390c2489e24d510d63bb2e11e20d64b"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band2_stone_and_root/spawns.json",
+      "bytes": 58947,
+      "sha256": "513c4d6f42383cbe2b936c9019adb677c3f0d5bbf9d85b15847267e52ada4ff4"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band2_stone_and_root/spawns.json",
+      "bytes": 58947,
+      "sha256": "513c4d6f42383cbe2b936c9019adb677c3f0d5bbf9d85b15847267e52ada4ff4"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band2_stone_and_root/trainers.json",
+      "bytes": 14277,
+      "sha256": "11d9adb2a358d1159fd39193cc2c073417be979562bbe818e2aba31fe89d6b11"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band2_stone_and_root/trainers.json",
+      "bytes": 14277,
+      "sha256": "11d9adb2a358d1159fd39193cc2c073417be979562bbe818e2aba31fe89d6b11"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band2_stone_and_root/vegetation.json",
+      "bytes": 12352,
+      "sha256": "2695ecadd6458d3aa1e6fe520c8637adfe2e652f1a73dbee5cce00cab9a28a58"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band2_stone_and_root/vegetation.json",
+      "bytes": 12352,
+      "sha256": "2695ecadd6458d3aa1e6fe520c8637adfe2e652f1a73dbee5cce00cab9a28a58"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band3_the_river_lock/harvest.json",
+      "bytes": 25834,
+      "sha256": "66b7a139e36c8721d3ab776e71cb51ed0b56d6efad2f054911c850051efcd698"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band3_the_river_lock/harvest.json",
+      "bytes": 25834,
+      "sha256": "66b7a139e36c8721d3ab776e71cb51ed0b56d6efad2f054911c850051efcd698"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band3_the_river_lock/pickups.json",
+      "bytes": 9188,
+      "sha256": "972d04e7dd9ca9d22cda58692fca89892378773220e702d518446796e4d0175c"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band3_the_river_lock/pickups.json",
+      "bytes": 9188,
+      "sha256": "972d04e7dd9ca9d22cda58692fca89892378773220e702d518446796e4d0175c"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band3_the_river_lock/props.json",
+      "bytes": 71634,
+      "sha256": "aea5b9abfad2d1cf06d13030c72fb3d11ca703f57ee5776a600c2b30a6173c82"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band3_the_river_lock/props.json",
+      "bytes": 71634,
+      "sha256": "aea5b9abfad2d1cf06d13030c72fb3d11ca703f57ee5776a600c2b30a6173c82"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band3_the_river_lock/spawns.json",
+      "bytes": 59441,
+      "sha256": "15831d2402f5239a7682b2341501b227b460a2a583dfa8b181d0732e1cf6dec0"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band3_the_river_lock/spawns.json",
+      "bytes": 59441,
+      "sha256": "15831d2402f5239a7682b2341501b227b460a2a583dfa8b181d0732e1cf6dec0"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band3_the_river_lock/trainers.json",
+      "bytes": 38757,
+      "sha256": "77df9fd7ea10cdfdf1b3c711a8d0a26c5e88da0e0165faa3179afa3293b5f846"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band3_the_river_lock/trainers.json",
+      "bytes": 38757,
+      "sha256": "77df9fd7ea10cdfdf1b3c711a8d0a26c5e88da0e0165faa3179afa3293b5f846"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band3_the_river_lock/vegetation.json",
+      "bytes": 16786,
+      "sha256": "0493ecf1641a1c901b9eb6d4544709c558bbf172b72b5c6579333384f4b8ef6b"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band3_the_river_lock/vegetation.json",
+      "bytes": 16786,
+      "sha256": "0493ecf1641a1c901b9eb6d4544709c558bbf172b72b5c6579333384f4b8ef6b"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "bytes": 33877,
+      "sha256": "e6c76c0ef9226be024ad030880a9fcc2c5e83b675f835e83ef41da3b5dfe8d2c"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "bytes": 33877,
+      "sha256": "e6c76c0ef9226be024ad030880a9fcc2c5e83b675f835e83ef41da3b5dfe8d2c"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band4_upper_meadows_ironwood/pickups.json",
+      "bytes": 17657,
+      "sha256": "f787d7efb4d9213d8ec91efa97a5373b8c3242ac11c3067c5ca050fd41145304"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/pickups.json",
+      "bytes": 17657,
+      "sha256": "f787d7efb4d9213d8ec91efa97a5373b8c3242ac11c3067c5ca050fd41145304"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band4_upper_meadows_ironwood/props.json",
+      "bytes": 52406,
+      "sha256": "2b586149f70a400ac700e26d1ee6ac757951a6f1d8838b750935b9b132cc4b44"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/props.json",
+      "bytes": 52406,
+      "sha256": "2b586149f70a400ac700e26d1ee6ac757951a6f1d8838b750935b9b132cc4b44"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "bytes": 116240,
+      "sha256": "2e503fbdbc2811cdce703ef25a8501fdb07d0f4367e7cd983fa4325994ff8edb"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "bytes": 116240,
+      "sha256": "2e503fbdbc2811cdce703ef25a8501fdb07d0f4367e7cd983fa4325994ff8edb"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "bytes": 39154,
+      "sha256": "5f7cbf9d568d2c19f8d60c609bf602a951bbe33204827127ded0f152be003964"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "bytes": 39154,
+      "sha256": "5f7cbf9d568d2c19f8d60c609bf602a951bbe33204827127ded0f152be003964"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band4_upper_meadows_ironwood/vegetation.json",
+      "bytes": 17368,
+      "sha256": "f451051c1520ce5fac9f0e92ecb5415f2459d8a0c62b3eb16d04e3009a325906"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/vegetation.json",
+      "bytes": 17368,
+      "sha256": "f451051c1520ce5fac9f0e92ecb5415f2459d8a0c62b3eb16d04e3009a325906"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band5_stronghold_approach/harvest.json",
+      "bytes": 7113,
+      "sha256": "2e0fced0d1a907ef5edf9ad2bfb1fcf8d0c7f15c4a2d47853bd546625dcad334"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band5_stronghold_approach/harvest.json",
+      "bytes": 7113,
+      "sha256": "2e0fced0d1a907ef5edf9ad2bfb1fcf8d0c7f15c4a2d47853bd546625dcad334"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band5_stronghold_approach/pickups.json",
+      "bytes": 7199,
+      "sha256": "148ccc9f97d70ed2fe1d4d322464729672c4c2802333a187f572620b94d29e40"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band5_stronghold_approach/pickups.json",
+      "bytes": 7199,
+      "sha256": "148ccc9f97d70ed2fe1d4d322464729672c4c2802333a187f572620b94d29e40"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band5_stronghold_approach/props.json",
+      "bytes": 26742,
+      "sha256": "d0fc3016ffbbc91d8acbfc42527f9e0b1223db845c3d48846ff13d0c9276a8c5"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band5_stronghold_approach/props.json",
+      "bytes": 26742,
+      "sha256": "d0fc3016ffbbc91d8acbfc42527f9e0b1223db845c3d48846ff13d0c9276a8c5"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band5_stronghold_approach/spawns.json",
+      "bytes": 38163,
+      "sha256": "5be330f82e549ad76e2682895d5ba86db41b20f4040707a21a575313a8e1f676"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band5_stronghold_approach/spawns.json",
+      "bytes": 38163,
+      "sha256": "5be330f82e549ad76e2682895d5ba86db41b20f4040707a21a575313a8e1f676"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band5_stronghold_approach/trainers.json",
+      "bytes": 38342,
+      "sha256": "663c6fe20aabe620a171b3d4f6b8b2c04b98a6392bbee64f307a2718321543c8"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band5_stronghold_approach/trainers.json",
+      "bytes": 38342,
+      "sha256": "663c6fe20aabe620a171b3d4f6b8b2c04b98a6392bbee64f307a2718321543c8"
+    },
+    {
+      "path": "frozen/before/data/config/bands/band5_stronghold_approach/vegetation.json",
+      "bytes": 11019,
+      "sha256": "e705c91104d1b0b1892d0da89dbfc432277a4008160c38825b6e1d64cbfc0877"
+    },
+    {
+      "path": "frozen/candidate/data/config/bands/band5_stronghold_approach/vegetation.json",
+      "bytes": 11019,
+      "sha256": "e705c91104d1b0b1892d0da89dbfc432277a4008160c38825b6e1d64cbfc0877"
+    },
+    {
+      "path": "frozen/before/data/config/building_prefabs.json",
+      "bytes": 266862,
+      "sha256": "5e60ebd341184fe5946f115f6c9494c5d0163df08e69c5e0ae33d662f114c3b3"
+    },
+    {
+      "path": "frozen/candidate/data/config/building_prefabs.json",
+      "bytes": 277022,
+      "sha256": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36"
+    },
+    {
+      "path": "frozen/before/data/config/farm.json",
+      "bytes": 3130,
+      "sha256": "020ec00f965eed78369029817c6d6228d0ec7fc9dbb5eb87e1f9071b535b4467"
+    },
+    {
+      "path": "frozen/candidate/data/config/farm.json",
+      "bytes": 3180,
+      "sha256": "0906b9c6f754f9863c6b3d2cf7a547d21b457071277c8e868d1a3331f602e4ec"
+    },
+    {
+      "path": "frozen/before/data/config/harvest.json",
+      "bytes": 3087,
+      "sha256": "bf60fa96ba3274fe41a5ba80992ddbf5d7f6fdc442e46f11ae6029b088a8063d"
+    },
+    {
+      "path": "frozen/candidate/data/config/harvest.json",
+      "bytes": 3087,
+      "sha256": "bf60fa96ba3274fe41a5ba80992ddbf5d7f6fdc442e46f11ae6029b088a8063d"
+    },
+    {
+      "path": "frozen/before/data/config/props.json",
+      "bytes": 4476,
+      "sha256": "8659cf6dd387e2f67952ecefd3e2631b5faa1bae3c069c08ecb805bd636248c8"
+    },
+    {
+      "path": "frozen/candidate/data/config/props.json",
+      "bytes": 4476,
+      "sha256": "8659cf6dd387e2f67952ecefd3e2631b5faa1bae3c069c08ecb805bd636248c8"
+    },
+    {
+      "path": "frozen/before/data/config/spawns.json",
+      "bytes": 8664,
+      "sha256": "bb1ae1539cc468c0bbef8b9ccac843dafe93a150932589f9adb33e8dd905f30b"
+    },
+    {
+      "path": "frozen/candidate/data/config/spawns.json",
+      "bytes": 8664,
+      "sha256": "bb1ae1539cc468c0bbef8b9ccac843dafe93a150932589f9adb33e8dd905f30b"
+    },
+    {
+      "path": "frozen/before/data/config/terrain_playground.json",
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    {
+      "path": "frozen/candidate/data/config/terrain_playground.json",
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    {
+      "path": "frozen/before/data/config/trainers.json",
+      "bytes": 9102,
+      "sha256": "450340f7eb58e210f5a170e36f196ebd193764d8e963c56dc7c3e8bbdc9e2c52"
+    },
+    {
+      "path": "frozen/candidate/data/config/trainers.json",
+      "bytes": 9102,
+      "sha256": "450340f7eb58e210f5a170e36f196ebd193764d8e963c56dc7c3e8bbdc9e2c52"
+    },
+    {
+      "path": "frozen/before/data/config/vegetation.json",
+      "bytes": 240087,
+      "sha256": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df"
+    },
+    {
+      "path": "frozen/candidate/data/config/vegetation.json",
+      "bytes": 240087,
+      "sha256": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df"
+    },
+    {
+      "path": "frozen/before/data/config/village.json",
+      "bytes": 12217,
+      "sha256": "24688edacadb6f368e4c62fed73bc923c3da98949fb841b67b15f7ea2f7aee9b"
+    },
+    {
+      "path": "frozen/candidate/data/config/village.json",
+      "bytes": 12551,
+      "sha256": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946"
+    },
+    {
+      "path": "frozen/before/data/config/village_boundary.json",
+      "bytes": 19086,
+      "sha256": "6833f920ef97436eb33b0242eb46c63f04f8f37bfe17d75eff0246c4524bd3da"
+    },
+    {
+      "path": "frozen/candidate/data/config/village_boundary.json",
+      "bytes": 19391,
+      "sha256": "2e3ba93eb7212ba4d02a524fc0e9711481a75304808955cfa6e1bceb1b51ce86"
+    },
+    {
+      "path": "frozen/before/data/config/village_npcs.json",
+      "bytes": 51312,
+      "sha256": "f50a0e7d2f92a34eddcb17ce891c5143bebf09ae60b387d4916ab3474a7f034b"
+    },
+    {
+      "path": "frozen/candidate/data/config/village_npcs.json",
+      "bytes": 51308,
+      "sha256": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07"
+    },
+    {
+      "path": "frozen/before/data/dialogue/relay.json",
+      "bytes": 2893,
+      "sha256": "e5faa37bab0f597b2dafe87622affdc61186973f75efac688cbdf3e1c0f2f590"
+    },
+    {
+      "path": "frozen/candidate/data/dialogue/relay.json",
+      "bytes": 2893,
+      "sha256": "e5faa37bab0f597b2dafe87622affdc61186973f75efac688cbdf3e1c0f2f590"
+    },
+    {
+      "path": "frozen/before/data/dialogue/village.json",
+      "bytes": 35907,
+      "sha256": "8869cf73a3213c63a767b9f44a6169a69e6ea92dd25a648fe1a6b5fe4b18949d"
+    },
+    {
+      "path": "frozen/candidate/data/dialogue/village.json",
+      "bytes": 35907,
+      "sha256": "8869cf73a3213c63a767b9f44a6169a69e6ea92dd25a648fe1a6b5fe4b18949d"
+    },
+    {
+      "path": "frozen/before/scripts/data/band_content.gd",
+      "bytes": 6247,
+      "sha256": "9cbdf7f164cfed9e1a95df38448ab3b87f074ae4dcfa12cd96edb323b08f7ef0"
+    },
+    {
+      "path": "frozen/candidate/scripts/data/band_content.gd",
+      "bytes": 6247,
+      "sha256": "9cbdf7f164cfed9e1a95df38448ab3b87f074ae4dcfa12cd96edb323b08f7ef0"
+    },
+    {
+      "path": "frozen/before/scripts/npc/npc_body.gd",
+      "bytes": 6820,
+      "sha256": "ad88f474afa7b6c770a87557c94f32ea48a592c2c2aa6dc9f61bbab04ce99793"
+    },
+    {
+      "path": "frozen/candidate/scripts/npc/npc_body.gd",
+      "bytes": 6820,
+      "sha256": "ad88f474afa7b6c770a87557c94f32ea48a592c2c2aa6dc9f61bbab04ce99793"
+    },
+    {
+      "path": "frozen/before/scripts/player/player_controller.gd",
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    {
+      "path": "frozen/candidate/scripts/player/player_controller.gd",
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    {
+      "path": "frozen/before/scripts/world/building_prefabs.gd",
+      "bytes": 23026,
+      "sha256": "c810de6ea61ea843847e0e4d83ae27de96dff43375b97c41ab71749e7697a9f5"
+    },
+    {
+      "path": "frozen/candidate/scripts/world/building_prefabs.gd",
+      "bytes": 23026,
+      "sha256": "c810de6ea61ea843847e0e4d83ae27de96dff43375b97c41ab71749e7697a9f5"
+    },
+    {
+      "path": "frozen/before/scripts/world/inn_interior.gd",
+      "bytes": 42369,
+      "sha256": "57e8e51aa9aee52f81a932430dcee084b94f86e5d08aabf0d7e1d0513e14402f"
+    },
+    {
+      "path": "frozen/candidate/scripts/world/inn_interior.gd",
+      "bytes": 42369,
+      "sha256": "57e8e51aa9aee52f81a932430dcee084b94f86e5d08aabf0d7e1d0513e14402f"
+    },
+    {
+      "path": "frozen/before/scripts/world/scatter_bake.gd",
+      "bytes": 34161,
+      "sha256": "ab3c64339ef63b20d301f9b0c17d53b91a001360d9fee441ebb65cbae269eb6e"
+    },
+    {
+      "path": "frozen/candidate/scripts/world/scatter_bake.gd",
+      "bytes": 34161,
+      "sha256": "ab3c64339ef63b20d301f9b0c17d53b91a001360d9fee441ebb65cbae269eb6e"
+    },
+    {
+      "path": "frozen/before/scripts/world/shop_interior.gd",
+      "bytes": 8789,
+      "sha256": "752a211ffc19ab9a59bce2891aea552bbf4f5ecdf166ce5c8d03f220e06e3646"
+    },
+    {
+      "path": "frozen/candidate/scripts/world/shop_interior.gd",
+      "bytes": 8789,
+      "sha256": "752a211ffc19ab9a59bce2891aea552bbf4f5ecdf166ce5c8d03f220e06e3646"
+    },
+    {
+      "path": "frozen/before/scripts/world/vegetation.gd",
+      "bytes": 142445,
+      "sha256": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a"
+    },
+    {
+      "path": "frozen/candidate/scripts/world/vegetation.gd",
+      "bytes": 142445,
+      "sha256": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a"
+    },
+    {
+      "path": "frozen/before/scripts/world/village_boundary.gd",
+      "bytes": 30001,
+      "sha256": "2ee9484c183adddca8679baa84cdbb8f7faf549dab3a0fd95d9449ebf70eeeca"
+    },
+    {
+      "path": "frozen/candidate/scripts/world/village_boundary.gd",
+      "bytes": 30001,
+      "sha256": "2ee9484c183adddca8679baa84cdbb8f7faf549dab3a0fd95d9449ebf70eeeca"
+    },
+    {
+      "path": "frozen/before/tests/fixtures/band_split_baseline/harvest.json",
+      "bytes": 18656,
+      "sha256": "1b9eb7d7106e3df688e9450ad1cc46b361e1dc7fbac6c4aef6afae213b5e2ca2"
+    },
+    {
+      "path": "frozen/candidate/tests/fixtures/band_split_baseline/harvest.json",
+      "bytes": 18656,
+      "sha256": "1b9eb7d7106e3df688e9450ad1cc46b361e1dc7fbac6c4aef6afae213b5e2ca2"
+    },
+    {
+      "path": "frozen/before/tests/fixtures/band_split_baseline/props.json",
+      "bytes": 22521,
+      "sha256": "3425a6284ce72bd8c91c3e145e556116b2da302c243f6149f2d22583cac7e1be"
+    },
+    {
+      "path": "frozen/candidate/tests/fixtures/band_split_baseline/props.json",
+      "bytes": 22503,
+      "sha256": "a89b03461acb6018aedaa2c27cf5eccb48dfbd2b03c35c832905e720d029fcb9"
+    },
+    {
+      "path": "frozen/before/tests/fixtures/band_split_baseline/spawns.json",
+      "bytes": 20263,
+      "sha256": "e4c2fe110fd528c9d66e9ffeb96715eaba9421469947f4c6896c88befc952cdc"
+    },
+    {
+      "path": "frozen/candidate/tests/fixtures/band_split_baseline/spawns.json",
+      "bytes": 20263,
+      "sha256": "e4c2fe110fd528c9d66e9ffeb96715eaba9421469947f4c6896c88befc952cdc"
+    },
+    {
+      "path": "frozen/before/tests/fixtures/band_split_baseline/trainers.json",
+      "bytes": 103300,
+      "sha256": "633cf8f45f55f0c9e1d5f38c4e16d3cbef5efe879cc129af458ad772685db749"
+    },
+    {
+      "path": "frozen/candidate/tests/fixtures/band_split_baseline/trainers.json",
+      "bytes": 103300,
+      "sha256": "633cf8f45f55f0c9e1d5f38c4e16d3cbef5efe879cc129af458ad772685db749"
+    },
+    {
+      "path": "frozen/before/tests/fixtures/band_split_baseline/vegetation.json",
+      "bytes": 79566,
+      "sha256": "dfa0a59c612b2fc6c69e9d10f77c0c348b46b3595da55c8860072fab35f2ea00"
+    },
+    {
+      "path": "frozen/candidate/tests/fixtures/band_split_baseline/vegetation.json",
+      "bytes": 79560,
+      "sha256": "cb98c0f4952c21ec978ab9c7539ddb82bd429e8684926cd7e3ab8d2e2697a156"
+    },
+    {
+      "path": "frozen/before/tests/helpers/fresh_opening_segment.gd",
+      "bytes": 19706,
+      "sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a"
+    },
+    {
+      "path": "frozen/candidate/tests/helpers/fresh_opening_segment.gd",
+      "bytes": 19706,
+      "sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a"
+    },
+    {
+      "path": "frozen/before/tests/helpers/gate_a_npc_gather_segment.gd",
+      "bytes": 42713,
+      "sha256": "414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d"
+    },
+    {
+      "path": "frozen/candidate/tests/helpers/gate_a_npc_gather_segment.gd",
+      "bytes": 42713,
+      "sha256": "414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d"
+    },
+    {
+      "path": "frozen/before/tests/helpers/opening_geometry_navigator.gd",
+      "bytes": 69743,
+      "sha256": "282731a0b8450aa2dedc9d617d1e12ac38e8b3300e9b812ae9f1f87d64fb93ba"
+    },
+    {
+      "path": "frozen/candidate/tests/helpers/opening_geometry_navigator.gd",
+      "bytes": 70104,
+      "sha256": "6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55"
+    },
+    {
+      "path": "frozen/before/tests/test_band_content.gd",
+      "bytes": 13364,
+      "sha256": "060d144add86de91daeee462d620aaa762490ffff88f52ea596fc9171ecd08ba"
+    },
+    {
+      "path": "frozen/candidate/tests/test_band_content.gd",
+      "bytes": 13582,
+      "sha256": "d80301f5015e405871f4de89aee74e1f2b23e18e8b922d914fbee2a550d55652"
+    },
+    {
+      "path": "frozen/before/tests/test_band_vegetation.gd",
+      "bytes": 10244,
+      "sha256": "f2f500eaac5e91bd9e0c467c5328a85ce4fd3b512bb134e89a33810dfc6df8cf"
+    },
+    {
+      "path": "frozen/candidate/tests/test_band_vegetation.gd",
+      "bytes": 10392,
+      "sha256": "b52cd81eb233e0aece51fb28b9a8f07eb673c8805ef0af4a2d5ec3a4b9768030"
+    },
+    {
+      "path": "frozen/before/tests/test_farming.gd",
+      "bytes": 12726,
+      "sha256": "72f2ea871174db53076179ba50640fec0366aac7481dea1ef613b0403c5c17a9"
+    },
+    {
+      "path": "frozen/candidate/tests/test_farming.gd",
+      "bytes": 13931,
+      "sha256": "1e7fcf6143113bd342799b0cf7b43b965399ad517c65d6272da9f4a640f0aa98"
+    },
+    {
+      "path": "frozen/before/tests/test_gate_f_segments.gd",
+      "bytes": 22868,
+      "sha256": "ca78499732ad3608d44530ce0148381ec4988d4690452ccad231b2acf6cdeec0"
+    },
+    {
+      "path": "frozen/candidate/tests/test_gate_f_segments.gd",
+      "bytes": 22868,
+      "sha256": "ca78499732ad3608d44530ce0148381ec4988d4690452ccad231b2acf6cdeec0"
+    },
+    {
+      "path": "frozen/before/tests/test_gate_f_village_passage.gd",
+      "bytes": 4087,
+      "sha256": "508399031a26a5dc8281ce94736e2c8fea933de2cf640dbcb4e2512037f9d033"
+    },
+    {
+      "path": "frozen/candidate/tests/test_gate_f_village_passage.gd",
+      "bytes": 4400,
+      "sha256": "e5274680acacd5886b5d6640de84f4fb74decea9b790c21afdb0308035e2c68a"
+    },
+    {
+      "path": "frozen/before/tests/test_grandpa_yard_visual_identity.gd",
+      "bytes": 4953,
+      "sha256": "e87707bb8be3ef76dcbdd12eedf31364850cf2eb494d547c17a7e590f45a5f48"
+    },
+    {
+      "path": "frozen/candidate/tests/test_grandpa_yard_visual_identity.gd",
+      "bytes": 5009,
+      "sha256": "3cca71faefcd2a4dfc4559c39c5f874a2a3cf4dc23d0a443d008466a4338afc9"
+    },
+    {
+      "path": "frozen/before/tests/test_inn_interior_visual_identity.gd",
+      "bytes": 11548,
+      "sha256": "2c3a8d5076b581a089a961cae2e9ad1605f743ff294be31d0ff9b2ad3ed6509b"
+    },
+    {
+      "path": "frozen/candidate/tests/test_inn_interior_visual_identity.gd",
+      "bytes": 11520,
+      "sha256": "e3852dbea6fdd4c7a271e65e24f99446c007009833c5663e02f8ffbb3f4a609e"
+    },
+    {
+      "path": "frozen/before/tests/test_meadows_south_trail_pulls_0912.gd",
+      "bytes": 11748,
+      "sha256": "b7f0fa41261ced41d3fbb360f434186e06d7550fba0a5cb57228687c3a5eecfb"
+    },
+    {
+      "path": "frozen/candidate/tests/test_meadows_south_trail_pulls_0912.gd",
+      "bytes": 12199,
+      "sha256": "88090d26c241c910cb9764b1cfc4c8ab0d7962854d90afab522368c5addc9c9b"
+    },
+    {
+      "path": "frozen/before/tests/test_vegetation_human_prompt_height.gd",
+      "bytes": 3683,
+      "sha256": "644fd5ca5f917d620b91f78d418e62ea94427fcd725ec55f1300468a5fc6e4a6"
+    },
+    {
+      "path": "frozen/candidate/tests/test_vegetation_human_prompt_height.gd",
+      "bytes": 3615,
+      "sha256": "96b395849b5208a0f2d524c330f12e77db19dab0658262a1a6fa4d40f934b65b"
+    },
+    {
+      "path": "frozen/before/tests/test_village_street_0912.gd",
+      "bytes": 15497,
+      "sha256": "5e8a00afcc487bcfe92901e5cdc752821701942671d6bb13f3d524908bf164d9"
+    },
+    {
+      "path": "frozen/candidate/tests/test_village_street_0912.gd",
+      "bytes": 19115,
+      "sha256": "6e73456a167a66f34d656e6ada78387880e6f5d08c1937d8d496333ee4845408"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S01.json",
+      "bytes": 10339,
+      "sha256": "4fd588d0ed423ad7ddec5ddc8957594b2a3a3ef5fdaa2af81248960fc0a4eb31"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S01.json",
+      "bytes": 10339,
+      "sha256": "4fd588d0ed423ad7ddec5ddc8957594b2a3a3ef5fdaa2af81248960fc0a4eb31"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S01C.json",
+      "bytes": 4109,
+      "sha256": "32515cf8d0cfab95d3d15fe303f7846c33d954f60083dde7b968d2f2b8ad8e28"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S01C.json",
+      "bytes": 4109,
+      "sha256": "32515cf8d0cfab95d3d15fe303f7846c33d954f60083dde7b968d2f2b8ad8e28"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S02.json",
+      "bytes": 70077,
+      "sha256": "e4b332e17f1d21ad01b0cad5187c137a4b40c9a95aa91f2c3f27a3c82376da20"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S02.json",
+      "bytes": 70077,
+      "sha256": "e4b332e17f1d21ad01b0cad5187c137a4b40c9a95aa91f2c3f27a3c82376da20"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S02C.json",
+      "bytes": 58075,
+      "sha256": "b05c791a87d188820afe0cf26fc59952f825dcf5b88159bef042310ca0c85580"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S02C.json",
+      "bytes": 58075,
+      "sha256": "b05c791a87d188820afe0cf26fc59952f825dcf5b88159bef042310ca0c85580"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03.json",
+      "bytes": 392281,
+      "sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03.json",
+      "bytes": 391964,
+      "sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03C.json",
+      "bytes": 344663,
+      "sha256": "dd8abc56fae9db172e63bea5bb3c8b328d39cc9b80da569aece8ca7ff0336628"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03C.json",
+      "bytes": 344346,
+      "sha256": "c08065ae4678bbef59bb984cd804f2134ae617868d1859ea8fc66496f2aa54a6"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03CT.json",
+      "bytes": 21771,
+      "sha256": "af1da42c0221e9ab2bd52e9694c0a06efd455d3791afc7ec7d7d3ef4a7da9a41"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03CT.json",
+      "bytes": 21771,
+      "sha256": "af1da42c0221e9ab2bd52e9694c0a06efd455d3791afc7ec7d7d3ef4a7da9a41"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03Cp1.json",
+      "bytes": 146621,
+      "sha256": "eabde213cdddda1048f7225715b514e538d55310256f355528f8b5bad36d46c2"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03Cp1.json",
+      "bytes": 146621,
+      "sha256": "eabde213cdddda1048f7225715b514e538d55310256f355528f8b5bad36d46c2"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03Cp2.json",
+      "bytes": 116344,
+      "sha256": "cd1f055fde1fb4c5605bb88f0f3a8e2dbcfd5205bdee532a90d30856b37163be"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03Cp2.json",
+      "bytes": 116344,
+      "sha256": "cd1f055fde1fb4c5605bb88f0f3a8e2dbcfd5205bdee532a90d30856b37163be"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03Cp3.json",
+      "bytes": 123907,
+      "sha256": "bb4237f124981d51248d11eaf79136af0668ab15fe778922106a50880a7e992a"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03Cp3.json",
+      "bytes": 123907,
+      "sha256": "bb4237f124981d51248d11eaf79136af0668ab15fe778922106a50880a7e992a"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03p1.json",
+      "bytes": 149067,
+      "sha256": "b7e63fb8c94c0863a17ba900edd3320f3594099ce25f067204d10a4d0672b430"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03p1.json",
+      "bytes": 149067,
+      "sha256": "b7e63fb8c94c0863a17ba900edd3320f3594099ce25f067204d10a4d0672b430"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03p2.json",
+      "bytes": 116742,
+      "sha256": "0340588cf68df076abba53bfad10fb4efdb806e687e29af0dd9e93148bd3759d"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03p2.json",
+      "bytes": 116742,
+      "sha256": "0340588cf68df076abba53bfad10fb4efdb806e687e29af0dd9e93148bd3759d"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S03p3.json",
+      "bytes": 167844,
+      "sha256": "51b102ecbe3f56a635fe62d48beaccc80b89035c1c0d985f3201db256ad30ed3"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S03p3.json",
+      "bytes": 167844,
+      "sha256": "51b102ecbe3f56a635fe62d48beaccc80b89035c1c0d985f3201db256ad30ed3"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S04.json",
+      "bytes": 52671,
+      "sha256": "cc91e0646a9b37e925da0cf6ee08d3266218409e5e1e30050ff951cebfd4e52d"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S04.json",
+      "bytes": 52671,
+      "sha256": "cc91e0646a9b37e925da0cf6ee08d3266218409e5e1e30050ff951cebfd4e52d"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S04C.json",
+      "bytes": 40313,
+      "sha256": "ab6bb1803bb2cdbd368658bf8defb76177117718cbc6d95218083b6bc2282b40"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S04C.json",
+      "bytes": 40313,
+      "sha256": "ab6bb1803bb2cdbd368658bf8defb76177117718cbc6d95218083b6bc2282b40"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S05.json",
+      "bytes": 65301,
+      "sha256": "ecad21bfa47eb82e29acfcf9656cb1a1a9f7427e8e36a6d91433acfa12c11a6b"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S05.json",
+      "bytes": 65301,
+      "sha256": "ecad21bfa47eb82e29acfcf9656cb1a1a9f7427e8e36a6d91433acfa12c11a6b"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S05C.json",
+      "bytes": 53469,
+      "sha256": "f4e89dbea0efce0842c6ae89b7ed992498f19c570c119d6cd593677fd449d80f"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S05C.json",
+      "bytes": 53469,
+      "sha256": "f4e89dbea0efce0842c6ae89b7ed992498f19c570c119d6cd593677fd449d80f"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S06.json",
+      "bytes": 84564,
+      "sha256": "21ef98b1a76fbc04ec13ecc88148e4614996d39470e2fc26ad2d883b2960c9fb"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S06.json",
+      "bytes": 84564,
+      "sha256": "21ef98b1a76fbc04ec13ecc88148e4614996d39470e2fc26ad2d883b2960c9fb"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S06C.json",
+      "bytes": 54821,
+      "sha256": "f6caf6820240a28da8c325ffb419fc864737b819583c7b0ea3e00ed0a3c0e223"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S06C.json",
+      "bytes": 54821,
+      "sha256": "f6caf6820240a28da8c325ffb419fc864737b819583c7b0ea3e00ed0a3c0e223"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S07.json",
+      "bytes": 99886,
+      "sha256": "b2980dbebeeffa6b4f6804c9ee64d28d86a1ef960af6813f59a00bb375947c5b"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S07.json",
+      "bytes": 99886,
+      "sha256": "b2980dbebeeffa6b4f6804c9ee64d28d86a1ef960af6813f59a00bb375947c5b"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S07C.json",
+      "bytes": 82722,
+      "sha256": "16863696ebb2706676180bc206d21541ae416e18ea2703cd94f537634f906cb8"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S07C.json",
+      "bytes": 82722,
+      "sha256": "16863696ebb2706676180bc206d21541ae416e18ea2703cd94f537634f906cb8"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S08.json",
+      "bytes": 103442,
+      "sha256": "9624e6d854692baa2dc03debfc77c791c9510fe27c80ee21a8b325c9b1760fde"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S08.json",
+      "bytes": 103442,
+      "sha256": "9624e6d854692baa2dc03debfc77c791c9510fe27c80ee21a8b325c9b1760fde"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S08C.json",
+      "bytes": 53899,
+      "sha256": "9bfa029c5cf7095d3ba3f9701f51982b7857660544b572b550c7a02b81c4ec5f"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S08C.json",
+      "bytes": 53899,
+      "sha256": "9bfa029c5cf7095d3ba3f9701f51982b7857660544b572b550c7a02b81c4ec5f"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S09.json",
+      "bytes": 55048,
+      "sha256": "c11ce7dd0d10f2a60512aad023a096d8842a029cb884de2eb4fc415ff9b26afd"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S09.json",
+      "bytes": 55048,
+      "sha256": "c11ce7dd0d10f2a60512aad023a096d8842a029cb884de2eb4fc415ff9b26afd"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S09C.json",
+      "bytes": 38905,
+      "sha256": "c90c2342aa49d521234e5101d9a8dd9ff518882b5f3d89b59b7a4e5a1043476b"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S09C.json",
+      "bytes": 38905,
+      "sha256": "c90c2342aa49d521234e5101d9a8dd9ff518882b5f3d89b59b7a4e5a1043476b"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10a.json",
+      "bytes": 41463,
+      "sha256": "d2a57c65e6f637ee54a6b7c3fc5525542fd3b5358be8ef5d4c464f4ce1b44a7e"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10a.json",
+      "bytes": 41463,
+      "sha256": "d2a57c65e6f637ee54a6b7c3fc5525542fd3b5358be8ef5d4c464f4ce1b44a7e"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10aC.json",
+      "bytes": 15811,
+      "sha256": "6a1f4ddf1a2033cefd4c332a177dbbc6b0f61a0508a19290ec803553018fe695"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10aC.json",
+      "bytes": 15811,
+      "sha256": "6a1f4ddf1a2033cefd4c332a177dbbc6b0f61a0508a19290ec803553018fe695"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10b.json",
+      "bytes": 40497,
+      "sha256": "cc8957787d818842a4fd7b16aa86ae69ec1c3a1ad324df6e3c6074a126d82103"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10b.json",
+      "bytes": 40497,
+      "sha256": "cc8957787d818842a4fd7b16aa86ae69ec1c3a1ad324df6e3c6074a126d82103"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10bC.json",
+      "bytes": 30025,
+      "sha256": "c1a4daa522baadf60904c8d41e411f9a1f989d76aa414c959c606bfb38ff2f96"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10bC.json",
+      "bytes": 30025,
+      "sha256": "c1a4daa522baadf60904c8d41e411f9a1f989d76aa414c959c606bfb38ff2f96"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10c.json",
+      "bytes": 15419,
+      "sha256": "cb79ad8a1b6f465c9a9431aed430942686e82a425aa1f21c83fb98894b8d45ea"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10c.json",
+      "bytes": 15419,
+      "sha256": "cb79ad8a1b6f465c9a9431aed430942686e82a425aa1f21c83fb98894b8d45ea"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10cC.json",
+      "bytes": 9427,
+      "sha256": "a030fad4f939da64a87fe249661b94b0765e6df90a5f947023d2790b6129a30a"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10cC.json",
+      "bytes": 9427,
+      "sha256": "a030fad4f939da64a87fe249661b94b0765e6df90a5f947023d2790b6129a30a"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10d.json",
+      "bytes": 15597,
+      "sha256": "16887e9b0dfeefa147ecd4483203da880286119a43a908df389ebd9c5bbf1373"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10d.json",
+      "bytes": 15597,
+      "sha256": "16887e9b0dfeefa147ecd4483203da880286119a43a908df389ebd9c5bbf1373"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/S10e.json",
+      "bytes": 27086,
+      "sha256": "02e86cda0c56d1d03331794fc807564d1e6a1de85e3fcc5c23fcc6cb19b18596"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/S10e.json",
+      "bytes": 23730,
+      "sha256": "362d2d0748c40ea5cd84df88206fbaee9555a16132e18dda9cb3dd6d010e3103"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/selfcheck_capture.json",
+      "bytes": 3199,
+      "sha256": "d54f54ed2c153d5c55876759290005f4fba964d3051b68185136b352bdec6de8"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/selfcheck_capture.json",
+      "bytes": 3199,
+      "sha256": "d54f54ed2c153d5c55876759290005f4fba964d3051b68185136b352bdec6de8"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/selfcheck_context.json",
+      "bytes": 6051,
+      "sha256": "7ead3300acfd253ac50a53ce2eee8424f77b5551311b685a100943c9d71a8d8d"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/selfcheck_context.json",
+      "bytes": 6051,
+      "sha256": "7ead3300acfd253ac50a53ce2eee8424f77b5551311b685a100943c9d71a8d8d"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/selfcheck_menu.json",
+      "bytes": 3334,
+      "sha256": "2cecc6673dd140077ea1af28a4f1d3f8f9ea9c5886c6fc0538f923cf194aa3c5"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/selfcheck_menu.json",
+      "bytes": 3334,
+      "sha256": "2cecc6673dd140077ea1af28a4f1d3f8f9ea9c5886c6fc0538f923cf194aa3c5"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/selfcheck_reach.json",
+      "bytes": 11909,
+      "sha256": "36406ebcea92c514a04dbe4c1653f64b9b6c91b3a460efe94b9cdf776419b184"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/selfcheck_reach.json",
+      "bytes": 11909,
+      "sha256": "36406ebcea92c514a04dbe4c1653f64b9b6c91b3a460efe94b9cdf776419b184"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/selfcheck_record.json",
+      "bytes": 5052,
+      "sha256": "51c412359d013a39896ff8ed3181bdcedc739725e3ee0df9430a7d75a312ddc6"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/selfcheck_record.json",
+      "bytes": 5052,
+      "sha256": "51c412359d013a39896ff8ed3181bdcedc739725e3ee0df9430a7d75a312ddc6"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/selfcheck_save_handoff.json",
+      "bytes": 8443,
+      "sha256": "731ee448a940836a580b9dd9481968148888f373d23eba8b801bf25a58cacace"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/selfcheck_save_handoff.json",
+      "bytes": 8443,
+      "sha256": "731ee448a940836a580b9dd9481968148888f373d23eba8b801bf25a58cacace"
+    },
+    {
+      "path": "frozen/before/tools/gate_f/segments/selfcheck_walk.json",
+      "bytes": 7069,
+      "sha256": "3ea4f8ffc3c271f3ad0075ca4b2aff8981978d438cad0a05d90058f4b0e88c3c"
+    },
+    {
+      "path": "frozen/candidate/tools/gate_f/segments/selfcheck_walk.json",
+      "bytes": 7069,
+      "sha256": "3ea4f8ffc3c271f3ad0075ca4b2aff8981978d438cad0a05d90058f4b0e88c3c"
+    },
+    {
+      "path": "retained-native-failure/native.log",
+      "bytes": 58181,
+      "sha256": "1052b9c5d62cef952424ae10ca23cb6fd7c720fcc95d9f5aa6b2397d27510dee",
+      "origin": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\earned-opening-e86c6a9fed5e\\native.log"
+    },
+    {
+      "path": "retained-native-failure/receipt.json",
+      "bytes": 494124,
+      "sha256": "2f2c9f9808e7c93bb7fadddca4752052bbea0e78f7953b7fbe8aff100f85879b",
+      "origin": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\earned-opening-e86c6a9fed5e\\receipt.json"
+    },
+    {
+      "path": "historical-tree/region_0_-1.bin",
+      "bytes": 443876,
+      "sha256": "c156f5385982b2d23b84b15d17b0a97c0a4edc141b6ea54c4cca04fbba37dfd4",
+      "origin": "bf0f38b203^:data/scatter/playground/region_0_-1.bin"
+    }
+  ]
+}

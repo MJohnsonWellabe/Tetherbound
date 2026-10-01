@@ -1,0 +1,1561 @@
+{
+  "_comment": "BAND-SPLIT. Band-local clusters for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order props are added to the scene tree, and Godot silently auto-renames same-named siblings by that order. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+  "clusters": [
+    {
+      "order": 0,
+      "name": "work_area",
+      "props": [
+        {
+          "model": "Anvil_Log",
+          "at": [12.5, -35.5],
+          "yaw_deg": 30.0,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- an anvil mounted on its own stump"
+        },
+        {
+          "model": "Workbench",
+          "at": [11.5, -34.5],
+          "yaw_deg": 110.0,
+          "scale": 1.0,
+          "_why": "faces the anvil across the nook -- pulled in 0.7m (round 1 blind critic: the anvil/whetstone and crate/workbench read as two separate groups, not one station)"
+        },
+        {
+          "model": "Whetstone",
+          "at": [13.3, -34.3],
+          "yaw_deg": 0.0,
+          "scale": 1.0,
+          "_why": "a sharpening stone within reach of the bench -- pulled in 0.4m, same reason"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [11.5, -36.1],
+          "yaw_deg": 200.0,
+          "scale": 1.0,
+          "_why": "stock crate behind the anvil -- pulled in 0.9m, same reason"
+        },
+        {
+          "model": "Pickaxe_Bronze",
+          "at": [13.7, -36.1],
+          "yaw_deg": -40.0,
+          "scale": 1.0,
+          "_why": "a tool left leaning, mid-repair -- pulled in 0.3m, same reason"
+        }
+      ],
+      "_why_f01": "F01-b (PENDING GRANT). Moved by (+17.5,-32.5) from beside the old workshop site (-5,-3) -- which the OWNER-0912 inn replan left inside the inn's own apron -- into The Stoneyard (terrain_playground.json paths.village_topology.subareas the_stoneyard, centre [16.5,-33] r7), so the stone-working area reads as a working yard: anvil, workbench, whetstone, pickaxe and crate between stone nodes 1037 [11,-32] and 4 [22,-34], 4.2m+ off the Practice Meadow road."
+    },
+    {
+      "order": 1,
+      "name": "farmhouse_yard",
+      "props": [
+        {
+          "model": "Barrel_Apples",
+          "at": [0.0, 5.0],
+          "yaw_deg": 10.0,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- overflow from the last harvest"
+        },
+        {
+          "model": "FarmCrate_Apple",
+          "at": [-0.9, 5.4],
+          "yaw_deg": -20.0,
+          "scale": 1.0,
+          "_why": "set right against the barrel's side, not just nearby -- round 2 blind critic: a loose arc of props near a wall reads as dumped, not a task. This is meant to read as one pile: a load just carried out and set down together."
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [0.7, 5.3],
+          "yaw_deg": 50.0,
+          "scale": 1.0,
+          "_why": "touching the barrel's other side, tipped at an angle rather than square -- just set down, not arranged. FarmCrate_Carrot swapped out earlier (round 1 blind critic): its vertex-colour-tinted contents render as an unreadable white/grey smear, a model defect not a placement one."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [-0.3, 4.0],
+          "yaw_deg": 190.0,
+          "scale": 1.0,
+          "_why": "in front of the pile, facing back toward it -- the tool that did the carrying, set down after"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [0.8, 3.9],
+          "yaw_deg": -30.0,
+          "scale": 1.0,
+          "_why": "the big piece of the same load, closing the pile from the front"
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "name": "trainer_camp",
+      "props": [
+        {
+          "model": "Bag",
+          "at": [
+            30.7,
+            -25.9
+          ],
+          "yaw_deg": 15.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: the cluster's anchor -- a travelling trainer's pack, dropped beside the practice-meadow path, kept as its own separate stop rather than crammed against the supply pile (a genuine blind critic on the shipped state: 'reads as three container props at even spacing... scatter-list output, not a place'). Sited off route 2 ([18,-24]->[30,-40], terrain_playground.json), inside the practice-meadow clearing (vegetation.json, centre [30,-40] r16) but well short of the arena itself."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            31.2,
+            -27.6
+          ],
+          "yaw_deg": 165.0,
+          "sink_m": 0.08,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: the pile's anchor. This meadow slopes here for real -- a corner-height probe against the crate's own exact footprint (tools/_probe_ev7fix.gd) measures 0.137-0.172m of spread across the headings tried, barely moved by yaw alone (165deg: 0.137m vs the old -25deg heading's 0.145m -- yaw was never going to fix this on its own). `sink_m` 0.08 is what actually settles it: added to the model's own ~0.05m embed, the crate's rigid bottom sits ~0.13m below the sampled centre height, which is deeper than half this footprint's worst-case corner spread, so every corner ends up buried in the terrain mesh rather than floating above it, regardless of which way it's turned. `Bench` (a trestle table) is DROPPED entirely -- the critic's own offered alternative ('drop the table and commit to a supply cache at a waypoint composition'): props.gd places every prop flush to the ground with no way to rest one ON another, so the table's flat top could never actually hold the crate/sack/barrel it was meant to -- they always passed clean through its legs. A cache of things set down together, not a furnished stop, is what this system can honestly build."
+        },
+        {
+          "model": "Barrel",
+          "at": [
+            30.62,
+            -28.2
+          ],
+          "yaw_deg": 80.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: touching the crate's side (0.83m centre-to-centre, matching the two footprints' combined radius) so the pair reads as one pile someone set down together, not a scatter -- distinct spacing from the pack 1.9m away, breaking the old even 3-way spacing the critic named as 'placed by script.' Still the plain supply barrel, not the farmhouse's apple-branded one."
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [26.8, -26.6],
+          "yaw_deg": 0.0,
+          "scale": 0.7,
+          "_why_f01_camp_r3": "F01#2 day judge b9ad225e (day_069): at 0.45 the flame read as a small orange cone, even as a tent, and the crate, barrel and pack in front of it made the stop a supply cache. The fire grows to 0.7 inside a 1.5 ring, the tent to 1.4 with the bedroll at its mouth, and the pile moves to the tent's side, so fire, seat, tent and bed lead the arrival view. TUNABLE.",
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "F01#3 code-blind judge (visits_night_072): the practice-meadow trainer camp read as 'an open flower meadow' at night -- a pack, crate and barrel carry no light, so nothing in the frame said camp. A one-person firepit, same Bonfire_Fire+ignite()+campfire_glow recipe and 0.3 scale as pond_fisher_camp, 1.5-2.3m from the pack/crate/barrel so the four read as one stop, and ~5.5m off route 2's centreline ([18,-24]->[30,-40]), clear of the painted road. TUNABLE."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [26.8, -26.6],
+          "yaw_deg": 0.0,
+          "scale": 1.5,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "The fire's stone ring, as pond_fisher_camp pairs them."
+        },
+        {
+          "model": "camp_tent",
+          "at": [24.4, -23.0],
+          "yaw_deg": 215.0,
+          "scale": 1.4,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": -0.85,
+          "_why": "F01#2/#3 code-blind walk judge (day_070/night_070): the practice-meadow trainer camp read as 'a supply cache, not a camp' -- crate, barrel, sack and a small fire with no shelter or bedding. The trail camp's own accepted generated_camp tent (same model and seating ratio), 8.2 m off route 2's centreline ([18,-24]->[30,-40]), its door turned toward the fire. TUNABLE."
+        },
+        {
+          "model": "camp_bed",
+          "at": [25.3, -24.3],
+          "yaw_deg": 215.0,
+          "scale": 1.1,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": -0.23,
+          "_why": "A bedroll between the tent mouth and the fire, as trail_camp pairs them."
+        },
+        {
+          "model": "tree-log",
+          "at": [28.7, -25.6],
+          "yaw_deg": 120.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "A log seat on the fire's village side, so the camp reads as somewhere a trainer sits."
+        }
+      ]
+    },
+    {
+      "order": 3,
+      "name": "bridge_repair_site",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            -391.7,
+            520.93
+          ],
+          "yaw_deg": 20.0,
+          "sink_m": 0.08,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: the cluster's anchor, moved to hug the footbridge's own west landing (tools/_probe_ev7fix.gd -- bridge local frame x=-5.3, z=1.4, just outside the deck/rail collider's z=+/-1.05 half-extent and past the stone abutment tile at local x=-3.9..-5.9) instead of sitting marooned in open lawn ~3m further out (a genuine blind critic on the shipped state: 'marooned ~6m from the house and ~4m off the bridge head in open lawn'). `sink_m` buries the crate's own shallow 0.05m embed a little further so grass doesn't show lit up under its skirt -- this spot is flat (0.000-0.006m corner spread, real terrain data, not sloped), so the old 'floating crate' complaint here was the shallow embed, not a slope."
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [
+            -390.9,
+            521.0
+          ],
+          "yaw_deg": -90.0,
+          "pitch_deg": 38.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: actually leaning against the crate's near face now, not standing bolt upright ('the axe LEVITATES: bolt upright, unsupported, haft ending mid-air'). This model is authored vertical in its own glTF (a baked -90deg node rotation puts its long axis on Y regardless of yaw -- confirmed with tools/_probe_ev7fix.gd, not guessed), so no yaw value could ever lay it down; `pitch_deg` is new on scripts/world/props.gd for exactly this. Anchor and pitch picked from the same probe's world-space AABB check so the tilted mesh's low end sits in the grass and its body actually overlaps the crate's east face (~0.05m real contact, not just visually adjacent), clear of the crate's own footprint so it doesn't clip through a corner."
+        },
+        {
+          "model": "Rope_1",
+          "at": [
+            -391.0,
+            521.34
+          ],
+          "yaw_deg": 30.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: moved to the crate's own east/bridge-facing side, in front rather than tucked behind it ('the rope coil -- the most purpose-carrying prop -- is 90% hidden behind the crate'). This is the side a player sees first walking off the bridge, so the repair stock reads immediately instead of needing to walk around the crate to find it."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [
+            -392.13,
+            521.25
+          ],
+          "yaw_deg": 160.0,
+          "scale": 1.0,
+          "_why": "EV7-clusters-fix: water bucket at the pile's far (west) side, foot of the pile -- kept off the deck/rail collider the same way the rest of the cluster is now (local z 1.75, not 0.89 like the position this replaced, which was inside the walkway's own collider footprint)."
+        }
+      ]
+    },
+    {
+      "order": 1005,
+      "name": "village_twins_yard",
+      "_why": "BACKLOG-E1-VILLAGE-DAYTIME, 2026-08-31. `01-village-twins-day.png` (ralph/reports/audit/E-2026-08-31.md sec E1, matching T1-VILLAGE's own 2026-08-30 finding on the same frame) reads as 'two houses dropped in a meadow' by day: the existing `farmhouse_yard` cluster sits behind Grandpa's house (around -24,-25/-26) and is out of frame from the twins stand (eye -11.5,-21 looking -11.5,-12, i.e. north -- everything south of the eye is behind the camera), so neither building shows any clutter from the angle a player and the survey both actually see them from. These sit on the FRONT/path side of each building instead, inside each one's own building_apron worked-soil footprint (data/config/terrain_playground.json) so nothing floats on raw grass, and at the new well<->inn path's own end point (see terrain_playground.json paths.routes 'The Inn', added alongside this) so the path visibly arrives somewhere rather than stopping at a lawn.",
+      "props": [
+        {
+          "model": "log_large",
+          "at": [29.0, -10.9],
+          "yaw_deg": 10.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "_why": "a woodpile against the farmhouse's east wall, 2m south of the door (built door node (-15.7,-16), wall extent x -16.05): homely, private-house clutter on the side the player walks up. Clear of the smoke_opening door lane (z ~ -15) by 3.9m and of the Grandpa's-house path by 4.4m."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [29.7, -11.4],
+          "yaw_deg": -15.0,
+          "scale": 1.0,
+          "_why": "set against the woodpile's own foot (0.86m centre to centre, touching), not floating separately -- one pile, not a scatter."
+        },
+        {
+          "model": "Barrel",
+          "at": [47.6, -0.4],
+          "yaw_deg": 200.0,
+          "scale": 1.0,
+          "_why": "the inn's cellar barrels, south of its east door (door node (3.5,-9); east wall collider ends at x 3.73, so 0.9m clear), on the square side where the well-to-inn path arrives. A public house's clutter, not a private home's.",
+          "name": "Barrel_inn_1"
+        },
+        {
+          "model": "Bench",
+          "at": [47.7, 4.4],
+          "yaw_deg": -90.0,
+          "scale": 1.0,
+          "_why": "a seat along the inn's east wall NORTH of the door, running with the wall (local X on world -Z, spanning z -8.0..-5.2, so the door's 1.6m leaf at z -9.8..-8.2 stays clear): somewhere to sit before going in, which is the whole difference an inn's frontage needs over a private home's."
+        },
+        {
+          "model": "Barrel",
+          "name": "Barrel_inn_2",
+          "at": [47.9, -1.2],
+          "yaw_deg": 40.0,
+          "scale": 1.0,
+          "_why": "VP5: the second barrel, touching the first (0.85m centre to centre) at a different yaw -- a pair set down together reads as stock, one alone reads as a prop."
+        }
+      ],
+      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Every one of the four E1 entries below was standing INSIDE a building: the log_large/Crate_Wooden pair at (-19.2,-15.6)/(-19.8,-15.1) sat inside Grandpa's house (grandpa_house.gd INNER_W 9.0 -> walls at x -26.8..-17.2, z -19.8..-12.2), and the Barrel/Bench at (0,-9.6)/(-0.8,-10.2) sat inside the inn's common room (inn recipe walls at local x +/-3, z +/-5 under yaw 90 -> world x -6.5..3.5, z -12..-6; the door is on the EAST face at (3.5,-9), not where the apron half-extents were read as saying). Measured against the built scene's collider extents with a scratch layout probe, not against the apron table. Moved OUTSIDE: the woodpile against the farmhouse's east wall south of the door, the inn's seat and barrels either side of its door on the square side, with village.json's new `doorstep` between them."
+    },
+    {
+      "order": 1006,
+      "name": "tournament_ground",
+      "_why": "BACKLOG-E1-VILLAGE-DAYTIME, 2026-08-31. `01-village-tournament-day.png` (ralph/reports/audit/E-2026-08-31.md sec E1) reads as open wilderness with a board in it, matching T1-VILLAGE's own 2026-08-30 judge finding on this exact ground ('an empty field with a sign in it... no seating, no perimeter'). Two spectator benches, well clear of both the board's own 2.6m prompt radius and Bryn's practice challenge (tournament.json: board at [20,15], Bryn at [13,9], the two already kept 9.2m apart on purpose) -- these sit 5-11m from either, inside neither's radius, flanking the board the way an audience would rather than blocking anything. Deliberately minimal: this is dressing for a field two trainers already occupy, not a rebuilt arena, and tournament.gd/the NPCs placed here are out of this lane's scope.",
+      "props": [
+        {
+          "model": "Bench",
+          "name": "Bench_east",
+          "at": [91.0, 44.6],
+          "yaw_deg": 130.0,
+          "scale": 1.0,
+          "_why": "east flank of the ring, facing north-west at the fight ground and the board; 3.2m from Halda (E1 had it at (24,12), 0.4m from her standing spot), 4.7m inside the east fence, 4.1m from the berry node."
+        },
+        {
+          "model": "Barrel",
+          "at": [92.6, 46.2],
+          "yaw_deg": 25.0,
+          "scale": 1.0,
+          "_why": "a water barrel at the east bench's end (0.9m from it) -- the one thing a crowd on a warm day needs, and it stops the bench reading as a lone plank."
+        },
+        {
+          "model": "Bench",
+          "name": "Bench_west",
+          "at": [82.2, 53.6],
+          "yaw_deg": 307.0,
+          "scale": 1.0,
+          "_why": "the board's other flank, facing back toward it across the ring, 2.1m east of the corridor road's centreline (its 0.7m half-width plus 1.1m shoulder is 1.8m, so it sits on the verge, not the road), 3m inside the new north-east fence."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [88.0, 49.2],
+          "yaw_deg": 30.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "creature staging: the pile the next team's kit waits on, 3.4m east of the board (its prompt radius is 2.6m), 2.8m inside the fence, 2.3m from Halda's spot."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [88.75, 49.9],
+          "yaw_deg": 0.0,
+          "scale": 1.0,
+          "_why": "water for the creature waiting its bout, touching the crate's north-east corner."
+        },
+        {
+          "model": "Bag",
+          "at": [87.35, 49.7],
+          "yaw_deg": 120.0,
+          "scale": 1.0,
+          "_why": "a trainer's pack leaning on the crate's west face (0.82m centre to centre)."
+        }
+      ],
+      "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Two blind judges (ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md, ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read this ground as 'a plain open meadow ... no arena, ring, stands, or banner'. The geography fixes what a ring can be: the corridor spine (terrain_playground.json trail.bands[0], (27.5,-16)->(14,20)) runs straight through the field 4m west of the board, the three tournament trainers stand at (20,12) (band1 trainers.json) with an 11m combat arena (combat_arena.gd) around the fight, and the village fence runs 3.3m behind the board. So the ring is the road's east verge, bounded by the fence: the two spectator benches face the ring from outside the trainers' axis (E1's east bench stood 0.4m from Halda, on top of her); and a small staging pile (crate, bucket, bag) by the board for the team waiting its turn, with a barrel by the east bench. Everything solid sits >= 7m from the arena centre (20,10) except the board-side staging pile, 4.5m off its axis. Positions checked against the built scene (board node (20,15) yaw -155, Halda (23.5,11.5), Bryn (13,9), the berry node (28,6), the trail road's actual line, and the NEW boundary edge (30,11)->(15.98,22.59), which is 2.5-4m from the pile and the west bench).",
+      "_why_vp5_f01": "F01-a/b correction to _why_vp5 above: the corridor spine no longer starts at (27.5,-16) and crosses this field -- it now continues South Street from (11.5,2) to TrailGate (14,20), 6m+ west of the board, so the ring's road-side verge is South Street's east verge. tests/test_tournament_ground_presentation.gd reads that clearance from the live road data.",
+      "_why_vp5_removed_0903": "TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: 'I don't like the flags around the tournament area.' VP5 above added three flat cloth-quad `Banner` props (quaternius_castle's Banner.obj -- the same bolt-of-cloth mesh band3_the_river_lock/props.json and tether_relay.json already retint oxblood for Team Tether's own checkpoints, retinted village green here instead) to answer two blind judges' 'no arena, ring, stands, or banner'. It is the only cloth/pennant mesh installed in the project (checked: no other pennant/flag geometry exists under assets/), so there is no different asset to swap it for without a new Meshy generation, which CLAUDE.md reserves for Team Tether hero objects and forbids for the Meadows outright. Removed rather than reworked: `Banner_gate_west`, `Banner_gate_east` and `Banner_west_ring` are gone, and the ring's event read now comes from the benches, the staging pile, the board and the ceremony itself (tournament.gd's begin-the-round/win/next-round beats, same lane) rather than from set dressing the owner explicitly said he does not like."
+    },
+    {
+      "order": 1000,
+      "name": "trail_camp",
+      "roadside_threshold": {
+        "at": [346.3, 926.3],
+        "yaw_deg": 45.0,
+        "_why": "MEADOWS-LOCATIONS-0911. Three full production rounds rejected a free-standing marker offset into the old-growth: collisionless leaf cards defeated the long view even when a single physics ray passed. That experiment is removed. This one collisionless timber-and-installed-lantern threshold instead stands at the actual south intersection of the Oak Grove Ring road and the existing Trail Camp clearing (approximately [346.3,926.3]). Its two posts are 2.65m either side of the road centre and its beam is overhead, so the ordinary 3.6m painted travel ribbon remains visually and mechanically open. The centred TRAIL CAMP board is composed directly down the road rather than asking a side marker to read through foliage. It moves no camp furniture, encounter, scatter, path, interaction or functional radius."
+      },
+      "rest": {
+        "_why": "T5-CADENCE, closing T4-REGIONS' third-ranked chapter gap (ralph/reports/REGION_AUDIT_2026-08-30.md: 'Camps are set dressing'). This is the best-dressed camp in the game -- 18 props, a bed, a lit bonfire, a bench and a stool -- and it is a named map landmark (`band1_trail_camp`), and until this block it could not be used for anything. The audit's exit-criterion verdict for band 1's camp/recovery row was FAIL, with the reason written as 'a map landmark that promises rest and delivers scenery'. `scripts/world/rest_point.gd` is what reads this; the offer it stands up is the SAME one the player-built Camp makes, not a better one.\n\nOP-0905-08 (owner playtest 2026-09-05: 'You can't rest at the camp right by Gil'). The original siting -- 1.6m east of the fire, radius 3.2 -- put the fire and stool in reach but left the Bench (3.95m away) and the camp_bed (3.26m away) OUTSIDE the circle: exactly the two pieces of furniture a player standing at Gil's camp actually walks up to, so the natural place to try to rest offered nothing. RE-SITED to the cluster's own midpoint (roughly fire/camp_bed/Bench/Stool) with a radius wide enough to cover the whole dressed clearing -- fire 1.63m, camp_bed 1.53m, Stool 0.67m, Bench 2.67m, the informal tree-log seat 3.85m, all now inside. `craft_at` and the creature_bed keep their own authored positions and, per `rest_point.gd`, their own independent trigger circles (the creature bed's own 'Rest a Creature' prompt is fixed at 2.6m and never reads this radius at all), so widening this circle does not move or merge either offer -- it only fixes which patch of ground answers 'Rest until morning'.",
+        "at": [
+          344.3,
+          936.6
+        ],
+        "radius": 4.6,
+        "label": "Rest until morning",
+        "craft_at": [
+          342.4,
+          935.0
+        ],
+        "creature_bed": {
+          "_why": "The camp's own creature bed, and the half of this that makes 'recovery' mean anything 900m from home: `game_state.gd::_tick_creature_bed_recovery()` heals an occupant gradually whether or not the player is standing here, so a creature bedded down at the trail camp is genuinely unavailable and genuinely recovering -- exit criterion H3.\n\nADDED rather than converted. The `camp_bed` prop already in this cluster stays exactly where it is, inside the tent's mouth, as the TRAINER's own sleeping surface; a trail camp a trainer keeps has a place for the team as well as for the person, and that is one more instance of an already-installed mesh rather than a new asset. Sited south-east of the fire in the one genuinely open quarter of the camp: 3.2m from the fire, 2.8m from the firewood log, 2.3m from the tall-grass tuft, and clear of the tent/bed footprint on the opposite side. Yaw turns its long axis toward the fire the way the bench and stool already face it. VISUAL NOTE: sited from the measured prop layout, not from a frame -- worth a look when this camp is next captured.",
+          "at": [
+            347.0,
+            934.0
+          ],
+          "yaw_deg": 55.0,
+          "bed_index": -11
+        }
+      },
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [
+            344.0,
+            935.0
+          ],
+          "yaw_deg": 20.0,
+          "scale": 0.45,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "REVERTED to round 3's Bonfire_Fire + ignite() after two rounds of dedicated Meshy generation (camp_firewood, camp_flame -- text-to-3D, retextured, non-uniform-scaled, repositioned) each failed an independent Fable review against the reference: the log pile read as flat slabs or a rock cairn rather than logs, and the flame read as an opaque carved spire with no emissive light cast on its surroundings, in both attempts. This combination was never itself criticised by either review -- both were reviewing the NEW pieces specifically -- and it is round 3's own solved problem: `Bonfire_Fire.obj`'s three-surface OBJ import (Wood/LightWood/Fire) with `ignite()` lighting the real `Fire` surface, plus `campfire_glow.gd`'s light/embers/smoke overlay including its billboard halo (default `include_halo=true`, unlike the generated flame's own `flame_mesh` path). Owner directive to wrap up rather than keep spending Meshy rounds on a shape that was not converging; `camp_firewood.glb`/`camp_flame.glb` stay committed under assets/props/generated_camp/ for a future attempt, just not wired into this cluster."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [
+            344.0,
+            935.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.05,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "Replaces round 3's six hand-placed Rock_Medium instances with one Meshy-generated ring mesh, textured to match the reference board's own fire-ring stones. Raw 2.00m diameter; 0.85 gives ~1.7m, the same footprint the six-stone version measured at (0.82-0.94m radius). The fire and its glow overlay sit inside the ring's own empty centre, which is why this prop carries no `glow` key of its own -- the flame is the Bonfire above, not this. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/specs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after. ROUND 3: a dispatched Fable fidelity review against the reference found the stones individually too small/flat and too gapped relative to the reference's tightly packed boulders -- a defect internal to this single rigid mesh that scale cannot fully fix (relative gaps and per-stone height-to-footprint ratio are baked into the geometry), but a straight size increase at least makes each stone read chunkier. Scale raised 0.85 -> 1.05, ~1.7m -> ~2.1m diameter -- the only lever available without a further regeneration, which Fable rated this piece as not clearly needing (the tent did)."
+        },
+        {
+          "model": "Bench",
+          "at": [
+            341.7,
+            936.0
+          ],
+          "yaw_deg": 113.5,
+          "scale": 1.0,
+          "_why": "Long seat facing the fire across it, tangential yaw so its 2.78m length runs perpendicular to the radius. Unchanged from round 3."
+        },
+        {
+          "model": "tree-log",
+          "at": [
+            342.4,
+            933.25
+          ],
+          "yaw_deg": 42.4,
+          "scale": 1.15,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "A third, informal seat. Round 3's environment/nature log_large was found this round to render with an untextured near-white placeholder material -- the independent blind critic's unidentifiable 'pale rectangular chute object' -- and was replaced with Kenney's real textured tree-log.glb, CC0, already vendored for scripts/build/camp.gd's own fire."
+        },
+        {
+          "model": "Stool",
+          "at": [
+            344.6,
+            937.2
+          ],
+          "yaw_deg": 15.3,
+          "scale": 1.0,
+          "dir": "res://assets/props/quaternius_furniture",
+          "_why": "A second, smaller seat on the fire's opposite side from the bench. Unchanged from round 3."
+        },
+        {
+          "model": "tree-log-small",
+          "at": [
+            345.15,
+            936.35
+          ],
+          "yaw_deg": 40.4,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "pitch_deg": 4.0,
+          "_why": "Firewood, radial not tangential (the opposite rule from the two seats, for the opposite reason). Same environment/nature defect as log_large above; same Kenney replacement."
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            340.4,
+            937.2
+          ],
+          "yaw_deg": 300.0,
+          "scale": 1.0,
+          "_why": "Supply crate, behind the seats rather than between them and the fire. Unchanged from round 3."
+        },
+        {
+          "model": "Bag",
+          "at": [
+            340.95,
+            937.75
+          ],
+          "yaw_deg": 340.0,
+          "scale": 1.0,
+          "_why": "Leaning against the crate. Unchanged from round 3."
+        },
+        {
+          "model": "Rope_1",
+          "at": [
+            340.05,
+            936.55
+          ],
+          "yaw_deg": 10.0,
+          "scale": 1.0,
+          "_why": "Coiled beside the crate/bag pile. Unchanged from round 3."
+        },
+        {
+          "model": "Backpack",
+          "at": [
+            342.95,
+            937.85
+          ],
+          "yaw_deg": -20.2,
+          "scale": 0.18,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": -0.25,
+          "_why": "Measured raw 3.34 x 3.12 x 1.75m with its origin 1.46m above its own base; 0.18 with sink_m -0.25 lifts it back to ground level. Unchanged from round 3."
+        },
+        {
+          "model": "Barrel",
+          "at": [
+            340.9,
+            934.4
+          ],
+          "yaw_deg": 95.0,
+          "scale": 1.0,
+          "_why": "Water barrel, already the right size at scale 1.0 (measured 0.70 x 0.90 x 0.70m). Unchanged from round 3."
+        },
+        {
+          "model": "camp_tent",
+          "at": [
+            343.5,
+            941.0
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.05,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "Owner's pick from the eight-candidate contact sheet: round 1's multi-image-to-3D result. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/specs/ASSET_LEDGER.md). Round 1's geometry (multi-image-to-3D, three reference crops, refine tier) is the version the owner chose after reviewing a contact sheet of all eight candidates generated across rounds 1-5 -- rounds 2-3 tried to fix its proportions via image reference changes and converged on the same shape (images dominate text in this pipeline); round 4-5 tried text-to-3D instead and traded the proportion problem for a construction-fidelity problem (a teepee, then missing patches/rigging/weathering once corrected to an A-frame). Kept round 1: weathered patched canvas, crossed lashed pole tips at both ends, matches the reference board's own material and stitching most closely of any candidate even though its proportions read flatter than the reference.",
+          "sink_m": -0.64
+        },
+        {
+          "model": "camp_bed",
+          "at": [
+            343.5,
+            937.9
+          ],
+          "yaw_deg": 0.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "Replaces round 3b's ground bedroll with a proper raised camp bed -- lashed log frame, stuffed mattress, pillow -- matching the board's own PAL BED panel far more closely than a flat bedroll ever could. Raw 1.23 x 0.41 x 1.90m needs no scaling. Laid inside the tent's mouth, its long axis parallel to the tent's ridge, head end under the canvas. Sourced via Meshy image-to-3D from an owner-supplied reference board (docs/art/reference/owner-board-2026-08-23-camp-set.png, docs/specs/ASSET_LEDGER.md) -- an explicit owner directive and reference art, which is the actual prerequisite CLAUDE.md's Meshy-generation rule enforces; that board's own bed panel carried another game's paw-print/leaf emblem and both were removed from the crops before submission plus banned in the negative prompt (tools/art_pipeline/meshy.py NEGATIVE_CAMP_BED) before generation, not after.",
+          "sink_m": -0.21
+        },
+        {
+          "model": "Bush_Common",
+          "at": [
+            347.2,
+            937.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.42,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Authored scenery, breaking the clearing's own edge. Unchanged from round 3."
+        },
+        {
+          "model": "Bush_Common_Flowers",
+          "at": [
+            339.4,
+            932.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.38,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Second bush, west edge. Unchanged from round 3."
+        },
+        {
+          "model": "Fern_1",
+          "at": [
+            345.9,
+            938.4
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.26,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Low fern, different silhouette from the bushes. Unchanged from round 3."
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [
+            348.2,
+            935.9
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.5,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Tall grass tuft, trail-side foreground. Unchanged from round 3."
+        },
+        {
+          "model": "Clover_1",
+          "at": [
+            340.9,
+            932.6
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.55,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Low clover clump, moved slightly from round 3's position to stay clear of the relocated tent/bed pair's footprint."
+        }
+      ],
+      "_why": "BAND1-D1-v3. Relocated from (348,919) to (344,935). The old site drops 1.2m across the camp's own 7m footprint (tools/_probe_camp_ground.gd), which is why round 2's props sat at nine different heights and why the wide frame read as a grass slope with objects on it. tools/_probe_camp_flat.gd swept the ground 5-14m off the loop trail and (344,935) is the flattest shelf near it. Round 5 (blind-critic follow-up + owner-directed Meshy generation) swapped the fire ring, tent and bed for owner-referenced generated assets and fixed the environment/nature untextured-material defect the critic's 'unidentifiable pale rectangular object' finding traced back to (log_large)."
+    },
+    {
+      "order": 1010,
+      "name": "old_champion_rest",
+      "_why": "Prompt 30 asks every optional activity for 'local environmental storytelling so it belongs to its region'. Old Bram sitting alone in an empty field is a man standing in a field; a man sitting on a fallen tree he has clearly sat on for years, with a ring of old stones and his gear beside him, is somebody who comes here. Seven props, deliberately few: this is a place a person uses, not a settlement. Every model is one this band's trail_camp already uses, so no new prop family enters the chapter for one NPC (CLAUDE.md's one-prop-family rule).",
+      "props": [
+        {
+          "model": "log_large",
+          "at": [
+            298.7,
+            983.9
+          ],
+          "yaw_deg": 18.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "_why": "The seat. He is placed facing 215 degrees, which is across it and back toward the road he is watching -- a man who sits where he can see who is coming. environment/nature's log_large is one of only two models in that pack that render correctly through props.gd (see the trail_camp entries and ralph/BLOCKED.md for why the rest do not); this is one of them."
+        },
+        {
+          "model": "Rock_Medium_1",
+          "at": [
+            301.9,
+            982.6
+          ],
+          "yaw_deg": 40.0,
+          "scale": 0.19,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "First of three stones set in a loose arc in front of the log -- the fire he does not light any more. Same models and the same 0.11-0.22 scale band as trail_camp's fire ring, for the same measured reason: the RockPath family are flat pebble mosaics and read as gravel at any scale."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [
+            301.2,
+            984.6
+          ],
+          "yaw_deg": 110.0,
+          "scale": 0.16,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Second stone."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [
+            302.4,
+            984.1
+          ],
+          "yaw_deg": 260.0,
+          "scale": 0.14,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Third stone, the smallest, closing the arc."
+        },
+        {
+          "model": "Bag",
+          "at": [
+            297.4,
+            983.4
+          ],
+          "yaw_deg": 25.0,
+          "scale": 1.0,
+          "_why": "His bag, set down at the far end of the log rather than carried -- the difference between somebody passing through and somebody who has been here since morning."
+        },
+        {
+          "model": "Bush_Common",
+          "at": [
+            303.6,
+            985.9
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.45,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Authored edge on the approach side, so the 13m clearing his arena needs does not read as a bald circle in open grass. Same lesson trail_camp learned the hard way."
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [
+            296.6,
+            980.8
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.5,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "Second piece of authored edge, opposite side, at a different height so the two do not read as a pair."
+        }
+      ]
+    },
+    {
+      "order": 1020,
+      "name": "tether_waypost",
+      "_why": "T3-BRIDGE, owner-direction \u00a75: 'Team Tether patrol or evidence' as its own checklist item, distinct from the wilds/trainers/resources already authored here and distinct from the south_bridge_grunt fight itself -- everything Team Tether in Band 1 before this was spoken (Oskar/the Foreman/the Ranger's dialogue, data/dialogue/village.json) or fought (the bridge). Nothing physical said it until now. Follows data/config/bands/band3_the_river_lock/props.json order 3000's own established grammar for this exact faction beat (a staked, retinted Banner claims ground) rather than inventing a new one, but stripped down to EVIDENCE per \u00a732's reveal ladder (data/config/old_quarry.json's own _comment_evidence: 'no dialogue in this file, no interactable on the hardware, no note to read' at this stage of the ladder) -- no brazier, no held position, because nobody mans this one. A dropped crate and a staked banner read as 'they were through here, recently, and didn't stay' rather than 'this is a manned post', which is the correct claim for ground the player has not been challenged on yet. Sited on-route (within `tools/_probe_band1_cadence.py`'s own 60m on-route lateral call) at arc~2100m of 2403m -- inside the last kilometre before the south_bridge_grunt checkpoint (arc~2372m), so the escalation reads as: evidence, then the grunt himself. Checked clear of every other authored entry in this band (nearest, the order-1049 mudsnout pocket, is 48m off).",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [
+            156.0,
+            1227.5
+          ],
+          "yaw_deg": 15.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the anchor -- a supply crate that fell, or was left, off the same road the grunt now watches the end of. Stamped no differently from any other loose crate in the world; it is the banner beside it that says whose."
+        },
+        {
+          "model": "Banner_1",
+          "at": [
+            158.0,
+            1230.2
+          ],
+          "yaw_deg": 15.0,
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
+          "retint": {
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
+          },
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle Banner was a flat 0.70x0.66m cloth cutout and read as a red paper arrow. This uses the already-installed Banner_1 standard and the accepted Hallward treatment: a 2.39m native vertical silhouette at 1.55x, seated by its measured below-origin extent, with the same reserved oxblood faction material. Position and road clearance are unchanged."
+        }
+      ]
+    },
+    {
+      "order": 1032,
+      "name": "cottage_b_backyard",
+      "_why": "VP5 (visual-parity village lane), 2026-09-02. The practice-meadow fence runs at [14,-20] and [19.5,-25.5] (village.json) read as 'a fence that starts and stops enclosing nothing' (2026-08-30 judge). With village.json's new cart parked behind cottage_b at [21.8,-20] the line now fences that cottage's back yard; this woodpile against the cottage's south wall is what a back yard holds. 1.8m clear of the cottage's south collider extent (z -16.84), 1.4m from the cart's north face, 4m from the practice path's shoulder.",
+      "props": [
+        {
+          "model": "log_large",
+          "at": [60.0, 22.6],
+          "yaw_deg": 15.0,
+          "scale": 1.0,
+          "dir": "res://assets/environment/nature",
+          "_why": "split logs stacked along the wall line."
+        },
+        {
+          "model": "tree-log-small",
+          "at": [60.9, 22.6],
+          "yaw_deg": 100.0,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "sink_m": 0.03,
+          "_why": "one round not yet split, dropped beside the stack at a different angle so the pile reads as work in progress, not a placed pair."
+        }
+      ]
+    },
+    {
+      "order": 1033,
+      "name": "garden_gate",
+      "_why": "VP5 (visual-parity village lane), 2026-09-02. The open east side of Grandpa's kitchen garden (farm.json plots, now railed on the north and west by village.json): a picking crate and the watering bucket set down where the beds are worked from. 0.9m east of the eastern plot column, 3.5m from Old Perrin's spot at (-15,-5), 3.7m from the deadwood node at (-14,-8).",
+      "props": [
+        {
+          "model": "FarmCrate_Apple",
+          "at": [6.6, 20.7],
+          "yaw_deg": 20.0,
+          "scale": 1.0,
+          "_why": "the harvest crate, half full."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [6.1, 21.6],
+          "yaw_deg": -30.0,
+          "scale": 1.0,
+          "_why": "the watering bucket, touching the crate's side."
+        }
+      ]
+    },
+    {
+      "order": 1034,
+      "name": "grandpa_door_lantern",
+      "_why": "VP2-NIGHT judge pass, 2026-09-02: '01-village-grandpa-yard-night' (marker stand GrandpaHouse/outside -> GrandpaHouse/door) reads NPCs at the door as 'silhouetted to illegibility (a little warm light near the door)'. `grandpa_house.gd`'s door marker is `to_global(Vector3(INNER_W*0.5+WALL_T+1.2, 0, 0))` = world (-15.7,-16) off `playground_world.gd`'s HOUSE_AT (-22,-16) with no rotation -- the same figure this file's own `village_twins_yard` cluster already cites for its woodpile ('built door node (-15.7,-16), wall extent x -16.05'), not a fresh guess. No lantern/lamp/brazier mesh exists anywhere under assets/ (torch_prop.gd's own header: a find across assets/props and assets/environment for torch/flame/lantern turns up nothing but this same Bonfire), and this lane may only edit config, not scripts, so the reused mechanism is the one already-solved warm-practical-light recipe every camp in the chapter uses (`Bonfire_Fire.obj`'s real `Fire` surface + `ignite()` + `campfire_glow.gd`'s light/ember/smoke overlay, `glow: campfire`) -- scaled far down from every camp's own use of it (band1's trail camp 0.45, band4's patrol posting 0.42) to read as a small dooryard fire-pot rather than a bonfire dropped on the threshold, which is what 'a lantern by a door, not stage lighting' asks for. ONE light only -- no stone ring, no supply pile -- since a fire ring/log cache would read as a camp, not a doorstep. Sited 1.24m from the door node at (-15.4,-17.2): south of the door on the same side as the existing woodpile/crate pair (-15.0,-18.9)/(-14.3,-19.4) so it reads as one dooryard rather than clutter on both flanks, 1.75m clear of the woodpile, 1.63m clear of the 'Grandpa's House' route's own painted-path endpoint (-16.5,-16.0) (terrain_playground.json paths.routes), and off the door-to-outside walking lane (village_twins_yard's own 'x -16..-9.7 at z~-15' figure runs close to z=-16 at this x, not through z=-17.2). Sits in `building_aprons.footprints[0]`'s (centre -22,-16, half_extents 5.3x3.3) feather zone, same as the woodpile/crate beside it -- worked dooryard ground, not raw lawn, the same convention every other VP5 entry in this file already follows.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [8.6, 12.8],
+          "yaw_deg": 35.0,
+          "scale": 0.22,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "The door light itself. `scale` 0.22 -- roughly half band4's already-small 0.42 patrol posting -- keeps the log pile door-side-brazier small rather than reading as a hearth blocking the threshold; `glow_scale` deliberately left at the chapter's own 1.0 default (LIGHT_RANGE 8.0m, LIGHT_BASE_ENERGY 3.4, warm colour (1.0,0.68,0.32) -- campfire_glow.gd's own constants) rather than dimmed further, because the judge's finding was specifically that NPCs at the door are ILLEGIBLE at night: an 8m warm pool centred 1.24m from the door is what actually reads Oskar/Grandpa's faces, and every other camp in the chapter already proves this exact energy/range reads as a warm practical light rather than daylight at night without complaint. `yaw_deg` 35 (not a flat 0/90) so the log pile does not stand squared-off against the wall, matching this file's own 'not one more object than the yard needs, every object placed on purpose' convention for the rest of the dooryard."
+        }
+      ]
+    },
+    {
+      "order": 1035,
+      "name": "grandpa_southeast_work_yard",
+      "_why": "MEADOWS-LOCATIONS-0911 Grandpa's House yard pass. The production grandpa-yard eye stands south-east of the farmhouse and previously saw only a lone doorstep crate beyond an oversized foreground plant, so the home had architecture but no readable domestic hierarchy. This compact harvest-and-wash nook extends the existing door-side woodpile/crate story onto the farmhouse's south apron using only the installed village prop family: a trestle bench as the work surface, an apple crate as the current harvest, and the bucket/stool as daily-use companions. The bench runs east-west, parallel to the south wall, 1.35m beyond the wall's measured z=-19.8 outer face; its centre is still west of the east wall rather than sitting in the opening. Every item stays south of z=-20.45, more than 4.4m from the door at (-15.7,-16) and entirely off the opening/starter walking lane (x -16..-9.7 around z=-15). The farm plots remain north of the house at z=-9/-6.6, and no interaction, marker, collision recipe, NPC, path, or progression data changes here.",
+      "props": [
+        {
+          "model": "Bench",
+          "name": "GrandpaHarvestTable",
+          "at": [6.1, 8.85],
+          "yaw_deg": 0.0,
+          "scale": 0.82,
+          "_why": "The installed Bench is a trestle work table in this pack. Scaled modestly and aligned with the south wall so it reads as the yard's anchor without becoming a second foreground mass. Its z position clears the eaves/wall and its east-west span stays outside the doorway lane."
+        },
+        {
+          "model": "FarmCrate_Apple",
+          "name": "GrandpaFreshHarvest",
+          "at": [4.75, 9.45],
+          "yaw_deg": 18.0,
+          "scale": 0.82,
+          "_why": "A partly filled harvest crate touching the work table's west end, connecting the nook to the six berry plots north of the house without adding a new interaction."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "name": "GrandpaWashBucket",
+          "at": [7.55, 9.45],
+          "yaw_deg": -22.0,
+          "scale": 0.86,
+          "_why": "Wash bucket at the opposite end of the same work surface, close enough to compose as one lived-in task rather than another scattered prop."
+        },
+        {
+          "model": "Stool",
+          "name": "GrandpaYardStool",
+          "at": [6.0, 7.75],
+          "yaw_deg": 12.0,
+          "scale": 0.82,
+          "_why": "A small seat facing the table from the open yard. It completes the domestic-use story while leaving the direct east-door approach several metres clear."
+        }
+      ]
+    },
+    {
+      "order": 1049,
+      "name": "rise_cache_marker",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): the discovery cache (playground_world.gd CACHE_AT['tm_rock_throw']) is 'marked by a lone dead tree'. One tree, not a station -- the point is a single silhouette a player notices from a distance and walks toward, not a grove. Reuses the installed DeadTree_2 model every wood harvest node in this band already uses (CLAUDE.md: no new mesh), scaled up from harvest.json's 0.22 gathering-node convention to read as a real dead tree rather than a stick, since this one carries no gather prompt of its own -- the cache beside it does. The marker now stands 13.5m south-west of the cache at (-395.5,360.0), still one composition from the Rise sightline but no longer centred on the find: props.gd wraps the imported tree's entire 8.7m-by-8.3m scaled AABB in collision, so the old shared point enclosed every legal seat inside the cache's 2.4m interaction radius and made the marked reward physically impossible to take. The prior site around (-382.8,355.5), ~50m off the road at arc 603 (the ALREADY-STANDING 'Pond Circuit' trailhead crest, terrain_playground.json paths.trailheads), was ground-scanned dry with worst slope 11.8 degrees over a 2m pad; this small same-slope offset still needs production ground and sightline acceptance. BAND1-DISCOVERY-0903: `docs/specs/BAND1_COMPOSITION_PLAN.md` §6.1/§5.3 names this as the ONE discovery marker (the WORLD-TREES lane's second, decorative dead tree 107m away at (-276,320) is a vegetation anchor this lane does not own and is not touched here) and, from the Rise crest overlook 170m away, calls for it to read as 'a grey vertical 30° right of the road, alone on the slope' rather than the harvest-node-scaled sapling it was.",
+      "props": [
+        {
+          "model": "DeadTree_2",
+          "at": [
+            -395.5,
+            360.0
+          ],
+          "yaw_deg": 40.0,
+          "scale": 1.3,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "The marker itself, offset 13.5m south-west of the TM cache so its full imported-AABB collider and the cache's 2.4m interaction circle are disjoint while tree and find remain one small discovery composition. Same model/directory harvest.json's wood nodes already load (DeadTree_2.gltf). Scale 1.3 (was 0.9, itself already scaled up from the gathering convention's 0.22 since this one carries no gather prompt of its own): the composition plan's own crest-overlook proof requires this marker to survive 170m of distance and read as a landmark silhouette, not a stick -- 0.9 was still sized for a near approach, not the long sightline the Rise window now depends on."
+        }
+      ]
+    },
+    {
+      "order": 1050,
+      "name": "pond_fisher_camp",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket): 'one bench-and-firepit camp prop within sight of the water'. Deliberately minimal -- one seat and one fire, not a second trail_camp -- so it reads as a single traveller's stop (the fisher's own) rather than a second authored campsite competing with the band's real rest point 700m south. Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd; the water is at level -17.0 and the straight-line candidate off the road here came back underwater): this point is dry (h=-14.48, 2.52m above the waterline), on the pond's south-east shore, 10m from the fisher NPC (village_npcs.json-pattern placement, data/config/bands/band1_lower_meadows/pond_npc.json) so the two read as one scene, and clear (>=30m) of the bridge_repair_site prop cluster and every wild cluster already authored at the pond.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [
+            -395.5,
+            583.5
+          ],
+          "yaw_deg": 200.0,
+          "scale": 0.3,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "The firepit -- a small fire, between the trail camp's 0.45 and the doorway lantern's 0.22, sized for one person's camp rather than a rest stop. Same solved Bonfire_Fire+ignite()+campfire_glow.gd recipe every camp in the chapter uses (CLAUDE.md: no new mesh)."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [
+            -395.5,
+            583.5
+          ],
+          "yaw_deg": 0.0,
+          "scale": 0.65,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04,
+          "_why": "A small stone ring around the fire, scaled down from the trail camp's own 1.05 (a ~2.1m ring) to match this camp's one-person scale."
+        },
+        {
+          "model": "Bench",
+          "at": [
+            -393.0,
+            585.3
+          ],
+          "yaw_deg": 150.0,
+          "scale": 1.0,
+          "_why": "The seat, facing the fire across it and out toward the water beyond -- a place to sit and watch a line, which is what the fisher NPC beside this cluster is doing."
+        }
+      ]
+    },
+    {
+      "order": 1051,
+      "name": "bridge_approach_fence",
+      "_why": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 5 (the Bridge approach): 'a broken-fence line leading the eye toward the South Bridge on the approach'. Four sections of the settlement's own wooden-fence kit (quaternius_medieval, already vendored -- CLAUDE.md: no new prop family), NOT village.json's structural `fence_run` prefab (that is a sealed boundary line with gate logic; this is scenery, an old field-fence nobody has mended). Run along the road's own shoulder from arc 2170 to arc 2250 of trail.bands[0], 8-10m off the centreline, ending short of the south_bridge_grunt checkpoint (order 1000, arc 2371) so the eye is led TO the gate rather than past it. The third section is toppled (`pitch_deg`) -- the 'broken' the route contract asks for, not just an intact line -- reading as an old field boundary from before Team Tether closed the crossing, left to rot the way the tether_waypost cluster (order 1020) reads as evidence rather than a manned position.",
+      "_why_orphan_fix_g3band1": "G3-BAND1-FINISH-0904, GATE2-EVIDENCE-0903/REPORT.md 2.13: 'connect or remove the orphan fence segments at the bridge approach'. The four ORIGINAL sections above sat ~19-20m apart from each other -- checked against the coordinates themselves, not eyeballed (P1->P2 20.0m, P2->P3 20.0m, P3->P4 21.7m) -- against a ~2m panel width each. Four isolated 2m fence posts scattered every 20m across an 80m stretch is not a broken FENCE LINE, it is four unrelated fence posts, which is exactly what a critic with no access to this file's own '_why' would see and call orphaned. Fixed by filling the two INTACT runs (P1-P2, P3-P4) down to ~6-7m spacing -- close enough that the eye joins consecutive panels into one line, the same interval real field fencing actually uses -- while leaving the P2-P3 run at one added interior panel rather than fully closed: that is the stretch immediately before the toppled section, and a wider gap there reads as the part of the line that has actually rotted away, which is the story the toppled panel is telling. Every new position is a linear interpolation between the two ORIGINAL anchors either side of it (this fence runs close enough to straight over these distances that the four original bearings -71.6/-71.6/-60.0/-49.4 already vary by under 12 degrees end to end), alternating the same three module variants the original four already used so the line does not read as one plank repeated (bible sec12/D24 -- no new prop family, no new mesh, just more of the same three already-vendored segments).",
+      "props": [
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            81.9,
+            1223.2
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "First section, arc 2170, running with the road's own bearing."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension2",
+          "at": [
+            75.57,
+            1225.33
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 1/3 of the way from section 1 to section 2, closing the 20m gap to ~6.7m so the two read as one line rather than two isolated posts."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            69.23,
+            1227.47
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 2/3 of the way from section 1 to section 2."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension1",
+          "at": [
+            62.9,
+            1229.6
+          ],
+          "yaw_deg": -71.6,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Second section, arc 2190, continuing the line."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            53.4,
+            1232.75
+          ],
+          "yaw_deg": -65.8,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: one interior panel midway between section 2 and the toppled section 3 -- this run stays the widest gap in the line on purpose (see `_why_orphan_fix_g3band1`), just no longer a full 20m of nothing leading into the break."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension2",
+          "at": [
+            43.9,
+            1235.9
+          ],
+          "yaw_deg": -60.0,
+          "pitch_deg": 72.0,
+          "sink_m": -0.15,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Third section, arc 2210 -- the broken one, tipped almost flat (`pitch_deg` 72, the same lean mechanic `bridge_repair_site`'s axe already uses on this prop family's fixed vertical authoring) with its foot sunk into the grass rather than floating."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            36.73,
+            1238.83
+          ],
+          "yaw_deg": -56.47,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 1/3 of the way from the toppled section to section 4 -- the line resuming past the break, leading the eye on toward the checkpoint."
+        },
+        {
+          "model": "Prop_WoodenFence_Extension1",
+          "at": [
+            29.57,
+            1241.77
+          ],
+          "yaw_deg": -52.93,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "G3-BAND1-FINISH-0904: interpolated 2/3 of the way from the toppled section to section 4."
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "at": [
+            22.4,
+            1244.7
+          ],
+          "yaw_deg": -49.4,
+          "scale": 1.0,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "Fourth section, arc 2230, the road's bend toward the bridge -- the line's last intact panel before the gap the broken section leaves, ending the eye's path at the checkpoint ahead rather than at the fence itself."
+        }
+      ]
+    },
+    {
+      "order": 1052,
+      "name": "the_rise_rock_crown",
+      "_why": "THE-RISE-IDENTITY-0910. The canonical The Rise arrival is map_landmarks.json's region centre (88,-43) reached by terrain_playground.json's named road ending at (74,-41). Current production day/night frames showed a strong rocky landform but no authored hero at player scale: the fingerpost, random trees and loose boulders were the entire identity. This one natural composition uses the Meadows' already-installed stylized-nature family to make the foot read in a glance without inventing a shrine, faction claim or new lore: one wind-shaped gold-green TwistedTree nested into three asymmetrical stone fins. The tree supplies the character/creature-grade silhouette and one controlled hue break; the rocks tie that silhouette to the Rise rather than making it another tree in a field. Every piece is inside the published 55m region, 20m+ off the road end and clear of the Stronghold approach, so it is a destination seen from the route rather than collision dressing in the travel lane.",
+      "props": [
+        {
+          "name": "RiseHeroTree",
+          "model": "TwistedTree_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [99.5, -55.0],
+          "yaw_deg": -32.0,
+          "scale": 1.78,
+          "collision_scale_xyz": [0.12, 1.0, 0.12],
+          "_collision_why": "THE-RISE-R25. The production combined-AABB collider enclosed every canopy card and extended more than six metres downhill over CrownTreadA, creating a solid invisible ceiling. The visible hero remains unchanged; collision is narrowed to its trunk footprint.",
+          "retint": {
+            "Leaves_TwistedTree": {
+              "color": "#d6b86a",
+              "texture": "res://assets/environment/stylized_nature/Leaves_NormalTree_C.png"
+            }
+          },
+          "_why": "The one hero, not a grove. R2 moves it only 1.6m uphill inside the existing r12 clearing and grows the crooked 18m-class TwistedTree from 1.14 to 1.34: the accepted 40m approach could read it, but the ordinary road-end frame reduced it to a partial trunk behind its own oversized crown stones. The source TwistedTree leaf sheet is crimson, so a tint alone cannot make it green: the existing building-prefab retint path swaps to the same installed green leaf sheet the Meadows scatter already uses, then applies a restrained warm-gold modulation. This keeps the hue inside the Meadows palette instead of borrowing Team Tether's oxblood or a supernatural emissive colour."
+        },
+        {
+          "name": "RiseCrownLeft",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [96.5, -58.0],
+          "yaw_deg": 18.0,
+          "roll_deg": -7.0,
+          "scale_xyz": [0.92, 2.45, 0.72],
+          "collision_scale_xyz": [0.28, 1.0, 0.28],
+          "sink_m": 0.24,
+          "_why": "Largest lower fin, now compact and re-seated 4m uphill inside the same clearing. The previous 2.05x2.65x1.75 stone filled the road-end foreground, hid the hero trunk and turned the named-place stand into a black boulder wall. This still overlaps the tree's lower silhouette from arrival, but leaves its trunk and canopy readable behind a trainer. It remains uphill of the canonical region look point at (88,-43), whose ground query must stay clear."
+        },
+        {
+          "name": "RiseCrownRight",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [104.0, -57.0],
+          "yaw_deg": -41.0,
+          "roll_deg": 6.0,
+          "scale_xyz": [0.82, 2.05, 0.68],
+          "collision_scale_xyz": [0.28, 1.0, 0.28],
+          "sink_m": 0.22,
+          "_why": "Shorter counter-fin on the far side of the trunk. Different model, height and lean make an asymmetric shoulder instead of a procedural ring or three identical rocks."
+        },
+        {
+          "name": "RiseCrownBack",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [101.0, -62.0],
+          "yaw_deg": 67.0,
+          "roll_deg": -4.0,
+          "scale_xyz": [0.72, 1.65, 0.62],
+          "collision_scale_xyz": [0.28, 1.0, 0.28],
+          "sink_m": 0.20,
+          "_why": "The smallest rear stone completes a triangular depth read from the approach instead of a flat row. Its lower height keeps the tree crown and the Rise's own rock face as the skyline."
+        }
+      ]
+    },
+    {
+      "order": 1053,
+      "name": "long_field_wayfarer_signal",
+      "_why": "Owner playtest 2026-09-12 asks for restrained peripheral glows and meaningful reasons to leave the south dirt trail. This is one abandoned wayfarer's fire and supply cache in the Long Field, not another rest point, settlement or map pin. Its centre [160,710] is about 80m east of the authored spine: far enough that reaching it is a deliberate detour, close enough that campfire_glow's existing smoke, flame and warm practical can be judged from the road. A three-Meadowhart herd in spawns.json and two persistent pickups in pickups.json complete the same scene. The five-piece composition reuses the Trail Camp's installed prop family at a smaller scale, carries no `rest` block, and adds one light only. Ground and road-sightline placement remain subject to production capture acceptance.",
+      "props": [
+        {
+          "name": "WayfarerSignalFire",
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "at": [160.0, 710.0],
+          "yaw_deg": 17.0,
+          "scale": 0.30,
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "_why": "The passive draw: the existing solved campfire presentation gives this off-path site a warm source, smoke and embers without inventing a waypoint beam. Scale 0.30 keeps it clearly below the Trail Camp's 0.45 rest fire; this is a traveller's abandoned signal, not a second camp."
+        },
+        {
+          "name": "WayfarerSignalRing",
+          "model": "campfire_stone_ring",
+          "dir": "res://assets/props/generated_camp",
+          "at": [160.0, 710.0],
+          "yaw_deg": -11.0,
+          "scale": 0.70,
+          "sink_m": 0.04,
+          "_why": "A small installed stone ring seats the fire in the meadow and distinguishes it from a loose glowing pickup. It is deliberately simpler and smaller than the named Trail Camp composition."
+        },
+        {
+          "name": "WayfarerSupplyCrate",
+          "model": "Crate_Wooden",
+          "at": [163.0, 708.6],
+          "yaw_deg": -24.0,
+          "scale": 0.90,
+          "sink_m": 0.04,
+          "_why": "One supply crate beside the signal makes the reward placement belong to a traveller's stop instead of appearing as loot scattered in an empty field."
+        },
+        {
+          "name": "WayfarerSupplyBag",
+          "model": "Bag",
+          "at": [162.35, 708.15],
+          "yaw_deg": 18.0,
+          "scale": 0.90,
+          "sink_m": 0.03,
+          "_why": "A single soft bag leans into the crate grouping; no tent or bed is present, so this never promises a usable rest point."
+        },
+        {
+          "name": "WayfarerSeat",
+          "model": "Bench",
+          "at": [157.4, 712.2],
+          "yaw_deg": 126.0,
+          "scale": 0.90,
+          "sink_m": 0.03,
+          "_why": "A weathered seat faces the fire and closes the tiny vignette. It uses the same installed family as the Trail Camp but leaves open ground for the herd and pickups rather than growing into another dense prop island."
+        }
+      ]
+    },
+    {
+      "order": 1054,
+      "name": "village_lookback_overlook",
+      "_why": "OWNER-0912 Tier 3. A quiet look-back point about 200m from Grandpa's Village and more than 100m east of the south-road spine. It frames the real opening settlement instead of building a fake second hamlet: a bench faces the roofs, while Nessa pauses beside the small inn supply load in village_npcs.json. Three non-glowing pieces keep this visually and mechanically distinct from the Long Field fire/cache at [160,710]. The production road sightline, vegetation occlusion and exact bench facing remain visual-acceptance work.",
+      "props": [
+        {
+          "name": "VillageLookbackBench",
+          "model": "Bench",
+          "at": [100.0, 175.0],
+          "yaw_deg": 150.0,
+          "scale": 0.92,
+          "sink_m": 0.04,
+          "_why": "The subject of the overlook: one installed timber bench angled back toward the real village centre around [0,0], not toward the southern objective route."
+        },
+        {
+          "name": "VillageLookbackApples",
+          "model": "FarmCrate_Apple",
+          "at": [98.8, 176.25],
+          "yaw_deg": -18.0,
+          "scale": 0.90,
+          "sink_m": 0.04,
+          "_why": "One inn-bound apple crate gives Nessa a reason to have stopped here and ties the view back to the inhabited village without adding a new building silhouette."
+        },
+        {
+          "name": "VillageLookbackBag",
+          "model": "Bag",
+          "at": [99.55, 176.65],
+          "yaw_deg": 24.0,
+          "scale": 0.86,
+          "sink_m": 0.03,
+          "_why": "A soft bag touching the crate completes one carried load. No fire, light, pickup or rest service duplicates the Long Field signal."
+        }
+      ]
+    },
+    {
+      "order": 1055,
+      "name": "the_rise_cairn_trail",
+      "_why": "THE-RISE-R16-SOURCE. R15 removed the measured random-pebble and retaining-stone pinch, then production traversal isolated the remaining stops to closed terrace-box leading faces. props.gd now exposes only the exact visible top rectangle as two-sided collision, raised within the production step allowance so Terrain3D cannot claim the same capsule; uphill tops begin on their shared joint and inherit the prior tread's exit overlap, eliminating both artificial walls and exposed triangle edges. The authored terrain bench, exact shared joints, road end, lower fork, crown, progression and encounters remain unchanged.",
+      "props": [
+        {
+          "name": "RiseTrailRoadEndTread",
+          "walkable_segment": {"from": [74.0, -41.0], "to": [72.6, -46.0], "width_m": 5.4, "thickness_m": 0.18, "overlap_m": 0.55, "surface_lift_m": 0.10, "colour": "#786a4f"},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [74.8, -42.5],
+          "yaw_deg": -33.0,
+          "scale_xyz": [3.10, 0.22, 3.35],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}},
+          "_why": "This broad, flattened threshold overlaps the unchanged painted road end. The walking line therefore changes material but never visually stops."
+        },
+        {
+          "name": "RiseTrailDescentTreadA",
+          "walkable_segment": {"from": [72.6, -46.0], "to": [70.2, -49.5], "width_m": 5.4},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [72.6, -46.0],
+          "yaw_deg": -32.0,
+          "scale_xyz": [3.20, 0.20, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailDescentTreadB",
+          "walkable_segment": {"from": [70.2, -49.5], "to": [67.8, -53.1], "width_m": 5.4},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [70.2, -49.5],
+          "yaw_deg": -34.0,
+          "scale_xyz": [3.05, 0.22, 3.40],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailDescentTreadC",
+          "walkable_segment": {"from": [67.8, -53.1], "to": [65.3, -56.8], "width_m": 5.8, "overlap_m": 0.85, "entry_clearance_m": 0.32, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [67.8, -53.1],
+          "yaw_deg": -34.0,
+          "scale_xyz": [3.20, 0.20, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailDescentTreadD",
+          "walkable_segment": {"from": [65.3, -56.8], "to": [62.7, -60.2], "width_m": 6.2, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [65.3, -56.8],
+          "yaw_deg": -34.0,
+          "scale_xyz": [3.10, 0.22, 3.40],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailForkTread",
+          "walkable_segment": {"from": [62.7, -60.2], "to": [66.2, -63.1], "width_m": 6.4, "overlap_m": 1.0, "entry_clearance_m": 0.85, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [62.7, -60.2],
+          "yaw_deg": -12.0,
+          "scale_xyz": [3.35, 0.20, 3.60],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailRoadEndTorch",
+          "model": "Torch_Metal",
+          "at": [77.6, -43.4],
+          "yaw_deg": -24.0,
+          "scale": 0.78,
+          "sink_m": 0.04,
+          "glow": "campfire",
+          "glow_scale": 0.44,
+          "_why": "A small physical waylight sits beyond the fingerpost on the outside shoulder, clear of the tread centre. It makes the trailhead readable after dark while remaining subordinate to the hero tree."
+        },
+        {
+          "name": "RiseTrailForkTorch",
+          "model": "Torch_Metal",
+          "at": [59.8, -62.2],
+          "yaw_deg": 31.0,
+          "scale": 0.82,
+          "sink_m": 0.04,
+          "glow": "campfire",
+          "glow_scale": 0.48,
+          "_why": "The second bounded waylight sits outside the west-foot turn and announces the broad switchback. It is navigation punctuation, not a camp or hillside floodlight."
+        },
+        {
+          "name": "RiseTrailShelfTreadA",
+          "walkable_segment": {"from": [66.2, -63.1], "to": [69.0, -62.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [66.2, -63.1],
+          "yaw_deg": 55.0,
+          "scale_xyz": [3.15, 0.22, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailShelfTreadB",
+          "walkable_segment": {"from": [69.0, -62.0], "to": [72.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [69.8, -65.8],
+          "yaw_deg": 54.0,
+          "scale_xyz": [3.25, 0.20, 3.50],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailShelfTreadC",
+          "walkable_segment": {"from": [72.0, -61.0], "to": [75.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [73.5, -68.4],
+          "yaw_deg": 56.0,
+          "scale_xyz": [3.10, 0.22, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailShelfTreadD",
+          "walkable_segment": {"from": [75.0, -61.0], "to": [78.0, -61.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [77.3, -70.6],
+          "yaw_deg": 62.0,
+          "scale_xyz": [3.25, 0.20, 3.50],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailShelfTreadE",
+          "walkable_segment": {"from": [78.0, -61.0], "to": [81.0, -61.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [81.2, -72.1],
+          "yaw_deg": 69.0,
+          "scale_xyz": [3.15, 0.22, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailSwitchbackTread",
+          "walkable_segment": {"from": [81.0, -61.0], "to": [84.0, -60.0], "width_m": 6.8, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 20.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [85.2, -72.0],
+          "yaw_deg": 104.0,
+          "scale_xyz": [3.45, 0.20, 3.70],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseRetainingRoadEndA",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [77.2, -47.4],
+          "yaw_deg": 18.0,
+          "scale_xyz": [0.78, 0.52, 0.48],
+          "sink_m": 0.34,
+          "_why": "The first low dry-stone edge turns toward the branch in the ordinary road view. It sits outside the six-metre tread and leaves the road-to-fork centreline open."
+        },
+        {
+          "name": "RiseRetainingRoadEndB",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [73.5, -52.8],
+          "yaw_deg": -11.0,
+          "scale_xyz": [0.86, 0.48, 0.46],
+          "sink_m": 0.32
+        },
+        {
+          "name": "RiseRetainingRoadEndC",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [69.4, -58.0],
+          "yaw_deg": 27.0,
+          "scale_xyz": [0.74, 0.56, 0.50],
+          "sink_m": 0.36
+        },
+        {
+          "name": "RiseRetainingFork",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [62.8, -64.4],
+          "yaw_deg": 58.0,
+          "scale_xyz": [0.92, 0.62, 0.52],
+          "sink_m": 0.38,
+          "_why": "A broader corner block makes the lower turn read as a supported landing, while its offset keeps the switchback mouth wider than a player and companion together."
+        },
+        {
+          "name": "RiseRetainingLowerA",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [68.0, -65.6],
+          "yaw_deg": 72.0,
+          "scale_xyz": [0.88, 0.58, 0.48],
+          "sink_m": 0.36
+        },
+        {
+          "name": "RiseRetainingLowerB",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [70.1, -57.6],
+          "yaw_deg": 81.0,
+          "scale_xyz": [0.94, 0.54, 0.46],
+          "sink_m": 0.34
+        },
+        {
+          "name": "RiseRetainingLowerC",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [76.1, -56.6],
+          "yaw_deg": 95.0,
+          "scale_xyz": [0.90, 0.61, 0.50],
+          "sink_m": 0.38,
+          "_why": "THE-RISE-R22. Full production traversal found this collider touching the ShelfTreadC/D lane at z=-60.10 while a random CommonTree forced the Player toward that edge. Moving the retaining face 2.1m uphill keeps it within the switchback composition but restores a capsule-wide shoulder beside the real route."
+        },
+        {
+          "name": "RiseRetainingLowerTurn",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [81.1, -58.5],
+          "yaw_deg": 116.0,
+          "scale_xyz": [0.98, 0.68, 0.54],
+          "sink_m": 0.40,
+          "_why": "The largest low block anchors the switchback point so the two broad legs read as terraces bearing on a retaining corner rather than an erosion scar."
+        },
+        {
+          "name": "RiseRetainingReturnA",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [84.8, -52.8],
+          "yaw_deg": 132.0,
+          "scale_xyz": [0.86, 0.56, 0.48],
+          "sink_m": 0.35
+        },
+        {
+          "name": "RiseRetainingReturnB",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [87.2, -50.9],
+          "yaw_deg": 141.0,
+          "scale_xyz": [0.92, 0.60, 0.50],
+          "sink_m": 0.37
+        },
+        {
+          "name": "RiseRetainingReturnC",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [90.3, -49.8],
+          "yaw_deg": 154.0,
+          "scale_xyz": [0.82, 0.52, 0.46],
+          "sink_m": 0.34,
+          "_why": "THE-RISE-R24. R23 production collision proved the old stone and the overlook cairn pinched both sides of ReturnTreadC. This keeps the broken retaining rhythm on the inner uphill edge while opening the real capsule lane."
+        },
+        {
+          "name": "RiseRetainingCrown",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [91.0, -48.5],
+          "yaw_deg": 166.0,
+          "scale_xyz": [0.74, 0.48, 0.44],
+          "sink_m": 0.32,
+          "_why": "The retaining rhythm stops below the crown composition; the hero tree and outward overlook remain the only summit focus."
+        },
+        {
+          "name": "RiseTrailReturnTreadA",
+          "walkable_segment": {"from": [84.0, -60.0], "to": [86.0, -59.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [88.5, -69.6],
+          "yaw_deg": 126.0,
+          "scale_xyz": [3.15, 0.22, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailReturnTreadB",
+          "walkable_segment": {"from": [86.0, -59.0], "to": [89.0, -56.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [91.5, -67.1],
+          "yaw_deg": 130.0,
+          "scale_xyz": [3.25, 0.20, 3.50],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailReturnTreadC",
+          "walkable_segment": {"from": [89.0, -56.0], "to": [90.0, -53.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [94.2, -64.4],
+          "yaw_deg": 132.0,
+          "scale_xyz": [3.15, 0.22, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailReturnTreadD",
+          "walkable_segment": {"from": [90.0, -53.0], "to": [93.0, -52.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [96.5, -61.3],
+          "yaw_deg": 143.0,
+          "scale_xyz": [3.25, 0.20, 3.50],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailCrownTreadA",
+          "walkable_segment": {"from": [93.0, -52.0], "to": [97.0, -54.0], "width_m": 5.4, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Wide",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [97.9, -58.0],
+          "yaw_deg": 157.0,
+          "scale_xyz": [3.15, 0.22, 3.45],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}}
+        },
+        {
+          "name": "RiseTrailCrownTread",
+          "walkable_segment": {"from": [97.0, -54.0], "to": [99.5, -55.0], "width_m": 5.8, "overlap_m": 1.0, "entry_clearance_m": 0.0, "max_slope_deg": 28.0},
+          "model": "RockPath_Round_Thin",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [98.6, -55.5],
+          "yaw_deg": 170.0,
+          "scale_xyz": [3.35, 0.20, 3.60],
+          "sink_m": 0.03,
+          "retint": {"PathRocks": {"color": "#e5ddb5", "emission": "#6f694e", "energy": 0.22}},
+          "_why": "The final flattened surface meets the retained tree-and-stone crown and the separate overlook composition rather than stopping below it."
+        },
+        {
+          "name": "RiseTrailCrownTorch",
+          "model": "Torch_Metal",
+          "at": [101.0, -58.7],
+          "yaw_deg": 14.0,
+          "scale": 0.78,
+          "sink_m": 0.04,
+          "glow": "campfire",
+          "glow_scale": 0.44,
+          "_why": "The arrival waylight sits behind and south of the final tread, off the walking line and below the hero-tree silhouette. Together with the two earlier sources it makes the same start-turn-arrival rhythm readable by night."
+        }
+      ]
+    },
+    {
+      "order": 1056,
+      "name": "the_rise_overlook",
+      "_why": "THE-RISE-R6-PROMOTION. R5's arrival camera faced uphill into a blank mound, so reaching the named crown had no visible reward. This small installed-prop composition turns the player back toward the opening landscape: one bench faces the village and pond country, two unequal low cairns frame that outward view without forming a wall, and a traveller's apple crate and bag give the pause a lived-in Meadows reason. It adds no rest service, pickup, faction claim, light or progression state; the hero tree remains the dominant skyline and the completed switchback remains the only approach.",
+      "props": [
+        {
+          "name": "RiseOverlookBench",
+          "model": "Bench",
+          "at": [94.0, -57.5],
+          "yaw_deg": 58.0,
+          "scale": 0.92,
+          "sink_m": 0.04,
+          "_why": "The bench faces northwest across the opening village country rather than back into the slope, making the vista the crown's explicit reward."
+        },
+        {
+          "name": "RiseOverlookCairnLeft",
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [87.0, -50.0],
+          "yaw_deg": 22.0,
+          "scale_xyz": [0.55, 0.72, 0.48],
+          "collision_scale_xyz": [0.45, 1.0, 0.45],
+          "sink_m": 0.28
+        },
+        {
+          "name": "RiseOverlookCairnRight",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "at": [94.0, -48.5],
+          "yaw_deg": -31.0,
+          "scale_xyz": [0.42, 0.55, 0.40],
+          "collision_scale_xyz": [0.45, 1.0, 0.45],
+          "sink_m": 0.24
+        },
+        {
+          "name": "RiseOverlookApples",
+          "model": "FarmCrate_Apple",
+          "at": [96.4, -58.7],
+          "yaw_deg": -18.0,
+          "scale": 0.74,
+          "sink_m": 0.04
+        },
+        {
+          "name": "RiseOverlookBag",
+          "model": "Bag",
+          "at": [96.0, -59.3],
+          "yaw_deg": 24.0,
+          "scale": 0.78,
+          "sink_m": 0.03
+        }
+      ]
+    },
+    {
+      "order": 1057,
+      "name": "old_bram_camp",
+      "_why": "F03 lure cue, coordinator ruling (b): a tall cue visible from the road, then readable on approach; the site is not moved. Old Bram stands 55.5 m off the nearest clear road view at [140.6,915.9]; a 1.8 m figure is only ~24 px within ~34 m at the game camera, so from the road he read as a speck. A retired champion's signal fire 21 m from him, on the line a player walks in from the road (137, 900) -> Bram, outside the 11 m fight ring. Round-5 judge: at the first site (184, 901) the fire sat behind a trunk on that approach, and tests/probe_lure_road_visibility.gd found no clear road view of it (0 of 94 samples). Here it has 9 hard / 7 soft / 5 canopy-clear road samples, the nearest 35.5 m from the road, with a 28 m dark smoke column (12 m wide at the top, alpha 0.9) that clears the canopy: a large signal fire (scale 0.6, glow 1.9, as at the River Lock camp), the same friendly waymark language as band 1's WayfarerSignalFire, so the site reads as a friendly figure worth a detour. No interaction, reward or collider path changes.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "scale": 0.6,
+          "glow_scale": 1.9,
+          "smoke_top_m": 42.0,
+          "smoke_alpha": 1.0,
+          "smoke_top_size_m": 14.0,
+          "smoke_fade": 0.2,
+          "smoke_base_size_m": 2.5,
+          "smoke_colour": "#2e2a27",
+          "_why_f03_0_smoke": "Coordinator ruling on #356 (12:00, 2026-09-27): reuse the Tether holding camp's column values (TetherHoldingFire as set in f46b6669; batch 47 later dropped that column from Juno's camp). Code-blind lure judge C failed this 28 m #4f4a45 column as thin and pale against the sky from the road; Juno's 42 m #2e2a27 column is the one the judges read. It is a data reuse of an in-game treatment, with no new asset.",
+          "glow": "campfire",
+          "name": "OldBramCampFire",
+          "_why_r7_bram_road": "Walk on main integration-32 (ralph/reports/MEADOWS-PAYOFFS/six-activities/discovery-snowball/bram-woods-integration32/): Bram is 55 m east of the band1 woodland road behind dense trunks; neither this fire nor a trial 42 m column (reverted: smoke colour/opacity are art under the Codex rule, and it had no passing capture) read from the road. Relocating the camp needs a coordinator decision.",
+          "_why_r6": "Round-6 code-blind judge: at (174, 903.4) the fire sat exactly on the road-to-Bram line, so on approach its flames and smoke column stood between the player and Bram, who never appeared at 30 m. Moved 6 m north of that line to (176, 909); tests/probe_lure_road_visibility.gd --at=bram:176,909 finds 2 hard-clear road samples at ground level (nearest 42.4 m), against 0 at the old spot, and the 28 m column clears the canopy from the older road line (not from the integration-32 woodland road; see _why_r7_bram_road).",
+          "_why_f03_0_site": "Moved with Bram to his woodline-edge site (300,983), coordinator option A on #356. The fire sits 13 m from him toward the trail-camp road (359,939), outside the 11 m fight ring, and 5 m north of the road-to-Bram line, so it never stands between an approaching player and him (the round-6 defect).",
+          "at": [
+            313.4,
+            979.2
+          ],
+          "yaw_deg": 30.0
+        }
+      ]
+    },
+    {
+      "order": 1058,
+      "name": "meadowhart_watch_fire",
+      "_why": "F03#0 herd night cue (lure judge set F: at the 123 m night road glance nothing reads; the pair reads from 55 m). A herd-watcher's small fire and seat at the grazing ground's south edge, 14.6 m from the herd centre (-70,1310) -- outside its 12 m scatter and the 12 m visit circle. Sited by tests/probe_lure_road_visibility.gd --at=herd:x,z: here 14 hard-clear road samples reach out to 135 m (the first try at (-56,1296) sat behind a boulder, clear only to 43 m). The same Bonfire_Fire + campfire_glow + stone-ring recipe as pond_fisher_camp: at night a warm point in the road's sightline says someone watches something here; by day a small fire and seat beside the herd. glow_scale 1.3 carries the light. TUNABLE.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "at": [-74.0, 1296.0],
+          "yaw_deg": 30.0,
+          "scale": 0.65,
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "glow": "campfire",
+          "glow_scale": 2.4,
+          "_why_night_size": "Night cue views (render 36419344502, tests/capture_lure_cue_views.gd --cue=herd --time=night): at 0.3/1.3 the fire was a ~10 px speck at 41 m and gone by 71 m. The halo scales with the prop, so the fire doubles (Doss's signal fire is 0.6) and the light's reach grows with glow_scale."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [-74.0, 1296.0],
+          "yaw_deg": 0.0,
+          "scale": 1.2,
+          "dir": "res://assets/props/generated_camp",
+          "sink_m": 0.04
+        },
+        {
+          "name": "HerdWatchSeat",
+          "model": "Bench",
+          "at": [-72.3, 1297.2],
+          "yaw_deg": 120.0,
+          "scale": 0.9,
+          "sink_m": 0.03,
+          "_why": "The watcher's seat, turned toward the herd."
+        }
+      ]
+    }
+  ]
+}

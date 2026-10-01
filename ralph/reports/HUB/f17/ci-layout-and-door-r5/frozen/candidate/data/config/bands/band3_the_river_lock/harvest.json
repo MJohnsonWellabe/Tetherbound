@@ -1,0 +1,327 @@
+{
+  "_comment": "BAND-SPLIT. Band-local nodes for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_why_this_was_empty": "GATE-D3. This file existed with an empty `nodes` array, which the Gate D lane contract names directly: 1580m of river country with nothing to pick up, the largest single gap in the band. Prompt 64: 'River/relay route needs useful gathering and rewards consistent with current tier. Do not let faction content erase the survival/crafting loop.' Twelve nodes, the same four-material spread band1's own harvest.json set out (`_comment_amounts` there: a camp costs 12 wood / 8 stone / 10 fiber), so a player who reaches the region's flat clearing (vegetation.json order 3000) with an empty satchel can actually gather enough to make camp there rather than needing to have hauled materials the whole way from the Warrens.",
+  "_comment_siting": "Positions measured against the real heightfield with a scratch probe (tools/_probe_band3.gd, deleted before ship -- not a committed tool, the same one-off shape _probe_relay.gd already is). Spread across the whole 1580m rather than clustered at either end: the western swing out of Band 2, the approach into the relay, the crossing itself, and the run north out of the region toward Band 4 -- so gathering is a reason to stop the whole way through, not just at the seams.",
+  "nodes": [
+    {
+      "order": 3000,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-140.0, 3250.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "the western swing out of Band 2, alongside the region's first wild cluster"
+    },
+    {
+      "order": 3001,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [-40.0, 3350.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "the wooded dip at the spine's westernmost point, near the night duskhush site"
+    },
+    {
+      "order": 3002,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-180.0, 3460.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.1,
+      "_why": "loose scree off the same rise the spine skirts before turning east"
+    },
+    {
+      "order": 3003,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [-90.0, 3500.0],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why": "the last gathering before the ground starts climbing into the relay approach"
+    },
+    {
+      "order": 3004,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [150.0, 3630.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "on the approach leg before the spine bends into the relay road, a stone's throw from the new camp clearing (vegetation.json order 3000)"
+    },
+    {
+      "order": 3005,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [270.0, 3820.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why": "on the relay's own back leg, out past the compound -- a reason to keep exploring after the captain rather than just doubling back"
+    },
+    {
+      "order": 3006,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [300.0, 3860.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "beside the burrowback cluster in the relay's own spoil banks"
+    },
+    {
+      "order": 3007,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-70.0, 4030.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "the approach to the Old Mill Crossing, on the south bank"
+    },
+    {
+      "order": 3008,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [-90.0, 4260.0],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why": "downstream of the crossing on the near-bank walk, clear of the gorge's own carved edge"
+    },
+    {
+      "order": 3009,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-120.0, 4280.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "_why": "river-worn stone along the same near-bank walk"
+    },
+    {
+      "order": 3010,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [80.0, 4420.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "past the crossing, on the run north -- the region's back half had nothing at all before this pass"
+    },
+    {
+      "order": 3011,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [190.0, 4600.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "the last stretch before Band 4, by the trailpup cluster that closes the region out"
+    },
+    {
+      "order": 3012,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [-60.0, 3240.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "T3-RELAY (ralph/reports/finding-post-tournament-cadence-2026-08-29.md): the region's own entrance carried nothing authored for 380m of its own territory before this pass -- the first authored beat a player met after crossing from Band 2 sat at order 3003, well past the region's own start point (0,3180). Seated directly on the spine's own first leg (point0->point1, `tools/_probe_gate_f_corridor.gd` measured min_dist ~0m), roughly midway along it, splitting the old 641m dead stretch measured at the band2/3 seam into two ~320m halves -- both inside the owner's 60-90s/240-360m cadence band. A stone's throw past bramblebun/mudsnout order 3009/3010's own western-approach clusters, so the region reads as populated from the seam itself rather than only once the relay road begins."
+    },
+    {
+      "order": 3013,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [110.0, 3960.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why": "T3-RELAY. The measured 679m dead stretch ran from the relay's own back-leg gathering (order 3006) straight through the four-trainer gauntlet's aftermath to the Old Mill Crossing's own approach (order 3009) with nothing authored in between -- exactly the ground the player crosses right after beating Captain Vance, which is the worst place in the region for the world to go quiet on a victory. Sited on the relay's own spoil ground, the same disturbed ground order 3002/3005/3006 already read off Team Tether's excavation."
+    },
+    {
+      "order": 3014,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [-60.0, 4110.0],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why": "T3-RELAY. The second half of the same 679m stretch, on the near-bank approach to the Old Mill Crossing itself -- the gear Sela hands over on rescue is what reopens this exact crossing, so gathering here is the first thing the player does on ground that was Team Tether's a few minutes ago and is the player's own again now."
+    },
+    {
+      "order": 3015,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [152.0, 4563.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "T3-RELAY, band4-seams follow-up. The chapter's own band3/4 seam gap (674m, `ralph/T3-BAND4` had already cut it from the finding's original 1,064m before this pass merged its work in) runs from Captain Riverwatch to T3-BAND4's own tree-line grove just past the region boundary at (0,4760) -- and the geometric midpoint of that gap (chapter distance ~7130 of 11519, checked against `tools/_probe_gate_f_corridor.gd`'s own 30m/spine-segment geometry the way every node in this file has been) falls on this band's OWN last leg (spine points 13->14, `terrain_playground.json`), not band4's. Placed here rather than in band4_upper_meadows_ironwood/harvest.json for that reason -- the fix belongs where the gap actually is. Splits the 674m gap into ~325m/~349m, both inside the owner's 60-90s/240-360m cadence band. Matches the region's own fiber convention (order 3010/3012)."
+    },
+    {
+      "order": 3016,
+      "item": "potion_small",
+      "amount": 1,
+      "label": "A stashed potion",
+      "at": [-140.0, 4175.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29: a potion wants to sit where a fight just went badly. On the Old Mill Crossing's south bank landing (props.json's own `_why_resited` -- the crossing's mill cluster stands here, 13-17m short of the narrows), right after the Relay assault's own gauntlet."
+    },
+    {
+      "order": 3017,
+      "item": "orb_basic",
+      "amount": 2,
+      "label": "A cache of orbs",
+      "at": [515.0, 4225.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29. Beside the tm_leviathan_surge detour (playground_world.gd TM_AT, (500,4240)) -- the same off-the-river-course detour that risks the apex Water TM now also pays orbs, matching band5's own precedent of stacking reasons to leave the road at one spot rather than scattering single-purpose stops."
+    },
+    {
+      "order": 3018,
+      "item": "hide_leggings",
+      "amount": 1,
+      "label": "A dropped pair of leggings",
+      "at": [165.0, 4548.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "T3-REWARD found `hide_leggings` fully modelled with zero acquisition path anywhere in the game. Beside the river fiber cut (order 3015) on the band3/4 seam gap's own fix -- gear left on the same disturbed ground. stack:1; a respawning crate is harmless."
+    },
+    {
+      "order": 3019,
+      "item": "attack_tonic",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [200.0, 3688.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: 'found in world / merchants' -- attack_tonic/swift_tonic/stoneguard_brew (items.json's own TEMPORARY tonic trio) were shop-only at Mira's (trade.json) before this pass, with no world presence at all. Beside the riverwatch_rest staging camp (props.json order 3000, centre (211,3700)) -- the one authored recovery/staging point before the Relay's own gauntlet, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
+    },
+    {
+      "order": 3020,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut river fiber",
+      "at": [-111.1, 3490.1],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_t3_density": "T3-DENSITY, Gap A. `tools/_probe_gate_f_corridor.gd` (2026-08-30 census) counts every harvest node within 30m of the spine, of any kind; narrowed to `kind: resource` items only (items.json), the band's ON-ROUTE crafting-material density is 6 nodes/2375m -- less than a third of Band 1's -- and the specific gap this closes ran a full 588m (spine points 0-6) with not one reachable crafting material on the required path, the worst resource-specific gap in the band. Placed 15m off the spine's own segment 3-4 (checked against `tools/_probe_gate_f_corridor.gd`'s own point-to-segment geometry, not eyeballed) and ground-checked (`tools/_probe_density_sites.gd`, worst slope 9.2 degrees over a 2m pad), splitting the gap into ~294m/~294m -- both inside the owner's 60-90s/240-360m cadence band already used elsewhere in this file. Fiber, matching the region's own established rotation and the saddle recipe's own real sink (recipes_rootstone.json's `saddle`, 8 fiber -- 'the one baseline material a player has no other Band-3 sink for')."
+    },
+    {
+      "order": 3021,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-82.2, 4086.9],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's second-worst on-route resource gap, 453m (order 3013's stone to order 3009's stone, spine points 8-9) -- more than a minute of walking with no reachable crafting material despite passing directly through the Old Mill Crossing approach. 15m off the spine (`tools/_probe_gate_f_corridor.gd` geometry), ground-checked (worst slope 10.8 degrees, `tools/_probe_density_sites.gd`), splitting the gap into ~227m/~227m. Wood rather than another stone, for material variety against its two stone neighbours either side."
+    },
+    {
+      "order": 3022,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [5.0, 4430.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.1,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's third on-route resource gap, 402m (order 3009's stone to order 3015's fiber, spine points 9-11), on the run north out of the region toward Band 4. On the spine itself (`tools/_probe_gate_f_corridor.gd` geometry places this within a few metres of the centreline, not a detour), ground-checked (worst slope 7.1 degrees at (5,4430) -- an earlier 15m-off candidate at (-11,4445) measured 16.4 degrees and was moved onto this flatter spot instead, `tools/_probe_density_sites.gd`), splitting the gap into ~201m/~201m."
+    },
+    {
+      "order": 3023,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [-64.0, 3247.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "_why": "T5-CADENCE, fixing T4-REGIONS' fifth-ranked chapter gap head-on: 'The resource ladder goes backwards. Band 2 introduces rootstone + ironwood; band 3 drops to wood/fiber/stone/berries.' MEADOWS_PROGRESSION_SPEC §10 and items.json's own `rootstone` comment agree there are exactly two tier materials in the whole biome, Rootstone then Ironwood, and a band that ships neither is a band whose economy is band 1's. Three deposits here and four Ironwood on the north bank (orders 3027-3030) put band 3 back on the ladder without turning it into a second Old Quarry: band 2 keeps five deposits and band 4 keeps ten trees, so the ladder still rises.\n\nSITED IN THE HAULAGE SPILL (props.json order 3005), not in open meadow, and that is the whole reason this is honest content rather than a number correction. items.json says Rootstone 'comes only from deep seams -- warrens, old quarry faces', and there is no seam in the river country; what there IS, is Team Tether's haul road out of Stone & Root. This is their load, off the sled and on the ground. Pickaxe-gated like all stone through `gathered_with` on the ITEM, never on the node."
+    },
+    {
+      "order": 3024,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [-75.5, 3255.5],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "_why": "Second of the spilled deposits, on the far side of the wreck so the three are not a line -- 3.5m clear of the nearest prop collider, the same separation band 2's quarry deposits keep from theirs."
+    },
+    {
+      "order": 3025,
+      "item": "rootstone",
+      "amount": 2,
+      "label": "Prise out rootstone",
+      "at": [-66.2, 3257.6],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "_why": "Third, downhill of the sled where a rolling block would actually have come to rest. 3.9m from the nearest prop, so no two interact prompts contest."
+    },
+    {
+      "order": 3026,
+      "item": "orb_greater",
+      "amount": 1,
+      "label": "A stashed orb",
+      "at": [-133.5, 3454.5],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "_why": "T5-CADENCE. What the Lockwater Overlook (props.json order 3006) PAYS. Exit criterion G9: 'Every detour pays into preparation ... No empty rewards' -- an overlook that is only a view is exactly the empty reward that clause exists to forbid. A Greater Orb rather than another potion because T4-REGIONS scored this band's roster temptation PARTIAL ('a player who crosses this band in clear weather by day sees ZERO new species'), and the one thing that changes what a player can do about a creature they suddenly want is a better orb. Set behind the shelf's largest stone, 3.9m clear of it, so it is found by walking onto the overlook rather than seen from the trail."
+    },
+    {
+      "order": 3027,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [72.5, 4494.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "_why": "T5-CADENCE, the Ironwood half of the same fix -- see order 3023's note. Sited in the north-bank cutting (props.json order 3008), on the climb OUT of the river country toward the band the Ironwood Grove is named for, which is where items.json's 'old-growth stands' actually are. Four trees at 3 each: a taste and a foreshadow of band 4's ten, and enough to matter to a player who arrives at the crossing having spent their band-2 stock on the relay. Same TwistedTree models and same amount band 2's own ironwood uses; axe-gated through the item."
+    },
+    {
+      "order": 3028,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [84.5, 4494.5],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "_why": "Second of the north-bank stand, east of the cutting."
+    },
+    {
+      "order": 3029,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [71.0, 4506.5],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
+      "_why": "Third, uphill and behind the cutting -- the stand continues past the felled round, which is what makes the site read as work interrupted rather than work finished."
+    },
+    {
+      "order": 3030,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [86.0, 4505.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "_why": "Fourth and last. All four sit 6-10m out from the cutting's own props so no tree collider touches a crate's."
+    },
+    {"order": 3040, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [-112.0, 3302.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.9, "_why": "W17-DENSITY-B2-B3. Loose stone on the wreck road under the pipwing at (-90,3300): the river country's first stone past the haulage wreck's own Rootstone."},
+    {"order": 3041, "item": "berries", "amount": 3, "label": "Pick berries", "at": [-32.0, 3302.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries on the wreck road's east verge opposite the stone: the band opens with a gather pair, one each side of the road."},
+    {"order": 3042, "item": "wood", "amount": 4, "label": "Gather deadwood", "at": [-202.0, 3422.0], "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf", "model_scale": 0.22, "_why": "W17-DENSITY-B2-B3. Deadwood on the Stonewater Reach's west shelf by the mosshell (spawns 3060) and the Good Candy at (-176,3402): the Reach had one stone node and no wood."},
+    {"order": 3043, "item": "berries", "amount": 3, "label": "Pick berries", "at": [-172.0, 3482.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries below the lockwater overlook between its stone at (-180,3460) and the fiber at (-111,3490)."},
+    {"order": 3044, "item": "fiber", "amount": 4, "label": "Cut river fiber", "at": [42.0, 3522.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. River fiber in the spring meadow beside the Good Candy at (58,3538): the spring's own reeds."},
+    {"order": 3045, "item": "wood", "amount": 4, "label": "Gather deadwood", "at": [-12.0, 3604.0], "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf", "model_scale": 0.24, "_why": "W17-DENSITY-B2-B3. Deadwood at the springhead's east side by the mudsnout at (12,3581): the springhead is a place with a Great Candy, an Elder and now something to gather."},
+    {"order": 3046, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [122.0, 3562.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 1.0, "_why": "W17-DENSITY-B2-B3. Loose stone on the relay road's east verge between the spring and the camp, under the pipwing at (72,3568)."},
+    {"order": 3047, "item": "berries", "amount": 3, "label": "Pick berries", "at": [188.0, 3718.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries at the camp clearing's west edge (clearing (210,3700) r11): the band's only rest had no food at it."},
+    {"order": 3048, "item": "wood", "amount": 4, "label": "Gather deadwood", "at": [346.0, 3892.0], "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf", "model_scale": 0.22, "_why": "W17-DENSITY-B2-B3. Deadwood on the relay loop's east leg ((340,3810)->(320,3890)) by the pipwing perch (spawns 3061): the loop's far leg gathers."},
+    {"order": 3049, "item": "fiber", "amount": 4, "label": "Cut river fiber", "at": [232.0, 3952.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. River fiber on the loop's south leg (loop point (230,3940)) beside the Good Candy at (252,3928)."},
+    {"order": 3050, "item": "berries", "amount": 3, "label": "Pick berries", "at": [152.0, 3996.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries at the loop's rejoin (130,3980) by the stone at (110,3960) and the trailpup (spawns 3069)."},
+    {"order": 3051, "item": "fiber", "amount": 4, "label": "Cut river fiber", "at": [-86.0, 4216.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. River fiber on the near bank by the mill crossing gear (props 3003 at (-157,4187)) and the rain reedwing at (-116,4175)."},
+    {"order": 3052, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [-68.0, 4342.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 0.9, "_why": "W17-DENSITY-B2-B3. Loose stone on the far bank's draw beside the brooktail bank (spawns 3063), before Oreth."},
+    {"order": 3053, "item": "berries", "amount": 3, "label": "Pick berries", "at": [-22.0, 4402.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries on the far bank between Oreth's draw and the spine's (30,4460): the far-bank walk had stone and berries at the landing and nothing after the captain."},
+    {"order": 3054, "item": "stone", "amount": 3, "label": "Prise loose stones", "at": [58.0, 4562.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "model_scale": 1.0, "_why": "W17-DENSITY-B2-B3. Loose stone on the north bank between the burrowback at (50,4524) and the meadowhart pair (spawns 3064)."},
+    {"order": 3055, "item": "wood", "amount": 4, "label": "Gather deadwood", "at": [132.0, 4692.0], "model": "res://assets/environment/stylized_nature/DeadTree_1.gltf", "model_scale": 0.24, "_why": "W17-DENSITY-B2-B3. Deadwood on the north bank's last leg ((160,4570)->(110,4690)) under the pipwing at (151,4643): the band's last wood before the Ironwood Grove."},
+    {"order": 3056, "item": "berries", "amount": 3, "label": "Pick berries", "at": [40.0, 4682.0], "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf", "model_scale": 1.2, "_why": "W17-DENSITY-B2-B3. Berries on the seam approach by the bramblebun verge (spawns 3066): the band-4 seam is met with food in hand."},
+    {"order": 3057, "item": "fiber", "amount": 4, "label": "Cut river fiber", "at": [-32.0, 4742.0], "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf", "model_scale": 1.3, "_why": "W17-DENSITY-B2-B3. River fiber at the seam beside the meadowhart at (-6,4740): the last gather of the river country."}
+  ]
+}

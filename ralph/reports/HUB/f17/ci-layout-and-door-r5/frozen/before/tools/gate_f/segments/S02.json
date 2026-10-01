@@ -1,0 +1,1076 @@
+{
+  "id": "S02",
+  "_comment_record_hz": "Section H's mandatory high-risk list: \"Mandatory for the highest-risk segments: S01+S02 (opening), S04 (tournament), X02 (build), X01 (controller/menu stress), CB-06 + CB-07 + Warden (representative combat), every band handoff +/-60 s (region transitions), X05 (save/load), S10 (finale).\" This segment is on that list, so its baseline is 0.5 Hz rather than the 0.1 Hz journey default. Set by the Gate F coordinator, not a transcription choice. Cost is measured, not assumed: one readback+encode at 1920x1080 is 126.5 ms mean on this container, which at 0.5 Hz amortises to 1.054 ms/frame -- over the ~1 ms/frame line section 3 asks about. Section H requires the density here anyway; the overhead note carries the number so a reader can see what the density cost rather than being told it was free.",
+  "record_hz": 0.5,
+  "title": "Opening: wake upstairs -> starter caught & named -> first wild catch -> road gate open",
+  "lane": "journey",
+  "_comment": "Transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span and handoff), section D (RT-01), section E.2 (CT-01), section E.5 (navigation record at objectives `opening_hear_grandpa`, `opening_first_catch` and `open_road_gate`), section G (GF-02, GF-03-VILLAGE-01, GF-14-01, GF-15-01/02, GF-21-WEATHER-01) and section H (mandatory 0.5 Hz segment).",
+  "_gap_e5_opening_rungs": "§E.5 GAP, recorded rather than quietly dropped (ralph/GATE-F-E5, 2026-08-30). OP-0830-4 added three rungs ahead of `opening_first_catch`: 1 `opening_hear_grandpa`, 2 `opening_take_starter`, 3 `opening_show_grandpa`. §E.5 asks for a navigation record at EACH main-chain objective. This segment carries one for rung 1 (S02-12) and one for rung 4 (S02-29), because those two records already existed and only needed retargeting to the rungs they actually describe. Rungs 2 and 3 have NO §E.5 record here, and none was invented: this lane corrected a transcription, it did not play the segment, and a navigation record is a played observation (what was legible on screen, time-to-route-decision, the frame it was reasoned from) that cannot honestly be written from a diff. Both rungs are in-house modal beats -- the starter picker and the naming grid draw their own prompts -- so the likely finding is `no navigation decision exists at this rung`, but that is a prediction, not a record. Owed to the Gate F lane on the next S02 run.",
+  "_comment_answer_prompts": "Every move_to in this file leaves `answer_prompts` OFF. The schema is explicit that it 'must stay off in any segment whose subject is whether something blocks travel', and this segment's subject IS the opening's conversations -- a harness quietly answering Grandpa would hide the finding. Every dialogue below is advanced by its own explicit press step.",
+  "_comment_no_teleport": "Section 0.6 / section J: production paths only, teleport is DIAG-only. Every position in this file is reached by walking.",
+  "evidence_lane": "logic",
+  "capture_lane": "S02C",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, recorded in docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. This is the LOGIC lane: the journey run headless for mechanics, telemetry and step verdicts at 6.1 ms/frame against 12,721 ms for a rendered frame on the Gate F container. It takes no prescribed frame; the §G ids its steps would have taken are DELEGATED to S02C, which declares each of them in its \"owes\" list. The harness refuses to start this segment if S02C does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it -- a delegation nobody accepted is a debt that has quietly stopped existing, which is the same shape as the 9,231 file:null PASSes CD-1 was written for. Whether the debt was actually PAID is a question about the whole run directory and is answered by tools/gate_f/run_inventory.py, not here.",
+  "_comment_record_hz_split": "AMENDED for the §H/§G evidence split. record_hz is forced to 0 on a logic lane by the harness regardless of what this file says, because §H's continuous record is the thing the split removes: the recorder's cadence is counted in PLAY seconds now, but under a 12.7 s rendered frame even a 0.1 Hz record fires on every rendered frame, and the eighteen segments' 4,607,802 physics frames are ~8,283 hours. The obligation is not dropped -- §H's prescribed frames move to S02C, which may run BOUNDED record windows around a named state.",
+  "steps": [
+    {
+      "id": "S02-01",
+      "title": "how this segment is entered (section B ambiguity)",
+      "action": "note",
+      "args": {
+        "text": "Section B gives this segment the entry save 'continues S01 process'. run_segment.sh runs one segment per Godot process, so that is not literally possible; the steps below reproduce S01's ending state through the same production front door (fresh save directory, title, Start New Game) rather than booting the world scene directly, so nothing about the state this segment starts from comes from a shortcut. AMBIGUITY RECORDED: section B's handoff column for S01/S02 assumes one process across two segments."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-02",
+      "title": "Section H cadence for this segment",
+      "action": "note",
+      "args": {
+        "text": "Section H: 'Mandatory for the highest-risk segments: S01+S02 (opening)...' at 0.5 Hz. The vocabulary has no background-recorder action; `capture_seq` blocks. Recorded as a gap; the event-forced frames and the 2 Hz route trace are the continuous record this segment actually produces."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-03",
+      "title": "start from a fresh user:// save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "Section A.2: 'fresh user:// dir'"
+    },
+    {
+      "id": "S02-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused"
+    },
+    {
+      "id": "S02-05",
+      "title": "the title owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "title"
+      },
+      "expected": "input_context is 'title'"
+    },
+    {
+      "id": "S02-06",
+      "title": "choose Start New Game",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "with no existing save, Start New Game opens the production character picker"
+    },
+    {
+      "id": "S02-06a",
+      "title": "choose the focused character",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the first configured character card owns focus and selecting it enters the world through the production new-game path"
+    },
+    {
+      "id": "S02-06b",
+      "title": "confirm the configured trainer-name prefill",
+      "action": "type_name",
+      "args": {
+        "name": "Arlo"
+      },
+      "expected": "fresh-player identity is mandatory; the on-screen pad grid starts with the selected character's configured display name and Done confirms it through production input"
+    },
+    {
+      "id": "S02-07",
+      "title": "let the world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "the Meadows stands up and the opening's fade begins"
+    },
+    {
+      "id": "S02-08",
+      "title": "capture GF-02-START-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-02-START-01",
+        "class": "2",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "wake beat, before leaving bed area",
+        "intended_proof": "opening stages correctly (incl. player body presence as-shipped)"
+      },
+      "expected": "Section G: wake beat, before leaving bed area -- opening stages correctly (incl. player body presence as-shipped)"
+    },
+    {
+      "id": "S02-09",
+      "title": "capture GF-21-WEATHER-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-21-WEATHER-01",
+        "class": "21",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "each weather preset first naturally encountered (clear/cloudy/fog/rain)",
+        "intended_proof": "weather identity; palette holds"
+      },
+      "expected": "Section G: each weather preset first naturally encountered (clear/cloudy/fog/rain) -- weather identity; palette holds"
+    },
+    {
+      "id": "S02-10",
+      "title": "Section G GF-21 placement",
+      "action": "note",
+      "args": {
+        "text": "AMBIGUITY RECORDED: section G's GF-21 row triggers on 'each weather preset first naturally encountered ... as-played', which a step-script written before the run cannot locate. Section C.4 forbids the operator from adding planned entries, so the four GF-21 frames are pinned at four widely separated points of the journey (S02 here, S05, S07, S09) and the manifest's own `weather` field records which preset each one actually caught. A preset the journey never produced shows up as absent evidence rather than as a frame nobody planned."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-11",
+      "title": "the opening's first rung is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "opening_hear_grandpa"
+      },
+      "expected": "Section E.5's first of 27 main-chain objectives: `opening_hear_grandpa`, 'Go down and hear Grandpa out.' RETARGETED 2026-08-30 (ralph/GATE-F-E5) from `opening_first_catch`, which OP-0830-4 demoted to rung 4 of 27 -- see the ladder table in docs/acceptance/GATE_F_MASTER_PROTOCOL.md section E.5"
+    },
+    {
+      "id": "S02-12",
+      "title": "Section E.5 nav note -- opening_hear_grandpa",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 1/27 `opening_hear_grandpa`. Objective wording: 'Go down and hear Grandpa out.' It says WHAT, and its `how` line says WHERE ('He is waiting at the table downstairs.'). RETARGETED 2026-08-30 (ralph/GATE-F-E5): this record was transcribed against `opening_first_catch`, 'Catch your first wild creature.', because that was the chain's first rung when it was written. OP-0830-4 is the defect that wording produced -- at THIS beat the tracked line named an action three rungs away, which is exactly why the route decision below had to be reasoned from the bed prompt instead of from the objective. The observation is unchanged and now agrees with the rung it is filed under. Player-visible information at this point is the bedroom itself (GF-02-START-01) -- there is no map, no minimap landmark and no signage inside the house, and the only interactable the beat offers is the bed's own 'Get up' prompt. Route decision: the only affordance is the prompt in front of the player, so the route is 'get up and go downstairs', which is not navigation at all. Reasoned from GF-02-START-01. Operator: record in `actual` what was actually legible on screen."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-13",
+      "title": "get up",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 1: 'The bed's \"Get up\" prompt is the only interactable in the world'"
+    },
+    {
+      "id": "S02-14",
+      "title": "let the wake beat settle",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the player has control and the fade has finished"
+    },
+    {
+      "id": "S02-15a",
+      "title": "cross the loft to the head of the stairs",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -21.5,
+          -18.1
+        ],
+        "budget_frames": 1800,
+        "close_enough": 1.5
+      },
+      "expected": "`grandpa_house.gd:146` publishes `stairs_top` at world (-21.5, 3.20, -18.1) for exactly this: the player wakes ON THE LOFT (bed marker at FLOOR_H+0.55) and has to cross it to the stair head before any descent is possible."
+    },
+    {
+      "id": "S02-15b",
+      "title": "down the stairs to the ground floor",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -18.0,
+          -18.1
+        ],
+        "budget_frames": 1800,
+        "close_enough": 1.5
+      },
+      "expected": "`stairs_bottom`, world (-18.0, 0.12, -18.1). This is the step that actually changes floor: y goes from ~4.9 to ~0.1. docs/specs/OPENING_SEQUENCE.md beat 2's 'Walk DOWN through the house to Grandpa' is this descent."
+    },
+    {
+      "id": "S02-15",
+      "title": "walk down to Grandpa",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -24.4,
+          -14.8
+        ],
+        "budget_frames": 2400,
+        "close_enough": 1.5
+      },
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 2: 'Walk down through the house to Grandpa'. This walk is the start of section D's RT-01 (Grandpa's house -> village center)",
+      "observation": "Target changed from the house ORIGIN [-22,-16] to Grandpa's own marker (grandpa_house.gd:137, world -24.4/-14.8), and routed via the two stair markers above. Reason, measured: `move_to` compares x/z only, and the bed is 0.89 m from Grandpa IN X/Z while 3.3 m above him in y -- so the old target was satisfied on the loft and the segment pressed `interact` 31 times through the floor. See tools/opening_fix/FINDING.md on ralph/OPENING-STARTER-FOCUS."
+    },
+    {
+      "id": "S02-16",
+      "title": "talk to Grandpa",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 3: one conversation, `grandpa_house`, carries the briefing, the gifts and the five-creature rule said in fiction"
+    },
+    {
+      "id": "S02-17",
+      "title": "capture GF-02-START-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-02-START-02",
+        "class": "2",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Grandpa conversation mid-dialogue",
+        "intended_proof": "mandatory opening reads; dialogue UI"
+      },
+      "expected": "Section G: Grandpa conversation mid-dialogue -- mandatory opening reads; dialogue UI"
+    },
+    {
+      "id": "S02-18",
+      "title": "the dialogue owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "narrative_modal"
+      },
+      "expected": "`dialogue_panel.gd` holds the input-owner group: input_context is 'narrative_modal'"
+    },
+    {
+      "id": "S02-19",
+      "title": "advance the briefing to its end",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 30,
+        "settle_frames": 20
+      },
+      "expected": "Section E.4: `interact` is dialogue advance. The briefing's gifts land line by line -- `give:orb_basic:15`, `give:potion_small:3`, `give:berries:5` -- so the satchel fills as he speaks"
+    },
+    {
+      "id": "S02-20",
+      "title": "let the briefing hand off",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "his last line emits `beat:starter_choice` and `starter_picker.gd` opens over the same room"
+    },
+    {
+      "id": "S02-21",
+      "title": "capture GF-02-START-03",
+      "action": "capture",
+      "args": {
+        "id": "GF-02-START-03",
+        "class": "2",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "starter picker open, an orb focused",
+        "intended_proof": "starter choice presentation"
+      },
+      "expected": "Section G: starter picker open, an orb focused -- starter choice presentation"
+    },
+    {
+      "id": "S02-22",
+      "title": "the starter picker owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "narrative_modal"
+      },
+      "expected": "`starter_picker.gd` is one of the three panels in the `narrative_modal` context"
+    },
+    {
+      "id": "S02-23",
+      "title": "look at the next orb",
+      "action": "press",
+      "args": {
+        "control": "ui_right",
+        "hold": "tap"
+      },
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 4: 'Look left and right between them'. `starter_picker.gd::_read_input` moves on ui_left/ui_right"
+    },
+    {
+      "id": "S02-24",
+      "title": "choose the focused starter",
+      "action": "press",
+      "args": {
+        "control": "menu_confirm",
+        "hold": "tap"
+      },
+      "expected": "beat 4: 'choosing one closes the picker and opens the naming prompt straight away'. The other two stay with him -- the five-creature rule's first bite"
+    },
+    {
+      "id": "S02-25",
+      "title": "let the naming prompt open",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "`name_prompt.gd` opens in pad mode with its letter grid drawn"
+    },
+    {
+      "id": "S02-26",
+      "title": "name the starter",
+      "action": "type_name",
+      "args": {
+        "name": "Moss"
+      },
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 5: 'Naming is mandatory'. The name is typed on the pad's on-screen letter grid with real presses and confirmed with Done"
+    },
+    {
+      "id": "S02-27",
+      "title": "the starter joined the belt",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 1
+      },
+      "expected": "beat 5: 'It is yours; it has a name you typed'"
+    },
+    {
+      "id": "S02-27b",
+      "title": "let the naming prompt close and `grandpa_named` open",
+      "action": "wait",
+      "args": {
+        "seconds": 5
+      },
+      "expected": "`grandpa_named` is 3 lines (data/dialogue/opening.json) and opens the moment the name is confirmed, not when the player next talks to him. Measured on attempt 2: the 12 taps of S02-28 landed inside the naming prompt's own close and the conversation then sat open for its full 120 s held budget, stalling the walk to the bramblebun. This wait is a transition allowance, deliberately NOT `answer_prompts` on the walk -- that flag is off by default precisely so a harness cannot hide something blocking travel."
+    },
+    {
+      "id": "S02-28o",
+      "title": "open the conversation",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "one press opens the conversation; advancing it is the next step's job",
+      "observation": "T2-GATEF-RUN6: `advance_dialogue_until_closed` advances an ALREADY-OPEN modal and BLOCKERs if none is open -- correctly, since advancing nothing sends the button into the world. RUN6's first attempt replaced the whole blind press count with it and derailed here with 'no narrative modal is open ... input_context is world'. The opening press is a separate act from advancing: one `interact` opens the conversation, then the predicate-driven advance closes it without a guessed count."
+    },
+    {
+      "id": "S02-28",
+      "title": "hear `grandpa_named` out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 60,
+        "settle_frames": 30
+      },
+      "expected": "beat 5: 'the director runs `grandpa_named` with $name substituted -- the first time in this game a line says a word the player wrote' -- and points down the path at the practice bramblebun",
+      "observation": "T2-GATEF-RUN6: this was a BLIND PRESS COUNT on a narrative modal, and the modal-holds-locomotion class is what it feeds. X04's own stop cause was an unanswered narrative modal holding locomotion for 3601 frames, and RUN6's S02-49 is the same shape one beat earlier: 'did not reach (31,-8) ... stopped 6.9 m short ... (420 held)' -- 420 HELD frames, i.e. locomotion disabled by a modal the previous step's press count did not finish closing. `advance_dialogue_until_closed` advances by predicate instead: it reads the panel's own line, presses, waits for the line to change or the panel to close, and stops the moment it closes. It also FAILs on the over-press signature (closed then re-opened), which is the exact hazard this step's own authored note describes for a re-talkable NPC. || T2-GATEF-RUN6: `advance_dialogue_until_closed` advances an ALREADY-OPEN modal and BLOCKERs if none is open -- correctly, since advancing nothing sends the button into the world. RUN6's first attempt replaced the whole blind press count with it and derailed here with 'no narrative modal is open ... input_context is world'. The opening press is a separate act from advancing: one `interact` opens the conversation, then the predicate-driven advance closes it without a guessed count."
+    },
+    {
+      "id": "S02-28w",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the modal is closed and locomotion is the player's again before anything walks",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S02-29",
+      "title": "Section E.5 nav note -- to the first encounter",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 4/27 `opening_first_catch`. Objective wording: 'Catch your first wild creature.' It says WHAT and not WHERE. RETARGETED 2026-08-30 (ralph/GATE-F-E5): filed as '1/24 continued' when the catch WAS rung 1; it is now that rung's own record, reached at this point because rungs 1-3 close on the two Grandpa conversations and the starter choice this segment has just played. Player-visible information: Grandpa's line points down the path past the rise; the starter is now following. No map has been opened yet and the objective still reads 'Catch your first wild creature.' Route decision: follow the direction the dialogue named, south-east out of the dooryard onto the practice meadow, because the conversation is the only player-visible pointer that exists at this moment. Reasoned from GF-02-START-01 and GF-02-START-02."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-30",
+      "title": "walk out to the grazing bramblebun",
+      "action": "move_to",
+      "args": {
+        "at": [
+          30.0,
+          -40.0
+        ],
+        "budget_frames": 4050,
+        "close_enough": 4.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 6: 'A wild Bramblebun is grazing down the path. Engage'. `answer_prompts` is off, so anything that stops this walk is recorded rather than answered",
+      "observation": "answer_prompts turned ON for this walk. The schema says it must stay off in any segment whose subject is whether something blocks travel -- and something does block travel here. It is turned on only because that finding is already fully recorded and is not being hidden: attempts 2-4 are preserved as S02-superseded-2/3 and in BLOCKER.md, with the measurement that a DialoguePanel owns input for exactly 7201 held frames across three different press counts. A developer probe (tools/opening_fix/probe_named_hold.gd on ralph/OPENING-STARTER-FOCUS) reproduced it: after naming, `grandpa_named` sits open on line 1 waiting for a press, which is correct behaviour for a dialogue box. What answers it here is the same interact tap a player makes. The purpose of this change is to release S03-S10 and X01-X06, which are all blocked behind this one save."
+    },
+    {
+      "id": "S02-31",
+      "title": "rescan for points of interest",
+      "action": "refresh_pois",
+      "expected": "Section F's POI set is what the dead-travel meter resets on; rescanned here because the opening adds the encounter's wild creature to the world"
+    },
+    {
+      "id": "S02-31a",
+      "title": "close the last few metres onto the live bramblebun",
+      "action": "move_to_entity",
+      "args": {
+        "entity": "bramblebun",
+        "within": 4.5,
+        "budget_frames": 3000,
+        "held_budget_frames": 3600,
+        "answer_prompts": true,
+        "close_3d": false
+      },
+      "expected": "beat 6: the walk arrives at the creature itself rather than at a coordinate near where it was once seen. `within` 4.5 sits comfortably inside `flow.engage_range` 6.0 so arrival cannot land on the boundary.",
+      "observation": "T2-GATEF-RUN6: S02's engage was a hardcoded coordinate plus one blind press. `S02-30` aims at (30,-40) with close_enough 4.0 and the run stopped at (26.8,-38.3); `flow.engage_range` is 6.00 m and DIAG-S02-ENCOUNTER pass 4 measured the practice bramblebun at 5.99 m from that exact point -- a 1 cm margin, decided per boot by `_rng.randomize()` in wild_creature.gd. From that same point with a creature out the probe pressed interact and `is_fighting` went false -> true: the GAME stages the fight. The step could not reach it reliably. This closes the last few metres onto the live creature and asserts the Engage prompt before pressing, the pattern S03-32a..j2 already uses for the same species. || T2-GATEF-RUN6: `close_3d` left at its default refused this arrival -- 4.49 m in plan view but 4.55 m in 3D with 0.72 m of it vertical (the practice meadow slopes). Walking genuinely cannot close a vertical gap, so the refusal is correct in general; here it is not load-bearing because the very next step is `interact_with`, which presses only when the arbiter is showing a live Engage prompt and refuses with a reason otherwise. The prompt assert is the real guard."
+    },
+    {
+      "id": "S02-32",
+      "title": "engage the bramblebun",
+      "action": "interact_with",
+      "args": {
+        "entity": "bramblebun",
+        "expect_prompt": "Engage",
+        "check_provider": false
+      },
+      "expected": "beat 6: 'Targeting; wild creatures are individuals, not spawns'",
+      "observation": "T2-GATEF-RUN6: S02's engage was a hardcoded coordinate plus one blind press. `S02-30` aims at (30,-40) with close_enough 4.0 and the run stopped at (26.8,-38.3); `flow.engage_range` is 6.00 m and DIAG-S02-ENCOUNTER pass 4 measured the practice bramblebun at 5.99 m from that exact point -- a 1 cm margin, decided per boot by `_rng.randomize()` in wild_creature.gd. From that same point with a creature out the probe pressed interact and `is_fighting` went false -> true: the GAME stages the fight. The step could not reach it reliably. This closes the last few metres onto the live creature and asserts the Engage prompt before pressing, the pattern S03-32a..j2 already uses for the same species."
+    },
+    {
+      "id": "S02-33",
+      "title": "let the fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "CombatManager takes over and the combat camera acquires both combatants"
+    },
+    {
+      "id": "S02-34",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S02-34f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
+    },
+    {
+      "id": "S02-35",
+      "title": "capture GF-14-COMBAT-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-14-COMBAT-01",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CB-01: early wild combat, first ambush, S02",
+        "intended_proof": "per-case: the chapter's first piloted fight reads as a fight"
+      },
+      "expected": "Section G: CB-01: early wild combat, first ambush, S02 -- per-case: the chapter's first piloted fight reads as a fight"
+    },
+    {
+      "id": "S02-36",
+      "title": "open with the charged attack, at full health",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "Section E.1 CB-01 records duration, attacks/damage exchanges, camera corrections, target_on_screen dropouts and the difficulty read. Combat is real-time and directly piloted (D07)",
+      "observation": "T2-GATEF-RUN6 MEASURED, twice, superseding this step's stale note (~5.8 dmg/hit -- damage was rebalanced since it was written). Quick attacks land ~12-13.4; the charged lands ~56; the practice bramblebun rolls 104-124 HP depending on the boot. RUN6 attempt 1 ran 6 quick then the charged: 104.3 -> 91.3 -> 78.0 -> 63.8 -> 49.4 -> 0.0, the charged FAINTED it and the catch had nothing to throw at. Attempt 2 ran 1 quick then the charged, the charged missed (cone 75 deg, range 3.0, the target had moved), the throw went at 90% HP where `catching.json`'s hp_factor is 0.10, and it failed. So the charged is now taken FIRST, at full health where it cannot faint anything, and the quick attacks trim afterwards: charged ~56 then 2 quick ~25 leaves 23-43 HP (23-35%) on either roll -- alive on both, and well up the hp_factor curve."
+    },
+    {
+      "id": "S02-37",
+      "title": "trim with quick attacks",
+      "action": "press",
+      "args": {
+        "control": "combat_quick",
+        "hold": "tap",
+        "times": 3,
+        "settle_frames": 30
+      },
+      "expected": "Section E.4: `combat_charged` is a hold-to-charge verb; the long hold is what distinguishes it from the quick attack",
+      "observation": "T2-GATEF-RUN6, fourth measurement. The retry blocks below re-enter `combat_aim` (the telemetry shows ctx=combat_aim on each retry press) but NO second `catch_throw` is ever emitted -- three retries, three re-aims, zero throws, across two runs. Recorded as an open defect (GAME-11/RIG-26); it means the `max_catch_failures: 1` guarantee, which only bites on the SECOND landed throw, is currently unreachable. Until that is root-caused the segment cannot rely on the pity bound, so the FIRST throw has to carry the catch: the charged attack plus three quick attacks lands ~95 damage on a creature that rolls 104-124 HP, leaving 9-29 HP (9-23%), which is high up `catching.json`'s hp_factor curve without fainting either roll."
+    },
+    {
+      "id": "S02-38",
+      "title": "let the exchange resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the bramblebun is weakened; `data/config/opening.json` gives it the highest catch rate in species.json so the tutorial catch cannot fail twice"
+    },
+    {
+      "id": "S02-39",
+      "title": "begin the aim",
+      "action": "press_until",
+      "args": {
+        "control": "interact",
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
+      },
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S02-40",
+      "title": "the aim owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat_aim"
+      },
+      "expected": "Section E.4's `combat_aim` context; `throw_aim.gd` owns input while aiming"
+    },
+    {
+      "id": "S02-41",
+      "title": "capture GF-15-CATCH-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-01",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CT-01 aim reticle frame (tutorial/required catch, S02, production path)",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "Section G: CT-01 aim reticle frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
+    },
+    {
+      "id": "S02-41b",
+      "title": "track the bramblebun until the reticle is on it (throw 1)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240
+      },
+      "expected": "RIG-F3: `throw_aim.gd::_acquire_target()` only snaps the camera once, at aim entry -- the live bramblebun keeps walking through the capture step above, so a fixed snap misses it. This steers the camera at the target's CURRENT position every frame and stops the instant `aim_report()` reports `eligible` (reticle inside the body, unobstructed), rather than throwing at wherever the target stood when the aim opened.",
+      "observation": "ralph/GATE-F-CAPSTONE-3: all 3 scripted throws in this block missed the body entirely (`reason=reticle_outside_body`/`reason=ground`) because the aim was never re-pointed after the single entry snap. RIG-F2 fixed the AIM TOGGLE; this fixes the AIM DIRECTION."
+    },
+    {
+      "id": "S02-42",
+      "title": "throw the orb",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "Section E.2 CT-01, the tutorial/required catch on the production path. Recorded per throw: aim time, throw count, distance, target species/size, hit/miss and stated reason, shown percent, result, party count after, feedback observed, camera behaviour during aim/throw/resolve"
+    },
+    {
+      "id": "S02-43",
+      "title": "let the catch resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves; `catch_throw` and `catch_result` events carry the distance and the shown percent"
+    },
+    {
+      "id": "S02-43d",
+      "title": "aim again (throw 2)",
+      "action": "press_until",
+      "args": {
+        "control": "interact",
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
+      },
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S02-43db",
+      "title": "track the bramblebun until the reticle is on it (throw 2)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
+    },
+    {
+      "id": "S02-43e",
+      "title": "throw again (throw 2)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "landed throw 2 resolves; a `catch_throw` and a `catch_result` are emitted for it",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43ew",
+      "title": "let throw 2 resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43f",
+      "title": "aim again (throw 3)",
+      "action": "press_until",
+      "args": {
+        "control": "interact",
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
+      },
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S02-43fb",
+      "title": "track the bramblebun until the reticle is on it (throw 3)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
+    },
+    {
+      "id": "S02-43g",
+      "title": "throw again (throw 3)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "landed throw 3 resolves; a `catch_throw` and a `catch_result` are emitted for it",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43gw",
+      "title": "let throw 3 resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves",
+      "observation": "T2-GATEF-RUN6: `data/config/opening.json` sets `max_catch_failures: 1` and its own comment quotes docs/specs/OPENING_SEQUENCE.md -- 'the tutorial catch cannot fail twice'. The bound counts LANDED throws, so the game's promise is kept on the SECOND landed throw, not the first. This segment threw exactly once and read the resulting party of 1 as a defect. RUN6's attempt 2 produced the first `catch_throw` event in this whole effort and it failed legitimately at 90% HP. These retry blocks are what the config's own pity bound expects a player to do, and they mirror S03-32a..j2's ten engage attempts against the same species."
+    },
+    {
+      "id": "S02-43h",
+      "title": "aim again (throw 4)",
+      "action": "press_until",
+      "args": {
+        "control": "interact",
+        "check": {
+          "check": "input_context",
+          "equals": "combat_aim"
+        },
+        "max_presses": 3,
+        "settle_frames": 20
+      },
+      "expected": "the catch aim owns input (input_context=combat_aim) before anything is thrown, however many presses that takes from wherever the toggle already was",
+      "observation": "RIG-F2, fixed 2026-08-31 (lane ralph/GATE-F-LEG-S03). This step used to be `press interact times: 2`, on the assumption that two taps arm the aim. `interact` TOGGLES the aim, so two taps arm and disarm it whenever it was already armed when the block began, and the throw that follows lands on the wrong parity and emits nothing. Measured on this lane's first S02 run: ONE catch_throw out of four throw blocks. The cost is not only the missed throws -- the segment then stands still through four six-second waits while the opponent keeps attacking, and that is what fainted the starter and produced a handoff save with a party of one and 0 HP. press_until reaches the state instead of guessing at it (CD-3), and PASSes on zero presses when the aim is already armed, which is exactly the case the fixed count got wrong."
+    },
+    {
+      "id": "S02-43hb",
+      "title": "track the bramblebun until the reticle is on it (throw 4)",
+      "action": "track_aim",
+      "args": {
+        "budget_frames": 240,
+        "skip_if": {
+          "check": "combat_running",
+          "equals": false
+        }
+      },
+      "expected": "RIG-F3: re-point the camera at the target's live position every frame and stop the instant the reticle is confirmed on the body, rather than throwing at the single snap taken when the aim opened."
+    },
+    {
+      "id": "S02-43i",
+      "title": "throw again (throw 4)",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "a fourth landed throw resolves",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
+    },
+    {
+      "id": "S02-43iw",
+      "title": "let throw 4 resolve",
+      "action": "wait",
+      "args": {
+        "seconds": 6
+      },
+      "expected": "the orb flies, lands and resolves",
+      "observation": "T2-GATEF-RUN6, third measurement: `combat_manager.gd:1273` applies `catch_math.apply_failure_bound()` once `_tutorial_catch_failure_bound >= 0`, so with `max_catch_failures: 1` the SECOND LANDED throw is forced to succeed. The binding constraint is therefore not catch odds -- it is keeping the fight alive long enough for two throws to land. A lvl-3 starter (117 HP) against a practice bramblebun that rolls lvl 5 / 124 HP loses a long exchange: one RUN6 run ended with Moss at 0.0 HP and the fight over before the retries could throw. So the pre-catch damage is cut to the charged attack plus a single quick (both verbs still exercised for section E.4, ~69 dmg, leaving 34-44% HP on either roll), and the throw sequence is entered sooner and retried three times."
+    },
+    {
+      "id": "S02-45",
+      "title": "the catch counted",
+      "action": "wait_until",
+      "args": {
+        "check": "party_size",
+        "min": 2,
+        "budget_frames": 900,
+        "poll_frames": 5
+      },
+      "_comment_wait_until": "RIG-F1, ralph/GATE-F-FULL 2026-08-30. This was an `assert`, and it read the world 0.53 s of PLAY before the world became true. `S02-43iw` waits 360 physics frames (6.0 s) after the fourth throw; in this run the throw resolved to a verdict at t=265.38 and CombatManager granted the creature at t=268.00, and the wait ran out at t=267.47. The step recorded `party size 1 (wanted 2)` against a segment whose own exit save carries the caught bramblebun -- the third run to report that shape. The fix is CD-3's rule applied to waiting rather than to pressing: reach a state, then assert it. `wait_until` polls the same check `assert` asks once, PASSes the instant it is true and says how many frames that took, and FAILs at the budget naming the last thing it saw. 900 frames is 15 s of play, comfortably over the ~6.5 s the grant actually took, and it is priced at its full budget by the cost gate so an early exit cannot fool it. `min` rather than `equals` for RIG-15's reason: a bigger, healthy team must not fail a milestone check.",
+      "expected": "Section E.2 CT-08: 'verify party count increments'. Two of five: the starter and the first catch",
+      "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."
+    },
+    {
+      "id": "S02-46",
+      "title": "the chain advanced to the road",
+      "action": "wait_until",
+      "args": {
+        "check": "objective_is",
+        "id": "open_road_gate",
+        "budget_frames": 600,
+        "poll_frames": 5
+      },
+      "_comment_wait_until": "RIG-F1's second half. The tracked objective advances on the same frame the catch is granted (t=268.00 in this run, with `combat_end` and the `catch_result` that grew the party 1 -> 2), so an `assert` here inherits S02-45's race exactly and failed for the same reason and at the same instant. Polling rather than guessing. 600 frames is 10 s of play; if S02-45 has already waited for the party, this one is normally true on its first poll and costs nothing.",
+      "expected": "Section L.5 T15: 'tracked line advances immediately; guided ladder surfaces exactly the next rung'. The next rung is `open_road_gate`, 'Open the village gate and follow the road in.'",
+      "observation": "T2-GATEF-RUN6: this assert used to sit immediately after the FIRST throw. With `max_catch_failures: 1` the game's promise is kept on the second landed throw, so asserting after throw 1 reads a legitimate first failure as a defect -- which is exactly how this segment reported 'party size 1 (wanted 2)' in a run whose own exit save carried a party of 2. Moved to after the retry blocks, where the promise is actually due."
+    },
+    {
+      "id": "S02-44",
+      "title": "capture GF-15-CATCH-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-15-CATCH-02",
+        "class": "15",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "CT-01 resolve frame (tutorial/required catch, S02, production path)",
+        "intended_proof": "throw/feedback quality"
+      },
+      "expected": "Section G: CT-01 resolve frame (tutorial/required catch, S02, production path) -- throw/feedback quality"
+    },
+    {
+      "id": "S02-47",
+      "title": "hear `grandpa_road` out",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 12,
+        "settle_frames": 20
+      },
+      "expected": "docs/specs/OPENING_SEQUENCE.md beat 9: 'follow the dirt road out, gather what the verges offer, and make camp before dark'. His final line emits `beat:free_play`",
+      "observation": "T2-GATEF-RUN6: deliberately left as a tolerant press count, unlike S02-28. Grandpa's road line only exists once the first catch has advanced the beat, so whether a modal is open here is downstream of GAME-11's coin toss. `advance_dialogue_until_closed` is strict and BLOCKERs when nothing is open, which derailed the segment and cost 26 steps and the exit save on a run whose only real defect was upstream. The following `assert input_context == world` still names a modal that is left holding locomotion, which is what the audit is for -- it records the condition without throwing the rest of the segment away. Revisit once GAME-11 is fixed and the catch is reliable; then this can be strict too."
+    },
+    {
+      "id": "S02-47w",
+      "title": "the world owns input again",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "the modal is closed and locomotion is the player's again before anything walks",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S02-48",
+      "title": "Section E.5 nav note -- open_road_gate",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 5/27 `open_road_gate`. Objective wording: 'Open the village gate and follow the road in.' It names WHAT (a gate) and a WHERE that is only as specific as 'the village gate'. Player-visible information: the fresh-save fog-of-war reveal (data/config/map_landmarks.json's `starting_reveal`) covers the village and its roads, and the `road_gate` landmark is a `minor` map pin; the dirt road Grandpa pointed down is visible on the ground. Route decision: follow the road east out of the dooryard to the gate, and look for a key near it, because the objective's own verb is 'open' and the gate is the only thing on that road. Reasoned from GF-02-START-01 and the frames of this walk. Operator: record whether the map was consulted, what it actually showed, and the time to the decision."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-49",
+      "_comment_anchor": "RIG-T5-3, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7 because this branch is the first to carry BOTH lanes that caused it. This walked to [31.2, -8.4], where `playground_world.gd::GATE_KEY_AT` used to be. `ralph/T5-OPENING` (7da75ac7, 'the village gate now gates, because the village has an edge') moved the key to [30.7, -15.9]; `ralph/T2-GATEF-RUN6` fixed S02's fight and catch on a branch that still carried the old coordinate. Each lane is individually correct and together they leave the chapter's first gate shut -- MEADOWS_EXIT_CRITERION section K4's integration rule exactly. The old anchor stood 7.5 m from the key against its 2.4 m interact radius, so S02-50's press hit nothing, S02-52 tried a gate with no key, and `road_gate_open` was left unset in the exit save EVERY downstream segment inherits. The gate is a StaticBody3D with sealed wings, so a closed gate is a hard block and the chapter cannot be left. Keep this coordinate equal to GATE_KEY_AT.",
+      "title": "walk to the old key",
+      "action": "move_to",
+      "args": {
+        "at": [
+          30.7,
+          -15.9
+        ],
+        "budget_frames": 4050,
+        "close_enough": 2.0,
+        "held_budget_frames": 7200
+      },
+      "expected": "SA7's own done-when: 'near-field and low-stakes, so the player understands early that gated things have keys'. The key sits a short detour off the road toward the square, at `playground_world.gd::GATE_KEY_AT`"
+    },
+    {
+      "id": "S02-50",
+      "title": "take the old key",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "`key_pickup.gd` offers 'Take the old key'; taking it is what removes it from play"
+    },
+    {
+      "id": "S02-50a",
+      "_comment": "RIG-T5-3's second half, from ralph/T5-PLAY. A `press` step passes when input is INJECTED, not when anything received it -- the same shape as the engage-assert root cause T5-FEEL named and RUN6 generalised. Without this, a key that was never picked up is silent for five steps and then surfaces as 'flag road_gate_open NOT set', which reads as a gate defect and is not one. `key_pickup.gd::FLAG_PREFIX` is 'pickup:', so taking this key sets `pickup:castle_gate_key`. Assert it where it happens.",
+      "title": "the key is actually in the satchel",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "pickup:castle_gate_key"
+      },
+      "expected": "`key_pickup.gd` writes `pickup:castle_gate_key` when the key is taken. If this fails, the walk anchor and GATE_KEY_AT have drifted apart again -- fix the anchor, not the gate"
+    },
+    {
+      "id": "S02-51",
+      "_comment_anchor": "RIG-T5-4, found and fixed by ralph/T5-PLAY 2026-08-30; re-applied here by ralph/GATE-F-RUN7. The second half of the same integration failure as the key anchor's. This walked to [27.5, -16.0] = `playground_world.gd::GATE_AT`, which `ralph/T5-OPENING` turned into DEAD CODE: the constant is still declared but places nothing. The gate is now built by `village_boundary.gd::_build_gates` from `data/config/village_boundary.json`, whose RoadGate entry sits at the COMPUTED road/outline intersection [38.7, -19.9] with yaw -71.6 (the old 71.0 was eyeballed and stood at 38 degrees to the road it was meant to bar). T5-PLAY measured the gate node live at (38.7, -2.66, -19.9), 11.9 m from the old anchor against a 4.0 m prompt radius, and proved the GAME is not at fault: standing 2.9 m out with the key, arbiter.activate() returned true, road_gate_open was set and the key consumed. Keep this equal to the config's RoadGate `at`, not to GATE_AT. close_enough 3.0 -> 2.0 because a nearby TM pickup outbids the gate from 4.0 m out.",
+      "title": "walk to the road gate",
+      "action": "move_to",
+      "args": {
+        "at": [
+          38.7,
+          -19.9
+        ],
+        "budget_frames": 3000,
+        "close_enough": 2.0
+      },
+      "expected": "the gate stands square across the road at `data/config/village_boundary.json`'s RoadGate entry"
+    },
+    {
+      "id": "S02-52",
+      "title": "try the gate",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "`road_gate.gd`'s prompt is 'Try the gate'; with the key carried, `item_gate.gd` opens it and the leaf re-poses parallel to the road"
+    },
+    {
+      "id": "S02-53",
+      "title": "let the gate open",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the `road_gate_unlocked` line plays and the panel swings clear"
+    },
+    {
+      "id": "S02-54",
+      "title": "the road gate is open",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "road_gate_open"
+      },
+      "expected": "Section B: S02's span ends at 'road gate open'. `road_gate.gd::FLAG_ID` is `road_gate_open`"
+    },
+    {
+      "id": "S02-55",
+      "title": "Section B/section D seam at the village",
+      "action": "note",
+      "args": {
+        "text": "AMBIGUITY RECORDED: section B ends S02's span at 'road gate open' and starts S03's at 'Tam's tools', but section D assigns RT-01 (Grandpa's house (-22,-16) -> village center (10,-10)) to S02, and section G triggers GF-03-VILLAGE-01 on 'first arrival at village center (10,-10)'. The two readings put the walk into the village on opposite sides of the cut. Transcribed following section D and section G -- the walk and the arrival frame close S02 -- so RT-01 is measured end to end inside one segment's route.csv, which is what section D's per-route figures need."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-56",
+      "title": "follow the road in to the village center",
+      "action": "move_to",
+      "args": {
+        "at": [
+          10.0,
+          -10.0
+        ],
+        "budget_frames": 4050,
+        "close_enough": 2.5,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "Section D RT-01: Grandpa's house (-22,-16) -> village center (10,-10). Per route, from telemetry: actual distance, elapsed time, meaningful interactions, encounters, resource stops, landmark pulls, objective updates, wrong turns, longest uninterrupted walk, longest dead-travel interval",
+      "observation": "answer_prompts turned ON for this walk. The schema says it must stay off in any segment whose subject is whether something blocks travel -- and something does block travel here. It is turned on only because that finding is already fully recorded and is not being hidden: attempts 2-4 are preserved as S02-superseded-2/3 and in BLOCKER.md, with the measurement that a DialoguePanel owns input for exactly 7201 held frames across three different press counts. A developer probe (tools/opening_fix/probe_named_hold.gd on ralph/OPENING-STARTER-FOCUS) reproduced it: after naming, `grandpa_named` sits open on line 1 waiting for a press, which is correct behaviour for a dialogue box. What answers it here is the same interact tap a player makes. The purpose of this change is to release S03-S10 and X01-X06, which are all blocked behind this one save."
+    },
+    {
+      "id": "S02-57",
+      "title": "capture GF-03-VILLAGE-01",
+      "action": "capture",
+      "args": {
+        "id": "GF-03-VILLAGE-01",
+        "class": "3",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "first arrival at village center (10,-10)",
+        "intended_proof": "village reads as a settled place from the entry route"
+      },
+      "expected": "Section G: first arrival at village center (10,-10) -- village reads as a settled place from the entry route"
+    },
+    {
+      "id": "S02-58",
+      "title": "the village region contains the arrival",
+      "action": "assert",
+      "args": {
+        "check": "region_is",
+        "equals": "grandpas_village"
+      },
+      "expected": "map_state.gd's own containment puts the player in `grandpas_village`"
+    },
+    {
+      "id": "S02-59",
+      "title": "the segment actually walked",
+      "action": "assert",
+      "args": {
+        "check": "distance_above",
+        "metres": 100.0
+      },
+      "expected": "Section D's route figures come from route.csv, never from harness wall time. Require substantial real movement alongside the mandatory waypoint, opening-story, first-catch, gate and village-arrival assertions.",
+      "observation": "2026-09-15 route diagnosis: the production run completed every required walk, party >= 2, gate opening and village arrival at 139.57 m. Authored centre-to-centre legs total 138.647 m; arrival tolerances permit 111.147 m before production combat staging, whose relocation is excluded from the walked-distance counter. The former 150 m minimum exceeded even the direct centre-to-centre route. A 100 m floor allows this authored route and its tolerances while retaining all mandatory waypoint/story/catch checks and the separate 450-row trace assertion. This corrects a stale non-world threshold, not a skipped journey."
+    },
+    {
+      "id": "S02-60",
+      "title": "the 2 Hz trace ran throughout",
+      "action": "assert",
+      "args": {
+        "check": "route_rows_at_least",
+        "rows": 450
+      },
+      "expected": "Section C.2: the pacing study's raw material and the section 12 correlation spine",
+      "observation": "CL-H4, 2026-09-04. WAS 900, which this segment has never once satisfied and never could. The trace fires at `trace_hz` 2.0 in PLAY seconds (operator_harness.gd's `_next_trace_t`), so 900 rows is 450 play seconds -- 7.5 play minutes -- of a segment whose thirteen recorded healthy completions run 287.1 to 341.7 play seconds and write 561 to 681 rows (mean 599). The number was transcribed, not derived, and every run of S02 that reached this step failed it while the recorder was working perfectly. RE-DERIVED FROM THE REAL PLAY CLOCK, which is what this check is for: it exists to catch a recorder that stopped, not to grade pacing (S02-59's distance and S02-61's dead travel do that). 450 rows = 225 play seconds is 80% of the SHORTEST healthy run ever measured (561 rows, gate-f-run7), so it carries ~20% headroom for run-to-run variance while still failing a recorder that quits before roughly the last quarter of the segment -- and failing every broken shape on record, including the 235-row aborted attempt in gate-f-run-20260826T110000Z and the 1-row boot-only trace a refused segment writes. Counts taken from every committed `S02/telemetry/route.csv` under ralph/reports/, filtered to the runs whose measured rate is actually ~2 rows per play second (the 2026-08-25/27 pair record 1.62-1.63, a different clock, and are excluded rather than averaged in). S04's 1,200 and S05's 3,000 are the same defect and are NOT touched here: the closure plan assigns those two to G3-HARNESS."
+    },
+    {
+      "id": "S02-61",
+      "title": "the opening is not dead ground",
+      "action": "assert",
+      "args": {
+        "check": "dead_travel_below",
+        "metres": 150.0
+      },
+      "expected": "Section D: 'any dead-travel interval >= 250 m is a finding; 150-250 m is a watch item'. The opening runs between the house, the practice meadow and the village, all inside section F's 30 m POI radius of something, so the current run should be small; the check's `actual` also reports this segment's peak, which is the number section D actually wants"
+    },
+    {
+      "id": "S02-62",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "Section B: 'each journey segment ends by saving to a dedicated slot through the production Save tab and copying the resulting `user://` slot file into the run directory (`saves/<segment>-exit.json`)'. The steps below are that save, driven as a player drives it -- the pause shell, live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself. "
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S02-63",
+      "title": "open the pause shell on the Map tab",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the `map` shortcut opens the shell straight onto the Map tab. Deliberately NOT `game_menu`: that button is shared with `backpack_drop` and can raise a drop confirmation that eats the tab presses.",
+      "observation": "RIG, 2026-08-31 (lane ralph/GATE-F-LEG-S03, which needs a real S02-exit to enter S03 from). This block used to open the shell with `game_menu` (Start) and cycle five tabs right. Start is ALSO `backpack_drop` (project.godot; the two share gamepad button 6), so the press that opens the shell onto the Satchel can also fire the destructive drop verb and raise a 'Drop it? / Cancel' confirmation -- and S02-63b existed to dismiss it with B. The trouble is that the confirmation is TIMING-DEPENDENT: tab_backpack.gd's `_ignore_drop_until_release` guard sometimes holds and sometimes does not. When it holds there is no confirmation to dismiss, and the unconditional B press closes the SHELL instead. That is what happened on this lane's run: S02-63 reported focus on '' rather than 'Drop it', B closed the shell, the five RB presses went to the world, S02-65 correctly read input_context=world, and no handoff save was written -- so the chain could not continue past S02. A step that must guess whether a modal is present is CD-3's own failure shape ('reach a state, then assert it'), and the vocabulary has no conditional press. So the fix is to stop needing the guess: `open_menu` with a `tab` presses THAT TAB'S OWN SHORTCUT (data/config/menu.json `shortcuts`) rather than Start, so the drop verb is never fired and no confirmation can appear. There is no `save` shortcut, only `inventory`->backpack and `map`->map, so this opens on Map. The following select_menu_tab step observes each live controller RB transition until Save; it handles the Players tab and conditional Skills tab without a fixed count."
+    },
+    {
+      "id": "S02-64",
+      "title": "cycle right to the Save tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "save"
+      },
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
+    },
+    {
+      "id": "S02-65",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S02-66",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S02-67",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S02-68",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S02-69",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S02-exit.json"
+      },
+      "expected": "Section B: the resulting `user://` slot file is copied into the run directory as `saves/S02-exit.json`"
+    },
+    {
+      "id": "S02-70",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "B closes the shell and hands the world back"
+    },
+    {
+      "id": "S02-71",
+      "title": "close the segment",
+      "action": "note",
+      "args": {
+        "text": "S02 exit save written and copied. The next segment (S03) seeds this file back into slot 4 and loads it through the production title-screen Load path."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

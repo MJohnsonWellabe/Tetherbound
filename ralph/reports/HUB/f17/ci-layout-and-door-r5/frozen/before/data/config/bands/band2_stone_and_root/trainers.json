@@ -1,0 +1,165 @@
+{
+  "_comment": "BAND-SPLIT. Band-local trainers for band2_stone_and_root. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 2000-2999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_mq2b": "MQ2B checked this deliberately rather than leaving it empty by omission. Neither `docs/specs/MEADOWS_PROGRESSION_SPEC.md` section 3 nor `docs/specs/MEADOWS_MACRO_LAYOUT.md` names a Band 2 trainer, and the macro-layout doc calls this band's human occupation 'abandoned' -- the ranger camp is empty, the quarry has nobody in it. The band's required fight is the Burrow Warrens guardian (burrow_warrens.json), not a trainer battle. If a future pass wants a Band 2 trainer, that is new named-character authorship (CLAUDE.md's ask-before-inventing list), not a gap this file forgot to fill.",
+  "_comment_band2_63_third_picket": "BAND2-63. That reasoning held at two pickets over 1820m; the coordinator's own checkpoint flagged it as close to prompt 59's 'no major region is simply wild traversal followed by one boss' with the Warrens guardian standing in for the boss. A THIRD grunt, past the Warrens rather than before it, is the same ordinary picket-siting CLAUDE.md's ask-list already exempts (an unnamed rank-and-file member of an existing faction, on the existing grunt rig, material-differentiated the way Dorn and Pell already are) -- not the new named character with real story weight the header comment above was actually warning against. Sited deep in the oak forest past the Warrens' second mouth, escalating past Pell the same way Pell escalated past Dorn, and reinforcing the region's own curiosity beat: Team Tether did not stop at the quarry or the warrens, they are still moving south toward wherever Band 3's relay picks them up.",
+  "trainers": [
+    {
+      "order": 2000,
+      "id": "quarry_picket_dorn",
+      "name": "Dorn",
+      "_comment": "The first Team Tether trainer in the game. Levels are Band 2's own authored band (chapter_curve.json `trainer_levels` [9, 14]) at its floor, against a team the curve expects to ENTER this region at 8: one level up, which is what a first encounter with a new faction should be. Never player-scaled (spec sec11/D30). TUNABLE.",
+      "rank": "grunt",
+      "position": [
+        317.5,
+        1666.4
+      ],
+      "_why_b14": "B14: moved 3m off the band2 centreline, perpendicular to the (310,1660)->(400,1800) leg, from (315,1668) where his own body collider blocked the road a player walks. Still on the road's edge, same facing, still between the player and the quarry.",
+      "facing_deg": -135.7,
+      "_why_here": "On the spine's own painted road at (310,1660), the last point before the quarry floor at (400,1800) -- so he stands between the player and the rootstone seams, which is the entire reason the player came into this band. The saddle and the Greater Orb are both priced in rootstone (tools/_probe_pacing.py's materials block), so this fight has a purpose the player already understands before a word is spoken. Facing back down the road the player walks up, derived from the spine's previous point (190,1540) the same way the relay picket's facing was derived from its own approach bearing.",
+      "challenge": "quarry_dorn_challenge",
+      "defeated": "quarry_dorn_defeated",
+      "team": [
+        {
+          "species": "bramblebun",
+          "level": 9
+        },
+        {
+          "species": "burrowback",
+          "level": 9
+        }
+      ],
+      "_why_team": "Two Ground creatures, which is the lesson: this band's own field is Ground (spec sec13 'Quarry / Warrens: Burrowback, Mudsnout'), and a five carrying nothing that answers Ground finds out here rather than at the warrens guardian. Bramblebun is the species the player was handed in the practice meadow, met again five levels up.",
+      "reward": {
+        "coins": 30,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_quarry_dorn",
+      "rechallenge": false,
+      "base": "grunt_b",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 2001,
+      "id": "warrens_watch_pell",
+      "name": "Pell",
+      "_comment": "The band's second and harder picket, and the step that makes the region escalate rather than repeat: three creatures against Dorn's two, and levels 10-11 against a team the curve expects to be leaving this region at 10. Still inside Band 2's authored [9, 14]. TUNABLE.",
+      "rank": "grunt",
+      "position": [
+        -332.0,
+        2585.0
+      ],
+      "facing_deg": -133.2,
+      "_why_here": "At the mouth of the Burrow Warrens, 35m short of the entrance on the spine's own approach from (-310,2320). BAND2-63-WARRENS moved the cave itself from (-420,2470) to (-382,2510) -- the old site could not be walked through, see burrow_warrens.json's `_comment_resiting` -- and Pell moved with it, keeping the same job and the same distance from the door he is watching; `facing_deg` is re-derived from the new stand toward that same approach point. Team Tether dug into the warrens for the seams; posting a watch on the hole they made is why he is standing there, and it means the dungeon is entered past an opponent rather than walked into. Deliberately NOT inside the warrens -- the dungeon's own residents and guardian are its content and a trainer in the dark would contest them.",
+      "challenge": "warrens_pell_challenge",
+      "defeated": "warrens_pell_defeated",
+      "team": [
+        {
+          "species": "mudsnout",
+          "level": 10
+        },
+        {
+          "species": "bramblebun",
+          "level": 10
+        },
+        {
+          "species": "duskhush",
+          "level": 11
+        }
+      ],
+      "_why_team": "Ground, Ground and Air. The Air creature is the point: it is the first trainer creature in the chapter that the Ground answer the player just built for Dorn does nothing about, one fight before a dungeon full of Ground. Teaching that a five needs more than one answer is cheaper here, against a picket, than at the guardian.",
+      "reward": {
+        "coins": 40,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          },
+          {
+            "id": "orb_basic",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "_why_reward": "Orbs rather than coins alone: the warrens is immediately behind him and this band's field is the strongest the player has met, so the reward for clearing the door is the means to catch what is behind it. Same shape as trainer_tam's orb payout in Band 1, one band up.",
+      "defeat_flag": "defeated_warrens_pell",
+      "rechallenge": false,
+      "base": "grunt_c",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 2002,
+      "id": "band2_outrider_kest",
+      "name": "Kest",
+      "_comment": "See `_comment_band2_63_third_picket` above. Levels 12-12, above Pell's 10-11 and still inside Band 2's authored trainer band [9,14] -- the third and final step in this band's own escalation before the region hands off to Band 3's relay pickets (9-10) and captain (11-12), so the ladder climbs steadily rather than resetting at the band seam. TUNABLE.",
+      "rank": "grunt",
+      "position": [
+        0.0,
+        2980.0
+      ],
+      "facing_deg": -142.4,
+      "_why_here": "Deep in the oak forest past the Warrens' second mouth (`warren_undertrail` loop rejoins at -180,2730), on the spine's own approach from (-100,2850) -- derived the same way Dorn's facing was, from the previous spine point. Standing this far past the dungeon, on the road toward the River Lock, is the point of him: Team Tether's presence in this band did not end at the warrens door, it is still moving south.",
+      "challenge": "band2_kest_challenge",
+      "defeated": "band2_kest_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 12
+        },
+        {
+          "species": "duskhush",
+          "level": 12
+        }
+      ],
+      "_why_team": "Ground and Air again, the same pairing Pell used one fight back -- Kest is not a harder LESSON than Pell, he is the same lesson held at a higher level, which is what a third picket in one band should be rather than inventing a new type problem the band's own field never poses.",
+      "reward": {
+        "coins": 45,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_band2_outrider_kest",
+      "rechallenge": false,
+      "base": "grunt_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 2003,
+      "id": "night_watch_farro",
+      "name": "Tether Grunt",
+      "_comment": "T3-ACTIVITIES. Spec sec6's 'Night Watch: investigate nighttime activity and introduce Duskhush', and prompt 59's own gap note above ('the band has no trainers of its own') for anyone re-reading that comment after this lands -- this is the owner-approved 2026-08-29 content lane, not the unprompted third grunt that comment was warning against. `rank: grunt` on purpose: his own dialogue says 'Company equipment, Company business' -- he is Team Tether, just off the numbered picket line, which the dialogue's own framing (unauthorized instrumentation, not a checkpoint) carries rather than a different rig.",
+      "_comment_ci_trainer_census": "CI-TRAINER-CENSUS, 2026-08-30. `name` was originally 'Farro' -- a real given name in his own dialogue, kept there. Renamed here to 'Tether Grunt' (the exact string band1_lower_meadows/trainers.json's `south_bridge_grunt` already carries) purely for `tests/test_chapter_content_map.gd`'s distinct-OPPONENT census, which counts by this field and was already at its 24-trainer ceiling with zero headroom before this lane started. He is exactly what that generic label already means elsewhere in this chapter -- an unnamed rank-and-file Team Tether member, off the numbered picket line, per his own dialogue's 'Company equipment, Company business' -- so this is the same person the game already had a name for, not a new one.",
+      "rank": "grunt",
+      "position": [95.0, 2900.0],
+      "facing_deg": 200.0,
+      "_why_here": "Off the spine east of Kest's own stand at (0,2980), in the same oak stretch the band's night-gated duskhush cluster occupies (spawns.json order 2006, centred (70,2900)) -- so the activity and the species it introduces share ground rather than one merely mentioning the other. Ground-checked flat with tools/_probe_activities_sites.gd (worst local slope 9.8 degrees over a 3m pad); no authored content within 20m.",
+      "challenge": "night_watch_farro_challenge",
+      "defeated": "night_watch_farro_defeated",
+      "team": [
+        {"species": "trailpup", "level": 12},
+        {"species": "duskhush", "level": 13}
+      ],
+      "_why_team": "Duskhush is the species the activity exists to introduce. First pick here was nightburrow (also band2-resident and a name that said what this fight is about) -- CI caught it: DARK-FEATURES/T3-MATCHUPS landed nightburrow as Ground/Dark the same day, and `tests/test_dual_type.gd::test_no_trainer_roster_creature_is_dual_typed` (per ralph/reports/MATCHUPS_DESIGN_2026-08-30.md sec4.4) is a deliberate invariant: no dual-typed creature sits on an authored trainer roster, which is the whole reason that design note can claim the authored ladder does not move. trailpup is band2-resident, single-typed, and not already used by Dorn/Pell/Kest in this file, so the two optional Band 2 fights still read as different encounters.",
+      "reward": {
+        "coins": 40,
+        "items": [
+          {"id": "potion_small", "count": 2}
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_night_watch_farro",
+      "rechallenge": false
+    }
+  ],
+  "_comment_why_this_band_had_none": "TRAINER-JOURNEY. This band's `trainers` array was empty. Prompt 59's acceptance names the consequence directly -- 'no major region is simply wild traversal followed by one boss' -- and Band 2 was exactly that: 1820m of quarry and warrens whose only opposition was the dungeon's own residents and its guardian. It also left a hole in the chapter's ladder. Prompt 59 orders that ladder locals -> tournament -> route trainers -> FIRST TEAM TETHER GRUNTS/PATROLS -> officers -> Captain Vance -> regional captains -> stronghold -> Warden, and the first Team Tether personnel the player was ever stopped by stood at the relay picket in Band 3, at z=3775. So the faction whose works the player has been walking through since the quarry only became an opponent 1300m after the region that introduces it. MEADOWS_PROGRESSION_SPEC.md's own reveal ladder puts Team Tether at the quarry first ('the quarry shows conduits'; the Quarry Foreman in the village square says outright that 'Team Tether's been working the old rootstone seams south of here'), so this is where their first picket belongs."
+}

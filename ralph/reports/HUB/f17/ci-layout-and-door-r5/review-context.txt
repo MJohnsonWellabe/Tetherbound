@@ -1,0 +1,124 @@
+F17/RD-29 bounded layout and near-waypoint repair
+Source readiness only. F17#4 remains OPEN.
+
+Base: c21be258900a2de22ac4eef61cf71f9b55c6e426, existing tb/hub branch.
+Frozen manifest SHA256:
+72302312c4b770714639742dc852aa0979c7775542f5cb61107cb8861572d551
+Frozen before files are Git blob bytes; candidate files are raw worktree
+bytes. Eight unchanged JSON context files consequently differ only in LF
+versus CRLF representation. Their normalized text and parsed JSON are exact;
+the logical repair scope is the16 paths in the manifest, not24 source edits.
+Candidate navigator SHA256:
+6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55
+Unchanged gather helper SHA256:
+414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d
+
+The accepted RD-29 layout is the straight eastward road, with eight houses
+on both sides, farmhouse centre (2,14), and Hall at the end. The former
+two-leg 0912 house poses and farmhouse (-22,-16) are superseded design pins.
+These repairs preserve the functional assertions on the accepted layout.
+
+Native cause and approved repair
+
+ROOT's e86c6a9fed5e original-budget, no-checkpoint native campaign failed
+after naturally reaching road_gate, 227.993s total. It earned the starter,
+practice catch and gate progress, then refused deep actual overlap while
+entering Mira's building. The raw native.log and receipt.json here are exact
+copies, hashed in manifest.json. Their failure and incomplete campaign are
+retained. No earned prefix or successful arrival is inferred from this patch.
+
+At retained frame397 the request was the axial entry waypoint (27,2.8).
+Only ~1.1266m remained. The advisory 2m max-speed cast extended past that
+clear endpoint toward the counter's front at world z=1.9. The resulting
+normal chose a tangent toward the east wall; the actual skin refusal was
+correct and remains unchanged. The six-line repair caps only non-raw
+position-request advisory reach at the remaining waypoint distance, after
+the same finite/speed/delta/MAX_EDGE guards, before the same single full-body
+native query. Raw directional requests retain their original horizon.
+
+Static planar controls read the exact frame from the retained raw log:
+old prediction comes within 0.065943m of the counter; clipped prediction
+stops 0.905539m away; a hypothetical counter before the waypoint remains
+within 0.125177m. Capsule radius remains 0.4m. These are source/planar controls,
+not a replay of Godot motion results, full 3D clearance, timing or arrival.
+The same native query/contact handling still applies to obstacles before
+the waypoint. All other navigator functions and actual pre/post validators
+restore exactly to the base after removing the insertion.
+
+Raw aggregate8 cached points, 10000us combined pre/post callback allowance,
+96 queries/frame, 250000 lifetime queries, 24000 requests, 90 stall frames,
+26 retry frames, 1800 gather and 3600 team allowances remain unchanged.
+No contact deduplication, grants, pose/HP/mask/shape/exclusion changes, or
+budget weakening. Default predictive API and gather helper are unchanged.
+
+Layout, fixture and route repairs
+
+Mira and Bram were facing away from the patrons after their buildings
+rotated to yaw0. Only those two facing_deg values change from180 to0. Cast,
+positions, gifts, dialogue, eligibility, rewards and production geometry
+are untouched.
+
+The TRACKED MIRROR policy in test_band_content.gd permits deliberate authored
+relocations to be mirrored. The live F17 moves already exist on this base.
+Props fixture: exactly10 coordinate leaves, five farmhouse-yard props
+translated (+24,+30). Vegetation fixture: exactly8 x/z leaves for home,
+tournament ground and inn. Identity, order, counts, radii, payloads and all
+other fields stay strict. No comparison is relaxed or row deleted.
+Props/harvest and both vegetation baseline prefixes match entry for entry.
+Preexisting spawn indices6/8/11/12 and trainer indices0/7/11/12/13 still drift;
+those unrelated files/payloads are unchanged here and need their owners.
+This source verdict does not claim a globally green CI suite.
+
+Farm and yard tests pin current home/pad/door coordinates, all six beds,
+whole timber footprint on full-flatten ground, public-green/fence clearance,
+bounded domestic apron, unchanged early berries and farming rules. Street
+tests preserve every entrypoint, opening functions and total installed cast,
+check eight independent parcels/thresholds/yaws, actual routes, level ground
+for all160 ground-wall corners, installed aprons, rail clearance, full
+ground-cover radii and actual wall coverage by road scatter clearings.
+Nessa's current research-house role retains her one-time three-berry gift
+and persisted spent flag. Independent overlook-supply assertions remain.
+
+The prompt-height regression now uses the exact historical failed tree
+producer input from bf0f38b203^, retained here as the original binary and
+independently decoded. That tree was legitimately retired in the scoped
+F17 bake. The test still calls the real production spawner, checks wood2,
+unchanged radius2.6, old unreachable versus current reachable contact and
+scale-independent anchor1.4. No tree is resurrected or bake data changed.
+
+S03 and S03C change four move_to targets each to the real shop door, east
+front corner and main road. S10e changes four targets to the real TrailGate
+axial outside/inside points and translated farmhouse door/interior. All
+actions, IDs/order, close tolerances, held/request budgets and prompt answers
+stay unchanged. The full literal shard chain's old return crossed solid
+fence46.18m and4.80m from the nearest gate. The repaired chain crosses only
+PondGate and TrailGate centers. Static centerline routing does not prove
+capsule clearance, bed readiness, battle rounds or actual earned progress.
+
+Validation and remaining work
+
+Run source-geometry-audit.py with Python only. It verifies frozen byte hashes,
+bounded source/data diffs, unchanged test entrypoints, exact fixture leaves,
+strict scoped prefixes plus deletion/order negative controls, actual layout
+geometry, retained failed receipt and door controls. Results are reproducible
+from this frozen packet, independent of a moving checkout. Independent
+source review is retained separately with its own verdict and hashes.
+
+Final author audit: 3023/3023 static checks. Independent review: 403/403,
+including an independently proved single-disk containment for each complete
+ground-wall rectangle. The reviewer also ran the earlier 2976-check author
+audit against the same immutable source manifest. Those exact reviewed
+author script/results are retained under independent/reviewed-author-*;
+the final author's extra layout checks changed no frozen input. Independent
+scripts/results/review are copied byte-for-byte. seal.json pins the packet.
+To reproduce the independent verdict, copy the whole packet into an ignored
+directory, then run independent/independent-checks.py with --packet COPY
+and --output IGNORED_OUTPUT. To reproduce its exact original audit metadata,
+replace the copied root source-geometry-audit.py/results.json with their
+independent/reviewed-author-* versions first. Never overwrite retained proof.
+
+No Godot/parser/import/engine/CI was run for this repair. ROOT owns import,
+composition, actual same-world tests and the fresh original-budget earned
+opening from title through starter/catch/paid camp/three beds/three played
+tournament rounds, with separate independent criterion review and main
+landing. F17#4 remains OPEN until all of those requirements are satisfied.

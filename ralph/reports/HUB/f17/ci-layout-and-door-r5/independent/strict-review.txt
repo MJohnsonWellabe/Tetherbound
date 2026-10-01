@@ -1,0 +1,20 @@
+SOURCEPASS readiness only. 403/403 independent checks; copied author static audit 2976/2976.
+Manifest SHA256 72302312c4b770714639742dc852aa0979c7775542f5cb61107cb8861572d551.
+225 frozen manifest entries verified. Exact logical repair scope 16; eight context files differ only by LF/CRLF representation.
+No engine, parser, import, CI, Git, tracked writes or delegates.
+
+Every original actual pre/post full-capsule guard, aggregate-eight admission, shape/mask, finite/deep-overlap/recovery/door checks, 10ms pre+post accounting and final metadata guard, 1800 gather/3600 team/90 stall/26 retry/query/lifetime caps remain identical after removal of the six approved logical lines.
+
+Current waypoint displacement is horizontal and nonzero before heading; raw directional mode bypasses clipping. One original fullbody advisory query remains. No provisional clearance, arrival, inventory or earned milestone credit is added.
+
+Changed tests retain functional constraints: exact cast and opening five plus accepted research residents; named eight house parcels/thresholds, road facing/alignment; actual ground colliders and clearings; translated yard and whole beds; one-time Nessa gift and unchanged supply tests; closed-fence outside chord; real production vegetation prompt/radius regression. Comments and historical names do not imply current path success.
+
+Mira/Bram 180 to 0 facing is a real data correction. village_npcs assigns facing_deg to rotation.y; npc_body uses +Z facing. Both native yaw-zero buildings open toward positive Z public road. Near-player NPC tracking remains unchanged.
+
+Historical tree fixture preserves exact old producer input instead of depending on a retired live tree; production spawning/contact-distance/radius assertions remain. This independent script decodes the entire pinned raw record and confirms the unique kept trees#320 input including model, all float32 coordinates, yaw/scale and absent normal; no present-tree integration claim follows.
+
+Unchanged spawns/trainers strict baseline drift is existing and outside this repair. No full CI green, parser success, engine replay, or acceptance credit claimed.
+
+Planar counter controls support an advisory overreach hypothesis only. They do not prove native contact classification, 10ms runtime, unobstructed doors, or earned completion. ROOT must run required fresh actual path and land to main; F17#4 OPEN.
+
+Independent planar values: {"start": [27.334413528442344, 3.8757972717285205], "goal": [27.0, 2.79999995231628], "counter_from_production": [24.4, 1.4, 26.9, 1.9], "old_distance": 0.06594333648682049, "clipped_distance": 0.9055384664216684, "before_target_obstacle_distance": 0.12517679018845893}
