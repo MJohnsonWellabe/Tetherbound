@@ -317,12 +317,9 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if node == null:
 		_fail("no unspent authored %s node exists in the opening route" % item_id)
 		return false
-	# The direct wood leg crossed Grandpa's furnished yard and lost actual floor.
-	# Follow the existing Pond road to its nearest authored node, then leave it
-	# for the resource. Stone retains its existing full Practice Meadow hint.
-	# Every leg shares the same 1800-frame walk and unchanged live floor checks.
-	var road := "The Pond" if item_id == "wood" else ("Practice Meadow" if item_id == "stone" else "")
-	if not await _walk_toward(node.global_position, 1800, 1.55, road, item_id == "wood"):
+	# Stone lies beyond the concave fence corner. Follow the existing painted
+	# Practice Meadow road before turning toward it, inside the same 1800 frames.
+	if not await _walk_toward(node.global_position, 1800, 1.55, "Practice Meadow" if item_id == "stone" else ""):
 		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
 		return false
 	# A visible swing owns the held prop for its full production animation.  Do
@@ -759,8 +756,8 @@ func _walk_diagnosis(point: Vector3) -> String:
 		Vector2(point.x - _player.global_position.x, point.z - _player.global_position.z).length(), colliders]
 
 
-func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
-	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road, end_road_at_goal)
+func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "") -> bool:
+	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road)
 	_stop_left_stick()
 	if _nav.refused():
 		_fail("Native opening refused: " + _nav.refusal_reason())

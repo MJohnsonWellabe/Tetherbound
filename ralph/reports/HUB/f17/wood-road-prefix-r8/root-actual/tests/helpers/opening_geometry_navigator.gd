@@ -226,15 +226,12 @@ func push_once(direction: Vector3) -> void:
 	_requested = not refused()
 
 
-func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
+func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "") -> bool:
 	reset()
 	_arrival = close_enough
 	if budget <= 0 or budget > 3600 or not point.is_finite() \
 			or not is_finite(close_enough) or close_enough <= 0.0 or close_enough > 1.65:
 		_stop_geometry("invalid bounded walk request")
-		return false
-	if end_road_at_goal and authored_road.is_empty():
-		_stop_geometry("road exit requested without an authored road")
 		return false
 	if not authored_road.is_empty():
 		if not _production_steering or not _authored_roads.has(authored_road) \
@@ -242,11 +239,6 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
 			_stop_geometry("requested authored road is unavailable in production steering")
 			return false
 		_guided_road.assign(_authored_roads[authored_road])
-		if end_road_at_goal:
-			_guided_road.assign(_road_prefix_to_goal(_guided_road, _xz(point)))
-			if _guided_road.is_empty():
-				_stop_geometry("missing/malformed bounded authored road prefix")
-				return false
 		_guided_label = authored_road
 	var walked := 0
 	var held := 0
@@ -269,27 +261,6 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
 	_requested = false
 	_drive.call(0.0, 0.0)
 	return false
-
-
-## A local errand may leave a long authored road at the node nearest its goal.
-## Only an explicit production-road request uses this prefix. Default full-road
-## and predictive walks remain unchanged; no invented waypoint or geometry proof.
-static func _road_prefix_to_goal(road: Array[Vector2], goal: Vector2) -> Array[Vector2]:
-	if road.is_empty() or road.size() > MAX_ROAD_INPUTS or not goal.is_finite():
-		return []
-	for index in road.size():
-		if not road[index].is_finite() or (index > 0 and road[index - 1].distance_to(road[index]) > MAX_EDGE):
-			return []
-	var exit := 0
-	for index in road.size():
-		if goal.distance_squared_to(road[index]) < goal.distance_squared_to(road[exit]):
-			exit = index
-	if goal.distance_to(road[exit]) > MAX_EDGE:
-		return []
-	var prefix: Array[Vector2] = []
-	for index in range(exit + 1):
-		prefix.append(road[index])
-	return prefix
 
 
 func _spend() -> bool:
