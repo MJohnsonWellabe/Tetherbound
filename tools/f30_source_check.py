@@ -6,6 +6,7 @@ import math
 
 ROOT = Path(__file__).resolve().parents[1]
 cfg = json.loads(ROOT.joinpath('data/config/traits.json').read_text(encoding='utf-8'))
+assert type(cfg.get('runtime_enabled')) is bool and cfg['runtime_enabled'] is False
 assert len(cfg['traits']) == 30
 counts = {rarity:0 for rarity in cfg['rarities']}
 effects = set()

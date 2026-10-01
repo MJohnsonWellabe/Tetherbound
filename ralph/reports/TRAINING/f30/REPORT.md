@@ -5,7 +5,25 @@ Returned parser repair: the coordinator's combined Godot 4.7 parse identified
 an inference failure at `traits.gd:137`. The initialization comparison now
 has an explicit `bool` declaration; its existing `== true` guard and all
 configuration remain unchanged. The refreshed source check covers this
-repair. Coordinator parser verification is pending; all criteria remain OPEN.
+repair. The coordinator confirmed that initialization repair compiled;
+all criteria remain OPEN.
+Its actual JSON configuration diagnostic then failed with
+`invalid roll/bond/slot gates`; prior baseline-looking numeric results did
+not establish inactivity because invalid config returned an empty ruleset.
+The returned configuration repair admits tiers by exact per-element finite
+integer values 1/3/5, without Array equality or unchecked coercion. Roll cap
+3 and bond gate 5 also require finite integral numbers and reject booleans.
+Slot lookup normalizes validated breakthrough integers before comparison.
+`runtime_enabled:false` is now explicit and must be a present boolean.
+The pure `Traits.runtime_enabled(cfg = {}) -> bool` predicate requires a
+valid complete configuration and boolean true; it never uses durable
+`traits_initialized` as activation. Pure staging/effect/adoption helpers
+remain independent of activation. Foundation owns live consumer gates for
+healing, defence and max HP and must also retain canonical projection guards.
+The queued GDScript witness parses the actual JSON and checks malformed,
+missing, boolean, nonfinite and fractional gates plus numeric tier lookup.
+It was authored but not run here; coordinator diagnostic verification is
+pending. No new runtime acceptance credit is claimed.
 Anchor: CODEX_START_HERE §6 F30, RD-30/§8.1, TRAINING §6,
 CREATURES §3 and ACCEPTANCE F30#0–#4. Effective permissions verified from
 session context: danger-full-access, approval never. No Godot, imports,

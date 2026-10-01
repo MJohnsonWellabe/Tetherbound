@@ -32,8 +32,17 @@ static func configuration_errors(cfg: Dictionary) -> Array[String]:
 	var errors: Array[String] = []
 	if not cfg.get("traits") is Dictionary or cfg.traits.size() != 30: return ["expected 30 traits"]
 	if not cfg.get("profiles") is Dictionary: return ["expected roll profiles"]
-	if cfg.get("maximum_rolled") != 3 or cfg.get("slot_breakthrough_tiers") != [1,3,5] \
-		or cfg.get("bond_reveal_nodes") != 5: errors.append("invalid roll/bond/slot gates")
+	if not cfg.get("runtime_enabled") is bool: errors.append("invalid runtime activation gate")
+	var slots: Variant = cfg.get("slot_breakthrough_tiers")
+	var slots_valid: bool = slots is Array and slots.size() == 3
+	if slots_valid:
+		for index: int in 3:
+			# JSON integers arrive as floats. Validate before numeric conversion;
+			# Array equality would distinguish the JSON and authored element types.
+			if not integer(slots[index],1,5) or int(slots[index]) != 1 + 2 * index:
+				slots_valid = false
+	if not integer(cfg.get("maximum_rolled"),3,3) or not slots_valid \
+		or not integer(cfg.get("bond_reveal_nodes"),5,5): errors.append("invalid roll/bond/slot gates")
 	if not integer(cfg.get("essence_cost_per_slot"),1,1000) \
 		or not integer(cfg.get("maximum_transaction_receipts"),1,100000): errors.append("invalid costs or receipt budget")
 	if not cfg.get("aggregate_effect_limit") is float \
@@ -67,6 +76,13 @@ static func configuration_errors(cfg: Dictionary) -> Array[String]:
 				else: sum += float(weight)
 			if sum <= 0.0: errors.append("empty roll weights")
 	return errors
+
+## Product activation is distinct from durable traits_initialized adoption.
+## Pure roll/effect/staging helpers remain usable while live doors are off.
+static func runtime_enabled(cfg: Dictionary = {}) -> bool:
+	var rules: Dictionary = config() if cfg.is_empty() else cfg
+	return rules.get("runtime_enabled") is bool and rules.runtime_enabled == true \
+		and configuration_errors(rules).is_empty()
 
 static func definition(id: String, cfg: Dictionary = {}) -> Dictionary:
 	var rules := config() if cfg.is_empty() else cfg
@@ -177,9 +193,13 @@ static func unlocked_slots(record: Dictionary, cfg: Dictionary = {}) -> Array[in
 	var rules := config() if cfg.is_empty() else cfg
 	var output: Array[int] = []
 	var tiers: Variant = record.get("breakthroughs",[])
-	if not tiers is Array: return output
-	for index: int in rules.get("slot_breakthrough_tiers",[]).size():
-		if tiers.has(rules.slot_breakthrough_tiers[index]): output.append(index+1)
+	if not tiers is Array or not configuration_errors(rules).is_empty(): return output
+	var normalized: Array[int] = []
+	for tier: Variant in tiers:
+		if not integer(tier,1,9): return output
+		normalized.append(int(tier))
+	for index: int in 3:
+		if normalized.has(int(rules.slot_breakthrough_tiers[index])): output.append(index+1)
 	return output
 
 static func _refuse(code: String) -> Dictionary:
