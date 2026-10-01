@@ -1,5 +1,5 @@
 {
-  "policy": "User explicitly authorized sidebar archives for sessions with all content consolidated and no CI failures attributed to their source, before main landing or criterion closure.",
+  "policy": "Latest user override: archive idle sessions with their complete content consolidated and no currently attributed CI failure requiring their session. Inactivity alone is not fault attribution. Reopen the same archived session if a later actual failure maps to it. Sidebar archives do not close criteria or imply main landing.",
   "consolidated_head": "c03cd139ae39dacfeef88e7f684cae7debd6bfd6",
   "main_head": "30fcc38fc591d5df3a7cfb122b9da58445467021",
   "ci_run": 36820599627,
@@ -9,50 +9,88 @@
   "archived": [
     {
       "threadId": "01a0f52e-4cbe-79b0-82d4-31dc392af2cd",
-      "title": "F24 \u00e2\u20ac\u201d Tether Commands, complete feature\u00e2\u20ac\u00a6",
+      "title": "F24 â€” Tether Commands, complete featureâ€¦",
       "branch": "tb/f24",
       "head": "5e0481bb5ac80b17906e7b2756251766d6678c0b",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f512-ab97-7c93-a96c-45705ff3d26a",
-      "title": "F28 \u00e2\u20ac\u201d Masters, breakthroughs and feasts",
+      "title": "F28 â€” Masters, breakthroughs and feasts",
       "branch": "tb/f28",
       "head": "a07c26cc5866d4845f8dd7c76e4807e452535173",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f512-b8f3-7522-a5bf-59c1a4a901da",
-      "title": "F30 \u00e2\u20ac\u201d Wild traits and Trait Seeds",
+      "title": "F30 â€” Wild traits and Trait Seeds",
       "branch": "tb/f30",
       "head": "26b0a1a0e008fe65c0f20fc4ad9c10ee3e4e9227",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f512-a7d7-7f91-b47f-922a18d234d6",
-      "title": "F23 \u00e2\u20ac\u201d Move slots, learnsets and mastery",
+      "title": "F23 â€” Move slots, learnsets and mastery",
       "branch": "tb/f23",
       "head": "1e24ef9f5037fbd5f8b00cfb5d37dc32f169b943",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f538-279e-74f1-8b67-e9d9baacab02",
-      "title": "F32 \u00e2\u20ac\u201d Materials, essence nodes and farming,\u00e2\u20ac\u00a6",
+      "title": "F32 â€” Materials, essence nodes and farming,â€¦",
       "branch": "tb/f32",
       "head": "810881e7a8ff4056eeafd5fbbf30994825fd06fd",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f546-24b0-7e61-930f-07eae74b0746",
-      "title": "F25 \u2014 Move effects library, complete\u2026",
+      "title": "F25 — Move effects library, complete…",
       "branch": "tb/f25",
       "head": "66b24e8aa01e9a6f51cf4b985e14fdfde9a71de7",
       "confirmed_archived": true,
       "checked_consolidated_head": "426de65195cafa5a5c7659eb514b7a590fe6348b",
       "audit": "f25-archive-source-audit.json",
       "reason": "Original cue mappings were lost in the assembled audio config, not absent in F25. All original mappings are restored; actual unchanged Move Effects tests pass. Complete feature branch ancestry and clean worktree verified."
+    },
+    {
+      "threadId": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "title": "F20 — Homecoming and regional ending",
+      "branch": "tb/f20",
+      "head": "e7829fba3ceec4d31a1bcb45b2e1f4d53a0b94ff",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+    },
+    {
+      "threadId": "01a0f510-cc96-7090-8e99-bf47054aed88",
+      "title": "F22 — Enemy patterns and combat roles",
+      "branch": "tb/f22",
+      "head": "6bc07fac4500e3d2adb48fc2954ba61834b59a22",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+    },
+    {
+      "threadId": "01a0f53f-0dcd-7070-a370-e361e9e308f6",
+      "title": "F35 — Signature ultimates, complete…",
+      "branch": "tb/f35",
+      "head": "532f2842615256a844a5672a124b4ae08fe86699",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+    },
+    {
+      "threadId": "01a0f547-bca4-77c3-a5e2-1c5ee16e340e",
+      "title": "F33 — Creature and trainer gear, complete…",
+      "branch": "tb/f33",
+      "head": "ac662d34b5962a758eea8048b2af9ea1d9f93303",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
     }
   ],
-  "retained": "Existing conversations owning failures or active shared repairs/review remain visible. Six archived sessions do not imply main landing or acceptance.",
-  "latest_archive_consolidated_head": "426de65195cafa5a5c7659eb514b7a590fe6348b"
+  "retained": "F17, F18, F19, Foundation and F31 own current returned failures; existing F29 reviews their fixes. Ten confirmed sidebar archives; main and criteria remain unchanged.",
+  "latest_archive_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+  "latest_archive_ci_run": 36854264014,
+  "latest_archive_ci_status": "Actual unit/runtime failures returned to existing owners; shared CI remains unaccepted."
 }
