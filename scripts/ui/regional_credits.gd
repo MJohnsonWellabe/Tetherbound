@@ -23,6 +23,7 @@ var _mouse_before := Input.MOUSE_MODE_CAPTURED
 var _root: Control = null
 var _scroll: ScrollContainer = null
 var _continue: Button = null
+var _save_status: Label = null
 var _scroll_position := 0.0
 var _config: Dictionary = {}
 var _ending_context: Dictionary = {}
@@ -71,6 +72,7 @@ func open_for(character_id: String, world: Object) -> bool:
 	_elapsed = 0.0
 	_presentation_serial += 1
 	_acknowledging = false
+	_save_status.visible = false
 	_open = true
 	visible = true
 	_mouse_before = Input.mouse_mode
@@ -132,6 +134,7 @@ func _acknowledge() -> void:
 		return
 	_acknowledging = true
 	_continue.disabled = true
+	_save_status.visible = true
 	var character_id := _expected_character_id
 	var game := get_node_or_null(^"/root/Game")
 	var frozen_context := _ending_context.duplicate(true)
@@ -158,6 +161,7 @@ func _close(_was_acknowledged: bool) -> void:
 	_closing_interact = Input.is_action_pressed("interact")
 	visible = false
 	_continue.disabled = false
+	_save_status.visible = false
 	_expected_character_id = ""
 	_expected_world = null
 	_ending_context = {}
@@ -250,6 +254,15 @@ func _build() -> void:
 			_add_line(roll, str(entry), int(layout.get("body_font_px", 24)), UI.TEXT_SECONDARY)
 	_add_line(roll, str(config.get("closing", "")),
 		int(layout.get("closing_font_px", 26)), UI.TEXT_PRIMARY)
+
+	_save_status = Label.new()
+	_save_status.text = str(config.get("saving_label", "Saving your homecoming…"))
+	_save_status.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_save_status.add_theme_font_override("font", load(UI.FONT_PATH))
+	_save_status.add_theme_font_size_override("font_size", int(layout.get("body_font_px", 24)))
+	_save_status.add_theme_color_override("font_color", UI.TEXT_PRIMARY)
+	_save_status.visible = false
+	column.add_child(_save_status)
 
 	_continue = Button.new()
 	_continue.text = "Continue exploring"

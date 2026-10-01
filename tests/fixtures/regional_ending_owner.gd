@@ -67,6 +67,7 @@ var chapter_choices: Array = ["meadows:refused", "water:accepted"]
 var receipts: Dictionary = {}
 var receipt_overrides: Dictionary = {}
 var bool_only := false
+var mutate_intent := false
 
 func regional_ending_context() -> Dictionary:
 	if not accepted_outcome or not world.flags.has(HOMECOMING.WORLD_FLAG):
@@ -84,6 +85,8 @@ func regional_ending_context() -> Dictionary:
 func commit_regional_ending_ack(intent: Dictionary) -> Variant:
 	if bool_only:
 		return true
+	if mutate_intent:
+		intent["transaction_id"] = "wrong-owner-transaction"
 	var id := str(intent.get("transaction_id", ""))
 	if receipts.has(id):
 		# A durable replay binds its envelope to the current validated request.

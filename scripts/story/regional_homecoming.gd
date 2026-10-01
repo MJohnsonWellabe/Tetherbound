@@ -9,6 +9,7 @@ const INITIAL_PREFIX := "regional_homecoming_"
 const REPEAT_ID := "regional_homecoming_repeat"
 const MAX_PARTY := 5
 const CONFIG_PATH := "res://data/config/regional_credits.json"
+const OBJECTIVES_PATH := "res://data/config/regional_ending_objectives.json"
 const SAVE_FAILURE_NOTICE := "Homecoming was not saved. Talk to Grandpa again to keep it."
 const CREDITS_SAVE_FAILURE_NOTICE := "The credits acknowledgement was not saved. Talk to Grandpa again to revisit it."
 const CONTEXT_FIELDS := ["world_instance_id", "session_epoch", "character_id",
@@ -71,6 +72,44 @@ static func aftermath_conversation(game: Object) -> String:
 	var value := journey_context(game)
 	return "stormwood_homecoming_aftermath" if not value.is_empty() \
 		and value.get("realm") == "stormwood" and value.get(SEEN_FLAG) != true else ""
+
+
+static func handoff_retry_seconds() -> float:
+	return maxf(0.1, float(_settings().get("handoff_retry_seconds", 0.5)))
+
+
+## One presentation reader for the owning quest log's HUD/journal/map/beacon.
+## It never grants an ending to a character merely visiting an ahead world.
+static func objective_rows(game: Object, authored: Dictionary = {}, realm_id: String = "") -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	var current := journey_context(game)
+	if current.is_empty() or current.get(CREDITS_SEEN_FLAG) == true:
+		return rows
+	if authored.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(OBJECTIVES_PATH))
+		authored = raw if raw is Dictionary else {}
+	var realm := str(current.get("realm", ""))
+	if not realm_id.is_empty() and realm != realm_id:
+		return rows
+	var supported: Variant = authored.get("supported_realms", [])
+	if not supported is Array or not supported.has(realm):
+		return rows
+	for raw: Variant in authored.get("rows", []):
+		if not raw is Dictionary or raw.get("scope") != "player" \
+				or raw.get("flag_id") not in [SEEN_FLAG, CREDITS_SEEN_FLAG]:
+			continue
+		var row: Dictionary = raw.duplicate(true)
+		var by_realm: Variant = row.get("realms", {})
+		row.erase("realms")
+		if by_realm is Dictionary and by_realm.get(realm) is Dictionary:
+			row.merge(by_realm[realm], true)
+		if current.get("durable_home_return") != true:
+			row.erase("beacon")
+			var before_return: Variant = authored.get("before_home_return", {})
+			if before_return is Dictionary:
+				row.merge(before_return, true)
+		rows.append(row)
+	return rows
 
 
 static func valid_party(party: Object) -> bool:
@@ -233,6 +272,10 @@ static func acknowledgement_intent(expected: Dictionary, flag: String) -> Dictio
 
 
 static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: String) -> bool:
+	# Retain our own snapshot across the authority callback and frame waits.
+	# Dictionary arguments are references; neither the caller nor an owner
+	# implementation may rewrite the envelope we later verify.
+	expected = expected.duplicate(true)
 	var failure := CREDITS_SAVE_FAILURE_NOTICE if flag == CREDITS_SEEN_FLAG else SAVE_FAILURE_NOTICE
 	if id.is_empty() or id != character_id(game) or not context_matches(game, expected) \
 			or not game.has_method("commit_regional_ending_ack"):
@@ -242,7 +285,7 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 		_notice(game, failure)
 		return false
 	var intent := acknowledgement_intent(expected, flag)
-	var raw: Variant = game.call("commit_regional_ending_ack", intent)
+	var raw: Variant = game.call("commit_regional_ending_ack", intent.duplicate(true))
 	var settings := _settings()
 	var deadline := Time.get_ticks_msec() + int(float(settings.get("ack_timeout_seconds", 8.0)) * 1000.0)
 	while raw is Dictionary and raw.get("status") == "pending":
@@ -270,7 +313,9 @@ static func receipt_matches(raw: Variant, intent: Dictionary) -> bool:
 			or not intent.get("version") is int or intent.get("version") != 1 \
 			or intent.get("transaction_id") != expected.get("transaction_id"):
 		return false
-	if raw.get("status") != "committed" or not raw.get("durable") is bool \
+	if acknowledgement_intent(raw, str(raw.get("stage", ""))).is_empty() \
+			or not raw.get("version") is int \
+			or raw.get("status") != "committed" or not raw.get("durable") is bool \
 			or raw.get("durable") != true \
 			or raw.get("kind") != intent.get("kind") or raw.get("version") != intent.get("version") \
 			or raw.get("transaction_id") != intent.get("transaction_id") \

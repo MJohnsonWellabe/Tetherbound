@@ -81,5 +81,7 @@
       "stormwood:refused": "You let the Stormheart choose its own road."
     }
   },
-  "ack_timeout_seconds": 8
+  "ack_timeout_seconds": 8,
+  "handoff_retry_seconds": 0.5,
+  "saving_label": "Saving your homecoming…"
 }

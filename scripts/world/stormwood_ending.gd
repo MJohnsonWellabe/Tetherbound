@@ -80,6 +80,9 @@ var _waterward_sea: MeshInstance3D
 var _local_claim: Dictionary = {}
 var _local_creature: RefCounted
 var _waiting_for_offer_dialogue := false
+var _homecoming_handoff_pending := false
+var _homecoming_handoff_presented := false
+var _homecoming_handoff_left := 0.0
 ## This conversation reached its Yes/No line, and whether Yes or the panel's
 ## explicit No was chosen. Neither set means the conversation was cut off.
 var _offer_reached_choice := false
@@ -152,11 +155,14 @@ func receive(event: Dictionary) -> void:
 			_aftermath_announced = bool(event.get("waterward_revealed", false))
 			_participants = (event.get("participants", []) as Array).duplicate()
 			_refresh_presentation()
+			if _released_announced:
+				_queue_homecoming_handoff()
 		"ending_release":
 			_released_announced = true
 			_refresh_presentation()
 			_animate_release()
 			_start_dialogue_when_free("stormwood_stormheart_release")
+			_queue_homecoming_handoff()
 		"ending_offer":
 			var claim: Variant = event.get("claim", {})
 			if claim is Dictionary and not (claim as Dictionary).is_empty():
@@ -164,10 +170,7 @@ func receive(event: Dictionary) -> void:
 		"ending_aftermath":
 			_aftermath_announced = true
 			_refresh_presentation()
-			var handoff := preload("res://scripts/story/regional_homecoming.gd").aftermath_conversation(
-				get_node("/root/Game"))
-			if not handoff.is_empty():
-				_start_dialogue_when_free(handoff)
+			_queue_homecoming_handoff()
 		"ending_water_gate_opened":
 			get_node("/root/Game").push_world_message("The Waterward gate is open.")
 		"ending_refused":
@@ -190,6 +193,7 @@ func restore_progression_from_game(_game: Node) -> void:
 
 
 func _process(delta: float) -> void:
+	_process_homecoming_handoff(delta)
 	var progression: RefCounted = get_node("/root/Game").get("progression")
 	if progression != null and int(progression.get("revision")) != _progression_revision:
 		_refresh_presentation()
@@ -783,6 +787,31 @@ func _party_holds_claim(party: RefCounted, claim: Dictionary) -> bool:
 		if str(creature.get("uid")) == id:
 			return true
 	return false
+
+
+## The release/event can arrive before canonical personal context. Remember
+## only a presentation request, then wait for the owner's accepted lineage.
+## It grants nothing to spectators and is disposed with this realm's node.
+func _queue_homecoming_handoff() -> void:
+	if not _homecoming_handoff_presented:
+		_homecoming_handoff_pending = true
+		_homecoming_handoff_left = 0.0
+
+
+func _process_homecoming_handoff(delta: float) -> void:
+	if not _homecoming_handoff_pending or bool(world.get("simulation_only")):
+		return
+	_homecoming_handoff_left -= delta
+	if _homecoming_handoff_left > 0.0:
+		return
+	var homecoming := preload("res://scripts/story/regional_homecoming.gd")
+	_homecoming_handoff_left = homecoming.handoff_retry_seconds()
+	var handoff := homecoming.aftermath_conversation(get_node("/root/Game"))
+	if handoff.is_empty() or preload("res://scripts/ui/input_owner.gd").current(get_tree()) != null:
+		return
+	if _start_dialogue_when_free(handoff):
+		_homecoming_handoff_pending = false
+		_homecoming_handoff_presented = true
 
 
 func _start_dialogue_when_free(id: String) -> bool:

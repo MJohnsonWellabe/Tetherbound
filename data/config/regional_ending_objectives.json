@@ -6,6 +6,10 @@
     "cloudreach",
     "meadows"
   ],
+  "before_home_return": {
+    "label": "Use your Home Key: Grandpa is waiting.",
+    "how": "Tap your Home Key outside combat, dialogue, cutscenes, swimming or flight. Then walk from the home arch to Grandpa's farm."
+  },
   "rows": [
     {
       "id": "regional_return_home",
@@ -23,11 +27,11 @@
           "how": "Use your Home Key: Grandpa is waiting. Tap the key outside combat, dialogue, cutscenes, swimming or flight."
         },
         "meadows": {
-          "how": "Walk from the home arch to Grandpa's farm and talk to him.",
+          "how": "Use your Home Key if you have not since the finale, then walk from the home arch to Grandpa's farm and talk to him.",
           "beacon": {
             "position": [
-              -22,
-              -16
+              2,
+              14
             ],
             "display_name": "Grandpa"
           }
@@ -50,11 +54,11 @@
           "how": "Use your Home Key: Grandpa is waiting. Tap the key outside combat, dialogue, cutscenes, swimming or flight."
         },
         "meadows": {
-          "how": "Talk to Grandpa again, then Continue or Skip the credits to return to the same world.",
+          "how": "Use your Home Key if you have not since the finale. Talk to Grandpa, then Continue or Skip the credits to return to the same world.",
           "beacon": {
             "position": [
-              -22,
-              -16
+              2,
+              14
             ],
             "display_name": "Grandpa"
           }

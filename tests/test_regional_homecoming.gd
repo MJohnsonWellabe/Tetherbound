@@ -257,6 +257,26 @@ func test_home_key_arrival_farm_and_safe_context_are_required() -> void:
 	assert_eq(game.save_system.calls, 0)
 
 
+func test_ending_objectives_require_personal_context_and_honest_return_goal() -> void:
+	var game := _credits_game()
+	game.accepted_outcome = false
+	assert_true(HOMECOMING.objective_rows(game).is_empty())
+	game.accepted_outcome = true
+	game.durable_home_return = false
+	assert_true(HOMECOMING.objective_rows(game, {}, "water").is_empty(), "a stale realm reader cannot display this character's current ending")
+	var rows := HOMECOMING.objective_rows(game)
+	assert_eq(rows.size(), 2)
+	for row: Dictionary in rows:
+		assert_true(str(row.get("how", "")).contains("Home Key"))
+		assert_false(row.has("beacon"), "do not lead the player to a farm dialogue they cannot start yet")
+	game.durable_home_return = true
+	rows = HOMECOMING.objective_rows(game)
+	assert_true(rows[0].has("beacon"))
+	assert_eq(rows[0].beacon.position, [2, 14], "the F17 farmhouse is at the village road's start")
+	game.local.flags.set_flag(HOMECOMING.CREDITS_SEEN_FLAG)
+	assert_true(HOMECOMING.objective_rows(game).is_empty(), "completed credits return to the ordinary realm feed")
+
+
 func test_stale_world_session_roster_names_and_memory_cannot_acknowledge() -> void:
 	for field: String in ["world_instance_id", "session_epoch", "outcome_id", "home_return_receipt"]:
 		var game := _credits_game()
@@ -286,6 +306,9 @@ func test_receipt_requires_matching_durable_typed_envelope() -> void:
 	assert_true(HOMECOMING.receipt_matches(receipt, intent))
 	assert_false(HOMECOMING.receipt_matches(true, intent), "bool save success alone is not an owner receipt")
 	assert_false(HOMECOMING.receipt_matches({"status": "committed", "durable": true}, {"unexpected": true}))
+	var wrong_type := receipt.duplicate(true)
+	wrong_type["party_revision"] = float(receipt.party_revision)
+	assert_false(HOMECOMING.receipt_matches(wrong_type, intent), "equal numeric values do not substitute for a typed revision")
 	for field: String in HOMECOMING.CONTEXT_FIELDS:
 		var wrong := receipt.duplicate(true)
 		wrong[field] = -1 if field == "party_revision" else "wrong"
@@ -298,6 +321,10 @@ func test_receipt_requires_matching_durable_typed_envelope() -> void:
 	assert_false(await HOMECOMING.complete_credits(game, game.local.character_id, HOMECOMING.context(game)))
 	assert_eq(game.save_system.calls, 0)
 	assert_false(game.local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG))
+	game.bool_only = false
+	game.mutate_intent = true
+	assert_false(await HOMECOMING.complete_credits(game, game.local.character_id, HOMECOMING.context(game)),
+		"the owner callback cannot rewrite the locally frozen request")
 
 
 func test_pending_owner_acknowledgement_waits_for_receipt() -> void:

@@ -4,7 +4,7 @@
   "schema_version": 1,
   "foundations_methods": {
     "regional_ending_context() -> Dictionary": {
-      "empty_until": "Canonical host-accepted captain_marrow_dynamo_core participant outcome is durable for this stable character. A shared stormheart_freed flag alone grants nothing.",
+      "empty_until": "Canonical host-accepted captain_marrow_dynamo_core participant outcome is durable for this stable character and respects the F19 validated legendary accept-or-refuse settlement barrier. A shared stormheart_freed flag alone grants nothing.",
       "required_fields": {
         "version": "int = 1",
         "world_instance_id": "nonempty String, validated current world identity",
@@ -42,8 +42,8 @@
     "ignored_patch": ".tmp/f20-shared-callers.patch",
     "apply_check": "git apply --check --recount --unidiff-zero --ignore-space-change .tmp/f20-shared-callers.patch",
     "sequence_director": "Freeze context BEFORE first spoken line; await saved homecoming; revalidate frozen context before deferred overlay; overlay itself awaits credits receipt. Remove old second credits acknowledgement callback. Interrupted dialogue cannot acknowledge.",
-    "quest_log": "_active_main must use owner Game.regional_ending_context plus RegionalHomecoming.journey_context, not only the shared required_world_flag. Resolve same reader for journal/HUD/map/beacon. Return normal realm feed for nonparticipant or completed personal credits; personalize homecoming/credits done bits from canonical context.",
-    "stormwood_handoff": "Deliver ending_aftermath only from the canonical accepted finale outcome when personal ending context is synchronized; legacy waterward view/physical gate is not a required trigger. Existing owned adapter fails closed if context not ready."
+    "quest_log": "F20 RegionalHomecoming.objective_rows(Game, authored_config, reader_realm) validates owner journey context, refuses nonparticipants/stale realm, hides farm beacon before post-finale durable HomeKey return, and returns no ending rows after personal credits. Proposed quest_log patch routes HUD/journal/map/beacon through it; shared owner must ensure canonical personal flags match the context.",
+    "stormwood_handoff": "Owned controller queues release/state/aftermath events and retries at authored 0.5-second intervals until canonical personal outcome context is available and dialogue/input_owner is free. Shared release cannot grant eligibility; presentation never requires the obsolete waterward-view platform. ROOT must still prove real accepted finale/source delivery."
   },
   "f18": {
     "arch_id": "biome5",
