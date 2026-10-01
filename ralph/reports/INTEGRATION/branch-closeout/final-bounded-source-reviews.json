@@ -1,0 +1,32 @@
+{
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "review_delivery": "Two independent SOURCE verdicts delivered directly to ROOT by the existing review conversation. Full messages remain in this conversation.",
+  "frozen_candidate": "3d469614558b9f967adf55f70ade527e48bdf53b",
+  "scope": "SOURCE ONLY; no engine, earned, visual, ENet, hardware or main acceptance follows.",
+  "reviews": [
+    {
+      "commit": "bb16c60ff38dab81538537439bb610db149c209d",
+      "verdict": "PASS",
+      "patch_sha256": "7e5778d5c76d8940ec0ddb2d7db898e189fa2934a498a316bd357a10f69bacf2",
+      "manifest_sha256": "e206e5cf5ae1ac47febbec0b57339d0175f99b50eb7af0fea23313c7f171ae50",
+      "independent_geometry": {
+        "decoded_float32_vertices": 1650,
+        "whole_edge_fence_clearance_m": 2.9616868457140457,
+        "maximum_lawn_extent_m": 15.073786814901682,
+        "lawn_radius_m": 16,
+        "old_footprint_outside_m": -1.4555208403596565
+      },
+      "preserved": "Only canopy translation/rationale changed. Current trainer, marshal and berry anchors verified from authored data; every old numerical clearance threshold retained, real runtime fitting/yaw reproduced.",
+      "provenance_caveat": "Packet whole-file EncounterDirector input is an older snapshot; relevant _send_out_spot function independently verified byte-identical to actual ROOT. Do not treat that whole snapshot as a ROOT source pin."
+    },
+    {
+      "commit": "6bc07fac4500e3d2adb48fc2954ba61834b59a22",
+      "verdict": "PASS",
+      "patch_sha256": "d6d3c0fba6b9ae1297b6d09858d1f974fd6b4fd56062f589288f85b39c6cfec0",
+      "root_before_lf_sha256": "4548a61a46ab7b4eb6baf6f0be8c0b2d626168ace3e66c162e2ee322d249ec38",
+      "root_after_lf_sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162",
+      "preserved": "Only native spawner preconditions changed. All remaining Director code byte-identical; pending deployment rows retained for peer-join/reconciliation and retirement retry. Existing Session host/duplicate/retirement guards, payload/callback/protocol and all 66 smoke assertions unchanged.",
+      "native_reference": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/multiplayer/multiplayer_spawner.cpp"
+    }
+  ]
+}
