@@ -77,7 +77,7 @@
   ],
   "source_checks_only": {
     "name": "source_risk_check.cjs",
-    "checks": 620,
+    "checks": 728,
     "result": "PASS",
     "engine_proof": false
   },
@@ -94,5 +94,6 @@
     "f32_source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
     "f32_ticket": "ralph/reports/HOMESTEAD/f32/whole-source/proof-ticket.json",
     "runtime_accepted_stock": null
-  }
+  },
+  "source_commit": "0724c8d5d0965bd6ac90dfe7a9d20287c8f16811"
 }

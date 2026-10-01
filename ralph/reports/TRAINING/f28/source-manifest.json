@@ -1,11 +1,11 @@
 {
-  "source_commit": "1341de115f9d228d2ff2657cff5cf17cb301bd2c",
+  "source_commit": "0724c8d5d0965bd6ac90dfe7a9d20287c8f16811",
   "source_base": "b7cb96de89c4c6a9ae827f09e0ad7a2d3a699e70",
   "owned_files": {
     "data/config/masters.json": "d93a2a2064c87f5f27066691c128e7a17a62bf212e878da385c6c7c110aafece",
-    "data/recipes/feasts.json": "37cca34e965955058d4fdde542013765ab1de0f0ae287b1e3aa409e86325cdc1",
-    "scripts/creatures/breakthrough.gd": "5b568b142ecd6e748c4c83001eeb21e5685002b8f114c93e09246fa36913bc47",
-    "scripts/masters/attuned_herb.gd": "f9244980a44651abbfeb5202d6a989090ddd6b999d0109add4305861137afc18",
+    "data/recipes/feasts.json": "f5d56eca0663be480ba85df7b55401ad554ecff5228f54b179be65cd695ed1f7",
+    "scripts/creatures/breakthrough.gd": "a01540a1d0469f309fe860a1b5056c042e04c2040471ef7ac059b357520cbebb",
+    "scripts/masters/attuned_herb.gd": "2f0cf342d944a23bd1d5fabe8ecb2394f94b9e50f862105875e6ddef08df6ca4",
     "scripts/masters/breakthrough_actions.gd": "7570bcb25b0ab976de3581cff33cfc0cc3996d7d0d00b8a05c8c44baf29b77ab",
     "scripts/masters/breakthrough_panel.gd": "2a3c48571caa8f19f5fb44d057003b578d71383587e0370961ef470081decbd6",
     "scripts/masters/breakthrough_service.gd": "6e08236b29b73f9dd5a950815371e57f25a4f7d244deac86e30f09c9b49926d6",
@@ -20,15 +20,36 @@
   "shared_source_changed": false,
   "ignored_proposals": "D:\\tetherbound\\feature-f28\\.tmp\\f28\\shared-patches.json",
   "source_risk_check": {
-    "checks": 620,
-    "failures": []
+    "checks": 728,
+    "failures": [],
+    "scope": "Authored JSON identity/catalogue/source/order checks only; no GDScript parse, engine, persistence or acceptance proof."
   },
   "independent_review": {
     "author": "/root/strict_f28_source_review (different-author read-only subagent)",
-    "artifact": "independent-source-review.json",
-    "disposition": "No remaining concrete owned source blocker; integration/runtime proof held"
+    "artifact": "independent-f32-retirement-review.json",
+    "predecessor_artifact": "independent-source-review.json",
+    "disposition": "No concrete owned source blocker; integration/runtime proof held"
   },
   "engine_runs": 0,
   "unit_runs": 0,
-  "acceptance_credit": 0
+  "acceptance_credit": 0,
+  "predecessor_source_commit": "1341de115f9d228d2ff2657cff5cf17cb301bd2c",
+  "attuned_source_contract": "attuned-source-contract.json",
+  "retirement_invariants": "No recipe/item/cost/output or other Breakthrough arithmetic changed from1341; finite garden removed and old gather always refuses.",
+  "source_git_content_sha256": {
+    "data/config/masters.json": "d93a2a2064c87f5f27066691c128e7a17a62bf212e878da385c6c7c110aafece",
+    "data/recipes/feasts.json": "f5d56eca0663be480ba85df7b55401ad554ecff5228f54b179be65cd695ed1f7",
+    "scripts/creatures/breakthrough.gd": "a01540a1d0469f309fe860a1b5056c042e04c2040471ef7ac059b357520cbebb",
+    "scripts/masters/attuned_herb.gd": "2f0cf342d944a23bd1d5fabe8ecb2394f94b9e50f862105875e6ddef08df6ca4",
+    "scripts/masters/breakthrough_actions.gd": "7570bcb25b0ab976de3581cff33cfc0cc3996d7d0d00b8a05c8c44baf29b77ab",
+    "scripts/masters/breakthrough_panel.gd": "2a3c48571caa8f19f5fb44d057003b578d71383587e0370961ef470081decbd6",
+    "scripts/masters/breakthrough_service.gd": "6e08236b29b73f9dd5a950815371e57f25a4f7d244deac86e30f09c9b49926d6",
+    "scripts/masters/master_duel.gd": "529206af830f49944b1d321f0b6d2324dbc89ccb1e5bf6672d6db6749e69d373",
+    "scripts/masters/master_site.gd": "e1f581bb7ab34cc5dbfdabdd45b3e040e3b38b017ddf6d0906b545a461a3b926",
+    "scenes/masters/master_t1.tscn": "221c94a8b9991db155769492b068d4ac348153fed020b8413714da2077805ae1",
+    "scenes/masters/master_t2.tscn": "4ad7b9b0664eb737aa6d8a33ccda423bed7985942dc544a6e565e4829b8a1ae8",
+    "scenes/masters/master_t3.tscn": "d2cfb48bc6779f238adbb1ac5fb31dee8a063f50ce86e3ecb6367936dafaa567",
+    "scenes/masters/master_t4.tscn": "a97b7f0a1b23924efc91fecc6ba19a833fee942861ad8f447a359b9c93e9b88c",
+    "scenes/masters/master_t5.tscn": "543be7dbf44f751205d4b2bb96bf543a0b2bc094a3d62ade45c3e129e8c9e47f"
+  }
 }
