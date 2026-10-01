@@ -64,8 +64,9 @@ var _stalled := 0
 var _checked_start := false
 
 
-func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable) -> void:
+func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable, production_steering: bool = false) -> void:
 	super(tree, player, rig, drive)
+	_production_steering = production_steering
 	_contact_init()
 	_body = player as CharacterBody3D
 	_world = player.get_parent() as Node3D
@@ -106,6 +107,18 @@ func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable) -> voi
 	_tick.process_physics_priority = _body.process_physics_priority - 1
 	_world.add_child(_tick)
 	_progress_at = _player.global_position
+	if _production_steering:
+		_observer = ProductionObserve.new()
+		_observer.name = "OpeningProductionObservationHarness"
+		_observer.navigator = weakref(self)
+		_observer.process_thread_group = Node.PROCESS_THREAD_GROUP_INHERIT
+		_observer.process_physics_priority = _body.process_physics_priority + 1
+		_world.add_child(_observer)
+		if not _production_contract():
+			return
+		_recoveries_at_start = int(_body.call("unstick_count"))
+		if _recoveries_at_start != 0:
+			_stop_geometry("production route started after an actual recovery attempt")
 
 
 func _config(path: String) -> Variant:
@@ -153,6 +166,8 @@ func reset() -> void:
 	_goal = Vector2.INF
 	_arrival = 0.05
 	_stalled = 0
+	_observed_choice = 0
+	_retry_at = STALL_FRAMES
 	_checked_start = false
 	if is_instance_valid(_player):
 		_progress_at = _player.global_position
@@ -562,15 +577,23 @@ func _native_tick_impl(_delta: float) -> void:
 		_stop_geometry("native request/lifetime/finite-input cap")
 		return
 	if not can_walk():
+		if _production_steering:
+			_checked_start = false
 		_drive.call(0.0, 0.0)
 		return
-	if not _trainer_contract() or not _start_clear(_body.global_transform):
+	if not _trainer_contract() or not (_observed_live_clear() if _production_steering else _start_clear(_body.global_transform)):
 		_stop_geometry("actual starting overlap cannot be classified as shallow support floor")
 		return
 	if not _body.is_on_floor():
 		_stop_geometry("trainer not grounded; aerial/stream/recovery case is incomplete")
 		return
-	_checked_start = true
+	_checked_start = not _production_steering
+	if _production_steering:
+		if not _production_contract():
+			return
+		_production_pending = true
+		_production_before = _body.global_position
+		_production_driven = false
 	var direction := _request
 	if not _raw:
 		if not _prepare_departure(_request):
@@ -592,18 +615,25 @@ func _native_tick_impl(_delta: float) -> void:
 		if _goal == Vector2.INF or _goal.distance_to(point) > 0.5:
 			_goal = point
 			_route.clear()
+			if _production_steering:
+				_observed_choice = 0
+				_retry_at = STALL_FRAMES
 		elif not _route.is_empty():
 			_route[_route.size() - 1] = point # Live target, still checked locally.
 		if not _route.is_empty() and _xz(_player.global_position).distance_to(_route[0]) <= THRESHOLD_RADIUS:
 			_route.pop_front()
-		if _route.is_empty() and not _choose(point, tolerance):
+		if _production_steering and _departure.is_empty() and _stalled >= _retry_at:
+			_observed_choice += 1
+			_retry_at += STALL_FRAMES # Does not reset the unchanged 90-frame stall cap.
+			_route.clear()
+		if _route.is_empty() and not _choose_route(point, tolerance):
 			return
 		var at := _route[0]
 		direction = Vector3(at.x - _player.global_position.x, 0.0, at.y - _player.global_position.z)
 	if direction.length_squared() <= 0.000001:
 		_drive.call(0.0, 0.0)
 		return
-	if not _supported_step(direction):
+	if not _production_steering and not _supported_step(direction):
 		# Recheck live geometry every input; additions, raw shapes and owner edits
 		# are observed natively. A blocked local leg gets one new bounded choice.
 		_route.clear()
@@ -611,14 +641,17 @@ func _native_tick_impl(_delta: float) -> void:
 			_stop_geometry("native local floor/clearance incomplete; no blind fallback")
 			return
 		direction = Vector3(_route[0].x - _player.global_position.x, 0.0, _route[0].y - _player.global_position.z)
-	_stalled += 1
-	if _player.global_position.distance_to(_progress_at) >= 0.08:
-		_progress_at = _player.global_position
-		_stalled = 0
-	if _stalled > 90:
-		_stop_geometry("real stick travel made no progress within 90 requested frames")
-		return
+	if not _production_steering:
+		_stalled += 1
+		if _player.global_position.distance_to(_progress_at) >= 0.08:
+			_progress_at = _player.global_position
+			_stalled = 0
+		if _stalled > 90:
+			_stop_geometry("real stick travel made no progress within 90 requested frames")
+			return
 	_owns_input = true
+	if _production_steering:
+		_production_driven = true
 	if refused() or Time.get_ticks_usec() > _deadline:
 		_stop_geometry("native callback cooperative deadline before stick input")
 		return
@@ -922,6 +955,20 @@ func _contact_dump() -> void:
 
 
 func _native_tick(delta: float) -> void:
+	if _production_steering:
+		var began: int = Time.get_ticks_usec()
+		_production_delta = delta
+		if OS.get_thread_caller_id() != OS.get_main_thread_id():
+			_native_tick_impl(delta) # Uses the existing deferred stop on wrong thread.
+			return
+		if _production_pending:
+			_stop_geometry("production post-physics observation did not complete")
+		else:
+			_native_tick_impl(delta)
+		_pre_observe_us = Time.get_ticks_usec() - began
+		if refused() and OS.get_thread_caller_id() == OS.get_main_thread_id():
+			_production_record()
+		return
 	if not _contact_enabled or not _requested or OS.get_thread_caller_id() != OS.get_main_thread_id():
 		_native_tick_impl(delta)
 		return
@@ -981,3 +1028,233 @@ func diagnose_supported_pose(pose: Transform3D, direction: Vector3) -> bool:
 		"admitted": admitted, "refusal": _reason, "queries": _queries, "failed_records": _contact_count}, "", true, true))
 	_contact_staged = false
 	return admitted
+
+
+# Opt-in M1 observation, not a predictive certificate. Default diagnostics above
+# remain byte-for-byte intact. Production owns every movement/collision response.
+class ProductionObserve extends Node:
+	var navigator: WeakRef
+	func _physics_process(_delta: float) -> void:
+		var nav: RefCounted = navigator.get_ref()
+		if nav == null:
+			queue_free()
+		else:
+			nav.call("_production_observe")
+
+var _production_steering := false
+var _observer: ProductionObserve
+var _production_pending := false
+var _production_driven := false
+var _production_before := Vector3.ZERO
+var _production_delta := 0.0
+var _pre_observe_us := 0
+var _recoveries_at_start := -1
+var _observed_choice := 0
+var _retry_at := STALL_FRAMES
+var _observed_frames := 0
+var _observed_distance := 0.0
+var _observed_wall_frames := 0
+var _observed_ceiling_frames := 0
+var _observed_slide_depth := 0.0
+var _observed_live: PhysicsTestMotionResult3D
+var _recorded_frame := -1
+var _recorded_failure := false
+
+
+func _production_contract() -> bool:
+	if not is_instance_valid(_body) or not is_instance_valid(_tick) or not is_instance_valid(_observer) \
+			or _body.get_script().resource_path != "res://scripts/player/player_controller.gd" \
+			or not _body.has_method("unstick_count") or not _body.is_physics_processing() or not _body.can_process() \
+			or _body.process_thread_group != Node.PROCESS_THREAD_GROUP_INHERIT \
+			or _tick.process_thread_group != Node.PROCESS_THREAD_GROUP_INHERIT \
+			or _observer.process_thread_group != Node.PROCESS_THREAD_GROUP_INHERIT \
+			or _body.get_parent() != _world or _tick.get_parent() != _world or _observer.get_parent() != _world \
+			or _tick.process_physics_priority != _body.process_physics_priority - 1 \
+			or _observer.process_physics_priority != _body.process_physics_priority + 1 \
+			or _body.max_slides <= 0 or _body.max_slides > CONTACTS:
+		_stop_geometry("production body/callback order/observation bound changed")
+		return false
+	return true
+
+
+func _observed_live_clear() -> bool:
+	# Actual registered pose only. No cast, future support query, terrain special
+	# case or normal-cone admission. A shallow wall/ceiling contact is observed;
+	# the unchanged production controller must actually resolve it.
+	if not _production_contract() or int(_body.call("unstick_count")) != _recoveries_at_start:
+		_stop_geometry("actual production recovery attempt; route cannot claim ordinary traversal")
+		return false
+	if not _body.global_position.is_finite() or not _body.velocity.is_finite():
+		_stop_geometry("nonfinite actual production pose/velocity")
+		return false
+	var result: Dictionary = _motion(_body.global_transform, Vector3.ZERO, true)
+	_observed_live = result.hit as PhysicsTestMotionResult3D
+	if _observed_live == null:
+		return false
+	if _observed_live.get_travel().length() > _body.safe_margin + CONTACT_EPS:
+		_stop_geometry("deep actual overlap: zero-motion recovery exceeds unchanged skin")
+		return false
+	for index in _observed_live.get_collision_count():
+		var normal: Vector3 = _observed_live.get_collision_normal(index)
+		var point: Vector3 = _observed_live.get_collision_point(index)
+		var depth: float = _observed_live.get_collision_depth(index)
+		if not normal.is_finite() or not point.is_finite() or not is_finite(depth) \
+				or depth < -CONTACT_EPS or depth > _body.safe_margin + CONTACT_EPS \
+				or absf(normal.length_squared() - 1.0) > 0.001 \
+				or _observed_live.get_collision_local_shape(index) != _capsule_index:
+			_stop_geometry("invalid/deep actual live contact or changed trainer local shape")
+			return false
+	return not refused()
+
+
+func _choose_route(point: Vector2, tolerance: float) -> bool:
+	if not _production_steering:
+		return _choose(point, tolerance)
+	_plans += 1
+	var from: Vector2 = _xz(_body.global_position)
+	if _plans > MAX_PLANS or from.distance_to(point) > MAX_EDGE or _observed_choice >= MAX_CHOICES:
+		_stop_geometry("observed route scope/plan/candidate cap")
+		return false
+	_route.clear()
+	if _observed_choice == 0 or not _departure.is_empty():
+		_route.append(point) # Provisional requested road/door/camp heading only.
+		return true
+	var candidates: Array[Vector2] = []
+	for road: Vector2 in _roads:
+		if road.distance_to(from) > 0.5 and road.distance_to(from) <= MAX_EDGE and road.distance_to(point) <= MAX_EDGE:
+			candidates.append(road)
+	candidates.sort_custom(func(a: Vector2, b: Vector2) -> bool:
+		return from.distance_to(a) + a.distance_to(point) < from.distance_to(b) + b.distance_to(point))
+	if _observed_choice - 1 >= candidates.size():
+		_stop_geometry("actual steering stalled with no remaining authored road choice")
+		return false
+	_route.append(candidates[_observed_choice - 1])
+	_route.append(point)
+	return true # Does not certify either future leg or silently succeed at it.
+
+
+func _production_observe() -> void:
+	if OS.get_thread_caller_id() != OS.get_main_thread_id():
+		_reason = "production observation no longer runs on the main physics thread"
+		_requested = false
+		_drive.call_deferred(0.0, 0.0)
+		return
+	if not _production_pending:
+		return
+	_production_pending = false
+	# One 10ms allowance for the two harness callbacks' own work, excluding the
+	# intervening production controller. Native query counts share the frame cap.
+	_deadline = Time.get_ticks_usec() + maxi(0, FRAME_QUERY_US - _pre_observe_us)
+	_checked_start = false
+	if refused():
+		_production_record()
+		return
+	if not _trainer_contract() or not _observed_live_clear():
+		_stop_geometry("invalid actual production landing/registration")
+	elif not _body.is_on_floor():
+		_stop_geometry("actual production walk lost grounded floor")
+	else:
+		var count: int = _body.get_slide_collision_count()
+		var contacts := 0
+		_observed_slide_depth = 0.0
+		if count > CONTACTS:
+			_stop_geometry("actual production slide observation cap")
+		else:
+			for slide in count:
+				var collision: KinematicCollision3D = _body.get_slide_collision(slide)
+				if collision == null or not is_finite(collision.get_depth()) or collision.get_depth() < -CONTACT_EPS:
+					_stop_geometry("invalid actual production slide result")
+					break
+				contacts += collision.get_collision_count()
+				if contacts > CONTACTS:
+					_stop_geometry("actual production contact observation cap")
+					break
+				# Swept depths describe UNSAFE motion; only the live ZERO-motion
+				# result above is used to reject deep current-body overlap.
+				_observed_slide_depth = maxf(_observed_slide_depth, collision.get_depth())
+				for index in collision.get_collision_count():
+					var normal: Vector3 = collision.get_normal(index)
+					var point: Vector3 = collision.get_position(index)
+					# Owner identity is valid here: get_slide_collision returns the
+					# body's populated cache, not a fresh ownerless test_move result.
+					if collision.get_local_shape(index) != _cap or not normal.is_finite() or not point.is_finite():
+						_stop_geometry("invalid actual slide contact/shape owner")
+						break
+				if refused():
+					break
+	if not refused():
+		# Cached real velocity is computed by move_and_slide before the production
+		# step-up. Read it; never write it. Additional motion must fit that actual
+		# controller's step/drop bounds, so a respawn/pose jump cannot earn travel.
+		var speed_cap: float = float(_body.get("_max_speed"))
+		var slide_motion: Vector3 = _body.get_real_velocity() * _production_delta
+		var extra: Vector3 = _body.global_position - _production_before - slide_motion
+		var skin: float = _body.safe_margin + CONTACT_EPS
+		if not is_finite(_production_delta) or _production_delta <= 0.0 or not is_finite(speed_cap) or speed_cap <= 0.0 \
+				or not slide_motion.is_finite() or not extra.is_finite() \
+				or speed_cap * _production_delta > MAX_EDGE \
+				or slide_motion.length() > speed_cap * _production_delta + _body.floor_snap_length + skin \
+				or _xz(extra).length() > maxf(_probe, speed_cap * _production_delta) + skin \
+				or extra.y > _step_height + skin or extra.y < -_body.floor_snap_length - skin:
+			_stop_geometry("actual movement exceeded production slide/step/drop bounds")
+	if not refused():
+		_observed_frames += 1
+		_observed_distance += _body.global_position.distance_to(_production_before)
+		_observed_wall_frames += int(_body.is_on_wall())
+		_observed_ceiling_frames += int(_body.is_on_ceiling())
+		if _production_driven:
+			_stalled += 1
+			if _xz(_body.global_position).distance_to(_xz(_progress_at)) >= PROGRESS:
+				_progress_at = _body.global_position
+				_stalled = 0
+				_retry_at = STALL_FRAMES
+			if _stalled > 90:
+				_stop_geometry("real production stick travel made no progress within 90 requested frames")
+		_checked_start = not refused() # Only AFTER actual controller movement.
+	_production_record()
+	if Time.get_ticks_usec() > _deadline:
+		_checked_start = false
+		_stop_geometry("production observation cooperative callback deadline")
+		_production_record()
+
+
+func _production_record() -> void:
+	# First eight observations, each 90th, and one terminal failure. Bounded
+	# formatting, never a per-frame history or an acceptance/no-snag assertion.
+	if not is_instance_valid(_body) or (refused() and _recorded_failure):
+		return
+	if not refused() and (_recorded_frame == _observed_frames or (_observed_frames > 8 and _observed_frames % 90 != 0)):
+		return
+	_recorded_frame = _observed_frames
+	_recorded_failure = refused()
+	var contacts: Array = []
+	if _observed_live != null:
+		for index in mini(CONTACTS, _observed_live.get_collision_count()):
+			contacts.append({"normal": _contact_vector(_observed_live.get_collision_normal(index)),
+				"point": _contact_vector(_observed_live.get_collision_point(index)),
+				"depth": _observed_live.get_collision_depth(index), "local_shape": _observed_live.get_collision_local_shape(index),
+				"collider_rid": str(_observed_live.get_collider_rid(index)), "collider_shape": _observed_live.get_collider_shape(index)})
+	var slides: Array = []
+	for slide in mini(CONTACTS, _body.get_slide_collision_count()):
+		var collision: KinematicCollision3D = _body.get_slide_collision(slide)
+		if collision == null:
+			break
+		for index in mini(CONTACTS - slides.size(), collision.get_collision_count()):
+			slides.append({"slide": slide, "normal": _contact_vector(collision.get_normal(index)),
+				"point": _contact_vector(collision.get_position(index)), "swept_depth": collision.get_depth(),
+				"collider_rid": str(collision.get_collider_rid(index)), "collider_shape": collision.get_collider_shape_index(index)})
+		if slides.size() == CONTACTS:
+			break
+	print("OPENING_PRODUCTION_OBSERVATION " + JSON.stringify({"acceptance": false,
+		"frame": _observed_frames, "player": _contact_vector(_body.global_position), "request": _contact_vector(_request),
+		"on_floor": _body.is_on_floor(), "on_wall": _body.is_on_wall(), "on_ceiling": _body.is_on_ceiling(),
+		"actual_delta": _contact_vector(_body.global_position - _production_before),
+		"slide_motion": _contact_vector(_body.get_real_velocity() * _production_delta),
+		"progress_m": _observed_distance, "stall_frames": _stalled, "wall_frames": _observed_wall_frames,
+		"ceiling_frames": _observed_ceiling_frames, "slide_count": _body.get_slide_collision_count(),
+		"swept_depth": _observed_slide_depth, "slide_contacts": slides,
+		"safe_margin": _body.safe_margin, "floor_angle": _body.floor_max_angle, "snap": _body.floor_snap_length, "mask": _body.collision_mask,
+		"recoveries": int(_body.call("unstick_count")) if _body.has_method("unstick_count") else -1,
+		"live_recovery_travel": _contact_vector(_observed_live.get_travel()) if _observed_live != null else [],
+		"live_contacts": contacts, "queries": _queries, "total_queries": _total_queries,
+		"requests": _requests, "plans": _plans, "provisional_choice": _observed_choice, "refusal": _reason}))

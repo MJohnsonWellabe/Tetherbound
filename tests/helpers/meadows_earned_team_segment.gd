@@ -97,7 +97,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if _initial_ids.size() != 2 or _fighting() or INPUT_OWNER.current(tree) != null:
 		_fail("Preparation starts after live opening/village with two earned creatures and world input")
 		return result()
-	_nav = NAV.new(tree, _player, _rig, _stick)
+	_nav = NAV.new(tree, _player, _rig, _stick, true) # Observe actual production steering.
 	# A fresh save rolls its own world seed (spawn_tables.json roll_new_worlds),
 	# which re-rolls table clusters near the practice meadow. Record it so any
 	# run can be reproduced with TB_WORLD_SEED.

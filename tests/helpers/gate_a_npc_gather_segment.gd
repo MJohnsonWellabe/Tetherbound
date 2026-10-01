@@ -91,7 +91,7 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 		return _failures
 	if not _required_pad_actions_exist():
 		return _failures
-	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
+	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick, true) # Observe actual production steering.
 	var activation_handler := Callable(self, "_on_arbiter_activated")
 	if not _arbiter.is_connected("activated", activation_handler):
 		_arbiter.connect("activated", activation_handler)

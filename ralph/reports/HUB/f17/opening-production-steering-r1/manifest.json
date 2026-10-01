@@ -1,0 +1,463 @@
+{
+  "scope": "Independent sourcePASS only; original R5 FAIL retained; actual M1 fresh original-budget proof queued, no F17#4 credit.",
+  "base": "95e6d5fa69b97514031fd4a0ef883d940732bb62",
+  "patch_sha256": "db20d22b0ce867d2f7172981658bf4943f231cee150b13e1d2b75d2fa49c1c59",
+  "independent_review_sha256": "614597522e2965ba0221c5b6ee157e100e7c6ffa89b1aa623df8b6a69d0bec7e",
+  "files": [
+    {
+      "raw_path": "source-and-review/api/character_body_3d.cpp",
+      "raw_bytes": 39395,
+      "raw_sha256": "97f7a62669d7fea06a450be8eecad53d2d1523f4323425af2ac6bf1b19c68383",
+      "archive": "source-and-review/api/character_body_3d.cpp.gz",
+      "archive_sha256": "01d8189316a19bd6f914124db4cb7c9a561d649482a23ac664b30564ad65d14a"
+    },
+    {
+      "raw_path": "source-and-review/api/kinematic_collision_3d.cpp",
+      "raw_bytes": 7042,
+      "raw_sha256": "0ff2f08cf9bb1370c06b04af51d91b1a23d0c4dc30a4569ca57e247a893aaf73",
+      "archive": "source-and-review/api/kinematic_collision_3d.cpp.gz",
+      "archive_sha256": "5bcfa41a39f9767f836fdabe1f1725bee169ac9bf2df71382b7aca9c1ca3c0ce"
+    },
+    {
+      "raw_path": "source-and-review/api/physics_body_3d.cpp",
+      "raw_bytes": 10965,
+      "raw_sha256": "c071f6e22ed283fe20429246643a0f004b86e50737afb19a1465d45a3498e112",
+      "archive": "source-and-review/api/physics_body_3d.cpp.gz",
+      "archive_sha256": "42645df3e7054f4d3cfd1d18f45b72c26a88a26a73787d65674d7dadc3b3112b"
+    },
+    {
+      "raw_path": "source-and-review/author.py",
+      "raw_bytes": 17139,
+      "raw_sha256": "32b762435717d0cf28dd7839f8372049e9164dd37da3ede6153d95b83c4c7e5f",
+      "archive": "source-and-review/author.py.gz",
+      "archive_sha256": "d5dd7f85f74405e7ecdabe0e14e08ded7f5b10893ea01f5c17b29d70366ed9f7"
+    },
+    {
+      "raw_path": "source-and-review/capture.py",
+      "raw_bytes": 1921,
+      "raw_sha256": "6027136328749f2077183ebde3f18036a92c75e6cef845ce7a00c34c82fdf541",
+      "archive": "source-and-review/capture.py.gz",
+      "archive_sha256": "e3e1a385171c7e5262c657229422f3e1057ade7d718d2216e9cafc048303be5b"
+    },
+    {
+      "raw_path": "source-and-review/cause-and-constraints.json",
+      "raw_bytes": 10536,
+      "raw_sha256": "995e331b61c14472dad79967cd95ced1ac34ae5946de3ef046293f46d191c428",
+      "archive": "source-and-review/cause-and-constraints.json.gz",
+      "archive_sha256": "a996adb698c4242123436d0cda19c567446f228d45e3000b4df04bcd32ed820d"
+    },
+    {
+      "raw_path": "source-and-review/evidence/native.txt",
+      "raw_bytes": 24846,
+      "raw_sha256": "7c87a79a69b89b5765a794111de3d20849bc486805bb3e6d0d16559eddc1256f",
+      "archive": "source-and-review/evidence/native.txt.gz",
+      "archive_sha256": "4d808adf700d864a48639ce5694a6ff58d7e0393a399ff40299651a0fb34d906"
+    },
+    {
+      "raw_path": "source-and-review/evidence/parser.txt",
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "archive": "source-and-review/evidence/parser.txt.gz",
+      "archive_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    {
+      "raw_path": "source-and-review/evidence/receipt.json",
+      "raw_bytes": 5566,
+      "raw_sha256": "bfc6dc71a18f7c42c3119a3dddee07b4fbb038fac42ff3f8f86694cc29fc93de",
+      "archive": "source-and-review/evidence/receipt.json.gz",
+      "archive_sha256": "6fb8dab4af1a49133be845e303cd106920e19090ef05c2c28d7149065bf1f4de"
+    },
+    {
+      "raw_path": "source-and-review/freeze.json",
+      "raw_bytes": 4218,
+      "raw_sha256": "c52c5a2af2f898a424ebcf3acda661fd7174d200627c27481fdd0a5880c47a53",
+      "archive": "source-and-review/freeze.json.gz",
+      "archive_sha256": "d7abadea5a9d3f7ba3b7cb110387ea70419d9ad9146fffc1d4e9b7e6ac02cc90"
+    },
+    {
+      "raw_path": "source-and-review/independent/engine-pinned/scene/3d/physics/character_body_3d.cpp",
+      "raw_bytes": 39395,
+      "raw_sha256": "97f7a62669d7fea06a450be8eecad53d2d1523f4323425af2ac6bf1b19c68383",
+      "archive": "source-and-review/independent/engine-pinned/scene/3d/physics/character_body_3d.cpp.gz",
+      "archive_sha256": "01d8189316a19bd6f914124db4cb7c9a561d649482a23ac664b30564ad65d14a"
+    },
+    {
+      "raw_path": "source-and-review/independent/engine-pinned/scene/3d/physics/kinematic_collision_3d.cpp",
+      "raw_bytes": 7042,
+      "raw_sha256": "0ff2f08cf9bb1370c06b04af51d91b1a23d0c4dc30a4569ca57e247a893aaf73",
+      "archive": "source-and-review/independent/engine-pinned/scene/3d/physics/kinematic_collision_3d.cpp.gz",
+      "archive_sha256": "5bcfa41a39f9767f836fdabe1f1725bee169ac9bf2df71382b7aca9c1ca3c0ce"
+    },
+    {
+      "raw_path": "source-and-review/independent/engine-pinned/scene/main/node.h",
+      "raw_bytes": 37759,
+      "raw_sha256": "e2825e0196dfe645b872adab78f8039ddc4de4032f975e1d7d8370fe2cadf528",
+      "archive": "source-and-review/independent/engine-pinned/scene/main/node.h.gz",
+      "archive_sha256": "9559ac5719abc239ad1b4e9e47eb31bc11d08edf7a4e259bde21bc73ac9dc31b"
+    },
+    {
+      "raw_path": "source-and-review/independent/engine-pinned/scene/main/scene_tree.cpp",
+      "raw_bytes": 75907,
+      "raw_sha256": "eed6dbff323344efff19f2de6763705aff062a76e00fd7cbe42a4ee849b7e5a4",
+      "archive": "source-and-review/independent/engine-pinned/scene/main/scene_tree.cpp.gz",
+      "archive_sha256": "3a1a8679873c543bcdbc5dd78f2fbf326542ba5abd09be654e45b19b88ca932c"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/autoload/game_state.gd",
+      "raw_bytes": 135845,
+      "raw_sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+      "archive": "source-and-review/independent/originals/autoload/game_state.gd.gz",
+      "archive_sha256": "2e7e9cbe4fa26325033890aed05e438bd20782c537f93383f57b1150edf84475"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/data/config/building_prefabs.json",
+      "raw_bytes": 277022,
+      "raw_sha256": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36",
+      "archive": "source-and-review/independent/originals/data/config/building_prefabs.json.gz",
+      "archive_sha256": "bbd3ed1f94794b0505efadbe1476921c437b87446bb547a454f7a98fea27e878"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/data/config/combat.json",
+      "raw_bytes": 53541,
+      "raw_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+      "archive": "source-and-review/independent/originals/data/config/combat.json.gz",
+      "archive_sha256": "207d6ccf324ad967216f28e604330f0dadffe5015a408237ce07accc89ca7da4"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/data/config/movement.json",
+      "raw_bytes": 15052,
+      "raw_sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+      "archive": "source-and-review/independent/originals/data/config/movement.json.gz",
+      "archive_sha256": "ce20285a36b853cc76b8de33515c5ddb1858eca2832267a5cd7a9de88bc339e2"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/data/config/terrain_playground.json",
+      "raw_bytes": 258199,
+      "raw_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "archive": "source-and-review/independent/originals/data/config/terrain_playground.json.gz",
+      "archive_sha256": "285f9f6c3298e1f6dd556c4fb3df1fb4ef0ae33a8d0392d915b8e331a6b93836"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/data/config/village.json",
+      "raw_bytes": 12551,
+      "raw_sha256": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+      "archive": "source-and-review/independent/originals/data/config/village.json.gz",
+      "archive_sha256": "f776b4aa15f4e1f5e5f99101fc7bda2f097071e51152b57ae72b4ee8fab1fd99"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/scenes/player/player.tscn",
+      "raw_bytes": 1478,
+      "raw_sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+      "archive": "source-and-review/independent/originals/scenes/player/player.tscn.gz",
+      "archive_sha256": "4b22807a4bc0cc95dd05f870846f5c7e40f61cf41a082404c157acb688346921"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/scripts/combat/utility_effects.gd",
+      "raw_bytes": 13212,
+      "raw_sha256": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+      "archive": "source-and-review/independent/originals/scripts/combat/utility_effects.gd.gz",
+      "archive_sha256": "9711d11f5cdff46f0220c73961b789e022dc148147e943926a619c47aac6944d"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/scripts/net/encounter_host.gd",
+      "raw_bytes": 71307,
+      "raw_sha256": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+      "archive": "source-and-review/independent/originals/scripts/net/encounter_host.gd.gz",
+      "archive_sha256": "ebea9a36676433972d0b7aaf0362544acbcdb7c2c273d8b2245d5499150709ca"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/scripts/player/player_controller.gd",
+      "raw_bytes": 43509,
+      "raw_sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+      "archive": "source-and-review/independent/originals/scripts/player/player_controller.gd.gz",
+      "archive_sha256": "8ded256b2f9246543bea1f4fcdc0009f6d8caef268d6360c7ea78067ab1c3fd3"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/scripts/world/grandpa_house.gd",
+      "raw_bytes": 43387,
+      "raw_sha256": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+      "archive": "source-and-review/independent/originals/scripts/world/grandpa_house.gd.gz",
+      "archive_sha256": "bf7845de6e8126e09ad1659139cb886db2cf96e6f73953f1bc7474e51dc4f100"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/tests/helpers/fresh_opening_segment.gd",
+      "raw_bytes": 19706,
+      "raw_sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a",
+      "archive": "source-and-review/independent/originals/tests/helpers/fresh_opening_segment.gd.gz",
+      "archive_sha256": "92b7405c042abd050ec736d6569fc21c63849481f365cfd7c1aa7fe038e186b1"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/tests/helpers/gate_a_npc_gather_segment.gd",
+      "raw_bytes": 42423,
+      "raw_sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "archive": "source-and-review/independent/originals/tests/helpers/gate_a_npc_gather_segment.gd.gz",
+      "archive_sha256": "e2c9bb6f02aab1acd902f2827aeda05995479a81f261d1c93350540067edf49d"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/tests/helpers/meadows_earned_team_segment.gd",
+      "raw_bytes": 50000,
+      "raw_sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "archive": "source-and-review/independent/originals/tests/helpers/meadows_earned_team_segment.gd.gz",
+      "archive_sha256": "d17891cc5c58163d65ad1089c4dfdf238a1188b2de406a3956e13113040c853f"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/tests/helpers/opening_geometry_navigator.gd",
+      "raw_bytes": 42191,
+      "raw_sha256": "b05d1655021d2b796c4803e6f4d844c918a9ef0915f27d1e553ca5f09b674953",
+      "archive": "source-and-review/independent/originals/tests/helpers/opening_geometry_navigator.gd.gz",
+      "archive_sha256": "477d142eaa82cf637a76ed2f64b82f3473569068217a5f539bdedf647c55e498"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/tests/helpers/stick_navigator.gd",
+      "raw_bytes": 42441,
+      "raw_sha256": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+      "archive": "source-and-review/independent/originals/tests/helpers/stick_navigator.gd.gz",
+      "archive_sha256": "3f52c873f0e5a174847bdf6ed7296910fbffae57a3ce4a0a3ef9e94ccc3695dc"
+    },
+    {
+      "raw_path": "source-and-review/independent/originals/tests/smoke_four_biome_continuous.gd",
+      "raw_bytes": 54470,
+      "raw_sha256": "8fee7fab8693af0963b133d83e929da893a0b2cc378af3034fc2c1c582eea207",
+      "archive": "source-and-review/independent/originals/tests/smoke_four_biome_continuous.gd.gz",
+      "archive_sha256": "753a199d359303da391e88eb47f04c727835ea35703fd1fa0d7d4ccf2a0f1d72"
+    },
+    {
+      "raw_path": "source-and-review/independent/review.json",
+      "raw_bytes": 16611,
+      "raw_sha256": "614597522e2965ba0221c5b6ee157e100e7c6ffa89b1aa623df8b6a69d0bec7e",
+      "archive": "source-and-review/independent/review.json.gz",
+      "archive_sha256": "c6098a845a1813a251aac053573928ecb7644787694dfe15cf19619962bec228"
+    },
+    {
+      "raw_path": "source-and-review/independent/review_source.py",
+      "raw_bytes": 14881,
+      "raw_sha256": "6056838e68a8da641384fd512a5289484b5e2b8193816952fd22983985a3669d",
+      "archive": "source-and-review/independent/review_source.py.gz",
+      "archive_sha256": "be820f47826759d92bfce04c45d8dcd81244e03f70c6a948612d616127bffa64"
+    },
+    {
+      "raw_path": "source-and-review/independent/strict-review.txt",
+      "raw_bytes": 16665,
+      "raw_sha256": "114bf1d79101d666f261e72b6ceafd38ae5fcfa9c10343bb7665a525665c25f1",
+      "archive": "source-and-review/independent/strict-review.txt.gz",
+      "archive_sha256": "7a029b945ad574a97789f530b8aed39cf99674000c1bbf3338ec591fff9b0eff"
+    },
+    {
+      "raw_path": "source-and-review/opening-production-steering.patch",
+      "raw_bytes": 18786,
+      "raw_sha256": "db20d22b0ce867d2f7172981658bf4943f231cee150b13e1d2b75d2fa49c1c59",
+      "archive": "source-and-review/opening-production-steering.patch.gz",
+      "archive_sha256": "d57dd424fb485155e29e334bbeae707e0b6e42ff0657049464f4911adb7e4c49"
+    },
+    {
+      "raw_path": "source-and-review/originals/autoload/game_state.gd",
+      "raw_bytes": 135845,
+      "raw_sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+      "archive": "source-and-review/originals/autoload/game_state.gd.gz",
+      "archive_sha256": "2e7e9cbe4fa26325033890aed05e438bd20782c537f93383f57b1150edf84475"
+    },
+    {
+      "raw_path": "source-and-review/originals/data/config/building_prefabs.json",
+      "raw_bytes": 277022,
+      "raw_sha256": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36",
+      "archive": "source-and-review/originals/data/config/building_prefabs.json.gz",
+      "archive_sha256": "bbd3ed1f94794b0505efadbe1476921c437b87446bb547a454f7a98fea27e878"
+    },
+    {
+      "raw_path": "source-and-review/originals/data/config/combat.json",
+      "raw_bytes": 53541,
+      "raw_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+      "archive": "source-and-review/originals/data/config/combat.json.gz",
+      "archive_sha256": "207d6ccf324ad967216f28e604330f0dadffe5015a408237ce07accc89ca7da4"
+    },
+    {
+      "raw_path": "source-and-review/originals/data/config/movement.json",
+      "raw_bytes": 15052,
+      "raw_sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+      "archive": "source-and-review/originals/data/config/movement.json.gz",
+      "archive_sha256": "ce20285a36b853cc76b8de33515c5ddb1858eca2832267a5cd7a9de88bc339e2"
+    },
+    {
+      "raw_path": "source-and-review/originals/data/config/terrain_playground.json",
+      "raw_bytes": 258199,
+      "raw_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "archive": "source-and-review/originals/data/config/terrain_playground.json.gz",
+      "archive_sha256": "285f9f6c3298e1f6dd556c4fb3df1fb4ef0ae33a8d0392d915b8e331a6b93836"
+    },
+    {
+      "raw_path": "source-and-review/originals/data/config/village.json",
+      "raw_bytes": 12551,
+      "raw_sha256": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+      "archive": "source-and-review/originals/data/config/village.json.gz",
+      "archive_sha256": "f776b4aa15f4e1f5e5f99101fc7bda2f097071e51152b57ae72b4ee8fab1fd99"
+    },
+    {
+      "raw_path": "source-and-review/originals/scenes/player/player.tscn",
+      "raw_bytes": 1478,
+      "raw_sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+      "archive": "source-and-review/originals/scenes/player/player.tscn.gz",
+      "archive_sha256": "4b22807a4bc0cc95dd05f870846f5c7e40f61cf41a082404c157acb688346921"
+    },
+    {
+      "raw_path": "source-and-review/originals/scripts/combat/utility_effects.gd",
+      "raw_bytes": 13212,
+      "raw_sha256": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+      "archive": "source-and-review/originals/scripts/combat/utility_effects.gd.gz",
+      "archive_sha256": "9711d11f5cdff46f0220c73961b789e022dc148147e943926a619c47aac6944d"
+    },
+    {
+      "raw_path": "source-and-review/originals/scripts/net/encounter_host.gd",
+      "raw_bytes": 71307,
+      "raw_sha256": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+      "archive": "source-and-review/originals/scripts/net/encounter_host.gd.gz",
+      "archive_sha256": "ebea9a36676433972d0b7aaf0362544acbcdb7c2c273d8b2245d5499150709ca"
+    },
+    {
+      "raw_path": "source-and-review/originals/scripts/player/player_controller.gd",
+      "raw_bytes": 43509,
+      "raw_sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+      "archive": "source-and-review/originals/scripts/player/player_controller.gd.gz",
+      "archive_sha256": "8ded256b2f9246543bea1f4fcdc0009f6d8caef268d6360c7ea78067ab1c3fd3"
+    },
+    {
+      "raw_path": "source-and-review/originals/scripts/world/grandpa_house.gd",
+      "raw_bytes": 43387,
+      "raw_sha256": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+      "archive": "source-and-review/originals/scripts/world/grandpa_house.gd.gz",
+      "archive_sha256": "bf7845de6e8126e09ad1659139cb886db2cf96e6f73953f1bc7474e51dc4f100"
+    },
+    {
+      "raw_path": "source-and-review/originals/tests/helpers/fresh_opening_segment.gd",
+      "raw_bytes": 19706,
+      "raw_sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a",
+      "archive": "source-and-review/originals/tests/helpers/fresh_opening_segment.gd.gz",
+      "archive_sha256": "92b7405c042abd050ec736d6569fc21c63849481f365cfd7c1aa7fe038e186b1"
+    },
+    {
+      "raw_path": "source-and-review/originals/tests/helpers/gate_a_npc_gather_segment.gd",
+      "raw_bytes": 42423,
+      "raw_sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "archive": "source-and-review/originals/tests/helpers/gate_a_npc_gather_segment.gd.gz",
+      "archive_sha256": "e2c9bb6f02aab1acd902f2827aeda05995479a81f261d1c93350540067edf49d"
+    },
+    {
+      "raw_path": "source-and-review/originals/tests/helpers/meadows_earned_team_segment.gd",
+      "raw_bytes": 50000,
+      "raw_sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "archive": "source-and-review/originals/tests/helpers/meadows_earned_team_segment.gd.gz",
+      "archive_sha256": "d17891cc5c58163d65ad1089c4dfdf238a1188b2de406a3956e13113040c853f"
+    },
+    {
+      "raw_path": "source-and-review/originals/tests/helpers/opening_geometry_navigator.gd",
+      "raw_bytes": 42191,
+      "raw_sha256": "b05d1655021d2b796c4803e6f4d844c918a9ef0915f27d1e553ca5f09b674953",
+      "archive": "source-and-review/originals/tests/helpers/opening_geometry_navigator.gd.gz",
+      "archive_sha256": "477d142eaa82cf637a76ed2f64b82f3473569068217a5f539bdedf647c55e498"
+    },
+    {
+      "raw_path": "source-and-review/originals/tests/helpers/stick_navigator.gd",
+      "raw_bytes": 42441,
+      "raw_sha256": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+      "archive": "source-and-review/originals/tests/helpers/stick_navigator.gd.gz",
+      "archive_sha256": "3f52c873f0e5a174847bdf6ed7296910fbffae57a3ce4a0a3ef9e94ccc3695dc"
+    },
+    {
+      "raw_path": "source-and-review/originals/tests/smoke_four_biome_continuous.gd",
+      "raw_bytes": 54470,
+      "raw_sha256": "8fee7fab8693af0963b133d83e929da893a0b2cc378af3034fc2c1c582eea207",
+      "archive": "source-and-review/originals/tests/smoke_four_biome_continuous.gd.gz",
+      "archive_sha256": "753a199d359303da391e88eb47f04c727835ea35703fd1fa0d7d4ccf2a0f1d72"
+    },
+    {
+      "raw_path": "source-and-review/parent-pins.json",
+      "raw_bytes": 1933,
+      "raw_sha256": "244f75cd6936e0a3d0e31d9918785320f2ce37223ce2a2bbebaf0c28e497f2c3",
+      "archive": "source-and-review/parent-pins.json.gz",
+      "archive_sha256": "a4812d1fe4efd4eff3b45966525f99b0e4d2e6939b83898c6a3584e43f6e0094"
+    },
+    {
+      "raw_path": "source-and-review/proposal/tests/helpers/gate_a_npc_gather_segment.gd",
+      "raw_bytes": 42467,
+      "raw_sha256": "58adf57b1276b2f7b6ea20b243fb4d3a069fb4fdf9640a550be611a330c8cc8b",
+      "archive": "source-and-review/proposal/tests/helpers/gate_a_npc_gather_segment.gd.gz",
+      "archive_sha256": "6891c9af6b3a184c1f48597ee81e08e26333bc8a91ceab80ad9aa6ea32cc98c0"
+    },
+    {
+      "raw_path": "source-and-review/proposal/tests/helpers/meadows_earned_team_segment.gd",
+      "raw_bytes": 50044,
+      "raw_sha256": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a",
+      "archive": "source-and-review/proposal/tests/helpers/meadows_earned_team_segment.gd.gz",
+      "archive_sha256": "437a5a1f9a884fadc1db57d4158cbfb858b2cd146490c412c573669ff6cc1f26"
+    },
+    {
+      "raw_path": "source-and-review/proposal/tests/helpers/opening_geometry_navigator.gd",
+      "raw_bytes": 55809,
+      "raw_sha256": "2bfdb54c0760fba575252be182cfbf08c6f87875a8e1212a44b2ed88adfe606d",
+      "archive": "source-and-review/proposal/tests/helpers/opening_geometry_navigator.gd.gz",
+      "archive_sha256": "23d25133ebb142c7bfe0c77a658466ebd2233b55d5f91313c8a2aecbf77cdd3b"
+    },
+    {
+      "raw_path": "source-and-review/rationale.txt",
+      "raw_bytes": 1002,
+      "raw_sha256": "88ba60b57605d1ba86c838b9c71a79d9ec2c70f27c2be73586dc07f6572e01bb",
+      "archive": "source-and-review/rationale.txt.gz",
+      "archive_sha256": "b50f8fd49e01164287c1d2955a8e0d058506d5275696d7b256ae0ed86f9096c3"
+    },
+    {
+      "raw_path": "source-and-review/refine-order.py",
+      "raw_bytes": 845,
+      "raw_sha256": "f833c28172254c27c2a7aed7cf5ea98fa025982cc2c2142826cf3bae350cce2f",
+      "archive": "source-and-review/refine-order.py.gz",
+      "archive_sha256": "eaafa31707bdc5baa715c6e37769e73e3162b230a84a42205516a335f68fa4b0"
+    },
+    {
+      "raw_path": "source-and-review/refine-record.py",
+      "raw_bytes": 1483,
+      "raw_sha256": "10a644a1232ab8cac8dff5502fbef4390d628a75ef3aece4ef32c2012c2e4ae9",
+      "archive": "source-and-review/refine-record.py.gz",
+      "archive_sha256": "540ecef12f24d7f0d1bd66d6df209ec864c64a16069d5e9f4d81a11047e36d96"
+    },
+    {
+      "raw_path": "source-and-review/refine-unavailable.py",
+      "raw_bytes": 544,
+      "raw_sha256": "e506e8deaa2b7340d3958fc0d94df57c37fef0dc4f5ba317743706ce4e3266a7",
+      "archive": "source-and-review/refine-unavailable.py.gz",
+      "archive_sha256": "15eb65d26a87ebeb1e7a3dc079e6c2d9824412a4853b01631e803bdfa1364b65"
+    },
+    {
+      "raw_path": "source-and-review/refine.py",
+      "raw_bytes": 2400,
+      "raw_sha256": "af1ebccf6bbfc97a8a9e983e6a4c9c176823a295ea0005ec261125c26a036236",
+      "archive": "source-and-review/refine.py.gz",
+      "archive_sha256": "8bfcd184a38ddf0c571a251b17ab583dc739d9f545e2c858d6f9e252d8cc1969"
+    },
+    {
+      "raw_path": "source-and-review/seal.py",
+      "raw_bytes": 12971,
+      "raw_sha256": "8d21ec7726c3d6b4af88dbf914fbd6774eb375c0eaa3e9c73a1c591402031a3d",
+      "archive": "source-and-review/seal.py.gz",
+      "archive_sha256": "cccb9721b3ef4cf3afce10afe13738c283f5c22f58ec4ca21002e58a1a8a714f"
+    },
+    {
+      "raw_path": "prior-r5-fail/native.txt",
+      "raw_bytes": 24846,
+      "raw_sha256": "7c87a79a69b89b5765a794111de3d20849bc486805bb3e6d0d16559eddc1256f",
+      "archive": "prior-r5-fail/native.txt.gz",
+      "archive_sha256": "4d808adf700d864a48639ce5694a6ff58d7e0393a399ff40299651a0fb34d906"
+    },
+    {
+      "raw_path": "prior-r5-fail/parser.txt",
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "archive": "prior-r5-fail/parser.txt.gz",
+      "archive_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    {
+      "raw_path": "prior-r5-fail/receipt.json",
+      "raw_bytes": 5566,
+      "raw_sha256": "bfc6dc71a18f7c42c3119a3dddee07b4fbb038fac42ff3f8f86694cc29fc93de",
+      "archive": "prior-r5-fail/receipt.json.gz",
+      "archive_sha256": "6fb8dab4af1a49133be845e303cd106920e19090ef05c2c28d7149065bf1f4de"
+    }
+  ]
+}
