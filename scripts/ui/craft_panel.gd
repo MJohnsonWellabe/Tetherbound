@@ -134,11 +134,20 @@ func _rebuild_station_presentation() -> void:
 	var recipe_index := _recipe_ids.find(recipe_id)
 	if recipe_index >= 0: _selected=recipe_index
 	for button: Button in _station_buttons:
-		if not focus_key.is_empty() and str(button.get_meta("station_focus_key","")) == focus_key:
+		if not button.disabled and not focus_key.is_empty() and str(button.get_meta("station_focus_key","")) == focus_key:
 			button.call_deferred("grab_focus")
 			return
+	if not _station_intent.is_empty():
+		for button: Button in _station_buttons:
+			if not button.disabled and button.text == "Retry original transaction":
+				button.call_deferred("grab_focus")
+				return
 	if not _rows.is_empty(): _rows[clampi(_selected,0,_rows.size()-1)].call_deferred("grab_focus")
-	elif not _station_buttons.is_empty(): _station_buttons[0].call_deferred("grab_focus")
+	else:
+		for button: Button in _station_buttons:
+			if not button.disabled:
+				button.call_deferred("grab_focus")
+				return
 
 func _disconnect_station_producer() -> void:
 	if not is_instance_valid(_producer): return
