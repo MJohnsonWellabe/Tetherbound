@@ -1,0 +1,17 @@
+{
+  "scope": "gdtoolkit static grammar only; no Godot or shader/typecheck",
+  "files": [
+    "scripts/combat/move_projectile.gd",
+    "scripts/vfx/authored_effect_geometry.gd",
+    "scripts/vfx/fluid_effect_geometry.gd",
+    "scripts/vfx/legacy_move_travel.gd",
+    "scripts/vfx/move_effect.gd",
+    "scripts/vfx/move_effect_budget.gd",
+    "scripts/vfx/move_effect_geometry.gd",
+    "scripts/vfx/move_effect_library.gd",
+    "scripts/vfx/move_presentation_contract.gd",
+    "scripts/vfx/organic_effect_geometry.gd",
+    "scripts/vfx/presentation_observer.gd"
+  ],
+  "pass": true
+}

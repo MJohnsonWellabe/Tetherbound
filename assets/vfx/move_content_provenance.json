@@ -1,0 +1,27 @@
+{
+  "scope": "Applied unrendered move content; no native parse/render or visual acceptance",
+  "base_game_source": "a74500624fea0dd05ec1166d4a16c1e0722cea8b",
+  "reference": "Restored owner Palworld forest combat reference; studied as direction, no pixels or model copied",
+  "installed_reuse": [
+    {
+      "installed_source": "assets/environment/tidewake/interior_waterfall/plunge_foam.gdshader",
+      "sha256": "488150d282c23e4f77e7bd148762987933730dbd683fa676b23c98e16d02344c",
+      "origin": "Existing project-authored original procedural waterfall material; source/provenance.json inspected",
+      "adaptation": "Reuse flow/foam math in a local move-object shader; no image/vertex copying, world-coordinate floor clamp or screen-space renderer requirement"
+    },
+    {
+      "installed_source": "assets/environment/tidewake/interior_waterfall/receiving_water.gdshader",
+      "sha256": "5e99dfaf408e03aa731e8b8a1d31be5bd5bd9484413ceb5ed9f836aa220b1b6d",
+      "origin": "Existing project-authored original procedural waterfall material; source/provenance.json inspected",
+      "adaptation": "Reuse flow/foam math in a local move-object shader; no image/vertex copying, world-coordinate floor clamp or screen-space renderer requirement"
+    }
+  ],
+  "new_geometry": "Original parametric curling crest/flowing tube/faceted crystal math",
+  "mesh_generations": 0,
+  "limits": [
+    "No native syntax/render/motion/Medium-High performance or independent visual check",
+    "Rolling ground-wave currently uses frozen target ground height; sloped-path ground sampling remains a visual integration limit",
+    "No persistent status authority or player progression authored",
+    "Library stays disabled"
+  ]
+}

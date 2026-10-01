@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "scope": "Named mapping audit detects missingarchetype; noengine",
+  "observed_failures": [
+    "pebble_toss: unmapped archetype"
+  ]
+}
