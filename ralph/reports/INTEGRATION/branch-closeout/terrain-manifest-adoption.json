@@ -1,0 +1,19 @@
+{
+  "producer_head": "aae8f14e81c840d23cf50d922b9020e147af4951",
+  "source_inputs": {
+    "data/config/terrain_stormwood.json": "2b56527ce1ab72053cbfe3a0377f34f7e9f44d69294c7eff96e52cee4b88635a",
+    "data/config/stormwood_world.json": "018de59fd7fafc00fa33b3fcf2f4838cee4a4b055f6e0b0716f633104f3a1651",
+    "scripts/world/build_stormwood_terrain.gd": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+    "scripts/world/stormwood_heightfield.gd": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+    "data/config/stormwood_road_surface.json": "d16b3ee1f851c94d816363bae321d460bea827cc0b4d430a190413c488957019",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+  },
+  "full_bake_raw_sha256": "95d50952a3aa41ebf24e2f13b6fc49a16ab22b99b77f22558ca7f1af60f319b3",
+  "native_channel_compare_raw_sha256": "dc523ea8f0ff06ae8e43d049c5e678bb84ff89dd077aa6237abcc43cc87dde46",
+  "all_108_channels_equal": true,
+  "adopted": "data/terrain/stormwood/manifest.json",
+  "generated_manifest_sha256": "564f44e8e4703149d2b14962133cf17f12cfabda909af3726e5b36de27300d01",
+  "previous_manifest_sha256": "4d9bd543e570aab5ecaa52b39f031464be18be0037cb5cf61f885f4c269ed41b",
+  "regions_retained": "All108 committed region files retained after zero native height/colour/range/control differences. Generated serialization-only changes not adopted.",
+  "criterion_credit": false
+}
