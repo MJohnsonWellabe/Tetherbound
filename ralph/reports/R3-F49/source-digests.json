@@ -1,0 +1,122 @@
+{
+  "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+  "branch": "tb/r3-f49",
+  "changed_sources": [
+    {
+      "path": "tests/smoke_four_biome_continuous.gd",
+      "sha256": "5ccb6965b28d7de544ed2b3a87cbc970799c2d51ac3ca81f69a36e2675c5de04"
+    },
+    {
+      "path": "tests/helpers/f49_campaign_journey.gd",
+      "sha256": "b385c8272533e913480945bd7940b06dd7b9b8fac510524c593714a40764c12b"
+    },
+    {
+      "path": "tests/helpers/f49_cloudreach_chapter.gd",
+      "sha256": "57b3469429cc119bb62444608c88fa33800973631b60320cb4f46f2a9a591078"
+    },
+    {
+      "path": "tests/helpers/f49_disk_handoff.gd",
+      "sha256": "40ef9c4bd4b4441a836c1707ab9f4fd35631227e2bb64c078e6010f5c1b813af"
+    },
+    {
+      "path": "tests/helpers/f49_portal_travel.gd",
+      "sha256": "1084175b848d08edb7fa5b423e96fa16e043a03f795fde4298646f08a8dcfc44"
+    },
+    {
+      "path": "tests/helpers/f49_stormheart_settlement.gd",
+      "sha256": "e3842185757df9c1801dad148e3033ef213a7782685177136c0f7d6087b27029"
+    },
+    {
+      "path": "tests/helpers/f49_tidewake_opening.gd",
+      "sha256": "659b4e33b77e703356c08a2a288fb3846eb57e7ecdc10c092781b01ef718dad8"
+    },
+    {
+      "path": "tests/helpers/f49_warden_finale.gd",
+      "sha256": "190cecfdc93a186dacac02f28e7a25731cdab0b6c4647c23df7900c3fdf7e47b"
+    },
+    {
+      "path": "tools/f49_source_check.py",
+      "sha256": "9ed69af06f29bc01d4825ec53fd9467117a095798aec3772f4b7230863e0ca07"
+    },
+    {
+      "path": "tools/f49_verify_release.py",
+      "sha256": "af75ea25cb6df75819f34db8735d8adfa3a4ba8d11cff0be71620ef50b224ed7"
+    }
+  ],
+  "read_only_dependencies": [
+    {
+      "path": "autoload/game_state.gd",
+      "sha256": "acdfc09400384745bf17666a14651ad08be38fd301af33bba1df053a461f4bc4"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "sha256": "02fb845febabe456887c0170aa2b933704c80ec6a21a3870328317ea76d7e7fa"
+    },
+    {
+      "path": "scripts/ui/tab_backpack.gd",
+      "sha256": "5d96cfddcf04e13907b7d5403c7a566bf68b83a145a3eab7615cfaf0a69e4107"
+    },
+    {
+      "path": "scripts/world/home_key.gd",
+      "sha256": "5442000e7a46a8668a6bdef6fe43bef6b9fad594be60fd7a7f366ebd29a5b086"
+    },
+    {
+      "path": "scripts/world/crossing_hall.gd",
+      "sha256": "22b493ac267474a8f646dfe7e928b242794f1e2f718184d96de6a3f75a9ae3ae"
+    },
+    {
+      "path": "scripts/world/portal_arch.gd",
+      "sha256": "3332f7e5420a817b2039e966cdc63e8206e10670644c0b56fd494b286eb647ea"
+    },
+    {
+      "path": "scripts/story/regional_homecoming.gd",
+      "sha256": "f8ac5d427f64cfed5ce1e58c0e9aaf8c685a61d04101e0d8fc16685c93c2e6d5"
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8"
+    },
+    {
+      "path": "data/config/multiplayer.json",
+      "sha256": "01ce69dc7966e79f4cdb035d0e6b42cc52f206445059a3c0d88a3e2742faa2bd"
+    },
+    {
+      "path": "data/config/portals.json",
+      "sha256": "6f5dd33d3aac202c7fd8fe62d4bd4e7c64b4f0e4946d2d0ea58e79b0e6ec712c"
+    },
+    {
+      "path": "data/config/chapter_rewards.json",
+      "sha256": "20d76a4dd17b6a2bd810ad577c18f834546fe0a954e6da7f2679b60b1ca41dcf"
+    },
+    {
+      "path": "data/schema/character_state.schema.json",
+      "sha256": "3dbd212199b5041bd38440b1a3f262598879b4768c8cd1663f8e319b9b3947d8"
+    },
+    {
+      "path": "tests/helpers/stick_navigator.gd",
+      "sha256": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345"
+    },
+    {
+      "path": "tests/helpers/meadows_earned_warden_segment.gd",
+      "sha256": "5083272cc0c33a23ce4823389034048f3df17ada4b89324f0e9e7987da619bbe"
+    },
+    {
+      "path": "tests/helpers/water_earned_ending_segment.gd",
+      "sha256": "b3ef49974bb1064a9ad840fcac146ff23f605ab11e64655d57ec03351667f907"
+    },
+    {
+      "path": "tests/helpers/cloudreach_live_segment.gd",
+      "sha256": "5cee1e013b6722ff170eefe07fd15a6e6aa6735e109649e7199091dd5fbb41c4"
+    },
+    {
+      "path": "tests/helpers/stormwood_earned_waterward_handoff.gd",
+      "sha256": "10cee6c4f329def30ea45e5e9c1defb4e5f00cdcf99b18a108ae754830b2e575"
+    }
+  ],
+  "overlap": [
+    "tests/smoke_four_biome_continuous.gd (ROOT integration/CI repairs only)"
+  ],
+  "acceptance": "unproved; no engine/native/device/owner/publication proof",
+  "evidence_digest_scope": "Source files only; this manifest and SOURCE_EVIDENCE.md are excluded to avoid a self-referential digest.",
+  "digest_bytes": "Canonical Git index blob bytes, independent of checkout line endings"
+}
