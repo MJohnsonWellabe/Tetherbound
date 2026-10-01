@@ -197,8 +197,27 @@ func test_regional_credits_save_is_idempotent_and_player_local() -> void:
 	assert_true(await HOMECOMING.complete_credits(game, "character-homecoming", HOMECOMING.context(game)))
 	assert_eq(game.save_system.calls, 1, "an acknowledged credits receipt is not saved again")
 	var other := _credits_game()
+	other.local.character_id = "another-stable-character"
 	assert_false(other.local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG))
 	assert_true(HOMECOMING.credits_pending(other))
+	assert_ne(HOMECOMING.acknowledgement_intent(HOMECOMING.context(other), HOMECOMING.CREDITS_SEEN_FLAG).transaction_id,
+		HOMECOMING.acknowledgement_intent(HOMECOMING.context(game), HOMECOMING.CREDITS_SEEN_FLAG).transaction_id)
+
+
+func test_stable_character_credits_receipt_is_global_across_host_contexts() -> void:
+	var game := _credits_game()
+	var initial := HOMECOMING.context(game)
+	var first_id := HOMECOMING.acknowledgement_intent(initial, HOMECOMING.CREDITS_SEEN_FLAG).transaction_id
+	assert_true(await HOMECOMING.complete_credits(game, game.local.character_id, initial))
+	game.world_instance_id = "another-accepted-world"
+	game.session_epoch = "another-authority-session"
+	game.outcome_id = "another-accepted-finale"
+	game.home_return_receipt = "another-durable-key-return"
+	var current := HOMECOMING.context(game)
+	assert_eq(HOMECOMING.acknowledgement_intent(current, HOMECOMING.CREDITS_SEEN_FLAG).transaction_id, first_id)
+	assert_false(HOMECOMING.credits_pending(game), "changing hosts cannot reopen globally acknowledged credits")
+	assert_true(await HOMECOMING.complete_credits(game, game.local.character_id, current))
+	assert_eq(game.save_system.calls, 1, "validated replay binds the new envelope without another durable write")
 
 
 func test_regional_credits_save_failure_rolls_back_and_retries() -> void:
