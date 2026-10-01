@@ -342,6 +342,7 @@ func test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unread
 
 var _native_hp_fixture_completed := false
 var _native_hp_fixture_observation: Dictionary = {}
+var _native_hp_fixture_observations: Array[Dictionary] = []
 
 ## Real scene timers must advance for the projectile's host-owned arrival.
 func _native_projectile_until(condition: Callable) -> bool:
@@ -355,7 +356,8 @@ func _native_projectile_until(condition: Callable) -> bool:
 ## The old live-only six-HP setup is a negative control, followed by the exact
 ## helper used by win_trainer_battle. Production authority/presentation stays
 ## unchanged; this witnesses the fixture and arrival, not a complete Warden win.
-func _case_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
+func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: bool = false) -> void:
+	_native_hp_fixture_completed = false
 	if not _native_build(): return
 	assert_false(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
 		"the disclosed HP fixture covers ordinary authority with the tracked path off")
@@ -394,23 +396,28 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
 	_native_host.set("_ally", striker)
 	_native_host.set("_ally_body", ally)
 	_native_host.set("_player", player)
-	_native_host.set("_trainer_spec", {"id": "native-hp-fixture"})
+	var trainer_spec: Dictionary = NATIVE_TRAINERS.trainer("warden_aldis") if warden_boss else {"id": "native-hp-fixture"}
+	assert_false(trainer_spec.is_empty(), "the boss mode uses the actual Warden trainer data")
+	_native_host.set("_trainer_spec", trainer_spec)
 	_native_host.set("_trainer_body", foe)
 	_native_host.set("_engaged_with", foe)
 	_native_host._host_set_deployed(1, {"creature_uid": striker.uid,
 		"species_id": striker.species_id, "shiny": false, "card": _native_host._creature_card(striker)})
-	_native_host._ensure_encounter_arbiters()
-	var arbiter: RefCounted = _native_host.get("_encounter_host")
-	var rec: Dictionary = arbiter.call("open", 1, "meadows", "trainer", {
-		"species_id": enemy.species_id, "level": enemy.level, "hp": enemy.hp,
-		"hp_max": enemy.max_hp, "owner_npc": "native-hp-fixture",
-		"position": [foe.centre().x, foe.centre().y, foe.centre().z]}, striker.uid, owners[1])
-	var encounter_id := str(rec.encounter_id)
-	_native_host.set("_encounter", rec)
 	assert_true(host_manager.begin(player, foe, ally, [striker] as Array[RefCounted], null, null, true))
 	assert_true(guest_manager.begin(guest_player, guest_foe, guest_ally, [guest_creature] as Array[RefCounted], null, null, true))
-	host_manager.bind_encounter(_native_host, encounter_id, "trainer")
-	guest_manager.bind_encounter(_native_guest, encounter_id, "trainer")
+	# Let production mint/bind the record as the real trainer send-out does.
+	# The old handcrafted "trainer" row missed Warden's actual "boss" kind.
+	_native_host._open_encounter_if_networked(foe, true)
+	var arbiter: RefCounted = _native_host.get("_encounter_host")
+	var rec: Dictionary = _native_host.get("_encounter") as Dictionary
+	assert_false(rec.is_empty(), "the production opener created the actual opponent-owned record")
+	if rec.is_empty(): return
+	var encounter_id := str(rec.encounter_id)
+	var kind := str(rec.kind)
+	assert_eq(kind, "boss" if warden_boss else "trainer", "production classifies the Warden from boss_ranks")
+	assert_eq(str(rec.get("opponent", {}).get("owner_npc", "")), str(trainer_spec.get("id", "")))
+	assert_eq(host_manager.encounter_id(), encounter_id, "production opener bound the manager to that record")
+	guest_manager.bind_encounter(_native_guest, encounter_id, kind)
 	var join := _native_guest.submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
 		"character_id": owners[guest_id]})
 	assert_true(bool(join.get("pending", false)))
@@ -444,6 +451,13 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
 	assert_true(await _native_projectile_until(func() -> bool: return finished.size() == 2))
 	assert_true(float(enemy.hp) > 6.0 and float(enemy.hp) < hp_after_control)
 	var fixture_script: Script = load("res://tools/net/peer_runner.gd")
+	var hp_before_wrong_body := float(enemy.hp)
+	var seq_before_wrong_body := int((arbiter.call("record", encounter_id) as Dictionary).get("seq", 0))
+	assert_eq(str(mirror.get("uid")), str(enemy.get("uid")), "the refused body represents the same opponent UID")
+	var wrong_body: Dictionary = fixture_script.call("_stage_trainer_hp_ceiling", _native_host, host_manager, guest_foe, 6.0)
+	assert_false(bool(wrong_body.get("ok", true)), "another body with the same opponent UID cannot stage canonical HP")
+	assert_almost_eq(float(enemy.hp), hp_before_wrong_body)
+	assert_eq(int((arbiter.call("record", encounter_id) as Dictionary).get("seq", 0)), seq_before_wrong_body)
 	var before_authority: Dictionary = arbiter.call("strike_authority_state", encounter_id, 1)
 	var max_hp_before := float(enemy.max_hp)
 	var phase_before := str(arbiter.call("phase", encounter_id))
@@ -485,17 +499,19 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
 	assert_eq(host_manager.state, NATIVE_COMBAT.State.RESOLVING)
 	assert_eq(guest_manager.state, NATIVE_COMBAT.State.RESOLVING)
 	assert_true(exits.is_empty(), "the original faint pause still precedes round exit")
-	_native_hp_fixture_observation = {"full_hp": hp_full, "hp_after_control": hp_after_control,
+	_native_hp_fixture_observation = {"kind": kind, "owner_npc": trainer_spec.get("id", ""),
+		"record_created_by_production_opener": true, "full_hp": hp_full, "hp_after_control": hp_after_control,
 		"ceiling": 6.0, "max_hp": enemy.max_hp, "accepted_arrivals": finished.size(),
 		"killed_by_host_arrival": enemy.fainted, "record_phase": arbiter.call("phase", encounter_id)}
 	_native_hp_fixture_completed = true
+	_native_hp_fixture_observations.append(_native_hp_fixture_observation.duplicate(true))
 
 func test_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
 	var runner_path := "user://director_hp_fixture_regression_runner.gd"
 	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
 	assert_true(runner != null)
 	if runner == null: return
-	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_director_join_snapshot.gd").new()\n\tawait test._case_native_trainer_hp_fixture_survives_projectile_snapshot()\n\ttest._native_cleanup()\n\tprint("DIRECTOR_HP_FIXTURE_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures,"completed":test._native_hp_fixture_completed,"observation":test._native_hp_fixture_observation}))\n\tquit(0 if test.failures.is_empty() and test._native_hp_fixture_completed else 1)\n')
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_director_join_snapshot.gd").new()\n\tfor boss in [false, true]:\n\t\tawait test._case_native_trainer_hp_fixture_survives_projectile_snapshot(boss)\n\t\ttest._native_cleanup()\n\t\tif not test._native_hp_fixture_completed: break\n\tprint("DIRECTOR_HP_FIXTURE_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures,"completed":test._native_hp_fixture_completed and test._native_hp_fixture_observations.size() == 2,"observations":test._native_hp_fixture_observations}))\n\tquit(0 if test.failures.is_empty() and test._native_hp_fixture_completed and test._native_hp_fixture_observations.size() == 2 else 1)\n')
 	runner.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(runner_path)
@@ -509,7 +525,8 @@ func test_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
 			result = JSON.parse_string(line.trim_prefix("DIRECTOR_HP_FIXTURE_RESULT="))
 	assert_true(bool(result.get("completed", false)), combined)
 	assert_eq(result.get("failures", ["missing result"]), [], combined)
-	assert_true(int(result.get("assertions", 0)) >= 45)
+	assert_true(int(result.get("assertions", 0)) >= 90, "both native modes must execute their full cause and arrival checks")
+	assert_eq((result.get("observations", []) as Array).size(), 2, "both production trainer and Warden boss records must finish")
 	assert_false(combined.contains("ERROR:"), combined)
 	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
 	assert_eq(code, 0, combined)
@@ -525,6 +542,7 @@ class NativeTrainerBody extends Node3D:
 	var owner_peer_id := 0
 	var arena: Node3D
 	var combat_override: Dictionary = {}
+	var body_scale := 1.0
 	var engaged := false
 	var faint_presentations := 0
 	var faint_notifications := 0
@@ -563,6 +581,7 @@ class NativeTrainerManager extends "res://scripts/combat/combat_manager.gd":
 
 const NATIVE_COMBAT := preload("res://scripts/combat/combat_manager.gd")
 const NATIVE_SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const NATIVE_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const NATIVE_CREATURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 var _native_trainer_completed := false
 var _native_trainer_observation: Dictionary = {}
