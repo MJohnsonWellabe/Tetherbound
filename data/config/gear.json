@@ -1,0 +1,1433 @@
+{
+  "version": 1,
+  "feature_flags": {
+    "runtime_enabled": false,
+    "network_enabled": false,
+    "visual_enabled": false
+  },
+  "scope": "character",
+  "canonical_path": "redesign_character.creatures[uid].gear",
+  "max_upgrade": 3,
+  "upgrade_bonus_step": 0.1,
+  "mitigation_cap": 0.6,
+  "tiers": [
+    {
+      "tier": 1,
+      "biome": "meadows",
+      "status": "live",
+      "name": "Rootiron",
+      "ingot": "rootiron_ingot",
+      "shed": "fiber",
+      "color": [
+        0.78,
+        0.66,
+        0.28,
+        1
+      ],
+      "bonuses": {
+        "max_hp": 0.12,
+        "defence": 0.1,
+        "move_power": 0.08,
+        "ultimate_gain": 0.1
+      },
+      "unlock_relic": ""
+    },
+    {
+      "tier": 2,
+      "biome": "tidewake",
+      "status": "live",
+      "name": "Tidesteel",
+      "ingot": "tidesteel_ingot",
+      "shed": "reed_fiber",
+      "color": [
+        0.22,
+        0.76,
+        0.74,
+        1
+      ],
+      "bonuses": {
+        "max_hp": 0.24,
+        "defence": 0.22,
+        "move_power": 0.16,
+        "ultimate_gain": 0.2
+      },
+      "unlock_relic": "meadows"
+    },
+    {
+      "tier": 3,
+      "biome": "cloudreach",
+      "status": "live",
+      "name": "Skyglass",
+      "ingot": "skyglass_ingot",
+      "shed": "skyplume",
+      "color": [
+        0.48,
+        0.7,
+        0.98,
+        1
+      ],
+      "bonuses": {
+        "max_hp": 0.38,
+        "defence": 0.36,
+        "move_power": 0.24,
+        "ultimate_gain": 0.3
+      },
+      "unlock_relic": "tidewake"
+    },
+    {
+      "tier": 4,
+      "biome": "stormwood",
+      "status": "live",
+      "name": "Stormglass",
+      "ingot": "stormglass_plate",
+      "shed": "sparkfur",
+      "color": [
+        0.73,
+        0.51,
+        0.94,
+        1
+      ],
+      "bonuses": {
+        "max_hp": 0.54,
+        "defence": 0.52,
+        "move_power": 0.32,
+        "ultimate_gain": 0.4
+      },
+      "unlock_relic": "cloudreach"
+    },
+    {
+      "tier": 5,
+      "biome": "biome5",
+      "status": "reserved"
+    },
+    {
+      "tier": 6,
+      "biome": "biome6",
+      "status": "reserved"
+    },
+    {
+      "tier": 7,
+      "biome": "biome7",
+      "status": "reserved"
+    },
+    {
+      "tier": 8,
+      "biome": "biome8",
+      "status": "reserved"
+    }
+  ],
+  "items": {
+    "rootiron_harness": {
+      "name": "Rootiron Harness",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 1,
+      "gear_upgrade": 0,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "rootiron_harness_plus_1": {
+      "name": "Rootiron Harness +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 1,
+      "gear_upgrade": 1,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "rootiron_harness_plus_2": {
+      "name": "Rootiron Harness +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 1,
+      "gear_upgrade": 2,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "rootiron_harness_plus_3": {
+      "name": "Rootiron Harness +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 1,
+      "gear_upgrade": 3,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "rootiron_charm": {
+      "name": "Rootiron Charm",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 1,
+      "gear_upgrade": 0,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "rootiron_charm_plus_1": {
+      "name": "Rootiron Charm +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 1,
+      "gear_upgrade": 1,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "rootiron_charm_plus_2": {
+      "name": "Rootiron Charm +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 1,
+      "gear_upgrade": 2,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "rootiron_charm_plus_3": {
+      "name": "Rootiron Charm +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 1,
+      "gear_upgrade": 3,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "rootiron_travel_hood": {
+      "name": "Rootiron Travel Hood",
+      "kind": "armor",
+      "armor_slot": "helmet",
+      "stack": 1,
+      "fall_damage_reduction": 0.06,
+      "terrain_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "rootiron_travel_coat": {
+      "name": "Rootiron Travel Coat",
+      "kind": "armor",
+      "armor_slot": "upper_body",
+      "stack": 1,
+      "fall_damage_reduction": 0.06,
+      "terrain_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "rootiron_travel_trousers": {
+      "name": "Rootiron Travel Trousers",
+      "kind": "armor",
+      "armor_slot": "lower_body",
+      "stack": 1,
+      "fall_damage_reduction": 0.06,
+      "terrain_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "rootiron_travel_boots": {
+      "name": "Rootiron Travel Boots",
+      "kind": "armor",
+      "armor_slot": "boots",
+      "stack": 1,
+      "fall_damage_reduction": 0.06,
+      "terrain_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "rootiron_command_pouch": {
+      "name": "Rootiron Command Pouch",
+      "kind": "armor",
+      "armor_slot": "backpack",
+      "stack": 1,
+      "command_pouch_tier": 1,
+      "description": "Extends Tether Commands; command numbers come from tether_commands.json."
+    },
+    "tidesteel_harness": {
+      "name": "Tidesteel Harness",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 2,
+      "gear_upgrade": 0,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "tidesteel_harness_plus_1": {
+      "name": "Tidesteel Harness +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 2,
+      "gear_upgrade": 1,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "tidesteel_harness_plus_2": {
+      "name": "Tidesteel Harness +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 2,
+      "gear_upgrade": 2,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "tidesteel_harness_plus_3": {
+      "name": "Tidesteel Harness +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 2,
+      "gear_upgrade": 3,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "tidesteel_charm": {
+      "name": "Tidesteel Charm",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 2,
+      "gear_upgrade": 0,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "tidesteel_charm_plus_1": {
+      "name": "Tidesteel Charm +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 2,
+      "gear_upgrade": 1,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "tidesteel_charm_plus_2": {
+      "name": "Tidesteel Charm +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 2,
+      "gear_upgrade": 2,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "tidesteel_charm_plus_3": {
+      "name": "Tidesteel Charm +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 2,
+      "gear_upgrade": 3,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "tidesteel_travel_hood": {
+      "name": "Tidesteel Travel Hood",
+      "kind": "armor",
+      "armor_slot": "helmet",
+      "stack": 1,
+      "drowning_damage_reduction": 0.08,
+      "swim_stamina_reduction": 0.08,
+      "current_push_reduction": 0.08,
+      "terrain_damage_reduction": 0.05,
+      "fall_damage_reduction": 0.03,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "tidesteel_travel_coat": {
+      "name": "Tidesteel Travel Coat",
+      "kind": "armor",
+      "armor_slot": "upper_body",
+      "stack": 1,
+      "drowning_damage_reduction": 0.08,
+      "swim_stamina_reduction": 0.08,
+      "current_push_reduction": 0.08,
+      "terrain_damage_reduction": 0.05,
+      "fall_damage_reduction": 0.03,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "tidesteel_travel_trousers": {
+      "name": "Tidesteel Travel Trousers",
+      "kind": "armor",
+      "armor_slot": "lower_body",
+      "stack": 1,
+      "drowning_damage_reduction": 0.08,
+      "swim_stamina_reduction": 0.08,
+      "current_push_reduction": 0.08,
+      "terrain_damage_reduction": 0.05,
+      "fall_damage_reduction": 0.03,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "tidesteel_travel_boots": {
+      "name": "Tidesteel Travel Boots",
+      "kind": "armor",
+      "armor_slot": "boots",
+      "stack": 1,
+      "drowning_damage_reduction": 0.08,
+      "swim_stamina_reduction": 0.08,
+      "current_push_reduction": 0.08,
+      "terrain_damage_reduction": 0.05,
+      "fall_damage_reduction": 0.03,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "tidesteel_command_pouch": {
+      "name": "Tidesteel Command Pouch",
+      "kind": "armor",
+      "armor_slot": "backpack",
+      "stack": 1,
+      "command_pouch_tier": 2,
+      "description": "Extends Tether Commands; command numbers come from tether_commands.json."
+    },
+    "skyglass_harness": {
+      "name": "Skyglass Harness",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 3,
+      "gear_upgrade": 0,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "skyglass_harness_plus_1": {
+      "name": "Skyglass Harness +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 3,
+      "gear_upgrade": 1,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "skyglass_harness_plus_2": {
+      "name": "Skyglass Harness +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 3,
+      "gear_upgrade": 2,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "skyglass_harness_plus_3": {
+      "name": "Skyglass Harness +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 3,
+      "gear_upgrade": 3,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "skyglass_charm": {
+      "name": "Skyglass Charm",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 3,
+      "gear_upgrade": 0,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "skyglass_charm_plus_1": {
+      "name": "Skyglass Charm +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 3,
+      "gear_upgrade": 1,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "skyglass_charm_plus_2": {
+      "name": "Skyglass Charm +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 3,
+      "gear_upgrade": 2,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "skyglass_charm_plus_3": {
+      "name": "Skyglass Charm +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 3,
+      "gear_upgrade": 3,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "skyglass_travel_hood": {
+      "name": "Skyglass Travel Hood",
+      "kind": "armor",
+      "armor_slot": "helmet",
+      "stack": 1,
+      "cold_penalty_reduction": 0.12,
+      "fall_damage_reduction": 0.08,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "skyglass_travel_coat": {
+      "name": "Skyglass Travel Coat",
+      "kind": "armor",
+      "armor_slot": "upper_body",
+      "stack": 1,
+      "cold_penalty_reduction": 0.12,
+      "fall_damage_reduction": 0.08,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "skyglass_travel_trousers": {
+      "name": "Skyglass Travel Trousers",
+      "kind": "armor",
+      "armor_slot": "lower_body",
+      "stack": 1,
+      "cold_penalty_reduction": 0.12,
+      "fall_damage_reduction": 0.08,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "skyglass_travel_boots": {
+      "name": "Skyglass Travel Boots",
+      "kind": "armor",
+      "armor_slot": "boots",
+      "stack": 1,
+      "cold_penalty_reduction": 0.12,
+      "fall_damage_reduction": 0.08,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "skyglass_command_pouch": {
+      "name": "Skyglass Command Pouch",
+      "kind": "armor",
+      "armor_slot": "backpack",
+      "stack": 1,
+      "command_pouch_tier": 3,
+      "description": "Extends Tether Commands; command numbers come from tether_commands.json."
+    },
+    "stormglass_harness": {
+      "name": "Stormglass Harness",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 4,
+      "gear_upgrade": 0,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "stormglass_harness_plus_1": {
+      "name": "Stormglass Harness +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 4,
+      "gear_upgrade": 1,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "stormglass_harness_plus_2": {
+      "name": "Stormglass Harness +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 4,
+      "gear_upgrade": 2,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "stormglass_harness_plus_3": {
+      "name": "Stormglass Harness +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "harness",
+      "gear_tier": 4,
+      "gear_upgrade": 3,
+      "description": "A fitted harness that supports this companion’s health and resilience."
+    },
+    "stormglass_charm": {
+      "name": "Stormglass Charm",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 4,
+      "gear_upgrade": 0,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "stormglass_charm_plus_1": {
+      "name": "Stormglass Charm +1",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 4,
+      "gear_upgrade": 1,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "stormglass_charm_plus_2": {
+      "name": "Stormglass Charm +2",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 4,
+      "gear_upgrade": 2,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "stormglass_charm_plus_3": {
+      "name": "Stormglass Charm +3",
+      "kind": "creature_gear",
+      "stack": 1,
+      "gear_slot": "charm",
+      "gear_tier": 4,
+      "gear_upgrade": 3,
+      "description": "An attuned charm that strengthens moves and ultimate gain."
+    },
+    "stormglass_travel_hood": {
+      "name": "Stormglass Travel Hood",
+      "kind": "armor",
+      "armor_slot": "helmet",
+      "stack": 1,
+      "storm_strike_reduction": 0.12,
+      "static_duration_scale": 0.85,
+      "terrain_damage_reduction": 0.1,
+      "fall_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "stormglass_travel_coat": {
+      "name": "Stormglass Travel Coat",
+      "kind": "armor",
+      "armor_slot": "upper_body",
+      "stack": 1,
+      "storm_strike_reduction": 0.12,
+      "static_duration_scale": 0.85,
+      "terrain_damage_reduction": 0.1,
+      "fall_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "stormglass_travel_trousers": {
+      "name": "Stormglass Travel Trousers",
+      "kind": "armor",
+      "armor_slot": "lower_body",
+      "stack": 1,
+      "storm_strike_reduction": 0.12,
+      "static_duration_scale": 0.85,
+      "terrain_damage_reduction": 0.1,
+      "fall_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "stormglass_travel_boots": {
+      "name": "Stormglass Travel Boots",
+      "kind": "armor",
+      "armor_slot": "boots",
+      "stack": 1,
+      "storm_strike_reduction": 0.12,
+      "static_duration_scale": 0.85,
+      "terrain_damage_reduction": 0.1,
+      "fall_damage_reduction": 0.04,
+      "description": "Personal protection against the region’s travel hazards."
+    },
+    "stormglass_command_pouch": {
+      "name": "Stormglass Command Pouch",
+      "kind": "armor",
+      "armor_slot": "backpack",
+      "stack": 1,
+      "command_pouch_tier": 4,
+      "description": "Extends Tether Commands; command numbers come from tether_commands.json."
+    }
+  },
+  "recipes": {
+    "craft_rootiron_harness": {
+      "name": "Rootiron Harness",
+      "station_id": "forge",
+      "station_tier": 1,
+      "output": {
+        "id": "rootiron_harness",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "rootiron_ingot",
+          "n": 3
+        },
+        {
+          "id": "fiber",
+          "n": 2
+        }
+      ]
+    },
+    "craft_rootiron_charm": {
+      "name": "Rootiron Charm",
+      "station_id": "altar",
+      "station_tier": 1,
+      "output": {
+        "id": "rootiron_charm",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        },
+        {
+          "id": "sunleaf",
+          "n": 2
+        }
+      ]
+    },
+    "craft_rootiron_travel_hood": {
+      "name": "Rootiron Travel Hood",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "rootiron_travel_hood",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        },
+        {
+          "id": "fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 1
+    },
+    "craft_rootiron_travel_coat": {
+      "name": "Rootiron Travel Coat",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "rootiron_travel_coat",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        },
+        {
+          "id": "fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 1
+    },
+    "craft_rootiron_travel_trousers": {
+      "name": "Rootiron Travel Trousers",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "rootiron_travel_trousers",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        },
+        {
+          "id": "fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 1
+    },
+    "craft_rootiron_travel_boots": {
+      "name": "Rootiron Travel Boots",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "rootiron_travel_boots",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        },
+        {
+          "id": "fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 1
+    },
+    "craft_rootiron_command_pouch": {
+      "name": "Rootiron Command Pouch",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "rootiron_command_pouch",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        },
+        {
+          "id": "fiber",
+          "n": 4
+        }
+      ],
+      "personal_gear_tier": 1
+    },
+    "craft_tidesteel_harness": {
+      "name": "Tidesteel Harness",
+      "station_id": "forge",
+      "station_tier": 2,
+      "output": {
+        "id": "tidesteel_harness",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "tidesteel_ingot",
+          "n": 3
+        },
+        {
+          "id": "reed_fiber",
+          "n": 2
+        }
+      ]
+    },
+    "craft_tidesteel_charm": {
+      "name": "Tidesteel Charm",
+      "station_id": "altar",
+      "station_tier": 2,
+      "output": {
+        "id": "tidesteel_charm",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "tidesteel_ingot",
+          "n": 2
+        },
+        {
+          "id": "tide_pearl",
+          "n": 2
+        }
+      ]
+    },
+    "craft_tidesteel_travel_hood": {
+      "name": "Tidesteel Travel Hood",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "tidesteel_travel_hood",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "tidesteel_ingot",
+          "n": 2
+        },
+        {
+          "id": "reed_fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 2
+    },
+    "craft_tidesteel_travel_coat": {
+      "name": "Tidesteel Travel Coat",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "tidesteel_travel_coat",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "tidesteel_ingot",
+          "n": 2
+        },
+        {
+          "id": "reed_fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 2
+    },
+    "craft_tidesteel_travel_trousers": {
+      "name": "Tidesteel Travel Trousers",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "tidesteel_travel_trousers",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "tidesteel_ingot",
+          "n": 2
+        },
+        {
+          "id": "reed_fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 2
+    },
+    "craft_tidesteel_travel_boots": {
+      "name": "Tidesteel Travel Boots",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "tidesteel_travel_boots",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "tidesteel_ingot",
+          "n": 2
+        },
+        {
+          "id": "reed_fiber",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 2
+    },
+    "craft_tidesteel_command_pouch": {
+      "name": "Tidesteel Command Pouch",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "tidesteel_command_pouch",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "tidesteel_ingot",
+          "n": 2
+        },
+        {
+          "id": "reed_fiber",
+          "n": 4
+        }
+      ],
+      "personal_gear_tier": 2
+    },
+    "craft_skyglass_harness": {
+      "name": "Skyglass Harness",
+      "station_id": "forge",
+      "station_tier": 3,
+      "output": {
+        "id": "skyglass_harness",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "skyglass_ingot",
+          "n": 3
+        },
+        {
+          "id": "skyplume",
+          "n": 2
+        }
+      ]
+    },
+    "craft_skyglass_charm": {
+      "name": "Skyglass Charm",
+      "station_id": "altar",
+      "station_tier": 3,
+      "output": {
+        "id": "skyglass_charm",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "skyglass_ingot",
+          "n": 2
+        },
+        {
+          "id": "skyplume",
+          "n": 2
+        }
+      ]
+    },
+    "craft_skyglass_travel_hood": {
+      "name": "Skyglass Travel Hood",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "skyglass_travel_hood",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "skyglass_ingot",
+          "n": 2
+        },
+        {
+          "id": "skyplume",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 3
+    },
+    "craft_skyglass_travel_coat": {
+      "name": "Skyglass Travel Coat",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "skyglass_travel_coat",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "skyglass_ingot",
+          "n": 2
+        },
+        {
+          "id": "skyplume",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 3
+    },
+    "craft_skyglass_travel_trousers": {
+      "name": "Skyglass Travel Trousers",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "skyglass_travel_trousers",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "skyglass_ingot",
+          "n": 2
+        },
+        {
+          "id": "skyplume",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 3
+    },
+    "craft_skyglass_travel_boots": {
+      "name": "Skyglass Travel Boots",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "skyglass_travel_boots",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "skyglass_ingot",
+          "n": 2
+        },
+        {
+          "id": "skyplume",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 3
+    },
+    "craft_skyglass_command_pouch": {
+      "name": "Skyglass Command Pouch",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "skyglass_command_pouch",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "skyglass_ingot",
+          "n": 2
+        },
+        {
+          "id": "skyplume",
+          "n": 4
+        }
+      ],
+      "personal_gear_tier": 3
+    },
+    "craft_stormglass_harness": {
+      "name": "Stormglass Harness",
+      "station_id": "forge",
+      "station_tier": 4,
+      "output": {
+        "id": "stormglass_harness",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass_plate",
+          "n": 3
+        },
+        {
+          "id": "sparkfur",
+          "n": 2
+        }
+      ]
+    },
+    "craft_stormglass_charm": {
+      "name": "Stormglass Charm",
+      "station_id": "altar",
+      "station_tier": 4,
+      "output": {
+        "id": "stormglass_charm",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass_plate",
+          "n": 2
+        },
+        {
+          "id": "sparkfur",
+          "n": 2
+        }
+      ]
+    },
+    "craft_stormglass_travel_hood": {
+      "name": "Stormglass Travel Hood",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "stormglass_travel_hood",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass_plate",
+          "n": 2
+        },
+        {
+          "id": "sparkfur",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 4
+    },
+    "craft_stormglass_travel_coat": {
+      "name": "Stormglass Travel Coat",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "stormglass_travel_coat",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass_plate",
+          "n": 2
+        },
+        {
+          "id": "sparkfur",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 4
+    },
+    "craft_stormglass_travel_trousers": {
+      "name": "Stormglass Travel Trousers",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "stormglass_travel_trousers",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass_plate",
+          "n": 2
+        },
+        {
+          "id": "sparkfur",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 4
+    },
+    "craft_stormglass_travel_boots": {
+      "name": "Stormglass Travel Boots",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "stormglass_travel_boots",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass_plate",
+          "n": 2
+        },
+        {
+          "id": "sparkfur",
+          "n": 3
+        }
+      ],
+      "personal_gear_tier": 4
+    },
+    "craft_stormglass_command_pouch": {
+      "name": "Stormglass Command Pouch",
+      "station_id": "workbench",
+      "station_tier": 0,
+      "output": {
+        "id": "stormglass_command_pouch",
+        "n": 1
+      },
+      "cost": [
+        {
+          "id": "stormglass_plate",
+          "n": 2
+        },
+        {
+          "id": "sparkfur",
+          "n": 4
+        }
+      ],
+      "personal_gear_tier": 4
+    }
+  },
+  "upgrades": {
+    "rootiron_harness": {
+      "output": "rootiron_harness_plus_1",
+      "station_id": "forge",
+      "station_tier": 1,
+      "inputs": {
+        "rootiron_ingot": 2,
+        "fiber": 1
+      }
+    },
+    "rootiron_harness_plus_1": {
+      "output": "rootiron_harness_plus_2",
+      "station_id": "forge",
+      "station_tier": 1,
+      "inputs": {
+        "rootiron_ingot": 2,
+        "fiber": 1
+      }
+    },
+    "rootiron_harness_plus_2": {
+      "output": "rootiron_harness_plus_3",
+      "station_id": "forge",
+      "station_tier": 1,
+      "inputs": {
+        "rootiron_ingot": 2,
+        "fiber": 1
+      }
+    },
+    "rootiron_charm": {
+      "output": "rootiron_charm_plus_1",
+      "station_id": "altar",
+      "station_tier": 1,
+      "inputs": {
+        "rootiron_ingot": 2,
+        "fiber": 1
+      }
+    },
+    "rootiron_charm_plus_1": {
+      "output": "rootiron_charm_plus_2",
+      "station_id": "altar",
+      "station_tier": 1,
+      "inputs": {
+        "rootiron_ingot": 2,
+        "fiber": 1
+      }
+    },
+    "rootiron_charm_plus_2": {
+      "output": "rootiron_charm_plus_3",
+      "station_id": "altar",
+      "station_tier": 1,
+      "inputs": {
+        "rootiron_ingot": 2,
+        "fiber": 1
+      }
+    },
+    "tidesteel_harness": {
+      "output": "tidesteel_harness_plus_1",
+      "station_id": "forge",
+      "station_tier": 2,
+      "inputs": {
+        "tidesteel_ingot": 2,
+        "reed_fiber": 1
+      }
+    },
+    "tidesteel_harness_plus_1": {
+      "output": "tidesteel_harness_plus_2",
+      "station_id": "forge",
+      "station_tier": 2,
+      "inputs": {
+        "tidesteel_ingot": 2,
+        "reed_fiber": 1
+      }
+    },
+    "tidesteel_harness_plus_2": {
+      "output": "tidesteel_harness_plus_3",
+      "station_id": "forge",
+      "station_tier": 2,
+      "inputs": {
+        "tidesteel_ingot": 2,
+        "reed_fiber": 1
+      }
+    },
+    "tidesteel_charm": {
+      "output": "tidesteel_charm_plus_1",
+      "station_id": "altar",
+      "station_tier": 2,
+      "inputs": {
+        "tidesteel_ingot": 2,
+        "reed_fiber": 1
+      }
+    },
+    "tidesteel_charm_plus_1": {
+      "output": "tidesteel_charm_plus_2",
+      "station_id": "altar",
+      "station_tier": 2,
+      "inputs": {
+        "tidesteel_ingot": 2,
+        "reed_fiber": 1
+      }
+    },
+    "tidesteel_charm_plus_2": {
+      "output": "tidesteel_charm_plus_3",
+      "station_id": "altar",
+      "station_tier": 2,
+      "inputs": {
+        "tidesteel_ingot": 2,
+        "reed_fiber": 1
+      }
+    },
+    "skyglass_harness": {
+      "output": "skyglass_harness_plus_1",
+      "station_id": "forge",
+      "station_tier": 3,
+      "inputs": {
+        "skyglass_ingot": 2,
+        "skyplume": 1
+      }
+    },
+    "skyglass_harness_plus_1": {
+      "output": "skyglass_harness_plus_2",
+      "station_id": "forge",
+      "station_tier": 3,
+      "inputs": {
+        "skyglass_ingot": 2,
+        "skyplume": 1
+      }
+    },
+    "skyglass_harness_plus_2": {
+      "output": "skyglass_harness_plus_3",
+      "station_id": "forge",
+      "station_tier": 3,
+      "inputs": {
+        "skyglass_ingot": 2,
+        "skyplume": 1
+      }
+    },
+    "skyglass_charm": {
+      "output": "skyglass_charm_plus_1",
+      "station_id": "altar",
+      "station_tier": 3,
+      "inputs": {
+        "skyglass_ingot": 2,
+        "skyplume": 1
+      }
+    },
+    "skyglass_charm_plus_1": {
+      "output": "skyglass_charm_plus_2",
+      "station_id": "altar",
+      "station_tier": 3,
+      "inputs": {
+        "skyglass_ingot": 2,
+        "skyplume": 1
+      }
+    },
+    "skyglass_charm_plus_2": {
+      "output": "skyglass_charm_plus_3",
+      "station_id": "altar",
+      "station_tier": 3,
+      "inputs": {
+        "skyglass_ingot": 2,
+        "skyplume": 1
+      }
+    },
+    "stormglass_harness": {
+      "output": "stormglass_harness_plus_1",
+      "station_id": "forge",
+      "station_tier": 4,
+      "inputs": {
+        "stormglass_plate": 2,
+        "sparkfur": 1
+      }
+    },
+    "stormglass_harness_plus_1": {
+      "output": "stormglass_harness_plus_2",
+      "station_id": "forge",
+      "station_tier": 4,
+      "inputs": {
+        "stormglass_plate": 2,
+        "sparkfur": 1
+      }
+    },
+    "stormglass_harness_plus_2": {
+      "output": "stormglass_harness_plus_3",
+      "station_id": "forge",
+      "station_tier": 4,
+      "inputs": {
+        "stormglass_plate": 2,
+        "sparkfur": 1
+      }
+    },
+    "stormglass_charm": {
+      "output": "stormglass_charm_plus_1",
+      "station_id": "altar",
+      "station_tier": 4,
+      "inputs": {
+        "stormglass_plate": 2,
+        "sparkfur": 1
+      }
+    },
+    "stormglass_charm_plus_1": {
+      "output": "stormglass_charm_plus_2",
+      "station_id": "altar",
+      "station_tier": 4,
+      "inputs": {
+        "stormglass_plate": 2,
+        "sparkfur": 1
+      }
+    },
+    "stormglass_charm_plus_2": {
+      "output": "stormglass_charm_plus_3",
+      "station_id": "altar",
+      "station_tier": 4,
+      "inputs": {
+        "stormglass_plate": 2,
+        "sparkfur": 1
+      }
+    }
+  },
+  "accent": {
+    "band_center": 0.56,
+    "band_width": 0.12,
+    "charm_band_center": 0.78,
+    "charm_band_width": 0.045,
+    "emission_energy": 0.7,
+    "upgrade_emission_step": 0.1
+  },
+  "boss_proof": {
+    "runner": "F22 actual encounter/director C2 runner",
+    "status": "UNRUN",
+    "pairs": [
+      {
+        "biome": "meadows",
+        "tier": 1,
+        "previous": 0
+      },
+      {
+        "biome": "tidewake",
+        "tier": 2,
+        "previous": 1
+      },
+      {
+        "biome": "cloudreach",
+        "tier": 3,
+        "previous": 2
+      },
+      {
+        "biome": "stormwood",
+        "tier": 4,
+        "previous": 3
+      }
+    ],
+    "minimum_reader_win_rate": 0.9,
+    "previous_tier_metric": "compare lead-creature faints, damage taken, and clear time at identical seeds and loadouts; retain per-boss C2 judgement"
+  },
+  "cold_zones": [
+    {
+      "id": "upper_cloudreach_exposed_heights",
+      "realm_id": "cloudreach",
+      "min": [
+        -1000,
+        650,
+        3480
+      ],
+      "max": [
+        -350,
+        1250,
+        5720
+      ],
+      "stamina_regen_penalty": 0.35
+    }
+  ],
+  "limits": {
+    "ultimate_gain_multiplier_cap": 1.52
+  }
+}
