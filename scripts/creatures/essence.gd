@@ -614,7 +614,7 @@ static func training_row_valid(raw: Variant, character_id: String = "", world_na
 	if not world_namespace.is_empty() and raw.world_namespace != world_namespace: return false
 	if raw.delivery_id != training_delivery_id(raw.world_namespace, raw.character_id) \
 			or not raw.intent is Dictionary or not raw.receipt is String: return false
-	var component := raw.action_id if raw.action == "altar_spend" else _defeat_action_component(raw.world_namespace, raw.action_id)
+	var component: String = raw.action_id if raw.action == "altar_spend" else _defeat_action_component(raw.world_namespace, raw.action_id)
 	var prefix := ("essence_spend" if raw.action == "altar_spend" else "defeat") + ":%s:%s:" % [raw.character_id, component]
 	if not raw.receipt.begins_with(prefix): return false
 	for field: String in ["before", "after"]:
@@ -622,7 +622,7 @@ static func training_row_valid(raw: Variant, character_id: String = "", world_na
 		if not projection is Dictionary or projection.size() != 3 \
 				or not projection.get("party") is Array or not projection.get("inventory") is Array \
 				or not projection.get("redesign_character") is Dictionary: return false
-		var candidate := projection.duplicate(true)
+		var candidate: Dictionary = projection.duplicate(true)
 		candidate["character_id"] = raw.character_id
 		if not _baseline_errors(candidate, raw.character_id).is_empty(): return false
 	return STATE.uids(raw.before.party) == STATE.uids(raw.after.party) \
@@ -691,7 +691,7 @@ static func stage_training_owner(actual_owner: Dictionary, incoming: Dictionary,
 		return _refuse("invalid_training_delivery")
 	if not _baseline_errors(actual_owner, character).is_empty(): return _refuse("invalid_owner_baseline")
 	var current := training_projection(actual_owner)
-	var applied := actual_owner.redesign_character.transaction_receipts.has(incoming.receipt)
+	var applied: bool = actual_owner.redesign_character.transaction_receipts.has(incoming.receipt)
 	if applied:
 		if not _equivalent(current, incoming.after): return _refuse("training_marker_state_conflict")
 		return {"ok": true, "duplicate": true, "state": actual_owner.duplicate(true),
@@ -827,7 +827,7 @@ static func commit_host_training(registry: RefCounted, prepared_writer: Node, pe
 		registry.call("finish_creature_training", stage, false)
 		return _refuse("training_stage_unavailable")
 	var journal: Variant = prepared_writer.call("journal_creature_training_prepared", peer_id, character_id, accepted)
-	var saved := journal is Dictionary and journal.get("ok") == true and journal.get("durable") == true
+	var saved: Variant = journal is Dictionary and journal.get("ok") == true and journal.get("durable") == true
 	if not bool(registry.call("finish_creature_training", stage, saved)):
 		return {"ok": false, "code": "training_stage_changed", "durable": saved, "resolved": false}
 	if not saved:
