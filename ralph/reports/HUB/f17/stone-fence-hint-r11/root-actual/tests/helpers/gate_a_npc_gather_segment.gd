@@ -30,7 +30,6 @@ const DOOR_SCRIPT := "res://scripts/world/village_door.gd"
 const HARVEST_NODE_SCRIPT := "res://scripts/world/harvest_node.gd"
 const BACKPACK_COLUMNS := 6
 const NAVIGATOR := preload("res://tests/helpers/opening_geometry_navigator.gd")
-const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 
 ## Metres out along a door's own outward normal that the approach stands off
 ## before asking for the prompt, and metres in past the leaf once it is open.
@@ -320,20 +319,10 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 		return false
 	# The direct wood leg crossed Grandpa's furnished yard and lost actual floor.
 	# Follow the existing Pond road to its nearest authored node, then leave it
-	# for the resource. Nearest live nodes vary with the real NPC arrival pose.
-	# A stone heading that crosses the concave fence uses the existing meadow
-	# road; an interior heading stays direct. This hint admits no native contact.
+	# for the resource. From wood, nearby stone is west of the yard; approach it
+	# directly instead of returning east through the yard to Practice Meadow.
 	# Every leg shares the same 1800-frame walk and unchanged live floor checks.
 	var road := "The Pond" if item_id == "wood" else ""
-	if item_id == "stone":
-		var outline := VILLAGE_BOUNDARY.outline(VILLAGE_BOUNDARY.load_config())
-		var hint := stone_road_hint(Vector2(_player.global_position.x, _player.global_position.z),
-			Vector2(node.global_position.x, node.global_position.z), outline, 1.55)
-		if hint == StoneRoadHint.INVALID:
-			_fail("actual stone approach is outside the bounded village fence hint")
-			return false
-		if hint == StoneRoadHint.MEADOW:
-			road = "Practice Meadow"
 	if not await _walk_toward(node.global_position, 1800, 1.55, road, item_id == "wood"):
 		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
 		return false
@@ -472,36 +461,6 @@ func _wait_for_tool_idle() -> bool:
 		await _tree.physics_frame
 	_fail("previous tool swing did not finish before the next controller hotbar edge")
 	return false
-
-
-enum StoneRoadHint { INVALID, DIRECT, MEADOW }
-
-
-## Bounded layout guidance only. Inside endpoints can still cross a concave
-## fence twice, leaving via an open gate and returning through a solid panel.
-## Native production movement, floor, skin and raw contact checks still decide
-## whether the unchanged actual target is physically reached.
-static func stone_road_hint(from: Vector2, goal: Vector2, outline: PackedVector2Array, clearance: float) -> int:
-	if not from.is_finite() or not goal.is_finite() or outline.size() < 3 or outline.size() > 64 \
-			or from.distance_to(goal) > 180.0 or not is_finite(clearance) or clearance <= 0.0 or clearance > 1.65:
-		return StoneRoadHint.INVALID
-	for index in outline.size():
-		if not outline[index].is_finite() or outline[index] == outline[(index + 1) % outline.size()]:
-			return StoneRoadHint.INVALID
-	if not Geometry2D.is_point_in_polygon(from, outline) or not Geometry2D.is_point_in_polygon(goal, outline):
-		return StoneRoadHint.INVALID
-	for index in outline.size():
-		var a := outline[index]
-		var b := outline[(index + 1) % outline.size()]
-		if Geometry2D.segment_intersects_segment(from, goal, a, b) != null:
-			return StoneRoadHint.MEADOW
-		var gap := minf(from.distance_to(Geometry2D.get_closest_point_to_segment(from, a, b)),
-			goal.distance_to(Geometry2D.get_closest_point_to_segment(goal, a, b)))
-		gap = minf(gap, a.distance_to(Geometry2D.get_closest_point_to_segment(a, from, goal)))
-		gap = minf(gap, b.distance_to(Geometry2D.get_closest_point_to_segment(b, from, goal)))
-		if gap <= clearance:
-			return StoneRoadHint.MEADOW
-	return StoneRoadHint.DIRECT
 
 
 func _nearest_authored_node(item_id: String) -> Node3D:

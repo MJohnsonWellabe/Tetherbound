@@ -1,0 +1,114 @@
+{
+  "_comment": "The first day's gathering: hand-placed harvest spots along the tutorial path, read by scripts/world/harvest_node.gd. NOT the real M8 harvesting loop (tools, durability, the vegetation itself) — a dozen legible spots so 'gather enough to make camp' is playable today. Positions are world metres, stood on the ground per D09. ALL TUNABLE.",
+  "_comment_amounts": "A camp costs 12 wood / 8 stone / 10 fiber (data/items/buildables.json), so one full walk down the practice path and back covers it with a little over: 4 wood spots x 4, 3 stone x 3, 3 fiber x 4, 2 berry x 3.",
+  "_comment_bands": "BAND-SPLIT. The nodes array that used to live here is now cut per corridor band, under data/config/bands/<band>/harvest.json, and merged back at load by scripts/data/band_content.gd. What stays here is what is NOT positional and must not be duplicated five times where it could drift. Every entry carries an `order`; the merge sorts by it, so the merged array is byte-identical to the pre-split file (tests/test_band_content.gd pins that against tests/fixtures/band_split_baseline/).",
+  "_comment_ironwood_sf31": "SF31, spec §3 Band 4: the old-growth stands on the Rise's south-west flank, up the trainer road past the Burrow Warrens' mouth ([70,-140]) -- the upper Meadows, and the only place ironwood grows. Nodes here rather than in a new `ironwood_grove.json` because this file already IS where a gathered material lives: SD16's quarry made exactly this call for rootstone (`old_quarry.gd`'s own header: 'the Rootstone deposits are harvest.json, placed by playground_world.gd like every other harvest node') and a second config would be the drift that comment exists to prevent. Every position is MEASURED, not guessed -- `tools/_probe_upper_meadows.gd` (heights -3.3m to +0.5m, worst local slope 2.3-11.3 degrees over a 3m pad, all inside world_perimeter.gd's 235m ring at 149-183m out); the eastern quadrant beyond them is the Rise's own 45-75 degree rock and will not hold a node a player can stand at. `TwistedTree` rather than `DeadTree_2` (which `wood` already uses): the gnarled trunk is the read, and a second dead tree would say 'wood' at a glance. Amounts and scales TUNABLE.",
+  "_comment_models_r9_4": "R9.4. Every node here had no `model`, and harvest_node.gd's fallback for that is a BoxMesh tinted by the item's colour -- so all twelve harvest spots rendered as coloured boxes. The blind critic found two of them sitting a couple of metres from the player in the spawn framing and noted they were 'MORE legible than the player', being the only hard-edged geometric shapes in frame; it listed them among the three assets doing the most damage. These are the vegetation's own Quaternius pack, deliberately: assets/environment/nature is the Kenney kit, which ships flat untextured vertex colours including a teal-green rock material, and mixing it in would trade one cohesion problem for another (CLAUDE.md, visual cohesion). The box fallback stays in the code -- it is the right behaviour for a node whose model is missing. TUNABLE (scales especially).",
+  "_comment_renewable": "RD-01 / HOMESTEAD §5.1: only tier material nodes and attuned essence nodes renew on the host-world day. Story pickups, caches, unique items and ordinary berry bushes retain their existing once-per-world behavior. Stable order/site IDs and authored positions are unchanged. This policy is consumed by host ledger validation, never a client timer.",
+  "renewable": {
+    "clock": "host_world_day",
+    "scope": "world",
+    "material_respawn_days": 2,
+    "essence_respawn_days": 3,
+    "tier": 1,
+    "materials": [
+      "wood",
+      "stone",
+      "fiber",
+      "rootstone",
+      "ironwood",
+      "sunleaf"
+    ],
+    "essence_node_config": "res://data/config/essence_nodes.json",
+    "runtime_enabled": false
+  },
+  "additional_material_node_candidates": {
+    "status": "authored_candidates_not_runtime_mounted",
+    "_comment": "F32#0: Meadows Sunleaf supply, using its existing Cloudreach nature-family plant model. Source anchors are existing fibre patches;8m offsets are unproven candidates. Not part of BandContent nodes, so old merged entries, orders and positions remain unchanged. World-owner mounting and typed host stock follow actual body/path validation.",
+    "nodes": [
+      {
+        "id": "meadows:sunleaf:patch:01",
+        "realm": "meadows",
+        "region_id": "band1_lower_meadows",
+        "item": "sunleaf",
+        "amount": 3,
+        "outputs": {
+          "sunleaf": 3
+        },
+        "respawn_days": 2,
+        "at": [
+          3.0,
+          141.0
+        ],
+        "label": "Gather Sunleaf",
+        "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+        "model_scale": 0.8,
+        "anchor": {
+          "id": "order:1000",
+          "config": "data/config/bands/band1_lower_meadows/harvest.json",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "terrain_and_player_path_proven": false
+      },
+      {
+        "id": "meadows:sunleaf:patch:02",
+        "realm": "meadows",
+        "region_id": "band2_stone_and_root",
+        "item": "sunleaf",
+        "amount": 3,
+        "outputs": {
+          "sunleaf": 3
+        },
+        "respawn_days": 2,
+        "at": [
+          158.0,
+          1565.0
+        ],
+        "label": "Gather Sunleaf",
+        "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+        "model_scale": 0.8,
+        "anchor": {
+          "id": "order:2008",
+          "config": "data/config/bands/band2_stone_and_root/harvest.json",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "terrain_and_player_path_proven": false
+      },
+      {
+        "id": "meadows:sunleaf:patch:03",
+        "realm": "meadows",
+        "region_id": "band4_upper_meadows_ironwood",
+        "item": "sunleaf",
+        "amount": 3,
+        "outputs": {
+          "sunleaf": 3
+        },
+        "respawn_days": 2,
+        "at": [
+          -297.0,
+          5075.0
+        ],
+        "label": "Gather Sunleaf",
+        "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+        "model_scale": 0.8,
+        "anchor": {
+          "id": "order:4007",
+          "config": "data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+          "offset_xz_m": [
+            8,
+            0
+          ]
+        },
+        "terrain_and_player_path_proven": false
+      }
+    ],
+    "runtime_enabled": false,
+    "_comment_runtime_gate": "OFF until independent actual baked-terrain/body/slope/water-depth and earned player approach proofs authorize every candidate. Literal terrain_and_player_path_proven is only a source-release precondition; it does not replace current native validation. Disabled blocks add no known site or stock and never clear any legacy depletion/revision. One canonical RenewableSiteCatalog/host stock transaction is shared by all claimants."
+  }
+}
