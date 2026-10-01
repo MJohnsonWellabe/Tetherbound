@@ -3,6 +3,33 @@
   "$id": "tetherbound/character_state",
   "type": "object",
   "properties": {
+    "bounties": {
+      "description": "Optional additive v28 carrier; absent means no board issued. Existing saves retain all fields. Only host transactions issue or change a board.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchor_world": {"type": "string"},
+        "anchor_day": {"type": "integer", "minimum": 0, "maximum": 2147483646},
+        "cycle": {"type": "integer", "minimum": 0, "maximum": 2147483646},
+        "slots": {
+          "type": "array", "minItems": 0, "maxItems": 3, "uniqueItems": true,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "properties": {
+              "instance": {"type": "string", "minLength": 64},
+              "template": {"type": "string", "minLength": 1},
+              "complete": {"type": "boolean"}
+            },
+            "required": ["instance", "template", "complete"]
+          }
+        }
+      },
+      "required": ["anchor_world", "anchor_day", "cycle", "slots"],
+      "oneOf": [
+        {"properties": {"anchor_world": {"const": ""}, "anchor_day": {"const": 0}, "cycle": {"const": 0}, "slots": {"maxItems": 0}}},
+        {"properties": {"anchor_world": {"minLength": 1}, "anchor_day": {"minimum": 1}, "cycle": {"minimum": 1}, "slots": {"minItems": 3}}}
+      ]
+    },
     "portal_unlocks": {
       "type": "array",
       "items": {

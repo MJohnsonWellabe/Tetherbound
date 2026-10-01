@@ -11,6 +11,7 @@
   "transaction_receipts": [],
   "research_receipts": [],
   "bounty_receipts": [],
+  "bounties": {"anchor_world": "", "anchor_day": 0, "cycle": 0, "slots": []},
   "pouch_tier": 0,
   "creatures": {}
 }
