@@ -146,6 +146,24 @@
           "faint": "faint"
         }
       },
+      "rideable": {
+        "can_carry": true,
+        "required_realm": "water",
+        "requires_item": "",
+        "mount_offset": [0.0, 1.45, -0.15],
+        "ride_speed_multiplier": 1.0,
+        "dismount_distance": 2.5
+      },
+      "swim_mount": {
+        "compatible": true,
+        "requires_item": "",
+        "requires_personal_flag": "",
+        "speed_mps": 6.0,
+        "stamina_capacity": 210.0,
+        "stamina_drain_per_s": 1.8,
+        "stamina_owner": "creature_instance"
+      },
+      "water_mount_geometry": {"surface_origin_offset_m": -0.7},
       "learnset": "ripplet"
     },
     "galewisp": {

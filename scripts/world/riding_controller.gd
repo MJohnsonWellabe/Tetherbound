@@ -254,6 +254,9 @@ func _mountable_body() -> Node3D:
 		return null
 	if not SPECIES.is_rideable(str(body.get("species_id"))):
 		return null
+	var realm := str(SPECIES.definition(str(body.get("species_id"))).get("rideable", {}).get("required_realm", ""))
+	var game := get_node_or_null("/root/Game")
+	if not realm.is_empty() and (game == null or str(game.current_realm) != realm): return null
 	var instance: RefCounted = _encounter.call("ally_instance")
 	# A creature on its side does not carry anybody. The director already
 	# refuses to summon a fainted creature; this is the same rule for a creature

@@ -1,0 +1,38 @@
+{
+  "feature": "F37",
+  "criteria": {"0":"OPEN", "1":"OPEN", "2":"OPEN", "3":"OPEN", "4":"OPEN"},
+  "implementation": "Owned Ripplet surface mount without saddle or Swim Stone; 6m/s versus human 3.8m/s; reduced ordinary current push; tap Jump Dive after admitted L30 breakthrough; 20-second depth budget; six optional sunken finds and three submerged speed corridors; stable creature UID and remaining dive budget in existing traversal save; host-authorized actions and durable character-bound rewards.",
+  "completed_evidence": ["source-audit.json: GDScript grammar, static resource references, configuration, site depth/reach and unchanged mandatory-route data", "git diff --check"],
+  "not_run": "No Godot, editor, import, render, export, device, workflow dispatch or engine lock mutation. ROOT owns the shared queue.",
+  "native_commands_from_checkout": [
+    "godot --headless --path . --script tests/run_tests.gd -- --only=test_f37_ripplet_traversal.gd,test_water_traversal_save.gd,test_water_closed_gate_seals.gd,test_water_mount_dismount_replication.gd",
+    "godot --headless --path . --script tests/smoke_f37_ripplet.gd",
+    "godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd",
+    "godot --headless --path . --script tests/smoke_water_swimming.gd -- --original-five",
+    "bash tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/f37_ripplet_rejoin.json --out=ralph/reports/R2-F37/native-rejoin",
+    "bash tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/f37_ripplet_render.json --render --out=ralph/reports/R2-F37/render-rejoin"
+  ],
+  "fixture_limits": "Queued scenarios explicitly create owned Ripplet, level/breakthrough records and deep-water poses. They are not earned opening/feast or campaign proofs. Render scenario requires captured=true and must not pass headless. Loopback ENet is not invitation/internet/device acceptance.",
+  "remaining_proofs": [
+    "Native load/typecheck and scoped rule/controller tests",
+    "Earned Tidewake opening ownership and actual F28 L30 breakthrough feast; pre-breakthrough Dive refusal",
+    "Surface speed/current comparison, auto-surface on timeout/exhaustion/shallow water and combat refusal",
+    "Real Interact sunken cache/node claims, two-peer race, multi-output capacity, disk journal failure rollback and reconnect settlement",
+    "All mandatory Water routes human-swimmable; optional corridor traversal with gates closed/open",
+    "Underwater assets, route legibility, camera/water visibility, mounted animations and rendered independent visual verdict",
+    "Stable UID party reorder, disk save/reload and new-peer reconnect with spent stamina/timer; real device and invitation evidence"
+  ],
+  "shared_overlaps": [
+    "F28: admitted redesign_character creature breakthroughs; no progression authority edits",
+    "F16/F12: swim_controller.gd, water_traversal_save.gd, water_riding_controller.gd, water_mounted_swim.gd and water_encounter_director.gd",
+    "Foundation reward/save authority: world_ledger.gd and ledger_rpc.gd; reuse existing journal/escrow and rollback, no WorldState or Session schema edits",
+    "F32: reuse harvest_logic.renewable_candidate for node yields/timing; existing world flags carry latest harvest day while full F32 configured stock service remains unavailable/flag-off",
+    "F36: species.json ride metadata only; installed optional props are presentation_enabled=false pending creature/art owner judgment",
+    "F39: water_world.gd adds optional service/content; water_world.json mandatory route/gate data unchanged",
+    "F42: existing Jump/Interact actions and world-message prompt; no UI files changed",
+    "Proof tooling: proof_peer_runner.gd adds only F37 adapter dispatch"
+  ],
+  "dependency_warning": "Frozen baseline contains unfinished/flag-off F28/F16/F32/dependency work. This isolated candidate does not establish their acceptance or authorize landing them on main. Underwater routes currently provide ordinary movement speed corridors; terrain and visible passage value require runtime/art proof.",
+  "cache_scope_resolution": "Follow SYSTEMS authored pickup ownership: one cache per world, with stable character-bound reward delivery. WORLD's conflicting once-per-character wording was reconciled in the feature paragraph.",
+  "release_status": "Source candidate only. No criterion marked MET, no PR/merge/main/integration mutation."
+}

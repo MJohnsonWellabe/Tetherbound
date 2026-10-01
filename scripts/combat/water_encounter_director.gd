@@ -13,6 +13,26 @@ var _restoring_surface_position := Vector3.INF
 ## own trainer fight, so only those are switched back on afterwards.
 var _muted_greetings: Dictionary = {}
 
+func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
+	var service := get_parent().get_node_or_null("RippletWaterService")
+	if service != null and service.is_submerged(peer_id) and str(intent.get("kind", "")) in ["engage","strike_intent","catch_attempt"]:
+		return {"ok":false,"kind":str(intent.kind),"peer":peer_id,"code":"submerged",
+			"reason":"Surface before fighting or catching.","pending":false,"delta":{}}
+	return super._host_commit_encounter(intent,peer_id)
+
+func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
+	var riding := get_parent().get_node_or_null("RidingController")
+	if riding != null and bool(riding.diving): return
+	super._start_fight(wild, opponent_owned)
+
+func can_challenge(spec: Dictionary) -> bool:
+	var riding := get_parent().get_node_or_null("RidingController")
+	return not (riding != null and bool(riding.diving)) and super.can_challenge(spec)
+
+func join_encounter(encounter_id: String) -> bool:
+	var riding := get_parent().get_node_or_null("RidingController")
+	return not (riding != null and bool(riding.diving)) and super.join_encounter(encounter_id)
+
 
 ## Surface sites are explicit open-water ecology, never land bodies with their Y
 ## spoofed once at spawn. CreatureBody still owns all horizontal peace/combat
@@ -112,7 +132,8 @@ static func site_spawn_plans(site: Dictionary, table: Dictionary,
 ## A surface swimmer must not be placed on the seabed by the land spawn helper.
 func restore_swim_mount(saved: Dictionary) -> bool:
 	var party := _party()
-	var creature: RefCounted = party.at(int(saved.party_index)) if party != null else null
+	var index := preload("res://scripts/save/water_traversal_save.gd").mount_index(saved, party.members()) if party != null else -1
+	var creature: RefCounted = party.at(index) if party != null and index >= 0 else null
 	if creature == null or str(creature.species_id) != str(saved.species_id) \
 			or creature.fainted or creature.resting:
 		return false
@@ -126,10 +147,13 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 		riding.dismount()
 	if is_instance_valid(_ally_body) and not dismiss_active_creature():
 		return false
-	if not party.set_active(int(saved.party_index)):
+	if not party.set_active(index):
 		return false
 	var raw: Array = saved.position
 	_restoring_surface_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	# Submerged reconnects always use the validated surface, preserving the
+	# creature's existing stamina. Never let an old dive pose seat it in terrain.
+	if saved.has("dive"): _restoring_surface_position.y = realm_world.field.water_level() - 0.7
 	var spawned := await _spawn_ally_body(creature)
 	_restoring_surface_position = Vector3.INF
 	if not spawned:
@@ -137,7 +161,13 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	# No frame advances between revealing the body and attaching its rider.
 	_player.global_position = _ally_body.global_position + Vector3.UP
 	_ally_body.velocity = Vector3.ZERO
-	return riding.mount()
+	var mounted: bool = riding.mount()
+	if not mounted and str(creature.species_id) == "ripplet":
+		for attempt in 120:
+			await get_tree().physics_frame
+			if not is_instance_valid(_ally_body): return false
+			if riding.is_mounted(): return true
+	return mounted
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	if _restoring_surface_position.is_finite() and body == _ally_body:

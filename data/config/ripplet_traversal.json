@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "surface_speed_m_s": 6.0,
+  "current_multiplier": 0.25,
+  "stamina_capacity": 210.0,
+  "stamina_drain_per_s": 1.8,
+  "dive_seconds": 20.0,
+  "dive_depth_m": 5.0,
+  "minimum_dive_depth_m": 8.0,
+  "surface_origin_offset_m": -0.7,
+  "rider_offset_m": [
+    0.0,
+    1.45,
+    -0.15
+  ],
+  "presentation_enabled": false,
+  "_comment": "F37 starting values. Mechanics reuse Water's owner body and current field. Closed tide races retain full force. Installed prop dressing is flag-off pending code-blind proof; Compatibility is unchanged.",
+  "sites": [
+    {
+      "id": "lantern_arch_cache",
+      "kind": "cache",
+      "position": [
+        -215.0,
+        -6.6,
+        166.0
+      ],
+      "item": "tide_pearl",
+      "count": 3
+    },
+    {
+      "id": "lantern_pearl_bed",
+      "kind": "node",
+      "position": [
+        -213.0,
+        -6.6,
+        175.0
+      ],
+      "item": "tide_pearl",
+      "count": 4,
+      "respawn_days": 3
+    },
+    {
+      "id": "garden_sunken_cache",
+      "kind": "cache",
+      "position": [
+        1015.0,
+        -6.6,
+        2234.0
+      ],
+      "item": "tide_pearl",
+      "count": 4
+    },
+    {
+      "id": "garden_water_bed",
+      "kind": "node",
+      "position": [
+        1015.0,
+        -6.6,
+        2245.0
+      ],
+      "item": "essence_water",
+      "count": 4,
+      "respawn_days": 3,
+      "outputs": {
+        "essence_water": 4,
+        "attuned_water": 2
+      }
+    },
+    {
+      "id": "watch_sunken_cache",
+      "kind": "cache",
+      "position": [
+        1175.0,
+        -6.6,
+        3494.0
+      ],
+      "item": "tide_pearl",
+      "count": 4
+    },
+    {
+      "id": "watch_water_bed",
+      "kind": "node",
+      "position": [
+        1175.0,
+        -6.6,
+        3505.0
+      ],
+      "item": "essence_water",
+      "count": 4,
+      "respawn_days": 3,
+      "outputs": {
+        "essence_water": 4,
+        "attuned_water": 2
+      }
+    }
+  ],
+  "routes": [
+    {
+      "id": "lantern_arch_cut",
+      "from": [
+        -216.0,
+        -5.7,
+        154.0
+      ],
+      "to": [
+        -215.0,
+        -5.7,
+        186.0
+      ],
+      "radius_m": 7.0,
+      "speed_m_s": 8.0,
+      "optional": true
+    },
+    {
+      "id": "garden_root_cut",
+      "from": [
+        1013.0,
+        -5.7,
+        2224.0
+      ],
+      "to": [
+        1013.0,
+        -5.7,
+        2254.0
+      ],
+      "radius_m": 7.0,
+      "speed_m_s": 8.0,
+      "optional": true
+    },
+    {
+      "id": "first_shore_lantern_underpass",
+      "from": [
+        -200,
+        -5.7,
+        95
+      ],
+      "to": [
+        -219,
+        -5.7,
+        110
+      ],
+      "radius_m": 5,
+      "speed_m_s": 8,
+      "optional": true,
+      "from_island": "first_shore",
+      "to_island": "lantern_cove"
+    }
+  ],
+  "validation_window_s": 1.0,
+  "position_slack_m": 1.5
+}

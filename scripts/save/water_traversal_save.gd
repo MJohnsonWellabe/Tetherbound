@@ -35,4 +35,27 @@ static func sanitise(raw: Variant) -> Dictionary:
 			if not (value is int or value is float) or not is_finite(float(value)):
 				return {}
 		clean.mount = {"party_index": int(index), "species_id": str(mount.species_id), "position": position.duplicate()}
+		if mount.has("creature_uid"):
+			if not mount.creature_uid is String or not preload("res://scripts/creatures/creature_instance.gd").valid_uid(mount.creature_uid): return {}
+			clean.mount.creature_uid = mount.creature_uid
+		if mount.has("dive"):
+			if mount.species_id != "ripplet" or not mount.has("creature_uid") or not mount.dive is Dictionary: return {}
+			var seconds: Variant = mount.dive.get("remaining_s")
+			if not (seconds is float or seconds is int) or not is_finite(float(seconds)) or float(seconds) <= 0.0 \
+				or float(seconds) > float(preload("res://scripts/player/ripplet_traversal.gd").config().dive_seconds): return {}
+			clean.mount.dive = {"remaining_s":float(seconds)}
 	return clean
+
+## New saves identify the owned individual. The old slot remains only the
+## migration fallback; a missing UID never falls back to a replacement animal.
+static func mount_index(saved: Dictionary, members: Array) -> int:
+	var found := -1
+	if saved.has("creature_uid"):
+		for index in members.size():
+			if members[index].get("uid") == saved.creature_uid:
+				if found >= 0: return -1
+				found = index
+	else:
+		found = int(saved.get("party_index", -1))
+	if found < 0 or found >= members.size() or members[found].get("species_id") != saved.get("species_id"): return -1
+	return found

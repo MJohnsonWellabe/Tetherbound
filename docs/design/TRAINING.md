@@ -145,7 +145,7 @@ Every species has at least three research tasks in `data/config/research.json` (
 | Ripplet | Surface swim mount; **Dive** at its L30 breakthrough | Tidewake onward |
 | Galewisp | Fly (held input allowed) | Cloudreach onward |
 
-**Superseded (owner, 2026-09-29, RD-32):** Ripplet's Teleport promise after Stormwood. The Home Key provides fast travel (WORLD). Remove the promise from docs and UI (F37#3).
+The Home Key provides fast travel (WORLD). Ripplet's traversal unlocks remain on that owned creature's breakthrough history (RD-32).
 
 The owned Ripplet can be ridden on the surface from Tidewake's opening, faster than human swimming and able to cross currents (starting values in `data/config/water_mounts.json`, beside the five existing water adapter mounts). Dive is a tap toggle to submerge and surface, never a held button, reaching optional sunken caches, nodes and routes. **Every required water route stays human-swimmable without Ripplet.** Because starters are exclusive, only the starter Ripplet ever gains Dive. Acceptance: F37#0–#4.
 

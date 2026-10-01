@@ -400,7 +400,7 @@ Captain Marrow's five-creature fight runs across four capacitor banks and three 
 
 The containment opens and the Stormheart voluntarily offers companionship. The Long Storm ends, arches brighten and the forest enters a mostly calm storm season. **Current source:** release awards Spark, its Lantern Hollow shrine explains the single-active choice, and returning to the high platform grants the Water key and the Waterward view. **Target (RD-20, RD-22):** each Marrow participant receives the Spark relic and the **fifth portal key**. The Water key and the Waterward hand-off are retired. The single-active choice is explained at the Shrine Room (§2.6). The aftermath then prompts each player to use the Home Key for Grandpa's homecoming and the credits (§2.8).
 
-**Superseded (owner, 2026-09-29, RD-32): Ripplet Teleport.** The former target gave Ripplet a return/Teleport ability after Stormwood and Water entry, with a 5 s channel and a 120 s cooldown to an attuned arch. It is dropped. The Home Key now provides fast travel for everyone (§2.7). Ripplet's traversal is its Tidewake swim mount and its L30 Dive (§6.7; TRAINING §9). F37#3 removes the old promise from docs and UI.
+**Ripplet starter travel (RD-32).** The Home Key provides fast travel for everyone (§2.7). Ripplet's traversal is its Tidewake swim mount and its L30 Dive (§6.7; TRAINING §9).
 
 ### 5.5 Content and status
 
@@ -523,7 +523,7 @@ WaterChapter, Veilfall, Aquaryn, Nerissa, Guardian ceremony, relic award and res
 - **Dive targets** reuse existing places. There are sunken caches beneath Lantern Cove's rock arch, the Drowned Garden and Deep Watch. There are rich `tide_pearl` and attuned-Water node beds (§2.12). There are hidden short routes between islands. None of it holds a story item, a required material or a Master. Starting count: 6–10 sites in total, in the dive config F37 adds.
 - **Dive is a tap toggle** to submerge and surface. It is never held (hard rule). It is refused in combat. Surfacing is automatic when the mount's traversal stamina runs out, leaving the rider at the surface with that stamina spent. It never drowns the player instantly.
 - **Tidewake is chapter 2**, so a player reaches the L30 breakthrough near the end of Tidewake or on a later return by portal. Dive content is designed as a reason to come back.
-- **Scope and save.** The mount and Dive state belong to the Ripplet creature (character scope). Sunken caches are once per character under their pickup receipts, and node beds follow §2.12. Riding and diving survive save/reload and a two-peer rejoin (F37#4). A disconnect while submerged restores the player to the last validated surface point without refilling stamina (the §6.3 rule).
+- **Scope and save.** The mount and Dive state belong to the Ripplet creature (character scope). Sunken caches are once per world under SYSTEMS' authored-find rule and stable site IDs; node beds follow §2.12's renewable rule. Their grants use the existing reward journal bound to the claimant's stable character. Riding and diving survive save/reload and a two-peer rejoin (F37#4). A disconnect while submerged restores the player to the last validated surface point without refilling stamina (the §6.3 rule).
 
 ## 7. Multiplayer world behavior
 
