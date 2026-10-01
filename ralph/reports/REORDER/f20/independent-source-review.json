@@ -1,5 +1,5 @@
 {
-  "source_head": "64540ef8d6a0c64334a2c0795b3fcc46c0140d9e",
+  "source_head": "077ffbb1d457bc9682f86860c5e649bf2de4646c",
   "reviewer": {
     "reviewer": "/root/f20_strict_source_review",
     "result": "SOURCE_RECHECK_PASS_ONLY",
@@ -48,9 +48,9 @@
     },
     {
       "path": "tests/test_regional_homecoming.gd",
-      "working_tree_sha256": "2db6502bfd4b10e40f3735abbaea5a277d47a24c3c2d2c34205f41a75225ad84",
-      "git_content_sha256": "2db6502bfd4b10e40f3735abbaea5a277d47a24c3c2d2c34205f41a75225ad84",
-      "git_blob_sha1": "dfe40e06e71dec32bafb5ce3ba258257b7421c25"
+      "working_tree_sha256": "5e185279ad47977ddace14e5bfe86ffdfd2f99e31c0e0dfe0ab6e9ede8c32fe0",
+      "git_content_sha256": "5e185279ad47977ddace14e5bfe86ffdfd2f99e31c0e0dfe0ab6e9ede8c32fe0",
+      "git_blob_sha1": "1e5c15d2f862ed3de60985f02ae2e6a79075274f"
     },
     {
       "path": "tests/test_homecoming_ending_invariants.gd",
