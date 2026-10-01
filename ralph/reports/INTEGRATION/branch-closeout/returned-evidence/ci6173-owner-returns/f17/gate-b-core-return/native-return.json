@@ -22,7 +22,8 @@
     "scripts/player/player_controller.gd": "df8b89efa2f5dffd96b46e808662d398b5496aa7cb3d290a436b24f3cd5bfe2e",
     "tests/helpers/opening_geometry_navigator.gd": "d078109a915db0c936ca1cb29fce8a7e7f66b1297abf249c5400f71d2183ae3f",
     "tests/helpers/gate_a_npc_gather_segment.gd": "5debb89039b9c1ae3e93d3f3bfb1975e4db38551d6471589a972d0543924ded5",
-    "tests/smoke_gate_b_continuous.gd": "49e9f4415d6e7e921938e613df0e374e6a3339deec2654670f4a9c421641bed1"
+    "tests/smoke_gate_b_continuous.gd": "49e9f4415d6e7e921938e613df0e374e6a3339deec2654670f4a9c421641bed1",
+    "tests/helpers/gate_a_opening_drive.gd": "489c4e43a08170faa19d1ea90b62b90b781c43805d041078a54afe5498341058"
   },
   "new_failure_owner": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
   "owner_restored": true,
