@@ -1,0 +1,29 @@
+{
+  "assembled_source_head": "c082c97bfc1bd3d9f6d59136ecdfe5d8ed583f7a",
+  "captured_utc": "2026-10-01T05:27:36.832695+00:00",
+  "ref_count": 131,
+  "unique_head_count": 105,
+  "all_current_local_and_origin_heads_are_ancestors": true,
+  "criterion_credit_added": 0,
+  "conversations_archived": 0,
+  "units": {
+    "head": "c1c3a2a0e19dbd9da0569b664cb85cec01449626",
+    "exit": 0,
+    "selection": "test_traits_inactive_runtime.gd,test_director_projectile_deployment_binding.gd,test_f30_traits.gd::test_real_json_config_numeric_gates_and_strict_activation,test_f22_action_publication.gd,test_training_guard_lifetime.gd",
+    "summary": [
+      "14 tests, 156 assertions, 0 failed"
+    ],
+    "raw_log_sha256": "03b0ce060f1a3504a9c9880be39e1ffb776f48c92a6dc832a60dc972603a52db",
+    "raw_log_local_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\targeted-c1c3a2a0e19d\\tests.log"
+  },
+  "world_smoke": {
+    "head": "58185a9bbcb6fe2a3507749b8da079c3b3ef2aa7",
+    "exit": 0,
+    "distinct_errors": [
+      "ERROR: Parameter \"material\" is null."
+    ],
+    "raw_log_sha256": "ddec22f35dcc24b42e03e18cbd465cada64e7d570f2ec9261aad82e34d63b53b",
+    "raw_log_local_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\world-smoke-58185a9bbcb6\\smoke.log"
+  },
+  "scope": "Inactive source integration only; feature save/ACK/rejoin/activation/visual/hardware acceptance remains open."
+}
