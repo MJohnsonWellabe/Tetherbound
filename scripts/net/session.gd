@@ -2424,18 +2424,50 @@ func is_open() -> bool:
 	return owns_input()
 
 
+## Stored child callbacks must not retain their owning PlayerState. Static
+## adapters also remain fail-closed if the Session has already been freed.
+static func _training_guard_live_owner(owner: WeakRef, session: WeakRef) -> RefCounted:
+	var live_session: Node = session.get_ref() as Node
+	var player: RefCounted = owner.get_ref() as RefCounted
+	if live_session == null or player == null: return null
+	var game: Node = live_session.call("_game") as Node
+	return player if game != null and game.get("local") == player else null
+
+
+static func _weak_training_mutation_blocked(owner: WeakRef, session: WeakRef) -> bool:
+	var player := _training_guard_live_owner(owner, session)
+	return player == null or session.get_ref().call("_owner_training_mutation_blocked", player) == true
+
+
+static func _weak_training_inventory_write_allowed(index: int, stack: Variant, owner: WeakRef, session: WeakRef) -> bool:
+	var player := _training_guard_live_owner(owner, session)
+	return player != null and session.get_ref().call("_owner_training_inventory_write_allowed", index, stack, player) == true
+
+
+static func _weak_training_release_write_allowed(index: int, owner: WeakRef, session: WeakRef) -> bool:
+	var player := _training_guard_live_owner(owner, session)
+	return player != null and session.get_ref().call("_owner_training_release_write_allowed", index, player) == true
+
+
+static func _weak_training_release_rollback_allowed(snapshot: Dictionary, owner: WeakRef, session: WeakRef) -> bool:
+	var player := _training_guard_live_owner(owner, session)
+	return player != null and session.get_ref().call("_owner_training_release_rollback_allowed", snapshot, player) == true
+
+
 func _bind_training_container_guards() -> void:
 	var game := _game()
 	if game == null or not game.get("local") is RefCounted: return
 	var player: RefCounted = game.get("local")
+	var owner_ref: WeakRef = weakref(player)
+	var session_ref: WeakRef = weakref(self)
 	var inv: Variant = player.get("inventory")
 	var party: Variant = player.get("party")
 	if inv is RefCounted and inv.has_method("bind_owner_mutation_guard"):
-		inv.call("bind_owner_mutation_guard", _owner_training_mutation_blocked.bind(player),
-			_owner_training_inventory_write_allowed.bind(player))
+		inv.call("bind_owner_mutation_guard", _weak_training_mutation_blocked.bind(owner_ref, session_ref),
+			_weak_training_inventory_write_allowed.bind(owner_ref, session_ref))
 	if party is RefCounted and party.has_method("bind_owner_mutation_guard"):
-		party.call("bind_owner_mutation_guard", _owner_training_mutation_blocked.bind(player),
-			_owner_training_release_write_allowed.bind(player), _owner_training_release_rollback_allowed.bind(player))
+		party.call("bind_owner_mutation_guard", _weak_training_mutation_blocked.bind(owner_ref, session_ref),
+			_weak_training_release_write_allowed.bind(owner_ref, session_ref), _weak_training_release_rollback_allowed.bind(owner_ref, session_ref))
 
 
 func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
