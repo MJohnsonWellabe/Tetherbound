@@ -47,9 +47,6 @@ var _cap: CollisionShape3D
 var _world: Node3D
 var _tick: NativeTick
 var _roads: Array[Vector2] = []
-var _authored_roads: Dictionary = {}
-var _guided_road: Array[Vector2] = []
-var _guided_label := ""
 var _recipes: Dictionary = {}
 var _route: Array[Vector2] = []
 var _goal := Vector2.INF
@@ -104,17 +101,9 @@ func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable, produc
 		if not road is Dictionary or not road.get("points") is Array or road.points.size() > MAX_ROAD_INPUTS:
 			_stop_geometry("invalid authored road")
 			return
-		var authored: Array[Vector2] = []
 		for pair: Variant in road.points:
 			if not _append_road(pair):
 				return
-			authored.append(_roads.back())
-		if _production_steering:
-			var label := str(road.get("label", ""))
-			if label.is_empty() or label.length() > 256 or _authored_roads.has(label):
-				_stop_geometry("missing/duplicate/excessive authored road label")
-				return
-			_authored_roads[label] = authored
 	for key: String in ["road_start", "road_end"]:
 		if not _append_road(village.road_plan.get(key)):
 			return
@@ -190,8 +179,6 @@ func reset() -> void:
 	_requested = false
 	_owns_input = false
 	_route.clear()
-	_guided_road.clear()
-	_guided_label = ""
 	_goal = Vector2.INF
 	_arrival = 0.05
 	_stalled = 0
@@ -224,20 +211,13 @@ func push_once(direction: Vector3) -> void:
 	_requested = not refused()
 
 
-func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "") -> bool:
+func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 	reset()
 	_arrival = close_enough
 	if budget <= 0 or budget > 3600 or not point.is_finite() \
 			or not is_finite(close_enough) or close_enough <= 0.0 or close_enough > 1.65:
 		_stop_geometry("invalid bounded walk request")
 		return false
-	if not authored_road.is_empty():
-		if not _production_steering or not _authored_roads.has(authored_road) \
-				or (_authored_roads[authored_road] as Array).is_empty():
-			_stop_geometry("requested authored road is unavailable in production steering")
-			return false
-		_guided_road.assign(_authored_roads[authored_road])
-		_guided_label = authored_road
 	var walked := 0
 	var held := 0
 	while walked < budget and not refused():
@@ -1203,26 +1183,6 @@ func _choose_route(point: Vector2, tolerance: float) -> bool:
 		_stop_geometry("observed route scope/plan/candidate cap")
 		return false
 	_route.clear()
-	if not _guided_road.is_empty() and _departure.is_empty():
-		# Follow the current named painted road from its nearest authored node.
-		# A hint changes stick headings, never certifies geometry or resets the
-		# walking/stall/query caps. Actual controller and all observations still run.
-		var nearest := 0
-		for index in _guided_road.size():
-			if from.distance_squared_to(_guided_road[index]) < from.distance_squared_to(_guided_road[nearest]):
-				nearest = index
-		var previous: Vector2 = from
-		for index in range(nearest, _guided_road.size()):
-			if from.distance_to(_guided_road[index]) > MAX_EDGE or previous.distance_to(_guided_road[index]) > MAX_EDGE:
-				_stop_geometry("authored road hint exceeds unchanged edge scope")
-				return false
-			_route.append(_guided_road[index])
-			previous = _guided_road[index]
-		if previous.distance_to(point) > MAX_EDGE:
-			_stop_geometry("authored road final heading exceeds unchanged edge scope")
-			return false
-		_route.append(point)
-		return true # Provisional headings only; no query/cache/dedup shortcut.
 	if _observed_choice == 0 or not _departure.is_empty():
 		_route.append(point) # Provisional requested road/door/camp heading only.
 		return true
@@ -1389,11 +1349,6 @@ func _production_record() -> Dictionary:
 				"depth": _observed_live.get_collision_depth(index), "local_shape": _observed_live.get_collision_local_shape(index),
 				"collider_rid": str(_observed_live.get_collider_rid(index)), "collider_shape": _observed_live.get_collider_shape(index)})
 	var slides: Array = []
-	var slide_point_counts: Array[int] = []
-	if _production_controller_observed:
-		for slide in mini(CONTACTS, _body.get_slide_collision_count()):
-			var cached: KinematicCollision3D = _body.get_slide_collision(slide)
-			slide_point_counts.append(cached.get_collision_count() if cached != null else -1)
 	for slide in (mini(CONTACTS, _body.get_slide_collision_count()) if _production_controller_observed else 0):
 		var collision: KinematicCollision3D = _body.get_slide_collision(slide)
 		if collision == null:
@@ -1422,8 +1377,6 @@ func _production_record() -> Dictionary:
 		"controller_wanted_dir": _contact_vector(_body.get("_wanted_dir")) if _production_controller_observed else [],
 		"controller_observation_available": _production_controller_observed,
 		"live_state_phase": _production_live_phase,
-		"authored_road_hint": _guided_label, "slide_point_counts": slide_point_counts,
-		"slide_contacts_are_capped_prefix": true,
 		"diagnostic_output_outside_physics_cap": true}
 	_tick.records.append(record)
 	if not _tick.flush_pending:
