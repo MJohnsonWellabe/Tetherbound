@@ -16,4 +16,8 @@ F22 supplied exact patch `4d7dda12487f6684a2469548e36d2b36f6f2772c8efc479e7456d3
 
 No new criterion has passed or closed from these checks. One combined CI selection remains reserved for the repaired candidate.
 
+The same original branches supplied the repairs: Foundation `9e01989eda`/`c488611bf9`/`a62b644fce`/`d55a29d72a`, F22 `2c09b71c8f`, F24 `5e0481bb5a`, and F30 `7127d7f32d`. F24 and Traits then passed actual Godot 4.7 parser checks. On `673177218758a86ef7ae1c80e8f6e92aa905a55b`, Game and QuestLog compile without script/resource errors after the bounded F20 caller repair. Exact F20 patch `ff0339d9236255f43cbb534841c84687c2ae6f18c1c99275421a6efbf464ca26` passed the existing independent F29 conversation's frozen-source review; it removes old raw-relic eligibility and delegates to the accepted personal-context reader.
+
+The final shared catalogue/schema packet has an independent source verdict `920e6d9db35e397d6b21445b47acf720a9ae488974970ef94b8791365b19db36`. The item JSON conflict was composed structurally: 125 integration items plus the new thirty trait seeds produce 155 items, with no competing scalar edits. Existing materials, attuned ingredients and draught presentation metadata survive. Source compile checks and review establish neither save/ACK/rejoin behavior nor feature acceptance.
+
 `included-heads.tsv` pins the source heads represented in the candidate. Runtime evidence and repair outcomes will be added here on the exact tested head. Process-only CI green does not establish engine or criterion acceptance.
