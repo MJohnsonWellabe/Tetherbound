@@ -1,0 +1,470 @@
+{
+  "scope": "Source/data audit only. Detached candidate assertions grant zero runtime, route, solvency, earning, transaction, readiness, save, visual or activation credit.",
+  "parent_sha": "6617bb05c73e6963d8697cda88ac1e50fbe2a48e",
+  "baseline_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "candidate_source_sha": "e86c6a9fed5e22ef830fc6f4ec0e83a82600809f",
+  "candidate_shipping_runtime_enabled": false,
+  "production_mounts": [],
+  "allocated_paths": [
+    {
+      "path": "data/config/chapter_curve.json",
+      "overlay_records": 31,
+      "owned_live_blob": "a63d4e6e578ca7d5bac10580638be3495f09f5d1",
+      "baseline_blob": "353b63df307157693adadc813c41799af35b7e09",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band3_the_river_lock/trainers.json",
+      "overlay_records": 17,
+      "owned_live_blob": "7f915ddf4a08d74d71e741098ca5ec75dab02bee",
+      "baseline_blob": "7f915ddf4a08d74d71e741098ca5ec75dab02bee",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "overlay_records": 16,
+      "owned_live_blob": "b552497446ed74975cb9e6fee57478cd2f849b47",
+      "baseline_blob": "b552497446ed74975cb9e6fee57478cd2f849b47",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "overlay_records": 20,
+      "owned_live_blob": "f9f6f6a7a5d1a5bf5e23f7a75b7d51e5bc6e9b7e",
+      "baseline_blob": "f9f6f6a7a5d1a5bf5e23f7a75b7d51e5bc6e9b7e",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "overlay_records": 4,
+      "owned_live_blob": "f483430a75f9f718be8b9040ca0d35fdded9745e",
+      "baseline_blob": "f483430a75f9f718be8b9040ca0d35fdded9745e",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+      "overlay_records": 2,
+      "owned_live_blob": "00168a0a16981082b2790af0608eb33745861114",
+      "baseline_blob": "00168a0a16981082b2790af0608eb33745861114",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/cloudreach_chapter.json",
+      "overlay_records": 50,
+      "owned_live_blob": "004723f9e599ac685e401d10980592ac219b5dfc",
+      "baseline_blob": "c29ac2aeb7d6d7240fd888e640f9f054cc169de4",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/cloudreach_solmane_climax.json",
+      "overlay_records": 1,
+      "owned_live_blob": "7044e1b312c80894dadc53fdbebc2a9910925ea2",
+      "baseline_blob": "7044e1b312c80894dadc53fdbebc2a9910925ea2",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/stormwood_encounters.json",
+      "overlay_records": 31,
+      "owned_live_blob": "a66ee9be061f07689905e8105962b3864b3186a5",
+      "baseline_blob": "c8f90739256e0017c6135b1abf8315888d5c1639",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/stormwood_trainers.json",
+      "overlay_records": 88,
+      "owned_live_blob": "fa341f67de8118d8711cd3c225dd6abd97b138a7",
+      "baseline_blob": "fa341f67de8118d8711cd3c225dd6abd97b138a7",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/stormwood_dynamo.json",
+      "overlay_records": 1,
+      "owned_live_blob": "616f7fb8b9d69b1909c4c1632c4f4ff7d34e955d",
+      "baseline_blob": "616f7fb8b9d69b1909c4c1632c4f4ff7d34e955d",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/water_characters.json",
+      "overlay_records": 80,
+      "owned_live_blob": "7be542e56315981e466c8bef57e7b33cfd9e093c",
+      "baseline_blob": "7be542e56315981e466c8bef57e7b33cfd9e093c",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "overlay_records": 39,
+      "owned_live_blob": "8b60e035ff9745f3bea0ee7bcec0a215c781301e",
+      "baseline_blob": "b6df882313d667cc852095b8d684820f06c75bb3",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/water_alpha.json",
+      "overlay_records": 1,
+      "owned_live_blob": "a6fcd9a990c08579ab04a4f3b0104b4dce3f874f",
+      "baseline_blob": "a6fcd9a990c08579ab04a4f3b0104b4dce3f874f",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    }
+  ],
+  "overlay_records": 381,
+  "restoration": {
+    "baseline": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+    "source": "e86c6a9fed5e22ef830fc6f4ec0e83a82600809f",
+    "restored": [
+      {
+        "path": "data/config/chapter_curve.json",
+        "numeric_edits": 16
+      },
+      {
+        "path": "data/config/bands/band3_the_river_lock/trainers.json",
+        "numeric_edits": 14
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+        "numeric_edits": 10
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/trainers.json",
+        "numeric_edits": 20
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/cloudreach_chapter.json",
+        "numeric_edits": 50
+      },
+      {
+        "path": "data/config/cloudreach_solmane_climax.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/stormwood_encounters.json",
+        "numeric_edits": 31
+      },
+      {
+        "path": "data/config/stormwood_trainers.json",
+        "numeric_edits": 88
+      },
+      {
+        "path": "data/config/stormwood_dynamo.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/water_characters.json",
+        "numeric_edits": 80
+      },
+      {
+        "path": "data/config/water_encounters.json",
+        "numeric_edits": 37
+      },
+      {
+        "path": "data/config/water_alpha.json",
+        "numeric_edits": 0
+      }
+    ],
+    "fixture_numeric_edits": 33,
+    "new_numeric_fields": [
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          8,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              8,
+              "order"
+            ],
+            "value": 4007
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          78,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              78,
+              "order"
+            ],
+            "value": 4075
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          79,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              79,
+              "order"
+            ],
+            "value": 4100
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          80,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              80,
+              "order"
+            ],
+            "value": 4101
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+        "at": [
+          "spawns",
+          1,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              1,
+              "order"
+            ],
+            "value": 5001
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+        "at": [
+          "spawns",
+          15,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              15,
+              "order"
+            ],
+            "value": 5015
+          }
+        ]
+      }
+    ],
+    "missing_identities": []
+  },
+  "fixture_nonlevel_bytes_unchanged": true,
+  "route_and_solvency_checks": [
+    {
+      "path": "tests/test_cloudreach_route_ledger.gd",
+      "owned_live_blob": "c93a3fc459687b12f4742aaec19740c111a1e57f",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    },
+    {
+      "path": "tests/test_meadows_economy_solvency.gd",
+      "owned_live_blob": "d31d5ecd06217f1e7eb66b3b799754df8e0fd920",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    },
+    {
+      "path": "tests/test_meadows_earned_route_ledger_segment.gd",
+      "owned_live_blob": "739f58f43329962e654a60d329db78a85051ac29",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    },
+    {
+      "path": "tests/helpers/meadows_earned_route_ledger_segment.gd",
+      "owned_live_blob": "bc9afc611a415094138f23ef7c379cc66a4e2f2f",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    }
+  ],
+  "warrens": {
+    "path": "data/config/burrow_warrens.json",
+    "restore_blob": "3b0a3025884a05b46df64cf0b1cbfae951179ec5",
+    "owned_geometry_identity_rewards_equal_pinned_main": true,
+    "integration_geometry_identity_rewards_equal_owned": true,
+    "owned_levels": [
+      {
+        "at": [
+          "spawns",
+          0,
+          "level"
+        ],
+        "value": 9
+      },
+      {
+        "at": [
+          "spawns",
+          1,
+          "level"
+        ],
+        "value": 10
+      },
+      {
+        "at": [
+          "spawns",
+          2,
+          "level"
+        ],
+        "value": 10
+      },
+      {
+        "at": [
+          "spawns",
+          3,
+          "level"
+        ],
+        "value": 13
+      },
+      {
+        "at": [
+          "guardian",
+          "level"
+        ],
+        "value": 14
+      }
+    ],
+    "integration_levels_read_only": [
+      {
+        "at": [
+          "spawns",
+          0,
+          "level"
+        ],
+        "value": 11
+      },
+      {
+        "at": [
+          "spawns",
+          1,
+          "level"
+        ],
+        "value": 12
+      },
+      {
+        "at": [
+          "spawns",
+          2,
+          "level"
+        ],
+        "value": 12
+      },
+      {
+        "at": [
+          "spawns",
+          3,
+          "level"
+        ],
+        "value": 15
+      },
+      {
+        "at": [
+          "guardian",
+          "level"
+        ],
+        "value": 16
+      }
+    ]
+  },
+  "retained_live_metadata": "chapter_curve.biomes is preexisting unmounted authoring metadata, retained byte-for-byte outside this numeric-only allocation. Candidate owns the exact new metadata copy.",
+  "foundation_test_patch": "test-input-reconciliation.patch; ROOT applies to existing test_redesign_chapter_curve.gd after structural composition.",
+  "checks": {
+    "exact_candidate_and_legacy_numbers": "PASS",
+    "numeric_only_live_and_fixture_edits": "PASS",
+    "no_missing_legacy_identities": "PASS",
+    "warrens_nonlevel_comparison": "PASS",
+    "unchanged_actual_route_and_solvency_checks": "PASS",
+    "test_f19_curve_mjs": "PASS: 88 named teams / 36 regional wild tables; detached authoring only",
+    "godot_parser_and_tests": "NOT RUN: ROOT owns serialized engine/import/CI"
+  },
+  "integration_instructions": [
+    "Apply baseline levels for ALL 14 paths from overlay legacy values, preserving other owners nonlevel changes; legacy:null means delete the new leaf, never invent a legacy value.",
+    "Cherry-pick alone cannot restore integration-only edits in the five allocated paths whose owned numeric edit count is zero.",
+    "Restore the exact owned Warrens blob after geometry/identity comparison, per ROOT allocation.",
+    "Keep candidate false and policy unmounted. No provider hooks or shared gameplay source belongs to this cut.",
+    "Compose the existing Foundation test patch with F20 chapter admission/ending ownership; actual route inputs, engagement, margins and negative controls stay unchanged."
+  ]
+}

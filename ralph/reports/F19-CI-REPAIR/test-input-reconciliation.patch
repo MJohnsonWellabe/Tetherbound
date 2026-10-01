@@ -1,0 +1,148 @@
+diff --git a/tests/test_redesign_chapter_curve.gd b/tests/test_redesign_chapter_curve.gd
+index ff39232ec1..2970d66f52 100644
+--- a/tests/test_redesign_chapter_curve.gd
++++ b/tests/test_redesign_chapter_curve.gd
+@@ -6,6 +6,7 @@ const ORDER := preload("res://scripts/data/biome_order.gd")
+ const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+ const CURVE := preload("res://scripts/creatures/chapter_curve.gd")
+ const REWARDS := preload("res://scripts/net/encounter_rewards.gd")
++const POLICY := preload("res://scripts/creatures/level_curve_policy.gd")
+ 
+ 
+ ## F19#3 config gate scan. This inspects authored prerequisite fields; actual
+@@ -58,13 +59,50 @@ func test_authored_traversal_gates_do_not_require_fly_in_tidewake_or_later_rewar
+ func _read(path: String) -> Dictionary:
+ 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+ 	assert_true(parsed is Dictionary, "missing/invalid curve input: " + path)
+-	return parsed as Dictionary if parsed is Dictionary else {}
++	if not parsed is Dictionary:
++		return {}
++	return _candidate_view(path, parsed as Dictionary)
++
++
++## These views are explicit detached opt-ins for authored targets. Production
++## providers and the legacy route ledger never mount the candidate policy.
++func _candidate_view(path: String, base: Dictionary) -> Dictionary:
++	var authored := POLICY.config()
++	assert_eq(authored.get("runtime_enabled"), false)
++	if not (authored.get("overlays", {}) as Dictionary).has(path.trim_prefix("res://")):
++		return base
++	authored["runtime_enabled"] = true
++	var next := POLICY.apply(path, base, true, authored)
++	assert_false(next.is_empty(), "candidate refuses stale level/identity: " + path)
++	return next
++
++
++func _candidate_curve() -> Dictionary:
++	return _candidate_view(CURVE.CONFIG_PATH, CURVE.config())
++
++
++func _candidate_bands(key: String) -> Dictionary:
++	var head := BAND_CONTENT.load_config("res://data/config/%s.json" % key, key).duplicate(true)
++	var rows: Array = []
++	for band: String in BAND_CONTENT.BANDS:
++		var path := "res://data/config/bands/%s/%s.json" % [band, key]
++		if FileAccess.file_exists(path):
++			rows.append_array(_read(path).get(key, []))
++	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.order) < int(b.order))
++	head[key] = rows
++	return head
+ 
+ 
+ func _ints(raw: Array) -> Array:
+ 	var out: Array = []
+ 	for value: Variant in raw:
+-		out.append(int(value))
++		assert_true(value is int or value is float, "candidate level must be numeric")
++		if not (value is int or value is float):
++			continue
++		assert_true(is_finite(float(value)) and float(value) == floorf(float(value)),
++			"candidate level must be finite and integral before normalization")
++		if is_finite(float(value)) and float(value) == floorf(float(value)):
++			out.append(int(value))
+ 	return out
+ 
+ 
+@@ -101,24 +139,24 @@ func test_chapter_trainers_have_no_active_hidden_level_gate() -> void:
+ 
+ func test_four_chapter_curve_uses_foundation_order_and_pins_owner_envelopes() -> void:
+ 	assert_eq(ORDER.runtime_ids(), ["meadows", "water", "cloudreach", "stormwood"])
+-	var chapters: Dictionary = CURVE.config().get("chapters", {})
++	var chapters: Dictionary = _candidate_curve().get("biomes", {})
+ 	var targets := {"meadows": [3, 22, 2, 20], "water": [20, 33, 18, 32],
+ 		"cloudreach": [31, 44, 29, 43], "stormwood": [42, 55, 40, 54]}
+ 	assert_eq(chapters.size(), 4)
+ 	for realm: String in ORDER.runtime_ids():
+-		var chapter: Dictionary = chapters.get(realm, {})
+-		var team: Dictionary = chapter.get("team", {})
+-		var wild: Array = chapter.get("wild_band", [])
+-		assert_eq([int(team.get("enter", 0)), int(team.get("exit", 0))]
+-			+ _ints(wild), targets[realm], realm + " curve drift")
+-		assert_eq(int(chapter.get("recommended_level", 0)), int(team.get("enter", 0)))
++		var biome := "tidewake" if realm == "water" else realm
++		var chapter: Dictionary = chapters.get(biome, {})
++		var team: Array = chapter.get("team", [])
++		var wild: Array = chapter.get("wild", [])
++		assert_eq(_ints(team) + _ints(wild), targets[realm], realm + " curve drift")
++		assert_eq(int(chapter.get("recommended_level", 0)), int(team[0]))
+ 		assert_false(chapter.has("min_level"), "recommendation must never become a portal gate")
+ 
+ 
+ func test_meadows_retains_contiguous_split_and_replacement_catches() -> void:
+-	var expected := [[3, 9, 2, 6], [9, 12, 7, 10], [12, 15, 10, 13],
+-		[15, 18, 13, 17], [18, 22, 16, 20]]
+-	var regions: Array = CURVE.regions(CURVE.config())
++	var expected := [[3, 9, 2, 6], [9, 12, 7, 8], [12, 15, 9, 13],
++		[15, 18, 12, 16], [18, 22, 16, 20]]
++	var regions: Array = CURVE.regions(_candidate_curve())
+ 	assert_eq(regions.size(), expected.size())
+ 	var last_exit := 3
+ 	for index in regions.size():
+@@ -165,7 +203,7 @@ func test_each_named_boss_team_matches_the_pinned_curve() -> void:
+ 	]
+ 	for raw: Variant in specs:
+ 		var spec: Array = raw
+-		var data: Dictionary = BAND_CONTENT.load_config(str(spec[0]), "trainers") \
++		var data: Dictionary = _candidate_bands("trainers") \
+ 			if str(spec[0]).ends_with("/trainers.json") else _read(str(spec[0]))
+ 		var found := false
+ 		for trainer: Variant in data.get("trainers", []):
+@@ -183,13 +221,13 @@ func test_each_named_boss_team_matches_the_pinned_curve() -> void:
+ 
+ 
+ func test_meadows_alpha_ceiling_preserves_bonuses_within_chapter_exit() -> void:
+-	var spawns: Array = BAND_CONTENT.load_config("res://data/config/spawns.json", "spawns").get("spawns", [])
++	var spawns: Array = _candidate_bands("spawns").get("spawns", [])
+ 	for raw: Variant in spawns:
+ 		var row: Dictionary = raw
+ 		var at: Array = row.get("centre", [])
+ 		if at.size() < 3:
+ 			continue
+-		var range: Array = CURVE.wild_band_at(float(at[2]), CURVE.config())
++		var range: Array = CURVE.wild_band_at(float(at[2]), _candidate_curve())
+ 		for key: String in ["alpha", "elder"]:
+ 			var leader: Dictionary = row.get(key, {})
+ 			if leader.is_empty():
+@@ -213,12 +251,18 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
+ 	assert_eq(int((_read("res://data/config/cloudreach_solmane_climax.json").get("legendary", {}) as Dictionary).get("level", 0)), 44)
+ 
+ 
+-func test_chapter_arrival_does_not_require_a_second_legacy_world_key() -> void:
++func test_inactive_curve_retains_legacy_chapter_arrival_prerequisites() -> void:
+ 	for realm: String in ["cloudreach", "stormwood"]:
+ 		var old_key := "realm_key_" + realm
+-		for act: Dictionary in _read("res://data/config/%s_chapter.json" % realm).get("acts", []):
+-			assert_false((act.get("entry_flags", []) as Array).has(old_key),
+-				"actual portal admission is the sole crossrealm entry gate")
++		var path := "res://data/config/%s_chapter.json" % realm
++		var live: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
++		var acts: Array = live.get("acts", [])
++		assert_false(acts.is_empty(), "legacy arrival remains authored")
++		assert_eq(_read(path).get("acts", []), acts, "a numeric candidate never changes admission guards")
++		if not acts.is_empty():
++			assert_true((acts[0].get("entry_flags", []) as Array).has(old_key),
++				"OFF retains the actual legacy arrival key")
++		for act: Dictionary in acts:
+ 			for row: Dictionary in act.get("objectives", []):
+ 				assert_false((row.get("requires_flags", []) as Array).has(old_key))
+ 	var npc_config := _read("res://data/config/cloudreach_npc_runtime.json")

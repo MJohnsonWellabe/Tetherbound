@@ -1,0 +1,10133 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": false,
+  "_scope": "Unmounted process-scoped RD-10 level candidate. The live JSON keeps the pinned legacy levels while portal order is inactive. Pure explicit opt-in is authoring validation only, with no route, earning, engine, readiness, save or activation credit.",
+  "baseline_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "candidate_sha": "e86c6a9fed5e22ef830fc6f4ec0e83a82600809f",
+  "biomes": {
+    "meadows": {
+      "team": [
+        3,
+        22
+      ],
+      "wild": [
+        2,
+        20
+      ],
+      "boss": [
+        21,
+        22
+      ],
+      "recommended_level": 3
+    },
+    "tidewake": {
+      "team": [
+        20,
+        33
+      ],
+      "wild": [
+        18,
+        32
+      ],
+      "boss": [
+        32,
+        33
+      ],
+      "recommended_level": 20,
+      "regional_targets": [
+        {
+          "region_id": "first_shores",
+          "team": [
+            20,
+            23
+          ],
+          "tables": [
+            "water_first_shore_land",
+            "water_first_shore_shallows"
+          ]
+        },
+        {
+          "region_id": "marsh_channels",
+          "team": [
+            23,
+            26
+          ],
+          "tables": [
+            "water_reedhaven_land",
+            "water_reedhaven_shallows",
+            "water_brine_steps_land",
+            "water_brine_steps_shallows",
+            "water_shellwatch_land",
+            "water_shellwatch_shallows"
+          ]
+        },
+        {
+          "region_id": "tidal_cradle",
+          "team": [
+            26,
+            28
+          ],
+          "tables": [
+            "water_tidal_cradle_land",
+            "water_tidal_cradle_shallows"
+          ]
+        },
+        {
+          "region_id": "outer_reaches",
+          "team": [
+            28,
+            30
+          ],
+          "tables": [
+            "water_salt_crown_land",
+            "water_salt_crown_shallows"
+          ]
+        },
+        {
+          "region_id": "tether_current",
+          "team": [
+            30,
+            32
+          ],
+          "tables": [
+            "water_sluice_isle_land",
+            "water_sluice_isle_shallows"
+          ]
+        },
+        {
+          "region_id": "veilfall",
+          "team": [
+            32,
+            33
+          ],
+          "tables": [
+            "water_veilfall_land",
+            "water_veilfall_shallows"
+          ]
+        }
+      ]
+    },
+    "cloudreach": {
+      "team": [
+        31,
+        44
+      ],
+      "wild": [
+        29,
+        43
+      ],
+      "boss": [
+        43,
+        44
+      ],
+      "recommended_level": 31,
+      "regional_targets": [
+        {
+          "region_id": "gate_lower_cliffs",
+          "team": [
+            31,
+            34
+          ],
+          "tables": [
+            "cloudreach_lower_wild"
+          ]
+        },
+        {
+          "region_id": "broken_causeways",
+          "team": [
+            34,
+            36
+          ],
+          "tables": [
+            "cloudreach_causeway_wild"
+          ]
+        },
+        {
+          "region_id": "windscar_ravine",
+          "team": [
+            36,
+            39
+          ],
+          "tables": [
+            "cloudreach_windscar_wild"
+          ]
+        },
+        {
+          "region_id": "high_roost_sky_shrine",
+          "team": [
+            39,
+            41
+          ],
+          "tables": [
+            "cloudreach_high_roost_wild"
+          ],
+          "optional": true
+        },
+        {
+          "region_id": "upper_cloudreach",
+          "team": [
+            39,
+            42
+          ],
+          "tables": [
+            "cloudreach_upper_wild",
+            "cloudreach_upper_released_wild"
+          ]
+        },
+        {
+          "region_id": "summit_final_stronghold",
+          "team": [
+            42,
+            44
+          ],
+          "tables": [
+            "cloudreach_summit_wild",
+            "cloudreach_summit_restored_wild"
+          ]
+        }
+      ]
+    },
+    "stormwood": {
+      "team": [
+        42,
+        55
+      ],
+      "wild": [
+        40,
+        54
+      ],
+      "boss": [
+        54,
+        55
+      ],
+      "recommended_level": 42,
+      "regional_targets": [
+        {
+          "region_id": "cinder_verge",
+          "team": [
+            42,
+            45
+          ],
+          "tables": [
+            "verge_calm",
+            "verge_surge"
+          ]
+        },
+        {
+          "region_id": "glowmoss_hollows",
+          "team": [
+            45,
+            47
+          ],
+          "tables": [
+            "hollows_calm",
+            "hollows_surge"
+          ]
+        },
+        {
+          "region_id": "conductor_run",
+          "team": [
+            47,
+            49
+          ],
+          "tables": [
+            "run_calm",
+            "run_surge"
+          ]
+        },
+        {
+          "region_id": "hollow_crown",
+          "team": [
+            49,
+            50
+          ],
+          "tables": [
+            "crown_calm",
+            "crown_surge"
+          ]
+        },
+        {
+          "region_id": "deepwood",
+          "team": [
+            50,
+            52
+          ],
+          "tables": [
+            "deepwood_calm",
+            "deepwood_surge"
+          ]
+        },
+        {
+          "region_id": "dynamo",
+          "team": [
+            52,
+            55
+          ],
+          "tables": [
+            "dynamo_calm",
+            "dynamo_surge"
+          ]
+        }
+      ]
+    }
+  },
+  "overlays": {
+    "data/config/chapter_curve.json": [
+      {
+        "at": [
+          "regions",
+          0,
+          "team",
+          "enter"
+        ],
+        "legacy": 3,
+        "value": 3,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              0,
+              "id"
+            ],
+            "value": "band1_lower_meadows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          0,
+          "team",
+          "exit"
+        ],
+        "legacy": 9,
+        "value": 9,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              0,
+              "id"
+            ],
+            "value": "band1_lower_meadows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          0,
+          "wild_band",
+          0
+        ],
+        "legacy": 2,
+        "value": 2,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              0,
+              "id"
+            ],
+            "value": "band1_lower_meadows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          0,
+          "wild_band",
+          1
+        ],
+        "legacy": 6,
+        "value": 6,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              0,
+              "id"
+            ],
+            "value": "band1_lower_meadows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          0,
+          "trainer_levels",
+          0
+        ],
+        "legacy": 2,
+        "value": 2,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              0,
+              "id"
+            ],
+            "value": "band1_lower_meadows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          0,
+          "trainer_levels",
+          1
+        ],
+        "legacy": 7,
+        "value": 12,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              0,
+              "id"
+            ],
+            "value": "band1_lower_meadows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          1,
+          "team",
+          "enter"
+        ],
+        "legacy": 9,
+        "value": 9,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              1,
+              "id"
+            ],
+            "value": "band2_stone_and_root"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          1,
+          "team",
+          "exit"
+        ],
+        "legacy": 12,
+        "value": 12,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              1,
+              "id"
+            ],
+            "value": "band2_stone_and_root"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          1,
+          "wild_band",
+          0
+        ],
+        "legacy": 6,
+        "value": 7,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              1,
+              "id"
+            ],
+            "value": "band2_stone_and_root"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          1,
+          "wild_band",
+          1
+        ],
+        "legacy": 8,
+        "value": 8,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              1,
+              "id"
+            ],
+            "value": "band2_stone_and_root"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          1,
+          "trainer_levels",
+          0
+        ],
+        "legacy": 9,
+        "value": 9,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              1,
+              "id"
+            ],
+            "value": "band2_stone_and_root"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          1,
+          "trainer_levels",
+          1
+        ],
+        "legacy": 14,
+        "value": 14,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              1,
+              "id"
+            ],
+            "value": "band2_stone_and_root"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          2,
+          "team",
+          "enter"
+        ],
+        "legacy": 12,
+        "value": 12,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              2,
+              "id"
+            ],
+            "value": "band3_the_river_lock"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          2,
+          "team",
+          "exit"
+        ],
+        "legacy": 15,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              2,
+              "id"
+            ],
+            "value": "band3_the_river_lock"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          2,
+          "wild_band",
+          0
+        ],
+        "legacy": 9,
+        "value": 9,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              2,
+              "id"
+            ],
+            "value": "band3_the_river_lock"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          2,
+          "wild_band",
+          1
+        ],
+        "legacy": 12,
+        "value": 13,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              2,
+              "id"
+            ],
+            "value": "band3_the_river_lock"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          2,
+          "trainer_levels",
+          0
+        ],
+        "legacy": 8,
+        "value": 12,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              2,
+              "id"
+            ],
+            "value": "band3_the_river_lock"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          2,
+          "trainer_levels",
+          1
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              2,
+              "id"
+            ],
+            "value": "band3_the_river_lock"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          3,
+          "team",
+          "enter"
+        ],
+        "legacy": 15,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              3,
+              "id"
+            ],
+            "value": "band4_upper_meadows_ironwood"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          3,
+          "team",
+          "exit"
+        ],
+        "legacy": 17,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              3,
+              "id"
+            ],
+            "value": "band4_upper_meadows_ironwood"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          3,
+          "wild_band",
+          0
+        ],
+        "legacy": 11,
+        "value": 12,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              3,
+              "id"
+            ],
+            "value": "band4_upper_meadows_ironwood"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          3,
+          "wild_band",
+          1
+        ],
+        "legacy": 15,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              3,
+              "id"
+            ],
+            "value": "band4_upper_meadows_ironwood"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          3,
+          "trainer_levels",
+          0
+        ],
+        "legacy": 13,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              3,
+              "id"
+            ],
+            "value": "band4_upper_meadows_ironwood"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          3,
+          "trainer_levels",
+          1
+        ],
+        "legacy": 16,
+        "value": 17,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              3,
+              "id"
+            ],
+            "value": "band4_upper_meadows_ironwood"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          4,
+          "team",
+          "enter"
+        ],
+        "legacy": 17,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              4,
+              "id"
+            ],
+            "value": "band5_stronghold_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          4,
+          "team",
+          "exit"
+        ],
+        "legacy": 21,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              4,
+              "id"
+            ],
+            "value": "band5_stronghold_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          4,
+          "wild_band",
+          0
+        ],
+        "legacy": 14,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              4,
+              "id"
+            ],
+            "value": "band5_stronghold_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          4,
+          "wild_band",
+          1
+        ],
+        "legacy": 17,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              4,
+              "id"
+            ],
+            "value": "band5_stronghold_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          4,
+          "trainer_levels",
+          0
+        ],
+        "legacy": 15,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              4,
+              "id"
+            ],
+            "value": "band5_stronghold_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "regions",
+          4,
+          "trainer_levels",
+          1
+        ],
+        "legacy": 20,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "regions",
+              4,
+              "id"
+            ],
+            "value": "band5_stronghold_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "difficulty",
+          "warden_level"
+        ],
+        "legacy": 19,
+        "value": 21,
+        "anchors": []
+      }
+    ],
+    "data/config/bands/band3_the_river_lock/trainers.json": [
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 8,
+        "value": 12,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "relay_picket_hess"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "bramblebun"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 8,
+        "value": 12,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "relay_picket_hess"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mudsnout"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 9,
+        "value": 13,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "relay_picket_orrin"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 9,
+        "value": 13,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "relay_picket_orrin"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "pipwing"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 10,
+        "value": 14,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "relay_officer_dell"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 10,
+        "value": 14,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "relay_officer_dell"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 10,
+        "value": 14,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "relay_officer_dell"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "galecrest"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 12,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "relay_captain"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "galecrest"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 12,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "relay_captain"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "duskhush"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 12,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "relay_captain"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          3,
+          "level"
+        ],
+        "legacy": 12,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "relay_captain"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              3,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          4,
+          "level"
+        ],
+        "legacy": 12,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "relay_captain"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              4,
+              "species"
+            ],
+            "value": "tuskroot"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "captain_riverwatch"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "captain_riverwatch"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "trailpup"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "captain_riverwatch"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          3,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "captain_riverwatch"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              3,
+              "species"
+            ],
+            "value": "duskhush"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          4,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "captain_riverwatch"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              4,
+              "species"
+            ],
+            "value": "brooktail"
+          }
+        ]
+      }
+    ],
+    "data/config/bands/band4_upper_meadows_ironwood/trainers.json": [
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "captain_field"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "duskhush"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "captain_field"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "tuskroot"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "captain_field"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          3,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 17,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "captain_field"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              3,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          4,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 17,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "captain_field"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              4,
+              "species"
+            ],
+            "value": "meadowhart"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "captain_ridge"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "trailpup"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "captain_ridge"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "duskhush"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "captain_ridge"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "trailpup"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          3,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 17,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "captain_ridge"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              3,
+              "species"
+            ],
+            "value": "tuskroot"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          4,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 17,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "captain_ridge"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              4,
+              "species"
+            ],
+            "value": "galecrest"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 13,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "patrol_ridgeline"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 14,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "patrol_ridgeline"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "galecrest"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 13,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "pasture_drover_juno"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 13,
+        "value": 15,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "pasture_drover_juno"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mudsnout"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 14,
+        "value": 16,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "lost_creature_rue"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 15,
+        "value": 17,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "lost_creature_rue"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "trailpup"
+          }
+        ]
+      }
+    ],
+    "data/config/bands/band5_stronghold_approach/trainers.json": [
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 15,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "stronghold_patrol"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "trailpup"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 19,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "stronghold_patrol"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 19,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "stronghold_courtyard"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 17,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "stronghold_courtyard"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "reedwing"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 17,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "stronghold_courtyard"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "mudsnout"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 18,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "stronghold_elite"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "galecrest"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 19,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "stronghold_elite"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 19,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "stronghold_elite"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "trailpup"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          3,
+          "level"
+        ],
+        "legacy": 19,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "stronghold_elite"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              3,
+              "species"
+            ],
+            "value": "duskhush"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          4,
+          "level"
+        ],
+        "legacy": 19,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "stronghold_elite"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              4,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 18,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "warden_aldis"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 18,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "warden_aldis"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "galecrest"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 19,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "warden_aldis"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "brooktail"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          3,
+          "level"
+        ],
+        "legacy": 19,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "warden_aldis"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              3,
+              "species"
+            ],
+            "value": "meadowhart"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          4,
+          "level"
+        ],
+        "legacy": 20,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "warden_aldis"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              4,
+              "species"
+            ],
+            "value": "tuskroot"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 15,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "stronghold_outer_watch"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "burrowback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 15,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "stronghold_outer_watch"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "duskhush"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 19,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "stronghold_checkpoint"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "trailpup"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 19,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "stronghold_checkpoint"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "galecrest"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 16,
+        "value": 19,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "stronghold_checkpoint"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      }
+    ],
+    "data/config/bands/band4_upper_meadows_ironwood/spawns.json": [
+      {
+        "at": [
+          "spawns",
+          8,
+          "alpha",
+          "level_ceiling"
+        ],
+        "legacy": null,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "spawns",
+              8,
+              "order"
+            ],
+            "value": 4007
+          }
+        ]
+      },
+      {
+        "at": [
+          "spawns",
+          78,
+          "alpha",
+          "level_ceiling"
+        ],
+        "legacy": null,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "spawns",
+              78,
+              "order"
+            ],
+            "value": 4075
+          }
+        ]
+      },
+      {
+        "at": [
+          "spawns",
+          79,
+          "alpha",
+          "level_ceiling"
+        ],
+        "legacy": null,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "spawns",
+              79,
+              "order"
+            ],
+            "value": 4100
+          }
+        ]
+      },
+      {
+        "at": [
+          "spawns",
+          80,
+          "alpha",
+          "level_ceiling"
+        ],
+        "legacy": null,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "spawns",
+              80,
+              "order"
+            ],
+            "value": 4101
+          }
+        ]
+      }
+    ],
+    "data/config/bands/band5_stronghold_approach/spawns.json": [
+      {
+        "at": [
+          "spawns",
+          1,
+          "alpha",
+          "level_ceiling"
+        ],
+        "legacy": null,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "spawns",
+              1,
+              "order"
+            ],
+            "value": 5001
+          }
+        ]
+      },
+      {
+        "at": [
+          "spawns",
+          15,
+          "alpha",
+          "level_ceiling"
+        ],
+        "legacy": null,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "spawns",
+              15,
+              "order"
+            ],
+            "value": 5015
+          }
+        ]
+      }
+    ],
+    "data/config/cloudreach_chapter.json": [
+      {
+        "at": [
+          "trainer_ladder",
+          0,
+          "level_band",
+          0
+        ],
+        "legacy": 19,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "id"
+            ],
+            "value": "trainer_ila_lower_ring"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          0,
+          "level_band",
+          1
+        ],
+        "legacy": 21,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "id"
+            ],
+            "value": "trainer_ila_lower_ring"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          0,
+          "team_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 19,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "id"
+            ],
+            "value": "trainer_ila_lower_ring"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "team_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "breezetail"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "team_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "fast_opener"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          0,
+          "team_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 21,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "id"
+            ],
+            "value": "trainer_ila_lower_ring"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "team_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "ribbonray"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              0,
+              "team_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "air_finisher"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          1,
+          "level_band",
+          0
+        ],
+        "legacy": 21,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "id"
+            ],
+            "value": "trainer_orrin_bridge_watch"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          1,
+          "level_band",
+          1
+        ],
+        "legacy": 23,
+        "value": 35,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "id"
+            ],
+            "value": "trainer_orrin_bridge_watch"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          1,
+          "team_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 21,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "id"
+            ],
+            "value": "trainer_orrin_bridge_watch"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "team_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "aeriex"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "team_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "bridge_controller"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          1,
+          "team_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 23,
+        "value": 35,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "id"
+            ],
+            "value": "trainer_orrin_bridge_watch"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "team_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "craghorn"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              1,
+              "team_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "durable_anchor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          2,
+          "level_band",
+          0
+        ],
+        "legacy": 22,
+        "value": 34,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "id"
+            ],
+            "value": "tether_lieutenant_senn"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          2,
+          "level_band",
+          1
+        ],
+        "legacy": 24,
+        "value": 36,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "id"
+            ],
+            "value": "tether_lieutenant_senn"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          2,
+          "team_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 22,
+        "value": 34,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "id"
+            ],
+            "value": "tether_lieutenant_senn"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "team_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "cliffspike"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "team_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "disruptor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          2,
+          "team_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 24,
+        "value": 36,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "id"
+            ],
+            "value": "tether_lieutenant_senn"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "team_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "cloudfang"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              2,
+              "team_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "pursuer"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          3,
+          "level_band",
+          0
+        ],
+        "legacy": 23,
+        "value": 35,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "id"
+            ],
+            "value": "keeper_maela_trial"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          3,
+          "level_band",
+          1
+        ],
+        "legacy": 25,
+        "value": 37,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "id"
+            ],
+            "value": "keeper_maela_trial"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          3,
+          "team_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 23,
+        "value": 35,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "id"
+            ],
+            "value": "keeper_maela_trial"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "team_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "aeriex"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "team_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "wind_tutor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          3,
+          "team_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 25,
+        "value": 37,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "id"
+            ],
+            "value": "keeper_maela_trial"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "team_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "galecrest"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              3,
+              "team_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "flight_ace"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          4,
+          "level_band",
+          0
+        ],
+        "legacy": 26,
+        "value": 38,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "id"
+            ],
+            "value": "young_trainer_tavi_upper_ring"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          4,
+          "level_band",
+          1
+        ],
+        "legacy": 29,
+        "value": 40,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "id"
+            ],
+            "value": "young_trainer_tavi_upper_ring"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          4,
+          "team_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 26,
+        "value": 38,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "id"
+            ],
+            "value": "young_trainer_tavi_upper_ring"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "team_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "craghorn"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "team_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "terrain_controller"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          4,
+          "team_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 28,
+        "value": 39,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "id"
+            ],
+            "value": "young_trainer_tavi_upper_ring"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "team_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "skyrill"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "team_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "switch_punisher"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          4,
+          "team_contract",
+          "slots",
+          2,
+          "level"
+        ],
+        "legacy": 29,
+        "value": 40,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "id"
+            ],
+            "value": "young_trainer_tavi_upper_ring"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "team_contract",
+              "slots",
+              2,
+              "placeholder_species"
+            ],
+            "value": "galecrest"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              4,
+              "team_contract",
+              "slots",
+              2,
+              "role"
+            ],
+            "value": "air_ace"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          5,
+          "level_band",
+          0
+        ],
+        "legacy": 29,
+        "value": 41,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "id"
+            ],
+            "value": "officer_voss_summit_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          5,
+          "level_band",
+          1
+        ],
+        "legacy": 31,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "id"
+            ],
+            "value": "officer_voss_summit_approach"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          5,
+          "team_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 29,
+        "value": 41,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "id"
+            ],
+            "value": "officer_voss_summit_approach"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "team_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "stormcapra"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "team_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "edge_denial"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          5,
+          "team_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 30,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "id"
+            ],
+            "value": "officer_voss_summit_approach"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "team_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "cloudfang"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "team_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "heavy_pressure"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          5,
+          "team_contract",
+          "slots",
+          2,
+          "level"
+        ],
+        "legacy": 31,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "id"
+            ],
+            "value": "officer_voss_summit_approach"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "team_contract",
+              "slots",
+              2,
+              "placeholder_species"
+            ],
+            "value": "skyrill"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              5,
+              "team_contract",
+              "slots",
+              2,
+              "role"
+            ],
+            "value": "switching_ace"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          6,
+          "level_band",
+          0
+        ],
+        "legacy": 31,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "id"
+            ],
+            "value": "captain_veyra_storm_anchor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          6,
+          "level_band",
+          1
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "id"
+            ],
+            "value": "captain_veyra_storm_anchor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          6,
+          "team_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 31,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "id"
+            ],
+            "value": "captain_veyra_storm_anchor"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "team_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "aeriex"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "team_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "crosswind_controller"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          6,
+          "team_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 32,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "id"
+            ],
+            "value": "captain_veyra_storm_anchor"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "team_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "cloudfang"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "team_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "positional_pursuer"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainer_ladder",
+          6,
+          "team_contract",
+          "slots",
+          2,
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "id"
+            ],
+            "value": "captain_veyra_storm_anchor"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "team_contract",
+              "slots",
+              2,
+              "placeholder_species"
+            ],
+            "value": "galecrest"
+          },
+          {
+            "at": [
+              "trainer_ladder",
+              6,
+              "team_contract",
+              "slots",
+              2,
+              "role"
+            ],
+            "value": "summit_ace"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          0,
+          "level_range",
+          0
+        ],
+        "legacy": 18,
+        "value": 29,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              0,
+              "id"
+            ],
+            "value": "cloudreach_lower_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          0,
+          "level_range",
+          1
+        ],
+        "legacy": 22,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              0,
+              "id"
+            ],
+            "value": "cloudreach_lower_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          1,
+          "level_range",
+          0
+        ],
+        "legacy": 20,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              1,
+              "id"
+            ],
+            "value": "cloudreach_causeway_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          1,
+          "level_range",
+          1
+        ],
+        "legacy": 25,
+        "value": 35,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              1,
+              "id"
+            ],
+            "value": "cloudreach_causeway_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          2,
+          "level_range",
+          0
+        ],
+        "legacy": 24,
+        "value": 34,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              2,
+              "id"
+            ],
+            "value": "cloudreach_windscar_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          2,
+          "level_range",
+          1
+        ],
+        "legacy": 27,
+        "value": 37,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              2,
+              "id"
+            ],
+            "value": "cloudreach_windscar_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          3,
+          "level_range",
+          0
+        ],
+        "legacy": 28,
+        "value": 37,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              3,
+              "id"
+            ],
+            "value": "cloudreach_high_roost_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          3,
+          "level_range",
+          1
+        ],
+        "legacy": 30,
+        "value": 40,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              3,
+              "id"
+            ],
+            "value": "cloudreach_high_roost_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          4,
+          "level_range",
+          0
+        ],
+        "legacy": 28,
+        "value": 37,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              4,
+              "id"
+            ],
+            "value": "cloudreach_upper_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          4,
+          "level_range",
+          1
+        ],
+        "legacy": 31,
+        "value": 41,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              4,
+              "id"
+            ],
+            "value": "cloudreach_upper_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          5,
+          "level_range",
+          0
+        ],
+        "legacy": 28,
+        "value": 37,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              5,
+              "id"
+            ],
+            "value": "cloudreach_upper_released_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          5,
+          "level_range",
+          1
+        ],
+        "legacy": 31,
+        "value": 41,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              5,
+              "id"
+            ],
+            "value": "cloudreach_upper_released_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          6,
+          "level_range",
+          0
+        ],
+        "legacy": 30,
+        "value": 40,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              6,
+              "id"
+            ],
+            "value": "cloudreach_summit_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          6,
+          "level_range",
+          1
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              6,
+              "id"
+            ],
+            "value": "cloudreach_summit_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          7,
+          "level_range",
+          0
+        ],
+        "legacy": 30,
+        "value": 40,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              7,
+              "id"
+            ],
+            "value": "cloudreach_summit_restored_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "encounter_tables",
+          7,
+          "level_range",
+          1
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "encounter_tables",
+              7,
+              "id"
+            ],
+            "value": "cloudreach_summit_restored_wild"
+          }
+        ]
+      },
+      {
+        "at": [
+          "final_encounter",
+          "opposition_contract",
+          "slots",
+          0,
+          "level"
+        ],
+        "legacy": 31,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "final_encounter",
+              "opposition_contract",
+              "slots",
+              0,
+              "placeholder_species"
+            ],
+            "value": "aeriex"
+          },
+          {
+            "at": [
+              "final_encounter",
+              "opposition_contract",
+              "slots",
+              0,
+              "role"
+            ],
+            "value": "crosswind_controller"
+          }
+        ]
+      },
+      {
+        "at": [
+          "final_encounter",
+          "opposition_contract",
+          "slots",
+          1,
+          "level"
+        ],
+        "legacy": 32,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "final_encounter",
+              "opposition_contract",
+              "slots",
+              1,
+              "placeholder_species"
+            ],
+            "value": "cloudfang"
+          },
+          {
+            "at": [
+              "final_encounter",
+              "opposition_contract",
+              "slots",
+              1,
+              "role"
+            ],
+            "value": "positional_pursuer"
+          }
+        ]
+      },
+      {
+        "at": [
+          "final_encounter",
+          "opposition_contract",
+          "slots",
+          2,
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "final_encounter",
+              "opposition_contract",
+              "slots",
+              2,
+              "placeholder_species"
+            ],
+            "value": "galecrest"
+          },
+          {
+            "at": [
+              "final_encounter",
+              "opposition_contract",
+              "slots",
+              2,
+              "role"
+            ],
+            "value": "summit_ace"
+          }
+        ]
+      }
+    ],
+    "data/config/cloudreach_solmane_climax.json": [
+      {
+        "at": [
+          "legendary",
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": []
+      }
+    ],
+    "data/config/stormwood_encounters.json": [
+      {
+        "at": [
+          "tables",
+          0,
+          "level_range",
+          0
+        ],
+        "legacy": 30,
+        "value": 40,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              0,
+              "id"
+            ],
+            "value": "verge_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          0,
+          "level_range",
+          1
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              0,
+              "id"
+            ],
+            "value": "verge_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          1,
+          "level_range",
+          0
+        ],
+        "legacy": 32,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              1,
+              "id"
+            ],
+            "value": "verge_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          1,
+          "level_range",
+          1
+        ],
+        "legacy": 35,
+        "value": 45,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              1,
+              "id"
+            ],
+            "value": "verge_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          2,
+          "level_range",
+          0
+        ],
+        "legacy": 32,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              2,
+              "id"
+            ],
+            "value": "hollows_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          2,
+          "level_range",
+          1
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              2,
+              "id"
+            ],
+            "value": "hollows_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          3,
+          "level_range",
+          0
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              3,
+              "id"
+            ],
+            "value": "hollows_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          3,
+          "level_range",
+          1
+        ],
+        "legacy": 37,
+        "value": 47,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              3,
+              "id"
+            ],
+            "value": "hollows_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          4,
+          "level_range",
+          0
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              4,
+              "id"
+            ],
+            "value": "run_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          4,
+          "level_range",
+          1
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              4,
+              "id"
+            ],
+            "value": "run_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          5,
+          "level_range",
+          0
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              5,
+              "id"
+            ],
+            "value": "run_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          5,
+          "level_range",
+          1
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              5,
+              "id"
+            ],
+            "value": "run_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          6,
+          "level_range",
+          0
+        ],
+        "legacy": 37,
+        "value": 47,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              6,
+              "id"
+            ],
+            "value": "crown_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          6,
+          "level_range",
+          1
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              6,
+              "id"
+            ],
+            "value": "crown_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          7,
+          "level_range",
+          0
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              7,
+              "id"
+            ],
+            "value": "crown_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          7,
+          "level_range",
+          1
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              7,
+              "id"
+            ],
+            "value": "crown_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          8,
+          "level_range",
+          0
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              8,
+              "id"
+            ],
+            "value": "deepwood_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          8,
+          "level_range",
+          1
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              8,
+              "id"
+            ],
+            "value": "deepwood_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          9,
+          "level_range",
+          0
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              9,
+              "id"
+            ],
+            "value": "deepwood_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          9,
+          "level_range",
+          1
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              9,
+              "id"
+            ],
+            "value": "deepwood_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          10,
+          "level_range",
+          0
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              10,
+              "id"
+            ],
+            "value": "dynamo_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          10,
+          "level_range",
+          1
+        ],
+        "legacy": 42,
+        "value": 53,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              10,
+              "id"
+            ],
+            "value": "dynamo_calm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          11,
+          "level_range",
+          0
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              11,
+              "id"
+            ],
+            "value": "dynamo_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          11,
+          "level_range",
+          1
+        ],
+        "legacy": 43,
+        "value": 54,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              11,
+              "id"
+            ],
+            "value": "dynamo_surge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          0,
+          "level"
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              0,
+              "id"
+            ],
+            "value": "hollows_alpha"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          1,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              1,
+              "id"
+            ],
+            "value": "capacitor_alpha"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          2,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              2,
+              "id"
+            ],
+            "value": "crown_guardian"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          3,
+          "level"
+        ],
+        "legacy": 43,
+        "value": 53,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              3,
+              "id"
+            ],
+            "value": "old_rodfolk_hall_guardian"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          4,
+          "level"
+        ],
+        "legacy": 43,
+        "value": 53,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              4,
+              "id"
+            ],
+            "value": "blackwater_elder"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          5,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 54,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              5,
+              "id"
+            ],
+            "value": "glass_field_alpha"
+          }
+        ]
+      },
+      {
+        "at": [
+          "legendary_placeholder",
+          "level"
+        ],
+        "legacy": 44,
+        "value": 55,
+        "anchors": []
+      }
+    ],
+    "data/config/stormwood_trainers.json": [
+      {
+        "at": [
+          "trainers",
+          0,
+          "ace_level"
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "tamsin_surge_lesson"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 32,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "tamsin_surge_lesson"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "tamsin_surge_lesson"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "ace_level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "rodfolk_pathfinder_elin"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "rodfolk_pathfinder_elin"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "rodfolk_pathfinder_elin"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "ace_level"
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "lieutenant_dace_hollows_rod"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 35,
+        "value": 45,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "lieutenant_dace_hollows_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "lieutenant_dace_hollows_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "lieutenant_dace_hollows_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "ace_level"
+        ],
+        "legacy": 35,
+        "value": 45,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "traveller_ivo_lantern_pools"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "traveller_ivo_lantern_pools"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 35,
+        "value": 45,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "traveller_ivo_lantern_pools"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "ace_level"
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "lieutenant_varga_rodline_bridge"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 37,
+        "value": 47,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "lieutenant_varga_rodline_bridge"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "lieutenant_varga_rodline_bridge"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "lieutenant_varga_rodline_bridge"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "ace_level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "officer_maren_verge_rod"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 32,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "officer_maren_verge_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "officer_maren_verge_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "officer_maren_verge_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          6,
+          "ace_level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              6,
+              "id"
+            ],
+            "value": "archwright_senn_crown_footing"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          6,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              6,
+              "id"
+            ],
+            "value": "archwright_senn_crown_footing"
+          },
+          {
+            "at": [
+              "trainers",
+              6,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          6,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              6,
+              "id"
+            ],
+            "value": "archwright_senn_crown_footing"
+          },
+          {
+            "at": [
+              "trainers",
+              6,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          7,
+          "ace_level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              7,
+              "id"
+            ],
+            "value": "archivist_wen_crown_trial"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          7,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              7,
+              "id"
+            ],
+            "value": "archivist_wen_crown_trial"
+          },
+          {
+            "at": [
+              "trainers",
+              7,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          7,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              7,
+              "id"
+            ],
+            "value": "archivist_wen_crown_trial"
+          },
+          {
+            "at": [
+              "trainers",
+              7,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          8,
+          "ace_level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              8,
+              "id"
+            ],
+            "value": "crown_wayfarer_nell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          8,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              8,
+              "id"
+            ],
+            "value": "crown_wayfarer_nell"
+          },
+          {
+            "at": [
+              "trainers",
+              8,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          8,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              8,
+              "id"
+            ],
+            "value": "crown_wayfarer_nell"
+          },
+          {
+            "at": [
+              "trainers",
+              8,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          9,
+          "ace_level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              9,
+              "id"
+            ],
+            "value": "officer_nysa_deepwood_rod"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          9,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              9,
+              "id"
+            ],
+            "value": "officer_nysa_deepwood_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              9,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          9,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              9,
+              "id"
+            ],
+            "value": "officer_nysa_deepwood_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              9,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          9,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              9,
+              "id"
+            ],
+            "value": "officer_nysa_deepwood_rod"
+          },
+          {
+            "at": [
+              "trainers",
+              9,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          10,
+          "ace_level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              10,
+              "id"
+            ],
+            "value": "rodfolk_guard_bram"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          10,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              10,
+              "id"
+            ],
+            "value": "rodfolk_guard_bram"
+          },
+          {
+            "at": [
+              "trainers",
+              10,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          10,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              10,
+              "id"
+            ],
+            "value": "rodfolk_guard_bram"
+          },
+          {
+            "at": [
+              "trainers",
+              10,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          11,
+          "ace_level"
+        ],
+        "legacy": 42,
+        "value": 53,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              11,
+              "id"
+            ],
+            "value": "outerworks_lieutenant_sera"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          11,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              11,
+              "id"
+            ],
+            "value": "outerworks_lieutenant_sera"
+          },
+          {
+            "at": [
+              "trainers",
+              11,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          11,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 53,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              11,
+              "id"
+            ],
+            "value": "outerworks_lieutenant_sera"
+          },
+          {
+            "at": [
+              "trainers",
+              11,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          11,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 53,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              11,
+              "id"
+            ],
+            "value": "outerworks_lieutenant_sera"
+          },
+          {
+            "at": [
+              "trainers",
+              11,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          12,
+          "ace_level"
+        ],
+        "legacy": 43,
+        "value": 54,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              12,
+              "id"
+            ],
+            "value": "officer_kestrel_outer_works"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          12,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              12,
+              "id"
+            ],
+            "value": "officer_kestrel_outer_works"
+          },
+          {
+            "at": [
+              "trainers",
+              12,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          12,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 53,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              12,
+              "id"
+            ],
+            "value": "officer_kestrel_outer_works"
+          },
+          {
+            "at": [
+              "trainers",
+              12,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          12,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 43,
+        "value": 54,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              12,
+              "id"
+            ],
+            "value": "officer_kestrel_outer_works"
+          },
+          {
+            "at": [
+              "trainers",
+              12,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "ace_level"
+        ],
+        "legacy": 44,
+        "value": 55,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "captain_marrow_dynamo_core"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 54,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "captain_marrow_dynamo_core"
+          },
+          {
+            "at": [
+              "trainers",
+              13,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 43,
+        "value": 54,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "captain_marrow_dynamo_core"
+          },
+          {
+            "at": [
+              "trainers",
+              13,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 43,
+        "value": 54,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "captain_marrow_dynamo_core"
+          },
+          {
+            "at": [
+              "trainers",
+              13,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "party",
+          3,
+          "level"
+        ],
+        "legacy": 44,
+        "value": 55,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "captain_marrow_dynamo_core"
+          },
+          {
+            "at": [
+              "trainers",
+              13,
+              "party",
+              3,
+              "slot"
+            ],
+            "value": 4
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "party",
+          4,
+          "level"
+        ],
+        "legacy": 44,
+        "value": 55,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "captain_marrow_dynamo_core"
+          },
+          {
+            "at": [
+              "trainers",
+              13,
+              "party",
+              4,
+              "slot"
+            ],
+            "value": 5
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          14,
+          "ace_level"
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              14,
+              "id"
+            ],
+            "value": "tamsin_ash_ring"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          14,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 32,
+        "value": 42,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              14,
+              "id"
+            ],
+            "value": "tamsin_ash_ring"
+          },
+          {
+            "at": [
+              "trainers",
+              14,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          14,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              14,
+              "id"
+            ],
+            "value": "tamsin_ash_ring"
+          },
+          {
+            "at": [
+              "trainers",
+              14,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          15,
+          "ace_level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              15,
+              "id"
+            ],
+            "value": "ranger_pax_sentinel"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          15,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 33,
+        "value": 43,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              15,
+              "id"
+            ],
+            "value": "ranger_pax_sentinel"
+          },
+          {
+            "at": [
+              "trainers",
+              15,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          15,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              15,
+              "id"
+            ],
+            "value": "ranger_pax_sentinel"
+          },
+          {
+            "at": [
+              "trainers",
+              15,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          16,
+          "ace_level"
+        ],
+        "legacy": 35,
+        "value": 45,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              16,
+              "id"
+            ],
+            "value": "courier_pim_pool_loop"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          16,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 34,
+        "value": 44,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              16,
+              "id"
+            ],
+            "value": "courier_pim_pool_loop"
+          },
+          {
+            "at": [
+              "trainers",
+              16,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          16,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 35,
+        "value": 45,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              16,
+              "id"
+            ],
+            "value": "courier_pim_pool_loop"
+          },
+          {
+            "at": [
+              "trainers",
+              16,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          17,
+          "ace_level"
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              17,
+              "id"
+            ],
+            "value": "traveller_ivo_moss_detour"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          17,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 35,
+        "value": 45,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              17,
+              "id"
+            ],
+            "value": "traveller_ivo_moss_detour"
+          },
+          {
+            "at": [
+              "trainers",
+              17,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          17,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              17,
+              "id"
+            ],
+            "value": "traveller_ivo_moss_detour"
+          },
+          {
+            "at": [
+              "trainers",
+              17,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          18,
+          "ace_level"
+        ],
+        "legacy": 37,
+        "value": 47,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              18,
+              "id"
+            ],
+            "value": "rodline_scout_kael"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          18,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 36,
+        "value": 46,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              18,
+              "id"
+            ],
+            "value": "rodline_scout_kael"
+          },
+          {
+            "at": [
+              "trainers",
+              18,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          18,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 37,
+        "value": 47,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              18,
+              "id"
+            ],
+            "value": "rodline_scout_kael"
+          },
+          {
+            "at": [
+              "trainers",
+              18,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          19,
+          "ace_level"
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              19,
+              "id"
+            ],
+            "value": "rodline_keeper_fenn"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          19,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 37,
+        "value": 47,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              19,
+              "id"
+            ],
+            "value": "rodline_keeper_fenn"
+          },
+          {
+            "at": [
+              "trainers",
+              19,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          19,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              19,
+              "id"
+            ],
+            "value": "rodline_keeper_fenn"
+          },
+          {
+            "at": [
+              "trainers",
+              19,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          20,
+          "ace_level"
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              20,
+              "id"
+            ],
+            "value": "rodline_duelist_ren"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          20,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 38,
+        "value": 48,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              20,
+              "id"
+            ],
+            "value": "rodline_duelist_ren"
+          },
+          {
+            "at": [
+              "trainers",
+              20,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          20,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              20,
+              "id"
+            ],
+            "value": "rodline_duelist_ren"
+          },
+          {
+            "at": [
+              "trainers",
+              20,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "ace_level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "rook_circuit_lantern"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "rook_circuit_lantern"
+          },
+          {
+            "at": [
+              "trainers",
+              21,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "rook_circuit_lantern"
+          },
+          {
+            "at": [
+              "trainers",
+              21,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "party",
+          2,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "rook_circuit_lantern"
+          },
+          {
+            "at": [
+              "trainers",
+              21,
+              "party",
+              2,
+              "slot"
+            ],
+            "value": 3
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          22,
+          "ace_level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              22,
+              "id"
+            ],
+            "value": "circuit_lena_giant"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          22,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              22,
+              "id"
+            ],
+            "value": "circuit_lena_giant"
+          },
+          {
+            "at": [
+              "trainers",
+              22,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          22,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              22,
+              "id"
+            ],
+            "value": "circuit_lena_giant"
+          },
+          {
+            "at": [
+              "trainers",
+              22,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "ace_level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "circuit_orin_blackwater"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "circuit_orin_blackwater"
+          },
+          {
+            "at": [
+              "trainers",
+              23,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "circuit_orin_blackwater"
+          },
+          {
+            "at": [
+              "trainers",
+              23,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          24,
+          "ace_level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              24,
+              "id"
+            ],
+            "value": "circuit_mira_lantern"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          24,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 39,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              24,
+              "id"
+            ],
+            "value": "circuit_mira_lantern"
+          },
+          {
+            "at": [
+              "trainers",
+              24,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          24,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 40,
+        "value": 50,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              24,
+              "id"
+            ],
+            "value": "circuit_mira_lantern"
+          },
+          {
+            "at": [
+              "trainers",
+              24,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          25,
+          "ace_level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              25,
+              "id"
+            ],
+            "value": "circuit_tavi_rodline"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          25,
+          "party",
+          0,
+          "level"
+        ],
+        "legacy": 41,
+        "value": 51,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              25,
+              "id"
+            ],
+            "value": "circuit_tavi_rodline"
+          },
+          {
+            "at": [
+              "trainers",
+              25,
+              "party",
+              0,
+              "slot"
+            ],
+            "value": 1
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          25,
+          "party",
+          1,
+          "level"
+        ],
+        "legacy": 42,
+        "value": 52,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              25,
+              "id"
+            ],
+            "value": "circuit_tavi_rodline"
+          },
+          {
+            "at": [
+              "trainers",
+              25,
+              "party",
+              1,
+              "slot"
+            ],
+            "value": 2
+          }
+        ]
+      }
+    ],
+    "data/config/stormwood_dynamo.json": [
+      {
+        "at": [
+          "captive",
+          "level"
+        ],
+        "legacy": 44,
+        "value": 55,
+        "anchors": []
+      }
+    ],
+    "data/config/water_characters.json": [
+      {
+        "at": [
+          "trainers",
+          0,
+          "ace_level"
+        ],
+        "legacy": 43,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "water_trainer_pell_trial"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 43,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "water_trainer_pell_trial"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "torrentoad"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          0,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 43,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              0,
+              "id"
+            ],
+            "value": "water_trainer_pell_trial"
+          },
+          {
+            "at": [
+              "trainers",
+              0,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "ace_level"
+        ],
+        "legacy": 44,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "water_trainer_fen"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 44,
+        "value": 21,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "water_trainer_fen"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          1,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 44,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              1,
+              "id"
+            ],
+            "value": "water_trainer_fen"
+          },
+          {
+            "at": [
+              "trainers",
+              1,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "ace_level"
+        ],
+        "legacy": 45,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "water_trainer_lysa"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 45,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "water_trainer_lysa"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "cragclaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          2,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 45,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              2,
+              "id"
+            ],
+            "value": "water_trainer_lysa"
+          },
+          {
+            "at": [
+              "trainers",
+              2,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mirejaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "ace_level"
+        ],
+        "legacy": 45,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "water_trainer_daro"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 45,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "water_trainer_daro"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "riptusk"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          3,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 45,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              3,
+              "id"
+            ],
+            "value": "water_trainer_daro"
+          },
+          {
+            "at": [
+              "trainers",
+              3,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "torrentoad"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "ace_level"
+        ],
+        "legacy": 46,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "water_trainer_tovin"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 46,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "water_trainer_tovin"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          4,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 46,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              4,
+              "id"
+            ],
+            "value": "water_trainer_tovin"
+          },
+          {
+            "at": [
+              "trainers",
+              4,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "ace_level"
+        ],
+        "legacy": 46,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "water_trainer_keir"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 46,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "water_trainer_keir"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          5,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 46,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              5,
+              "id"
+            ],
+            "value": "water_trainer_keir"
+          },
+          {
+            "at": [
+              "trainers",
+              5,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "cragclaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          6,
+          "ace_level"
+        ],
+        "legacy": 47,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              6,
+              "id"
+            ],
+            "value": "water_trainer_rune"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          6,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              6,
+              "id"
+            ],
+            "value": "water_trainer_rune"
+          },
+          {
+            "at": [
+              "trainers",
+              6,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          6,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              6,
+              "id"
+            ],
+            "value": "water_trainer_rune"
+          },
+          {
+            "at": [
+              "trainers",
+              6,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          7,
+          "ace_level"
+        ],
+        "legacy": 47,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              7,
+              "id"
+            ],
+            "value": "water_trainer_solm"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          7,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              7,
+              "id"
+            ],
+            "value": "water_trainer_solm"
+          },
+          {
+            "at": [
+              "trainers",
+              7,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mirejaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          7,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              7,
+              "id"
+            ],
+            "value": "water_trainer_solm"
+          },
+          {
+            "at": [
+              "trainers",
+              7,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mangrove_monitor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          8,
+          "ace_level"
+        ],
+        "legacy": 48,
+        "value": 26,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              8,
+              "id"
+            ],
+            "value": "water_trainer_irva"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          8,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 48,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              8,
+              "id"
+            ],
+            "value": "water_trainer_irva"
+          },
+          {
+            "at": [
+              "trainers",
+              8,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "riptusk"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          8,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 48,
+        "value": 26,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              8,
+              "id"
+            ],
+            "value": "water_trainer_irva"
+          },
+          {
+            "at": [
+              "trainers",
+              8,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          9,
+          "ace_level"
+        ],
+        "legacy": 47,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              9,
+              "id"
+            ],
+            "value": "water_trainer_nel"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          9,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              9,
+              "id"
+            ],
+            "value": "water_trainer_nel"
+          },
+          {
+            "at": [
+              "trainers",
+              9,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "torrentoad"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          9,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              9,
+              "id"
+            ],
+            "value": "water_trainer_nel"
+          },
+          {
+            "at": [
+              "trainers",
+              9,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          10,
+          "ace_level"
+        ],
+        "legacy": 48,
+        "value": 26,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              10,
+              "id"
+            ],
+            "value": "water_trainer_oswin"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          10,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 48,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              10,
+              "id"
+            ],
+            "value": "water_trainer_oswin"
+          },
+          {
+            "at": [
+              "trainers",
+              10,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          10,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 48,
+        "value": 26,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              10,
+              "id"
+            ],
+            "value": "water_trainer_oswin"
+          },
+          {
+            "at": [
+              "trainers",
+              10,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mirejaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          11,
+          "ace_level"
+        ],
+        "legacy": 49,
+        "value": 27,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              11,
+              "id"
+            ],
+            "value": "water_trainer_tal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          11,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 49,
+        "value": 26,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              11,
+              "id"
+            ],
+            "value": "water_trainer_tal"
+          },
+          {
+            "at": [
+              "trainers",
+              11,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          11,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 49,
+        "value": 27,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              11,
+              "id"
+            ],
+            "value": "water_trainer_tal"
+          },
+          {
+            "at": [
+              "trainers",
+              11,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          12,
+          "ace_level"
+        ],
+        "legacy": 50,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              12,
+              "id"
+            ],
+            "value": "water_trainer_sera"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          12,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 50,
+        "value": 27,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              12,
+              "id"
+            ],
+            "value": "water_trainer_sera"
+          },
+          {
+            "at": [
+              "trainers",
+              12,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mangrove_monitor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          12,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 50,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              12,
+              "id"
+            ],
+            "value": "water_trainer_sera"
+          },
+          {
+            "at": [
+              "trainers",
+              12,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "riptusk"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "ace_level"
+        ],
+        "legacy": 50,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "water_trainer_odan"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 50,
+        "value": 27,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "water_trainer_odan"
+          },
+          {
+            "at": [
+              "trainers",
+              13,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          13,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 50,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              13,
+              "id"
+            ],
+            "value": "water_trainer_odan"
+          },
+          {
+            "at": [
+              "trainers",
+              13,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          14,
+          "ace_level"
+        ],
+        "legacy": 51,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              14,
+              "id"
+            ],
+            "value": "water_trainer_yara"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          14,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 51,
+        "value": 27,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              14,
+              "id"
+            ],
+            "value": "water_trainer_yara"
+          },
+          {
+            "at": [
+              "trainers",
+              14,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          14,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 51,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              14,
+              "id"
+            ],
+            "value": "water_trainer_yara"
+          },
+          {
+            "at": [
+              "trainers",
+              14,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mangrove_monitor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          14,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 51,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              14,
+              "id"
+            ],
+            "value": "water_trainer_yara"
+          },
+          {
+            "at": [
+              "trainers",
+              14,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          15,
+          "ace_level"
+        ],
+        "legacy": 51,
+        "value": 29,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              15,
+              "id"
+            ],
+            "value": "water_trainer_bex"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          15,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 51,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              15,
+              "id"
+            ],
+            "value": "water_trainer_bex"
+          },
+          {
+            "at": [
+              "trainers",
+              15,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "cragclaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          15,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 51,
+        "value": 29,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              15,
+              "id"
+            ],
+            "value": "water_trainer_bex"
+          },
+          {
+            "at": [
+              "trainers",
+              15,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          16,
+          "ace_level"
+        ],
+        "legacy": 52,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              16,
+              "id"
+            ],
+            "value": "water_trainer_calder"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          16,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 52,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              16,
+              "id"
+            ],
+            "value": "water_trainer_calder"
+          },
+          {
+            "at": [
+              "trainers",
+              16,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "riptusk"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          16,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 52,
+        "value": 29,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              16,
+              "id"
+            ],
+            "value": "water_trainer_calder"
+          },
+          {
+            "at": [
+              "trainers",
+              16,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "torrentoad"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          16,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 52,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              16,
+              "id"
+            ],
+            "value": "water_trainer_calder"
+          },
+          {
+            "at": [
+              "trainers",
+              16,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          17,
+          "ace_level"
+        ],
+        "legacy": 52,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              17,
+              "id"
+            ],
+            "value": "water_trainer_vera"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          17,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 52,
+        "value": 29,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              17,
+              "id"
+            ],
+            "value": "water_trainer_vera"
+          },
+          {
+            "at": [
+              "trainers",
+              17,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          17,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 52,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              17,
+              "id"
+            ],
+            "value": "water_trainer_vera"
+          },
+          {
+            "at": [
+              "trainers",
+              17,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          18,
+          "ace_level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              18,
+              "id"
+            ],
+            "value": "water_trainer_tess"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          18,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              18,
+              "id"
+            ],
+            "value": "water_trainer_tess"
+          },
+          {
+            "at": [
+              "trainers",
+              18,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mirejaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          18,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              18,
+              "id"
+            ],
+            "value": "water_trainer_tess"
+          },
+          {
+            "at": [
+              "trainers",
+              18,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          18,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              18,
+              "id"
+            ],
+            "value": "water_trainer_tess"
+          },
+          {
+            "at": [
+              "trainers",
+              18,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          19,
+          "ace_level"
+        ],
+        "legacy": 53,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              19,
+              "id"
+            ],
+            "value": "water_trainer_fennel"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          19,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 53,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              19,
+              "id"
+            ],
+            "value": "water_trainer_fennel"
+          },
+          {
+            "at": [
+              "trainers",
+              19,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "mirejaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          19,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 53,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              19,
+              "id"
+            ],
+            "value": "water_trainer_fennel"
+          },
+          {
+            "at": [
+              "trainers",
+              19,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mangrove_monitor"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          20,
+          "ace_level"
+        ],
+        "legacy": 53,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              20,
+              "id"
+            ],
+            "value": "water_trainer_venn"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          20,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 53,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              20,
+              "id"
+            ],
+            "value": "water_trainer_venn"
+          },
+          {
+            "at": [
+              "trainers",
+              20,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          20,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 53,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              20,
+              "id"
+            ],
+            "value": "water_trainer_venn"
+          },
+          {
+            "at": [
+              "trainers",
+              20,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "riptusk"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          20,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 53,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              20,
+              "id"
+            ],
+            "value": "water_trainer_venn"
+          },
+          {
+            "at": [
+              "trainers",
+              20,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "ace_level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "water_trainer_morra"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "water_trainer_morra"
+          },
+          {
+            "at": [
+              "trainers",
+              21,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "cragclaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "water_trainer_morra"
+          },
+          {
+            "at": [
+              "trainers",
+              21,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mirejaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          21,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              21,
+              "id"
+            ],
+            "value": "water_trainer_morra"
+          },
+          {
+            "at": [
+              "trainers",
+              21,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          22,
+          "ace_level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              22,
+              "id"
+            ],
+            "value": "water_trainer_evi"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          22,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 31,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              22,
+              "id"
+            ],
+            "value": "water_trainer_evi"
+          },
+          {
+            "at": [
+              "trainers",
+              22,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "sirenseal"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          22,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              22,
+              "id"
+            ],
+            "value": "water_trainer_evi"
+          },
+          {
+            "at": [
+              "trainers",
+              22,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          22,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              22,
+              "id"
+            ],
+            "value": "water_trainer_evi"
+          },
+          {
+            "at": [
+              "trainers",
+              22,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "mosshell"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "ace_level"
+        ],
+        "legacy": 55,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "water_trainer_nerissa"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "team",
+          0,
+          "level"
+        ],
+        "legacy": 55,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "water_trainer_nerissa"
+          },
+          {
+            "at": [
+              "trainers",
+              23,
+              "team",
+              0,
+              "species"
+            ],
+            "value": "cannonback"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "team",
+          1,
+          "level"
+        ],
+        "legacy": 55,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "water_trainer_nerissa"
+          },
+          {
+            "at": [
+              "trainers",
+              23,
+              "team",
+              1,
+              "species"
+            ],
+            "value": "mirejaw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "team",
+          2,
+          "level"
+        ],
+        "legacy": 55,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "water_trainer_nerissa"
+          },
+          {
+            "at": [
+              "trainers",
+              23,
+              "team",
+              2,
+              "species"
+            ],
+            "value": "riverdrake"
+          }
+        ]
+      },
+      {
+        "at": [
+          "trainers",
+          23,
+          "team",
+          3,
+          "level"
+        ],
+        "legacy": 55,
+        "value": 33,
+        "anchors": [
+          {
+            "at": [
+              "trainers",
+              23,
+              "id"
+            ],
+            "value": "water_trainer_nerissa"
+          },
+          {
+            "at": [
+              "trainers",
+              23,
+              "team",
+              3,
+              "species"
+            ],
+            "value": "riptusk"
+          }
+        ]
+      }
+    ],
+    "data/config/water_encounters.json": [
+      {
+        "at": [
+          "tables",
+          0,
+          "level_range",
+          0
+        ],
+        "legacy": 43,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              0,
+              "id"
+            ],
+            "value": "water_first_shore_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          0,
+          "level_range",
+          1
+        ],
+        "legacy": 45,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              0,
+              "id"
+            ],
+            "value": "water_first_shore_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          1,
+          "level_range",
+          0
+        ],
+        "legacy": 43,
+        "value": 18,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              1,
+              "id"
+            ],
+            "value": "water_first_shore_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          1,
+          "level_range",
+          1
+        ],
+        "legacy": 45,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              1,
+              "id"
+            ],
+            "value": "water_first_shore_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          2,
+          "level_range",
+          0
+        ],
+        "legacy": 45,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              2,
+              "id"
+            ],
+            "value": "water_reedhaven_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          2,
+          "level_range",
+          1
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              2,
+              "id"
+            ],
+            "value": "water_reedhaven_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          3,
+          "level_range",
+          0
+        ],
+        "legacy": 45,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              3,
+              "id"
+            ],
+            "value": "water_reedhaven_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          3,
+          "level_range",
+          1
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              3,
+              "id"
+            ],
+            "value": "water_reedhaven_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          4,
+          "level_range",
+          0
+        ],
+        "legacy": 45,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              4,
+              "id"
+            ],
+            "value": "water_brine_steps_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          4,
+          "level_range",
+          1
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              4,
+              "id"
+            ],
+            "value": "water_brine_steps_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          5,
+          "level_range",
+          0
+        ],
+        "legacy": 45,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              5,
+              "id"
+            ],
+            "value": "water_brine_steps_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          5,
+          "level_range",
+          1
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              5,
+              "id"
+            ],
+            "value": "water_brine_steps_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          6,
+          "level_range",
+          0
+        ],
+        "legacy": 45,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              6,
+              "id"
+            ],
+            "value": "water_shellwatch_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          6,
+          "level_range",
+          1
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              6,
+              "id"
+            ],
+            "value": "water_shellwatch_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          7,
+          "level_range",
+          0
+        ],
+        "legacy": 45,
+        "value": 20,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              7,
+              "id"
+            ],
+            "value": "water_shellwatch_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          7,
+          "level_range",
+          1
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              7,
+              "id"
+            ],
+            "value": "water_shellwatch_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          8,
+          "level_range",
+          0
+        ],
+        "legacy": 47,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              8,
+              "id"
+            ],
+            "value": "water_tidal_cradle_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          8,
+          "level_range",
+          1
+        ],
+        "legacy": 49,
+        "value": 26,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              8,
+              "id"
+            ],
+            "value": "water_tidal_cradle_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          9,
+          "level_range",
+          0
+        ],
+        "legacy": 47,
+        "value": 23,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              9,
+              "id"
+            ],
+            "value": "water_tidal_cradle_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          9,
+          "level_range",
+          1
+        ],
+        "legacy": 49,
+        "value": 26,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              9,
+              "id"
+            ],
+            "value": "water_tidal_cradle_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          10,
+          "level_range",
+          0
+        ],
+        "legacy": 49,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              10,
+              "id"
+            ],
+            "value": "water_salt_crown_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          10,
+          "level_range",
+          1
+        ],
+        "legacy": 51,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              10,
+              "id"
+            ],
+            "value": "water_salt_crown_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          11,
+          "level_range",
+          0
+        ],
+        "legacy": 49,
+        "value": 25,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              11,
+              "id"
+            ],
+            "value": "water_salt_crown_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          11,
+          "level_range",
+          1
+        ],
+        "legacy": 51,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              11,
+              "id"
+            ],
+            "value": "water_salt_crown_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          12,
+          "level_range",
+          0
+        ],
+        "legacy": 51,
+        "value": 27,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              12,
+              "id"
+            ],
+            "value": "water_sluice_isle_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          12,
+          "level_range",
+          1
+        ],
+        "legacy": 53,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              12,
+              "id"
+            ],
+            "value": "water_sluice_isle_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          13,
+          "level_range",
+          0
+        ],
+        "legacy": 51,
+        "value": 27,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              13,
+              "id"
+            ],
+            "value": "water_sluice_isle_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          13,
+          "level_range",
+          1
+        ],
+        "legacy": 53,
+        "value": 30,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              13,
+              "id"
+            ],
+            "value": "water_sluice_isle_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          14,
+          "level_range",
+          0
+        ],
+        "legacy": 53,
+        "value": 29,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              14,
+              "id"
+            ],
+            "value": "water_veilfall_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          14,
+          "level_range",
+          1
+        ],
+        "legacy": 55,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              14,
+              "id"
+            ],
+            "value": "water_veilfall_land"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          15,
+          "level_range",
+          0
+        ],
+        "legacy": 53,
+        "value": 29,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              15,
+              "id"
+            ],
+            "value": "water_veilfall_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "tables",
+          15,
+          "level_range",
+          1
+        ],
+        "legacy": 55,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "tables",
+              15,
+              "id"
+            ],
+            "value": "water_veilfall_shallows"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          0,
+          "level"
+        ],
+        "legacy": 45,
+        "value": 22,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              0,
+              "id"
+            ],
+            "value": "water_lantern_shell_sentinel"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          1,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              1,
+              "id"
+            ],
+            "value": "water_gull_basalt_claw"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          2,
+          "level"
+        ],
+        "legacy": 47,
+        "value": 24,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              2,
+              "id"
+            ],
+            "value": "water_brine_root_watcher"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          3,
+          "level"
+        ],
+        "legacy": 51,
+        "value": 28,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              3,
+              "id"
+            ],
+            "value": "water_drowned_garden_songweaver"
+          }
+        ]
+      },
+      {
+        "at": [
+          "named_encounters",
+          4,
+          "level"
+        ],
+        "legacy": 54,
+        "value": 32,
+        "anchors": [
+          {
+            "at": [
+              "named_encounters",
+              4,
+              "id"
+            ],
+            "value": "water_deep_watch_tidecoil"
+          }
+        ]
+      },
+      {
+        "at": [
+          "scripted_encounter_references",
+          0,
+          "level"
+        ],
+        "legacy": 49,
+        "value": 49,
+        "anchors": [
+          {
+            "at": [
+              "scripted_encounter_references",
+              0,
+              "id"
+            ],
+            "value": "water_aquaryn_alpha"
+          }
+        ]
+      },
+      {
+        "at": [
+          "scripted_encounter_references",
+          1,
+          "level"
+        ],
+        "legacy": 55,
+        "value": 55,
+        "anchors": [
+          {
+            "at": [
+              "scripted_encounter_references",
+              1,
+              "id"
+            ],
+            "value": "water_abyssal_guardian_release"
+          }
+        ]
+      }
+    ],
+    "data/config/water_alpha.json": [
+      {
+        "at": [
+          "level"
+        ],
+        "legacy": 49,
+        "value": 26,
+        "anchors": []
+      }
+    ]
+  }
+}
