@@ -1,0 +1,100 @@
+{
+  "classification": "ACTUAL STARTUP NATIVE PASS; DIRECTOR TEST PARSE FAIL; NO CRITERION CREDIT",
+  "startup": {
+    "head": "b1c6bb934e929c6991b5600d983edc0c7ad8441c",
+    "source_commit": "843196939e2adbebfda6ff7908cd898f30e71d3c",
+    "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "independent_source_checks": 124,
+    "native_exit": 0,
+    "elapsed_seconds": 169.28099999995902,
+    "source_closure_count": 3250,
+    "source_closure_unchanged": true,
+    "actual_checks": [
+      "PASS: coordinator launch enters before the real Game autoload is ready",
+      "PASS: coordinator Game autoload completed its real _ready",
+      "PASS: ready coordinator relinquished world-save ownership",
+      "PASS: coordinator retains its private home after spawning both peers",
+      "PASS: Windows coordinator retains its private APPDATA after spawning both peers",
+      "PASS: coordinator tracked 2 peers",
+      "PASS: peer 0 input_context is 'world' (got 'world')",
+      "PASS: peer 1 input_context is 'world' (got 'world')",
+      "PASS: no sustained state-hash divergence across peers over 3s of real play",
+      "PASS: both peers' world state hashes agree (contract §7)",
+      "PASS: peer 0 resolved world_seed 0.0 matches the pin 0",
+      "PASS: peer 1 resolved world_seed 0.0 matches the pin 0",
+      "PASS: peer 0 held the stick forward (left stick (0.00, -1.00) for 90 frames)",
+      "PASS: peer 0's body moved >= 0.5 m holding the stick forward (moved 2.71 m)",
+      "PASS: peer 1 held the stick forward (left stick (0.00, -1.00) for 90 frames)",
+      "PASS: peer 1's body moved >= 0.5 m holding the stick forward (moved 2.71 m)"
+    ],
+    "all_raw_errors": [],
+    "original_budgets": {
+      "desync_frames": 240.0,
+      "heartbeat_frames": 60.0,
+      "hello_budget_s": 180.0,
+      "near_tolerance_motion_m": 4.0,
+      "near_tolerance_rest_m": 1.5,
+      "smoke_step_budget_s_2peer": 300.0,
+      "smoke_step_budget_s_wide": 1500.0,
+      "step_budget_frames": 3000.0
+    },
+    "peer_exits_normal": true
+  },
+  "director": {
+    "head": "dd224c2029d959cf9806044d721a58de232b8885",
+    "source_commit": "50e25a24b460d9afd1311400b5b5bc9f880f353f",
+    "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "independent_source_checks": 142,
+    "native_exit": 1,
+    "actual_verdict": "1 parse failure, 0 assertions; source two comparison callbacks cast the comparison bool to Array[String] at253/270. Returned same existing F22 for syntax-only RHS parentheses. Native transport regression UNRUN; runtime guard not verified.",
+    "raw_sha256": "84700f38db5da751049e57bc61454884b40bb1a9e45fbbad37e16d5228c97c50"
+  },
+  "limits": "The startup smoke proves actual harness lifecycle/ownership/home/hash/movement only. Original Warden95s timeout, earned opening, tree reachability, CI/main/criteria remain unproved or failed. No fixtures, deadlines, assertions or native gates waived.",
+  "files": [
+    {
+      "name": "startup-receipt.json.gz",
+      "raw_bytes": 736703,
+      "raw_sha256": "571bc20395d9a74474e9f1d5e272f8f160ffc261c26af619a59fac7046ed7e23"
+    },
+    {
+      "name": "startup-coordinator.log.gz",
+      "raw_bytes": 2424,
+      "raw_sha256": "99800537686aa5dcf7e986bdf782d23283312b17ef0a2307f054e3261c56423d"
+    },
+    {
+      "name": "startup-net-run_peer-0.log.gz",
+      "raw_bytes": 10085,
+      "raw_sha256": "f6d66a165617448d48bf588042e32221c58a299b48efee4997a75a192a2b57ec"
+    },
+    {
+      "name": "startup-net-run_peer-1.log.gz",
+      "raw_bytes": 10087,
+      "raw_sha256": "44e4368d174c322e09939e8ea206e14eb64947d9472619a96adab770144e3ba3"
+    },
+    {
+      "name": "startup-net-run_NET_RUN.json.gz",
+      "raw_bytes": 2532,
+      "raw_sha256": "cfcbad0de8ac20f3e2f9116280594f7ae6209e00e800892f39b121a118b41381"
+    },
+    {
+      "name": "startup-net-run_SUMMARY.md.gz",
+      "raw_bytes": 247,
+      "raw_sha256": "b9111ebbd878cfd5a59883cf3ba6ff0a4c14815ad0dd63ad0f43219c55de9ded"
+    },
+    {
+      "name": "startup-initial-home_Godot_app_userdata_Tetherbound_logs_godot.log.gz",
+      "raw_bytes": 2400,
+      "raw_sha256": "9b272bbf66a36e759a354f62aa02927c4c21333b73980b70fdc1fe05a745a5d8"
+    },
+    {
+      "name": "director-parser-tests.log.gz",
+      "raw_bytes": 13339,
+      "raw_sha256": "84700f38db5da751049e57bc61454884b40bb1a9e45fbbad37e16d5228c97c50"
+    },
+    {
+      "name": "director-parser-result.json.gz",
+      "raw_bytes": 1155,
+      "raw_sha256": "d50a0dff408fcb730589644082660860d96be29f7198c3d75ffdbc4f1543faad"
+    }
+  ]
+}
