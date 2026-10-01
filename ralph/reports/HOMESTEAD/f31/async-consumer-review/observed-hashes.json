@@ -1,0 +1,29 @@
+{
+  "source_commit": "efb9a77b25accd63ae1c664945499a7f891c666a",
+  "predecessor": "09aa5402db311de1a533e6dc0b5e17a7f383d7f5",
+  "manifest_source_commit": "efb9a77b25accd63ae1c664945499a7f891c666a",
+  "files": [
+    {
+      "path": "scripts/ui/craft_panel.gd",
+      "before_git_sha256": "dd7a0ebc859a4bc4003513bef833049c01cac40d18c7f5491ff7ec73b762320e",
+      "after_git_sha256": "6c9b49eaf258f4bc1ed0cbd6f6e0c3227d28696e716cc5524c0438b080009b69",
+      "working_sha256": "a9f0518996a85ade1a1363ba28254adf100961d96c767c0a41fe3813ef063bed",
+      "after_git_blob_oid": "2623488e2ea44ac9410ae30129c139b6a9821d06",
+      "manifest_match": true
+    },
+    {
+      "path": "scripts/build/build_placer.gd",
+      "before_git_sha256": "686bc450ba97a5e074e6c103a4da6a7b089fe41d356af5ade7c09db3a88553ee",
+      "after_git_sha256": "d8ee94aa2d3a112b648d9dbeb572a984b65cfed77d688d41811a958ff36998fe",
+      "working_sha256": "95469e7a5fcf54ed1f9923446f8a39b34367b217d73af45255c7bb59f2a32607",
+      "after_git_blob_oid": "afa16c7dc848c6db2b52ea592595ec06a63f9fd4",
+      "manifest_match": true
+    }
+  ],
+  "diff_scope": [
+    "scripts/build/build_placer.gd",
+    "scripts/ui/craft_panel.gd"
+  ],
+  "source_only": true,
+  "engine_or_unit_tests_run": false
+}

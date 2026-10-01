@@ -58,9 +58,13 @@ const LIST_VISIBLE_HEIGHT := 6 * ROW_HEIGHT + 5 * 8
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const STATION_NEXT := preload("res://scripts/build/station_next_upgrade.gd")
 var _station: Node3D
+var _station_mode := false
 var _station_intent: Dictionary = {}
 var _station_operation := ""
-var _station_source: Node3D
+var _station_source: WeakRef
+var _station_source_key := ""
+var _view_refresh_pending := false
+var _presented_station_view: Dictionary = {}
 var _upgrade_label: Label
 var _station_buttons: Array[Button] = []
 var _producer: Node
@@ -75,6 +79,8 @@ func open_station(station: Node3D) -> void:
 	var session: Node = game.get("session") as Node if game != null else null
 	if session == null or not session.has_method("homestead_submit_action") \
 			or not session.has_method("homestead_personal_view"): return
+	if not _station_intent.is_empty() and (station != _original_station() or session != _producer): return
+	if session != _producer: _disconnect_station_producer()
 	_producer=session
 	_gear_cfg={}
 	_gear_rules=null
@@ -87,12 +93,71 @@ func open_station(station: Node3D) -> void:
 	if _producer.has_signal("homestead_action_completed") \
 			and not _producer.is_connected("homestead_action_completed",_station_completed):
 		_producer.connect("homestead_action_completed",_station_completed)
+	if _producer.has_signal("homestead_personal_view_completed") \
+			and not _producer.is_connected("homestead_personal_view_completed",_station_view_completed):
+		_producer.connect("homestead_personal_view_completed",_station_view_completed)
 	open(station)
 
 func _station_view() -> Dictionary:
 	if not is_instance_valid(_producer) or not _producer.has_method("homestead_personal_view"): return {}
 	var raw: Variant = _producer.call("homestead_personal_view")
 	return raw if raw is Dictionary else {}
+
+func _original_station() -> Node3D:
+	return _station_source.get_ref() as Node3D if _station_source != null else null
+
+func _station_view_completed() -> void:
+	if not _open or not is_instance_valid(_station) or _view_refresh_pending: return
+	_view_refresh_pending=true
+	call_deferred("_refresh_station_view")
+
+## Notification only: re-read the producer's authenticated current cache.
+## A new quote never rebases, retries or releases the original transaction.
+func _refresh_station_view() -> void:
+	_view_refresh_pending=false
+	if not _open or not is_instance_valid(_station) or not is_instance_valid(_producer) \
+			or game == null or game.get("session") != _producer: return
+	var view := _station_view()
+	if view == _presented_station_view: return
+	_presented_station_view=view.duplicate(true)
+	_rebuild_station_presentation()
+
+func _rebuild_station_presentation() -> void:
+	var message := _status.text if is_instance_valid(_status) else ""
+	var remaining := _status_left
+	var focus := get_viewport().gui_get_focus_owner() as Button
+	var focus_key := str(focus.get_meta("station_focus_key","")) if is_instance_valid(focus) and _station_buttons.has(focus) else ""
+	var recipe_id := _recipe_ids[_selected] if _selected >= 0 and _selected < _recipe_ids.size() else ""
+	_build()
+	_status.text=message
+	_status_left=remaining
+	var recipe_index := _recipe_ids.find(recipe_id)
+	if recipe_index >= 0: _selected=recipe_index
+	for button: Button in _station_buttons:
+		if not button.disabled and not focus_key.is_empty() and str(button.get_meta("station_focus_key","")) == focus_key:
+			button.call_deferred("grab_focus")
+			return
+	if not _station_intent.is_empty():
+		for button: Button in _station_buttons:
+			if not button.disabled and button.text == "Retry original transaction":
+				button.call_deferred("grab_focus")
+				return
+	if not _rows.is_empty(): _rows[clampi(_selected,0,_rows.size()-1)].call_deferred("grab_focus")
+	else:
+		for button: Button in _station_buttons:
+			if not button.disabled:
+				button.call_deferred("grab_focus")
+				return
+
+func _disconnect_station_producer() -> void:
+	if not is_instance_valid(_producer): return
+	if _producer.has_signal("homestead_action_completed") and _producer.is_connected("homestead_action_completed",_station_completed):
+		_producer.disconnect("homestead_action_completed",_station_completed)
+	if _producer.has_signal("homestead_personal_view_completed") and _producer.is_connected("homestead_personal_view_completed",_station_view_completed):
+		_producer.disconnect("homestead_personal_view_completed",_station_view_completed)
+
+func _exit_tree() -> void:
+	_disconnect_station_producer()
 
 func _build_station_controls(outer: VBoxContainer) -> void:
 	_station_buttons.clear()
@@ -123,7 +188,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 			if raw is Dictionary:
 				for recipe_id: String in raw.get("recipes",{}):
 					var name: String = str(raw.recipes[recipe_id].get("name",recipe_id))
-					_station_button(controls,"Refine "+name,func() -> void: _start_refining(recipe_id))
+					_station_button(controls,"Refine "+name,func() -> void: _start_refining(recipe_id),"refine:"+recipe_id)
 		"altar": _station_button(controls,"Creature training",_open_altar)
 		"den":
 			var view := _station_view()
@@ -134,8 +199,8 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 					var uid: String = row.uid
 					var label: String = str(row.get("nickname",row.get("species_id",uid)))
 					var action := "wake" if row.get("resting") == true else "rest"
-					_station_button(controls,action.capitalize()+" "+label,func() -> void: _station_action("den_rest",{"creature_uid":uid,"action":action}))
-					_station_button(controls,"Groom "+label,func() -> void: _station_action("groom",{"creature_uid":uid}))
+					_station_button(controls,action.capitalize()+" "+label,func() -> void: _station_action("den_rest",{"creature_uid":uid,"action":action}),"den_rest:"+uid)
+					_station_button(controls,"Groom "+label,func() -> void: _station_action("groom",{"creature_uid":uid}),"groom:"+uid)
 		"farm":
 			_station_button(controls,"Till plot",func() -> void: _farm_action("till",""))
 			_station_button(controls,"Sow berries",func() -> void: _farm_action("sow","berries"))
@@ -212,11 +277,12 @@ func _gear_name(id: String) -> String:
 	return str(_gear_cfg.get("items",{}).get(id,{}).get("name",id.replace("_"," ").capitalize()))
 
 func _gear_button(controls: VBoxContainer, label: String, action: String, uid: String, slot: String, id: String) -> void:
-	_station_button(controls,label,func() -> void: _station_action("gear",{"action":action,"creature_uid":uid,"slot":slot,"item_id":id}))
+	_station_button(controls,label,func() -> void: _station_action("gear",{"action":action,"creature_uid":uid,"slot":slot,"item_id":id}),JSON.stringify(["gear",action,uid,slot,id]))
 
-func _station_button(parent: VBoxContainer, label: String, action: Callable) -> void:
+func _station_button(parent: VBoxContainer, label: String, action: Callable, focus_key: String = "") -> void:
 	var button := Button.new()
 	button.text=label
+	button.set_meta("station_focus_key",focus_key if not focus_key.is_empty() else label)
 	button.custom_minimum_size=Vector2(740,42)
 	button.add_theme_font_size_override("font_size",UITokens.FONT_READ)
 	button.pressed.connect(action)
@@ -237,7 +303,12 @@ func _refresh_next_upgrade() -> void:
 	if _upgrade_label.visible:
 		_upgrade_label.text="Next upgrade: %s — %s. %s" % [str(upgrade.get("name","")),str(upgrade.get("unlocks","")),str(upgrade.get("missing_requirement",""))]
 	for button: Button in _station_buttons:
-		button.disabled=not _station_intent.is_empty() and button.text != "Retry original transaction"
+		if button.text == "Retry original transaction":
+			button.disabled=_station_intent.is_empty()
+		else:
+			var revision: Variant = view.get("registry_revision")
+			button.disabled=not _station_intent.is_empty() or not STATION_RULES.number(revision) \
+				or float(revision) != floor(float(revision)) or revision < 0
 
 func _farm_action(action: String, crop: String) -> void:
 	if not is_instance_valid(_station): return
@@ -257,7 +328,9 @@ func _station_action(op: String, fields: Dictionary) -> void:
 		_status.text="The character's saved station state is unavailable."
 		return
 	_original_revision=int(revision)
-	_station_source=_station
+	if not is_instance_valid(_station): return
+	_station_source=weakref(_station)
+	_station_source_key="%s:%s:%s" % [str(_station.get_meta("building_id","")),str(_station.get_meta("realm","")),str(_station.get_meta("building_uid",""))]
 	_station_operation=op
 	_station_intent=fields.duplicate(true)
 	_station_intent["craft_id" if op == "station_craft" else "action_id"]=Crypto.new().generate_random_bytes(16).hex_encode()
@@ -265,7 +338,9 @@ func _station_action(op: String, fields: Dictionary) -> void:
 
 func _retry_station() -> void:
 	if _station_intent.is_empty() or not is_instance_valid(_producer): return
-	var raw: Variant = _producer.call("homestead_submit_action",_station_operation,_station_intent.duplicate(true),_station_source,_original_revision)
+	# A removed node may be null. The producer must reconcile the retained
+	# original journal before fresh-source validation; null cannot start work.
+	var raw: Variant = _producer.call("homestead_submit_action",_station_operation,_station_intent.duplicate(true),_original_station(),_original_revision)
 	if raw is Dictionary: _station_completed(_station_operation,_station_intent.duplicate(true),raw)
 	else: _status.text="Waiting for the original station transaction."
 
@@ -283,12 +358,8 @@ func _station_completed(op: String, original: Dictionary, result: Dictionary) ->
 			and result.get("terminal_refusal") is bool and result.terminal_refusal == true:
 		_station_intent={}
 	if _station_intent.is_empty() and _open:
-		var message := _status.text
-		_build()
-		_status.text=message
 		_status_left=STATUS_SECONDS
-		if not _rows.is_empty(): _rows[clampi(_selected,0,_rows.size()-1)].call_deferred("grab_focus")
-		elif not _station_buttons.is_empty(): _station_buttons[0].call_deferred("grab_focus")
+		_rebuild_station_presentation()
 	_refresh_next_upgrade()
 
 func _open_feasts() -> void:
@@ -409,11 +480,13 @@ func _known_ids_differ_from_the_list_on_screen() -> bool:
 func open(station: Node3D = null) -> void:
 	if _open:
 		return
-	if not _station_intent.is_empty() and station != _station_source:
+	if not _station_intent.is_empty() and (not is_instance_valid(station) or station != _original_station()):
 		return # Keep unresolved original source/intent; no competing craft.
 	_station = station
+	_station_mode=is_instance_valid(station)
 	if is_instance_valid(_station) or _known_ids_differ_from_the_list_on_screen():
 		_build()
+	if is_instance_valid(_station): _presented_station_view=_station_view().duplicate(true)
 	_open = true
 	visible = true
 	_mouse_before = Input.mouse_mode
@@ -769,8 +842,12 @@ func _process(delta: float) -> void:
 		return
 	if is_instance_valid(_station):
 		_refresh_next_upgrade()
-	elif not _station_intent.is_empty():
-		_status.text = "Waiting for the original station transaction to reconcile."
+	elif _station_mode:
+		_status.text="Waiting for the original station transaction to reconcile." if not _station_intent.is_empty() else "This station is no longer available."
+		for button: Button in _rows: button.disabled=true
+		for button: Button in _station_buttons:
+			button.disabled=button.text != "Retry original transaction" or _station_intent.is_empty()
+		return
 	if _status_left > 0.0:
 		_status_left -= delta
 		if _status_left <= 0.0:
@@ -779,6 +856,7 @@ func _process(delta: float) -> void:
 
 
 func _craft(id: String) -> void:
+	if not _station_intent.is_empty() or (_station_mode and not is_instance_valid(_station)): return
 	if is_instance_valid(_station):
 		_station_action("station_craft", {"recipe_id":id})
 		return
