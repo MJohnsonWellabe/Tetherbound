@@ -1,0 +1,21 @@
+{
+  "base": "667d2a0b4b584fe09a72b7bc761e573b8bd53359",
+  "source_sha256": {
+    "tests/helpers/f48_net_proof.gd": "8e7b3b303df4ed1a7c47ab21e120fd64ab7bf5ea0cd5fc27256db46c9df77efc",
+    "tools/net/proof_steps_f48.gd": "ed24a59e5118f8d422cad4958bcb5250060f525b2ae3567208982ecb056a8d0e",
+    "tools/net/proof_steps.gd": "c8c6a77b883be713bf953d2732bebb3ee1b3e42db0e5f93c6ae4b256c0147bc6",
+    "tools/net/f48_detached_file.gd": "ce9e8fa607caf2db6599ac33e380b0a44698e1f4f8bee9d67594b0f0a909907d"
+  },
+  "default_transactions": "All6 declared operations times4 declared cuts,24 independent original-save-restored sessions; separate case outputs and proof observers; guest case output restored after true process restart",
+  "explicit_mode": "Both --transaction and --cut retain original single-case debug invocation; partial arguments fail",
+  "bounds": "Existing3600-second total scenario,300-second build allowance and10-second boundary bounds unchanged. Existing CI30-minute outer cap may require dedicated parallel matrix, never silently extended",
+  "saved_input_support": "Windows absolute drive paths preserved; nested saves/redesign-v28 locator discovery added; carrier dirs copied exactly; legacy path retained; no guest world, locator or v28 migration fabricated",
+  "typing_fix": "ActualROOTcheck-only abbee8 failure Cannot infer ok resolved by explicit bool declaration",
+  "checks": {
+    "standalone_gdtoolkit_grammar": "PASS for4 GDScript files",
+    "git_diff_check": "PASS"
+  },
+  "native_runtime": "UNRUN on this cut; ROOT owns serialized engine checks",
+  "profiles": "OPEN prerequisite; no default fake saved input or claimed earned profile",
+  "acceptance": "OPEN"
+}

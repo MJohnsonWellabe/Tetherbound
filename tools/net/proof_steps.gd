@@ -231,7 +231,7 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var from := str(args.get("from", ""))
 	if from.is_empty():
 		return {"verdict": "ERROR", "detail": "load_save needs args.from (a captured save directory or a slot json)"}
-	if not from.begins_with("res://") and not from.begins_with("/"):
+	if not from.begins_with("res://") and not from.is_absolute_path():
 		from = ProjectSettings.globalize_path("res://").path_join(from)
 	from = ProjectSettings.globalize_path(from)
 	var game := tree.root.get_node_or_null(^"Game")
@@ -260,7 +260,13 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	elif DirAccess.dir_exists_absolute(from):
 		form = "captured directory (split path)"
 		var found := -1
-		var saves := DirAccess.open(from.path_join("saves"))
+		# Redesign-v28 uses the same split carriers beneath their schema root.
+		# Preserve the original captured layout byte-for-byte; never flatten,
+		# reinterpret a locator, invent a guest world or migrate an old save.
+		var saves_path := from.path_join("saves")
+		if DirAccess.dir_exists_absolute(saves_path.path_join("redesign-v28")):
+			saves_path = saves_path.path_join("redesign-v28")
+		var saves := DirAccess.open(saves_path)
 		if saves != null:
 			for entry: String in saves.get_files():
 				var m := RegEx.create_from_string("^slot_(\\d+)\\.json(\\.gz)?$").search(entry)

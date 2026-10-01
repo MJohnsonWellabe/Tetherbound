@@ -134,14 +134,23 @@ func _build() -> Dictionary:
 		_profile_errors.append("F48 requires exactly %d independently captured v28 save directories" % peers)
 		return {}
 	if str(_profile.get("provenance", "")).is_empty(): _profile_errors.append("Disclose saved-input origin and any mechanics setup in profile.provenance")
-	for peer: int in peers:
-		if not saves[peer] is String or not DirAccess.dir_exists_absolute(saves[peer]):
-			_profile_errors.append("Missing actual saved input for peer %d" % peer)
-		steps.append(_entry(peer, "load_save", {"from": saves[peer]}, "DISCLOSED saved-input setup; not earned full-loop acceptance"))
-	steps.append(_entry(0, "host"))
-	for peer: int in range(1, peers): steps.append(_entry(peer, "production_join", {"returning_route": true}))
-	steps.append(_entry("all", "expect_peers", {"count": peers}))
-	steps.append(_entry("all", "f48_witness", {"remember": "admitted"}))
+	var transaction := _argument("transaction", "")
+	var cut := _argument("cut", "")
+	if suite() == "transactions" and transaction.is_empty() and cut.is_empty():
+		var first := true
+		for operation: String in TRANSACTIONS:
+			for boundary: String in CUTS:
+				var case_id := operation + "_" + boundary
+				if not first:
+					steps.append(_entry(1, "leave", {}, "End prior independent transaction case"))
+					steps.append(_entry(0, "leave", {}, "End prior original host session"))
+				steps.append(_entry("all", "f48_start_case", {"case": case_id}))
+				_admit(steps, saves, peers)
+				_transactions(steps, operation, boundary, case_id)
+				first = false
+		return {"name": "F48 transactions complete6x4 matrix", "claim": "24 independent original saved-input mechanics cases; no earned campaign PASS. " + str(_profile.get("provenance", "")),
+			"peers": peers, "scene": "title", "budget_s": 3600, "build_allowance_s": 300, "steps": steps}
+	_admit(steps, saves, peers)
 	match suite():
 		"loop": _loop(steps)
 		"boss_four": _boss(steps, peers)
@@ -150,6 +159,16 @@ func _build() -> Dictionary:
 		_: _profile_errors.append("Unknown F48 suite")
 	return {"name": "F48 " + suite(), "claim": "Named mechanics proof only; no earned campaign PASS. " + str(_profile.get("provenance", "")),
 		"peers": peers, "scene": "title", "budget_s": 3600, "build_allowance_s": 300, "steps": steps}
+
+func _admit(steps: Array, saves: Array, peers: int) -> void:
+	for peer: int in peers:
+		if not saves[peer] is String or not DirAccess.dir_exists_absolute(saves[peer]):
+			_profile_errors.append("Missing actual saved input for peer %d" % peer)
+		steps.append(_entry(peer, "load_save", {"from": saves[peer]}, "DISCLOSED saved-input setup; not earned full-loop acceptance"))
+	steps.append(_entry(0, "host"))
+	for peer: int in range(1, peers): steps.append(_entry(peer, "production_join", {"returning_route": true}))
+	steps.append(_entry("all", "expect_peers", {"count": peers}))
+	steps.append(_entry("all", "f48_witness", {"remember": "admitted"}))
 
 func _prerequisites(steps: Array) -> void:
 	steps.append(_entry("all", "f48_require", {"flags": [
@@ -276,9 +295,9 @@ func _behind(steps: Array) -> void:
 	rejoined.unchanged = ["redesign_character/portal_unlocks", "redesign_character/relics_held", "redesign_character/transaction_receipts"]
 	steps.append(_entry(1, "f48_assert", rejoined))
 
-func _transactions(steps: Array) -> void:
-	var transaction := _argument("transaction", "")
-	var cut := _argument("cut", "")
+func _transactions(steps: Array, operation: String = "", boundary: String = "", case_id: String = "") -> void:
+	var transaction := operation if not operation.is_empty() else _argument("transaction", "")
+	var cut := boundary if not boundary.is_empty() else _argument("cut", "")
 	if not TRANSACTIONS.has(transaction) or not CUTS.has(cut):
 		_profile_errors.append("Choose --transaction=" + ",".join(TRANSACTIONS) + " and --cut=" + ",".join(CUTS))
 		return
@@ -287,13 +306,14 @@ func _transactions(steps: Array) -> void:
 	steps.append(_entry(1, "f48_witness", {"remember": "transaction_before"}))
 	if cut in ["after_host_write_before_delivery", "after_owner_write_before_ack"]:
 		steps.append(_entry(1, "f48_boundary_transaction", {"transaction": transaction, "phase": cut,
-			"route": _route(transaction + "_commit", 1)}, "Hard guest death at the original production writer boundary"))
+			"route": _route(transaction + "_commit", 1), "case": case_id}, "Hard guest death at the original production writer boundary"))
 	if cut == "after_settlement":
 		steps.append_array(_route(transaction + "_commit", 1))
 		steps.append(_entry(1, "wait", {"frames": 180}))
 		steps.append(_entry(1, "f48_assert", _outcome(transaction, "transaction_before")))
 		steps.append(_entry(1, "f48_witness", {"remember": "settled"}))
 	steps.append(_entry(1, "restart_peer", {"scene": "title"}, "F48 hard process kill; no Session.leave or autosave"))
+	if not case_id.is_empty(): steps.append(_entry(1, "f48_start_case", {"case": case_id}, "Restore detached case directory in fresh guest process"))
 	steps.append(_entry(0, "expect_peers", {"count": 1}))
 	steps.append(_entry(1, "production_join", {"returning_route": true}))
 	steps.append(_entry("all", "expect_peers", {"count": 2}))
@@ -339,7 +359,9 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 	var pid := int(_peers[peer].get("pid", -1))
 	var character := str(_characters.get(peer, ""))
 	var token := "%s_%s_%d" % [args.transaction, args.phase, pid]
-	var path := _proof_out.path_join("f48-boundaries").path_join(token + ".json")
+	var output := _proof_out
+	if not str(args.get("case", "")).is_empty(): output = output.path_join("cases").path_join(str(args.case))
+	var path := output.path_join("f48-boundaries").path_join(token + ".json")
 	var observer_peer := 0 if args.phase == "after_host_write_before_delivery" else peer
 	var before := _process_guard(pid)
 	if before.get("ok") != true:
@@ -384,7 +406,7 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		and resume.get("token") == token and resume.get("marker_sha256") == ack.get("marker_sha256") \
 		and resume.get("ack_sha256") == FileAccess.get_sha256(path + ".ack.json") \
 		and resume.get("observer_pid") == int(_peers[observer_peer].pid))
-	var ok := not input_failed and exit_confirmed and host_resume_confirmed and evidence is Dictionary \
+	var ok: bool = not input_failed and exit_confirmed and host_resume_confirmed and evidence is Dictionary \
 		and evidence.get("guest_pid") == pid and evidence.get("token") == token and evidence.get("phase") == args.phase \
 		and evidence.get("transaction") == args.transaction and evidence.get("observation", {}).get("character_id") == character \
 		and not str(evidence.get("observation", {}).get("delivery_id", "")).is_empty() \
