@@ -1,0 +1,1464 @@
+{
+  "scope": "F23 frozen evidence snapshot; runtime moves.json remains sole effect/stat authority",
+  "owned_commit": "71bf3746bd63668e945095d895a91b61c8f57d01",
+  "moves_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+  "shared_proposal_patch_sha256": "9479e602c6289e20501b0e518e30dc97a590a17182933e9275fd010377a26ec2",
+  "activation": "OFF",
+  "signatures": {
+    "ultimate_terrapup": {
+      "display_name": "Mountain Home",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ripplet": {
+      "display_name": "Turning Tide",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_galewisp": {
+      "display_name": "Sky Ribbon",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_current": {
+      "display_name": "Ground Current Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_wall": {
+      "display_name": "Ground Wall Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_charger": {
+      "display_name": "Ground Charger Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_diver": {
+      "display_name": "Ground Diver Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_tuskroot": {
+      "display_name": "Rootquake",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_current": {
+      "display_name": "Water Current Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_wall": {
+      "display_name": "Water Wall Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_charger": {
+      "display_name": "Water Charger Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_charger": {
+      "display_name": "Air Charger Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_diver": {
+      "display_name": "Air Diver Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_veridian": {
+      "display_name": "Verdant Rebirth",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ashtusk": {
+      "display_name": "Cinder Stampede",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_charger": {
+      "display_name": "Electric Charger Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_fire_wall": {
+      "display_name": "Fire Wall Finale",
+      "type": "fire",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "fireball",
+        "colour": "#f6a132",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_dark_diver": {
+      "display_name": "Dark Diver Finale",
+      "type": "dark",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "shadow_bolt",
+        "colour": "#9e80ca",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ice_current": {
+      "display_name": "Ice Current Finale",
+      "type": "ice",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "ice_shard_volley",
+        "colour": "#a8dcf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_cannonback": {
+      "display_name": "Broadside Bloom",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_diver": {
+      "display_name": "Water Diver Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_abyssal_guardian": {
+      "display_name": "Abyssal Crown",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_current": {
+      "display_name": "Electric Current Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_diver": {
+      "display_name": "Electric Diver Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_wall": {
+      "display_name": "Electric Wall Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_fulgocobra": {
+      "display_name": "Stormheart Coil",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_current": {
+      "display_name": "Air Current Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_wall": {
+      "display_name": "Air Wall Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_stormcapra": {
+      "display_name": "Summit Thunder",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_solmane": {
+      "display_name": "Solar Gale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_stormursa": {
+      "display_name": "Thunder Roar",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    }
+  },
+  "species_mapping": {
+    "terrapup": {
+      "primary_type": "ground",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_terrapup"
+    },
+    "ripplet": {
+      "primary_type": "water",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_ripplet"
+    },
+    "galewisp": {
+      "primary_type": "air",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_galewisp"
+    },
+    "bramblebun": {
+      "primary_type": "ground",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_ground_current"
+    },
+    "mudsnout": {
+      "primary_type": "ground",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_ground_wall"
+    },
+    "trailpup": {
+      "primary_type": "ground",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_ground_charger"
+    },
+    "burrowback": {
+      "primary_type": "ground",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_ground_wall"
+    },
+    "meadowhart": {
+      "primary_type": "ground",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_ground_diver"
+    },
+    "tuskroot": {
+      "primary_type": "ground",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_tuskroot"
+    },
+    "paddlenewt": {
+      "primary_type": "water",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_water_current"
+    },
+    "mosshell": {
+      "primary_type": "water",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_water_wall"
+    },
+    "brooktail": {
+      "primary_type": "water",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "galecrest": {
+      "primary_type": "air",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_air_charger"
+    },
+    "duskhush": {
+      "primary_type": "air",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_air_diver"
+    },
+    "pipwing": {
+      "primary_type": "air",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_air_charger"
+    },
+    "reedwing": {
+      "primary_type": "water",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_water_current"
+    },
+    "veridian": {
+      "primary_type": "ground",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_veridian"
+    },
+    "nightburrow": {
+      "primary_type": "ground",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_ground_diver"
+    },
+    "stormtrail": {
+      "primary_type": "ground",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_ground_charger"
+    },
+    "riftfrill": {
+      "primary_type": "water",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_water_current"
+    },
+    "ashtusk": {
+      "primary_type": "ground",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_ashtusk"
+    },
+    "sparkit": {
+      "primary_type": "electric",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_electric_charger"
+    },
+    "cindercub": {
+      "primary_type": "fire",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_fire_wall"
+    },
+    "shadelet": {
+      "primary_type": "dark",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_dark_diver"
+    },
+    "frostclaw": {
+      "primary_type": "ice",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_ice_current"
+    },
+    "cannonback": {
+      "primary_type": "water",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_cannonback"
+    },
+    "riptusk": {
+      "primary_type": "water",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_water_wall"
+    },
+    "mirejaw": {
+      "primary_type": "water",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_water_diver"
+    },
+    "aquaryn": {
+      "primary_type": "water",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "torrentoad": {
+      "primary_type": "water",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "cragclaw": {
+      "primary_type": "water",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_water_wall"
+    },
+    "riverdrake": {
+      "primary_type": "water",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "sirenseal": {
+      "primary_type": "water",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_water_current"
+    },
+    "mangrove_monitor": {
+      "primary_type": "water",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "tidecoil": {
+      "primary_type": "water",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_water_current"
+    },
+    "abyssal_guardian": {
+      "primary_type": "water",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_abyssal_guardian"
+    },
+    "voltwig": {
+      "primary_type": "electric",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_electric_current"
+    },
+    "mosshock": {
+      "primary_type": "electric",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_electric_diver"
+    },
+    "staticub": {
+      "primary_type": "electric",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_electric_wall"
+    },
+    "voltarach": {
+      "primary_type": "electric",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_electric_wall"
+    },
+    "fulgocobra": {
+      "primary_type": "electric",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_fulgocobra"
+    },
+    "stormraven": {
+      "primary_type": "electric",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_electric_charger"
+    },
+    "pebbik": {
+      "primary_type": "air",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_air_current"
+    },
+    "craghorn": {
+      "primary_type": "air",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_air_wall"
+    },
+    "stormbrush": {
+      "primary_type": "electric",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_electric_current"
+    },
+    "tanglevolt": {
+      "primary_type": "electric",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_electric_current"
+    },
+    "thundertunnel": {
+      "primary_type": "electric",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_electric_wall"
+    },
+    "glimmermoth": {
+      "primary_type": "electric",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_electric_diver"
+    },
+    "stormcapra": {
+      "primary_type": "air",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_stormcapra"
+    },
+    "skyrill": {
+      "primary_type": "air",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_air_charger"
+    },
+    "aeriex": {
+      "primary_type": "air",
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_air_charger"
+    },
+    "ribbonray": {
+      "primary_type": "air",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_air_current"
+    },
+    "breezetail": {
+      "primary_type": "air",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_air_current"
+    },
+    "cloudfang": {
+      "primary_type": "air",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_air_diver"
+    },
+    "cliffspike": {
+      "primary_type": "air",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_air_wall"
+    },
+    "tempestwing": {
+      "primary_type": "air",
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_air_current"
+    },
+    "solmane": {
+      "primary_type": "air",
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_solmane"
+    },
+    "stormursa": {
+      "primary_type": "electric",
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_stormursa"
+    }
+  },
+  "alias_mapping": {
+    "water_cannonback": {
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_cannonback"
+    },
+    "water_riptusk": {
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_water_wall"
+    },
+    "water_aquaryn": {
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "water_tidecoil": {
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_water_current"
+    },
+    "water_mirejaw": {
+      "role_family": "DIVER",
+      "ultimate_id": "ultimate_water_diver"
+    },
+    "water_torrentoad": {
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "water_cragclaw": {
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_water_wall"
+    },
+    "water_riverdrake": {
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "water_sirenseal": {
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_water_current"
+    },
+    "water_mangrove_monitor": {
+      "role_family": "CHARGER",
+      "ultimate_id": "ultimate_water_charger"
+    },
+    "water_mosshell": {
+      "role_family": "WALL",
+      "ultimate_id": "ultimate_water_wall"
+    },
+    "water_abyssal_guardian": {
+      "role_family": "CURRENT",
+      "ultimate_id": "ultimate_abyssal_guardian"
+    }
+  },
+  "mastery": {
+    "_comment": "F23 prototype: character-scope per-creature mastery from host-resolved landed hits. Uses saturate at rank5; durable per-move event identities prevent snapshot/rejoin replay. Never changes move timing, range, cone or resource cost.",
+    "rank_thresholds": [
+      0,
+      25,
+      75,
+      150,
+      300
+    ],
+    "damage_per_rank": 0.05,
+    "max_known_moves": 128
+  },
+  "presentation_contract": {
+    "duration_seconds": 2.4,
+    "windup_seconds": 0.6,
+    "recovery_seconds": 1.8,
+    "host_action_identity": "action_id + character_id/creature_uid/encounter_id/generation, frozen by host acceptance",
+    "visual_seed": "No extra seed field exists. Deterministic visual randomness may derive from the SAME host action_id; it cannot mint damage/receipt identity.",
+    "arrival": "Same host accepted release/arrival owns actual damage/effect commit. Presentation is disposable; no animation callback can hit, spend or award.",
+    "cancellation": "Canonical producer must expire/cancel same accepted action on actor death, generation/body replacement, encounter end or host refusal. Visual owner tears down on that authority lifetime; no second registry.",
+    "rank_growth": "Frozen rank 1..5; +5% damage per additional rank; breakthrough signature damage +10% per completed ordinal; presentation count base+rank-1+breakthrough_count, size base*rankMultiplier*(1+0.05*breakthrough_count), impact base*rankMultiplier.",
+    "fixed": "No mastery/tier changes to geometry/timing/resource costs; named target cap20%maxHP; fullmeter100 spendonce; signature earns0meter.",
+    "f35_scope": "ultimates.json may index/describe canonical IDs and VFX assets only; no duplicate effect/stat/damage/slot/save authority.",
+    "producer_route": "F25 launch consumes full frozen action + trusted current_actor/action/generation + finite host-clock travel_seconds and actual anchors; old shared9479 vfx-only call is an unintegrated proposal.",
+    "gear_gain": "Same accepted action may hold gear_ultimate_gain_multiplier from canonical F33; host copies gear.json limits cap1.52 into meter_config.gear_gain_multiplier_cap. Default1, finite bounds; actual debit/receipt only."
+  },
+  "predecessor_owned_commit": "39ca697f876f463b555b022e183f0747a6ffdc20",
+  "successor_patch_sha256": "bebe434e2f3ecc7e15dec9dc9fa5ad5688407bd8b332136fbfc8486812ac550d"
+}
