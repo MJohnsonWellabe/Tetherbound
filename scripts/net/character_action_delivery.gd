@@ -23,6 +23,8 @@ static func valid(raw: Variant, schema_check: Callable,
 	if raw.delivery_id != ESSENCE.training_delivery_id(raw.world_namespace, raw.character_id) or raw.action_id != raw.receipt.sha256_text(): return false
 	if not raw.intent is Dictionary or not raw.host_context is Dictionary or not raw.before is Dictionary or not raw.after is Dictionary: return false
 	if raw.host_context.get("source_key") != raw.source_key or raw.before.get("character_id") != raw.character_id or raw.after.get("character_id") != raw.character_id: return false
+	if raw.action == "rematch_win" and (raw.host_context.get("world_namespace") != raw.world_namespace \
+		or raw.host_context.get("session_id") != raw.session_id): return false
 	# Re-run the exact canonical callback against the frozen pre-decision full
 	# record. An imported balance, alternative trait seed or changed choice
 	# cannot turn a saved row or packet into a different accepted operation.

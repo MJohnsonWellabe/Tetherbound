@@ -4241,6 +4241,34 @@
         ],
         "additionalProperties": false
       }
+    },
+    "rematch_cooldowns": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "world_namespace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "paid_at_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "next_eligible_seconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "world_namespace",
+          "paid_at_seconds",
+          "next_eligible_seconds"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": [

@@ -433,6 +433,20 @@ var _active_reground_left := ACTIVE_REGROUND_INTERVAL_SECONDS
 ## falling and the next stepping up, which is a gap the fight itself is not
 ## running in.
 var _trainer_spec: Dictionary = {}
+## F44 narrow composition hook. Host owner journals the actual final outcome
+## before this director discards its encounter/participant evidence.
+var _rematch_outcome_writer: Callable
+var _rematch_pending_outcome: Variant = null
+
+func bind_rematch_outcome_writer(writer: Callable) -> bool:
+	if not writer.is_valid() or trainer_battle_active(): return false
+	_rematch_outcome_writer = writer
+	return true
+
+func retry_rematch_resolution() -> bool:
+	if not _rematch_pending_outcome is bool: return false
+	_finish_trainer_battle(_rematch_pending_outcome)
+	return _rematch_pending_outcome == null
 var _tournament_members: Array[RefCounted] = []
 var _tournament_entry_condition: Array[Dictionary] = []
 ## The NPC who issued the challenge; their creatures are sent out from beside
@@ -5785,7 +5799,9 @@ func usable_ally_blocker() -> String:
 ## team, or with the player having nothing to fight with, would suspend
 ## exploration and never give it back.
 func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
-	var tournament_round := TOURNAMENT.is_round(str(spec.get("id", "")))
+	if spec.has("rematch") and (not _is_host() or not _rematch_outcome_writer.is_valid() \
+		or preload("res://scripts/repeatables/rematch_rules.gd").config().get("runtime_enabled") != true): return false
+	var tournament_round := not spec.has("rematch") and TOURNAMENT.is_round(str(spec.get("id", "")))
 	var selected: Array = []
 	if tournament_round:
 		var party := _party()
@@ -6194,6 +6210,14 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	if spec.has("rematch"):
+		# Exact director/host record is read by the bound writer. Never reuse a
+		# client trainer_victory intent or close/forget a win before durable save.
+		var retained: Variant = _rematch_outcome_writer.call(self, spec.duplicate(true), won) if _rematch_outcome_writer.is_valid() else {}
+		if not retained is Dictionary or retained.get("ok") != true or (won and retained.get("durable") != true):
+			_rematch_pending_outcome = won
+			return
+		_rematch_pending_outcome = null
 	var tournament_encounter_id := _tournament_host_encounter_id
 	if not won and not _tournament_members.is_empty():
 		# The tournament retry exception restores the entered three, not the
@@ -6220,7 +6244,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	# battle still ends with the player standing beside the fight they just won.
 	_has_trainer_battle_anchor = false
 	_set_exploration_active(true)
-	if won:
+	if won and not spec.has("rematch"):
 		_record_trainer_defeat(spec)
 		call_deferred("_present_trainer_victory", spec, victory_speaker)
 	# NOW the battle's one encounter record is over, and not one creature

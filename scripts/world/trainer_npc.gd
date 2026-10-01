@@ -777,6 +777,11 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 			creature.move_quick = quick
 		if charged != "":
 			creature.move_charged = charged
+		# F44 supplies these on its combat-only copy. Ordinary authored trainer
+		# entries retain their current defaults and pattern behavior.
+		for slot: String in ["utility", "ultimate"]:
+			if not str(moves.get(slot, "")).is_empty():
+				creature.set("move_" + slot, str(moves[slot]))
 	# G-2: the entry's optional per-creature behaviour override, read beside
 	# `moves` because it is the same kind of thing -- this individual fights
 	# differently, and nothing about the species changes.

@@ -9,8 +9,9 @@ const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const BOUNTIES := preload("res://scripts/world/bounty_board.gd")
+const REMATCH := preload("res://scripts/repeatables/rematch_rules.gd")
 const RECORD_FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
-const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "bounty_rotate", "bounty_event", "bounty_claim"]
+const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win"]
 
 
 static func stage(current: Dictionary, revision: int, action: String,
@@ -28,6 +29,8 @@ static func stage(current: Dictionary, revision: int, action: String,
 	var callback_before := current
 	if action in BOUNTIES.ACTIONS:
 		proposal = BOUNTIES.stage(current, revision, action, intent, context)
+	elif action == "rematch_win":
+		proposal = REMATCH.stage(current, revision, intent, context)
 	elif action in ["trait_teach", "trait_release"]:
 		if context.get("station_id") != "altar" or context.get("homestead") != true or context.get("in_combat") != false:
 			return deny("actual_altar_required")
