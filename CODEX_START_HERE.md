@@ -892,6 +892,8 @@ same criteria, numbered from zero (`F27#3`).
 ## 7. How to run the overnight build
 
 ### 7.1 Orchestration
+
+- **Owner operational direction (2026-09-30):** use separate visible local Codex tasks for whole-feature code/content generation, including all owned criteria, then batch the necessary integration/runtime proofs across coherent cuts. Owner-authorized feature worktrees use `tb/fNN`; one shared-file owner remains. Keep source-ready drafts distinct from accepted/main criteria. Replace finished task slots with the next available implementation, retaining prerequisite landing order. RD-36/RD-37 still require named player/save/co-op/visual proofs and independent strict verdicts; no blanket unit/full-CI per change.
 - One orchestrating Codex session per wave spawns sub-agents, one per lane. Each gets exact file
   ownership (§6), its criteria, and the stop conditions below. Senior model at high effort
   for design, integration, combat and look-dev. Lower tiers for mechanical data authoring
