@@ -1,6 +1,6 @@
 {
   "status": "SOURCE_CANDIDATE_NOT_MET",
-  "baseline": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "baseline": "6cee2372f0d488e25ddb4548c09043901fc32979",
   "shared_owner": "01a0f51f-eae6-7400-8a76-16b642c262ad",
   "runtime_enabled": false,
   "registry_adapter": "res://scripts/world/f32_source_actions.gd::stage",
@@ -33,6 +33,7 @@
     "expected_revision",
     "world_id",
     "realm",
+    "actor_realm == realm from authenticated live actor; never a client or full-record field",
     "host_day",
     "source_id",
     "source_generation",
@@ -41,6 +42,17 @@
     "in_combat=false",
     "modal_open=false"
   ],
+  "full_character_fields": [
+    "character_id",
+    "party",
+    "redesign_character",
+    "inventory",
+    "portal_escrow",
+    "vitals_escrow",
+    "equipment",
+    "realm_hearts"
+  ],
+  "character_shape": "Preserve admitted full eight fields. No persisted realm/flags additions. Four base refining recipes require no personal unlock; future personal recipe gates fail closed pending a bound eligibility provider.",
   "node_context": [
     "source_definition exact RenewableSiteCatalog.by_id result",
     "stock {revision,generation,next_ready_day}",

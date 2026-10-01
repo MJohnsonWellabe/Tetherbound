@@ -1,7 +1,7 @@
 extends RefCounted
 
 ## F32#1 pure one-unit plan for F31's present, tap-started Forge interaction.
-## Supply HOST WorldState.save_data()/PlayerState.save_data() snapshots and
+## Supply HOST world snapshot, full admitted character, authenticated live realm and
 ## the canonical recipes_forge.json contents, never request/client baselines.
 ## This helper is currently uncalled. It neither registers recipes nor starts
 ## a channel, spends inventory, grants items, writes state or creates receipts.
@@ -21,8 +21,7 @@ static func unit_plan(source: Dictionary, recipe_id: String, station_uid: String
 		return _refusal("invalid_recipe", "This refining recipe is unavailable.")
 	if realm != "meadows":
 		return _refusal("needs_homestead", "Refine at the homestead Forge.")
-	if not _identity(host_world.get("world_id")) or not _identity(host_character.get("character_id")) \
-			or host_character.get("realm") != realm:
+	if not _identity(host_world.get("world_id")) or not _identity(host_character.get("character_id")):
 		return _refusal("invalid_actor", "The character's world residency is unavailable.")
 	var station := _built_forge(host_world.get("placed_buildings"), station_uid, realm)
 	if station.is_empty():
@@ -39,12 +38,11 @@ static func unit_plan(source: Dictionary, recipe_id: String, station_uid: String
 	if not resolved is Dictionary or resolved.get("ok") != true or not _integer(resolved.get("effective_tier"), 0):
 		return _refusal("invalid_station", "The actual Forge's tier is unavailable.")
 	var tier := int(resolved["effective_tier"])
-	var flags := _personal_flags(host_character.get("flags"))
-	if not bool(flags.get("ok", false)):
-		return _refusal("invalid_actor", "The character's recipe state is unavailable.")
-	for prerequisite: String in _recipe_prerequisites(definition):
-		if not (flags["ids"] as Array).has(prerequisite):
-			return _refusal("recipe_locked", "Learn this refining recipe on your character.")
+	# These four base recipes are known from the start. The canonical full
+	# character has no realm/flags fields; realm is the authenticated live actor's.
+	# A future personal gate requires a bound eligibility provider before use.
+	if not _recipe_prerequisites(definition).is_empty():
+		return _refusal("recipe_locked", "The character's recipe eligibility is unavailable.")
 	# Base refinement deliberately needs no own/previous attachment. Every
 	# attachment costs its own refined ingot; gating that ingot would deadlock.
 	# Reading the host tier does not grant the guest any tier or blueprint.
@@ -126,13 +124,6 @@ static func _built_forge(records: Variant, uid: String, realm: String) -> Dictio
 			return {}
 		found = row.duplicate(true)
 	return found
-
-
-static func _personal_flags(payload: Variant) -> Dictionary:
-	# This is the existing ProgressionState.save_data() shape, not a new bag.
-	if not payload is Dictionary or not _string_ids(payload.get("flags")):
-		return {"ok": false}
-	return {"ok": true, "ids": (payload["flags"] as Array).duplicate()}
 
 
 static func _recipe_prerequisites(definition: Dictionary) -> Array[String]:

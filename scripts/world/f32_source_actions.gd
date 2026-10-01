@@ -33,7 +33,9 @@ static func stage(current: Dictionary, revision: int, op: String, intent: Dictio
 			or context.get("expected_revision") != revision or revision < 0 \
 			or context.get("registered_live_source") != true or context.get("in_range") != true \
 			or context.get("in_combat") != false or context.get("modal_open") != false \
-			or not _identity(context.get("world_id")) or context.get("realm") != current.get("realm") \
+			or not _identity(context.get("world_id")) \
+			or not ["meadows", "water", "cloudreach", "stormwood"].has(context.get("realm")) \
+			or context.get("actor_realm") != context.get("realm") \
 			or not _integer(context.get("host_day"), 1) or not _identity(context.get("source_generation")) \
 			or not _identity(context.get("source_id")) or not _action_id(intent.get("action_id")):
 		return _deny("canonical_live_source_required")
