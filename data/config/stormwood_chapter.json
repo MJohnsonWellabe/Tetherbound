@@ -456,15 +456,15 @@
           "id": "stormwood_waterward_revealed",
           "flag_id": "stormwood:waterward_revealed",
           "scope": "world",
-          "label": "Look over the cleared sky.",
-          "how": "Take in the cleared sky, then use your Home Key to reach the Crossing Hall HOME ARCH. Walk the village road back to Grandpa.",
+          "label": "Look beyond the broken storm.",
+          "how": "Return to the high platform for the newly clear view of water.",
           "region_id": "dynamo",
           "requires_flags": [
             "stormwood:legendary_offer_made"
           ],
           "completion_event": "aftermath:waterward_view",
-          "grants_flags": ["waterward_route_revealed", "stormwood:chapter_complete"],
-          "consumed_grants": {}
+          "grants_flags": ["realm_key_water", "waterward_route_revealed", "stormwood:chapter_complete"],
+          "consumed_grants": {"realm_key_water": "realm_gate_water_unlocked"}
         }
       ]
     }
