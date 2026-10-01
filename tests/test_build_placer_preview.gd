@@ -30,8 +30,18 @@ func test_public_preview_and_live_ghost_share_one_legality_core() -> void:
 	var source := FileAccess.get_file_as_string(SOURCE_PATH)
 	assert_true(source.contains("var preview := preview_placement(game, armed, raw_spot)"),
 		"the live ghost must consume the public preview result")
-	assert_true(source.contains("return evaluate_placement(game, armed, raw_spot, buildings"),
-		"the public wrapper must delegate to the shared legality core")
+	var wrapper_begin := source.find("func preview_placement(")
+	var wrapper_end := source.find("static func evaluate_placement(",wrapper_begin)
+	assert_true(wrapper_begin >= 0 and wrapper_end > wrapper_begin,
+		"the public wrapper and shared legality core must both exist")
+	if wrapper_begin < 0 or wrapper_end <= wrapper_begin: return
+	var wrapper := source.substr(wrapper_begin,wrapper_end-wrapper_begin)
+	assert_true(wrapper.contains("var source_spot := raw_spot"),
+		"ordinary placement must retain the caller's raw aim")
+	assert_true(wrapper.contains("var result := evaluate_placement(game, armed, source_spot, buildings, Callable(self, \"_ground_height\"), _yaw_deg)"),
+		"the public wrapper must evaluate the shared core before station policy")
+	assert_true(wrapper.contains("\n\treturn result\n"),
+		"the wrapper must return the evaluated result with its station postchecks")
 
 
 func test_preview_agrees_with_live_for_a_legal_floor() -> void:

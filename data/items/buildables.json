@@ -163,9 +163,7 @@
           "id": "stone",
           "n": 4
         }
-      ],
-      "home_only": true,
-      "station_id": "workbench"
+      ]
     },
     {
       "id": "storage",
@@ -227,6 +225,29 @@
         }
       ],
       "unlocked_by": "stormwood:arch_recipe_known"
+    }
+  ],
+  "_comment_F31": "Default-off catalogue: buildables is the exact legacy twelve-piece array. homestead_buildables contains the Workbench override and twenty-two typed station/attachment/Greenhouse definitions; ItemDB projects them only through StationRules.active_catalogue with stations.runtime_enabled exactly bool true. Material producers and typed visual/runtime acceptance remain OPEN.",
+  "homestead_buildables": [
+    {
+      "id": "workbench",
+      "name": "Workbench",
+      "category": "crafting",
+      "blurb": "A sturdy bench for heavier work, once there is heavier work to do.",
+      "mesh": "res://assets/props/quaternius_fantasy/Workbench.gltf",
+      "thumbnail": "res://assets/ui/icons/buildables/workbench.png",
+      "cost": [
+        {
+          "id": "wood",
+          "n": 10
+        },
+        {
+          "id": "stone",
+          "n": 4
+        }
+      ],
+      "home_only": true,
+      "station_id": "workbench"
     },
     {
       "id": "forge",
@@ -751,6 +772,5 @@
         }
       ]
     }
-  ],
-  "_comment_F31": "F31 source candidate: new stations/attachments refuse while stations.runtime_enabled=false. Workbench home-only policy activates with the same flag. Storage remains the existing world chest; no creature storage."
+  ]
 }

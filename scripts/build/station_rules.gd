@@ -88,6 +88,36 @@ static func homestead_id(id: String) -> bool:
 			if id == station_id+"_"+biome: return true
 	return false
 
+## ItemDB's canonical loader uses this projection. The JSON `buildables`
+## array remains the complete legacy catalogue, including its Workbench.
+## No proposed typed cost or procedural piece enters that active catalogue
+## until the exact runtime switch is enabled; the overlay never edits input.
+static func active_catalogue(catalogue: Dictionary, cfg: Dictionary) -> Array:
+	var raw: Variant = catalogue.get("buildables",[])
+	var legacy: Array = raw.duplicate(true) if raw is Array else []
+	var enabled: Variant = cfg.get("runtime_enabled")
+	if not enabled is bool or enabled != true: return legacy
+	var typed: Variant = catalogue.get("homestead_buildables")
+	if not typed is Array: return legacy
+	var result := legacy.duplicate(true)
+	var seen := {}
+	for row: Variant in typed:
+		if not row is Dictionary or not row.get("id") is String or seen.has(row.id) \
+				or not homestead_id(row.id) or not valid_cost(row.get("cost")): return legacy
+		var id: String = row.id
+		var attached := attachment(cfg,id)
+		if not station(cfg,id) and not cfg.get("auxiliary_buildables",[]).has(id) \
+				and attached.get("status") != "live": return legacy
+		seen[id]=true
+		var replace_at := -1
+		for index: int in result.size():
+			if result[index] is Dictionary and result[index].get("id") == id:
+				replace_at=index
+				break
+		if replace_at >= 0: result[replace_at]=row.duplicate(true)
+		else: result.append(row.duplicate(true))
+	return result
+
 static func bounds_config(cfg: Dictionary, id: String) -> Dictionary:
 	var def: Dictionary = cfg.pieces.get(id, attachment(cfg, id))
 	if not PLOT.numbers(def.get("size_m"), 3): return {}
