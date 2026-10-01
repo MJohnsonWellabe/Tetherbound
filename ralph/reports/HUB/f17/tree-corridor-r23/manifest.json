@@ -1,0 +1,72 @@
+{
+  "scope": "R23 same original tree full capsule geometry corridor implementation; SOURCE only",
+  "hub_parent": "ed33d3b375fdb4766a446e202e98cb9968f22141",
+  "logical_paths": [
+    "tools/_probe_scatter_tree_prompt_height.gd",
+    "tests/test_vegetation_human_prompt_height.gd"
+  ],
+  "logical_changes": {
+    "tools/_probe_scatter_tree_prompt_height.gd": {
+      "original_sha256": "d158bd34c23cc5051b04cbdbf42df836dea29cb6a3c81a6872cfa0ed7e489275",
+      "proposal_sha256": "e5731c54a6eb9ee4d55aefa2bf0956c42365d777e8994ab03cfa29946b48fa38"
+    },
+    "tests/test_vegetation_human_prompt_height.gd": {
+      "original_sha256": "b919716fa6008baa0cd5059b3538a739e343dd10d4c65eabbb42908e2b7173a1",
+      "proposal_sha256": "73c06f132eee94a633786d58451c7e878d31fea50784a30be3f9562ce7d3391d"
+    }
+  },
+  "checks": 75,
+  "native": "UNRUN; prior ROOT R22 FAIL preserved",
+  "extra_collision_queries": 0,
+  "extra_frames": 0,
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "native-failed/smoke.log": {
+      "bytes": 46864,
+      "sha256": "7d7de091fbf727de1af2fe9430f8183fe5e3b0566bfc064f98cf0366a7ba72d7"
+    },
+    "native-failed/tree-geometry.json": {
+      "bytes": 23583,
+      "sha256": "a2865c7c39c7be4d3b10d185f5ad90f1d9b81044df0ed7a1d53a8a086294073b"
+    },
+    "originals/tests/test_vegetation_human_prompt_height.gd": {
+      "bytes": 5005,
+      "sha256": "b919716fa6008baa0cd5059b3538a739e343dd10d4c65eabbb42908e2b7173a1"
+    },
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 18132,
+      "sha256": "d158bd34c23cc5051b04cbdbf42df836dea29cb6a3c81a6872cfa0ed7e489275"
+    },
+    "proposal/tests/test_vegetation_human_prompt_height.gd": {
+      "bytes": 9289,
+      "sha256": "73c06f132eee94a633786d58451c7e878d31fea50784a30be3f9562ce7d3391d"
+    },
+    "proposal/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 23952,
+      "sha256": "e5731c54a6eb9ee4d55aefa2bf0956c42365d777e8994ab03cfa29946b48fa38"
+    },
+    "repair.patch": {
+      "bytes": 15118,
+      "sha256": "3739cda230f4e74eb214d292c3ff4590da90b3a6e9d937c3236a2a06d7de460d"
+    },
+    "review-context.json": {
+      "bytes": 3529,
+      "sha256": "3e637c026d790793e45720891b5f8635dbb43e48b597e1d3e84102c081231256"
+    },
+    "source-check.py": {
+      "bytes": 17517,
+      "sha256": "21db206e1c9fdfead7fcaf6dd404d1b665bac12f0f7bb346bc08ab9a28c470f8"
+    },
+    "source-results.json": {
+      "bytes": 68194,
+      "sha256": "6009d370a6f37058f0264a8e46b02ce7bb5cb70ac48a200971ce607dfe91cb16"
+    },
+    "unchanged-paths.json": {
+      "bytes": 950,
+      "sha256": "e82b8ee9c7d1863999ce6e151760099fe9358e4cb0458964aa71f7f987e546dd"
+    }
+  }
+}

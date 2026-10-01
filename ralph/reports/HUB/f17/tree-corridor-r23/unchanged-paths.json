@@ -1,0 +1,11 @@
+{
+  "scripts/world/playground_heightfield.gd": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf",
+  "scripts/world/vegetation.gd": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a",
+  "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+  "scenes/player/player.tscn": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+  "tests/helpers/opening_geometry_navigator.gd": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2",
+  "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+  "data/config/movement.json": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+  "data/scatter/playground/region_0_-1.bin": "25cd556cdd008fa464bde19ba8828f86fb21c16056fc5a6c1a296b33c02b595c",
+  "project.godot": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a"
+}
