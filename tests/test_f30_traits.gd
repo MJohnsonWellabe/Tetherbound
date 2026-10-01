@@ -180,7 +180,7 @@ func test_teach_debit_slots_overwrite_and_hardy_fraction_atomically() -> void:
 	assert_eq(bag.count("essence_ground"),90)
 	assert_eq(bag.count("trait_seed_hardy"),1)
 	assert_eq(result.state.redesign_character.creatures["caught-a"].taught_traits,{"1":"hardy"})
-	var replaced := result.state.party[0].duplicate(true)
+	var replaced: Dictionary = result.state.party[0].duplicate(true)
 	replaced.merge(result.state.redesign_character.creatures["caught-a"],true)
 	assert_false(TRAITS.effective_ids(replaced).has("gentle"),"overwritten trait remained active")
 	assert_almost_eq(result.state.party[0].hp/result.state.party[0].max_hp,0.5)

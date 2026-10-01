@@ -24,6 +24,13 @@ The queued GDScript witness parses the actual JSON and checks malformed,
 missing, boolean, nonfinite and fractional gates plus numeric tier lookup.
 It was authored but not run here; coordinator diagnostic verification is
 pending. No new runtime acceptance credit is claimed.
+The coordinator confirmed the config now loads valid rules and observed the
+real inactive Gentle/Sturdy failures; Foundation owns their consumer repair.
+Its selected witness also reported `test_f30_traits.gd:183` could not infer
+`replaced` from a nested Variant party entry. That local now explicitly uses
+`Dictionary`; assertions/cases are unchanged. Remaining inferred locals use
+literals, declared-return helpers or duplicate known dictionaries, with no
+other nested Variant inference found. Coordinator test parse remains pending.
 Anchor: CODEX_START_HERE §6 F30, RD-30/§8.1, TRAINING §6,
 CREATURES §3 and ACCEPTANCE F30#0–#4. Effective permissions verified from
 session context: danger-full-access, approval never. No Godot, imports,
