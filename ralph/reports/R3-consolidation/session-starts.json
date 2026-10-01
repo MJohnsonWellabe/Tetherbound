@@ -16,7 +16,13 @@
         "type": "active",
         "activeFlags": []
       },
-      "archived": false
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "c82a9d10d5122ff452b908b6df378606250e894f",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit"
     },
     {
       "thread_id": "01a0f8df-d2a5-72b1-b5ce-9fc75530db55",
@@ -29,7 +35,13 @@
         "type": "active",
         "activeFlags": []
       },
-      "archived": false
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "c130f340309b981eb119080548654928049cb6bd",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit"
     },
     {
       "thread_id": "01a0f8e0-c591-77a2-a145-b0510dc61a1c",
@@ -42,7 +54,13 @@
         "type": "active",
         "activeFlags": []
       },
-      "archived": false
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "55f6300154b910f945f0a9d0c75cf0339798bac6",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit"
     },
     {
       "thread_id": "01a0f8e1-9d29-78f2-b3be-6a513313932b",
@@ -55,7 +73,13 @@
         "type": "active",
         "activeFlags": []
       },
-      "archived": false
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "1ac778d726d1f74d39ded74199ff910e1eaf1f94",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit"
     },
     {
       "thread_id": "01a0f8e2-2fb7-7ae2-9039-4abaa404eb47",
@@ -83,5 +107,11 @@
       },
       "archived": false
     }
-  ]
+  ],
+  "root_source_review": {
+    "F45": "Optional additive personal carrier; bounty/rematch staging retained; producer/durability dependencies pending",
+    "F46": "Personal scope/modal ownership/authentic arrival gate retained; F45 journal reader combined via three-way merge",
+    "F47": "Analysis only; ROOT corrected legacy/candidate curve mix in0fa57dec9a;15 focused Node checks pass; independent review pending",
+    "F48": "Witnesses never repair/save observed state; real OS.kill guest restart; actual file/participant/namespace receipts; missing exact loss windows fail"
+  }
 }
