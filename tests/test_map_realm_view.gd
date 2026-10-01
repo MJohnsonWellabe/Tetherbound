@@ -38,9 +38,9 @@ var _nodes: Array[Node] = []
 ## Synthetic mode fixture; it never enables the shipping Session config or
 ## grants an unlock. The real Game predicate still reads this fixture's owner.
 class PortalSessionFixture extends Node:
-	var ready := false
+	var portal_ready := false
 	func portal_runtime_ready() -> bool:
-		return ready
+		return portal_ready
 
 
 func after_each() -> void:
@@ -54,7 +54,7 @@ func _game(portal_mode: bool = true) -> Node:
 	game.reset_for_new_game()
 	_nodes.append(game)
 	var session := PortalSessionFixture.new()
-	session.ready = portal_mode
+	session.portal_ready = portal_mode
 	game.session = session
 	_nodes.append(session)
 	return game
