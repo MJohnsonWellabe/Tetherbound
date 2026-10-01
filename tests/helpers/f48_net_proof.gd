@@ -8,8 +8,54 @@ const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button"]
 const TRANSACTIONS := ["craft", "release", "feast", "key", "relic", "essence_spend"]
 const CUTS := ["before_input", "after_settlement", "after_host_write_before_delivery", "after_owner_write_before_ack"]
 const REPLAY_FIELDS := ["inventory", "redesign_character", "satchel_escrow"]
+const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 var _profile: Dictionary = {}
 var _profile_errors: Array[String] = []
+var _boundary_pending: Dictionary = {}
+
+func _process_guard(pid: int, identity: String = "", stop: bool = false) -> Dictionary:
+	var python := OS.get_environment("TB_F48_PROCESS_PYTHON")
+	if python.is_empty(): python = "python" if OS.get_name() == "Windows" else "python3"
+	var arguments := PackedStringArray([ProjectSettings.globalize_path("res://tools/net/f48_process_guard.py"),
+		"--pid", str(pid), "--image", OS.get_executable_path()])
+	if not identity.is_empty(): arguments.append_array(["--identity", identity])
+	if stop: arguments.append("--stop")
+	var output: Array = []
+	var code := OS.execute(python, arguments, output, true)
+	var raw: Variant = JSON.parse_string("".join(output))
+	if code != 0 or not raw is Dictionary or raw.get("ok") != true or raw.get("pid") != pid:
+		return {"ok": false, "pid": pid, "error": "Native process witness failed", "exit_code": code, "output": output}
+	return raw
+
+func _pump_once() -> void:
+	# step() pumps while its guest is awaiting a verdict. Service the host's
+	# blocked synchronous boundary first, so the coordinator/host cannot deadlock.
+	if not _boundary_pending.is_empty() and not _boundary_pending.get("serviced", false):
+		var path: String = _boundary_pending.path
+		var marker: Variant = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+		if marker is Dictionary:
+			_boundary_pending.serviced = true
+			var matches: bool = marker.get("token") == _boundary_pending.token \
+				and marker.get("guest_pid") == _boundary_pending.pid \
+				and marker.get("coordinator_pid") == OS.get_process_id() \
+				and marker.get("process_identity") == _boundary_pending.identity \
+				and marker.get("phase") == _boundary_pending.phase \
+				and marker.get("transaction") == _boundary_pending.transaction \
+				and marker.get("observation", {}).get("character_id") == _boundary_pending.character \
+				and marker.get("observer_pid") == _boundary_pending.observer_pid \
+				and not str(marker.get("observation", {}).get("delivery_id", "")).is_empty() \
+				and not str(marker.get("observation", {}).get("receipt", "")).is_empty()
+			var exit_witness := _process_guard(_boundary_pending.pid, _boundary_pending.identity, true) if matches \
+				else {"ok": false, "error": "Boundary marker identity mismatch; target not killed"}
+			var ack := {"token": _boundary_pending.token, "guest_pid": _boundary_pending.pid,
+				"coordinator_pid": OS.get_process_id(), "process_identity": _boundary_pending.identity,
+				"marker_sha256": FileAccess.get_sha256(path), "exit": exit_witness}
+			_boundary_pending.ack = ack
+			DETACHED.publish(path + ".ack.json", ack)
+			if exit_witness.get("ok") == true and exit_witness.get("exited") == true:
+				_peers[_boundary_pending.peer].exited = true
+				_peers[_boundary_pending.peer].f48_exit_confirmed = ack
+	super._pump_once()
 
 func suite() -> String:
 	return "loop"
@@ -213,15 +259,22 @@ func _behind(steps: Array) -> void:
 	steps.append_array(_route("behind_enter_tidewake", 1))
 	honest.since = "admitted"
 	honest.equals = {"realm": "water"}
-	honest.unchanged = ["redesign_character/portal_unlocks", "redesign_character/relics_held", "redesign_character/transaction_receipts"]
+	honest.unchanged = ["redesign_character/portal_unlocks", "redesign_character/relics_held"]
 	honest.item_delta = {"tidewake_portal_key": 0}
 	honest.guest_world_empty = true
 	honest.portal_enter = true
+	honest.behind_arrival = true
 	steps.append(_entry(1, "wait", {"frames": 180}))
 	steps.append(_entry(1, "f48_assert", honest))
+	steps.append(_entry(1, "f48_witness", {"remember": "behind_arrived"}))
 	steps.append(_entry(1, "leave"))
 	steps.append(_entry(1, "production_join", {"returning_route": true}))
-	steps.append(_entry(1, "f48_assert", honest))
+	var rejoined := honest.duplicate(true)
+	rejoined.since = "behind_arrived"
+	rejoined.erase("behind_arrival")
+	rejoined.erase("portal_enter")
+	rejoined.unchanged = ["redesign_character/portal_unlocks", "redesign_character/relics_held", "redesign_character/transaction_receipts"]
+	steps.append(_entry(1, "f48_assert", rejoined))
 
 func _transactions(steps: Array) -> void:
 	var transaction := _argument("transaction", "")
@@ -263,15 +316,19 @@ func _argument(key: String, fallback: String) -> String:
 
 func _restart_peer(i: int, scene: String) -> Dictionary:
 	# Existing restart sends quit first. F48 must also test a real process crash.
-	# OS.kill is Godot's native Windows/POSIX API; no Unix kill command on Windows.
+	# Kernel process exit is confirmed before the inherited restart is entered.
 	if i <= 0 or i >= _peers.size(): return {"verdict": "FAIL", "detail": "F48 crashes only an admitted guest"}
 	var old: Dictionary = _peers[i]
 	var pid := int(old.get("pid", -1))
 	old.quit_sent = true
-	if pid <= 0 or (OS.is_process_running(pid) and OS.kill(pid) != OK): return {"verdict": "FAIL", "detail": "Could not kill actual guest process"}
-	var deadline := Time.get_ticks_msec() + 10000
-	while OS.is_process_running(pid) and Time.get_ticks_msec() < deadline: await process_frame
-	if OS.is_process_running(pid): return {"verdict": "FAIL", "detail": "Guest process did not die within 10 seconds"}
+	if not old.has("f48_exit_confirmed"):
+		var before := _process_guard(pid)
+		if before.get("ok") != true: return {"verdict": "FAIL", "detail": "Cannot identify original live guest process", "data": before}
+		var stopped := _process_guard(pid, str(before.identity), true)
+		if stopped.get("ok") != true or stopped.get("exited") != true:
+			return {"verdict": "FAIL", "detail": "Native guest process exit not confirmed", "data": stopped}
+		old.f48_exit_confirmed = stopped
+	old.exited = true
 	var result: Dictionary = await super._restart_peer(i, scene)
 	if result.get("verdict") == "PASS": result.detail = "HARD CRASH (no graceful save): " + str(result.detail)
 	return result
@@ -284,9 +341,18 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 	var token := "%s_%s_%d" % [args.transaction, args.phase, pid]
 	var path := _proof_out.path_join("f48-boundaries").path_join(token + ".json")
 	var observer_peer := 0 if args.phase == "after_host_write_before_delivery" else peer
+	var before := _process_guard(pid)
+	if before.get("ok") != true:
+		check(false, "F48 boundary cannot identify original guest process: " + str(before))
+		return false
+	_boundary_pending = {"path": path, "token": token, "pid": pid, "identity": str(before.identity),
+		"peer": peer, "observer_pid": int(_peers[observer_peer].pid), "character": character,
+		"phase": args.phase, "transaction": args.transaction, "serviced": false}
 	var armed: Dictionary = await step(observer_peer, "f48_arm_boundary", {"transaction": args.transaction,
-		"phase": args.phase, "guest_pid": pid, "character_id": character, "token": token})
+		"phase": args.phase, "guest_pid": pid, "character_id": character, "token": token,
+		"coordinator_pid": OS.get_process_id(), "process_identity": str(before.identity)})
 	if armed.get("verdict") != "PASS":
+		_boundary_pending = {}
 		check(false, "F48 boundary arm failed: " + str(armed.get("detail")))
 		return false
 	# Suppress only the expected process exit while this boundary is armed.
@@ -304,20 +370,28 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 	var evidence: Variant = null
 	while not input_failed and Time.get_ticks_msec() < deadline:
 		evidence = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
-		if evidence is Dictionary and evidence.get("kill_failed", false) == true: break
-		if not OS.is_process_running(pid) and evidence is Dictionary \
-			and (args.phase != "after_host_write_before_delivery" or evidence.get("guest_exit_observed") == true): break
+		if _boundary_pending.get("serviced", false):
+			if args.phase != "after_host_write_before_delivery" or FileAccess.file_exists(path + ".resume.json"): break
 		await process_frame
 		_pump_once()
-	var ok := not input_failed and not OS.is_process_running(pid) and evidence is Dictionary \
+	var ack: Dictionary = _boundary_pending.get("ack", {})
+	var durable_ack: Variant = JSON.parse_string(FileAccess.get_file_as_string(path + ".ack.json")) if FileAccess.file_exists(path + ".ack.json") else null
+	var resume: Variant = JSON.parse_string(FileAccess.get_file_as_string(path + ".resume.json")) if FileAccess.file_exists(path + ".resume.json") else null
+	var exit_confirmed: bool = durable_ack is Dictionary and durable_ack == ack \
+		and ack.get("exit", {}).get("ok") == true and ack.get("exit", {}).get("exited") == true \
+		and ack.get("exit", {}).get("identity") == before.identity and ack.get("marker_sha256") == FileAccess.get_sha256(path)
+	var host_resume_confirmed: bool = args.phase != "after_host_write_before_delivery" or (resume is Dictionary \
+		and resume.get("token") == token and resume.get("marker_sha256") == ack.get("marker_sha256") \
+		and resume.get("ack_sha256") == FileAccess.get_sha256(path + ".ack.json") \
+		and resume.get("observer_pid") == int(_peers[observer_peer].pid))
+	var ok := not input_failed and exit_confirmed and host_resume_confirmed and evidence is Dictionary \
 		and evidence.get("guest_pid") == pid and evidence.get("token") == token and evidence.get("phase") == args.phase \
-		and evidence.get("kill_failed", false) != true \
-		and (args.phase != "after_host_write_before_delivery" or evidence.get("guest_exit_observed") == true) \
 		and evidence.get("transaction") == args.transaction and evidence.get("observation", {}).get("character_id") == character \
 		and not str(evidence.get("observation", {}).get("delivery_id", "")).is_empty() \
 		and not str(evidence.get("observation", {}).get("receipt", "")).is_empty()
 	check(ok, "F48 original production boundary and hard guest process death: " + token)
 	_rows.append({"index": index, "peer": peer, "what": "f48_boundary_transaction", "label": entry.get("label", ""),
 		"verdict": "PASS" if ok else "FAIL", "ok": ok, "expect": "PASS", "expect_data": {}, "detail": path})
-	if not ok and OS.is_process_running(pid): _peers[peer].quit_sent = false
+	if not ok and not exit_confirmed: _peers[peer].quit_sent = false
+	_boundary_pending = {}
 	return ok

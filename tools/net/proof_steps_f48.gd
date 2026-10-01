@@ -3,9 +3,9 @@ extends RefCounted
 ## Read-only F48 witnesses and ordinary input. Never saves during observation:
 ## an observation must not repair a missing durable write before asserting it.
 ## All receipt records below are read from production files, never constructed.
-const DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 const UIDS := preload("res://scripts/data/redesign_state.gd")
 const ATOMIC := preload("res://scripts/save/atomic_save_file.gd")
+const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
@@ -32,16 +32,21 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var pid := int(args.get("guest_pid", -1))
 	var character := str(args.get("character_id", ""))
 	var token := str(args.get("token", ""))
+	var coordinator_pid := int(args.get("coordinator_pid", -1))
+	var process_identity := str(args.get("process_identity", ""))
 	if writer == null or game == null or not writer.has_signal("transaction_boundary") or not actions.has(transaction) \
 		or phase not in ["after_host_write_before_delivery", "after_owner_write_before_ack"] \
-		or pid <= 0 or character.is_empty() or token.is_empty() or tree.has_meta("f48_boundary_armed"): return _result(false, "Exact production boundary cannot be armed")
+		or pid <= 0 or coordinator_pid <= 0 or coordinator_pid == pid or process_identity.is_empty() \
+		or character.is_empty() or token.is_empty() or tree.has_meta("f48_boundary_armed"): return _result(false, "Exact production boundary cannot be armed")
 	if (phase == "after_host_write_before_delivery") != bool(game.call("is_host")) \
 		or (phase == "after_owner_write_before_ack" and (pid != OS.get_process_id() or character != game.local.character_id)):
 		return _result(false, "Boundary observer is not the actual host/owner process")
 	var output := OS.get_environment("TB_PROOF_OUT")
 	if output.is_empty(): return _result(false, "Detached boundary evidence directory unavailable")
 	var path := output.path_join("f48-boundaries").path_join(token.validate_filename() + ".json")
-	if FileAccess.file_exists(path): return _result(false, "Boundary token already exists; fresh output required")
+	var ack_path := path + ".ack.json"
+	if FileAccess.file_exists(path) or FileAccess.file_exists(ack_path) or FileAccess.file_exists(path + ".resume.json"):
+		return _result(false, "Boundary token already exists; fresh output required")
 	var world_ref := weakref(game.world)
 	var namespace_id := str(game.world.reward_delivery_namespace)
 	var epoch := str(game.session.call("_altar_current_epoch"))
@@ -58,31 +63,28 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if transaction == "key" and observation.get("biome") != "tidewake": return
 		var evidence := {"token": token, "phase": phase, "transaction": transaction,
 			"guest_pid": pid, "observer_pid": OS.get_process_id(), "session_epoch": epoch,
+			"coordinator_pid": coordinator_pid, "process_identity": process_identity,
 			"observation": observation.duplicate(true), "files": _observe(tree)}
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
-		var file := FileAccess.open(path, FileAccess.WRITE)
-		if file == null: return
-		file.store_string(JSON.stringify(evidence, "\t"))
-		file.flush()
-		file.close()
+		if not DETACHED.publish(path, evidence): return
 		tree.set_meta("f48_boundary_fired", true)
-		# Hard death occurs inside the synchronous production writer edge,
-		# before it can proceed to delivery/ACK. No graceful quit or autosave.
-		if OS.kill(pid) != OK:
-			evidence.kill_failed = true
-			var failed := FileAccess.open(path, FileAccess.WRITE)
-			if failed != null:
-				failed.store_string(JSON.stringify(evidence, "\t"))
-				failed.close()
-			return
-		if pid != OS.get_process_id():
-			var deadline := Time.get_ticks_msec() + 2000
-			while OS.is_process_running(pid) and Time.get_ticks_msec() < deadline: OS.delay_msec(1)
-			evidence.guest_exit_observed = not OS.is_process_running(pid)
-			var confirmed := FileAccess.open(path, FileAccess.WRITE)
-			if confirmed != null:
-				confirmed.store_string(JSON.stringify(evidence, "\t"))
-				confirmed.close()
+		# The coordinator owns the child. It reads this immutable exact-cut
+		# marker while pumping the pending input step, kills through a kernel
+		# process handle/pidfd, waits for real exit, then writes a correlated ACK.
+		# Neither Godot OS.kill nor its process-local PID map is an exit witness.
+		var marker_sha := FileAccess.get_sha256(path)
+		var deadline := Time.get_ticks_msec() + 10000
+		while Time.get_ticks_msec() < deadline:
+			var ack: Variant = JSON.parse_string(FileAccess.get_file_as_string(ack_path)) if FileAccess.file_exists(ack_path) else null
+			if ack is Dictionary and ack.get("token") == token and ack.get("marker_sha256") == marker_sha \
+				and ack.get("coordinator_pid") == coordinator_pid and ack.get("guest_pid") == pid \
+				and ack.get("process_identity") == process_identity:
+				if ack.get("exit", {}).get("ok") == true and ack.get("exit", {}).get("exited") == true \
+					and ack.get("exit", {}).get("identity") == process_identity:
+					DETACHED.publish(path + ".resume.json", {"token": token, "marker_sha256": marker_sha,
+						"ack_sha256": FileAccess.get_sha256(ack_path), "observer_pid": OS.get_process_id()})
+				return
+			OS.delay_msec(1)
 	writer.connect("transaction_boundary", observer)
 	tree.set_meta("f48_boundary_armed", observer)
 	return _result(true, "Armed real writer boundary for original admitted character; no state mutation")
@@ -156,7 +158,10 @@ static func _participants(tree: SceneTree, args: Dictionary) -> Dictionary:
 		var row: Variant = registry.call("row", int(peer))
 		if not row is Dictionary: return _result(false, "Participant has no stable identity")
 		found.append(str(row.get("character_id", "")))
-	return _result(_unique(found).size() == wanted.size() and found.all(func(id: Variant) -> bool: return wanted.has(id)),
+	var exact: bool = _unique(found).size() == wanted.size() and found.all(func(id: Variant) -> bool: return wanted.has(id)) \
+		and not str(data.get("id", "")).is_empty() and data.get("id") == data.get("bound_id")
+	if exact: tree.set_meta("f48_boss_encounter", str(data.id))
+	return _result(exact,
 		"Actual host participant identities: " + str(found), data)
 
 static func _watch_portal(tree: SceneTree) -> Dictionary:
@@ -203,6 +208,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if not prior.is_empty():
 		if now.character_id != prior.character_id or now.world_namespace != prior.world_namespace:
 			errors.append("Stable character/world-instance identity changed")
+	if args.get("behind_arrival") == true: _check_behind_arrival(tree, now, prior, errors)
 	for payload: String in ["memory", "disk"]:
 		var state: Dictionary = now[payload]
 		var party: Array = UIDS.uids(state.get("party", []))
@@ -265,7 +271,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if args.get("boss_rewards") == true:
 		_check_boss(now, errors)
 	if args.has("participants"):
-		_check_host_journal(now, args.participants, errors)
+		_check_host_journal(now, args.participants, str(tree.get_meta("f48_boss_encounter", "")), errors)
 	if args.get("guest_world_empty") == true:
 		var admitted: Dictionary = tree.get_meta("f48_witness_admitted", {})
 		if now.owns_world or admitted.is_empty() or now.world_files != admitted.get("world_files"):
@@ -284,30 +290,84 @@ static func _check_boss(now: Dictionary, errors: Array[String]) -> void:
 	for scope: String in ["memory", "disk"]:
 		var state: Dictionary = now[scope]
 		if _counts(state).get("tidewake_portal_key", 0) != 1: errors.append(scope + ": participant must own exactly one Tidewake key")
-		if not state.get("redesign_character", {}).get("relics_held", []).has("meadows"):
+		if state.get("redesign_character", {}).get("relics_held", []).count("meadows") != 1:
 			errors.append(scope + ": participant lacks personal Meadows relic")
-		var escrow: Dictionary = state.get("satchel_escrow", {})
-		for source: String in ["trainer:warden_aldis:item:tidewake_portal_key", "trainer:warden_aldis:relic:meadows"]:
-			var id := DELIVERY.delivery_id(now.world_namespace, source, now.character_id)
-			var row: Variant = escrow.get(id)
-			if not row is Dictionary or row.get("character_id") != now.character_id or row.get("source") != source \
-					or row.get("world_namespace") != now.world_namespace or row.get("status") != "settled":
-				errors.append(scope + ": missing exact settled personal delivery " + source)
+		var receipt := "defeat:boss_warden_aldis:" + str(now.character_id)
+		if state.get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
+			errors.append(scope + ": missing exactly one protected personal boss receipt")
 
-static func _check_host_journal(now: Dictionary, participants: Array, errors: Array[String]) -> void:
+static func _check_host_journal(now: Dictionary, participants: Array, encounter: String, errors: Array[String]) -> void:
 	if not now.owns_world or now.disk_world.is_empty():
 		errors.append("Actual host world file unavailable")
 		return
-	if participants.size() < 2 or _unique(participants).size() != participants.size(): errors.append("Distinct participant identities required")
+	if participants.size() < 2 or _unique(participants).size() != participants.size() or encounter.is_empty():
+		errors.append("Distinct actual participants and observed live boss encounter required")
 	for scope: String in ["world", "disk_world"]:
 		var deliveries: Dictionary = now[scope].get("reward_deliveries", {})
+		var event_matches := 0
+		for raw: Variant in deliveries.values():
+			if not raw is Dictionary or raw.get("kind") != "foundation_event" \
+				or raw.get("source_id") != "boss:warden_aldis:" + encounter: continue
+			if raw.get("version") != 1 or raw.get("status") != "retained" or raw.get("world_namespace") != now.world_namespace \
+				or raw.get("world_id") != now.world_id or str(raw.get("session_id", "")).is_empty():
+				errors.append(scope + ": malformed retained actual boss event"); continue
+			var identity := "foundation_event:" + JSON.stringify([now.world_namespace, raw.session_id, raw.source_id]).sha256_text()
+			if raw.get("delivery_id") != identity or not deliveries.has(identity) or deliveries[identity] != raw:
+				errors.append(scope + ": retained boss event identity mismatch"); continue
+			var duties: Variant = raw.get("duties")
+			if not duties is Array or duties.size() != participants.size():
+				errors.append(scope + ": retained event does not contain one duty per participant"); continue
+			var found: Array = []
+			for duty: Variant in duties:
+				if not duty is Dictionary or duty.get("action") != "boss_relic" \
+					or not participants.has(duty.get("character_id")) \
+					or duty.get("intent") != {"trainer_id": "warden_aldis", "biome": "meadows", "encounter_id": encounter} \
+					or duty.get("context", {}).get("source_key") != "boss:warden_aldis" \
+					or duty.get("context", {}).get("validated_host_outcome") != "win" \
+					or duty.get("context", {}).get("realm") != "meadows" \
+					or duty.get("context", {}).get("encounter_id") != encounter \
+					or not duty.get("context", {}).get("participants") is Array:
+					errors.append(scope + ": boss duty is not bound to the observed outcome"); continue
+				var bound: Array = duty.context.participants
+				if bound.size() != participants.size() or _unique(bound).size() != bound.size() \
+					or not bound.all(func(id: Variant) -> bool: return participants.has(id)):
+					errors.append(scope + ": boss duty participant identity mismatch")
+				found.append(duty.character_id)
+			if found.size() != participants.size() or _unique(found).size() != found.size():
+				errors.append(scope + ": missing or duplicated stable boss participant duty")
+			event_matches += 1
+		if event_matches != 1: errors.append(scope + ": exactly one retained observed boss outcome required")
 		for character: String in participants:
-			for source: String in ["trainer:warden_aldis:item:tidewake_portal_key", "trainer:warden_aldis:relic:meadows"]:
-				var id := DELIVERY.delivery_id(now.world_namespace, source, character)
-				var row: Variant = deliveries.get(id)
-				if not row is Dictionary or row.get("character_id") != character or row.get("source") != source \
-						or row.get("world_namespace") != now.world_namespace or row.get("status") != "accepted":
-					errors.append(scope + ": missing exact accepted participant delivery " + character + "/" + source)
+			var id := "creature_training:" + JSON.stringify([now.world_namespace, character]).sha256_text()
+			var row: Variant = deliveries.get(id)
+			var receipt := "defeat:boss_warden_aldis:" + character
+			# This carrier is overwritten by each later accepted action. Its full
+			# portable after-state must preserve the original protected boss receipt.
+			if not row is Dictionary or row.get("version") not in [1, 2, 3] or row.get("kind") != "creature_training" or row.get("delivery_id") != id \
+				or row.get("character_id") != character or row.get("world_namespace") != now.world_namespace \
+				or row.get("world_id") != now.world_id or row.get("status") != "accepted" \
+				or row.get("after", {}).get("character_id") != character \
+				or row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
+				errors.append(scope + ": missing durable accepted personal boss receipt " + character)
+
+static func _check_behind_arrival(tree: SceneTree, now: Dictionary, prior: Dictionary, errors: Array[String]) -> void:
+	if prior.is_empty(): errors.append("Behind arrival requires the admitted before witness"); return
+	var permits: Array[String] = []
+	for result: Dictionary in tree.get_meta("f48_portal_results", []):
+		if result.get("kind") == "portal_enter" and result.get("ok") == true and result.get("saved") == true \
+			and result.get("durable") == true and result.get("arrival_applied") == true \
+			and result.get("character_id") == now.character_id and result.get("world_instance_id") == now.world_namespace \
+			and not str(result.get("request_id", "")).is_empty() \
+			and not str(result.get("permit_id", "")).is_empty(): permits.append(str(result.permit_id))
+	if permits.size() != 1: errors.append("Exactly one real saved arrival permit result required"); return
+	var receipt := "craft:portal_arrival_%s:%s" % [permits[0], now.character_id]
+	for scope: String in ["memory", "disk"]:
+		var before: Array = prior[scope].get("redesign_character", {}).get("transaction_receipts", [])
+		var actual: Array = now[scope].get("redesign_character", {}).get("transaction_receipts", [])
+		var expected := before.duplicate()
+		if expected.has(receipt): errors.append(scope + ": arrival permit was already paid before travel")
+		expected.append(receipt)
+		if actual != expected: errors.append(scope + ": behind travel must append only its actual bound arrival receipt")
 
 static func _files(path: String) -> Dictionary:
 	var found := {}
