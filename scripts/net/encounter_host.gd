@@ -1482,7 +1482,7 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 ## inactive actor binding. No current participant or unsettled damage is reset.
 func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 		character_revision: int, world_namespace: String, world_id: String) -> Dictionary:
-	var full_action := training.get("version") == 2 and training.get("kind") == "creature_training"
+	var full_action: bool = training.get("version") == 2 and training.get("kind") == "creature_training"
 	if not TRAINING_WORLD.training_row_valid(training, world_namespace, world_id) \
 		or (not full_action and not training.action in ["altar_spend", "wild_defeat"]) or admitted.get("character_id") != training.character_id \
 		or character_revision < int(training.character_revision) or not admitted.get("party") is Array \
@@ -1523,7 +1523,7 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 							or int(actor.get("settled_revision", -1)) != int(actor.get("revision", -2)):
 							return {"ok":false,"code":"retired_actor_lineage_conflict"}
 						continue
-					var releasing := full_action and training.action == "trait_release" and training.intent.creature_uid == uid \
+					var releasing: bool = full_action and training.action == "trait_release" and training.intent.creature_uid == uid \
 						and old_party.has(uid) and not next_party.has(uid) and not current_party.has(uid)
 					if releasing:
 						var before_actor: Dictionary = old_party[uid]
@@ -1557,7 +1557,7 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 					# is read-only. Replays can never restore earlier HP/generation.
 					if actor.get("training_receipt")==training.receipt \
 						and actor.get("training_character_revision")==training.character_revision: continue
-					var card_changed := full_action and (not ACTOR_AUTHORITY.equivalent(old, next) \
+					var card_changed: bool = full_action and (not ACTOR_AUTHORITY.equivalent(old, next) \
 						or not ACTOR_AUTHORITY.equivalent(training.before.redesign_character.creatures.get(uid), training.after.redesign_character.creatures.get(uid)))
 					if not card_changed and ACTOR_AUTHORITY.equivalent(actor.max_hp,current.max_hp) \
 						and ACTOR_AUTHORITY.equivalent(actor.hp,current.hp) and actor.fainted==current.fainted \
