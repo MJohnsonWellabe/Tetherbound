@@ -87,10 +87,38 @@
       "confirmed_archived": true,
       "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
       "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+    },
+    {
+      "threadId": "01a0f4f8-e11a-71d2-8984-caa18c9bad04",
+      "title": "F18 — HomeKey, portals and waystones",
+      "branch": "tb/f18",
+      "head": "f69d5a6ce26cc8f7a5e6f1c753113544108a12e8",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+      "reason": "Current idle status, tracked/untracked checkout clean and exact full head contained in pushed candidate verified. No current source-attributed failure needs this owner. Latest user cleanup override; criteria remain OPEN; same session can reopen."
+    },
+    {
+      "threadId": "01a0f4f8-e65f-7591-94a7-b4799df734b7",
+      "title": "F19 — Chapter order, levels and rewards",
+      "branch": "tb/f19",
+      "head": "15ce6ff7ac8bb7852564bf9eb4ba23a292797cee",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+      "reason": "Current idle status, tracked/untracked checkout clean and exact full head contained in pushed candidate verified. No current source-attributed failure needs this owner. Latest user cleanup override; criteria remain OPEN; same session can reopen."
+    },
+    {
+      "threadId": "01a0f533-294e-71c1-9ec1-328527aa8d21",
+      "title": "F31 — Homestead stations, complete feature…",
+      "branch": "tb/f31",
+      "head": "ae65eb81949f7f72deaf4c5a58c532790a2f7978",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+      "reason": "Current idle status, tracked/untracked checkout clean and exact full head contained in pushed candidate verified. No current source-attributed failure needs this owner. Latest user cleanup override; criteria remain OPEN; same session can reopen."
     }
   ],
   "retained": "F17, F18, F19, Foundation and F31 own current returned failures; existing F29 reviews their fixes. Ten confirmed sidebar archives; main and criteria remain unchanged.",
   "latest_archive_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
   "latest_archive_ci_run": 36854264014,
-  "latest_archive_ci_status": "Actual unit/runtime failures returned to existing owners; shared CI remains unaccepted."
+  "latest_archive_ci_status": "Actual unit/runtime failures returned to existing owners; shared CI remains unaccepted.",
+  "total_confirmed_archived": 13
 }
