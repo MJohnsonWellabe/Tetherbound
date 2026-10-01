@@ -1,0 +1,22 @@
+diff --git a/data/config/stormwood_chapter.json b/data/config/stormwood_chapter.json
+index 54d28d74e6..1d84c61fac 100644
+--- a/data/config/stormwood_chapter.json
++++ b/data/config/stormwood_chapter.json
+@@ -95,7 +95,7 @@
+       "id": "act_i",
+       "order": 1,
+       "title": "Under the Storm",
+-      "entry_flags": [],
++      "entry_flags": ["realm_key_stormwood"],
+       "completion_flag": "stormwood:act_i_complete",
+       "objectives": [
+         {
+@@ -105,7 +105,7 @@
+           "label": "Find Ashfoot Waycamp.",
+           "how": "Follow the Struck Sentinel north under the canopy.",
+           "region_id": "cinder_verge",
+-          "requires_flags": [],
++          "requires_flags": ["realm_key_stormwood"],
+           "completion_event": "arrival:ashfoot"
+         },
+         {
