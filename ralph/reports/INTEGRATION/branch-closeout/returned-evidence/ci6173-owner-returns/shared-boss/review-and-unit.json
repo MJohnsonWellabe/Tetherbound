@@ -1,0 +1,35 @@
+{
+  "production_candidate": "354998f2a51bb990d0a9f0e5fc84427f369ad3dd",
+  "test_entry_candidate": "70bfd13f2affc1053a69ba6ab1169cac20fad455",
+  "root_merge": "47bb7eeb343ddab2661f0a1ce7d27614f102935a",
+  "independent_reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "source_verdict": "PASS: production lifecycle cut and deferred test entry reviewed independently; 54 bounded test-entry checks, original lifecycle bodies and 70 assertions preserved.",
+  "native_parent": {
+    "head": "47bb7eeb343ddab2661f0a1ce7d27614f102935a",
+    "exit": 0,
+    "timed_out": false,
+    "selection": "test_stormwood_hosted_combat.gd",
+    "summary": [
+      "7 tests, 26 assertions, 0 failed"
+    ],
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-47bb7eeb343d-3738bb61\\tests.log",
+    "raw_log_sha256": "b6b90afc949b72502ff7e2d72d8fee99473b3b9b42467a8a900af4ff18bdb98d"
+  },
+  "native_child": {
+    "assertions": 70,
+    "failures": []
+  },
+  "raw_logs": {
+    "parent-tests.log": {
+      "raw_bytes": 18348,
+      "raw_sha256": "b6b90afc949b72502ff7e2d72d8fee99473b3b9b42467a8a900af4ff18bdb98d",
+      "lossless_log": "parent-tests.log.gz"
+    },
+    "native-child.log": {
+      "raw_bytes": 131,
+      "raw_sha256": "b8af434e56eb110ced3c15036b7c618c74c8476aa6f75fe275da7a9ca90ee858",
+      "lossless_log": "native-child.log.gz"
+    }
+  },
+  "limits": "Affected units pass. Original full shared-boss smoke remains unverified; legacy fixture starter ownership remains unresolved. No CI/main/criterion credit. Windows post-kill loop is not independent disappearance proof; this passing run did not time out or invoke cleanup kill."
+}
