@@ -68,7 +68,9 @@
       "head": "6bc07fac4500e3d2adb48fc2954ba61834b59a22",
       "confirmed_archived": true,
       "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
-      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved.",
+      "currently_archived": false,
+      "reopened_reason": "Concrete CI6169 post-disconnect encounter director publication fault, owned F22. Same session reopened; source branch preserved. Warden timeout earlier causal relation unproved."
     },
     {
       "threadId": "01a0f53f-0dcd-7070-a370-e361e9e308f6",
@@ -120,5 +122,6 @@
   "latest_archive_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
   "latest_archive_ci_run": 36854264014,
   "latest_archive_ci_status": "Actual unit/runtime failures returned to existing owners; shared CI remains unaccepted.",
-  "total_confirmed_archived": 13
+  "total_confirmed_archived": 13,
+  "currently_archived_count": 12
 }
