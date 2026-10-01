@@ -1,0 +1,105 @@
+{
+  "classification": "SOURCEPASS only; F17#4 OPEN",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "inputs/assets/props/quaternius_fantasy/Stall_Empty.bin": {
+      "bytes": 88176,
+      "sha256": "9ddececa6f5e0922ee32b064c400abea4dd068be2bfc78891017fca334158826"
+    },
+    "inputs/assets/props/quaternius_fantasy/Stall_Empty.gltf": {
+      "bytes": 7262,
+      "sha256": "b20f7e2f343f293b4642a9e7dbce5df19524ce9d5b30b63f7f641f616b89650c"
+    },
+    "inputs/data/config/bands/band1_lower_meadows/harvest.json": {
+      "bytes": 39170,
+      "sha256": "bc15d97d65091da5871bd9f5be32f29df469abe67446a52879e1be6828c924f2"
+    },
+    "inputs/data/config/bands/band1_lower_meadows/props.json": {
+      "bytes": 98741,
+      "sha256": "7948969367b466e38582f273bbfb4e9a1b4f0001355837814198369bea9867d1"
+    },
+    "inputs/data/config/bands/band1_lower_meadows/trainers.json": {
+      "bytes": 35683,
+      "sha256": "b77a0cede4d5dadedc7aab29ccaba9208d762ebcbdf91e6774c71690427bcc1c"
+    },
+    "inputs/data/config/realm_transitions.json": {
+      "bytes": 698,
+      "sha256": "61480a2343100e980d1b0450b581b489c672c7cfd03e1b5a408bdb421cc44a43"
+    },
+    "inputs/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "inputs/data/config/tournament.json": {
+      "bytes": 8622,
+      "sha256": "efa269e0ca1c16944cde032685c36637135fbbc0a0e2272d1a5278c4985bf5c7"
+    },
+    "inputs/data/config/village_boundary.json": {
+      "bytes": 19391,
+      "sha256": "2e3ba93eb7212ba4d02a524fc0e9711481a75304808955cfa6e1bceb1b51ce86"
+    },
+    "inputs/data/config/village_npcs.json": {
+      "bytes": 51308,
+      "sha256": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07"
+    },
+    "inputs/scripts/characters/render_bounds.gd": {
+      "bytes": 4552,
+      "sha256": "80ff8237cc9cba5182c24f60cb22e4151315ac2031de8a147782f3174b7d9b90"
+    },
+    "inputs/scripts/combat/encounter_director.gd": {
+      "bytes": 318189,
+      "sha256": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f"
+    },
+    "inputs/scripts/world/tournament.gd": {
+      "bytes": 40608,
+      "sha256": "ef8a1a0826db5a1ad650a3176eca7ba00ef64706adbc4ad624bc166bcf8f6226"
+    },
+    "inputs/scripts/world/tournament_ground_presentation.gd": {
+      "bytes": 13744,
+      "sha256": "64c50df0add6911fc2a2455e2e4d73c1b8ef448c3166554cc39c892d6c338f4b"
+    },
+    "manifest.json": {
+      "bytes": 4080,
+      "sha256": "e206e5cf5ae1ac47febbec0b57339d0175f99b50eb7af0fea23313c7f171ae50"
+    },
+    "originals/data/config/tournament_ground_presentation.json": {
+      "bytes": 5811,
+      "sha256": "e6d674717421f92117a3f303bd99471d3b5a34299b8b879644af8f2c86cc647c"
+    },
+    "originals/tests/test_tournament_ground_presentation.gd": {
+      "bytes": 14936,
+      "sha256": "bd23ffdedf612f05dcfdd47136749ee5eee56841b0d82d6e9843619c99cd8d06"
+    },
+    "prior-failure/tests.log": {
+      "bytes": 270104,
+      "sha256": "938709b278a36edc9bec63803f0048b5dee90b1aeb149c3bd510156403ae826d"
+    },
+    "proposal/data/config/tournament_ground_presentation.json": {
+      "bytes": 5502,
+      "sha256": "a861e8c302a6013bfd1c29dcc2867ffc9ad0c5b8b4c6fe1608cbe8e5d4107f4f"
+    },
+    "proposal/tests/test_tournament_ground_presentation.gd": {
+      "bytes": 18448,
+      "sha256": "e58d912ef86cdec39c0dc7041d63e6531f72fd65e986ea5d3467993b5c7500f3"
+    },
+    "repair.patch": {
+      "bytes": 9241,
+      "sha256": "7e5778d5c76d8940ec0ddb2d7db898e189fa2934a498a316bd357a10f69bacf2"
+    },
+    "review-context.txt": {
+      "bytes": 3298,
+      "sha256": "3099e15fd3783c597ae9319bd1ba707c9cb96648119f883c9f04d607cfc3aadc"
+    },
+    "source-geometry-check.py": {
+      "bytes": 11174,
+      "sha256": "21e06541860cf96a4f07b19fe9352b3745d778ffd011191f6909102588f0d2bd"
+    },
+    "source-results.json": {
+      "bytes": 14076,
+      "sha256": "9139e6e908eb574ab1612d3371948af319a32641a28a643a8f0fef484159e583"
+    }
+  }
+}

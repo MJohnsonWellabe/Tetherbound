@@ -11,15 +11,9 @@ const BOUNDARY_PATH := "res://data/config/village_boundary.json"
 const PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
 const REALMS_PATH := "res://data/config/realm_transitions.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
-const TRAINERS_PATH := "res://data/config/bands/band1_lower_meadows/trainers.json"
-const PEOPLE_PATH := "res://data/config/village_npcs.json"
-const HARVEST_PATH := "res://data/config/bands/band1_lower_meadows/harvest.json"
-const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
-const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
-## Accepted F17/RD-29 lawn and existing people/resource anchors.
-const BRYN := Vector2(78.0, 44.0)
-const HALDA := Vector2(88.5, 46.5)
-const PRACTICE_BERRY := Vector2(30.0, 8.0)
+const BRYN := Vector2(13.0, 9.0)
+const HALDA := Vector2(23.5, 11.5)
+const PRACTICE_BERRY := Vector2(28.0, 6.0)
 
 
 func _config() -> Dictionary:
@@ -120,26 +114,8 @@ func test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring() -> 
 	var cfg := _config()
 	var arena := cfg.get("arena", {}) as Dictionary
 	var canopy := cfg.get("marshal_canopy", {}) as Dictionary
-	var practice: Dictionary = {}
-	for trainer: Dictionary in _read_json(TRAINERS_PATH).get("trainers", []):
-		if str(trainer.get("id", "")) == "practice_trainer":
-			practice = trainer
-	assert_false(practice.is_empty(), "the existing practice trainer still anchors the authored lawn")
-	assert_eq(_point(practice.get("position", []) as Array), BRYN, "the current practice anchor remains authored")
-	assert_eq(_point(arena.get("centre", []) as Array), BRYN,
-		"the lists marking follows the current authored practice/tournament lawn; live fights place their own arena")
-	var halda: Dictionary = {}
-	for person: Dictionary in _read_json(PEOPLE_PATH).get("villagers", []):
-		if str(person.get("name", "")) == "Halda":
-			halda = person
-	assert_false(halda.is_empty(), "the installed marshal remains authored")
-	assert_eq(_point(halda.get("position", []) as Array), HALDA, "equipment clearance uses the actual marshal anchor")
-	var berry: Dictionary = {}
-	for node: Dictionary in _read_json(HARVEST_PATH).get("nodes", []):
-		if int(node.get("order", -1)) == 1031:
-			berry = node
-	assert_eq(str(berry.get("item", "")), "berries", "the practice berry identity remains authored")
-	assert_eq(_point(berry.get("at", []) as Array), PRACTICE_BERRY, "equipment clearance uses the actual berry anchor")
+	assert_eq(_point(arena.get("centre", []) as Array), Vector2(20.0, 10.0),
+		"the marking follows the existing tournament fight centre")
 	assert_true(float(arena.get("radius_x_m", 0.0)) >= 6.5,
 		"the lists ellipse reads at field scale across its broad axis")
 	assert_true(float(arena.get("radius_z_m", 0.0)) >= 5.5,
@@ -179,19 +155,6 @@ func test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring() -> 
 	var canopy_boundary_clearance := _boundary_clearance(canopy_at)
 	assert_true(canopy_boundary_clearance >= 2.0,
 		"the marshal backdrop at %s remains inside the visible village boundary (%.2fm)" % [canopy_at, canopy_boundary_clearance])
-	var corners := _canopy_footprint(canopy)
-	assert_eq(corners.size(), 4, "the complete fitted canopy footprint is checked")
-	var boundary_config := _read_json(BOUNDARY_PATH)
-	var lawn: Dictionary = {}
-	for flat: Dictionary in _read_json(TERRAIN_PATH).get("flats", []):
-		if _point(flat.get("centre", []) as Array) == BRYN:
-			lawn = flat
-	assert_true(float(lawn.get("radius", 0.0)) >= 16.0, "the existing lawn pad covers the marshal presentation")
-	assert_eq(float(lawn.get("height", INF)), 0.9, "the lawn remains full-flatten ground")
-	for corner: Vector2 in corners:
-		assert_true(BOUNDARY.contains(BOUNDARY.outline(boundary_config), corner), "the entire fitted stall stays inside the fence")
-		assert_true(_boundary_clearance(corner) >= 2.0, "every fitted stall corner retains the original two-metre boundary clearance")
-		assert_true(corner.distance_to(BRYN) <= float(lawn.get("radius", 0.0)), "the entire fitted stall stays on the existing lawn pad")
 	for shrine_at in _shrine_centres():
 		assert_true(canopy_at.distance_to(shrine_at) >= 5.5,
 			"the marshal backdrop stays clear of every shrine body")
@@ -200,26 +163,6 @@ func test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring() -> 
 		and source.contains('spec.get("light_range_m"')
 		and source.contains('spec.get("light_below_roof_m"'),
 		"production canopy consumes all bounded night-cloth light tunables")
-
-
-func _canopy_footprint(spec: Dictionary) -> Array[Vector2]:
-	var packed := load("%s/%s.gltf" % [spec.get("dir", ""), spec.get("model", "")]) as PackedScene
-	assert_true(packed != null, "the installed marshal stall can be measured")
-	if packed == null:
-		return []
-	var model := packed.instantiate() as Node3D
-	var bounds: AABB = RENDER_BOUNDS.measure(model)
-	model.free()
-	assert_true(bounds.size.y > 0.0, "the installed stall has visible render bounds")
-	var factor := float(spec.get("fit_height_m", 0.0)) / maxf(bounds.size.y, 0.001)
-	var rotation := Basis(Vector3.UP, deg_to_rad(float(spec.get("yaw_deg", 0.0))))
-	var centre := _point(spec.get("at", []) as Array)
-	var out: Array[Vector2] = []
-	for x: float in [bounds.position.x, bounds.end.x]:
-		for z: float in [bounds.position.z, bounds.end.z]:
-			var offset := rotation * Vector3(x * factor * float(spec.get("width_scale", 1.0)), 0.0, z * factor)
-			out.append(centre + Vector2(offset.x, offset.z))
-	return out
 
 
 func test_equipment_is_asymmetric_installed_and_outside_the_fight_floor() -> void:

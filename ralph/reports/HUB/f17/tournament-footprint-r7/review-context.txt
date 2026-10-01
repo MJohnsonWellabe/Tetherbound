@@ -1,0 +1,22 @@
+F17 tournament presentation R7 - source and fitted stall footprint only
+Base: 2113505a710388640c998a91fc964233ae8562ef (tb/hub)
+ROOT failure source: 862385aa92f4b198cc5ccf22448d66f8acfb6e28
+ROOT raw regression: 162 tests, 95648 assertions, one named presentation failure; separate F29-owned Viewport cleanup issue retained in the raw log.
+Failure: test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring expected retired (20,10), actual authored lawn (78,44); old canopy centre (85.2,51.1) has only 0.622271m boundary clearance, with fitted stall corner outside by 1.455521m.
+
+Two logical paths only: data/config/tournament_ground_presentation.json and tests/test_tournament_ground_presentation.gd.
+Only config mutations: marshal_canopy.at [90.1,47.3] and truthful _why. This is a visual translation beside Halda. Board and all NPC/resource positions, terrain, boundary, arena centre, radius, runtime scripts, collision=false, yaw205, fit-height4.65, width-scale1.58, two accents and every lighting/presentation budget are unchanged.
+The retired test anchors are replaced with assertions against current authored practice trainer (78,44), Halda (88.5,46.5), berry order1031 (30,8). Live tournament fights retain existing player-relative encounter placement; (78,44) is the authored lawn/marking centre, not a fixed assertion about every live fight.
+The added unit guard measures the installed stall via the same render-bounds fit as production, frees the temporary model, and checks all four fitted corners inside the fence with the original 2m clearance and on the unchanged radius16 lawn pad.
+
+Author source geometry: 81/81 SOURCEPASS. Actual 1650 float32 glTF POSITION vertices decoded and compared to accessor bounds. Old centre and outside-footprint negative controls preserved.
+New fitted main stall: minimum signed fence clearance 2.961686846m (original minimum2m); maximum lawn extent15.073786815m (pad16m); original road-centre clearance3.911521443m (minimum3.5m). Whole-stall board distance3.183635527m exceeds prompt2.6 + player-capsule0.4 + skin0.001. Marshal distance0.566623383m exceeds capsule0.4 + skin0.001. Marked-floor distance10.086645196m exceeds radius6.65 + clearance0.5.
+Footprint scope is the fitted installed main stall. Accents and light settings remain unchanged; these source calculations are not render/native contact, arrival, or earned proof.
+
+Frozen inputs: 19 raw byte-preserved originals, proposals, production/config/mesh inputs and ROOT failure log.
+Manifest SHA256: e206e5cf5ae1ac47febbec0b57339d0175f99b50eb7af0fea23313c7f171ae50
+Raw failure SHA256: 938709b278a36edc9bec63803f0048b5dee90b1aeb149c3bd510156403ae826d
+Navigator unchanged SHA256: 6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55
+Gather helper unchanged SHA256: 414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d
+
+F17#4 OPEN. No Godot, parser/import, CI, engine run, new session/agent or ROOT checkout mutation. ROOT owns composition after its bake writer, existing F29 independent review, named engine tests/visual review, fresh earned opening and main landing. The original failure receipt remains immutable. No thresholds, contact counting, predictive API, motion budgets, grants, player pose/HP/masks/shapes/exclusions or progression were weakened.

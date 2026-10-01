@@ -1,0 +1,21 @@
+{
+  "_comment": "Authored physical handoff between the Meadows and Cloudreach. Positions are realm-local x/z metres and are kept here so gates, arrival placement and evidence harnesses share one source.",
+  "meadows_heart_shrine": {
+    "position": [10.0, 8.0],
+    "yaw_deg": 12.0,
+    "heart_id": "meadows"
+  },
+  "meadows_cloudreach_gate": {
+    "position": [-33.5, 7502.0],
+    "yaw_deg": 0.0,
+    "destination_entry_id": "cloudreach_arrival_from_meadows",
+    "key_flag": "realm_key_cloudreach",
+    "unlock_flag": "realm_gate_cloudreach_unlocked"
+  },
+  "meadows_entries": {
+    "meadows_cloudreach_gate_return": {
+      "position": [-33.5, 7494.0],
+      "facing_yaw_deg": 180.0
+    }
+  }
+}
