@@ -20,9 +20,9 @@ extends RefCounted
 ##   REPOSITION back off and circle, so the fight is not two creatures standing
 ##              in each other's faces trading hits
 ##
-## Not implemented on purpose: feints, blocking, retreating on low health,
-## reacting to the player's wind-up. Every one of those is a reason for the
-## fight to feel unfair before it has been played once.
+## F22 pattern selection and reactions use measured past observations only.
+## The caller owns the cursor/clocks and freezes one selected profile until
+## recovery finishes. No reaction cancels a committed tell or recovery.
 
 enum Intent {
 	CLOSE,
@@ -30,6 +30,7 @@ enum Intent {
 	RECOVER,
 	REPOSITION,
 	IDLE,
+	DODGE,
 }
 
 
@@ -65,6 +66,8 @@ static func decide(
 			if timer > 0.0:
 				return Intent.REPOSITION
 			return Intent.CLOSE
+		Intent.DODGE:
+			return Intent.DODGE if timer > 0.0 else Intent.CLOSE
 
 		_:
 			# CLOSE or IDLE: attack if in reach and off cooldown, otherwise walk in.
@@ -82,6 +85,8 @@ static func duration_for(intent: Intent, cfg: Dictionary) -> float:
 			return float(cfg.get("recovery", 0.75))
 		Intent.REPOSITION:
 			return float(cfg.get("reposition_time", 1.0))
+		Intent.DODGE:
+			return float(cfg.get("dodge_duration_s", 0.2))
 		_:
 			return 0.0
 
@@ -120,6 +125,8 @@ static func movement_for(intent: Intent, towards_target: Vector3, side_sign: flo
 		Intent.REPOSITION:
 			var side := forward.cross(Vector3.UP).normalized() * signf(side_sign)
 			return (-forward * 0.65 + side * 0.75).normalized()
+		Intent.DODGE:
+			return forward.cross(Vector3.UP).normalized() * signf(side_sign)
 		_:
 			return Vector3.ZERO
 
@@ -132,5 +139,155 @@ static func speed_for(intent: Intent, cfg: Dictionary, inside_preferred := false
 			return float(cfg.get("chase_speed", 4.6))
 		Intent.REPOSITION:
 			return float(cfg.get("reposition_speed", 3.8))
+		Intent.DODGE:
+			return float(cfg.get("dodge_distance_m", 3.0)) / maxf(0.001, float(cfg.get("dodge_duration_s", 0.2)))
 		_:
 			return 0.0
+
+
+## Role vocabulary matches BOSSES 2.1 priority, including compound roles.
+## An unmatched role is an authoring error, never a generic fallback.
+static func normalize_role(role: String, patterns: Dictionary) -> String:
+	var upper := role.to_upper()
+	if upper in ["WALL", "CHARGER", "DIVER", "CURRENT", "ACE"]:
+		return upper
+	var aliases: Dictionary = patterns.get("role_aliases", {})
+	for profile: String in ["WALL", "CHARGER", "DIVER", "CURRENT"]:
+		for word: String in aliases.get(profile, []):
+			if role.to_lower().contains(word):
+				return profile
+	return ""
+
+
+static func species_role(species_id: String, patterns: Dictionary) -> String:
+	return normalize_role(str((patterns.get("species_roles", {}) as Dictionary).get(species_id, "")), patterns)
+
+
+## A named fight's sequence belongs to the fight, then to its exact send-out.
+## The first Meadows wild band deliberately learns just the first role row.
+static func pattern_ids(patterns: Dictionary, role: String, context: Dictionary) -> Array:
+	var named_id := str(context.get("pattern_id", ""))
+	if not named_id.is_empty():
+		var named: Dictionary = (patterns.get("named", {}) as Dictionary).get(named_id, {})
+		var rows: Array = named.get("sendouts", [])
+		var index := int(context.get("sendout_index", 0))
+		if index < 0 or index >= rows.size() or not rows[index] is Dictionary:
+			return []
+		return (rows[index] as Dictionary).get("sequence", []).duplicate()
+	var roles: Dictionary = patterns.get("roles", {})
+	var ids: Array = roles.get(role, [])
+	if not bool(context.get("trainer_owned", false)) and str(context.get("band", "")) == "band1_lower_meadows":
+		return [ids[0]] if not ids.is_empty() else []
+	return ids.duplicate()
+
+
+## Returns an unspaced, immutable-at-entry strike profile. Node caller applies
+## body clearance ONCE after this overlay. Cursor advances on attempt (also
+## on interruption), never on frame, hit or RNG. No damage/stat scaling here.
+static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dictionary,
+		cursor: int) -> Dictionary:
+	var role := str(context.get("role", ""))
+	if role.is_empty():
+		role = species_role(str(context.get("species_id", "")), patterns)
+	var ids := pattern_ids(patterns, role, context)
+	if ids.is_empty():
+		return {}
+	var id := str(ids[posmod(cursor, ids.size())])
+	var row: Dictionary = (patterns.get("attacks", {}) as Dictionary).get(id, {})
+	if row.is_empty():
+		return {}
+	var out := base.duplicate(true)
+	out.merge(row.duplicate(true), true)
+	out["pattern_attack_id"] = id
+	out["combat_role"] = role
+	out["pattern_id"] = str(context.get("pattern_id", ""))
+	var chapter := str(context.get("chapter", "meadows"))
+	var floor_row: Dictionary = (patterns.get("chapter_floors", {}) as Dictionary).get(chapter, {})
+	if chapter == "meadows" and bool(context.get("after_south_bridge", false)):
+		floor_row = (patterns.get("chapter_floors", {}) as Dictionary).get("meadows_late", {})
+	var tell_floor := float(floor_row.get("telegraph", 0.8))
+	if bool(out.get("heavy", false)):
+		tell_floor = maxf(tell_floor, float(patterns.get("heavy_tell_floor_s", 1.1)))
+	out["telegraph"] = maxf(tell_floor, float(out.get("telegraph", tell_floor)))
+	out["recovery"] = maxf(float(floor_row.get("recovery", 0.6)), float(out.get("recovery", 0.6)))
+	var slot := str(out.get("slot", "quick"))
+	out["move_id"] = str(out.get("move_override", context.get("move_" + slot, "")))
+	if out.move_id.is_empty():
+		return {}
+	# Low-health tradeoffs are visible timing changes, confined to the role.
+	if float(context.get("hp_fraction", 1.0)) <= float(patterns.get("low_hp_fraction", 0.3)):
+		var tradeoff: Dictionary = (patterns.get("low_hp_tradeoffs", {}) as Dictionary).get(role, {})
+		out["telegraph"] = float(out.telegraph) + float(tradeoff.get("telegraph_add_s", 0.0))
+		out["reposition_time"] = maxf(0.0, float(out.get("reposition_time", 1.0)) + float(tradeoff.get("reposition_add_s", 0.0)))
+		if posmod(cursor + 1, 3) == 0:
+			out["recovery"] = float(out.recovery) + float(tradeoff.get("third_recovery_add_s", 0.0))
+	return out
+
+
+## Observation time is accumulated by the node only while the SAME visible
+## state persists. These decisions cannot read a queued/future input. Dodge
+## is a swept spatial move with no invulnerability, requiring a safe lane.
+static func reaction(state: Intent, observation: Dictionary, patterns: Dictionary) -> String:
+	if state != Intent.CLOSE and state != Intent.REPOSITION:
+		return ""
+	var cfg: Dictionary = patterns.get("reactions", {})
+	var seen := float(observation.get("visible_for_s", 0.0))
+	if seen < float(cfg.get("observation_s", 0.25)):
+		return ""
+	var action := str(observation.get("action", ""))
+	var distance := float(observation.get("distance", INF))
+	if action in ["charged_windup", "ultimate_windup"] \
+			and distance > float(cfg.get("dodge_min_range_m", 3.0)) \
+			and float(observation.get("dodge_cooldown_s", 0.0)) <= 0.0 \
+			and bool(observation.get("safe_dodge_lane", false)):
+		return "dodge"
+	if state == Intent.CLOSE and action == "recovery" \
+			and distance <= float(observation.get("quick_range", 0.0)) \
+			and float(observation.get("attack_cooldown_s", 0.0)) <= 0.0:
+		return "punish"
+	return ""
+
+
+## The punish still declares a complete quick tell and recovery. Reading a
+## player's commitment provides opportunity; it does not buy an instant hit.
+static func punish_profile(patterns: Dictionary, base: Dictionary, context: Dictionary) -> Dictionary:
+	var local := context.duplicate(true)
+	local.erase("pattern_id")
+	var role := str(local.get("role", ""))
+	var ids := pattern_ids(patterns, role, local)
+	for index: int in ids.size():
+		var row: Dictionary = (patterns.get("attacks", {}) as Dictionary).get(str(ids[index]), {})
+		if str(row.get("slot", "")) == "quick":
+			return select_pattern(patterns, base, local, index)
+	return {}
+
+
+## One geometry predicate serves host hit tests and named proof probes. All
+## points are frozen on tell entry/heading lock by the node. A field checks a
+## target once per cast receipt in the manager, not once per physics frame.
+static func pattern_contains(profile: Dictionary, origin: Vector3, heading: Vector3,
+		marker: Vector3, target: Vector3, target_radius: float = 0.0) -> bool:
+	var offset := Vector3(target.x - origin.x, 0.0, target.z - origin.z)
+	var forward := Vector3(heading.x, 0.0, heading.z).normalized()
+	var shape := str(profile.get("telegraph_shape", "cone"))
+	var radius := maxf(0.0, target_radius)
+	match shape:
+		"ring":
+			return offset.length() <= float(profile.get("range", 0.0)) + radius \
+				and offset.length() + radius >= float(profile.get("inner_radius_m", 0.0))
+		"marker", "field":
+			return Vector2(target.x - marker.x, target.z - marker.z).length() <= float(profile.get("marker_radius_m", 0.0)) + radius
+		"lane":
+			var along := offset.dot(forward)
+			var across := absf(offset.dot(forward.cross(Vector3.UP)))
+			return along >= -radius and along <= float(profile.get("lunge", 0.0)) + radius \
+				and across <= float(profile.get("lane_half_width_m", 0.0)) + radius
+		"fan", "cone":
+			if offset.length() > float(profile.get("range", 0.0)) + radius:
+				return false
+			if offset.length() <= radius:
+				return true
+			var allowance := rad_to_deg(asin(clampf(radius / offset.length(), 0.0, 1.0)))
+			var angle := rad_to_deg(acos(clampf(offset.normalized().dot(forward), -1.0, 1.0)))
+			return angle <= float(profile.get("cone_degrees", 0.0)) * 0.5 + allowance
+	return false

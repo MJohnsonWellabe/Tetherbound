@@ -399,5 +399,1281 @@
     "colour": "#f4f7ff",
     "height": 1.6,
     "size": 0.42
+  },
+  "patterns": {
+    "schema_version": 1,
+    "runtime_enabled": false,
+    "_activation": "F22 source candidate. Enable only after ROOT integrates actual geometry/node/actor contracts and named engine/player/code-blind proofs pass.",
+    "role_aliases": {
+      "WALL": [
+        "anchor",
+        "tank",
+        "wall",
+        "bulwark",
+        "guardian",
+        "counter",
+        "interceptor"
+      ],
+      "CHARGER": [
+        "bruiser",
+        "breaker",
+        "gap-closer",
+        "punisher"
+      ],
+      "DIVER": [
+        "diver",
+        "dive",
+        "duelist",
+        "ambusher",
+        "skirmisher",
+        "harrier",
+        "flanker",
+        "pursuit",
+        "hunter",
+        "scout",
+        "runner",
+        "spotter",
+        "disruptor"
+      ],
+      "CURRENT": [
+        "controller",
+        "current",
+        "ranged",
+        "screen",
+        "zone",
+        "trapper",
+        "sweeper",
+        "artillery",
+        "support",
+        "decoy",
+        "kiter"
+      ]
+    },
+    "species_roles": {
+      "terrapup": "WALL",
+      "ripplet": "DIVER",
+      "galewisp": "DIVER",
+      "bramblebun": "CURRENT",
+      "mudsnout": "WALL",
+      "trailpup": "DIVER",
+      "burrowback": "WALL",
+      "meadowhart": "DIVER",
+      "tuskroot": "CHARGER",
+      "paddlenewt": "DIVER",
+      "mosshell": "WALL",
+      "brooktail": "DIVER",
+      "galecrest": "DIVER",
+      "duskhush": "DIVER",
+      "pipwing": "DIVER",
+      "reedwing": "CURRENT",
+      "veridian": "WALL",
+      "nightburrow": "WALL",
+      "stormtrail": "DIVER",
+      "riftfrill": "CURRENT",
+      "ashtusk": "CHARGER",
+      "sparkit": "DIVER",
+      "cindercub": "CHARGER",
+      "shadelet": "DIVER",
+      "frostclaw": "CHARGER",
+      "cannonback": "WALL",
+      "riptusk": "CHARGER",
+      "mirejaw": "WALL",
+      "aquaryn": "DIVER",
+      "torrentoad": "CHARGER",
+      "cragclaw": "WALL",
+      "riverdrake": "DIVER",
+      "sirenseal": "CURRENT",
+      "mangrove_monitor": "DIVER",
+      "tidecoil": "CURRENT",
+      "abyssal_guardian": "CURRENT",
+      "voltwig": "DIVER",
+      "mosshock": "DIVER",
+      "staticub": "WALL",
+      "voltarach": "WALL",
+      "fulgocobra": "CURRENT",
+      "stormraven": "DIVER",
+      "pebbik": "DIVER",
+      "craghorn": "CHARGER",
+      "stormbrush": "CURRENT",
+      "tanglevolt": "CURRENT",
+      "thundertunnel": "CHARGER",
+      "glimmermoth": "CURRENT",
+      "stormcapra": "WALL",
+      "skyrill": "DIVER",
+      "aeriex": "DIVER",
+      "ribbonray": "CURRENT",
+      "breezetail": "CURRENT",
+      "cloudfang": "DIVER",
+      "cliffspike": "CHARGER",
+      "tempestwing": "CURRENT",
+      "solmane": "WALL"
+    },
+    "roles": {
+      "WALL": [
+        "wall_check",
+        "wall_slam",
+        "wall_quake"
+      ],
+      "CHARGER": [
+        "charger_rush",
+        "charger_double_rush",
+        "charger_check"
+      ],
+      "DIVER": [
+        "diver_retreat",
+        "diver_leap"
+      ],
+      "CURRENT": [
+        "current_volley",
+        "current_zone"
+      ],
+      "ACE": [
+        "ace_lane",
+        "ace_exam"
+      ]
+    },
+    "attacks": {
+      "wall_slam": {
+        "role": "WALL",
+        "slot": "charged",
+        "telegraph_shape": "cone",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 5,
+        "cone_degrees": 85,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 4,
+        "safe_escape": "side",
+        "chase_speed": 3.4
+      },
+      "wall_quake": {
+        "role": "WALL",
+        "slot": "charged",
+        "telegraph_shape": "ring",
+        "telegraph": 1.2,
+        "recovery": 1.25,
+        "heavy": true,
+        "range": 5.5,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 4.5,
+        "safe_escape": "outside",
+        "inner_radius_m": 0,
+        "chase_speed": 3.4
+      },
+      "wall_check": {
+        "role": "WALL",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.9,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 3,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 2.5,
+        "preferred_range": 2.5,
+        "safe_escape": "side",
+        "chase_speed": 3.4
+      },
+      "charger_rush": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.9,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.65,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2
+      },
+      "charger_double_rush": {
+        "role": "CHARGER",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "repeat_count": 2,
+        "repeat_reaim_s": 0.3,
+        "repeat_telegraph_s": 1.1,
+        "repeat_recovery_s": 0.6
+      },
+      "charger_check": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.9,
+        "recovery": 0.8,
+        "heavy": false,
+        "range": 3.5,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 2.5,
+        "safe_escape": "side"
+      },
+      "diver_leap": {
+        "role": "DIVER",
+        "slot": "charged",
+        "telegraph_shape": "marker",
+        "telegraph": 1.1,
+        "recovery": 1,
+        "heavy": true,
+        "range": 6,
+        "cone_degrees": 80,
+        "lunge": 5.5,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 1.6,
+        "reposition_speed": 7,
+        "preferred_range": 5.5,
+        "safe_escape": "outside",
+        "marker_radius_m": 2,
+        "marker_tracks_fraction": 0.5,
+        "reposition_distance": 7
+      },
+      "diver_retreat": {
+        "role": "DIVER",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.9,
+        "recovery": 0.8,
+        "heavy": false,
+        "range": 3.5,
+        "cone_degrees": 65,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 1.2,
+        "reposition_speed": 5.5,
+        "preferred_range": 3,
+        "safe_escape": "side",
+        "retreat_distance_m": 3,
+        "reposition_distance": 6
+      },
+      "current_volley": {
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 0.9,
+        "recovery": 0.8,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 60,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.5,
+        "reposition_speed": 4,
+        "preferred_range": 6,
+        "safe_escape": "lateral",
+        "projectile_count": 3,
+        "projectile_spacing_degrees": 20
+      },
+      "current_zone": {
+        "role": "CURRENT",
+        "slot": "charged",
+        "telegraph_shape": "field",
+        "telegraph": 1.1,
+        "recovery": 0.9,
+        "heavy": true,
+        "range": 8,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.5,
+        "reposition_speed": 3.8,
+        "preferred_range": 6,
+        "safe_escape": "outside",
+        "marker_radius_m": 2.5,
+        "marker_tracks_fraction": 0.5,
+        "field_duration_s": 3,
+        "field_hits_per_cast": 1
+      },
+      "ace_lane": {
+        "role": "ACE",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 6,
+        "cone_degrees": 80,
+        "lunge": 6,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.3,
+        "first_attack_delay": 2.5
+      },
+      "ace_exam": {
+        "role": "ACE",
+        "slot": "charged",
+        "telegraph_shape": "cone",
+        "telegraph": 1.2,
+        "recovery": 1.3,
+        "heavy": true,
+        "range": 6,
+        "cone_degrees": 90,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "first_attack_delay": 2.5
+      },
+      "guardian_earth_fist": {
+        "role": "WALL",
+        "slot": "charged",
+        "telegraph_shape": "cone",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 5,
+        "cone_degrees": 85,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4,
+        "safe_escape": "side",
+        "move_override": "earth_fist",
+        "armored_front_degrees": 85,
+        "front_damage_scale": 0.5
+      },
+      "hald_reset": {
+        "role": "WALL",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 1,
+        "recovery": 1.1,
+        "heavy": false,
+        "range": 4,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 1.2,
+        "reposition_speed": 2.5,
+        "preferred_range": 3,
+        "safe_escape": "side"
+      },
+      "oreth_pressure": {
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 0.9,
+        "recovery": 0.85,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 50,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.5,
+        "reposition_speed": 3.8,
+        "preferred_range": 7,
+        "safe_escape": "lateral",
+        "projectile_count": 3,
+        "projectile_spacing_degrees": 16
+      },
+      "halder_range": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 1,
+        "recovery": 1,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1
+      },
+      "vess_flank": {
+        "role": "DIVER",
+        "slot": "charged",
+        "telegraph_shape": "marker",
+        "telegraph": 1.1,
+        "recovery": 1,
+        "heavy": true,
+        "range": 6,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 1.6,
+        "reposition_speed": 7,
+        "preferred_range": 5.5,
+        "safe_escape": "outside",
+        "marker_radius_m": 1.75
+      },
+      "aquaryn_wake": {
+        "role": "CURRENT",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.2,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 8,
+        "cone_degrees": 80,
+        "lunge": 8,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 6,
+        "safe_escape": "side",
+        "lane_half_width_m": 1.5
+      },
+      "tidecoil_sweep": {
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 100,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 7,
+        "safe_escape": "lateral",
+        "active_s": 0.8,
+        "eddy_every": 3,
+        "eddy_duration_s": 2,
+        "low_hp": {
+          "threshold": 0.5,
+          "attack_cooldown": 0.8,
+          "eddy_every": 2
+        }
+      },
+      "nerissa_lane": {
+        "role": "CHARGER",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 0.9,
+        "heavy": true,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2
+      },
+      "veyra_crosswind": {
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 1,
+        "recovery": 1,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 70,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 6,
+        "safe_escape": "lateral",
+        "projectile_count": 3,
+        "projectile_spacing_degrees": 23
+      },
+      "marrow_bank_answer": {
+        "role": "ACE",
+        "slot": "charged",
+        "telegraph_shape": "ring",
+        "telegraph": 1.2,
+        "recovery": 1.3,
+        "heavy": true,
+        "range": 5,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4,
+        "safe_escape": "outside_or_center",
+        "inner_radius_m": 2
+      }
+    },
+    "named": {
+      "named_warrens_guardian": {
+        "encounter_id": "warrens_guardian",
+        "pattern_id": "named_warrens_guardian",
+        "chapter": "meadows",
+        "kernel": "Sidestep armored front; Earth Fist final cone",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "guardian_earth_fist"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_relay_captain": {
+        "encounter_id": "relay_captain",
+        "pattern_id": "named_relay_captain",
+        "chapter": "meadows",
+        "kernel": "Air spacing, flank reset, three-type team and charge lane",
+        "sendouts": [
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_rush",
+              "charger_double_rush"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_captain_riverwatch": {
+        "encounter_id": "captain_riverwatch",
+        "pattern_id": "named_captain_riverwatch",
+        "chapter": "meadows",
+        "kernel": "Patience then sustained pressure",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
+            ]
+          },
+          {
+            "sequence": [
+              "oreth_pressure",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "oreth_pressure",
+              "current_volley"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_captain_field": {
+        "encounter_id": "captain_field",
+        "pattern_id": "named_captain_field",
+        "chapter": "meadows",
+        "kernel": "Range control; long narrow charge",
+        "sendouts": [
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "halder_range",
+              "charger_double_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_check",
+              "halder_range"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_captain_ridge": {
+        "encounter_id": "captain_ridge",
+        "pattern_id": "named_captain_ridge",
+        "chapter": "meadows",
+        "kernel": "Endurance with a flank/landing ace",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_check",
+              "charger_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "vess_flank"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_stronghold_elite": {
+        "encounter_id": "stronghold_elite",
+        "pattern_id": "named_stronghold_elite",
+        "chapter": "meadows",
+        "kernel": "Movement, reset, patient punish",
+        "sendouts": [
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          },
+          {
+            "sequence": [
+              "hald_reset",
+              "wall_slam"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "hald_reset",
+              "wall_quake"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_warden_aldis": {
+        "encounter_id": "warden_aldis",
+        "pattern_id": "named_warden_aldis",
+        "chapter": "meadows",
+        "kernel": "Four learned shapes then Earth Fist exam",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_rush",
+              "charger_double_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "guardian_earth_fist",
+              "ace_exam"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_water_aquaryn_alpha": {
+        "encounter_id": "water_aquaryn_alpha",
+        "pattern_id": "named_water_aquaryn_alpha",
+        "chapter": "water",
+        "kernel": "Three visible shore/wake phases",
+        "sendouts": [
+          {
+            "sequence": [
+              "diver_retreat",
+              "aquaryn_wake",
+              "diver_leap"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "aquaryn",
+          "phases": [
+            "shore",
+            "wake",
+            "surface_routes"
+          ]
+        }
+      },
+      "named_water_deep_watch_tidecoil": {
+        "encounter_id": "water_deep_watch_tidecoil",
+        "pattern_id": "named_water_deep_watch_tidecoil",
+        "chapter": "water",
+        "kernel": "Lateral sweep and sheltered eddy",
+        "sendouts": [
+          {
+            "sequence": [
+              "tidecoil_sweep"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "tidecoil",
+          "hp_threshold": 0.5
+        }
+      },
+      "named_water_trainer_venn": {
+        "encounter_id": "water_trainer_venn",
+        "pattern_id": "named_water_trainer_venn",
+        "chapter": "water",
+        "kernel": "Wall space, charge lane, current finish",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_rush",
+              "charger_double_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_water_trainer_nerissa": {
+        "encounter_id": "water_trainer_nerissa",
+        "pattern_id": "named_water_trainer_nerissa",
+        "chapter": "water",
+        "kernel": "Interleaved side-channel sweeps and Pressure Rise",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_check",
+              "nerissa_lane"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "water_veilfall",
+          "phases": [
+            "channel_cycle",
+            "pressure_rise",
+            "break_tether"
+          ],
+          "safe_area_fraction": 0.5,
+          "suppress_unescapable": true
+        }
+      },
+      "named_captain_veyra_storm_anchor": {
+        "encounter_id": "captain_veyra_storm_anchor",
+        "pattern_id": "named_captain_veyra_storm_anchor",
+        "chapter": "cloudreach",
+        "kernel": "Crosswind, overload, relay movement exam",
+        "sendouts": [
+          {
+            "sequence": [
+              "veyra_crosswind",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_leap",
+              "ace_lane"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "cloudreach_anchor",
+          "phases": [
+            "crosswind",
+            "anchor_overload",
+            "break_eye"
+          ]
+        }
+      },
+      "named_captain_marrow_dynamo_core": {
+        "encounter_id": "captain_marrow_dynamo_core",
+        "pattern_id": "named_captain_marrow_dynamo_core",
+        "chapter": "stormwood",
+        "kernel": "Capacitor banks, Overload, four-conduit Break",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          },
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_check",
+              "charger_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "marrow_bank_answer",
+              "ace_lane"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "stormwood_dynamo",
+          "phases": [
+            "bank_cycle",
+            "overload",
+            "break_core"
+          ],
+          "break_countdown_s": 36,
+          "distinct_conduits": 4
+        }
+      },
+      "named_lieutenant_dace_hollows_rod": {
+        "encounter_id": "lieutenant_dace_hollows_rod",
+        "pattern_id": "named_lieutenant_dace_hollows_rod",
+        "chapter": "stormwood",
+        "kernel": "Ordered relay spacing exam lieutenant_dace_hollows_rod",
+        "sendouts": [
+          {
+            "sequence": [
+              "current_zone",
+              "current_volley"
+            ]
+          },
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "existing_relay",
+          "relay_id": "lieutenant_dace_hollows_rod"
+        }
+      },
+      "named_lieutenant_varga_rodline_bridge": {
+        "encounter_id": "lieutenant_varga_rodline_bridge",
+        "pattern_id": "named_lieutenant_varga_rodline_bridge",
+        "chapter": "stormwood",
+        "kernel": "Ordered relay spacing exam lieutenant_varga_rodline_bridge",
+        "sendouts": [
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "current_zone",
+              "current_volley"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "existing_relay",
+          "relay_id": "lieutenant_varga_rodline_bridge"
+        }
+      },
+      "named_officer_maren_verge_rod": {
+        "encounter_id": "officer_maren_verge_rod",
+        "pattern_id": "named_officer_maren_verge_rod",
+        "chapter": "stormwood",
+        "kernel": "Ordered relay spacing exam officer_maren_verge_rod",
+        "sendouts": [
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "existing_relay",
+          "relay_id": "officer_maren_verge_rod"
+        }
+      },
+      "named_officer_nysa_deepwood_rod": {
+        "encounter_id": "officer_nysa_deepwood_rod",
+        "pattern_id": "named_officer_nysa_deepwood_rod",
+        "chapter": "stormwood",
+        "kernel": "Ordered relay spacing exam officer_nysa_deepwood_rod",
+        "sendouts": [
+          {
+            "sequence": [
+              "current_volley",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "current_zone",
+              "current_volley"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam",
+              "wall_quake"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "existing_relay",
+          "relay_id": "officer_nysa_deepwood_rod"
+        }
+      },
+      "named_outerworks_lieutenant_sera": {
+        "encounter_id": "outerworks_lieutenant_sera",
+        "pattern_id": "named_outerworks_lieutenant_sera",
+        "chapter": "stormwood",
+        "kernel": "Ordered relay spacing exam outerworks_lieutenant_sera",
+        "sendouts": [
+          {
+            "sequence": [
+              "charger_check",
+              "charger_rush",
+              "charger_double_rush"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "current_zone",
+              "current_volley"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "existing_relay",
+          "relay_id": "outerworks_lieutenant_sera"
+        }
+      },
+      "named_officer_kestrel_outer_works": {
+        "encounter_id": "officer_kestrel_outer_works",
+        "pattern_id": "named_officer_kestrel_outer_works",
+        "chapter": "stormwood",
+        "kernel": "Ordered relay spacing exam officer_kestrel_outer_works",
+        "sendouts": [
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          },
+          {
+            "sequence": [
+              "current_zone",
+              "current_volley"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "existing_relay",
+          "relay_id": "officer_kestrel_outer_works"
+        }
+      },
+      "named_rodline_keeper_fenn": {
+        "encounter_id": "rodline_keeper_fenn",
+        "pattern_id": "named_rodline_keeper_fenn",
+        "chapter": "stormwood",
+        "kernel": "Ordered relay spacing exam rodline_keeper_fenn",
+        "sendouts": [
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_retreat",
+              "diver_leap"
+            ]
+          }
+        ],
+        "mechanic": {
+          "controller": "existing_relay",
+          "relay_id": "rodline_keeper_fenn"
+        }
+      }
+    },
+    "heavy_tell_floor_s": 1.1,
+    "chapter_floors": {
+      "meadows": {
+        "telegraph": 1,
+        "recovery": 0.9
+      },
+      "meadows_late": {
+        "telegraph": 0.9,
+        "recovery": 0.75
+      },
+      "water": {
+        "telegraph": 0.85,
+        "recovery": 0.7
+      },
+      "cloudreach": {
+        "telegraph": 0.8,
+        "recovery": 0.6
+      },
+      "stormwood": {
+        "telegraph": 0.8,
+        "recovery": 0.6
+      }
+    },
+    "reactions": {
+      "observation_s": 0.25,
+      "dodge_min_range_m": 3,
+      "wild_dodge_cooldown_s": 6,
+      "trainer_dodge_cooldown_s": 6,
+      "mobile_trainer_dodge_cooldown_s": 4,
+      "dodge_distance_m": 3,
+      "dodge_duration_s": 0.2
+    },
+    "low_hp_fraction": 0.3,
+    "low_hp_tradeoffs": {
+      "WALL": {
+        "telegraph_add_s": 0.2
+      },
+      "DIVER": {
+        "reposition_add_s": 0.4
+      },
+      "CURRENT": {
+        "reposition_add_s": -0.2,
+        "third_recovery_add_s": 0.15
+      }
+    },
+    "tag_switch": {
+      "window_s": 1.25,
+      "followup_power_scale": 0.65,
+      "followup_tell_s": 0.25,
+      "source": "creature",
+      "max_followups_per_hit": 1
+    },
+    "proof": {
+      "seeds_per_band": 12,
+      "reader_win_min": 0.9,
+      "masher_lead_faint_gap_min": 0.25,
+      "switch_reader_hp_ratio_max": 0.9,
+      "named_top_seeds": 24,
+      "codeblind_roles": [
+        "WALL",
+        "CHARGER",
+        "DIVER",
+        "CURRENT",
+        "ACE"
+      ]
+    },
+    "settlement": {
+      "retry_s": 1
+    }
   }
 }
