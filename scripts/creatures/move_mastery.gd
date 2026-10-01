@@ -101,6 +101,107 @@ static func rank_for(creature: RefCounted, move_id: String) -> int:
 	var uses: Dictionary = creature.get("move_mastery_uses")
 	return rank_from_uses(int(uses.get(move_id,0)))
 
+## Freeze once in the actual accepted host action, before any credit. Actor
+## identity comes from the existing live deployment record, never an RPC card.
+## Pending actions retain this value across IO retries and body replacement.
+static func freeze_action(creature: RefCounted, slot: String, actor: Dictionary,
+		completed_tiers: Array, moves: RefCounted) -> Dictionary:
+	if creature == null or moves == null or not ["quick", "charged", "utility", "ultimate"].has(slot):
+		return {"ok": false, "code": "invalid_slot"}
+	var uid := str(creature.get("uid"))
+	if str(actor.get("creature_uid", "")) != uid or str(actor.get("character_id", "")).is_empty() \
+			or str(actor.get("encounter_id", "")).is_empty() or not _whole_nonnegative(actor.get("generation")) \
+			or int(actor.generation) < 1 or not _whole_nonnegative(actor.get("action")) or int(actor.action) < 1:
+		return {"ok": false, "code": "stale_actor"}
+	var move_id := str(creature.get("move_" + slot))
+	var known: Array = creature.get("known_moves")
+	if not known.has(move_id) or not moves.has(move_id) or str(moves.slot(move_id)) != slot:
+		return {"ok": false, "code": "unknown_or_wrong_slot"}
+	var row: Dictionary = moves.move(move_id).duplicate(true)
+	var rank := rank_for(creature, move_id)
+	var unique_tiers := {}
+	for tier: Variant in completed_tiers:
+		if not _whole_nonnegative(tier) or int(tier) < 1 or int(tier) > 5 or unique_tiers.has(int(tier)):
+			return {"ok": false, "code": "invalid_breakthroughs"}
+		unique_tiers[int(tier)] = true
+	var growth := 1.0
+	if slot == "ultimate":
+		var signature: Dictionary = row.get("ultimate", {})
+		growth += float(signature.get("growth_per_breakthrough", 0.0)) * unique_tiers.size()
+	row["mastery_rank"] = rank
+	row["effect_tier"] = rank
+	row["power_multiplier"] = power_multiplier(rank) * growth
+	row["slot"] = slot
+	row["move_id"] = move_id
+	row["action_id"] = new_action_identity("%s:%s:%d:%d" % [actor.encounter_id, uid, int(actor.generation), int(actor.action)])
+	row["actor_binding"] = actor.duplicate(true)
+	row["breakthrough_count"] = unique_tiers.size()
+	row["vfx"] = effect_tier(row.get("vfx", {}), rank, unique_tiers.size() if slot == "ultimate" else 0)
+	return {"ok": true, "move": row}
+
+## Tier changes object count/size and impact only. Geometry/timing/cost stays
+## frozen and unchanged, so a higher rank never falsifies an opponent's tell.
+static func effect_tier(base: Dictionary, rank: int, breakthroughs: int = 0) -> Dictionary:
+	var result := base.duplicate(true)
+	var step := clampi(rank, 1, 5) - 1
+	var tier := clampi(breakthroughs, 0, 5)
+	result["effect_tier"] = step + 1
+	result["breakthrough_tier"] = tier
+	result["count"] = maxi(1, int(base.get("count", 1))) + step + tier
+	result["size"] = float(base.get("size", 1.0)) * power_multiplier(step + 1) * (1.0 + float(config().get("damage_per_rank", 0.0)) * tier)
+	result["impact_scale"] = float(base.get("impact_scale", 1.0)) * power_multiplier(step + 1)
+	return result
+
+## Stage into the SAME existing live actor row as HP/action/Wind. No new meter
+## registry or portable ledger: meter is encounter-scoped, keyed by creature UID.
+## Caller verifies frozen binding against current generation before committing.
+static func stage_meter_landed(actor: Dictionary, frozen: Dictionary, actual_debit: float,
+		meter_config: Dictionary) -> Dictionary:
+	var binding: Variant = frozen.get("actor_binding")
+	if not binding is Dictionary or not is_finite(actual_debit) or actual_debit <= 0.0:
+		return {"ok": false, "code": "not_landed"}
+	for key: String in ["character_id", "creature_uid", "encounter_id", "generation"]:
+		if actor.get(key) != binding.get(key): return {"ok": false, "code": "stale_actor"}
+	var action := int(binding.get("action", -1))
+	if action < 1 or action <= int(actor.get("last_meter_action", 0)):
+		return {"ok": false, "code": "replayed_action"}
+	var maximum: Variant = meter_config.get("max")
+	var gains: Variant = meter_config.get("landed_gain")
+	if not _whole_nonnegative(maximum) or int(maximum) < 1 or not gains is Dictionary:
+		return {"ok": false, "code": "invalid_meter_config"}
+	var slot := str(frozen.get("slot", ""))
+	if not ["quick", "charged", "utility", "ultimate"].has(slot): return {"ok": false, "code": "invalid_slot"}
+	var gain: Variant = gains.get(slot, 0)
+	if not _whole_nonnegative(gain) or (slot == "ultimate" and int(gain) != 0):
+		return {"ok": false, "code": "invalid_meter_config"}
+	var before: Variant = actor.get("ultimate_meter", 0.0)
+	if not (before is int or before is float) or not is_finite(float(before)) \
+			or float(before) < 0.0 or float(before) > float(maximum): return {"ok": false, "code": "invalid_meter"}
+	var next := actor.duplicate(true)
+	next["ultimate_meter"] = minf(float(maximum), float(before) + float(gain))
+	next["last_meter_action"] = action
+	return {"ok": true, "actor": next}
+
+## The firing CAS consumes full meter inside the accepted action transaction.
+## A refusal or IO rollback leaves the exact old row available for retry.
+static func stage_ultimate_spend(actor: Dictionary, frozen: Dictionary, meter_config: Dictionary) -> Dictionary:
+	var binding: Variant = frozen.get("actor_binding")
+	if not binding is Dictionary or str(frozen.get("slot", "")) != "ultimate": return {"ok": false, "code": "invalid_slot"}
+	for key: String in ["character_id", "creature_uid", "encounter_id", "generation"]:
+		if actor.get(key) != binding.get(key): return {"ok": false, "code": "stale_actor"}
+	var maximum: Variant = meter_config.get("max")
+	if not _whole_nonnegative(maximum) or int(maximum) < 1: return {"ok": false, "code": "invalid_meter_config"}
+	if not ["idle", "recovery"].has(str(actor.get("state", ""))): return {"ok": false, "code": "committed"}
+	var action := int(binding.get("action", -1))
+	if action < 1 or action <= int(actor.get("last_ultimate_action", 0)): return {"ok": false, "code": "replayed_action"}
+	var meter: Variant = actor.get("ultimate_meter")
+	if not (meter is int or meter is float) or not is_finite(float(meter)) or float(meter) != float(maximum):
+		return {"ok": false, "code": "ultimate_not_full"}
+	var next := actor.duplicate(true)
+	next["ultimate_meter"] = 0.0
+	next["last_ultimate_action"] = action
+	return {"ok": true, "actor": next}
+
 ## Call inside the existing host HP transaction after commit, from the actual
 ## manager/director Node. Incoming network requests cannot supply this authority.
 ## The caller MUST revalidate current live attacker+target UID/generation and
@@ -133,6 +234,38 @@ static func stage_landed_use(creature: RefCounted, host_event: Dictionary) -> Di
 	var applied := float(raw_damage)
 	if not is_finite(hp_before) or not is_finite(applied) or hp_before <= 0.0 or applied <= 0.0 or applied > hp_before: return {"ok":false,"reason":"invalid_or_replayed_hit"}
 	if bool(host_event.get("snapshot_replay",false)): return {"ok":false,"reason":"invalid_or_replayed_hit"}
+	return _stage_use(creature, move_id, event_id)
+
+## Non-damaging utilities earn mastery only from a committed, effective host
+## utility receipt. Full-health heal, immune root, miss and snapshot award none.
+## This is private transaction planning: receiving this dictionary is not proof
+## of authority. The actual existing host HP/effect writer constructs it itself.
+static func stage_accepted_effect(creature: RefCounted, receipt: Dictionary) -> Dictionary:
+	if creature == null or config().is_empty(): return {"ok": false, "reason": "unavailable"}
+	var move_id := str(receipt.get("move_id", ""))
+	var event_id := str(receipt.get("action_id", ""))
+	if event_id.is_empty() or event_id.length() > 160 \
+			or receipt.get("source_uid") != creature.get("uid") \
+			or bool(receipt.get("snapshot_replay", false)):
+		return {"ok": false, "reason": "invalid_effect"}
+	var registry := MOVES.load_default()
+	if not registry.has(move_id) or registry.slot(move_id) != "utility":
+		return {"ok": false, "reason": "invalid_effect"}
+	var kind := str(receipt.get("kind", ""))
+	if kind == "heal":
+		var before: Variant = receipt.get("hp_before")
+		var after: Variant = receipt.get("hp_after")
+		if not (before is int or before is float) or not (after is int or after is float) \
+				or not is_finite(float(before)) or not is_finite(float(after)) \
+				or float(before) <= 0.0 or float(after) <= float(before):
+			return {"ok": false, "reason": "no_effect"}
+	elif not ["root", "slow_field", "movement_buff", "trap", "next_hit_buff", "damage_taken_debuff"].has(kind):
+		return {"ok": false, "reason": "no_effect"}
+	if str(registry.move(move_id).get("utility", {}).get("kind", "")) != kind:
+		return {"ok": false, "reason": "wrong_effect"}
+	return _stage_use(creature, move_id, event_id)
+
+static func _stage_use(creature: RefCounted, move_id: String, event_id: String) -> Dictionary:
 	var known: Array = creature.get("known_moves")
 	if not known.has(move_id): return {"ok":false,"reason":"invalid_or_replayed_hit"}
 	var uses: Dictionary = creature.get("move_mastery_uses")

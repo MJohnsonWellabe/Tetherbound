@@ -1,5 +1,5 @@
 {
-  "_comment": "F23 executable draft: 57 authored base species plus one reserved Stormursa and 12 explicit existing runtime Water catalogue records. Base defaults preserved; target first utility matches CREATURES\u00a75. Level/cap and completed-breakthrough authority stays with F27/F28. No new species registration, ultimate assignment or earned-state change. Breakthrough gates use the reserved character-schema ordinal T1..T5 (not cap levels L10..L50).",
+  "_comment": "F23 authored 57 base species, reserved Stormursa, and 12 existing Water adapters. L1 quick/charged/signature, L5 and L15 utility options, ordinal completed breakthroughs T1\u2013T5. Learning never edits an equipped loadout; primary types stay canonical.",
   "species": {
     "terrapup": {
       "target_role": "balanced bulwark",
@@ -15,6 +15,10 @@
           "move_id": "stone_rush"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_terrapup"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -37,8 +41,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_terrapup"
     },
     "ripplet": {
       "target_role": "current duelist",
@@ -54,6 +63,10 @@
           "move_id": "undertow"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ripplet"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -76,8 +89,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ripplet"
     },
     "galewisp": {
       "target_role": "mobile ranged scout",
@@ -93,6 +111,10 @@
           "move_id": "sky_rend"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_galewisp"
+        },
+        {
           "level": 5,
           "move_id": "veil"
         },
@@ -115,8 +137,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_galewisp"
     },
     "bramblebun": {
       "target_role": "route-denial trapper",
@@ -132,6 +159,10 @@
           "move_id": "warren_charge"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -154,8 +185,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ground_current"
     },
     "mudsnout": {
       "target_role": "attrition tank",
@@ -171,6 +207,10 @@
           "move_id": "rootquake"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_wall"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -193,8 +233,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "sap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ground_wall"
     },
     "trailpup": {
       "target_role": "pursuit skirmisher",
@@ -210,6 +255,10 @@
           "move_id": "trailblaze_pounce"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -232,8 +281,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ground_charger"
     },
     "burrowback": {
       "target_role": "front-line wall",
@@ -249,6 +303,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_wall"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -271,8 +329,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ground_wall"
     },
     "meadowhart": {
       "target_role": "mobile support runner",
@@ -288,6 +351,10 @@
           "move_id": "verdant_burst"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_diver"
+        },
+        {
           "level": 5,
           "move_id": "veil"
         },
@@ -310,8 +377,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ground_diver"
     },
     "tuskroot": {
       "target_role": "heavy breaker",
@@ -327,6 +399,10 @@
           "move_id": "rootquake"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_tuskroot"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -349,8 +425,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_tuskroot"
     },
     "paddlenewt": {
       "target_role": "ranged setup scout",
@@ -366,6 +447,10 @@
           "move_id": "riptide_rush"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -388,8 +473,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_current"
     },
     "mosshell": {
       "target_role": "endurance anchor",
@@ -405,6 +495,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_wall"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -427,8 +521,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "sap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_wall"
     },
     "brooktail": {
       "target_role": "reactive current skirmisher",
@@ -444,6 +543,10 @@
           "move_id": "riptide_rush"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -466,8 +569,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_charger"
     },
     "galecrest": {
       "target_role": "dive ace",
@@ -483,6 +591,10 @@
           "move_id": "storm_strike"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_air_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -505,8 +617,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_charger"
     },
     "duskhush": {
       "target_role": "evasive ambusher",
@@ -522,6 +639,10 @@
           "move_id": "night_swoop"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_air_diver"
+        },
+        {
           "level": 5,
           "move_id": "veil"
         },
@@ -544,8 +665,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_diver"
     },
     "pipwing": {
       "target_role": "fragile spotter",
@@ -561,6 +687,10 @@
           "move_id": "gust_burst"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_air_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -583,8 +713,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_charger"
     },
     "reedwing": {
       "target_role": "cross-type controller",
@@ -600,6 +735,10 @@
           "move_id": "sky_rend"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -622,8 +761,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_current"
     },
     "veridian": {
       "target_role": "legendary guardian",
@@ -639,6 +783,10 @@
           "move_id": "antler_slam"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_veridian"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -661,8 +809,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
-      ]
+      ],
+      "ultimate": "ultimate_veridian"
     },
     "nightburrow": {
       "target_role": "counter tank",
@@ -678,6 +831,10 @@
           "move_id": "gloom_surge"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_diver"
+        },
+        {
           "level": 5,
           "move_id": "veil"
         },
@@ -700,8 +857,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ground_diver"
     },
     "stormtrail": {
       "target_role": "pursuit disruptor",
@@ -717,6 +879,10 @@
           "move_id": "trailblaze_pounce"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -739,8 +905,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ground_charger"
     },
     "riftfrill": {
       "target_role": "ranged mind controller",
@@ -756,6 +927,10 @@
           "move_id": "rift_pulse"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_current"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -778,8 +953,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_current"
     },
     "ashtusk": {
       "target_role": "heavy burst breaker",
@@ -795,6 +975,10 @@
           "move_id": "rootquake"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ashtusk"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -817,8 +1001,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ashtusk"
     },
     "sparkit": {
       "target_role": "close spark skirmisher",
@@ -834,6 +1023,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -856,8 +1049,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_charger"
     },
     "cindercub": {
       "target_role": "brawling zone breaker",
@@ -873,6 +1071,10 @@
           "move_id": "rootquake"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_fire_wall"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -895,8 +1097,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_fire_wall"
     },
     "shadelet": {
       "target_role": "attrition ambusher",
@@ -912,6 +1119,10 @@
           "move_id": "gloom_surge"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_dark_diver"
+        },
+        {
           "level": 5,
           "move_id": "veil"
         },
@@ -934,8 +1145,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_dark_diver"
     },
     "frostclaw": {
       "target_role": "glass breaker",
@@ -951,6 +1167,10 @@
           "move_id": "glacier_break"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ice_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -973,8 +1193,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_ice_current"
     },
     "cannonback": {
       "target_role": "artillery anchor",
@@ -990,6 +1215,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_cannonback"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -1012,8 +1241,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "sap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_cannonback"
     },
     "riptusk": {
       "target_role": "river bruiser",
@@ -1029,6 +1263,10 @@
           "move_id": "undertow"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_wall"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -1051,8 +1289,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_wall"
     },
     "mirejaw": {
       "target_role": "ambush counterattacker",
@@ -1068,6 +1311,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_diver"
+        },
+        {
           "level": 5,
           "move_id": "veil"
         },
@@ -1090,8 +1337,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_diver"
     },
     "aquaryn": {
       "target_role": "mobile duelist",
@@ -1107,6 +1359,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -1129,8 +1385,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_charger"
     },
     "torrentoad": {
       "target_role": "burst gap-closer",
@@ -1146,6 +1407,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -1168,8 +1433,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_charger"
     },
     "cragclaw": {
       "target_role": "defensive counter-bruiser",
@@ -1185,6 +1455,10 @@
           "move_id": "undertow"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_wall"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -1207,8 +1481,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_wall"
     },
     "riverdrake": {
       "target_role": "flanking skirmisher",
@@ -1224,6 +1503,10 @@
           "move_id": "riptide_rush"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -1246,8 +1529,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_charger"
     },
     "sirenseal": {
       "target_role": "ranged controller",
@@ -1263,6 +1551,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -1285,8 +1577,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_current"
     },
     "mangrove_monitor": {
       "target_role": "shore flanker",
@@ -1302,6 +1599,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -1324,8 +1625,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_charger"
     },
     "tidecoil": {
       "target_role": "surface sweeper",
@@ -1341,6 +1647,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_water_current"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -1363,8 +1673,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
-      ]
+      ],
+      "ultimate": "ultimate_water_current"
     },
     "abyssal_guardian": {
       "target_role": "legendary burst controller",
@@ -1380,6 +1695,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_abyssal_guardian"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -1402,8 +1721,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
-      ]
+      ],
+      "ultimate": "ultimate_abyssal_guardian"
     },
     "voltwig": {
       "target_role": "line harrier",
@@ -1419,6 +1743,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -1441,8 +1769,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_current"
     },
     "mosshock": {
       "target_role": "ambush disruptor",
@@ -1458,6 +1791,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_diver"
+        },
+        {
           "level": 5,
           "move_id": "veil"
         },
@@ -1480,8 +1817,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_diver"
     },
     "staticub": {
       "target_role": "compact peel tank",
@@ -1497,6 +1839,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_wall"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -1519,8 +1865,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_wall"
     },
     "voltarach": {
       "target_role": "arena anchor",
@@ -1536,6 +1887,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_wall"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -1558,8 +1913,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "sap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_wall"
     },
     "fulgocobra": {
       "target_role": "apex lane sweeper",
@@ -1575,6 +1935,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_fulgocobra"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -1597,8 +1961,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_fulgocobra"
     },
     "stormraven": {
       "target_role": "aerial dive disruptor",
@@ -1614,6 +1983,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -1636,8 +2009,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_charger"
     },
     "pebbik": {
       "target_role": "air-screen harrier",
@@ -1653,6 +2031,10 @@
           "move_id": "gust_burst"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_air_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -1675,8 +2057,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_current"
     },
     "craghorn": {
       "target_role": "aerial bruiser",
@@ -1692,6 +2079,10 @@
           "move_id": "sky_rend"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_air_wall"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -1714,8 +2105,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_wall"
     },
     "stormbrush": {
       "target_role": "mobile screen controller",
@@ -1731,6 +2127,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_current"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -1753,8 +2153,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_current"
     },
     "tanglevolt": {
       "target_role": "tether-zone controller",
@@ -1770,6 +2175,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_current"
+        },
+        {
           "level": 5,
           "move_id": "snare"
         },
@@ -1792,8 +2201,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_current"
     },
     "thundertunnel": {
       "target_role": "burrow breaker",
@@ -1809,6 +2223,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_electric_wall"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -1831,8 +2249,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_wall"
     },
     "glimmermoth": {
       "target_role": "fragile ranged decoy",
@@ -1846,6 +2269,10 @@
         {
           "level": 1,
           "move_id": "arc_lash"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_electric_diver"
         },
         {
           "level": 5,
@@ -1870,8 +2297,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_electric_diver"
     },
     "stormcapra": {
       "target_role": "charge interceptor",
@@ -1885,6 +2317,10 @@
         {
           "level": 1,
           "move_id": "storm_strike"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_stormcapra"
         },
         {
           "level": 5,
@@ -1909,8 +2345,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_stormcapra"
     },
     "skyrill": {
       "target_role": "night pursuit hunter",
@@ -1926,6 +2367,10 @@
           "move_id": "night_swoop"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_air_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -1948,8 +2393,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_charger"
     },
     "aeriex": {
       "target_role": "high-line duelist",
@@ -1965,6 +2415,10 @@
           "move_id": "storm_strike"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_air_charger"
+        },
+        {
           "level": 5,
           "move_id": "dash_strike"
         },
@@ -1987,8 +2441,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_charger"
     },
     "ribbonray": {
       "target_role": "area screen controller",
@@ -2002,6 +2461,10 @@
         {
           "level": 1,
           "move_id": "gust_burst"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_air_current"
         },
         {
           "level": 5,
@@ -2026,8 +2489,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_current"
     },
     "breezetail": {
       "target_role": "ranged kiter",
@@ -2041,6 +2509,10 @@
         {
           "level": 1,
           "move_id": "storm_strike"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_air_current"
         },
         {
           "level": 5,
@@ -2065,8 +2537,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_current"
     },
     "cloudfang": {
       "target_role": "ambush diver",
@@ -2080,6 +2557,10 @@
         {
           "level": 1,
           "move_id": "sky_rend"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_air_diver"
         },
         {
           "level": 5,
@@ -2104,8 +2585,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_diver"
     },
     "cliffspike": {
       "target_role": "terrain punisher",
@@ -2119,6 +2605,10 @@
         {
           "level": 1,
           "move_id": "storm_strike"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_air_wall"
         },
         {
           "level": 5,
@@ -2143,8 +2633,13 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_wall"
     },
     "tempestwing": {
       "target_role": "elite air controller",
@@ -2158,6 +2653,10 @@
         {
           "level": 1,
           "move_id": "gust_burst"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_air_current"
         },
         {
           "level": 5,
@@ -2182,8 +2681,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
-      ]
+      ],
+      "ultimate": "ultimate_air_current"
     },
     "solmane": {
       "target_role": "legendary sky guardian, volunteered after Veyra, never wild or catchable (the summit wild tables use `tempestwing`)",
@@ -2197,6 +2701,10 @@
         {
           "level": 1,
           "move_id": "sky_rend"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_solmane"
         },
         {
           "level": 5,
@@ -2221,8 +2729,13 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
-      ]
+      ],
+      "ultimate": "ultimate_solmane"
     },
     "stormursa": {
       "reserved": true,
@@ -2239,6 +2752,10 @@
           "move_id": "arc_lash"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_stormursa"
+        },
+        {
           "level": 5,
           "move_id": "shove"
         },
@@ -2249,8 +2766,25 @@
         {
           "breakthrough_tier": 5,
           "move_id": "hearten"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "heal_pulse"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "hearten"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "sap"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
-      ]
+      ],
+      "ultimate": "ultimate_stormursa"
     },
     "water_cannonback": {
       "target_role": "ranged_anchor",
@@ -2264,6 +2798,10 @@
         {
           "level": 1,
           "move_id": "tidal_burst"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_cannonback"
         },
         {
           "level": 5,
@@ -2288,9 +2826,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "sap"
         }
       ],
-      "source_roster": "water_roster.json#species/cannonback"
+      "source_roster": "water_roster.json#species/cannonback",
+      "ultimate": "ultimate_cannonback"
     },
     "water_riptusk": {
       "target_role": "shore_bruiser",
@@ -2304,6 +2847,10 @@
         {
           "level": 1,
           "move_id": "riptide_rush"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_wall"
         },
         {
           "level": 5,
@@ -2328,9 +2875,14 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
       ],
-      "source_roster": "water_roster.json#species/riptusk"
+      "source_roster": "water_roster.json#species/riptusk",
+      "ultimate": "ultimate_water_wall"
     },
     "water_aquaryn": {
       "target_role": "alpha_mobile_duelist",
@@ -2344,6 +2896,10 @@
         {
           "level": 1,
           "move_id": "riptide_lance"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
         },
         {
           "level": 5,
@@ -2368,9 +2924,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
       ],
-      "source_roster": "water_roster.json#species/aquaryn"
+      "source_roster": "water_roster.json#species/aquaryn",
+      "ultimate": "ultimate_water_charger"
     },
     "water_tidecoil": {
       "target_role": "late_apex_surface_sweeper",
@@ -2384,6 +2945,10 @@
         {
           "level": 1,
           "move_id": "leviathan_surge"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_current"
         },
         {
           "level": 5,
@@ -2408,9 +2973,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
       ],
-      "source_roster": "water_roster.json#species/tidecoil"
+      "source_roster": "water_roster.json#species/tidecoil",
+      "ultimate": "ultimate_water_current"
     },
     "water_mirejaw": {
       "target_role": "ambush_counterattacker",
@@ -2424,6 +2994,10 @@
         {
           "level": 1,
           "move_id": "undertow"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_diver"
         },
         {
           "level": 5,
@@ -2448,9 +3022,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 1,
+          "move_id": "snare"
         }
       ],
-      "source_roster": "water_roster.json#species/mirejaw"
+      "source_roster": "water_roster.json#species/mirejaw",
+      "ultimate": "ultimate_water_diver"
     },
     "water_torrentoad": {
       "target_role": "burst_gap_closer",
@@ -2464,6 +3043,10 @@
         {
           "level": 1,
           "move_id": "riptide_rush"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
         },
         {
           "level": 5,
@@ -2488,9 +3071,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
       ],
-      "source_roster": "water_roster.json#species/torrentoad"
+      "source_roster": "water_roster.json#species/torrentoad",
+      "ultimate": "ultimate_water_charger"
     },
     "water_cragclaw": {
       "target_role": "defensive_counter_bruiser",
@@ -2504,6 +3092,10 @@
         {
           "level": 1,
           "move_id": "tremor_roll"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_wall"
         },
         {
           "level": 5,
@@ -2528,9 +3120,14 @@
         {
           "breakthrough_tier": 4,
           "move_id": "bramble_trap"
+        },
+        {
+          "breakthrough_tier": 5,
+          "move_id": "quake_ring"
         }
       ],
-      "source_roster": "water_roster.json#species/cragclaw"
+      "source_roster": "water_roster.json#species/cragclaw",
+      "ultimate": "ultimate_water_wall"
     },
     "water_riverdrake": {
       "target_role": "flanking_skirmisher",
@@ -2544,6 +3141,10 @@
         {
           "level": 1,
           "move_id": "riptide_rush"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
         },
         {
           "level": 5,
@@ -2568,9 +3169,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
       ],
-      "source_roster": "water_roster.json#species/riverdrake"
+      "source_roster": "water_roster.json#species/riverdrake",
+      "ultimate": "ultimate_water_charger"
     },
     "water_sirenseal": {
       "target_role": "ranged_controller",
@@ -2584,6 +3190,10 @@
         {
           "level": 1,
           "move_id": "undertow"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_current"
         },
         {
           "level": 5,
@@ -2608,9 +3218,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 4,
+          "move_id": "bramble_trap"
         }
       ],
-      "source_roster": "water_roster.json#species/sirenseal"
+      "source_roster": "water_roster.json#species/sirenseal",
+      "ultimate": "ultimate_water_current"
     },
     "water_mangrove_monitor": {
       "target_role": "shore_flanker",
@@ -2624,6 +3239,10 @@
         {
           "level": 1,
           "move_id": "trailblaze_pounce"
+        },
+        {
+          "level": 1,
+          "move_id": "ultimate_water_charger"
         },
         {
           "level": 5,
@@ -2648,9 +3267,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 2,
+          "move_id": "shove"
         }
       ],
-      "source_roster": "water_roster.json#species/mangrove_monitor"
+      "source_roster": "water_roster.json#species/mangrove_monitor",
+      "ultimate": "ultimate_water_charger"
     },
     "water_mosshell": {
       "target_role": "endurance_tank",
@@ -2666,6 +3290,10 @@
           "move_id": "tremor_roll"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_ground_wall"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -2688,9 +3316,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "sap"
         }
       ],
-      "source_roster": "water_roster.json#species/mosshell"
+      "source_roster": "water_roster.json#species/mosshell",
+      "ultimate": "ultimate_ground_wall"
     },
     "water_abyssal_guardian": {
       "target_role": "legendary_burst_controller",
@@ -2706,6 +3339,10 @@
           "move_id": "leviathan_surge"
         },
         {
+          "level": 1,
+          "move_id": "ultimate_abyssal_guardian"
+        },
+        {
           "level": 5,
           "move_id": "slow_field"
         },
@@ -2728,9 +3365,14 @@
         {
           "breakthrough_tier": 5,
           "move_id": "quake_ring"
+        },
+        {
+          "breakthrough_tier": 3,
+          "move_id": "veil"
         }
       ],
-      "source_roster": "water_roster.json#species/abyssal_guardian"
+      "source_roster": "water_roster.json#species/abyssal_guardian",
+      "ultimate": "ultimate_abyssal_guardian"
     }
   }
 }
