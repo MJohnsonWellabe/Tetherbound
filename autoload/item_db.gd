@@ -76,6 +76,12 @@ func _init(
 		for id: String in gear.get("items", {}): _items[id] = gear.items[id]
 		if gear.get("feature_flags", {}).get("runtime_enabled") == true:
 			for id: String in gear.get("recipes", {}): _recipes[id] = gear.recipes[id]
+		var camps := _read("res://data/config/forward_camps.json")
+		# Item remains known while OFF so future additive saves retain the kit.
+		for id: String in camps.get("items",{}): _items[id]=camps.items[id]
+		if camps.get("runtime_enabled") == true:
+			for id: String in camps.get("recipes",{}): _recipes[id]=camps.recipes[id]
+			for row: Dictionary in catalogue.get("forward_camp_buildables",[]): _buildables.append(row)
 
 
 func _read(path: String) -> Dictionary:

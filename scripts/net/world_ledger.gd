@@ -539,6 +539,7 @@ func _deplete_vegetation(intent: Dictionary, peer_id: int, realm: String) -> Dic
 ## placed-building record has one construction site and cannot drift.
 func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var id := str(intent.get("id", ""))
+	if id == "forward_camp": return _refuse("place_building",peer_id,"camp_transaction_required","Forward camps need the host's paid kit transaction.")
 	if id == "altar": return _refuse("place_building", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
 	if id.is_empty():
 		return _refuse("place_building", peer_id, "malformed", "That structure has no identity to record.")
@@ -634,6 +635,7 @@ func _dismantle(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	if index < 0 or index >= buildings.size():
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
 	var record: Dictionary = buildings[index] as Dictionary
+	if record.get("id") == "forward_camp": return _refuse("dismantle",peer_id,"camp_transaction_required","Pack up the camp through its host kit transaction.")
 	if record.get("id") == "altar": return _refuse("dismantle", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
 	if str(record.get("realm", "meadows")) != realm:
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
