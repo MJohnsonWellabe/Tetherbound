@@ -7341,6 +7341,13 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		var uid := str(owned_creature.get("uid"))
 		var biome := "tidewake" if marker == 1 else "cloudreach"
 		var suffix := "storage-%d" % marker
+		# Disclosed storage receipts, not earned hits. The live loadout is the
+		# production serialization source, so seed matching durable mastery there.
+		var mastery_receipts: Array[String] = []
+		for use in marker + 1:
+			mastery_receipts.append("fixture:%s:pebble_toss:%d" % [suffix, use])
+		owned_creature.set("move_mastery_uses", {"pebble_toss": marker + 1})
+		owned_creature.set("move_mastery_receipts", {"pebble_toss": mastery_receipts})
 		var personal := {"portal_unlocks": [biome],
 			"waystones_activated": {biome: [biome + "_entry"]}, "last_waystones": {biome: biome + "_entry"},
 			"relics_held": [biome], "relics_hung": ["meadows"], "attachment_recipes": ["forge_meadows"],
@@ -7349,17 +7356,29 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 			"research_receipts": ["research:" + suffix], "bounty_receipts": ["bounty:" + suffix],
 			"pouch_tier": marker, "creatures": {uid: {"cap_level": 20,
 				"breakthroughs": [1], "evolution_choices": {"1": "stay"}, "rolled_traits": ["hardy"],
-				"taught_traits": {"1": "hardy"}, "known_moves": ["pebble_toss", "stone_rush"],
-				"loadout": {"quick": "pebble_toss", "charged": "stone_rush", "utility": "", "ultimate": ""},
-				"mastery": {"pebble_toss": {"uses": marker + 1, "rank": 1}}, "best": true}}}
-		var errors := FOUNDATIONS_STATE.validate("character", personal, [uid])
+				"taught_traits": {"1": "calm"},
+				"known_moves": (owned_creature.get("known_moves") as Array).duplicate(),
+				"loadout": {"quick": owned_creature.get("move_quick"), "charged": owned_creature.get("move_charged"),
+					"utility": owned_creature.get("move_utility"), "ultimate": owned_creature.get("move_ultimate")},
+				"mastery": {"pebble_toss": {"uses": marker + 1,
+					"rank": preload("res://scripts/creatures/move_mastery.gd").rank_from_uses(marker + 1)}}, "best": true}}}
+		var fixture_snapshot: Dictionary = saver.call("snapshot", game)
+		var canonical := preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(fixture_snapshot.party, personal)
+		# Add existing codec keys before the roundtrip; refuse any replacement of
+		# the requested fixture values rather than hiding loss in the expectation.
+		for field: String in personal.creatures[uid]:
+			if canonical.creatures[uid].get(field) != personal.creatures[uid][field]:
+				return {"verdict": "FAIL", "detail": "canonical fixture changed " + field}
+		var errors := FOUNDATIONS_STATE.validate("character", canonical, [uid])
+		errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(fixture_snapshot.party, canonical, true))
+		errors.append_array(preload("res://scripts/save/save_game.gd").trait_party_errors(fixture_snapshot.party, canonical))
 		var hosted := {"portal_unlocks": ["tidewake", "cloudreach"], "shrine_display": {"meadows": true},
 			"station_tiers": {"forge": 2}, "node_cycles": {"essence_ground": 3},
 			"rematch_cycles": {"meadows": 4}, "alpha_cycles": {"meadows": 5},
 			"bounty_day": 6, "fifth_arch_stirred": true}
 		if bool(game.call("is_host")): errors.append_array(FOUNDATIONS_STATE.validate("world", hosted))
 		if not errors.is_empty(): return {"verdict": "FAIL", "detail": str(errors)}
-		local.set("redesign_character", personal)
+		local.set("redesign_character", canonical)
 		if bool(game.call("is_host")):
 			world.set("redesign_world", hosted)
 			world.set("revision", int(world.get("revision")) + 1)

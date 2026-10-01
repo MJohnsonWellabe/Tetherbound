@@ -85,4 +85,15 @@ func _populated(payload: Dictionary) -> bool:
 		if personal[key] == STATE.defaults("character")[key]: return false
 	var creatures: Dictionary = personal.get("creatures", {})
 	if creatures.size() != 1: return false
-	return (creatures.values()[0] as Dictionary).size() == 9
+	var creature: Dictionary = creatures.values()[0]
+	var defaults := {"cap_level": 10, "breakthroughs": [], "evolution_choices": {},
+		"rolled_traits": [], "taught_traits": {}, "known_moves": [],
+		"loadout": {"quick": "", "charged": "", "utility": "", "ultimate": ""},
+		"mastery": {}, "best": false}
+	for key: String in defaults:
+		if not creature.has(key) or creature[key] == defaults[key]: return false
+	# The original nine fields remain populated. Require only the exact codec
+	# additions used by the live loadout.
+	for key: String in ["mastery_receipts", "loadout_revision", "loadout_last_edit"]:
+		if not creature.has(key): return false
+	return creature.size() == 12 and not (creature.mastery_receipts as Dictionary).is_empty()

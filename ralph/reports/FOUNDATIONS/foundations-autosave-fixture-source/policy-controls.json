@@ -1,0 +1,405 @@
+{
+  "kind": "source checks and independent pure Python data-policy models; no GDScript execution/parser",
+  "checks": [
+    {
+      "name": "original artifact ZIP digest",
+      "passed": true
+    },
+    {
+      "name": "one retained host refusal",
+      "passed": true
+    },
+    {
+      "name": "actual production trait refusal",
+      "passed": true
+    },
+    {
+      "name": "rejected exact snapshot string digest",
+      "passed": true
+    },
+    {
+      "name": "actual duplicate rolled/taught trait",
+      "passed": true
+    },
+    {
+      "name": "actual snapshot already canonicalized loadout",
+      "passed": true
+    },
+    {
+      "name": "allocated preimage matches pinned ROOT: tools/net/peer_runner.gd",
+      "passed": true
+    },
+    {
+      "name": "ROOT working file still pinned: tools/net/peer_runner.gd",
+      "passed": true
+    },
+    {
+      "name": "all other peer runner bytes unchanged",
+      "passed": true
+    },
+    {
+      "name": "roundtrip/full equality/all negative modes unchanged",
+      "passed": true
+    },
+    {
+      "name": "fixture values guarded before canonical adoption",
+      "passed": true
+    },
+    {
+      "name": "real production loadout and trait preflight retained in seed",
+      "passed": true
+    },
+    {
+      "name": "allocated preimage matches pinned ROOT: tests/smoke_net_foundations.gd",
+      "passed": true
+    },
+    {
+      "name": "ROOT working file still pinned: tests/smoke_net_foundations.gd",
+      "passed": true
+    },
+    {
+      "name": "all native smoke actions/assertions/budgets unchanged",
+      "passed": true
+    },
+    {
+      "name": "all original world/personal population checks unchanged",
+      "passed": true
+    },
+    {
+      "name": "nine original schema fields exactly retained",
+      "passed": true
+    },
+    {
+      "name": "all three exact extensions allowed by existing schema",
+      "passed": true
+    },
+    {
+      "name": "trait runtime flag stays off",
+      "passed": true
+    },
+    {
+      "name": "marker1 registered distinct unlocked trait",
+      "passed": true
+    },
+    {
+      "name": "marker1 actual learnset/default slots/nonzero mastery/unique receipts",
+      "passed": true
+    },
+    {
+      "name": "marker1 all nine original fields nondefault plus exact extensions",
+      "passed": true
+    },
+    {
+      "name": "marker1 disclosed original mastery uses/rank retained",
+      "passed": true
+    },
+    {
+      "name": "marker1 canonical mirror preserves all requested original values",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault cap_level refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault breakthroughs refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault evolution_choices refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault rolled_traits refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault taught_traits refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault known_moves refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault loadout refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault mastery refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing nondefault best refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing exact extension loadout_revision refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing exact extension mastery_receipts refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 missing exact extension loadout_last_edit refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 unexpected extension refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 duplicate taught trait refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 unknown taught trait refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 locked taught trait refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 duplicate mastery receipt refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 receipt count mismatch refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 wrong slot refuses",
+      "passed": true
+    },
+    {
+      "name": "marker1 unknown move refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 registered distinct unlocked trait",
+      "passed": true
+    },
+    {
+      "name": "marker2 actual learnset/default slots/nonzero mastery/unique receipts",
+      "passed": true
+    },
+    {
+      "name": "marker2 all nine original fields nondefault plus exact extensions",
+      "passed": true
+    },
+    {
+      "name": "marker2 disclosed original mastery uses/rank retained",
+      "passed": true
+    },
+    {
+      "name": "marker2 canonical mirror preserves all requested original values",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault cap_level refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault breakthroughs refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault evolution_choices refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault rolled_traits refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault taught_traits refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault known_moves refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault loadout refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault mastery refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing nondefault best refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing exact extension loadout_revision refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing exact extension mastery_receipts refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 missing exact extension loadout_last_edit refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 unexpected extension refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 duplicate taught trait refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 unknown taught trait refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 locked taught trait refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 duplicate mastery receipt refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 receipt count mismatch refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 wrong slot refuses",
+      "passed": true
+    },
+    {
+      "name": "marker2 unknown move refuses",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: character_loadout_mirror",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: party_loadout_errors",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: trait_state_errors",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: initialize_legacy_record",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: normalize_admitted",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: snapshot",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: _redesign_errors",
+      "passed": true
+    },
+    {
+      "name": "actual CI and pinned ROOT relevant function equal: errors",
+      "passed": true
+    }
+  ],
+  "count": 77,
+  "fixtures": [
+    {
+      "marker": 1,
+      "policy_model_record": {
+        "best": true,
+        "breakthroughs": [
+          1
+        ],
+        "cap_level": 20,
+        "evolution_choices": {
+          "1": "stay"
+        },
+        "known_moves": [
+          "pebble_toss",
+          "stone_rush",
+          "ultimate_terrapup"
+        ],
+        "loadout": {
+          "charged": "stone_rush",
+          "quick": "pebble_toss",
+          "ultimate": "ultimate_terrapup",
+          "utility": ""
+        },
+        "loadout_last_edit": {},
+        "loadout_revision": 0,
+        "mastery": {
+          "pebble_toss": {
+            "uses": 2,
+            "rank": 1
+          }
+        },
+        "mastery_receipts": {
+          "pebble_toss": [
+            "fixture:storage-1:pebble_toss:0",
+            "fixture:storage-1:pebble_toss:1"
+          ]
+        },
+        "rolled_traits": [
+          "hardy"
+        ],
+        "taught_traits": {
+          "1": "calm"
+        }
+      }
+    },
+    {
+      "marker": 2,
+      "policy_model_record": {
+        "best": true,
+        "breakthroughs": [
+          1
+        ],
+        "cap_level": 20,
+        "evolution_choices": {
+          "1": "stay"
+        },
+        "known_moves": [
+          "pebble_toss",
+          "stone_rush",
+          "ultimate_terrapup"
+        ],
+        "loadout": {
+          "charged": "stone_rush",
+          "quick": "pebble_toss",
+          "ultimate": "ultimate_terrapup",
+          "utility": ""
+        },
+        "loadout_last_edit": {},
+        "loadout_revision": 0,
+        "mastery": {
+          "pebble_toss": {
+            "uses": 3,
+            "rank": 1
+          }
+        },
+        "mastery_receipts": {
+          "pebble_toss": [
+            "fixture:storage-2:pebble_toss:0",
+            "fixture:storage-2:pebble_toss:1",
+            "fixture:storage-2:pebble_toss:2"
+          ]
+        },
+        "rolled_traits": [
+          "hardy"
+        ],
+        "taught_traits": {
+          "1": "calm"
+        }
+      }
+    }
+  ]
+}
