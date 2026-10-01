@@ -1,0 +1,358 @@
+{
+  "_comment": "BAND-SPLIT. Band-local trainers for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
+  "trainers": [
+    {
+      "order": 11,
+      "id": "captain_field",
+      "_comment_gatec_curve": "GATEC-CURVE raised this team from 11/12/13 to 13/14/15. It was the one DIP in the chapter's opposition curve: the player reaches this captain at z=5590, having already beaten the relay captain (11/11/12, z=3757) and Captain Riverwatch (13/14/16, z=4350), so a level-11 lead creature here was weaker than two fights the player had already won and the region read as a step backwards. Still inside spec section 3's 'roughly 10-16 entering this band' and inside tests/test_trainers_data.gd::test_captain_teams_sit_in_the_bands_own_level_range. The band this must stay inside now lives in data/config/chapter_curve.json.",
+      "name": "Captain Halder",
+      "_comment": "SF34, spec §3 Band 4. The first of the three regional captains: Ground-focused team, rewards the Field Sigil. Team levels are TUNABLE and sit inside §3's own 'roughly 10-16 entering this band' -- NEVER player-scaled (§3 says so outright): a player who over-levels walks through him, and that is the reward for over-levelling.",
+      "rank": "captain",
+      "palette": {
+        "*": "#d9a878"
+      },
+      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the golden dry straw of the high pasture, and the warmest of the three. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
+      "_comment_ow6": "OW6 (owner: 'the captain to challenge is way too close to where you start'). THIS is the trainer the complaint describes -- OW5D's own note below records the pre-corridor stand-in position (52,-122), effectively at the village. It already moved before this item ran. Verified with OW5-walk's real spine (11,316.6m walked, 37.7min, walked/config 0.983): current site is 8767m of polyline / 76.1% in, ~28.7 walked minutes -- third of the four field/relay captains and well past the corridor's midpoint. No further move made; a fourth relocation of the same trainer without a fresh measured problem would be exactly the kind of un-asked-for redesign this project's own conventions warn against.",
+      "_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: this captain was 'unplaced/near village' (the (52,-122) below was a Band-4-shaped stand-in on the OLD map, not a real Band 4 site -- the old map had no Band 4). Moved to (170,5590), the position section 3.1's Band 4 waypoint list names explicitly for the Field Captain. `facing_deg` (-20.6) is UNCHANGED and is almost certainly wrong for the new site -- it was derived by atan2 back to the OLD village at roughly the origin, and the new corridor's Band 4 geometry is a different shape entirely. Left as a flag rather than invented: re-deriving a correct facing needs the reviewer to pick which way 'back down the road' points on the new spine, which is authoring judgement past a coordinate relocation.",
+      "position": [
+        170.0,
+        5590.0
+      ],
+      "facing_deg": -20.6,
+      "_why_here": "The high pasture west of the Rise, on the trainer road up-country (spec Band 4's 'high pasture' and 'trainer road'). MEASURED, not guessed: `tools/_probe_upper_meadows.gd` reads h=0.59m, 0.64m of height spread and a worst local slope of 6.0 degrees over an 8m pad -- a real arena, on the flattest ground in the upper Meadows. 28.6m clear of the Burrow Warrens' mouth at [70,-140] so the dungeon's own prompt never contests the challenge, 133m from the origin and well inside world_perimeter.gd's 235m ring. `facing_deg` is the yaw that looks back down the road toward the village, the same atan2(dx, dz) convention every other entry in this file uses. STALE after OW5D's move -- see `_comment_ow5d` above; ground here was not re-probed either.",
+      "challenge": "captain_field_challenge",
+      "defeated": "captain_field_defeated",
+      "victory_conversation": "captain_field_defeated",
+      "_why_victory_conversation_f04_6": "F04#6 (ACCEPTANCE 6.1, BOSSES 4.3 Change): the win used to end with the player already walking away and nothing in frame (earned-run aftermath capture, meadows-f04-bosses r1). encounter_director.gd::_present_trainer_victory plays this conversation the moment the fight resolves -- the captain's own Sigil handover, the same lines the defeated greeting says -- while the aftermath camera faces this trainer and the defeat slump plays. Data only; no new lines.",
+      "team": [
+        {
+          "species": "duskhush",
+          "level": 16,
+          "combat": {
+            "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 0.9,
+            "power": 31.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "tuskroot",
+          "level": 16,
+          "combat": {
+            "preferred_range": 4.5,
+            "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "lunge": 7.0,
+            "_why_lunge_travels_f04": "F04: this CHARGER's lunge really travels. At the end of its tell the body runs `lunge` metres down the heading it locked at mid-tell, shown on the ground as a lane of exactly that length while it winds up, and the blow lands only if the body reaches its target on the way (combat.json `charger_lunge`; scripts/creatures/wild_creature.gd). Before this the 7.0 was an impulse that moved the body under a metre and hit or missed by a cone test at range, so the distance BOSSES makes the cue was never seen. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "open_separation": 8.5,
+            "_why_open_separation_f04": "F04#2 (round-1 judge B1): at the 5 m default gap this 7 m CHARGER opened inside its own reach, so the charge fired point-blank and its lane was a stub under the HUD. The fight forms 8.5 m apart (combat_manager.gd::_open_separation; inside the 11 m ring), so the first charge runs its whole lane in view. Staging only; timings and power unchanged. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "lunge_travels": true,
+            "telegraph": 0.8,
+            "recovery": 0.9,
+            "attack_cooldown": 1.6,
+            "power": 10.4
+          }
+        },
+        {
+          "species": "burrowback",
+          "level": 16,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 22.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "mosshell",
+          "level": 16,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 22.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "meadowhart",
+          "level": 16,
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 23.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        }
+      ],
+      "_why_t3_typechart_rebalance": "T3-ACTIVITIES, acting on T3-TYPECHART's own finding (handover-T3-TYPECHART-2026-08-30.md sec4.2/8): this trio fielded Ground x3, which under the new type chart hands ANY Water-typed challenger a -35% exchange discount for the whole fight and taxes an Air-typed one +56% -- the '-35% discounts are the real problem' the design note names, worse than the tax because it lets a prepared player trivialise a Sigil fight on type alone. Swapping the WEAKEST original member (burrowback, level 13, the lowest of the three) for a same-level, same-band-resident Air creature (duskhush) breaks the mono-type sweep: a Water challenger now gets the 1.25x advantage against only 2 of 3 members instead of all 3, and an Air challenger is no longer taxed on every exchange either. Not a fourth member and not a level change -- same team size, same level ladder (13/14/15), same reward. Verified with tools/_probe_captain_typechart.gd (non-mirror: three mono-type challengers modelled against the real chart, not the same type on both sides smoke_combat.gd's own director draws).",
+      "_why_combat_g3encounters": "G3-ENCOUNTERS (Fable design contract, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sections 1.3 and 4.2). G-2 defines an optional per-team-member `combat` override that `wild_creature.set_engaged()` merges over `combat.json`'s `enemy` block for that body only (implemented by the coordinator directly, ralph/G3-ENCOUNTERS-0903, to avoid a five-lane collision on the shared script); this authors the values the contract assigns THIS captain against G-3's five reusable profiles. C-4 (Halder, the Pasture: power): Tuskroot -- the second Tuskroot in the chapter, three levels over Vance's -- gets CHARGER (preferred_range 4.5, lunge 7.0, telegraph 0.6, recovery 0.9, attack_cooldown 1.6, power 8.0x1.3=10.4), closing from range in one lunge, the tell is distance not time. Meadowhart (the ace) gets CURRENT (attack_cooldown 0.7, recovery 0.55, reposition_time 0.5, reposition_distance 2.0) but at the contract's explicit power 1.0, not CURRENT's own default 0.8x (8.0, not 6.4) -- 'relentless, not thin: the no-trick fight is pressure that never lets up'. Duskhush carries no override, C-4's own 'default' third member. All values computed against combat.json's own `enemy` defaults (power 8.0, telegraph 0.55, recovery 0.75, attack_cooldown 1.1, preferred_range 2.1, reposition_distance 4.0, reposition_time 1.0, lunge 3.4), which is what an absent `combat` block still resolves to for every other creature in the game (G-2's own fails-if).",
+      "reward": {
+        "coins": 40,
+        "items": [
+          {
+            "id": "field_sigil",
+            "count": 1
+          },
+          {
+            "id": "potion_small",
+            "count": 2
+          },
+          {
+            "id": "tm_earth_fist",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 60
+      },
+      "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 1: Sigil + strong TM'). Field is the first of the three regional captains (see this entry's own `_comment`) and had no TM in its payout -- every Ground TM in the game came from a world pickup (tm_stone_rush/tm_burrow_strike, opening field) or Mira's shop (tm_rock_throw/tm_stone_spike/tm_earth_fist), never a fight. tm_earth_fist is the strongest Ground TM Mira sells (230 coins, power 1.4, one rung under the apex tm_earthshatter that is reserved for the off-spine Band 4 detour) -- a captain victory now hands over the same disc a player would otherwise have to save up for, which is what makes beating him feel like it paid for something beyond the Sigil. Still buyable at Mira's afterward for a second copy; nothing about the shop changed.",
+      "defeat_flag": "defeated_captain_field",
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "base": "captain_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 12,
+      "id": "captain_ridge",
+      "_comment_gatec_curve": "GATEC-CURVE raised this team from 12/13/15 to 14/15/16, for the same reason as captain_field above and to keep this file's own claim that Vess is 'a level step above the Field Captain' true after that change. 16 is the ceiling the captain band test already enforces.",
+      "name": "Captain Vess",
+      "_comment": "SF34. The second captain: Air-focused team, rewards the Ridge Sigil. A level step above the Field Captain -- the three are meant to be fought in road order, not in one sitting, and nothing enforces that order because nothing needs to: the Sigils are a set and the gate counts them, not their sequence.",
+      "rank": "captain",
+      "palette": {
+        "*": "#c8969f"
+      },
+      "_comment_palette": "A regional accent laid over the CAPTAIN rank -- the cold rose light of the wind ridge, the coolest of the three. All three sit in the CAPTAIN RANK's own warm oxblood family (npc_ranks.json, `#d4a3a3`) at roughly its luminance, rather than in the olive/tan/slate they used to carry. That is the actual fix VIS-CAST landed here: NP2-grunt-wire moved the captain rank to the reserved faction colour, these three overrode `palette` wholesale, and `trainer_npc.gd::model_config()` REPLACED the whole dictionary instead of merging it -- so the oxblood reached the generic `relay_captain` and reached none of the three captains a player actually fights. `model_config()` now merges `palette` per surface, and these hexes are inside the family the merge is there to preserve. HONEST LIMIT, measured rather than assumed: every human rig carries one fused material addressed by a single `\"*\"` key, so the body palette is the only dial there is, and it is now spent on faction identity. Three accents held inside one reserved colour at one luminance moved the RENDERED torso by only a few points per channel in the cast capture -- these read as one faction with a nuance, not as three visibly different coats, and no hex inside this family will do better. Real per-site separation needs a dial that is not the faction colour: a second material on the rig, an accessory, or a per-site prop. The site's own character otherwise lives in `_why_here` and the dialogue, which is where it does the real work anyway.",
+      "_comment_ow6": "OW6. Measured against OW5-walk's real spine: nearest spine point is 10143m of polyline / 88.1% in, ~33.2 walked minutes -- the furthest of the four, and already sited at the last patch of walkable ground on the ridge (see `_why_here` below, which measured 43-76 degrees of rock past it). Left in place; there is no further walkable ground to move him onto without a fresh terrain probe this item did not run.",
+      "_comment_ow5d": "OW5D relocation to (-280,6460), section 3.1's named 'Ridge Captain' position (watchtower spur). `facing_deg` UNCHANGED and stale -- see captain_field's own OW5D note; the same reasoning applies here.",
+      "position": [
+        -280.0,
+        6460.0
+      ],
+      "facing_deg": -24.9,
+      "_why_here": "The shoulder under the Rise's south-west face, where the wind ridge starts and the walkable ground ends -- everything east of here measures 43 to 76 degrees of rock in the same probe, so this is literally the last place on the ridge a fight can happen. MEASURED: h=-1.51m, 2.79m spread, worst slope 12.8 degrees over a 9m pad, 168m out. 36m from the Field Captain and 46m from the Riverwatch Captain: three distinct places, none of them in sight-and-prompt range of another. STALE after OW5D's move -- ground not re-probed at the new site.",
+      "challenge": "captain_ridge_challenge",
+      "defeated": "captain_ridge_defeated",
+      "victory_conversation": "captain_ridge_defeated",
+      "_why_victory_conversation_f04_6": "F04#6 (ACCEPTANCE 6.1, BOSSES 4.3 Change): the win used to end with the player already walking away and nothing in frame (earned-run aftermath capture, meadows-f04-bosses r1). encounter_director.gd::_present_trainer_victory plays this conversation the moment the fight resolves -- the captain's own Sigil handover, the same lines the defeated greeting says -- while the aftermath camera faces this trainer and the defeat slump plays. Data only; no new lines.",
+      "team": [
+        {
+          "species": "trailpup",
+          "level": 16,
+          "combat": {
+            "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 0.9,
+            "power": 19.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "duskhush",
+          "level": 16,
+          "combat": {
+            "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 0.9,
+            "power": 30.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "trailpup",
+          "level": 16,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 19.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "tuskroot",
+          "level": 16,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 18.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "galecrest",
+          "level": 16,
+          "combat": {
+            "telegraph": 0.4,
+            "lunge": 5.5,
+            "lunge_travels": true,
+            "_why_lunge_travels_diver_f04": "F04 (owner yes, #356 5859072534): BOSSES gives the DIVER a .4 s tell only with a long positional cue. Its 5.5 m dive now really travels, drawing the same ground lane and arrow as the CHARGER while it winds up, and lands only if the body reaches its target (combat.json charger_lunge; wild_creature.gd). Before this the dive was an in-place strike and the code-blind judge saw no direction. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "reposition_distance": 7.0,
+            "reposition_time": 1.6,
+            "attack_cooldown": 0.9,
+            "power": 7.2,
+            "poise_max": 28.0
+          }
+        }
+      ],
+      "_why_t3_typechart_rebalance": "T3-ACTIVITIES, the other half of T3-TYPECHART's finding -- see captain_field's own `_why_t3_typechart_rebalance` for the full reasoning. Air x3 handed a Ground challenger the same free -35% sweep. Swapped the weakest original member (pipwing, level 14) for a same-level, same-band-resident Ground creature (trailpup). Same team size, same 14/15/16 ladder, same reward.",
+      "_why_combat_g3encounters": "G3-ENCOUNTERS (Fable design contract, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sections 1.3 and 4.2). G-2 defines an optional per-team-member `combat` override that `wild_creature.set_engaged()` merges over `combat.json`'s `enemy` block for that body only (implemented by the coordinator directly, ralph/G3-ENCOUNTERS-0903, to avoid a five-lane collision on the shared script); this authors the values the contract assigns THIS captain against G-3's five reusable profiles. C-5 (Vess, the Ridge: endurance -- the exam is the route, her team is the punchline): Galecrest (the ace) gets DIVER (telegraph 0.4, lunge 5.5, reposition_distance 7.0, reposition_time 1.6, attack_cooldown 0.9, power 8.0x0.9=7.2), hit-and-run: short tell, long retreat, comes again from a new side. Trailpup and Duskhush carry no override, C-5's own 'default' pair. All values computed against combat.json's own `enemy` defaults (power 8.0, telegraph 0.55, recovery 0.75, attack_cooldown 1.1, preferred_range 2.1, reposition_distance 4.0, reposition_time 1.0, lunge 3.4), which is what an absent `combat` block still resolves to for every other creature in the game (G-2's own fails-if).",
+      "reward": {
+        "coins": 45,
+        "items": [
+          {
+            "id": "ridge_sigil",
+            "count": 1
+          },
+          {
+            "id": "revive",
+            "count": 1
+          },
+          {
+            "id": "elixir_guard",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 70
+      },
+      "_why_t3_reward": "T3-REWARD, owner-direction §14 ('Captain 2: Sigil + equipment/preparation improvement'). Ridge is the second captain. data/items/items.json's own elixir header says permanent stat boosters 'belong in the world -- a dungeon, a captain, a stronghold' and are deliberately kept out of Mira's stock so they stay rare; none of the three had ever actually been placed anywhere in the game before this. elixir_guard (permanent defence, capped by progression.json's elixirs.cap_per_stat) is the preparation reward: a one-time, non-refundable choice of who on the five gets stronger, which is what 'preparation improvement' means for an item that is not a TM and not consumed in one fight.",
+      "defeat_flag": "defeated_captain_ridge",
+      "rechallenge": false,
+      "_why_vis_cast_palette": "VIS-CAST, 2026-08-23. Deliberate edit to a pinned fixture entry, made live and mirrored in the same commit per tests/test_band_content.gd's own policy. The entry keeps its index and no identity key moves -- only `palette` and its comment. Rationale in `_comment_palette` above: the faction's reserved oxblood was reaching the generic `relay_captain` and none of the three captains a player actually fights. Old values: captain_field #a89a6b, captain_ridge #a3a79c, captain_riverwatch #8f9a86.",
+      "base": "officer_b",
+      "_comment_base_vess": "Owner, 2026-09-27 23:55 (STATE ruling 11): Vess is written as a woman and stood on Oreth's male captain_b body. She now wears the installed female officer body `officer_b` (defeated clip added through animate_humanoid.py --only defeated) and its portrait; the rank badge/palette still applies on top.",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 4000,
+      "id": "patrol_ridgeline",
+      "name": "Tether Patrol",
+      "_comment": "GATE-D4/prompt 65's 'at least one meaningful optional trainer... competing for attention with the captain route'. Spec Band 4 names Team Tether patrol camps as part of the region's identity and none existed here -- the only Team Tether personnel in the whole back half of the chapter were the relay's four fighters in Band 3 and the stronghold approach's own patrol in Band 5, so Band 4 read as the one stretch of upper-country road the faction had abandoned. `rank: grunt` matches the relay pickets' own convention (band3_the_river_lock/trainers.json) -- Team Tether ranks reuse the Warden's rig geometry until NP4-rig installs a dedicated grunt body (npc_ranks.json's own header), so this spends no new mesh. Optional and unguarded: no sigil, no flag any other content reads, purely a coins/xp detour off the watchtower spur so a player can walk past it entirely and lose nothing but the fight and the loot.",
+      "rank": "grunt",
+      "position": [
+        -235.0,
+        6470.0
+      ],
+      "facing_deg": -24.9,
+      "_why_here": "The watchtower spur, 46m from captain_ridge (-280,6460) -- the same separation captain_ridge's own `_why_here` measures to captain_riverwatch and calls a distinct place rather than sight-and-prompt range of another fight. Co-sited with the patrol camp prop dressing (props.json order 4000) and the resident galecrest (spawns.json order 4010): the ruin, its garrison, and what they left lying around, in one place rather than three unrelated additions. MEASURED: h=2.42m, 0.73m spread, worst slope 11.5 degrees over a 5m pad (tools/_probe_band4_sites.gd), flattest of five candidates walked along the spur. `facing_deg` copied from captain_ridge's own approach bearing -- both stand on the same spur road and face the same way down it.",
+      "challenge": "patrol_ridgeline_challenge",
+      "defeated": "patrol_ridgeline_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 13
+        },
+        {
+          "species": "galecrest",
+          "level": 14
+        }
+      ],
+      "reward": {
+        "coins": 30,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 35
+      },
+      "defeat_flag": "defeated_patrol_ridgeline",
+      "rechallenge": false,
+      "base": "grunt_b",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 4001,
+      "id": "pasture_drover_juno",
+      "name": "Juno",
+      "config_key": "rival_trainer",
+      "_comment_body_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated instead of dressing every non-Tether trainer in one of two villager rigs. `rival_trainer` is installed, rigged, animated and wired into art.json (docs/specs/ASSET_LEDGER.md, T1-NPC-CAST) and stood nowhere in the game. The entry's own reasoning below still holds -- it argued for reusing an installed rig rather than spending a mesh, which this does; it just reaches for a rig that was ALREADY PAID FOR and idle rather than the villager rig every wayside trainer was already wearing. Juno is the one non-Tether trainer standing out on the road rather than in the village, the warm-up the player meets walking toward Captain Halder, and a bright, confident, non-village body is what makes that read at distance on the trainer road spec section 3 names as this band's own identity feature.",
+      "_comment": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md named an 818m authored-content gap right before Captain Halder (trainers.json order 11, Ground-focused, high pasture at 170,5590) -- the last stretch before the first of the three captains had nothing to prepare with. docs/owner/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 9 wants every captain to close a learn-prepare-challenge loop; a wayside trainer whose own team is Halder's own species one level down is a warm-up fight a player can read as practice for the real one. Independent (no `rank`), matching Bryn/Mira/Oskar/Tam's convention rather than another Team Tether grunt -- patrol_ridgeline was this band's one Team Tether beat at the time this entry was written (CI-TRAINER-CENSUS, 2026-08-30 later added a second, `lost_creature_rue`, reusing patrol_ridgeline's own 'Tether Patrol' identity rather than a new one -- see that entry's own comment), and spec section 3 Band 4 names a 'trainer road' as its own separate identity feature, distinct from the patrol-camp one. Spends no new mesh: `config_key: villager_ranger` reuses the same installed rig `data/config/art.json` already gives every wayside villager trainer, matching Oskar/Tam's own `villager_keeper`/`villager_smith` pattern -- an outdoor herder's config for an outdoor herder, not a new character.",
+      "position": [
+        -225.0,
+        5400.0
+      ],
+      "facing_deg": -122.0,
+      "_why_here": "The high pasture between the ironwood tree line and Captain Halder's own field, on the spine's own approach -- MEASURED, flattest of five candidates (h=-5.50m, 0.77m spread, worst slope 7.5 degrees over a 6m pad, tools/_probe_t3band4_sites.gd). `facing_deg` is the yaw looking back down the road toward the village, atan2(dx,dz) from the spine's own travel direction at this point -- the same convention every other entry in this file uses.",
+      "challenge": "pasture_drover_juno_challenge",
+      "defeated": "pasture_drover_juno_defeated",
+      "dialogue_after": {
+        "flag": "lost_creature_rue_returned",
+        "challenge": "pasture_drover_juno_reunited_challenge",
+        "defeated": "pasture_drover_juno_reunited_defeated"
+      },
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 13
+        },
+        {
+          "species": "mudsnout",
+          "level": 13
+        }
+      ],
+      "_why_team": "Both already resident in this band (spawns.json orders 4002/4003). Originally one level under Halder's own weakest (12, against his burrowback 13) -- WARRENS-LAND-0829A: that undershot chapter_curve.json's own band4_upper_meadows_ironwood floor of 13 (test_chapter_curve.gd::test_every_trainer_fights_at_their_own_regions_strength), which every other trainer in this file (11/13/14/15, 14/15/16, 13/14) already respects. 13 is the lowest level inside the band, so it is still a step below Halder's own 14/15 members without being a duplicate of his weakest -- the intended 'warm-up, not a formality' reading survives at the floor.",
+      "reward": {
+        "coins": 35,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 1
+          }
+        ],
+        "flags": [],
+        "xp_bonus": 40
+      },
+      "defeat_flag": "defeated_pasture_drover_juno",
+      "rechallenge": false
+    },
+    {
+      "order": 4002,
+      "id": "lost_creature_rue",
+      "name": "Tether Patrol",
+      "rank": "grunt",
+      "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'.",
+      "_comment_ci_trainer_census": "CI-TRAINER-CENSUS, 2026-08-30. Originally authored as 'Rue', a poacher with no `rank`, wearing the villager_keeper rig (config_key/hair, since removed). `tests/test_chapter_content_map.gd::test_the_chapter_fields_the_number_of_trainers_it_is_aiming_for` caps the chapter at 24 distinct trainer opponents, on purpose, and the chapter was already at that ceiling with no headroom before this lane's three new Local Request fights. Reframed as Team Tether instead -- they requisition the stolen Meadowhart for instrumentation, which fits the faction's established pattern (Farro's own 'Company equipment, Company business' in Band 2, the relay captive, the machine under the Hall) at least as well as an unrelated poacher did -- and given `rank: grunt` and `name: 'Tether Patrol'`, reusing the exact identity `patrol_ridgeline` (order 4000, this same file) already carries. No new mesh either way: both entries already reused Team Tether's own rank-based rig convention (`patrol_ridgeline`'s own `_comment`: 'Team Tether ranks reuse the Warden's rig geometry until NP4-rig installs a dedicated grunt body'); this only removes the `config_key`/`hair` override that gave Rue her own separate look.",
+      "position": [
+        -175.0,
+        5470.0
+      ],
+      "facing_deg": 160.0,
+      "_why_here": "F03#0 lure (Meadows core grant on #257, comment 5847142740, Option A fallback): the camp moved to the band4 road's edge. At its first site, deep in the ironwood stand ([-300, 5870], 472 m from the nearest road), the patrol could not be seen from any road, and the granted Option B signal smoke did not read from the road either (render.yml cue views from the nearest road samples, 465-480 m). A stolen creature is still kept off the spine: 56 m off the band4 road, 86 m north-east of Juno, in the open ground the road looks across. tests/probe_lure_road_visibility.gd: 3 m-pad slope 6.9 deg, 20 hard / 19 soft clear road samples within 160 m, no solid scatter within 6 m; no authored band4 content within 45 m. The Meadowhart's waiting_offset is relative to the patrol, so she moves with it. Previously: Deep in the ironwood stand between Captain Halder (z 5590) and Captain Vess (z 6460) -- off the spine, the kind of ground a stolen creature would actually be kept out of sight on. Ground-checked flat with tools/_probe_activities_sites.gd (worst local slope 12.3 degrees over a 3m pad); no authored content within 20m.",
+      "challenge": "lost_creature_rue_challenge",
+      "defeated": "lost_creature_rue_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 14
+        },
+        {
+          "species": "trailpup",
+          "level": 15
+        }
+      ],
+      "_why_team": "The patrol's own creatures, not the stolen Meadowhart -- the player is not asked to fight the animal they are here to recover. Both species are already resident to Band 4 (spawns.json); levels sit mid-band, inside chapter_curve.json's [13,16] floor/ceiling for this region.",
+      "reward": {
+        "coins": 50,
+        "items": [
+          {
+            "id": "revive",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_lost_creature_rue",
+      "rechallenge": false
+    }
+  ]
+}

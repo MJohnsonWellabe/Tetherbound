@@ -1,0 +1,1108 @@
+{
+  "_comment": "BAND-SPLIT-2. `clearings` and `footprints` cut from data/config/vegetation.json, merged back by scripts/data/band_content.gd. `order` equals the index each entry held in the pre-split file, so the merge reproduces it exactly -- see tests/test_band_vegetation.gd.",
+  "clearings": [
+    {
+      "order": 0,
+      "x": 0.0,
+      "z": 0.0,
+      "radius": 16.0,
+      "_why": "spawn"
+    },
+    {
+      "order": 1,
+      "x": 10.0,
+      "z": -10.0,
+      "radius": 22.0,
+      "_why": "the village square and its structures"
+    },
+    {
+      "order": 2,
+      "x": 2,
+      "z": 14,
+      "radius": 16.0,
+      "_why": "Grandpa's house and its yard"
+    },
+    {
+      "order": 3,
+      "x": 30.0,
+      "z": -40.0,
+      "radius": 16.0,
+      "_why": "the practice meadow: the opening's bramblebun and the arena around it"
+    },
+    {
+      "order": 4,
+      "x": 78,
+      "z": 44,
+      "radius": 14.0,
+      "_why": "R8.1: the practice trainer's ground north of the square (data/config/trainers.json). Same reason as the entries above -- a trainer battle's arena is 11m across and forms between the player and the creature their opponent just sent out, so without this the fight is watched through a tree. Most of it already falls inside the village square's own 22m clearing; this covers the northern edge that does not."
+    },
+    {
+      "order": 5,
+      "_comment_ow5d": "OW5D relocation (clearings[5]). NOT explicitly named in the macro-layout doc's table (which lists `vegetation.footprints[2,3]` for the mill group but not this clearing), moved anyway to avoid leaving a stale tree-free clearing at the old (-133.5,110) once the mill/footbridge move to (-383.5,517).",
+      "x": -383.5,
+      "z": 517.0,
+      "radius": 15.0,
+      "_why": "EV6-remainder: the mill and its crossing -- keeps trees/rocks off the pad and the bridge approaches"
+    },
+    {
+      "order": 6,
+      "_comment_ow5d": "OW5D relocation (clearings[6]), same reasoning as clearings[5] above: not named explicitly in the table but moved to track the ranger station.",
+      "x": -350.0,
+      "z": 507.0,
+      "radius": 10.0,
+      "_why": "EV6-remainder: the ranger station and its yard on the pond route"
+    },
+    {
+      "order": 7,
+      "x": 8.0,
+      "z": 1330.0,
+      "radius": 20.0,
+      "_why": "SC14: the South Bridge and both its abutment aprons -- a tree or a boulder on either rim would stand between the player and the one thing the whole south road exists to show them",
+      "_comment_ow5d": "OW5D: translated with south_bridge crossings[0] by the same (-5,+1250).",
+      "_comment_ow5c_seam": "OW5C follow-up: shifted +8 in x with south_bridge crossings[0] (WALL1 seam workaround)."
+    },
+    {
+      "order": 1000,
+      "x": 344.0,
+      "z": 935.0,
+      "radius": 9.0,
+      "_why": "BAND1-D1: the trail_camp prop cluster (props.json order 1000) and the ground its fire ring, seats and gear pile stand on. Moved from (348,919.5) r=12 with the cluster itself: the old site dropped 1.2m across the camp's own footprint (tools/_probe_camp_ground.gd) and (344,935) is the flattest shelf within 14m of the loop trail (tools/_probe_camp_flat.gd, 0.29m of relief over 8m). Radius tightened 12 -> 9 at the same time: the camp's outermost prop is 5.7m from centre, so 9 keeps a ~3m margin while letting scattered grass close back in near enough that the camp reads as a cleared spot rather than a bald patch in a field. NOTE for the coordinator: scatter_bake.gd::config_fingerprint() does not hash band vegetation files (GATE_D_LANE_CONTRACT section 4), so this move does NOT invalidate the baked scatter on this branch and needs the single integration re-bake."
+    },
+    {
+      "order": 1900,
+      "x": -490.0,
+      "z": 555.0,
+      "radius": 12.0,
+      "_why": "BAND1-D1 / PW2: the elder mosshell's hollow (spawns.json order 1900) and the arena a fight with it forms in. Same reasoning as clearings 3 and 4 above -- a trainer or wild battle arena is ~11m across and forms between the player and the creature, so without this the encounter is watched through a tree. NOTE for the coordinator: like the trail_camp move, this does NOT invalidate the baked scatter on this branch, because scatter_bake.gd::config_fingerprint() does not hash band vegetation files (GATE_D_LANE_CONTRACT section 4). It needs the single integration re-bake."
+    },
+    {
+      "order": 1901,
+      "x": 195.0,
+      "z": 905.0,
+      "radius": 13.0,
+      "_why": "BAND1-D1 / prompt 30: Old Bram's ground (trainers.json order 1010) and the arena his fight forms in. Same reasoning as clearings 3, 4 and 1900 -- a trainer battle arena is ~11m across and forms between the player and the creature their opponent just sent out, so without this the region's hardest optional fight is watched through a tree. NOTE for the coordinator: does NOT invalidate the baked scatter on this branch (GATE_D_LANE_CONTRACT section 4); needs the single integration re-bake."
+    },
+    {
+      "order": 1902,
+      "x": -104.0,
+      "z": 660.0,
+      "radius": 8.0,
+      "_why": "WORLD-TREES-0903, BAND1_ROUTE_CONTRACT.md Place 4: 'trees clustered into two groves... each 8-12 trees with scale variety and a clearing.' This is the first grove's glade -- an open pocket just outside the (-120,650) tree anchor's own 14m radius (vegetation.json layers.trees.anchors) rather than centred on it, so it does not eat into the anchor's own placement budget. Gives the grove a foreground/mid-ground read (an open patch beside the canopy) instead of a solid wall of trees, and leaves the ground clear for WORLD-LIFE's own siting in the same area. NOTE for the coordinator: scatter_bake.gd::config_fingerprint() does not hash band vegetation files (GATE_D_LANE_CONTRACT section 4), so this does NOT invalidate the baked scatter on this branch and needs the single integration re-bake."
+    },
+    {
+      "order": 1903,
+      "x": 21.0,
+      "z": 1245.0,
+      "radius": 8.0,
+      "_why": "WORLD-TREES-0903, Place 4: the second grove's glade, same reasoning as clearing 1902 -- an open pocket beside the (5,1235) tree anchor rather than centred on it. NOTE for the coordinator: does NOT invalidate the baked scatter on this branch (GATE_D_LANE_CONTRACT section 4); needs the single integration re-bake."
+    },
+    {
+      "order": 1904,
+      "x": -244.0,
+      "z": 346.0,
+      "radius": 14.0,
+      "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3): the crest window -- basin side of the road from the crest to arc 520; no tree, bush or rock in the sightline (-218,324)->(-383.5,517). This is what turns the Rise crest overlook from a screened grove into 'there is the Pond, that is where I am going.'"
+    },
+    {
+      "order": 1905,
+      "x": -345.0,
+      "z": 432.0,
+      "radius": 18.0,
+      "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.5): the pond-reveal window -- basin side of the road from arc 570 to 650, between the road and the water; a sightline on the pocket's road-side edge, not a thinning of the pocket's own density behind it."
+    },
+    {
+      "order": 1906,
+      "x": -378.0,
+      "z": 470.0,
+      "radius": 10.0,
+      "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.5): the pond-arrival window, the second one comp5 looks through, between the road and the water at arc 640-690."
+    },
+    {
+      "order": 1907,
+      "x": 12.0,
+      "z": 1258.0,
+      "radius": 5.0,
+      "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the bridge-approach gate grove's road-gap -- no trunk within 5m of the centreline through the grove the road already runs through, so the notch reads from comp6's approach."
+    },
+    {
+      "order": 1908,
+      "x": -27.0,
+      "z": 1297.0,
+      "radius": 8.0,
+      "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): removes the accidental corridor-fill boulder in the hollow (about (-25,1295)) so the hollow stays a hollow, not a snagged obstacle."
+    },
+    {
+      "order": 1909,
+      "x": -397.0,
+      "z": 586.0,
+      "radius": 16.0,
+      "_why": "TREE-SILHOUETTE-0903. MID-LAYER-0903 re-sited place3-pond-pocket's capture stand to the fisher's camp (6.3) and fixed 'shooting the mill's wall from 3m', but left the Pond's own unthinned grove standing between the eye and the water: JUDGE-after.md called the re-sited frame 'the darkest, most cluttered... at least four tree trunks cross the frame at odd diagonal angles with almost no negative space... arguably fails the 30%-size test outright', with the player 'nearly swallowed by the surrounding foliage' and the pond itself 'wedged behind trunks' at ~8% of frame. That was left for this lane -- the grove anchors are 2.3's. A near-field trunk 4-8m from an 8m-high eye occupies far more of the frame than anything near the 72m-distant mill, so the fix is a clearing over the CAMP and the first ~15-20m toward the water, not a thinning of the pocket itself: the far 50m of grove between this clearing's edge and the mill's own clearing (order 5, (-383.5,517) r15) is untouched, and the far-side grove this lane adds at (-448,590) r14 stays 51m clear of this circle's own edge, so 'the density does not change' (5.5's own rule) still holds for the pocket as a whole. Centred on the fisher NPC/bench-and-firepit camp (pond_npc.json, props.json order 1050, both ~(-395.5,583.5)) rather than the bare eye coordinate, so the clearing reads as the camp's own clearing -- a traveller's stop in the wood -- and not a bald disc with no reason to be there. Reeds (this file's own drygrass anchor at (-392,586)) are unaffected: grass/drygrass/flowers are exempt from `clearings` (scatter_rules.gd::_gate, `cleared_by_clearings`)."
+    },
+    {
+      "order": 1910,
+      "x": 6.0,
+      "z": 1296.0,
+      "radius": 5.0,
+      "_why": "BROAD-VISUAL-0910 continuation: retained source isolation measured three CommonTree_5 saplings at (6.309,1294.878), (6.127,1298.240), and (1.675,1294.252), with leaf cards 0.619-4.408m from the fixed South Bridge gameplay camera. They merge into one dark foreground mass that hides the held crossing. This five-metre road-gap circle removes those three measured saplings without thinning the wider gate grove, moving the camera, changing shared foliage materials, or enlarging player collision. Grass and flowers remain because they are exempt from clearings."
+    },
+    {
+      "order": 1911,
+      "x": 99.0,
+      "z": -53.0,
+      "radius": 12.0,
+      "_why": "THE-RISE-IDENTITY-0910. A tightly scoped composition clearing around props.json's `the_rise_rock_crown`, not a bald patch on the hill. The canonical named-place stand is the walkable road end at (74,-41), looking into map_landmarks.json's The Rise region at (88,-43); the shipped frame had a random large tree and loose boulders competing with the sign, so the destination read as generic scatter in front of the otherwise strong landform. Twelve metres removes only that accidental overlap around the new authored gold-green TwistedTree and three-rock crown. The crown sits 20m+ off both maintained roads, and the uphill centre is production-render-proven not to overlap the region look point's ground query, so clearing the hero silhouette does not turn either route into an empty verge or pitch an ordinary standing view into the sky."
+    },
+    {
+      "order": 1912,
+      "x": -330.0,
+      "z": 492.0,
+      "radius": 14.0,
+      "_why": "MEADOWS-POND-VISUAL-0911. The production 02-mill-pond approach is authored on the real OW5D pond-route head at (-330,492), with the camera pulled back along that same route to approximately (-320,484). Fresh full-resolution evidence showed a mature near-field canopy filling the entire left third and covering most of the ranger-station/mill reveal. The first candidate's 9m camera-only circle removed its immediate scatter but left the next canopy band directly across the waypoint-to-mill sightline. This corrected fourteen-metre road-head opening covers both the authored route waypoint and pulled-back eye while remaining separate from the shoreline pocket and far-bank grove. It does not touch the mill clearing (order 5), pond-pocket camp clearing (1909), water, grass, flowers, or any route/geography; it only joins the ordinary arrival opening cleanly to the ranger yard clearing (order 6)."
+    },
+    {
+      "order": 1913,
+      "x": -365.0,
+      "z": 505.0,
+      "radius": 8.0,
+      "_why": "MEADOWS-POND-VISUAL-0911 sightline lens, derived rather than widened by eye. The production camera is approximately (-320,484) and the mill is (-382,514); the 75% point on that exact segment is (-366.5,506.5). Existing ranger clearing order 6 at (-350,507) r10 and mill clearing order 5 at (-383.5,517) r15 have centres 35.0m apart, leaving a 10.0m trunk-centre gap directly across the mill reveal. This 8m lens at (-365,505) bridges only that measured seam: its centre is 15.1m from the ranger clearing and 22.0m from the mill clearing, producing shallow 2.9m and 1.0m overlaps. The combined shape follows the camera-to-mill bearing rather than making a broad bald pond zone. Grass/flowers remain; shoreline/far-bank grove, water, geography and route are untouched."
+    },
+    {
+      "order": 1914,
+      "x": 339.7,
+      "z": 919.7,
+      "radius": 7.0,
+      "_why": "TRAIL-CAMP-ARRIVAL-0911. R4/R5 full-frame production evidence proves that the failure is a near-field canopy/trunk wall across the real south road, not missing camp art or camera height. This seven-metre road-centred lens is the smallest circle that joins the threshold mouth to the retained camp clearing: its centre lies on oak_grove_ring's exact (300,880)->(370,950) segment and is 15.89m from clearing 1000 at (344,935) r9, giving only 0.11m of overlap. It removes the central tree/grove/sapling/deadfall/bush/rock obstruction without widening the whole forest or touching gameplay. It is intentionally a clearing, never a footprint: grass, drygrass, flowers, path_stones and groundmat preserve their cleared_by_clearings=false policy. Coordinate this band edit with the held Quarry deadfall edit in one authoritative integration scatter bake."
+    },
+    {
+      "order": 1915,
+      "x": 87.0,
+      "z": -48.0,
+      "radius": 8.5,
+      "_why": "THE-RISE-IDENTITY-R3-0911. Fresh production proof showed the existing twelve-metre crown clearing protected the authored tree itself but left a random near-field tree mass directly between the real road end (74,-41) and the crown (99.5,-55). This small sightline lens sits on that exact segment and overlaps the crown clearing by only 0.7m. It removes accidental trees/bushes/rocks while retaining grass, flowers and the authored three-stone crown; route, terrain, collision and the wider hillside remain unchanged."
+    },
+    {
+      "order": 1916,
+      "x": 10.0,
+      "z": 8.0,
+      "radius": 17.0,
+      "_why": "OWNER-0912 / C3 V-1. The south-street building clearing joins the existing square clearing around Mira's shop, Tam's workshop and the road between them. It removes random trees/rocks from the moved footprints and street sightline while authored oaks, fences and ground cover retain their own explicit placement rules. Requires the integration scatter bake."
+    },
+    {
+      "order": 1917,
+      "x": 90.0,
+      "z": 760.0,
+      "radius": 9.0,
+      "_why": "OWNER-0912 wayfinding-pulls R3. The real Long Field road seat is a production trail vertex, but round-02 evidence put its ordinary third-person camera inside a wall of random leaves. This small road-centred lens clears only the travel eye and the mouth of the off-path bearing. Grass, drygrass and flowers remain because their layers deliberately ignore broad clearings."
+    },
+    {
+      "order": 1918,
+      "x": 106.5,
+      "z": 748.2,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. First narrow lens on the exact (90,760)->(160,710) road-to-signal bearing. Together with orders 1917 and 1919 it removes random trunks, bushes and rocks from the sightline without thinning either side of the Long Field wood."
+    },
+    {
+      "order": 1919,
+      "x": 124.0,
+      "z": 735.7,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. Midpoint lens on the failed production road-to-signal bearing. The overlapping 23m-wide chain is intentionally much narrower than a landmark clearing and preserves walk-through ground cover, leaving a framed woodland opening instead of a bald field."
+    },
+    {
+      "order": 1920,
+      "x": 141.5,
+      "z": 723.2,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. Final approach lens joining the sightline to the existing wayfarer site. It removes the canopy wall round-02 showed between the road and fire while leaving the accepted Trailpup cluster at (170,815) and Bramblebun cluster at (275,862) well outside the affected ground."
+    },
+    {
+      "order": 1921,
+      "x": 160.0,
+      "z": 710.0,
+      "radius": 11.5,
+      "_why": "OWNER-0912 wayfinding-pulls R3. Site clearing around the existing one-fire/five-prop wayfarer vignette. It protects the smoke, Meadowhart and reward silhouette at the end of the narrow road lens; it does not move the site toward the road, add another glow, or turn the detour into a camp."
+    },
+    {
+      "order": 1922,
+      "x": 111.0,
+      "z": -54.0,
+      "radius": 6.5,
+      "_why": "THE-RISE-R8-SOURCE. R7's crown-overlook frame exposed one random near-right canopy whose huge pale leaf cards covered the village-country edge and competed with the retained hero payoff. This 6.5m local lens overlaps the existing crown clearing but extends only east to the measured intruder; it removes random trees, bushes and rocks while leaving grass, flowers, the authored RiseHeroTree, its three crown stones, the overlook props and the wider hillside untouched. It adds no light or exposure and is deliberately too small to bald the crown."
+    },
+    {
+      "order": 1923,
+      "x": 71.2,
+      "z": -61.0,
+      "radius": 4.25,
+      "_why": "THE-RISE-R15-SOURCE. R14's fail-closed production traversal manifest measured a collidable Pebble_Round_1 directly on the ShelfTreadB joint at approximately [71.39,-61.19], where it combined with the lower retaining edge to stop the real Player capsule. This small joint-centred clearing removes blocking trees, bushes and rocks from only the broad terrace handoff; grass, drygrass and flowers keep their cleared_by_clearings=false policy, so the repair remains a planted hillside path rather than a bald disc."
+    },
+    {
+      "order": 1924,
+      "x": 76.0,
+      "z": -61.0,
+      "radius": 4.75,
+      "_why": "THE-RISE-R22. R21's full production receipt measured CommonTree_1 collision at [75.21,-60.79] on the ShelfTreadC/D handoff. This route-centred lens overlaps the existing R15 joint clearing and removes only collidable random trees, bushes and rocks from the next 4.8m of authored terrace; grass, drygrass and flowers remain, and the wider Rise flank stays planted."
+    },
+    {
+      "order": 1925,
+      "x": 81.0,
+      "z": -60.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. R22 reached the upper shelf and then measured Pebble_Round_1 and Rock_Medium_1 colliders across the live lane at x=80.3. This overlapping lens protects the ShelfTreadE/switchback handoff while retaining all non-colliding grass and flowers."
+    },
+    {
+      "order": 1926,
+      "x": 86.5,
+      "z": -57.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. Continuation of the narrow authored switchback corridor across the first return turn. Its overlap prevents another seeded trunk or rock from occupying the 5.4m tread; it does not clear the surrounding flank."
+    },
+    {
+      "order": 1927,
+      "x": 91.5,
+      "z": -53.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. Route-centred protection over the upper return joints, preserving the planted hillside on both sides while removing random solid scatter from the player lane."
+    },
+    {
+      "order": 1928,
+      "x": 97.0,
+      "z": -54.5,
+      "radius": 5.5,
+      "_why": "THE-RISE-R23. Final switchback-corridor lens joining the return tread to the existing twelve-metre crown clearing, so the authored route reaches its hero tree and overlook without a random solid blocker."
+    },
+    {
+      "order": 1929,
+      "x": 16.5,
+      "z": -33.0,
+      "radius": 8.0,
+      "_why": "F01-b. The Stoneyard (terrain_playground.json paths.village_topology.subareas the_stoneyard): random trees and rocks stay off the stone-working ground so its two stone nodes and working yard read as a place, not scatter. Overlaps the practice clearing (order 3) at its east rim."
+    },
+    {
+      "order": 1930,
+      "x": -20.0,
+      "z": 6.0,
+      "radius": 9.5,
+      "_why": "F01-c. The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): keeps baked random trees and rocks off the six authored village.json oaks (the farthest is 7.9m from this centre, so every trunk sits 1.6m+ inside). Same role as the Stoneyard's order 1929. The grove's own understorey anchor opts out of it."
+    },
+    {
+      "order": 1150,
+      "x": 26,
+      "z": 14,
+      "radius": 22,
+      "_why": "F17 road settlement build pad, outside unchanged practice-wild disk"
+    },
+    {
+      "order": 1151,
+      "x": 50,
+      "z": 14,
+      "radius": 22,
+      "_why": "F17 road settlement build pad, outside unchanged practice-wild disk"
+    },
+    {
+      "order": 1152,
+      "x": 74,
+      "z": 14,
+      "radius": 22,
+      "_why": "F17 road settlement build pad, outside unchanged practice-wild disk"
+    },
+    {
+      "order": 1153,
+      "x": 107,
+      "z": 14,
+      "radius": 25,
+      "_why": "F17 road settlement build pad, outside unchanged practice-wild disk"
+    }
+  ],
+  "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
+  "layer_anchors": {
+    "trees": [
+      {
+        "_why": "VP4 station 01-village-edge (14,20)->(8,90): the before frame's right-hand gap between the practice-field fence and the far tree line was bare grass all the way to the sky. A copse on the opposite side of the path from the fence, between the player and the horizon line, so the sightline gets a mid-ground read on both sides instead of only the fence side.",
+        "at": [
+          45.0,
+          58.0
+        ],
+        "radius": 11.0,
+        "count": 7
+      },
+      {
+        "_why": "VP4 station 02-first-bend (-120,270)->(-230,330), TREE-SILHOUETTE-0903 recipe: 5.4's own eye (comp4-rise-look-back) reads this copse as a mid-distance mass and BAND1_COMPOSITION_PLAN.md 5.4's Now/Judged both name it 'a flat row'/'a hedge of lollipops' -- one species at one height. Split into three co-located sub-anchors (section 3's copse recipe: one tree tall, two short, the rest between) so the outline has a peak and a shoulder instead of a level top; count and footprint unchanged (1+2+3=6, same radius/centre).",
+        "at": [
+          -95.0,
+          292.0
+        ],
+        "radius": 12.0,
+        "count": 1,
+        "scale_min": 1.93,
+        "scale_max": 2.14
+      },
+      {
+        "_why": "station 02-first-bend, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
+        "at": [
+          -95.0,
+          292.0
+        ],
+        "radius": 12.0,
+        "count": 2,
+        "scale_min": 0.5,
+        "scale_max": 0.65
+      },
+      {
+        "_why": "station 02-first-bend, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+        "at": [
+          -95.0,
+          292.0
+        ],
+        "radius": 12.0,
+        "count": 3,
+        "scale_min": 1.03,
+        "scale_max": 1.66
+      },
+      {
+        "_why": "ROUND 2 (JUDGE-round1.md), COORDINATES CORRECTED THREE TIMES across two rounds: round 1's own additions here were confirmed present by crop diff but judged net emptier than before (the pre-isolation-fix RNG-reshuffle bug, see round-2-addendum's own report section). Attempt 1 ((-158,280)) rendered on the wrong side (screen-right, not left). Attempt 2 ((-126,302)) fixed the side but sat 50.8 degrees off-axis, clipped at the edge of a ~51.3-degree half-FOV. Attempt 3 ((-138,300), 35m out at 30 degrees) fixed both, but JUDGE-round2.md (round against the isolation-fixed bake) called the frame 'still right-heavy -- new copse smaller/farther than the grove it replaced'. This FOURTH centre is closer (25m, within the FOV at 22 degrees off-axis) and bigger (10 trees, radius 13, up from 8/11) so it reads at a comparable size and prominence to the pre-existing right-side mass rather than a token gesture on the opposite side. Two leaf variants only (CommonTree_1/_3, skipping _2) per the original brief; >20m off the path centreline (past the 6m minimum). TREE-SILHOUETTE-0903: split into the same copse recipe as the (-95,292) station above (peak/shoulder/body sub-anchors at this same centre/radius, count and model list unchanged, 1+2+7=10) for the same reason -- BAND1_COMPOSITION_PLAN.md 5.4 names this exact mass 'a flat row'.",
+        "at": [
+          -136.0,
+          289.0
+        ],
+        "radius": 13.0,
+        "count": 1,
+        "scale_min": 1.93,
+        "scale_max": 2.07,
+        "max_slope_deg": 24.0,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_1.gltf",
+          "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+        ]
+      },
+      {
+        "_why": "the fourth-centre grove, shoulder pair -- see the peak sub-anchor above for the recipe and siting history.",
+        "at": [
+          -136.0,
+          289.0
+        ],
+        "radius": 13.0,
+        "count": 2,
+        "scale_min": 0.55,
+        "scale_max": 0.7,
+        "max_slope_deg": 24.0,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_1.gltf",
+          "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+        ]
+      },
+      {
+        "_why": "the fourth-centre grove, the body between the peak and the shoulder -- see the peak sub-anchor above.",
+        "at": [
+          -136.0,
+          289.0
+        ],
+        "radius": 13.0,
+        "count": 7,
+        "scale_min": 1.1,
+        "scale_max": 1.72,
+        "max_slope_deg": 24.0,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_1.gltf",
+          "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+        ]
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.4): the near tree at comp4-rise-look-back, pinned with its own anchor so a re-bake cannot lose it -- the stand's own Owner line asks for exactly this ('pin it with a trees anchor x1... so a re-bake cannot lose it'). Re-sited TWICE off the plan's own guessed centre (-243,338): first to (-238,330) because a live bake placed 0 of 1 there (8.1m inside MID-LAYER-0903's crest-window clearing, clearings order 1904, (-244,346) r14); then, after `_capture_band1_composition.gd`'s own eye/target/FOV (`comp4-rise-look-back`: eye (-236,334), target (10,-10), FOV 70) showed that (-238,330) sits 62 degrees off the camera's forward axis -- outside the 35-degree half-FOV, i.e. never in frame regardless of what placed there -- to a point computed directly from the stand's own forward/right axes (7m ahead, 3m left, the same 'near, left' the plan's own Look line asks for), 23 degrees off-axis and comfortably inside the FOV. `max_slope_deg` overridden 21 -> 28 (was 24): the new centre measures 23.6 degrees, inside a mere 0.4 degrees of the old 24-degree ceiling, too tight a margin for a single-instance, 2m-radius anchor with no fallback candidate.",
+        "at": [
+          -234.4,
+          326.6
+        ],
+        "radius": 2.0,
+        "count": 1,
+        "scale_min": 1.93,
+        "scale_max": 1.93,
+        "max_slope_deg": 28.0
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): the frame trunk at comp1-village-approach, the near element that replaces the corridor-fill boulder as this frame's ruler -- one trunk cut by the top-left edge, canopy over the eye. Re-sited off the plan's own guessed centre (-58,199): computed against comp1's own eye/target (`_capture_band1_composition.gd`: eye (-52,194), target (10,-10)), that point is 146.7 degrees off the camera's forward axis -- BEHIND the eye, not in front of it, so it could never appear in the frame no matter how reliably it placed (confirmed live: the tree placed every bake, and the rendered frame still showed the pre-existing rock line as the only near element, matching the blind judge's after-set read of `comp1-village-approach`, 'the large grey boulder beside them is a good scale reference,' no tree named at all). This centre is computed directly from the stand's own forward/right axes (6m ahead, 3m left, matching the plan's own 'near, left, 4-7m'), 27 degrees off-axis and in front of the camera.",
+        "at": [
+          -53.1,
+          187.4
+        ],
+        "radius": 2.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+        ],
+        "scale_min": 2.07,
+        "scale_max": 2.07
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2/5.3): the crest's other two trees, right of the road behind the outcrop -- they make the crest a crown of three from 360m at comp2-route-out without entering the window clearing MID-LAYER-0903 cut on the basin side. `max_slope_deg` overridden 21 -> 26: tools/_probe_tree_silhouette_0903.gd measured this centre at 22.2 degrees (the crest shoulder MID-LAYER-0903's own outcrop anchor is built on, 5.3), over the layer's 21-degree ceiling.",
+        "at": [
+          -232.0,
+          330.0
+        ],
+        "radius": 4.0,
+        "count": 2,
+        "models": [
+          "res://assets/environment/stylized_nature/CommonTree_1.gltf"
+        ],
+        "scale_min": 1.72,
+        "scale_max": 1.86,
+        "max_slope_deg": 26.0
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3, 5.5): the basin far-side grove, the dark mass behind the mill the crest window (comp3) reads it against -- 5.3's own recipe. Re-sited off the plan's own guessed centre: tools/_probe_tree_silhouette_0903.gd measured (-420,560) at h=-20.2, 3.2m UNDER the -17.0 waterline (open pond, not the far bank). tools/_probe_farbank_0903.gd then swept the basin's south-west shore for real dry ground; this centre is dry (h=-15.69, 1.3m above waterline) at a buildable 11.8-degree slope, AND sits almost exactly on the crest eye (-218,324) -> mill (-383.5,517) bearing extended past the mill (351.7m from the crest eye, inside the plan's stated 300-330m -- 22m over, the honest cost of moving from a guess to real ground), so it still reads as 'behind the mill' from the one eye (comp3) this element's Owner line is actually for. It sits 51m clear of TREE-SILHOUETTE-0903's own shore clearing (clearings order 1909, (-397,586) r16) -- no overlap with either that opening or the mill's own clearing (clearings order 5).",
+        "at": [
+          -448.0,
+          590.0
+        ],
+        "radius": 14.0,
+        "count": 10,
+        "scale_min": 1.1,
+        "scale_max": 2.21
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the far-rim treeline behind the South Bridge, on the far bank south of the trail's end -- the dark mass the pale bridge parapet is composed against instead of sky or bare slope (comp8-bridge-rim); also breaks the horizon.",
+        "at": [
+          15.0,
+          1385.0
+        ],
+        "radius": 14.0,
+        "count": 9,
+        "scale_min": 1.1,
+        "scale_max": 2.21
+      },
+      {
+        "_why": "ROUND 2, station 04-eastward-swing (360,910)->(430,1020), COORDINATES CORRECTED: JUDGE-round1.md called round 1's fix here 'the one real, working fix' but named the LEFT flank 'thin'. This round's first attempt ((412,1067)) used the same inverted left/right axis as station 02's grove above and rendered on the already-strong right side instead -- checked directly, its offset from the eye has a POSITIVE dot with the camera's true right axis here ((-0.843,0.537), from the same `(-Fz,Fx)` derivation), i.e. right, not left. This corrected centre has a NEGATIVE dot (-40.0, confirmed left) with that axis, ~165m out (within the 120-200m ask), balancing the already-good right flank without adding anything near the camera or path.",
+        "at": [
+          480.0,
+          1023.0
+        ],
+        "radius": 22.0,
+        "count": 12,
+        "scale_min": 1.24,
+        "scale_max": 1.66
+      },
+      {
+        "_why": "ROUND 2 ADDENDUM: the program coordinator asked to also thicken 04's left flank at closer range, not just the distant 120-200m horizon mass above -- 4 trees at ~80m out, 25 degrees off-axis (comfortably inside the ~51.3-degree half-FOV, unlike station 02's own first miss), clear of the (480,1023) mass (87.6m apart) and >30m off the path centreline (checked against the p13-p14 trail segment).",
+        "at": [
+          427.0,
+          953.0
+        ],
+        "radius": 10.0,
+        "count": 4,
+        "scale_min": 1.17,
+        "scale_max": 1.72
+      }
+    ],
+    "rocks": [
+      {
+        "_why": "VP4 station 02-first-bend: a rock cluster at the bend itself (bible sec4C names this combination explicitly), mixed sizes via the layer's own 0.28-2.1 scale span. `min_slope_deg` overridden to 0 -- the layer's own floor of 6 degrees would reject most draws on this gentle meadow bend, the same override `_place_anchor`'s own doc names for a hillside outcrop, used here for the opposite reason (too flat, not too steep). ROUND 2 verified: this centre's own dot with the camera's true right axis is POSITIVE (+31.9, i.e. genuinely on the outside/right of the bend, matching the brief's round-2 ask) -- unlike the two anchors above, this one was already correctly sided and needed no change.",
+        "at": [
+          -150.0,
+          250.0
+        ],
+        "radius": 10.0,
+        "count": 4,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): the rock line, near-right of comp1-village-approach, arcing up the road toward the village -- the ruler that replaces the corridor-fill boulder as this frame's near element.",
+        "at": [
+          -44.0,
+          203.0
+        ],
+        "radius": 5.0,
+        "count": 3,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+        ],
+        "scale_min": 0.5,
+        "scale_max": 1.1,
+        "sink": 0.4,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): the rock line's one big stone.",
+        "at": [
+          -44.0,
+          203.0
+        ],
+        "radius": 5.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+        ],
+        "scale_min": 1.6,
+        "scale_max": 1.6,
+        "sink": 0.4,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): the rock line's pebble skirt.",
+        "at": [
+          -44.0,
+          203.0
+        ],
+        "radius": 5.0,
+        "count": 6,
+        "models": [
+          "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",
+          "res://assets/environment/stylized_nature/Pebble_Round_2.gltf",
+          "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"
+        ],
+        "sink": 0.4,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2): the rock pair on the village side of comp2-route-out's gate -- one stone, not a line.",
+        "at": [
+          2.0,
+          47.0
+        ],
+        "radius": 2.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_1.gltf"
+        ],
+        "scale_min": 1.4,
+        "scale_max": 1.4,
+        "sink": 0.4
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2): the rock pair's pebbles.",
+        "at": [
+          2.0,
+          47.0
+        ],
+        "radius": 2.0,
+        "count": 4,
+        "models": [
+          "res://assets/environment/stylized_nature/Pebble_Round_1.gltf",
+          "res://assets/environment/stylized_nature/Pebble_Round_2.gltf",
+          "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"
+        ],
+        "sink": 0.4
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2): the knoll outcrop on its south face, so the Gate Meadow knoll is a landform and not a bump.",
+        "at": [
+          50.0,
+          124.0
+        ],
+        "radius": 4.0,
+        "count": 2,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+        ],
+        "scale_min": 1.8,
+        "scale_max": 2.2,
+        "max_slope_deg": 60.0,
+        "sink": 0.6
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3): the crest outcrop on the shoulder that is already higher than the road -- it becomes stone and is meant to block, pushing the eye left into the window.",
+        "at": [
+          -212.0,
+          318.0
+        ],
+        "radius": 3.0,
+        "count": 2,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+        ],
+        "scale_min": 1.6,
+        "scale_max": 2.0,
+        "max_slope_deg": 60.0,
+        "sink": 0.6
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3, 6.1): the marker rocks at the cache's foot -- the real discovery marker, so the crest window's find reads as one at ground level too.",
+        "at": [
+          -382.8,
+          355.5
+        ],
+        "radius": 3.0,
+        "count": 3,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+          "res://assets/environment/stylized_nature/Rock_Medium_2.gltf"
+        ],
+        "scale_min": 0.6,
+        "scale_max": 1.0
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.5): the rock line down the bank on comp7-pond-reveal's descent, reading as a cut into a slope and pushing the eye left toward the water.",
+        "at": [
+          -312.0,
+          383.0
+        ],
+        "radius": 4.0,
+        "count": 4,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+        ],
+        "scale_min": 0.5,
+        "scale_max": 1.0,
+        "sink": 0.3,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the approach rock line converging with the rebuilt fence to gather the road toward the notch.",
+        "at": [
+          98.0,
+          1236.0
+        ],
+        "radius": 6.0,
+        "count": 5,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+          "res://assets/environment/stylized_nature/Rock_Medium_2.gltf"
+        ],
+        "scale_min": 0.5,
+        "scale_max": 1.2,
+        "sink": 0.4,
+        "min_slope_deg": 0.0
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the rim's cut-wall rock skirt -- the gully's walls become stone instead of grass at 45 degrees, the defect place5 showed.",
+        "at": [
+          -10.0,
+          1318.0
+        ],
+        "radius": 22.0,
+        "count": 8,
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_2.gltf"
+        ],
+        "scale_min": 0.6,
+        "scale_max": 1.2,
+        "max_slope_deg": 70.0,
+        "min_slope_deg": 25.0,
+        "sink": 0.5
+      }
+    ],
+    "bushes": [
+      {
+        "_why": "VP4 station 01: 2-4 bushes on the new tree copse's own edge, per the brief's own recipe.",
+        "at": [
+          36.0,
+          66.0
+        ],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "VP4 station 02: edge planting beside the bend's rock cluster.",
+        "at": [
+          -146.0,
+          246.0
+        ],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "ROUND 2: 5 bushes on the round-2 grove's own PATH-FACING edge, per the brief. Coordinates re-corrected alongside the grove's round-3 nearer/larger recentre (12m out at the same bearing, between the eye and the grove core).",
+        "at": [
+          -128.0,
+          279.0
+        ],
+        "radius": 7.0,
+        "count": 5
+      },
+      {
+        "_why": "ROUND 2 ADDENDUM: bushes beside station 04's new closer left-flank trees, completing the coordinator's 'thicken with trees + bushes' ask.",
+        "at": [
+          415.0,
+          945.0
+        ],
+        "radius": 6.0,
+        "count": 4
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): understorey banked at comp1's frame-trunk base, the near element's own foot.",
+        "at": [
+          -58.0,
+          199.0
+        ],
+        "radius": 3.0,
+        "count": 3
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.5): understorey on the pond pocket's road-facing edge, the young-tree edge's own foot cover.",
+        "at": [
+          -368.0,
+          426.0
+        ],
+        "radius": 8.0,
+        "count": 8
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's first grove, understorey banked on its shaded side.",
+        "at": [
+          -120.0,
+          650.0
+        ],
+        "radius": 7.0,
+        "count": 10
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's second grove, understorey banked on its shaded side.",
+        "at": [
+          5.0,
+          1235.0
+        ],
+        "radius": 7.0,
+        "count": 10
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the hollow's floor, so the dip between the rim and the abutment reads as a different texture from the slopes.",
+        "at": [
+          -20.0,
+          1300.0
+        ],
+        "radius": 12.0,
+        "count": 8
+      },
+      {
+        "_why": "F01-b/F01-c Berry Field (paths.village_topology.subareas berry_field, centre [-8.5,-23] r6): the planted rows inside the field's L of village.json rails. F01-c: deliberately NOT the harvest model -- Bush_Common_Flowers is what every berry harvest node uses, and seven harvest-sized copies beside node 1036 read as eight pickable bushes of which one works. Bush_Common is the same installed family's flowerless shrub (green leaves only, retextured by the layer like every other bush), at model_scale 0.4 (0.16-0.36 of the raw 1.9m mesh, knee height) against the harvest node's ~1m flowering bush, so the rows read as tended low plants and the one pickable bush stands out. `cleared_by_clearings` false because the field sits 14m from Grandpa's 16m farmhouse clearing (order 2), which exists to keep trees out of fights; bushes do not collide and cannot block one.",
+        "at": [
+          -8.5,
+          -25.0
+        ],
+        "radius": 3.2,
+        "count": 10,
+        "models": [
+          "res://assets/environment/stylized_nature/Bush_Common.gltf"
+        ],
+        "model_scale": {
+          "res://assets/environment/stylized_nature/Bush_Common.gltf": 0.4
+        },
+        "cleared_by_clearings": false
+      },
+      {
+        "_why": "F01-b The Grove (subareas the_grove, centre [-20,6] r8): understorey between the six authored oaks, so the grove reads as woodland rather than six trees on lawn. F01-c: `cleared_by_clearings` false because the grove's own clearing (order 1930) exists to keep random scatter TREES and rocks off the authored oaks; bushes do not collide. path_factor still keeps them off the Pond lane.",
+        "at": [
+          -21.0,
+          6.0
+        ],
+        "radius": 5.5,
+        "count": 6,
+        "cleared_by_clearings": false
+      }
+    ],
+    "saplings": [
+      {
+        "_why": "ROUND 2: 3 saplings on the same path-facing edge as the bushes above, completing the brief's 'bushes and saplings on its path-facing edge'. Coordinates re-corrected alongside the grove's round-3 nearer/larger recentre (18m out at the same bearing).",
+        "at": [
+          -131.0,
+          284.0
+        ],
+        "radius": 6.0,
+        "count": 3
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2): the gate's east flank saplings, young trees on the copse's road-facing edge.",
+        "at": [
+          14.0,
+          60.0
+        ],
+        "radius": 5.0,
+        "count": 4
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.2): the gate's west flank saplings, same recipe as the east flank.",
+        "at": [
+          -2.0,
+          66.0
+        ],
+        "radius": 5.0,
+        "count": 3
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.5): young trees on the pond pocket's road-facing edge, the right frame of comp7's reveal window.",
+        "at": [
+          -372.0,
+          430.0
+        ],
+        "radius": 8.0,
+        "count": 5
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's first grove, saplings on its road-facing side, part of the copse recipe every grove in this band now carries.",
+        "at": [
+          -120.0,
+          650.0
+        ],
+        "radius": 6.0,
+        "count": 5
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's second grove, saplings on its road-facing side.",
+        "at": [
+          5.0,
+          1235.0
+        ],
+        "radius": 6.0,
+        "count": 5
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the gate grove's approach-side saplings, thickening the edge the road passes.",
+        "at": [
+          40.0,
+          1240.0
+        ],
+        "radius": 6.0,
+        "count": 4
+      }
+    ],
+    "drygrass": [
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the hollow's floor, alongside the bushes anchor at the same centre.",
+        "at": [
+          -20.0,
+          1300.0
+        ],
+        "radius": 12.0,
+        "count": 8
+      },
+      {
+        "_why": "MID-LAYER-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.5): reeds at the fisher's-camp shore, water's edge only -- Grass_Wide_Tall lives in the `grass` layer's own models list (vegetation.gd::_layer_for resolves retint by that list), so this anchor overrides `models` to place it under this layer's own scale/sink/min_height, the same technique the bushes layer's existing water-margin anchors already use.",
+        "at": [
+          -392.0,
+          586.0
+        ],
+        "radius": 4.0,
+        "count": 10,
+        "models": [
+          "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf"
+        ],
+        "scale_min": 0.8,
+        "scale_max": 1.0,
+        "min_height": -17.5
+      }
+    ],
+    "deadfall": [
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.1): one dead tree at the mound's south-west foot copse, on the skyline side (section 3's punctuation role) -- a grey vertical in the new copse's green line, the discovery-marker technique this exact plan already retired at (-276,320) (6.1) reused here for silhouette, not for wayfinding. `models` narrowed to the three dead trees, no mushrooms -- this ground is open meadow, not forest floor.",
+        "at": [
+          60.5,
+          -133.7
+        ],
+        "radius": 10.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "max_slope_deg": 25.0,
+        "scale_min": 0.85,
+        "scale_max": 1.1
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.3): the far-side grove's one dead tree, breaking its green line the way every copse in this band now does. Sited inside the grove's own re-centred footprint (-448,590) rather than the plan's original (-432,548), which tools/_probe_tree_silhouette_0903.gd measured underwater -- see the grove anchor's own `_why` for the full re-siting.",
+        "at": [
+          -442.0,
+          596.0
+        ],
+        "radius": 6.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.9,
+        "scale_max": 1.2
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.7): the far-rim treeline's one dead tree, on the skyline side behind the bridge.",
+        "at": [
+          30.0,
+          1378.0
+        ],
+        "radius": 5.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.9,
+        "scale_max": 1.2
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's first grove, one dead tree on its skyline side -- the copse recipe's punctuation piece, same as every other reshaped copse in this pass.",
+        "at": [
+          -120.0,
+          650.0
+        ],
+        "radius": 14.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.85,
+        "scale_max": 1.1
+      },
+      {
+        "_why": "TREE-SILHOUETTE-0903 (docs/specs/BAND1_COMPOSITION_PLAN.md 5.6): the Long Field's second grove, same recipe as the first.",
+        "at": [
+          5.0,
+          1235.0
+        ],
+        "radius": 14.0,
+        "count": 1,
+        "models": [
+          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+          "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+        ],
+        "scale_min": 0.85,
+        "scale_max": 1.1
+      }
+    ]
+  },
+  "footprints": [
+    {
+      "order": 0,
+      "x": 2,
+      "z": 14,
+      "radius": 6.5,
+      "_why": "Grandpa's house, 9x7m inside plus walls -- grass was standing on the floor and the rug"
+    },
+    {
+      "order": 1,
+      "x": 28.0,
+      "z": 4.0,
+      "radius": 5.0,
+      "_why": "the windmill -- at distance sqrt(18^2+14^2)=22.8m from the village-square clearing's own centre, just outside its 22m radius, so the rocks layer (which DOES respect clearings, unlike grass) could still land a boulder against its base. R9.4-remainder-8's survey found one doing exactly that, obscuring village.json's own stated landmark from the meadow view."
+    },
+    {
+      "order": 2,
+      "_comment_ow5d": "OW5D relocation (footprints[2], docs/MEADOWS_MACRO_LAYOUT.md section 10.2): (-132,107) -> (-382,514), same offset as the mill.",
+      "x": -382.0,
+      "z": 514.0,
+      "radius": 5.5,
+      "_why": "the mill -- grass out of the tower and from under the wheel"
+    },
+    {
+      "order": 3,
+      "_comment_ow5d": "OW5D relocation (footprints[3]): (-136.3,113) -> (-386.3,520), same offset as the footbridge.",
+      "x": -386.3,
+      "z": 520.0,
+      "radius": 6.5,
+      "_why": "the footbridge -- grass off the deck and both stone landings"
+    },
+    {
+      "order": 4,
+      "_comment_ow5d": "OW5D relocation (footprints[4]): (-100,100) -> (-350,507), same offset as the ranger station.",
+      "x": -350.0,
+      "z": 507.0,
+      "radius": 4.5,
+      "_why": "the ranger station"
+    },
+    {
+      "order": 5,
+      "x": 5.0,
+      "z": 80.0,
+      "radius": 10.5,
+      "_why": "SC14: the South Bridge's deck and both stone landings -- the same treatment the mill's footbridge already gets, at this span's own half-length"
+    },
+    {
+      "order": 6,
+      "x": 44,
+      "z": 2,
+      "radius": 7.8,
+      "_why": "R7.9 plus OWNER-0912 visual acceptance repair: the inn's 7.8m canopy-aware exclusion follows its corrected south-side frontage at [-1.5,-2], so grass and scatter cannot occupy the common room or public porch."
+    },
+    {
+      "order": 1000,
+      "x": 8.0,
+      "z": 1330.0,
+      "radius": 14.5,
+      "_why": "BROAD-VISUAL-0910 continuation: the South Bridge moved from z=80 to z=1330 with OW5D, but its original footprint (order 5) stayed at the retired coordinate. The tree/rock clearing moved correctly while dynamic grass, flowers and cover could still stand across the live deck and both occupied landing shoulders. Keep the historical order-5 entry for the split-baseline identity contract and add this band-reserved footprint at the crossing's actual centre; 14.5m covers the 10.5m deck/landing contract plus the held checkpoint's near-side occupation without turning the wider approach into a bald field."
+    },
+    {
+      "order": 1001,
+      "x": 7.3,
+      "z": 8.8,
+      "radius": 3.15,
+      "_why": "MEADOWS-LOCATIONS-0911 Grandpa-yard domestic apron. The latest ordinary south-east walk-up was dominated by one oversized purple/black foreground clump on this exact patch while the existing work props disappeared into undifferentiated grass. This small footprint turns only the new harvest-table nook into visibly worked ground and guarantees that no scatter or dynamic cover grows through its furniture. Centre/radius cover the four-prop cluster at x -19.25..-16.45, z -22.25..-20.55 plus a narrow walking margin; the disc's north edge stops at z=-18.05, south of the east-facing door and its starter lane around z=-16, and it does not reach the interactive farm rows at z=-9/-6.6. This is a 3.15m yard apron, not another broad vegetation clearing."
+    },
+    {
+      "order": 1002,
+      "x": 26,
+      "z": 26,
+      "radius": 7.5,
+      "_why": "OWNER-0912. Tam's moved workshop footprint covers the rotated 4.3m by 5.0m half-extents plus its open-bay working margin; even ground-cover layers that ignore broad clearings cannot grow through the shop floor."
+    },
+    {
+      "order": 1003,
+      "x": 26,
+      "z": 2,
+      "radius": 6.0,
+      "_why": "OWNER-0912. Mira's moved shop footprint covers cottage_a and its street threshold, keeping dynamic ground cover out of the enterable merchant room."
+    },
+    {
+      "order": 1004,
+      "x": 44,
+      "z": 26,
+      "radius": 5.3,
+      "_why": "OWNER-0912. The stone cottage footprint follows its west-street move; this exact building exclusion complements the broad square clearing for layers that intentionally ignore clearings."
+    },
+    {
+      "order": 1005,
+      "x": 160.0,
+      "z": 710.0,
+      "radius": 7.0,
+      "_why": "OWNER-0912 wayfinding-pulls R3. The wayfarer fire, stone ring, supply cache and both detour rewards occupy this seven-metre work patch. Unlike the wider sightline clearing, this footprint also removes grass/flowers from the prop bases so the site resolves as one deliberately used stop once the road signal pulls the player over."
+    },
+    {
+      "order": 1104,
+      "x": 62,
+      "z": 2,
+      "radius": 5.37,
+      "_why": "F17 research_house native module exclusion"
+    },
+    {
+      "order": 1105,
+      "x": 62,
+      "z": 26,
+      "radius": 4.61,
+      "_why": "F17 oskar_house native module exclusion"
+    },
+    {
+      "order": 1106,
+      "x": 80,
+      "z": 2,
+      "radius": 4.61,
+      "_why": "F17 alder_house native module exclusion"
+    },
+    {
+      "order": 1107,
+      "x": 80,
+      "z": 26,
+      "radius": 5.37,
+      "_why": "F17 orchard_house native module exclusion"
+    },
+    {
+      "order": 1108,
+      "x": 107,
+      "z": 14,
+      "radius": 24.59,
+      "_why": "F17 crossing_hall native module exclusion"
+    },
+    {
+      "order": 1110,
+      "x": 34,
+      "z": 5,
+      "radius": 4.5,
+      "_why": "F17 retained small well green native apron"
+    }
+  ],
+  "_comment_w05_treeline_0904": "W05-TREELINE-0904: every `trees` anchor here that carries its own scale range (the TREE-SILHOUETTE copse peaks and bodies, the frame trunk, the crest pair, the comp4 pin, the basin and far-rim treelines, station 04) is lifted by the same 2.0/1.45 factor the corridor-wide `trees.scale_max` moved by, so each composed silhouette keeps its authored relationship to the fill around it instead of becoming the SHORT stand in a taller wood. Shoulder pairs (scale_max <= 0.85, the deliberately young trees of the peak/shoulder/body recipe) are untouched: grow, never shrink, and the recipe wants them small. Anchor `count`, `at`, `radius`, `models` untouched -- those would re-roll the shared stream; a scale range does not."
+}
