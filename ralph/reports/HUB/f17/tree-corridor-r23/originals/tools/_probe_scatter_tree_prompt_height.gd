@@ -14,8 +14,6 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const TARGET := Vector3(98.15209197998047, 5.79111909866333, -35.932098388671875)
 const BANK_TURN_FRAMES := 26
 const MAX_BANK_TURNS := 3
-const CORRIDOR_TRACKING_ALLOWANCE := 0.22
-const CORRIDOR_WAYPOINT_RADIUS := 0.20
 var _player: CharacterBody3D
 var _arbiter: Node
 var _prompt: Node3D
@@ -99,32 +97,30 @@ func _run() -> void:
 	for frame in 30: await physics_frame
 	# At most nine cached observations; no additional physics query or frame.
 	var approach_trace := [_approach_sample("settled", 0, Vector3.ZERO)]
-	# One full-precision geometry witness before the original 180-frame walk.
-	var geometry := _fixture_geometry(world, trunk, placement, layer, order)
-	print("TREE_GEOMETRY ", JSON.stringify(geometry, "", true, true))
-	var corridor := PackedVector3Array()
-	if geometry.complete:
-		corridor = tree_corridor(_geometry_faces, _player.global_position, TARGET,
-			float(geometry.settled_start.player.shape_data.radius), _player.safe_margin,
-			_player.floor_max_angle, float(geometry.trunk.shape_data.radius))
-	var corridor_index := 1
-	var corridor_record: Array = []
-	for waypoint: Vector3 in corridor:
-		corridor_record.append(_geometry_vector(waypoint))
-	print("TREE_CORRIDOR ", JSON.stringify({"acceptance": false, "waypoints": corridor_record,
-		"tracking_allowance": CORRIDOR_TRACKING_ALLOWANCE, "within_original_180_frames": true}, "", true, true))
+	# One full-precision geometry witness before the unchanged original walk.
+	print("TREE_GEOMETRY ", JSON.stringify(_fixture_geometry(world, trunk, placement, layer, order), "", true, true))
 	var saw_wall := false
+	var terrain := world.get_node("CanonicalLocalTerrain") as StaticBody3D
+	var bank_left := 0
+	var bank_direction := Vector3.ZERO
+	var bank_turns: Array[Dictionary] = []
 	var touched := false
 	for frame in 180:
-		var steering := Vector3.ZERO
-		if not corridor.is_empty():
-			while corridor_index < corridor.size() and _corridor_planar(_player.global_position).distance_to(
-					_corridor_planar(corridor[corridor_index])) <= CORRIDOR_WAYPOINT_RADIUS:
-				corridor_index += 1
-			var aim := corridor[corridor_index] if corridor_index < corridor.size() else TARGET
-			steering = aim - _player.global_position
-			steering.y = 0.0
-			steering = steering.normalized()
+		var offset := TARGET - _player.global_position
+		offset.y = 0
+		offset = offset.normalized()
+		var steering := offset
+		if bank_left == 0 and bank_turns.size() < MAX_BANK_TURNS:
+			var normal := _terrain_bank_normal(offset, terrain)
+			var tangent := bank_tangent(offset, normal, bank_direction)
+			if tangent != Vector3.ZERO:
+				bank_direction = tangent
+				bank_left = BANK_TURN_FRAMES
+				bank_turns.append({"approach_frame": frame + 1, "player": _player.global_position,
+					"cached_normal": normal, "requested_tangent": tangent})
+		if bank_left > 0:
+			steering = bank_direction
+			bank_left -= 1
 		_axis(JOY_AXIS_LEFT_X, steering.x)
 		_axis(JOY_AXIS_LEFT_Y, steering.z)
 		await physics_frame
@@ -148,7 +144,7 @@ func _run() -> void:
 	# Flush outside the moving sample; these observations cannot admit success.
 	for sample: Dictionary in approach_trace:
 		print("APPROACH cached sample=", sample)
-	print("TREE_CORRIDOR progress_index=", corridor_index, " waypoints=", corridor.size(), " within_original_180_frames=true")
+	print("TERRAIN stick turns=", bank_turns, " within_original_180_frames=true")
 	await process_frame
 	var press := InputEventAction.new()
 	press.action = "interact"
@@ -200,114 +196,6 @@ static func bank_tangent(wanted: Vector3, normal: Vector3, previous: Vector3 = V
 		tangent = -tangent
 	return tangent
 
-
-## Geometry-derived east corridor on the exact R22 mesh. Only ordinary stick
-## headings consume it; the unchanged native contact/offer conjunction decides.
-static func tree_corridor(faces: PackedVector3Array, start: Vector3, target: Vector3,
-		radius: float, margin: float, floor_angle: float, trunk_radius: float) -> PackedVector3Array:
-	for value: float in [radius, margin, floor_angle, trunk_radius, start.x, start.y, start.z, target.x, target.y, target.z]:
-		if not is_finite(value):
-			return PackedVector3Array()
-	if faces.size() != 1176 or absf(radius - 0.4) > 0.00001 or absf(margin - 0.001) > 0.00000001 \
-			or absf(floor_angle - 0.7854) > 0.000001 or absf(trunk_radius - 0.7190233469009399) > 0.000001 \
-			or target != TARGET \
-			or (_corridor_planar(start) - _corridor_planar(target)).distance_to(Vector2(0, 4)) > 0.0001:
-		return PackedVector3Array()
-	var path := PackedVector3Array([start])
-	for offset: Vector2 in [Vector2(0.7, 4.7), Vector2(4.3, 4.7), Vector2(4.7, 4.3),
-			Vector2(4.7, 2.7), Vector2(4.3, 2.3), Vector2(1.5, 0.5)]:
-		path.append(target + Vector3(offset.x, 0, offset.y))
-	var end := Vector2(1.5, 0.5).normalized() * (radius + trunk_radius - 0.002)
-	var contact := target + Vector3(end.x, 0, end.y)
-	if not corridor_clear(faces, path, target, radius + margin + CORRIDOR_TRACKING_ALLOWANCE, floor_angle) \
-			or not corridor_clear(faces, PackedVector3Array([path[path.size() - 1], contact]), target,
-				radius + margin + CORRIDOR_TRACKING_ALLOWANCE, floor_angle):
-		return PackedVector3Array()
-	return path
-
-
-## A swept planar disc stays in the UNION of floor-like facets, including
-## shared edges. Every steep triangle and mesh boundary remains an obstacle.
-static func corridor_clear(faces: PackedVector3Array, path: PackedVector3Array, target: Vector3,
-		clearance: float, floor_angle: float) -> bool:
-	if faces.size() != 1176 or path.size() < 2 or path.size() > 7 or not is_finite(clearance) \
-			or clearance <= 0.0 or not is_finite(floor_angle) or floor_angle <= 0.0 or floor_angle >= PI * 0.5 \
-			or not target.is_finite():
-		return false
-	var points: Array[Vector2] = []
-	for point: Vector3 in path:
-		if not point.is_finite():
-			return false
-		var at := _corridor_planar(point - target)
-		if absf(at.x) + clearance > 7.0 or absf(at.y) + clearance > 7.0:
-			return false
-		points.append(at)
-	var heights := {}
-	for triangle in 392:
-		var a := faces[triangle * 3] - target
-		var b := faces[triangle * 3 + 1] - target
-		var c := faces[triangle * 3 + 2] - target
-		if not a.is_finite() or not b.is_finite() or not c.is_finite():
-			return false
-		# Require every original grid triangle in construction order and a
-		# single shared height per vertex: a missing/duplicated face is no floor.
-		var cell := int(triangle / 2)
-		var x := int(cell / 14) - 7
-		var z := cell % 14 - 7
-		var expected: Array = [Vector2(x, z), Vector2(x + 1, z), Vector2(x, z + 1)] \
-			if triangle % 2 == 0 else [Vector2(x + 1, z), Vector2(x + 1, z + 1), Vector2(x, z + 1)]
-		var vertices: Array[Vector3] = [a, b, c]
-		for index in 3:
-			var key := _corridor_planar(vertices[index])
-			if key != expected[index] or (heights.has(key) and float(heights[key]) != vertices[index].y):
-				return false
-			heights[key] = vertices[index].y
-		var normal := (b - a).cross(c - a)
-		if absf(normal.y) < 0.0001:
-			return false
-		# This fixture's original clockwise winding gives a downward cross.
-		# Absolute Y grades the same unmodified face; no floor angle is changed.
-		if absf(normal.normalized().y) >= cos(floor_angle) + 0.0001:
-			continue
-		for index in points.size() - 1:
-			if _corridor_segment_triangle_distance_squared(points[index], points[index + 1],
-					_corridor_planar(a), _corridor_planar(b), _corridor_planar(c)) < clearance * clearance:
-				return false
-	return heights.size() == 225
-
-
-static func _corridor_segment_triangle_distance_squared(a: Vector2, b: Vector2,
-		p: Vector2, q: Vector2, r: Vector2) -> float:
-	for point: Vector2 in [a, b]:
-		var sides := [(q - p).cross(point - p), (r - q).cross(point - q), (p - r).cross(point - r)]
-		if (sides[0] >= 0 and sides[1] >= 0 and sides[2] >= 0) or (sides[0] <= 0 and sides[1] <= 0 and sides[2] <= 0):
-			return 0.0
-	var distance := INF
-	for edge: Array in [[p, q], [q, r], [r, p]]:
-		var c: Vector2 = edge[0]
-		var d: Vector2 = edge[1]
-		if minf(a.x, b.x) <= maxf(c.x, d.x) and minf(c.x, d.x) <= maxf(a.x, b.x) \
-				and minf(a.y, b.y) <= maxf(c.y, d.y) and minf(c.y, d.y) <= maxf(a.y, b.y) \
-				and (b - a).cross(c - a) * (b - a).cross(d - a) <= 0.0 \
-				and (d - c).cross(a - c) * (d - c).cross(b - c) <= 0.0:
-			return 0.0
-		distance = minf(distance, _corridor_point_segment_distance_squared(a, c, d))
-		distance = minf(distance, _corridor_point_segment_distance_squared(b, c, d))
-		distance = minf(distance, _corridor_point_segment_distance_squared(c, a, b))
-		distance = minf(distance, _corridor_point_segment_distance_squared(d, a, b))
-	return distance
-
-
-static func _corridor_point_segment_distance_squared(point: Vector2, a: Vector2, b: Vector2) -> float:
-	var along := b - a
-	if along.length_squared() < 0.00000001:
-		return point.distance_squared_to(a)
-	return point.distance_squared_to(a + along * clampf((point - a).dot(along) / along.length_squared(), 0.0, 1.0))
-
-
-static func _corridor_planar(point: Vector3) -> Vector2:
-	return Vector2(point.x, point.z)
-
 func _approach_sample(stage: String, frame: int, requested_stick: Vector3) -> Dictionary:
 	# physics_frame resumes before the next player step; contact/wanted fields
 	# describe the latest completed controller step, not the new stick request.
@@ -351,7 +239,7 @@ func _build_floor(world: Node3D, field: RefCounted) -> void:
 	_geometry_faces = faces.duplicate() # Freeze the actual construction array; never resample.
 
 
-## Metadata only. The corridor requires complete capture; native success is unchanged.
+## Metadata only. Incomplete capture cannot change movement or native success.
 func _fixture_geometry(world: Node3D, trunk: StaticBody3D, placement: Dictionary, layer: String, order: int) -> Dictionary:
 	var record := {"acceptance": false, "complete": false, "mesh_frozen_at": "fixture_construction",
 		"registered_state_at": "settled_before_original_walk", "native_queries_added": 0,
