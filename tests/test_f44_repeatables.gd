@@ -185,3 +185,16 @@ func test_actual_clear_weather_metadata_does_not_choose_unusual_alpha_odds() -> 
 	assert_false(ALPHA_PRODUCER.unusual_weather(config.presets.clear))
 	assert_true(ALPHA_PRODUCER.unusual_weather(config.presets.rain))
 	assert_true(ALPHA_PRODUCER.unusual_weather(config.presets.fog))
+
+func test_alpha_cooldown_uses_three_saved_day_transitions() -> void:
+	assert_eq(ALPHA_PRODUCER.day_seconds(0), -1)
+	var resolved := ALPHA.resolve(STATE.defaults("world"), "hollows_alpha", 1,
+		ALPHA_PRODUCER.day_seconds(4), ["character_a"], "defeat")
+	assert_false(resolved.is_empty())
+	if resolved.is_empty(): return
+	var departed := ALPHA.depart(resolved.state, "hollows_alpha", 1, "character_a", "meadows")
+	assert_false(departed.is_empty())
+	if departed.is_empty(): return
+	var reload: Dictionary = JSON.parse_string(JSON.stringify(departed.state))
+	assert_true(ALPHA.spawn(reload, "hollows_alpha", "world_a", ALPHA_PRODUCER.day_seconds(6), false, false).is_empty())
+	assert_false(ALPHA.spawn(reload, "hollows_alpha", "world_a", ALPHA_PRODUCER.day_seconds(7), false, false).is_empty())
