@@ -7,7 +7,7 @@
   "sessions": [
     {
       "thread_id": "01a0f8de-3f53-7a41-bc91-689c49cc3024",
-      "title": "R3 F45 — Research log",
+      "title": "R3 F45 \u00e2\u20ac\u201d Research log",
       "feature": "F45",
       "checkout": "D:/tetherbound/r3-f45",
       "branch": "tb/r3-f45",
@@ -26,7 +26,7 @@
     },
     {
       "thread_id": "01a0f8df-d2a5-72b1-b5ce-9fc75530db55",
-      "title": "R3 F46 — New-system onboarding",
+      "title": "R3 F46 \u00e2\u20ac\u201d New-system onboarding",
       "feature": "F46",
       "checkout": "D:/tetherbound/r3-f46",
       "branch": "tb/r3-f46",
@@ -45,7 +45,7 @@
     },
     {
       "thread_id": "01a0f8e0-c591-77a2-a145-b0510dc61a1c",
-      "title": "R3 F47 — Economy and balance",
+      "title": "R3 F47 \u00e2\u20ac\u201d Economy and balance",
       "feature": "F47",
       "checkout": "D:/tetherbound/r3-f47",
       "branch": "tb/r3-f47",
@@ -64,7 +64,7 @@
     },
     {
       "thread_id": "01a0f8e1-9d29-78f2-b3be-6a513313932b",
-      "title": "R3 F48 — Co-op across the new loop",
+      "title": "R3 F48 \u00e2\u20ac\u201d Co-op across the new loop",
       "feature": "F48",
       "checkout": "D:/tetherbound/r3-f48",
       "branch": "tb/r3-f48",
@@ -83,7 +83,7 @@
     },
     {
       "thread_id": "01a0f8e2-2fb7-7ae2-9039-4abaa404eb47",
-      "title": "R3 F49 — Integrated campaign and release…",
+      "title": "R3 F49 \u00e2\u20ac\u201d Integrated campaign and release\u00e2\u20ac\u00a6",
       "feature": "F49",
       "checkout": "D:/tetherbound/r3-f49",
       "branch": "tb/r3-f49",
@@ -102,7 +102,7 @@
     },
     {
       "thread_id": "01a0f8ec-f553-77d1-8975-10f7fe056137",
-      "title": "R3 Foundation — Wire the remaining production…",
+      "title": "R3 Foundation \u00e2\u20ac\u201d Wire the remaining production\u00e2\u20ac\u00a6",
       "feature": "Foundation",
       "checkout": "D:/tetherbound/r3-foundation-wiring",
       "branch": "tb/r3-foundation-wiring",
@@ -112,16 +112,16 @@
         "activeFlags": []
       },
       "archived": false,
-      "source_checkpoint_not_yet_consolidated": "f7dd0d6978e0b0e26ea1e77316fc14fd999ab59a",
-      "source_review": "CHECKPOINT HOLD: three concrete source defects returned to author; newer source and remaining production work continue",
+      "source_review": "Reviewed checkpoint source consolidated; complete R3 production composition remains unfinished.",
       "remaining_source_work": [
-        "Authenticated guest personal flags and guest Home Key/portal arrival consumer",
-        "Old envelope identity revalidation after fallback callbacks, including research claims",
-        "Durable original stable-participant research defeat obligations before teardown",
-        "Actual final ending context and ordinary Tidewake dock continuation",
-        "Executable F48 profiles and actual world-write/delivery/owner-write/ACK boundary observations"
+        "Authenticated guest travel and grounded split owner-save/ACK consumer",
+        "Guest Master and remaining Master/boss/alpha rematch production composition",
+        "Authenticated guest ending acknowledgements",
+        "Executable F48 ordinary-input profiles and actual write/delivery/owner-write/ACK loss boundaries"
       ],
-      "source_review_evidence": "foundation-source-review.json"
+      "source_review_evidence": "foundation-source-review.json",
+      "source_checkpoint_consolidated": "665c6e73229f5fcec94777ff6cc4f91c364c6bdf",
+      "source_contained_at": "26f0c017fbafd3d2c20e1b732529434ad064842b"
     }
   ],
   "root_source_review": {
@@ -130,6 +130,6 @@
     "F47": "ROOT overlay repair0fa57dec9a independently sourcePASS byF49 atd07ae5c396;15 focused Node checks PASS, original live levels/gates unchanged; no runtime solvency credit",
     "F48": "Witnesses never repair/save observed state; real OS.kill guest restart; actual file/participant/namespace receipts; missing exact loss windows fail",
     "F49": "New-order driver preserves earned helpers and immutable save copies, package evidence verifier is read-only, missing producer/ordinary dock continuation fails explicitly. Runtime/owner/hardware/publication pending",
-    "Foundation": "Independent f7 checkpoint HOLD: gear API mismatch, direct world/snapshot validation gap, catch retry changes original night. Author fixing while completing guest travel/Master/ending, bounty/rematch and F48 profiles. No NEXT engine/CI or criterion acceptance."
+    "Foundation": "Reviewed checkpoint source consolidated; complete R3 production composition remains unfinished. No NEXT runtime/CI or acceptance credit."
   }
 }
