@@ -1,0 +1,54 @@
+{
+  "kind": "Non-engine structural/content validation; not runtime, import, earned, device or visual proof",
+  "checks": {
+    "default_off": true,
+    "installed_assets_exist": true,
+    "unique_placement_ids": true,
+    "native_architecture_scale": true,
+    "positive_scales": true,
+    "cleared_layers_have_no_collision_or_harvest": true,
+    "street_dressing_clear_of_existing_centreline": true,
+    "existing_F17_configs_unchanged": true,
+    "weather_names_resolve": true,
+    "matrix_over_200": true,
+    "matrix_has_high_medium": true,
+    "unique_matrix_sites": true,
+    "all_catalog_rows_audited": true,
+    "no_purchase_generation": true
+  },
+  "source_sha256": {
+    "scripts/world/meadows_catalog_presentation.gd": "5abf9aab9e82f04d2ddb4787a1026abceb40446620bba75fab36a8ba439ddc6e",
+    "scripts/world/village.gd": "2ee584739aa6ca2c54e112e592e436db41dfc40ce12995cb3e03ca1d8819b80a",
+    "scripts/world/crossing_hall.gd": "22b493ac267474a8f646dfe7e928b242794f1e2f718184d96de6a3f75a9ae3ae",
+    "scripts/world/props.gd": "e9596bd0beb6720b7178b0bb544557abe5c93ea47496e29bc7ab6b85f6e7047b",
+    "scripts/world/vegetation.gd": "929e321a0764deb547a48920f6faebdf86859e0efc5d1ebeb8d90cf0e1f15b5c",
+    "scripts/world/horizon_ranges.gd": "0b9210b6b601a24673793a4284151fa4577cd850106b08c2f1a96eaba70cedd7",
+    "tools/capture_f38_matrix.gd": "4257c0bb0ed79208da2d2d023d0a3098e4c1b50aeeba8d969377f0e5350608fe",
+    "tools/capture_f38_fight.gd": "b728da39581f3c721e4f4a8815639c53251841cc1e6828467440d5545c67ac6c",
+    "data/config/meadows_catalog_presentation.json": "ce79e87a773b8b0d067e492ab80b19b3a24b2df9fca02fa09461ea2c8a2b0ba9"
+  },
+  "candidate_placements": 60,
+  "pending": [
+    "Godot parser/type/import pass",
+    "Native High/Medium paired matrices",
+    "Code-blind full-bar judgment",
+    "Earned opening walk and real fight",
+    "Save/reconnect presentation reconstruction and F17 regression",
+    "F26/main reconciliation after prior batch GREEN"
+  ],
+  "criteria_status": "F38#0..#5 OPEN",
+  "integration_seams": {
+    "scripts/world/village.gd": "Post-build optional presentation child; F17 placement/grounding/collision/door path unchanged.",
+    "scripts/world/crossing_hall.gd": "Optional child after frontage; F17/F18/F31 arches, pedestals, arrivals and interactions unchanged.",
+    "scripts/world/props.gd": "Post-build optional landscape presentation; existing rest/collision path unchanged; F34 consumer seam.",
+    "scripts/world/vegetation.gd": "Meadows-only noncolliding, unharvested decorative draw suppression after identity assignment. Shared F39-F41 consumer seam.",
+    "scripts/world/horizon_ranges.gd": "Flag-off Meadows config overlay and optional smooth normals/colour variation; no collider/global atmosphere/default renderer edit."
+  },
+  "dependencies": [
+    "F17 current-source opening/Warden failures are inherited; source is not accepted main.",
+    "F26 look-dev plus High/Medium and owner Ally proof before default promotion.",
+    "F36 creature art/scale/pose and relevant pickup-family mesh work; F42 UI; F22 fight/camera/tell presentation.",
+    "No edits to F34 camps, F37 traversal, F43 bounties, F44 rematches, save carrier, flags, autoloads, CI or global STATE.",
+    "Prior consolidated batch GREEN ON MAIN, then ROOT consolidation/reconciliation of ALL TEN candidates."
+  ]
+}

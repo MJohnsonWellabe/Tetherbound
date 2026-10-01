@@ -1,0 +1,943 @@
+{
+  "schema_version": 1,
+  "enabled": false,
+  "scope": "peer-local presentation; no durable state, RPC, transaction or save schema",
+  "provenance": "Unmodified installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Duplicated banner tint only. No acquisition/generation.",
+  "cover_layers": [
+    "grass",
+    "drygrass",
+    "flowers",
+    "groundmat"
+  ],
+  "cover_clearances": [
+    {
+      "id": "relay_traffic",
+      "at": [
+        350,
+        3760
+      ],
+      "radius_m": 16
+    },
+    {
+      "id": "village_road_12",
+      "at": [
+        12,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_18",
+      "at": [
+        18,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_24",
+      "at": [
+        24,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_30",
+      "at": [
+        30,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_36",
+      "at": [
+        36,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_42",
+      "at": [
+        42,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_48",
+      "at": [
+        48,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_54",
+      "at": [
+        54,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_60",
+      "at": [
+        60,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_66",
+      "at": [
+        66,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_72",
+      "at": [
+        72,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_78",
+      "at": [
+        78,
+        14
+      ],
+      "radius_m": 3.3
+    },
+    {
+      "id": "village_road_84",
+      "at": [
+        84,
+        14
+      ],
+      "radius_m": 3.3
+    }
+  ],
+  "horizon_layers": {
+    "FarRanges": {
+      "frequency": 1.45,
+      "octaves": 3,
+      "ridged": false,
+      "massif_frequency": 0.32,
+      "hero_width_deg": 11,
+      "hero_lift": 0.28,
+      "sharpness": 1.1,
+      "segments": 512,
+      "rows": 24,
+      "forest": "#526c64",
+      "rock": "#687b90",
+      "snow": "#cad8e5",
+      "smooth_normals": true,
+      "colour_variation": 0.018
+    },
+    "Foothills": {
+      "frequency": 1.8,
+      "octaves": 2,
+      "massif_frequency": 0.32,
+      "segments": 512,
+      "rows": 12,
+      "forest": "#425f50",
+      "rock": "#596e60",
+      "smooth_normals": true,
+      "colour_variation": 0.018
+    }
+  },
+  "placements": [
+    {
+      "id": "shop_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        22.3,
+        0,
+        8.4
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "shop_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        29.2,
+        0,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "shop_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        29.2,
+        0.18,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "workshop_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        22.3,
+        0,
+        19.6
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "workshop_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        29.2,
+        0,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "workshop_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        29.2,
+        0.18,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "inn_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        40.3,
+        0,
+        8.4
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "inn_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        47.2,
+        0,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "inn_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        47.2,
+        0.18,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "halda_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        40.3,
+        0,
+        19.6
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "halda_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        47.2,
+        0,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "halda_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        47.2,
+        0.18,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "research_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        58.3,
+        0,
+        8.4
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "research_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        65.2,
+        0,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "research_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        65.2,
+        0.18,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "ranger_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        58.3,
+        0,
+        19.6
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "ranger_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        65.2,
+        0,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "ranger_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        65.2,
+        0.18,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "guest_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        76.3,
+        0,
+        8.4
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "guest_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        83.2,
+        0,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "guest_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        83.2,
+        0.18,
+        7.7
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "cottage_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        76.3,
+        0,
+        19.6
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "cottage_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        83.2,
+        0,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "cottage_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        83.2,
+        0.18,
+        20.3
+      ],
+      "yaw_deg": 180,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "shop_apples",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Apple.gltf",
+      "at": [
+        29.6,
+        0,
+        7.0
+      ],
+      "yaw_deg": 12,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "shop_bag",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        30.8,
+        0,
+        6.7
+      ],
+      "yaw_deg": -16,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "workshop_barrel",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "at": [
+        29.6,
+        0,
+        21.0
+      ],
+      "yaw_deg": 18,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "inn_luggage",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        40.3,
+        0,
+        7.2
+      ],
+      "yaw_deg": 32,
+      "scale": 1,
+      "grounded": true
+    },
+    {
+      "id": "hall_banner_-1",
+      "anchor": "hall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [
+        -4.8,
+        5.8,
+        -15.35
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false,
+      "retint": {
+        "*": "#426b69"
+      }
+    },
+    {
+      "id": "hall_gable_support_-1",
+      "anchor": "hall",
+      "path": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -4,
+        6.24,
+        -15.02
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false
+    },
+    {
+      "id": "hall_front_roof_-1",
+      "anchor": "hall",
+      "path": "res://assets/buildings/quaternius_medieval/Roof_Front_Brick4.gltf",
+      "at": [
+        -4,
+        6.24,
+        -15
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false
+    },
+    {
+      "id": "hall_entry_trim_-1",
+      "anchor": "hall",
+      "path": "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf",
+      "at": [
+        -4,
+        0,
+        -15.08
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false
+    },
+    {
+      "id": "hall_banner_1",
+      "anchor": "hall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [
+        4.8,
+        5.8,
+        -15.35
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false,
+      "retint": {
+        "*": "#426b69"
+      }
+    },
+    {
+      "id": "hall_gable_support_1",
+      "anchor": "hall",
+      "path": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        4,
+        6.24,
+        -15.02
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false
+    },
+    {
+      "id": "hall_front_roof_1",
+      "anchor": "hall",
+      "path": "res://assets/buildings/quaternius_medieval/Roof_Front_Brick4.gltf",
+      "at": [
+        4,
+        6.24,
+        -15
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false
+    },
+    {
+      "id": "hall_entry_trim_1",
+      "anchor": "hall",
+      "path": "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf",
+      "at": [
+        4,
+        0,
+        -15.08
+      ],
+      "yaw_deg": 180,
+      "scale": 1,
+      "grounded": false
+    },
+    {
+      "id": "pond_west_0",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "at": [
+        -394,
+        -0.08,
+        514
+      ],
+      "yaw_deg": 22,
+      "scale": 0.55,
+      "grounded": true
+    },
+    {
+      "id": "pond_west_1",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        -392.9,
+        -0.08,
+        514.5
+      ],
+      "yaw_deg": 54,
+      "scale": 0.85,
+      "grounded": true
+    },
+    {
+      "id": "pond_west_2",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "at": [
+        -395.7,
+        -0.08,
+        513.6
+      ],
+      "yaw_deg": 121,
+      "scale": 0.8,
+      "grounded": true
+    },
+    {
+      "id": "pond_west_3",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "at": [
+        -393.2,
+        -0.08,
+        512.7
+      ],
+      "yaw_deg": 82,
+      "scale": 1.15,
+      "grounded": true
+    },
+    {
+      "id": "pond_east_0",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "at": [
+        -374,
+        -0.08,
+        523
+      ],
+      "yaw_deg": 22,
+      "scale": 0.55,
+      "grounded": true
+    },
+    {
+      "id": "pond_east_1",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        -372.9,
+        -0.08,
+        523.5
+      ],
+      "yaw_deg": 54,
+      "scale": 0.85,
+      "grounded": true
+    },
+    {
+      "id": "pond_east_2",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "at": [
+        -375.7,
+        -0.08,
+        522.6
+      ],
+      "yaw_deg": 121,
+      "scale": 0.8,
+      "grounded": true
+    },
+    {
+      "id": "pond_east_3",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "at": [
+        -373.2,
+        -0.08,
+        521.7
+      ],
+      "yaw_deg": 82,
+      "scale": 1.15,
+      "grounded": true
+    },
+    {
+      "id": "pond_north_0",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "at": [
+        -386,
+        -0.08,
+        531
+      ],
+      "yaw_deg": 22,
+      "scale": 0.55,
+      "grounded": true
+    },
+    {
+      "id": "pond_north_1",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        -384.9,
+        -0.08,
+        531.5
+      ],
+      "yaw_deg": 54,
+      "scale": 0.85,
+      "grounded": true
+    },
+    {
+      "id": "pond_north_2",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "at": [
+        -387.7,
+        -0.08,
+        530.6
+      ],
+      "yaw_deg": 121,
+      "scale": 0.8,
+      "grounded": true
+    },
+    {
+      "id": "pond_north_3",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "at": [
+        -385.2,
+        -0.08,
+        529.7
+      ],
+      "yaw_deg": 82,
+      "scale": 1.15,
+      "grounded": true
+    },
+    {
+      "id": "village_verge_west_0",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "at": [
+        18,
+        -0.07,
+        21.8
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "village_verge_west_1",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        18.8,
+        -0.07,
+        22.5
+      ],
+      "yaw_deg": 47,
+      "scale": 0.7,
+      "grounded": true
+    },
+    {
+      "id": "village_verge_west_2",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "at": [
+        16.9,
+        -0.07,
+        22.1
+      ],
+      "yaw_deg": 94,
+      "scale": 0.35,
+      "grounded": true
+    },
+    {
+      "id": "village_verge_east_0",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "at": [
+        88,
+        -0.07,
+        6.2
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "village_verge_east_1",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        88.8,
+        -0.07,
+        6.9
+      ],
+      "yaw_deg": 47,
+      "scale": 0.7,
+      "grounded": true
+    },
+    {
+      "id": "village_verge_east_2",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "at": [
+        86.9,
+        -0.07,
+        6.5
+      ],
+      "yaw_deg": 94,
+      "scale": 0.35,
+      "grounded": true
+    },
+    {
+      "id": "hall_verge_north_0",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "at": [
+        87,
+        -0.07,
+        24.2
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "hall_verge_north_1",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        87.8,
+        -0.07,
+        24.9
+      ],
+      "yaw_deg": 47,
+      "scale": 0.7,
+      "grounded": true
+    },
+    {
+      "id": "hall_verge_north_2",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "at": [
+        85.9,
+        -0.07,
+        24.5
+      ],
+      "yaw_deg": 94,
+      "scale": 0.35,
+      "grounded": true
+    },
+    {
+      "id": "hall_verge_south_0",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "at": [
+        86,
+        -0.07,
+        3.4
+      ],
+      "yaw_deg": 0,
+      "scale": 0.65,
+      "grounded": true
+    },
+    {
+      "id": "hall_verge_south_1",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        86.8,
+        -0.07,
+        4.1
+      ],
+      "yaw_deg": 47,
+      "scale": 0.7,
+      "grounded": true
+    },
+    {
+      "id": "hall_verge_south_2",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "at": [
+        84.9,
+        -0.07,
+        3.6999999999999997
+      ],
+      "yaw_deg": 94,
+      "scale": 0.35,
+      "grounded": true
+    }
+  ]
+}

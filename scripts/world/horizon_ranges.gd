@@ -19,6 +19,7 @@ extends Node3D
 ## peer.
 
 const CONFIG_PATH := "res://data/config/meadows_horizon.json"
+const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 
 var _config: Dictionary = {}
 var _base_y := 0.0
@@ -30,6 +31,12 @@ func _ready() -> void:
 		push_warning("meadows_horizon.json missing or invalid; no horizon ranges")
 		return
 	_config = parsed
+	if CATALOG_PRESENTATION.enabled():
+		_config = _config.duplicate(true)
+		var overrides: Dictionary = CATALOG_PRESENTATION.settings().get("horizon_layers", {})
+		for layer: Dictionary in _config.get("layers", []):
+			var replacement: Dictionary = overrides.get(str(layer.get("name", "")), {})
+			layer.merge(replacement, true)
 	_base_y = float(_config.get("base_y", -40.0))
 	for layer_variant: Variant in _config.get("layers", []):
 		var layer: Dictionary = layer_variant
@@ -116,6 +123,8 @@ static func build_ring(layer: Dictionary, seed: int) -> ArrayMesh:
 			for index: int in [a, b, a + 1, b, b + 1, a + 1]:
 				st.set_color(colours[index])
 				st.add_vertex(positions[index])
+	if bool(layer.get("smooth_normals", false)):
+		st.index()
 	st.generate_normals()
 	return st.commit()
 
@@ -136,6 +145,7 @@ static func _colours(layer: Dictionary, positions: PackedVector3Array, segments:
 		c = c.lerp(snow, smoothstep(snow_line * 0.96, snow_line * 1.04, y))
 		# A little variation so a slope is not one flat swatch.
 		var jitter := (sin(float(index) * 12.9898) * 43758.5453)
-		jitter = (jitter - floorf(jitter)) * 0.08 - 0.04
+		var variation := float(layer.get("colour_variation", .08))
+		jitter = (jitter - floorf(jitter)) * variation - variation * .5
 		out[index] = Color(clampf(c.r + jitter, 0.0, 1.0), clampf(c.g + jitter, 0.0, 1.0), clampf(c.b + jitter, 0.0, 1.0))
 	return out

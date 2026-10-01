@@ -1,0 +1,47 @@
+{
+  "kind": "Non-engine syntax parse only; no Godot type/runtime/import proof",
+  "parser": "gdtoolkit",
+  "version": "4.5.0",
+  "files": [
+    {
+      "file": "scripts/world/meadows_catalog_presentation.gd",
+      "syntax": "PASS",
+      "sha256": "5abf9aab9e82f04d2ddb4787a1026abceb40446620bba75fab36a8ba439ddc6e"
+    },
+    {
+      "file": "scripts/world/village.gd",
+      "syntax": "PASS",
+      "sha256": "2ee584739aa6ca2c54e112e592e436db41dfc40ce12995cb3e03ca1d8819b80a"
+    },
+    {
+      "file": "scripts/world/crossing_hall.gd",
+      "syntax": "PASS",
+      "sha256": "22b493ac267474a8f646dfe7e928b242794f1e2f718184d96de6a3f75a9ae3ae"
+    },
+    {
+      "file": "scripts/world/props.gd",
+      "syntax": "PASS",
+      "sha256": "e9596bd0beb6720b7178b0bb544557abe5c93ea47496e29bc7ab6b85f6e7047b"
+    },
+    {
+      "file": "scripts/world/vegetation.gd",
+      "syntax": "PASS",
+      "sha256": "929e321a0764deb547a48920f6faebdf86859e0efc5d1ebeb8d90cf0e1f15b5c"
+    },
+    {
+      "file": "scripts/world/horizon_ranges.gd",
+      "syntax": "PASS",
+      "sha256": "0b9210b6b601a24673793a4284151fa4577cd850106b08c2f1a96eaba70cedd7"
+    },
+    {
+      "file": "tools/capture_f38_matrix.gd",
+      "syntax": "PASS",
+      "sha256": "4257c0bb0ed79208da2d2d023d0a3098e4c1b50aeeba8d969377f0e5350608fe"
+    },
+    {
+      "file": "tools/capture_f38_fight.gd",
+      "syntax": "PASS",
+      "sha256": "b728da39581f3c721e4f4a8815639c53251841cc1e6828467440d5545c67ac6c"
+    }
+  ]
+}
