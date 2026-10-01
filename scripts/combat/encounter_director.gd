@@ -1635,9 +1635,14 @@ func _reconcile_creature_proxies() -> void:
 
 
 func _spawn_creature_proxy(peer_id: int) -> void:
-	if not _is_host() or _creature_spawner == null or _creature_proxies.has(peer_id) \
+	if not _is_host() or not is_instance_valid(_creature_spawner) or _creature_proxies.has(peer_id) \
 			or _retiring_creature_proxies.has(peer_id):
 		return
+	# Session identity does not imply that this native spawner has a transport.
+	# Keep the deployment row for reconciliation once the host peer is live.
+	if not _creature_spawner.is_inside_tree(): return
+	var api := _creature_spawner.get_multiplayer()
+	if api == null or not api.has_multiplayer_peer() or not _creature_spawner.is_multiplayer_authority(): return
 	var row: Dictionary = _deployed_by.get(peer_id, {})
 	if row.is_empty():
 		return
