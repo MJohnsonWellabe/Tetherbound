@@ -60,7 +60,7 @@
       "confirmed_archived": true,
       "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
       "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved.",
-      "currently_archived": true,
+      "currently_archived": false,
       "reopened_reason": "Concrete CI6172 regional credits smoke parser failure; same F20 session reopened for test-only async API alignment. No new session.",
       "rearchived_after_source_consolidation": true
     },
@@ -176,10 +176,40 @@
       "reason": "All assigned independent source/native receipt reviews complete; restore same reviewer when needed"
     }
   ],
-  "next_batch_archives": "Ten confirmed R2 archives and exact source reachability are retained on tb/integration-next in ralph/reports/R2-consolidation; six source-only R3 sessions started from the consolidated R2 source. No R3 CI started.",
+  "next_batch_archives": "All ten R2 and five R3 feature authors confirmed archived; exact sources contained on pushed tb/integration-next. R3 Foundation remains active for production wiring. No NEXT engine or CI.",
   "latest_reopened": {
     "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
     "currently_archived": false,
     "reason": "Actual CI6173 opening failure on63429; original session restored for source repair"
-  }
+  },
+  "ci6173_reopened": [
+    {
+      "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+      "feature": "F17",
+      "reason": "Actual original opening failures in CI6173 jobs437,544,294; candidate1c7e04b source review pending",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    },
+    {
+      "thread_id": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "feature": "F20",
+      "reason": "Actual Waterward reveal-name predicate failure before traversal; source66d90261 independently PASS252 and merged23f48d78; original native proof recorded separately",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    },
+    {
+      "thread_id": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+      "feature": "F29",
+      "reason": "Independent review of attributable existing-owner source repairs",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    },
+    {
+      "thread_id": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+      "feature": "Foundation",
+      "reason": "Actual multiplayer shard5 guest loses shared boss presentation/binding after first Warden round; source investigation pending",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    }
+  ]
 }

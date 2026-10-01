@@ -1,0 +1,39 @@
+{
+  "source_candidate": "66d90261efe9b4ffbb3fb3255ab44652fdd14bba",
+  "root_merge": "23f48d78e52f608981d3257edf8f9393e90ee8e1",
+  "independent_reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "source_verdict": "PASS252 source checks; exactly two historical legacy dialogue lines restored; separate guarded Home Key conversation and all test/provider/budget source unchanged",
+  "native": {
+    "head": "23f48d78e52f608981d3257edf8f9393e90ee8e1",
+    "watchdog_seconds": 240,
+    "timed_out": true,
+    "script": "tests/smoke_stormwood_water_gate_path.gd",
+    "exit": 1,
+    "errors": [],
+    "summary": [],
+    "raw_log_sha256": "a876a3475623adff7e5cd3d9ce90c219e57daac1aa3d276f20bdb160b4a024d0",
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-23f48d78e52f-smoke_stormwood_water_gate_path\\smoke.log"
+  },
+  "runtime_verdict": "INCONCLUSIVE: original240s watchdog reached during world loading; no strict errors, assertions or summary. No full traversal pass or semantic code failure inferred; original failed6173 source remains retained.",
+  "acceptance": "No criterion closed",
+  "lossless_inputs": [
+    {
+      "original": "D:\\tetherbound\\feature-f20\\.tmp\\f20-waterward-legacy-dialogue.patch",
+      "copy": "candidate.patch.gz",
+      "raw_sha256": "28780eaf4de47a59aa5fd45f2d7bcb35dfad8dc8392c0f7af8b12c3b7c039768",
+      "raw_bytes": 907
+    },
+    {
+      "original": "D:\\tetherbound\\feature-f20\\.tmp\\f20-waterward-legacy-source-pins.json",
+      "copy": "source-pins.json.gz",
+      "raw_sha256": "73c58e4b66240d2eadff59fc494fbd7861386fef9b9327d991e14ddd4737e5e3",
+      "raw_bytes": 8932
+    },
+    {
+      "original": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-23f48d78e52f-smoke_stormwood_water_gate_path\\smoke.log",
+      "copy": "native.log.gz",
+      "raw_sha256": "a876a3475623adff7e5cd3d9ce90c219e57daac1aa3d276f20bdb160b4a024d0",
+      "raw_bytes": 733304
+    }
+  ]
+}
