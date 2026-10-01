@@ -184,6 +184,14 @@ func _on_activated() -> void:
 func _refresh(game: Node) -> void:
 	if not _built or _prompt == null:
 		return
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		var portals: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
+		var reason := str(portals.get("retired_crossing_reason", "Use the Crossing Hall portals.")) if portals is Dictionary else "Use the Crossing Hall portals."
+		_prompt.call("configure", reason, interaction_radius, true)
+		_prompt.set("actionable", false)
+		_set_open_visual(false, false)
+		set_process(false)
+		return
 	_observed_progression = _progression(game)
 	_progression_revision = int(_observed_progression.get("revision")) if _observed_progression != null else -1
 	var state := state_for(game)

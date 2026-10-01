@@ -19,6 +19,47 @@
   "_comment_armor": "R7.7. GAME_DESIGN.md sec18's five trainer equipment slots (Helmet, Upper body, Lower body, Boots, Backpack) -- 'trainer armor protects the human, not creatures'. `kind: \"armor\"` items are worn, not spent (`stack: 1`, same as a tool), and carry two fields nothing else in this file uses: `armor_slot` (one of the five slot names scripts/player/player_equipment.gd knows) and `defense` (a 0..1 fraction of incoming damage the piece alone soaks, summed across every equipped piece and capped by player_equipment.gd's own MAX_TOTAL_DEFENSE). CLAUDE.md's hard rules bound this on purpose: no shields (this is passive damage reduction, never a block/parry verb), and the human still cannot fight (nothing here is a weapon or adds an attack). The only real damage source the Meadows has today is a fall (player_vitals.gd's own fall-damage curve), so that is the one thing armor reduces so far; GAME_DESIGN.md's 'later biomes require gear' line is explicitly Biome-2 scope and stays unbuilt. Icons are original flat silhouettes (tools/gen_item_icons.py, spec sec21's sanctioned 'simple generated vector icons for game-specific concepts') -- neither vendored Kenney icon pack this project uses has a clothing/armor glyph to reuse.",
   "_comment_saddle_frame": "SD18/R6.2. An intermediate crafted component, not a gathered resource -- `kind: material` says so without inventing a branch nothing reads yet (same 'descriptive only' rule `coin`'s `kind: currency` documents). Consumed later by the Riding Saddle (R6.2, spec Band 4) once the saddle recipe itself is built; this item and the recipe that makes it are SD18's whole contribution toward that -- no riding code, no mount/dismount, nothing here reads or writes anything about a creature.",
   "items": {
+    "home_key": {
+      "name": "Home Key", "kind": "key", "stack": 1,
+      "colour": "#b8f6df", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "blurb": "One tap brings you to the Crossing Hall. Free, with no cooldown.",
+      "description": "Grandpa's gift. Raise it for two seconds to return to the home arch. Finish fights and conversations, reach solid ground and land before using it.",
+      "use_action": "home_key", "quick_bindable": true,
+      "droppable": false, "sellable": false, "tradeable": false, "death_satchel": false,
+      "protected_key": true, "scope": "character"
+    },
+    "tidewake_portal_key": {
+      "name": "Tidewake Portal Key", "kind": "key", "stack": 1,
+      "colour": "#69bfc5", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "blurb": "Opens the Tidewake arch in the Crossing Hall.",
+      "description": "Earned by a participant in the Meadows climax. Used once at the Tidewake arch; its unlock follows your character.",
+      "portal_biome": "tidewake", "droppable": false, "sellable": false,
+      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+    },
+    "cloudreach_portal_key": {
+      "name": "Cloudreach Portal Key", "kind": "key", "stack": 1,
+      "colour": "#d0e1da", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "blurb": "Opens the Cloudreach arch in the Crossing Hall.",
+      "description": "Earned by a participant in the Tidewake climax. Used once at the Cloudreach arch; its unlock follows your character.",
+      "portal_biome": "cloudreach", "droppable": false, "sellable": false,
+      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+    },
+    "stormwood_portal_key": {
+      "name": "Stormwood Portal Key", "kind": "key", "stack": 1,
+      "colour": "#b5a9e2", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "blurb": "Opens the Stormwood arch in the Crossing Hall.",
+      "description": "Earned by a participant in the Cloudreach climax. Used once at the Stormwood arch; its unlock follows your character.",
+      "portal_biome": "stormwood", "droppable": false, "sellable": false,
+      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+    },
+    "fifth_portal_key": {
+      "name": "Fifth Portal Key", "kind": "key", "stack": 1,
+      "colour": "#c1c5bd", "icon": "res://assets/ui/icons/items/south_bridge_key.png",
+      "blurb": "The fifth arch stirs, but its way remains sealed.",
+      "description": "Earned by a participant in the Stormwood finale. Used once at the fifth arch. It stirs, but it is not ready yet.",
+      "portal_biome": "biome5", "droppable": false, "sellable": false,
+      "tradeable": false, "death_satchel": false, "protected_key": true, "scope": "character"
+    },
     "essence_ground": {
       "name": "Ground Essence",
       "kind": "essence",
