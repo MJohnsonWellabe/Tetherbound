@@ -1,0 +1,4829 @@
+{
+  "status": "REVIEWED_SOURCE_REFERENCES_ONLY; RUNTIME_STOCK_UNPROVEN",
+  "claim": "All recipe inputs have authored sources in or before recipe biome. F32 canonical renewable nodes/crops exclusively provide attuned ingredients; actual mounted stock, terrain, seeds, supply and Kitchen integration remain unproven.",
+  "external_source": {
+    "owner": "F32",
+    "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+    "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df",
+    "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/515",
+    "source_cut": "ralph/reports/HOMESTEAD/f32/whole-source/source-cut.json",
+    "files": {
+      "data/config/essence_nodes.json": {
+        "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
+        "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
+      },
+      "data/config/farm.json": {
+        "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
+        "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+      }
+    },
+    "runtime_accepted_stock": null,
+    "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+    "retirement": "F28 finite master_garden nodes removed; old prepare_gather compatibility doorway always refuses. F32 node/farm staging alone owns attuned supply and renewable stock.",
+    "typed_node_intent": [
+      "site_id",
+      "expected_stock_revision",
+      "action_id"
+    ],
+    "transaction_owner": "F32 inside Foundation existing world_harvest/character journal; host resolves actual source, stock revision, host day and retained seed roll.",
+    "item_owners": "F28 attuned definitions; F27 essence; F32 seeds. Register each canonical ID once.",
+    "supply": {
+      "node_attuned_per_ready_generation": 1,
+      "node_respawn_host_days": 3,
+      "seed_chance": 0.25,
+      "crop_grow_host_days": 2,
+      "crop_attuned_output": 2,
+      "native_outdoor_types": [
+        "ground",
+        "air"
+      ],
+      "other_types_require": "actual paid world Greenhouse"
+    },
+    "unproven": [
+      "All eight Meadows body paths before L10",
+      "Off-route and terrain clearance",
+      "Actual node/plot stock and generations",
+      "Co-op contention and repeated five-creature feast supply",
+      "Actual seed availability and paid Greenhouse access",
+      "Save/ACK/rejoin and world namespace boundaries"
+    ],
+    "removed_assumption": "No longer asserts 25 attuned units per type per character; renewable source arithmetic is not ordinary-play solvency proof.",
+    "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument"
+  },
+  "biome_order": [
+    "meadows",
+    "tidewake",
+    "cloudreach",
+    "stormwood"
+  ],
+  "recipes": [
+    {
+      "recipe_id": "feast_t1_ground",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
+            "position": [
+              22,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_water",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
+            "position": [
+              32,
+              -44
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_air",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
+            "position": [
+              46.5,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_electric",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
+            "position": [
+              -2,
+              8
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_fire",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
+            "position": [
+              28,
+              -34
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_dark",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
+            "position": [
+              53,
+              -34.5
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_ice",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
+            "position": [
+              -12,
+              6
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_psychic",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
+            "position": [
+              18,
+              -22
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ground",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
+            "position": [
+              22,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ground_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
+            "position": [
+              22,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ground_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
+            "position": [
+              22,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_water",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
+            "position": [
+              32,
+              -44
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_water_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
+            "position": [
+              32,
+              -44
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_water_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
+            "position": [
+              32,
+              -44
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_air",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
+            "position": [
+              46.5,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_air_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
+            "position": [
+              46.5,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_air_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
+            "position": [
+              46.5,
+              -28
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_electric",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
+            "position": [
+              -2,
+              8
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_electric_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
+            "position": [
+              -2,
+              8
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_electric_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
+            "position": [
+              -2,
+              8
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_fire",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
+            "position": [
+              28,
+              -34
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_fire_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
+            "position": [
+              28,
+              -34
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_fire_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
+            "position": [
+              28,
+              -34
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_dark",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
+            "position": [
+              53,
+              -34.5
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_dark_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
+            "position": [
+              53,
+              -34.5
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_dark_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
+            "position": [
+              53,
+              -34.5
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ice",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
+            "position": [
+              -12,
+              6
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ice_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
+            "position": [
+              -12,
+              6
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ice_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
+            "position": [
+              -12,
+              6
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_psychic",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
+            "position": [
+              18,
+              -22
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_psychic_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
+            "position": [
+              18,
+              -22
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_psychic_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
+            "biome": "meadows",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
+            "position": [
+              18,
+              -22
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_ground",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.24",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_ground_01",
+            "position": [
+              574,
+              1344
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_water",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.25",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_water_01",
+            "position": [
+              814,
+              2900
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_air",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.26",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_air_01",
+            "position": [
+              84,
+              2304
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_electric",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.27",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_electric_01",
+            "position": [
+              24,
+              452
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_fire",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.28",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_fire_01",
+            "position": [
+              344,
+              3792
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_dark",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.29",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_dark_01",
+            "position": [
+              -90,
+              18
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_ice",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.30",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_ice_01",
+            "position": [
+              482,
+              1216
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_psychic",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.31",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_psychic_01",
+            "position": [
+              504,
+              828
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_ground",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.8",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_ground_01",
+            "position": [
+              -394,
+              570
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_water",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.9",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_water_01",
+            "position": [
+              1206,
+              3100
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_air",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.10",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_air_01",
+            "position": [
+              -262.3,
+              3117.5
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_electric",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.11",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_electric_01",
+            "position": [
+              -211.2,
+              5327.4
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_fire",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.12",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_fire_01",
+            "position": [
+              -1083.4,
+              1495.1
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_dark",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.13",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_dark_01",
+            "position": [
+              186,
+              620
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_ice",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.14",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_ice_01",
+            "position": [
+              -342.5,
+              5011
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_psychic",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.15",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_psychic_01",
+            "position": [
+              -515.5,
+              5301.5
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_ground",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.16",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_ground_01",
+            "position": [
+              -794,
+              4430
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_water",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.17",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_water_01",
+            "position": [
+              -1144,
+              3160
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_air",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.18",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_air_01",
+            "position": [
+              -986,
+              1857
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_electric",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.19",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_electric_01",
+            "position": [
+              -344,
+              4430
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_fire",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.20",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_fire_01",
+            "position": [
+              -1144,
+              3030
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_dark",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.21",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_dark_01",
+            "position": [
+              -1324,
+              1750
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_ice",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.22",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_ice_01",
+            "position": [
+              -794,
+              4280
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_psychic",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.23",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_psychic_01",
+            "position": [
+              -1144,
+              2900
+            ],
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          }
+        }
+      ]
+    }
+  ]
+}
