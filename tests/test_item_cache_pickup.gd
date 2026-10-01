@@ -187,3 +187,5 @@ func test_every_cache_placement_names_a_model_that_actually_exists() -> void:
 	var start := at + marker.length()
 	var path := text.substr(start, text.find("\"", start) - start)
 	assert_true(ResourceLoader.exists(path), "CACHE_MODEL names '%s', which does not exist" % path)
+
+# Live-tree presentation/glow checks: tests/smoke_stat_draught_presentation.gd.
