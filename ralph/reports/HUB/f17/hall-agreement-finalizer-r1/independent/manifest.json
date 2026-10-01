@@ -1,0 +1,26 @@
+{
+  "verdict": "Independent literal F17#5 CRITERION PASS and prepared evidence packaging PASS;189checks",
+  "artifacts": [
+    {
+      "original": "review.json",
+      "archive": "review.json.gz",
+      "raw_sha256": "24c58da315d932a8c6bf84cc6d62cacbcd842d7acef989bc3a897acc230fdcca",
+      "gzip_sha256": "229121f4e0415bfcc3365538ba420f373f60f909a369223de0bb999abf5c38ad",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "strict-review.txt",
+      "archive": "strict-review.txt.gz",
+      "raw_sha256": "d9159d31f00aec0a48e127864ed66c610e4275383bb1f6427f37f9b134824152",
+      "gzip_sha256": "95e6a893769ecebded5f5af7a3e2e02c105804ed44f68558c7ad01a184897981",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "asset-line-ending-bindings.json",
+      "archive": "asset-line-ending-bindings.json.gz",
+      "raw_sha256": "d5f657da0bfcbc500c60e4acaacd3ec0c8b46192f3241273a0650e504fa3de43",
+      "gzip_sha256": "398e802b7899ad9769cb2f5b7441c2dc199ca09b0ad81c6d8807084d7ba90ac9",
+      "lossless_roundtrip": true
+    }
+  ]
+}
