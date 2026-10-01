@@ -29,7 +29,8 @@
         "defence": 0.1,
         "move_power": 0.08,
         "ultimate_gain": 0.1
-      }
+      },
+      "unlock_relic": ""
     },
     {
       "tier": 2,
@@ -49,7 +50,8 @@
         "defence": 0.22,
         "move_power": 0.16,
         "ultimate_gain": 0.2
-      }
+      },
+      "unlock_relic": "meadows"
     },
     {
       "tier": 3,
@@ -69,7 +71,8 @@
         "defence": 0.36,
         "move_power": 0.24,
         "ultimate_gain": 0.3
-      }
+      },
+      "unlock_relic": "tidewake"
     },
     {
       "tier": 4,
@@ -89,7 +92,8 @@
         "defence": 0.52,
         "move_power": 0.32,
         "ultimate_gain": 0.4
-      }
+      },
+      "unlock_relic": "cloudreach"
     },
     {
       "tier": 5,
@@ -640,7 +644,7 @@
     "craft_rootiron_travel_hood": {
       "name": "Rootiron Travel Hood",
       "station_id": "workbench",
-      "station_tier": 1,
+      "station_tier": 0,
       "output": {
         "id": "rootiron_travel_hood",
         "n": 1
@@ -654,12 +658,13 @@
           "id": "fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 1
     },
     "craft_rootiron_travel_coat": {
       "name": "Rootiron Travel Coat",
       "station_id": "workbench",
-      "station_tier": 1,
+      "station_tier": 0,
       "output": {
         "id": "rootiron_travel_coat",
         "n": 1
@@ -673,12 +678,13 @@
           "id": "fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 1
     },
     "craft_rootiron_travel_trousers": {
       "name": "Rootiron Travel Trousers",
       "station_id": "workbench",
-      "station_tier": 1,
+      "station_tier": 0,
       "output": {
         "id": "rootiron_travel_trousers",
         "n": 1
@@ -692,12 +698,13 @@
           "id": "fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 1
     },
     "craft_rootiron_travel_boots": {
       "name": "Rootiron Travel Boots",
       "station_id": "workbench",
-      "station_tier": 1,
+      "station_tier": 0,
       "output": {
         "id": "rootiron_travel_boots",
         "n": 1
@@ -711,12 +718,13 @@
           "id": "fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 1
     },
     "craft_rootiron_command_pouch": {
       "name": "Rootiron Command Pouch",
       "station_id": "workbench",
-      "station_tier": 1,
+      "station_tier": 0,
       "output": {
         "id": "rootiron_command_pouch",
         "n": 1
@@ -730,7 +738,8 @@
           "id": "fiber",
           "n": 4
         }
-      ]
+      ],
+      "personal_gear_tier": 1
     },
     "craft_tidesteel_harness": {
       "name": "Tidesteel Harness",
@@ -773,7 +782,7 @@
     "craft_tidesteel_travel_hood": {
       "name": "Tidesteel Travel Hood",
       "station_id": "workbench",
-      "station_tier": 2,
+      "station_tier": 0,
       "output": {
         "id": "tidesteel_travel_hood",
         "n": 1
@@ -787,12 +796,13 @@
           "id": "reed_fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 2
     },
     "craft_tidesteel_travel_coat": {
       "name": "Tidesteel Travel Coat",
       "station_id": "workbench",
-      "station_tier": 2,
+      "station_tier": 0,
       "output": {
         "id": "tidesteel_travel_coat",
         "n": 1
@@ -806,12 +816,13 @@
           "id": "reed_fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 2
     },
     "craft_tidesteel_travel_trousers": {
       "name": "Tidesteel Travel Trousers",
       "station_id": "workbench",
-      "station_tier": 2,
+      "station_tier": 0,
       "output": {
         "id": "tidesteel_travel_trousers",
         "n": 1
@@ -825,12 +836,13 @@
           "id": "reed_fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 2
     },
     "craft_tidesteel_travel_boots": {
       "name": "Tidesteel Travel Boots",
       "station_id": "workbench",
-      "station_tier": 2,
+      "station_tier": 0,
       "output": {
         "id": "tidesteel_travel_boots",
         "n": 1
@@ -844,12 +856,13 @@
           "id": "reed_fiber",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 2
     },
     "craft_tidesteel_command_pouch": {
       "name": "Tidesteel Command Pouch",
       "station_id": "workbench",
-      "station_tier": 2,
+      "station_tier": 0,
       "output": {
         "id": "tidesteel_command_pouch",
         "n": 1
@@ -863,7 +876,8 @@
           "id": "reed_fiber",
           "n": 4
         }
-      ]
+      ],
+      "personal_gear_tier": 2
     },
     "craft_skyglass_harness": {
       "name": "Skyglass Harness",
@@ -906,7 +920,7 @@
     "craft_skyglass_travel_hood": {
       "name": "Skyglass Travel Hood",
       "station_id": "workbench",
-      "station_tier": 3,
+      "station_tier": 0,
       "output": {
         "id": "skyglass_travel_hood",
         "n": 1
@@ -920,12 +934,13 @@
           "id": "skyplume",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 3
     },
     "craft_skyglass_travel_coat": {
       "name": "Skyglass Travel Coat",
       "station_id": "workbench",
-      "station_tier": 3,
+      "station_tier": 0,
       "output": {
         "id": "skyglass_travel_coat",
         "n": 1
@@ -939,12 +954,13 @@
           "id": "skyplume",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 3
     },
     "craft_skyglass_travel_trousers": {
       "name": "Skyglass Travel Trousers",
       "station_id": "workbench",
-      "station_tier": 3,
+      "station_tier": 0,
       "output": {
         "id": "skyglass_travel_trousers",
         "n": 1
@@ -958,12 +974,13 @@
           "id": "skyplume",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 3
     },
     "craft_skyglass_travel_boots": {
       "name": "Skyglass Travel Boots",
       "station_id": "workbench",
-      "station_tier": 3,
+      "station_tier": 0,
       "output": {
         "id": "skyglass_travel_boots",
         "n": 1
@@ -977,12 +994,13 @@
           "id": "skyplume",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 3
     },
     "craft_skyglass_command_pouch": {
       "name": "Skyglass Command Pouch",
       "station_id": "workbench",
-      "station_tier": 3,
+      "station_tier": 0,
       "output": {
         "id": "skyglass_command_pouch",
         "n": 1
@@ -996,7 +1014,8 @@
           "id": "skyplume",
           "n": 4
         }
-      ]
+      ],
+      "personal_gear_tier": 3
     },
     "craft_stormglass_harness": {
       "name": "Stormglass Harness",
@@ -1039,7 +1058,7 @@
     "craft_stormglass_travel_hood": {
       "name": "Stormglass Travel Hood",
       "station_id": "workbench",
-      "station_tier": 4,
+      "station_tier": 0,
       "output": {
         "id": "stormglass_travel_hood",
         "n": 1
@@ -1053,12 +1072,13 @@
           "id": "sparkfur",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 4
     },
     "craft_stormglass_travel_coat": {
       "name": "Stormglass Travel Coat",
       "station_id": "workbench",
-      "station_tier": 4,
+      "station_tier": 0,
       "output": {
         "id": "stormglass_travel_coat",
         "n": 1
@@ -1072,12 +1092,13 @@
           "id": "sparkfur",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 4
     },
     "craft_stormglass_travel_trousers": {
       "name": "Stormglass Travel Trousers",
       "station_id": "workbench",
-      "station_tier": 4,
+      "station_tier": 0,
       "output": {
         "id": "stormglass_travel_trousers",
         "n": 1
@@ -1091,12 +1112,13 @@
           "id": "sparkfur",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 4
     },
     "craft_stormglass_travel_boots": {
       "name": "Stormglass Travel Boots",
       "station_id": "workbench",
-      "station_tier": 4,
+      "station_tier": 0,
       "output": {
         "id": "stormglass_travel_boots",
         "n": 1
@@ -1110,12 +1132,13 @@
           "id": "sparkfur",
           "n": 3
         }
-      ]
+      ],
+      "personal_gear_tier": 4
     },
     "craft_stormglass_command_pouch": {
       "name": "Stormglass Command Pouch",
       "station_id": "workbench",
-      "station_tier": 4,
+      "station_tier": 0,
       "output": {
         "id": "stormglass_command_pouch",
         "n": 1
@@ -1129,7 +1152,8 @@
           "id": "sparkfur",
           "n": 4
         }
-      ]
+      ],
+      "personal_gear_tier": 4
     }
   },
   "upgrades": {
@@ -1402,5 +1426,8 @@
       ],
       "stamina_regen_penalty": 0.35
     }
-  ]
+  ],
+  "limits": {
+    "ultimate_gain_multiplier_cap": 1.52
+  }
 }

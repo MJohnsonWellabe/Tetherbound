@@ -184,9 +184,6 @@ func total_defense() -> float:
 ## overrides both to zero. Item ids stay in data: a future insulated piece only
 ## needs the same two fields and a valid equipped armour slot.
 func storm_mitigation(full_set_pieces: int) -> Dictionary:
-	if _gear_enabled():
-		return {"pieces": _insulated_pieces(), "full_set": false,
-			"damage_scale": hazard_scale("storm"), "static_scale": static_duration_scale()}
 	var pieces := 0
 	var strike_reduction := 0.0
 	var static_scale := 1.0
@@ -217,6 +214,7 @@ const HAZARD_FIELDS := {
 	"currents": "current_push_reduction", "cold": "cold_penalty_reduction",
 	"terrain": "terrain_damage_reduction"
 }
+static var _gear_rules: Dictionary = {}
 
 func hazard_reduction(hazard: String) -> float:
 	if not HAZARD_FIELDS.has(hazard) or _items == null or not _gear_enabled():
@@ -278,18 +276,12 @@ func static_duration_scale() -> float:
 			result *= clampf(float(raw), 0.0, 1.0)
 	return clampf(result, 1.0 - float(_gear_config().get("mitigation_cap", MAX_TOTAL_DEFENSE)), 1.0)
 
-func _insulated_pieces() -> int:
-	var result := 0
-	if _items != null:
-		for slot: String in SLOTS:
-			var row: Dictionary = _items.call("definition", equipped_in(slot))
-			if row.has("storm_strike_reduction") and row.has("static_duration_scale"):
-				result += 1
-	return result
-
 static func _gear_config() -> Dictionary:
+	if not _gear_rules.is_empty():
+		return _gear_rules
 	var raw: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/gear.json")
-	return raw if raw is Dictionary else {}
+	_gear_rules = raw if raw is Dictionary else {}
+	return _gear_rules
 
 static func _gear_enabled() -> bool:
 	return bool(_gear_config().get("feature_flags", {}).get("runtime_enabled", false))

@@ -15,6 +15,21 @@ static func config() -> Dictionary:
 static func empty_slots() -> Dictionary:
 	return {"harness": "", "charm": ""}
 
+## Workbench has no attachments. Its regional travel/pouch recipes use the
+## personal relic unlock; Forge/Altar also require their paid world attachment.
+## The real station producer derives recipe_known from this canonical record.
+static func recipe_known(record: Dictionary, recipe: Dictionary, cfg: Dictionary) -> bool:
+	var tier: Variant = recipe.get("personal_gear_tier", recipe.get("station_tier", 0))
+	if not _integer(tier, 0, 4):
+		return false
+	if int(tier) <= 1:
+		return true
+	var tiers: Array = cfg.get("tiers", [])
+	if tiers.size() < int(tier):
+		return false
+	var required: String = str(tiers[int(tier) - 1].get("unlock_relic", ""))
+	return not required.is_empty() and record.get("redesign_character", {}).get("relics_hung", []).has(required)
+
 static func slots_errors(raw: Variant, cfg: Dictionary) -> Array[String]:
 	if not raw is Dictionary or raw.size() != SLOTS.size():
 		return ["Creature gear requires Harness and Charm slots."]
@@ -189,6 +204,8 @@ static func stage_core(record: Dictionary, character: String, revision: int,
 			return _refuse("maximum_upgrade")
 		if not _station_allows(recipe, context):
 			return _refuse("station_tier")
+		if not recipe_known(next, recipe, cfg):
+			return _refuse("personal_recipe_locked")
 		if not _pay(bag, recipe.get("inputs", {})):
 			return _refuse("materials")
 		output = str(recipe.output)
