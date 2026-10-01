@@ -1,0 +1,17 @@
+{
+  "scope": "immutable byte-exact evidence; excludes itself",
+  "files": {
+    ".gitattributes": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c",
+    "diagnosis.json": "ac4eba822b316cf232c4a6917a8cc752c7a0aa4952984c2a09cc605d41957d61",
+    "manifest.json": "4e5b134f4c879a3c199773dad3398bd3df58a78ff38f17d57bf2d986406a463c",
+    "originals/tests/test_vegetation_human_prompt_height.gd": "73c06f132eee94a633786d58451c7e878d31fea50784a30be3f9562ce7d3391d",
+    "proposal/tests/fixtures/scatter_tree_corridor_r23.json": "184e967c295ee6ae4e379248525a9ae239cc9ab424b433bd8319afc1e538128e",
+    "proposal/tests/test_vegetation_human_prompt_height.gd": "fb2b90dc7a91b1e42e0a68b2549a8415fb9e4b06a4f0a20daf8227ed92b7b19c",
+    "repair.patch": "e8c703b562265abb79ad9264eb6211d7b13b43236bf2b7e9398d8033b1bc3e39",
+    "source-check.py": "f23552d6baf2b0aafa5897bb3b6d4f7d861a955690746ad62ab92db88b7ebc47",
+    "source-results.json": "5117705bcbaa24dce5613d38247c63c30f1b2773019a5b7f3b5c9aa533e9f3de",
+    "unchanged-paths.json": "057c11f574bf8e3dd82f3906c0c3626bc8cf0cb7a72d76de264bebf81dee338a",
+    "unit-failed/result.json": "c7f9e83c32a8a6eee21660f29888e2877d18e1bbb331d1adc867735dac80062c",
+    "unit-failed/tests.log": "a23f60c833a370a36ae290a1ab086ce9ae4670af7c82e408e2b774ad281429e1"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "scope": "SOURCE diagnosis; actual selective unit FAIL retained",
+  "root_native_head": "8783105f7c17d0a84523348aa897b4f1faaff1b1",
+  "actual_unit_result": "8 tests /40 assertions /3 failed. Original5 passed; each new case failed complete assertion after empty fixture read and ParseJSON line0 Unknownerror token. Walk not run.",
+  "runtime_fixture_missing": true,
+  "tracked_root_fixture_flag": "S ralph/reports/HUB/f17/tree-corridor-r23/native-failed/tree-geometry.json",
+  "root_sparse_checkout_paths": [
+    ".github",
+    "addons",
+    "assets",
+    "autoload",
+    "data",
+    "docs",
+    "ralph/reports/FOUNDATIONS",
+    "ralph/reports/INTEGRATION",
+    "ralph/reports/MEADOWS-0919",
+    "scenes",
+    "scripts",
+    "shaders",
+    "tests",
+    "tools"
+  ],
+  "root_unit_launcher_uses_root_project": true,
+  "cause": "A runtime unit fixture was referenced under ralph, which ROOT sparse checkout omits. FileAccess returns empty text; JSON.parse_string errors before the new cases inspect the mesh.",
+  "fix": "Copy the full unchanged frozen R22 JSON payload into tests/fixtures, included by ROOT and CI. Normalize ONLY its final CRLF to LF under existing *.json text eol=lf. Change ONLY loader path plus empty-read guard; all assertions stay, so absent/empty fixture fails existing complete assertions.",
+  "native": "UNRUN locally; correction requires existing F29 SOURCE review and ROOT selective unit before any original180 walk.",
+  "scope_limits": "No probe/corridor/production/180frames/strict native conjunction change; no engine/parser/import/render/unit/CI/push/ROOT writes/new chat/new agent; F17#4 OPEN; R9 HOLD.",
+  "fixture_newline": "Native original CRLF remains byte-exact in immutable R23 packet. Runtime copy changes only trailing CRLF to repository LF; every payload byte and parsed JSON value is identical."
+}
