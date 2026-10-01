@@ -1,0 +1,23 @@
+{
+  "scope": "byte-exact evidence; seal excludes itself",
+  "files": {
+    ".gitattributes": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c",
+    "latest-mira-ci/job-110442934661-decoded.log.gz": "48e4047a7d3c4bf14f587f2e523845aa29dd2cc81f8b315ea0f96c5d258f12d1",
+    "latest-mira-ci/report.json": "df4bcf5f69f166c44c8e2a7fa8677b574eac6c97e824908dde042dde04db030c",
+    "manifest.json": "dc0fbc1e3733b29934ae4e766af8b81a9db52b0d44128302bee5376593c08717",
+    "native-source/doc/classes/JSON.xml": "946641c7844148c54426ae9897a774cf7f0451a92a799a35d00ece9583fba7e4",
+    "native-source/modules/godot_physics_3d/godot_shape_3d.cpp": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75",
+    "native-source/provenance.json": "b61171a762a552ff8d5fd2174f1057213bac6ef7facce854cabf4d0bf252f6b1",
+    "native-source/servers/physics_3d/physics_server_3d.cpp": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f",
+    "native-source/servers/physics_3d/physics_server_3d.h": "f41afb9aec4dbcd308a661f9ec46d8a19313b7196e2700b54af40bcfe9805105",
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": "ee760573c753b40eebc1e029f2f9f29255b3166cc179bc3d06e4b5e43d0faeb9",
+    "prior-failure/result.json": "2ae87037e7cdd43ca6f9a8d4264545d15378d34c9f902ebdd50a4523aa6117ca",
+    "prior-failure/smoke.log": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7",
+    "proposal/tools/_probe_scatter_tree_prompt_height.gd": "d158bd34c23cc5051b04cbdbf42df836dea29cb6a3c81a6872cfa0ed7e489275",
+    "repair.patch": "80368966fe58b4b8c1f2d67907372da560e3e7fbe83a72453e3ae9b8aeab194e",
+    "review-context.txt": "219af12cbfc5483fa8c5e9fa1010f2463b9d7ea0e21d21b2cef965b60a6a3d66",
+    "source-check.py": "b3a2bf4572a0c2244f14a2328ef149fd3be11006f0c6a5bacf6bb47ff9f658e4",
+    "source-results.json": "9eb752be0f9cbc1c2add49d2808ad427bd59a00bc1549d28432271c6b0cd43e5",
+    "unchanged-paths.json": "b8876bb3957f51cbb5d37230e59aa180477d17ec4995e4b559011128688a674c"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "head": "83d9dada76b6127c26456767ec3b20c9c74fa8fd",
+  "script": "tools/_probe_scatter_tree_prompt_height.gd",
+  "exit": 1,
+  "errors": [],
+  "summary": [],
+  "raw_log_sha256": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7",
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-83d9dada76b6-_probe_scatter_tree_prompt_height\\smoke.log"
+}

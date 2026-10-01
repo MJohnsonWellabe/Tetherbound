@@ -1,0 +1,89 @@
+{
+  "scope": "R22 bounded actual tree geometry capture source successor; native witness pending",
+  "hub_parent": "f8d8c838406804940dcea1ea505c6564b54d4193",
+  "logical_paths": [
+    "tools/_probe_scatter_tree_prompt_height.gd"
+  ],
+  "logical_change": {
+    "old_sha256": "ee760573c753b40eebc1e029f2f9f29255b3166cc179bc3d06e4b5e43d0faeb9",
+    "new_sha256": "d158bd34c23cc5051b04cbdbf42df836dea29cb6a3c81a6872cfa0ed7e489275",
+    "added_lines": 120,
+    "removed_lines": 0
+  },
+  "author_source_checks": 124,
+  "maximum_vertices": 225,
+  "maximum_triangles": 392,
+  "extra_collision_queries": 0,
+  "extra_frames": 0,
+  "native": "UNRUN locally; original native failures retained",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "latest-mira-ci/job-110442934661-decoded.log.gz": {
+      "bytes": 64411,
+      "sha256": "48e4047a7d3c4bf14f587f2e523845aa29dd2cc81f8b315ea0f96c5d258f12d1"
+    },
+    "latest-mira-ci/report.json": {
+      "bytes": 12712,
+      "sha256": "df4bcf5f69f166c44c8e2a7fa8677b574eac6c97e824908dde042dde04db030c"
+    },
+    "native-source/doc/classes/JSON.xml": {
+      "bytes": 8379,
+      "sha256": "946641c7844148c54426ae9897a774cf7f0451a92a799a35d00ece9583fba7e4"
+    },
+    "native-source/modules/godot_physics_3d/godot_shape_3d.cpp": {
+      "bytes": 63744,
+      "sha256": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75"
+    },
+    "native-source/provenance.json": {
+      "bytes": 1048,
+      "sha256": "b61171a762a552ff8d5fd2174f1057213bac6ef7facce854cabf4d0bf252f6b1"
+    },
+    "native-source/servers/physics_3d/physics_server_3d.cpp": {
+      "bytes": 69031,
+      "sha256": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f"
+    },
+    "native-source/servers/physics_3d/physics_server_3d.h": {
+      "bytes": 41365,
+      "sha256": "f41afb9aec4dbcd308a661f9ec46d8a19313b7196e2700b54af40bcfe9805105"
+    },
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 10848,
+      "sha256": "ee760573c753b40eebc1e029f2f9f29255b3166cc179bc3d06e4b5e43d0faeb9"
+    },
+    "prior-failure/result.json": {
+      "bytes": 399,
+      "sha256": "2ae87037e7cdd43ca6f9a8d4264545d15378d34c9f902ebdd50a4523aa6117ca"
+    },
+    "prior-failure/smoke.log": {
+      "bytes": 23277,
+      "sha256": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7"
+    },
+    "proposal/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 18132,
+      "sha256": "d158bd34c23cc5051b04cbdbf42df836dea29cb6a3c81a6872cfa0ed7e489275"
+    },
+    "repair.patch": {
+      "bytes": 8439,
+      "sha256": "80368966fe58b4b8c1f2d67907372da560e3e7fbe83a72453e3ae9b8aeab194e"
+    },
+    "review-context.txt": {
+      "bytes": 8219,
+      "sha256": "219af12cbfc5483fa8c5e9fa1010f2463b9d7ea0e21d21b2cef965b60a6a3d66"
+    },
+    "source-check.py": {
+      "bytes": 9653,
+      "sha256": "b3a2bf4572a0c2244f14a2328ef149fd3be11006f0c6a5bacf6bb47ff9f658e4"
+    },
+    "source-results.json": {
+      "bytes": 7701,
+      "sha256": "9eb752be0f9cbc1c2add49d2808ad427bd59a00bc1549d28432271c6b0cd43e5"
+    },
+    "unchanged-paths.json": {
+      "bytes": 1068,
+      "sha256": "b8876bb3957f51cbb5d37230e59aa180477d17ec4995e4b559011128688a674c"
+    }
+  }
+}
