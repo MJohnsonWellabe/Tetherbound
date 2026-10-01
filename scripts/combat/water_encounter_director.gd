@@ -267,6 +267,12 @@ func _spawn_available_sites() -> void:
 		var authored_members: Array = site.get("member_anchors", [])
 		if plans.size() == 1 and not str(plans[0].id).is_empty():
 			var cycle := foundation_alpha_cycle(str(plans[0].id))
+			if cycle.is_empty() and not _once_cleared(str(plans[0].opts.get("once_id", ""))) \
+				and _session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(str(plans[0].id)).is_empty():
+				var first_packet: Dictionary = _session.call("foundation_alpha_first_spawn", self, str(plans[0].id))
+				if first_packet.is_empty(): continue
+				cycle = foundation_alpha_cycle(str(plans[0].id))
 			if cycle.get("status") == "waiting":
 				_site_members[id] = members
 				_site_spawned[id] = true
@@ -360,7 +366,7 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		var opts: Dictionary = plan.opts.duplicate(true)
 		# The original once flag continues to suppress first rewards. The new
 		# durable generation admits only this fresh authored body and UID.
-		opts.once_id = ""
+		if int(packet.captured_from.spawn_generation) > 1: opts.once_id = ""
 		opts.name = "%s_generation_%d" % [site_id, packet.captured_from.spawn_generation]
 		var at := _vector3_of(plan.position)
 		opts.site_anchor = at
@@ -377,6 +383,7 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		wild.display_name = str(plan.display_name)
 		wild.get("instance").set("display_name", str(plan.display_name))
 		wild.set_meta("water_named_encounter", site_id)
+		if int(packet.captured_from.spawn_generation) == 1: wild.set_meta("water_reward_role", str(plan.reward_role))
 		wild.set_meta("water_site_id", str(site.id))
 		wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
 		if plan.get("combat_camera") is Dictionary and not plan.combat_camera.is_empty(): wild.set_meta("combat_camera", plan.combat_camera.duplicate(true))

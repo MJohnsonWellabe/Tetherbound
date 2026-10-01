@@ -5,6 +5,7 @@ extends Node
 const RULES := preload("res://scripts/repeatables/alpha_respawns.gd")
 var _pending: Dictionary = {}
 var _settled: Dictionary = {}
+var _first_pending: Dictionary = {}
 var _left := 0.0
 var _service: Node
 
@@ -16,6 +17,44 @@ func _ready() -> void:
 
 func session() -> Node:
 	return get_parent().get_parent()
+
+func first_spawn(director: Node, id: String) -> Dictionary:
+	var owner := session()
+	var site := RULES.site(id)
+	if RULES.config().get("runtime_enabled") != true or owner.call("is_host") != true or site.is_empty() \
+		or not is_instance_valid(director) or director.get("_session") != owner or director.get_script() == null \
+		or not owner.FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {}
+	var realm_id := "water" if site.biome == "tidewake" else str(site.biome)
+	var realm: Node = owner.call("_portal_world_node", realm_id)
+	if realm == null or not realm.is_ancestor_of(director): return {}
+	var world: RefCounted = owner.call("_game").world
+	var epoch := str(owner.call("_altar_current_epoch"))
+	var retained := RULES.retained_spawn(world.redesign_world, id)
+	if not retained.is_empty(): return retained
+	if not world.redesign_world.alpha_cycles.sites.get(id, {}).is_empty(): return {}
+	var key := JSON.stringify([world.reward_delivery_namespace, epoch, id]).sha256_text()
+	if not _first_pending.has(key):
+		var look: Node = null
+		for candidate: Node in get_tree().get_nodes_in_group(&"day_cycle"):
+			if realm.is_ancestor_of(candidate) and candidate.get_script() != null \
+				and candidate.get_script().resource_path == "res://scripts/world/world_look.gd":
+				if look != null: return {}
+				look = candidate
+		# This realm's actual look owns both the day state and applied weather.
+		# An empty weather delta is its existing clear-weather state.
+		if look == null or not look.has_method("is_dark") or not look.get("_weather") is Dictionary: return {}
+		_first_pending[key] = {"world": weakref(world), "director": weakref(director), "epoch": epoch,
+			"world_namespace": world.reward_delivery_namespace, "site_id": id,
+			"night": bool(look.call("is_dark")), "weather": not look.get("_weather").is_empty()}
+	var frozen: Dictionary = _first_pending[key]
+	if frozen.world.get_ref() != world or frozen.director.get_ref() != director or frozen.epoch != epoch \
+		or frozen.world_namespace != world.reward_delivery_namespace: return {}
+	var plan := RULES.first_spawn(world.redesign_world, id, frozen.world_namespace, frozen.night, frozen.weather)
+	if plan.is_empty(): return {}
+	var result: Dictionary = _commit(plan)
+	if result.get("ok") != true or result.get("durable") != true: return {}
+	_first_pending.erase(key)
+	return RULES.retained_spawn(world.redesign_world, id)
 
 func resolution(director: Node, encounter_id: String, outcome: String, capture: Dictionary = {}) -> Dictionary:
 	var owner := session()
@@ -158,6 +197,16 @@ func _process(delta: float) -> void:
 	_left = 1.0
 	var owner := session()
 	if RULES.config().get("runtime_enabled") != true or owner.call("is_host") != true: return
+	for key: String in _first_pending.keys():
+		var frozen: Dictionary = _first_pending[key]
+		var director: Node = frozen.director.get_ref()
+		if director == null or frozen.world.get_ref() != owner.call("_game").world \
+			or frozen.epoch != owner.call("_altar_current_epoch") \
+			or frozen.world_namespace != owner.call("_game").world.reward_delivery_namespace:
+			_first_pending.erase(key)
+			continue
+		var packet := first_spawn(director, frozen.site_id)
+		if not packet.is_empty(): _publish(frozen.site_id, packet)
 	for key: String in _pending.keys(): _retry(key)
 	var game: Node = owner.call("_game")
 	var world: RefCounted = game.world

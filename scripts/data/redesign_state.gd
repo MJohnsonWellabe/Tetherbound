@@ -25,10 +25,11 @@ static func validate(scope: String, value: Variant, owned_uids: Array = []) -> A
 			var row: Dictionary = alpha[id]
 			if not catalogue is Dictionary or not catalogue.get("sites", {}).has(id):
 				errors.append("unknown alpha site %s" % id)
-			if row.next_eligible_seconds < row.resolved_at_seconds:
-				errors.append("alpha deadline regressed %s" % id)
-			for character: String in row.departed:
-				if not row.required_departures.has(character): errors.append("unknown alpha departure %s" % id)
+			if row.has("resolved_at_seconds"):
+				if row.next_eligible_seconds < row.resolved_at_seconds:
+					errors.append("alpha deadline regressed %s" % id)
+				for character: String in row.departed:
+					if not row.required_departures.has(character): errors.append("unknown alpha departure %s" % id)
 			var packet: Dictionary = row.spawn_traits
 			if row.status == "waiting":
 				if not packet.is_empty(): errors.append("waiting alpha carries live traits %s" % id)

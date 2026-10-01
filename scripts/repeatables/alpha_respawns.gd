@@ -26,6 +26,22 @@ static func _plan(world: Dictionary, id: String, record: Dictionary, operation: 
 		"before": world.duplicate(true), "state": next, "record": record.duplicate(true),
 		"source": source.duplicate(true), "durable": false}
 
+## The first live generation has no resolution, deadline or departure census.
+## Retain its real spawn roll before publishing, using the same site carrier.
+static func first_spawn(world: Dictionary, id: String, namespace_id: String, night: bool, weather: bool) -> Dictionary:
+	if site(id).is_empty() or not _sites(world).get(id, {}).is_empty() or not TRAITS.component(namespace_id): return {}
+	var packet := _spawn_traits(namespace_id, id, 1, night, weather)
+	if packet.is_empty(): return {}
+	return _plan(world, id, {"generation": 1, "status": "active", "spawn_traits": packet}, "alpha_first_spawn",
+		{"world_namespace": namespace_id, "night": night, "weather": weather})
+
+static func _spawn_traits(namespace_id: String, id: String, generation: int, night: bool, weather: bool) -> Dictionary:
+	var traits := TRAITS.config()
+	traits.profiles.alpha = config().trait_profiles.alpha.duplicate(true)
+	traits.profiles.alpha_unusual = config().trait_profiles.alpha_unusual.duplicate(true)
+	return HOOKS.prepare_host_spawn({"world_namespace": namespace_id, "spawn_id": id,
+		"spawn_generation": generation, "alpha": true, "night": night, "weather": weather}, traits)
+
 ## Frozen host region census, not only fighters. Players who disconnect remain
 ## required until their accepted departure; a newly arriving peer blocks spawn
 ## while present, but cannot create a permanent departure requirement.
@@ -35,7 +51,7 @@ static func resolve(world: Dictionary, id: String, generation: int, world_second
 	var old: Dictionary = _sites(world).get(id, {})
 	if generation < 1 or (not old.is_empty() and (int(old.generation) != generation or old.status != "active")): return {}
 	if old.is_empty() and generation != 1: return {}
-	if not old.is_empty() and world_seconds < int(old.next_eligible_seconds): return {}
+	if old.has("next_eligible_seconds") and world_seconds < int(old.next_eligible_seconds): return {}
 	var required: Array[String] = []
 	for character: Variant in region_characters:
 		if not TRAITS.component(character) or required.has(character): return {}
@@ -69,13 +85,9 @@ static func spawn(world: Dictionary, id: String, namespace_id: String, world_sec
 		if not old.departed.has(character): return {}
 	var generation := int(old.generation) + 1
 	if generation > 2147483647: return {}
-	var traits := TRAITS.config()
 	# Reuse F30's validated roll pool and seed/provenance. Config changes only
 	# weights, so no fourth trait, invented effects or arbitrary stat inflation.
-	traits.profiles.alpha = config().trait_profiles.alpha.duplicate(true)
-	traits.profiles.alpha_unusual = config().trait_profiles.alpha_unusual.duplicate(true)
-	var packet := HOOKS.prepare_host_spawn({"world_namespace": namespace_id, "spawn_id": id,
-		"spawn_generation": generation, "alpha": true, "night": night, "weather": weather}, traits)
+	var packet := _spawn_traits(namespace_id, id, generation, night, weather)
 	if packet.is_empty(): return {}
 	var record := old.duplicate(true)
 	record.generation = generation
@@ -93,6 +105,10 @@ static func valid_plan(plan: Variant, current: Dictionary, namespace_id: String)
 	var source: Dictionary = plan.source
 	var canonical: Dictionary = {}
 	match plan.get("operation"):
+		"alpha_first_spawn":
+			if source.size() != 3 or source.get("world_namespace") != namespace_id \
+				or not source.get("night") is bool or not source.get("weather") is bool: return false
+			canonical = first_spawn(current, plan.site_id, namespace_id, source.night, source.weather)
 		"alpha_resolve":
 			if source.size() != 4 or not TRAITS.integer(source.get("generation"), 1, 2147483647) \
 				or not TRAITS.integer(source.get("world_seconds"), 0, 2147483647) \

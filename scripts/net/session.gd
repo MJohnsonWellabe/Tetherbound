@@ -344,6 +344,10 @@ func foundation_alpha_resolution(director: Node, encounter_id: String, outcome: 
 	var producer := get_node_or_null(^"FoundationComposition/Alphas")
 	return producer.call("resolution", director, encounter_id, outcome, capture) if producer != null else {"ok": false, "durable": false}
 
+func foundation_alpha_first_spawn(director: Node, site_id: String) -> Dictionary:
+	var producer := get_node_or_null(^"FoundationComposition/Alphas")
+	return producer.call("first_spawn", director, site_id) if producer != null else {}
+
 func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dictionary:
 	var research_enabled := preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
 	var bounty_enabled := preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
