@@ -81,7 +81,8 @@ func test_unique_repeat_and_cooldown_win_are_atomic_and_replay_safe() -> void:
 	assert_false(due.unique_reward)
 	assert_eq(due.state.redesign_character.rematch_cooldowns["world_a:relay_captain:r1"].next_eligible_seconds, 2500)
 	var reloaded: Dictionary = JSON.parse_string(JSON.stringify(due.state))
-	assert_true(STATE.validate("character", reloaded.redesign_character).is_empty())
+	var state_errors := STATE.validate("character", reloaded.redesign_character)
+	assert_true(state_errors.is_empty(), str(state_errors))
 	assert_false(REMATCH.stage(reloaded, 0, _intent("relay_captain", "r1", "encounter_3"),
 		_context("character_a", 1300, "relay_captain", "r1", "encounter_3")).ok)
 
@@ -198,3 +199,18 @@ func test_alpha_cooldown_uses_three_saved_day_transitions() -> void:
 	var reload: Dictionary = JSON.parse_string(JSON.stringify(departed.state))
 	assert_true(ALPHA.spawn(reload, "hollows_alpha", "world_a", ALPHA_PRODUCER.day_seconds(6), false, false).is_empty())
 	assert_false(ALPHA.spawn(reload, "hollows_alpha", "world_a", ALPHA_PRODUCER.day_seconds(7), false, false).is_empty())
+
+func test_retained_alpha_normalizes_only_valid_integral_provenance_without_rewriting_world() -> void:
+	var born := ALPHA.first_spawn(STATE.defaults("world"), "hollows_alpha", "world_a", false, false)
+	assert_false(born.is_empty())
+	if born.is_empty(): return
+	var reload: Dictionary = JSON.parse_string(JSON.stringify(born.state))
+	var before := reload.duplicate(true)
+	assert_eq(ALPHA.retained_spawn(reload, "hollows_alpha"), born.record.spawn_traits)
+	assert_eq(reload, before)
+	reload.alpha_cycles.sites.hollows_alpha.spawn_traits.captured_from.spawn_generation = 1.5
+	assert_true(ALPHA.retained_spawn(reload, "hollows_alpha").is_empty())
+	reload.alpha_cycles.sites.hollows_alpha.spawn_traits.captured_from.spawn_generation = 2
+	assert_true(ALPHA.retained_spawn(reload, "hollows_alpha").is_empty())
+	reload.alpha_cycles.sites.hollows_alpha.spawn_traits.captured_from.spawn_generation = "1"
+	assert_true(ALPHA.retained_spawn(reload, "hollows_alpha").is_empty())

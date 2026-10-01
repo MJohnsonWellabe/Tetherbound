@@ -266,8 +266,9 @@ func request_relic_hang(biome: String) -> Dictionary:
 	return _foundation_send("relic_hang", "shrine:" + biome, {"biome": biome}, int(view.get("registry_revision", -1)))
 
 func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: Dictionary) -> Dictionary:
+	var peer: int = int(permit.get("peer_id", 0))
 	if producer != get_node_or_null(^"FoundationComposition/PortalArrival") or not is_host() \
-		or envelope.get("session_epoch") != _altar_current_epoch() or envelope.get("character_id") != _authority_character(local_peer_id()) \
+		or peer < 1 or envelope.get("session_epoch") != _altar_current_epoch() or envelope.get("character_id") != _authority_character(peer) \
 		or envelope.get("world_instance_id") != _game().get("world").reward_delivery_namespace \
 		or producer.call("arrival_binding", envelope, permit) != true: return FOUNDATION_ACTIONS.deny("arrival_binding_changed")
 	var character: String = envelope.character_id
@@ -276,14 +277,14 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
 	if row.get("action") == "portal_arrival" and row.get("intent") == intent:
 		get_node(^"LedgerRpc").call("_process_creature_training", row)
-		return _foundation_decision(local_peer_id(), row)
+		return _foundation_decision(peer, row)
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
 		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
 		"world_namespace": world.reward_delivery_namespace}
-	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), local_peer_id(), character, context.expected_revision, "portal_arrival", intent, context)
+	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, character, context.expected_revision, "portal_arrival", intent, context)
 	if result.get("durable") != true: return result
-	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+	return _foundation_decision(peer, world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
 
 func _foundation_relic_context(peer: int, biome: String) -> Dictionary:
 	if not portal_runtime_ready() or _altar_peer_in_combat(peer): return {}
@@ -2449,6 +2450,14 @@ func _restore_character_here(wanted_id: String) -> bool:
 ## torn down exactly as always, but the transport is detached and handed to
 ## `_poll_lingering_peer()` instead of being closed under the goodbye.
 func _teardown(linger_transport: bool = false) -> void:
+	# Session's altar epoch survives a transport teardown. Explicitly retire
+	# observations and consumed travel identities before a peer can rejoin.
+	for path: NodePath in [^"FoundationComposition/TravelLifecycle", ^"FoundationComposition/PortalArrival"]:
+		var travel_service := get_node_or_null(path)
+		if travel_service != null: travel_service.call("reset")
+	_portal_policy.call("bind_world", "")
+	_portal_requests.clear()
+	_portal_waiters.clear()
 	var had_transport := _peer != null
 	if realm_transition != null:
 		realm_transition.call("reset")
@@ -3655,12 +3664,60 @@ func request_portal_action(payload: Dictionary) -> Dictionary:
 
 func _send_portal_action(frozen: Dictionary) -> void:
 	if is_host() or not is_active() or frozen.session_epoch != _altar_current_epoch(): return
+	# Publish the registered owner's current lifecycle immediately before the
+	# action on the same reliable channel. A previous safe sample cannot mask
+	# damage, a new modal or a traversal change occurring on this frame.
+	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	if lifecycle == null or lifecycle.call("publish_now") != true:
+		_receive_portal_reply({"ok": false, "reason": "Your travel state is not ready.", "request_id": frozen.request_id,
+			"kind": frozen.payload.kind, "character_id": frozen.character_id,
+			"world_instance_id": frozen.world_instance_id, "session_epoch": frozen.session_epoch})
+		return
 	rpc_id(HOST_PEER_ID, "_rpc_portal_action", frozen.duplicate(true))
 
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_portal_action(envelope: Dictionary) -> void:
 	if is_host(): _host_portal_action(multiplayer.get_remote_sender_id(), envelope)
+
+func send_portal_owner_permit(producer: Node, peer: int, envelope: Dictionary, permit: Dictionary) -> void:
+	if not is_host() or producer != get_node_or_null(^"FoundationComposition/PortalArrival") \
+		or peer == local_peer_id() or not _portal_envelope_valid(peer, envelope): return
+	rpc_id(peer, "_rpc_portal_owner_permit", envelope, permit)
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_portal_owner_permit(envelope: Dictionary, permit: Dictionary) -> void:
+	if is_host() or not is_active() or not portal_runtime_ready() \
+		or _portal_requests.get(envelope.get("request_id"), {}) != envelope \
+		or envelope.get("session_epoch") != _altar_current_epoch() \
+		or envelope.get("character_id") != _local_character_id() \
+		or envelope.get("world_instance_id") != _game().get("world").reward_delivery_namespace \
+		or envelope.get("payload", {}).get("kind") not in ["home_key_finish", "portal_enter"] \
+		or permit.size() != 7 or permit.get("peer_id") != local_peer_id() \
+		or permit.get("character_id") != envelope.character_id or permit.get("world_instance_id") != envelope.world_instance_id \
+		or not permit.get("request_id") is String or permit.request_id.is_empty() \
+		or not permit.get("origin_realm") is String or permit.origin_realm != _local_realm() \
+		or permit.get("realm") not in ["meadows", "water", "cloudreach", "stormwood"] \
+		or not permit.get("entry_id") is String or permit.entry_id.is_empty(): return
+	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
+	if arrival != null: arrival.call("owner_travel", self, envelope, permit)
+
+func report_portal_owner_saved(producer: Node, envelope: Dictionary, permit_id: String) -> void:
+	if is_host() or not is_active() or producer != get_node_or_null(^"FoundationComposition/PortalArrival") \
+		or _portal_requests.get(envelope.get("request_id"), {}) != envelope: return
+	rpc_id(HOST_PEER_ID, "_rpc_portal_owner_notice", envelope, permit_id, "")
+
+func report_portal_owner_refused(producer: Node, envelope: Dictionary, permit_id: String, reason: String) -> void:
+	if is_host() or not is_active() or producer != get_node_or_null(^"FoundationComposition/PortalArrival") \
+		or _portal_requests.get(envelope.get("request_id"), {}) != envelope or reason.is_empty(): return
+	rpc_id(HOST_PEER_ID, "_rpc_portal_owner_notice", envelope, permit_id, reason.left(192))
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_portal_owner_notice(envelope: Dictionary, permit_id: String, refused: String) -> void:
+	var peer: int = multiplayer.get_remote_sender_id()
+	if not is_host() or permit_id.length() > 192 or refused.length() > 192 or not _portal_envelope_valid(peer, envelope): return
+	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
+	if arrival != null: arrival.call("owner_notice", peer, envelope, permit_id, refused)
 
 
 func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
@@ -3798,6 +3855,8 @@ func _receive_portal_reply(reply: Dictionary) -> void:
 		frozen.character_id != game.get("local").character_id or frozen.world_instance_id != game.get("world").reward_delivery_namespace or
 		frozen.session_epoch != _altar_current_epoch()): return
 	_portal_requests.erase(frozen.request_id)
+	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
+	if arrival != null: arrival.call("owner_finished", reply)
 	game.emit_signal("portal_action_result", reply.duplicate(true))
 
 
@@ -3812,10 +3871,9 @@ func _host_portal_context(peer: int) -> Dictionary:
 	if not is_host() or not portal_runtime_ready(): return {}
 	var admitted := admitted_character_state(peer)
 	if admitted.is_empty(): return {}
-	# Remote panels, traversal and trainer hazard revision currently have no
-	# host-approved lifecycle. Absence must not become safe=false. This closed
-	# door remains explicit until their owning real producers are integrated.
-	if peer != local_peer_id(): return {}
+	if peer != local_peer_id():
+		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		return lifecycle.call("host_context", peer) if lifecycle != null else {}
 	var game := _game()
 	var player := game.call("find_player") as CharacterBody3D
 	var realm := _local_realm()
@@ -3875,10 +3933,25 @@ func _host_portal_context(peer: int) -> Dictionary:
 
 func home_key_refusal() -> String:
 	if not portal_runtime_ready(): return "The Home Key is not ready yet."
-	if not is_host(): return "Your authoritative travel state is not ready."
-	var context := _host_portal_context(local_peer_id())
+	var context: Dictionary = _host_portal_context(local_peer_id()) if is_host() else {}
+	if not is_host():
+		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		if lifecycle != null:
+			context = lifecycle.call("local_sample")
+			context.combat = _altar_peer_in_combat(local_peer_id())
 	if context.is_empty(): return "Your travel state is not ready."
 	return PORTAL_POLICY.refusal(context)
+
+func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> void:
+	if is_host() or not is_active() or producer != get_node_or_null(^"FoundationComposition/TravelLifecycle") \
+		or not preload("res://scripts/net/foundation_travel_lifecycle.gd").valid_sample(sample): return
+	rpc_id(HOST_PEER_ID, "_rpc_travel_lifecycle", sample)
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_travel_lifecycle(sample: Dictionary) -> void:
+	if not is_host() or not portal_runtime_ready(): return
+	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	if lifecycle != null: lifecycle.call("accept", multiplayer.get_remote_sender_id(), sample)
 
 ## Read-only pending predicate over the one durable world carrier. Unknown
 ## matching rows fail closed; this is not a new pending store or inventory.
