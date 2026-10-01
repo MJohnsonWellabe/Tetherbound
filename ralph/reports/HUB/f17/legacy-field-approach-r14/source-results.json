@@ -1,0 +1,482 @@
+{
+  "classification": "AUTHOR SOURCE ONLY; LEGACY NATIVE SMOKES REQUIRED; F17#4 OPEN",
+  "passed": true,
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "passed": true
+    },
+    {
+      "name": "frozen originals/tests/helpers/gate_a_opening_drive.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen originals/tests/test_opening_beats.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen prior-failure/ci6165-110344653602.log",
+      "passed": true
+    },
+    {
+      "name": "frozen prior-failure/ci6165-110344653729.log",
+      "passed": true
+    },
+    {
+      "name": "frozen proposal/tests/helpers/gate_a_opening_drive.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen proposal/tests/test_opening_beats.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen repair.patch",
+      "passed": true
+    },
+    {
+      "name": "frozen review-context.txt",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/data/config/terrain_playground.json",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/player/player_controller.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/world/grandpa_house.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/world/playground_world.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/tests/helpers/fresh_opening_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/tests/helpers/gate_a_opening_drive.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen source-check.py",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected tests/helpers/fresh_opening_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected tests/test_fresh_opening_target.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected tests/test_tournament_network_selection.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected tests/helpers/stick_navigator.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected scripts/player/player_controller.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged protected data/config/terrain_playground.json",
+      "passed": true
+    },
+    {
+      "name": "live proposal tests/helpers/gate_a_opening_drive.gd",
+      "passed": true
+    },
+    {
+      "name": "live proposal tests/test_opening_beats.gd",
+      "passed": true
+    },
+    {
+      "name": "only legacy approach changed",
+      "passed": true
+    },
+    {
+      "name": "one pure metadata planner added",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function run",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _collect_world_nodes",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _type_name_with_pad",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _accept_name_prefill_with_pad",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _select_name_cell",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _fight_until_catchable",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _catch_with_real_throws",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _orbs_held",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _drain_satchel_to_last_orb",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _open_throw_aim",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _target_is_out_cold",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _aim_camera_at",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _released_aim_is_ready",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _aim_readiness_ready",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _aim_readiness_requires_movement",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _calibrated_deflection",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _smallest_live_deflection",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _aim_at_wild",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _close_to_wild",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function aim_recovery",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _launch_reason",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _shot_is_eligible",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _walk_to_and_activate",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _wild_offer_ready",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _walk_toward",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _drive_body_toward",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _close_dialogue",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _tap_action",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _event_for",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _required_pad_actions_exist",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _send_axis",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _stop_left_stick",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _stop_right_stick",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _find_interactable",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _descendants",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _find_by_method",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _find_by_script",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _checkpoint",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _fail",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _why_the_aim_would_not_open",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _wait_for_the_bramblebun_back_on_its_feet",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _hold_the_fight_where_it_was",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _wander_for_a_new_angle",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _step_until_the_shot_is_clear",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _result",
+      "passed": true
+    },
+    {
+      "name": "unchanged inherited function _move_picker_to_starter",
+      "passed": true
+    },
+    {
+      "name": "all drive const declarations exact",
+      "passed": true
+    },
+    {
+      "name": "all drive var declarations exact",
+      "passed": true
+    },
+    {
+      "name": "exact target/offer/recheck/physical action block",
+      "passed": true
+    },
+    {
+      "name": "exhaustion diagnostics exact",
+      "passed": true
+    },
+    {
+      "name": "same live target fallback",
+      "passed": true
+    },
+    {
+      "name": "same real drive only",
+      "passed": true
+    },
+    {
+      "name": "existing .8m plus nativefloor road arrival",
+      "passed": true
+    },
+    {
+      "name": "one caller budget with capped sidesteps",
+      "passed": true
+    },
+    {
+      "name": "same stall/side distance/alternation",
+      "passed": true
+    },
+    {
+      "name": "actual farmhouse marker and missing-world fallback",
+      "passed": true
+    },
+    {
+      "name": "pure planner without native queries/body writes",
+      "passed": true
+    },
+    {
+      "name": "finite bounded metadata",
+      "passed": true
+    },
+    {
+      "name": "one exact route required",
+      "passed": true
+    },
+    {
+      "name": "same fresh clearance geometry",
+      "passed": true
+    },
+    {
+      "name": "farfield needs no metadata",
+      "passed": true
+    },
+    {
+      "name": "two route regressions added",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_the_beats_come_out_in_the_order_the_config_lists_them",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_comment_keys_are_not_beats",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_every_beat_the_state_machine_names_is_in_the_data",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_next_runs_out_rather_than_looping",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_at_or_after_locks_rather_than_opens_when_it_does_not_know",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_the_opening_delivers_one_goal_at_a_time_before_qualification",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_every_conversation_a_beat_names_really_exists",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_he_has_nothing_scripted_left_once_the_sequence_is_over",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_every_conversation_grandpas_ladder_names_really_exists",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_grandpas_ladder_lets_the_latest_milestone_outrank_the_rest",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_every_beat_effect_the_dialogue_emits_is_mapped_to_a_beat",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_no_effect_points_at_a_beat_that_does_not_exist",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_dialogue_effects_hand_the_player_to_the_next_single_goal",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_existing_village_and_tournament_facts_advance_the_saved_opening",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_the_fade_is_a_real_duration",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_three_starters_stand_in_a_row_at_the_configured_spacing",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_the_starter_row_turns_with_the_facing_it_is_given",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_a_facing_of_nothing_still_produces_a_row",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression test_the_tutorial_creature_is_the_one_with_the_best_catch_rate_and_a_failure_bound",
+      "passed": true
+    },
+    {
+      "name": "existing opening regression _beat_effects_in_the_dialogue",
+      "passed": true
+    },
+    {
+      "name": "synchronous regression test_legacy_field_road_refuses_ambiguous_or_malformed_near_door_metadata",
+      "passed": true
+    },
+    {
+      "name": "synchronous regression test_legacy_wild_approach_clears_door_and_uses_actual_field_road",
+      "passed": true
+    },
+    {
+      "name": "actual authored seven points",
+      "passed": true
+    },
+    {
+      "name": "actual movement directions agree",
+      "passed": true
+    },
+    {
+      "name": "recall is nonactionable status",
+      "passed": true
+    },
+    {
+      "name": "actual CI checkout retained",
+      "passed": true
+    },
+    {
+      "name": "actual three distances retained",
+      "passed": true
+    },
+    {
+      "name": "legacy failures not substituted with fresh proof",
+      "passed": true
+    }
+  ]
+}

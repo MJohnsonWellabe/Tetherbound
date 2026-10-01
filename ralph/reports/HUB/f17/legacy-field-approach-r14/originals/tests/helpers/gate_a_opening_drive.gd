@@ -1157,71 +1157,11 @@ var _stall_frames := 0
 var _stall_side := 1.0
 
 
-## Metadata hints only; the legacy drive still earns its own travel and catch.
-## Near the front doorway, clear its axis before taking the authored field road.
-static func wild_approach_road(from: Vector3, house: Vector3, door: Vector3, routes: Variant) -> Dictionary:
-	var points: Array[Vector3] = []
-	if not from.is_finite() or not house.is_finite() or not door.is_finite():
-		return {"valid": false, "points": points}
-	var offset := from - door
-	offset.y = 0.0
-	if offset.length() >= 4.0:
-		return {"valid": true, "points": points}
-	var front := door - house
-	front.y = 0.0
-	if front.length_squared() < 0.01 or not routes is Array or routes.size() > 32:
-		return {"valid": false, "points": points}
-	front = front.normalized()
-	if offset.dot(front) < 1.0:
-		points.append(door + front * 1.8)
-	var matches := 0
-	for route: Variant in routes:
-		if not route is Dictionary or route.get("label") != "Practice Meadow":
-			continue
-		matches += 1
-		var raw: Variant = route.get("points")
-		if not raw is Array or raw.is_empty() or raw.size() > 64:
-			return {"valid": false, "points": []}
-		for point: Variant in raw:
-			if not point is Array or point.size() != 2 \
-					or not (point[0] is int or point[0] is float) \
-					or not (point[1] is int or point[1] is float) \
-					or not is_finite(float(point[0])) or not is_finite(float(point[1])) \
-					or absf(float(point[0])) > 180.0 or absf(float(point[1])) > 180.0:
-				return {"valid": false, "points": []}
-			points.append(Vector3(float(point[0]), from.y, float(point[1])))
-	return {"valid": matches == 1, "points": points}
-
-
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
-	var started_frame := Engine.get_physics_frames()
-	var road: Array[Vector3] = []
-	var road_index := 0
-	var house := _world.get_node_or_null(^"GrandpaHouse") as Node3D if _world != null else null
-	if house != null:
-		var door: Vector3 = house.call("marker", "door")
-		var offset := _player.global_position - door
-		offset.y = 0.0
-		var routes: Variant = null
-		if offset.length() < 4.0:
-			var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
-			if raw is Dictionary and raw.get("paths") is Dictionary:
-				routes = raw.paths.get("routes")
-		var plan := wild_approach_road(_player.global_position, house.global_position, door, routes)
-		if not bool(plan.valid):
-			_stop_left_stick()
-			print("wild approach: invalid farmhouse/Practice Meadow route metadata")
-			return false
-		road.assign(plan.points)
-		if not road.is_empty():
-			print("wild approach: legacy controller uses farmhouse/Practice Meadow road ", road)
 	var closest := INF
 	_stall_best = INF
 	_stall_frames = 0
 	for _i in budget:
-		# Road, pursuit and sidesteps consume this one original travel budget.
-		if int(Engine.get_physics_frames() - started_frame) >= budget:
-			break
 		if not is_instance_valid(target):
 			print("wild approach: target despawned")
 			_stop_left_stick()
@@ -1241,39 +1181,25 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 				])
 				await _tap_action("interact")
 				return true
-		if int(Engine.get_physics_frames() - started_frame) >= budget:
-			break
-		var goal := target.global_position
-		if road_index < road.size():
-			var offset := road[road_index] - _player.global_position
-			offset.y = 0.0
-			if offset.length() <= 0.8 and _player.is_on_floor():
-				road_index += 1
-				_stall_best = INF
-				_stall_frames = 0
-			if road_index < road.size():
-				goal = road[road_index]
-		var progress := _player.global_position.distance_to(goal)
 		# A player who walks into a fence post or a tree between them and the
 		# creature steps around it; the straight drive would press into it for
 		# the rest of the budget (CI: stalled 9 m short behind the F01 village
 		# props while the wanderer stood on their far side). No progress for
 		# STALL_FRAMES -> side-step perpendicular, alternating sides.
-		if progress < _stall_best - 0.3:
-			_stall_best = progress
+		if distance < _stall_best - 0.3:
+			_stall_best = distance
 			_stall_frames = 0
 		else:
 			_stall_frames += 1
 		if _stall_frames >= STALL_FRAMES:
-			var to_target := goal - _player.global_position
+			var to_target := target.global_position - _player.global_position
 			var side := Vector3(-to_target.z, 0.0, to_target.x).normalized() * (4.0 * _stall_side)
 			_stall_side = -_stall_side
 			_stall_frames = 0
 			_stall_best = INF
-			var remaining := maxi(0, budget - int(Engine.get_physics_frames() - started_frame))
-			await _drive_body_toward(_player, _player.global_position + side, mini(SIDESTEP_FRAMES, remaining))
+			await _drive_body_toward(_player, _player.global_position + side, SIDESTEP_FRAMES)
 			continue
-		await _drive_body_toward(_player, goal, 1)
+		await _drive_body_toward(_player, target.global_position, 1)
 	_stop_left_stick()
 	print("wild approach: exhausted after closest %.2fm; final %.2fm; visible=%s alive=%s prompt='%s' winner=%s" % [
 		closest,

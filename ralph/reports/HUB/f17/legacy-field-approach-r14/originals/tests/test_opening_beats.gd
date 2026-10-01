@@ -16,7 +16,6 @@ extends "res://tests/test_case.gd"
 ## suite starts lying.
 
 const BEATS := preload("res://scripts/story/opening_beats.gd")
-const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 ## F3. `grandpa_conversations_when()`'s branches are read through the exact
 ## same reader village_npcs.json's `greeting_when` ladders use, so the ladder
@@ -232,43 +231,6 @@ func test_the_tutorial_creature_is_the_one_with_the_best_catch_rate_and_a_failur
 	for other: String in species.table():
 		assert_true(species.catch_rate(other) <= best,
 			"'%s' is easier to catch than the tutorial creature '%s'" % [other, id])
-
-
-func test_legacy_wild_approach_clears_door_and_uses_actual_field_road() -> void:
-	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
-	var house := Vector3(2.0, 0.9, 14.0)
-	var door := Vector3(8.3, 0.9, 14.0)
-	var plan := OPENING_DRIVE.wild_approach_road(Vector3(7.6, 0.9, 14.0), house, door, config.paths.routes)
-	assert_true(plan.valid)
-	assert_eq(plan.points.size(), 8, "door clearance plus the existing seven painted road points")
-	assert_true((plan.points[0] as Vector3).is_equal_approx(Vector3(10.1, 0.9, 14.0)))
-	assert_eq(plan.points[1], Vector3(20.0, 0.9, 14.0))
-	assert_eq(plan.points[-1], Vector3(30.0, 0.9, -40.0))
-	plan = OPENING_DRIVE.wild_approach_road(Vector3(9.467221, 0.9, 14.06712), house, door, config.paths.routes)
-	assert_true(plan.valid)
-	assert_eq(plan.points.size(), 7, "the observed cleared doorway pose needs no extra clearance waypoint")
-	plan = OPENING_DRIVE.wild_approach_road(Vector3(20.0, 0.9, -26.0), house, door, null)
-	assert_true(plan.valid)
-	assert_true(plan.points.is_empty(), "later field approaches keep pursuing their live target without a farmhouse detour")
-
-
-func test_legacy_field_road_refuses_ambiguous_or_malformed_near_door_metadata() -> void:
-	var house := Vector3(2.0, 0.9, 14.0)
-	var door := Vector3(8.3, 0.9, 14.0)
-	var route := {"label": "Practice Meadow", "points": [[20, 14], [20, -12]]}
-	for routes: Variant in [null, [], [route, route],
-			[{"label": "Practice Meadow", "points": []}],
-			[{"label": "Practice Meadow", "points": [[INF, 14]]}],
-			[{"label": "Practice Meadow", "points": [[20, 14, 0]]}],
-			[{"label": "Practice Meadow", "points": [[181, 14]]}]]:
-		assert_false(OPENING_DRIVE.wild_approach_road(door, house, door, routes).valid)
-	assert_false(OPENING_DRIVE.wild_approach_road(door, door, door, [route]).valid)
-	assert_false(OPENING_DRIVE.wild_approach_road(Vector3(INF, 0.9, 14), house, door, [route]).valid)
-	var too_many: Array = []
-	too_many.resize(65)
-	too_many.fill([20, 14])
-	assert_false(OPENING_DRIVE.wild_approach_road(door, house, door,
-		[{"label": "Practice Meadow", "points": too_many}]).valid)
 
 
 func _beat_effects_in_the_dialogue() -> Array[String]:
