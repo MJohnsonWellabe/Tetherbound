@@ -1149,6 +1149,10 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 	# starting position, rather than leaving the whole freshly spawned meadow
 	# processing until the first `_process()` tick happens to run.
 	_tick_streaming()
+	if repeat_packet.is_empty() and default_starter != "":
+		# Preserve the ordinary startup guard and its supported placement.
+		# Publishing a repeat generation never adopts another starter.
+		await adopt_starter(default_starter)
 
 func foundation_register_alpha(wild: Node3D, site_id: String, packet: Dictionary = {}) -> bool:
 	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
@@ -1167,12 +1171,6 @@ func foundation_register_alpha(wild: Node3D, site_id: String, packet: Dictionary
 		wild.set_meta("foundation_alpha_packet", packet.duplicate(true))
 		wild.remove_meta("once_completion_reward")
 	return true
-
-	if default_starter != "":
-		# Awaited: `adopt_starter` waits for ground under the spawn point, so
-		# calling it bare would hand back a coroutine and leave the creature unplaced.
-		await adopt_starter(default_starter)
-
 
 ## T3-ENCOUNTER. The world seed this boot is building, resolved once.
 ##
