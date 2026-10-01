@@ -1917,6 +1917,13 @@ func _realm_rpc_allowed(peer: int, completing: bool = false) -> bool:
 
 
 func _send_realm_rpc(peer: int, method: String, arguments: Array, completing: bool = false) -> bool:
+	if not is_inside_tree():
+		return false
+	var api := multiplayer
+	# Encounter participants can outlive their transport during disconnect cleanup.
+	# Sample native membership immediately before dispatch, without yielding.
+	if api == null or not api.has_multiplayer_peer() or not api.get_peers().has(peer):
+		return false
 	if not _realm_rpc_allowed(peer, completing):
 		return false
 	var call_arguments: Array = [peer, method]
