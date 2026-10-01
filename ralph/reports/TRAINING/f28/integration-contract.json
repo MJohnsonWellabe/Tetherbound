@@ -51,7 +51,8 @@
       "request": [
         "source_id"
       ],
-      "receipt": "craft:<character_id>:attuned:<authored_source_id>"
+      "receipt": "craft:<character_id>:attuned:<authored_source_id>",
+      "status": "RETIRED; compatibility refusal only; never register as an active source"
     }
   },
   "identity_contract": [
@@ -93,14 +94,16 @@
     "All XP/candy/Altar": "F27 capped arithmetic uses canonical cap and validates contiguous Breakthrough.level_cap; no cfg global100 reward path while redesign active",
     "Items": "bounded ignored ItemDB patch loads owned feast item definitions only; does NOT expose recipes via ungated generic crafting",
     "F29": "prepare_feast_choice(card,tier,evolve|stay|empty,HOST-derived-catalyst); cooked catalyst SKU pays stone at cook ONLY; disable legacy independent evolution via evolution_mode gate",
-    "F22": "existing director enforces no switch/flee/spectator hit/XP/tag combo; master patterns and safe hazard question retained; MasterDuel never creates second combat loop"
+    "F22": "existing director enforces no switch/flee/spectator hit/XP/tag combo; master patterns and safe hazard question retained; MasterDuel never creates second combat loop",
+    "Attuned ingredients": "F32 canonical node/farm source and existing world_harvest stock carrier only; no provisional garden, no second grant/cost."
   },
   "dependency_holds": [
     "F16 current shared producer/replay/save/ACK wiring",
     "F27 source cap/XP/spend activation + typed catch initialization",
     "F31 actual Kitchen/attachment/source integration",
     "F29 evolved source + legacy evolution activation gate",
-    "F22 real master encounter/profile integration"
+    "F22 real master encounter/profile integration",
+    "F32 reviewed source 6c063a2c8c104619730759b27e0332ae8e23a583; actual renewable node/crop stock and ordinary early supply"
   ],
   "shared_patches": [
     {
@@ -117,5 +120,6 @@
       "before_sha256": "fe34d0d3a1d64b3243afa28a1e9b05bfd8fa138bb287ef00407a73a723907218",
       "after_sha256": "a1faefa2e94d4f59809689fe51017e092ac71d03893b1ed8d110438691984398"
     }
-  ]
+  ],
+  "attuned_source_contract": "attuned-source-contract.json"
 }

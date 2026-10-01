@@ -1,0 +1,49 @@
+{
+  "owner": "F32",
+  "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+  "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df",
+  "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/515",
+  "source_cut": "ralph/reports/HOMESTEAD/f32/whole-source/source-cut.json",
+  "files": {
+    "data/config/essence_nodes.json": {
+      "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
+      "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
+    },
+    "data/config/farm.json": {
+      "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
+      "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+    }
+  },
+  "runtime_accepted_stock": null,
+  "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+  "retirement": "F28 finite master_garden nodes removed; old prepare_gather compatibility doorway always refuses. F32 node/farm staging alone owns attuned supply and renewable stock.",
+  "typed_node_intent": [
+    "site_id",
+    "expected_stock_revision",
+    "action_id"
+  ],
+  "transaction_owner": "F32 inside Foundation existing world_harvest/character journal; host resolves actual source, stock revision, host day and retained seed roll.",
+  "item_owners": "F28 attuned definitions; F27 essence; F32 seeds. Register each canonical ID once.",
+  "supply": {
+    "node_attuned_per_ready_generation": 1,
+    "node_respawn_host_days": 3,
+    "seed_chance": 0.25,
+    "crop_grow_host_days": 2,
+    "crop_attuned_output": 2,
+    "native_outdoor_types": [
+      "ground",
+      "air"
+    ],
+    "other_types_require": "actual paid world Greenhouse"
+  },
+  "unproven": [
+    "All eight Meadows body paths before L10",
+    "Off-route and terrain clearance",
+    "Actual node/plot stock and generations",
+    "Co-op contention and repeated five-creature feast supply",
+    "Actual seed availability and paid Greenhouse access",
+    "Save/ACK/rejoin and world namespace boundaries"
+  ],
+  "removed_assumption": "No longer asserts 25 attuned units per type per character; renewable source arithmetic is not ordinary-play solvency proof.",
+  "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument"
+}

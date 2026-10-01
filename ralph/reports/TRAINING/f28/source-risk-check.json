@@ -1,5 +1,5 @@
 {
-  "checks": 620,
+  "checks": 728,
   "failures": [],
   "scope": "Authored JSON identity/catalogue/source/order checks only; no GDScript parse, engine, persistence or acceptance proof."
 }

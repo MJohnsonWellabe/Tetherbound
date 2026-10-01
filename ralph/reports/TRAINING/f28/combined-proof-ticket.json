@@ -7,7 +7,8 @@
     "F27 source cap/XP/spend activation + typed catch initialization",
     "F31 actual Kitchen/attachment/source integration",
     "F29 evolved source + legacy evolution activation gate",
-    "F22 real master encounter/profile integration"
+    "F22 real master encounter/profile integration",
+    "F32 reviewed source 6c063a2c8c104619730759b27e0332ae8e23a583; actual renewable node/crop stock and ordinary early supply"
   ],
   "execution_owner": "ROOT only; no lane Godot/import/check-only/gameplay/render/export/GPU execution",
   "minimum_batch": [
@@ -46,7 +47,8 @@
         "Loss faints chosen creature only; retry atonce with any conscious companion",
         "Win then manually open chest teaches own tierrecipe+2candy; fullbag preserves pending chest; repeatclaim paysnothing",
         "Actual gather sources from ingredient-ledger exist in/before each biome; T2 uses Meadows berries+ironwood, no Sunleaf",
-        "Home Key\u2192actual Kitchen\u2192cook\u2192feed\u2192capUI\u2192portal retains earned route; no direct setup grants undisclosed"
+        "Home Key\u2192actual Kitchen\u2192cook\u2192feed\u2192capUI\u2192portal retains earned route; no direct setup grants undisclosed",
+        "F32 canonical eight Meadows node types are earned before L10; no master_garden pool. Prove actual stock generations, co-op contention, repeat feast supply, real seed rolls and native/paid-Greenhouse manual crops without undisclosed grants; 1 attuned/3hostdays and25%seed do not prove solvency."
       ]
     },
     {
@@ -86,5 +88,11 @@
     "asset expansion",
     ".godot copy",
     "test disable/skip/quarantine"
-  ]
+  ],
+  "attuned_source_dependency": {
+    "contract": "attuned-source-contract.json",
+    "f32_source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+    "f32_ticket": "ralph/reports/HOMESTEAD/f32/whole-source/proof-ticket.json",
+    "runtime_accepted_stock": null
+  }
 }

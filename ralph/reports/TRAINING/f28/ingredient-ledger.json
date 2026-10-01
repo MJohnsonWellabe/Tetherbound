@@ -1,6 +1,55 @@
 {
-  "status": "SOURCE_CANDIDATE_ONLY",
-  "claim": "All recipe inputs have canonical/owned definitions and authored sources in or before recipe biome. New personal herb sources and Kitchen host producer must mount before runtime acceptance.",
+  "status": "REVIEWED_SOURCE_REFERENCES_ONLY; RUNTIME_STOCK_UNPROVEN",
+  "claim": "All recipe inputs have authored sources in or before recipe biome. F32 canonical renewable nodes/crops exclusively provide attuned ingredients; actual mounted stock, terrain, seeds, supply and Kitchen integration remain unproven.",
+  "external_source": {
+    "owner": "F32",
+    "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+    "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df",
+    "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/515",
+    "source_cut": "ralph/reports/HOMESTEAD/f32/whole-source/source-cut.json",
+    "files": {
+      "data/config/essence_nodes.json": {
+        "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
+        "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
+      },
+      "data/config/farm.json": {
+        "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
+        "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+      }
+    },
+    "runtime_accepted_stock": null,
+    "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+    "retirement": "F28 finite master_garden nodes removed; old prepare_gather compatibility doorway always refuses. F32 node/farm staging alone owns attuned supply and renewable stock.",
+    "typed_node_intent": [
+      "site_id",
+      "expected_stock_revision",
+      "action_id"
+    ],
+    "transaction_owner": "F32 inside Foundation existing world_harvest/character journal; host resolves actual source, stock revision, host day and retained seed roll.",
+    "item_owners": "F28 attuned definitions; F27 essence; F32 seeds. Register each canonical ID once.",
+    "supply": {
+      "node_attuned_per_ready_generation": 1,
+      "node_respawn_host_days": 3,
+      "seed_chance": 0.25,
+      "crop_grow_host_days": 2,
+      "crop_attuned_output": 2,
+      "native_outdoor_types": [
+        "ground",
+        "air"
+      ],
+      "other_types_require": "actual paid world Greenhouse"
+    },
+    "unproven": [
+      "All eight Meadows body paths before L10",
+      "Off-route and terrain clearance",
+      "Actual node/plot stock and generations",
+      "Co-op contention and repeated five-creature feast supply",
+      "Actual seed availability and paid Greenhouse access",
+      "Save/ACK/rejoin and world namespace boundaries"
+    ],
+    "removed_assumption": "No longer asserts 25 attuned units per type per character; renewable source arithmetic is not ordinary-play solvency proof.",
+    "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument"
+  },
   "biome_order": [
     "meadows",
     "tidewake",
@@ -53,16 +102,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
             "biome": "meadows",
-            "stable_id": "master_garden_ground_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
             "position": [
-              490,
-              1720
+              22,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -112,16 +182,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.4",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
             "biome": "meadows",
-            "stable_id": "master_garden_water_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
             "position": [
-              496,
-              1720
+              32,
+              -44
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -171,16 +262,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.8",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
             "biome": "meadows",
-            "stable_id": "master_garden_air_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
             "position": [
-              502,
-              1720
+              46.5,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -230,16 +342,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.12",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
             "biome": "meadows",
-            "stable_id": "master_garden_electric_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
             "position": [
-              508,
-              1720
+              -2,
+              8
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -289,16 +422,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.16",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
             "biome": "meadows",
-            "stable_id": "master_garden_fire_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
             "position": [
-              514,
-              1720
+              28,
+              -34
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -348,16 +502,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.20",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
             "biome": "meadows",
-            "stable_id": "master_garden_dark_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
             "position": [
-              520,
-              1720
+              53,
+              -34.5
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -407,16 +582,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.24",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
             "biome": "meadows",
-            "stable_id": "master_garden_ice_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
             "position": [
-              526,
-              1720
+              -12,
+              6
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -466,16 +662,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.28",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
             "biome": "meadows",
-            "stable_id": "master_garden_psychic_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
             "position": [
-              532,
-              1720
+              18,
+              -22
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -508,16 +725,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
             "biome": "meadows",
-            "stable_id": "master_garden_ground_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
             "position": [
-              490,
-              1720
+              22,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -567,16 +805,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
             "biome": "meadows",
-            "stable_id": "master_garden_ground_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
             "position": [
-              490,
-              1720
+              22,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -643,16 +902,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.0",
             "biome": "meadows",
-            "stable_id": "master_garden_ground_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
             "position": [
-              490,
-              1720
+              22,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -717,16 +997,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.4",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
             "biome": "meadows",
-            "stable_id": "master_garden_water_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
             "position": [
-              496,
-              1720
+              32,
+              -44
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -776,16 +1077,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.4",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
             "biome": "meadows",
-            "stable_id": "master_garden_water_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
             "position": [
-              496,
-              1720
+              32,
+              -44
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -852,16 +1174,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.4",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.1",
             "biome": "meadows",
-            "stable_id": "master_garden_water_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
             "position": [
-              496,
-              1720
+              32,
+              -44
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -926,16 +1269,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.8",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
             "biome": "meadows",
-            "stable_id": "master_garden_air_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
             "position": [
-              502,
-              1720
+              46.5,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -985,16 +1349,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.8",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
             "biome": "meadows",
-            "stable_id": "master_garden_air_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
             "position": [
-              502,
-              1720
+              46.5,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1061,16 +1446,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.8",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.2",
             "biome": "meadows",
-            "stable_id": "master_garden_air_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
             "position": [
-              502,
-              1720
+              46.5,
+              -28
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1135,16 +1541,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.12",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
             "biome": "meadows",
-            "stable_id": "master_garden_electric_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
             "position": [
-              508,
-              1720
+              -2,
+              8
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1194,16 +1621,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.12",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
             "biome": "meadows",
-            "stable_id": "master_garden_electric_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
             "position": [
-              508,
-              1720
+              -2,
+              8
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1270,16 +1718,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.12",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.3",
             "biome": "meadows",
-            "stable_id": "master_garden_electric_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
             "position": [
-              508,
-              1720
+              -2,
+              8
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1344,16 +1813,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.16",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
             "biome": "meadows",
-            "stable_id": "master_garden_fire_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
             "position": [
-              514,
-              1720
+              28,
+              -34
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1403,16 +1893,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.16",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
             "biome": "meadows",
-            "stable_id": "master_garden_fire_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
             "position": [
-              514,
-              1720
+              28,
+              -34
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1479,16 +1990,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.16",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.4",
             "biome": "meadows",
-            "stable_id": "master_garden_fire_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
             "position": [
-              514,
-              1720
+              28,
+              -34
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1553,16 +2085,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.20",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
             "biome": "meadows",
-            "stable_id": "master_garden_dark_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
             "position": [
-              520,
-              1720
+              53,
+              -34.5
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1612,16 +2165,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.20",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
             "biome": "meadows",
-            "stable_id": "master_garden_dark_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
             "position": [
-              520,
-              1720
+              53,
+              -34.5
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1688,16 +2262,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.20",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.5",
             "biome": "meadows",
-            "stable_id": "master_garden_dark_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
             "position": [
-              520,
-              1720
+              53,
+              -34.5
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1762,16 +2357,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.24",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
             "biome": "meadows",
-            "stable_id": "master_garden_ice_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
             "position": [
-              526,
-              1720
+              -12,
+              6
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1821,16 +2437,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.24",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
             "biome": "meadows",
-            "stable_id": "master_garden_ice_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
             "position": [
-              526,
-              1720
+              -12,
+              6
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1897,16 +2534,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.24",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.6",
             "biome": "meadows",
-            "stable_id": "master_garden_ice_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
             "position": [
-              526,
-              1720
+              -12,
+              6
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -1971,16 +2629,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.28",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
             "biome": "meadows",
-            "stable_id": "master_garden_psychic_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
             "position": [
-              532,
-              1720
+              18,
+              -22
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -2030,16 +2709,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.28",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
             "biome": "meadows",
-            "stable_id": "master_garden_psychic_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
             "position": [
-              532,
-              1720
+              18,
+              -22
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -2106,16 +2806,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.28",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.7",
             "biome": "meadows",
-            "stable_id": "master_garden_psychic_0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
             "position": [
-              532,
-              1720
+              18,
+              -22
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         },
         {
@@ -2199,16 +2920,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.0",
-            "biome": "meadows",
-            "stable_id": "master_garden_ground_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.24",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_ground_01",
             "position": [
-              490,
-              1720
+              574,
+              1344
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2260,16 +3002,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.4",
-            "biome": "meadows",
-            "stable_id": "master_garden_water_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.25",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_water_01",
             "position": [
-              496,
-              1720
+              814,
+              2900
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2321,16 +3084,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.8",
-            "biome": "meadows",
-            "stable_id": "master_garden_air_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.26",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_air_01",
             "position": [
-              502,
-              1720
+              84,
+              2304
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2382,16 +3166,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.12",
-            "biome": "meadows",
-            "stable_id": "master_garden_electric_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.27",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_electric_01",
             "position": [
-              508,
-              1720
+              24,
+              452
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2443,16 +3248,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.16",
-            "biome": "meadows",
-            "stable_id": "master_garden_fire_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.28",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_fire_01",
             "position": [
-              514,
-              1720
+              344,
+              3792
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2504,16 +3330,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.20",
-            "biome": "meadows",
-            "stable_id": "master_garden_dark_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.29",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_dark_01",
             "position": [
-              520,
-              1720
+              -90,
+              18
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2565,16 +3412,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.24",
-            "biome": "meadows",
-            "stable_id": "master_garden_ice_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.30",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_ice_01",
             "position": [
-              526,
-              1720
+              482,
+              1216
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2626,16 +3494,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.28",
-            "biome": "meadows",
-            "stable_id": "master_garden_psychic_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.31",
+            "biome": "tidewake",
+            "runtime_realm": "water",
+            "stable_id": "essence_water_psychic_01",
             "position": [
-              532,
-              1720
+              504,
+              828
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2687,16 +3576,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.0",
-            "biome": "meadows",
-            "stable_id": "master_garden_ground_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.8",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_ground_01",
             "position": [
-              490,
-              1720
+              -394,
+              570
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2748,16 +3658,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.4",
-            "biome": "meadows",
-            "stable_id": "master_garden_water_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.9",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_water_01",
             "position": [
-              496,
-              1720
+              1206,
+              3100
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2809,16 +3740,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.8",
-            "biome": "meadows",
-            "stable_id": "master_garden_air_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.10",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_air_01",
             "position": [
-              502,
-              1720
+              -262.3,
+              3117.5
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2870,16 +3822,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.12",
-            "biome": "meadows",
-            "stable_id": "master_garden_electric_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.11",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_electric_01",
             "position": [
-              508,
-              1720
+              -211.2,
+              5327.4
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2931,16 +3904,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.16",
-            "biome": "meadows",
-            "stable_id": "master_garden_fire_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.12",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_fire_01",
             "position": [
-              514,
-              1720
+              -1083.4,
+              1495.1
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -2992,16 +3986,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.20",
-            "biome": "meadows",
-            "stable_id": "master_garden_dark_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.13",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_dark_01",
             "position": [
-              520,
-              1720
+              186,
+              620
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3053,16 +4068,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.24",
-            "biome": "meadows",
-            "stable_id": "master_garden_ice_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.14",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_ice_01",
             "position": [
-              526,
-              1720
+              -342.5,
+              5011
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3114,16 +4150,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.28",
-            "biome": "meadows",
-            "stable_id": "master_garden_psychic_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.15",
+            "biome": "cloudreach",
+            "runtime_realm": "cloudreach",
+            "stable_id": "essence_cloudreach_psychic_01",
             "position": [
-              532,
-              1720
+              -515.5,
+              5301.5
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3173,16 +4230,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.0",
-            "biome": "meadows",
-            "stable_id": "master_garden_ground_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.16",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_ground_01",
             "position": [
-              490,
-              1720
+              -794,
+              4430
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ground",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ground",
+            "biome": "meadows",
+            "seed_item": "seed_ground",
+            "seed_source_id": "essence_meadows_ground_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3232,16 +4310,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.4",
-            "biome": "meadows",
-            "stable_id": "master_garden_water_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.17",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_water_01",
             "position": [
-              496,
-              1720
+              -1144,
+              3160
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_water",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.water",
+            "biome": "meadows",
+            "seed_item": "seed_water",
+            "seed_source_id": "essence_meadows_water_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3291,16 +4390,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.8",
-            "biome": "meadows",
-            "stable_id": "master_garden_air_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.18",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_air_01",
             "position": [
-              502,
-              1720
+              -986,
+              1857
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_air",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.air",
+            "biome": "meadows",
+            "seed_item": "seed_air",
+            "seed_source_id": "essence_meadows_air_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "native outdoor crop",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3350,16 +4470,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.12",
-            "biome": "meadows",
-            "stable_id": "master_garden_electric_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.19",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_electric_01",
             "position": [
-              508,
-              1720
+              -344,
+              4430
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_electric",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.electric",
+            "biome": "meadows",
+            "seed_item": "seed_electric",
+            "seed_source_id": "essence_meadows_electric_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3409,16 +4550,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.16",
-            "biome": "meadows",
-            "stable_id": "master_garden_fire_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.20",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_fire_01",
             "position": [
-              514,
-              1720
+              -1144,
+              3030
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_fire",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.fire",
+            "biome": "meadows",
+            "seed_item": "seed_fire",
+            "seed_source_id": "essence_meadows_fire_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3468,16 +4630,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.20",
-            "biome": "meadows",
-            "stable_id": "master_garden_dark_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.21",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_dark_01",
             "position": [
-              520,
-              1720
+              -1324,
+              1750
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_dark",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.dark",
+            "biome": "meadows",
+            "seed_item": "seed_dark",
+            "seed_source_id": "essence_meadows_dark_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3527,16 +4710,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.24",
-            "biome": "meadows",
-            "stable_id": "master_garden_ice_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.22",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_ice_01",
             "position": [
-              526,
-              1720
+              -794,
+              4280
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_ice",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.ice",
+            "biome": "meadows",
+            "seed_item": "seed_ice",
+            "seed_source_id": "essence_meadows_ice_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]
@@ -3586,16 +4790,37 @@
           "count": 1,
           "catalogue": "data/recipes/feasts.json",
           "source": {
-            "file": "data/recipes/feasts.json",
-            "json_path": "$.attuned_sources.nodes.28",
-            "biome": "meadows",
-            "stable_id": "master_garden_psychic_0",
+            "file": "data/config/essence_nodes.json",
+            "json_path": "$.nodes.23",
+            "biome": "stormwood",
+            "runtime_realm": "stormwood",
+            "stable_id": "essence_stormwood_psychic_01",
             "position": [
-              532,
-              1720
+              -1144,
+              2900
             ],
-            "amount": 6,
-            "status": "owned_source_requires_typed_host_mount"
+            "amount": 1,
+            "scope": "world_stock; character_outputs",
+            "respawn_host_days": 3,
+            "seed_drop": {
+              "item": "seed_psychic",
+              "amount": 1,
+              "chance": 0.25
+            },
+            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+          },
+          "supplemental_crop": {
+            "file": "data/config/farm.json",
+            "json_path": "$.crops.psychic",
+            "biome": "meadows",
+            "seed_item": "seed_psychic",
+            "seed_source_id": "essence_meadows_psychic_01",
+            "seed_chance": 0.25,
+            "seed_guaranteed": false,
+            "grow_host_days": 2,
+            "amount": 2,
+            "growth_gate": "actual paid world Greenhouse",
+            "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
           }
         }
       ]

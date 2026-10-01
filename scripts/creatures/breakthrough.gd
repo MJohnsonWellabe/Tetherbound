@@ -141,20 +141,10 @@ static func prepare_chest(current: Dictionary, master_id: String, character_id: 
 	result.intent = {"master_id": master_id, "character_id": character_id}
 	return result
 
-static func prepare_gather(current: Dictionary, source_id: String, context: Dictionary) -> Dictionary:
-	var source: Dictionary = {}
-	for row: Dictionary in feasts().get("attuned_sources", {}).get("nodes", []):
-		if row.id == source_id: source = row
-	if source.is_empty() or context.get("in_range") != true or context.get("biome") != source.realm:
-		return _deny("attuned_source_unavailable")
-	var receipt := "craft:%s:attuned:%s" % [str(current.get("character_id", "")), source_id]
-	var replay := _duplicate(current, receipt)
-	if not replay.is_empty(): return replay
-	var next := current.duplicate(true)
-	if not _inventory(next, {}, {str(source.item): int(source.amount)}): return _deny("satchel_full")
-	var result := _result(next, receipt, "attuned_gather")
-	result.intent = {"source_id": source_id, "character_id": str(current.character_id)}
-	return result
+## Compatibility refusal only. F32 owns renewable node/crop staging, stock,
+## host-day generations and outputs through the existing world_harvest carrier.
+static func prepare_gather(_current: Dictionary, _source_id: String, _context: Dictionary) -> Dictionary:
+	return _deny("attuned_sources_owned_by_f32")
 
 ## Context is supplied by the registered live Kitchen producer: never a request
 ## field. The host's actual building/attachment tier is the effective tier.

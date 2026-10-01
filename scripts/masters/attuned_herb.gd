@@ -1,7 +1,7 @@
 extends "res://scripts/world/harvest_node.gd"
-## Uses the existing harvest presentation, but NOT its generic item/amount
-## intent. Foundation re-derives this authored source by ID in the same atomic
-## character transaction as every F28 action. Personal claims preserve co-op.
+## Retired provisional garden adapter. Do not mount this as a canonical F32
+## node: F32 owns renewable stock and node/crop transactions. The retained
+## F28 attuned_gather doorway refuses all new requests after garden retirement.
 var source_id := ""
 var service: Node
 
