@@ -3,7 +3,8 @@
   "motion": {
     "input_guard_seconds": 0.25,
     "auto_scroll_delay_seconds": 1.5,
-    "auto_scroll_speed_px_s": 54.0
+    "auto_scroll_speed_px_s": 54,
+    "manual_scroll_step_px": 144
   },
   "layout": {
     "safe_margin_px": 72,
@@ -43,6 +44,44 @@
       ]
     }
   ],
-  "closing": "The regional road is free. Thank you for travelling with your companions.",
-  "layout_note": "Values use the 1920x1080 project canvas: at the 1280x720 stress raster, margins are 48px, title 44px and body 24px."
+  "closing": "You and your companions are home. The roads you reopened belong to their people again.",
+  "layout_note": "Values use the 1920x1080 project canvas: at the 1280x720 stress raster, margins are 48px, title 44px and body 24px.",
+  "homecoming": {
+    "starter_present": "%s, the companion you chose here, is still beside you.",
+    "starter_absent": "Your first companion took another road. That beginning still matters.",
+    "starter_unknown": "That first beginning still matters. I will not guess which road your first companion took.",
+    "memory_empty": "This company is home with you. There is room here to make more memories together.",
+    "memories": [
+      {
+        "counter": "landmarks_visited_together",
+        "line": "%s has discovered %d landmarks with you. You have seen a great deal together."
+      },
+      {
+        "counter": "battles_fought",
+        "line": "%s has stood with you through %d battles. I am glad you both made it home."
+      },
+      {
+        "counter": "rest_nights_together",
+        "line": "You and %s have shared %d nights of rest. Quiet care is part of a journey, too."
+      },
+      {
+        "counter": "feeds_together",
+        "line": "You have cared for %s through %d meals. That care belongs in their story."
+      }
+    ],
+    "choices_empty": "Those you met had their own wishes. Their invitations were yours to answer.",
+    "choices": {
+      "meadows:accepted": "You welcomed Veridian when it chose to follow you.",
+      "meadows:refused": "You let Veridian choose its own road.",
+      "water:accepted": "You welcomed the Abyssal Guardian when it chose to follow you.",
+      "water:refused": "You let the Abyssal Guardian choose its own road.",
+      "cloudreach:accepted": "You welcomed Solmane when it chose to follow you.",
+      "cloudreach:refused": "You let Solmane choose its own road.",
+      "stormwood:accepted": "You welcomed the Stormheart when it chose to follow you.",
+      "stormwood:refused": "You let the Stormheart choose its own road."
+    }
+  },
+  "ack_timeout_seconds": 8,
+  "handoff_retry_seconds": 0.5,
+  "saving_label": "Saving your homecoming…"
 }

@@ -1,0 +1,76 @@
+{
+  "source_head": "077ffbb1d457bc9682f86860c5e649bf2de4646c",
+  "reviewer": {
+    "reviewer": "/root/f20_strict_source_review",
+    "result": "SOURCE_RECHECK_PASS_ONLY",
+    "criteria": "F20#0-#4 all NOT_MET",
+    "findings_resolved": [
+      "Missing HomeKey instruction/premature farm beacon in Meadows",
+      "Delayed canonical context dropped finale handoff"
+    ]
+  },
+  "sources": [
+    {
+      "path": "scripts/story/regional_homecoming.gd",
+      "working_tree_sha256": "8ea18816b280f6aa0abbd3882b1510cdfd48f4805a57b97aee80b0a10ea88b60",
+      "git_content_sha256": "f8ac5d427f64cfed5ce1e58c0e9aaf8c685a61d04101e0d8fc16685c93c2e6d5",
+      "git_blob_sha1": "ce188e2aca79c96bd9cffdcaabd76c21870299a4"
+    },
+    {
+      "path": "scripts/ui/regional_credits.gd",
+      "working_tree_sha256": "3e0f7817141beac87e9688dfcb4f738082662a24983981a9d653cb1209161c1c",
+      "git_content_sha256": "3e0f7817141beac87e9688dfcb4f738082662a24983981a9d653cb1209161c1c",
+      "git_blob_sha1": "fb38b4c4f19cbe51c57620da811d83b5cc2c90fe"
+    },
+    {
+      "path": "scripts/world/stormwood_ending.gd",
+      "working_tree_sha256": "de17a0e1b80aa6dafaa8e1ae654ea9a4a34a46bd134c97a868f7fdce6a588863",
+      "git_content_sha256": "de17a0e1b80aa6dafaa8e1ae654ea9a4a34a46bd134c97a868f7fdce6a588863",
+      "git_blob_sha1": "d548759dfbecf297baf76378963baa21d66b17a0"
+    },
+    {
+      "path": "data/dialogue/homecoming.json",
+      "working_tree_sha256": "ae21df471d7cc581d4bbe88b88aeeea6db522dbe2f8acec1924bf244499b6cbe",
+      "git_content_sha256": "ae21df471d7cc581d4bbe88b88aeeea6db522dbe2f8acec1924bf244499b6cbe",
+      "git_blob_sha1": "1dcdd5bc3690f2a18be66c288336b77fe9926a7a"
+    },
+    {
+      "path": "data/config/regional_credits.json",
+      "working_tree_sha256": "a6829912dc87a929b652e349cd03735dfaa377819153f317c148f5dd70cc7a4b",
+      "git_content_sha256": "a6829912dc87a929b652e349cd03735dfaa377819153f317c148f5dd70cc7a4b",
+      "git_blob_sha1": "10c4116c11aea5dac9d400aadc306d9c2d530dc0"
+    },
+    {
+      "path": "data/config/regional_ending_objectives.json",
+      "working_tree_sha256": "3bdbbd18ce5c50c56c7a0540a753ba0fdf18bb9798a45a84b776295775d3d33c",
+      "git_content_sha256": "3bdbbd18ce5c50c56c7a0540a753ba0fdf18bb9798a45a84b776295775d3d33c",
+      "git_blob_sha1": "9e653ed6d65e95aea56e372c5fa3c3b6f5a51cf6"
+    },
+    {
+      "path": "tests/test_regional_homecoming.gd",
+      "working_tree_sha256": "5e185279ad47977ddace14e5bfe86ffdfd2f99e31c0e0dfe0ab6e9ede8c32fe0",
+      "git_content_sha256": "5e185279ad47977ddace14e5bfe86ffdfd2f99e31c0e0dfe0ab6e9ede8c32fe0",
+      "git_blob_sha1": "1e5c15d2f862ed3de60985f02ae2e6a79075274f"
+    },
+    {
+      "path": "tests/test_homecoming_ending_invariants.gd",
+      "working_tree_sha256": "789d116786fa97d1c733a6437b89dfb561a28781bc21764a063e99c4f6ec71ce",
+      "git_content_sha256": "789d116786fa97d1c733a6437b89dfb561a28781bc21764a063e99c4f6ec71ce",
+      "git_blob_sha1": "16fb80f423b4448fb102cc9532724e09687563ed"
+    },
+    {
+      "path": "tests/fixtures/regional_ending_owner.gd",
+      "working_tree_sha256": "e87fb270e875209e7cd22cdb8e59623158a7c8b17abffb1db830c391c810d7f0",
+      "git_content_sha256": "e87fb270e875209e7cd22cdb8e59623158a7c8b17abffb1db830c391c810d7f0",
+      "git_blob_sha1": "f188f596b93ea0e485519baabc5c1658b58e6ffc"
+    },
+    {
+      "path": "ralph/reports/REORDER/f20/receipt-contract.json",
+      "working_tree_sha256": "06b6cc635d13ab7a4886dbbc231b450e35ad0b7c2d6260d815da6b3b95b466ff",
+      "git_content_sha256": "66b48a28e7c965d9e82aff049310b00c16f5c5b892e5b11d5bef21d646844be2",
+      "git_blob_sha1": "d37ae116cd5c5682da968ae109a7c5cf30c54752"
+    }
+  ],
+  "engine_runs": 0,
+  "verdict": "No remaining concrete owned bug in bounded source recheck. All actual acceptance evidence remains required."
+}
