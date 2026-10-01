@@ -171,6 +171,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	outer.add_child(_upgrade_label)
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size=Vector2(780,210 if _station.get_meta("building_id","") == "forge" else 80)
+	if not _gear_cfg.is_empty() and _station.get_meta("building_id","") in ["workbench","altar"]: scroll.custom_minimum_size.y=210
 	if _station.get_meta("building_id","") in ["farm","den"]: scroll.custom_minimum_size.y=460
 	var viewport_height := get_viewport().get_visible_rect().size.y
 	scroll.custom_minimum_size.y=minf(scroll.custom_minimum_size.y,maxf(120,viewport_height*0.28 if _station.get_meta("building_id","") == "forge" else viewport_height*0.5))
@@ -345,7 +346,15 @@ func _gear_button(controls: VBoxContainer, label: String, action: String, uid: S
 		details.text=". ".join(parts)
 		details.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 		details.add_theme_font_size_override("font_size",UITokens.FONT_READ)
+		_station_button(controls,"Details: "+label,func() -> void:
+			_status.text=details.text
+			_status_left=STATUS_SECONDS,JSON.stringify(["gear_details",action,uid,slot,id]))
+		var reader: Button = _station_buttons[-1]
+		reader.set_meta("station_readonly",true)
 		controls.add_child(details)
+		reader.focus_entered.connect(func() -> void:
+			var scroll := controls.get_parent() as ScrollContainer
+			if scroll != null: scroll.ensure_control_visible(details))
 
 func _gear_action(fields: Dictionary) -> void:
 	if not _station_intent.is_empty(): return
@@ -383,7 +392,9 @@ func _refresh_next_upgrade() -> void:
 		_upgrade_label.text="Next upgrade: %s — %s. %s" % [str(upgrade.get("name","")),str(upgrade.get("unlocks","")),str(upgrade.get("missing_requirement",""))]
 	var gear_context := _gear_context(view) if not _gear_cfg.is_empty() else {}
 	for button: Button in _station_buttons:
-		if button.text == "Retry original transaction":
+		if button.get_meta("station_readonly",false) == true:
+			button.disabled=false
+		elif button.text == "Retry original transaction":
 			button.disabled=_station_intent.is_empty()
 		else:
 			var revision: Variant = view.get("registry_revision")
