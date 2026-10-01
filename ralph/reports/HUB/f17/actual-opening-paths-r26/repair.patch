@@ -1,0 +1,226 @@
+diff --git a/scripts/player/player_controller.gd b/scripts/player/player_controller.gd
+index 06f5a72a55..29a6fbbf35 100644
+--- a/scripts/player/player_controller.gd
++++ b/scripts/player/player_controller.gd
+@@ -770,9 +770,9 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
+ 	# Godot's floor-stop mode is for an idle body, but leaving it enabled while
+ 	# the player actively climbs can pin the capsule to a perfectly valid floor
+ 	# without any wall contact. Production Rise receipts reproduced this on
+-	# 20-degree authored treads. Keep idle slope stability, and release the stop
+-	# mode only while locomotion is actually requesting horizontal travel.
+-	floor_stop_on_slope = direction == Vector3.ZERO
++	# 20-degree authored treads. Keep idle slope stability and retain native
++	# shallow recovery on flat floors; active movement releases the stop mode.
++	floor_stop_on_slope = idle_slope_stop(direction, get_floor_normal(), up_direction)
+ 	floor_constant_speed = direction != Vector3.ZERO
+ 
+ 	var game := get_node_or_null(^"/root/Game")
+@@ -799,6 +799,13 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
+ 	velocity.z = horizontal.z
+ 
+ 
++## On a flat floor the native idle slope-stop branch can undo a shallow
++## recovery by subtracting its travel. Keep that recovery in the one ordinary
++## move_and_slide pass; sloped floors still need their original idle stop.
++static func idle_slope_stop(direction: Vector3, floor_normal: Vector3, up: Vector3) -> bool:
++	return direction == Vector3.ZERO and not floor_normal.is_equal_approx(up)
++
++
+ func _face(direction: Vector3, delta: float) -> void:
+ 	if _model == null:
+ 		return
+diff --git a/tests/helpers/gate_a_npc_gather_segment.gd b/tests/helpers/gate_a_npc_gather_segment.gd
+index 6a9787c490..6a0a845fa3 100644
+--- a/tests/helpers/gate_a_npc_gather_segment.gd
++++ b/tests/helpers/gate_a_npc_gather_segment.gd
+@@ -226,7 +226,7 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
+ 		elif not await _wait_world_owned(30):
+ 			_fail("%s cycle %d left stale dialogue ownership" % [who, cycle + 1])
+ 			return false
+-		if not await _prove_movement_resumed():
++		if not await _prove_movement_resumed(door, npc.global_position):
+ 			_fail("%s cycle %d returned visually but world movement stayed dead" % [who, cycle + 1])
+ 			return false
+ 		_checkpoint("%s cycle %d exited and movement resumed" % [who, cycle + 1])
+@@ -872,7 +872,7 @@ func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, author
+ 	return arrived
+ 
+ 
+-func _prove_movement_resumed() -> bool:
++func _prove_movement_resumed(door: Node3D = null, inside_target: Vector3 = Vector3.ZERO) -> bool:
+ 	# Say WHICH of the four ways this fails. "Movement stayed dead" covers a
+ 	# paused tree, a stale input owner, a cleared locomotion flag and a player
+ 	# who simply could not walk anywhere, and those are four different bugs
+@@ -901,6 +901,15 @@ func _prove_movement_resumed() -> bool:
+ 	if not bool(_player.call("locomotion_enabled")):
+ 		print("movement dead: locomotion_enabled is false after two seconds of waiting")
+ 		return false
++	# An indoor greeting first returns toward the SAME doorway-axis point already
++	# used by _exit_through. The camera's forward nudge pointed into guest
++	# furniture in CI6173; the aisle uses these existing frames instead.
++	var aisle := Vector3.INF
++	if door != null:
++		aisle = doorway_resume_goal(door.global_position, _door_outward(door, inside_target))
++		if not aisle.is_finite():
++			_fail("invalid doorway-axis movement-resume hint")
++			return false
+ 	# Try four physical directions because a villager counter or wall can block
+ 	# one without implying dead world input.  This is ordinary walking, not a
+ 	# relocation shortcut, and leaves the player wherever the successful step
+@@ -909,10 +918,13 @@ func _prove_movement_resumed() -> bool:
+ 		var before := _player.global_position
+ 		_nav.reset()
+ 		for _i in 22:
+-			var basis: Basis = _rig.call("planar_basis")
+-			var requested := basis * Vector3(axis.x, 0.0, axis.y)
+-			_nav.push_once(requested)
+-			await _tree.physics_frame
++			if axis == Vector2(0, -1) and aisle.is_finite():
++				await _nav.step(aisle)
++			else:
++				var basis: Basis = _rig.call("planar_basis")
++				var requested := basis * Vector3(axis.x, 0.0, axis.y)
++				_nav.push_once(requested)
++				await _tree.physics_frame
+ 			if _nav.refused():
+ 				_stop_left_stick()
+ 				_fail("Native opening refused during movement resume: " + _nav.refusal_reason())
+@@ -933,6 +945,15 @@ func _prove_movement_resumed() -> bool:
+ 	return false
+ 
+ 
++## Heading only. Original door, inward distance, stick input, frame allowance,
++## displacement witness and both actual native guards remain decisive.
++static func doorway_resume_goal(door: Vector3, outward: Vector3) -> Vector3:
++	if not door.is_finite() or not outward.is_finite() or absf(outward.y) > 0.00001 \
++			or absf(outward.length_squared() - 1.0) > 0.00001:
++		return Vector3.INF
++	return door - outward * DOOR_STEP_IN
++
++
+ func _wait_dialogue_open(budget: int) -> bool:
+ 	for _i in budget:
+ 		if bool(_dialogue.call("is_open")):
+diff --git a/tests/helpers/gate_a_opening_drive.gd b/tests/helpers/gate_a_opening_drive.gd
+index ab507385ee..cb419ed585 100644
+--- a/tests/helpers/gate_a_opening_drive.gd
++++ b/tests/helpers/gate_a_opening_drive.gd
+@@ -1275,6 +1275,11 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+ 			continue
+ 		await _drive_body_toward(_player, goal, 1)
+ 	_stop_left_stick()
++	print("WILD_APPROACH_FINAL ", JSON.stringify({"acceptance": false,
++		"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
++		"target": [target.global_position.x, target.global_position.y, target.global_position.z],
++		"road_index": road_index, "road_size": road.size(), "on_floor": _player.is_on_floor(),
++		"physics_frames": int(Engine.get_physics_frames() - started_frame), "budget": budget}))
+ 	print("wild approach: exhausted after closest %.2fm; final %.2fm; visible=%s alive=%s prompt='%s' winner=%s" % [
+ 		closest,
+ 		_player.global_position.distance_to(target.global_position),
+@@ -1301,17 +1306,33 @@ func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> boo
+ 
+ 
+ func _drive_body_toward(body: Node3D, point: Vector3, frames: int) -> void:
+-	var direction := point - body.global_position
++	for _i in frames:
++		# Re-aim against the actual body and current camera on every requested
++		# tick. A zero heading must still yield: otherwise a close airborne
++		# waypoint can exhaust the loop without letting gravity settle it.
++		var direction := point - body.global_position
++		var basis: Basis = _rig.call("planar_basis")
++		var axis := drive_axis(direction, basis)
++		if not axis.is_finite():
++			_stop_left_stick()
++			_fail("nonfinite legacy ordinary stick heading")
++			return
++		_send_axis(JOY_AXIS_LEFT_X, axis.x)
++		_send_axis(JOY_AXIS_LEFT_Y, axis.y)
++		# Parsed axes otherwise wait for a process-frame flush. Several physics
++		# ticks can then use an older camera-relative heading before delivery.
++		Input.flush_buffered_events()
++		await _tree.physics_frame
++
++
++static func drive_axis(direction: Vector3, basis: Basis) -> Vector2:
++	if not direction.is_finite() or not basis.is_finite() or absf(basis.determinant()) < 0.00001:
++		return Vector2.INF
+ 	direction.y = 0.0
+ 	if direction.length_squared() < 0.01:
+-		_stop_left_stick()
+-		return
+-	var basis: Basis = _rig.call("planar_basis")
++		return Vector2.ZERO
+ 	var local := basis.inverse() * direction.normalized()
+-	_send_axis(JOY_AXIS_LEFT_X, local.x)
+-	_send_axis(JOY_AXIS_LEFT_Y, local.z)
+-	for _i in frames:
+-		await _tree.physics_frame
++	return Vector2(local.x, local.z)
+ 
+ 
+ func _close_dialogue(max_presses: int) -> bool:
+diff --git a/tests/test_gate_a_npc_gather_segment_contract.gd b/tests/test_gate_a_npc_gather_segment_contract.gd
+index dac376bc58..3e2ce45afa 100644
+--- a/tests/test_gate_a_npc_gather_segment_contract.gd
++++ b/tests/test_gate_a_npc_gather_segment_contract.gd
+@@ -195,3 +195,15 @@ func test_mira_return_uses_painted_bends_and_same_standoff_without_stepping_onto
+ 		Vector3(4, 0.2, 2), 0.4, 0.001, road), [], "a higher lip cannot inherit this full-capsule corridor")
+ 	assert_eq(SEGMENT.mira_approach_hint(Vector3.ZERO, Vector3(27, 0.85, 5), Vector3(27, 0.9, 7.9),
+ 		Vector3(4, 0.1, 2), 0.4, 0.01, road), [], "the original skin remains mandatory")
++
++
++func test_indoor_movement_resume_uses_the_existing_doorway_axis() -> void:
++	assert_true(SEGMENT.doorway_resume_goal(Vector3(44, 0.85, 7), Vector3.BACK).is_equal_approx(Vector3(44, 0.85, 4.8)),
++		"Bram's first resume heads along the central aisle rather than into the guest furniture")
++	assert_true(SEGMENT.doorway_resume_goal(Vector3(27, 0.85, 5), Vector3.BACK).is_equal_approx(Vector3(27, 0.85, 2.8)),
++		"Mira uses the same inward point as the original exit leg")
++	assert_true(SEGMENT.doorway_resume_goal(Vector3(5, 1, 8), Vector3.LEFT).is_equal_approx(Vector3(7.2, 1, 8)))
++	assert_false(SEGMENT.doorway_resume_goal(Vector3.INF, Vector3.BACK).is_finite())
++	assert_false(SEGMENT.doorway_resume_goal(Vector3.ZERO, Vector3.ZERO).is_finite())
++	assert_false(SEGMENT.doorway_resume_goal(Vector3.ZERO, Vector3.UP).is_finite())
++	assert_false(SEGMENT.doorway_resume_goal(Vector3.ZERO, Vector3.BACK * 2.0).is_finite())
+diff --git a/tests/test_opening_beats.gd b/tests/test_opening_beats.gd
+index 92c2cb645a..70816339e7 100644
+--- a/tests/test_opening_beats.gd
++++ b/tests/test_opening_beats.gd
+@@ -287,3 +287,16 @@ func _beat_effects_in_the_dialogue() -> Array[String]:
+ 				if str(parts[0]) == "beat" and not out.has(str(parts[1])):
+ 					out.append(str(parts[1]))
+ 	return out
++
++
++func test_legacy_drive_axis_reaims_against_current_camera_basis() -> void:
++	var yaw := Basis(Vector3.UP, PI / 2.0)
++	var axis := OPENING_DRIVE.drive_axis(Vector3(4, 7, 0), yaw)
++	var world := yaw * Vector3(axis.x, 0, axis.y)
++	assert_true(world.is_equal_approx(Vector3.RIGHT), "vertical target height cannot steer horizontal travel")
++	assert_true(OPENING_DRIVE.drive_axis(Vector3.FORWARD, Basis.IDENTITY).is_equal_approx(Vector2(0, -1)))
++	assert_true(OPENING_DRIVE.drive_axis(Vector3.FORWARD, yaw).is_equal_approx(Vector2.RIGHT))
++	assert_eq(OPENING_DRIVE.drive_axis(Vector3(0.01, 7, 0), yaw), Vector2.ZERO,
++		"an arrived horizontal heading supplies neutral stick while its requested physics tick still settles")
++	assert_false(OPENING_DRIVE.drive_axis(Vector3.INF, yaw).is_finite())
++	assert_false(OPENING_DRIVE.drive_axis(Vector3.FORWARD, Basis(Vector3.ZERO, Vector3.ZERO, Vector3.ZERO)).is_finite())
+diff --git a/tests/test_player_runaway_velocity_guard.gd b/tests/test_player_runaway_velocity_guard.gd
+index 5aa31c7714..79e1b88f5f 100644
+--- a/tests/test_player_runaway_velocity_guard.gd
++++ b/tests/test_player_runaway_velocity_guard.gd
+@@ -28,3 +28,19 @@ func test_real_airborne_fall_keeps_its_direction_when_bounded() -> void:
+ 	assert_almost_eq(player.velocity.length(), 120.0, 0.001)
+ 	assert_true(player.velocity.y < 0.0)
+ 	player.free()
++
++
++func test_idle_flat_floor_keeps_native_recovery_while_slopes_keep_the_stop() -> void:
++	assert_false(PLAYER.idle_slope_stop(Vector3.ZERO, Vector3.UP, Vector3.UP),
++		"CI6173 Tam's flat native UP floor must retain its ordinary recovery")
++	assert_true(PLAYER.idle_slope_stop(Vector3.ZERO, Vector3(0, cos(0.35), sin(0.35)), Vector3.UP),
++		"idle stability on the original sloped treads remains enabled")
++	assert_false(PLAYER.idle_slope_stop(Vector3.FORWARD, Vector3(0, cos(0.35), sin(0.35)), Vector3.UP),
++		"active locomotion retains its original slope policy")
++	assert_true(PLAYER.idle_slope_stop(Vector3.ZERO, Vector3.ZERO, Vector3.UP),
++		"missing floor normal cannot masquerade as a flat floor")
++
++
++func test_idle_flat_floor_policy_uses_the_current_up_direction() -> void:
++	assert_false(PLAYER.idle_slope_stop(Vector3.ZERO, Vector3.RIGHT, Vector3.RIGHT))
++	assert_true(PLAYER.idle_slope_stop(Vector3.ZERO, Vector3.UP, Vector3.RIGHT))
