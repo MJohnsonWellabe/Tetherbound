@@ -988,9 +988,6 @@ func _native_tick(delta: float) -> void:
 		_production_input = Vector2.ZERO
 		_production_live_pre_us = 0
 		_production_live_post_us = 0
-		_production_controller_observed = false
-		_observed_live = null
-		_production_live_phase = &"unavailable"
 		if OS.get_thread_caller_id() != OS.get_main_thread_id():
 			_native_tick_impl(delta) # Uses the existing deferred stop on wrong thread.
 			return
@@ -1093,8 +1090,6 @@ var _production_flush_us := 0
 var _production_input := Vector2.ZERO
 var _production_live_pre_us := 0
 var _production_live_post_us := 0
-var _production_controller_observed := false
-var _production_live_phase: StringName = &"unavailable"
 var _recoveries_at_start := -1
 var _observed_choice := 0
 var _retry_at := STALL_FRAMES
@@ -1156,9 +1151,7 @@ func _observed_live_clear() -> bool:
 
 func _production_live_check(post: bool) -> bool:
 	var began: int = Time.get_ticks_usec()
-	_observed_live = null
 	var clear: bool = _observed_live_clear()
-	_production_live_phase = (&"post" if post else &"pre") if _observed_live != null else &"unavailable"
 	if post:
 		_production_live_post_us = Time.get_ticks_usec() - began
 	else:
@@ -1218,7 +1211,6 @@ func _production_observe() -> void:
 		_production_stop_input()
 		_production_record()
 		return
-	_production_controller_observed = true
 	var contract_began: int = Time.get_ticks_usec()
 	var contract_ok: bool = _trainer_contract()
 	var contract_us: int = Time.get_ticks_usec() - contract_began
@@ -1300,10 +1292,6 @@ func _production_observe() -> void:
 			"callback_cap_us": FRAME_QUERY_US, "stage": "post",
 			"serialization_and_print": "deferred; excluded; snapshot included",
 			"between_callbacks": "controller and other nodes; excluded; not controller-only"}
-		record["callback_own_us"] = _pre_observe_us + Time.get_ticks_usec() - began
-		record["checked_start"] = _checked_start
-	# Last success check includes snapshot scheduling and all timing metadata.
-	# Only refused cleanup/terminal diagnostic updates may follow this guard.
 	if Time.get_ticks_usec() > _deadline:
 		_checked_start = false
 		_stop_geometry("production observation cooperative callback deadline")
@@ -1324,9 +1312,9 @@ func _production_observe() -> void:
 		else:
 			_recorded_failure = true
 			record["refusal"] = _reason # Replace the queued sample, never a duplicate.
-		if not record.is_empty():
-			record["callback_own_us"] = _pre_observe_us + Time.get_ticks_usec() - began
-			record["checked_start"] = false
+	if not record.is_empty():
+		record["callback_own_us"] = _pre_observe_us + Time.get_ticks_usec() - began
+		record["checked_start"] = _checked_start
 
 
 func _production_record() -> Dictionary:
@@ -1349,7 +1337,7 @@ func _production_record() -> Dictionary:
 				"depth": _observed_live.get_collision_depth(index), "local_shape": _observed_live.get_collision_local_shape(index),
 				"collider_rid": str(_observed_live.get_collider_rid(index)), "collider_shape": _observed_live.get_collider_shape(index)})
 	var slides: Array = []
-	for slide in (mini(CONTACTS, _body.get_slide_collision_count()) if _production_controller_observed else 0):
+	for slide in mini(CONTACTS, _body.get_slide_collision_count()):
 		var collision: KinematicCollision3D = _body.get_slide_collision(slide)
 		if collision == null:
 			break
@@ -1362,21 +1350,18 @@ func _production_record() -> Dictionary:
 	var record: Dictionary = {"acceptance": false,
 		"frame": _observed_frames, "player": _contact_vector(_body.global_position), "request": _contact_vector(_request),
 		"on_floor": _body.is_on_floor(), "on_wall": _body.is_on_wall(), "on_ceiling": _body.is_on_ceiling(),
-		"actual_delta": _contact_vector(_body.global_position - _production_before) if _production_controller_observed else [],
-		"slide_motion": _contact_vector(_body.get_real_velocity() * _production_delta) if _production_controller_observed else [],
+		"actual_delta": _contact_vector(_body.global_position - _production_before),
+		"slide_motion": _contact_vector(_body.get_real_velocity() * _production_delta),
 		"progress_m": _observed_distance, "stall_frames": _stalled, "wall_frames": _observed_wall_frames,
-		"ceiling_frames": _observed_ceiling_frames,
-		"slide_count": _body.get_slide_collision_count() if _production_controller_observed else -1,
-		"swept_depth": _observed_slide_depth if _production_controller_observed else -1.0, "slide_contacts": slides,
+		"ceiling_frames": _observed_ceiling_frames, "slide_count": _body.get_slide_collision_count(),
+		"swept_depth": _observed_slide_depth, "slide_contacts": slides,
 		"safe_margin": _body.safe_margin, "floor_angle": _body.floor_max_angle, "snap": _body.floor_snap_length, "mask": _body.collision_mask,
 		"recoveries": int(_body.call("unstick_count")) if _body.has_method("unstick_count") else -1,
 		"live_recovery_travel": _contact_vector(_observed_live.get_travel()) if _observed_live != null else [],
 		"live_contacts": contacts, "queries": _queries, "total_queries": _total_queries,
 		"requests": _requests, "plans": _plans, "provisional_choice": _observed_choice, "refusal": _reason,
 		"physics_frame": Engine.get_physics_frames(), "delivered_input": [_production_input.x, _production_input.y],
-		"controller_wanted_dir": _contact_vector(_body.get("_wanted_dir")) if _production_controller_observed else [],
-		"controller_observation_available": _production_controller_observed,
-		"live_state_phase": _production_live_phase,
+		"controller_wanted_dir": _contact_vector(_body.get("_wanted_dir")),
 		"diagnostic_output_outside_physics_cap": true}
 	_tick.records.append(record)
 	if not _tick.flush_pending:
