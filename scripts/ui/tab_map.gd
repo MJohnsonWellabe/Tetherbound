@@ -1640,27 +1640,55 @@ func _available_realms() -> Array[String]:
 	return out
 
 
-## Only actual host-world or personal canonical portal unlocks make another
-## live destination viewable. Discovery and old world-key flags are not entry.
+## Portal mode uses the same admitted destination predicate as real travel.
+## While that runtime is OFF, preserve the historical key/discovery reader.
+func _portal_runtime_ready() -> bool:
+	var game := state()
+	var session: Variant = game.get("session") if game != null else null
+	if not session is Node or not is_instance_valid(session) or not session.has_method("portal_runtime_ready"):
+		return false
+	var ready: Variant = session.call("portal_runtime_ready")
+	return ready is bool and ready == true
+
+
 func _realm_unlocked(realm_id: String) -> bool:
 	var game := state()
 	if game == null:
 		return false
-	var order := preload("res://scripts/data/biome_order.gd")
-	var biome := order.canonical_id(realm_id)
-	if not order.ids(false).has(biome):
-		return false
+	if _portal_runtime_ready():
+		var order := preload("res://scripts/data/biome_order.gd")
+		if not order.ids(false).has(order.canonical_id(realm_id)):
+			return false
+		if _player_realm() == realm_id:
+			return true
+		if not game.has_method("can_enter_realm"):
+			return false
+		var permitted: Variant = game.call("can_enter_realm", realm_id)
+		return permitted is bool and permitted == true
 	if _player_realm() == realm_id:
 		return true
+	var key_flag := _realm_entry_key(realm_id)
 	var progression: RefCounted = game.get("progression")
-	if progression == null or not progression.has_method("portal_is_unlocked"):
-		return false
-	return bool(progression.call("portal_is_unlocked", biome))
+	if not key_flag.is_empty() and progression != null and bool(progression.call("has", key_flag)):
+		return true
+	var map_state := _realm_map_state(realm_id)
+	return map_state != null and map_state.has_method("discovered_fraction") \
+		and float(map_state.call("discovered_fraction")) > 0.0
 
 
-## Retained public helper, answered by the same finite canonical predicate.
+## Historical alternate Cloudreach flags remain valid only in legacy mode.
 func _cloudreach_unlocked() -> bool:
-	return _realm_unlocked("cloudreach")
+	if _realm_unlocked("cloudreach"):
+		return true
+	if _portal_runtime_ready():
+		return false
+	var game := state()
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null:
+		for flag: Variant in _realm_link_unlock_flags():
+			if bool(progression.call("has", str(flag))):
+				return true
+	return false
 
 
 func _configured_map_realms() -> Array[String]:
@@ -1759,7 +1787,7 @@ func _realm_link_unlock_flags() -> Array:
 ## map may promise a way through before one exists); Cloudreach always shows
 ## the way back, since arriving there requires the way in to already exist.
 func _realm_link_visible() -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if _portal_runtime_ready():
 		return false
 	var realm_id := _display_realm()
 	if realm_id == "meadows":
