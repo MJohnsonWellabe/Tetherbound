@@ -1,0 +1,97 @@
+{
+  "head": "5e82c8991d9dde5108e70af5c19ae0f5003de97d",
+  "tree": {
+    "verdict": "SCOPED_NATIVE_PASS",
+    "unit": "8 tests, 59 assertions, 0 failed",
+    "original_probe": "7/7 waypoints within original 180 frames; exact physical prompt activated",
+    "source_review": "F29 R24 SOURCE_PASS 108",
+    "limits": "No opening-path, campaign receipt or whole-world clearance credit; original R23 failure retained"
+  },
+  "warden": {
+    "head": "cf1bf765b398296a74a12d35903a6dd632c9ad83",
+    "verdict": "FAIL",
+    "native_exit": 2,
+    "strict_wrapper_exit": 1,
+    "failure": "shared trainer HP fixture is not bound to this opponent",
+    "source_closure_unchanged": true,
+    "strict_log_errors": [],
+    "handles_ended": true,
+    "returned_owner": "Existing F22 session; classification/body binding fix in progress",
+    "limits": "Original 95-second/5400-frame probe; no payout/reload/rejoin PASS"
+  },
+  "ci_review": {
+    "scheduling": "F29 SOURCE_PASS 186",
+    "final_cleanup": "F29 SOURCE_PASS 39 at 5e82c8991d",
+    "local": "actionlint PASS; unchanged release-helper 7 tests PASS",
+    "pending": "All eight POSIX process cases and full shared scheduled CI execute on Linux; speed gains unmeasured"
+  },
+  "files": [
+    {
+      "source": ".tmp/closeout/returned-unit-5e82c8991d9d-8250ff4c/result.json",
+      "sealed": "tree-unit-result.json.gz",
+      "bytes": 422,
+      "sha256": "585e58d183bea40c06371c5cde87d850c5b450b16bae7a3283d135c9d09f590c"
+    },
+    {
+      "source": ".tmp/closeout/returned-unit-5e82c8991d9d-8250ff4c/tests.log",
+      "sealed": "tree-unit-tests.log.gz",
+      "bytes": 14054,
+      "sha256": "9db2bf37cca08e4e498d331755334d33544ec1ccb3176492885c5c2090f67523"
+    },
+    {
+      "source": ".tmp/closeout/returned-smoke-5e82c8991d9d-_probe_scatter_tree_prompt_height/result.json",
+      "sealed": "tree-native-result.json.gz",
+      "bytes": 399,
+      "sha256": "d0e11b2042d4fe115cd623670e9347facb8758fe35d24904df7cd9bf59522090"
+    },
+    {
+      "source": ".tmp/closeout/returned-smoke-5e82c8991d9d-_probe_scatter_tree_prompt_height/smoke.log",
+      "sealed": "tree-native-smoke.log.gz",
+      "bytes": 45642,
+      "sha256": "16fcbd180067148e87c60a9aeaecbcf77eb8eb2a42b1f93b914f030e4273c0f1"
+    },
+    {
+      "source": ".tmp/closeout/returned-net-cf1bf765b398-veridian_relic_key/receipt.json",
+      "sealed": "warden-receipt.json.gz",
+      "bytes": 737103,
+      "sha256": "9266e48cba018ca95ada5a6ed33ae0f29e7664ab32c8d84911260087d60b1e2c"
+    },
+    {
+      "source": ".tmp/closeout/returned-net-cf1bf765b398-veridian_relic_key/net-run/NET_RUN.json",
+      "sealed": "warden-net-run-NET_RUN.json.gz",
+      "bytes": 2857,
+      "sha256": "93cd7a5dae6cd2b48bfce44a91312a0a0264de906aa30e50ea4b3ba1f98aa1fb"
+    },
+    {
+      "source": ".tmp/closeout/returned-net-cf1bf765b398-veridian_relic_key/net-run/SUMMARY.md",
+      "sealed": "warden-net-run-SUMMARY.md.gz",
+      "bytes": 326,
+      "sha256": "be125f6b3001ca76fe7f545fe153da555d6740265a53beef632488180a2de0e5"
+    },
+    {
+      "source": ".tmp/closeout/returned-net-cf1bf765b398-veridian_relic_key/coordinator.log",
+      "sealed": "warden-log-0.gz",
+      "bytes": 3260,
+      "sha256": "31671adca392c4757abe830178acd9525e0f71f4a52556396280426a14c445ea"
+    },
+    {
+      "source": ".tmp/closeout/returned-net-cf1bf765b398-veridian_relic_key/initial-home/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "sealed": "warden-log-1.gz",
+      "bytes": 3234,
+      "sha256": "c26543f75a051248c8f36bc87a3587770f8fcca2ae025a7599a99c6e2fa63242"
+    },
+    {
+      "source": ".tmp/closeout/returned-net-cf1bf765b398-veridian_relic_key/net-run/peer-0.log",
+      "sealed": "warden-log-2.gz",
+      "bytes": 12178,
+      "sha256": "48ffa3601419155bc0d3c0ae81338cc38e2f43c30a35d9037e30a238ee237b61"
+    },
+    {
+      "source": ".tmp/closeout/returned-net-cf1bf765b398-veridian_relic_key/net-run/peer-1.log",
+      "sealed": "warden-log-3.gz",
+      "bytes": 11329,
+      "sha256": "e9b5e9911839ca28c886466dcc91ad27fadc821469aa43b5f30c54536114dfdd"
+    }
+  ],
+  "no_criterion_credit": true
+}
