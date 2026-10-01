@@ -51,7 +51,15 @@
   "runtime_visual_acceptance": "OPEN",
   "flags": "unchanged OFF",
   "shared_writes": false,
-  "shared_ItemDB_binding": "Foundation sole writer requested canonical BUILDABLES_PATH active_catalogue projection with stations config; custom fixtures untouched; owner SHA pending",
+  "shared_ItemDB_binding": {
+    "owner": "Foundation sole shared writer",
+    "branch": "tb/foundations",
+    "source_commit": "79414dba5af30600309656fca2a3c030b22843e3",
+    "depends_on_owned_source": "d2ca82a501ef753090438c4d6cc0208ff9532a51",
+    "source_inspection": "Verified exact canonical BUILDABLES_PATH-only active_catalogue call with canonical stations config; custom fixture paths retain raw buildables; one catalogue read.",
+    "constructor_regression_cases": "tests/test_item_db_station_catalogue.gd; default OFF exact legacy, detached enabled canonical overlay, custom path raw; NOT RUN here",
+    "combined_engine_proof": "OPEN; ROOT only"
+  },
   "independent_review": "PASS_FOR_FLAG_OFF_CI_CATALOGUE_REPAIR_SOURCE on d2ca82a501ef753090438c4d6cc0208ff9532a51; no open bounded P1/P2; existing reviewer reused",
   "review_evidence": "ci-catalogue-review/verdict.json",
   "open_prerequisites": [

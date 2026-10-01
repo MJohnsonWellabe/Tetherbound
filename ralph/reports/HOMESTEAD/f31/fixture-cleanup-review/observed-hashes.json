@@ -1,0 +1,29 @@
+{
+  "source_commit": "46ad6e84ec88a095e99e204bf64624aa5a588c0e",
+  "predecessor": "6634be1bac4f0cb1fdcd5bd502a168647f447830",
+  "files": [
+    {
+      "path": "tests/test_build_placer_preview.gd",
+      "before_git_sha256": "a1e9e583054b3b6e3cabb35e8b1dc23c4d1995fcba832d6c8bd1db77341d8a7d",
+      "before_git_blob_oid": "df9fd915b74d5798c6a82f7fcd944dd7f081b81c",
+      "after_git_sha256": "6a1d708bd34495d4660c470f22a615c8d3a339dfc655edb2cf2ed56c3bc4023f",
+      "working_sha256": "0b25a8c2e538c95a843089b90eb5bb78373a33aae66bfafa94156a5063336cad",
+      "after_git_blob_oid": "3b41122df1524901d0f0a4635ae880d1a5adad7c",
+      "manifest_match": true
+    }
+  ],
+  "static_source_comparisons": {
+    "case_bodies_exact_except_factory": true,
+    "case_count": 12,
+    "before_bare_allocation_count": 10,
+    "after_bare_allocation_count": 1,
+    "after_registered_factory_call_count": 10,
+    "runner_unchanged": true
+  },
+  "returned_root_log_sha256": "3c19146f420b6850379da586eb35aad7ae84f411d135f21dfb369b2f43a8bc8b",
+  "diff_scope": [
+    "tests/test_build_placer_preview.gd"
+  ],
+  "source_only": true,
+  "engine_or_unit_tests_run": false
+}
