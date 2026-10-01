@@ -230,7 +230,7 @@ static func stage_core(record: Dictionary, character: String, revision: int,
 		var equipment := EQUIPMENT.new()
 		equipment.configure(items)
 		equipment.load_data(next.equipment)
-		next.redesign_character.pouch_tier = equipment.command_pouch_tier()
+		next.redesign_character.command_pouch_tier = equipment.command_pouch_tier()
 	else:
 		gear[slot] = output
 		next.redesign_character.creatures[intent.creature_uid]["gear"] = gear
