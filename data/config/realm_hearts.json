@@ -1,5 +1,5 @@
 {
-  "_comment": "Cloudreach Phase 1. Realm Hearts are reusable realm rewards. Story ownership (earned/placed) stays in the progression flag store; exactly one active selection is persisted by RealmHeartState. Values are tunable.",
+  "_comment": "RD-10/F19: Meadows -> Tidewake -> Cloudreach -> Stormwood. The existing runtime id water denotes Tidewake. Personal earned/placed entitlements and one active power remain unchanged; legacy physical entry-key metadata is retained until the F18 transition consumer retires it.",
   "hearts": {
     "meadows": {
       "display_name": "Heart of Meadows",
@@ -8,18 +8,8 @@
       "power": {
         "display_name": "Meadowstride",
         "description": "Doubles maximum stamina.",
-        "max_stamina_multiplier": 2.0
+        "max_stamina_multiplier": 2
       }
-    },
-    "cloudreach": {
-      "placed_flag": "realm_heart_cloudreach_placed",
-      "power": {
-        "description": "Fly without spending stamina.",
-        "display_name": "Skyborne",
-        "fly_stamina_multiplier": 0.0
-      },
-      "display_name": "Wings of Cloudreach",
-      "earned_flag": "realm_heart_cloudreach_earned"
     },
     "water": {
       "display_name": "Tideglass Compass",
@@ -31,6 +21,16 @@
         "_comment": "Owner-set starting blessing: 10% damage reduction. Tune this multiplier; 0.9 means damage received is 90% of normal. This relic shares the single-active realm power slot.",
         "incoming_damage_multiplier": 0.9
       }
+    },
+    "cloudreach": {
+      "placed_flag": "realm_heart_cloudreach_placed",
+      "power": {
+        "description": "Fly without spending stamina.",
+        "display_name": "Skyborne",
+        "fly_stamina_multiplier": 0
+      },
+      "display_name": "Wings of Cloudreach",
+      "earned_flag": "realm_heart_cloudreach_earned"
     },
     "stormwood": {
       "placed_flag": "realm_heart_stormwood_placed",
@@ -49,6 +49,12 @@
       "scene": "res://scenes/world/meadows_playground.tscn",
       "entry_key_flag": ""
     },
+    "water": {
+      "map_world_path": "res://data/config/water_world.json",
+      "display_name": "Tidewake",
+      "scene": "res://scenes/world/water_archipelago.tscn",
+      "entry_key_flag": "realm_key_water"
+    },
     "cloudreach": {
       "display_name": "Cloudreach Cliffs",
       "scene": "res://scenes/world/cloudreach_cliffs.tscn",
@@ -60,12 +66,6 @@
       "map_tuning_path": "res://data/config/stormwood_atmosphere.json",
       "display_name": "The Stormwood",
       "scene": "res://scenes/world/stormwood.tscn"
-    },
-    "water": {
-      "map_world_path": "res://data/config/water_world.json",
-      "display_name": "Tidewake",
-      "scene": "res://scenes/world/water_archipelago.tscn",
-      "entry_key_flag": "realm_key_water"
     }
   }
 }
