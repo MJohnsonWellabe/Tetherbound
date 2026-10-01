@@ -8,7 +8,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Board:** [private rendered board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site); source/scoring/republishing: `ralph/reports/COORDINATOR/dashboard/`. **MET110/280:** original95/101, redesign15/179. No chapter accepted; candidates do not count before landing. F16 landed `b2ea1455a` via #467 with selected full CI36667090983 on game source7e3283098 and final gate36670808563; docs-only merge reused that proof. Rolling download remains historical8f5dd6ed2.
 
-**F17#5 closure:** independent189checks PASS; actual8 ENet join/reload captures + immutable finalizer527PASS. Evidence `ralph/reports/HUB/f17/hall-agreement-finalizer-r1/`; original budgetFAIL/fourENeterrors retained, transport/F49 OPEN.
+**F17#5:** 189source checks, 8actual ENet join/reload captures and immutable finalizer527PASS: `ralph/reports/HUB/f17/hall-agreement-finalizer-r1/`. Original budget/4ENet failures retained; transport/F49 OPEN.
 
 **Still-open original criteria and where they go (CODEX_START_HERE §7.5):**
 - F04#1, #2, #6, #7 (Meadows named fights) and F14#1 (Nerissa C3) fold into **F22#4**. Their last evidence and BAR files are under `ralph/reports/CLOSER/` (`f04_6/`, `f04_2_7/`, `f14_1_nerissa/`), `ralph/reports/MEADOWS/f04/` and `ralph/reports/TIDEWAKE/phase1/`. Recurring residue: contact-range overlap, the ally covering the foe's head, and HUD cover. **Every C2 number and judge capture taken before #448/#450 (the combat timing change) is stale** and must be re-taken on main.
@@ -26,7 +26,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Recent owner requests:** faster combat/re-aim #448/#450/#454/#457; sprint #449 (owner pad feel); straight village road #455. Mouse capture awaits real-PC confirmation. Exact prior details: Git history.
 
-**Closeout:** Owner requires one consolidated `tb/integration` PR519/full-CI gate; return failures to existing sessions and start none until work lands and criteria close. Later sidebar override allows archives before main/closure for complete consolidated content with no attributed owned-source CI failure. Six are confirmed in `ralph/reports/INTEGRATION/branch-closeout/session-archives.json`; zero acceptance credit. Prior coordinator paused; checkpoint `tb/redesign-board` preserved. All14 feature drafts/older histories consolidated; main unchanged `30fcc38fc591d5df3a7cfb122b9da58445467021`, MET110/280. Named repaired checks pass; fresh `8f29e7b3a1d1` fails365.318s: gathers/NPC exits/live catches pass, later stationary recovery exceeds unchanged skin and autosave rejects redesign state. Owners: F17 movement, Foundation save, existing F29 review. Remote CI36820599627 failed on `1fdf20938325`; final push/CI/main pending. Keep failed evidence/strict guards. Camp/rest/three beds/three tournament wins unproved; F17#4 OPEN. Evidence: `ralph/reports/INTEGRATION/branch-closeout/`; CODEX §0/§6.
+**Closeout:** Owner requires one `tb/integration` PR519/full-CI gate; return failures to existing sessions; start none until work lands and criteria close. Later sidebar override permits pre-main archives for complete consolidated content with no attributed owned-source CI failure. Six confirmed: `ralph/reports/INTEGRATION/branch-closeout/session-archives.json`; zero acceptance credit. Prior coordinator paused, `tb/redesign-board` preserved. All14 drafts/older histories consolidated; main unchanged `30fcc38fc591d5df3a7cfb122b9da58445467021`, MET110/280. Latest saver-diagnostic `bbe43027409c` fails231.683s on stone grounded-floor loss after wood; no save payload. Earlier `8f29e7b3a1d1` fails365.318s on raw recovery/skin comparison and autosave redesign rejection. F29 proves recovery travel differs from initial penetration; no replacement approved. Owners: F17 route/measurement, Foundation save, existing F29 review. Remote CI36820599627 failed on `1fdf20938325`; final push/CI/main pending. Guards/failures retained; camp/rest/three beds/three wins unproved, F17#4 OPEN. Evidence: `ralph/reports/INTEGRATION/branch-closeout/`; CODEX §0/§6.
 
 | Lane | Features | State |
 |---|---|---|
@@ -43,7 +43,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | `tb/hud` | F42 | Wave 2 |
 | `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43–F49 | Wave 3 |
 
-**Active ownership:** all fourteen feature drafts remain unaccepted although their source is consolidated in PR519. Six conversation archives are sidebar cleanup only. Shared save diagnosis has one Foundation writer; F17 owns the opening movement repair; existing F29 is the independent reviewer; ROOT owns integration and serialized Godot/GPU. Continue scoped necessary checks, actual earned proof, final consolidated CI and main landing, then independently close only proved criteria. Atomic rows show In progress, never source-only MET. Exact cuts/tasks: board status. References restored.
+**Ownership:** Foundation alone writes shared saves; F17 repairs opening; existing F29 reviews; ROOT integrates and serializes Godot/GPU. All14 drafts remain unaccepted; six archives only clean the sidebar. Scoped checks, actual proof, CI and main precede verified criterion closure; source alone never earns MET. Board has cuts; references restored.
 
 ### Open owner decisions
 
