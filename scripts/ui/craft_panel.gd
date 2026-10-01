@@ -100,7 +100,8 @@ func open_station(station: Node3D) -> void:
 	open(station)
 
 func _station_view() -> Dictionary:
-	if not is_instance_valid(_producer) or not _producer.has_method("homestead_personal_view"): return {}
+	if not is_instance_valid(_producer) or not _producer.has_method("homestead_personal_view") \
+			or game == null or game.get("session") != _producer: return {}
 	var raw: Variant = _producer.call("homestead_personal_view")
 	return raw if raw is Dictionary else {}
 
@@ -117,7 +118,7 @@ func _station_view_completed() -> void:
 func _refresh_station_view() -> void:
 	_view_refresh_pending=false
 	if not _open or not is_instance_valid(_station) or not is_instance_valid(_producer) \
-			or game == null or game.get("session") != _producer: return
+			or game == null: return
 	var view := _station_view()
 	var context := _gear_context(view)
 	if view == _presented_station_view and context == _presented_gear_context: return
@@ -380,6 +381,7 @@ func _refresh_next_upgrade() -> void:
 	_upgrade_label.visible=upgrade.get("visible") == true
 	if _upgrade_label.visible:
 		_upgrade_label.text="Next upgrade: %s — %s. %s" % [str(upgrade.get("name","")),str(upgrade.get("unlocks","")),str(upgrade.get("missing_requirement",""))]
+	var gear_context := _gear_context(view) if not _gear_cfg.is_empty() else {}
 	for button: Button in _station_buttons:
 		if button.text == "Retry original transaction":
 			button.disabled=_station_intent.is_empty()
@@ -387,6 +389,7 @@ func _refresh_next_upgrade() -> void:
 			var revision: Variant = view.get("registry_revision")
 			button.disabled=not _station_intent.is_empty() or not STATION_RULES.number(revision) \
 				or float(revision) != floor(float(revision)) or revision < 0 or button.get_meta("station_available",true) != true
+			if button.has_meta("station_available") and gear_context.is_empty(): button.disabled=true
 
 func _farm_action(action: String, crop: String) -> void:
 	if not is_instance_valid(_station): return
