@@ -1308,7 +1308,9 @@
       "icon": "res://assets/ui/icons/items/tm_charged.png",
       "blurb": "A burning orb that bursts when it reaches its target.",
       "description": "A burning orb that bursts when it reaches its target. Teaching it spends the disc, and it replaces the creature's charged move. Fire creatures can learn it.",
-      "move": "fireball"
+      "move": "fireball",
+      "world_model": "res://assets/props/tm_orb/tm_orb.glb",
+      "world_model_scale": 0.10531858873091102
     },
     "tm_thunder_break": {
       "name": "TM: Thunder Break",

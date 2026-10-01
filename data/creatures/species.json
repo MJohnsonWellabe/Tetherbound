@@ -1282,7 +1282,8 @@
       },
       "learnset": "cannonback",
       "evolution_source": "mosshell",
-      "wild_evolution_form": true
+      "wild_evolution_form": true,
+      "evolves_from": "mosshell"
     },
     "riptusk": {
       "display_name": "Riptusk",
@@ -1792,11 +1793,7 @@
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       },
-      "learnset": "staticub",
-      "evolves_into": "stormursa",
-      "evolution_breaks_level": 50,
-      "evolution_trigger": "breakthrough_feast",
-      "evolution_enabled": false
+      "learnset": "staticub"
     },
     "voltarach": {
       "display_name": "Voltarach",
@@ -2191,7 +2188,8 @@
       },
       "learnset": "stormcapra",
       "evolution_source": "craghorn",
-      "wild_evolution_form": true
+      "wild_evolution_form": true,
+      "evolves_from": "craghorn"
     },
     "skyrill": {
       "display_name": "Skyrill",
@@ -2504,30 +2502,6 @@
         "value": 0.3
       },
       "learnset": "solmane"
-    },
-    "stormursa": {
-      "display_name": "Stormursa",
-      "type": "electric",
-      "evolves_from": "staticub",
-      "evolution_authorized": true,
-      "evolution_enabled": false,
-      "evolution_trigger": "breakthrough_feast",
-      "evolution_breaks_level": 50,
-      "wild_evolution_form": false,
-      "base_hp": 150.0,
-      "base_attack": 30.0,
-      "base_defence": 24.0,
-      "catch_rate": 0.0,
-      "aggressive": false,
-      "moves": {
-        "quick": "spark_bite",
-        "charged": "arc_lash",
-        "utility": "",
-        "ultimate": "ultimate_stormursa"
-      },
-      "learnset_id": "stormursa",
-      "_comment": "RD-28 sole authorized new species. Tuning authored by F29; target art 4.10m versus current Staticub3.25m. No placeholder/model path: acquisition and visual activation OFF until reference/Meshy/rig/animation/scale/full in-engine code-blind art bar PASS. F23 supplies unique ultimate from its authored stormursa learnset.",
-      "learnset": "stormursa"
     }
   },
   "_comment_aspect_variants": "T3-CREATURES, from docs/owner/TETHERBOUND_MEADOWS_CREATURE_EXPANSION.md and the ten reference boards in docs/art/reference/creature-expansion-2026-08-30/. The four entries below are ASPECT VARIANTS -- the brief's own third category, kept deliberately separate from the other two (its 'Shiny vs Alpha vs Elemental Variant' section). A SHINY is the same species with the same typing and a rare colourway and MUST NEVER change typing; that stays data/creatures/shiny_colourways.json and encounter_director's shiny draw, both untouched by this lane. An ALPHA is an exceptional INDIVIDUAL of a species, bigger and higher-level, and stays the per-cluster `alpha` block on a spawns.json entry. An ASPECT variant is a creature whose environmental exposure changed its TYPING and its appearance -- and typing is a species-table property in this build, read by creature_instance.from_species from here and nowhere else, so an aspect variant has to be a row in this table. `variant_of` records the canon claim the brief makes ('This is NOT a new species unless later decided otherwise... internally it may remain a Paddlenewt variant'): these are the same animal, and that field is what a codex, a research log, or a later decision to merge one back into its base species would read. Two of the four are ALSO alphas exactly as the brief directs (Nightburrow, Stormtrail), and that is expressed the ordinary way -- their spawn entries carry an `alpha` block -- so the two concepts compose instead of colliding. All four reuse their base species' MESH on purpose. The other five creatures in the brief need meshes that do not exist yet and are deliberately NOT in this table, because smoke_art.gd requires every entry here to name a model that exists (this file's own _comment_wild_roster already states that rule); they are authored in full in data/creatures/species_pending.json, which nothing loads.",
