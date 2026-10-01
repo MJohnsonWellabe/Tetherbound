@@ -1482,12 +1482,16 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 ## inactive actor binding. No current participant or unsettled damage is reset.
 func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 		character_revision: int, world_namespace: String, world_id: String) -> Dictionary:
+	var full_action := training.get("version") == 2 and training.get("kind") == "creature_training"
 	if not TRAINING_WORLD.training_row_valid(training, world_namespace, world_id) \
-		or not training.action in ["altar_spend", "wild_defeat"] or admitted.get("character_id") != training.character_id \
+		or (not full_action and not training.action in ["altar_spend", "wild_defeat"]) or admitted.get("character_id") != training.character_id \
 		or character_revision < int(training.character_revision) or not admitted.get("party") is Array \
 		or not admitted.get("redesign_character") is Dictionary \
 		or not admitted.redesign_character.get("transaction_receipts", []).has(training.receipt):
 		return {"ok":false,"code":"training_lineage_unavailable"}
+	if full_action and (not preload("res://scripts/net/character_record_rules.gd").errors(admitted, training.character_id).is_empty() \
+		or not has_method("move_action_publication_pending")):
+		return {"ok":false,"code":"canonical_action_fence_unavailable"}
 	var old_party: Dictionary = {}
 	var next_party: Dictionary = {}
 	var current_party: Dictionary = {}
@@ -1502,11 +1506,46 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 			for key: Variant in participants:
 				var participant: Dictionary = participants[key]
 				if participant.get("character_id") != training.character_id: continue
+				if full_action and call("move_action_publication_pending", id) == true:
+					return {"ok":false,"code":"training_move_action_pending"}
 				if not retained and record.get("phase") != "done":
 					return {"ok":false,"code":"training_actor_still_active"}
 				var high_water := int(participant.get("actor_generation",0))
 				for uid: String in participant.get("actor_vitals",{}):
 					var actor: Dictionary = participant.actor_vitals[uid]
+					# Prior released actor history stays in the same private record.
+					# Both durable release histories must attest it, never a flag alone.
+					if actor.get("training_retired") == true and not old_party.has(uid) and not next_party.has(uid) and not current_party.has(uid):
+						var released := "release:" + uid
+						if actor.get("training_receipt") != released or actor.get("body_instance_id") != 0 \
+							or not admitted.redesign_character.transaction_receipts.has(released) \
+							or not admitted.redesign_character.get("release_receipts", []).has(released) \
+							or int(actor.get("settled_revision", -1)) != int(actor.get("revision", -2)):
+							return {"ok":false,"code":"retired_actor_lineage_conflict"}
+						continue
+					var releasing := full_action and training.action == "trait_release" and training.intent.creature_uid == uid \
+						and old_party.has(uid) and not next_party.has(uid) and not current_party.has(uid)
+					if releasing:
+						var before_actor: Dictionary = old_party[uid]
+						if int(actor.get("settled_revision", -1)) != int(actor.get("revision", -2)) \
+							or not ACTOR_AUTHORITY.equivalent(actor.max_hp, before_actor.max_hp) \
+							or not ACTOR_AUTHORITY.equivalent(actor.hp, before_actor.hp) or actor.fainted != before_actor.fainted:
+							return {"ok":false,"code":"release_actor_baseline_conflict"}
+						if actor.get("training_retired") == true and actor.get("training_receipt") == training.receipt \
+							and actor.get("training_character_revision") == training.character_revision: continue
+						high_water = maxi(high_water, int(actor.body_generation))
+						if high_water >= 2147483647: return {"ok":false,"code":"generation_exhausted"}
+						high_water += 1
+						var retired_actor := actor.duplicate(true)
+						retired_actor.body_generation = high_water
+						retired_actor.body_instance_id = 0
+						retired_actor.training_receipt = training.receipt
+						retired_actor.training_character_revision = training.character_revision
+						retired_actor.training_retired = true
+						changes.append({"encounter_id": id, "retained": retained, "participant_key": key,
+							"uid": uid, "before": actor.duplicate(true), "after": retired_actor,
+							"participant_generation": participant.get("actor_generation", 0)})
+						continue
 					if not old_party.has(uid) or not next_party.has(uid) or not current_party.has(uid):
 						return {"ok":false,"code":"training_actor_ownership_changed"}
 					var old: Dictionary=old_party[uid]
@@ -1518,10 +1557,12 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 					# is read-only. Replays can never restore earlier HP/generation.
 					if actor.get("training_receipt")==training.receipt \
 						and actor.get("training_character_revision")==training.character_revision: continue
-					if ACTOR_AUTHORITY.equivalent(actor.max_hp,current.max_hp) \
+					var card_changed := full_action and (not ACTOR_AUTHORITY.equivalent(old, next) \
+						or not ACTOR_AUTHORITY.equivalent(training.before.redesign_character.creatures.get(uid), training.after.redesign_character.creatures.get(uid)))
+					if not card_changed and ACTOR_AUTHORITY.equivalent(actor.max_hp,current.max_hp) \
 						and ACTOR_AUTHORITY.equivalent(actor.hp,current.hp) and actor.fainted==current.fainted \
 						and ACTOR_AUTHORITY.equivalent(current.max_hp,next.max_hp): continue
-					if ACTOR_AUTHORITY.equivalent(old.max_hp,next.max_hp) \
+					if not card_changed and ACTOR_AUTHORITY.equivalent(old.max_hp,next.max_hp) \
 						and ACTOR_AUTHORITY.equivalent(old.hp,next.hp) and old.fainted==next.fainted: continue
 					if not ACTOR_AUTHORITY.equivalent(actor.max_hp,old.max_hp) \
 						or not ACTOR_AUTHORITY.equivalent(actor.hp,old.hp) or actor.fainted!=old.fainted \

@@ -8,7 +8,36 @@
       "id": {
         "type": "string",
         "enum": [
-          "hardy"
+          "bold",
+          "calm",
+          "sturdy",
+          "swift",
+          "gentle",
+          "stubborn",
+          "curious",
+          "watchful",
+          "hardy",
+          "keen",
+          "surefoot",
+          "paddler",
+          "fierce",
+          "composed",
+          "resolute",
+          "nimble",
+          "renewing",
+          "unshaken",
+          "inventive",
+          "vigilant",
+          "current_rider",
+          "soaring",
+          "precise",
+          "ferocious",
+          "radiant",
+          "unyielding",
+          "tireless",
+          "fleet",
+          "tide_dancer",
+          "sky_dancer"
         ]
       },
       "rarity": {
@@ -22,7 +51,20 @@
       "effect": {
         "type": "string",
         "enum": [
-          "max_hp_scale"
+          "charged_power",
+          "wind_regen",
+          "defence",
+          "combat_speed",
+          "healing",
+          "poise",
+          "cooldown",
+          "burst_cost",
+          "max_hp",
+          "quick_power",
+          "ride_speed",
+          "swim_speed",
+          "fly_speed",
+          "ultimate_power"
         ]
       },
       "magnitude": {
@@ -42,15 +84,486 @@
       {
         "properties": {
           "id": {
-            "const": "hardy"
+            "const": "bold"
+          },
+          "rarity": {
+            "const": "common"
           },
           "effect": {
-            "const": "max_hp_scale"
+            "const": "charged_power"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "calm"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "wind_regen"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "sturdy"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "defence"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "swift"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "combat_speed"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "gentle"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "healing"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "stubborn"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "poise"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "curious"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "cooldown"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "watchful"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "burst_cost"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "hardy"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "max_hp"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "keen"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "quick_power"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "surefoot"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "ride_speed"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "paddler"
+          },
+          "rarity": {
+            "const": "common"
+          },
+          "effect": {
+            "const": "swim_speed"
+          },
+          "magnitude": {
+            "const": 0.05
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "fierce"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "charged_power"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "composed"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "wind_regen"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "resolute"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "defence"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "nimble"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "combat_speed"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "renewing"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "healing"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "unshaken"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "poise"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "inventive"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "cooldown"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "vigilant"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "burst_cost"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "current_rider"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "swim_speed"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "soaring"
+          },
+          "rarity": {
+            "const": "rare"
+          },
+          "effect": {
+            "const": "fly_speed"
+          },
+          "magnitude": {
+            "const": 0.08
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "precise"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "quick_power"
+          },
+          "magnitude": {
+            "const": 0.12
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "ferocious"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "charged_power"
+          },
+          "magnitude": {
+            "const": 0.12
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "radiant"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "ultimate_power"
+          },
+          "magnitude": {
+            "const": 0.12
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "unyielding"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "defence"
+          },
+          "magnitude": {
+            "const": 0.12
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tireless"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "wind_regen"
+          },
+          "magnitude": {
+            "const": 0.12
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "fleet"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "combat_speed"
+          },
+          "magnitude": {
+            "const": 0.12
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "tide_dancer"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "swim_speed"
+          },
+          "magnitude": {
+            "const": 0.12
+          }
+        }
+      },
+      {
+        "properties": {
+          "id": {
+            "const": "sky_dancer"
+          },
+          "rarity": {
+            "const": "epic"
+          },
+          "effect": {
+            "const": "fly_speed"
+          },
+          "magnitude": {
+            "const": 0.12
           }
         }
       }
     ]
   },
-  "minItems": 1,
-  "uniqueItems": true
+  "minItems": 30,
+  "uniqueItems": true,
+  "maxItems": 30
 }

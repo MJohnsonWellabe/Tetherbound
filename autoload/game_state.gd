@@ -2960,7 +2960,7 @@ func altar_placement_is_authorized(record: Dictionary, building: Node3D) -> bool
 		or record.get("realm", "meadows") != "meadows" or record.get("removed", false) != false: return false
 	var scene := get_tree().current_scene
 	if scene == null or not scene.is_ancestor_of(building): return false
-	var key := "altar:meadows:" + uid
+	var key: String = "altar:meadows:" + uid
 	var matched := false
 	for placer: Node in get_tree().get_nodes_in_group("build_placer"):
 		if not is_instance_valid(placer) or not placer.is_inside_tree() \
@@ -3002,7 +3002,7 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 	var uid: Variant = instance.get("uid")
 	if not uid is String or uid.is_empty() or local.character_id.is_empty() or local.character_id.contains(":") or uid.contains(":"): return false
 	var prefix := "starter_choice:%s:" % local.character_id
-	var receipt := prefix + uid
+	var receipt: String = prefix + uid
 	for prior: String in local.redesign_character.transaction_receipts:
 		if prior.begins_with(prefix): return prior == receipt and local.flags.call("has", "opening:starter_granted") == true
 	if party.size() != 0 or session.call("_owner_training_mutation_blocked", local) == true: return false
@@ -3047,7 +3047,7 @@ func grant_home_key_from_opening(source: Node) -> bool:
 	if source.get("_f18_opening_conversation_id") != "grandpa_first_catch" or current_realm != "meadows": return false
 	var panel: Node = source.get("_dialogue")
 	var spoken: Variant = source.get("_f18_pending_home_key")
-	var retained := spoken is Dictionary and spoken.size() == 3 and spoken.get("character_id") == local.character_id and spoken.get("world_instance_id") == world.reward_delivery_namespace and spoken.get("session_epoch") == session.call("_altar_current_epoch")
+	var retained: Variant = spoken is Dictionary and spoken.size() == 3 and spoken.get("character_id") == local.character_id and spoken.get("world_instance_id") == world.reward_delivery_namespace and spoken.get("session_epoch") == session.call("_altar_current_epoch")
 	if spoken is Dictionary and not spoken.is_empty() and not retained: return false
 	if panel == null or (panel.call("is_open") != true and not retained) or original_starter_uid().is_empty(): return false
 	if local.flags.call("has", "home_key_given") == true: return true

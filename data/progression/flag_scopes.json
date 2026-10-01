@@ -473,6 +473,18 @@
       "authority": "finite Home Key original portable entitlement",
       "transaction": "secondary world row settles without item/flag mutation; points to existing original owed/settled row or existing home_key_given saved flag",
       "persistence": "alias never becomes an original entitlement; original owed row retains the sole bag grant"
+    },
+    "redesign_character.creatures.<uid>.traits_initialized": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "Host spawn/catch admission; exact stable-character/current-generation same-record CAS; portable bool-save ACK; release removes UID atomically with F27 essence and one seed.",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.captured_from": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "Host spawn/catch admission; exact stable-character/current-generation same-record CAS; portable bool-save ACK; release removes UID atomically with F27 essence and one seed.",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
     }
   }
 }
