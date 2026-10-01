@@ -1,0 +1,29 @@
+{
+  "source_candidate": "06fb04d636c3e4f5e32b100283b3ee77f04d7a4b",
+  "root_merge": "d4c9f7b95a159a4523721738b0c022e7f8ae9bb4",
+  "independent_reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "source_review": "PASS117 source/pin/inverse/ownership controls and75 retained original evidence checks; original production/refusal/Story/math/caps unchanged.",
+  "native_unit": {
+    "head": "d4c9f7b95a159a4523721738b0c022e7f8ae9bb4",
+    "exit": 0,
+    "timed_out": false,
+    "selection": "test_multiplayer_identity_0912.gd",
+    "summary": [
+      "10 tests, 60 assertions, 0 failed"
+    ],
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-d4c9f7b95a15-da7f6d98\\tests.log",
+    "raw_log_sha256": "366cbceb5079061dceb1b783d7b3bd31e1bd52455485c919cdc1e27a49e1c4e9"
+  },
+  "raw_bytes": 20744,
+  "lossless_log": "tests.log.gz",
+  "archive": {
+    "thread_id": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+    "head": "06fb04d636c3e4f5e32b100283b3ee77f04d7a4b",
+    "source_contained_at": "d4c9f7b95a159a4523721738b0c022e7f8ae9bb4",
+    "tracked_clean": true,
+    "untracked_source": [],
+    "idle": true,
+    "confirmed_archived": true
+  },
+  "limits": "Pure ownership checks pass; original full default two-peer shared-boss native validation remains pending. Original starter refusals not retired; no criterion or main credit. Source-based archive follows current human direction."
+}
