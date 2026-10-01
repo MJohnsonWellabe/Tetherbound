@@ -70,7 +70,7 @@ func bounty_context(peer: int) -> Dictionary:
 	if writer == null: return {}
 	var actor: Dictionary = writer.call("_water_actor_context", peer, {})
 	var board := _board.get_ref() as Node3D if _board != null else null
-	var nearby := actor.get("position") is Vector3 and actor.get("realm") == "meadows" \
+	var nearby: bool = actor.get("position") is Vector3 and actor.get("realm") == "meadows" \
 		and board != null and actor.position.distance_to(board.global_position) <= float(preload("res://scripts/world/bounty_board.gd").config().interaction_radius_m)
 	var registry: RefCounted = session.get("_character_authority")
 	var character: String = session.call("_authority_character", peer)

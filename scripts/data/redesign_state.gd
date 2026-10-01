@@ -10,7 +10,7 @@ static func defaults(scope: String) -> Dictionary:
 		return {}
 	return value.duplicate(true)
 
-static func validate(scope: String, value: Variant, owned_uids: Array = []) -> Array[String]:
+static func validate(scope: String, value: Variant, owned_uids: Array = [], world_namespace: Variant = null) -> Array[String]:
 	var raw_schema: Variant = DATA.json("res://data/schema/%s_state.schema.json" % scope)
 	if not raw_schema is Dictionary:
 		return ["Redesign %s schema is missing or malformed" % scope]
@@ -25,10 +25,11 @@ static func validate(scope: String, value: Variant, owned_uids: Array = []) -> A
 			var row: Dictionary = alpha[id]
 			if not catalogue is Dictionary or not catalogue.get("sites", {}).has(id):
 				errors.append("unknown alpha site %s" % id)
-			if row.next_eligible_seconds < row.resolved_at_seconds:
-				errors.append("alpha deadline regressed %s" % id)
-			for character: String in row.departed:
-				if not row.required_departures.has(character): errors.append("unknown alpha departure %s" % id)
+			if row.has("resolved_at_seconds"):
+				if row.next_eligible_seconds < row.resolved_at_seconds:
+					errors.append("alpha deadline regressed %s" % id)
+				for character: String in row.departed:
+					if not row.required_departures.has(character): errors.append("unknown alpha departure %s" % id)
 			var packet: Dictionary = row.spawn_traits
 			if row.status == "waiting":
 				if not packet.is_empty(): errors.append("waiting alpha carries live traits %s" % id)
@@ -41,7 +42,8 @@ static func validate(scope: String, value: Variant, owned_uids: Array = []) -> A
 			var provenance: Dictionary = packet.captured_from
 			if provenance.size() != 4 or provenance.get("kind") != "wild" or provenance.get("spawn_id") != id \
 				or provenance.get("spawn_generation") != row.generation \
-				or not provenance.get("world_namespace") is String or provenance.world_namespace.is_empty():
+				or not provenance.get("world_namespace") is String or provenance.world_namespace.is_empty() \
+				or (world_namespace != null and provenance.world_namespace != world_namespace):
 				errors.append("alpha provenance changed %s" % id)
 			var seen: Array = []
 			for trait_row: Variant in packet.rolled_traits:

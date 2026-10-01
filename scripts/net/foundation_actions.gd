@@ -18,7 +18,7 @@ static func commit(registry: RefCounted, writer: Node, peer: int, character: Str
 	if token.get("ok") != true: return token
 	var accepted: Dictionary = registry.call("staged_creature_training", token)
 	var result: Dictionary = writer.call("journal_creature_training_prepared", peer, character, accepted)
-	var saved := result.get("ok") == true and result.get("durable") == true
+	var saved: bool = result.get("ok") == true and result.get("durable") == true
 	if registry.call("finish_creature_training", token, saved) != true: return deny("stage_changed")
 	if not saved: return result
 	writer.call("publish_creature_training", peer, character, accepted.receipt)

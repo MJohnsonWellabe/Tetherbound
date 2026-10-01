@@ -909,6 +909,11 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 		# waiting cycle cannot recreate generation one before that flag is saved.
 		var spawn_packet := repeat_packet.duplicate(true)
 		var cycle := foundation_alpha_cycle(alpha_site)
+		if cycle.is_empty() and not once_already_cleared and _session != null \
+			and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+			and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty():
+			spawn_packet = _session.call("foundation_alpha_first_spawn", self, alpha_site)
+			cycle = foundation_alpha_cycle(alpha_site)
 		if spawn_packet.is_empty() and cycle.get("status") == "active":
 			spawn_packet = preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)
 		if not spawn_packet.is_empty(): set_meta("foundation_alpha_spawning_" + alpha_site, true)
@@ -918,7 +923,9 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			# (`_make_alpha()`/`_apply_elder()` below). Once it is beaten,
 			# caught or freed, this spot simply spawns one fewer body -- the
 			# rest of an ordinary-population cluster (`n > 0`) is untouched.
-			if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty())):
+			if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty()) \
+				or (_session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+					and not preload("res://scripts/repeatables/alpha_respawns.gd").site(alpha_site).is_empty() and spawn_packet.is_empty())):
 				continue
 			var member_packet: Dictionary = spawn_packet if n == 0 else {}
 			var repeat_world: RefCounted = get_node("/root/Game").world if not member_packet.is_empty() else null
@@ -1098,7 +1105,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 					# `_on_combat_exited()` can fire the flag and skip its
 					# respawn timer the moment this alpha leaves the field.
 					_once_only[wild] = once_id
-					if member_packet.is_empty(): _configure_once_completion_reward(wild, once_alpha)
+					if member_packet.is_empty() or int(member_packet.captured_from.spawn_generation) == 1: _configure_once_completion_reward(wild, once_alpha)
 			var wild_cfg: Dictionary = MATH.config().get("wild", {})
 			# WORLD-LIFE-0903 (BAND1_ROUTE_CONTRACT.md). A cluster's own
 			# `wander_radius` overrides `wild_creature.gd`'s open-meadow default
@@ -1189,7 +1196,7 @@ func foundation_register_alpha(wild: Node3D, site_id: String, packet: Dictionary
 		instance.set("rolled_traits", packet.rolled_traits.duplicate())
 		instance.set("taught_traits", packet.taught_traits.duplicate(true))
 		wild.set_meta("foundation_alpha_packet", packet.duplicate(true))
-		wild.remove_meta("once_completion_reward")
+		if int(packet.captured_from.spawn_generation) > 1: wild.remove_meta("once_completion_reward")
 	return true
 
 ## T3-ENCOUNTER. The world seed this boot is building, resolved once.

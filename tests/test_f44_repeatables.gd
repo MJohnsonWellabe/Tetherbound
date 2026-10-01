@@ -8,6 +8,7 @@ const STATE := preload("res://scripts/data/redesign_state.gd")
 const BAG := preload("res://scripts/world/death_satchel_rules.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const ALPHA_PRODUCER := preload("res://scripts/net/foundation_alphas.gd")
 
 func _current(character: String = "character_a") -> Dictionary:
 	return {"character_id": character, "inventory": BAG.slots(BAG.inventory_from([])),
@@ -155,3 +156,32 @@ func test_alpha_timer_waits_for_all_departures_and_retains_fresh_generation_on_r
 	assert_eq(born.record.spawn_traits.captured_from.spawn_generation, 2)
 	assert_true(ALPHA.resolve(reload, id, 1, 2000, ["character_a"], "defeat").is_empty())
 	assert_true(ALPHA.resolve(reload, id, 2, 1800, ["character_a"], "defeat").is_empty())
+
+func test_first_alpha_roll_is_durable_without_invented_resolution_and_rejects_foreign_world() -> void:
+	var before := STATE.defaults("world")
+	var id := "hollows_alpha"
+	var born := ALPHA.first_spawn(before, id, "world_a", true, true)
+	assert_false(born.is_empty())
+	if born.is_empty(): return
+	assert_true(ALPHA.valid_plan(born, before, "world_a"))
+	assert_false(ALPHA.valid_plan(born, before, "world_b"))
+	assert_false(born.record.has("resolved_at_seconds"))
+	assert_false(born.record.has("required_departures"))
+	assert_true(STATE.validate("world", born.state, [], "world_a").is_empty())
+	assert_false(STATE.validate("world", born.state, [], "world_b").is_empty())
+	assert_false(STATE.validate("world", born.state, [], "").is_empty())
+	assert_true(STATE.validate("world", before, [], "").is_empty())
+	var reload: Dictionary = JSON.parse_string(JSON.stringify(born.state))
+	assert_true(STATE.validate("world", reload, [], "world_a").is_empty())
+	assert_eq(ALPHA.retained_spawn(reload, id), born.record.spawn_traits)
+	assert_true(ALPHA.first_spawn(reload, id, "world_a", false, false).is_empty())
+	var resolved := ALPHA.resolve(reload, id, 1, 100, ["character_a"], "catch")
+	assert_false(resolved.is_empty())
+	if not resolved.is_empty(): assert_true(STATE.validate("world", resolved.state, [], "world_a").is_empty())
+
+func test_actual_clear_weather_metadata_does_not_choose_unusual_alpha_odds() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/weather.json"))
+	assert_false(ALPHA_PRODUCER.unusual_weather({}))
+	assert_false(ALPHA_PRODUCER.unusual_weather(config.presets.clear))
+	assert_true(ALPHA_PRODUCER.unusual_weather(config.presets.rain))
+	assert_true(ALPHA_PRODUCER.unusual_weather(config.presets.fog))
