@@ -1,0 +1,316 @@
+{
+  "state": "ACTUAL_FAIL; F17#4 OPEN",
+  "head": "8189ef734addce12d446c6c9a0f9d4016a0d657d",
+  "engine_run_here": false,
+  "tracked_writes": false,
+  "exact_cached_contact_total": 12,
+  "cached_manifold_counts": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "contact_points_are_capped_prefix": true,
+  "recorded_contact_identities": [
+    [
+      "RID(5448982058764229)",
+      0
+    ],
+    [
+      "RID(67778878898179)",
+      33
+    ]
+  ],
+  "live_contacts": [
+    {
+      "collider_rid": "RID(67778878898179)",
+      "collider_shape": 33,
+      "depth": 0.000187456607818604,
+      "local_shape": 0,
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "point": [
+        12.9745054244995,
+        0.899999976158142,
+        14.726900100708
+      ]
+    },
+    {
+      "collider_rid": "RID(5448982058764229)",
+      "collider_shape": 0,
+      "depth": 5.82678621867672e-05,
+      "local_shape": 0,
+      "normal": [
+        0.930705428123474,
+        0.0,
+        0.365769594907761
+      ],
+      "point": [
+        12.6013469696045,
+        1.51999998092651,
+        14.5802478790283
+      ]
+    }
+  ],
+  "terminal": {
+    "acceptance": false,
+    "actual_delta": [
+      0.000810623168945313,
+      -0.000953376293182373,
+      0.000319480895996094
+    ],
+    "authored_road_hint": "",
+    "callback_own_us": 1117,
+    "ceiling_frames": 0,
+    "checked_start": false,
+    "controller_observation_available": true,
+    "controller_wanted_dir": [
+      -0.952226281166077,
+      0.0,
+      -0.30539333820343
+    ],
+    "delivered_input": [
+      0.419508814811707,
+      -0.907751262187958
+    ],
+    "diagnostic_output_outside_physics_cap": true,
+    "floor_angle": 0.785399973392487,
+    "frame": 700,
+    "live_contacts": [
+      {
+        "collider_rid": "RID(67778878898179)",
+        "collider_shape": 33,
+        "depth": 0.000187456607818604,
+        "local_shape": 0,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          12.9745054244995,
+          0.899999976158142,
+          14.726900100708
+        ]
+      },
+      {
+        "collider_rid": "RID(5448982058764229)",
+        "collider_shape": 0,
+        "depth": 5.82678621867672e-05,
+        "local_shape": 0,
+        "normal": [
+          0.930705428123474,
+          0.0,
+          0.365769594907761
+        ],
+        "point": [
+          12.6013469696045,
+          1.51999998092651,
+          14.5802478790283
+        ]
+      }
+    ],
+    "live_recovery_travel": [
+      0.0,
+      0.000923335552215576,
+      0.0
+    ],
+    "live_state_phase": "post",
+    "mask": 1,
+    "on_ceiling": false,
+    "on_floor": true,
+    "on_wall": true,
+    "physics_frame": 5189,
+    "plans": 7,
+    "player": [
+      12.9745054244995,
+      0.89988911151886,
+      14.726900100708
+    ],
+    "progress_m": 56.6471386789344,
+    "provisional_choice": 0,
+    "queries": 2,
+    "recoveries": 0,
+    "refusal": "actual production contact observation cap",
+    "request": [
+      -8.0,
+      0.899999976158142,
+      8.0
+    ],
+    "requests": 701,
+    "safe_margin": 0.00100000004749745,
+    "slide_contacts": [
+      {
+        "collider_rid": "RID(67778878898179)",
+        "collider_shape": 33,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          12.9740705490112,
+          0.899999976158142,
+          14.7267532348633
+        ],
+        "slide": 0,
+        "swept_depth": 0.00107294321060181
+      },
+      {
+        "collider_rid": "RID(5448982058764229)",
+        "collider_shape": 0,
+        "normal": [
+          0.930700659751892,
+          0.0,
+          0.365781664848328
+        ],
+        "point": [
+          12.6013412475586,
+          1.51999998092651,
+          14.5802640914917
+        ],
+        "slide": 0,
+        "swept_depth": 0.00107294321060181
+      },
+      {
+        "collider_rid": "RID(67778878898179)",
+        "collider_shape": 33,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          12.9744071960449,
+          0.899999976158142,
+          14.726861000061
+        ],
+        "slide": 1,
+        "swept_depth": 0.00113493204116821
+      },
+      {
+        "collider_rid": "RID(5448982058764229)",
+        "collider_shape": 0,
+        "normal": [
+          0.930706679821014,
+          0.0,
+          0.36576646566391
+        ],
+        "point": [
+          12.6013469696045,
+          1.51999998092651,
+          14.5802478790283
+        ],
+        "slide": 1,
+        "swept_depth": 0.00113493204116821
+      },
+      {
+        "collider_rid": "RID(67778878898179)",
+        "collider_shape": 33,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          12.9745006561279,
+          0.899999976158142,
+          14.7268981933594
+        ],
+        "slide": 2,
+        "swept_depth": 0.00111597776412964
+      },
+      {
+        "collider_rid": "RID(5448982058764229)",
+        "collider_shape": 0,
+        "normal": [
+          0.930706202983856,
+          2.97327432008387e-07,
+          0.365767449140549
+        ],
+        "point": [
+          12.6013469696045,
+          1.51999998092651,
+          14.5802488327026
+        ],
+        "slide": 2,
+        "swept_depth": 0.00111597776412964
+      },
+      {
+        "collider_rid": "RID(67778878898179)",
+        "collider_shape": 33,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          12.9745054244995,
+          0.899999976158142,
+          14.726900100708
+        ],
+        "slide": 3,
+        "swept_depth": 0.000976860523223877
+      },
+      {
+        "collider_rid": "RID(5448982058764229)",
+        "collider_shape": 0,
+        "normal": [
+          0.930705428123474,
+          0.0,
+          0.365769594907761
+        ],
+        "point": [
+          12.6013469696045,
+          1.51999998092651,
+          14.5802478790283
+        ],
+        "slide": 3,
+        "swept_depth": 0.000976860523223877
+      }
+    ],
+    "slide_contacts_are_capped_prefix": true,
+    "slide_count": 6,
+    "slide_motion": [
+      0.000810623168945313,
+      -0.000953376293182373,
+      0.000319480895996094
+    ],
+    "slide_point_counts": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "snap": 0.400000005960464,
+    "stall_frames": 1,
+    "swept_depth": 0.00113493204116821,
+    "timing": {
+      "between_callbacks": "controller and other nodes; excluded; not controller-only",
+      "between_callbacks_us": 7188,
+      "callback_cap_us": 10000,
+      "input_flush_us": 69,
+      "live_post_us": 216,
+      "live_pre_us": 136,
+      "movement_progress_us": 1,
+      "post_contract_us": 37,
+      "post_us": 409,
+      "pre_us": 342,
+      "serialization_and_print": "deferred; excluded; snapshot included",
+      "slide_validation_us": 47,
+      "snapshot_us": 104,
+      "stage": "post"
+    },
+    "total_queries": 1402,
+    "wall_frames": 27
+  },
+  "conclusion": "Recorded evidence is floor plus near-horizontal wall against a second collider RID. Six Terrain paths in the helper error enumerate only collision.get_collider() default index0, not every manifold point. This is not evidence of a pure overlapping-floor case. The exact cached total is twelve; eight point payload is only a prefix. No omitted point normal/depth identity is reconstructed.",
+  "source_hold": "8189ef734a; awaiting ROOT authoritative terminal/PID release"
+}

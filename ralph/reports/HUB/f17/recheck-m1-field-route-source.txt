@@ -1,0 +1,9 @@
+INDEPENDENT BOUNDED SOURCE RE-CHECK — FINAL M1 ROUTE ACTIVATION
+Exact pin f5de8c3bd7db8ea1db71d2ee807b59086bacb820, D:/tetherbound/redesign-hub.
+Verdict SOURCE PASS for the one-line correction, with previously disclosed early legitimate engagement shortcut accepted by ROOT's latest task direction. No gameplay or acceptance MET verdict.
+
+The sole changed line sets left_farmhouse=offset.length()<4.0 from the real house door before the separate extra-exit necessity guard. Thus any near-house opening endpoint selects the authored Practice Meadow route, including an endpoint already>=1m forward/clear of the wall. Extra physical exit is still conditional on front-dot<1 and preserves the same .8m arrival/floor requirement. Already-clear endpoints do not need an additional physical walk before starting the real route. No production pose/speed/collider, budget, catch/grant or gameplay assertion changes.
+
+The previous source check's exact seven authored points, orientation, physical parsed-stick navigator and whole2600 budget assessment remain applicable because those bytes are unchanged. Existing exact target offer/combat can legitimately engage before all seven route points. This is explicitly accepted/disclosed as a shortcut by ROOT: acceptance is the actual earned catch. Do not claim completed seven-waypoint route coverage unless native evidence actually records all seven reached events. The source PASS authorizes the requested bounded parser/prefix retry; it is not native success proof.
+
+No engine/parser/import/GPU/unit/fullCI or native retry by this reviewer. Prior actual two red runs retained. Only ignored raw review artifact written; no source/board/STATE/git mutations.

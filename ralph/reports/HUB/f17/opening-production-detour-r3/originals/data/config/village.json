@@ -1,0 +1,334 @@
+{
+  "_comment": "The opening settlement. EV6: every structure is a PREFAB from data/config/building_prefabs.json, composed from the Medieval Village MegaKit (docs/specs/ASSET_LEDGER.md, D24 -- the one civilian architectural family) and placed by scripts/world/village.gd: stood on the ground by asking the world (D09), given the prefab's own colliders or one AABB box, at kit-native scale (no scale corrections -- the kit is authored in real metres, walls measured 2.0w x 3.12h). Positions are world metres on the fixed farmhouse/square flats plus OWNER-0912's matching south-street pad. ALL TUNABLE.",
+  "_comment_layout": "RD-29/F17: one straight eastward village road, homestead at [2,14] beside TrailGate, eight native-scale houses on both sides and the Crossing Hall at [107,14]. Field/practice-wild geography remains unchanged. Layout rebuilds identically on every peer; no save reset.",
+  "structures": [
+    {
+      "prefab": "mill",
+      "at": [
+        -382.0,
+        514.0
+      ],
+      "yaw_deg": 0.0,
+      "ground": "highest",
+      "_why": "EV6-remainder: bible sec12's mill at a real crossing, on EV5's stream where it approaches the pond. West wall sits at the carve's edge so the wheel (local x -4.0) hangs over the channel and its bottom paddles meet the stream surface; grounded 'highest' because the wheel's own AABB corner is the streambed. Sited on the mill-crossing terrain flat at [-133,109] (terrain_playground.json).",
+      "_comment_ow5d": "OW5D relocation, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from (-132,107) to (-382,514) with the rest of the pond/mill group -- see terrain_playground.json flats[4]/building_aprons.footprints[5] and vegetation.json footprints[2]/clearings[5] for the matching moves. `_why` above still describes the OLD site's [-133,109] flat by number; the flat itself moved (same offset) but the prose was not rewritten to avoid drifting from the original author's reasoning -- the mill still sits on that flat, just at its new coordinates."
+    },
+    {
+      "prefab": "footbridge",
+      "at": [
+        -386.3,
+        520.0
+      ],
+      "yaw_deg": -5.0,
+      "ground": "highest",
+      "_why": "the crossing itself, just downstream of the mill's north face -- deck spans the 5m carve bank to bank (centreline x~-136.3 at z=113), yawed to sit square across the stream's local bearing. Grounded 'highest' for the same reason as the mill.",
+      "_comment_ow5d": "OW5D relocation: (-136.3,113) -> (-386.3,520), same (-250,+407) offset as the mill and the pond."
+    },
+    {
+      "prefab": "ranger_station",
+      "at": [
+        -350.0,
+        507.0
+      ],
+      "yaw_deg": 75.0,
+      "interior": "cottage",
+      "_why": "EV6-remainder: the ranger station, on the pond route's west shoulder where the route (points [-80,85] -> [-105,115]) overlooks the water -- the first built thing between the settlement and the pond valley, watching the wilds. Door yawed east toward the path; east wall clears the path's 3m shoulder by ~0.8m at the closest point. On its own small flat at [-100,100].",
+      "_comment_ow5d": "OW5D relocation: (-100,100) -> (-350,507) per docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2. `yaw_deg` 75 is UNCHANGED -- the table only specifies the new position, and re-deriving the door-facing angle for the new pond-route geometry is a judgement call left to the reviewer/OW5C (which owns the pond route's actual new path polyline). Flagged, not guessed at."
+    },
+    {
+      "id": "mira_shop",
+      "display_name": "Mira’s Shop",
+      "prefab": "cottage_a",
+      "at": [
+        26,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "shop"
+    },
+    {
+      "id": "tam_workshop",
+      "display_name": "Tam’s Workshop",
+      "prefab": "workshop",
+      "at": [
+        26,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true
+    },
+    {
+      "id": "bram_inn",
+      "display_name": "Bram’s Inn",
+      "prefab": "inn",
+      "at": [
+        44,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "inn"
+    },
+    {
+      "id": "halda_house",
+      "display_name": "Halda’s House",
+      "prefab": "cottage_b",
+      "at": [
+        44,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "research_house",
+      "display_name": "Research House",
+      "prefab": "cottage_a",
+      "at": [
+        62,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "oskar_house",
+      "display_name": "Oskar’s House",
+      "prefab": "cottage_b",
+      "at": [
+        62,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "alder_house",
+      "display_name": "Alder Cottage",
+      "prefab": "cottage_b",
+      "at": [
+        80,
+        2
+      ],
+      "yaw_deg": 0,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "orchard_house",
+      "display_name": "Orchard Cottage",
+      "prefab": "cottage_a",
+      "at": [
+        80,
+        26
+      ],
+      "yaw_deg": 180,
+      "road_house": true,
+      "interior": "cottage"
+    },
+    {
+      "id": "village_well",
+      "prefab": "well",
+      "at": [
+        34,
+        5
+      ],
+      "yaw_deg": 15
+    },
+    {
+      "id": "crossing_hall",
+      "prefab": "crossing_hall_shell",
+      "at": [
+        107,
+        14
+      ],
+      "yaw_deg": 90
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        -17.5,
+        -0.5
+      ],
+      "yaw_deg": 20.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        -23.0,
+        2.5
+      ],
+      "yaw_deg": 135.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        -19.0,
+        9.5
+      ],
+      "yaw_deg": 250.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        -24.5,
+        8.5
+      ],
+      "yaw_deg": 310.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        -21.5,
+        13.5
+      ],
+      "yaw_deg": 80.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        -16.0,
+        4.5
+      ],
+      "yaw_deg": 190.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        -9.0,
+        -28.5
+      ],
+      "yaw_deg": 0.0,
+      "_why_f01": "F01-b Berry Field (subareas berry_field, centre [-8.5,-23] r6): the field's north rail, meeting the west rail at [-12,-28.5] as an L so the planted rows read as a tended field, not loose bushes. The south and east sides stay open to Berry Lane and the through-road."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        -12.0,
+        -25.5
+      ],
+      "yaw_deg": 90.0,
+      "_why_f01": "F01-b Berry Field's west rail (z -28.5..-22.5), 4.4m clear of Grandpa's south-east work-yard props and 3m clear of the twins' yard crate."
+    },
+    {
+      "id": "mira_shop_threshold",
+      "prefab": "doorstep",
+      "at": [
+        27,
+        7.9
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "tam_workshop_threshold",
+      "prefab": "doorstep",
+      "at": [
+        26,
+        19.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "bram_inn_threshold",
+      "prefab": "doorstep",
+      "at": [
+        44,
+        10.6
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "halda_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        43,
+        21.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "research_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        63,
+        7.9
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "oskar_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        61,
+        21.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "alder_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        81,
+        6.9
+      ],
+      "yaw_deg": 0,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    },
+    {
+      "id": "orchard_house_threshold",
+      "prefab": "doorstep",
+      "at": [
+        79,
+        20.1
+      ],
+      "yaw_deg": 180,
+      "_why": "F17 native front-eave walk-up; door itself remains the installed prefab doorway"
+    }
+  ],
+  "_comment_vp5": "VP5 (visual-parity village lane), 2026-09-02: the entries after `inn` are daylight dressing -- three door thresholds, two garden rails plus a yard rail, two carts and three edge oaks -- placed against the BUILT scene's collider extents (a scratch layout probe printing every structure's world AABB, door node, marker and NPC), not against the recipe comments. The owner's standing constraint applies: not one more object than the yard needs, no new villagers.",
+  "road_plan": {
+    "home_centre": [
+      2,
+      14
+    ],
+    "home_door": [
+      8.3,
+      14
+    ],
+    "road_start": [
+      8.3,
+      14
+    ],
+    "road_end": [
+      91,
+      14
+    ],
+    "width_m": 5.2,
+    "hall_centre": [
+      107,
+      14
+    ],
+    "hall_yaw_deg": 90,
+    "exit_gate": "TrailGate",
+    "houses_required": [
+      8,
+      10
+    ]
+  }
+}

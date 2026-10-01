@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS",
+  "gate": "SOURCEPASS only",
+  "commit": "dff2f6c7a4111cb26d36ae22c0428b97180799fb",
+  "parent": "a605f9969dea6ecc3abf566326aeedb68094db33",
+  "helper_sha256": "5b781f8401018c9030058874692c1f3c7bd6ebf427dbec741f61c81f1d201fc0",
+  "sourcepins": "exactsourcepins.json",
+  "sourcepins_sha256": "716fd1c349e403d35c907a17489ae1a063327d58f6c53ea259311b002ff89c78",
+  "exact_delta": {
+    "deletions": 5,
+    "path": "tests/helpers/opening_geometry_navigator.gd",
+    "insertions": 7,
+    "function": "_choose"
+  },
+  "unchanged_helper_outside_choose": true,
+  "callers_unchanged": true,
+  "provisional_heading_only": true,
+  "current_native_supported_step_required_before_every_stick": true,
+  "future_route_certified": false,
+  "bounds_budgets_earned_assertions_unchanged": true,
+  "substantive_blockers": [],
+  "smallest_correction": "No additional source correction justified",
+  "effective_permissions": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never"
+  },
+  "prior_actual_native_verdict": "FAIL",
+  "prior_r2_parser_verdict": "PASS on parent only",
+  "prior_reports_and_actual_failure_preserved": true,
+  "reviewer_engine_parser_test_run": false,
+  "source_freeze_verified": true,
+  "permitted_next": "One cheap whole-M1 parser; if clean, one necessary real M1 in serialized queue",
+  "acceptance_credit": false,
+  "F17_4": "OPEN until full uninterrupted real player chain passes",
+  "runtime_limits": [
+    "Greedy dead ends and limited road bends",
+    "Conservative floor/overlap/contact refusals",
+    "Dynamic timing and terrain availability",
+    "Actual controller travel and original performance outcomes",
+    "Single native query can exceed cooperative deadline"
+  ],
+  "raw_report": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\successor-local-step-dff\\strict-review.txt",
+  "raw_report_sha256": "77cac83f83621dca25c72208064658e91cf4e0151e249ac41d5c814fbb541d61",
+  "utc": "2026-09-30T22:02:49.4568366Z"
+}

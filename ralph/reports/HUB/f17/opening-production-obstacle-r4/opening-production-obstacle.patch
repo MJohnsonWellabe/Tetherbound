@@ -1,0 +1,189 @@
+--- a/tests/helpers/opening_geometry_navigator.gd
++++ b/tests/helpers/opening_geometry_navigator.gd
+@@ -197,6 +197,8 @@
+ 	_stalled = 0
+ 	_observed_choice = 0
+ 	_retry_at = STALL_FRAMES
++	_avoid_tangent = Vector3.ZERO
++	_avoid_retry = 0
+ 	_checked_start = false
+ 	if is_instance_valid(_player):
+ 		_progress_at = _player.global_position
+@@ -684,6 +686,12 @@
+ 			_stalled = 0
+ 		if _stalled > 90:
+ 			_stop_geometry("real stick travel made no progress within 90 requested frames")
++			return
++	if _production_steering:
++		var steering_began: int = Time.get_ticks_usec()
++		direction = _production_heading(direction)
++		_production_steering_us = Time.get_ticks_usec() - steering_began
++		if refused():
+ 			return
+ 	_owns_input = true
+ 	if _production_steering:
+@@ -1008,6 +1016,11 @@
+ 		_production_input = Vector2.ZERO
+ 		_production_live_pre_us = 0
+ 		_production_live_post_us = 0
++		_production_steering_us = 0
++		_production_hint_source = &"none"
++		_production_hint_normal = Vector3.ZERO
++		_production_prediction_motion = Vector3.ZERO
++		_production_heading_vector = Vector3.ZERO
+ 		_production_controller_observed = false
+ 		_observed_live = null
+ 		_production_live_phase = &"unavailable"
+@@ -1113,6 +1126,13 @@
+ var _production_input := Vector2.ZERO
+ var _production_live_pre_us := 0
+ var _production_live_post_us := 0
++var _production_steering_us := 0
++var _production_hint_source: StringName = &"none"
++var _production_hint_normal := Vector3.ZERO
++var _production_prediction_motion := Vector3.ZERO
++var _production_heading_vector := Vector3.ZERO
++var _avoid_tangent := Vector3.ZERO
++var _avoid_retry := 0
+ var _production_controller_observed := false
+ var _production_live_phase: StringName = &"unavailable"
+ var _recoveries_at_start := -1
+@@ -1192,6 +1212,91 @@
+ 	_checked_start = false
+ 	_drive.call(0.0, 0.0)
+ 	Input.flush_buffered_events()
++
++
++func _production_wall_normals(hit: PhysicsTestMotionResult3D) -> Array[Vector3]:
++	var walls: Array[Vector3] = []
++	if hit == null or hit.get_collision_count() >= CONTACTS:
++		_stop_geometry("missing/saturated provisional native steering contacts")
++		return walls
++	for index in hit.get_collision_count(): # Same unsaturated result, no new query.
++		var normal: Vector3 = hit.get_collision_normal(index)
++		var point: Vector3 = hit.get_collision_point(index)
++		var depth: float = hit.get_collision_depth(index)
++		if not normal.is_finite() or not point.is_finite() or not is_finite(depth) \
++				or depth < -CONTACT_EPS or absf(normal.length_squared() - 1.0) > 0.001 \
++				or hit.get_collision_local_shape(index) != _capsule_index:
++			_stop_geometry("invalid provisional native steering contact/shape")
++			return []
++		# Floor-cone classification selects headings only; it admits no overlap,
++		# ground, predicted travel or cached slide. Swept depth is not live depth.
++		var horizontal := Vector3(normal.x, 0.0, normal.z)
++		if normal.dot(_body.up_direction) < cos(_body.floor_max_angle) \
++				and horizontal.length_squared() > CONTACT_EPS:
++			walls.append(horizontal.normalized())
++	return walls
++
++
++func _production_heading(direction: Vector3) -> Vector3:
++	var wanted := Vector3(direction.x, 0.0, direction.z).normalized()
++	var walls := _production_wall_normals(_observed_live) # Actual pre pose result.
++	_production_hint_source = &"live_pre"
++	if refused():
++		return Vector3.ZERO
++	if walls.is_empty():
++		# ONE prospective max-speed ordinary step from the real registered pose.
++		# _motion charges the SAME query/lifetime/deadline caps and unchanged
++		# capsule, mask, skin and no extra exclusions. This is never clearance.
++		var speed: float = float(_body.get("_max_speed"))
++		var reach: float = speed * _production_delta
++		if not is_finite(speed) or speed <= 0.0 or not is_finite(_production_delta) \
++				or _production_delta <= 0.0 or not is_finite(reach) or reach > MAX_EDGE:
++			_stop_geometry("invalid bounded provisional production step")
++			return Vector3.ZERO
++		_production_prediction_motion = wanted * reach
++		var predicted: Dictionary = _motion(_body.global_transform, _production_prediction_motion)
++		_production_hint_source = &"prospective_step"
++		if refused():
++			return Vector3.ZERO
++		walls = _production_wall_normals(predicted.hit as PhysicsTestMotionResult3D)
++		if refused():
++			return Vector3.ZERO
++	var opposing := Vector3.ZERO
++	var incoming := -CONTACT_EPS
++	for wall: Vector3 in walls:
++		if wanted.dot(wall) < incoming:
++			incoming = wanted.dot(wall)
++			opposing = wall
++	if opposing == Vector3.ZERO:
++		_production_heading_vector = wanted
++		return direction
++	var tangent := Vector3(-opposing.z, 0.0, opposing.x)
++	if _avoid_tangent == Vector3.ZERO:
++		if tangent.dot(wanted) < 0.0:
++			tangent = -tangent
++	else:
++		# Keep the prior hand while it yields an outward heading. The existing
++		# 26-frame retry reverses the preference; no stall/budget reset here.
++		if tangent.dot(_avoid_tangent) < 0.0:
++			tangent = -tangent
++		if _avoid_retry != _observed_choice:
++			tangent = -tangent
++	_production_hint_normal = opposing
++	for choice in 2: # Two headings, below unchanged MAX_CHOICES; no native query.
++		var along := tangent if choice == 0 else -tangent
++		var heading := (along + opposing * 0.25).normalized()
++		var outward := true
++		for wall: Vector3 in walls: # At most seven reported normals, no dedup.
++			if heading.dot(wall) < -CONTACT_EPS:
++				outward = false
++				break
++		if outward:
++			_avoid_tangent = along
++			_avoid_retry = _observed_choice
++			_production_heading_vector = heading
++			return heading * direction.length() # Preserve original stick easing.
++	_stop_geometry("no bounded outward provisional stick heading")
++	return Vector3.ZERO
+ 
+ 
+ func _choose_route(point: Vector2, tolerance: float) -> bool:
+@@ -1334,6 +1439,7 @@
+ 	if not record.is_empty():
+ 		record["timing"] = {"pre_us": _pre_observe_us, "input_flush_us": _production_flush_us,
+ 			"live_pre_us": _production_live_pre_us, "between_callbacks_us": began - _production_pre_end,
++			"provisional_steering_us": _production_steering_us,
+ 			"post_contract_us": contract_us, "live_post_us": _production_live_post_us,
+ 			"slide_validation_us": slides_us, "movement_progress_us": movement_us,
+ 			"snapshot_us": snapshot_us, "post_us": Time.get_ticks_usec() - began,
+@@ -1387,7 +1493,8 @@
+ 			contacts.append({"normal": _contact_vector(_observed_live.get_collision_normal(index)),
+ 				"point": _contact_vector(_observed_live.get_collision_point(index)),
+ 				"depth": _observed_live.get_collision_depth(index), "local_shape": _observed_live.get_collision_local_shape(index),
+-				"collider_rid": str(_observed_live.get_collider_rid(index)), "collider_shape": _observed_live.get_collider_shape(index)})
++				"collider_rid": str(_observed_live.get_collider_rid(index)), "collider_shape": _observed_live.get_collider_shape(index),
++				"collider_path": _production_collider_path(_observed_live.get_collider(index))})
+ 	var slides: Array = []
+ 	var slide_point_counts: Array[int] = []
+ 	if _production_controller_observed:
+@@ -1401,7 +1508,8 @@
+ 		for index in mini(CONTACTS - slides.size(), collision.get_collision_count()):
+ 			slides.append({"slide": slide, "normal": _contact_vector(collision.get_normal(index)),
+ 				"point": _contact_vector(collision.get_position(index)), "swept_depth": collision.get_depth(),
+-				"collider_rid": str(collision.get_collider_rid(index)), "collider_shape": collision.get_collider_shape_index(index)})
++				"collider_rid": str(collision.get_collider_rid(index)), "collider_shape": collision.get_collider_shape_index(index),
++				"collider_path": _production_collider_path(collision.get_collider(index))})
+ 		if slides.size() == CONTACTS:
+ 			break
+ 	var record: Dictionary = {"acceptance": false,
+@@ -1423,6 +1531,10 @@
+ 		"controller_observation_available": _production_controller_observed,
+ 		"live_state_phase": _production_live_phase,
+ 		"authored_road_hint": _guided_label, "slide_point_counts": slide_point_counts,
++		"provisional_steering": {"source": _production_hint_source, "acceptance": false,
++			"prediction_motion": _contact_vector(_production_prediction_motion),
++			"wall_normal": _contact_vector(_production_hint_normal),
++			"heading": _contact_vector(_production_heading_vector), "retry_choice": _avoid_retry},
+ 		"slide_contacts_are_capped_prefix": true,
+ 		"diagnostic_output_outside_physics_cap": true}
+ 	_tick.records.append(record)
+@@ -1430,3 +1542,7 @@
+ 		_tick.flush_pending = true
+ 		_tick.call_deferred("flush_records")
+ 	return record
++
++
++func _production_collider_path(collider: Object) -> String:
++	return str((collider as Node).get_path()) if is_instance_valid(collider) and collider is Node else "<raw>"

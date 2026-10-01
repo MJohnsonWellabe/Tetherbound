@@ -1,0 +1,70 @@
+{
+  "verdict": "PASS",
+  "source_gate": "SOURCEPASS",
+  "scope": "independent read-only actual applied source",
+  "commit": "8316c68826c95d7d3249088954294babdb504864",
+  "parent": "39ad0773577c54a798322ea5d0ef3aef8255a2da",
+  "effective_permissions": {
+    "approval_policy": "never",
+    "sandbox_mode": "danger-full-access"
+  },
+  "changed_paths": [
+    "tests/helpers/gate_a_npc_gather_segment.gd",
+    "tests/helpers/meadows_earned_team_segment.gd",
+    "tests/helpers/opening_geometry_navigator.gd"
+  ],
+  "source_hashes": [
+    {
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "bytes": 42423
+    },
+    {
+      "path": "tests/helpers/meadows_earned_team_segment.gd",
+      "sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "bytes": 50000
+    },
+    {
+      "path": "tests/helpers/opening_geometry_navigator.gd",
+      "sha256": "d472c80d61e6acba253f9ed7c4e1ceaf9d9f6a46266b561b6f51748c7d1072c3",
+      "bytes": 26995
+    },
+    {
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "sha256": "ea1c2b7f76a7014b569477fce80948f6bd63470347ea18ff529604a5d98acbea",
+      "bytes": 42891
+    },
+    {
+      "path": "tests/helpers/meadows_earned_team_segment.gd",
+      "sha256": "d0ae23f17c75189b1b62f813182999d7ecd123a4e7b06a2a7fd77dfd880b9f4c",
+      "bytes": 49674
+    }
+  ],
+  "source_frozen": true,
+  "prior_fail_preserved": true,
+  "prior_fail_sha256": "cbf7fd68f927c38b85ca7a516ac480550e9d418238543a6fa784370c93eb51d1",
+  "runtime_run": false,
+  "acceptance_credit": false,
+  "M1": "OPEN; permits exactly one owner-executed run in the serialized queue",
+  "F17_4": "OPEN until full uninterrupted player chain passes",
+  "substantive_blockers": [],
+  "smallest_correction": "None justified by source review; preserve guards and diagnose any actual M1 refusal",
+  "conservative_false_refusals": [
+    "Exact floor touch reported as overlap",
+    "Skin/foot-band ambiguity or saturated native contacts",
+    "Constant-height sweep, slopes and limited road bends",
+    "Legitimate dynamic or stream transition"
+  ],
+  "runtime_assumptions": [
+    "Actual engine/backend contract and registration visibility",
+    "Terrain3D/raw/dynamic collision availability",
+    "Mounted callback timing and input consumption",
+    "Path completion and original performance assertions"
+  ],
+  "raw_report": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\strict-review.txt",
+  "raw_report_sha256": "1c3eefef257a8212e07cdc82a5014073d71a8e38f9a17dd79f669d3253c21cc0",
+  "capture": "capture.json",
+  "preserved_blocks": "preserved-blocks.json",
+  "primary_api": "primary-api-hashes.json",
+  "utc": "2026-09-30T21:21:58.7500565Z"
+}

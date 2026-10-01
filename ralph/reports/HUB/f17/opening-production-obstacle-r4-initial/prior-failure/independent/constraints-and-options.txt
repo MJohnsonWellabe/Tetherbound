@@ -1,0 +1,29 @@
+Read-only evidence constraints and options — no source gate or runtime completion disposition.
+Baseline HOLD: 8189ef734addce12d446c6c9a0f9d4016a0d657d. No tracked/Git/engine writes or retry were performed.
+
+Verified immutable raw hashes:
+native.txt 3d7124bd986062c8b23ef1dae4053849341760e7ff42f8f6f6037840d158b3d6
+parser.txt bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d
+receipt.json 4382ef99fa02e3dbab66c918ed16b604302ef827020f87574bf7fbd7084649cd
+diagnostic.json 7b3e0b57ea6cfb3250e1828dc3c8bab6f2a00ab40061849adc14efda5338372c
+The receipt reports parser exit0/17.656s, native exit1/293.203s; the campaign reports 277.246s and requested_prefix_passed=false. Raw terminal observation independently equals diagnostic.json's terminal. Receipt source pins match the held working tree.
+
+Evidence constraints:
+- The failure concerns wood at (-8,0.9,8), before the stone hint; terminal authored_road_hint is empty. The stone detour was not exercised by this failure.
+- Six cached manifolds each report two points: exact cached total 12. The eight detailed points describe only four of those six manifolds. No omitted point normal, depth or identity can be reconstructed.
+- The detailed prefix alternates Terrain RID67778878898179/shape33 with UP normal and RID5448982058764229/shape0 with near-horizontal normal. The current live query contains those same two identities, including wall normal approximately (0.930705,0,0.365770). This is floor plus wall contact, not a pure floor case.
+- Grounded+wall, zero counted recovery attempts and live zero-motion travel 0.000923336m below the approximately0.001m skin do not waive the independent cumulative contact cap. Swept slide depths are not a substitute for live overlap depth.
+- The six Terrain paths in the error are incomplete identification: _walk_diagnosis calls get_collider() without a contact index for each cached slide. That reads the first contact of each manifold; it does not enumerate the second collider. Its precise node/path is not established by the frozen detailed fields. Repeated RID identity does not prove duplicate contacts.
+- Own callback time is1117us at terminal, below10000us; the stated refusal is contact observation cap, not callback deadline. Neither sample supplies a sole runtime root cause for earlier failures.
+
+Policy analysis:
+The current rule counts every cached collision point and refuses when the cumulative count exceeds8. It crosses10 at the fifth two-point manifold; the sixth cached manifold exists but is not admitted by that validation loop. This eight-point admission policy is explicit in the held source and ROOT's current constraint. AGENTS/WORKFLOW do not themselves specify this particular numeric cap; their general testing rules cannot be used as permission to relax ROOT's narrower scope.
+
+AGENTS line59: “Never skip, disable or quarantine a test to make a selected check pass.” AGENTS line67 requires the named acceptance proof to pass and leaves failed/unavailable checks open. WORKFLOW lines307–309 requires real behaviour, including real parsed input events. WORKFLOW lines315–316 says to fix wrong implementation and never skip, disable or quarantine tests to get green. AGENTS line122 and WORKFLOW lines451–452 require a changed approach or re-scope after two unsuccessful harness fixes. WORKFLOW's general allowance for declared fixtures/shortcuts does not supersede the explicit no-grants/no-pose/no-checkpoints task scope.
+
+Options within that policy:
+1. A stronger bounded cached validator or clearer diagnostic can inspect/reject permitted records more precisely and reveal every contact's identity. It can coexist with the raw aggregate8 guard. It cannot admit this twelve-point frame while preserving that policy. Streaming12 points through an eight-slot buffer, merging by RID, counting unique pairs, or validating all12 safely and accepting them changes admission semantics even if resource use stays bounded. No such change is authorized here.
+2. A changed physical normal-input approach that avoids this wall contact before the cap triggers is compatible in principle. It must retain the same selected wood node, original shared1800 budget, door departure, actual movement/input and all original physical/query/callback/stall limits. A different heading's success is unproved. This report supplies no new route, implementation or retry.
+3. If no ordinary input path can satisfy the unchanged bounds, re-scope with the responsible owner or investigate the player-facing collision/controller problem as a separately scoped fix. Do not substitute a new cached admission policy or silently broaden geometry ownership.
+
+Under the present frozen scope, stronger validation alone cannot turn this rejected twelve-point frame into admissible traversal. Progress requires a physically different normal-input approach or an explicitly authorized re-scope. F17#4 remains OPEN; its complete earned opening chain is still missing.

@@ -1,0 +1,700 @@
+{
+  "verdict": "SOURCEFAIL",
+  "scope": "frozen packet readiness only; F17#4 OPEN",
+  "parent": "8189ef734addce12d446c6c9a0f9d4016a0d657d",
+  "source_sha256": "282731a0b8450aa2dedc9d617d1e12ac38e8b3300e9b812ae9f1f87d64fb93ba",
+  "patch_sha256": "cd7edb02cf0912b215733d84eaf0e1f8e01592a3af61db8382e9715751456f0a",
+  "freeze_sha256": "7540253827dcdd2761e48279f5366e9974b9098406d933638eda50bb12b7f96b",
+  "independent_script_sha256": "8a917a6b83926694674789f5aeae1762e75c66b186d47ce5435c2d02d5548681",
+  "checks": [
+    {
+      "name": "parent and lane",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "tracked diff navigator only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact32 frozen files and every hash",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact requested candidate source and patch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposal current raw tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposal current raw tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin autoload/game_state.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git autoload/game_state.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin autoload/game_state.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin scripts/net/encounter_host.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git scripts/net/encounter_host.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin scripts/net/encounter_host.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin scripts/combat/utility_effects.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git scripts/combat/utility_effects.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin scripts/combat/utility_effects.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin data/config/combat.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git data/config/combat.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin data/config/combat.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original exact pin data/config/building_prefabs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original equals pinned Git data/config/building_prefabs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected current pin data/config/building_prefabs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen patch truthfully reproduces original-to-proposal UTF8 bytes",
+      "passed": false,
+      "detail": {
+        "lossless_regenerated_sha256": "f22a170875b3c95b8a1ca0739467be16aab6bbdddd80af1702aacb6bc28f9e2f",
+        "supplied_sha256": "cd7edb02cf0912b215733d84eaf0e1f8e01592a3af61db8382e9715751456f0a",
+        "same_gather_bytes": true
+      }
+    },
+    {
+      "name": "patch has no nonexistent gather source change",
+      "passed": false,
+      "detail": "Supplied patch contains a mojibake-to-em-dash hunk despite identical original/proposal/current gather bytes."
+    },
+    {
+      "name": "exact archives protected path set",
+      "passed": true,
+      "detail": {
+        "count": 379
+      }
+    },
+    {
+      "name": "all archives raw hashes unchanged",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "exact tests protected path set",
+      "passed": true,
+      "detail": {
+        "count": 1985
+      }
+    },
+    {
+      "name": "all tests raw hashes unchanged",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "prior immutable raw native.txt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior immutable raw parser.txt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior immutable raw receipt.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior immutable raw diagnostic.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior immutable raw freeze-failure.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior actual FAIL source",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior receipt raw parser",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior receipt raw native",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior floor and wall twelve-point FAIL retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only five intended original functions changed",
+      "passed": true,
+      "detail": [
+        "_native_tick",
+        "_native_tick_impl",
+        "_production_observe",
+        "_production_record",
+        "reset"
+      ]
+    },
+    {
+      "name": "only three new production functions",
+      "passed": true,
+      "detail": [
+        "_production_collider_path",
+        "_production_heading",
+        "_production_wall_normals"
+      ]
+    },
+    {
+      "name": "original unchanged function _init",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _config",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _append_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function refused",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function refusal_reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _stop_geometry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function set_approach_radius",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function step",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function push_once",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function walk_to",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _spend",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _motion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _trainer_contract",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _registered_body_contract",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _foot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _paired_floor_skin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _floor_contacts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _start_clear_impl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _supported_step_from",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _choose",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function departure_pending",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _leaf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _open_leaf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _prepare_departure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _xz",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _contact_init",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _contact_mark",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _contact_stage_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _contact_capture",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _contact_vector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _contact_pose",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _contact_dump",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _supported_step",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _supported_step_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _start_clear",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function diagnose_supported_pose",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _production_contract",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _observed_live_clear",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _production_live_check",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _production_stop_input",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original unchanged function _choose_route",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual observer guards byte exact except timing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "default movement and every guard exact after production-only insertion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "reset only new unused nonproduction avoid state",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all hard constants unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exactly one syntactic query only in empty pre-wall branch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prospective finite-positive bounded input",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "full unchanged actor native motion query",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "normal extraction <=7 all reported points undeduplicated",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "normal data stronger guards used for steering only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "two math candidates against every reported wall",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "preferred hand and existing retry only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "new math gives no credit and resets no original budgets",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual aggregate8 policy unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact contact prefixes and queue retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "indexed diagnostic collider getters only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "snapshot included before unchanged final success guard",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "safety ceiling candidly disclosed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gather and original earned assertions byte exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen packet immutable through independent audit",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "failed": [
+    {
+      "name": "frozen patch truthfully reproduces original-to-proposal UTF8 bytes",
+      "passed": false,
+      "detail": {
+        "lossless_regenerated_sha256": "f22a170875b3c95b8a1ca0739467be16aab6bbdddd80af1702aacb6bc28f9e2f",
+        "supplied_sha256": "cd7edb02cf0912b215733d84eaf0e1f8e01592a3af61db8382e9715751456f0a",
+        "same_gather_bytes": true
+      }
+    },
+    {
+      "name": "patch has no nonexistent gather source change",
+      "passed": false,
+      "detail": "Supplied patch contains a mojibake-to-em-dash hunk despite identical original/proposal/current gather bytes."
+    }
+  ],
+  "engine_executed": false,
+  "tracked_writes": false,
+  "protected_archive_count": 379,
+  "unchanged_test_count": 1985,
+  "lossless_patch_sha256": "f22a170875b3c95b8a1ca0739467be16aab6bbdddd80af1702aacb6bc28f9e2f"
+}
