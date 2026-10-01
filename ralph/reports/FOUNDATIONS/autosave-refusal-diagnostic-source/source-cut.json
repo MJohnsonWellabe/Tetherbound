@@ -1,0 +1,35 @@
+{
+  "integration_source": "8f29e7b3a1d19795d66892a3986dc47e6b2f5a2d",
+  "original_source_sha256_lf": "fdebe4f26ac9a02372e2e864d0fab6e1c36fd5ae22ecf2f037ba6b0e37721443",
+  "proposed_source_sha256_lf": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8",
+  "patch_sha256": "834a74c7a5932abd490e2664f69fb9e410aba18177f11086e1dbb6444eea60b8",
+  "native_log_sha256": "cc0f4409e0d33e898a4eb372e7cc99daf95d30dcb72e1ee2d43600b813fe3856",
+  "receipt_sha256": "bfbf19d766c3331dc8a517bfb10cce190cfda47fd963d6218d408e1962fc5c18",
+  "closure_sha256": "56e81238872e57c155a8e7cd69556b7536689ffdada957b22048b5a0bb23d716",
+  "source_only": true,
+  "exact_original_validation_invocation_count_preserved": true,
+  "only_changes": [
+    "retain existing validator result",
+    "failure-only structured log after the unchanged native error"
+  ],
+  "preserved_source_sha256": {
+    "scripts/data/redesign_state.gd": "45e967db081630eab9f739684f04441df259a75e19d76a02ff3b734960d7a8d5",
+    "scripts/data/redesign_data.gd": "3086392d2eeb4cb3fa155b435f9372ee0d54bf9b7c3749be4631c278cafdab99",
+    "scripts/creatures/teaching.gd": "4128cf4a87384270412150ecb3bf24afdb497c049c2298ad89d7db57f77faac4",
+    "scripts/creatures/traits.gd": "70074025deee55868a238c51b5b81d5b925955b76e9c3e86e785f158bc869dc8",
+    "data/schema/character_state.schema.json": "ba8cf4398329a34df452a958c9ce6f515e486d1c38f12af47a0666bc69b589d9",
+    "data/schema/world_state.schema.json": "52be2e3bd38dc78e95aee635baff220e48479eba2ce742c16c229057fd4945e6",
+    "autoload/game_state.gd": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156",
+    "tests/test_save_redesign.gd": "9b38c4db496f1acdcfc3888d13fc6296cd9deb523fbe3c6c15b2208c2683e8c6",
+    "tests/test_autosave_fallback.gd": "88296d3a658d57bda1bb5cc141dcc7b89ebcb527d71a8746885ae10c875a3a7a"
+  },
+  "failure_payload": {
+    "prefix": "SAVE_SNAPSHOT_REFUSAL ",
+    "schema_version": 1,
+    "snapshot_provenance": "SHA256 of UTF-8 bytes of snapshot_json; serialize the exact already-rejected initial_data once",
+    "immutable_representation": "snapshot_json is a string retained by the existing raw log, not a live object or deferred worker"
+  },
+  "diagnosis": "Actual rejecting validator fields and mutation remain unproven until coordinator captures the diagnostic",
+  "runtime_verdict": "OPEN; no corrective state change or acceptance claim",
+  "engine_jobs_run_here": false
+}
