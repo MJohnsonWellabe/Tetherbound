@@ -1,0 +1,1103 @@
+{
+  "subjects": [
+    {
+      "id": "terrapup",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+          "sha256": "dfaf9519476da87d485e5ed8ee435989135810bc3b06e05a901d084143f52a21"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/terrapup/reference/back.png",
+          "sha256": "df3a1fcae452a98b0d6d668eeb7198c9555251f6e73050879aebb71dc6b5acfe"
+        },
+        {
+          "path": "assets/creatures/tetherbound/terrapup/reference/front.png",
+          "sha256": "7d6644616af817b332e0bc2ad40d4313aa1f1c75c74cc34067c76fca24d5e5cd"
+        },
+        {
+          "path": "assets/creatures/tetherbound/terrapup/reference/side.png",
+          "sha256": "e0f6a6fe461c910cf6dc9e6f857dd6d4711f3d9a27c2294f3b61f8a2d67ad064"
+        },
+        {
+          "path": "assets/creatures/tetherbound/terrapup/reference/three_quarter.png",
+          "sha256": "6458af34a4c3ae4d3c5c8a0721aeb4f9c233df588a9644c04eac7b62815cff74"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/audio.json": 1,
+        "data/config/chapter_curve.json": 1,
+        "data/config/combat.json": 1,
+        "data/config/opening.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "ripplet",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb",
+          "sha256": "2af2f490297c19406a27365077bdd6f45d84c49ccf846a05b46d1e57f2f4b4fc"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/ripplet/reference/back.png",
+          "sha256": "5285b10c5d9bea6b14cdfb04c122d80c124926bf4268d6083c341a855d013ed7"
+        },
+        {
+          "path": "assets/creatures/tetherbound/ripplet/reference/front.png",
+          "sha256": "3e62445dc1e0ac9fefd3f38b5a2dafbe3ed30487d8beb8192b31aec5e69296a1"
+        },
+        {
+          "path": "assets/creatures/tetherbound/ripplet/reference/side.png",
+          "sha256": "a12368e0ce10ad556ab62d6133043b56e901fd5dad237666b5dff5452322e8b5"
+        },
+        {
+          "path": "assets/creatures/tetherbound/ripplet/reference/three_quarter.png",
+          "sha256": "1e8a0b3b76da7b03dfd2035d67cf6af2101d81844b24100527fb817636a27e6d"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/opening.json": 1,
+        "data/config/water_roster.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "galewisp",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb",
+          "sha256": "70bbd671016f6f66652e09c22d36610f0f82b3dce7464fd61d105551a456bf00"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/galewisp/reference/back.png",
+          "sha256": "cb2d11c3e8342dda08b58e687ae8bf0c8b2bb9962b0701dd73938ea6d6893248"
+        },
+        {
+          "path": "assets/creatures/tetherbound/galewisp/reference/front.png",
+          "sha256": "28d64e0e290af99880e50e9776140b50fd8e55a69615c9cbbe3db47c9b4a27f8"
+        },
+        {
+          "path": "assets/creatures/tetherbound/galewisp/reference/side.png",
+          "sha256": "19822aca453fb437ff40345a3eda18d4f32040f1d0b04d799ac7128650b7997d"
+        },
+        {
+          "path": "assets/creatures/tetherbound/galewisp/reference/three_quarter.png",
+          "sha256": "fc86b926d31d96571934820af4c28b58c36de0242c1adc9fca4d41cfbc7e5f58"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/fly_traversal.json": 1,
+        "data/config/opening.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "mudsnout",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/mudsnout/models/creature_mudsnout_lod0.glb",
+          "sha256": "a786fc9fe50b6d933261eeba1e86937b49a08c867c5a262b709e1b0b30a89fd4"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/mudsnout/reference/back.png",
+          "sha256": "693570bec16d9a3a7d18c5369e6cc822149bf2b611d315ae7b51735d3027c687"
+        },
+        {
+          "path": "assets/creatures/tetherbound/mudsnout/reference/front.png",
+          "sha256": "7ad4faed7064c768a8f4e18350921819b0794f88677376def1370cba4f711b8c"
+        },
+        {
+          "path": "assets/creatures/tetherbound/mudsnout/reference/side.png",
+          "sha256": "c1437b49e60ab6bb1f67d2730a02971142b295947f2aa909e5759d817466bcc2"
+        },
+        {
+          "path": "assets/creatures/tetherbound/mudsnout/reference/three_quarter.png",
+          "sha256": "a0e442282c446cbb4e7c5606cac57c421a83a93f50e1a08ab5611607a2cde1e6"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/burrow_warrens.json": 2,
+        "data/config/chapter_curve.json": 1,
+        "data/config/combat.json": 1,
+        "data/config/evolution_lines.json": 2,
+        "data/config/progression.json": 1,
+        "data/config/redesign_level_curve.json": 3,
+        "data/config/shed_drops.json": 1,
+        "data/config/spawn_tables.json": 4
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "bramblebun",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb",
+          "sha256": "3375754f9b1f016e4b3bb8e957c947060e4a2ecf7857cf6ad548522b7d3f22ec"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/bramblebun/reference/back.png",
+          "sha256": "691857a9ada5906fa70a4f05af3669c8b68351b24f4caa2409aaa7aca606ea99"
+        },
+        {
+          "path": "assets/creatures/tetherbound/bramblebun/reference/front.png",
+          "sha256": "3ccad6e060ec2b48d9df3436c6b79341ba4e12a539a7d4d2f92bdf825292e9d0"
+        },
+        {
+          "path": "assets/creatures/tetherbound/bramblebun/reference/side.png",
+          "sha256": "977eca8bf4e852200c127c1185218980625004fbf4ec83925aa57736c24198b7"
+        },
+        {
+          "path": "assets/creatures/tetherbound/bramblebun/reference/three_quarter.png",
+          "sha256": "08c2bf138e2f898126e4db4fde410fb3b57d57a02464785e38bfb17969395354"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/audio.json": 1,
+        "data/config/chapter_curve.json": 1,
+        "data/config/combat.json": 1,
+        "data/config/opening.json": 1,
+        "data/config/redesign_level_curve.json": 1,
+        "data/config/spawns.json": 1,
+        "data/config/spawn_tables.json": 1,
+        "data/config/trade.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "burrowback",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb",
+          "sha256": "ec5d8cbcea2cdb7cd25101a3591e14814ca909a19ae9404885a8210725a275a7"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/burrowback/reference/back.png",
+          "sha256": "db7c62acd447cdfd23fcd162259edcaa9551caf200e953be6dc79b9bec05eefa"
+        },
+        {
+          "path": "assets/creatures/tetherbound/burrowback/reference/front.png",
+          "sha256": "f671c8abe02c495ad890547f0a46c0844afa7eeb6869c22b6fa14cf6b8778a9d"
+        },
+        {
+          "path": "assets/creatures/tetherbound/burrowback/reference/side.png",
+          "sha256": "2ff6c988e8979f1035a6d3deb303eb170e384ac6904644094a27da87f2ac9130"
+        },
+        {
+          "path": "assets/creatures/tetherbound/burrowback/reference/three_quarter.png",
+          "sha256": "40ed7d06ca36ea0e44a4c3db6d481af346268871b41a5814c504a93f88a8e740"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/audio.json": 1,
+        "data/config/burrow_warrens.json": 2,
+        "data/config/combat.json": 1,
+        "data/config/masters.json": 1,
+        "data/config/redesign_level_curve.json": 12,
+        "data/config/spawn_tables.json": 3,
+        "data/config/water_roster.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "meadowhart",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/meadowhart_bare/models/creature_meadowhart_bare_lod0.glb",
+          "sha256": "d02c229bc9c33b8e2717bb7524027ece0ec7e81cba71f013eae183eeb84405f8"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/meadowhart/reference/back.png",
+          "sha256": "6af653ca4173d9d00a73c23f307c9574e34dcdda2f6f9c291cc9fd01fdd0d056"
+        },
+        {
+          "path": "assets/creatures/tetherbound/meadowhart/reference/front.png",
+          "sha256": "3043d4d22b5e0ff6661a47e01992e33f9025b3c87efe094b31424ff0e7efa325"
+        },
+        {
+          "path": "assets/creatures/tetherbound/meadowhart/reference/side.png",
+          "sha256": "d13b4d570cae546d01935283217875783039a95ef1f8d42a4460ba6137f8c80c"
+        },
+        {
+          "path": "assets/creatures/tetherbound/meadowhart/reference/three_quarter.png",
+          "sha256": "e616f3ae2c98ff6feec9a1ec1bc7fdc51a14e8f02de1665da63190bda6b61319"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/lost_companion_reunion.json": 1,
+        "data/config/meadow_healing.json": 1,
+        "data/config/redesign_level_curve.json": 2,
+        "data/config/spawn_tables.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "galecrest",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb",
+          "sha256": "08b690381f612a995ec9974881e730adb2810167f8093443b7202a2455d42fa6"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/galecrest/reference/back.png",
+          "sha256": "08ca1c1e84af0f5c92b3f6d8eb727e0ac2f8f05bbc075ef63a5f2f24984ec3a3"
+        },
+        {
+          "path": "assets/creatures/tetherbound/galecrest/reference/side.png",
+          "sha256": "843b62babde0d74c4c39ad0eb909ae4e852806f432a3cb417c52c0dbe08461cf"
+        },
+        {
+          "path": "assets/creatures/tetherbound/galecrest/reference/three_quarter.png",
+          "sha256": "965e22f074d9ba572a3184c36c10d7641fc1c17e84f3420ce08ed21907ac15ac"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/audio.json": 1,
+        "data/config/cloudreach_chapter.json": 6,
+        "data/config/combat.json": 1,
+        "data/config/companion_presence.json": 1,
+        "data/config/fly_traversal.json": 2,
+        "data/config/redesign_level_curve.json": 11,
+        "data/config/shed_drops.json": 1,
+        "data/config/spawns.json": 1,
+        "data/config/spawn_tables.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "mirejaw",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb",
+          "sha256": "ec903c0c78edcd66b0beb253e89d58c609d896c49511448666c2c9d10c615690"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/mirejaw/reference/back.png",
+          "sha256": "df436ecfbaed0ba5ba099af9110640c98ab84ef71ac6b605dc74d9e66570a049"
+        },
+        {
+          "path": "assets/creatures/tetherbound/mirejaw/reference/front.png",
+          "sha256": "5f1d6a239917bacc0e035341632c38e0ee44682c8e22b591e57fa22f07e37954"
+        },
+        {
+          "path": "assets/creatures/tetherbound/mirejaw/reference/side.png",
+          "sha256": "7bdc1213baacf601e270a7766525b9599183ebd9066db040ef3f0a0e9566330c"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/redesign_level_curve.json": 7,
+        "data/config/water_characters.json": 7,
+        "data/config/water_encounters.json": 13,
+        "data/config/water_roster.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "riverdrake",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
+          "sha256": "aaf16bc62867ee0052667932a79d99b1fe83b8f8e47a8a5d3a51323cba1d324b"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/riverdrake/reference/back.png",
+          "sha256": "76bbcaa175bf5f4cc974abf8401b7660782f222e5d0bbf036d41691f6c52db93"
+        },
+        {
+          "path": "assets/creatures/tetherbound/riverdrake/reference/front.png",
+          "sha256": "f86455b1d89dcf12c42243e91b0317e6ef14adb9a55f7c5c19a54f47f9035553"
+        },
+        {
+          "path": "assets/creatures/tetherbound/riverdrake/reference/side.png",
+          "sha256": "925694b65c72efa5ea8fd9a999e5e356b548d04378924c1d3f651b2bd3d47ea7"
+        },
+        {
+          "path": "assets/creatures/tetherbound/riverdrake/reference/top.png",
+          "sha256": "adfbd001e3f7f7b1ddcd00117b42246f1cb0545c2c3e9cdab917ee0d4bab4029"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/redesign_level_curve.json": 10,
+        "data/config/water_characters.json": 10,
+        "data/config/water_encounters.json": 14,
+        "data/config/water_roster.json": 1,
+        "data/config/water_world.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "cloudfang",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/cloudfang/models/creature_cloudfang_lod0.glb",
+          "sha256": "b1eccad461c2474020b9bbe4bebe535b621c63baa571aa6b9a3fcfd05ac64727"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/cloudfang/reference/back.png",
+          "sha256": "eec75543a21371d250eedc10816bea110f2eb035a2ede13f475fb5cb77168fce"
+        },
+        {
+          "path": "assets/creatures/tetherbound/cloudfang/reference/front.png",
+          "sha256": "4775b71b3e56874746027e613ae711cd330ddf2ab2452022e371bd66d10014f0"
+        },
+        {
+          "path": "assets/creatures/tetherbound/cloudfang/reference/side.png",
+          "sha256": "e640b30f77f7187f40a052027c4bf426be5f17980de0bbd5a59a3e8a6e476087"
+        },
+        {
+          "path": "assets/creatures/tetherbound/cloudfang/reference/top.png",
+          "sha256": "cbd8f1a5222a50c8b9753295c4fea51864f7231d06bd1c6a2e6b19f3ad7b8b3a"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/cloudreach_chapter.json": 9,
+        "data/config/combat.json": 1,
+        "data/config/redesign_level_curve.json": 4
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "aeriex",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb",
+          "sha256": "53f7371fe14784e7ba5d87353197013b163046d3e4036a3df0023efdad59943d"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/aeriex/reference/back.png",
+          "sha256": "4d930ac52ba60da7c43920bda0a9b1e38c746a8d966e79b2b72e509cdc743a95"
+        },
+        {
+          "path": "assets/creatures/tetherbound/aeriex/reference/front.png",
+          "sha256": "db9fb03cbab0232d84116622339ca4c8142b4681a75c411ae8d47fbdfccc1d00"
+        },
+        {
+          "path": "assets/creatures/tetherbound/aeriex/reference/side.png",
+          "sha256": "17511fce680845f9b91ce9e1aaf78059a85a88f381d50822d114c748f595fe1f"
+        },
+        {
+          "path": "assets/creatures/tetherbound/aeriex/reference/top.png",
+          "sha256": "653ebdefa7f6962987da424dbe062f1c1359b5314e4d6caae9fe5ff79158130a"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/cloudreach_chapter.json": 5,
+        "data/config/combat.json": 1,
+        "data/config/redesign_level_curve.json": 4
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "tanglevolt",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_lod0.glb",
+          "sha256": "694daa6a8744d5c3d679c66a4afff1414fa2e198a319bec5f652c150e22d9b93"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/tanglevolt/reference/back.png",
+          "sha256": "93d9fac0274ceb6b4c4139c4cca963d4f9fc727bafc06157df47f98e34bd9f75"
+        },
+        {
+          "path": "assets/creatures/tetherbound/tanglevolt/reference/front.png",
+          "sha256": "6237a2725b3fe5ca0fbf30701c60b9c72dae1ee6dcb2ec8210295bffd538d284"
+        },
+        {
+          "path": "assets/creatures/tetherbound/tanglevolt/reference/side.png",
+          "sha256": "09137794a427ff69313364c8784d466063b0d1f4685a0150680d468207698922"
+        },
+        {
+          "path": "assets/creatures/tetherbound/tanglevolt/reference/top.png",
+          "sha256": "79e84aeb08160fad3bf1cfb87a5a2a33f7840b727bfdc633a7462ca246731c91"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/stormwood_encounters.json": 7,
+        "data/config/stormwood_trainers.json": 8
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "fulgocobra",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb",
+          "sha256": "10b96104ec7c6ab2711d8f87e230aad58544b27af60581c12ca1b35092c5a13e"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/fulgocobra/reference/back.png",
+          "sha256": "2fd6f10ff82bc798940e666531ec7946e9076456cd4e01d942827b15d2b9f3bb"
+        },
+        {
+          "path": "assets/creatures/tetherbound/fulgocobra/reference/front.png",
+          "sha256": "b4683b66aab7374836ab7e3029dfd6d565f8aba9f5762e5dbb013b7aa7db72fd"
+        },
+        {
+          "path": "assets/creatures/tetherbound/fulgocobra/reference/side.png",
+          "sha256": "69312d5d21ff08def6971bf0d0fc678bd2ea03a7da87b1bbdf0851dbad26181c"
+        },
+        {
+          "path": "assets/creatures/tetherbound/fulgocobra/reference/top.png",
+          "sha256": "7db7520461f30f89c52b4064519cbec8141d3f4b41306ec98bf902657f1143b6"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/stormwood_dynamo.json": 1,
+        "data/config/stormwood_encounters.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "tuskroot",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
+          "sha256": "bdaa2b20aba79d77c2c08f4c5ca3d6d01f32639248e7147b0509bf535d793317"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/tuskroot/reference/back.png",
+          "sha256": "caad96279bef05ba8b0e9ba2cee27cefbeea0d1df5b5c4f25a3c1a0c51d10c24"
+        },
+        {
+          "path": "assets/creatures/tetherbound/tuskroot/reference/front.png",
+          "sha256": "fe1c5d49b1d59c0dbebf9f59a516e54e5284976ca8bb5f954c1637f690801a31"
+        },
+        {
+          "path": "assets/creatures/tetherbound/tuskroot/reference/side.png",
+          "sha256": "febabe71b16b22bd8d58f9a49c85c911406056625e4260b5270080124d97a4e6"
+        },
+        {
+          "path": "assets/creatures/tetherbound/tuskroot/reference/three_quarter.png",
+          "sha256": "643a2f7104618295f16d89a6be577667b1edd35e4b10af70b7edcb97b3fe3b02"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/audio.json": 1,
+        "data/config/combat.json": 1,
+        "data/config/evolution_lines.json": 1,
+        "data/config/redesign_level_curve.json": 4,
+        "data/config/water_roster.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "ashtusk",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
+          "sha256": "bdaa2b20aba79d77c2c08f4c5ca3d6d01f32639248e7147b0509bf535d793317"
+        }
+      ],
+      "reference_inventory": [],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/audio.json": 1,
+        "data/config/combat.json": 1,
+        "data/config/evolution_lines.json": 1,
+        "data/config/masters.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "cannonback",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb",
+          "sha256": "afbecb9a3b083a5b674ef2d89d0b76e48d67f18c16deab1e917a991beafea279"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/cannonback/reference/back.png",
+          "sha256": "337b4c28ddf963aa0efa45d77c5558d25c1eaa64345ed170918f34533c5a57a2"
+        },
+        {
+          "path": "assets/creatures/tetherbound/cannonback/reference/front.png",
+          "sha256": "045013bd9359331a71153cdc6fa1036d6cda89e0b5ba9b5db773135aa652bde4"
+        },
+        {
+          "path": "assets/creatures/tetherbound/cannonback/reference/side.png",
+          "sha256": "c88f836b767cf8b345d12d6f9c4f96216295162de0ea13968f0fec5f3a7d7eea"
+        },
+        {
+          "path": "assets/creatures/tetherbound/cannonback/reference/three_quarter.png",
+          "sha256": "d13326b568a4006b79ab6d6e82277c75dd245379392a61210932b8fc0f3de0fd"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/creatures_visual.json": 1,
+        "data/config/evolution_lines.json": 1,
+        "data/config/masters.json": 1,
+        "data/config/redesign_level_curve.json": 8,
+        "data/config/water_characters.json": 8,
+        "data/config/water_encounters.json": 13,
+        "data/config/water_roster.json": 1,
+        "data/config/water_world.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "stormcapra",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/stormcapra/models/creature_stormcapra_lod0.glb",
+          "sha256": "48962dac6bd2d3969b8b0e1008bac3e77f887fb20deb66ea988c5826716cbb78"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/stormcapra/reference/back.png",
+          "sha256": "93fe35c1fc389faa2694111eae4e7a36e0ad7bcca0ca6b198a3c79c8782756b7"
+        },
+        {
+          "path": "assets/creatures/tetherbound/stormcapra/reference/front.png",
+          "sha256": "7895aad6a3d36d87ceddccb3dc964ef9bdd4dbc86a8a201b37cb33fe8983ae3a"
+        },
+        {
+          "path": "assets/creatures/tetherbound/stormcapra/reference/side.png",
+          "sha256": "e11b9ab33d01e565557492ab164e3c94ed091f878e6b5f1f97395ba424f99528"
+        },
+        {
+          "path": "assets/creatures/tetherbound/stormcapra/reference/top.png",
+          "sha256": "68e126a486e9b11596cfbcb447b21e4634ad65fb69d9ce56d7813027fada8b57"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/cloudreach_chapter.json": 4,
+        "data/config/combat.json": 1,
+        "data/config/evolution_lines.json": 1,
+        "data/config/masters.json": 1,
+        "data/config/redesign_level_curve.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "staticub",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb",
+          "sha256": "c2e42a53ebeb922b06564bd4ce210cb02b5d438bf0d816516cc327719d758c1a"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/staticub/reference/back.png",
+          "sha256": "f042da618fdfa273712885cdd295b7fda1b88a82386b43beba613e4f4ae89369"
+        },
+        {
+          "path": "assets/creatures/tetherbound/staticub/reference/front.png",
+          "sha256": "227a826e3cdba51d5181c6bad076e7d3660f35632c2b4d980225560b66c9df57"
+        },
+        {
+          "path": "assets/creatures/tetherbound/staticub/reference/side.png",
+          "sha256": "8ee3920bb274137136034e19011a3a8c1f9258896596fde0794425b56f237a1a"
+        },
+        {
+          "path": "assets/creatures/tetherbound/staticub/reference/top.png",
+          "sha256": "a740dc1443417923c320d7798a843580f96a53c7bd59b3274bf97b5d807f44f0"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/evolution_lines.json": 1,
+        "data/config/shed_drops.json": 1,
+        "data/config/stormwood_encounters.json": 4,
+        "data/config/stormwood_trainers.json": 7
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "voltarach",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb",
+          "sha256": "9553774feaa50f04e566d70fbce18c2b76474a0d6cbd9a71498f9284bdde29f1"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/voltarach/reference/back.png",
+          "sha256": "ab926e8c05ad3c16f8d6468fda0288329e17cccfe7141965f8031508d4a16e2b"
+        },
+        {
+          "path": "assets/creatures/tetherbound/voltarach/reference/front.png",
+          "sha256": "bff4a8277ef62384ba228316962e8f17ae83dda82f91c91b07077815c50ff63d"
+        },
+        {
+          "path": "assets/creatures/tetherbound/voltarach/reference/side.png",
+          "sha256": "ff3c27f34f56dde21a2fcc0b2734ec9b431b4aa661a34a3b25b2221118ee52f2"
+        },
+        {
+          "path": "assets/creatures/tetherbound/voltarach/reference/top.png",
+          "sha256": "7ee07c4a54839792b38544e0e884e8c492cdbc72540ff02e50ea83d4bfd40ace"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/masters.json": 1,
+        "data/config/stormwood_encounters.json": 3,
+        "data/config/stormwood_trainers.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "veridian",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb",
+          "sha256": "1345d6a890867bea7185ce47e3d86fd3f7ce4743bdd31fe4abb9c28c7ae23103"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/veridian/reference/front.png",
+          "sha256": "a24df98e78f26c384f22a45deba2d1a36a8ad98c45bd93377f547369609c4a82"
+        },
+        {
+          "path": "assets/creatures/tetherbound/veridian/reference/side.png",
+          "sha256": "67eb7bafc4171b3f82f718e60c044c12d2e2b61100dd09de227b7d7fded11575"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/audio.json": 1,
+        "data/config/combat.json": 1,
+        "data/config/meadow_healing.json": 1,
+        "data/config/stronghold_climax.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "abyssal_guardian",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+          "sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/abyssal_guardian/reference/back.png",
+          "sha256": "421563e9bcfc1f2287bf65a7e0331f4d6d280a487193e0dd53716c307743ba55"
+        },
+        {
+          "path": "assets/creatures/tetherbound/abyssal_guardian/reference/front.png",
+          "sha256": "f8b0bd05cc232130f732d6f614e96d6de6855f63a0546aaecdeba5315efc8a71"
+        },
+        {
+          "path": "assets/creatures/tetherbound/abyssal_guardian/reference/meshy_candidate_01.png",
+          "sha256": "6a25b39d0f03608a1914e5502f35333e94b8e989c8fe1a443557d261c1c36b69"
+        },
+        {
+          "path": "assets/creatures/tetherbound/abyssal_guardian/reference/side.png",
+          "sha256": "8bdc2b7725a913b39f9cdb84bd098a239dc002c28d0f27535e484f361a9cd8fb"
+        },
+        {
+          "path": "assets/creatures/tetherbound/abyssal_guardian/reference/top.png",
+          "sha256": "caf3770ecdc2a52653c9ef82ea3a918fb4943243e628c97cbf4bf3d52be7a435"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/combat.json": 1,
+        "data/config/water_encounters.json": 1,
+        "data/config/water_roster.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "solmane",
+      "kind": "creature",
+      "models": [
+        {
+          "path": "assets/creatures/tetherbound/solmane/models/creature_solmane_lod0.glb",
+          "sha256": "f5fab58e256087bcb61b01b868314468a177d718adb8e904ce58fd447b70025c"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/solmane/reference/back.png",
+          "sha256": "1283f2b36d3be2fbcc8b1397f73e0a7cceb4296a43dfe749a092513cbbc84b41"
+        },
+        {
+          "path": "assets/creatures/tetherbound/solmane/reference/front.png",
+          "sha256": "9b6ce808daa11a189acdaa6548d6a641290ab0abdad9a43a7a65f899439939cd"
+        },
+        {
+          "path": "assets/creatures/tetherbound/solmane/reference/side.png",
+          "sha256": "0ef31a924ad8972364833f61f57f94bf0333774c339d651f5423ff61457999fe"
+        },
+        {
+          "path": "assets/creatures/tetherbound/solmane/reference/top.png",
+          "sha256": "9dcc53f12439942ba361b4588a11620065f7be41d65db60ce0b3ad372710278a"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/cloudreach_solmane_climax.json": 1,
+        "data/config/combat.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "stormursa",
+      "kind": "creature",
+      "models": [],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
+          "sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/evolution_lines.json": 1,
+        "data/config/masters.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "grandpa",
+      "kind": "npc_family",
+      "models": [
+        {
+          "path": "assets/characters/grandpa/grandpa_lod0.glb",
+          "sha256": "e48d252a9d68f55e589d1d58d5631a8c4c753c779fc6e276b3f99579a589175b"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/grandpa/reference/back.png",
+          "sha256": "a938f93461f7c8fd4aee38db980fa79e2e633c232a84c90f986c60f24a759ce9"
+        },
+        {
+          "path": "assets/creatures/tetherbound/grandpa/reference/front.png",
+          "sha256": "d1495889815b13f18910bd11b588f61260317674b096ab9ba9bb103e2b2adb62"
+        },
+        {
+          "path": "assets/creatures/tetherbound/grandpa/reference/head.png",
+          "sha256": "e11f385d97095fd8a4583b479f2c95b3016861d9eef7904de27f0fbf54f3103b"
+        },
+        {
+          "path": "assets/creatures/tetherbound/grandpa/reference/side.png",
+          "sha256": "b236a4d5a98e9f5c9097211f7290b136876f310078f424fe30b9ebf9eb25def5"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/art.json": 1,
+        "data/config/opening.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "wandering_trainer",
+      "kind": "npc_family",
+      "models": [
+        {
+          "path": "assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+          "sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/wandering_trainer/reference/board_panel_source.png",
+          "sha256": "a5849fd4587b504329eb91b3f88ca38755093e5d01048a7def1b422102065b84"
+        },
+        {
+          "path": "assets/creatures/tetherbound/wandering_trainer/reference/front.png",
+          "sha256": "9eaaa5825bb091c34d3853ecb94e4e89f89e4ffd1ccb900702b2c3b06afd90d5"
+        },
+        {
+          "path": "assets/creatures/tetherbound/wandering_trainer/reference/side.png",
+          "sha256": "83f8df1cbab566910fe2fd929384a24fc7860fc46dbe97b4a57bb6d1687648f7"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/art.json": 1,
+        "data/config/cloudreach_chapter.json": 3,
+        "data/config/cloudreach_npc_runtime.json": 1,
+        "data/config/masters.json": 1,
+        "data/config/stormwood_npcs.json": 2,
+        "data/config/stormwood_trainers.json": 4,
+        "data/config/water_characters.json": 12
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "grunt",
+      "kind": "npc_family",
+      "models": [
+        {
+          "path": "assets/characters/grunt/grunt_lod0.glb",
+          "sha256": "eaef9fafa5ca31148cd9ff24801fbaa162c9c6a0553d7e581bfbb6e2d6b066f6"
+        },
+        {
+          "path": "assets/characters/grunt_a/grunt_a_lod0.glb",
+          "sha256": "57ea840ecbf629ccec39b71b553308616514fd3f2656e8abdb4297ed910e003f"
+        },
+        {
+          "path": "assets/characters/grunt_b/grunt_b_lod0.glb",
+          "sha256": "d993378718eb6facf23dc3247e65ee724220fa0b9c4dfd66e7e363a241b1d20a"
+        },
+        {
+          "path": "assets/characters/grunt_c/grunt_c_lod0.glb",
+          "sha256": "13bedc88c2e46be6d61cd3ad280954322eef945ac75e6cd7d94f8a680917f89a"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/grunt/reference/_unused_three_quarter_back.png",
+          "sha256": "63108a223f642b101e0dd86b75a4e7c3d5ccf6056e2bd492679b1eb5b90ef7e8"
+        },
+        {
+          "path": "assets/creatures/tetherbound/grunt/reference/back.png",
+          "sha256": "3e774580d112f01e1d276ad2da313d4a740b43c9cdc70aa4a112a43f370b4814"
+        },
+        {
+          "path": "assets/creatures/tetherbound/grunt/reference/front.png",
+          "sha256": "d0ac3b5bd418ff84ea88df23c70c3137f26170ac959ed1f392729580fe41fcc0"
+        },
+        {
+          "path": "assets/creatures/tetherbound/grunt/reference/side.png",
+          "sha256": "1bd908af8fd6a4d098ab0bda7c89fb8f82ab7490d5ec3366f707660f67c4dd86"
+        },
+        {
+          "path": "assets/creatures/tetherbound/grunt/reference/three_quarter.png",
+          "sha256": "1b0d192fb46518dcbe33c743a2579beba9ef1f47de7a819dd04ee313a2d5000a"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/art.json": 1,
+        "data/config/cloudreach_chapter.json": 1,
+        "data/config/cloudreach_encounters.json": 1,
+        "data/config/npc_ranks.json": 4,
+        "data/config/relay_site.json": 2,
+        "data/config/south_bridge_dressing.json": 1,
+        "data/config/tether_relay.json": 1,
+        "data/config/water_characters.json": 7,
+        "data/config/water_combat.json": 1
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "young_trainer",
+      "kind": "npc_family",
+      "models": [
+        {
+          "path": "assets/characters/young_trainer/young_trainer_lod0.glb",
+          "sha256": "9be7d137d951732c2f7aa1e7bb029c4aa703d4b48b3de0585c94861a38463b29"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/young_trainer/reference/board_panel_source.png",
+          "sha256": "522575d5d96801f2bc2c108f5c6639bb0320d58721b4a760a583a63d7b6991ad"
+        },
+        {
+          "path": "assets/creatures/tetherbound/young_trainer/reference/front.png",
+          "sha256": "3373d5eb403f1efc78143c2103f2bf044e1c6c57279c1b5bb66734e17da16405"
+        },
+        {
+          "path": "assets/creatures/tetherbound/young_trainer/reference/side.png",
+          "sha256": "7f01200ba768eb9a7bc97e6ba19af72dfac8efd0a7384b4cad6dbca900cdd4e6"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/art.json": 1,
+        "data/config/cloudreach_chapter.json": 3,
+        "data/config/stormwood_dialogue_presentation.json": 1,
+        "data/config/stormwood_npcs.json": 2,
+        "data/config/stormwood_trainers.json": 4,
+        "data/config/water_characters.json": 5
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "trader",
+      "kind": "npc_family",
+      "models": [
+        {
+          "path": "assets/characters/trader/trader_lod0.glb",
+          "sha256": "e45db6e5cb2378cd2c2f3d950b34dc77fe5d5a787dcab92a1be7e8a2a6b55194"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/trader/reference/board_panel_source.png",
+          "sha256": "d10888d92589712a228b9778477fc97b23a611efc1045b1d5d36960df24c2ca1"
+        },
+        {
+          "path": "assets/creatures/tetherbound/trader/reference/front.png",
+          "sha256": "af6c0829327492450462844067eff8f7d04244c28dbeeb080ede81bab4240cc1"
+        },
+        {
+          "path": "assets/creatures/tetherbound/trader/reference/side.png",
+          "sha256": "e0f66c83eec4e74f20df3f8f4461b4691f404ab1fc94f664b7d9f5f6c3f7d98e"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/art.json": 1,
+        "data/config/cloudreach_chapter.json": 2,
+        "data/config/stormwood_dialogue_presentation.json": 1,
+        "data/config/stormwood_npcs.json": 4,
+        "data/config/stormwood_trainers.json": 1,
+        "data/config/village_npcs.json": 1,
+        "data/config/water_characters.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    },
+    {
+      "id": "innkeeper",
+      "kind": "npc_family",
+      "models": [
+        {
+          "path": "assets/characters/innkeeper/innkeeper_lod0.glb",
+          "sha256": "61bef7c488b378d04d7a4c6e2eb6f043c9c8e72a7419a1298eea58f263434185"
+        }
+      ],
+      "reference_inventory": [
+        {
+          "path": "assets/creatures/tetherbound/innkeeper/reference/board_panel_source.png",
+          "sha256": "3cf56a67b1b8f3fd8972e053f55977891b1557a44c4d5bba85663a63bce4c457"
+        },
+        {
+          "path": "assets/creatures/tetherbound/innkeeper/reference/front.png",
+          "sha256": "93dbd382846d08da9cb63bc5e9e75aea30dc0f521e2633bdea6fd15b9d5d91a5"
+        },
+        {
+          "path": "assets/creatures/tetherbound/innkeeper/reference/side.png",
+          "sha256": "7abdbb8f9a169c0fdf319564711ecf16308ed4b0d5ba0262307b6dfc45eb7131"
+        }
+      ],
+      "reference_inventory_is_not_inspection": true,
+      "config_literal_occurrences": {
+        "data/config/art.json": 1,
+        "data/config/cloudreach_chapter.json": 2,
+        "data/config/stormwood_npcs.json": 2,
+        "data/config/village_npcs.json": 1,
+        "data/config/water_characters.json": 2
+      },
+      "status": "source_audited_visual_proof_pending",
+      "candidate_enabled": false
+    }
+  ],
+  "count": 30,
+  "baseline": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "ranking_change": "Fulgocobra replaces Sparkit in row14: settled Stormwood legendary; Sparkit remains in all-species pose pass.",
+  "galecrest": "retain rebuilt identity and scale; scoped historical PASS is not a current F36 PASS",
+  "stormursa": "reuse F29 candidate identity/4.10m target; no new roster or runtime activation",
+  "reference_and_asset_confirmations": "Pending drafted/inspected references and ROOT-queued native before/after code-blind verdicts. Inventory and source counts are not acceptance."
+}

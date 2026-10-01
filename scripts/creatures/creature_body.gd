@@ -20,6 +20,7 @@ extends CharacterBody3D
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
+const POSE_CANDIDATES := preload("res://scripts/creatures/creature_pose_candidates.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
@@ -658,7 +659,11 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 	if players.is_empty():
 		push_warning("model for '%s' has no AnimationPlayer; it will not animate" % species_id)
 		return
-	_animator = ANIMATOR.new(players[0] as AnimationPlayer, look.get("animations", {}))
+	var player := players[0] as AnimationPlayer
+	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {}))
+	_animator = ANIMATOR.new(player, clips)
+	if bool(get_meta("f36_pose_candidate_installed", false)):
+		_animator.call("bind_candidate_pivot", _model)
 
 
 ## Scale and centre an imported model so it stands on the node's origin at the
@@ -2582,6 +2587,14 @@ func rest_pose_receipt() -> Dictionary:
 func revive_animation() -> void:
 	if _animator != null:
 		_animator.call("revive")
+
+
+## Presentation hook for traversal owners and remote proxies. Call from the
+## already-authorized mounted/swimming/flying state, and clear on dismount.
+## This never grants traversal, moves collision, or mutates saved state.
+func set_traversal_pose(role: String) -> void:
+	if _animator != null:
+		_animator.call("set_traversal_role", role)
 
 
 ## --- catching, the creature's half ------------------------------------------

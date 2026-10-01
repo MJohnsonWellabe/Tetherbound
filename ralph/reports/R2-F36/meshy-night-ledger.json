@@ -1,0 +1,7 @@
+{
+  "cap_per_night": 30,
+  "timezone": "America/Chicago",
+  "tasks": [],
+  "actual_meshy_submissions": 0,
+  "note": "No Meshy API credential in the F36 session. Imagegen reference drafting is recorded separately and is not a Meshy task. Unit-test mocked task IDs are confined to a temporary fixture and never recorded here. Use f36_meshy_guard.py for every attended generation/refine/retexture/retry; uncertain submissions retain cap slots. F36 is the sole generation owner."
+}

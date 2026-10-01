@@ -43,6 +43,9 @@ var _telegraph_attack_clip := ""
 var _telegraph_contact_position := 0.0
 var _hitstop_speed_before := 1.0
 var _hitstop_active := false
+var _traversal_role := ""
+var _candidate_pivot: Node3D = null
+var _candidate_pivot_before := Transform3D.IDENTITY
 
 
 func _init(animation_player: AnimationPlayer, clips: Dictionary) -> void:
@@ -62,6 +65,11 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 	_hold = maxf(0.0, _hold - delta)
 	if _hold > 0.0:
 		return
+	if _traversal_role != "" and _resolve(_traversal_role) != "":
+		# A rider at rest keeps the installed idle, avoiding a walk-in-place.
+		if _traversal_role != "ride" or speed >= STILL_SPEED:
+			_play(_traversal_role, true)
+			return
 
 	if speed < STILL_SPEED:
 		_play(IDLE, true)
@@ -90,6 +98,8 @@ func play_once(role: String) -> void:
 		return
 	_clear_telegraph_attack()
 	_hold = _player.get_animation(clip).length
+	if clip.begins_with("f36_candidate/"):
+		_current = ""
 	_play(role, false)
 
 
@@ -140,6 +150,21 @@ func revive() -> void:
 	_hold = 0.0
 	_current = ""
 	_clear_telegraph_attack()
+	_restore_candidate_pivot()
+
+
+func set_traversal_role(role: String) -> void:
+	_traversal_role = role if role in ["ride", "swim", "fly_grip"] else ""
+
+
+func bind_candidate_pivot(pivot: Node3D) -> void:
+	_candidate_pivot = pivot
+	_candidate_pivot_before = pivot.transform
+
+
+func _restore_candidate_pivot() -> void:
+	if is_instance_valid(_candidate_pivot):
+		_candidate_pivot.transform = _candidate_pivot_before
 
 
 ## W12-COMPANION-0904. Play `role` once IF this rig has a clip for it (its own
@@ -191,6 +216,8 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	if clip == "" or clip == _current:
 		return
 	_current = clip
+	if not clip.begins_with("f36_candidate/"):
+		_restore_candidate_pivot()
 	var animation := _player.get_animation(clip)
 	if animation != null:
 		animation.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
