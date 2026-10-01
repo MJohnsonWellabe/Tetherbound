@@ -207,7 +207,7 @@ func test_regional_credits_save_is_idempotent_and_player_local() -> void:
 func test_stable_character_credits_receipt_is_global_across_host_contexts() -> void:
 	var game := _credits_game()
 	var initial := HOMECOMING.context(game)
-	var first_id := HOMECOMING.acknowledgement_intent(initial, HOMECOMING.CREDITS_SEEN_FLAG).transaction_id
+	var first_id: String = HOMECOMING.acknowledgement_intent(initial, HOMECOMING.CREDITS_SEEN_FLAG).transaction_id
 	assert_true(await HOMECOMING.complete_credits(game, game.local.character_id, initial))
 	game.world_instance_id = "another-accepted-world"
 	game.session_epoch = "another-authority-session"

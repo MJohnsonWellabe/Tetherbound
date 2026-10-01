@@ -75,9 +75,12 @@ var _local: Array = []
 var _realm_id := ""
 var _realm_data: Dictionary = {}
 var _regional_ending: Dictionary = {}
+## Optional owner for pure reader fixtures; production resolves the live Game.
+var _ending_owner: Object = null
 
 
-func _init() -> void:
+func _init(ending_owner: Object = null) -> void:
+	_ending_owner = ending_owner
 	_regional_ending = _read_data(REGIONAL_ENDING_PATH)
 	set_realm("meadows")
 
@@ -137,13 +140,14 @@ func main_entries(progression: RefCounted) -> Array:
 
 
 ## Only the current character's canonical accepted outcome guides the ending.
-## The F20 reader owns return/arrival presentation and ends this override after
-## personal credits. Raw relics/legacy receipt strings cannot grant eligibility.
+## The F20 reader ends this presentation override after personal credits.
 func _active_main(progression: RefCounted) -> Array:
 	if progression == null or _regional_ending.is_empty():
 		return _main
-	var tree := Engine.get_main_loop() as SceneTree
-	var game: Node = tree.root.get_node_or_null(^"Game") if tree != null else null
+	var game: Object = _ending_owner
+	if game == null:
+		var tree := Engine.get_main_loop() as SceneTree
+		game = tree.root.get_node_or_null(^"Game") if tree != null else null
 	var ending: Array[Dictionary] = preload("res://scripts/story/regional_homecoming.gd").objective_rows(
 		game, _regional_ending, _realm_id)
 	return ending if not ending.is_empty() else _main
