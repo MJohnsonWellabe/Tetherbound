@@ -16,10 +16,76 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_restore_witness": return _restore_witness(tree, args)
 		"f48_participants": return await _participants(tree, args)
 		"f48_watch_portal": return _watch_portal(tree)
+		"f48_arm_boundary": return _arm_boundary(tree, args)
 	return _result(false, "Unknown F48 action: " + action)
 
 static func _result(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
+
+static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
+	var actions := {"craft": "station_craft", "release": "trait_release", "feast": "feast_feed",
+		"key": "portal_key", "relic": "relic_hang", "essence_spend": "altar_spend"}
+	var transaction := str(args.get("transaction", ""))
+	var phase := str(args.get("phase", ""))
+	var pid := int(args.get("guest_pid", -1))
+	var character := str(args.get("character_id", ""))
+	var token := str(args.get("token", ""))
+	if writer == null or game == null or not writer.has_signal("transaction_boundary") or not actions.has(transaction) \
+		or phase not in ["after_host_write_before_delivery", "after_owner_write_before_ack"] \
+		or pid <= 0 or character.is_empty() or token.is_empty() or tree.has_meta("f48_boundary_armed"): return _result(false, "Exact production boundary cannot be armed")
+	if (phase == "after_host_write_before_delivery") != bool(game.call("is_host")) \
+		or (phase == "after_owner_write_before_ack" and (pid != OS.get_process_id() or character != game.local.character_id)):
+		return _result(false, "Boundary observer is not the actual host/owner process")
+	var output := OS.get_environment("TB_PROOF_OUT")
+	if output.is_empty(): return _result(false, "Detached boundary evidence directory unavailable")
+	var path := output.path_join("f48-boundaries").path_join(token.validate_filename() + ".json")
+	if FileAccess.file_exists(path): return _result(false, "Boundary token already exists; fresh output required")
+	var world_ref := weakref(game.world)
+	var namespace := str(game.world.reward_delivery_namespace)
+	var epoch := str(game.session.call("_altar_current_epoch"))
+	var previous_receipts: Array[String] = []
+	for row: Variant in game.world.reward_deliveries.values():
+		if row is Dictionary and row.get("character_id") == character and not str(row.get("receipt", "")).is_empty(): previous_receipts.append(str(row.receipt))
+	var observer := func(observation: Dictionary) -> void:
+		if tree.get_meta("f48_boundary_fired", false) == true or observation.get("phase") != phase \
+			or observation.get("action") != actions[transaction] or observation.get("character_id") != character \
+			or observation.get("world_namespace") != namespace or game.world != world_ref.get_ref() \
+			or game.session.call("_altar_current_epoch") != epoch: return
+		if str(observation.get("delivery_id", "")).is_empty() or str(observation.get("receipt", "")).is_empty(): return
+		if previous_receipts.has(str(observation.receipt)): return
+		if transaction == "key" and observation.get("biome") != "tidewake": return
+		var evidence := {"token": token, "phase": phase, "transaction": transaction,
+			"guest_pid": pid, "observer_pid": OS.get_process_id(), "session_epoch": epoch,
+			"observation": observation.duplicate(true), "files": _observe(tree)}
+		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		if file == null: return
+		file.store_string(JSON.stringify(evidence, "\t"))
+		file.flush()
+		file.close()
+		tree.set_meta("f48_boundary_fired", true)
+		# Hard death occurs inside the synchronous production writer edge,
+		# before it can proceed to delivery/ACK. No graceful quit or autosave.
+		if OS.kill(pid) != OK:
+			evidence.kill_failed = true
+			var failed := FileAccess.open(path, FileAccess.WRITE)
+			if failed != null:
+				failed.store_string(JSON.stringify(evidence, "\t"))
+				failed.close()
+			return
+		if pid != OS.get_process_id():
+			var deadline := Time.get_ticks_msec() + 2000
+			while OS.is_process_running(pid) and Time.get_ticks_msec() < deadline: OS.delay_msec(1)
+			evidence.guest_exit_observed = not OS.is_process_running(pid)
+			var confirmed := FileAccess.open(path, FileAccess.WRITE)
+			if confirmed != null:
+				confirmed.store_string(JSON.stringify(evidence, "\t"))
+				confirmed.close()
+	writer.connect("transaction_boundary", observer)
+	tree.set_meta("f48_boundary_armed", observer)
+	return _result(true, "Armed real writer boundary for original admitted character; no state mutation")
 
 static func _observe(tree: SceneTree) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")

@@ -113,6 +113,7 @@ func commit_alpha_plan(plan: Dictionary) -> Dictionary:
 	var world_id := str(world.world_id)
 	var namespace := str(world.reward_delivery_namespace)
 	var epoch := str(session.call("_altar_current_epoch"))
+	game.call("_sync_clock_state")
 	var before: Dictionary = world.call("save_data")
 	var revision := int(world.revision)
 	var sequence := int(ledger.seq)
