@@ -7,6 +7,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const PARTY := preload("res://autoload/party.gd")
 const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
 
 class SingleMember extends RefCounted:
 	var creature: RefCounted
@@ -32,9 +33,14 @@ static func decode(payload: Variant) -> RefCounted:
 static func _valid(payload: Variant) -> bool:
 	if not payload is Dictionary:
 		return false
-	# Derive types/fields from the canonical writer so additions cannot silently
-	# disappear from captures. Capture records are new records, not legacy saves.
+	# The canonical writer emits distinct complete legacy and initialized
+	# loadout shapes. A blank instance describes only the former, while actual
+	# species spawns can carry the latter even with new gameplay flags off.
 	var schema: Dictionary = SAVE.new()._party_to_array(SingleMember.new(INSTANCE.new()))[0]
+	var modern_template := INSTANCE.new()
+	modern_template.loadout_initialized = true
+	var modern_schema: Dictionary = SAVE.new()._party_to_array(SingleMember.new(modern_template))[0]
+	if payload.size() == modern_schema.size(): schema = modern_schema
 	if payload.size() != schema.size():
 		return false
 	for key: String in schema:
@@ -51,6 +57,9 @@ static func _valid(payload: Variant) -> bool:
 			return false
 	if not SPECIES.has(payload.species_id):
 		return false
+	# Exact shape/type checks precede semantic preflight. Partial, forged or
+	# incompatible new loadout documents cannot fall back to legacy repair.
+	if not TEACHING.party_loadout_errors([payload]).is_empty(): return false
 	for key: String in ["base_hp", "base_attack", "base_defence", "max_hp", "attack", "defence", "level"]:
 		if float(payload[key]) <= 0.0:
 			return false

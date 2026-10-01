@@ -831,9 +831,16 @@ func reconcile_reward_deliveries() -> void:
 			_process_reward_delivery(raw as Dictionary)
 
 
+func _owner_training_blocks_character_write(game: Node) -> bool:
+	if game == null or not game.get("local") is RefCounted: return true
+	var session: Variant = game.get("session")
+	if not session is Node or not session.has_method("_owner_training_mutation_blocked"): return true
+	var blocked: Variant = session.call("_owner_training_mutation_blocked", game.get("local"))
+	return not blocked is bool or blocked
+
+
 func _process_reward_delivery(delivery: Dictionary) -> void:
-	var training_game := _game()
-	if training_game != null and training_game.get("session") is Node and training_game.get("session").call("_owner_training_mutation_blocked", training_game.get("local")) == true: return # Existing durable reward row retries after settlement.
+	if _owner_training_blocks_character_write(_game()): return # Existing durable reward row retries after settlement.
 	if delivery.get("kind") == "creature_training" or str(delivery.get("delivery_id", "")).begins_with("creature_training:"):
 		return # Typed revision/receipt ACK only, never ordinary reward escrow.
 	var game := _game()
@@ -1158,7 +1165,7 @@ func reconcile_creature_training_before_ready() -> bool:
 	row = game.get("world").reward_deliveries.get(id)
 	return row is Dictionary and row.status == "accepted" \
 		and game.get("local").redesign_character.transaction_receipts.has(row.receipt) \
-		and game.get("session").call("_owner_training_mutation_blocked", game.get("local")) != true
+		and not _owner_training_blocks_character_write(game)
 
 
 ## Only called after private actor handoff and registry ACK. A process restart

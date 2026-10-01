@@ -44,6 +44,8 @@ class Saver extends RefCounted:
 ## One stub answers both the ledger's `registry()` and the director's
 ## `peers()`, so the two can never disagree about who is admitted.
 class SessionStub extends Node:
+	func _owner_training_mutation_blocked(player: RefCounted) -> bool:
+		return get_parent() == null or get_parent().get("local") != player
 	var host := true
 	var peer_id := HOST
 	var rows: RefCounted = PEER_REGISTRY.new()

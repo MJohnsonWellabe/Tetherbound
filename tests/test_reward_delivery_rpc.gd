@@ -32,6 +32,10 @@ class Saver extends RefCounted:
 
 
 class SessionStub extends Node:
+	var training_blocked: Variant = false
+	func _owner_training_mutation_blocked(player: RefCounted) -> Variant:
+		if get_parent() == null or get_parent().get("local") != player: return true
+		return training_blocked
 	var host := true
 	var active := false
 	var admitted := true
@@ -162,6 +166,44 @@ func test_character_save_failure_rolls_back_personal_mutation_and_sends_no_ack()
 	assert_eq(_game.save_system.character_writes, 1)
 	assert_eq(_game.save_system.world_writes, 1,
 		"no ACK acceptance save occurs after the character save fails")
+
+
+func test_training_guard_defers_original_reward_until_unblocked_exactly_once() -> void:
+	_game.session.training_blocked = true
+	var verdict: Dictionary = _rpc.call("_commit_here", _intent(), 1)
+	assert_true(bool(verdict.get("ok")), "the world reward is durable while its owner write waits")
+	assert_eq(_game.world.reward_deliveries.size(), 1)
+	var original: Dictionary = _game.world.reward_deliveries.values()[0].duplicate(true)
+	assert_eq(original.status, "pending")
+	assert_eq(_game.local.inventory.count("coin"), 0)
+	assert_eq(_game.save_system.character_writes, 0)
+	assert_true(_game.local.satchel_escrow.is_empty())
+	_game.session.training_blocked = false
+	_rpc.call("reconcile_reward_deliveries")
+	assert_eq(_game.local.inventory.count("coin"), 3)
+	assert_eq(_game.save_system.character_writes, 1)
+	assert_eq(_game.world.reward_deliveries[original.delivery_id].status, "accepted")
+	_rpc.call("reconcile_reward_deliveries")
+	assert_eq(_game.local.inventory.count("coin"), 3)
+	assert_eq(_game.save_system.character_writes, 1)
+
+
+func test_missing_or_malformed_training_guard_never_allows_character_write() -> void:
+	var delivery := preload("res://scripts/net/reward_delivery.gd").make_record(
+		_game.world.world_id, "guard-contract-world", "guard-contract", "host-a", "coin", 3)
+	assert_false(delivery.is_empty())
+	for malformed: Variant in [null, 0, 1, "false", {}]:
+		_game.session.training_blocked = malformed
+		_rpc.call("_process_reward_delivery", delivery)
+		assert_eq(_game.local.inventory.count("coin"), 0)
+		assert_eq(_game.save_system.character_writes, 0)
+		assert_true(_game.local.satchel_escrow.is_empty())
+	_game.session = Node.new()
+	_game.add_child(_game.session)
+	_rpc.call("_process_reward_delivery", delivery)
+	assert_eq(_game.local.inventory.count("coin"), 0)
+	assert_eq(_game.save_system.character_writes, 0)
+	assert_true(_game.local.satchel_escrow.is_empty())
 
 
 func test_ack_sender_must_own_the_journal_character() -> void:
