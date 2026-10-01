@@ -1,0 +1,86 @@
+{
+  "measurement": "CPU skinned mesh against bind floor; approximate 240 Hz samples; not live terrain or visual acceptance",
+  "assets": {
+    "tuskroot": {
+      "asset": "assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
+      "source_sha256": "ff702d0d0a12d2a07da4d3929658beff76ac2573c42feb2ec487f0311875ebe2",
+      "candidate_sha256": "bdaa2b20aba79d77c2c08f4c5ca3d6d01f32639248e7147b0509bf535d793317",
+      "source_worst_floor_m": -1.3063857219579917,
+      "candidate_worst_floor_m": -3.2644067033730456e-07,
+      "source_mesh_fitted_height_m": 3.5999999046325684,
+      "max_vertex_displacement_m": 1.484012678389349,
+      "neutral_boundary_error_m": [
+        8.592456853043983e-07,
+        4.6104716172385936e-07
+      ],
+      "species_sharing_asset": [
+        "tuskroot",
+        "ashtusk"
+      ]
+    },
+    "riptusk": {
+      "asset": "assets/creatures/tetherbound/riptusk/models/creature_riptusk_lod0.glb",
+      "source_sha256": "fc6cc22690bff0d14eaabb978699fc39bf350ca987e808fd5b19017f33ef35cc",
+      "candidate_sha256": "31f7cd34723bf061921798f09da347fde49be65e86b04a6423ae36e49c09933f",
+      "source_worst_floor_m": -1.147233623555765,
+      "candidate_worst_floor_m": 2.2518074950925098e-07,
+      "source_mesh_fitted_height_m": 4.25,
+      "max_vertex_displacement_m": 1.862194655409424,
+      "neutral_boundary_error_m": [
+        5.856394358098419e-07,
+        5.856394358098419e-07
+      ],
+      "species_sharing_asset": [
+        "riptusk"
+      ]
+    },
+    "staticub": {
+      "asset": "assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb",
+      "source_sha256": "d2f655f0e10790c6b068e2e3291ebede23d955c7d170fab1c4e62187aa4506a4",
+      "candidate_sha256": "c2e42a53ebeb922b06564bd4ce210cb02b5d438bf0d816516cc327719d758c1a",
+      "source_worst_floor_m": -1.1970230589179365,
+      "candidate_worst_floor_m": -0.00020888479247256,
+      "source_mesh_fitted_height_m": 3.25,
+      "max_vertex_displacement_m": 1.2446848598339992,
+      "neutral_boundary_error_m": [
+        6.713982485830691e-07,
+        5.705957642151923e-07
+      ],
+      "species_sharing_asset": [
+        "staticub"
+      ]
+    },
+    "fulgocobra": {
+      "asset": "assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb",
+      "source_sha256": "0e54b261e0feaca9e32e46955f05c9672884215415fb69bc5b0de8fd373fd5fa",
+      "candidate_sha256": "10b96104ec7c6ab2711d8f87e230aad58544b27af60581c12ca1b35092c5a13e",
+      "source_worst_floor_m": -2.5076827171381404,
+      "candidate_worst_floor_m": 3.9551748824316037e-07,
+      "source_mesh_fitted_height_m": 5.199999809265137,
+      "max_vertex_displacement_m": 2.041131060923336,
+      "neutral_boundary_error_m": [
+        7.561907817432571e-07,
+        8.743375924666792e-07
+      ],
+      "species_sharing_asset": [
+        "fulgocobra"
+      ]
+    },
+    "solmane": {
+      "asset": "assets/creatures/tetherbound/solmane/models/creature_solmane_lod0.glb",
+      "source_sha256": "5ad45c7d043d3c191e88a8f9625bf0fc2cc7289383eba030766e29d553a26f5e",
+      "candidate_sha256": "f5fab58e256087bcb61b01b868314468a177d718adb8e904ce58fd447b70025c",
+      "source_worst_floor_m": -3.1269398985595678,
+      "candidate_worst_floor_m": -1.057292316354854e-06,
+      "source_mesh_fitted_height_m": 6.699999809265137,
+      "max_vertex_displacement_m": 1.8990355966983243,
+      "neutral_boundary_error_m": [
+        2.0114366776304503e-06,
+        1.8188651978668522e-06
+      ],
+      "species_sharing_asset": [
+        "solmane"
+      ]
+    }
+  }
+}
