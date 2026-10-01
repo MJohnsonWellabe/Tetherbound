@@ -292,6 +292,8 @@ func _run() -> void:
 	if not DirAccess.dir_exists_absolute(output_absolute):
 		DirAccess.make_dir_recursive_absolute(output_absolute)
 	var terrain: Node = ClassDB.instantiate("Terrain3D")
+	# Dynamically built assets have no path for Terrain3D to reload on entry.
+	terrain.set("free_editor_textures", false)
 	terrain.set("region_size", 256)
 	terrain.set("vertex_spacing", 2.0)
 	terrain.set("data_directory", data_dir)
