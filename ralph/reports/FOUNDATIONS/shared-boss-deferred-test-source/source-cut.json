@@ -1,0 +1,56 @@
+{
+  "preimage": "354998f2a51bb990d0a9f0e5fc84427f369ad3dd",
+  "root_review_pin": "d69ce16ec1e7e3484b845056c1bb4b92a4106e07",
+  "path": "tests/test_stormwood_hosted_combat.gd",
+  "preimage_blob": "fae51433fc8b4b388dca74d81018051aae9ca53a",
+  "preimage_sha256": "a85bda6173b147133f3507cd98dac93306b959b52ff8921691f43428fa2424e1",
+  "candidate_blob": "da73d5ee32b1991aa5b172dbd44150efb08382f4",
+  "candidate_normalized_sha256": "adeca6a30731dfcb00236614461b17298a99e85065fd97c433865f693c45176a",
+  "patch": {
+    "path": "D:\\tetherbound\\redesign-foundations\\.tmp\\shared-boss-ci6173\\deferred-test.patch",
+    "sha256": "53155653d8665826ff13e07080c154962301beb2007c7001e6bf33b7966f8473"
+  },
+  "unchanged": [
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "sha256": "ae77665e7bcac2b8d632e99da4b522e3e281c39cf68d0d2e5e0e21532c94fb17"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "sha256": "d290b65c5b6983567a04a13742d9741967d39658b87cfe06002eac00adf13fab"
+    },
+    {
+      "path": "scripts/net/encounter_host.gd",
+      "sha256": "242f44b910c7cecfd239b3459c478f05604736220cb6f9111593d2061c69812e"
+    },
+    {
+      "path": "scripts/story/sequence_director.gd",
+      "sha256": "319052dbca7d95de6a8364bc863f0ec63b51832560829525d4148037681ead81"
+    },
+    {
+      "path": "tools/net/peer_runner.gd",
+      "sha256": "4c82987b31462ac92a8affd437d3f1cf4fe4b4aabc56e1fb7d20ba1969bd5b05"
+    },
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "sha256": "1aeee3fd2cd092e0d23519b248d60afa8405ed482f9ef392888db6a74d5692e0"
+    },
+    {
+      "path": "tests/smoke_net_shared_boss.gd",
+      "sha256": "6f698cd41cea3532e8997586d8a1d94fce95bcc77098b2a70ffd66362ce31ab5"
+    },
+    {
+      "path": "tests/smoke_net_meadows_identity_fresh_join.gd",
+      "sha256": "53f9dc7bd8348919051af072a181c771f974760e91929e25794c48d908f703d3"
+    },
+    {
+      "path": "scripts/combat/combat_math.gd",
+      "sha256": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9"
+    },
+    {
+      "path": "tests/run_tests.gd",
+      "sha256": "c3d32b38f49ed2d82c089ef382e771a7e9a0d4186c549d998aeb40c6d9a77f06"
+    }
+  ],
+  "validation": "Source/byte and independent result controls only; native not run."
+}

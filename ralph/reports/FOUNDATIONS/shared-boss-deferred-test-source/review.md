@@ -1,0 +1,11 @@
+# Shared-boss lifecycle regression — deferred test entry
+
+This test-only follow-up fixes the entry point of four lifecycle cases supplied by `354998f2a51bb990d0a9f0e5fc84427f369ad3dd`. The standard `tests/run_tests.gd` runs inside `SceneTree._init`, before `Engine.get_main_loop()` is available. Those cases need an initialized tree for the real manager's victory/resolve/finish methods. Existing director regressions already supply a deferred native child for the same reason.
+
+Four cases move to private `_case_` names and are invoked once each by a deferred initialized child. Their bodies, controlled early/late schedules, assertions and cleanup are unchanged. The fifth, pure host metadata normalization/terminal-close case remains directly discovered. The pre-boss original test prefix is unchanged. The child must complete exactly 70 lifecycle assertions without failures; the parent checks the exact result, actual exit status, stdout, stderr and required native log. Missing/partial results, parse errors, SCRIPT ERROR/native ERROR, leaks, nonzero/unknown exit, timeout and surviving child all fail.
+
+The new focused child has a 60-second cap and bounded two-second kill confirmation. Nonblocking pipes drain in bounded chunks so output cannot starve the cap. Stale native logs are removed before launch; the child's current native log and pipes remain available for review. Pipe handles close on completion. Original shared-boss and other scenario budgets are unchanged.
+
+The pipe/exit APIs were checked against the [official Godot OS documentation](https://docs.godotengine.org/en/stable/classes/class_os.html#class-os-method-execute-with-pipe). No engine/parser/import/native execution occurred here. `review_source.py` verifies exact body inverse, unchanged runtime/story/runner/harness/smoke/math files and independent strict-result negative controls, then performs a read-only ROOT apply check. `source-cut.json` and `policy-controls.json` bind all evidence.
+
+The lifetime production repair and its immutable actual CI6173 evidence remain in the prior packet. The deployed fallback ownership investigation has no fixture or story change in this follow-up; the original protected starter refusal remains unretired. ROOT owns F29 review and native `test_stormwood_hosted_combat` execution. No main-complete or criterion-MET claim is made.

@@ -226,7 +226,7 @@ func _shared_round_record(manager: Node, seq: int, round_number: int,
 	}
 
 
-func test_shared_boss_guest_survives_next_round_before_and_after_faint_pause() -> void:
+func _case_shared_boss_guest_survives_next_round_before_and_after_faint_pause() -> void:
 	# Exercise both transport schedules with the real manager's record, award,
 	# resolve and finish methods. The two-process smoke owns real RPC timing.
 	for gap: float in [0.01, 10.0]:
@@ -265,7 +265,7 @@ func test_shared_boss_guest_survives_next_round_before_and_after_faint_pause() -
 			manager.free()
 
 
-func test_shared_round_wait_requires_host_boolean_and_matching_card() -> void:
+func _case_shared_round_wait_requires_host_boolean_and_matching_card() -> void:
 	for marker: Variant in [false, "true", null]:
 		var manager := _shared_round_manager()
 		manager.apply_encounter_record(_shared_round_record(manager, 1, 1, marker, true))
@@ -281,7 +281,7 @@ func test_shared_round_wait_requires_host_boolean_and_matching_card() -> void:
 	manager.free()
 
 
-func test_shared_round_terminal_close_and_disconnect_release_the_wait() -> void:
+func _case_shared_round_terminal_close_and_disconnect_release_the_wait() -> void:
 	for disconnect: bool in [false, true]:
 		var manager := _shared_round_manager()
 		manager.apply_encounter_record(_shared_round_record(manager, 1, 1, true, true))
@@ -301,7 +301,7 @@ func test_shared_round_terminal_close_and_disconnect_release_the_wait() -> void:
 		manager.free()
 
 
-func test_shared_round_loss_flee_and_wild_keep_normal_finish() -> void:
+func _case_shared_round_loss_flee_and_wild_keep_normal_finish() -> void:
 	for outcome: String in ["lost", "fled"]:
 		var manager := _shared_round_manager()
 		manager.apply_encounter_record(_shared_round_record(manager, 1, 1, true))
@@ -333,3 +333,82 @@ func test_host_round_continuation_survives_normalisation_and_terminal_close() ->
 	host.close(str(rec["encounter_id"]))
 	assert_eq(host.record(str(rec["encounter_id"]))["opponent"].get("round_continues"), false,
 		"terminal closure withdraws the promise even when the queue was nonempty")
+
+
+func _drain_shared_lifetime_pipes(process: Dictionary, buffers: Dictionary) -> void:
+	for key: String in ["stdio", "stderr"]:
+		var pipe: FileAccess = process.get(key)
+		if pipe == null:
+			continue
+		# Nonblocking pipes; bound each drain so output cannot starve the deadline.
+		for _chunk in 16:
+			var bytes := pipe.get_buffer(65536)
+			if bytes.is_empty():
+				break
+			var retained: PackedByteArray = buffers[key]
+			retained.append_array(bytes)
+			buffers[key] = retained
+
+
+func test_native_shared_boss_guest_round_lifetime_and_cleanup() -> void:
+	# run_tests executes during SceneTree._init, before a main loop exists.
+	# Use the same deferred native-child seam as the director transport cases.
+	var runner_path := "user://shared_boss_round_lifetime_runner.gd"
+	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null:
+		return
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar script = load("res://tests/test_stormwood_hosted_combat.gd")\n\tif script == null or not script.can_instantiate():\n\t\tquit(1)\n\t\treturn\n\tvar test = script.new()\n\ttest._case_shared_boss_guest_survives_next_round_before_and_after_faint_pause()\n\ttest._case_shared_round_wait_requires_host_boolean_and_matching_card()\n\ttest._case_shared_round_terminal_close_and_disconnect_release_the_wait()\n\ttest._case_shared_round_loss_flee_and_wild_keep_normal_finish()\n\tprint("SHARED_BOSS_LIFETIME_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == 70 else 1)\n')
+	runner.close()
+	var absolute := ProjectSettings.globalize_path(runner_path)
+	var log_path := ProjectSettings.globalize_path("user://shared-boss-round-lifetime-child.log")
+	# Clear a former child's log so a failed launch cannot consume stale proof.
+	if FileAccess.file_exists(log_path):
+		DirAccess.remove_absolute(log_path)
+	var process := OS.execute_with_pipe(OS.get_executable_path(), ["--headless", "--path",
+		ProjectSettings.globalize_path("res://"), "--script", absolute, "--log-file", log_path], false)
+	var pid := int(process.get("pid", -1))
+	assert_true(pid > 0, "the deferred native child must start")
+	if pid <= 0:
+		DirAccess.remove_absolute(absolute)
+		return
+	var buffers := {"stdio": PackedByteArray(), "stderr": PackedByteArray()}
+	# This new focused regression has its own finite cap; original smoke caps stay unchanged.
+	var deadline := Time.get_ticks_msec() + 60000
+	while OS.is_process_running(pid) and Time.get_ticks_msec() < deadline:
+		_drain_shared_lifetime_pipes(process, buffers)
+		OS.delay_msec(10)
+	var timed_out := OS.is_process_running(pid)
+	if timed_out:
+		OS.kill(pid)
+		var kill_deadline := Time.get_ticks_msec() + 2000
+		while OS.is_process_running(pid) and Time.get_ticks_msec() < kill_deadline:
+			_drain_shared_lifetime_pipes(process, buffers)
+			OS.delay_msec(10)
+	var running := OS.is_process_running(pid)
+	var code := OS.get_process_exit_code(pid)
+	_drain_shared_lifetime_pipes(process, buffers)
+	for key: String in ["stdio", "stderr"]:
+		var pipe: FileAccess = process.get(key)
+		if pipe != null:
+			pipe.close()
+	DirAccess.remove_absolute(absolute)
+	var stdout_bytes: PackedByteArray = buffers["stdio"]
+	var stderr_bytes: PackedByteArray = buffers["stderr"]
+	var combined := stdout_bytes.get_string_from_utf8() + "\n" + stderr_bytes.get_string_from_utf8()
+	assert_false(timed_out, "the deferred child exceeded its 60-second cap\n" + combined)
+	assert_false(running, "the deferred child must be gone after cleanup")
+	var result: Dictionary = {}
+	for line: String in combined.split("\n"):
+		if line.begins_with("SHARED_BOSS_LIFETIME_RESULT="):
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("SHARED_BOSS_LIFETIME_RESULT="))
+			if parsed is Dictionary:
+				result = parsed
+	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_eq(int(result.get("assertions", 0)), 70, "all original lifecycle assertions must finish")
+	var native_log := FileAccess.get_file_as_string(log_path) if FileAccess.file_exists(log_path) else ""
+	assert_true(not native_log.is_empty(), "the child must retain its native log")
+	combined += "\n" + native_log
+	assert_false(combined.contains("ERROR:"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
+	assert_eq(code, 0, combined)
