@@ -65,6 +65,7 @@ var _station_source: WeakRef
 var _station_source_key := ""
 var _view_refresh_pending := false
 var _presented_station_view: Dictionary = {}
+var _presented_gear_context: Dictionary = {}
 var _upgrade_label: Label
 var _station_buttons: Array[Button] = []
 var _producer: Node
@@ -118,8 +119,10 @@ func _refresh_station_view() -> void:
 	if not _open or not is_instance_valid(_station) or not is_instance_valid(_producer) \
 			or game == null or game.get("session") != _producer: return
 	var view := _station_view()
-	if view == _presented_station_view: return
+	var context := _gear_context(view)
+	if view == _presented_station_view and context == _presented_gear_context: return
 	_presented_station_view=view.duplicate(true)
+	_presented_gear_context=context.duplicate(true)
 	_rebuild_station_presentation()
 
 func _rebuild_station_presentation() -> void:
@@ -240,8 +243,9 @@ func _build_gear_controls(controls: VBoxContainer, station_id: String) -> void:
 			if not equipped.is_empty():
 				_gear_button(controls,"Remove "+_gear_name(equipped),"trainer_unequip","",slot,"")
 			for id: String in _gear_inventory_ids(inventory):
-				var item: Dictionary = _gear_cfg.get("items",{}).get(id,{})
-				if item.get("kind") == "armor" and item.get("armor_slot") == slot:
+				var db := _items()
+				var item: Dictionary = db.call("definition",id) if db != null else {}
+				if item.get("kind") == "armor" and item.get("armor_slot") == slot and int(db.call("stack_size",id)) == 1:
 					_gear_button(controls,"Wear "+_gear_name(id),"trainer_equip","",slot,id)
 	elif station_id in ["den","forge","altar"]:
 		var party: Variant = view.get("party")
@@ -264,8 +268,11 @@ func _build_gear_controls(controls: VBoxContainer, station_id: String) -> void:
 							_gear_button(controls,"Give %s to %s" % [_gear_name(id),companion],"equip",uid,slot,id)
 				else:
 					var upgrade: Dictionary = _gear_cfg.get("upgrades",{}).get(equipped,{})
-					if upgrade.get("station_id") == station_id and _gear_rules.call("recipe_known",view,upgrade,_gear_cfg) == true:
-						_gear_button(controls,"Upgrade %s's %s" % [companion,slot.capitalize()],"upgrade",uid,slot,equipped)
+					var piece: Dictionary = _gear_cfg.get("items",{}).get(equipped,{})
+					var made_here := station_id == ("forge" if slot == "harness" else "altar")
+					if not equipped.is_empty() and piece.get("kind") == "creature_gear" and made_here \
+							and (upgrade.is_empty() or upgrade.get("station_id") == station_id):
+						_gear_button(controls,"Upgrade %s's %s" % [companion,slot.capitalize()],"upgrade",uid,slot,equipped,companion)
 
 func _gear_inventory_ids(inventory: Array) -> Array[String]:
 	var result: Array[String] = []
@@ -274,10 +281,82 @@ func _gear_inventory_ids(inventory: Array) -> Array[String]:
 	return result
 
 func _gear_name(id: String) -> String:
+	var db := _items()
+	if db != null: return str(db.call("item_name",id))
 	return str(_gear_cfg.get("items",{}).get(id,{}).get("name",id.replace("_"," ").capitalize()))
 
-func _gear_button(controls: VBoxContainer, label: String, action: String, uid: String, slot: String, id: String) -> void:
-	_station_button(controls,label,func() -> void: _station_action("gear",{"action":action,"creature_uid":uid,"slot":slot,"item_id":id}),JSON.stringify(["gear",action,uid,slot,id]))
+## Hints use the producer's authenticated actual-source quote. The UI cannot
+## substitute its player, guessed proximity or world revision for this seam.
+func _gear_context(view: Dictionary) -> Dictionary:
+	if not is_instance_valid(_station) or not is_instance_valid(_producer) or game == null \
+			or game.get("session") != _producer or not _producer.has_method("homestead_station_context"): return {}
+	var raw: Variant = _producer.call("homestead_station_context",_station)
+	if not raw is Dictionary: return {}
+	var revision: Variant = view.get("registry_revision")
+	var id := str(_station.get_meta("building_id",""))
+	var key := "%s:meadows:%s" % [id,str(_station.get_meta("building_uid",""))]
+	if not STATION_RULES.number(revision) or float(revision) != floor(float(revision)) or revision < 0 \
+			or not view.get("character_id") is String or view.character_id.is_empty() \
+			or raw.get("character_id") != view.character_id or raw.get("expected_revision") != revision \
+			or raw.get("station_id") != id or raw.get("source_key") != key: return {}
+	return raw
+
+func _gear_hint(fields: Dictionary) -> Dictionary:
+	if _gear_rules == null or not _gear_rules.has_method("preflight") or _items() == null:
+		return {"available":false,"reason":"Gear details are unavailable."}
+	var view := _station_view()
+	var context := _gear_context(view)
+	var raw: Variant = _gear_rules.call("preflight",view,fields,context,_items(),_gear_cfg)
+	var hint: Dictionary = raw if raw is Dictionary else {}
+	if context.is_empty():
+		hint["available"]=false
+		hint["reason"]="Waiting for the host's station details."
+	return hint
+
+func _gear_button(controls: VBoxContainer, label: String, action: String, uid: String, slot: String, id: String, companion: String = "") -> void:
+	var fields := {"action":action,"creature_uid":uid,"slot":slot,"item_id":id}
+	var hint := _gear_hint(fields)
+	if action == "upgrade":
+		label=(_gear_name(id) if _gear_cfg.get("upgrades",{}).get(id,{}).is_empty() else str(hint.get("label",label))) \
+			+(" for "+companion if not companion.is_empty() else "")
+	_station_button(controls,label,func() -> void: _gear_action(fields),JSON.stringify(["gear",action,uid,slot,id]))
+	var button: Button = _station_buttons[-1]
+	button.set_meta("station_available",hint.get("available") is bool and hint.available == true)
+	button.disabled=button.get_meta("station_available") != true or not _station_intent.is_empty()
+	var parts: Array[String] = []
+	if action == "upgrade":
+		if int(hint.get("required_tier",0)) > 0: parts.append("Requires station tier %d" % int(hint.required_tier))
+		var inventory: Array = _station_view().get("inventory",[])
+		for cost: Variant in hint.get("cost",[]):
+			if not cost is Dictionary: continue
+			var have := 0
+			for stack: Variant in inventory:
+				if stack is Dictionary and stack.get("id") == cost.get("id"): have+=int(stack.get("n",0))
+			parts.append("%d %s (have %d)" % [int(cost.get("n",0)),_gear_name(str(cost.get("id",""))),have])
+		if hint.get("personal_known") == false and not _gear_cfg.get("upgrades",{}).get(id,{}).is_empty():
+			parts.append(str(_gear_rules.call("refusal_text","personal_recipe_locked",_gear_cfg)))
+	if hint.get("available") != true:
+		var reason := str(hint.get("reason","Gear details are unavailable."))
+		var explanation := str(_gear_rules.call("refusal_text",reason,_gear_cfg)) if _gear_rules.has_method("refusal_text") else reason
+		if not parts.has(explanation): parts.append(explanation)
+	if not parts.is_empty():
+		var details := Label.new()
+		details.text=". ".join(parts)
+		details.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		details.add_theme_font_size_override("font_size",UITokens.FONT_READ)
+		controls.add_child(details)
+
+func _gear_action(fields: Dictionary) -> void:
+	if not _station_intent.is_empty(): return
+	var hint := _gear_hint(fields)
+	if not hint.get("available") is bool or hint.available != true:
+		var reason := str(hint.get("reason","Gear details are unavailable."))
+		_status.text=str(_gear_rules.call("refusal_text",reason,_gear_cfg)) if _gear_rules != null \
+			and _gear_rules.has_method("refusal_text") else reason
+		_status_left=STATUS_SECONDS
+		_station_view_completed()
+		return
+	_station_action("gear",fields)
 
 func _station_button(parent: VBoxContainer, label: String, action: Callable, focus_key: String = "") -> void:
 	var button := Button.new()
@@ -291,7 +370,6 @@ func _station_button(parent: VBoxContainer, label: String, action: Callable, foc
 		var scroll := parent.get_parent() as ScrollContainer
 		if scroll != null: scroll.ensure_control_visible(button))
 	_station_buttons.append(button)
-	if _rows.is_empty() and _station_buttons.size() == 1: button.call_deferred("grab_focus")
 
 func _refresh_next_upgrade() -> void:
 	if _upgrade_label == null or not is_instance_valid(_station): return
@@ -308,7 +386,7 @@ func _refresh_next_upgrade() -> void:
 		else:
 			var revision: Variant = view.get("registry_revision")
 			button.disabled=not _station_intent.is_empty() or not STATION_RULES.number(revision) \
-				or float(revision) != floor(float(revision)) or revision < 0
+				or float(revision) != floor(float(revision)) or revision < 0 or button.get_meta("station_available",true) != true
 
 func _farm_action(action: String, crop: String) -> void:
 	if not is_instance_valid(_station): return
@@ -348,7 +426,9 @@ func _retry_station() -> void:
 ## unknown, contradictory and lost-ACK replies retain the original identity.
 func _station_completed(op: String, original: Dictionary, result: Dictionary) -> void:
 	if _station_intent.is_empty() or op != _station_operation or original != _station_intent: return
-	_status.text=str(result.get("reason",result.get("code","Waiting for the original station transaction.")))
+	var reason := str(result.get("reason",result.get("code","Waiting for the original station transaction.")))
+	_status.text=str(_gear_rules.call("refusal_text",reason,_gear_cfg)) if op == "gear" \
+		and _gear_rules != null and _gear_rules.has_method("refusal_text") else reason
 	var terminal: bool = result.get("settled") is bool and result.settled == true \
 		and result.get("durable") is bool and result.durable == true
 	if terminal and result.get("ok") is bool and result.ok == true:
@@ -486,7 +566,9 @@ func open(station: Node3D = null) -> void:
 	_station_mode=is_instance_valid(station)
 	if is_instance_valid(_station) or _known_ids_differ_from_the_list_on_screen():
 		_build()
-	if is_instance_valid(_station): _presented_station_view=_station_view().duplicate(true)
+	if is_instance_valid(_station):
+		_presented_station_view=_station_view().duplicate(true)
+		_presented_gear_context=_gear_context(_presented_station_view).duplicate(true)
 	_open = true
 	visible = true
 	_mouse_before = Input.mouse_mode
@@ -507,6 +589,11 @@ func open(station: Node3D = null) -> void:
 	if not _rows.is_empty():
 		_rows[0].grab_focus()
 		_select(0)
+	elif is_instance_valid(_station):
+		for button: Button in _station_buttons:
+			if not button.disabled:
+				button.grab_focus()
+				break
 
 
 func close() -> void:
@@ -841,6 +928,7 @@ func _process(delta: float) -> void:
 		close()
 		return
 	if is_instance_valid(_station):
+		if not _gear_cfg.is_empty() and _gear_context(_station_view()) != _presented_gear_context: _station_view_completed()
 		_refresh_next_upgrade()
 	elif _station_mode:
 		_status.text="Waiting for the original station transaction to reconcile." if not _station_intent.is_empty() else "This station is no longer available."
