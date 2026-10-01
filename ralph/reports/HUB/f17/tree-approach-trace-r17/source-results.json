@@ -1,0 +1,293 @@
+{
+  "classification": "AUTHOR SOURCE DIAGNOSTIC CANDIDATE ONLY; R16 NATIVE FAIL; R17 PARSER/NATIVE UNRUN; F17#4 OPEN",
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "pass": true
+    },
+    {
+      "name": "frozen originals/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen prior-failure/smoke.log",
+      "pass": true
+    },
+    {
+      "name": "frozen proposal/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen repair.patch",
+      "pass": true
+    },
+    {
+      "name": "frozen review-context.txt",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/autoload/game_state.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/data/config/movement.json",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/project.godot",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scenes/player/player.tscn",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scripts/player/player_controller.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scripts/ui/input_owner.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scripts/world/playground_heightfield.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen source-check.py",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/scatter_bake.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/vegetation.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/playground_heightfield.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/vegetation_harvest_point.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/interaction_arbiter.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/player/player_controller.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scenes/player/player.tscn",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/vegetation.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/scatter/playground/region_0_-1.bin",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/ui/input_owner.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/movement.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged autoload/game_state.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged project.godot",
+      "pass": true
+    },
+    {
+      "name": "R16 original packet seal unchanged",
+      "pass": true
+    },
+    {
+      "name": "working proposal matches frozen bytes",
+      "pass": true
+    },
+    {
+      "name": "ROOT native failure ran exact R16 proposal",
+      "pass": true
+    },
+    {
+      "name": "one diagnostic insertion 0",
+      "pass": true
+    },
+    {
+      "name": "one diagnostic insertion 1",
+      "pass": true
+    },
+    {
+      "name": "one diagnostic insertion 2",
+      "pass": true
+    },
+    {
+      "name": "one diagnostic insertion 3",
+      "pass": true
+    },
+    {
+      "name": "entire R16 source recovered by removing diagnostic additions",
+      "pass": true
+    },
+    {
+      "name": "helper absent from original",
+      "pass": true
+    },
+    {
+      "name": "no additional await or frame",
+      "pass": true
+    },
+    {
+      "name": "same native input writes",
+      "pass": true
+    },
+    {
+      "name": "same fixture start pose and terrain sampling",
+      "pass": true
+    },
+    {
+      "name": "same exact record and scale provenance",
+      "pass": true
+    },
+    {
+      "name": "same success expression",
+      "pass": true
+    },
+    {
+      "name": "same touched assignment and original break",
+      "pass": true
+    },
+    {
+      "name": "snapshot cannot wait or write input/pose/query",
+      "pass": true
+    },
+    {
+      "name": "snapshot method calls limited to cached/read APIs and local append",
+      "pass": true
+    },
+    {
+      "name": "flush happens after released-stick physical result, before unchanged process await",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes requested_stick",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes resolved_stick",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes last_controller_wanted",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes input_owner",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes velocity",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes position",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes grounded",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes wall",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes floor_stop_on_slope",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes floor_constant_speed",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes deflect_left",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes deflect",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes locomotion_enabled",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes carried",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes contacts",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes unsticks",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes physics_frame",
+      "pass": true
+    },
+    {
+      "name": "snapshot includes approach_frame",
+      "pass": true
+    },
+    {
+      "name": "all first-wall/first-touch combinations fit nine observations",
+      "pass": true
+    },
+    {
+      "name": "actual bound record loaded",
+      "pass": true
+    },
+    {
+      "name": "actual native failure has no trunk contact",
+      "pass": true
+    },
+    {
+      "name": "actual native failure remains authoritative",
+      "pass": true
+    },
+    {
+      "name": "native failure has only sampled terrain contact",
+      "pass": true
+    }
+  ],
+  "passed": 71,
+  "trace_bound_models": 32761,
+  "maximum_cached_observations": 9
+}
+
