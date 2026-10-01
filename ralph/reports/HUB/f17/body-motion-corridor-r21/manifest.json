@@ -1,0 +1,113 @@
+{
+  "scope": "R21 read-only two-body-motion and tree-corridor investigation; no logical source change",
+  "hub_parent": "b1ce96a8ec0134e48a507e22aa18a7009ba8bcfc",
+  "author_source_checks": 59,
+  "R20_seal_sha256": "aada570a71bb9064e9b5bf55b1f4ca48e13de2aace1f2990f848bbc7ca32535a",
+  "native": "UNRUN; original ROOT native failures remain authoritative",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "body-motion-analysis.json": {
+      "bytes": 1090,
+      "sha256": "9237fa5e8254f70d4a591a3d7c2e206bf9c1d20e8da3f1194c8663bacf4c80c1"
+    },
+    "native-source/core/math/math_defs.h": {
+      "bytes": 5880,
+      "sha256": "db5046323f7cc8a6d6340c0303c0bd02e399768a8b11b2df8b88654540eb3fdd"
+    },
+    "native-source/modules/godot_physics_3d/godot_body_3d.h": {
+      "bytes": 14769,
+      "sha256": "b0ba9328eb19ed31902624d04495b11ec6f11dd3ec5f65301613013d43e304af"
+    },
+    "native-source/modules/godot_physics_3d/godot_collision_object_3d.h": {
+      "bytes": 7268,
+      "sha256": "dc0fafea48a774cc60f1266f8639a7722952359e16186180b6f6117e7dec62b5"
+    },
+    "native-source/modules/godot_physics_3d/godot_physics_server_3d.cpp": {
+      "bytes": 58416,
+      "sha256": "3d0abb21d322589d7f6ffa5850e3a3ac75897ce66559a747e2297d15a721fe83"
+    },
+    "native-source/modules/godot_physics_3d/godot_space_3d.cpp": {
+      "bytes": 43185,
+      "sha256": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a"
+    },
+    "native-source/modules/godot_physics_3d/godot_space_3d.h": {
+      "bytes": 9468,
+      "sha256": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae"
+    },
+    "native-source/provenance.json": {
+      "bytes": 1644,
+      "sha256": "0ed7b5d5d43992829374fd59edce2d1b01e6e8f75c98ee6fb976a7a092ebc139"
+    },
+    "originals/data/config/movement.json": {
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    "originals/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "originals/project.godot": {
+      "bytes": 21697,
+      "sha256": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a"
+    },
+    "originals/scenes/player/player.tscn": {
+      "bytes": 1478,
+      "sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7"
+    },
+    "originals/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "originals/scripts/world/playground_heightfield.gd": {
+      "bytes": 95972,
+      "sha256": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf"
+    },
+    "originals/scripts/world/vegetation.gd": {
+      "bytes": 142445,
+      "sha256": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a"
+    },
+    "originals/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 76459,
+      "sha256": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2"
+    },
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 10848,
+      "sha256": "ee760573c753b40eebc1e029f2f9f29255b3166cc179bc3d06e4b5e43d0faeb9"
+    },
+    "r20-frozen/failed-sample.json": {
+      "bytes": 5562,
+      "sha256": "26b76149254a50077ab76232776d061da7d29d995a1d889cd49872acb810e48a"
+    },
+    "r20-frozen/source-results.json": {
+      "bytes": 5581,
+      "sha256": "45331883f6b16c4dea3720838ff214820bbcacbe2968b5c5515357c324c2170e"
+    },
+    "r20-frozen/tree-failed/result.json": {
+      "bytes": 399,
+      "sha256": "2ae87037e7cdd43ca6f9a8d4264545d15378d34c9f902ebdd50a4523aa6117ca"
+    },
+    "r20-frozen/tree-failed/smoke.log": {
+      "bytes": 23277,
+      "sha256": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7"
+    },
+    "review-context.txt": {
+      "bytes": 13687,
+      "sha256": "93fc79582c7eff1d6f8936cf46f6c11e31971b094d783ce004cdc5fcd310c6c8"
+    },
+    "source-check.py": {
+      "bytes": 13479,
+      "sha256": "9ddc42af5cb9176e08888ee4a3aee1d1c129433caecce002e1df698d4ae70fd3"
+    },
+    "source-results.json": {
+      "bytes": 3210,
+      "sha256": "027fe37da6510809d7dc290d5e1cbc322dab60cbd5e90b10b7cb62482461925b"
+    },
+    "tree-corridor-analysis.json": {
+      "bytes": 10683,
+      "sha256": "bf75b36063847f9404e15708656884218197f7d5dde062c659df232017f2740a"
+    }
+  }
+}

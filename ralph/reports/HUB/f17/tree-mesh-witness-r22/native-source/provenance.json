@@ -1,0 +1,22 @@
+{
+  "servers/physics_3d/physics_server_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/servers/physics_3d/physics_server_3d.cpp",
+    "bytes": 69031,
+    "sha256": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f"
+  },
+  "servers/physics_3d/physics_server_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/servers/physics_3d/physics_server_3d.h",
+    "bytes": 41365,
+    "sha256": "f41afb9aec4dbcd308a661f9ec46d8a19313b7196e2700b54af40bcfe9805105"
+  },
+  "modules/godot_physics_3d/godot_shape_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_shape_3d.cpp",
+    "bytes": 63744,
+    "sha256": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75"
+  },
+  "doc/classes/JSON.xml": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/doc/classes/JSON.xml",
+    "bytes": 8379,
+    "sha256": "946641c7844148c54426ae9897a774cf7f0451a92a799a35d00ece9583fba7e4"
+  }
+}
