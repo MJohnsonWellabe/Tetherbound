@@ -1015,9 +1015,20 @@ func journal_creature_training_prepared(peer: int, character: String, accepted: 
 	if saver == null or not saver.has_method("save_world_prepared") or saver.call("fallback_busy") == true:
 		return {"ok": false, "durable": false, "code": "world_not_prepared"}
 	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
-	var row := ESSENCE.next_training_delivery(world.world_id, world.reward_delivery_namespace,
-		_actor_vitals_session_id, accepted, world.reward_deliveries.get(id), ESSENCE.config(),
-		PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	var row: Dictionary
+	if accepted.get("action") in preload("res://scripts/net/character_action_rules.gd").ACTIONS:
+		# No candidate from an intent/RPC can enter this arm. The same hidden
+		# registry's private token must still bind its exact accepted stage.
+		var owner_session: Node = game.get("session")
+		if owner_session == null or owner_session.call("character_action_stage_matches", peer, accepted) != true:
+			return {"ok": false, "durable": false, "code": "action_stage_changed"}
+		row = preload("res://scripts/net/character_action_delivery.gd").make_record(
+			world.world_id, world.reward_delivery_namespace, str(owner_session.call("_altar_current_epoch")),
+			accepted, world.reward_deliveries.get(id), preload("res://scripts/net/character_record_rules.gd").errors)
+	else:
+		row = ESSENCE.next_training_delivery(world.world_id, world.reward_delivery_namespace,
+			_actor_vitals_session_id, accepted, world.reward_deliveries.get(id), ESSENCE.config(),
+			PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if row.is_empty() or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id):
 		return {"ok": false, "durable": false, "code": "invalid_training_journal"}
 	var session: Node=game.get("session")
@@ -1070,8 +1081,10 @@ func _process_creature_training(row: Dictionary) -> void:
 	# Bootstrap installs the real world before this arm. It intentionally does
 	# not require handshake_snapshot_applied, which waits on this owner save.
 	if session.call("_altar_current_epoch") == "": return
-	var outcome: Dictionary = session.call("apply_altar_building_owner", row) if row.kind == "altar_building" else ESSENCE.apply_training_owner(game, row,
-		TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	var outcome: Dictionary
+	if row.kind == "altar_building": outcome = session.call("apply_altar_building_owner", row)
+	elif row.get("version") == 2: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
+	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if outcome.get("ok") != true or outcome.get("saved") != true: return
 	if bool(game.call("is_host")):
 		_accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id())

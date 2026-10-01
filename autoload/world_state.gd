@@ -554,6 +554,8 @@ func _op_position(raw: Variant) -> Vector3:
 ## Canonical validation for the discriminated EXISTING world carrier; the
 ## same guard runs for split/flat reads, snapshots, typed ops and both saves.
 static func training_row_valid(row: Variant, namespace: String, expected_world: String = "") -> bool:
+	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 2:
+		return not namespace.is_empty() and preload("res://scripts/net/character_action_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", namespace, expected_world)
 	if row is Dictionary and row.get("kind") == "altar_building": return altar_build_row_valid(row, namespace, expected_world)
 	const ESSENCE = preload("res://scripts/creatures/essence.gd")
 	const TEACHING = preload("res://scripts/creatures/teaching.gd")
