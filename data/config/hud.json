@@ -14,5 +14,18 @@
     "action_font_size": 30,
     "pulse_speed": 4.0,
     "pulse_depth": 0.45
+  },
+  "new_system_screens": {
+    "_comment": "F42 local presentation candidate. No reward, authority, renderer or durable-state scope. Keep off until native controller/capture/code-blind evidence passes.",
+    "enabled": false,
+    "safe_margin": 48,
+    "row_height": 66,
+    "combat": {
+      "inset": 56,
+      "command_bottom": 500,
+      "move_width": 420,
+      "move_bottom": 380
+    },
+    "scope": "device_local_presentation"
   }
 }

@@ -42,6 +42,17 @@ const GLANCE_FONT_PX := UITokens.FONT_BUTTON
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const SYSTEM_OVERLAY := preload("res://scripts/ui/combat_system_overlay.gd")
+var _system_overlay: Control
+
+## F42 narrow producer seam. Combat authority supplies the local, acknowledged
+## view; this HUD never reads a guest's untrusted resource or move proposal.
+func configure_new_system_view(reader: Callable) -> bool:
+	if not reader.is_valid(): return false
+	if not is_instance_valid(_system_overlay):
+		_system_overlay = SYSTEM_OVERLAY.new()
+		$Root.add_child(_system_overlay)
+	return _system_overlay.call("configure", reader) == true
 ## T3-COMBAT. Only for `combat.json`'s `effect_banner` block; this file resolves
 ## no damage and reads no other part of that config.
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
@@ -535,6 +546,7 @@ func _process(delta: float) -> void:
 		# last round left them until the next creature is out; nothing redraws.
 		return
 	if not fighting:
+		if is_instance_valid(_system_overlay): _system_overlay.hide()
 		_show_fight(false, _was_fighting)
 		_was_fighting = false
 		return
@@ -544,6 +556,11 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
+	if is_instance_valid(_system_overlay):
+		_system_overlay.hide()
+		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
+		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
+			_grid_panel.hide()
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()

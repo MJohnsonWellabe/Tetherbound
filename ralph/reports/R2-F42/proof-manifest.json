@@ -1,0 +1,78 @@
+{
+  "feature": "F42",
+  "branch": "tb/r2-f42",
+  "frozen_base": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "disposition": "implemented source candidate; no criterion claimed MET",
+  "engine_runs_performed": 0,
+  "board_audit": {
+    "path": "D:/tetherbound/redesign-board/ralph/reports/COORDINATOR/dashboard/criteria.json",
+    "read_only": true,
+    "F42_criteria": "all four not_started; board not changed"
+  },
+  "reused_source": {
+    "F27": "altar_panel and altar_service retain existing original-id essence submit/reconcile and saved durable verdict checks",
+    "F29": "altar_traits_service retains existing quote/submit/reconcile; panel fixes presentation lifecycle and named irreversible confirm",
+    "F23": "teaching legal slot rules, move_db and move_mastery; no direct calls from UI to host_commit_creature_loadout",
+    "F31_F33": "craft_panel keeps actual station producer, next-upgrade and gear transaction actions; station controls now follow controller focus",
+    "F43": "read-only audit of r2-f43 bounty_board and bounty_interaction_adapter; panel matches actual view/claim/reconcile and owner_saved/owner_acknowledged verdicts",
+    "map": "existing tab_map terrain baker reused; absent terrain proof is not repaired by fabricated terrain"
+  },
+  "shared_overlaps": [
+    "scripts/ui/altar_panel.gd (F27/F42)",
+    "scripts/ui/altar_service.gd (F27; narrow configure_loadout_ui hook only)",
+    "scripts/ui/altar_traits_panel.gd (F29/F42)",
+    "scripts/ui/altar_traits_service.gd (F29; narrow configure_return_route hook only)",
+    "scripts/ui/craft_panel.gd (F31/F33; follow_focus only)",
+    "scripts/ui/combat_hud.gd (F23/F24/F42; configure_new_system_view hook)",
+    "scripts/ui/tether_command_meter.gd (F24; candidate-only readable font floor)",
+    "scripts/ui/tab_creatures.gd (F29/F33; candidate detail entry)",
+    "scripts/ui/tab_quest_log.gd (F43/F45; candidate research entry and active bounty projection)",
+    "scripts/ui/game_menu.gd (F45; configure_research_view hook only)",
+    "data/config/hud.json (local presentation candidate; default false)",
+    "data/config/input_contexts.json (five modal contexts; no project input remap)"
+  ],
+  "integration_doors": {
+    "loadout": "F23 canonical station-bound UI service must implement quote_loadout(key, uid), submit_loadout(key, request), reconcile_loadout(edit_id), loadout_completed(edit_id, result); mount with AltarService.configure_loadout_ui(service). Missing public producer in frozen base; UI never performs a local mutation. Forward camps may call companion_details_panel.open(game, uid, 'Loadout', true) after mounting their own station-bound service.",
+    "bounty": "F43 composition calls bounty_board_panel.attach(actual_bounty_interaction_adapter); connects actual open_requested/action_completed. No F43-owned file edited. Actual adapter mounting, transport and original-character recovery remain F43 responsibilities.",
+    "research": "F45 supplies a character-bound reader via Game.menu().configure_research_view(reader). Reader(biome) returns ready, completion_percent, title, species[{species_id,name,seen,caught,tasks[{label,progress,required,reward_item,reward_count,paid}]}]. No research authority/service exists in frozen base; UI does not infer tasks from current party.",
+    "combat": "CombatHUD.configure_new_system_view(reader) supplies local acknowledged actor/command view. combat_system_overlay documents its exact read-only snapshot. Public producer is absent in frozen base; old HUD remains the fallback. Validate both combat input layouts in actual authority integration."
+  },
+  "completed_checks": [
+    "17 GDScript files parsed by gdtoolkit; all literal preload paths exist",
+    "hud/input_contexts JSON parse and default-off candidate verified",
+    "git diff --check",
+    "source audit of existing Altar/station/gear/mastery and F43 adapter; no duplicate business service or shared save/schema rewrite"
+  ],
+  "pending_root_queue_commands": [
+    "& $F42Godot --headless --path D:/tetherbound/r2-f42 --script res://tests/smoke_f42_system_screen.gd",
+    "& $F42Godot --headless --path D:/tetherbound/r2-f42 --script res://tests/test_input_context_collisions.gd",
+    "& $F42Godot --headless --path D:/tetherbound/r2-f42 --script res://tests/test_world_verb_input_owner_enforcement.gd",
+    "& $F42Godot --headless --path D:/tetherbound/r2-f42 --script res://tests/smoke_party_strip_reflow.gd",
+    "& $F42Godot --headless --path D:/tetherbound/r2-f42 --script res://tests/smoke_progression_feedback.gd",
+    "& $F42Godot --path D:/tetherbound/r2-f42 --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/capture_f42_layout_fixtures.gd -- --size=1920x1080 --out-dir=D:/tetherbound/r2-f42/ralph/reports/R2-F42/layout-1920x1080",
+    "& $F42Godot --path D:/tetherbound/r2-f42 --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1280x800 --script res://tools/capture_f42_layout_fixtures.gd -- --size=1280x800 --out-dir=D:/tetherbound/r2-f42/ralph/reports/R2-F42/layout-1280x800"
+  ],
+  "queue_notes": "$F42Godot is ROOT's established engine executable. ROOT owns imports/native/render runs and isolated profiles. No command above was executed. Existing party/progression smokes are recorded as failing baseline; no test was changed/skipped/quarantined.",
+  "named_layout_capture_stems": [
+    "f42-altar-level", "f42-altar-loadout", "f42-altar-traits-release",
+    "f42-altar-mastery", "f42-altar-gear", "f42-research-log",
+    "f42-bounty-board", "f42-combat-meters-moves"
+  ],
+  "capture_disclosure": "Layout tool creates disclosed presentation fixtures and opts in in memory only. Native captures remain pending. Fixture captures cannot prove earned gameplay, service authority, save/reconnect, actual station reach, world/HUD coverage, Ally hardware or a code-blind visual PASS. Actual station and world-composite captures still require the integrated earned player path.",
+  "required_earned_evidence": [
+    "Altar: paid level/candy, legal loadout equip, trait teach/release, stale quote, repeated tap, close while pending, owner save failure and reconnect on same character/world",
+    "Stations/gear: actual registered host station, guest personal inventory, next-upgrade reason, focus-scroll, Den/Workbench equip and gear comparison/accent preview at both rasters",
+    "Research: canonical tasks including released/never-kept creatures, paid receipts, unseen-species privacy, biome completion/title",
+    "Bounties: three actual morning cards, actual delivery counts/debits, repeat claim, refused full inventory, lost acknowledgement and original-instance reconnect",
+    "Combat: actual ultimate and command authority views, switched/fainted actor reset, armed window, affordability/cooldowns, input-layout collision proofs and <=20% world-composite coverage",
+    "Code-blind 7-inch judge for both rasters and catalog P2-001/P2-002/P2-004/P2-007/P2-031/P2-088; remaining bare Build/Players, map terrain and heavy exploration HUD defects are still open",
+    "Native Godot compile/type check; reconcile dependencies with accepted main after prior batch is green, preserving this source"
+  ],
+  "criteria": {
+    "F42#0": "OPEN: targeted UI changes only; complete catalog/native/code-blind evidence absent",
+    "F42#1": "OPEN: screens and adapters coded; missing canonical producer mounts/native controller and save/co-op proof",
+    "F42#2": "OPEN: flag-off combat presenter; actual snapshot producer and world-composite/device judge pending",
+    "F42#3": "OPEN: named capture tool prepared; neither raster rendered or judged"
+  },
+  "protected_paths": "No integration/main/PR519, other checkout, CI workflow, STATE, live dashboard, renderer default or RENDER_LOCK edits. No PR, workflow dispatch, additional session/agent or self-landing."
+}
