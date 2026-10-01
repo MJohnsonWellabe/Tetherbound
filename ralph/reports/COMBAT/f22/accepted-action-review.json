@@ -1,0 +1,32 @@
+{
+  "reviewer": "/root/f22_source_review",
+  "scope": "Independent read-only bounded source review of exact ignored accepted-action producer; no parse, engine, simulation, gameplay or MET",
+  "source_cut_sha256": "18576547d3a1fe36a6c6b02eb9b1a48add50a8c58792fcdaaf240a2fc68bd89f",
+  "reviewed_after_sha256": {
+    "scripts/net/encounter_host.gd": "8158db7b066ea8e2de59f468bcf5789d903b5dad1b6640ffe616a14d6731f496",
+    "scripts/combat/encounter_director.gd": "15fa5211dbf2829461a86876bee5aea3dba99c9629bffbc6d11a55c8bbf00b9e",
+    "scripts/creatures/move_mastery.gd": "fe6892f6eac927d6d1c63fa3579e374028932565a236e351e9e007bd023305f0",
+    "scripts/combat/combat_manager.gd": "e177262621c0ad2b772465bf75a533c16f5ddd04e40ce6fe796110ea3ac716be"
+  },
+  "bounded_source_result": "No outstanding definite findings in reviewed source scope after three P1 corrections; actual activation remains blocked",
+  "corrected_findings": [
+    "Stable encounter utility ledger initialized and explicitly distinguished from strict actor body generation; ineffective arrivals settle once",
+    "Prior exact HP ACK-only settled_revision changes excluded from actor economic/body CAS",
+    "Verified canonical killing result starts manager victory/round resolution after capture/delivery; no legacy award writer added"
+  ],
+  "checks": {
+    "node ralph/reports/COMBAT/f22/check_accepted_action_source.mjs": "PASS SOURCE ONLY: exact four paths, hashes, originals/fences/markers, terminal hook and OFF flags",
+    "git diff --check": "PASS whitespace only"
+  },
+  "still_unconnected": [
+    "Actual Foundation Session _host_move_action_context and _commit_host_move_action_outcome using SAME CharacterAuthority journal, bool writers, owner ACK and current pending fence",
+    "Authored canonical finite per-slot delivery definitions and source/body/clock retention while durability waits",
+    "ROOT latest F23 71bf helper/gear/VFX, F21 manager, F24 admission/commands/joint combo, F25/F35 full-row consumers",
+    "Actual canonical incoming enemy actor HP, shared status/movement/field consumers and impact audio",
+    "Guest/reconnect start-token/action projections and owner reconciliation",
+    "Named final-boss accepted-outcome stable contributor capture, actual full-policy fixtures and serialized engine/gameplay/visual proofs"
+  ],
+  "acceptance": {"F22#0": "OPEN", "F22#1": "OPEN", "F22#2": "OPEN", "F22#3": "OPEN", "F22#4": "OPEN"},
+  "runtime_flags": "OFF",
+  "tracked_shared_source_writes": false
+}

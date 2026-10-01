@@ -1,0 +1,190 @@
+
+# Ignored F22 accepted-action Director adapter. Session methods below are an
+# explicit UNCONNECTED Foundation facade contract, never a substitute writer.
+const F22_ACTION_TRAVEL := preload("res://scripts/combat/move_projectile.gd")
+const F22_ACTION_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
+
+
+func _f22_action_refuse(code: String, peer: int = 0) -> Dictionary:
+	return {"ok": false, "kind": "move_action_start", "peer": peer,
+		"pending": false, "code": code, "reason": "The move could not start safely.", "delta": {}}
+
+
+func _f22_action_bodies(id: String, peer: int) -> Dictionary:
+	var record: Dictionary = _encounter_host.call("record", id)
+	var source := deployed_body_for(peer)
+	var runtime := _shared_host_fight(id)
+	var target: Node3D = runtime.call("body") as Node3D if runtime != null else \
+		_engaged_with if _local_bound_encounter_id() == id else null
+	if source == null or target == null or not is_instance_valid(source) \
+		or not is_instance_valid(target) or not source.is_inside_tree() or not target.is_inside_tree(): return {}
+	var instance: Variant = target.get("instance")
+	if not instance is RefCounted or str(instance.get("uid")) != str(record.get("opponent", {}).get("card", {}).get("uid")) \
+		or float(instance.get("hp")) != float(record.opponent.hp) \
+		or float(instance.get("max_hp")) != float(record.opponent.hp_max): return {}
+	return {"source": source, "target": target, "enemy": instance, "runtime": runtime}
+
+
+func _f22_action_context(id: String, peer: int, uid: String) -> Dictionary:
+	if MATH.config().get("move_loadout_runtime_enabled") != true or _encounter_host == null: return {}
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or _session == null or game.get("session") != _session \
+		or not _session.has_method("_host_move_action_context") \
+		or not _session.has_method("_commit_host_move_action_outcome"): return {}
+	# Foundation verifies this actual Director and ledger against SAME Session
+	# registry. Its context derives actual portable row/stats/tiers; no RPC card.
+	var context: Variant = _session.call("_host_move_action_context", self, id, peer, uid)
+	if not context is Dictionary or context.get("ready") != true \
+		or not context.get("owned_row") is Dictionary or context.owned_row.get("uid") != uid \
+		or not context.get("completed_tiers") is Array or not context.get("combat_stats") is Dictionary \
+		or not context.get("wind_profile") is Dictionary \
+		or not context.get("move_delivery_seconds") is Dictionary: return {}
+	for slot: String in ["quick", "charged", "utility", "ultimate"]:
+		if not F22_ACTION_EFFECTS._number(context.move_delivery_seconds.get(slot), 0.0, 3.0): return {}
+	var participant: Dictionary = (_encounter_host.call("record", id) as Dictionary).get("participants", {}).get(peer, {})
+	if participant.get("character_id") != context.get("character_id") \
+		or not _encounter_host.call("actor_encounter_is_current", id, peer, str(context.character_id)): return {}
+	return context.duplicate(true)
+
+
+## Manager reads host-issued token from SAME authoritative admission/body.
+## Remote projection transport must be composed by ROOT before activation.
+func local_move_action_view(id: String, uid: String) -> Dictionary:
+	var peer := _local_peer_id()
+	var context := _f22_action_context(id, peer, uid)
+	if context.is_empty(): return {}
+	return _encounter_host.call("local_move_action_view", id, peer, context.owned_row, Time.get_ticks_msec())
+
+
+func _host_move_action_start(intent: Dictionary, peer: int) -> Dictionary:
+	# Network input is an exact minimal request; every other field is host-owned.
+	if intent.size() != 6 or intent.get("kind") != "move_action_start": return _f22_action_refuse("malformed", peer)
+	for key: String in ["encounter_id", "creature_uid", "slot", "move_id", "start_token"]:
+		if not intent.get(key) is String: return _f22_action_refuse("malformed", peer)
+	var id := str(intent.encounter_id)
+	var context := _f22_action_context(id, peer, str(intent.creature_uid))
+	var bodies := _f22_action_bodies(id, peer)
+	if context.is_empty() or bodies.is_empty(): return _f22_action_refuse("authority_unready", peer)
+	var host := {"now_ms": Time.get_ticks_msec(), "character_id": context.character_id,
+		"owned_row": context.owned_row, "completed_tiers": context.completed_tiers,
+		"wind_profile": context.wind_profile, "attack": context.combat_stats.attack,
+		"quick_energy_multiplier": context.get("quick_energy_multiplier", 1.0),
+		"move_delivery_seconds": context.move_delivery_seconds.get(str(intent.slot)),
+		"source_body_instance_id": bodies.source.get_instance_id(),
+		"source_radius": _body_radius(bodies.source), "target_radius": _body_radius(bodies.target),
+		"reach_floor": CONTACT_SPACING.pair_reach_need(bodies.source, bodies.target)}
+	var bundle: Dictionary = _encounter_host.call("stage_move_action_start", intent, peer, host)
+	if bundle.get("ok") != true: return _f22_action_refuse(str(bundle.get("code", "start_refused")), peer)
+	var result: Dictionary = _encounter_host.call("commit_move_action_start", bundle)
+	if result.get("ok") != true: return _f22_action_refuse(str(result.get("code", "start_refused")), peer)
+	return {"ok": true, "kind": "move_action_start", "peer": peer, "pending": false, "delta": result.delta}
+
+
+## Host resolves from elapsed frozen schedule and real body contact. Visual
+## arrived()/hit_landed signals cannot reach this writer or grant credit.
+func _tick_f22_move_actions() -> void:
+	if MATH.config().get("move_loadout_runtime_enabled") != true or _encounter_host == null: return
+	var records: Dictionary = _encounter_host.get("encounters")
+	for id: String in records.keys().duplicate():
+		for original: Dictionary in _encounter_host.call("pending_move_actions", id):
+			var peer := int(original.peer_id)
+			if peer <= 0: continue # Foundation reconciles stable departed owner first.
+			var action_id := str(original.profile.action_id)
+			if original.phase == "cancelled":
+				F22_ACTION_TRAVEL.cancel_action(get_tree(), action_id)
+				_encounter_host.call("acknowledge_move_action_cancel", id, peer, action_id)
+				continue
+			if original.phase in ["staged_outcome", "published"]:
+				_f22_publish_move_original(original.outcome_bundle)
+				continue
+			var context := _f22_action_context(id, peer, str(original.profile.actor_binding.creature_uid))
+			var bodies := _f22_action_bodies(id, peer)
+			if context.is_empty() or bodies.is_empty():
+				_encounter_host.call("cancel_move_actions_for_peer", id, peer, "authority_or_body_retired")
+				continue
+			var now_ms := Time.get_ticks_msec()
+			if original.phase == "windup":
+				if now_ms < int(original.release_at_ms): continue
+				var from: Vector3 = bodies.source.call("centre")
+				var to: Vector3 = bodies.target.call("centre")
+				# Session derives finite authored delivery from canonical move data
+				# at start. Host freezes its deadline here; VFX consumes this time.
+				var travel := float(original.profile.travel_seconds)
+				var release := {"now_ms": now_ms, "resolve_at_ms": now_ms + ceili(travel * 1000.0),
+					"source_body_instance_id": bodies.source.get_instance_id(),
+					"source_position": from, "target_position": to, "facing": bodies.source.call("facing"),
+					"target_uid": str(bodies.enemy.get("uid")),
+					"target_generation": int(records[id].opponent.body_generation)}
+				var released: Dictionary = _encounter_host.call("release_move_action", id, peer, action_id, release)
+				if released.get("ok") != true: continue
+				F22_ACTION_TRAVEL.launch(get_parent(), from, to, released.profile, {
+					"travel_seconds": travel, "current_actor": released.profile.actor_binding,
+					"source_ground": bodies.source.global_position, "target_ground": bodies.target.global_position,
+					"action_id": action_id, "encounter_id": id})
+				original = _encounter_host.call("move_action_original", id, peer, action_id)
+				# Projection schema below is intentionally canonical, no latest-hit cache.
+				original = {"phase": original.phase, "profile": original.start.profile,
+					"release": original.release}
+			if original.phase != "inflight" or now_ms < int(original.release.resolve_at_ms): continue
+			var enemy: RefCounted = bodies.enemy
+			var rng: Variant = bodies.runtime.get("_rng") if bodies.runtime != null else _manager.get("_rng")
+			if not rng is RandomNumberGenerator: continue
+			var host := {"now_ms": now_ms, "owned_row": context.owned_row,
+				"source_body_instance_id": bodies.source.get_instance_id(), "target_role": "opponent", "hostile": true,
+				"source_position": bodies.source.call("centre"), "facing": bodies.source.call("facing"),
+				"target_position": bodies.target.call("centre"), "target_uid": str(enemy.get("uid")),
+				"target_generation": int(records[id].opponent.body_generation), "target_hp": records[id].opponent.hp,
+				"target_max_hp": records[id].opponent.hp_max, "target_defence": enemy.call("effective_defence", PROGRESSION.config()),
+				"target_type": str(enemy.get("creature_type")), "target_secondary_type": str(enemy.get("secondary_type")),
+				"named": str(records[id].get("kind", "")) == "trainer" \
+					or bodies.target.has_meta(&"named_encounter_id") or bodies.target.has_meta(&"water_named_encounter") \
+					or bodies.target.name == &"WarrenGuardian", "roll": rng.randf()}
+			var outcome: Dictionary = _encounter_host.call("stage_move_action_outcome", id, peer, action_id, host)
+			if outcome.get("ok") == true: _f22_publish_move_original(outcome)
+
+
+func _f22_publish_move_original(original: Dictionary) -> void:
+	if _session == null or not _session.has_method("_commit_host_move_action_outcome"): return
+	# Foundation stages actual admitted mastery+selfHP changes, retains original
+	# pending journal, performs bool writes and owner ACK, then calls Host's
+	# publish_move_action_outcome under its SAME current pending fence. A caller
+	# passing a dictionary with durable=true authenticates nothing.
+	var result: Variant = _session.call("_commit_host_move_action_outcome", self, original.duplicate(true))
+	if not result is Dictionary or result.get("ok") != true or result.get("durable") != true \
+		or result.get("published") != true or not result.get("verdict") is Dictionary: return
+	var id := str(original.encounter_id)
+	var peer := int(original.peer_id)
+	var canonical: Dictionary = _encounter_host.call("move_action_original", id, peer, str(original.action_id))
+	if canonical.get("phase") != "published" or canonical.get("result") != result.verdict: return
+	var bodies := _f22_action_bodies_after_publication(id, peer, original)
+	if bodies.is_empty(): return # Hold original receipt; ROOT adapter must reconcile.
+	var verdict: Dictionary = canonical.result
+	var delta: Dictionary = verdict.delta
+	if delta.hit: F22_ACTION_TRAVEL.confirm_impact(get_tree(), str(original.action_id))
+	bodies.enemy.set("hp", float(delta.hp))
+	bodies.enemy.set("fainted", float(delta.hp) <= 0.0)
+	# F27 capture requires actual dead body + same committed record, before any
+	# terminal publication/participant withdrawal. It receives the original hit.
+	if delta.killed: _capture_wild_victory_source(id, verdict)
+	if not _encounter_host.call("acknowledge_move_action_delivery", id, peer, str(original.action_id), verdict): return
+	if _manager != null and peer == _local_peer_id(): _manager.call("apply_host_move_action", delta)
+	if _is_multi_peer() and peer != _local_peer_id(): _send_realm_rpc(peer, "_rpc_encounter_verdict", [verdict])
+	if delta.killed: _encounter_host.call("set_phase", id, "done" if bodies.runtime != null else "resolving")
+	_host_after_encounter_change(id, peer)
+	if delta.killed: _finalize_shared_host_fight(id, "won")
+
+
+func _f22_action_bodies_after_publication(id: String, peer: int, original: Dictionary) -> Dictionary:
+	# This is a body projection check, not a second damage roll. Pre-publication
+	# target HP remains in the body until the exact original result is mirrored.
+	var source := deployed_body_for(peer)
+	var runtime := _shared_host_fight(id)
+	var target: Node3D = runtime.call("body") as Node3D if runtime != null else \
+		_engaged_with if _local_bound_encounter_id() == id else null
+	if source == null or target == null or not is_instance_valid(source) or not is_instance_valid(target): return {}
+	var enemy: Variant = target.get("instance")
+	var record: Dictionary = _encounter_host.call("record", id)
+	if not enemy is RefCounted or source.get_instance_id() != original.host.source_body_instance_id \
+		or enemy.get("uid") != original.host.target_uid or int(record.opponent.body_generation) != int(original.host.target_generation) \
+		or float(enemy.get("hp")) not in [float(original.plan.target_hp_before), float(original.plan.target_hp_after)]: return {}
+	return {"enemy": enemy, "runtime": runtime}
