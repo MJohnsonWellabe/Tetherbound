@@ -213,7 +213,7 @@ func _current_plan(actor: CharacterBody3D) -> Dictionary:
 	if canonical.get("ok") != true or canonical.record.id != "forge" \
 			or absf(wrapf(rad_to_deg(global_rotation.y)-float(canonical.record.yaw_deg),-180,180)) > 0.01:
 		return _refusal("station_gone", "This Forge no longer matches its paid world record.")
-	var plan: Dictionary = RULES.unit_plan(_recipes, _recipe_id, _uid, "meadows", raw["world"], raw["character"])
+	var plan: Dictionary = RULES.call("unit_plan",_recipes, _recipe_id, _uid, "meadows", raw["world"], raw["character"])
 	if not bool(plan.get("ok", false)):
 		return plan
 	var world_namespace: Variant = raw["world"].get("reward_delivery_namespace")
@@ -242,7 +242,7 @@ func _enabled() -> bool:
 		and _integer(_config.get("maximum_manual_units"), 1) \
 		and _number(_config.get("maximum_tick_delta_seconds")) \
 		and float(_config["maximum_tick_delta_seconds"]) > 0.0 \
-		and not RULES.manual_channel(_recipes).is_empty()
+		and not RULES.call("manual_channel",_recipes).is_empty()
 
 
 func _exit_tree() -> void:

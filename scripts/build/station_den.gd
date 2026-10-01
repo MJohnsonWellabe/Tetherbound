@@ -41,7 +41,7 @@ func configure(world: Node3D, uid: String, canonical_reader: Callable,
 	var block: Variant = parsed.get("den") if parsed is Dictionary else null
 	_config = block.duplicate(true) if block is Dictionary else {}
 	if ResourceLoader.exists(SHED_PATH): SHED=load(SHED_PATH)
-	_shed=SHED.read() if SHED != null else {}
+	_shed=SHED.call("read") if SHED != null else {}
 	if not _enabled():
 		return _refusal("disabled", "The Den is not ready yet.")
 	if not _reader.is_valid() or not _commit.is_valid():
@@ -140,7 +140,7 @@ func _current_plan(actor: CharacterBody3D, creature_uid: String) -> Dictionary:
 		return _refusal("unavailable", "The character's canonical grooming state is unavailable.")
 	if not _canonical_den(world.get("placed_buildings")):
 		return _refusal("missing_station", "Build a Den at the homestead.")
-	var shed: Dictionary = SHED.den_groom_candidate(character["character_id"], owned,
+	var shed: Dictionary = SHED.call("den_groom_candidate",character["character_id"], owned,
 		creature_uid, int(world["day"]), world["reward_delivery_namespace"],
 		raw["received_shed_receipts"], _shed)
 	if not bool(shed.get("ok", false)):

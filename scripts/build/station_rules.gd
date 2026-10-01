@@ -115,6 +115,8 @@ static func record(cfg: Dictionary, records: Array, uid: String) -> Dictionary:
 			found = i
 	if found < 0: return deny("station_gone")
 	var row: Dictionary = records[found]
+	var def := attachment(cfg,str(row.get("id","")))
+	if not def.is_empty() and (def.get("status") != "live" or def.get("registered") != true): return deny("attachment_reserved")
 	if not managed(cfg, str(row.get("id", ""))) or row.get("paid") != true \
 			or not row.get("paid") is bool or row.get("removed", false) != false \
 			or not row.get("removed", false) is bool or not PLOT.numbers(row.get("position"), 3) \

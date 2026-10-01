@@ -25,6 +25,7 @@ func build(id: String, ghost: bool = false) -> void:
 	if _cfg.is_empty(): return
 	var attachment := RULES.attachment(_cfg,id)
 	if not attachment.is_empty():
+		if attachment.get("status") != "live" or attachment.get("registered") != true: return
 		_build_attachment(attachment)
 	else:
 		match id:
