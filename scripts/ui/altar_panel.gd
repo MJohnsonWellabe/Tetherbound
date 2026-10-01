@@ -417,7 +417,7 @@ func _spend(payment_item: String) -> void:
 func _on_completed(spend_id: String, result: Dictionary) -> void:
 	if spend_id != _pending_id or _pending_id.is_empty(): return
 	if result.get("durable") == true: _pending_durable = true
-	var terminal := result.get("resolved") == true and result.get("ok") is bool
+	var terminal: bool = result.get("resolved") == true and result.get("ok") is bool
 	if result.get("ok") == true and (result.get("saved") != true or result.get("durable") != true):
 		terminal = false
 	if result.get("ok") == false and _pending_durable: terminal = false

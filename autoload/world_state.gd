@@ -530,9 +530,10 @@ func _apply_op(op: Dictionary) -> bool:
 			# Through `register_building()`, not a hand-built Dictionary: the
 			# shape of a placed-building record keeps exactly one construction
 			# site, so a delta and a solo placement can never disagree about it.
-			var placed_index := register_building(str(op.get("id", "")), _op_position(op.get("position")),
+			var placed_uid := register_building(str(op.get("id", "")), _op_position(op.get("position")),
 				float(op.get("yaw_deg", 0.0)), bool(op.get("paid", true)),
 				str(op.get("realm", "meadows")), str(op.get("uid", "")))
+			var placed_index := building_index_of(placed_uid)
 			if op.get("id") == "forward_camp" and placed_index >= 0:
 				placed_buildings[placed_index].character_id = op.character_id
 				placed_buildings[placed_index].txn_id = op.txn_id

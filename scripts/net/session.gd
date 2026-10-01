@@ -168,7 +168,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	var accepted: Dictionary = _character_authority.call("staged_creature_training", stage)
 	var writer := get_node_or_null(^"LedgerRpc")
 	var journal: Dictionary = writer.call("journal_creature_training_prepared", peer, character, accepted) if writer != null else {}
-	var saved := journal.get("ok") == true and journal.get("durable") == true
+	var saved: bool = journal.get("ok") == true and journal.get("durable") == true
 	if _character_authority.call("finish_creature_training", stage, saved) != true: return FOUNDATION_ACTIONS.deny("stage_changed")
 	if not saved: return _foundation_refusal(str(journal.get("code", "world_save_failed")))
 	writer.call("publish_creature_training", peer, character, accepted.receipt)
@@ -305,8 +305,8 @@ func _foundation_relic_context(peer: int, biome: String) -> Dictionary:
 func foundation_research_source(director: Node, encounter_id: String, peer: int, kind: String, source_id: String, species: String, move_id: String = "", night: Variant = null) -> Dictionary:
 	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
 		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false}
-	var research_enabled := preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
-	var bounty_enabled := preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
+	var research_enabled: bool = preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
+	var bounty_enabled: bool = preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
 	if not research_enabled and not (bounty_enabled and kind == "catch"): return {"ok": true, "durable": true, "disabled": true}
 	var host: RefCounted = director.get("_encounter_host")
 	var original: Dictionary = director.call("retained_research_source", source_id)
@@ -349,8 +349,8 @@ func foundation_alpha_first_spawn(director: Node, site_id: String) -> Dictionary
 	return producer.call("first_spawn", director, site_id) if producer != null else {}
 
 func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dictionary:
-	var research_enabled := preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
-	var bounty_enabled := preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
+	var research_enabled: bool = preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
+	var bounty_enabled: bool = preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
 	if not research_enabled and not bounty_enabled: return {"ok": true, "durable": true, "disabled": true}
 	if not is_host() or director.get("_session") != self or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
 		or director.call("host_wild_victory_source", str(original.get("record", {}).get("encounter_id", ""))) != original \
@@ -494,7 +494,7 @@ func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
 	if duty.action == "boss_relic": return "defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]
 	if duty.action == "research_event":
-		var event := duty.context
+		var event: Dictionary = duty.context
 		return "research:event_%s:%s" % [JSON.stringify([event.world_namespace, event.session_id, event.event_id, event.species_id, event.kind]).sha256_text(), duty.character_id]
 	if duty.action == "bounty_event": return "bounty:event_%s:%s" % [JSON.stringify([duty.context.world_namespace, duty.context.event_id]).sha256_text(), duty.character_id]
 	return ""
@@ -505,7 +505,7 @@ func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 	var row: Variant = world.reward_deliveries.get(context.get("retained_event", ""))
 	if not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): return _altar_current_epoch()
 	for duty: Dictionary in row.duties:
-		var capture := accepted.get("action") == "wild_capture" and duty.action == "capture_offer" and accepted.intent.get("offer_id") == duty.context.offer_id
+		var capture: bool = accepted.get("action") == "wild_capture" and duty.action == "capture_offer" and accepted.intent.get("offer_id") == duty.context.offer_id
 		if duty.character_id != accepted.get("character_id") or (not capture and (duty.action != accepted.get("action") or duty.intent != accepted.get("intent"))): continue
 		var canonical: Dictionary = context.duplicate(true)
 		for field: String in ["character_id", "expected_revision", "in_range", "retained_event", "in_combat", "foundation_runtime_authorized"]: canonical.erase(field)
