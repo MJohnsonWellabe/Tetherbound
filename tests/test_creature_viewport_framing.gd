@@ -430,6 +430,7 @@ func test_showcase_is_warm_never_red_and_switches_off() -> void:
 	widget.call("set_showcase", false)
 	assert_false(bool(widget.call("showcase")), "showcase off restores the ordinary preview")
 	assert_eq((widget.get("_rim") as DirectionalLight3D).light_color, VIEWPORT.RIM_COLOUR)
+	widget.free()
 
 ## Independent review: the per-frame fit walked thousands of hull points on
 ## the Guardian. The silhouette is now bounded whatever the mesh density.
