@@ -1,0 +1,2223 @@
+{
+  "schema_version": 1,
+  "items": {
+    "attuned_ground": {
+      "name": "Ground Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#b39b68",
+      "blurb": "Hand-gathered ingredient for ground Ascension Feasts.",
+      "attuned_type": "ground"
+    },
+    "attuned_water": {
+      "name": "Water Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#66b8d9",
+      "blurb": "Hand-gathered ingredient for water Ascension Feasts.",
+      "attuned_type": "water"
+    },
+    "attuned_air": {
+      "name": "Air Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#90cdd9",
+      "blurb": "Hand-gathered ingredient for air Ascension Feasts.",
+      "attuned_type": "air"
+    },
+    "attuned_electric": {
+      "name": "Electric Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#e2c25b",
+      "blurb": "Hand-gathered ingredient for electric Ascension Feasts.",
+      "attuned_type": "electric"
+    },
+    "attuned_fire": {
+      "name": "Fire Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#d7995e",
+      "blurb": "Hand-gathered ingredient for fire Ascension Feasts.",
+      "attuned_type": "fire"
+    },
+    "attuned_dark": {
+      "name": "Dark Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#77738f",
+      "blurb": "Hand-gathered ingredient for dark Ascension Feasts.",
+      "attuned_type": "dark"
+    },
+    "attuned_ice": {
+      "name": "Ice Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#bbdfe5",
+      "blurb": "Hand-gathered ingredient for ice Ascension Feasts.",
+      "attuned_type": "ice"
+    },
+    "attuned_psychic": {
+      "name": "Psychic Attuned Herb",
+      "kind": "resource",
+      "stack": 999,
+      "colour": "#be94ca",
+      "blurb": "Hand-gathered ingredient for psychic Ascension Feasts.",
+      "attuned_type": "psychic"
+    },
+    "feast_t1_ground": {
+      "name": "Ascension Feast 1 (ground)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#b39b68",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "blurb": "Feed one ground creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t1_water": {
+      "name": "Ascension Feast 1 (water)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#66b8d9",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "water",
+      "catalyst": "",
+      "blurb": "Feed one water creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t1_air": {
+      "name": "Ascension Feast 1 (air)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#90cdd9",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "air",
+      "catalyst": "",
+      "blurb": "Feed one air creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t1_electric": {
+      "name": "Ascension Feast 1 (electric)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#e2c25b",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "blurb": "Feed one electric creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t1_fire": {
+      "name": "Ascension Feast 1 (fire)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#d7995e",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "blurb": "Feed one fire creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t1_dark": {
+      "name": "Ascension Feast 1 (dark)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#77738f",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "blurb": "Feed one dark creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t1_ice": {
+      "name": "Ascension Feast 1 (ice)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#bbdfe5",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "blurb": "Feed one ice creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t1_psychic": {
+      "name": "Ascension Feast 1 (psychic)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#be94ca",
+      "tier": 1,
+      "breaks_level": 10,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "blurb": "Feed one psychic creature at Lv 10 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_ground": {
+      "name": "Ascension Feast 2 (ground)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#b39b68",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "blurb": "Feed one ground creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_ground_heartstone": {
+      "name": "Ascension Feast 2 (ground, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#b39b68",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "ground",
+      "catalyst": "heartstone",
+      "blurb": "Feed one ground creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_ground_sunstone": {
+      "name": "Ascension Feast 2 (ground, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#b39b68",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "ground",
+      "catalyst": "sunstone",
+      "blurb": "Feed one ground creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_water": {
+      "name": "Ascension Feast 2 (water)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#66b8d9",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "water",
+      "catalyst": "",
+      "blurb": "Feed one water creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_water_heartstone": {
+      "name": "Ascension Feast 2 (water, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#66b8d9",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "water",
+      "catalyst": "heartstone",
+      "blurb": "Feed one water creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_water_sunstone": {
+      "name": "Ascension Feast 2 (water, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#66b8d9",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "water",
+      "catalyst": "sunstone",
+      "blurb": "Feed one water creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_air": {
+      "name": "Ascension Feast 2 (air)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#90cdd9",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "air",
+      "catalyst": "",
+      "blurb": "Feed one air creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_air_heartstone": {
+      "name": "Ascension Feast 2 (air, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#90cdd9",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "air",
+      "catalyst": "heartstone",
+      "blurb": "Feed one air creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_air_sunstone": {
+      "name": "Ascension Feast 2 (air, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#90cdd9",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "air",
+      "catalyst": "sunstone",
+      "blurb": "Feed one air creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_electric": {
+      "name": "Ascension Feast 2 (electric)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#e2c25b",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "blurb": "Feed one electric creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_electric_heartstone": {
+      "name": "Ascension Feast 2 (electric, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#e2c25b",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "electric",
+      "catalyst": "heartstone",
+      "blurb": "Feed one electric creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_electric_sunstone": {
+      "name": "Ascension Feast 2 (electric, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#e2c25b",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "electric",
+      "catalyst": "sunstone",
+      "blurb": "Feed one electric creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_fire": {
+      "name": "Ascension Feast 2 (fire)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#d7995e",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "blurb": "Feed one fire creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_fire_heartstone": {
+      "name": "Ascension Feast 2 (fire, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#d7995e",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "fire",
+      "catalyst": "heartstone",
+      "blurb": "Feed one fire creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_fire_sunstone": {
+      "name": "Ascension Feast 2 (fire, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#d7995e",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "fire",
+      "catalyst": "sunstone",
+      "blurb": "Feed one fire creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_dark": {
+      "name": "Ascension Feast 2 (dark)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#77738f",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "blurb": "Feed one dark creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_dark_heartstone": {
+      "name": "Ascension Feast 2 (dark, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#77738f",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "dark",
+      "catalyst": "heartstone",
+      "blurb": "Feed one dark creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_dark_sunstone": {
+      "name": "Ascension Feast 2 (dark, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#77738f",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "dark",
+      "catalyst": "sunstone",
+      "blurb": "Feed one dark creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_ice": {
+      "name": "Ascension Feast 2 (ice)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#bbdfe5",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "blurb": "Feed one ice creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_ice_heartstone": {
+      "name": "Ascension Feast 2 (ice, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#bbdfe5",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "ice",
+      "catalyst": "heartstone",
+      "blurb": "Feed one ice creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_ice_sunstone": {
+      "name": "Ascension Feast 2 (ice, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#bbdfe5",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "ice",
+      "catalyst": "sunstone",
+      "blurb": "Feed one ice creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_psychic": {
+      "name": "Ascension Feast 2 (psychic)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#be94ca",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "blurb": "Feed one psychic creature at Lv 20 to open its next cap. No automatic level gain."
+    },
+    "feast_t2_psychic_heartstone": {
+      "name": "Ascension Feast 2 (psychic, heartstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#be94ca",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "psychic",
+      "catalyst": "heartstone",
+      "blurb": "Feed one psychic creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t2_psychic_sunstone": {
+      "name": "Ascension Feast 2 (psychic, sunstone)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#be94ca",
+      "tier": 2,
+      "breaks_level": 20,
+      "attuned_type": "psychic",
+      "catalyst": "sunstone",
+      "blurb": "Feed one psychic creature at Lv 20 to open its next cap. Catalyst already cooked in."
+    },
+    "feast_t3_ground": {
+      "name": "Ascension Feast 3 (ground)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#b39b68",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "blurb": "Feed one ground creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t3_water": {
+      "name": "Ascension Feast 3 (water)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#66b8d9",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "water",
+      "catalyst": "",
+      "blurb": "Feed one water creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t3_air": {
+      "name": "Ascension Feast 3 (air)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#90cdd9",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "air",
+      "catalyst": "",
+      "blurb": "Feed one air creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t3_electric": {
+      "name": "Ascension Feast 3 (electric)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#e2c25b",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "blurb": "Feed one electric creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t3_fire": {
+      "name": "Ascension Feast 3 (fire)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#d7995e",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "blurb": "Feed one fire creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t3_dark": {
+      "name": "Ascension Feast 3 (dark)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#77738f",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "blurb": "Feed one dark creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t3_ice": {
+      "name": "Ascension Feast 3 (ice)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#bbdfe5",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "blurb": "Feed one ice creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t3_psychic": {
+      "name": "Ascension Feast 3 (psychic)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#be94ca",
+      "tier": 3,
+      "breaks_level": 30,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "blurb": "Feed one psychic creature at Lv 30 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_ground": {
+      "name": "Ascension Feast 4 (ground)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#b39b68",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "blurb": "Feed one ground creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_water": {
+      "name": "Ascension Feast 4 (water)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#66b8d9",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "water",
+      "catalyst": "",
+      "blurb": "Feed one water creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_air": {
+      "name": "Ascension Feast 4 (air)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#90cdd9",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "air",
+      "catalyst": "",
+      "blurb": "Feed one air creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_electric": {
+      "name": "Ascension Feast 4 (electric)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#e2c25b",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "blurb": "Feed one electric creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_fire": {
+      "name": "Ascension Feast 4 (fire)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#d7995e",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "blurb": "Feed one fire creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_dark": {
+      "name": "Ascension Feast 4 (dark)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#77738f",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "blurb": "Feed one dark creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_ice": {
+      "name": "Ascension Feast 4 (ice)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#bbdfe5",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "blurb": "Feed one ice creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t4_psychic": {
+      "name": "Ascension Feast 4 (psychic)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#be94ca",
+      "tier": 4,
+      "breaks_level": 40,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "blurb": "Feed one psychic creature at Lv 40 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_ground": {
+      "name": "Ascension Feast 5 (ground)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#b39b68",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "blurb": "Feed one ground creature at Lv 50 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_water": {
+      "name": "Ascension Feast 5 (water)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#66b8d9",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "water",
+      "catalyst": "",
+      "blurb": "Feed one water creature at Lv 50 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_air": {
+      "name": "Ascension Feast 5 (air)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#90cdd9",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "air",
+      "catalyst": "",
+      "blurb": "Feed one air creature at Lv 50 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_electric": {
+      "name": "Ascension Feast 5 (electric)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#e2c25b",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "blurb": "Feed one electric creature at Lv 50 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_fire": {
+      "name": "Ascension Feast 5 (fire)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#d7995e",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "blurb": "Feed one fire creature at Lv 50 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_dark": {
+      "name": "Ascension Feast 5 (dark)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#77738f",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "blurb": "Feed one dark creature at Lv 50 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_ice": {
+      "name": "Ascension Feast 5 (ice)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#bbdfe5",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "blurb": "Feed one ice creature at Lv 50 to open its next cap. No automatic level gain."
+    },
+    "feast_t5_psychic": {
+      "name": "Ascension Feast 5 (psychic)",
+      "kind": "ascension_feast",
+      "stack": 20,
+      "colour": "#be94ca",
+      "tier": 5,
+      "breaks_level": 50,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "blurb": "Feed one psychic creature at Lv 50 to open its next cap. No automatic level gain."
+    }
+  },
+  "recipes": {
+    "feast_t1_ground": {
+      "name": "Ascension Feast 1 (ground)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_ground": 1
+      },
+      "output": {
+        "feast_t1_ground": 1
+      }
+    },
+    "feast_t1_water": {
+      "name": "Ascension Feast 1 (water)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "water",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_water": 1
+      },
+      "output": {
+        "feast_t1_water": 1
+      }
+    },
+    "feast_t1_air": {
+      "name": "Ascension Feast 1 (air)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "air",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_air": 1
+      },
+      "output": {
+        "feast_t1_air": 1
+      }
+    },
+    "feast_t1_electric": {
+      "name": "Ascension Feast 1 (electric)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_electric": 1
+      },
+      "output": {
+        "feast_t1_electric": 1
+      }
+    },
+    "feast_t1_fire": {
+      "name": "Ascension Feast 1 (fire)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_fire": 1
+      },
+      "output": {
+        "feast_t1_fire": 1
+      }
+    },
+    "feast_t1_dark": {
+      "name": "Ascension Feast 1 (dark)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_dark": 1
+      },
+      "output": {
+        "feast_t1_dark": 1
+      }
+    },
+    "feast_t1_ice": {
+      "name": "Ascension Feast 1 (ice)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_ice": 1
+      },
+      "output": {
+        "feast_t1_ice": 1
+      }
+    },
+    "feast_t1_psychic": {
+      "name": "Ascension Feast 1 (psychic)",
+      "feast_id": "feast_t1",
+      "tier": 1,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "cost": {
+        "berries": 4,
+        "rootstone": 2,
+        "attuned_psychic": 1
+      },
+      "output": {
+        "feast_t1_psychic": 1
+      }
+    },
+    "feast_t2_ground": {
+      "name": "Ascension Feast 2 (ground)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_ground": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_ground": 1
+      }
+    },
+    "feast_t2_ground_heartstone": {
+      "name": "Ascension Feast 2 (ground, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ground",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_ground": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_ground_heartstone": 1
+      }
+    },
+    "feast_t2_ground_sunstone": {
+      "name": "Ascension Feast 2 (ground, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ground",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_ground": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_ground_sunstone": 1
+      }
+    },
+    "feast_t2_water": {
+      "name": "Ascension Feast 2 (water)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "water",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_water": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_water": 1
+      }
+    },
+    "feast_t2_water_heartstone": {
+      "name": "Ascension Feast 2 (water, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "water",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_water": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_water_heartstone": 1
+      }
+    },
+    "feast_t2_water_sunstone": {
+      "name": "Ascension Feast 2 (water, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "water",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_water": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_water_sunstone": 1
+      }
+    },
+    "feast_t2_air": {
+      "name": "Ascension Feast 2 (air)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "air",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_air": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_air": 1
+      }
+    },
+    "feast_t2_air_heartstone": {
+      "name": "Ascension Feast 2 (air, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "air",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_air": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_air_heartstone": 1
+      }
+    },
+    "feast_t2_air_sunstone": {
+      "name": "Ascension Feast 2 (air, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "air",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_air": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_air_sunstone": 1
+      }
+    },
+    "feast_t2_electric": {
+      "name": "Ascension Feast 2 (electric)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_electric": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_electric": 1
+      }
+    },
+    "feast_t2_electric_heartstone": {
+      "name": "Ascension Feast 2 (electric, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "electric",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_electric": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_electric_heartstone": 1
+      }
+    },
+    "feast_t2_electric_sunstone": {
+      "name": "Ascension Feast 2 (electric, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "electric",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_electric": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_electric_sunstone": 1
+      }
+    },
+    "feast_t2_fire": {
+      "name": "Ascension Feast 2 (fire)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_fire": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_fire": 1
+      }
+    },
+    "feast_t2_fire_heartstone": {
+      "name": "Ascension Feast 2 (fire, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "fire",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_fire": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_fire_heartstone": 1
+      }
+    },
+    "feast_t2_fire_sunstone": {
+      "name": "Ascension Feast 2 (fire, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "fire",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_fire": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_fire_sunstone": 1
+      }
+    },
+    "feast_t2_dark": {
+      "name": "Ascension Feast 2 (dark)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_dark": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_dark": 1
+      }
+    },
+    "feast_t2_dark_heartstone": {
+      "name": "Ascension Feast 2 (dark, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "dark",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_dark": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_dark_heartstone": 1
+      }
+    },
+    "feast_t2_dark_sunstone": {
+      "name": "Ascension Feast 2 (dark, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "dark",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_dark": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_dark_sunstone": 1
+      }
+    },
+    "feast_t2_ice": {
+      "name": "Ascension Feast 2 (ice)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_ice": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_ice": 1
+      }
+    },
+    "feast_t2_ice_heartstone": {
+      "name": "Ascension Feast 2 (ice, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ice",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_ice": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_ice_heartstone": 1
+      }
+    },
+    "feast_t2_ice_sunstone": {
+      "name": "Ascension Feast 2 (ice, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "ice",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_ice": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_ice_sunstone": 1
+      }
+    },
+    "feast_t2_psychic": {
+      "name": "Ascension Feast 2 (psychic)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "cost": {
+        "ironwood": 2,
+        "attuned_psychic": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_psychic": 1
+      }
+    },
+    "feast_t2_psychic_heartstone": {
+      "name": "Ascension Feast 2 (psychic, heartstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "psychic",
+      "catalyst": "heartstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_psychic": 1,
+        "heartstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_psychic_heartstone": 1
+      }
+    },
+    "feast_t2_psychic_sunstone": {
+      "name": "Ascension Feast 2 (psychic, sunstone)",
+      "feast_id": "feast_t2",
+      "tier": 2,
+      "biome": "meadows",
+      "station_id": "kitchen",
+      "station_tier": 1,
+      "homestead_only": true,
+      "attuned_type": "psychic",
+      "catalyst": "sunstone",
+      "cost": {
+        "ironwood": 2,
+        "attuned_psychic": 1,
+        "sunstone": 1,
+        "berries": 6
+      },
+      "output": {
+        "feast_t2_psychic_sunstone": 1
+      }
+    },
+    "feast_t3_ground": {
+      "name": "Ascension Feast 3 (ground)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_ground": 1
+      },
+      "output": {
+        "feast_t3_ground": 1
+      }
+    },
+    "feast_t3_water": {
+      "name": "Ascension Feast 3 (water)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "water",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_water": 1
+      },
+      "output": {
+        "feast_t3_water": 1
+      }
+    },
+    "feast_t3_air": {
+      "name": "Ascension Feast 3 (air)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "air",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_air": 1
+      },
+      "output": {
+        "feast_t3_air": 1
+      }
+    },
+    "feast_t3_electric": {
+      "name": "Ascension Feast 3 (electric)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_electric": 1
+      },
+      "output": {
+        "feast_t3_electric": 1
+      }
+    },
+    "feast_t3_fire": {
+      "name": "Ascension Feast 3 (fire)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_fire": 1
+      },
+      "output": {
+        "feast_t3_fire": 1
+      }
+    },
+    "feast_t3_dark": {
+      "name": "Ascension Feast 3 (dark)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_dark": 1
+      },
+      "output": {
+        "feast_t3_dark": 1
+      }
+    },
+    "feast_t3_ice": {
+      "name": "Ascension Feast 3 (ice)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_ice": 1
+      },
+      "output": {
+        "feast_t3_ice": 1
+      }
+    },
+    "feast_t3_psychic": {
+      "name": "Ascension Feast 3 (psychic)",
+      "feast_id": "feast_t3",
+      "tier": 3,
+      "biome": "tidewake",
+      "station_id": "kitchen",
+      "station_tier": 2,
+      "homestead_only": true,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "cost": {
+        "tide_bloom": 3,
+        "reef_stone": 2,
+        "attuned_psychic": 1
+      },
+      "output": {
+        "feast_t3_psychic": 1
+      }
+    },
+    "feast_t4_ground": {
+      "name": "Ascension Feast 4 (ground)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_ground": 1
+      },
+      "output": {
+        "feast_t4_ground": 1
+      }
+    },
+    "feast_t4_water": {
+      "name": "Ascension Feast 4 (water)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "water",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_water": 1
+      },
+      "output": {
+        "feast_t4_water": 1
+      }
+    },
+    "feast_t4_air": {
+      "name": "Ascension Feast 4 (air)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "air",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_air": 1
+      },
+      "output": {
+        "feast_t4_air": 1
+      }
+    },
+    "feast_t4_electric": {
+      "name": "Ascension Feast 4 (electric)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_electric": 1
+      },
+      "output": {
+        "feast_t4_electric": 1
+      }
+    },
+    "feast_t4_fire": {
+      "name": "Ascension Feast 4 (fire)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_fire": 1
+      },
+      "output": {
+        "feast_t4_fire": 1
+      }
+    },
+    "feast_t4_dark": {
+      "name": "Ascension Feast 4 (dark)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_dark": 1
+      },
+      "output": {
+        "feast_t4_dark": 1
+      }
+    },
+    "feast_t4_ice": {
+      "name": "Ascension Feast 4 (ice)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_ice": 1
+      },
+      "output": {
+        "feast_t4_ice": 1
+      }
+    },
+    "feast_t4_psychic": {
+      "name": "Ascension Feast 4 (psychic)",
+      "feast_id": "feast_t4",
+      "tier": 4,
+      "biome": "cloudreach",
+      "station_id": "kitchen",
+      "station_tier": 3,
+      "homestead_only": true,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "cost": {
+        "cloudberry": 3,
+        "gale_fiber": 2,
+        "attuned_psychic": 1
+      },
+      "output": {
+        "feast_t4_psychic": 1
+      }
+    },
+    "feast_t5_ground": {
+      "name": "Ascension Feast 5 (ground)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "ground",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_ground": 1
+      },
+      "output": {
+        "feast_t5_ground": 1
+      }
+    },
+    "feast_t5_water": {
+      "name": "Ascension Feast 5 (water)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "water",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_water": 1
+      },
+      "output": {
+        "feast_t5_water": 1
+      }
+    },
+    "feast_t5_air": {
+      "name": "Ascension Feast 5 (air)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "air",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_air": 1
+      },
+      "output": {
+        "feast_t5_air": 1
+      }
+    },
+    "feast_t5_electric": {
+      "name": "Ascension Feast 5 (electric)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "electric",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_electric": 1
+      },
+      "output": {
+        "feast_t5_electric": 1
+      }
+    },
+    "feast_t5_fire": {
+      "name": "Ascension Feast 5 (fire)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "fire",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_fire": 1
+      },
+      "output": {
+        "feast_t5_fire": 1
+      }
+    },
+    "feast_t5_dark": {
+      "name": "Ascension Feast 5 (dark)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "dark",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_dark": 1
+      },
+      "output": {
+        "feast_t5_dark": 1
+      }
+    },
+    "feast_t5_ice": {
+      "name": "Ascension Feast 5 (ice)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "ice",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_ice": 1
+      },
+      "output": {
+        "feast_t5_ice": 1
+      }
+    },
+    "feast_t5_psychic": {
+      "name": "Ascension Feast 5 (psychic)",
+      "feast_id": "feast_t5",
+      "tier": 5,
+      "biome": "stormwood",
+      "station_id": "kitchen",
+      "station_tier": 4,
+      "homestead_only": true,
+      "attuned_type": "psychic",
+      "catalyst": "",
+      "cost": {
+        "voltcap": 3,
+        "glowmoss": 2,
+        "attuned_psychic": 1
+      },
+      "output": {
+        "feast_t5_psychic": 1
+      }
+    }
+  },
+  "attuned_sources": {
+    "biome": "meadows",
+    "author_reference": "old_quarry_approach",
+    "scope": "personal_existing_creature_training_transaction",
+    "nodes": [
+      {
+        "id": "master_garden_ground_0",
+        "order": 28000,
+        "item": "attuned_ground",
+        "amount": 6,
+        "label": "Gather ground attuned herbs",
+        "at": [
+          490,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_ground_1",
+        "order": 28001,
+        "item": "attuned_ground",
+        "amount": 6,
+        "label": "Gather ground attuned herbs",
+        "at": [
+          490,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_ground_2",
+        "order": 28002,
+        "item": "attuned_ground",
+        "amount": 6,
+        "label": "Gather ground attuned herbs",
+        "at": [
+          490,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_ground_3",
+        "order": 28003,
+        "item": "attuned_ground",
+        "amount": 7,
+        "label": "Gather ground attuned herbs",
+        "at": [
+          490,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_water_0",
+        "order": 28004,
+        "item": "attuned_water",
+        "amount": 6,
+        "label": "Gather water attuned herbs",
+        "at": [
+          496,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_water_1",
+        "order": 28005,
+        "item": "attuned_water",
+        "amount": 6,
+        "label": "Gather water attuned herbs",
+        "at": [
+          496,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_water_2",
+        "order": 28006,
+        "item": "attuned_water",
+        "amount": 6,
+        "label": "Gather water attuned herbs",
+        "at": [
+          496,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_water_3",
+        "order": 28007,
+        "item": "attuned_water",
+        "amount": 7,
+        "label": "Gather water attuned herbs",
+        "at": [
+          496,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_air_0",
+        "order": 28008,
+        "item": "attuned_air",
+        "amount": 6,
+        "label": "Gather air attuned herbs",
+        "at": [
+          502,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_air_1",
+        "order": 28009,
+        "item": "attuned_air",
+        "amount": 6,
+        "label": "Gather air attuned herbs",
+        "at": [
+          502,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_air_2",
+        "order": 28010,
+        "item": "attuned_air",
+        "amount": 6,
+        "label": "Gather air attuned herbs",
+        "at": [
+          502,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_air_3",
+        "order": 28011,
+        "item": "attuned_air",
+        "amount": 7,
+        "label": "Gather air attuned herbs",
+        "at": [
+          502,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_electric_0",
+        "order": 28012,
+        "item": "attuned_electric",
+        "amount": 6,
+        "label": "Gather electric attuned herbs",
+        "at": [
+          508,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_electric_1",
+        "order": 28013,
+        "item": "attuned_electric",
+        "amount": 6,
+        "label": "Gather electric attuned herbs",
+        "at": [
+          508,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_electric_2",
+        "order": 28014,
+        "item": "attuned_electric",
+        "amount": 6,
+        "label": "Gather electric attuned herbs",
+        "at": [
+          508,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_electric_3",
+        "order": 28015,
+        "item": "attuned_electric",
+        "amount": 7,
+        "label": "Gather electric attuned herbs",
+        "at": [
+          508,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_fire_0",
+        "order": 28016,
+        "item": "attuned_fire",
+        "amount": 6,
+        "label": "Gather fire attuned herbs",
+        "at": [
+          514,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_fire_1",
+        "order": 28017,
+        "item": "attuned_fire",
+        "amount": 6,
+        "label": "Gather fire attuned herbs",
+        "at": [
+          514,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_fire_2",
+        "order": 28018,
+        "item": "attuned_fire",
+        "amount": 6,
+        "label": "Gather fire attuned herbs",
+        "at": [
+          514,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_fire_3",
+        "order": 28019,
+        "item": "attuned_fire",
+        "amount": 7,
+        "label": "Gather fire attuned herbs",
+        "at": [
+          514,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_dark_0",
+        "order": 28020,
+        "item": "attuned_dark",
+        "amount": 6,
+        "label": "Gather dark attuned herbs",
+        "at": [
+          520,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_dark_1",
+        "order": 28021,
+        "item": "attuned_dark",
+        "amount": 6,
+        "label": "Gather dark attuned herbs",
+        "at": [
+          520,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_dark_2",
+        "order": 28022,
+        "item": "attuned_dark",
+        "amount": 6,
+        "label": "Gather dark attuned herbs",
+        "at": [
+          520,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_dark_3",
+        "order": 28023,
+        "item": "attuned_dark",
+        "amount": 7,
+        "label": "Gather dark attuned herbs",
+        "at": [
+          520,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_ice_0",
+        "order": 28024,
+        "item": "attuned_ice",
+        "amount": 6,
+        "label": "Gather ice attuned herbs",
+        "at": [
+          526,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_ice_1",
+        "order": 28025,
+        "item": "attuned_ice",
+        "amount": 6,
+        "label": "Gather ice attuned herbs",
+        "at": [
+          526,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_ice_2",
+        "order": 28026,
+        "item": "attuned_ice",
+        "amount": 6,
+        "label": "Gather ice attuned herbs",
+        "at": [
+          526,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_ice_3",
+        "order": 28027,
+        "item": "attuned_ice",
+        "amount": 7,
+        "label": "Gather ice attuned herbs",
+        "at": [
+          526,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_psychic_0",
+        "order": 28028,
+        "item": "attuned_psychic",
+        "amount": 6,
+        "label": "Gather psychic attuned herbs",
+        "at": [
+          532,
+          1720
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_psychic_1",
+        "order": 28029,
+        "item": "attuned_psychic",
+        "amount": 6,
+        "label": "Gather psychic attuned herbs",
+        "at": [
+          532,
+          1726
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_psychic_2",
+        "order": 28030,
+        "item": "attuned_psychic",
+        "amount": 6,
+        "label": "Gather psychic attuned herbs",
+        "at": [
+          532,
+          1732
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      },
+      {
+        "id": "master_garden_psychic_3",
+        "order": 28031,
+        "item": "attuned_psychic",
+        "amount": 7,
+        "label": "Gather psychic attuned herbs",
+        "at": [
+          532,
+          1738
+        ],
+        "realm": "meadows",
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "model_scale": 0.8
+      }
+    ],
+    "per_type_character_supply": 25
+  }
+}
