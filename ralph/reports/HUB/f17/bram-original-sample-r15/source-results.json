@@ -1,0 +1,510 @@
+{
+  "classification": "AUTHOR SOURCE ONLY; FAILURE-ONLY DIAGNOSTIC; F17#4 OPEN",
+  "passed": true,
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "passed": true
+    },
+    {
+      "name": "frozen native-api/PhysicsDirectSpaceState3D.xml",
+      "passed": true
+    },
+    {
+      "name": "frozen native-api/PhysicsServer3D.xml",
+      "passed": true
+    },
+    {
+      "name": "frozen native-api/PhysicsShapeQueryParameters3D.xml",
+      "passed": true
+    },
+    {
+      "name": "frozen native-api/provenance.json",
+      "passed": true
+    },
+    {
+      "name": "frozen originals/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen prior-failure/native.log",
+      "passed": true
+    },
+    {
+      "name": "frozen prior-failure/parser.log",
+      "passed": true
+    },
+    {
+      "name": "frozen prior-failure/receipt.json",
+      "passed": true
+    },
+    {
+      "name": "frozen proposal/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen repair.patch",
+      "passed": true
+    },
+    {
+      "name": "frozen review-context.txt",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/data/config/building_prefabs.json",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/data/config/village.json",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/data/config/village_npcs.json",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/player/player_controller.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/world/inn_interior.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/world/village.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/scripts/world/village_door.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen root-actual/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true
+    },
+    {
+      "name": "frozen source-check.py",
+      "passed": true
+    },
+    {
+      "name": "unchanged HUB tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged HUB tests/helpers/stick_navigator.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged HUB tests/helpers/gate_a_opening_drive.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged HUB tests/helpers/fresh_opening_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged HUB scripts/player/player_controller.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged HUB scripts/world/inn_interior.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged HUB data/config/village.json",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input data/config/building_prefabs.json",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input data/config/village.json",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input data/config/village_npcs.json",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input scripts/player/player_controller.gd",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input scripts/world/inn_interior.gd",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input scripts/world/village.gd",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input scripts/world/village_door.gd",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true
+    },
+    {
+      "name": "actual executed ROOT input tests/helpers/opening_geometry_navigator.gd",
+      "passed": true
+    },
+    {
+      "name": "original matches executed bytes",
+      "passed": true
+    },
+    {
+      "name": "live proposal exact",
+      "passed": true
+    },
+    {
+      "name": "source before/after closure same",
+      "passed": true
+    },
+    {
+      "name": "actual failed head",
+      "passed": true
+    },
+    {
+      "name": "only three instrumentation insertion functions changed",
+      "passed": true
+    },
+    {
+      "name": "only capture and transform helpers added",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _init",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _config",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _append_road",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function refused",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function refusal_reason",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _stop_geometry",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function reset",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function set_approach_radius",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function step",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function push_once",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function walk_to",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _road_prefix_to_goal",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _spend",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _motion",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _trainer_contract",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _registered_body_contract",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _foot",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _paired_floor_skin",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _floor_contacts",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _start_clear_impl",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _supported_step_from",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _choose",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _native_tick_impl",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function departure_pending",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _leaf",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _open_leaf",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _prepare_departure",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _xz",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _contact_init",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _contact_mark",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _contact_stage_at",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _contact_capture",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _contact_vector",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _contact_pose",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _contact_dump",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _native_tick",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _supported_step",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _supported_step_at",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _start_clear",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function diagnose_supported_pose",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _production_contract",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _production_stop_input",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _production_wall_normals",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _production_heading",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _choose_route",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _production_observe",
+      "passed": true
+    },
+    {
+      "name": "unchanged native/guard/function _production_collider_path",
+      "passed": true
+    },
+    {
+      "name": "original overlap refusal exact",
+      "passed": true
+    },
+    {
+      "name": "phase tagging only",
+      "passed": true
+    },
+    {
+      "name": "record adds cached failure field only",
+      "passed": true
+    },
+    {
+      "name": "all native constants exact",
+      "passed": true
+    },
+    {
+      "name": "two diagnostic transient states only",
+      "passed": true
+    },
+    {
+      "name": "first failure PRE after only original query",
+      "passed": true
+    },
+    {
+      "name": "capture called only at original raw refusal",
+      "passed": true
+    },
+    {
+      "name": "same registered full capsule",
+      "passed": true
+    },
+    {
+      "name": "no shifted pose/clone/shrink/body writes",
+      "passed": true
+    },
+    {
+      "name": "same mask zero margin self-only exclusion",
+      "passed": true
+    },
+    {
+      "name": "two budgeted native queries only",
+      "passed": true
+    },
+    {
+      "name": "preflight unchanged frame/lifetime allowance",
+      "passed": true
+    },
+    {
+      "name": "both native results checked for registration/deadline",
+      "passed": true
+    },
+    {
+      "name": "same capsule pair limit recorded without dedup",
+      "passed": true
+    },
+    {
+      "name": "contact geometry from original raw motion result without dedup",
+      "passed": true
+    },
+    {
+      "name": "geometry data restricted to bounded primitives",
+      "passed": true
+    },
+    {
+      "name": "explicit nonacceptance/noncertificate/backend caveat",
+      "passed": true
+    },
+    {
+      "name": "no new live admission value or branch",
+      "passed": true
+    },
+    {
+      "name": "sticky reset cannot clear failure evidence",
+      "passed": true
+    },
+    {
+      "name": "no print/serialize/wait inside sample",
+      "passed": true
+    },
+    {
+      "name": "snapshot remains within existing callback timing",
+      "passed": true
+    },
+    {
+      "name": "official 4.7 actual pair API type",
+      "passed": true
+    },
+    {
+      "name": "official 4.7 native geometry getter body_get_shape_count",
+      "passed": true
+    },
+    {
+      "name": "official 4.7 native geometry getter body_get_shape",
+      "passed": true
+    },
+    {
+      "name": "official 4.7 native geometry getter shape_get_data",
+      "passed": true
+    },
+    {
+      "name": "official 4.7 native geometry getter body_get_state",
+      "passed": true
+    },
+    {
+      "name": "official 4.7 native geometry getter body_get_shape_transform",
+      "passed": true
+    },
+    {
+      "name": "official 4.7 native geometry getter shape_get_type",
+      "passed": true
+    },
+    {
+      "name": "actual original PRE failed one query",
+      "passed": true
+    },
+    {
+      "name": "actual four raw contacts preserved",
+      "passed": true
+    },
+    {
+      "name": "actual recovery norm exceeds original skin threshold",
+      "passed": true
+    },
+    {
+      "name": "three Bram cycles completed before guarded exit",
+      "passed": true
+    },
+    {
+      "name": "original misleading coordinate label identified",
+      "passed": true
+    },
+    {
+      "name": "actual first catch and gather prefix, no completion",
+      "passed": true
+    },
+    {
+      "name": "no new autosave failure evidence",
+      "passed": true
+    }
+  ]
+}
