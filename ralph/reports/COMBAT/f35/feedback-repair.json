@@ -1,0 +1,51 @@
+{
+  "kind": "Returned production-source correction proposal; no ROOT changes or engine execution",
+  "consolidated_base": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+  "preceding_packet_commit": "8613249e0096653e924068e8a3dfd85135266464",
+  "failure_log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-3cdaa5d4\\tests.log",
+  "failure_log_sha256": "703af3de4e9ef1e80e517364c150e4cd95276bf5cf2a9b5932e7b441049650ce",
+  "patch_sha256": "67944d4951e580eec9c804f802a11f92f49e320c4e09cedb61854fa59d63e845",
+  "files": [
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "before_sha256": "1d95238f3639d1de06bc9e6242d5518e02cc9c8869de0a67bf8aaa30cf44a340",
+      "after_sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a"
+    },
+    {
+      "path": "data/config/combat.json",
+      "before_sha256": "e1e87b66885be0d43f42928944855d59b81d59f155f23def02aa28bb0c179012",
+      "after_sha256": "33ba3aef23f0446040c9bc5236b06b972a4bb34161fa9e6ff018b83b46f60a2d"
+    }
+  ],
+  "provenance": {
+    "feedback_author": "a16ebb5b971faaea8d4d8d8869f045e1ec166a5e",
+    "feedback_deletion": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
+    "feedback": "Restore authored impact.feedback slot weights, weighted reaction/hitstop, giant/profile scales, receipt limits, flashes, numbers styles and heavy/ultimate rumble. Preserve all values except floating-number enabled=false and mode=off to avoid unjudged display activation.",
+    "dispatch": "Replace exactly three PROJECTILE.call uses on the statically preloaded class with declared static launch/confirm_impact methods. Preserve all call arguments and authority guards.",
+    "stormwood_dependency": "stormwood_authoritative_fight extends combat_manager; shared_wild_host_fight extends it. The manager parse errors block this inherited chain. No fixture or inheritance change is needed or proposed. ROOT must verify the downstream compile error clears."
+  },
+  "source_checks": {
+    "only_three_projectile_dispatches_changed": true,
+    "all_other_manager_source_unchanged": true,
+    "author_feedback_exact_except_display_off": true,
+    "unrelated_combat_data_unchanged": true,
+    "tests_and_fixtures_untouched": true,
+    "move_library_and_ultimates_off": true,
+    "quick_and_charged_spike_overrides_absent": true,
+    "floating_number_display_off": true,
+    "git_apply_check_whitespace_error_against_root_working_files": true
+  },
+  "root_followup": [
+    "Review/apply the two named files against current ROOT source using the recorded before hashes; this extends the already applied first repair and does not touch its regenerated VRAM metadata.",
+    "Verify combat_manager, stormwood_authoritative_fight, shared_wild_host_fight and encounter_director compile; rerun selected test_combat_vfx and test_hit_feedback unchanged, then the native host caller after F22 composition.",
+    "A logged ok after a SCRIPT ERROR is an aborted test, not a pass; require no parse/compile/runtime script errors, original assertions passing and proper test completion.",
+    "Keep actor/admission feature flags, move library, ultimates and unjudged visual activation OFF. F35#0..4 remain open."
+  ],
+  "unrun": [
+    "Godot/parser",
+    "unit tests",
+    "native host caller",
+    "import/render/GPU/export",
+    "CI"
+  ]
+}
