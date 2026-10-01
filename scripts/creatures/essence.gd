@@ -37,8 +37,8 @@ static func _opaque_id(value: Variant) -> bool:
 		and value == value.strip_edges() and not value.contains("\n") and not value.contains("\r")
 
 
-static func _defeat_action_component(namespace: String, event_id: String) -> String:
-	return JSON.stringify([namespace, event_id]).sha256_text()
+static func _defeat_action_component(world_namespace: String, event_id: String) -> String:
+	return JSON.stringify([world_namespace, event_id]).sha256_text()
 
 
 static func config() -> Dictionary:
@@ -591,12 +591,12 @@ const TRAINING_ROW_FIELDS := ["version", "kind", "delivery_id", "world_id", "wor
 
 ## Latest absolute settlement per character, using the EXISTING world reward
 ## carrier. Old action receipts stay in the canonical character journal.
-static func training_delivery_id(namespace: String, character_id: String) -> String:
-	if not _opaque_id(namespace) or not _component(character_id): return ""
-	return TRAINING_KIND + ":" + JSON.stringify([namespace, character_id]).sha256_text()
+static func training_delivery_id(world_namespace: String, character_id: String) -> String:
+	if not _opaque_id(world_namespace) or not _component(character_id): return ""
+	return TRAINING_KIND + ":" + JSON.stringify([world_namespace, character_id]).sha256_text()
 
 
-static func training_row_valid(raw: Variant, character_id: String = "", namespace: String = "") -> bool:
+static func training_row_valid(raw: Variant, character_id: String = "", world_namespace: String = "") -> bool:
 	if not raw is Dictionary or raw.size() != TRAINING_ROW_FIELDS.size(): return false
 	for field: String in TRAINING_ROW_FIELDS:
 		if not raw.has(field): return false
@@ -611,7 +611,7 @@ static func training_row_valid(raw: Variant, character_id: String = "", namespac
 		if not _component(raw.action_id): return false
 	elif not _opaque_id(raw.action_id): return false
 	if not character_id.is_empty() and raw.character_id != character_id: return false
-	if not namespace.is_empty() and raw.world_namespace != namespace: return false
+	if not world_namespace.is_empty() and raw.world_namespace != world_namespace: return false
 	if raw.delivery_id != training_delivery_id(raw.world_namespace, raw.character_id) \
 			or not raw.intent is Dictionary or not raw.receipt is String: return false
 	var component := raw.action_id if raw.action == "altar_spend" else _defeat_action_component(raw.world_namespace, raw.action_id)
@@ -656,7 +656,7 @@ static func training_transition_valid(raw: Variant, cfg: Dictionary, progression
 ## Frozen registry output only, fetched by its private stage token. Never
 ## call this with a client's proposed snapshot. The prepared ledger writer
 ## owns matching host world identity and bool SaveWorld; this constructs data.
-static func next_training_delivery(world_id: String, namespace: String, session_id: String,
+static func next_training_delivery(world_id: String, world_namespace: String, session_id: String,
 		accepted: Dictionary, previous: Variant, cfg: Dictionary, progression_cfg: Dictionary,
 		available_moves: Callable, mirror_provider: Callable) -> Dictionary:
 	var character: Variant = accepted.get("character_id")
@@ -665,11 +665,11 @@ static func next_training_delivery(world_id: String, namespace: String, session_
 			or not accepted.get("intent") is Dictionary: return {}
 	var journal_revision := 1
 	if previous != null:
-		if not training_row_valid(previous, character, namespace) or previous.world_id != world_id \
+		if not training_row_valid(previous, character, world_namespace) or previous.world_id != world_id \
 				or previous.status != "accepted" or int(previous.character_revision) >= int(accepted.character_revision): return {}
 		journal_revision = int(previous.journal_revision) + 1
-	var row := {"version": 1, "kind": TRAINING_KIND, "delivery_id": training_delivery_id(namespace, character),
-		"world_id": world_id, "world_namespace": namespace, "session_id": session_id,
+	var row := {"version": 1, "kind": TRAINING_KIND, "delivery_id": training_delivery_id(world_namespace, character),
+		"world_id": world_id, "world_namespace": world_namespace, "session_id": session_id,
 		"character_id": character, "action": accepted.get("action"), "action_id": accepted.get("action_id"),
 		"intent": accepted.intent.duplicate(true), "before": training_projection(accepted.before),
 		"after": training_projection(accepted.state), "receipt": accepted.get("receipt"),
@@ -729,8 +729,8 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 	var deliveries: Variant = world.get("reward_deliveries")
 	if not deliveries is Dictionary: return _refuse("owner_world_journal_unavailable")
 	var character := str(player.get("character_id"))
-	var namespace := str(world.get("reward_delivery_namespace"))
-	if not training_row_valid(incoming, character, namespace) \
+	var world_namespace := str(world.get("reward_delivery_namespace"))
+	if not training_row_valid(incoming, character, world_namespace) \
 			or incoming.world_id != world.get("world_id") \
 			or not _equivalent(deliveries.get(incoming.delivery_id), incoming):
 		return _refuse("foreign_or_superseded_training")
