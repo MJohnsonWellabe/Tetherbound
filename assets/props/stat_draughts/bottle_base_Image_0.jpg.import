@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://clh3dg7nwy20s"
-path="res://.godot/imported/bottle_base_Image_0.jpg-412cdc80b63cb2482869445ed1c7e09f.ctex"
+path.s3tc="res://.godot/imported/bottle_base_Image_0.jpg-412cdc80b63cb2482869445ed1c7e09f.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "9d1e14e420de4b962d99aaf04b269911"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/stat_draughts/bottle_base_Image_0.jpg"
-dest_files=["res://.godot/imported/bottle_base_Image_0.jpg-412cdc80b63cb2482869445ed1c7e09f.ctex"]
+dest_files=["res://.godot/imported/bottle_base_Image_0.jpg-412cdc80b63cb2482869445ed1c7e09f.s3tc.ctex"]
 
 [params]
 
