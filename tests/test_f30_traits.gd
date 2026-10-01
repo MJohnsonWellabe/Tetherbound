@@ -80,3 +80,76 @@ func test_bond_secondary_and_iv_no_double_count() -> void:
 	assert_true(not TRAITS.trait_state_errors(creature).is_empty())
 	var zero := {"traits_initialized":true,"rolled_traits":[],"taught_traits":{},"trait_primary":"bold"}
 	assert_true(TRAITS.effective_ids(zero).is_empty())
+
+func _record() -> Dictionary:
+	return {"cap_level":60,"breakthroughs":[1,2,3,4,5],"evolution_choices":{},
+		"rolled_traits":["bold","swift"],"taught_traits":{},"known_moves":[],
+		"loadout":{"quick":"","charged":"","utility":"","ultimate":""},
+		"mastery":{},"best":false,"traits_initialized":true,
+		"captured_from":{"kind":"wild","world_namespace":"world","spawn_id":"wild-a","spawn_generation":1}}
+
+func _admitted() -> Dictionary:
+	var state := preload("res://scripts/data/redesign_state.gd").defaults("character")
+	state.creatures = {"caught-a":_record(),"kept-b":_record()}
+	var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from([])
+	bag.add("essence_ground",100)
+	bag.add("trait_seed_hardy",2)
+	return {"character_id":"owner-a","redesign_character":state,
+		"inventory":preload("res://scripts/world/death_satchel_rules.gd").slots(bag),
+		"party":[{"uid":"caught-a","species_id":"bramblebun","level":10,
+			"base_hp":95.0,"iv_hp":0.5,"boost_hp":0,"max_hp":100.0,"hp":50.0},
+			{"uid":"kept-b","species_id":"mudsnout","level":10}]}
+
+func _request(action: String, trait_id: String = "hardy") -> Dictionary:
+	return {"action_id":"action-a","action":action,"creature_uid":"caught-a",
+		"trait_id":trait_id,"slot":1 if action == "teach" else -1,
+		"payment_item":"essence_ground" if action == "teach" else "","expected_character_revision":0}
+
+func test_release_uses_f27_same_uid_receipt_chosen_seed_once() -> void:
+	var before := _admitted()
+	var frozen := before.duplicate(true)
+	var essence: GDScript = load("res://scripts/creatures/essence.gd")
+	assert_true(essence != null,"ROOT must integrate F27 producer before this batch")
+	if essence == null: return
+	var result := TRAITS.stage_action(before,"owner-a",_request("release","bold"),0,essence.config())
+	assert_true(result.get("ok") == true,str(result))
+	if result.get("ok") != true: return
+	assert_eq(before,frozen,"planning mutated admitted record")
+	assert_eq(result.state.party.size(),1)
+	assert_false(result.state.redesign_character.creatures.has("caught-a"))
+	assert_eq(result.receipt,"release:caught-a")
+	assert_eq(result.state.redesign_character.release_receipts,["release:caught-a"])
+	assert_eq(result.state.redesign_character.transaction_receipts,["release:caught-a"])
+	var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(result.state.inventory)
+	assert_eq(bag.count("trait_seed_bold"),1)
+	assert_eq(bag.count("trait_seed_swift"),0)
+	assert_false(TRAITS.stage_action(result.state,"owner-a",_request("release","swift"),1,essence.config()).get("ok",false))
+	var foreign := _request("release","bold")
+	assert_false(TRAITS.stage_action(before,"other-owner",foreign,0,essence.config()).get("ok",false))
+
+func test_teach_debit_slots_overwrite_and_hardy_fraction_atomically() -> void:
+	var before := _admitted()
+	var essence: GDScript = load("res://scripts/creatures/essence.gd")
+	assert_true(essence != null)
+	if essence == null: return
+	var frozen := before.duplicate(true)
+	var result := TRAITS.stage_action(before,"owner-a",_request("teach"),0,essence.config())
+	assert_true(result.get("ok") == true,str(result))
+	if result.get("ok") != true: return
+	assert_eq(before,frozen)
+	var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(result.state.inventory)
+	assert_eq(bag.count("essence_ground"),90)
+	assert_eq(bag.count("trait_seed_hardy"),1)
+	assert_eq(result.state.redesign_character.creatures["caught-a"].taught_traits,{"1":"hardy"})
+	assert_almost_eq(result.state.party[0].hp/result.state.party[0].max_hp,0.5)
+	var duplicate := _request("teach")
+	duplicate.action_id = "action-b"
+	assert_false(TRAITS.stage_action(result.state,"owner-a",duplicate,0,essence.config()).get("ok",false))
+	var locked := before.duplicate(true)
+	locked.redesign_character.creatures["caught-a"].breakthroughs = []
+	assert_false(TRAITS.stage_action(locked,"owner-a",_request("teach"),0,essence.config()).get("ok",false))
+	var no_money := before.duplicate(true)
+	no_money.inventory.fill(null)
+	var untouched := no_money.duplicate(true)
+	assert_false(TRAITS.stage_action(no_money,"owner-a",_request("teach"),0,essence.config()).get("ok",false))
+	assert_eq(no_money,untouched,"refusal partially consumed seed or essence")

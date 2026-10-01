@@ -101,7 +101,33 @@ edit('scripts/creatures/creature_instance.gd',
      '\thp = clampf(hp + maxf(0.0, amount), 0.0, max_hp)',
      '\thp = clampf(hp + TRAITS.apply_value(self,"healing",maxf(0.0,amount)), 0.0, max_hp)')
 edit('scripts/save/save_game.gd','\t\tcreature.trait_secondary = str(d.get("trait_secondary", ""))',
-     '\t\tcreature.trait_secondary = str(d.get("trait_secondary", ""))\n\t\tvar trait_record: Variant = character.get("creatures",{}).get(creature.uid)\n\t\tif trait_record is Dictionary:\n\t\t\tvar normalized := preload("res://scripts/creatures/traits.gd").initialize_legacy_record(d,trait_record)\n\t\t\tif not preload("res://scripts/creatures/traits.gd").project_instance(creature,normalized): return')
+     '\t\tcreature.trait_secondary = str(d.get("trait_secondary", ""))\n\t\tvar trait_record: Variant = character.get("creatures",{}).get(creature.uid)\n\t\tif trait_record is Dictionary:\n\t\t\tvar normalized := preload("res://scripts/creatures/traits.gd").initialize_legacy_record(d,trait_record)\n\t\t\tif not preload("res://scripts/creatures/traits.gd").project_instance(creature,normalized): return\n\t\t\tcharacter.creatures[creature.uid] = normalized')
+# Exact host admission normalizes only legitimate missing v28 fields, with
+# all present values validated strictly; no catch provenance is invented.
+edit('scripts/net/character_authority.gd',
+     'func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionary:\n',
+     '''func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionary:
+\traw = raw.duplicate(true)
+\tif raw.get("party") is Array and raw.get("redesign_character") is Dictionary and raw.redesign_character.get("creatures") is Dictionary:
+\t\tfor owned: Variant in raw.party:
+\t\t\tif owned is Dictionary and raw.redesign_character.creatures.get(owned.get("uid")) is Dictionary:
+\t\t\t\traw.redesign_character.creatures[owned.uid] = preload("res://scripts/creatures/traits.gd").initialize_legacy_record(owned,raw.redesign_character.creatures[owned.uid])
+''','foundation-admission')
+edit('scripts/net/character_authority.gd',
+     '\tvar failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)',
+     '\traw = preload("res://scripts/creatures/traits.gd").normalize_admitted(raw)\n\tvar failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)','foundation-admission')
+edit('scripts/net/character_authority.gd',
+     '\tvar candidate := raw.duplicate(true)',
+     '\tvar candidate := preload("res://scripts/creatures/traits.gd").normalize_admitted(raw)','foundation-admission')
+edit('scripts/net/character_authority.gd',
+     '\treturn {"character_id": personal.get("character_id"), "party": personal.get("party"),',
+     '\treturn preload("res://scripts/creatures/traits.gd").normalize_admitted({"character_id": personal.get("character_id"), "party": personal.get("party"),','foundation-admission')
+edit('scripts/net/character_authority.gd',
+     '\t\t"realm_hearts": personal.get("realm_hearts", {"active_id": ""})}',
+     '\t\t"realm_hearts": personal.get("realm_hearts", {"active_id": ""})})','foundation-admission')
+edit('scripts/net/character_authority.gd',
+     '\tfailures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))',
+     '\tfailures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))\n\tfor uid: String in raw.redesign_character.get("creatures",{}):\n\t\tfailures.append_array(preload("res://scripts/creatures/traits.gd").trait_state_errors(raw.redesign_character.creatures[uid]))','foundation-admission')
 
 # Formula dispatch. Host damage override is never multiplied a second time.
 edit('scripts/combat/combat_manager.gd','const CATCH := preload("res://scripts/combat/catch_math.gd")',
@@ -142,6 +168,50 @@ changes['scripts/combat/encounter_director.gd'] = changes['scripts/combat/encoun
 edit('scripts/combat/encounter_director.gd',
      '\t\t"wind_regen_scale": float(creature.call("buff_scale", "wind_regen")),',
      '\t\t"wind_regen_scale": preload("res://scripts/combat/trait_effects.gd").stat(creature,"wind_regen",float(creature.call("buff_scale", "wind_regen"))),','host-card')
+edit('scripts/combat/encounter_director.gd',
+     '\thost_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(striker, wild))',
+     '\thost_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(striker, wild))\n\tmove = preload("res://scripts/combat/trait_effects.gd").move_profile(card,move)','host-card')
+edit('scripts/combat/encounter_director.gd',
+     '\t\tfloat(wind.get("burst_cost", 30.0)), Time.get_ticks_msec(),',
+     '\t\tpreload("res://scripts/combat/trait_effects.gd").wind_cost(card,"burst",float(wind.get("burst_cost", 30.0))), Time.get_ticks_msec(),','host-card')
+# This patch replaces client-trusted stat cards ONLY when running host combat;
+# the existing Session admission method establishes current identity first.
+edit('scripts/combat/encounter_director.gd',
+     'func _creature_card_for(peer_id: int) -> Dictionary:\n',
+     '''func _creature_card_for(peer_id: int) -> Dictionary:
+\tif _is_host():
+\t\tvar game := get_node_or_null(^"/root/Game")
+\t\tvar session: Node = game.get("session") if game != null else null
+\t\tif session == null or not session.has_method("admitted_character_state"): return {}
+\t\tvar admitted: Dictionary = session.call("admitted_character_state",peer_id)
+\t\tvar actor_uid := str(_ally.get("uid")) if peer_id == _local_peer_id() and _ally != null else str(_deployed_by.get(peer_id,{}).get("card",{}).get("creature_uid",""))
+\t\tvar canonical: RefCounted = preload("res://scripts/creatures/trait_actor_projection.gd").creature(admitted,actor_uid)
+\t\tif canonical == null: return {}
+\t\tvar output := _creature_card(canonical)
+\t\tvar is_best: bool = admitted.redesign_character.creatures.get(actor_uid,{}).get("best",false)
+\t\tvar ability := SPECIES.best_creature_ability(str(canonical.get("species_id"))) if is_best else {}
+\t\toutput.defence = canonical.call("effective_defence",PROGRESSION.config(),is_best,ability)
+\t\toutput.active_relic_id = admitted.get("realm_hearts",{}).get("active_id","")
+\t\treturn output
+''','host-card')
+edit('scripts/combat/water_alpha.gd',
+     '\tvar killed: bool = enemy.take_damage(damage)',
+     '\tdamage = preload("res://scripts/combat/trait_effects.gd").damage(card,slot,damage)\n\tvar killed: bool = enemy.take_damage(damage)','water-alpha')
+edit('scripts/combat/water_alpha.gd',
+     '\t\t1.0, CONTACT_SPACING.pair_reach_need(striker, body))',
+     '\t\t1.0, CONTACT_SPACING.pair_reach_need(striker, body))\n\tmove = preload("res://scripts/combat/trait_effects.gd").move_profile(card,move)','water-alpha')
+# Host utility receipt uses the same admitted actor trait projection supplied
+# in the host-only view. No RPC/client trait-card field is allowed to fill it.
+# The current shared caller is not wired yet; Foundation must pass this field.
+edit('scripts/net/encounter_host.gd',
+     '\tmove = MATH.with_player_pace(move, "player_utility")\n\tvar state:',
+     '''\tmove = MATH.with_player_pace(move, "player_utility")
+\tvar trait_row: Variant = view.get("host_trait_row")
+\tif not trait_row is Dictionary or not preload("res://scripts/creatures/traits.gd").trait_state_errors(trait_row).is_empty():
+\t\treturn {"ok":false,"code":"trait_projection_required"}
+\tmove = preload("res://scripts/combat/trait_effects.gd").move_profile(trait_row,move)
+\tmove.utility.max_hp_fraction = minf(1.0,preload("res://scripts/combat/trait_effects.gd").stat(trait_row,"healing",float(move.utility.max_hp_fraction)))
+\tvar state:''','host-heal')
 
 # Host damage resolver uses same row; card.attack already has IV/bond.
 edit('scripts/combat/combat_manager.gd',
@@ -237,6 +307,6 @@ for group in sorted(set(groups.values())):
         before.write_bytes(baseline[path].encode('utf-8'))
         hashes.append({'path':path,'group':group,'before_sha256':hashlib.sha256(baseline[path].encode()).hexdigest(),
                        'after_sha256':hashlib.sha256(changes[path].encode()).hexdigest()})
-    (OUT/(group+'.patch')).write_text(''.join(diff),encoding='utf-8')
+    (OUT/(group+'.patch')).write_bytes(''.join(diff).encode('utf-8'))
 (OUT/'source-cut.json').write_text(json.dumps(hashes,indent=2)+'\n',encoding='utf-8')
 print(f'F30 generated {len(hashes)} isolated shared-owner file proposals in {OUT}')

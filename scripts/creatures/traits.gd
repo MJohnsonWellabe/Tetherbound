@@ -31,6 +31,7 @@ static func component(value: Variant) -> bool:
 static func configuration_errors(cfg: Dictionary) -> Array[String]:
 	var errors: Array[String] = []
 	if not cfg.get("traits") is Dictionary or cfg.traits.size() != 30: return ["expected 30 traits"]
+	if not cfg.get("profiles") is Dictionary: return ["expected roll profiles"]
 	if cfg.get("maximum_rolled") != 3 or cfg.get("slot_breakthrough_tiers") != [1,3,5] \
 		or cfg.get("bond_reveal_nodes") != 5: errors.append("invalid roll/bond/slot gates")
 	if not integer(cfg.get("essence_cost_per_slot"),1,1000) \
@@ -122,6 +123,8 @@ static func trait_state_errors(value: Variant, cfg: Dictionary = {}) -> Array[St
 		if not slot is String or not slot in ["1","2","3"] \
 			or not id is String or not rules.get("traits",{}).has(id) or seen.has(id): return ["unknown or duplicate taught trait"]
 		seen[id] = true
+		if value.has("breakthroughs") and not unlocked_slots(value,rules).has(int(slot)):
+			return ["taught trait in locked breakthrough slot"]
 	return []
 
 ## Legacy primary is adopted once when Foundation materializes an old v28
@@ -267,13 +270,14 @@ static func stage_action(admitted: Dictionary, character_id: String, intent: Dic
 	row.merge(record,true)
 	if intent.trait_id != "" and not rules.traits.has(intent.trait_id): return _refuse("unknown_trait")
 	var receipts: Array = admitted.redesign_character.transaction_receipts
-	var release_prefix := "release:%s:%s:" % [character_id,intent.creature_uid]
+	var release_receipt := "release:" + str(intent.creature_uid)
 	var teach_prefix := "trait_teach:%s:%s:" % [character_id,intent.action_id]
-	var prefix := release_prefix if intent.action == "release" else teach_prefix
 	# Retried decisions must reconcile the existing journal, including owner
 	# bool-save/ACK. A receipt alone never returns success or a fresh award.
 	for receipt: String in receipts:
-		if receipt.begins_with(prefix): return _refuse("reconcile_existing_decision")
+		if (intent.action == "release" and receipt == release_receipt) \
+			or (intent.action == "teach" and receipt.begins_with(teach_prefix)):
+			return _refuse("reconcile_existing_decision")
 	if receipts.size() >= int(rules.maximum_transaction_receipts): return _refuse("receipt_budget")
 	var next := admitted.duplicate(true)
 	var bag := RULES.inventory_from(admitted.inventory)
@@ -291,6 +295,8 @@ static func stage_action(admitted: Dictionary, character_id: String, intent: Dic
 		if not RULES.db().has(seed_item) or not bag.remove(seed_item,1) \
 			or not bag.remove(intent.payment_item,cost): return _refuse("seed_or_essence_missing")
 		next.redesign_character.creatures[intent.creature_uid].taught_traits[str(int(intent.slot))] = intent.trait_id
+		if not _refresh_max_hp(next.party[index],next.redesign_character.creatures[intent.creature_uid],rules):
+			return _refuse("invalid_derived_stats")
 		receipt = teach_prefix + "%s:%s:%s:%s:%s" % [intent.creature_uid,intent.slot,intent.trait_id,intent.payment_item,cost]
 	else:
 		if admitted.party.size() <= 1: return _refuse("last_creature")
@@ -298,21 +304,40 @@ static func stage_action(admitted: Dictionary, character_id: String, intent: Dic
 		if intent.trait_id != "" and not effective_ids(row,rules).has(intent.trait_id): return _refuse("trait_not_revealed")
 		var essence: GDScript = load("res://scripts/creatures/essence.gd")
 		if essence == null: return _refuse("producer_missing")
-		var payout: Array[Dictionary] = essence.release_payout(row,essence_cfg)
-		if payout.is_empty(): return _refuse("invalid_release_payout")
-		# No partial payout: bag is a preview; if any addition fails, no
-		# removal, receipt, essence or seed reaches the canonical record.
-		for stack: Dictionary in payout:
-			if not RULES.db().has(stack.id) or bag.add(stack.id,int(stack.n)) != 0: return _refuse("inventory_full")
+		# Use F27's ONE UID receipt/removal/payout proposal. Chosen seed is
+		# appended before durable acceptance; never a second release action.
+		var release: Dictionary = essence.stage_release(admitted,character_id,intent.creature_uid,character_revision,essence_cfg)
+		if release.get("ok") != true: return release
+		if release.get("duplicate") == true: return _refuse("reconcile_existing_decision")
+		if release.get("before") != admitted or release.get("receipt") != release_receipt \
+			or release.get("creature_uid") != intent.creature_uid: return _refuse("release_producer_conflict")
+		next = release.state.duplicate(true)
+		bag = RULES.inventory_from(next.inventory)
 		if seed_item != "" and (not RULES.db().has(seed_item) or bag.add(seed_item,1) != 0): return _refuse("inventory_full")
-		next.party.remove_at(index)
-		next.redesign_character.creatures.erase(intent.creature_uid)
-		receipt = release_prefix + (intent.trait_id if intent.trait_id != "" else "essence_only")
+		receipt = release_receipt
 	next.inventory = RULES.slots(bag)
-	next.redesign_character.transaction_receipts.append(receipt)
+	if intent.action == "teach": next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok":true,"duplicate":false,"action":intent.action,"action_id":intent.action_id,
 		"character_id":character_id,"expected_character_revision":character_revision,
 		"intent":intent.duplicate(true),"before":admitted.duplicate(true),"state":next,"receipt":receipt}
+
+static func _refresh_max_hp(owned: Dictionary, record: Dictionary, cfg: Dictionary) -> bool:
+	for field: String in ["base_hp","iv_hp","boost_hp","max_hp","hp"]:
+		var raw: Variant = owned.get(field)
+		if not (raw is int or raw is float) or not is_finite(float(raw)): return false
+	if float(owned.max_hp) <= 0.0 or float(owned.base_hp) <= 0.0: return false
+	var progression := PROGRESSION.config()
+	var base := PROGRESSION.stat_at_level(float(owned.base_hp),int(owned.level),
+		float(progression.get("level",{}).get("growth_per_level",{}).get("hp",0.0))) \
+		* PROGRESSION.individuality_multiplier(float(owned.iv_hp),progression) + float(owned.boost_hp)
+	var creature := owned.duplicate(true)
+	creature.merge(record,true)
+	var maximum := apply_value(creature,"max_hp",base,cfg)
+	if not is_finite(maximum) or maximum <= 0.0: return false
+	var fraction := clampf(float(owned.hp)/float(owned.max_hp),0.0,1.0)
+	owned.max_hp = maximum
+	owned.hp = maximum*fraction
+	return true
 
 static func rows(creature: Variant, cfg: Dictionary = {}) -> Array[Dictionary]:
 	var rules := config() if cfg.is_empty() else cfg
@@ -330,6 +355,7 @@ static func initialize_legacy_record(owned: Dictionary, existing: Dictionary,
 	var rules := config() if cfg.is_empty() else cfg
 	var result := existing.duplicate(true)
 	if result.has("traits_initialized"): return result
+	if result.has("rolled_traits") and not result.rolled_traits is Array: return result
 	var rolled: Array = result.get("rolled_traits",[]).duplicate()
 	var primary: String = owned.get("trait_primary","")
 	if rolled.is_empty() and rules.get("traits",{}).has(primary): rolled.append(primary)
@@ -337,6 +363,18 @@ static func initialize_legacy_record(owned: Dictionary, existing: Dictionary,
 	result["rolled_traits"] = rolled
 	if not result.has("taught_traits"): result["taught_traits"] = {}
 	return result
+
+static func normalize_admitted(admitted: Dictionary, cfg: Dictionary = {}) -> Dictionary:
+	var output := admitted.duplicate(true)
+	if not output.get("party") is Array or not output.get("redesign_character") is Dictionary \
+		or not output.redesign_character.get("creatures") is Dictionary: return output
+	for owned: Variant in output.party:
+		if not owned is Dictionary: continue
+		var uid: Variant = owned.get("uid")
+		var record: Variant = output.redesign_character.creatures.get(uid)
+		if record is Dictionary:
+			output.redesign_character.creatures[uid] = initialize_legacy_record(owned,record,cfg)
+	return output
 
 ## Runtime fields are projections from the single durable per-UID row.
 ## No repeated max-HP multiplier, no second persisted trait list.
