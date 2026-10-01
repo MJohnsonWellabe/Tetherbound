@@ -118,7 +118,16 @@ static func stage(current: Dictionary, revision: int, intent: Dictionary, contex
 	# does. Never compare clocks across worlds; F47 owns cross-world daily caps.
 	if not last.is_empty() and last.get("world_namespace") != context.world_namespace: return deny("foreign_rematch_cooldown")
 	if not last.is_empty() and int(context.world_seconds) < int(last.get("paid_at_seconds", 0)): return deny("host_clock_regressed")
-	var paid: bool = first or int(context.world_seconds) >= int(last.get("next_eligible_seconds", 0))
+	var foreign_paid_clock := false
+	for saved_key: String in cooldowns:
+		if not saved_key.ends_with(":" + intent.trainer_id + ":" + intent.tier): continue
+		var saved: Variant = cooldowns[saved_key]
+		if not saved is Dictionary: return deny("invalid_rematch_cooldown")
+		if saved.get("world_namespace") != context.world_namespace: foreign_paid_clock = true
+	# A different host has no authority to advance the original world's clock.
+	# Retain the win without a repeat payout until that owning clock can prove
+	# its deadline. World hopping cannot mint a new cooldown or compare clocks.
+	var paid: bool = first or (not foreign_paid_clock and int(context.world_seconds) >= int(last.get("next_eligible_seconds", 0)))
 	var next := current.duplicate(true)
 	if paid:
 		var payout: Dictionary = config().biomes[row.biome].unique_materials.duplicate(true) if first else config().biomes[row.biome].repeat_materials.duplicate(true)

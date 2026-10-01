@@ -17,6 +17,7 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 		session.call("_portal_reply", peer, envelope, {"ok": false, "reason": "That travel permission has ended."})
 		return
 	_pending = {"session": weakref(session), "game": weakref(game), "peer": peer,
+		"owner": weakref(game.get("local")), "world": weakref(game.get("world")),
 		"envelope": envelope.duplicate(true), "permit": permit.duplicate(true), "seated": false}
 	if str(game.get("current_realm")) != permit.realm:
 		# Only the consumed host permit chooses this destination; never a debug
@@ -66,6 +67,13 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 	query.exclude = [body.get_rid()]
 	if not actor.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty():
 		_refuse("The arrival anchor is obstructed."); return
+	if not body.is_physics_processing() or body.get("_foundation_ground_contact_generation") == null:
+		_refuse("The ordinary arrival controller is not processing."); return
+	_pending.actor = weakref(body)
+	_pending.contact_generation = int(body.get("_foundation_ground_contact_generation"))
+	_pending.collision = weakref(collision)
+	_pending.capsule = weakref(collision.shape)
+	_pending.capsule_height = float(collision.shape.height)
 	actor.global_position = landing
 	if actor is CharacterBody3D: actor.velocity = Vector3.ZERO
 	_pending.anchor = landing
@@ -81,6 +89,17 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 
 func _grounded_actor(actor: CharacterBody3D) -> bool:
 	return is_instance_valid(actor) and actor.is_on_floor() \
+		and actor.is_physics_processing() and _pending.has("actor") and _pending.actor.get_ref() == actor \
+		and int(actor.get("_foundation_ground_contact_generation")) > int(_pending.get("contact_generation", -1)) \
+		and actor.get("_foundation_ground_contact_position") is Vector3 \
+		and actor.global_position.distance_to(actor.get("_foundation_ground_contact_position")) <= actor.safe_margin \
+		and _pending.has("collision") and is_instance_valid(_pending.collision.get_ref()) \
+		and _pending.collision.get_ref().get("disabled") == false \
+		and _pending.collision.get_ref().get("shape") == _pending.capsule.get_ref() \
+		and _pending.capsule.get_ref() is CapsuleShape3D \
+		and _pending.capsule.get_ref().get("radius") == _pending.radius \
+		and _pending.capsule.get_ref().get("height") == _pending.capsule_height \
+		and actor.scale == Vector3.ONE and _pending.collision.get_ref().get("scale") == Vector3.ONE \
 		and actor.get_floor_normal().angle_to(Vector3.UP) <= actor.floor_max_angle \
 		and _pending.has("anchor") and actor.global_position.distance_to(_pending.anchor) <= float(_pending.radius)
 
@@ -101,6 +120,7 @@ func _same_owner() -> bool:
 	var game: Node = _pending.game.get_ref()
 	if game != null and _pending.get("seated") == true and str(game.get("current_realm")) != _pending.permit.realm: return false
 	return session != null and game != null and session.call("is_host") == true \
+		and game.get("local") == _pending.owner.get_ref() and game.get("world") == _pending.world.get_ref() \
 		and session.call("_authority_character", _pending.peer) == _pending.envelope.character_id \
 		and game.get("world").reward_delivery_namespace == _pending.envelope.world_instance_id \
 		and session.call("_altar_current_epoch") == _pending.envelope.session_epoch

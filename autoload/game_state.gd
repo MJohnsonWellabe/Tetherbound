@@ -3104,7 +3104,7 @@ func regional_ending_context() -> Dictionary:
 	var home_seen := false
 	var credits_seen := false
 	for receipt: String in local.redesign_character.transaction_receipts:
-		if receipt.begins_with("craft:home_return_") and receipt.ends_with(":" + local.character_id): home = receipt
+		if receipt.begins_with("craft:home_return_" + world.reward_delivery_namespace + "_") and receipt.ends_with(":" + local.character_id): home = receipt
 		if receipt == "craft:regional_ending_homecoming_seen:" + local.character_id: home_seen = true
 		if receipt == "craft:regional_ending_regional_credits_seen:" + local.character_id: credits_seen = true
 	var player := find_player() as CharacterBody3D

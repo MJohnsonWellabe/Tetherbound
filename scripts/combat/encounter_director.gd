@@ -441,6 +441,7 @@ var _master_duel: Dictionary = {}
 var _master_pending_win := false
 var _foundation_pending_sources: Array[Dictionary] = []
 var _trainer_character_participants: Array[String] = []
+var _trainer_foundation_admissions: Dictionary = {}
 var _boss_pending_win := false
 
 func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
@@ -520,6 +521,19 @@ func void_master_duel(encounter_id: String, character_id: String) -> void:
 		or _master_duel.character_id != character_id or _master_pending_win: return
 	if _manager != null and _manager.call("is_fighting") == true: _manager.call("_begin_resolve", "fled")
 	_finish_trainer_battle(false)
+
+func start_master_rematch(site: Node3D, character: String, uid: String, spec: Dictionary) -> bool:
+	if not _is_host() or _session == null or character != _local_character_id() or _ally == null \
+		or str(_ally.get("uid")) != uid or bool(_ally.get("fainted")) or float(_ally.get("hp")) <= 0 \
+		or not is_instance_valid(site) or site.get_script() != preload("res://scripts/masters/master_site.gd") \
+		or site.get("_mounted") != true or site.get("master_id") != spec.get("id") \
+		or not get_parent().is_ancestor_of(site) or trainer_battle_active(): return false
+	_master_duel = {"character_id": character, "creature_uid": uid, "master_id": str(spec.id)}
+	if not begin_trainer_battle(spec, site.get_node(^"Master")):
+		_master_duel.clear()
+		return false
+	_master_duel.encounter_id = str(_encounter.get("encounter_id", ""))
+	return not _master_duel.encounter_id.is_empty()
 
 func retained_master_win() -> Dictionary:
 	return _master_duel.duplicate(true) if _master_pending_win else {}
@@ -2436,6 +2450,8 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	if str(record.get("opponent", {}).get("owner_npc", "")).begins_with("master_"):
 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "single_challenger_duel", "pending": false, "delta": {}}
 	var character_id := str(_session.call("_authority_character", peer_id)) if _session != null else ""
+	if _trainer_spec.has("rematch") and (_session == null or not bool(_session.call("foundation_rematch_join_allowed", peer_id, _trainer_spec))):
+		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "rematch_tier_locked", "pending": false, "delta": {}}
 	var tournament_round := _record_is_tournament(record)
 	var tournament_ids: Array[String] = []
 	var active_uid := str(intent.get("creature_uid", ""))
@@ -2843,6 +2859,13 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 			"code": "unknown_encounter", "reason": "That fight is over.",
 			"pending": false, "delta": {}}
 	var hp_max := maxf(1.0, float(opponent.get("hp_max", 1.0)))
+	var catch_night: Variant = null
+	var catch_clock := get_tree().get_first_node_in_group("day_cycle")
+	if catch_clock != null and catch_clock.get("_cycle") is RefCounted:
+		var cycle: RefCounted = catch_clock.get("_cycle")
+		catch_night = cycle.call("is_dark", cycle.call("hour_at", float(catch_clock.get("_elapsed_seconds"))))
+	elif preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
+		return {"ok": false, "kind": "catch_attempt", "peer": peer_id, "encounter_id": encounter_id, "code": "capture_clock_unavailable", "pending": false, "delta": {}}
 	var verdict: Dictionary = _catch_arbiter.call("attempt", encounter_id, peer_id, {
 		"kind": str(_encounter_host.call("kind", encounter_id)),
 		"phase": str(_encounter_host.call("phase", encounter_id)),
@@ -2869,6 +2892,9 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 			runtime.set_meta("catch_decision", (verdict.get("delta", {}) as Dictionary).duplicate(true))
 			runtime.set_meta("catch_claim_id",
 				str((verdict.get("delta", {}) as Dictionary).get("claim_id", "")))
+			runtime.set_meta("foundation_catch_night_claim", str(runtime.get_meta("catch_claim_id", "")))
+			if catch_night is bool: runtime.set_meta("foundation_catch_night", catch_night)
+			else: runtime.remove_meta("foundation_catch_night")
 			runtime.call("pause_for_catch")
 		else:
 			_catch_claimant = peer_id
@@ -2943,11 +2969,8 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			_host_after_encounter_change(encounter_id)
 			return refused
 	if caught:
-		var look := get_tree().get_first_node_in_group("day_cycle")
-		if not runtime.has_meta("foundation_catch_night") and look != null and look.get("_cycle") is RefCounted:
-			var cycle: RefCounted = look.get("_cycle")
-			var dark: bool = cycle.call("is_dark", cycle.call("hour_at", float(look.get("_elapsed_seconds"))))
-			runtime.set_meta("foundation_catch_night", dark)
+		if runtime.get_meta("foundation_catch_night_claim", "") != claim_id:
+			runtime.remove_meta("foundation_catch_night")
 		if not runtime.has_meta("foundation_catch_night") and preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
 			return {"ok": false, "pending": true, "code": "capture_clock_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
 		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null), creature_card):
@@ -4848,7 +4871,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 ## below runs.
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
-	if not _trainer_spec.has("master") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
+	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()
 	var instance: Variant = wild.get("instance")
@@ -5948,6 +5971,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	_trainer_cleanup_delay = 0.0
 	_trainer_battle_participants = {}
 	_trainer_character_participants.clear()
+	_trainer_foundation_admissions.clear()
 	# Taken BEFORE the first round places anyone, so it is where the player was
 	# actually standing when they accepted — not where the first fight's
 	# `_stand_the_trainer_aside()` will shortly put them. See
@@ -6345,6 +6369,7 @@ func _finish_trainer_battle(won: bool) -> void:
 			_rematch_pending_outcome = won
 			return
 		_rematch_pending_outcome = null
+		_master_duel.clear()
 	var tournament_encounter_id := _tournament_host_encounter_id
 	if not won and not _tournament_members.is_empty():
 		# The tournament retry exception restores the entered three, not the
@@ -7052,6 +7077,8 @@ func _note_trainer_participants(encounter_id: String) -> void:
 		var record: Dictionary = _encounter_host.call("record", encounter_id)
 		var character := str(record.get("participants", {}).get(peer_id, {}).get("character_id", ""))
 		if not character.is_empty() and not _trainer_character_participants.has(character): _trainer_character_participants.append(character)
+		if not character.is_empty() and not _trainer_foundation_admissions.has(character) and _session != null:
+			_trainer_foundation_admissions[character] = _session.call("foundation_rematch_participant_context", peer_id)
 
 
 ## The same fight, one creature later: bring `encounter_id` back to `active` and

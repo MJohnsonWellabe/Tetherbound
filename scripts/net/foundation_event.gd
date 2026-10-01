@@ -27,6 +27,62 @@ static func valid(raw: Variant, namespace: String, world_id: String) -> bool:
 		if not duty is Dictionary or duty.size() != 4 or not duty.get("character_id") is String or duty.character_id.is_empty() \
 			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event"] \
 			or not duty.get("intent") is Dictionary or not duty.get("context") is Dictionary: return false
+		if not _duty_valid(duty, raw): return false
+	return true
+
+static func _strings(raw: Variant, allow_empty: bool = false) -> bool:
+	if not raw is Array or (not allow_empty and raw.is_empty()): return false
+	var seen := {}
+	for value: Variant in raw:
+		if not ESSENCE._opaque_id(value) or seen.has(value): return false
+		seen[value] = true
+	return true
+
+static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
+	var context: Dictionary = duty.context
+	var intent: Dictionary = duty.intent
+	if not ESSENCE._opaque_id(duty.character_id) or not ESSENCE._opaque_id(context.get("source_key")): return false
+	if duty.action in ["research_event", "rematch_win", "bounty_event"]:
+		if context.get("world_namespace") != row.world_namespace or context.get("session_id") != row.session_id: return false
+	if duty.action != "master_win":
+		if not _strings(context.get("participants")) or context.participants.size() > 4 or not context.participants.has(duty.character_id): return false
+	if duty.action in ["research_event", "bounty_event"]:
+		if not intent.is_empty() or context.get("event_confirmed") != true or not ESSENCE._opaque_id(context.get("event_id")): return false
+	if duty.action == "research_event":
+		if not ESSENCE._opaque_id(context.get("species_id")) or context.get("kind") not in ["sight", "cast", "catch", "defeat"] \
+			or not str(context.source_key).begins_with("encounter:"): return false
+		if row.source_id != context.event_id and row.source_id != "defeat:" + str(context.event_id): return false
+		if context.kind == "cast" and not ESSENCE._opaque_id(context.get("move_id")): return false
+		if context.kind == "catch" and (context.get("wild") != true or not context.get("night") is bool): return false
+		if context.kind == "defeat" and context.get("opponent_defeated") != true: return false
+	elif duty.action == "bounty_event":
+		if context.source_key != "halda_bounty_event" or context.get("kind") not in ["catch_trait", "defeat_alpha", "rematch"] \
+			or not preload("res://scripts/data/biome_order.gd").ids(false).has(context.get("biome")) \
+			or not _strings(context.get("issued_instances")) or not _strings(context.get("traits"), true): return false
+		for trait: String in context.traits:
+			if not preload("res://scripts/creatures/traits.gd").config().get("traits", {}).has(trait): return false
+	elif duty.action == "master_win":
+		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("master_id")) or not ESSENCE._opaque_id(intent.get("creature_uid")) \
+			or not ESSENCE._opaque_id(intent.get("encounter_id")) or context.get("master_id") != intent.master_id \
+			or context.get("creature_uid") != intent.creature_uid or context.get("encounter_id") != intent.encounter_id \
+			or context.get("validated_host_outcome") != "win" or context.get("participant_count") != 1 \
+			or context.source_key != "master_encounter:" + str(intent.encounter_id): return false
+	elif duty.action == "boss_relic":
+		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("trainer_id")) or not ESSENCE._opaque_id(intent.get("encounter_id")) \
+			or context.get("encounter_id") != intent.encounter_id or context.get("validated_host_outcome") != "win" \
+			or context.source_key != "boss:" + str(intent.trainer_id): return false
+		var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(intent.trainer_id, str(context.get("realm", "")))
+		if handoff.is_empty() or handoff.relic_biome != intent.get("biome"): return false
+	elif duty.action == "rematch_win":
+		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("trainer_id")) or not ESSENCE._opaque_id(intent.get("encounter_id")) \
+			or intent.get("tier") not in ["r1", "endgame"] or context.get("trainer_id") != intent.trainer_id \
+			or context.get("tier") != intent.tier or context.get("encounter_id") != intent.encounter_id \
+			or context.get("validated_host_outcome") != "win" or context.source_key != "rematch:" + str(intent.trainer_id) \
+			or not ESSENCE._integer(context.get("world_seconds"), 0, 9007199254740991) \
+			or not _strings(context.get("world_flags"), true) or not _strings(context.get("personal_flags"), true): return false
+		var profile := preload("res://scripts/repeatables/rematch_rules.gd").profile(intent.trainer_id)
+		if profile.is_empty(): return false
+		if profile.kind == "master" and (context.participants.size() != 1 or context.get("single_creature_duel") != true or not ESSENCE._opaque_id(context.get("creature_uid"))): return false
 	return true
 
 static func errors(rows: Dictionary, namespace: String, world_id: String) -> Array[String]:

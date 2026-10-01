@@ -246,7 +246,8 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 		return _foundation_decision(local_peer_id(), row)
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
-		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id}
+		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
+		"world_namespace": world.reward_delivery_namespace}
 	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), local_peer_id(), character, context.expected_revision, "portal_arrival", intent, context)
 	if result.get("durable") != true: return result
 	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
@@ -258,8 +259,10 @@ func _foundation_relic_context(peer: int, biome: String) -> Dictionary:
 	var actor: Dictionary = writer.call("_water_actor_context", peer, {})
 	if actor.get("realm") != "meadows" or not actor.get("position") is Vector3: return {}
 	var found: Node3D
+	var meadows := _portal_world_node("meadows")
+	if meadows == null: return {}
 	for pedestal: Node in get_tree().get_nodes_in_group("crossing_hall_pedestals"):
-		if pedestal.get_meta("biome", "") != biome or not _portal_world_node("meadows").is_ancestor_of(pedestal): continue
+		if pedestal.get_meta("biome", "") != biome or not meadows.is_ancestor_of(pedestal): continue
 		if found != null: return {}
 		found = pedestal as Node3D
 	if found == null or actor.position.distance_to(found.global_position) > float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m): return {}
@@ -322,6 +325,54 @@ func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dict
 			"participants": participants.duplicate(), "species_id": original.enemy_record.species_id, "kind": "defeat", "opponent_defeated": true}})
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "defeat:" + str(original.source_id), duties)
 
+func foundation_rematch_participant_context(peer: int) -> Dictionary:
+	if not is_host() or admitted_character_state(peer).is_empty(): return {}
+	var character := _authority_character(peer)
+	var flags := _foundation_flags(peer)
+	var full: Dictionary = _character_authority.call("state", character)
+	if full.redesign_character.transaction_receipts.has("craft:regional_ending_regional_credits_seen:" + character): flags.regional_credits_seen = true
+	return {"character_id": character, "world_flags": _game().world.flags.call("all_set"), "personal_flags": flags.keys()}
+
+func foundation_rematch_join_allowed(peer: int, spec: Dictionary) -> bool:
+	var context := foundation_rematch_participant_context(peer)
+	return not context.is_empty() and preload("res://scripts/repeatables/rematch_rules.gd").available(str(spec.get("id", "")),
+		str(spec.get("rematch", {}).get("tier", "")), context.world_flags, context.personal_flags)
+
+func foundation_rematch_outcome(director: Node, spec: Dictionary, won: bool) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
+		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		or spec != director.get("_trainer_spec") or not spec.get("rematch") is Dictionary: return {"ok": false}
+	var outcome: String = director.get("_manager").call("outcome")
+	if not won: return {"ok": outcome in ["lost", "fled"], "durable": outcome in ["lost", "fled"]}
+	if outcome != "won": return {"ok": false}
+	var original: Dictionary = director.get_meta("foundation_rematch_pending", {})
+	if original.is_empty():
+		var record: Dictionary = director.get("_encounter")
+		var participants: Array = director.call("retained_boss_participants")
+		if participants.is_empty() or str(record.get("encounter_id", "")).is_empty(): return {"ok": false}
+		var game := _game()
+		game.call("_sync_clock_state")
+		if not is_finite(float(game.world.clock_elapsed_seconds)) or float(game.world.clock_elapsed_seconds) < 0: return {"ok": false}
+		var duties: Array = []
+		for character: String in participants:
+			var admission: Dictionary = director.get("_trainer_foundation_admissions").get(character, {})
+			if admission.get("character_id") != character: return {"ok": false}
+			var intent := {"trainer_id": str(spec.id), "tier": str(spec.rematch.tier), "encounter_id": str(record.encounter_id)}
+			duties.append({"character_id": character, "action": "rematch_win", "intent": intent, "context": {
+				"source_key": "rematch:" + str(spec.id), "validated_host_outcome": "win", "encounter_id": record.encounter_id,
+				"trainer_id": str(spec.id), "tier": str(spec.rematch.tier), "participants": participants.duplicate(),
+				"world_namespace": game.world.reward_delivery_namespace, "session_id": _altar_current_epoch(),
+				"world_seconds": int(floor(game.world.clock_elapsed_seconds)), "world_flags": admission.world_flags.duplicate(),
+				"personal_flags": admission.personal_flags.duplicate()}})
+			if preload("res://scripts/repeatables/rematch_rules.gd").profile(str(spec.id)).kind == "master":
+				duties.back().context.single_creature_duel = true
+				duties.back().context.creature_uid = str(director.get("_master_duel").get("creature_uid", ""))
+		original = {"source_id": "rematch:%s:%s" % [spec.id, record.encounter_id], "duties": duties}
+		director.set_meta("foundation_rematch_pending", original.duplicate(true))
+	var result: Dictionary = get_node(^"LedgerRpc").call("journal_foundation_event", original.source_id, original.duties)
+	if result.get("durable") == true: director.remove_meta("foundation_rematch_pending")
+	return result
+
 func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionary) -> Dictionary:
 	var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(spec.get("id", "")), str(director.call("_encounter_realm")))
 	if handoff.is_empty() or config().get("redesign_boss_handoff_runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
@@ -372,6 +423,7 @@ func _retry_foundation_events() -> void:
 			if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
+	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
 	if duty.action == "boss_relic": return "defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]
 	if duty.action == "research_event":

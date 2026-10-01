@@ -55,6 +55,7 @@ static func _acknowledgement(current: Dictionary, action: String, intent: Dictio
 	var receipt: String
 	if action == "portal_arrival":
 		if intent.size() != 3 or not intent.get("permit_id") is String or not intent.get("realm") is String or not intent.get("entry_id") is String \
+			or not ESSENCE._opaque_id(context.get("world_namespace")) \
 			or context.get("grounded_arrival") != true or context.get("permit_id") != intent.permit_id \
 			or context.get("realm") != intent.realm or context.get("entry_id") != intent.entry_id: return deny("actual_grounded_permit_required")
 		receipt = "craft:portal_arrival_%s:%s" % [intent.permit_id, current.character_id]
@@ -72,7 +73,7 @@ static func _acknowledgement(current: Dictionary, action: String, intent: Dictio
 	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
 	next.redesign_character.transaction_receipts.append(receipt)
 	if action == "portal_arrival" and intent.realm == "meadows" and intent.entry_id == "hall_home":
-		var home := "craft:home_return_%s:%s" % [intent.permit_id, current.character_id]
+		var home := "craft:home_return_%s_%s:%s" % [context.get("world_namespace", ""), intent.permit_id, current.character_id]
 		if not next.redesign_character.transaction_receipts.has(home): next.redesign_character.transaction_receipts.append(home)
 	return {"ok": true, "state": next, "receipt": receipt}
 

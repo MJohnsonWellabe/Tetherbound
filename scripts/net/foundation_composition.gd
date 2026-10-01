@@ -26,6 +26,9 @@ func _ready() -> void:
 	_interaction.call("bind_actions", bounty_claim, personal_view, bounty_reconcile)
 	get_parent().connect("foundation_reply_received", _reply)
 	preload("res://scripts/ui/bounty_board_panel.gd").attach(_interaction)
+	var rematches: Node = preload("res://scripts/net/foundation_rematches.gd").new()
+	rematches.name = "Rematches"
+	add_child(rematches)
 
 func _process(delta: float) -> void:
 	_left -= delta

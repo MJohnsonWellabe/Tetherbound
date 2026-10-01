@@ -32,21 +32,44 @@ var _decline_settled: Dictionary = {}
 var _deferred: Dictionary = {}
 var _poll := 0.0
 var _answer_save_pending: Dictionary = {}
+var _decline_bindings: Dictionary = {}
+
+func _remember_decline_binding(id: String) -> void:
+	if _decline_bindings.has(id): return
+	var game := _game()
+	if game == null or game.local == null or game.world == null or game.session == null or id.is_empty(): return
+	_decline_bindings[id] = {"character_id": game.local.character_id, "world_namespace": game.world.reward_delivery_namespace,
+		"session_epoch": game.session.call("_altar_current_epoch"), "claim_id": id,
+		"player": weakref(game.local), "world": weakref(game.world), "session": weakref(game.session)}
+
+func _decline_binding_live(binding: Dictionary) -> bool:
+	var game := _game()
+	return not binding.is_empty() and game != null and game.local == binding.player.get_ref() \
+		and game.world == binding.world.get_ref() and game.session == binding.session.get_ref() \
+		and game.local.character_id == binding.character_id and game.world.reward_delivery_namespace == binding.world_namespace \
+		and game.session.call("_altar_current_epoch") == binding.session_epoch
 
 func _record_declined_answer(id: String) -> void:
-	var game := _game()
-	if game == null or game.local == null or game.world == null or id.is_empty(): return
-	_answer_save_pending = {"character_id": game.local.character_id, "world_namespace": game.world.reward_delivery_namespace, "claim_id": id}
+	var binding: Dictionary = _decline_bindings.get(id, {})
+	if not _decline_binding_live(binding): return
+	_answer_save_pending = binding.duplicate()
 	_retry_declined_answer()
 
 func _retry_declined_answer() -> void:
 	if _answer_save_pending.is_empty(): return
 	var game := _game()
-	if game == null or game.local.character_id != _answer_save_pending.character_id or game.world.reward_delivery_namespace != _answer_save_pending.world_namespace: return
-	var before: Dictionary = game.local.flags.call("save_data")
-	game.local.flags.call("set_flag", "water:legendary_refused")
-	if game.save_system == null or game.save_system.call("save_character", game, game.local.character_id) != true:
-		game.local.flags.call("load_data", before)
+	var binding := _answer_save_pending.duplicate()
+	if not _decline_binding_live(binding) or game.save_system == null: return
+	var saver: RefCounted = game.save_system
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or not _decline_binding_live(binding) or _answer_save_pending != binding: return
+	var player: RefCounted = binding.player.get_ref()
+	var flags: RefCounted = player.get("flags")
+	var before: Dictionary = flags.call("save_data")
+	flags.call("set_flag", "water:legendary_refused")
+	if saver.call("save_character_prepared", game, binding.character_id) != true \
+		or not _decline_binding_live(binding) or player.get("flags") != flags:
+		flags.call("load_data", before)
 		return
 	_answer_save_pending.clear()
 
@@ -246,6 +269,7 @@ func decline_pending() -> Dictionary:
 	if claim.is_empty():
 		return {"ok": false, "reason": "No Guardian offer is waiting."}
 	var id := str(claim.id)
+	_remember_decline_binding(id)
 	_decline_holds.erase(id)
 	_declined[id] = true
 	if str(_deferred.get("id", "")) == id:
@@ -278,6 +302,7 @@ func presentable() -> bool:
 ## with this id until the host's verdict arrives.
 func hold_for_decline(id: String) -> void:
 	if not id.is_empty():
+		_remember_decline_binding(id)
 		_decline_holds[id] = true
 
 func held_for_decline(id: String) -> bool:
@@ -339,10 +364,15 @@ func _confirm_decline_to(peer: int, id: String) -> void:
 		_decline_settled[id] = true
 		_record_declined_answer(id)
 	elif is_inside_tree() and multiplayer.has_multiplayer_peer():
-		_decline_done.rpc_id(peer, id)
+		_decline_done.rpc_id(peer, id, {"claim_id": id, "character_id": _bridge().call("_registered_character", peer),
+			"world_namespace": game.world.reward_delivery_namespace, "session_epoch": game.session.call("_altar_current_epoch")})
 
 @rpc("authority", "call_remote", "reliable", CHANNEL)
-func _decline_done(id: String) -> void:
+func _decline_done(id: String, envelope: Dictionary = {}) -> void:
+	var binding: Dictionary = _decline_bindings.get(id, {})
+	if not _decline_binding_live(binding) or envelope.size() != 4: return
+	for field: String in ["claim_id", "character_id", "world_namespace", "session_epoch"]:
+		if envelope.get(field) != binding.get(field): return
 	if not id.is_empty():
 		_decline_settled[id] = true
 		_record_declined_answer(id)
