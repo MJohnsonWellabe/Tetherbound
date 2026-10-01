@@ -375,8 +375,10 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		await process_frame
 		_pump_once()
 	var ack: Dictionary = _boundary_pending.get("ack", {})
+	var durable_ack: Variant = JSON.parse_string(FileAccess.get_file_as_string(path + ".ack.json")) if FileAccess.file_exists(path + ".ack.json") else null
 	var resume: Variant = JSON.parse_string(FileAccess.get_file_as_string(path + ".resume.json")) if FileAccess.file_exists(path + ".resume.json") else null
-	var exit_confirmed: bool = ack.get("exit", {}).get("ok") == true and ack.get("exit", {}).get("exited") == true \
+	var exit_confirmed: bool = durable_ack is Dictionary and durable_ack == ack \
+		and ack.get("exit", {}).get("ok") == true and ack.get("exit", {}).get("exited") == true \
 		and ack.get("exit", {}).get("identity") == before.identity and ack.get("marker_sha256") == FileAccess.get_sha256(path)
 	var host_resume_confirmed: bool = args.phase != "after_host_write_before_delivery" or (resume is Dictionary \
 		and resume.get("token") == token and resume.get("marker_sha256") == ack.get("marker_sha256") \
