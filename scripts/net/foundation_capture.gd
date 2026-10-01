@@ -38,9 +38,20 @@ func present_from_catch(creature: RefCounted) -> bool:
 	if offer.is_empty() or creature == null or creature.get("uid") != offer.creature.uid: return false
 	return _present(offer, creature)
 
+func _bind_release_service() -> bool:
+	var mounted := false
+	for node: Node in get_tree().root.find_children("*", "Control", true, false):
+		if node.get_script() == null or node.get_script().resource_path != "res://scripts/ui/tab_creatures.gd": continue
+		if node.call("configure_release_service", self) != true: return false
+		mounted = true
+	return mounted
+
 func _present(offer: Dictionary, creature: RefCounted = null) -> bool:
 	var game: Node = session().call("_game")
 	if session().call("_altar_peer_in_combat", session().call("local_peer_id")) == true: return false
+	# Game can open and poll the ceremony as soon as pending_catch is set.
+	# Bind its typed authority first on both direct-catch and retained-offer paths.
+	if not _bind_release_service(): return false
 	if game.pending_catch != null:
 		return game.pending_catch.get_meta("foundation_capture_offer", "") == offer.offer_id
 	if creature == null: creature = CODEC.decode(offer.creature, offer.capture_traits)
@@ -63,8 +74,6 @@ func _process(delta: float) -> void:
 		_active = ""
 	var offer := _offer(_active)
 	if offer.is_empty(): return
-	for node: Node in get_tree().root.find_children("*", "Control", true, false):
-		if node.get_script() != null and node.get_script().resource_path == "res://scripts/ui/tab_creatures.gd": node.call("configure_release_service", self)
 	if not _present(offer): return
 	_active = offer.offer_id
 	if game.local.party.is_full(): return
