@@ -1,0 +1,375 @@
+{
+  "head": "63429ee77e31341ed82b106ce5489b6479916e3f",
+  "pull": {
+    "head": "63429ee77e31341ed82b106ce5489b6479916e3f",
+    "draft": true,
+    "labels": [
+      "full-ci"
+    ],
+    "main": "30fcc38fc591d5df3a7cfb122b9da58445467021"
+  },
+  "runs": [
+    {
+      "id": 36915704718,
+      "name": "Process traceability",
+      "run_number": 1200,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-10-01T19:37:55Z",
+      "run_started_at": "2026-10-01T19:37:55Z",
+      "updated_at": "2026-10-01T19:38:01Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36915704718"
+    },
+    {
+      "id": 36915535082,
+      "name": "Process traceability",
+      "run_number": 1199,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-10-01T19:36:32Z",
+      "run_started_at": "2026-10-01T19:36:32Z",
+      "updated_at": "2026-10-01T19:36:33Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36915535082"
+    },
+    {
+      "id": 36915534683,
+      "name": "CI",
+      "run_number": 6173,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-01T19:36:32Z",
+      "run_started_at": "2026-10-01T19:36:32Z",
+      "updated_at": "2026-10-01T20:33:24Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36915534683"
+    },
+    {
+      "id": 36915532629,
+      "name": "Auto merge settled work",
+      "run_number": 990,
+      "event": "pull_request_target",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-10-01T19:36:31Z",
+      "run_started_at": "2026-10-01T19:36:31Z",
+      "updated_at": "2026-10-01T19:36:38Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36915532629"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 110548461344,
+      "name": "changes",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:36Z",
+      "completed_at": "2026-10-01T19:36:48Z"
+    },
+    {
+      "id": 110548566754,
+      "name": "verify-bake-freshness",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T19:39:22Z"
+    },
+    {
+      "id": 110548566784,
+      "name": "verify-unit-tests (2)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T19:44:34Z"
+    },
+    {
+      "id": 110548566819,
+      "name": "verify-unit-tests (1)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T19:45:14Z"
+    },
+    {
+      "id": 110548567167,
+      "name": "verify-veg-corridor",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:46:57Z",
+      "completed_at": "2026-10-01T19:57:59Z"
+    },
+    {
+      "id": 110548567230,
+      "name": "verify-gate-a-ui-build-shard",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:41:58Z",
+      "completed_at": "2026-10-01T19:50:37Z"
+    },
+    {
+      "id": 110548567239,
+      "name": "verify-combat-shard",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:52Z",
+      "completed_at": "2026-10-01T19:49:54Z"
+    },
+    {
+      "id": 110548567267,
+      "name": "export",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T19:43:57Z"
+    },
+    {
+      "id": 110548567283,
+      "name": "verify-regions-relay (meadows)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:53Z",
+      "completed_at": "2026-10-01T19:48:20Z"
+    },
+    {
+      "id": 110548567294,
+      "name": "verify-gate-evidence-shard",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T19:50:47Z"
+    },
+    {
+      "id": 110548567314,
+      "name": "verify-core-verb-shard",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T19:49:33Z"
+    },
+    {
+      "id": 110548567330,
+      "name": "verify-regions-relay (tidewake)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T19:57:09Z"
+    },
+    {
+      "id": 110548567342,
+      "name": "discover-net-smokes",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T19:38:14Z"
+    },
+    {
+      "id": 110548567345,
+      "name": "verify-scatter-rules",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T19:51:14Z"
+    },
+    {
+      "id": 110548567349,
+      "name": "verify-regions-shard (world)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:52Z",
+      "completed_at": "2026-10-01T19:46:18Z"
+    },
+    {
+      "id": 110548567376,
+      "name": "verify-continuous-core-known-red",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T20:06:50Z"
+    },
+    {
+      "id": 110548567424,
+      "name": "verify-veridian-offer (space)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T20:31:51Z"
+    },
+    {
+      "id": 110548567437,
+      "name": "verify-gate-b-core",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T19:39:24Z",
+      "completed_at": "2026-10-01T19:47:10Z"
+    },
+    {
+      "id": 110548567440,
+      "name": "verify-gate-evidence-finale",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:47:16Z",
+      "completed_at": "2026-10-01T19:57:16Z"
+    },
+    {
+      "id": 110548567448,
+      "name": "verify-catching",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T19:46:55Z"
+    },
+    {
+      "id": 110548567544,
+      "name": "verify-gate-b-full-known-red",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T19:41:56Z"
+    },
+    {
+      "id": 110548567547,
+      "name": "verify-owner-regressions-shard (catching)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T20:09:50Z"
+    },
+    {
+      "id": 110548567558,
+      "name": "verify-harvest",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:44:38Z",
+      "completed_at": "2026-10-01T19:52:07Z"
+    },
+    {
+      "id": 110548567598,
+      "name": "verify-veridian-offer (recovery)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:38:16Z",
+      "completed_at": "2026-10-01T20:33:17Z"
+    },
+    {
+      "id": 110548567609,
+      "name": "verify-cloudreach-midride-rejoin",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T19:54:07Z"
+    },
+    {
+      "id": 110548567621,
+      "name": "verify-regions-shard (stormwood)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T19:45:23Z",
+      "completed_at": "2026-10-01T19:56:31Z"
+    },
+    {
+      "id": 110548567624,
+      "name": "verify-owner-regressions-shard (controls)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T19:48:20Z"
+    },
+    {
+      "id": 110548567636,
+      "name": "verify-cloudreach-persistence",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:44:00Z",
+      "completed_at": "2026-10-01T19:47:23Z"
+    },
+    {
+      "id": 110548567650,
+      "name": "verify-regions-shard (tidewake)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:46:20Z",
+      "completed_at": "2026-10-01T19:55:54Z"
+    },
+    {
+      "id": 110548567733,
+      "name": "verify-veridian-offer (capacity)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T20:31:51Z"
+    },
+    {
+      "id": 110549151039,
+      "name": "verify-multiplayer-shard (5)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T19:48:21Z",
+      "completed_at": "2026-10-01T20:08:31Z"
+    },
+    {
+      "id": 110549151061,
+      "name": "verify-multiplayer-shard (3)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:48:21Z",
+      "completed_at": "2026-10-01T20:10:47Z"
+    },
+    {
+      "id": 110549151066,
+      "name": "verify-multiplayer-shard (7)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:49:35Z",
+      "completed_at": "2026-10-01T19:57:09Z"
+    },
+    {
+      "id": 110549151109,
+      "name": "verify-multiplayer-shard (1)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:47:27Z",
+      "completed_at": "2026-10-01T20:09:29Z"
+    },
+    {
+      "id": 110549151195,
+      "name": "verify-multiplayer-shard (4)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:49:57Z",
+      "completed_at": "2026-10-01T20:13:51Z"
+    },
+    {
+      "id": 110549151227,
+      "name": "verify-multiplayer-shard (2)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:50:49Z",
+      "completed_at": "2026-10-01T20:17:15Z"
+    },
+    {
+      "id": 110549151246,
+      "name": "verify-multiplayer-shard (6)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-01T19:50:39Z",
+      "completed_at": "2026-10-01T20:09:53Z"
+    },
+    {
+      "id": 110561891399,
+      "name": "verify-solo-regression",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-01T20:09:51Z",
+      "completed_at": "2026-10-01T20:09:51Z"
+    },
+    {
+      "id": 110571450882,
+      "name": "ci-gate",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T20:33:19Z",
+      "completed_at": "2026-10-01T20:33:23Z"
+    }
+  ]
+}
