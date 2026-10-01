@@ -1716,6 +1716,16 @@ jobs:
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
+      - name: Verify pending regional ending receipts and reconnect rejection
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          pending_log="$RUNNER_TEMP/regional-homecoming-pending.log"
+          timeout 120s godot --headless --path . --script tests/smoke_regional_homecoming_pending.gd 2>&1 | tee "$pending_log"
+          if grep -Eq 'SCRIPT ERROR:|^ERROR:|instances were leaked|resources still in use' "$pending_log"; then
+            echo "Regional pending acknowledgement emitted engine or cleanup errors."
+            exit 1
+          fi
       - name: Verify wild_streaming
         if: ${{ !cancelled() }}
         env: { SMOKE: wild_streaming, RETRIES: 1 }
