@@ -553,25 +553,25 @@ func _op_position(raw: Variant) -> Vector3:
 
 ## Canonical validation for the discriminated EXISTING world carrier; the
 ## same guard runs for split/flat reads, snapshots, typed ops and both saves.
-static func training_row_valid(row: Variant, namespace: String, expected_world: String = "") -> bool:
+static func training_row_valid(row: Variant, world_namespace: String, expected_world: String = "") -> bool:
 	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 2:
-		return not namespace.is_empty() and preload("res://scripts/net/character_action_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", namespace, expected_world)
-	if row is Dictionary and row.get("kind") == "altar_building": return altar_build_row_valid(row, namespace, expected_world)
+		return not world_namespace.is_empty() and preload("res://scripts/net/character_action_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", world_namespace, expected_world)
+	if row is Dictionary and row.get("kind") == "altar_building": return altar_build_row_valid(row, world_namespace, expected_world)
 	const ESSENCE = preload("res://scripts/creatures/essence.gd")
 	const TEACHING = preload("res://scripts/creatures/teaching.gd")
 	const PROGRESSION = preload("res://scripts/creatures/progression.gd")
-	return not namespace.is_empty() and ESSENCE.training_row_valid(row, "", namespace) \
+	return not world_namespace.is_empty() and ESSENCE.training_row_valid(row, "", world_namespace) \
 		and row.action in ["altar_spend", "wild_defeat"] and (expected_world.is_empty() or row.world_id == expected_world) \
 		and ESSENCE.training_transition_valid(row, ESSENCE.config(), PROGRESSION.config(),
 			TEACHING.available_moves, TEACHING.character_loadout_mirror)
 
 
-static func training_world_errors(raw: Variant, namespace: String, expected_world: String = "", buildings: Variant = null) -> Array[String]:
+static func training_world_errors(raw: Variant, world_namespace: String, expected_world: String = "", buildings: Variant = null) -> Array[String]:
 	if not raw is Dictionary: return ["world reward deliveries must be an object"]
 	for key: Variant in raw:
 		var row: Variant = raw[key]
 		if str(key).begins_with("creature_training:") or str(key).begins_with("altar_building:") or (row is Dictionary and row.get("kind") in ["creature_training", "altar_building"]):
-			if not training_row_valid(row, namespace, expected_world) or key != row.delivery_id:
+			if not training_row_valid(row, world_namespace, expected_world) or key != row.delivery_id:
 				return ["invalid typed creature training journal"]
 
 	var pending: Dictionary = {}
@@ -594,21 +594,21 @@ static func training_world_errors(raw: Variant, namespace: String, expected_worl
 	return []
 
 
-static func training_world_op_valid(op: Dictionary, records: Dictionary, namespace: String, expected_world: String) -> bool:
+static func training_world_op_valid(op: Dictionary, records: Dictionary, world_namespace: String, expected_world: String) -> bool:
 	if op.get("scope") != "world" or not op.get("delivery_id") is String: return false
 	var old: Variant = records.get(op.delivery_id)
 	if op.get("op") == "creature_training_journal":
-		if op.size() != 4 or not training_row_valid(op.get("delivery"), namespace, expected_world): return false
+		if op.size() != 4 or not training_row_valid(op.get("delivery"), world_namespace, expected_world): return false
 		var row: Dictionary = op.delivery
 		if row.delivery_id != op.delivery_id or row.status != "pending": return false
 		if old == null: return int(row.journal_revision) == 1
 		if row.kind == "altar_building": return false # Immutable per-action ID; only exact acceptance may change it.
-		return training_row_valid(old, namespace, expected_world) and old.character_id == row.character_id \
+		return training_row_valid(old, world_namespace, expected_world) and old.character_id == row.character_id \
 			and old.status == "accepted" and int(row.journal_revision) == int(old.journal_revision) + 1 \
 			and int(row.character_revision) > int(old.character_revision) \
 			and row.before.redesign_character.transaction_receipts.has(old.receipt)
 	if op.get("op") == "creature_training_accept":
-		return op.size() == 6 and training_row_valid(old, namespace, expected_world) \
+		return op.size() == 6 and training_row_valid(old, world_namespace, expected_world) \
 			and old.status == "pending" and not str(op.get("character_id", "")).is_empty() \
 			and old.character_id == op.character_id and old.journal_revision == op.get("journal_revision") \
 			and old.receipt == op.get("receipt")
@@ -617,10 +617,10 @@ static func training_world_op_valid(op: Dictionary, records: Dictionary, namespa
 
 ## Altar-only discriminator in the existing reward journal. A paid bit alone
 ## is not refundable provenance; original placement and removal rows survive.
-static func altar_build_id(namespace: String, character: String, txn: String) -> String:
+static func altar_build_id(world_namespace: String, character: String, txn: String) -> String:
 	const E = preload("res://scripts/creatures/essence.gd")
-	return "altar_building:" + JSON.stringify([namespace, character, txn]).sha256_text() \
-		if E._opaque_id(namespace) and E._component(character) and E._opaque_id(txn) else ""
+	return "altar_building:" + JSON.stringify([world_namespace, character, txn]).sha256_text() \
+		if E._opaque_id(world_namespace) and E._component(character) and E._opaque_id(txn) else ""
 
 
 static func altar_recipe() -> Array:
@@ -636,12 +636,12 @@ static func altar_recipe() -> Array:
 
 
 static func altar_build_transition(full: Dictionary, character: String, revision: int,
-		action: String, txn: String, record: Dictionary, namespace: String) -> Dictionary:
+		action: String, txn: String, record: Dictionary, world_namespace: String) -> Dictionary:
 
 	const E = preload("res://scripts/creatures/essence.gd")
 	const RULES = preload("res://scripts/world/death_satchel_rules.gd")
 	if not altar_txn_id_valid(txn) or not action in ["place_building", "dismantle"] or revision < 0 or revision >= 2147483647 \
-		or not E._baseline_errors(full, character).is_empty() or altar_build_id(namespace, character, txn).is_empty(): return {}
+		or not E._baseline_errors(full, character).is_empty() or altar_build_id(world_namespace, character, txn).is_empty(): return {}
 	if record.size() != 6 or record.get("id") != "altar" or record.get("realm") != "meadows" \
 		or not record.get("paid") is bool or record.paid != true or not record.get("uid") is String \
 		or not record.uid.begins_with("b") or not record.uid.substr(1).is_valid_int() \
@@ -654,7 +654,7 @@ static func altar_build_transition(full: Dictionary, character: String, revision
 	if record.uid != "b%d" % int(record.uid.substr(1)): return {}
 	var cost := altar_recipe()
 	if cost.is_empty(): return {}
-	var receipt := "craft:%s:altar_build:%s:%s:%s:%s" % [character, namespace.sha256_text(), txn, action, record.uid]
+	var receipt := "craft:%s:altar_build:%s:%s:%s:%s" % [character, world_namespace.sha256_text(), txn, action, record.uid]
 	var cfg: Dictionary = E.config()
 	if not E._integer(cfg.get("maximum_transaction_receipts"), 1, 65536) \
 		or full.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts) \
@@ -673,7 +673,7 @@ static func altar_build_transition(full: Dictionary, character: String, revision
 		"state": next, "record": record.duplicate(true), "cost": cost}
 
 
-static func altar_build_row_valid(raw: Variant, namespace: String, world_id: String = "") -> bool:
+static func altar_build_row_valid(raw: Variant, world_namespace: String, world_id: String = "") -> bool:
 	const E = preload("res://scripts/creatures/essence.gd")
 
 	if not raw is Dictionary or raw.size() != E.TRAINING_ROW_FIELDS.size(): return false
@@ -682,9 +682,9 @@ static func altar_build_row_valid(raw: Variant, namespace: String, world_id: Str
 	if raw.kind != "altar_building" or not E._integer(raw.version, 1, 1) \
 		or not E._integer(raw.journal_revision, 1, 1) or not E._integer(raw.character_revision, 1, 2147483647) \
 		or not raw.status in ["pending", "accepted"] or not raw.action in ["place_building", "dismantle"] \
-		or raw.world_namespace != namespace or not E._opaque_id(raw.world_id) \
+		or raw.world_namespace != world_namespace or not E._opaque_id(raw.world_id) \
 		or not E._opaque_id(raw.session_id) or (not world_id.is_empty() and raw.world_id != world_id) \
-		or raw.delivery_id != altar_build_id(namespace, str(raw.character_id), str(raw.action_id)) \
+		or raw.delivery_id != altar_build_id(world_namespace, str(raw.character_id), str(raw.action_id)) \
 		or not raw.intent is Dictionary or raw.intent.size() != 3 \
 		or not raw.intent.get("request") is Dictionary or not raw.intent.get("record") is Dictionary \
 		or not raw.intent.get("cost") is Array or not raw.before is Dictionary or not raw.after is Dictionary \
@@ -702,7 +702,7 @@ static func altar_build_row_valid(raw: Variant, namespace: String, world_id: Str
 	var full := raw.before.duplicate(true)
 	full.character_id = raw.character_id
 	var proposal := altar_build_transition(full, raw.character_id, int(raw.character_revision) - 1,
-		raw.action, raw.action_id, raw.intent.record, namespace)
+		raw.action, raw.action_id, raw.intent.record, world_namespace)
 	return proposal.get("ok") == true and proposal.receipt == raw.receipt \
 		and E._equivalent(proposal.cost, raw.intent.cost) \
 		and E._equivalent(E.training_projection(proposal.state), raw.after)
@@ -710,14 +710,14 @@ static func altar_build_row_valid(raw: Variant, namespace: String, world_id: Str
 
 ## Exactly one pending personal mutation across training/building actions.
 ## Old accepted history is retained for replay/provenance, never replayed as XP.
-static func training_owner_row(deliveries: Dictionary, namespace: String, world_id: String,
+static func training_owner_row(deliveries: Dictionary, world_namespace: String, world_id: String,
 		character: String) -> Dictionary:
 	var latest: Dictionary = {}
 	var pending := 0
 	for raw: Variant in deliveries.values():
 		if not raw is Dictionary or raw.get("character_id") != character \
 			or not raw.get("kind") in ["creature_training", "altar_building"]: continue
-		if not training_row_valid(raw, namespace, world_id): return {}
+		if not training_row_valid(raw, world_namespace, world_id): return {}
 		if raw.status == "pending": pending += 1
 		if latest.is_empty() or int(raw.character_revision) > int(latest.character_revision): latest = raw
 		elif int(raw.character_revision) == int(latest.character_revision) and raw.receipt != latest.receipt: return {}
@@ -725,14 +725,14 @@ static func training_owner_row(deliveries: Dictionary, namespace: String, world_
 	return latest.duplicate(true)
 
 
-static func altar_paid_provenance(deliveries: Dictionary, namespace: String, world_id: String,
+static func altar_paid_provenance(deliveries: Dictionary, world_namespace: String, world_id: String,
 		record: Dictionary, character: String = "", require_accepted: bool = true) -> Dictionary:
 	var placed: Dictionary = {}
 	for raw: Variant in deliveries.values():
 		if not raw is Dictionary or raw.get("kind") != "altar_building" \
 			or not raw.get("intent", {}).get("record") is Dictionary \
 			or raw.intent.record.get("uid") != record.get("uid"): continue
-		if not altar_build_row_valid(raw, namespace, world_id): return {}
+		if not altar_build_row_valid(raw, world_namespace, world_id): return {}
 		if raw.action == "dismantle": return {}
 		if not placed.is_empty() or (require_accepted and raw.status != "accepted") \
 			or (not character.is_empty() and raw.character_id != character) \
@@ -797,19 +797,19 @@ func _altar_building_op_bound(op: Dictionary, removing: bool) -> bool:
 
 ## Typed portal facts use the existing reward journal. Validate both saved
 ## rows and deltas; unrelated item/vitals/training discriminators stay intact.
-static func portal_world_errors(raw: Variant, namespace: String, world_id: String) -> Array[String]:
-	return preload("res://scripts/net/portal_delivery.gd").world_errors(raw, namespace, world_id)
+static func portal_world_errors(raw: Variant, world_namespace: String, world_id: String) -> Array[String]:
+	return preload("res://scripts/net/portal_delivery.gd").world_errors(raw, world_namespace, world_id)
 
 
-static func portal_op_valid(op: Dictionary, deliveries: Dictionary, namespace: String, world_id: String) -> bool:
+static func portal_op_valid(op: Dictionary, deliveries: Dictionary, world_namespace: String, world_id: String) -> bool:
 	const DELIVERY = preload("res://scripts/net/portal_delivery.gd")
 	var row: Variant = op.get("delivery")
-	if not DELIVERY.valid(row, "", namespace) or row.world_id != world_id or op.get("receipt") != row.receipt: return false
+	if not DELIVERY.valid(row, "", world_namespace) or row.world_id != world_id or op.get("receipt") != row.receipt: return false
 	var prior: Variant = deliveries.get(row.receipt)
 	if op.get("op") == "portal_delivery_journal":
 		return row.status == "pending" and (prior == null or DELIVERY.equivalent(prior, row))
 	if op.get("op") == "portal_delivery_accept":
-		if not DELIVERY.valid(prior, row.character_id, namespace): return false
+		if not DELIVERY.valid(prior, row.character_id, world_namespace): return false
 		var expected: Dictionary = prior.duplicate(true)
 		expected.status = "accepted"
 		return row.status == "accepted" and DELIVERY.equivalent(expected, row)
