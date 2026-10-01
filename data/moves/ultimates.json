@@ -1116,7 +1116,7 @@
     "jaw_height": 0.7,
     "crest_width": 1.5,
     "crest_thickness": 0.07,
-    "feather_length": 2.0,
+    "feather_length": 2,
     "feather_width": 0.44,
     "antler_height": 1.8,
     "nautilus_turns": 1.65,
@@ -1129,7 +1129,7 @@
     "horn_height": 1.8,
     "paw_width": 0.78,
     "paw_depth": 0.72,
-    "flame_height": 2.0,
+    "flame_height": 2,
     "spire_height": 2.1,
     "spire_turns": 1.25,
     "bolt_height": 2.2,
@@ -1139,7 +1139,8 @@
     "vertex_cap": 24000,
     "leviathan_scale": 0.75,
     "rock_levels": 5,
-    "curl_segments": 10
+    "curl_segments": 10,
+    "composition_candidate_cap": 128
   },
   "mote_geometry": {
     "path_segments": 6,

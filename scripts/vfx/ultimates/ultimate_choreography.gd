@@ -21,8 +21,9 @@ static func compose(row: Dictionary, tier: Dictionary, context: Dictionary) -> A
 	# This is a total descriptor ceiling, including charge and aftermath objects.
 	var authored_cap: int = clampi(int(visual.get("component_cap", 48)), 1, 256)
 	var cap: int = mini(authored_cap, maxi(1, int(context.get("component_cap", 48))))
-	# Compose within the authored ceiling, then admit contact bodies first.
-	p["cap"] = authored_cap
+	# Build a bounded candidate set before admission. A base phase must not
+	# consume the final ceiling before newly earned growth motifs are authored.
+	p["cap"] = clampi(int(visual.get("composition_candidate_cap", 128)), authored_cap, 256)
 	var mastery_step: int = clampi(int(context.get("mastery_rank", 1)), 1, 5) - 1
 	var count: int = clampi(int(visual.get("base_count", 4)) + mastery_step + int(tier.get("count_add", 0)), 1, cap)
 	var r: float = float(p["radius_m"])
@@ -109,8 +110,8 @@ static func compose(row: Dictionary, tier: Dictionary, context: Dictionary) -> A
 	for layer in range(layers):
 		var layer_p: Dictionary = p.duplicate()
 		layer_p["layer"] = layer + 1
-		_group(parts, secondary, "path", "growth_orbit", "strike", 2, [gap + r * secondary_scale * float(layer + 1), h * secondary_scale, 0.0], [r * secondary_scale, h * secondary_scale, r * secondary_scale], layer_p)
-		_group(parts, secondary, "target", "growth_release", "aftermath", 2, [gap + r * secondary_scale * float(layer + 1), 0.0, 0.0], [r * secondary_scale, h * secondary_scale, r * secondary_scale], layer_p)
+		_group(parts, secondary, "path", "growth_orbit", "strike", 1, [gap + r * secondary_scale * float(layer + 1), h * secondary_scale, 0.0], [r * secondary_scale, h * secondary_scale, r * secondary_scale], layer_p)
+		_group(parts, secondary, "target", "growth_release", "aftermath", 1, [gap + r * secondary_scale * float(layer + 1), 0.0, 0.0], [r * secondary_scale, h * secondary_scale, r * secondary_scale], layer_p)
 	# Preserve authored order inside each priority (sort_custom is not stable).
 	var ordered: Array[Dictionary] = []
 	for priority in range(4):
@@ -122,11 +123,11 @@ static func compose(row: Dictionary, tier: Dictionary, context: Dictionary) -> A
 
 static func _priority(part: Dictionary) -> int:
 	if str(part.get("motion", "")).begins_with("growth_"):
-		return 3
+		return 1
 	match str(part.get("phase", "")):
 		"strike": return 0
-		"charge": return 1
-	return 2
+		"charge": return 2
+	return 3
 
 
 static func _shared(parts: Array[Dictionary], row: Dictionary, count: int, p: Dictionary) -> void:
