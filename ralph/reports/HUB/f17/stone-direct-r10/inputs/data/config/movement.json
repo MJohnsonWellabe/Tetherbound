@@ -1,0 +1,146 @@
+{
+  "_comment": "Third-person movement tuning. ALL of it is TUNABLE and none of it is a mechanic. These are starting values chosen to be playable, not balanced; the owner's job in M1 is to say 'too floaty', 'sprint too slow', 'camera too close', and these are the numbers that answer that. Nothing here should be treated as settled until traversal feels good on the Ally.",
+
+  "locomotion": {
+    "walk_speed": 5.0,
+    "sprint_speed": 8.6,
+    "_comment_max_speed": "T5-CARE. A hard ceiling on the player body's speed, applied every physics frame before move_and_slide. Not a movement tuning number -- nothing the player does approaches it (sprint is 8.6 and vitals.json calls a 34 m/s landing lethal). It is a failsafe against velocity arriving from outside locomotion: a body resting on a collider that the world MOVES inherits that motion as platform velocity, and world construction moving a collider 24km in one 60Hz frame handed the player 1,444,690 m/s and threw them seven million metres out of the Meadows (tools/_probe_t5_launch.gd). Raise it only if some legitimate motion ever needs to exceed it. TUNABLE.",
+    "max_speed": 120.0,
+    "_comment_accel": "Metres per second squared. Ground acceleration high enough that the character does not feel like it is on ice, air acceleration low enough that mid-jump direction changes read as momentum rather than flight.",
+    "ground_acceleration": 42.0,
+    "ground_friction": 38.0,
+    "air_acceleration": 9.0,
+    "_comment_turn": "How fast the character model swings to face travel direction, radians/sec. Too low reads as sluggish, too high reads as a turret.",
+    "turn_speed": 11.0
+  },
+
+  "unstick": {
+    "_comment": "GATE-F-DEFECT-FIX. The player can become PERMANENTLY immobile in the open world. Measured, not theorised: Gate F S05 logged 1,019 consecutive route rows -- over eight minutes -- pinned at exactly (91.39, -6.00, 821.68) in the corridor, input_context 'world', heading swinging through more than twenty distinct values (so the stick was held and _face() was running) while x/z moved less than 2cm in total. The harness's selfcheck_walk froze the same way at (-161.03, 2.13, 286.01) for 120s. Two sites, so it is a class, not a one-off, and neither is recoverable without reloading. player_controller.gd::_recover_if_entombed is the failsafe; every number here is TUNABLE.",
+    "enabled": true,
+    "_comment_detect": "Seconds of held input producing no movement before the failsafe even LOOKS. Long enough that it can never fire during ordinary play -- pushing into a boulder resolves in a fraction of a second via _unwedge, and the longest legitimate stall anyone has measured is a step-up probe at ~0.2s. Short enough that a real entombment costs seconds, not the eight minutes S05 paid.",
+    "detect_after_s": 2.0,
+    "_comment_progress": "Total displacement, in metres, that counts as 'still where it was'. Not zero: a pocket leaks a millimetre or two per frame (S05's rows drift 91.38 -> 91.39 before settling).",
+    "progress_m": 0.08,
+    "_comment_probe": "The entombment predicate. Eight compass directions are swept through the physics server from STEP_HEIGHT above the body -- the same height _try_step_up probes from, so ordinary ground never reads as a blocker. If ANY of the eight is clear the body is not entombed, it is merely pressed against something, and the failsafe does nothing. This is what keeps a player who is walking into a cliff (and could always walk back) from ever being moved. 0.45 is deliberately SHORT. With the capsule's own 0.4m radius it asks for ~0.85m of clearance in some direction, which is small enough that no ordinary interior dead-end reads as a seal, and still decisive on the real case: S05's body swung its heading through twenty-plus directions over eight minutes and drifted under 2cm total, so the pocket it was in has no meaningful clearance in ANY direction. Raising this buys nothing on the measured defect and costs false positives.",
+    "probe_m": 0.45,
+    "_comment_breadcrumbs": "Where recovery puts the player. A rolling trail of positions the body actually stood on and walked away from, dropped every breadcrumb_spacing_m. Recovery rewinds along it -- it never invents a destination, and it never grants access to anywhere the player had not already legitimately stood, which is why it is preferred over lifting.",
+    "breadcrumb_spacing_m": 2.5,
+    "breadcrumb_count": 10,
+    "_comment_min_distance": "Recovery must land this far from where the body is entombed, or it just drops back into the same pocket.",
+    "min_recovery_distance_m": 6.0,
+    "_comment_lift": "Last resort, when there is no usable breadcrumb (entombed within seconds of a load, say). Raise the body until the same eight-direction probe comes back clear, then let gravity settle it. Bounded so a failure can never launch anyone.",
+    "lift_max_m": 8.0,
+    "lift_step_m": 0.4
+  },
+
+  "gait_feel": {
+    "_comment": "MQ1A, TUNABLE. Momentum tilt: the trainer's model leans into acceleration and banks into turns (character_model.gd::apply_momentum_tilt, driven from trainer_model.gd). lean_deg_per_accel converts m/s^2 to degrees; at ground_acceleration 42 the launch lean approaches pitch_limit_deg. smoothing_rate is 1/seconds-to-settle-ish; higher snaps, lower wallows.",
+    "lean_deg_per_accel": 0.18,
+    "pitch_limit_deg": 7.0,
+    "roll_limit_deg": 8.0,
+    "smoothing_rate": 9.0,
+    "_comment_terrain": "MQ1B, TUNABLE. Root-level terrain adaptation (character_model.gd::apply_terrain_adaptation, driven from trainer_model.gd) -- ADDS to the momentum tilt above rather than replacing it, so a sprint launch on a slope still both leans forward AND banks into the hill. terrain_stance_width/terrain_probe_ahead are the four ground samples (left/right/front/back of the model's own root) the pitch/roll angle is measured from -- half the trainer's own natural stance and stride, not a tuned guess. terrain_lean_scale is how much of the MEASURED slope angle the body actually adopts (1.0 would stand perfectly perpendicular to the ground, which reads wrong for a biped past a shallow slope; a fraction reads as leaning into it). Height offset is separately clamped in code to +-0.12m -- large enough for a kerb-sized bump, small enough that it can never read as the model detaching from the capsule.",
+    "terrain_stance_width": 0.18,
+    "terrain_probe_ahead": 0.22,
+    "terrain_lean_scale": 0.5,
+    "terrain_pitch_limit_deg": 18.0,
+    "terrain_roll_limit_deg": 18.0,
+    "terrain_smoothing_rate": 6.0,
+    "_comment_run": "RUN-LEAN, TUNABLE, presentation only (scripts/player/run_gait.gd, driven from trainer_model.gd; remote puppets share it). run_lean_max_deg is the steady forward pitch of the model at full sprint speed, eased in above walk_speed (smoothstep) over run_lean_ease_s seconds, 0 at walk and rest; it stacks on the clip's own baked lean. sprint_cadence_scale multiplies the sprint clip's ground-speed-matched playback (1.0 = authored 4.4 steps/s at 8.6 m/s; below 1 slows the step rate at the cost of a little foot slide). gait_rate_min/max clamp all gait playback.",
+    "run_lean_max_deg": 8.0,
+    "run_lean_ease_s": 0.15,
+    "sprint_cadence_scale": 0.85,
+    "gait_rate_min": 0.5,
+    "gait_rate_max": 1.4
+  },
+
+  "jump": {
+    "_comment": "Height in metres, converted to launch velocity against gravity so retuning gravity does not silently change jump height.",
+    "height": 1.35,
+    "gravity": 26.0,
+    "_comment_gravity": "Well above real 9.8. Realistic gravity in a third-person game reads as floating; this is the single biggest lever on 'too floaty' feedback.",
+    "fall_gravity_multiplier": 1.35,
+    "_comment_fall_mult": "Falling accelerates faster than rising. Standard platformer trick that makes a jump feel weighty without shortening its rise.",
+    "coyote_time": 0.12,
+    "buffer_time": 0.12,
+    "_comment_forgiveness": "Coyote time lets a jump register just after walking off an edge; buffer lets a jump pressed just before landing fire on touchdown. Both are invisible when they work and infuriating when absent."
+  },
+
+  "stamina": {
+    "max": 100.0,
+    "sprint_drain_per_second": 12.0,
+    "jump_cost": 8.0,
+    "regen_per_second": 18.0,
+    "_comment_delay": "Seconds after the last stamina spend before regeneration starts. Without a delay, tapping sprint costs nothing and the meter is decoration.",
+    "regen_delay": 1.1,
+    "_comment_exhausted": "Below this, sprint is refused until the meter recovers past it. Stops a stutter-sprint exploit at 1 stamina.",
+    "exhausted_below": 10.0
+  },
+
+  "fall_damage": {
+    "_comment": "Damage is driven by impact SPEED, not by fall distance: the same landing hurts the same whether it came off a cliff or a launch. safe_speed is roughly a 2.5m drop under the gravity above.",
+    "safe_speed": 12.0,
+    "lethal_speed": 34.0,
+    "_comment_curve": "Exponent on the normalised speed between safe and lethal. Above 1 makes small overshoots cheap and big ones brutal, which is what makes a player judge a drop rather than avoid all of them.",
+    "curve": 2.0,
+    "max_damage": 100.0
+  },
+
+  "health": {
+    "max": 100.0
+  },
+
+  "riding": {
+    "_comment": "R6.1. Deliberately SMALL: how fast a mount goes and what it needs to be ridden are per-species data (data/creatures/species.json's `rideable` block), because 'which creature is the mount' is a progression question the spec answers per band. What lives here is only the part that is about the RIG rather than about the animal -- the camera pose while mounted. All TUNABLE.",
+    "camera": {
+      "_comment": "Pulled back and raised a little from the walking pose (distance 5.2 / height 1.75 above): the thing being followed is a 2m animal with a rider on it, moving at twice walking pace, and the exploration framing puts its rump in your face. `retarget_lag` is the same easing combat uses when the rig swaps from the trainer to a creature -- mounting is the same handoff, and a hard cut loses the connection between the animal you walked up to and the animal you are now sitting on.",
+      "distance": 6.8,
+      "height": 2.35,
+      "retarget_lag": 6.0
+    }
+  },
+
+  "camera": {
+    "_comment": "Orbit camera on a spring arm. distance/height are the resting pose; the arm shortens automatically when terrain intrudes.",
+    "distance": 5.2,
+    "height": 1.75,
+    "_comment_pitch": "Degrees. Negative looks down. The lower bound stops the camera going under the terrain, the upper stops it looking at the sky behind the player's head.",
+    "pitch_min_deg": -60.0,
+    "pitch_max_deg": 32.0,
+    "pitch_start_deg": -12.0,
+    "_comment_sensitivity": "Gamepad is degrees/second at full stick. Mouse is degrees per pixel of motion. They are separate numbers because tuning one to fix the other always makes the other worse.",
+    "gamepad_sensitivity": 190.0,
+    "mouse_sensitivity": 0.16,
+    "_comment_deadzone": "The Ally's sticks rest slightly off centre and drift with wear. Applied on top of the input map's own deadzone.",
+    "stick_deadzone": 0.18,
+    "invert_y": false,
+    "_comment_follow": "How quickly the arm's origin catches up to the player, and how quickly it recovers after terrain pushes it in. Collision recovery is deliberately slower than intrusion, so the camera snaps away from a wall but eases back out.",
+    "follow_lag": 14.0,
+    "collision_recover_speed": 4.0,
+    "_comment_collision_margin": "How far the spring arm stops short of whatever it hit. The Meadows scatter's trees and rocks collide (scripts/world/vegetation.gd), and are dense enough that a trunk can sit almost directly behind the player; the old 0.3 default then read as the camera buried in bark rather than a normal close-up.",
+    "collision_margin": 0.6,
+    "_comment_probe": "Radius, in metres, of the ball the spring arm sweeps along itself. A SpringArm3D with no `shape` falls back to a single infinitely thin raycast, which is what shipped: indoors the ray slipped between a chair back and a table edge and drew the camera inside them, and when it did hit something nearer than the margin the arm collapsed to nothing and put the camera in the player's head. Keep it small -- it stands in for the camera's near plane, not for the player, and a large ball shortens the arm for doorframes it would have fitted through.",
+    "collision_probe_radius": 0.25
+  },
+
+  "torch": {
+    "_comment": "OF24-era history: this used to describe an always-on kit fixture with no torch ITEM to craft or lose. OW12 (owner, 2026-08-16: 'torches need to be a carry able item not placeable one') superseded that -- the torch is now data/items/items.json's own `torch` entry, equipped off the hotbar/backpack like any other tool, and everything below only takes effect while it is the equipped tool (scripts/player/torch.gd). `auto_at_night` still means it needs no extra input once equipped: it lights itself the moment world_look.gd's is_dark() goes true, and torch_toggle (L / gamepad Start) is a manual OVERRIDE on top of that, not the only way to turn it on.",
+    "auto_at_night": true,
+    "_comment_placement": "Metres above the player's feet, and forward -- roughly chest height, angled down and out so it reads as a carried light illuminating the ground ahead rather than a beacon strapped to the forehead. This is the forward-throw SpotLight's own fixed position, not the hand -- it does not need to track the mesh the way the OmniLight below does.",
+    "height": 1.3,
+    "forward_offset": 0.35,
+    "pitch_deg": -35.0,
+    "_comment_light": "Warm (low colour temperature) on purpose -- a cool-white spotlight reads as a flashlight/sci-fi prop, not a torch. Range and angle are tuned to light the ground and nearby foliage a few paces out without turning night into day; energy is kept modest for the same reason and because a single shadow-casting light following the player at all times is the wrong place to spend the handheld's frame budget.",
+    "colour": "#ffb366",
+    "range_m": 9.0,
+    "spot_angle_deg": 46.0,
+    "energy": 3.2,
+    "attenuation": 1.4,
+    "shadows": false,
+    "_comment_omni": "The prop's own warm point light, separate from the SpotLight throw above -- scripts/player/torch.gd keeps it synced each frame to wherever scripts/player/tool_hold.gd actually put the equipped torch mesh, so the glow reads as coming from the prop in hand. (The mesh itself, and where it sits in the hand, is items.json's `torch` entry's own `held_model`/`held_offset`/`held_rotation_deg` -- OW12 moved that data off this file's old `prop_bone`/`prop_offset`/`prop_rotation_deg` keys, retired along with the always-on kit torch.) Modest range/energy for the same D06 Compatibility-renderer reason the SpotLight stays unshadowed -- this one is unshadowed unconditionally, never toggled by `shadows` above. `flicker_amount` is a fraction of `omni_energy` the light wobbles by (0 = steady); `flicker_speed` is roughly how many wobbles per second.",
+    "omni_energy": 1.6,
+    "omni_range": 6.0,
+    "flicker_amount": 0.35,
+    "flicker_speed": 9.0
+  }
+}
