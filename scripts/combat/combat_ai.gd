@@ -163,6 +163,17 @@ static func species_role(species_id: String, patterns: Dictionary) -> String:
 	return normalize_role(str((patterns.get("species_roles", {}) as Dictionary).get(species_id, "")), patterns)
 
 
+## Only an authored named send-out may override its species to ACE.
+static func context_role(patterns: Dictionary, context: Dictionary) -> String:
+	var role := str(context.get("role", ""))
+	var named: Dictionary = patterns.get("named", {}).get(str(context.get("pattern_id", "")), {})
+	var rows: Array = named.get("sendouts", [])
+	var index := int(context.get("sendout_index", 0))
+	if index >= 0 and index < rows.size() and (rows[index] as Dictionary).has("role"):
+		role = normalize_role(str(rows[index].role), patterns)
+	return role if not role.is_empty() else species_role(str(context.get("species_id", "")), patterns)
+
+
 ## A named fight's sequence belongs to the fight, then to its exact send-out.
 ## The first Meadows wild band deliberately learns just the first role row.
 static func pattern_ids(patterns: Dictionary, role: String, context: Dictionary) -> Array:
@@ -176,7 +187,9 @@ static func pattern_ids(patterns: Dictionary, role: String, context: Dictionary)
 		return (rows[index] as Dictionary).get("sequence", []).duplicate()
 	var roles: Dictionary = patterns.get("roles", {})
 	var ids: Array = roles.get(role, [])
-	if not bool(context.get("trainer_owned", false)) and str(context.get("band", "")) == "band1_lower_meadows":
+	if str(context.get("chapter", "meadows")) == "meadows" \
+			and not bool(context.get("trainer_owned", false)) \
+			and str(context.get("band", "")) == "band1_lower_meadows":
 		return [ids[0]] if not ids.is_empty() else []
 	return ids.duplicate()
 
@@ -186,9 +199,7 @@ static func pattern_ids(patterns: Dictionary, role: String, context: Dictionary)
 ## on interruption), never on frame, hit or RNG. No damage/stat scaling here.
 static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dictionary,
 		cursor: int) -> Dictionary:
-	var role := str(context.get("role", ""))
-	if role.is_empty():
-		role = species_role(str(context.get("species_id", "")), patterns)
+	var role := context_role(patterns, context)
 	var ids := pattern_ids(patterns, role, context)
 	if ids.is_empty():
 		return {}
@@ -291,3 +302,32 @@ static func pattern_contains(profile: Dictionary, origin: Vector3, heading: Vect
 			var angle := rad_to_deg(acos(clampf(offset.normalized().dot(forward), -1.0, 1.0)))
 			return angle <= float(profile.get("cone_degrees", 0.0)) * 0.5 + allowance
 	return false
+
+
+static func chapter_windows(patterns: Dictionary, context: Dictionary, profile: Dictionary) -> Dictionary:
+	var key := str(context.get("chapter", "meadows"))
+	if key == "meadows" and bool(context.get("after_south_bridge", false)):
+		key = "meadows_late"
+	var floor_row: Dictionary = (patterns.get("chapter_floors", {}) as Dictionary).get(key, {})
+	var out := profile.duplicate(true)
+	var tell := float(floor_row.get("telegraph", 0.8))
+	if bool(out.get("heavy", false)):
+		tell = maxf(tell, float(patterns.get("heavy_tell_floor_s", 1.1)))
+	out["telegraph"] = maxf(tell, float(out.get("telegraph", tell)))
+	out["recovery"] = maxf(float(floor_row.get("recovery", 0.6)), float(out.get("recovery", 0.6)))
+	return out
+
+
+## The named guardian's visible armored frontal sector rewards a flank.
+## Applied to one accepted creature strike, never human/environment damage.
+static func armored_front_scale(profile: Dictionary, enemy_position: Vector3,
+		enemy_heading: Vector3, attacker_position: Vector3) -> float:
+	if not profile.has("armored_front_degrees"):
+		return 1.0
+	var offset := Vector3(attacker_position.x - enemy_position.x, 0.0, attacker_position.z - enemy_position.z)
+	var forward := Vector3(enemy_heading.x, 0.0, enemy_heading.z).normalized()
+	if offset.length_squared() < 0.000001:
+		return 1.0
+	var angle := rad_to_deg(acos(clampf(offset.normalized().dot(forward), -1.0, 1.0)))
+	return clampf(float(profile.get("front_damage_scale", 1.0)), 0.0, 1.0) \
+		if angle <= float(profile.armored_front_degrees) * 0.5 else 1.0

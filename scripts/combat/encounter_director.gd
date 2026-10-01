@@ -4,6 +4,9 @@ extends Node
 ## strike handler. Copies keep diagnostic subscribers away from live intents.
 signal host_strike_started(intent: Dictionary, peer_id: int)
 signal host_strike_finished(intent: Dictionary, peer_id: int, verdict: Dictionary)
+## Trusted synchronous creature-hit observation, after actual opponent HP debit.
+## Only current admitted actor lifetimes emit it; packets cannot award meter.
+signal host_creature_hit_accepted(hit: Dictionary)
 
 ## Everything around a fight that is not the fight: spawning the wild creature,
 ## offering the engage prompt, suspending exploration, and putting the world
@@ -1144,6 +1147,9 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	_wild_creatures.append(wild)
 	if once_id != "":
 		_once_only[wild] = once_id
+	var named_id := str(opts.get("encounter_id", ""))
+	if not named_id.is_empty():
+		wild.set_meta(&"named_encounter_id", named_id)
 		var completion_reward: Variant = opts.get("completion_reward", {})
 		if completion_reward is Dictionary:
 			_configure_once_completion_reward(wild, {"completion_reward": completion_reward})
@@ -1871,6 +1877,12 @@ func _send_realm_rpc(peer: int, method: String, arguments: Array, completing: bo
 ## A committed catch and its owning-party result finish while this receiver
 ## still exists. This never waits for another participant's fight.
 func realm_transition_results_settled() -> bool:
+	for id: String in _shared_host_fights:
+		var runtime := _shared_host_fight(id)
+		if runtime != null and (runtime.has_meta(&"wild_victory_source") \
+				or runtime.has_meta(&"wild_victory_capture_failure")) \
+				and not bool(runtime.get_meta(&"wild_victory_resolved", false)):
+			return false
 	var alpha := get_parent().get_node_or_null("WaterAlpha") if get_parent() != null else null
 	if alpha != null and alpha != self and not bool(alpha.call("realm_transition_alpha_results_settled")):
 		return false
@@ -2249,6 +2261,13 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 ## §6. `engage` with an `encounter_id` joins a live fight; without one it mints
 ## a record for the fight the host is already standing in.
 func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
+	var canonical_id := str(intent.get("encounter_id", ""))
+	if peer_id != _local_peer_id() and _owns_canonical_wild(canonical_id):
+		# The initial importer is local-owner only. Admitting a contributor then
+		# refusing their full-state reward would lose an earned victory.
+		return {"ok": false, "kind": "engage", "peer": peer_id, "pending": false,
+			"code": "canonical_training_solo_scope", "delta": {},
+			"reason": "This encounter is waiting for shared training reconciliation."}
 	var encounter_id := str(intent.get("encounter_id", ""))
 	if encounter_id.is_empty():
 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "malformed",
@@ -2434,8 +2453,11 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_host_after_encounter_change(encounter_id, peer_id)
 		return verdict
 
+	var enemy_profile: Dictionary = wild.call("combat_config")
+	var armor := COMBAT_AI.armored_front_scale(enemy_profile, wild.call("centre"),
+		wild.call("facing"), striker.call("centre"))
 	var rolled: Dictionary = damage_engine.call("host_roll_damage", card,
-		str(intent.get("move_id", "")), float(move.get("power", 9.0)), slot == "charged")
+		str(intent.get("move_id", "")), float(move.get("power", 9.0)) * armor, slot == "charged")
 	if rolled.is_empty():
 		return verdict
 	delta.merge(rolled, true)
@@ -2445,6 +2467,8 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		# Actual accepted damage and committed opponent HP, BEFORE any terminal
 		# publication can withdraw participants, retire actors or clear bodies.
 		_capture_wild_victory_source(encounter_id, verdict)
+	_emit_f22_accepted_hit(encounter_id, peer_id, striker, delta, move, slot)
+	if bool(rolled.get("killed", false)):
 		_encounter_host.call("set_phase", encounter_id,
 			"done" if runtime != null else "resolving")
 	_host_after_encounter_change(encounter_id, peer_id)
@@ -2717,7 +2741,9 @@ func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vect
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
 	if wild == null or not is_instance_valid(wild) or not wild.has_method("pattern_geometry"):
 		return false
-	var geometry: Dictionary = wild.call("pattern_geometry")
+	var geometry: Dictionary = profile.get("_pattern_geometry", {})
+	if geometry.is_empty():
+		geometry = wild.call("pattern_geometry")
 	if not geometry.get("profile") is Dictionary \
 			or geometry.profile.get("pattern_attack_id") != profile.get("pattern_attack_id"):
 		return false
@@ -3082,7 +3108,7 @@ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> 
 		return
 	# Existing runtime owns the original earned event. A full bag, prepared
 	# save refusal or unsettled actor cannot destroy it or rebuild it at respawn.
-	if runtime.has_meta(&"wild_victory_source") \
+	if (runtime.has_meta(&"wild_victory_source") or runtime.has_meta(&"wild_victory_capture_failure")) \
 			and not bool(runtime.get_meta(&"wild_victory_resolved", false)):
 		runtime.set_meta(&"dispose_after_wild_victory", true)
 		return
@@ -4443,6 +4469,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 		return
 	var shared_host_wild := not opponent_owned and ((_is_multi_peer() and _is_host()) \
 		or bool(canonical.get("ready", false)))
+	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
 		opponent_owned, shared_host_wild
@@ -6726,6 +6753,29 @@ func _set_exploration_active(active: bool) -> void:
 
 
 # F22: authored pattern context and canonical wild lifecycle.
+func _emit_f22_accepted_hit(encounter_id: String, peer_id: int, striker: Node3D,
+		delta: Dictionary, move: Dictionary, slot: String) -> void:
+	if delta.get("hit") != true or float(delta.get("damage", 0.0)) <= 0.0:
+		return
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	var participant: Dictionary = (record.get("participants", {}) as Dictionary).get(peer_id, {})
+	var uid := str(participant.get("actor_bound_uid", ""))
+	var character := str(participant.get("character_id", ""))
+	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(uid, {})
+	if uid.is_empty() or uid != str(participant.get("creature_uid", "")) \
+			or actor.is_empty() or int(actor.get("body_instance_id", 0)) != striker.get_instance_id() \
+			or not bool(_encounter_host.call("actor_encounter_is_current", encounter_id, peer_id, character)):
+		return
+	var hit := {"accepted": true, "hit": true, "source_kind": "creature",
+		"encounter_id": encounter_id, "peer_id": peer_id, "character_id": character,
+		"creature_uid": uid, "body_generation": int(actor.body_generation),
+		"action": int(delta.get("accepted_action", 0)),
+		"at_ms": int(delta.get("accepted_at_ms", Time.get_ticks_msec())),
+		"move_id": str(move.get("move_id", "")), "slot": slot,
+		"damage": float(delta.damage), "opponent_hp": float(delta.get("hp", 0.0))}
+	host_creature_hit_accepted.emit(hit.duplicate(true))
+
+
 func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 	var patterns: Dictionary = MATH.config().get("patterns", {})
 	if patterns.get("runtime_enabled") != true or not wild.has_method("configure_patterns"):
@@ -6739,6 +6789,9 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 	var explicit: Variant = wild.get_meta(&"named_encounter_id", "")
 	if explicit is String and not explicit.is_empty():
 		encounter_id = explicit
+	var water_named: Variant = wild.get_meta(&"water_named_encounter", "")
+	if water_named is String and not water_named.is_empty():
+		encounter_id = water_named
 	var pattern_id := ""
 	for id: String in patterns.get("named", {}):
 		if str(patterns.named[id].get("encounter_id", "")) == encounter_id:
@@ -6748,11 +6801,12 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 	var band := ""
 	var after_bridge := chapter != "meadows"
 	var creature_z := float(wild.get("home").z)
-	for region: Dictionary in CHAPTER_CURVE.regions(CHAPTER_CURVE.config()):
-		if creature_z < float(region.get("z_to", -INF)):
-			band = str(region.get("id", ""))
-			after_bridge = not band in ["band1_lower_meadows", "band2_stone_and_root"]
-			break
+	if chapter == "meadows":
+		for region: Dictionary in CHAPTER_CURVE.regions(CHAPTER_CURVE.config()):
+			if creature_z < float(region.get("z_to", -INF)):
+				band = str(region.get("id", ""))
+				after_bridge = not band in ["band1_lower_meadows", "band2_stone_and_root"]
+				break
 	var role := COMBAT_AI.species_role(str(creature.get("species_id")), patterns)
 	var context := {"species_id": str(creature.get("species_id")), "role": role,
 		"trainer_owned": opponent_owned, "chapter": chapter, "band": band,
@@ -6800,14 +6854,20 @@ func _canonical_wild_start_state(wild: Node3D) -> Dictionary:
 	var disabled := {"enabled": false, "ready": false}
 	if (MATH.config().get("actor_vitals", {}) as Dictionary).get("runtime_enabled") != true:
 		return disabled
+	var essence: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/essence.json")) \
+		if FileAccess.file_exists("res://data/config/essence.json") else null
+	if not essence is Dictionary or essence.get("wild_victory_runtime_enabled") != true:
+		return disabled
+	var refused := {"enabled": true, "ready": false}
+	if not ResourceLoader.exists(WILD_VICTORY_ADAPTER_PATH):
+		return refused
 	var game := get_node_or_null(^"/root/Game")
 	if _session == null or game == null or game.get("session") != _session \
 			or not _session.has_method("_host_wild_training_context"):
-		return disabled
+		return refused
 	var context: Variant = _session.call("_host_wild_training_context")
 	if not context is Dictionary or context.get("ready") != true:
-		return disabled
-	var refused := {"enabled": true, "ready": false}
+		return refused
 	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body) \
 			or not is_instance_valid(wild) or not _session.has_method("admitted_character_state") \
 			or not _session.has_method("_authority_character"):
@@ -6865,6 +6925,11 @@ func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) ->
 	var capture: Variant = adapter.call("capture_accepted_defeat", self, encounter_id, accepted.duplicate(true))
 	if not capture is Dictionary or capture.get("ok") != true:
 		runtime.set_meta(&"wild_victory_capture_refusal", capture)
+		# Preserve the exact original failure evidence and body lifetime. This
+		# is never a substitute reward source or a post-terminal reconstruction.
+		runtime.set_meta(&"wild_victory_capture_failure", {
+			"accepted": accepted.duplicate(true),
+			"record": (_encounter_host.call("record", encounter_id) as Dictionary).duplicate(true)})
 		return
 	runtime.set_meta(&"wild_victory_source", capture.duplicate(true))
 	runtime.set_meta(&"wild_victory_resolved", false)

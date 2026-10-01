@@ -7,13 +7,22 @@ const TYPE_GRAPH := preload("res://scripts/combat/type_chart.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 var context: Dictionary = {}
 var _prepared_body := 0
-var _switch_policy := false
+var _combo_hooked_manager := 0
+var _tell_seen_frame := -1
 var _moves: RefCounted = MOVE_DB.new()
 
 
 func _act(policy: String) -> void:
+	if policy == "SWITCH_READER" and _combo_hooked_manager != _manager.get_instance_id():
+		_combo_hooked_manager = _manager.get_instance_id()
+		if not _manager.has_signal("tag_combo_resolved"):
+			_tally["fixture_error"] = "actual accepted F24 combo observation is absent"
+			_manager.call("_begin_resolve", "fled")
+			return
+		_manager.connect("tag_combo_resolved", _on_tag_combo_resolved)
 	if is_instance_valid(_wild) and _prepared_body != _wild.get_instance_id():
 		_prepared_body = _wild.get_instance_id()
+		_tell_seen_frame = -1
 		var patterns: Dictionary = MATH.config().get("patterns", {})
 		if patterns.get("runtime_enabled") != true or not _wild.has_method("configure_patterns"):
 			_tally["fixture_error"] = "actual F22 pattern consumer is disabled or absent"
@@ -29,6 +38,19 @@ func _act(policy: String) -> void:
 		current["sendout_index"] = int(_tally.get("f22_sendouts", 0))
 		_tally["f22_sendouts"] = int(current.sendout_index) + 1
 		_wild.call("configure_patterns", patterns, current, _visible_observation)
+	var telling := bool(_manager.enemy_is_winding_up())
+	if not telling:
+		_tell_seen_frame = -1
+	elif _tell_seen_frame < 0:
+		_tell_seen_frame = _frames
+	if policy != "MASHER" and telling \
+			and float(_frames - _tell_seen_frame) / Engine.physics_ticks_per_second < 0.25:
+		# Continue ordinary approach while noticing a new tell; do not inspect
+		# its geometry or select a reaction before the declared reader delay.
+		var approach := _wild.global_position - _ally.global_position
+		approach.y = 0.0
+		if not _manager.player_is_committed(): _walk(approach.normalized())
+		return
 	if policy == "SWITCH_READER" and _manager.can_switch():
 		_switch_for_matchup()
 	if policy != "MASHER" and _manager.enemy_is_winding_up() \
@@ -98,3 +120,19 @@ func _switch_for_matchup() -> void:
 		return
 	if bool(_manager.call("request_tag_switch", best)):
 		_tally["switches"] = int(_tally.get("switches", 0)) + 1
+
+
+func _on_tag_combo_resolved(result: Dictionary) -> void:
+	var strikes: Array = result.get("strikes", [])
+	if strikes.size() != 2 or str(result.get("switched_to_uid", "")).is_empty(): return
+	var parts := {}
+	for row: Dictionary in strikes:
+		if str(row.get("attacker_uid", "")).is_empty() or int(row.get("generation", 0)) < 1 \
+				or str(row.get("action_id", "")).is_empty() or row.get("landed") != true \
+				or float(row.get("actual_hp_debit", 0.0)) <= 0.0: return
+		parts[str(row.get("part", ""))] = row
+	if not parts.has("incoming") or not parts.has("outgoing") \
+			or parts.incoming.attacker_uid != result.switched_to_uid \
+			or parts.outgoing.attacker_uid == parts.incoming.attacker_uid: return
+	_tally["tag_combos"] = int(_tally.get("tag_combos", 0)) + 1
+	(_tally.events as Array).append({"event": "accepted_tag_combo", "result": result.duplicate(true)})

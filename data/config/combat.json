@@ -973,6 +973,102 @@
         ],
         "mechanic": {}
       },
+      "named_relay_officer_dell": {
+        "encounter_id": "relay_officer_dell",
+        "pattern_id": "named_relay_officer_dell",
+        "chapter": "meadows",
+        "kernel": "Two anchored checks then an aerial landing answer",
+        "sendouts": [
+          {
+            "sequence": [
+              "wall_check",
+              "wall_slam"
+            ]
+          },
+          {
+            "sequence": [
+              "wall_check",
+              "wall_quake"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_tether_lieutenant_senn": {
+        "encounter_id": "tether_lieutenant_senn",
+        "pattern_id": "named_tether_lieutenant_senn",
+        "chapter": "cloudreach",
+        "kernel": "Disruptor landing followed by a pursuer double lane",
+        "sendouts": [
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_rush",
+              "charger_double_rush"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_keeper_maela_trial": {
+        "encounter_id": "keeper_maela_trial",
+        "pattern_id": "named_keeper_maela_trial",
+        "chapter": "cloudreach",
+        "kernel": "Crosswind sector, marked field, then aerial recovery lesson",
+        "sendouts": [
+          {
+            "sequence": [
+              "veyra_crosswind",
+              "current_zone"
+            ]
+          },
+          {
+            "sequence": [
+              "diver_leap",
+              "diver_retreat"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
+      "named_officer_voss_summit_approach": {
+        "encounter_id": "officer_voss_summit_approach",
+        "pattern_id": "named_officer_voss_summit_approach",
+        "chapter": "cloudreach",
+        "kernel": "Narrow edge denial, heavy pursuit, then ranged switching exam",
+        "sendouts": [
+          {
+            "sequence": [
+              "halder_range",
+              "charger_check"
+            ]
+          },
+          {
+            "sequence": [
+              "charger_double_rush",
+              "charger_check"
+            ]
+          },
+          {
+            "sequence": [
+              "current_zone",
+              "current_volley"
+            ]
+          }
+        ],
+        "mechanic": {}
+      },
       "named_relay_captain": {
         "encounter_id": "relay_captain",
         "pattern_id": "named_relay_captain",
@@ -1200,10 +1296,11 @@
           },
           {
             "sequence": [
-              "wall_check",
               "guardian_earth_fist",
+              "charger_rush",
               "ace_exam"
-            ]
+            ],
+            "role": "ACE"
           }
         ],
         "mechanic": {}
@@ -1302,8 +1399,10 @@
           {
             "sequence": [
               "charger_check",
+              "current_zone",
               "nerissa_lane"
-            ]
+            ],
+            "role": "ACE"
           }
         ],
         "mechanic": {
@@ -1338,8 +1437,10 @@
           {
             "sequence": [
               "diver_leap",
-              "ace_lane"
-            ]
+              "current_zone",
+              "veyra_crosswind"
+            ],
+            "role": "ACE"
           }
         ],
         "mechanic": {
@@ -1383,9 +1484,11 @@
           },
           {
             "sequence": [
-              "marrow_bank_answer",
-              "ace_lane"
-            ]
+              "wall_quake",
+              "charger_rush",
+              "marrow_bank_answer"
+            ],
+            "role": "ACE"
           }
         ],
         "mechanic": {
@@ -1509,9 +1612,9 @@
           },
           {
             "sequence": [
-              "wall_check",
               "wall_slam",
-              "wall_quake"
+              "wall_quake",
+              "wall_check"
             ]
           }
         ],
@@ -1528,9 +1631,9 @@
         "sendouts": [
           {
             "sequence": [
-              "charger_check",
               "charger_rush",
-              "charger_double_rush"
+              "charger_double_rush",
+              "charger_check"
             ]
           },
           {
@@ -1651,12 +1754,19 @@
         "third_recovery_add_s": 0.15
       }
     },
-    "tag_switch": {
-      "window_s": 1.25,
-      "followup_power_scale": 0.65,
-      "followup_tell_s": 0.25,
-      "source": "creature",
-      "max_followups_per_hit": 1
+    "presentation": {
+      "ground_lift_m": 0.09,
+      "segments": 48,
+      "fill_alpha": 0.18,
+      "edge_width_m": 0.12
+    },
+    "casts": {
+      "fan_travel_s": 0.3,
+      "leap_travel_s": 0.45,
+      "leap_height_m": 0.75
+    },
+    "settlement": {
+      "retry_s": 1
     },
     "proof": {
       "seeds_per_band": 12,
@@ -1671,9 +1781,6 @@
         "CURRENT",
         "ACE"
       ]
-    },
-    "settlement": {
-      "retry_s": 1
     }
   }
 }
