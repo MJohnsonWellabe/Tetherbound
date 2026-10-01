@@ -92,7 +92,13 @@
         "type": "active",
         "activeFlags": []
       },
-      "archived": false
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "220668bd4f8e327249f6e5e0f24b71d3cc06916b",
+      "source_contained_at": "ed6ade90fbf9c7b3ab1bcc8cd3688dedfdf94e56",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; no unconditional dock conclusion or missing arrival treated as complete"
     },
     {
       "thread_id": "01a0f8ec-f553-77d1-8975-10f7fe056137",
@@ -111,7 +117,8 @@
   "root_source_review": {
     "F45": "Optional additive personal carrier; bounty/rematch staging retained; producer/durability dependencies pending",
     "F46": "Personal scope/modal ownership/authentic arrival gate retained; F45 journal reader combined via three-way merge",
-    "F47": "Analysis only; ROOT corrected legacy/candidate curve mix in0fa57dec9a;15 focused Node checks pass; independent review pending",
-    "F48": "Witnesses never repair/save observed state; real OS.kill guest restart; actual file/participant/namespace receipts; missing exact loss windows fail"
+    "F47": "ROOT overlay repair0fa57dec9a independently sourcePASS byF49 atd07ae5c396;15 focused Node checks PASS, original live levels/gates unchanged; no runtime solvency credit",
+    "F48": "Witnesses never repair/save observed state; real OS.kill guest restart; actual file/participant/namespace receipts; missing exact loss windows fail",
+    "F49": "New-order driver preserves earned helpers and immutable save copies, package evidence verifier is read-only, missing producer/ordinary dock continuation fails explicitly. Runtime/owner/hardware/publication pending"
   }
 }
