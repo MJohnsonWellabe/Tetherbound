@@ -28,14 +28,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | PR496 core main; wire8 gear/inactive power admission 4/49 native0; callers/solo/equipCAS/relic/ownerACK OPEN. |
-| `tb/hub` | F17, F18 | #0-#3 main; ROOT8316 shape correction in source review. Actual M1 and F18 OPEN. |
-| `tb/reorder` | F19, F20 | Homecoming567798 source preserved; F18/F19 dependencies held, F20 open. |
-| `tb/combat` | F21–F24 | Live6155 FAIL54/119 overlaps archivedf384; production lag/body-limit fix active; F23 held. |
-| `tb/vfx` | F25, F35 | 8fae preserved/held; R17 stone PASS, R14 craft FAIL; library OFF. |
-| `tb/lookdev` | F26 | #0/#1/#2/#4 main. ade7b cliff OFF/held; full bar open; Ally owner-gated. |
-| `tb/training` | F27–F30, F37 | #0 main; Altar0e89 preserved/held; durable player path open. |
-| `tb/homestead` | F31–F34 | 499e8 preserved/held; Forge +Den080c source PASS, mounted durable path open. |
+| `tb/foundations` | F16 | PR500 main; actor/Heal3/73 PASS, runtime OFF. Altar net/save producer coding; callers OPEN. |
+| `tb/hub` | F17, F18 | #0-#3 main; M1r3 FAIL. Contact readiness confirmation queued; Hall R2 strict review. F18 OPEN. |
+| `tb/reorder` | F19, F20 | 567798 preserved; F18/F19 held, F20 open. |
+| `tb/combat` | F21–F24 | R3 five-pass/four-fail; bf9 adaptive retry RUNNING. Actual incoming caller coding; Heal/remote OFF. |
+| `tb/vfx` | F25, F35 | 8fae held; stone PASS/full craft FAIL; OFF. |
+| `tb/lookdev` | F26 | #0/#1/#2/#4 main; cliff OFF; full bar/Ally open. |
+| `tb/training` | F27–F30, F37 | #0 main; Altar4839 consumer review + host producer coding; XP reduction held. |
+| `tb/homestead` | F31–F34 | 499e8 held; Forge/Den source PASS; mounted/buildable Altar path open. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
