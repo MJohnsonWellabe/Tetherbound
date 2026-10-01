@@ -259,15 +259,22 @@ func _behind(steps: Array) -> void:
 	steps.append_array(_route("behind_enter_tidewake", 1))
 	honest.since = "admitted"
 	honest.equals = {"realm": "water"}
-	honest.unchanged = ["redesign_character/portal_unlocks", "redesign_character/relics_held", "redesign_character/transaction_receipts"]
+	honest.unchanged = ["redesign_character/portal_unlocks", "redesign_character/relics_held"]
 	honest.item_delta = {"tidewake_portal_key": 0}
 	honest.guest_world_empty = true
 	honest.portal_enter = true
+	honest.behind_arrival = true
 	steps.append(_entry(1, "wait", {"frames": 180}))
 	steps.append(_entry(1, "f48_assert", honest))
+	steps.append(_entry(1, "f48_witness", {"remember": "behind_arrived"}))
 	steps.append(_entry(1, "leave"))
 	steps.append(_entry(1, "production_join", {"returning_route": true}))
-	steps.append(_entry(1, "f48_assert", honest))
+	var rejoined := honest.duplicate(true)
+	rejoined.since = "behind_arrived"
+	rejoined.erase("behind_arrival")
+	rejoined.erase("portal_enter")
+	rejoined.unchanged = ["redesign_character/portal_unlocks", "redesign_character/relics_held", "redesign_character/transaction_receipts"]
+	steps.append(_entry(1, "f48_assert", rejoined))
 
 func _transactions(steps: Array) -> void:
 	var transaction := _argument("transaction", "")

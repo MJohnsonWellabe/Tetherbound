@@ -1,0 +1,17 @@
+{
+  "base": "0067c100e0919772b0edb5dff6f3403548403876",
+  "source_sha256": {
+    "tests/helpers/f48_net_proof.gd": "2328c0047c7a477c42d9b219775e396da9e801a42078c5678eb8e24a509225b3",
+    "tools/net/proof_steps_f48.gd": "2bbf20815270a8e68f00a2f2db49d0538a73bf9846a15b32ccb245cd6fb6e493"
+  },
+  "boss_oracle": "Fixed exactly1 Tidewake key + Meadows relic + personal defeat receipt, original live encounter retained event with exactly1 duty per actual distinct stable participant, host memory/disk accepted per-character training after-state preserves receipt; rejects unused legacy chapter-delivery rows",
+  "behind_oracle": "Absence of key/relic/unlock preserved; exactly1 actual saved arrival receipt bound to correlated successful permit_id; rejoin unchanged against actual after-arrival witness",
+  "production_dependency": "Foundation must expose actual permit_id in saved successful portal reply; envelope.request_id is a different identity and cannot substitute",
+  "checks": {
+    "standalone_gdtoolkit_grammar": "PASS for both changed GDScript files",
+    "git_diff_check": "PASS"
+  },
+  "native_runtime": "UNRUN: ROOT owns serialized Godot verification",
+  "profiles": "OPEN: retained2 v28 starter/boss mechanics characters inspected; no legitimate craft/feast/4-peer full-loop profile produced",
+  "acceptance": "OPEN: no F48 criterion closed"
+}

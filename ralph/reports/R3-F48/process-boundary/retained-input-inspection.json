@@ -1,0 +1,185 @@
+{
+  "origin": "ROOT native shared-boss9696 smoke; original starter/earned boss mechanics, not campaign/F48 full-loop acceptance",
+  "inputs": [
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-219d55c08e26227b4ccba505c7b3c409\\character.json",
+      "sha256": "fd4973fee083df26a95244be1ec4bd9339bf677196646f59f694148e15c474d9",
+      "version": 28,
+      "character_id": "character-219d55c08e26227b4ccba505c7b3c409",
+      "realm": "meadows",
+      "party": [
+        {
+          "uid": "creature-816f9f6954d724bc4eddc0bc0fb79946",
+          "species_id": "terrapup",
+          "level": 9
+        }
+      ],
+      "inventory": [
+        {
+          "id": "coin",
+          "n": 150
+        },
+        {
+          "id": "revive",
+          "n": 2
+        },
+        {
+          "id": "potion_small",
+          "n": 4
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "redesign_character": {
+        "attachment_recipes": [],
+        "bounty_receipts": [],
+        "creatures": {
+          "creature-816f9f6954d724bc4eddc0bc0fb79946": {
+            "best": false,
+            "breakthroughs": [],
+            "cap_level": 10,
+            "evolution_choices": {},
+            "known_moves": [
+              "pebble_toss",
+              "stone_rush",
+              "ultimate_terrapup",
+              "shove"
+            ],
+            "loadout": {
+              "charged": "stone_rush",
+              "quick": "pebble_toss",
+              "ultimate": "ultimate_terrapup",
+              "utility": ""
+            },
+            "loadout_last_edit": {},
+            "loadout_revision": 0,
+            "mastery": {},
+            "mastery_receipts": {},
+            "rolled_traits": [],
+            "taught_traits": {}
+          }
+        },
+        "feast_recipes": [],
+        "last_waystones": {},
+        "master_wins": [],
+        "portal_unlocks": [],
+        "pouch_tier": 0.0,
+        "release_receipts": [],
+        "relics_held": [],
+        "relics_hung": [],
+        "research_receipts": [],
+        "transaction_receipts": [],
+        "waystones_activated": {}
+      }
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-92a3946dcc1ebef20650b2c4f6675001\\character.json",
+      "sha256": "26f893c26cf4394dcfc4856f72d71c5395ead32cde54b5418607b950578f1e9b",
+      "version": 28,
+      "character_id": "character-92a3946dcc1ebef20650b2c4f6675001",
+      "realm": "meadows",
+      "party": [
+        {
+          "uid": "creature-15403b0082eb053f088ae6d59f10e0a4",
+          "species_id": "terrapup",
+          "level": 9
+        }
+      ],
+      "inventory": [
+        {
+          "id": "coin",
+          "n": 150
+        },
+        {
+          "id": "revive",
+          "n": 2
+        },
+        {
+          "id": "potion_small",
+          "n": 4
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "redesign_character": {
+        "attachment_recipes": [],
+        "bounty_receipts": [],
+        "creatures": {
+          "creature-15403b0082eb053f088ae6d59f10e0a4": {
+            "best": false,
+            "breakthroughs": [],
+            "cap_level": 10,
+            "evolution_choices": {},
+            "known_moves": [
+              "pebble_toss",
+              "stone_rush",
+              "ultimate_terrapup",
+              "shove"
+            ],
+            "loadout": {
+              "charged": "stone_rush",
+              "quick": "pebble_toss",
+              "ultimate": "ultimate_terrapup",
+              "utility": ""
+            },
+            "loadout_last_edit": {},
+            "loadout_revision": 0,
+            "mastery": {},
+            "mastery_receipts": {},
+            "rolled_traits": [],
+            "taught_traits": {}
+          }
+        },
+        "feast_recipes": [],
+        "last_waystones": {},
+        "master_wins": [],
+        "portal_unlocks": [],
+        "pouch_tier": 0.0,
+        "release_receipts": [],
+        "relics_held": [],
+        "relics_hung": [],
+        "research_receipts": [],
+        "transaction_receipts": [],
+        "waystones_activated": {}
+      }
+    }
+  ]
+}
