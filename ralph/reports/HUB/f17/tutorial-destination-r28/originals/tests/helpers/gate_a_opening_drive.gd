@@ -318,7 +318,7 @@ func run(tree: SceneTree) -> Dictionary:
 	if stop_after_doorway:
 		return _result()
 
-	_wild = _tutorial_wild_at_road_end()
+	_wild = _encounter.call("wild_creature") as Node3D
 	if _wild == null:
 		_fail("opening has no naturally spawned tutorial Bramblebun")
 		return _result()
@@ -1191,66 +1191,6 @@ static func wild_approach_road(from: Vector3, house: Vector3, door: Vector3, rou
 				return {"valid": false, "points": []}
 			points.append(Vector3(float(point[0]), from.y, float(point[1])))
 	return {"valid": matches == 1, "points": points}
-
-
-## Select for the destination we actually walk to. wild_creature() answers
-## nearest to the farmhouse, where an ambient herd can be closer than the
-## authored Practice Meadow. Selection earns no travel or engagement.
-func _tutorial_wild_at_road_end() -> Node3D:
-	var house := _world.get_node_or_null(^"GrandpaHouse") as Node3D
-	if house == null:
-		return null
-	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
-	if not raw is Dictionary or not raw.get("paths") is Dictionary:
-		return null
-	var plan := wild_approach_road(_player.global_position, house.global_position,
-		house.call("marker", "door"), raw.paths.get("routes"))
-	if not bool(plan.valid) or plan.points.is_empty():
-		return null
-	var anchor: Vector3 = plan.points[-1]
-	var opening: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/opening.json"))
-	if not opening is Dictionary or not opening.get("encounter") is Dictionary:
-		return null
-	var species := str(opening.encounter.get("species", ""))
-	var bodies: Array[Node3D] = []
-	var candidates: Array = []
-	for body: Node3D in _encounter.call("wild_creatures"):
-		if not is_instance_valid(body) or not body.has_method("is_alive"):
-			continue
-		bodies.append(body)
-		candidates.append({"species": str(body.get("species_id")),
-			"position": body.global_position, "visible": body.visible,
-			"alive": bool(body.call("is_alive"))})
-	var selected := practice_wild_index(candidates, species, anchor)
-	if selected < 0:
-		return null
-	var target := bodies[selected]
-	print("WILD_APPROACH_SELECTION ", JSON.stringify({"acceptance": false,
-		"name": str(target.name), "species": species,
-		"anchor": [anchor.x, anchor.y, anchor.z],
-		"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
-		"target": [target.global_position.x, target.global_position.y, target.global_position.z]}))
-	return target
-
-
-static func practice_wild_index(candidates: Array, species: String, anchor: Vector3) -> int:
-	if species.is_empty() or not anchor.is_finite():
-		return -1
-	var best := -1
-	var distance := INF
-	for i in candidates.size():
-		var candidate: Variant = candidates[i]
-		if not candidate is Dictionary or candidate.get("species") != species \
-				or not bool(candidate.get("visible", false)) or not bool(candidate.get("alive", false)):
-			continue
-		var position: Variant = candidate.get("position")
-		if not position is Vector3 or not position.is_finite():
-			continue
-		var next_distance: float = anchor.distance_squared_to(position)
-		if next_distance < distance:
-			best = i
-			distance = next_distance
-	return best
 
 
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:

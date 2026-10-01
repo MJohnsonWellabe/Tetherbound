@@ -1,0 +1,26 @@
+{
+  "final_native_observation": {
+    "acceptance": false,
+    "budget": 2600,
+    "on_floor": true,
+    "physics_frames": 2600,
+    "player": [
+      7.52341222763062,
+      0.900832831859589,
+      11.6486501693726
+    ],
+    "road_index": 8,
+    "road_size": 8,
+    "target": [
+      -7.13181591033936,
+      -0.735385000705719,
+      64.3180465698242
+    ]
+  },
+  "final_distance_m": 54.694773404407265,
+  "direct_native_evidence": "Actual2600physics frames consumed, road8/8, grounded at(7.523412,.900833,11.648650), live visible target(-7.131816,-.735385,64.318047), closest51.43m/final54.69m; actionable recall label Put Bud away, not an Engage offer. No intermediate contact, input, target identity/home or start-pose observations are available; do not invent those.",
+  "source_mismatch": "Initial cached wild_creature() is nearest species to the trainer at the farmhouse. It is selected before the same helper plans the Practice Meadow road ending(30,-40). Other Bramblebun clusters exist. The target location is consistent with ambient cluster1006 centre(-2.4,62), whose species is rolled; its specific identity is NOT proved by the native log. Authored practice cluster0 is anchored at(30,-40), count3, scatter15, level2. A mismatched origin for selection and planned travel is proved in unchanged source; exact collision/timing failure is unproved.",
+  "repair": "Select once from the production director live bodies by actual3D distance to the final endpoint returned by the unchanged validated Practice Meadow road planner, filtering actual visible/alive configured tutorial species. Return the exact body handle; do not change or move bodies. The original walker re-reads that moving body, requires exact actual actionable engage offer twice, sends physical Interact, and requires combat enemy_body identity. No retargeting during travel, no terrain shortcut, no changed path/arrival/range/budget.",
+  "scope": "Initial selection only; all old driver function bodies except run byte-preserved; run changes one assignment. All original named opening-beat tests byte-prefix-preserved and three meaningful selection cases appended. Original2600travel/1800re-engage/90stall/45sidestep/0.8waypoint/full native guards/900Mira budget unchanged. R27 accepted source and reported affectedunit47/428 are not exercised by this earlier failure and remain intact.",
+  "limitations": "SOURCE-only selection tests do not establish actual travel, grounded contacts, prompt, engagement or full opening acceptance. ROOT must independently review and natively validate with its consolidated cut. No engine/parser/unit/CI/ROOT writes/push/new session/new agent here. F17#4 OPEN; R9 HOLD."
+}

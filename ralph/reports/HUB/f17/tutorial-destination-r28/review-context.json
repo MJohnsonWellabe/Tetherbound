@@ -1,0 +1,17 @@
+{
+  "candidate": "R28 tutorial destination selection",
+  "hub_parent": "713bc3c62277ad76af4191507bb50cdb41fcd918",
+  "root_native_baseline": "7f485cb05470ee353af006e7634f1f37f60ed225",
+  "logical_paths": [
+    "tests/helpers/gate_a_opening_drive.gd",
+    "tests/test_opening_beats.gd"
+  ],
+  "author_source_checks": 121,
+  "new_named_cases": 3,
+  "original_named_cases": 22,
+  "native_acceptance": false,
+  "R27": "unchanged; ROOT reported independent110 source and affected47tests/428assertions accepted; this failed run stops earlier",
+  "F17#4": "OPEN",
+  "R9": "HOLD",
+  "required_next": "ROOT independent source review and consolidated native corrected original default smoke; no broad closure from source checks"
+}

@@ -1,0 +1,120 @@
+{
+  "hub_parent": "713bc3c62277ad76af4191507bb50cdb41fcd918",
+  "root_native_baseline": "7f485cb05470ee353af006e7634f1f37f60ed225",
+  "logical_paths": [
+    "tests/helpers/gate_a_opening_drive.gd",
+    "tests/test_opening_beats.gd"
+  ],
+  "source_checks": 121,
+  "logical_changes": {
+    "tests/helpers/gate_a_opening_drive.gd": {
+      "original_sha256": "489c4e43a08170faa19d1ea90b62b90b781c43805d041078a54afe5498341058",
+      "proposal_sha256": "b29662593ef110c44c315598a52f7045dfada15c74eb52c0fc5c61e34329147f"
+    },
+    "tests/test_opening_beats.gd": {
+      "original_sha256": "f22d3de3823772a1ba0ec9bbf8b893b0e188b4a8ce09fa2ee883569131f1fa95",
+      "proposal_sha256": "cbd245b63aa3fd9fc593aade468ee4f79c508154f2f5406f8a4989b740be5da7"
+    }
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "actual-analysis.json": {
+      "bytes": 2687,
+      "sha256": "30fa42cd2c5342e58766e1e6ce22138304ca1ec5a02a741807a4aa4e07d8440b"
+    },
+    "native-failed/all-opening-markers.json": {
+      "bytes": 2263,
+      "sha256": "2daaea497d4596d7c7497c49cbd0b80c924d2921e72247460f834423a52ecf7d"
+    },
+    "native-failed/launcher.log": {
+      "bytes": 597,
+      "sha256": "e9aed806b7df65d08d556b229ec35c433400c9f1648ccda99c2518a7b534df5e"
+    },
+    "native-failed/provenance.json": {
+      "bytes": 377,
+      "sha256": "6fcca545d2e435c329f42da970ea3be51448ffafc14b665e03ef3c704ef9929e"
+    },
+    "native-failed/result.json": {
+      "bytes": 643,
+      "sha256": "8391ef67dd12ab9088dc917a56b90ecbec5bb0e646b5ba1173182601246fc0e7"
+    },
+    "native-failed/smoke.log.gz": {
+      "bytes": 51959,
+      "sha256": "7dc96f7ad97d8c0fe5c67bea28be0d8884b2c00bcdbfb373af316927d10c3e16"
+    },
+    "originals/tests/helpers/gate_a_opening_drive.gd": {
+      "bytes": 77317,
+      "sha256": "489c4e43a08170faa19d1ea90b62b90b781c43805d041078a54afe5498341058"
+    },
+    "originals/tests/test_opening_beats.gd": {
+      "bytes": 15827,
+      "sha256": "f22d3de3823772a1ba0ec9bbf8b893b0e188b4a8ce09fa2ee883569131f1fa95"
+    },
+    "prior-seals.json": {
+      "bytes": 1020,
+      "sha256": "addeb4da72814da00f7c00c6f2b4e08f3a2ffb80b6dbae9b26a4ee7cbf717432"
+    },
+    "proposal/tests/helpers/gate_a_opening_drive.gd": {
+      "bytes": 79955,
+      "sha256": "b29662593ef110c44c315598a52f7045dfada15c74eb52c0fc5c61e34329147f"
+    },
+    "proposal/tests/test_opening_beats.gd": {
+      "bytes": 18142,
+      "sha256": "cbd245b63aa3fd9fc593aade468ee4f79c508154f2f5406f8a4989b740be5da7"
+    },
+    "repair.patch": {
+      "bytes": 6462,
+      "sha256": "96f7d286657c0be3e80a15934516c93f28442a8b3c8d05806ce5623d68e4a28d"
+    },
+    "review-context.json": {
+      "bytes": 721,
+      "sha256": "11cae3977a335b831f0404fcc0affdac3d256ba87edec19d82388d04328c9aa2"
+    },
+    "root-source/data/config/bands/band1_lower_meadows/spawns.json": {
+      "bytes": 122123,
+      "sha256": "f2de5c5c82591a8fe71b0ae81e7db159ca499162ed40a5c72e02a40cfadd0ad7"
+    },
+    "root-source/data/config/opening.json": {
+      "bytes": 15968,
+      "sha256": "e37105581c5cc1ad0f4da1c467722e4376b855bc7a1ad6e33b911e3c92ce3593"
+    },
+    "root-source/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "root-source/scripts/combat/encounter_director.gd": {
+      "bytes": 356513,
+      "sha256": "d290b65c5b6983567a04a13742d9741967d39658b87cfe06002eac00adf13fab"
+    },
+    "root-source/scripts/creatures/wild_creature.gd": {
+      "bytes": 56837,
+      "sha256": "fd452d77146ded93abb31ad5f266e96aa95dea3d0c0bfc5b9b907edb753df915"
+    },
+    "root-source/scripts/story/sequence_director.gd": {
+      "bytes": 101033,
+      "sha256": "319052dbca7d95de6a8364bc863f0ec63b51832560829525d4148037681ead81"
+    },
+    "source-check.py": {
+      "bytes": 6786,
+      "sha256": "da1c1077b186bc890787d2b8db439dd83d1b94ce1a1e48073dc0bff96fac3898"
+    },
+    "source-results.json": {
+      "bytes": 6871,
+      "sha256": "38b7842cb582c55cbf6f9da59874b29ce27384a001d102e0eef626c98eff2a48"
+    },
+    "unchanged-paths.json": {
+      "bytes": 1280,
+      "sha256": "3437b924b4984f8cd3e8f362ae5aed5ad0c02382c331de51c0cf17dd74c7d23d"
+    }
+  },
+  "production_changes": 0,
+  "original_travel_frames": 2600,
+  "original_mira_frames": 900,
+  "guard_or_query_changes": 0,
+  "native_acceptance": false,
+  "F17#4": "OPEN",
+  "R9": "HOLD"
+}

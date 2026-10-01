@@ -1,0 +1,12 @@
+{
+  "root_head": "7f485cb05470ee353af006e7634f1f37f60ed225",
+  "script": "tests/smoke_gate_b_continuous.gd",
+  "bytes": 1319865,
+  "sha256": "3bf2ab6cdd668a0a0a26a44b38e5c7ad4928d265cca9a18782f5e188dd412475",
+  "native_exit": 1,
+  "elapsed_seconds": 418.39099999994505,
+  "timed_out": false,
+  "watchdog_seconds": 1200,
+  "strict_errors": 2,
+  "first_failure_retained": true
+}

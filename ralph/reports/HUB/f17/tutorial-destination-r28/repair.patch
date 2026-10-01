@@ -1,0 +1,125 @@
+diff --git a/tests/helpers/gate_a_opening_drive.gd b/tests/helpers/gate_a_opening_drive.gd
+index cb419ed585..49af4b8fe1 100644
+--- a/tests/helpers/gate_a_opening_drive.gd
++++ b/tests/helpers/gate_a_opening_drive.gd
+@@ -318,7 +318,7 @@ func run(tree: SceneTree) -> Dictionary:
+ 	if stop_after_doorway:
+ 		return _result()
+ 
+-	_wild = _encounter.call("wild_creature") as Node3D
++	_wild = _tutorial_wild_at_road_end()
+ 	if _wild == null:
+ 		_fail("opening has no naturally spawned tutorial Bramblebun")
+ 		return _result()
+@@ -1193,6 +1193,66 @@ static func wild_approach_road(from: Vector3, house: Vector3, door: Vector3, rou
+ 	return {"valid": matches == 1, "points": points}
+ 
+ 
++## Select for the destination we actually walk to. wild_creature() answers
++## nearest to the farmhouse, where an ambient herd can be closer than the
++## authored Practice Meadow. Selection earns no travel or engagement.
++func _tutorial_wild_at_road_end() -> Node3D:
++	var house := _world.get_node_or_null(^"GrandpaHouse") as Node3D
++	if house == null:
++		return null
++	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
++	if not raw is Dictionary or not raw.get("paths") is Dictionary:
++		return null
++	var plan := wild_approach_road(_player.global_position, house.global_position,
++		house.call("marker", "door"), raw.paths.get("routes"))
++	if not bool(plan.valid) or plan.points.is_empty():
++		return null
++	var anchor: Vector3 = plan.points[-1]
++	var opening: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/opening.json"))
++	if not opening is Dictionary or not opening.get("encounter") is Dictionary:
++		return null
++	var species := str(opening.encounter.get("species", ""))
++	var bodies: Array[Node3D] = []
++	var candidates: Array = []
++	for body: Node3D in _encounter.call("wild_creatures"):
++		if not is_instance_valid(body) or not body.has_method("is_alive"):
++			continue
++		bodies.append(body)
++		candidates.append({"species": str(body.get("species_id")),
++			"position": body.global_position, "visible": body.visible,
++			"alive": bool(body.call("is_alive"))})
++	var selected := practice_wild_index(candidates, species, anchor)
++	if selected < 0:
++		return null
++	var target := bodies[selected]
++	print("WILD_APPROACH_SELECTION ", JSON.stringify({"acceptance": false,
++		"name": str(target.name), "species": species,
++		"anchor": [anchor.x, anchor.y, anchor.z],
++		"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
++		"target": [target.global_position.x, target.global_position.y, target.global_position.z]}))
++	return target
++
++
++static func practice_wild_index(candidates: Array, species: String, anchor: Vector3) -> int:
++	if species.is_empty() or not anchor.is_finite():
++		return -1
++	var best := -1
++	var distance := INF
++	for i in candidates.size():
++		var candidate: Variant = candidates[i]
++		if not candidate is Dictionary or candidate.get("species") != species \
++				or not bool(candidate.get("visible", false)) or not bool(candidate.get("alive", false)):
++			continue
++		var position: Variant = candidate.get("position")
++		if not position is Vector3 or not position.is_finite():
++			continue
++		var next_distance: float = anchor.distance_squared_to(position)
++		if next_distance < distance:
++			best = i
++			distance = next_distance
++	return best
++
++
+ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+ 	var started_frame := Engine.get_physics_frames()
+ 	var road: Array[Vector3] = []
+diff --git a/tests/test_opening_beats.gd b/tests/test_opening_beats.gd
+index 70816339e7..aaeb8579aa 100644
+--- a/tests/test_opening_beats.gd
++++ b/tests/test_opening_beats.gd
+@@ -300,3 +300,40 @@ func test_legacy_drive_axis_reaims_against_current_camera_basis() -> void:
+ 		"an arrived horizontal heading supplies neutral stick while its requested physics tick still settles")
+ 	assert_false(OPENING_DRIVE.drive_axis(Vector3.INF, yaw).is_finite())
+ 	assert_false(OPENING_DRIVE.drive_axis(Vector3.FORWARD, Basis(Vector3.ZERO, Vector3.ZERO, Vector3.ZERO)).is_finite())
++
++
++func test_tutorial_target_matches_road_destination_instead_of_farmhouse_nearest() -> void:
++	var anchor := Vector3(30, 0.9, -40)
++	var candidates := [
++		{"species": "bramblebun", "position": Vector3(-7.131816, -0.735385, 64.318047), "visible": true, "alive": true},
++		{"species": "bramblebun", "position": Vector3(38.824909, -1.001545, -48.624557), "visible": true, "alive": true},
++		{"species": "bramblebun", "position": Vector3(29, 0, -36), "visible": true, "alive": true}]
++	assert_eq(OPENING_DRIVE.practice_wild_index(candidates, "bramblebun", anchor), 2)
++	# The failed native target is closest to the farmhouse, so changing the
++	# selection origin is material even though travel/engagement stay real.
++	assert_eq(OPENING_DRIVE.practice_wild_index(candidates, "bramblebun", Vector3(8.3, 0.9, 14)), 0)
++	candidates.remove_at(2)
++	assert_eq(OPENING_DRIVE.practice_wild_index(candidates, "bramblebun", anchor), 1,
++		"the farther meadow body remains eligible; selection is not a shorter travel requirement")
++
++
++func test_tutorial_destination_selection_requires_live_visible_matching_body() -> void:
++	var anchor := Vector3(30, 0.9, -40)
++	var candidates := [
++		{"species": "mudsnout", "position": anchor, "visible": true, "alive": true},
++		{"species": "bramblebun", "position": anchor, "visible": false, "alive": true},
++		{"species": "bramblebun", "position": anchor, "visible": true, "alive": false},
++		{"species": "bramblebun", "position": Vector3(36, 0, -42), "visible": true, "alive": true}]
++	assert_eq(OPENING_DRIVE.practice_wild_index(candidates, "bramblebun", anchor), 3)
++	candidates.remove_at(3)
++	assert_eq(OPENING_DRIVE.practice_wild_index(candidates, "bramblebun", anchor), -1)
++
++
++func test_tutorial_destination_selection_refuses_missing_or_nonfinite_evidence() -> void:
++	var anchor := Vector3(30, 0.9, -40)
++	var candidates := [null, {}, {"species": "bramblebun", "position": [30, -40], "visible": true, "alive": true},
++		{"species": "bramblebun", "position": Vector3.INF, "visible": true, "alive": true}]
++	assert_eq(OPENING_DRIVE.practice_wild_index(candidates, "bramblebun", anchor), -1)
++	assert_eq(OPENING_DRIVE.practice_wild_index([], "bramblebun", anchor), -1)
++	assert_eq(OPENING_DRIVE.practice_wild_index([], "", anchor), -1)
++	assert_eq(OPENING_DRIVE.practice_wild_index([], "bramblebun", Vector3.INF), -1)
