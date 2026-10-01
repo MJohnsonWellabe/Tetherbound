@@ -1,0 +1,52 @@
+{
+  "source_commit": "d2ca82a501ef753090438c4d6cc0208ff9532a51",
+  "predecessor": "f37e2e1bc5533849466370ca0227f9a11ab48cc2",
+  "legacy_baseline": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "manifest_source_commit": "d2ca82a501ef753090438c4d6cc0208ff9532a51",
+  "files": [
+    {
+      "path": "data/items/buildables.json",
+      "before_git_sha256": "178a3b28e061b25fa3ae1f67e59776ac69efbdbe303c7c8d829e457c9be2931a",
+      "before_git_blob_oid": "657d1ac487437e4b1f53c4ae2bd97a0bce85c93e",
+      "after_git_sha256": "91a5a518d52873a60b5d5b09f25a949d882bfcda57c76a4f637bddfafd1f8f39",
+      "working_sha256": "b54da511f459406cd74122aabfff730dc0da329fb5466f3f984a3af33bbcfb72",
+      "after_git_blob_oid": "c4ef1ab5da9c8da794d9d077585d31162ad8ef65",
+      "manifest_match": true
+    },
+    {
+      "path": "scripts/build/station_rules.gd",
+      "before_git_sha256": "a67d75894973110178146784a255d4059cd426f81af5865998d589b45b7a21f8",
+      "before_git_blob_oid": "2e0a7744bfe6ed9aa5551cc15a418cc26355b0b2",
+      "after_git_sha256": "5dfe5a37528ff8a2a55ba25811ca65617f7e629b64b5298fee9b4714f12ea6c6",
+      "working_sha256": "5dfe5a37528ff8a2a55ba25811ca65617f7e629b64b5298fee9b4714f12ea6c6",
+      "after_git_blob_oid": "3ab3475b9b4e0142486a8fa587bfe16e0c05994e",
+      "manifest_match": true
+    },
+    {
+      "path": "tests/test_build_catalogue.gd",
+      "before_git_sha256": "3994eab7c3a9d2f64fe6d4d49173f764fbcb2556c3cee426305e7698d53cf210",
+      "before_git_blob_oid": "a28f2fd6d340983201339c3896a0f8b15da79fdd",
+      "after_git_sha256": "f1ff87ff537e7edcf47048ed915c967c7dc6a82e32f1634c3b846f6ad580f79a",
+      "working_sha256": "f1ff87ff537e7edcf47048ed915c967c7dc6a82e32f1634c3b846f6ad580f79a",
+      "after_git_blob_oid": "6fc6709aeb95bfe94e1ce8b078c2319cdeef83c7",
+      "manifest_match": true
+    },
+    {
+      "path": "tests/test_build_placer_preview.gd",
+      "before_git_sha256": "ac2890f7b6967b256b804d0285f03d6dee25e6311a312e389363f76064baf61b",
+      "before_git_blob_oid": "1c3f19ee9226867d5270ecff0bf77ee88a43f81a",
+      "after_git_sha256": "a1e9e583054b3b6e3cabb35e8b1dc23c4d1995fcba832d6c8bd1db77341d8a7d",
+      "working_sha256": "a1e9e583054b3b6e3cabb35e8b1dc23c4d1995fcba832d6c8bd1db77341d8a7d",
+      "after_git_blob_oid": "df9fd915b74d5798c6a82f7fcd944dd7f081b81c",
+      "manifest_match": true
+    }
+  ],
+  "diff_scope": [
+    "data/items/buildables.json",
+    "scripts/build/station_rules.gd",
+    "tests/test_build_catalogue.gd",
+    "tests/test_build_placer_preview.gd"
+  ],
+  "source_only": true,
+  "engine_or_unit_tests_run": false
+}
