@@ -1,7 +1,6 @@
 extends "res://tests/test_case.gd"
 
 const VEG := preload("res://scripts/world/vegetation.gd")
-const TREE_PROBE := preload("res://tools/_probe_scatter_tree_prompt_height.gd")
 const TARGET := Vector3(45.44734573364258, -0.18858742713928223, -62.50096893310547)
 
 func _exact_placement() -> Dictionary:
@@ -33,30 +32,6 @@ func test_exact_failed_baked_tree_spawns_reachable_prompt_without_radius_change(
 	assert_true(contact.distance_to(old) > float(prompt.radius))
 	assert_true(contact.distance_to(current) < float(prompt.radius))
 	vegetation.free()
-
-
-func test_recorded_terrain_wall_requests_horizontal_tangent_and_keeps_first_side() -> void:
-	var first_normal := Vector3(-0.470884, 0.630212, 0.617333)
-	var first := TREE_PROBE.bank_tangent(Vector3(0, 0, -1), first_normal)
-	assert_almost_eq(first.length(), 1.0, 0.0001)
-	assert_almost_eq(first.y, 0.0, 0.0001)
-	assert_almost_eq(first.dot(first_normal), 0.0, 0.0001)
-	assert_true(first.x < 0.0 and first.z < 0.0)
-	var later_normal := Vector3(-0.237581, 0.669214, 0.704066)
-	var later_wanted := Vector3(0.46911, 0, -0.88314)
-	var later := TREE_PROBE.bank_tangent(later_wanted, later_normal, first)
-	assert_almost_eq(later.dot(later_normal), 0.0, 0.0001)
-	assert_true(later.dot(first) > 0.0, "the observed changing bank cannot flip the committed side")
-	assert_true(later.x < 0.0 and later.z < 0.0)
-	assert_eq(TREE_PROBE.BANK_TURN_FRAMES, 26)
-	assert_eq(TREE_PROBE.MAX_BANK_TURNS, 3)
-
-
-func test_terrain_tangent_refuses_no_heading_no_horizontal_normal_or_nonfinite_input() -> void:
-	assert_eq(TREE_PROBE.bank_tangent(Vector3.ZERO, Vector3.LEFT), Vector3.ZERO)
-	assert_eq(TREE_PROBE.bank_tangent(Vector3.FORWARD, Vector3.UP), Vector3.ZERO)
-	assert_eq(TREE_PROBE.bank_tangent(Vector3(INF, 0, -1), Vector3.LEFT), Vector3.ZERO)
-	assert_eq(TREE_PROBE.bank_tangent(Vector3.FORWARD, Vector3(INF, 0, 1)), Vector3.ZERO)
 
 func test_measured_large_stone_spawns_a_reachable_human_height_prompt() -> void:
 	var vegetation := VEG.new()

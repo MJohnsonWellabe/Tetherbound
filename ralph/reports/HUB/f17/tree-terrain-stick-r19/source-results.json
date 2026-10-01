@@ -1,0 +1,296 @@
+{
+  "classification": "AUTHOR PROVISIONAL STICK SOURCE CANDIDATE ONLY; R17 NATIVE FAIL; R19 PARSER/UNIT/NATIVE UNRUN; F17#4 OPEN",
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "pass": true
+    },
+    {
+      "name": "frozen originals/tests/test_vegetation_human_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen originals/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen prior-failure/result.json",
+      "pass": true
+    },
+    {
+      "name": "frozen prior-failure/smoke.log",
+      "pass": true
+    },
+    {
+      "name": "frozen proposal/tests/test_vegetation_human_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen proposal/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen repair.patch",
+      "pass": true
+    },
+    {
+      "name": "frozen review-context.txt",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/data/config/movement.json",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scenes/player/player.tscn",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scripts/player/player_controller.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scripts/world/playground_heightfield.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/tests/test_vegetation_human_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen source-check.py",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/player/player_controller.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scenes/player/player.tscn",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/movement.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/vegetation.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/playground_heightfield.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/vegetation_harvest_point.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/interactable.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/interaction_arbiter.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/vegetation.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/scatter/playground/region_0_-1.bin",
+      "pass": true
+    },
+    {
+      "name": "unchanged tests/helpers/opening_geometry_navigator.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged tests/helpers/meadows_earned_team_segment.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged ralph/reports/HUB/f17/tree-approach-trace-r17/seal.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged ralph/reports/HUB/f17/team-boundary-refusal-r18/seal.json",
+      "pass": true
+    },
+    {
+      "name": "working probe exact",
+      "pass": true
+    },
+    {
+      "name": "ROOT failed probe exact baseline",
+      "pass": true
+    },
+    {
+      "name": "entire R17 probe recovered by reversing only steering edits",
+      "pass": true
+    },
+    {
+      "name": "same target fixed identity",
+      "pass": true
+    },
+    {
+      "name": "same frame and await counts",
+      "pass": true
+    },
+    {
+      "name": "same actual input event writer and axis call counts",
+      "pass": true
+    },
+    {
+      "name": "same original start",
+      "pass": true
+    },
+    {
+      "name": "same entire contact detection, release, offer, interact and success tail",
+      "pass": true
+    },
+    {
+      "name": "terrain trigger uses exact existing floor node",
+      "pass": true
+    },
+    {
+      "name": "trigger requires actual grounded and wall state",
+      "pass": true
+    },
+    {
+      "name": "trigger reads unchanged native floor angle without modifying it",
+      "pass": true
+    },
+    {
+      "name": "trigger requires opposing cached wall",
+      "pass": true
+    },
+    {
+      "name": "no helper native query, state or input write",
+      "pass": true
+    },
+    {
+      "name": "helper APIs are cached getters and vector arithmetic",
+      "pass": true
+    },
+    {
+      "name": "no success admission depends on steering metadata",
+      "pass": true
+    },
+    {
+      "name": "working tests exact",
+      "pass": true
+    },
+    {
+      "name": "all original producer tests and assertions recovered byte-exact",
+      "pass": true
+    },
+    {
+      "name": "two synchronous new regressions",
+      "pass": true
+    },
+    {
+      "name": "first recorded normal above unchanged 45 degree limit",
+      "pass": true
+    },
+    {
+      "name": "first horizontal unit provisional request",
+      "pass": true
+    },
+    {
+      "name": "first provisional tangent orthogonal to cached wall",
+      "pass": true
+    },
+    {
+      "name": "first first west/north side preserved",
+      "pass": true
+    },
+    {
+      "name": "later recorded normal above unchanged 45 degree limit",
+      "pass": true
+    },
+    {
+      "name": "later horizontal unit provisional request",
+      "pass": true
+    },
+    {
+      "name": "later provisional tangent orthogonal to cached wall",
+      "pass": true
+    },
+    {
+      "name": "later first west/north side preserved",
+      "pass": true
+    },
+    {
+      "name": "later side continuity",
+      "pass": true
+    },
+    {
+      "name": "first retains positive target progress",
+      "pass": true
+    },
+    {
+      "name": "later may temporarily trade direct target progress to keep side",
+      "pass": true
+    },
+    {
+      "name": "zero wanted refuses tangent",
+      "pass": true
+    },
+    {
+      "name": "up normal refuses tangent",
+      "pass": true
+    },
+    {
+      "name": "nonfinite wanted refuses tangent",
+      "pass": true
+    },
+    {
+      "name": "nonfinite normal refuses tangent",
+      "pass": true
+    },
+    {
+      "name": "all available-wall/contact-stop models preserve 3x26 within180",
+      "pass": true
+    },
+    {
+      "name": "actual native failure remains authoritative",
+      "pass": true
+    },
+    {
+      "name": "actual first wall and later wall normals frozen",
+      "pass": true
+    },
+    {
+      "name": "actual failed raw matches result",
+      "pass": true
+    }
+  ],
+  "passed": 69,
+  "steering_bound_models": 32580,
+  "max_turns": 3,
+  "max_tangent_frames": 78,
+  "first_provisional_tangent": [
+    -0.7950993776321411,
+    0.0,
+    -0.6064791083335876
+  ],
+  "later_provisional_tangent": [
+    -0.9475091099739075,
+    0.0,
+    -0.3197287917137146
+  ]
+}
+
