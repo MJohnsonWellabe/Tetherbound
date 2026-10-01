@@ -96,6 +96,17 @@ var _fight_hides := 0
 var _claiming := false
 var _claim: Dictionary = {}
 var _taken := false
+## Supplied only by a registered-world mount / replicated internal stock op.
+## New renewable nodes have no legacy fallback while their stock is unknown.
+var _renewable_site_id := ""
+var _renewable_stock: Dictionary = {}
+var _source_service: Node
+
+
+func bind_source_service(service: Node) -> void:
+	_source_service = service
+	if service != null and not service.is_connected("settled", _on_source_settled):
+		service.connect("settled", _on_source_settled)
 
 
 func setup(spec: Dictionary) -> void:
@@ -107,6 +118,9 @@ func setup(spec: Dictionary) -> void:
 	var order: Variant = spec.get("order")
 	_node_id = ("order:%s" % str(order)) if order != null else ("%s@%s" % [_item_id, str(spec.get("at", []))])
 	_realm_id = str(spec.get("realm", "meadows"))
+	_renewable_site_id = str(spec.get("renewable_site_id", ""))
+	var stock: Variant = spec.get("renewable_stock", {})
+	_renewable_stock = stock.duplicate(true) if stock is Dictionary else {}
 	add_to_group("progression_restore")
 
 	_build_visual()
@@ -130,10 +144,19 @@ func setup(spec: Dictionary) -> void:
 ## node is world-once under `harvest_node:<id>`; these defaults are exactly the
 ## behaviour this file always had.
 func _already_taken(game: Node) -> bool:
+	if not _renewable_site_id.is_empty():
+		return not _renewable_ready(game)
 	return was_taken(game, _node_id)
 
 
 func _claim_intent(actual_amount: int) -> Dictionary:
+	if not _renewable_site_id.is_empty():
+		var txn := "harvest:%s:%s:%d" % [_realm_id, _renewable_site_id, Time.get_ticks_usec()]
+		_claim["txn_id"] = txn
+		_claim["expected_revision"] = int(_renewable_stock.get("revision", -1))
+		return {"kind": "renewable_harvest", "realm": _realm_id,
+			"site_id": _renewable_site_id, "expected_revision": int(_renewable_stock.get("revision", -1)),
+			"txn_id": txn}
 	return {
 		"kind": "stormwood_harvest" if has_meta("stormwood_harvest_site") else "harvest",
 		"site_id": str(get_meta("stormwood_harvest_site", "")),
@@ -145,6 +168,8 @@ func _claim_intent(actual_amount: int) -> Dictionary:
 
 
 func _claim_committed(delta: Dictionary) -> bool:
+	if not _renewable_site_id.is_empty():
+		return not _stock_op(delta).is_empty()
 	return LEDGER_CLAIM.sets_world_flag(delta, flag_id(_node_id))
 
 
@@ -167,6 +192,10 @@ static func was_taken(game: Node, node_id: String) -> bool:
 ## answer: a mid-session load must hide/free an already-gathered node the live
 ## world still has standing.
 func restore_progression_from_game(game: Node) -> void:
+	if not _renewable_site_id.is_empty():
+		_read_renewable_stock(game)
+		_refresh_renewable_presentation()
+		return
 	if _already_taken(game):
 		_deactivate()
 
@@ -183,6 +212,8 @@ func _deactivate() -> void:
 	if _visual != null:
 		PICKUP_GLOW.detach(_visual)
 	visible = false
+	if not _renewable_site_id.is_empty():
+		return # Retain the presentation shell; only host stock can restore it.
 	queue_free()
 
 
@@ -493,6 +524,9 @@ func _item_kind() -> String:
 func _on_gathered(equipped_tool: Variant = null) -> void:
 	if _taken or _claiming:
 		return
+	if not _renewable_site_id.is_empty():
+		_gather_registered_source()
+		return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		push_error("no Game autoload; gathered %s into nothing" % _item_id)
@@ -559,6 +593,22 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 ## player the FEEDBACK for a gather that was theirs, and owes a peer who merely
 ## watched somebody else gather nothing but the removal.
 func _on_delta_applied(delta: Dictionary) -> void:
+	if not _renewable_site_id.is_empty():
+		var op := _stock_op(delta)
+		if op.is_empty():
+			return
+		var own_claim := _claiming and str(op.get("txn_id", "")) == str(_claim.get("txn_id", ""))
+		set_renewable_stock(op.get("state", {}))
+		if own_claim:
+			var game := get_node_or_null(^"/root/Game")
+			if game != null:
+				var items: RefCounted = game.get("items")
+				var label := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
+				game.call("push_world_message", "Gathered %s." % label)
+				_play_gather_audio(items)
+			_claiming = false
+			_claim = {}
+		return
 	if not _claim_committed(delta):
 		return
 	# The `_taken` guard is deliberately NOT first. On a client `_rpc_delta`
@@ -622,6 +672,109 @@ func _ready() -> void:
 	# sets this node up before adding it to the tree would otherwise never hear
 	# a committed delta.
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport != null and not transport.is_connected("intent_refused", _on_renewable_refused):
+		transport.connect("intent_refused", _on_renewable_refused)
+
+
+func _process(_delta: float) -> void:
+	if not _renewable_site_id.is_empty():
+		_read_renewable_stock(get_node_or_null(^"/root/Game"))
+		_refresh_renewable_presentation()
+
+
+func _read_renewable_stock(game: Node) -> void:
+	if _source_service != null and is_instance_valid(_source_service):
+		_renewable_stock = _source_service.call("stock", _realm_id, _renewable_site_id)
+		return
+	if game == null:
+		return
+	var world: Variant = game.get("world")
+	if world is Object and world.has_method("renewable_stock_state"):
+		var stock: Variant = world.call("renewable_stock_state", _realm_id, _renewable_site_id)
+		_renewable_stock = stock.duplicate(true) if stock is Dictionary else {}
+
+
+func _renewable_ready(game: Node) -> bool:
+	return game != null and not _renewable_stock.is_empty() \
+		and int(_renewable_stock.get("revision", -1)) >= 0 \
+		and int(_renewable_stock.get("next_ready_day", -1)) >= 1 \
+		and int(game.get("day")) >= int(_renewable_stock["next_ready_day"])
+
+
+## Read-only presentation reconciliation, called with an internal committed
+## stock record or a host snapshot. It never writes the authoritative world.
+func set_renewable_stock(stock: Dictionary) -> void:
+	_renewable_stock = stock.duplicate(true)
+	_refresh_renewable_presentation()
+
+
+func _refresh_renewable_presentation() -> void:
+	var ready := _renewable_ready(get_node_or_null(^"/root/Game"))
+	if not ready:
+		if not _taken:
+			_deactivate()
+		return
+	if _taken:
+		_taken = false
+		visible = true
+		if _visual != null:
+			_visual.visible = _fight_hides == 0
+			PICKUP_GLOW.attach(_visual, _item_colour(), -1.0, 1.0, _item_kind())
+		if _prompt != null and is_instance_valid(_prompt):
+			_prompt.call("set_enabled", true)
+
+
+func _stock_op(delta: Dictionary) -> Dictionary:
+	for raw: Variant in delta.get("ops", []):
+		if raw is Dictionary and str(raw.get("op", "")) == "renewable_stock_set" \
+				and str(raw.get("scope", "")) == "world" and str(raw.get("realm", "")) == _realm_id \
+				and str(raw.get("site_id", "")) == _renewable_site_id:
+			return raw
+	return {}
+
+
+func _on_renewable_refused(kind: String, _code: String, _reason: String, detail: Dictionary) -> void:
+	if kind == "renewable_harvest" and _claiming \
+			and str(detail.get("txn_id", "")) == str(_claim.get("txn_id", "")):
+		_claiming = false
+		_claim = {}
+
+
+## Typed canonical source path. No item, yield, day, tool slot or world flag
+## crosses the request boundary. No fallback into generic legacy harvest.
+func _gather_registered_source() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if _source_service == null or not is_instance_valid(_source_service) or not _renewable_ready(game):
+		if game != null: game.call("push_world_message", "This resource is not ready.")
+		return
+	var action_id := Crypto.new().generate_random_bytes(16).hex_encode()
+	_claiming = true
+	_claim = {"txn_id": action_id, "expected_revision": int(_renewable_stock.revision)}
+	var result: Dictionary = _source_service.call("submit", "node", {
+		"site_id": _renewable_site_id, "expected_stock_revision": int(_renewable_stock.revision),
+		"action_id": action_id}, self)
+	if not result.get("ok", false) and not result.get("pending", false):
+		_claiming = false
+		_claim = {}
+		if game != null: game.call("push_world_message", str(result.get("reason", "Resource unavailable.")))
+
+
+func _on_source_settled(op: String, source_id: String, action_id: String, verdict: Dictionary) -> void:
+	if op != "node" or source_id != _renewable_site_id: return
+	_read_renewable_stock(get_node_or_null(^"/root/Game"))
+	_refresh_renewable_presentation()
+	if not _claiming or action_id != str(_claim.get("txn_id", "")): return
+	_claiming = false
+	_claim = {}
+	var game := get_node_or_null(^"/root/Game")
+	if game == null: return
+	if verdict.get("resolved") != true:
+		game.call("push_world_message", str(verdict.get("reason", "Gathering is awaiting settlement.")))
+		return
+	var items: RefCounted = game.get("items")
+	game.call("push_world_message", "Gathered %s." % str(items.call("item_name", _item_id)))
+	_play_gather_audio(items)
 
 ## Gather this spot, the same as pressing the interact prompt on it.
 ##

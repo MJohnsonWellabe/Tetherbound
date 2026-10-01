@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": false,
+  "items": {
+    "rootiron_ingot": {
+      "name": "Rootiron Ingot",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#ad9b70",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Refined at the homestead Forge, one present channel per unit."
+    },
+    "tidesteel_ingot": {
+      "name": "Tidesteel Ingot",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#75aaa7",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Refined at the homestead Forge, one present channel per unit."
+    },
+    "skyglass_ingot": {
+      "name": "Skyglass Ingot",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#accbdb",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Refined at the homestead Forge, one present channel per unit."
+    },
+    "stormglass_plate": {
+      "name": "Stormglass Plate",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#b2a1d8",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Refined at the homestead Forge, one present channel per unit."
+    },
+    "tide_pearl": {
+      "name": "Tide Pearl",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#dadbc6",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "A pearl exposed along dry island shores."
+    },
+    "seed_ground": {
+      "name": "Rootbud Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for ground attuned ingredients and essence."
+    },
+    "seed_water": {
+      "name": "Tidebud Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for water attuned ingredients and essence."
+    },
+    "seed_air": {
+      "name": "Galebloom Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for air attuned ingredients and essence."
+    },
+    "seed_electric": {
+      "name": "Sparkstem Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for electric attuned ingredients and essence."
+    },
+    "seed_fire": {
+      "name": "Emberbloom Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for fire attuned ingredients and essence."
+    },
+    "seed_dark": {
+      "name": "Duskcap Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for dark attuned ingredients and essence."
+    },
+    "seed_ice": {
+      "name": "Frostbloom Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for ice attuned ingredients and essence."
+    },
+    "seed_psychic": {
+      "name": "Mindleaf Seeds",
+      "kind": "seed",
+      "stack": 50,
+      "colour": "#aeb477",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Plant by hand for psychic attuned ingredients and essence."
+    }
+  },
+  "display_overrides": {
+    "hide_helm": {
+      "name": "Padded Helm",
+      "blurb": "Woven padding over the crown. Softens a bad fall.",
+      "description": "Stiffened woven padding cushions accidental knocks and hard landings. The trainer never fights."
+    },
+    "hide_vest": {
+      "name": "Padded Vest",
+      "blurb": "Layered woven padding over the chest and back.",
+      "description": "Two woven layers cushion the ribs and shoulders against hard landings."
+    },
+    "hide_leggings": {
+      "name": "Padded Leggings",
+      "blurb": "Tough cloth padding over the thighs and knees.",
+      "description": "Woven pads cover the thighs and knees, cushioning hard landings on uneven ground."
+    },
+    "hide_boots": {
+      "name": "Padded Boots",
+      "blurb": "Thick woven soles cushion the ankles.",
+      "description": "Tough woven uppers and cushioned soles soften awkward landings."
+    },
+    "saddle_frame": {
+      "name": "Saddle Frame",
+      "blurb": "A rootstone-braced frame, ready for woven straps and a creature mount."
+    },
+    "insulated_boots": {
+      "description": "Dry insulating layers under tough cloth cut lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only."
+    },
+    "stoneguard_brew": {
+      "description": "A gritty brew helps the creature brace for a hard fight. Fur and feathers sit heavier on the drinker for a minute and a half."
+    },
+    "elixir_guard": {
+      "description": "A grey tonic permanently strengthens the creature\u2019s protective outer layers. Its benefit persists through rest."
+    }
+  },
+  "_comment": "F32 owned item overlay; Foundation alone adds its loader seam. F27 owns essence definitions and F28 owns attuned definitions: reuse their IDs and do not duplicate definitions."
+}

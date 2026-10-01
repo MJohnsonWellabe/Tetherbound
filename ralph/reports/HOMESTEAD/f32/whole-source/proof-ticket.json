@@ -1,0 +1,81 @@
+{
+  "ticket_id": "F32-whole-feature-player-batch-1",
+  "status": "SOURCE_REVIEW_THEN_SHARED_COMPOSITION_REQUIRED",
+  "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+  "working_set_sha256": "ce3ee8a1e460a4d4a19805ac19051a95ae49552b4a3581d83442560d9d0f7899",
+  "engine_owner": "ROOT ONLY; F32 source author runs no Godot/import/render/export/GPU",
+  "dependencies": [
+    "F16 actual current schema/save/inventory authority",
+    "F27 actual full admitted character transaction, wild victory and capped care producer",
+    "F31 actual paid stations, attachments, Greenhouse and crafting UI"
+  ],
+  "compose_first": [
+    "Apply exact owned source cut and compose ignored ItemDB overlay against current Foundation loaders",
+    "Bind F32SourceActions into existing typed registry and existing world_harvest stock reservation/save/ACK mechanism; validate original source identity/generation",
+    "Bind actual host world mounts with canonical stock and remove the corresponding old legacy material mounts/harvest acceptance",
+    "Bind F31 Forge completed unit, Den grooming and placed Farm UID to same service/registry; Greenhouse world presence must be paid",
+    "Retire F28 provisional master_garden pool; refresh ingredient ledger from this accepted stock only",
+    "Compose shed before the actual F27 retained host wild-victory journal, retaining roll per defeated actual UID",
+    "Activate flags only in the explicit ROOT proof candidate; leave release source OFF until evidence passes"
+  ],
+  "declared_start": "ROOT declares the exact integrated commit, working-file hashes, flag changes, real starting character/party/inventory, any seed/position fixtures and shortcuts. Per-criterion verdicts must distinguish earned stock from fixtures.",
+  "one_coherent_player_route": [
+    {
+      "criteria": [
+        "F32#0",
+        "F32#2"
+      ],
+      "witness": "Actually walk and hand/tool-gather each tier material in its own biome; census actual mounted and accessible one-or-two nodes per eight types per biome; measure majority off route; use intended Cloudreach strata and dry Tidewake ground. Collect attuned+essence and a seed through canonical node path.",
+      "assertions": "Host derives registered ID/type/yield/current generation; named items appear in winning portable inventory; only tier/essence nodes regrow on configured running-world days; story/unique pickups remain spent."
+    },
+    {
+      "criteria": [
+        "F32#3"
+      ],
+      "witness": "Actual player tills and sows Ground/Air native crops; refuses off-biome sow without Greenhouse; pays/builds real Farm Greenhouse; sows every off-biome type; advances live host days and hand-harvests eight types.",
+      "assertions": "Each type crop consumes one seed, grows2hostdays, pays2attuned+3essence atomically. No auto harvest, jobs or offline yield. Wrong/full bag/unknown stock changes nothing; crop identity and revision remain saved."
+    },
+    {
+      "criteria": [
+        "F32#1"
+      ],
+      "witness": "At paid homestead Forge, actual craft panel tap-starts Rootiron/Tidesteel/Skyglass/Stormglassplate and receives one per completed1.5s unit; walk outside3m/openanothermodal/entercombat to cancel remaining units.",
+      "assertions": "Canonical raw costs, complete room check and one original paid completion ticket; no unstarted debit, queue, offline or generic-craft bypass; correct actual perUID attachment tier."
+    },
+    {
+      "criteria": [
+        "F32#4"
+      ],
+      "witness": "Win actual wild against table species and manually groom an owned eligible creature at a paid Den; inspect material and padded armour descriptions.",
+      "assertions": "Use host retained victory/participant/generation and roll; shed composes with same XP/essence candidate. Den care and shed share one once-perUID/day receipt and cap. No hunting/butchery implication, typed receipts survive canonical admission."
+    },
+    {
+      "criteria": [
+        "F32#5"
+      ],
+      "witness": "Open actual crafting catalogue and craft representative recipes spanning all ten registered water entries, refusing missing personal unlocks without payment.",
+      "assertions": "All ten water proposal IDs and nine definitions are actual ItemDB runtime entries; current personal recipe gates and travel-tier station semantics remain enforced."
+    },
+    {
+      "criteria": [
+        "F32#2",
+        "F32#3",
+        "F32#4",
+        "F32#5"
+      ],
+      "witness": "Four distinct stable characters contend on SAME current node generation and SAME ready plot, with the host in another supported realm where applicable; repeat requests and introduce full bag/wrongtool/overscope/outofrange/stalegeneration/save-false/ACK-loss. Save host and owners, disconnect/rejoin with new peer IDs, then regrow and gather again.",
+      "assertions": "Exactly one winning stock commit and matching complete portable payout; other three pay0/wear0/receive refusal. Host-first reservation fences conflicting actions; bool-save false and missingACK stay unresolved; same original row replay settles once. Rejoin preserves stock/crop/care/ingots/items/receipts and exact character ownership. No client item/amount grant and no new journal."
+    }
+  ],
+  "required_artifacts": "Actual player route/census, ordinary UI captures where needed, four-character stock+inventory+receipt deltas, save-failure and exactACK replay evidence, immutable integrated source+working-file hashes and independent verdict for each literal F32 criterion.",
+  "acceptance": {
+    "F32#0": "NOT_MET",
+    "F32#1": "NOT_MET",
+    "F32#2": "NOT_MET",
+    "F32#3": "NOT_MET",
+    "F32#4": "NOT_MET",
+    "F32#5": "NOT_MET"
+  },
+  "full_ci_default": false,
+  "repairs": "Same F32 PR; rerun affected portion only when repaired source changes the witness."
+}

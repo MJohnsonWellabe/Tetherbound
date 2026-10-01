@@ -1,9 +1,9 @@
 {
   "_comment": "R7.6. The berry farm beside Grandpa's house: where the beds are, and the three numbers that decide whether farming is worth walking back for. Placed by scripts/world/playground_world.gd, drawn by scripts/world/farm_plot.gd, ruled by scripts/world/farm_logic.gd. CLAUDE.md: data that will clearly vary lives here, never in gameplay code. ALL TUNABLE.",
-  "_comment_scope": "GAME_DESIGN.md §21 is the whole specification and it is four lines long -- 'Meadows only needs berries initially. Plant -> wait -> harvest. No watering chores.' §32 excludes *deep* farming. So there is no water key, no soil key, no fertiliser key and no second crop in this file, and adding one is a design change rather than a tuning pass.",
+  "_comment_scope": "F32 manual crops. Existing berry farm remains reachable via its existing consumer while typed runtime is OFF; no offline growth or auto harvest. The typed consumer stages every verb through Foundation.",
   "_comment_placement": "F17: farmhouse [2,14], east door begins the village road. Existing six plots translate by [+24,+30] with the house; crop, yield, grow days and ownership remain unchanged.",
   "_comment_grid": "Two rows of three at 2.4m centres. Six beds because it is enough that a rest is worth taking and few enough that tilling the farm is one errand, not an afternoon. Spacing comfortably exceeds the prompt radius (farm_plot.gd's PROMPT_RADIUS, 2.0m), so standing at one bed the arbiter's nearest-wins rule (prompt_arbiter.gd::choose_index) picks the one you are actually on rather than the one behind it. Was 2.0m centres at z -10.6/-8.6 until the visual pass: at that pitch, and hard against the house's south wall, the six beds rendered as one continuous band of planting rather than as six plots, and the farmhouse ate the frame. Moved out to z -9.0/-6.6 (still ~4m clear of the wall line at z=-13, still 9.7m from the pad centre and well inside its 14m full-flatten radius) and opened up, so the rows read as rows from the door.",
-  "_comment_grow_days": "In-game DAYS (autoload/game_state.gd::day, advanced only by scripts/build/camp.gd's rest), not seconds. One day, so R7.6's done-when -- 'harvest berries from it on a later day' -- is exactly one sleep away rather than a week of them. Raise it if the farm turns out to trivialise the berry economy; there is no other lever here on purpose.",
+  "_comment_grow_days": "Host in-game days only, never elapsed wall time. Existing berries grow in 1 day; type crops grow in 2 days. Readiness derives from planted_on_day and ripe_on_day in durable world plot state.",
   "_comment_yield": "Berries per bed, against the 3 a wild bush gives (data/config/harvest.json). Deliberately only one more: the farm's advantage over walking to a bush is that it is at home and six beds ripen together, not that a bed out-yields the wild by a multiple. recipes_ironwood.json:58 keeps berries in the Ridge Tonic cost 'so the berry plots stay worth walking to at Band 4' -- this is the plot that line was written for, and a 3x yield would make that sentence false in the other direction.",
   "grow_days": 1,
   "yield": 4,
@@ -46,5 +46,333 @@
         23.4
       ]
     }
-  ]
+  ],
+  "_comment_native_types": "Starting value from Meadows spawn-table entry tier weights: ground 675, air 475, water 264, dark 50, electric 25, fire 14, ice 7 (spawn_tables.json + species.json). Ground and Air grow outside; all other types need the Farm Greenhouse.",
+  "default_crop": "berries",
+  "native_types": [
+    "ground",
+    "air"
+  ],
+  "greenhouse": {
+    "buildable_id": "greenhouse",
+    "station": "farm",
+    "scope": "world",
+    "allows_off_biome_types": true,
+    "automatic_harvest": false,
+    "buildable_candidate": {
+      "enabled": false,
+      "status": "authored_proposal_not_runtime_registered",
+      "id": "greenhouse",
+      "name": "Greenhouse",
+      "building_scope": "world",
+      "blueprint_scope": "character",
+      "cost": [
+        {
+          "id": "wood",
+          "n": 12
+        },
+        {
+          "id": "fiber",
+          "n": 8
+        },
+        {
+          "id": "rootstone",
+          "n": 4
+        },
+        {
+          "id": "rootiron_ingot",
+          "n": 2
+        }
+      ],
+      "_comment_cost": "Starting value for F47; follows the existing cost id/n schema. Refined-item registration and a solvent Forge path remain dependencies; this block does not charge anyone.",
+      "authority_contract": {
+        "placement_owner": "F31/foundation canonical building service using the existing place_building path; no second placement or payment service.",
+        "validation_before_commit": [
+          "Stable authenticated character and live world/realm",
+          "Canonical registered buildable definition and character blueprint grant",
+          "Authoritative real placement/body/footprint and existing occupancy checks",
+          "Exact host cost and complete actor inventory capacity/solvency",
+          "Stable transaction identity and world revision"
+        ],
+        "single_commit": "Host-created world building UID/record plus placer character inventory debit and delivery receipt commit together, or neither changes.",
+        "client_cost_or_baseline_authoritative": false,
+        "client_paid_or_available_materials_authoritative": false,
+        "pending_or_refused_effect": "No local placement, debit, refund or blueprint grant; presentation waits for the canonical committed world mirror.",
+        "save_rejoin": "Existing host-world building records and canonical character/world receipts; no new stock, actor, inventory or receipt bag.",
+        "blueprint_delivery": "Existing per-source/per-character once-only grant; the source is not assigned or invented by this proposal.",
+        "dismantle": "Existing canonical dismantle/refund transaction removes world presence. It never erases a crop, accelerates growth or grants harvest."
+      },
+      "farm_contract": {
+        "one_farm_buildable_not_attachment": true,
+        "tier_attachment_track": false,
+        "allows_off_biome_types": true,
+        "automatic_harvest": false,
+        "offline_production": false,
+        "crop_mutation_path": "Existing farm_plot_action host transaction; no new crop state write or free seed/harvest path.",
+        "presence_source": "Confirmed canonical world building records in the host realm. UI may read the replicated mirror; it cannot authorize sowing."
+      },
+      "recipe_known_from_start": true
+    },
+    "visual_proposal": {
+      "enabled": false,
+      "family": "Quaternius Medieval Village MegaKit",
+      "starting_footprint_m": [
+        8.0,
+        6.0
+      ],
+      "minimum_entry_clear_width_m": 1.6,
+      "minimum_entry_clear_height_m": 2.3,
+      "entry_clearance_proven": false,
+      "module_scale": 1.0,
+      "modules": [
+        "res://assets/buildings/quaternius_medieval/DoorFrame_Flat_WoodDark.gltf",
+        "res://assets/buildings/quaternius_medieval/Window_Wide_Flat1.gltf",
+        "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf",
+        "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf"
+      ],
+      "wood_material": "MI_WoodTrim",
+      "glass_material": "MI_WindowGlass",
+      "entry_collision_proposal": "Separate jambs/lintel only, following the existing build_door API. Raw doorframe bounds alone do not prove the required clear opening.",
+      "floor_proposal": "Leave existing authored soil beds open; installed uneven-brick modules only at perimeter/entry footing.",
+      "crop_read_proposal": "Framed transparent panes preserve sight of hand-harvested beds; preserve all working prompts and authored bed positions.",
+      "production_render_player_path_or_full_bar_proven": false
+    }
+  },
+  "crop_order": [
+    "berries",
+    "ground",
+    "water",
+    "air",
+    "electric",
+    "fire",
+    "dark",
+    "ice",
+    "psychic"
+  ],
+  "crops": {
+    "berries": {
+      "name": "Berries",
+      "type": "",
+      "seed_item": "berry_seeds",
+      "grow_days": 1,
+      "outputs": {
+        "berries": 4
+      },
+      "sow_label": "Sow berry seeds",
+      "harvest_label": "Pick berries"
+    },
+    "ground": {
+      "name": "Rootbud",
+      "type": "ground",
+      "seed_item": "seed_ground",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_ground": 2,
+        "essence_ground": 3
+      },
+      "sow_label": "Sow rootbud seeds",
+      "harvest_label": "Pick rootbud"
+    },
+    "water": {
+      "name": "Tidebud",
+      "type": "water",
+      "seed_item": "seed_water",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_water": 2,
+        "essence_water": 3
+      },
+      "sow_label": "Sow tidebud seeds",
+      "harvest_label": "Pick tidebud"
+    },
+    "air": {
+      "name": "Galebloom",
+      "type": "air",
+      "seed_item": "seed_air",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_air": 2,
+        "essence_air": 3
+      },
+      "sow_label": "Sow galebloom seeds",
+      "harvest_label": "Pick galebloom"
+    },
+    "electric": {
+      "name": "Sparkstem",
+      "type": "electric",
+      "seed_item": "seed_electric",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_electric": 2,
+        "essence_electric": 3
+      },
+      "sow_label": "Sow sparkstem seeds",
+      "harvest_label": "Pick sparkstem"
+    },
+    "fire": {
+      "name": "Emberbloom",
+      "type": "fire",
+      "seed_item": "seed_fire",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_fire": 2,
+        "essence_fire": 3
+      },
+      "sow_label": "Sow emberbloom seeds",
+      "harvest_label": "Pick emberbloom"
+    },
+    "dark": {
+      "name": "Duskcap",
+      "type": "dark",
+      "seed_item": "seed_dark",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_dark": 2,
+        "essence_dark": 3
+      },
+      "sow_label": "Sow duskcap seeds",
+      "harvest_label": "Pick duskcap"
+    },
+    "ice": {
+      "name": "Frostbloom",
+      "type": "ice",
+      "seed_item": "seed_ice",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_ice": 2,
+        "essence_ice": 3
+      },
+      "sow_label": "Sow frostbloom seeds",
+      "harvest_label": "Pick frostbloom"
+    },
+    "psychic": {
+      "name": "Mindleaf",
+      "type": "psychic",
+      "seed_item": "seed_psychic",
+      "grow_days": 2,
+      "outputs": {
+        "attuned_psychic": 2,
+        "essence_psychic": 3
+      },
+      "sow_label": "Sow mindleaf seeds",
+      "harvest_label": "Pick mindleaf"
+    }
+  },
+  "presentation": {
+    "panel_width": 560,
+    "crop_row_height": 36
+  },
+  "crop_presentation_candidate": {
+    "enabled": false,
+    "status": "unrendered_prototype_flag_off_pending_production_capture_and_code_blind_full_bar_pass",
+    "_comment": "F32 typed-crop presentation only. Preserve legacy berry visuals, bed positions/size, colliders, all crop outputs and host-day growth. Eight intended silhouettes and canonical owner-derived colours use inspected installed nature models. Sown visual size is a presentation multiplier, never a growth timer. Flag stays OFF until ordinary production capture and independent code-blind full bar pass on Medium/High, with Low readability. No root/flower silhouette claim from source bounds.",
+    "family": "Quaternius Stylized Nature",
+    "state_scale_multipliers": {
+      "sown": 0.35,
+      "ripe": 1.0
+    },
+    "reference_sources": [
+      "docs/reference/owner-board-2026-08-15-creature-colors.png",
+      "scripts/ui/ui_tokens.gd"
+    ],
+    "profiles": {
+      "ground": {
+        "model": "res://assets/environment/stylized_nature/Plant_1.gltf",
+        "scale": 0.48,
+        "floor_offset_m": 0.017812,
+        "intended_silhouette": "Low Rootbud leaf rosette",
+        "surface_accents": {
+          "Leaves": {
+            "tint": "#B99050",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "water": {
+        "model": "res://assets/environment/stylized_nature/Plant_1_Big.gltf",
+        "scale": 0.25,
+        "floor_offset_m": 0.01501,
+        "intended_silhouette": "Tall Tidebud blade fan",
+        "surface_accents": {
+          "Leaves": {
+            "tint": "#4AADE8",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "air": {
+        "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+        "scale": 0.35,
+        "floor_offset_m": 0.013104,
+        "intended_silhouette": "Loose Galebloom flower spray",
+        "surface_accents": {
+          "Flowers": {
+            "tint": "#73C8ED",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "electric": {
+        "model": "res://assets/environment/stylized_nature/Grass_Wheat.gltf",
+        "scale": 0.45,
+        "floor_offset_m": 0.016138,
+        "intended_silhouette": "Upright Sparkstem seed-head fork",
+        "surface_accents": {
+          "Grass": {
+            "tint": "#F5D33A",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "fire": {
+        "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+        "scale": 0.32,
+        "floor_offset_m": 0.010738,
+        "intended_silhouette": "Single orange Emberbloom crown",
+        "surface_accents": {
+          "Flowers": {
+            "tint": "#EE7B33",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "dark": {
+        "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+        "scale": 0.42,
+        "floor_offset_m": 0.073151,
+        "intended_silhouette": "Layered violet Duskcap shelf",
+        "surface_accents": {
+          "Mushrooms": {
+            "tint": "#9B7BEA",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "ice": {
+        "model": "res://assets/environment/stylized_nature/Clover_2.gltf",
+        "scale": 0.52,
+        "floor_offset_m": 0.002222,
+        "intended_silhouette": "Pale Frostbloom three-blade fan",
+        "surface_accents": {
+          "Leaves": {
+            "tint": "#A8E6EC",
+            "emission_energy": 0.1
+          }
+        }
+      },
+      "psychic": {
+        "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+        "scale": 0.37,
+        "floor_offset_m": 0.007781,
+        "intended_silhouette": "Lilac Mindleaf umbrella bloom",
+        "surface_accents": {
+          "Flowers": {
+            "tint": "#F09ADB",
+            "emission_energy": 0.1
+          }
+        }
+      }
+    }
+  },
+  "runtime_enabled": false
 }

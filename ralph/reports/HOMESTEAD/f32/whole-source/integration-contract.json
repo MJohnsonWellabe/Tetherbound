@@ -1,0 +1,99 @@
+{
+  "status": "SOURCE_CANDIDATE_NOT_MET",
+  "baseline": "6cee2372f0d488e25ddb4548c09043901fc32979",
+  "shared_owner": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+  "runtime_enabled": false,
+  "registry_adapter": "res://scripts/world/f32_source_actions.gd::stage",
+  "signature": "stage(current_full_admitted, revision, op, exact_intent, trusted_host_context, optional_bound_F27_care_stage)",
+  "intents": {
+    "node": [
+      "site_id",
+      "expected_stock_revision",
+      "action_id"
+    ],
+    "farm": [
+      "plot_id",
+      "action",
+      "crop_id",
+      "expected_stock_revision",
+      "action_id"
+    ],
+    "refine": [
+      "recipe_id",
+      "action_id"
+    ],
+    "groom": [
+      "creature_uid",
+      "action_id"
+    ]
+  },
+  "action_id": "32 lowercase hex, retained verbatim by the existing transaction journal",
+  "host_context": [
+    "character_id",
+    "expected_revision",
+    "world_id",
+    "realm",
+    "actor_realm == realm from authenticated live actor; never a client or full-record field",
+    "host_day",
+    "source_id",
+    "source_generation",
+    "registered_live_source=true",
+    "in_range=true",
+    "in_combat=false",
+    "modal_open=false"
+  ],
+  "full_character_fields": [
+    "character_id",
+    "party",
+    "redesign_character",
+    "inventory",
+    "portal_escrow",
+    "vitals_escrow",
+    "equipment",
+    "realm_hearts"
+  ],
+  "character_shape": "Preserve admitted full eight fields. No persisted realm/flags additions. Four base refining recipes require no personal unlock; future personal recipe gates fail closed pending a bound eligibility provider.",
+  "node_context": [
+    "source_definition exact RenewableSiteCatalog.by_id result",
+    "stock {revision,generation,next_ready_day}",
+    "retained_seed_roll for that actual registered generation",
+    "source_available from host prerequisites/phase",
+    "equipped_tool from host admitted equipment"
+  ],
+  "farm_context": [
+    "plot {state,revision,crop_id,planted_on_day,ripe_on_day}",
+    "greenhouse_built from actual paid greenhouse world record",
+    "actual authored:<index> or placed farm building UID"
+  ],
+  "refine_context": [
+    "world actual save_data snapshot",
+    "completed_present_channel=true",
+    "completed_action_id exact ticket ID; consume channel completion only on same journal settlement"
+  ],
+  "groom_context": [
+    "paid_den=true",
+    "bound F27 stage_care callback; same candidate and receipts as shed"
+  ],
+  "output": "Detached before/state + immutable original_intent/revision + source_identity + world_mutation {kind,realm,source_id,before,after}; stage does not promote or save.",
+  "journal": "Reuse existing creature_training with world_harvest companion for node/farm. Reserve original world stock BEFORE owner inventory stage/save. Retain full original source identity+generation and before/after stock in same journal; no new inventory, actor registry, receipt bag or second payout.",
+  "failure": "First claimant only. Full bag/broken tool/stale generation/out of range/wrong realm/save false/refusal change nothing. Pending rows fence other claims and conflicting portable transactions. Existing original intent replay, owner bool-save, exact ACK and second host save release reservation; never just receipt-present.",
+  "save_fields": "Foundation alone composes world stock/readiness schema and registry with existing node_cycles/farm_plots/world_harvest and immutable save/ACK rows. Existing node_cycles currently integer schema cannot silently store dictionaries.",
+  "presentation": "F32SourceService forwards injected submit/stock/plot callbacks; Foundation calls notify_settled after existing journal settlement. F32WorldMount mounts all canonical biome resources and authored farm; F31 mounts placed farm via TypeCropPlot.setup_source(uid,config,service). World owner removes corresponding legacy material mounts to avoid duplicates and prevents legacy harvest IDs for admitted F32 sources.",
+  "itemdb_proposal": ".tmp/f32/itemdb.patch + exact before/after and hashes. No shared file edited.",
+  "item_definition_owners": "F32 seeds/ingots/tide_pearl/non-butchery display overrides; F27 essence; F28 attuned. No duplicate independent item registries.",
+  "wild_shed": "F32SourceActions.compose_wild_shed(actual_F27_victory_stage, retained_host_outcome, retained_per_defeated_uid_rolls) BEFORE existing victory journal; no second payout or victory flag inference.",
+  "f28_bridge": "All eight Meadows essence candidate positions use existing early band1/band2 material anchors. Disable F28 provisional master_garden nodes at ROOT activation; retain canonical attuned IDs. Actual terrain and feast-solvency ledger must use accepted stock.",
+  "landing_dependencies": [
+    "F16",
+    "F27",
+    "F31"
+  ],
+  "unconnected": [
+    "Foundation typed registry dispatch/context+world reservation/save+owner ACK callbacks",
+    "world-owner mount registration and legacy exclusion",
+    "F31 actual Forge/Den/placed farm/Greenhouse callers",
+    "F27 actual wild victory shed composition",
+    "ItemDB overlay shared patch",
+    "actual player and 4-character proof"
+  ]
+}
