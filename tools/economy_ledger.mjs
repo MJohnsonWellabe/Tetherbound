@@ -7,6 +7,54 @@ import {fileURLToPath} from 'node:url';
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const integer = n => Number.isSafeInteger(n) && n >= 0;
+// Read the existing F19 authoring overlay without activating any game provider.
+// Validate its original identities/values before using candidate costs.
+export function authoredCurve(base, policy) {
+  const object = v => v !== null && typeof v === 'object' && !Array.isArray(v);
+  const level = v => Number.isInteger(v) && v >= 1 && v <= 100;
+  const slot = (root, tokens) => {
+    if (!Array.isArray(tokens) || !tokens.length || tokens.length > 16) throw Error('Invalid overlay path');
+    let parent = root;
+    for (let i=0;i<tokens.length;i++) {
+      const key = tokens[i];
+      if (!(object(parent) && typeof key === 'string') &&
+          !(Array.isArray(parent) && integer(key) && key < parent.length)) throw Error('Invalid overlay slot');
+      const exists = Object.hasOwn(parent,key);
+      if (i === tokens.length-1) return {parent,key,exists,value:exists?parent[key]:null};
+      if (!exists) throw Error('Missing overlay parent');
+      parent = parent[key];
+    }
+  };
+  if (!object(base) || !object(policy) || policy.schema_version !== 1 ||
+      typeof policy.runtime_enabled !== 'boolean' || !object(policy.biomes)) throw Error('Invalid authored curve');
+  const rows=policy.overlays?.['data/config/chapter_curve.json'];
+  if (!Array.isArray(rows)) throw Error('Missing authored curve overlay');
+  const seen=new Set();
+  for (const row of rows) {
+    if (!object(row) || !Array.isArray(row.at) || !Array.isArray(row.anchors) ||
+        !Object.hasOwn(row,'legacy') || !level(row.value)) throw Error('Invalid level overlay');
+    const words=row.at.filter(t=>typeof t==='string');
+    const last=words.at(-1);
+    if (row.at.some(t=>typeof t!=='string'&&!integer(t)) ||
+        !(['level','ace_level','level_ceiling','warden_level','wild_band','trainer_levels','level_range','level_band'].includes(last) ||
+          (['enter','exit'].includes(last)&&words.at(-2)==='team'))) throw Error('Not a level overlay');
+    const key=JSON.stringify(row.at);
+    if (seen.has(key)) throw Error('Duplicate level overlay');
+    seen.add(key);
+    for (const anchor of row.anchors) {
+      if (!object(anchor)||!Object.hasOwn(anchor,'value')) throw Error('Invalid overlay anchor');
+      const found=slot(base,anchor.at);
+      if (!found.exists || JSON.stringify(found.value)!==JSON.stringify(anchor.value)) throw Error('Stale overlay identity');
+    }
+    const old=slot(base,row.at);
+    if (row.legacy===null ? old.exists || !object(old.parent) :
+        !level(row.legacy)||!old.exists||!level(old.value)||old.value!==row.legacy) throw Error('Stale overlay level');
+  }
+  const next=structuredClone(base);
+  for (const row of rows) {const target=slot(next,row.at);target.parent[target.key]=row.value;}
+  next.biomes=structuredClone(policy.biomes);
+  return next;
+}
 export function stock(raw) {
   const out = {};
   const rows = Array.isArray(raw) ? raw : Object.entries(raw).map(([id,n]) => ({id,n}));
@@ -120,7 +168,10 @@ export function sourceReport(root = ROOT) {
     return JSON.parse(source(p));
   };
   const order = read('data/config/biome_order.json');
-  const curve = read('data/config/chapter_curve.json');
+  const liveCurve = read('data/config/chapter_curve.json');
+  const curvePolicy = read('data/config/redesign_level_curve.json');
+  source('scripts/creatures/level_curve_policy.gd');
+  const curve = authoredCurve(liveCurve,curvePolicy);
   const essence = read('data/config/essence.json');
   const progression = read('data/config/progression.json');
   const types = read('data/config/type_chart.json').types;
@@ -237,9 +288,11 @@ export function sourceReport(root = ROOT) {
   const missing = ['scripts/creatures/research_log.gd','data/config/research.json'].filter(p=>!fs.existsSync(path.join(root,p)));
   const flags = {essence:{xp_mode:essence.wild_victory_xp_mode,altar:essence.altar_runtime_enabled,wild:essence.wild_victory_runtime_enabled},
     gear:gear.feature_flags,stations:stations.runtime_enabled,camp:camp.runtime_enabled,bounties:bounties.runtime_enabled,
-    rematches:rematches.runtime_enabled,alphas:alphas.runtime_enabled};
+    rematches:rematches.runtime_enabled,alphas:alphas.runtime_enabled,level_curve:curvePolicy.runtime_enabled};
   return {schema_version:1,evidence_scope:'source-generated arithmetic; not an earned clear or acceptance verdict',
     manifest,errors,findings,bands,materials,authoredNodes,flags,missing_producers:missing,
+    level_curve:{basis:'validated F19 authoring overlay; no runtime activation',
+      legacy_meadows_exit:liveCurve.regions.at(-1).team.exit,authored_meadows_exit:curve.regions.at(-1).team.exit},
     economy_exploits:{trade:tradeResult,craft:craftResult,
       rest:'UNAVAILABLE: earned-day receipt and reload/world-hop witness required',
       release:{once_per:'creature uid',base:essence.release_essence_base,per_level:essence.release_essence_per_level,
