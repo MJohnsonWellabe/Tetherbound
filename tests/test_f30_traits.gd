@@ -11,6 +11,44 @@ const SPAWN := preload("res://scripts/creatures/trait_spawn_hooks.gd")
 func _one(id: String) -> Dictionary:
 	return {"traits_initialized":true,"rolled_traits":[id],"taught_traits":{},"trait_secondary":""}
 
+func test_real_json_config_numeric_gates_and_strict_activation() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(TRAITS.CONFIG_PATH))
+	assert_true(raw is Dictionary,"real trait JSON did not parse")
+	if not raw is Dictionary: return
+	var cfg: Dictionary = raw
+	assert_true(TRAITS.configuration_errors(cfg).is_empty(),str(TRAITS.configuration_errors(cfg)))
+	assert_false(TRAITS.runtime_enabled(cfg),"shipped F30 activation must remain off")
+	var enabled := cfg.duplicate(true)
+	enabled.runtime_enabled = true
+	assert_true(TRAITS.runtime_enabled(enabled))
+	var authored := enabled.duplicate(true)
+	authored.slot_breakthrough_tiers = [1,3,5]
+	assert_true(TRAITS.configuration_errors(authored).is_empty())
+	assert_true(TRAITS.runtime_enabled(authored))
+	assert_eq(TRAITS.unlocked_slots({"breakthroughs":[1,2,3,4,5]},enabled),[1,2,3])
+	assert_eq(TRAITS.unlocked_slots({"breakthroughs":[1.0,2.0,3.0,4.0,5.0]},enabled),[1,2,3])
+	assert_true(TRAITS.unlocked_slots({"breakthroughs":[true,3,5]},enabled).is_empty())
+	for invalid: Variant in [null,true,"1,3,5",[],[1,3],[1,3,5,7],[1,2,5],[5,3,1],[true,3,5],["1",3,5],[1,3.5,5],[1,NAN,5],[1,INF,5]]:
+		var broken := enabled.duplicate(true)
+		broken.slot_breakthrough_tiers = invalid
+		assert_false(TRAITS.configuration_errors(broken).is_empty(),"malformed tiers accepted: %s" % str(invalid))
+		assert_false(TRAITS.runtime_enabled(broken),"invalid config enabled runtime")
+	for field: String in ["maximum_rolled","bond_reveal_nodes"]:
+		var broken := enabled.duplicate(true)
+		broken[field] = true
+		assert_false(TRAITS.configuration_errors(broken).is_empty())
+	for invalid: Variant in [null,0,1,0.0,1.0,"true",[],{}]:
+		var broken := enabled.duplicate(true)
+		broken.runtime_enabled = invalid
+		assert_false(TRAITS.configuration_errors(broken).is_empty(),"nonboolean activation accepted")
+		assert_false(TRAITS.runtime_enabled(broken))
+	var missing := enabled.duplicate(true)
+	missing.erase("runtime_enabled")
+	assert_false(TRAITS.configuration_errors(missing).is_empty())
+	assert_false(TRAITS.runtime_enabled(missing))
+	# Pure rules remain available with valid runtime_enabled:false config.
+	assert_almost_eq(TRAITS.apply_value(_one("gentle"),"healing",100.0,cfg),105.0)
+
 func test_each_trait_applies_actual_consumer() -> void:
 	var cfg := TRAITS.config()
 	assert_true(TRAITS.configuration_errors(cfg).is_empty())

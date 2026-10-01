@@ -36,7 +36,8 @@ ROWS = [
     ('sky_dancer','epic','fly_speed',.12,'Fly 12% faster.'),
 ]
 config = {
-    'version': 1, 'rarities': {'common': .05, 'rare': .08, 'epic': .12},
+    'version': 1, 'runtime_enabled': False,
+    'rarities': {'common': .05, 'rare': .08, 'epic': .12},
     'maximum_rolled': 3, 'aggregate_effect_limit': .30,
     'bond_reveal_nodes': 5, 'slot_breakthrough_tiers': [1,3,5],
     'essence_cost_per_slot': 10, 'maximum_transaction_receipts': 4096,
