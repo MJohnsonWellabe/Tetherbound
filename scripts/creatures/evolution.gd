@@ -20,6 +20,170 @@ extends RefCounted
 ## between pure arithmetic and the instance that owns state.
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const DATA := preload("res://scripts/data/redesign_data.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
+const LINES_PATH := "res://data/config/evolution_lines.json"
+const BEAR_PROVENANCE := "res://assets/creatures/tetherbound/stormursa/source/provenance.json"
+
+
+## F29/RD-28: a pure component of F28's one feast_feed transaction. The host
+## passes its admitted party card plus that uid's evolution_choices mirror.
+## Ingredient is derived from the cooked feast SKU by F28, never inventory or
+## a client claim. Cooking already paid the stone: debit is ALWAYS empty.
+## This does not save, replace a creature, unlock a cap or change inventory.
+static func prepare_feast_choice(
+	creature_card: Dictionary, tier: int, choice: String, ingredient: String
+) -> Dictionary:
+	var offered := feast_offer(creature_card, tier)
+	if not bool(offered.get("ok", false)):
+		return offered
+	if not ingredient in ["", "heartstone", "sunstone"]:
+		return _feast_failure("evolution_ingredient_invalid")
+	if not choice in ["", "evolve", "stay"]:
+		return _feast_failure("evolution_choice_invalid")
+	var out := creature_card.duplicate(true)
+	var choices: Dictionary = out.get("evolution_choices", {}).duplicate(true)
+	var key := str(tier)
+	if choices.has(key):
+		return _feast_failure("evolution_choice_permanent")
+	var branches: Array = offered.get("branches", [])
+	if branches.is_empty():
+		# A disabled bear is no offer, not a permanent refusal. A T5 feast
+		# still lifts the cap; missed offers are not retroactive (§8.1).
+		if choice != "" or ingredient != "":
+			return _feast_failure("evolution_not_offered")
+		return _feast_success(out, {}, {}, "")
+	if choice == "":
+		return _feast_failure("evolution_choice_required")
+	if choice == "stay":
+		# A cooked catalyst feast can be declined, but never reimbursed.
+		if ingredient != "" and not _has_ingredient(branches, ingredient):
+			return _feast_failure("evolution_ingredient_invalid")
+		choices[key] = "stay"
+		out["evolution_choices"] = choices
+		return _feast_success(out, {"tier": key, "value": "stay"}, {}, "")
+	var selected: Dictionary = {}
+	for branch: Dictionary in branches:
+		if branch.extra_ingredient == ingredient:
+			if not selected.is_empty():
+				return _feast_failure("evolution_ingredient_ambiguous")
+			selected = branch
+	if selected.is_empty():
+		return _feast_failure("evolution_catalyst_feast_required")
+	var target := str(selected.target)
+	var definition := SPECIES.definition(target)
+	var patch := _species_patch(creature_card, target, definition)
+	if patch.is_empty():
+		return _feast_failure("evolution_stats_invalid")
+	out.merge(patch, true)
+	choices[key] = target
+	out["evolution_choices"] = choices
+	return _feast_success(out, {"tier": key, "value": target}, patch, ingredient)
+
+
+## UI quotes use the same canonical authored lines as the host planner.
+## F28 separately validates current cap, cleared tiers, recipe, actual station,
+## ownership and stable character. No missed lower-tier evolution is offered.
+static func feast_offer(creature_card: Dictionary, tier: int) -> Dictionary:
+	if tier < 1 or tier > 5 or not INSTANCE.valid_uid(str(creature_card.get("uid", ""))):
+		return _feast_failure("evolution_card_invalid")
+	var raw_level: Variant = creature_card.get("level")
+	if not (raw_level is int or raw_level is float) or not is_finite(float(raw_level)) \
+			or float(raw_level) != float(tier * 10):
+		return _feast_failure("evolution_wrong_level")
+	var raw_choices: Variant = creature_card.get("evolution_choices", {})
+	if not raw_choices is Dictionary:
+		return _feast_failure("evolution_choices_invalid")
+	if raw_choices.has(str(tier)):
+		return _feast_failure("evolution_choice_permanent")
+	var source := str(creature_card.get("species_id", ""))
+	if not SPECIES.has(source):
+		return _feast_failure("evolution_species_invalid")
+	var loaded := DATA.load_catalog("evolution_lines", LINES_PATH)
+	if not bool(loaded.get("ok", false)):
+		return _feast_failure("evolution_config_invalid")
+	var branches: Array[Dictionary] = []
+	for row: Dictionary in loaded.data:
+		if row.source != source or int(row.breaks_level) != tier * 10 or not bool(row.enabled):
+			continue
+		if row.target == "stormursa" and not storm_bear_ready():
+			continue
+		if not SPECIES.has(str(row.target)):
+			return _feast_failure("evolution_target_missing")
+		branches.append(row.duplicate(true))
+	return {"ok": true, "code": "ok", "branches": branches, "choice_required": not branches.is_empty(),
+		"stay_text": "Stay this species permanently for this tier. The level cap still lifts."}
+
+
+## A config flip alone cannot activate a generated or retargeted candidate.
+## ROOT fills this existing source manifest only after the actual full art bar.
+static func storm_bear_ready() -> bool:
+	if not FileAccess.file_exists(BEAR_PROVENANCE): return false
+	var raw: Variant = DATA.json(BEAR_PROVENANCE)
+	if not raw is Dictionary: return false
+	for gate: String in ["reference_inspected", "rig_pass", "animation_pass", "scale_pass", "full_art_bar_pass"]:
+		if raw.get(gate) != true: return false
+	if raw.get("generation_provider") != "Meshy" or str(raw.get("meshy_task_id", "")).is_empty(): return false
+	var height: Variant = raw.get("height_m")
+	if not (height is int or height is float) or not is_finite(float(height)): return false
+	var source_height := float(SPECIES.placeholder("staticub").get("height", INF))
+	if float(height) <= maxf(source_height, 1.80): return false
+	var visual := SPECIES.placeholder("stormursa")
+	var model: Variant = raw.get("model")
+	if not model is Dictionary or visual.get("model", "") != model.get("path", "") \
+			or float(visual.get("height", 0.0)) != float(height): return false
+	for slot: String in ["reference", "model", "judge_medium", "judge_high", "before_after"]:
+		var artifact: Variant = raw.get(slot)
+		if not artifact is Dictionary: return false
+		var path := str(artifact.get("path", ""))
+		var sha := str(artifact.get("sha256", ""))
+		if not path.begins_with("res://") or sha.length() != 64 or not FileAccess.file_exists(path): return false
+		if FileAccess.get_sha256(path) != sha: return false
+		if slot in ["judge_medium", "judge_high"] and (artifact.get("verdict") != "PASS" \
+				or str(artifact.get("independent_reviewer", "")).is_empty()): return false
+	return true
+
+
+static func _has_ingredient(branches: Array, ingredient: String) -> bool:
+	for branch: Dictionary in branches:
+		if branch.extra_ingredient == ingredient: return true
+	return false
+
+
+## Use the same curve/IV/boost math as the live individual. Everything else,
+## including every loadout slot and mastery counter, stays byte-for-byte.
+static func _species_patch(card: Dictionary, target: String, definition: Dictionary) -> Dictionary:
+	var growth: Dictionary = PROGRESSION.config().get("level", {}).get("growth_per_level", {})
+	var cfg := PROGRESSION.config()
+	var patch := {"species_id": target, "display_name": str(definition.get("display_name", target)),
+		"creature_type": str(definition.get("type", "")), "secondary_type": str(definition.get("type_secondary", ""))}
+	for stat: String in ["hp", "attack", "defence"]:
+		var raw_base: Variant = definition.get("base_" + stat)
+		var raw_iv: Variant = card.get("iv_" + stat)
+		var raw_boost: Variant = card.get("boost_" + stat)
+		for value: Variant in [raw_base, raw_iv, raw_boost]:
+			if not (value is int or value is float) or not is_finite(float(value)): return {}
+		if float(raw_base) <= 0.0 or float(raw_iv) < 0.0 or float(raw_iv) > 1.0 or float(raw_boost) < 0.0: return {}
+		patch["base_" + stat] = float(raw_base)
+		patch["max_hp" if stat == "hp" else stat] = PROGRESSION.stat_at_level(float(raw_base), int(card.level), float(growth.get(stat, 0.0))) \
+			* PROGRESSION.individuality_multiplier(float(raw_iv), cfg) + float(raw_boost)
+	var old_max: Variant = card.get("max_hp")
+	var old_hp: Variant = card.get("hp")
+	if not (old_max is int or old_max is float) or not (old_hp is int or old_hp is float): return {}
+	if not is_finite(float(old_max)) or not is_finite(float(old_hp)) or float(old_max) <= 0.0 \
+			or float(old_hp) < 0.0 or float(old_hp) > float(old_max): return {}
+	patch["hp"] = float(patch.max_hp) * (float(old_hp) / float(old_max))
+	return patch
+
+
+static func _feast_failure(code: String) -> Dictionary:
+	return {"ok": false, "code": code, "reason": code, "debit": {}, "choice_record": {}, "species_patch": {}}
+
+
+static func _feast_success(card: Dictionary, record: Dictionary, patch: Dictionary, ingredient: String) -> Dictionary:
+	return {"ok": true, "code": "ok", "reason": "", "creature": card, "debit": {},
+		"choice_record": record, "species_patch": patch, "extra_ingredient": ingredient}
 
 
 ## The full set of additional branches `species_id` declares beyond its
@@ -59,6 +223,10 @@ static func variant_branches(species_id: String) -> Dictionary:
 ## holding more than one sets `ambiguous` rather than silently choosing --
 ## `check()` turns that into a refusal naming the problem.
 static func requirements(species_id: String, cfg: Dictionary, inventory: RefCounted = null) -> Dictionary:
+	# F28 activation source cut supplies this explicit mode. Legacy UI cannot
+	# consume a held stone alongside the canonical feast transaction.
+	if cfg.get("evolution_mode", "legacy") == "breakthrough":
+		return {}
 	var definition := SPECIES.definition(species_id)
 	if not definition.has("evolves_into"):
 		return {}
