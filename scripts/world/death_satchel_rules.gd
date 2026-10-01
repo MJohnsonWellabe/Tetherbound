@@ -14,6 +14,21 @@ static func slots(inventory: RefCounted) -> Array:
 		var stack: Dictionary = inventory.stack_at(i)
 		result.append(null if stack.is_empty() else stack)
 	return result
+static func protected_key(item: String) -> bool:
+	return bool(db().definition(item).get("protected_key", false))
+
+static func death_slots(inventory: RefCounted) -> Array:
+	var result := slots(inventory)
+	for index: int in result.size():
+		if result[index] is Dictionary and protected_key(str(result[index].id)):
+			result[index] = null
+	return result
+
+static func has_stacks(raw: Array) -> bool:
+	for stack: Variant in raw:
+		if stack is Dictionary: return true
+	return false
+
 static func valid_slots(raw: Variant) -> bool:
 	if not raw is Array or raw.size() > INVENTORY.SLOT_COUNT:
 		return false
@@ -47,6 +62,8 @@ static func give_stack(inventory: RefCounted, stack: Dictionary) -> bool:
 		return false
 	return int(inventory.add(str(stack.id), int(stack.n))) == 0
 static func preview(container: Array, personal: Array, direction: String, item: String, count: int) -> Dictionary:
+	if protected_key(item):
+		return {}
 	if not valid_slots(container) or not valid_slots(personal) or count <= 0 or direction not in ["deposit", "withdraw"]:
 		return {}
 	var bag := inventory_from(container)

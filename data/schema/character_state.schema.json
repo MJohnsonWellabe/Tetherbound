@@ -30,13 +30,11 @@
             "type": "string",
             "enum": [
               "meadows_entry",
-              "tidewake_entry",
-              "cloudreach_entry",
-              "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
-              "biome8_entry"
+              "meadows_trail_camp",
+              "meadows_ranger_camp",
+              "meadows_old_mill",
+              "meadows_highfield",
+              "meadows_sigil_waystop"
             ]
           },
           "minItems": 0,
@@ -47,14 +45,12 @@
           "items": {
             "type": "string",
             "enum": [
-              "meadows_entry",
               "tidewake_entry",
-              "cloudreach_entry",
-              "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
-              "biome8_entry"
+              "tidewake_first_shore",
+              "tidewake_shellwatch",
+              "tidewake_tidal_cradle",
+              "tidewake_salt_crown",
+              "tidewake_sluice_isle"
             ]
           },
           "minItems": 0,
@@ -65,14 +61,11 @@
           "items": {
             "type": "string",
             "enum": [
-              "meadows_entry",
-              "tidewake_entry",
               "cloudreach_entry",
-              "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
-              "biome8_entry"
+              "cloudreach_galefoot_waycamp",
+              "cloudreach_windscar_flight_aerie_camp",
+              "cloudreach_cliffhold_commons",
+              "cloudreach_summit_bivouac"
             ]
           },
           "minItems": 0,
@@ -83,14 +76,12 @@
           "items": {
             "type": "string",
             "enum": [
-              "meadows_entry",
-              "tidewake_entry",
-              "cloudreach_entry",
               "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
-              "biome8_entry"
+              "stormwood_ashfoot_waycamp",
+              "stormwood_lantern_pools_camp",
+              "stormwood_still_grove_shelter",
+              "stormwood_lantern_hollow_waycamp",
+              "stormwood_ember_bivouac"
             ]
           },
           "minItems": 0,
@@ -101,14 +92,7 @@
           "items": {
             "type": "string",
             "enum": [
-              "meadows_entry",
-              "tidewake_entry",
-              "cloudreach_entry",
-              "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
-              "biome8_entry"
+              "biome5_entry"
             ]
           },
           "minItems": 0,
@@ -119,14 +103,7 @@
           "items": {
             "type": "string",
             "enum": [
-              "meadows_entry",
-              "tidewake_entry",
-              "cloudreach_entry",
-              "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
-              "biome8_entry"
+              "biome6_entry"
             ]
           },
           "minItems": 0,
@@ -137,14 +114,7 @@
           "items": {
             "type": "string",
             "enum": [
-              "meadows_entry",
-              "tidewake_entry",
-              "cloudreach_entry",
-              "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
-              "biome8_entry"
+              "biome7_entry"
             ]
           },
           "minItems": 0,
@@ -155,13 +125,6 @@
           "items": {
             "type": "string",
             "enum": [
-              "meadows_entry",
-              "tidewake_entry",
-              "cloudreach_entry",
-              "stormwood_entry",
-              "biome5_entry",
-              "biome6_entry",
-              "biome7_entry",
               "biome8_entry"
             ]
           },
@@ -180,110 +143,73 @@
           "enum": [
             "",
             "meadows_entry",
-            "tidewake_entry",
-            "cloudreach_entry",
-            "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
-            "biome8_entry"
+            "meadows_trail_camp",
+            "meadows_ranger_camp",
+            "meadows_old_mill",
+            "meadows_highfield",
+            "meadows_sigil_waystop"
           ]
         },
         "tidewake": {
           "type": "string",
           "enum": [
             "",
-            "meadows_entry",
             "tidewake_entry",
-            "cloudreach_entry",
-            "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
-            "biome8_entry"
+            "tidewake_first_shore",
+            "tidewake_shellwatch",
+            "tidewake_tidal_cradle",
+            "tidewake_salt_crown",
+            "tidewake_sluice_isle"
           ]
         },
         "cloudreach": {
           "type": "string",
           "enum": [
             "",
-            "meadows_entry",
-            "tidewake_entry",
             "cloudreach_entry",
-            "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
-            "biome8_entry"
+            "cloudreach_galefoot_waycamp",
+            "cloudreach_windscar_flight_aerie_camp",
+            "cloudreach_cliffhold_commons",
+            "cloudreach_summit_bivouac"
           ]
         },
         "stormwood": {
           "type": "string",
           "enum": [
             "",
-            "meadows_entry",
-            "tidewake_entry",
-            "cloudreach_entry",
             "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
-            "biome8_entry"
+            "stormwood_ashfoot_waycamp",
+            "stormwood_lantern_pools_camp",
+            "stormwood_still_grove_shelter",
+            "stormwood_lantern_hollow_waycamp",
+            "stormwood_ember_bivouac"
           ]
         },
         "biome5": {
           "type": "string",
           "enum": [
             "",
-            "meadows_entry",
-            "tidewake_entry",
-            "cloudreach_entry",
-            "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
-            "biome8_entry"
+            "biome5_entry"
           ]
         },
         "biome6": {
           "type": "string",
           "enum": [
             "",
-            "meadows_entry",
-            "tidewake_entry",
-            "cloudreach_entry",
-            "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
-            "biome8_entry"
+            "biome6_entry"
           ]
         },
         "biome7": {
           "type": "string",
           "enum": [
             "",
-            "meadows_entry",
-            "tidewake_entry",
-            "cloudreach_entry",
-            "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
-            "biome8_entry"
+            "biome7_entry"
           ]
         },
         "biome8": {
           "type": "string",
           "enum": [
             "",
-            "meadows_entry",
-            "tidewake_entry",
-            "cloudreach_entry",
-            "stormwood_entry",
-            "biome5_entry",
-            "biome6_entry",
-            "biome7_entry",
             "biome8_entry"
           ]
         }

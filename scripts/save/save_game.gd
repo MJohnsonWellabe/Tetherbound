@@ -424,6 +424,9 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_vitals_snapshot_allowed") \
 			and not bool(session.call("_owner_vitals_snapshot_allowed", portal_owner, initial_data)):
 		return {} # Refuse before identity generation or any live/disk mutation.
+	if portal_owner is RefCounted and session is Node and session.has_method("_owner_training_snapshot_allowed") \
+			and session.call("_owner_training_snapshot_allowed", portal_owner, initial_data) != true:
+		return {}
 	if not _redesign_errors(initial_data, portal_character).is_empty():
 		push_error("Save refused: invalid redesign state")
 		return {}
@@ -659,6 +662,8 @@ static func _redesign_errors(data: Dictionary, character_id: String = "") -> Arr
 	errors.append_array(preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
+	errors.append_array(preload("res://autoload/world_state.gd").portal_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
+	errors.append_array(preload("res://autoload/world_state.gd").training_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))
 	return errors
 
 

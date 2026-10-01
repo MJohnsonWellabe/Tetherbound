@@ -539,6 +539,7 @@ func _deplete_vegetation(intent: Dictionary, peer_id: int, realm: String) -> Dic
 ## placed-building record has one construction site and cannot drift.
 func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var id := str(intent.get("id", ""))
+	if id == "altar": return _refuse("place_building", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
 	if id.is_empty():
 		return _refuse("place_building", peer_id, "malformed", "That structure has no identity to record.")
 	var txn := str(intent.get("txn_id", ""))
@@ -633,6 +634,7 @@ func _dismantle(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	if index < 0 or index >= buildings.size():
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
 	var record: Dictionary = buildings[index] as Dictionary
+	if record.get("id") == "altar": return _refuse("dismantle", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
 	if str(record.get("realm", "meadows")) != realm:
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
 	var op := {"op": "building_remove", "scope": "world", "realm": realm,
@@ -739,6 +741,8 @@ func _grant_player_flag(intent: Dictionary, peer_id: int, realm: String) -> Dict
 ## committed once can never be committed again, so a retried or duplicated
 ## intent cannot mint a second stack no matter which order the two halves land.
 func _transfer_item(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	if SATCHEL_RULES.protected_key(str(intent.get("item", ""))):
+		return _refuse("transfer_item", peer_id, "protected_key", "Keys stay with their owner.")
 	var txn := str(intent.get("txn_id", ""))
 	var item := str(intent.get("item", ""))
 	var count := int(intent.get("count", 0))
@@ -761,6 +765,8 @@ func _transfer_item(intent: Dictionary, peer_id: int, realm: String) -> Dictiona
 ## guard, plus a `scene` op so lane 3.E's dropped-stack prop is spawned once for
 ## everyone rather than once per peer that heard about it.
 func _drop_item(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	if SATCHEL_RULES.protected_key(str(intent.get("item", ""))):
+		return _refuse("drop_item", peer_id, "protected_key", "Keys stay with their owner.")
 	var txn := str(intent.get("txn_id", ""))
 	var item := str(intent.get("item", ""))
 	var count := int(intent.get("count", 0))
@@ -1144,7 +1150,9 @@ func accept_actor_vitals_delivery(id: String, character: String, journal_revisio
 
 
 func accept_reward_delivery(delivery_id: String, character_id: String, peer_id: int) -> Dictionary:
-	if delivery_id.begins_with("actor_vitals:"):
+	if delivery_id.begins_with("portal_unlock:"):
+		return _refuse("reward_delivery_accept", peer_id, "typed_receipt_required", "That portal receipt requires its exact sender and generation.")
+	if delivery_id.begins_with("actor_vitals:") or delivery_id.begins_with("creature_training:") or delivery_id.begins_with("altar_building:"):
 		return _refuse("reward_delivery_accept", peer_id, "typed_receipt_required", "That vitality receipt requires its exact revision.")
 	var raw: Variant = (world.get("reward_deliveries") as Dictionary).get(delivery_id)
 	if delivery_id.is_empty() or character_id.is_empty() or not raw is Dictionary \
@@ -1295,3 +1303,69 @@ func _refuse(kind: String, peer_id: int, code: String, reason: String) -> Dictio
 		"ok": false, "kind": kind, "peer": peer_id, "code": code, "reason": reason,
 		"pending": false, "delta": {"seq": seq, "realm": "", "ops": []},
 	}
+
+
+## Internal host typed door; _commit_intent never accepts these op names.
+func commit_creature_training_delivery(row: Dictionary, peer_id: int) -> Dictionary:
+	var op := {"op": "creature_training_journal", "scope": "world", "delivery_id": row.get("delivery_id"), "delivery": row.duplicate(true)}
+	if world == null or not preload("res://autoload/world_state.gd").training_world_op_valid(op,
+		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+		return _refuse("creature_training", peer_id, "invalid_training", "That training decision is invalid.")
+	return _commit([op, {"op": "creature_training_settle", "scope": "player", "peers": [peer_id],
+		"delivery": row.duplicate(true)}], "creature_training", peer_id, "meadows")
+
+
+func accept_creature_training_delivery(id: String, character: String, journal_revision: int,
+		receipt: String, peer_id: int) -> Dictionary:
+	var op := {"op": "creature_training_accept", "scope": "world", "delivery_id": id,
+		"character_id": character, "journal_revision": journal_revision, "receipt": receipt}
+	if world == null or not preload("res://autoload/world_state.gd").training_world_op_valid(op,
+		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+		return _refuse("creature_training_accept", peer_id, "stale_training_ack", "That training decision is no longer current.")
+	return _commit([op], "creature_training_accept", peer_id, "meadows")
+
+
+## Internal only: the public building intent cannot call this typed door.
+## One delta applies the journal and the ordinary building UID operation.
+func commit_altar_building(row: Dictionary, peer: int) -> Dictionary:
+	const W = preload("res://autoload/world_state.gd")
+	if world == null or not W.altar_build_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+		or world.reward_deliveries.has(row.delivery_id) or row.status != "pending":
+		return _refuse(str(row.get("action", "")), peer, "invalid_building_journal", "That Altar decision is invalid.")
+	var record: Dictionary = row.intent.record
+	var building_op: Dictionary
+	if row.action == "place_building":
+		if record.uid != "b%d" % int(world.next_building_uid) or world.building_index_of(record.uid) >= 0:
+			return _refuse(row.action, peer, "stale_building_uid", "That placement changed.")
+		building_op = record.duplicate(true)
+		building_op.op = "building_add"
+	else:
+		var index := int(world.building_index_of(record.uid))
+		if index < 0 or not preload("res://scripts/creatures/essence.gd")._equivalent(world.placed_buildings[index], record) \
+			or W.altar_paid_provenance(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, record, row.character_id).is_empty():
+			return _refuse(row.action, peer, "unproved_paid_altar", "That Altar has no matching paid placement.")
+		building_op = {"op": "building_remove", "realm": "meadows", "uid": record.uid, "index": index}
+	building_op.scope = "world"
+	building_op.txn_id = row.action_id
+	var verdict := _commit([{"op": "creature_training_journal", "scope": "world", "delivery_id": row.delivery_id, "delivery": row.duplicate(true)},
+		building_op, {"op": "creature_training_settle", "scope": "player", "peers": [peer], "delivery": row.duplicate(true)}], row.action, peer, "meadows")
+	verdict.uid = record.uid
+	verdict.txn_id = row.action_id
+	return verdict
+
+
+## Internal prepared portal journal, never a packet-supplied grant intent.
+func commit_portal_delivery(row: Dictionary, peer: int) -> Dictionary:
+	if world == null or not preload("res://autoload/world_state.gd").portal_op_valid(
+		{"op": "portal_delivery_journal", "receipt": row.get("receipt"), "delivery": row},
+		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+		return _refuse("portal_unlock", peer, "invalid_portal_journal", "The portal receipt could not be prepared.")
+	return _commit([{"op": "portal_delivery_journal", "scope": "world", "realm": "meadows", "receipt": row.receipt, "delivery": row.duplicate(true)}], "portal_unlock", peer, "meadows")
+
+
+func accept_portal_delivery(row: Dictionary, peer: int) -> Dictionary:
+	if world == null or not preload("res://autoload/world_state.gd").portal_op_valid(
+		{"op": "portal_delivery_accept", "receipt": row.get("receipt"), "delivery": row},
+		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+		return _refuse("portal_unlock", peer, "invalid_portal_ack", "That portal acknowledgement is no longer current.")
+	return _commit([{"op": "portal_delivery_accept", "scope": "world", "realm": "meadows", "receipt": row.receipt, "delivery": row.duplicate(true)}], "portal_unlock", peer, "meadows")

@@ -278,6 +278,8 @@ var _fade_total: float = 0.0
 
 func _ready() -> void:
 	add_to_group("progression_restore")
+	add_to_group("input_owner")
+	add_to_group("story_modal")
 	_encounter = get_node_or_null(encounter_path)
 	# FIRST, before anything else in this function and before any await.
 	#
@@ -536,7 +538,11 @@ func _clear_fade() -> void:
 
 func _process(delta: float) -> void:
 	_tick_fade(delta)
+	_retry_original_starter_save()
 	_drain_effects()
+	if not _pending_starter_adoption.is_empty() or not _f18_pending_home_key.is_empty():
+		_refresh_lockout()
+		return
 	_advance_from_external_progression()
 	_catch_up_a_behind_character()
 	_refresh_lockout()
@@ -588,12 +594,33 @@ func _advance_from_external_progression() -> void:
 ## through the same `give:` effects Grandpa's briefing uses, and not a line of
 ## routing had to be written for it — a villager's conversation arrives in this
 ## queue exactly like the opening's own.
+var _f18_pending_effects: Array[String] = []
+var _f18_pending_home_key: Dictionary = {}
+var _f18_home_key_retry_at := 0
+
 func _drain_effects() -> void:
 	# A spoken line may couple a physical gift to the fact that it was handed
 	# over. Prove the whole batch fits before applying any part of it, otherwise
 	# a full satchel can consume the fact and permanently remove the only source
 	# of a required item (Sela's Mill Bridge Gear is the critical case).
-	var effects: Array[String] = _dialogue.call("drain_effects")
+	var effects: Array[String] = _f18_pending_effects.duplicate()
+	effects.append_array(_dialogue.call("drain_effects"))
+	_f18_pending_effects.clear()
+	# Preserve the actual spoken effect and following beats until the world
+	# journal is durable. Closing the panel cannot consume its only source.
+	var opening_game := _effect_game()
+	var finite_gift_enabled := opening_game != null and opening_game.get("session") != null and opening_game.get("session").call("portal_runtime_ready") == true
+	if effects.has("home_key:grant") and finite_gift_enabled:
+		if Time.get_ticks_msec() < _f18_home_key_retry_at:
+			_f18_pending_effects = effects.duplicate()
+			return
+		_f18_home_key_retry_at = Time.get_ticks_msec() + 3000
+		if _f18_pending_home_key.is_empty() and opening_game != null and _f18_opening_conversation_id == "grandpa_first_catch":
+			_f18_pending_home_key = {"character_id": opening_game.get("local").character_id, "world_instance_id": opening_game.get("world").reward_delivery_namespace, "session_epoch": opening_game.get("session").call("_altar_current_epoch")}
+		if opening_game == null or opening_game.call("grant_home_key_from_opening", self) != true:
+			_f18_pending_effects = effects.duplicate()
+			return
+		_f18_pending_home_key.clear()
 	if not _gift_batch_fits(effects):
 		_dialogue.call("close")
 		var game := _effect_game()
@@ -621,6 +648,8 @@ func _drain_effects() -> void:
 				_heal_party()
 			"map_reveal":
 				_reveal_map(str(parts[1]))
+			"home_key":
+				pass # The retained spoken batch journals the finite gift above.
 			_:
 				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:', 'battle:', 'map_reveal:' and 'heal_party' and nothing else" % effect)
 
@@ -1136,7 +1165,7 @@ func _refresh_lockout() -> void:
 			or bool(_starter_picker.call("is_open")) \
 			or (_regional_credits != null and is_instance_valid(_regional_credits) \
 				and bool(_regional_credits.call("is_open")))
-	var modal := panel or is_fading() or _adopting
+	var modal := panel or is_fading() or _adopting or not _f18_pending_home_key.is_empty() or not _pending_starter_adoption.is_empty()
 	# An armed build ghost is a fourth owner of the screen — see the header.
 	var game := get_node_or_null(^"/root/Game")
 	var building: bool = game != null and str(game.get("pending_build")) != ""
@@ -1668,6 +1697,8 @@ func _grandpa_conversation_id() -> String:
 	return VILLAGE_NPCS.greeting_for(spec, progression)
 
 
+var _f18_opening_conversation_id := ""
+
 func _start_conversation(id: String) -> bool:
 	if id == "":
 		return false
@@ -1681,7 +1712,9 @@ func _start_conversation(id: String) -> bool:
 		if started:
 			_homecoming_character_id = REGIONAL_HOMECOMING.character_id(game)
 		return started
-	return bool(_dialogue.call("start", id))
+	var opened := bool(_dialogue.call("start", id))
+	if opened: _f18_opening_conversation_id = id
+	return opened
 
 
 func _on_dialogue_completed(id: String) -> void:
@@ -1739,6 +1772,9 @@ func _on_name_confirmed(chosen: String) -> void:
 	if _choice < 0:
 		push_error("a name came back with no starter chosen")
 		return
+	if not _pending_starter_adoption.is_empty():
+		_retry_original_starter_save()
+		return
 	await _adopt(_choice, chosen)
 
 
@@ -1750,16 +1786,42 @@ func _adopt(index: int, chosen: String) -> void:
 	# in the world to free. `encounter_director.adopt_starter()` builds the one
 	# real follower body below, for the one the player actually chose.
 	var adopted: bool = await _encounter.call("adopt_starter", species, chosen)
-	_adopting = false
 	if not adopted:
+		_adopting = false
 		push_error("could not give the player the %s they chose" % species)
 		return
 
-	if not _give_to_party(_encounter.call("ally_instance"), chosen):
-		push_error("the chosen %s is beside the trainer but not in the party" % species)
+	var game := _effect_game()
+	var typed_adoption := game != null and game.get("session") != null and (game.get("session").call("config").get("redesign_ending_runtime_enabled", false) == true or game.get("session").call("portal_runtime_ready") == true)
+	var added := bool(game.call("commit_original_starter", self, _encounter.call("ally_instance"), chosen)) if typed_adoption else _give_to_party(_encounter.call("ally_instance"), chosen)
+	if not added:
+		if typed_adoption:
+			_pending_starter_adoption = {"instance": _encounter.call("ally_instance"), "nickname": chosen, "character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace, "session_epoch": game.get("session").call("_altar_current_epoch"), "retry_at": Time.get_ticks_msec() + 3000}
+			game.call("push_world_message", "Your chosen companion is waiting for the opening save.")
+		else:
+			_adopting = false
+			push_error("the chosen %s is beside the trainer but not in the party" % species)
 		return
-	_persist_opening_fact(STARTER_GRANTED_FLAG)
+	_finish_original_starter_adoption(chosen, typed_adoption)
 
+
+var _pending_starter_adoption: Dictionary = {}
+
+func _retry_original_starter_save() -> void:
+	if _pending_starter_adoption.is_empty() or Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
+	var game := _effect_game()
+	if game == null or game.get("session") == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return
+	if game.get("local").character_id != _pending_starter_adoption.character_id or game.get("world").reward_delivery_namespace != _pending_starter_adoption.world_instance_id or game.get("session").call("_altar_current_epoch") != _pending_starter_adoption.session_epoch: return
+	_pending_starter_adoption.retry_at = Time.get_ticks_msec() + 3000
+	if game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true: return
+	var chosen: String = _pending_starter_adoption.nickname
+	_pending_starter_adoption.clear()
+	_finish_original_starter_adoption(chosen, true)
+
+
+func _finish_original_starter_adoption(chosen: String, typed_adoption: bool) -> void:
+	_adopting = false
+	if not typed_adoption: _persist_opening_fact(STARTER_GRANTED_FLAG)
 	# The first time this game says a word the player wrote.
 	_dialogue.call("set_value", NAME_KEY, chosen)
 	# The player now has one named companion. Do not automatically pile the next
@@ -2011,3 +2073,13 @@ func _give_to_party(instance: RefCounted, nickname: String) -> bool:
 		push_warning("the party is full; %s was not added" % instance.get("display_name"))
 		return false
 	return bool(party.call("add", instance))
+
+
+## The existing input graph and pause shell poll this actual source. Empty
+## retry bindings preserve its legacy modal behavior and flags-OFF opening.
+func owns_input() -> bool:
+	return not _pending_starter_adoption.is_empty() or not _f18_pending_home_key.is_empty()
+
+
+func is_open() -> bool:
+	return owns_input()

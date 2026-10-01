@@ -50,6 +50,8 @@ extends RefCounted
 ## delta: missing is a legal outcome of a legal swing, not a refusal.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const TRAINING_WORLD := preload("res://autoload/world_state.gd")
+const ACTOR_AUTHORITY := preload("res://scripts/net/character_authority.gd")
 const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
 const ACTOR_MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 var _actor_moves: RefCounted = null
@@ -1320,6 +1322,8 @@ static func _actor_vitals_view(actor: Dictionary) -> Dictionary:
 	var out := actor.duplicate(true)
 	out.erase("receipts")
 	out.erase("body_instance_id")
+	out.erase("training_receipt")
+	out.erase("training_character_revision")
 	return out
 
 static func presentation_snapshot(rec: Dictionary) -> Dictionary:
@@ -1472,3 +1476,88 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 		"cooldown_deadline_ms":deadline,"hit":false,"target":"self"}
 	delta.merge(wind,true)
 	return _ok("utility_intent",peer_id,delta)
+
+
+## Only the current registry's exact typed Altar lineage may retire a stale
+## inactive actor binding. No current participant or unsettled damage is reset.
+func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
+		character_revision: int, world_namespace: String, world_id: String) -> Dictionary:
+	if not TRAINING_WORLD.training_row_valid(training, world_namespace, world_id) \
+		or not training.action in ["altar_spend", "wild_defeat"] or admitted.get("character_id") != training.character_id \
+		or character_revision < int(training.character_revision) or not admitted.get("party") is Array \
+		or not admitted.get("redesign_character") is Dictionary \
+		or not admitted.redesign_character.get("transaction_receipts", []).has(training.receipt):
+		return {"ok":false,"code":"training_lineage_unavailable"}
+	var old_party: Dictionary = {}
+	var next_party: Dictionary = {}
+	var current_party: Dictionary = {}
+	for owned: Dictionary in training.before.party: old_party[owned.uid]=owned
+	for owned: Dictionary in training.after.party: next_party[owned.uid]=owned
+	for owned: Dictionary in admitted.party: current_party[owned.uid]=owned
+	var changes: Array[Dictionary] = []
+	for id: String in encounters:
+		var record: Dictionary = encounters[id]
+		for retained: bool in [false,true]:
+			var participants: Dictionary = record.get("retained_actor_participants" if retained else "participants",{})
+			for key: Variant in participants:
+				var participant: Dictionary = participants[key]
+				if participant.get("character_id") != training.character_id: continue
+				if not retained and record.get("phase") != "done":
+					return {"ok":false,"code":"training_actor_still_active"}
+				var high_water := int(participant.get("actor_generation",0))
+				for uid: String in participant.get("actor_vitals",{}):
+					var actor: Dictionary = participant.actor_vitals[uid]
+					if not old_party.has(uid) or not next_party.has(uid) or not current_party.has(uid):
+						return {"ok":false,"code":"training_actor_ownership_changed"}
+					var old: Dictionary=old_party[uid]
+					var next: Dictionary=next_party[uid]
+					var current: Dictionary=current_party[uid]
+					if int(actor.get("settled_revision",-1)) != int(actor.get("revision",-2)):
+						return {"ok":false,"code":"training_actor_unsettled"}
+					# An exact prior handoff or a fresh canonical post-training seed
+					# is read-only. Replays can never restore earlier HP/generation.
+					if actor.get("training_receipt")==training.receipt \
+						and actor.get("training_character_revision")==training.character_revision: continue
+					if ACTOR_AUTHORITY.equivalent(actor.max_hp,current.max_hp) \
+						and ACTOR_AUTHORITY.equivalent(actor.hp,current.hp) and actor.fainted==current.fainted \
+						and ACTOR_AUTHORITY.equivalent(current.max_hp,next.max_hp): continue
+					if ACTOR_AUTHORITY.equivalent(old.max_hp,next.max_hp) \
+						and ACTOR_AUTHORITY.equivalent(old.hp,next.hp) and old.fainted==next.fainted: continue
+					if not ACTOR_AUTHORITY.equivalent(actor.max_hp,old.max_hp) \
+						or not ACTOR_AUTHORITY.equivalent(actor.hp,old.hp) or actor.fainted!=old.fainted \
+						or not ACTOR_AUTHORITY.equivalent(current.max_hp,next.max_hp) \
+						or not ACTOR_AUTHORITY.equivalent(current.hp,next.hp) or current.fainted!=next.fainted:
+						return {"ok":false,"code":"training_actor_baseline_conflict"}
+					high_water=maxi(high_water,int(actor.body_generation))
+					if high_water>=2147483647: return {"ok":false,"code":"generation_exhausted"}
+					high_water+=1
+					var after_actor: Dictionary=actor.duplicate(true)
+					after_actor.max_hp=next.max_hp
+					after_actor.hp=next.hp
+					after_actor.fainted=next.fainted
+					after_actor.body_generation=high_water
+					after_actor.body_instance_id=0
+					after_actor.training_receipt=training.receipt
+					after_actor.training_character_revision=training.character_revision
+					# All original receipts/revisions remain; this is not damage/heal.
+					changes.append({"encounter_id":id,"retained":retained,"participant_key":key,
+						"uid":uid,"before":actor.duplicate(true),"after":after_actor,
+						"participant_generation":participant.get("actor_generation",0)})
+	return {"ok":true,"receipt":training.receipt,"character_revision":training.character_revision,
+		"world_namespace":world_namespace,"world_id":world_id,"changes":changes}
+
+## No await, signal, callback or generic maximum setter. The caller passes the
+## current actual world carrier and the SAME registry, not packet state.
+func commit_actor_training_baseline(proposal: Dictionary, training: Dictionary,
+		admitted: Dictionary, character_revision: int, deliveries: Dictionary,
+		world_namespace: String, world_id: String) -> bool:
+	if training.get("status")!="accepted" or not ACTOR_AUTHORITY.equivalent(deliveries.get(training.get("delivery_id")),training): return false
+	var verified: Dictionary=stage_actor_training_baseline(training,admitted,character_revision,world_namespace,world_id)
+	if verified.get("ok")!=true or not ACTOR_AUTHORITY.equivalent(verified,proposal): return false
+	for change: Dictionary in proposal.changes:
+		var participants: Dictionary=encounters[change.encounter_id].get("retained_actor_participants" if change.retained else "participants",{})
+		var participant: Dictionary=participants[change.participant_key]
+		participant.actor_vitals[change.uid]=change.after.duplicate(true)
+		participant.actor_generation=maxi(int(participant.get("actor_generation",0)),int(change.after.body_generation))
+		if participant.get("actor_bound_uid")==change.uid: participant.actor_bound_uid=""
+	return true
