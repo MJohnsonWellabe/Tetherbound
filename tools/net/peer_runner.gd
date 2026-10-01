@@ -5061,6 +5061,46 @@ static func boss_combat_snapshot(director: Object) -> Dictionary:
 		"my_creature_hp": float(creature.get("hp")) if creature != null else -1.0}
 
 
+func _original_starter_ownership(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var director := _encounter_director()
+	if game == null or director == null:
+		return {}
+	var party: RefCounted = game.get("party")
+	var local: RefCounted = game.get("local")
+	var creature: RefCounted = director.call("ally_instance")
+	var body: Node3D = director.call("ally_body")
+	var uids: Array[String] = []
+	if party != null:
+		for member: RefCounted in party.call("members"):
+			uids.append(str(member.get("uid")))
+	var present := body != null and is_instance_valid(body)
+	var admitted: Dictionary = {}
+	var session := _session()
+	# Only the existing real host-held admission view answers the roster check.
+	# Before a session this probe only reads the local body/party and mints nothing.
+	if session != null and session.call("is_active") == true and session.call("is_host") == true:
+		admitted = session.call("admitted_character_state", int(args.get("peer_id", session.call("local_peer_id"))))
+	var admitted_uids: Array[String] = []
+	for member: Dictionary in admitted.get("party", []):
+		admitted_uids.append(str(member.get("uid", "")))
+	return {
+		"character_id": str(local.get("character_id")) if local != null else "",
+		"party_size": party.call("size") if party != null else -1,
+		"party_uids": uids,
+		"body_present": present,
+		"body_ready": present and body.is_inside_tree() and body.visible,
+		"body_uid": str(creature.get("uid")) if creature != null else "",
+		"body_species": str(creature.get("species_id")) if creature != null else "",
+		"body_nickname": str(creature.get("nickname")) if creature != null else "",
+		"body_is_owned_instance": creature != null and party != null and party.call("size") == 1
+			and party.call("at", 0) == creature,
+		"starter_granted": local != null and local.get("flags").call("has", "opening:starter_granted") == true,
+		"admitted_character_id": str(admitted.get("character_id", "")),
+		"admitted_party_uids": admitted_uids,
+	}
+
+
 func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	var args: Dictionary = msg.get("args", {}) as Dictionary
@@ -5180,6 +5220,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return str(_probe.call("input_context"))
 		"meadows_opening":
 			return _meadows_opening_state()
+		"original_starter_ownership":
+			return _original_starter_ownership(args)
 		"veridian_choice":
 			# F05 CI smoke (copied from ralph/f05-coop-veridian). Read-only view
 			# of THIS peer's Veridian offer: the climax's own stage and prompts,

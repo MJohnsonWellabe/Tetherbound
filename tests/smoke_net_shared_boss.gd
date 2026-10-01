@@ -1,5 +1,7 @@
 extends "res://tests/helpers/net_harness.gd"
 
+const ORIGINAL_STARTER_FIXTURE := preload("res://tests/helpers/net_original_starter_fixture.gd")
+
 # peers: 2
 
 ## Stage B row 8. **§17 ITEM 8: A BOSS ENCOUNTER TOGETHER.**
@@ -290,6 +292,14 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# Disclosed setup: complete each standalone peer's real original choice and
+	# naming before admission. No second starter, loaner, party_grant or forged fact.
+	var starter_fixture := ORIGINAL_STARTER_FIXTURE.new()
+	var prepared: Array[Dictionary] = await starter_fixture.prepare(self)
+	if prepared.size() != 2:
+		quit(await finish())
+		return
+
 	# --- the handshake, copied verbatim from smoke_net_movement_two_peers.gd ---
 	check(_peers.size() == 2, "coordinator tracked 2 peers")
 	for i in 2:
@@ -321,6 +331,10 @@ func _run() -> void:
 		var out: Dictionary = await step(i, "deploy_creature", {})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(out.get("detail", ""))])
+
+	if not await starter_fixture.verify_after_admission(self, prepared):
+		quit(await finish())
+		return
 
 	# What the configured multiplier for two players IS, read out of the data
 	# file rather than out of the code that applies it.

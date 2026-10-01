@@ -1,0 +1,110 @@
+{
+  "preimage": "70bfd13f2affc1053a69ba6ab1169cac20fad455",
+  "root_review_pin": "c7917ea506d44143c416cecc82d869edda1810c4",
+  "sources": [
+    {
+      "path": "tests/smoke_net_shared_boss.gd",
+      "preimage": {
+        "blob": "745aa259669f82c8ecfa00ff57265c39da3c9ef5",
+        "sha256": "6f698cd41cea3532e8997586d8a1d94fce95bcc77098b2a70ffd66362ce31ab5"
+      },
+      "candidate_normalized_sha256": "f2e8a78155e98babfbe7ccc0b8f041e433c35b12647cdce032ea7bf24b127ab1",
+      "candidate_blob": "bbda0639626d92c6af7f4dcf370c6aff72118caf"
+    },
+    {
+      "path": "tools/net/peer_runner.gd",
+      "preimage": {
+        "blob": "9b627ff43063e0e1635b89f23b7b9f1dbd2ad3ac",
+        "sha256": "4c82987b31462ac92a8affd437d3f1cf4fe4b4aabc56e1fb7d20ba1969bd5b05"
+      },
+      "candidate_normalized_sha256": "bdbd1c97b35d8741082316f8dfab2e3bf90ec1cee8901ffeb81246b59c6760e1",
+      "candidate_blob": "e02514f45fa9fe197f7f0861ac34a20fb1d6ffcd"
+    },
+    {
+      "path": "tests/test_multiplayer_identity_0912.gd",
+      "preimage": {
+        "blob": "bedf1047926732d60e2a2a87601f246f51ff74ae",
+        "sha256": "6c69c96ffdf1337e0aad9a02c768b7cc605b09f4bc5bc00fee3bb6038011d789"
+      },
+      "candidate_normalized_sha256": "02c4d14549ce3ff5cf65b9dde7db7225c0d545130ed806f87364b41653b7788f",
+      "candidate_blob": "19449beecc9a7d6a7dc7ba3b23bfe503215201ea"
+    },
+    {
+      "path": "tests/helpers/net_original_starter_fixture.gd",
+      "preimage": null,
+      "candidate_normalized_sha256": "cc9c21189d45722a6a2dc2e0fb5dee687c4a494c85400f69901023149978b1de",
+      "candidate_blob": "5e850ee64d15dbd7d78e94abb0daca877a21d405"
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "scripts/story/sequence_director.gd",
+      "sha256": "319052dbca7d95de6a8364bc863f0ec63b51832560829525d4148037681ead81"
+    },
+    {
+      "path": "scripts/story/party_seam.gd",
+      "sha256": "e79af97a3a6650622ab4d4ae67760e21bda46dd46fe0babf2eb945b017f31694"
+    },
+    {
+      "path": "autoload/party.gd",
+      "sha256": "67ad6d54f5e45f30f2abfffe9589485a067fdb543f96cd29ae861a909eccf170"
+    },
+    {
+      "path": "autoload/game_state.gd",
+      "sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "sha256": "02fb845febabe456887c0170aa2b933704c80ec6a21a3870328317ea76d7e7fa"
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "sha256": "f39ce5849116c0aee9474f7dd53f4052ff88642d72c52204c44a0883320af1d4"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "sha256": "d290b65c5b6983567a04a13742d9741967d39658b87cfe06002eac00adf13fab"
+    },
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "sha256": "ae77665e7bcac2b8d632e99da4b522e3e281c39cf68d0d2e5e0e21532c94fb17"
+    },
+    {
+      "path": "scripts/net/encounter_host.gd",
+      "sha256": "242f44b910c7cecfd239b3459c478f05604736220cb6f9111593d2061c69812e"
+    },
+    {
+      "path": "scripts/combat/combat_math.gd",
+      "sha256": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9"
+    },
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "sha256": "1aeee3fd2cd092e0d23519b248d60afa8405ed482f9ef392888db6a74d5692e0"
+    },
+    {
+      "path": "tests/test_stormwood_hosted_combat.gd",
+      "sha256": "adeca6a30731dfcb00236614461b17298a99e85065fd97c433865f693c45176a"
+    },
+    {
+      "path": "tests/smoke_net_meadows_identity_fresh_join.gd",
+      "sha256": "53f9dc7bd8348919051af072a181c771f974760e91929e25794c48d908f703d3"
+    },
+    {
+      "path": "data/config/combat.json",
+      "sha256": "33ba3aef23f0446040c9bc5236b06b972a4bb34161fa9e6ff018b83b46f60a2d"
+    },
+    {
+      "path": "data/config/multiplayer.json",
+      "sha256": "01ce69dc7966e79f4cdb035d0e6b42cc52f206445059a3c0d88a3e2742faa2bd"
+    },
+    {
+      "path": "data/config/opening.json",
+      "sha256": "e37105581c5cc1ad0f4da1c467722e4376b855bc7a1ad6e33b911e3c92ce3593"
+    }
+  ],
+  "patch": {
+    "path": "D:\\tetherbound\\redesign-foundations\\.tmp\\shared-boss-ci6173\\owned-original-starter-fixture.patch",
+    "sha256": "e8e207029dd0e4f7ad83424dfff7009cd19719fa4299cfb74d2b94e0641b3d4b"
+  },
+  "validation": "Source/byte and independent Python controls only. Native opening/admission timing and original smoke not run."
+}
