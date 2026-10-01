@@ -278,12 +278,20 @@ static func stage_action_outcome(creature: RefCounted, frozen: Dictionary, host:
 	if connected and base_power > 0.0:
 		var type_scale := chart.multiplier_dual(str(frozen.get("type", "")),
 			str(host.get("target_type", "")), str(host.get("target_secondary_type", "")))
-		damage = math.rolled_damage(base_power * float(frozen.get("power_multiplier", 1.0)),
+		var status_scale := effects.power_multiplier(status, str(actor.creature_uid), int(host.now_ms)) \
+			* effects.damage_taken_multiplier(status, str(host.target_uid), int(host.now_ms))
+		if not is_finite(status_scale) or status_scale < 1.0: return {"ok": false, "code": "invalid_status"}
+		damage = math.rolled_damage(base_power * float(frozen.get("power_multiplier", 1.0)) * status_scale,
 			float(host.attack), float(host.target_defence), float(host.roll), float(frozen.get("power", 1.0)), type_scale)
 		if slot == "ultimate" and host.get("named") == true:
 			damage = minf(damage, float(host.target_max_hp) * float(combat_config.get("ultimate", {}).get("max_fraction_of_named_hp", 0.0)))
 		damage = clampf(damage, 0.0, float(host.target_hp))
 		if damage > 0.0:
+			# Pure staging: the returned state publishes only with this actual
+			# clamped HP debit in the producer's one atomic commit. Miss/IO
+			# refusal never consumes the source's one-landed-hit buff.
+			var consumed := effects.stage_consume_next_hit(status, str(actor.creature_uid), int(host.now_ms))
+			if consumed.get("ok") == true: status = consumed.state
 			mastery = stage_landed_use(creature, {"action_id": frozen.action_id,
 				"move_id": frozen.move_id, "attacker_uid": actor.creature_uid,
 				"target_uid": host.target_uid, "target_hp_before": host.target_hp, "applied_damage": damage})
