@@ -1,0 +1,37 @@
+{
+  "source_commit": "485e2ae0a6cdb8b43c8d2f67936d22293e620872",
+  "predecessor": "a10c031c62b215614e3a8dfc1eb68f1d3da7db06",
+  "dependency_source_commit": "540c872877b87eb0cd96018c36b8684f60494f17",
+  "files": [
+    {
+      "path": "scripts/ui/craft_panel.gd",
+      "before_git_sha256": "6c9b49eaf258f4bc1ed0cbd6f6e0c3227d28696e716cc5524c0438b080009b69",
+      "before_git_blob_oid": "2623488e2ea44ac9410ae30129c139b6a9821d06",
+      "git_sha256": "d0a9ef68479d00b6331f44952e4d0fdfe0400de8c587bfa6e2e519be63ea365f",
+      "working_sha256": "526ca28515cb7ac32ad1a125e845fd0bef9d9395e0b0c4d88c654e06dcb903c0",
+      "git_blob_oid": "183db61c0489c148615ff8c0badfd43ac6875ff2",
+      "manifest_match": true
+    }
+  ],
+  "dependency_files": [
+    {
+      "path": "scripts/creatures/creature_gear.gd",
+      "git_sha256": "5aed89ff71c5f869df763aaac227eb7f648bad1e2a335c2d0380eb89d5240e41",
+      "working_sha256": "5aed89ff71c5f869df763aaac227eb7f648bad1e2a335c2d0380eb89d5240e41",
+      "git_blob_oid": "06e6b924d4bc22d9a1bfd9818cdbff1a1a0b6a1e",
+      "manifest_match": true
+    },
+    {
+      "path": "data/config/gear.json",
+      "git_sha256": "9d74ba1b3c8778847832ca697d522c93097a965be9848c261858c44558652fb8",
+      "working_sha256": "9d74ba1b3c8778847832ca697d522c93097a965be9848c261858c44558652fb8",
+      "git_blob_oid": "884232a33058e88886ce990d178821d1fa3efd84",
+      "manifest_match": true
+    }
+  ],
+  "diff_scope": [
+    "scripts/ui/craft_panel.gd"
+  ],
+  "source_only": true,
+  "engine_or_unit_tests_run": false
+}

@@ -1,0 +1,49 @@
+{
+  "source_commit": "485e2ae0a6cdb8b43c8d2f67936d22293e620872",
+  "predecessor": "a10c031c62b215614e3a8dfc1eb68f1d3da7db06",
+  "dependency_source_commit": "540c872877b87eb0cd96018c36b8684f60494f17",
+  "verdict": "PASS_FOR_FLAG_OFF_GEAR_MENU_DELTA",
+  "scope": ["scripts/ui/craft_panel.gd"],
+  "git_working_and_dependency_manifest_hashes_match": true,
+  "working_hash_status": "Frozen source and both frozen dependency files exactly match manifest hashes.",
+  "diff_check": "PASS",
+  "engine_or_unit_tests_run": false,
+  "acceptance_F31_0_through_6": "OPEN",
+  "runtime_visual_acceptance": "OPEN",
+  "acceptance_credit": 0,
+  "flags": "OFF; unchanged",
+  "open_P1_P2_findings": [],
+  "repaired_findings": [
+    {
+      "priority": "P2",
+      "title": "Disable stale gear presentation after producer replacement",
+      "trigger": "Game.session changes while an idle station panel remains open.",
+      "defect": "Context getter returns empty, but deferred refresh exits on producer mismatch before rebuilding. Per-frame availability continues using the old producer and retained station_available metadata, leaving stale enabled controls. Click preflight safely refuses.",
+      "repair": "Invalidate displayed cache and require nonempty current context for gear availability without switching or rebasing an original pending transaction.",
+      "fixed_in": "13ce43313aa33fb1a512e82078696caada3feb4f",
+      "recheck": "Station view rejects current-session mismatch, deferred refresh permits invalidating old presentation, and per-frame mutation availability requires current nonempty gear context. Original producer and retry remain retained."
+    },
+    {
+      "priority": "P2",
+      "title": "Make disabled gear refusal hints reachable by controller",
+      "trigger": "Locked, full-room or maximum-upgrade gear hints overflow the station ScrollContainer; Altar starts at 80 pixels tall.",
+      "defect": "Only disabled mutation buttons own the focus_entered callback that scrolls their hint rows into view. When all upgrades are disabled, lower hints have no enabled controller target.",
+      "repair": "Add enabled read-only focus targets for hint rows while retaining disabled mutation buttons and click-time preflight.",
+      "fixed_in": "485e2ae0a6cdb8b43c8d2f67936d22293e620872",
+      "recheck": "Stable gear_details buttons remain enabled and show authored hint text only; focus scrolls the details label into view. Mutation controls keep station_available disable state and click-time preflight. Workbench/Altar gear viewport is 210 pixels subject to existing cap."
+    }
+  ],
+  "source_observations": [
+    "Trainer armor choices use real ItemDB definition and stack_size==1, matching F33 trainer equip planner.",
+    "Preflight receives exact four action fields without action_id, authenticated personal view, source-bound context, ItemDB and frozen gear config.",
+    "F33 preflight invokes its detached swap/cost/return-room planner; UI performs no live inventory or world mutation.",
+    "Original exact five-field submit, operation, revision, source WeakRef and explicit same-ID retry remain unchanged; retry bypasses fresh preflight.",
+    "Foundation confirmed homestead_station_context(actualSourceNode) dictionary API and no-argument shared view notification; r14 implementation remains unfrozen and runtime proof remains OPEN.",
+    "No concrete new parser defect was found by source inspection; parsing and actual engine behavior remain unverified because no engine was invoked."
+  ],
+  "residual_producer_obligations": [
+    "Implement authenticated actual paid-source, admitted actor, personal revision context getter with empty result until current quote is valid.",
+    "Publish view/context changes through shared no-argument completion notification and validate after flushing before authoritative stage.",
+    "Context fields never enter action packet; host must restage with actual current trusted source and preserve retained journal reconciliation before null-source fresh validation."
+  ]
+}
