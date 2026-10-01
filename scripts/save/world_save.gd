@@ -156,7 +156,11 @@ func write(world_id: String, payload: Dictionary, envelope: Dictionary = {}, ret
 	var contract := preload("res://scripts/data/redesign_state.gd")
 	if not contract.validate("world", payload.get("redesign_world", contract.defaults("world"))).is_empty():
 		return false
+	if not preload("res://autoload/world_state.gd").training_world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id, payload.get("placed_buildings", [])).is_empty():
+		return false
 	if not preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id).is_empty():
+		return false
+	if not preload("res://autoload/world_state.gd").portal_world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id).is_empty():
 		return false
 	if world_id.is_empty():
 		return false
@@ -230,6 +234,8 @@ func read(world_id: String) -> Dictionary:
 		return {}
 	var errors := preload("res://scripts/data/redesign_state.gd").validate("world", data.get("redesign_world", preload("res://scripts/data/redesign_state.gd").defaults("world")))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id))
+	errors.append_array(preload("res://autoload/world_state.gd").portal_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id))
+	errors.append_array(preload("res://autoload/world_state.gd").training_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id, data.get("placed_buildings", [])))
 	if not errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That world contains invalid data.", "errors": errors}
 		return {}

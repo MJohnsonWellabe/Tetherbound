@@ -78,6 +78,19 @@ static func apply(player: RefCounted, delivery: Dictionary) -> Dictionary:
 		return {"ok": true, "changed": changed, "settled": true}
 	if str(row.get("status", "")) != "grant_due":
 		return {"ok": false, "changed": changed, "settled": false}
+	# A finite Home Key entitlement is global to this portable character.
+	# An older world's owed row may arrive after another host delivered it.
+	# Reuse the existing saved flag/original escrow row before adding a key.
+	if row.get("source") == "home_key:grant:" + str(player.character_id):
+		if row.get("stacks") != [{"id": "home_key", "n": 1}] or row.get("completion_flag") != "home_key_given":
+			return {"ok": false, "changed": changed, "settled": false}
+		var original := _existing_home_key_entitlement(player, id)
+		if not original.is_empty():
+			row.status = "settled"
+			row.finite_duplicate_of = original
+			row.erase("stacks")
+			row.erase("completion_flag")
+			return {"ok": true, "changed": true, "settled": true}
 	if not SATCHEL_ESCROW.give_all(player.get("inventory"), row.get("stacks", [])):
 		return {"ok": true, "changed": changed, "settled": false}
 	var flag := str(row.get("completion_flag", ""))
@@ -100,3 +113,15 @@ static func pending_for_character(world: RefCounted, character_id: String) -> Ar
 				and str(raw.get("character_id", "")) == character_id:
 			out.append((raw as Dictionary).duplicate(true))
 	return out
+
+
+static func _existing_home_key_entitlement(player: RefCounted, incoming: String) -> String:
+	if player.flags.call("has", "home_key_given") == true: return "home_key_given"
+	for key: Variant in player.satchel_escrow:
+		if key == incoming: continue
+		var row: Variant = player.satchel_escrow[key]
+		if not row is Dictionary or row.get("kind") != "reward_delivery" or row.get("source") != "home_key:grant:" + str(player.character_id) or row.get("character_id") != player.character_id or row.has("finite_duplicate_of"): continue
+		if key != row.get("delivery_id") or delivery_id(str(row.get("world_namespace", "")), str(row.get("source", "")), str(row.get("character_id", ""))) != key: continue
+		if row.get("status") == "settled": return str(key)
+		if row.get("status") == "grant_due" and row.get("stacks") == [{"id": "home_key", "n": 1}] and row.get("completion_flag") == "home_key_given": return str(key)
+	return ""

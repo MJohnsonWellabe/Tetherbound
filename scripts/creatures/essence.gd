@@ -12,6 +12,7 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const PARTY := preload("res://autoload/party.gd")
+const BIOMES := preload("res://scripts/data/biome_order.gd")
 const CONFIG_PATH := "res://data/config/essence.json"
 static var _configuration: Dictionary = {}
 static var _species: Dictionary = {}
@@ -54,6 +55,8 @@ static func configuration_errors(cfg: Dictionary) -> Array[String]:
 	var errors: Array[String] = []
 	if cfg.get("schema_version") != 1:
 		errors.append("unsupported essence configuration version")
+	if cfg.has("wild_victory_xp_mode") and not cfg.wild_victory_xp_mode in ["ordinary", "hybrid"]:
+		errors.append("invalid wild victory XP mode")
 	for field: String in ["essence_xp_value", "defeat_bonus_level_interval", "tether_candy_cost", "maximum_transaction_receipts", "maximum_release_receipts"]:
 		if not _integer(cfg.get(field), 1, 2147483647): errors.append("invalid " + field)
 	for field: String in ["defeat_essence_base", "release_essence_base", "care_per_grooming", "care_daily_character_cap", "crop_essence_yield", "crop_attuned_yield"]:
@@ -128,8 +131,10 @@ static func _species_types(row: Dictionary) -> Array[String]:
 ## Typed F16 cap only. A caught-above-cap legacy row is not assigned invented
 ## breakthrough history; its spend stays closed until an actual cap is admitted.
 static func creature_cap(personal: Dictionary, uid: String) -> int:
-	var mirror: Variant = personal.get("creatures", {}).get(uid, {})
-	var cap: Variant = mirror.get("cap_level", 10) if mirror is Dictionary else null
+	var records: Variant = personal.get("creatures")
+	if not records is Dictionary or not records.has(uid): return -1
+	var mirror: Variant = records[uid]
+	var cap: Variant = mirror.get("cap_level") if mirror is Dictionary else null
 	var rows: Variant = DATA.json("res://data/schema/level_caps.json")
 	if not _integer(cap, 1, 60) or not rows is Array: return -1
 	for row: Variant in rows:
@@ -226,8 +231,9 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	for previous: String in admitted.redesign_character.transaction_receipts:
 		if not previous.begins_with(prefix): continue
 		var parts := previous.split(":")
-		if parts.size() != 7 or parts[3] != uid or parts[4] != str(expected_level) \
-				or parts[5] != payment_item or not parts[6].is_valid_int() or int(parts[6]) < 1:
+		if parts.size() != 8 or parts[3] != uid or parts[4] != str(expected_level) \
+				or parts[5] != payment_item or not parts[6].is_valid_int() or int(parts[6]) < 1 \
+				or not parts[7].is_valid_int() or int(parts[7]) != character_revision:
 			return _refuse("receipt_conflict")
 		if not duplicate_receipt.is_empty(): return _refuse("receipt_conflict")
 		duplicate_receipt = previous
@@ -261,7 +267,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	var next := admitted.duplicate(true)
 	next.party[index] = next_row
 	next.inventory = RULES.slots(inventory).duplicate(true)
-	var receipt := prefix + "%s:%d:%s:%d" % [uid, expected_level, payment_item, cost]
+	var receipt := prefix + "%s:%d:%s:%d:%d" % [uid, expected_level, payment_item, cost, character_revision]
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
 	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,
@@ -345,6 +351,149 @@ static func stage_core_spend(admitted: Dictionary, character_id: String, host_re
 	return proposal
 
 
+## Construct a host-only nine-field intent (original eight plus frozen XP mode) at
+## the accepted killing-hit hook, BEFORE terminal publication/legacy awards.
+## The caller proves actual EncounterHost/world/body/deployment residency and
+## sender admission. None of these inputs is a remotely callable reward claim.
+## Session supplies its current runtime epoch; no minted fallback ids/rosters.
+static func host_wild_defeat_event(admitted: Dictionary, character_id: String,
+		host_peer_id: int, world_namespace: String, session_epoch: String,
+		host_record: Dictionary, actual_dead_enemy: Dictionary,
+		host_active_uid: String, cfg: Dictionary) -> Dictionary:
+	if not cfg.get("wild_victory_xp_mode") in ["ordinary", "hybrid"]: return _refuse("invalid_defeat_XP_policy")
+	if host_peer_id < 1 or not _component(character_id) or not _component(host_active_uid) \
+			or not _opaque_id(world_namespace) or not _opaque_id(session_epoch) \
+			or not _baseline_errors(admitted, character_id).is_empty(): return _refuse("invalid_host_defeat_context")
+	if host_record.get("kind") != "wild" or not host_record.get("phase") in ["active", "resolving", "done"] \
+			or not _opaque_id(host_record.get("encounter_id")) \
+			or not host_record.get("realm") is String or not BIOMES.runtime_ids(false).has(host_record.realm) \
+			or not _integer(host_record.get("seq"), 1, 2147483647) \
+			or not host_record.get("participants") is Dictionary: return _refuse("actual_host_wild_record_required")
+	var participants: Dictionary = host_record.participants
+	var participant: Variant = participants.get(host_peer_id)
+	if not participant is Dictionary or participant.get("character_id") != character_id \
+			or not _integer(participant.get("joined_seq"), 1, int(host_record.seq)): return _refuse("not_actual_defeat_participant")
+	var opponent: Variant = host_record.get("opponent")
+	if not opponent is Dictionary or not opponent.get("owner_npc") is String or opponent.owner_npc != "" \
+			or not _integer(opponent.get("hp"), 0, 0) or not _integer(opponent.get("level"), 1, 100) \
+			or not _integer(opponent.get("body_generation"), 1, 2147483647): return _refuse("actual_dead_wild_required")
+	if not _component(actual_dead_enemy.get("uid")) or not _integer(actual_dead_enemy.get("hp"), 0, 0) \
+			or not actual_dead_enemy.get("fainted") is bool or actual_dead_enemy.fainted != true \
+			or not _component(actual_dead_enemy.get("species_id")) \
+			or actual_dead_enemy.species_id != opponent.get("species_id") \
+			or not _equivalent(actual_dead_enemy.get("level"), opponent.level): return _refuse("host_enemy_identity_mismatch")
+	var hp_max: Variant = actual_dead_enemy.get("max_hp")
+	if not (hp_max is int or hp_max is float) or not is_finite(float(hp_max)) or float(hp_max) <= 0.0 \
+			or not _equivalent(hp_max, opponent.get("hp_max")): return _refuse("host_enemy_identity_mismatch")
+	var card: Variant = opponent.get("card")
+	if not card is Dictionary or card.get("uid") != actual_dead_enemy.uid \
+			or card.get("species_id") != actual_dead_enemy.species_id \
+			or not _equivalent(card.get("level"), actual_dead_enemy.level): return _refuse("host_enemy_identity_mismatch")
+	if _owned_index(admitted, actual_dead_enemy.uid) >= 0 or _owned_index(admitted, host_active_uid) < 0:
+		return _refuse("invalid_defeat_roster")
+	# Same legacy victory eligibility: all living owned members, up to five.
+	# Active UID comes from CURRENT authenticated deployed body/card, not the
+	# participant row's potentially stale opening UID after a tag switch.
+	var eligible: Array[String] = []
+	for row: Variant in admitted.party:
+		if not row is Dictionary or not _component(row.get("uid")) \
+				or not row.get("fainted") is bool: return _refuse("invalid_defeat_roster")
+		var hp: Variant = row.get("hp")
+		if not (hp is int or hp is float) or not is_finite(float(hp)) or float(hp) < 0.0 \
+				or row.fainted != (float(hp) == 0.0): return _refuse("invalid_defeat_roster")
+		if not row.fainted: eligible.append(row.uid)
+	if eligible.is_empty(): return _refuse("no_living_defeat_recipient")
+	eligible.sort()
+	var identity := [world_namespace, session_epoch, host_record.realm,
+		host_record.encounter_id, int(opponent.body_generation), actual_dead_enemy.uid]
+	var event := {"event_id": "wild_defeat:" + JSON.stringify(identity).sha256_text(),
+		"world_namespace": world_namespace, "encounter_id": host_record.encounter_id,
+		"enemy_uid": actual_dead_enemy.uid, "enemy_record": actual_dead_enemy.duplicate(true),
+		"active_uid": host_active_uid, "eligible_uids": eligible, "kind": "wild_defeat",
+		"xp_mode": cfg.wild_victory_xp_mode}
+	return {"ok": true, "intent": event, "source_identity": identity}
+
+
+## Pure bridge for the same admitted registry transaction used by the Altar.
+## Do not call legacy gain_xp or item.add alongside this. Stage/journal/owner
+## bool-save/accepted ACK remain Foundation's existing typed transaction.
+static func stage_host_wild_victory(admitted: Dictionary, character_id: String,
+		host_revision: int, host_peer_id: int, world_namespace: String, session_epoch: String,
+		host_record: Dictionary, actual_dead_enemy: Dictionary, host_active_uid: String,
+		cfg: Dictionary, progression_cfg: Dictionary, available_moves: Callable,
+		mirror_provider: Callable) -> Dictionary:
+	var source := host_wild_defeat_event(admitted, character_id, host_peer_id,
+		world_namespace, session_epoch, host_record, actual_dead_enemy, host_active_uid, cfg)
+	if source.get("ok") != true: return source
+	var event: Dictionary = source.intent
+	var proposal := stage_core_defeat(admitted, character_id, event, host_revision,
+		cfg, progression_cfg, available_moves, mirror_provider)
+	if proposal.get("ok") != true: return proposal
+	proposal["action"] = "wild_defeat"
+	proposal["action_id"] = event.event_id
+	proposal["intent"] = event.duplicate(true)
+	return proposal
+
+## Actual accepted damage outcome copied by the director after its live HP
+## commit. This is host-internal only: no reward-intent RPC, debug receipt,
+## client verdict or independently synthesized dead-card entitlement.
+static func stage_accepted_host_wild_victory(admitted: Dictionary, character_id: String,
+		host_revision: int, recipient_peer_id: int, world_namespace: String, session_epoch: String,
+		host_record: Dictionary, actual_dead_enemy: Dictionary, host_active_uid: String,
+		accepted: Dictionary, cfg: Dictionary, progression_cfg: Dictionary,
+		available_moves: Callable, mirror_provider: Callable) -> Dictionary:
+	if not accepted.get("ok") is bool or accepted.ok != true or accepted.get("kind") != "strike_intent" \
+			or not _integer(accepted.get("peer"), 1, 2147483647) or not accepted.get("delta") is Dictionary:
+		return _refuse("actual_accepted_killing_hit_required")
+	var delta: Dictionary = accepted.delta
+	if not delta.get("hit") is bool or delta.hit != true or not delta.get("killed") is bool \
+			or delta.killed != true or delta.get("encounter_id") != host_record.get("encounter_id") \
+			or not host_record.get("participants") is Dictionary \
+			or not host_record.participants.has(int(accepted.peer)):
+		return _refuse("actual_accepted_killing_hit_required")
+	var damage: Variant = delta.get("damage")
+	if not (damage is int or damage is float) or not is_finite(float(damage)) or float(damage) <= 0.0 \
+			or not _integer(delta.get("hp"), 0, 0) \
+			or not _equivalent(delta.get("hp_max"), actual_dead_enemy.get("max_hp")):
+		return _refuse("actual_accepted_killing_hit_required")
+	return stage_host_wild_victory(admitted, character_id, host_revision, recipient_peer_id,
+		world_namespace, session_epoch, host_record, actual_dead_enemy, host_active_uid,
+		cfg, progression_cfg, available_moves, mirror_provider)
+
+## Replayable host capture, never a wire-level owner reward claim. Its mode
+## was frozen when the director committed the real killing hit. A config
+## activation later cannot turn the same event into a new or repriced award.
+static func stage_captured_host_victory(admitted: Dictionary, character_id: String,
+		host_revision: int, recipient_peer_id: int, frozen: Dictionary,
+		cfg: Dictionary, progression_cfg: Dictionary, available_moves: Callable,
+		mirror_provider: Callable) -> Dictionary:
+	if not frozen.get("ok") is bool or frozen.ok != true or not frozen.get("record") is Dictionary \
+			or not frozen.get("enemy_record") is Dictionary or not frozen.get("accepted") is Dictionary \
+			or not frozen.get("deployments") is Array or not frozen.get("xp_mode") in ["ordinary", "hybrid"] \
+			or not _opaque_id(frozen.get("world_namespace")) or not _opaque_id(frozen.get("session_id")):
+		return _refuse("invalid_frozen_host_defeat")
+	var active_uid := ""
+	var seen := {}
+	for row: Variant in frozen.deployments:
+		if not row is Dictionary or row.size() != 2 or not _integer(row.get("peer_id"), 1, 2147483647) \
+				or seen.has(int(row.peer_id)) or not _component(row.get("active_uid")):
+			return _refuse("invalid_frozen_host_defeat")
+		seen[int(row.peer_id)] = true
+		if int(row.peer_id) == recipient_peer_id: active_uid = row.active_uid
+	if active_uid.is_empty(): return _refuse("not_actual_defeat_participant")
+	var original_cfg := cfg.duplicate(true)
+	original_cfg["wild_victory_xp_mode"] = frozen.xp_mode
+	var source := host_wild_defeat_event(admitted, character_id, recipient_peer_id,
+		frozen.world_namespace, frozen.session_id, frozen.record, frozen.enemy_record, active_uid, original_cfg)
+	if source.get("ok") != true: return source
+	if source.intent.event_id != frozen.get("source_id"): return _refuse("invalid_frozen_host_defeat")
+	return stage_accepted_host_wild_victory(admitted, character_id, host_revision, recipient_peer_id,
+		frozen.world_namespace, frozen.session_id, frozen.record, frozen.enemy_record, active_uid,
+		frozen.accepted, original_cfg, progression_cfg, available_moves, mirror_provider)
+
+
+
+
 ## Host event is frozen by actual wild defeat authority, never an RPC packet.
 ## XP, essence, typed caps and receipt are one candidate. No inventory payout
 ## can occur if any XP recipient/cap/slot/journal validation refuses.
@@ -353,7 +502,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	if character_revision < 0 or character_revision > 2147483646 \
 			or not _baseline_errors(admitted, character_id).is_empty() \
 			or not configuration_errors(cfg).is_empty(): return _refuse("invalid_defeat")
-	var keys := ["event_id", "world_namespace", "encounter_id", "enemy_uid", "enemy_record", "active_uid", "eligible_uids", "kind"]
+	var keys := ["event_id", "world_namespace", "encounter_id", "enemy_uid", "enemy_record", "active_uid", "eligible_uids", "kind", "xp_mode"]
 	if host_event.size() != keys.size(): return _refuse("invalid_defeat_event")
 	for key: String in keys:
 		if not host_event.has(key): return _refuse("invalid_defeat_event")
@@ -361,8 +510,10 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 		if not _opaque_id(host_event[key]): return _refuse("invalid_defeat_identity")
 	for key: String in ["enemy_uid", "active_uid"]:
 		if not _component(host_event[key]): return _refuse("invalid_defeat_identity")
-	if host_event.kind != "wild_defeat" or not host_event.enemy_record is Dictionary \
+	if host_event.kind != "wild_defeat" or not host_event.xp_mode in ["ordinary", "hybrid"] \
+			or not host_event.enemy_record is Dictionary \
 			or host_event.enemy_record.get("uid") != host_event.enemy_uid \
+			or not host_event.enemy_record.get("fainted") is bool \
 			or host_event.enemy_record.get("fainted") != true \
 			or not _integer(host_event.enemy_record.get("hp"), 0, 0) \
 			or not _integer(host_event.enemy_record.get("level"), 1, 100) \
@@ -376,11 +527,11 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 		eligible.append(uid)
 	eligible.sort() # Stable same-event signature despite caller array order.
 	var types := _species_types(host_event.enemy_record)
-	if types.is_empty() or eligible.is_empty() or not eligible.has(host_event.active_uid):
+	if types.is_empty() or eligible.is_empty():
 		return _refuse("invalid_defeat_participants")
 	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
 		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
-		types, host_event.active_uid, eligible]).sha256_text()
+		types, host_event.active_uid, eligible, host_event.xp_mode]).sha256_text()
 	var prefix := "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)]
 	var receipt := prefix + signature
 	var duplicate := false
@@ -391,6 +542,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	if duplicate:
 		return {"ok": true, "duplicate": true, "receipt": receipt, "expected_character_revision": character_revision}
 	if _owned_index(admitted, host_event.enemy_uid) >= 0: return _refuse("owned_enemy_refused")
+	if _owned_index(admitted, host_event.active_uid) < 0: return _refuse("invalid_defeat_active_uid")
 	for uid: String in eligible:
 		if _owned_index(admitted, uid) < 0: return _refuse("invalid_defeat_participants")
 	if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
@@ -399,7 +551,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	for uid: String in eligible:
 		caps[uid] = creature_cap(admitted.redesign_character, uid)
 	var xp := PROGRESSION.staged_combat_party_xp(admitted.party, host_event.active_uid,
-		eligible, caps, int(host_event.enemy_record.level), progression_cfg, cfg)
+		eligible, caps, int(host_event.enemy_record.level), progression_cfg, cfg, host_event.xp_mode)
 	if xp.is_empty(): return _refuse("invalid_defeat_XP_or_cap")
 	var payout := defeat_payout(host_event.enemy_record, cfg)
 	if payout.is_empty(): return _refuse("invalid_defeat_payout")
@@ -571,7 +723,7 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 	var session: Variant = game.get("session")
 	if not player is RefCounted or not world is RefCounted or not session is Node:
 		return _refuse("owner_context_missing")
-	for method: String in ["_retain_owner_training_retry", "_mark_owner_training_saved"]:
+	for method: String in ["_retain_owner_training_retry", "_mark_owner_training_saved", "_begin_owner_training_install", "_end_owner_training_install"]:
 		if not session.has_method(method): return _refuse("owner_training_retry_unavailable")
 	if not player.has_method("save_data"): return _refuse("owner_snapshot_unavailable")
 	var deliveries: Variant = world.get("reward_deliveries")
@@ -599,6 +751,8 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 			return _refuse("owner_party_changed")
 	if session.call("_retain_owner_training_retry", player, world, incoming) != true:
 		return _refuse("owner_training_retry_refused")
+	if session.call("_begin_owner_training_install", player, world, incoming) != true:
+		return _refuse("owner_training_install_refused")
 	if proposal.get("duplicate") != true:
 		# No yield, signal or snapshot replacement between these scalar updates.
 		# The retained retry guard rejects any half-installed ordinary autosave.
@@ -617,6 +771,7 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 			if not _equivalent(snapshot.inventory[slot], stack):
 				inventory.call("set_slot", slot, stack.duplicate(true) if stack is Dictionary else null)
 		player.set("redesign_character", incoming.after.redesign_character.duplicate(true))
+	session.call("_end_owner_training_install")
 	var installed: Variant = player.call("save_data")
 	if not installed is Dictionary or not _equivalent(training_projection(installed), incoming.after):
 		return {"ok": false, "code": "owner_training_install_conflict", "pending": true}

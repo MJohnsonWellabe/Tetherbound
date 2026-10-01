@@ -1,15 +1,40 @@
 {
   "schema_version": 1,
-  "_scope": "F27 authored tunables, not a new balance store. Automatic combat XP reads auto_xp_scale on the existing victory path. Essence and candy payouts/spends require canonical typed host actions and actual Altar registration before activation.",
+  "wild_victory_xp_mode": "ordinary",
+  "_scope": "F27 host-owned tunables; no new balance store. Initial authoritative earned-essence settlement preserves ordinary XP. Switch wild_victory_xp_mode to hybrid only after actual earned essence, mounted Altar spend and ordinary route gate. Mode is immutable in each host event/receipt so pending/replay is not repriced. Actual Altar registration and typed journal/owner-save ACK are required.",
   "auto_xp_scale": 0.35,
   "essence_xp_value": 25,
   "level_cost_bands": [
-    {"minimum_level": 1, "maximum_level": 10, "multiplier": 1.0},
-    {"minimum_level": 11, "maximum_level": 20, "multiplier": 1.0},
-    {"minimum_level": 21, "maximum_level": 30, "multiplier": 1.0},
-    {"minimum_level": 31, "maximum_level": 40, "multiplier": 1.0},
-    {"minimum_level": 41, "maximum_level": 50, "multiplier": 1.0},
-    {"minimum_level": 51, "maximum_level": 60, "multiplier": 1.0}
+    {
+      "minimum_level": 1,
+      "maximum_level": 10,
+      "multiplier": 1.0
+    },
+    {
+      "minimum_level": 11,
+      "maximum_level": 20,
+      "multiplier": 1.0
+    },
+    {
+      "minimum_level": 21,
+      "maximum_level": 30,
+      "multiplier": 1.0
+    },
+    {
+      "minimum_level": 31,
+      "maximum_level": 40,
+      "multiplier": 1.0
+    },
+    {
+      "minimum_level": 41,
+      "maximum_level": 50,
+      "multiplier": 1.0
+    },
+    {
+      "minimum_level": 51,
+      "maximum_level": 60,
+      "multiplier": 1.0
+    }
   ],
   "defeat_essence_base": 1,
   "defeat_bonus_level_interval": 10,
@@ -17,7 +42,10 @@
   "release_essence_per_level": 0.5,
   "release_rounding": "floor",
   "dual_type_payout": "split_remainder_to_primary",
-  "attuned_node_yield": [2, 4],
+  "attuned_node_yield": [
+    2,
+    4
+  ],
   "crop_essence_yield": 3,
   "crop_attuned_yield": 2,
   "care_per_grooming": 1,
@@ -26,8 +54,18 @@
   "tether_candy_cost": 1,
   "altar_interaction_radius_m": 3.0,
   "altar_result_retry_seconds": 2,
+  "altar_quote_timeout_seconds": 8,
+  "altar_prompt_offset_m": [
+    0,
+    0.6,
+    0.9
+  ],
   "maximum_transaction_receipts": 4096,
   "maximum_release_receipts": 4096,
   "level_spend_xp_policy": "preserve_until_cap_then_discard",
-  "legacy_above_cap_policy": "refuse_until_typed_cap_admitted"
+  "legacy_above_cap_policy": "refuse_until_typed_cap_admitted",
+  "altar_runtime_enabled": false,
+  "altar_remote_spend_enabled": false,
+  "altar_building_runtime_enabled": false,
+  "wild_victory_runtime_enabled": false
 }

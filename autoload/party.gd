@@ -22,6 +22,7 @@ const MAX_CREATURES := 5
 ## for why.
 var revision: int = 0
 
+var _owner_mutation_guard := Callable()
 var _creatures: Array = []
 var _active: int = 0
 var _tournament_selection: Array[String] = []
@@ -60,6 +61,7 @@ func at(index: int) -> RefCounted:
 
 ## The only way a creature enters the party.
 func add(creature: RefCounted) -> bool:
+	if _owner_mutation_blocked(): return false
 	if creature == null:
 		return false
 	if is_full():
@@ -74,6 +76,7 @@ func add(creature: RefCounted) -> bool:
 ## Remove a creature by slot. Used by the release ceremony (M5) and by nothing else
 ## yet; returns the instance so the caller can show it one last time.
 func remove_at(index: int) -> RefCounted:
+	if _owner_mutation_blocked(): return null
 	if index < 0 or index >= _creatures.size():
 		return null
 	var gone: RefCounted = _creatures[index]
@@ -94,6 +97,7 @@ func remove_at(index: int) -> RefCounted:
 ## Reorder. The party's order is the order the player sees and the order a
 ## future deploy wheel will offer, so it is state worth letting them set.
 func move(from: int, to: int) -> void:
+	if _owner_mutation_blocked(): return
 	if from == to:
 		return
 	if from < 0 or to < 0 or from >= _creatures.size() or to >= _creatures.size():
@@ -129,6 +133,7 @@ func active() -> RefCounted:
 ## Choose who takes the field. A fainted creature refuses, which is why this returns
 ## a bool rather than assigning blindly.
 func set_active(index: int) -> bool:
+	if _owner_mutation_blocked(): return false
 	var creature: RefCounted = at(index)
 	if creature == null:
 		return false
@@ -142,6 +147,7 @@ func set_active(index: int) -> bool:
 ## Gate A / owner: one-second previous/next party selection in exploration.
 ## Direction is -1 or +1; wraps and skips anything that cannot take the field.
 func set_resting(index: int, value: bool, bed_index: int = -1) -> bool:
+	if _owner_mutation_blocked(): return false
 	var creature: RefCounted = at(index)
 	if creature == null:
 		return false
@@ -156,6 +162,7 @@ func set_resting(index: int, value: bool, bed_index: int = -1) -> bool:
 
 
 func cycle_active(direction: int) -> bool:
+	if _owner_mutation_blocked(): return false
 	if _creatures.is_empty() or direction == 0:
 		return false
 	var step := -1 if direction < 0 else 1
@@ -188,6 +195,7 @@ func best() -> RefCounted:
 ## Unlike `set_active`, a fainted creature is still allowed: this is a
 ## standing title earned by play, not "who takes the field next."
 func set_best(index: int) -> bool:
+	if _owner_mutation_blocked(): return false
 	if index < 0 or index >= _creatures.size():
 		return false
 	_best = -1 if _best == index else index
@@ -199,6 +207,7 @@ func set_best(index: int) -> bool:
 ## Indices are accepted at the UI boundary but immediately converted to stable
 ## creature ids, so party reordering never changes the registered team.
 func set_tournament_selection(indices: Array) -> bool:
+	if _owner_mutation_blocked(): return false
 	if indices.size() != 3:
 		return false
 	var selected: Array[String] = []
@@ -239,6 +248,7 @@ func tournament_selection() -> Array[RefCounted]:
 ## Save/load seam. A malformed, partial, missing or ambiguous selection becomes
 ## explicitly unregistered; it is never repaired by choosing substitutes.
 func restore_tournament_selection(ids: Variant) -> bool:
+	if _owner_mutation_blocked(): return false
 	_tournament_selection.clear()
 	if typeof(ids) != TYPE_ARRAY or (ids as Array).size() != 3:
 		return false
@@ -256,6 +266,7 @@ func restore_tournament_selection(ids: Variant) -> bool:
 
 
 func clear_tournament_selection() -> void:
+	if _owner_mutation_blocked(): return
 	if _tournament_selection.is_empty():
 		return
 	_tournament_selection.clear()
@@ -274,6 +285,7 @@ func _members_with_uid(id: String) -> Array:
 ## without leaving whichever creatures were already in it mixed in with the loaded
 ## ones.
 func clear() -> void:
+	if _owner_mutation_blocked(): return
 	_creatures.clear()
 	_active = 0
 	_best = -1
@@ -289,3 +301,11 @@ func all_fainted() -> bool:
 		if not bool(creature.get("fainted")):
 			return false
 	return true
+
+
+func bind_owner_mutation_guard(blocked: Callable) -> void:
+	_owner_mutation_guard = blocked
+
+
+func _owner_mutation_blocked() -> bool:
+	return _owner_mutation_guard.is_valid() and _owner_mutation_guard.call() == true

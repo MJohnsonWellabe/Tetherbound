@@ -24,7 +24,13 @@ var max_health: float = 100.0
 var max_satiety: float = 100.0
 
 var stamina: float = 100.0
-var health: float = 100.0
+## Transient local hazard generation; every lower-health write invalidates a
+## raised Home Key, including direct writes from the existing hazard callers.
+var damage_revision: int = 0
+var health: float = 100.0:
+	set(value):
+		if value < health: damage_revision += 1
+		health = value
 var satiety: float = 100.0
 
 ## Active food buffs. Each entry is `{ "id": String, "stat": String,

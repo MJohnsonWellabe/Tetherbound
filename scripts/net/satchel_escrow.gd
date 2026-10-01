@@ -40,8 +40,8 @@ static func begin_drop(player: RefCounted, world: RefCounted, at: Vector3, realm
 	var instance := world_instance(world)
 	if instance.is_empty() or str(player.character_id).is_empty():
 		return ""
-	var slots := RULES.slots(player.inventory)
-	if player.inventory.used_slots() == 0:
+	var slots := RULES.death_slots(player.inventory)
+	if not RULES.has_stacks(slots):
 		return ""
 	var txn := Crypto.new().generate_random_bytes(16).hex_encode()
 	player.satchel_escrow[txn] = {"status": "pending", "kind": "death_satchel_create", "world_id": str(world.world_id),
@@ -49,7 +49,10 @@ static func begin_drop(player: RefCounted, world: RefCounted, at: Vector3, realm
 		"character_id": str(player.character_id), "origin_host": origin_host, "stacks": slots,
 		"intent": {"kind": "death_satchel_create", "realm": realm, "txn_id": txn,
 			"world_instance_id": instance, "state": slots, "position": [at.x, at.y, at.z]}}
-	player.inventory.drain()
+	# Clear only stacks frozen into this row; protected key slots stay put.
+	for index: int in slots.size():
+		if slots[index] is Dictionary:
+			player.inventory.set_slot(index, null)
 	return txn
 
 static func begin_transfer(player: RefCounted, world: RefCounted, uid: String, direction: String, item: String, count: int, expected: int, origin_host: bool) -> String:

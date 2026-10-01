@@ -28,6 +28,8 @@ var revision: int = 0
 
 var _db: RefCounted
 var _slots: Array = []
+var _owner_mutation_guard := Callable()
+var _typed_slot_writer := Callable()
 
 
 func _init(db: RefCounted) -> void:
@@ -85,6 +87,7 @@ func used_slots() -> int:
 ## Partial stacks are filled before new slots are opened, so a satchel cannot
 ## end up with three half-stacks of wood while claiming to be full.
 func add(id: String, n: int) -> int:
+	if _owner_mutation_blocked(): return maxi(0, n)
 	if n <= 0 or id.is_empty():
 		return maxi(0, n)
 	var maximum: int = _db.call("stack_size", id)
@@ -122,6 +125,9 @@ func add(id: String, n: int) -> int:
 ## Remove items. All-or-nothing: returns false and changes nothing when there is
 ## not enough, so a craft can never half-consume its cost.
 func remove(id: String, n: int) -> bool:
+	if _owner_mutation_blocked(): return false
+	if n > 0 and is_protected_key(id):
+		return false
 	if n <= 0:
 		return true
 	if count(id) < n:
@@ -173,6 +179,7 @@ func has_room_for(id: String, n: int) -> bool:
 ## rather than refusing is deliberate: putting a stack onto an occupied slot
 ## means "put it here", and a move that silently does nothing feels broken.
 func move_slot(from: int, to: int) -> void:
+	if _owner_mutation_blocked(): return
 	if from == to:
 		return
 	if from < 0 or to < 0 or from >= SLOT_COUNT or to >= SLOT_COUNT:
@@ -251,6 +258,7 @@ func max_durability_at(index: int) -> int:
 ## slot with no durability to lose, so calling this on a resource stack by
 ## mistake can't corrupt it into carrying a stray field.
 func damage_tool(index: int, amount: int = 1) -> void:
+	if _owner_mutation_blocked(): return
 	var maximum := max_durability_at(index)
 	if maximum <= 0:
 		return
@@ -262,6 +270,7 @@ func damage_tool(index: int, amount: int = 1) -> void:
 
 ## Free, full repair -- GAME_DESIGN.md 19. No materials, no partial repair.
 func repair_tool(index: int) -> void:
+	if _owner_mutation_blocked(): return
 	var maximum := max_durability_at(index)
 	if maximum <= 0:
 		return
@@ -280,6 +289,7 @@ func repair_tool(index: int) -> void:
 ## reset to a fixed max. No-op on an empty slot, a non-tool (nothing to
 ## reinforce), or a non-positive bonus.
 func reinforce_tool(index: int, bonus: int) -> void:
+	if _owner_mutation_blocked(): return
 	if bonus <= 0 or index < 0 or index >= SLOT_COUNT:
 		return
 	var stack: Variant = _slots[index]
@@ -300,6 +310,7 @@ func reinforce_tool(index: int, bonus: int) -> void:
 ## is player-visible state, and routing a restore through `add()` would
 ## repack everything into whatever slots happen to be free first.
 func set_slot(index: int, stack: Variant) -> void:
+	if _owner_mutation_blocked() and (not _typed_slot_writer.is_valid() or _typed_slot_writer.call(index, stack) != true): return
 	if index < 0 or index >= SLOT_COUNT:
 		return
 	_slots[index] = (stack as Dictionary).duplicate() if typeof(stack) == TYPE_DICTIONARY else null
@@ -315,6 +326,7 @@ func set_slot(index: int, stack: Variant) -> void:
 ## splitting nothing is not a split) or when the item does not stack at all
 ## (a tool's `n` is always 1 -- there is no half of one axe).
 func split_slot(from: int, to: int, amount: int) -> bool:
+	if _owner_mutation_blocked(): return false
 	if from == to or from < 0 or to < 0 or from >= SLOT_COUNT or to >= SLOT_COUNT:
 		return false
 	var source: Variant = _slots[from]
@@ -351,11 +363,18 @@ func split_slot(from: int, to: int, amount: int) -> bool:
 ## nothing, in case a future world-pickup entity wants to spawn from it; none
 ## exists yet, so today this just deletes the stack. That gap is real and is
 ## the honest scope of this verb until a ground-item system exists.
+func is_protected_key(id: String) -> bool:
+	return bool(_db.definition(id).get("protected_key", false))
+
+
 func drop_slot(index: int) -> Dictionary:
+	if _owner_mutation_blocked(): return {}
 	if index < 0 or index >= SLOT_COUNT:
 		return {}
 	var stack: Variant = _slots[index]
 	if stack == null:
+		return {}
+	if is_protected_key(str(stack.id)):
 		return {}
 	_slots[index] = null
 	revision += 1
@@ -367,11 +386,21 @@ func drop_slot(index: int) -> Dictionary:
 ## This is what a death satchel is made from. CLAUDE.md: multiple death satchels
 ## persist, so the caller keeps the returned list — nothing here destroys it.
 func drain() -> Array:
+	if _owner_mutation_blocked(): return []
 	var out: Array = []
 	for i in SLOT_COUNT:
-		if _slots[i] != null:
+		if _slots[i] != null and not is_protected_key(str(_slots[i].id)):
 			out.append((_slots[i] as Dictionary).duplicate())
 			_slots[i] = null
 	if not out.is_empty():
 		revision += 1
 	return out
+
+
+func bind_owner_mutation_guard(blocked: Callable, typed_slot_writer: Callable) -> void:
+	_owner_mutation_guard = blocked
+	_typed_slot_writer = typed_slot_writer
+
+
+func _owner_mutation_blocked() -> bool:
+	return _owner_mutation_guard.is_valid() and _owner_mutation_guard.call() == true

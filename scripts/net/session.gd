@@ -44,6 +44,10 @@ const PEER_REGISTRY := preload("res://scripts/net/peer_registry.gd")
 const REALM_SHELLS := preload("res://scripts/net/realm_shells.gd")
 const REALM_TRANSITION := preload("res://scripts/net/realm_transition.gd")
 const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const TRAINING_WORLD := preload("res://autoload/world_state.gd")
 const CHARACTER_AUTHORITY := preload("res://scripts/net/character_authority.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 const BUILD_FINGERPRINT := preload("res://scripts/net/build_fingerprint.gd")
@@ -83,9 +87,20 @@ const GOODBYE_LINGER_S := 1.5
 
 const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
+var _altar_epoch := Crypto.new().generate_random_bytes(16).hex_encode()
+var _altar_host_epoch := ""
+var _altar_host_namespace := ""
+var _altar_stations: Dictionary = {} # Weak mounted nodes, never placement truth.
+var _altar_quote_request: Dictionary = {}
+var _altar_spend_request: Dictionary = {}
+var _owner_training_retry: Dictionary = {} # Only weak refs + exact row identity, no balances.
+var _owner_training_install := false
+var _training_bootstrap_waiting := false
 var _character_authority: RefCounted = CHARACTER_AUTHORITY.new()
 
 
+signal altar_essence_quote_completed(key: String, owned_uid: String, quote_id: String, result: Dictionary)
+signal altar_essence_spend_completed(key: String, spend_id: String, result: Dictionary)
 signal peer_joined(peer_id: int, character_id: String)
 signal peer_left(peer_id: int)
 ## Wave 6 lane 6.A. Somebody crossed a realm boundary without leaving the
@@ -210,6 +225,8 @@ var realm_transition: Node = null
 
 func _ready() -> void:
 	name = "Session"
+	add_to_group(preload("res://scripts/ui/input_owner.gd").GROUP)
+	add_to_group("story_modal")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_config = _load_config()
 	realm_transition = REALM_TRANSITION.new()
@@ -797,6 +814,8 @@ func _rpc_hello(summary: Dictionary) -> void:
 	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
 	if bool(seeded.get("ok", false)):
 		seeded = _character_authority.call("recover_durable_vitals", character_id, _game().get("world").reward_deliveries)
+	if bool(seeded.get("ok", false)):
+		seeded = _character_authority.call("recover_durable_training", character_id, _game().get("world").reward_deliveries)
 	if not bool(seeded.get("ok", false)):
 		_registry.call("remove", sender)
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
@@ -837,6 +856,7 @@ func _finish_peer_hello(sender: int) -> void:
 		# acknowledgement cursor of the transfer already serving this peer.
 		return
 	var row: Dictionary = _registry.call("row", sender)
+	rpc_id(sender, "_rpc_altar_epoch", _altar_epoch, str(_game().get("world").reward_delivery_namespace), str(row.get("character_id", "")))
 	var character_id := str(row.get("character_id", ""))
 	var display_name := str(row.get("display_name", ""))
 	var realm := str(row.get("realm", ""))
@@ -1050,6 +1070,7 @@ func _finalize_snapshot_receive() -> bool:
 		data.get("redesign_world", REDESIGN_STATE.defaults("world")))
 	redesign_errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(
 		data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
+	redesign_errors.append_array(TRAINING_WORLD.training_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))
 	if not redesign_errors.is_empty():
 		_fail_snapshot_receive("The received world snapshot contains invalid redesign data.", true)
 		return false
@@ -1068,6 +1089,10 @@ func _finalize_snapshot_receive() -> bool:
 			or not bool(ledger_rpc.call("reconcile_actor_vitals_before_ready"))):
 		_fail_snapshot_receive("Your accepted vitality receipt could not be saved. It remains recoverable on the host.", true)
 		return false
+	if ledger_rpc != null and not bool(ledger_rpc.call("reconcile_creature_training_before_ready")):
+		_training_bootstrap_waiting = true
+		return true # Existing bootstrap stays closed; exact saved decision resumes it.
+	_training_bootstrap_waiting = false
 	_box["snapshot"] = true
 	_box["handshake_snapshot_applied"] = true
 	print("[session] snapshot applied (%d keys, day %d)" % [data.size(), int(data.get("day", 1))])
@@ -1275,10 +1300,21 @@ func _rpc_goodbye() -> void:
 	var sender := multiplayer.get_remote_sender_id()
 	if bool(_registry.call("has", sender)):
 		_departing_peers[sender] = true
+		# Retire existing scene senders while this endpoint still has channels.
+		# ENet removes it only on a later poll; cached Sync visibility must not
+		# keep targeting the disconnecting endpoint in that interval.
+		if realm_transition != null:
+			realm_transition.call("_refresh_scopes")
 		# Close from this side, after the goodbye has been read, so the
 		# leaving client's disconnect cannot discard it. See GOODBYE_LINGER_S.
 		if _peer != null:
 			_peer.disconnect_peer(sender)
+
+
+## The existing goodbye lifetime, read by the scene replication coordinator.
+## It is not an admission, world-readiness or held-seat decision.
+func peer_is_departing(peer_id: int) -> bool:
+	return bool(_departing_peers.get(peer_id, false))
 
 
 ## Returns whether a goodbye went out. The caller then tears the session down
@@ -1409,6 +1445,14 @@ func _on_server_disconnected() -> void:
 # --- host clock (D105) -----------------------------------------------------------
 
 func _process(delta: float) -> void:
+	_bind_training_container_guards()
+	if portal_runtime_ready() and is_host():
+		var portal_context := _host_portal_context(local_peer_id())
+		if not portal_context.is_empty(): _portal_policy.call("cancel_invalid", portal_context)
+	if _training_bootstrap_waiting:
+		var training_transport := get_node_or_null(^"LedgerRpc")
+		if training_transport != null:
+			training_transport.call("reconcile_creature_training_before_ready")
 	_poll_lingering_peer()
 	if _closing_frames > 0:
 		if _closing_frames > 1:
@@ -1758,6 +1802,12 @@ func admitted_character_state(peer_id: int) -> Dictionary:
 			var recovered: Dictionary = _character_authority.call("recover_durable_vitals", character, game.get("world").reward_deliveries)
 			if not bool(recovered.get("ok", false)):
 				return {}
+	var training_recovered: Dictionary = _character_authority.call("recover_durable_training", character, _game().get("world").reward_deliveries)
+	if training_recovered.get("ok") != true: return {}
+	var game_for_portals := _game()
+	if game_for_portals != null and game_for_portals.get("world") != null:
+		var portals: Dictionary = _character_authority.call("recover_durable_portals", character, game_for_portals.get("world").reward_deliveries)
+		if portals.get("ok") != true: return {}
 	return _character_authority.call("actor_stat_state", character)
 
 
@@ -1979,7 +2029,9 @@ func _bind_character_authority() -> bool:
 	if not raw is String or raw.is_empty():
 		_world_snapshot()
 		raw = game.get("world").get("reward_delivery_namespace")
-	return raw is String and bool(_character_authority.call("bind_world", raw))
+	if not raw is String or not bool(_character_authority.call("bind_world", raw)): return false
+	_character_authority.call("bind_portal_pending_reader", _pending_portal_for)
+	return true
 
 
 func _local_character_id() -> String:
@@ -2025,3 +2077,1092 @@ func _local_realm() -> String:
 	if game == null:
 		return "meadows"
 	return str(game.get("current_realm"))
+
+
+func _altar_current_epoch() -> String:
+	if is_host(): return _altar_epoch
+	var game := _game()
+	return _altar_host_epoch if game != null and game.get("world") != null and game.get("world").reward_delivery_namespace == _altar_host_namespace else ""
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_epoch(epoch: String, world_namespace: String, character: String) -> void:
+	if is_host() or not _altar_hex_id(epoch) or character != _local_character_id() or world_namespace.is_empty(): return
+	_altar_host_epoch = epoch
+	_altar_host_namespace = world_namespace
+
+
+static func _altar_hex_id(raw: Variant) -> bool:
+	if not raw is String or raw.length() != 32: return false
+	for code: int in raw.to_utf8_buffer():
+		if not (code >= 48 and code <= 57) and not (code >= 97 and code <= 102): return false
+	return true
+
+
+func _altar_envelope(op: String, key: String) -> Dictionary:
+	var game := _game()
+	if game == null or game.get("world") == null or _altar_current_epoch().is_empty(): return {}
+	return {"op": op, "session_epoch": _altar_current_epoch(),
+		"world_namespace": game.get("world").reward_delivery_namespace,
+		"character_id": _local_character_id(), "station_key": key}
+
+
+func _altar_envelope_matches(peer: int, envelope: Dictionary, fields: Array) -> bool:
+	if not is_host() or envelope.size() != fields.size(): return false
+	for field: String in fields:
+		if not envelope.has(field): return false
+	var character := _authority_character(peer)
+	return not character.is_empty() and (peer == local_peer_id() or bool(_registry.call("has", peer))) \
+		and envelope.character_id == character and envelope.session_epoch == _altar_epoch \
+		and envelope.world_namespace == _game().get("world").reward_delivery_namespace \
+		and ESSENCE._opaque_id(envelope.station_key)
+
+
+## Trusted builder registration stores a weak node only. Each use rechecks
+## committed UID, realm, ID, pose and the owning Homestead placement policy.
+func _register_altar_station_node(key: String, building: Node3D) -> bool:
+	if _altar_station_record(key, building).is_empty(): return false
+	var prior: WeakRef = _altar_stations.get(key)
+	if prior != null and prior.get_ref() != null and prior.get_ref() != building: return false
+	_altar_stations[key] = weakref(building)
+	return true
+
+
+func _unregister_altar_station_node(key: String, building: Node3D) -> void:
+	var prior: WeakRef = _altar_stations.get(key)
+	if prior != null and prior.get_ref() == building: _altar_stations.erase(key)
+
+
+func _altar_station_record(key: String, building: Node3D) -> Dictionary:
+	var game := _game()
+	if game == null or not is_instance_valid(building) or not building.is_inside_tree() \
+			or not building.is_in_group("placed_building") or building.get_meta("building_id", "") != "altar" \
+			or building.get_meta("realm", "") != "meadows" or not key.begins_with("altar:meadows:"): return {}
+	var uid := key.trim_prefix("altar:meadows:")
+	if not ESSENCE._component(uid) or not game.get("items").call("buildable", "altar") is Dictionary \
+			or (game.get("items").call("buildable", "altar") as Dictionary).is_empty(): return {}
+	var selected: Dictionary = {}
+	for raw: Variant in game.get("world").placed_buildings:
+		if raw is Dictionary and raw.get("uid") == uid:
+			if not selected.is_empty(): return {}
+			selected = raw.duplicate(true)
+	if selected.get("id") != "altar" or selected.get("realm", "meadows") != "meadows" \
+			or selected.get("removed", false) != false: return {}
+	var position: Variant = selected.get("position")
+	var yaw: Variant = selected.get("yaw_deg")
+	if not position is Array or position.size() != 3 or not (yaw is int or yaw is float) \
+			or not is_finite(float(yaw)): return {}
+	for coordinate: Variant in position:
+		if not (coordinate is int or coordinate is float) or not is_finite(float(coordinate)): return {}
+	var authored := Vector3(float(position[0]), float(position[1]), float(position[2]))
+	if building.global_position.distance_to(authored) > 0.01 \
+			or absf(wrapf(rad_to_deg(building.global_rotation.y) - float(yaw), -180.0, 180.0)) > 0.01: return {}
+	# Deliberately closed until the canonical owning build/plot validator is
+	# wired. No duplicated farmhouse bounds or synthetic station fallback.
+	if not game.has_method("altar_placement_is_authorized") \
+			or game.call("altar_placement_is_authorized", selected, building) != true: return {}
+	# Pending paid placement may register its real node after durable world publication; owner mutation/readiness guards still prevent its use.
+	if TRAINING_WORLD.altar_paid_provenance(game.get("world").reward_deliveries, game.get("world").reward_delivery_namespace, game.get("world").world_id, selected, "", false).is_empty(): return {}
+	return selected
+
+
+func _altar_station_for_peer(peer: int, key: String) -> bool:
+	var weak: WeakRef = _altar_stations.get(key)
+	var building := weak.get_ref() as Node3D if weak != null else null
+	if _altar_station_record(key, building).is_empty(): return false
+	var transport := get_node_or_null(^"LedgerRpc")
+	if transport == null: return false
+	var context: Dictionary = transport.call("_water_actor_context", peer, {})
+	if context.get("character_id") != _authority_character(peer) or context.get("realm") != "meadows" \
+			or not context.get("position") is Vector3: return false
+	if _altar_peer_in_combat(peer): return false
+	var radius: Variant = ESSENCE.config().get("altar_interaction_radius_m")
+	return (radius is int or radius is float) and is_finite(float(radius)) and float(radius) > 0.0 \
+		and (context.position as Vector3).distance_to(building.global_position) <= float(radius)
+
+
+func altar_station_available(key: String) -> bool:
+	if ESSENCE.config().get("altar_runtime_enabled") != true or not ESSENCE.config().get("altar_runtime_enabled") is bool: return false
+	if _owner_training_mutation_blocked(_game().get("local")) or not snapshot_ready(): return false
+	if is_host(): return _altar_station_for_peer(local_peer_id(), key) and not admitted_character_state(local_peer_id()).is_empty()
+	var weak: WeakRef = _altar_stations.get(key)
+	return not _altar_current_epoch().is_empty() and weak != null \
+		and not _altar_station_record(key, weak.get_ref() as Node3D).is_empty()
+
+
+func quote_altar_essence_spend(key: String, uid: String, quote_id: String) -> Dictionary:
+	if not _altar_hex_id(quote_id) or not ESSENCE._component(uid): return {"ok": false, "code": "invalid_quote"}
+	var envelope := _altar_envelope("altar_quote", key)
+	if envelope.is_empty(): return {"ok": false, "code": "authority_missing"}
+	envelope["owned_uid"] = uid
+	envelope["quote_id"] = quote_id
+	_altar_quote_request = envelope.duplicate(true)
+	if is_host(): return _handle_altar_quote(local_peer_id(), envelope)
+	if not is_active(): return {"ok": false, "code": "authority_missing"}
+	rpc_id(HOST_PEER_ID, "_rpc_altar_quote", envelope)
+	return {"ok": false, "pending": true, "code": "quote_pending"}
+
+
+func _handle_altar_quote(peer: int, envelope: Dictionary) -> Dictionary:
+	if ESSENCE.config().get("altar_runtime_enabled") != true or not ESSENCE.config().get("altar_runtime_enabled") is bool: return {"ok": false, "code": "altar_not_ready"}
+	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "owned_uid", "quote_id"]) \
+			or envelope.op != "altar_quote" or not _altar_hex_id(envelope.quote_id) \
+			or not ESSENCE._component(envelope.owned_uid) or not _altar_station_for_peer(peer, envelope.station_key):
+		return {"ok": false, "code": "station_unavailable"}
+	if admitted_character_state(peer).is_empty(): return {"ok": false, "code": "not_admitted"}
+	var character := _authority_character(peer)
+	# Refresh/bind above uses the existing local owner, but prices and stage
+	# ALWAYS use its full protected record, not the masked combat read view.
+	return ESSENCE.quote_spend(_character_authority.call("state", character), character,
+		envelope.owned_uid, int(_character_authority.call("revision", character)), ESSENCE.config(), PROGRESSION.config())
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_quote(envelope: Dictionary) -> void:
+	if not is_host(): return
+	var peer := multiplayer.get_remote_sender_id()
+	var result := _handle_altar_quote(peer, envelope)
+	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_altar_quote_result", envelope, result)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_quote_result(envelope: Dictionary, result: Dictionary) -> void:
+	if is_host() or not ESSENCE._equivalent(envelope, _altar_quote_request) \
+			or envelope.get("session_epoch") != _altar_current_epoch() \
+			or envelope.get("character_id") != _local_character_id() \
+			or envelope.get("world_namespace") != _game().get("world").reward_delivery_namespace: return
+	_altar_quote_request = {}
+	altar_essence_quote_completed.emit(envelope.station_key, envelope.owned_uid, envelope.quote_id, result.duplicate(true))
+
+
+func submit_altar_essence_spend(key: String, intent: Dictionary) -> Dictionary:
+	return _send_altar_spend("altar_spend", key, intent)
+
+
+func reconcile_altar_essence_spend(key: String, intent: Dictionary) -> Dictionary:
+	return _send_altar_spend("altar_reconcile", key, intent)
+
+
+func _send_altar_spend(op: String, key: String, intent: Dictionary) -> Dictionary:
+	var envelope := _altar_envelope(op, key)
+	if envelope.is_empty(): return {"ok": false, "resolved": false, "code": "decision_unavailable"}
+	envelope["intent"] = intent.duplicate(true)
+	_altar_spend_request = envelope.duplicate(true)
+	if is_host(): return _handle_altar_spend(local_peer_id(), envelope)
+	if not is_active(): return {"ok": false, "resolved": false, "code": "decision_unavailable"}
+	rpc_id(HOST_PEER_ID, "_rpc_altar_spend", envelope)
+	return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
+
+
+func _handle_altar_spend(peer: int, envelope: Dictionary) -> Dictionary:
+	var refuse := {"ok": false, "resolved": true, "durable": false, "saved": false, "code": "invalid_spend"}
+	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent"]) \
+			or not envelope.op in ["altar_spend", "altar_reconcile"] or not envelope.intent is Dictionary: return refuse
+	var intent: Dictionary = envelope.intent
+	if intent.size() != 5 or not _altar_hex_id(intent.get("spend_id")): return refuse
+	for field: String in ["creature_uid", "expected_level", "payment_item", "expected_character_revision"]:
+		if not intent.has(field): return refuse
+	var character := _authority_character(peer)
+	var world: RefCounted = _game().get("world")
+	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
+	var row: Variant = world.reward_deliveries.get(id)
+	if row is Dictionary and row.action_id == intent.spend_id:
+		if not ESSENCE._equivalent(row.intent, intent): return refuse
+		return _training_decision(peer, row)
+	# An old spend may be superseded only after it was durably accepted.
+	# Its complete eight-part receipt remains in the SAME personal history.
+	if admitted_character_state(peer).is_empty(): return {"ok": false, "resolved": false, "code": "decision_unavailable"}
+	var full: Dictionary = _character_authority.call("state", character)
+	var revision := int(_character_authority.call("revision", character))
+	var proposal := ESSENCE.stage_core_spend(full, character, revision, intent, ESSENCE.config(),
+		PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	if proposal.get("duplicate") == true and row is Dictionary and row.status == "accepted" and TRAINING_WORLD.training_row_valid(row, world.reward_delivery_namespace, world.world_id) and row.after.redesign_character.transaction_receipts.has(proposal.receipt):
+		return {"ok": true, "resolved": true, "durable": true, "saved": true, "receipt": proposal.receipt,
+			"character_revision": int(intent.expected_character_revision) + 1, "journal_revision": row.journal_revision}
+	if proposal.get("duplicate") == true or envelope.op == "altar_reconcile":
+		return {"ok": false, "resolved": false, "code": "decision_unavailable"}
+	if proposal.get("ok") != true:
+		refuse.code = proposal.get("code", "invalid_spend")
+		return refuse
+	if ESSENCE.config().get("altar_runtime_enabled") != true or not ESSENCE.config().get("altar_runtime_enabled") is bool:
+		refuse.code = "altar_not_ready"
+		return refuse
+	if peer != local_peer_id() and (ESSENCE.config().get("altar_remote_spend_enabled") != true or not ESSENCE.config().get("altar_remote_spend_enabled") is bool):
+		refuse.code = "remote_training_baseline_not_ready"
+		return refuse
+	if not _altar_station_for_peer(peer, envelope.station_key):
+		refuse.code = "station_unavailable"
+		return refuse
+	var saver: RefCounted = _game().get("save_system")
+	if saver == null: return refuse
+	saver.call("finish_fallback") # All callbacks BEFORE re-freezing actual identity/state.
+	if saver.call("fallback_busy") == true or not _altar_envelope_matches(peer, envelope,
+		["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent"]) \
+		or not _altar_station_for_peer(peer, envelope.station_key) or admitted_character_state(peer).is_empty(): return refuse
+	full = _character_authority.call("state", character)
+	revision = int(_character_authority.call("revision", character))
+	proposal = ESSENCE.stage_core_spend(full, character, revision, intent, ESSENCE.config(),
+		PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	var transport := get_node_or_null(^"LedgerRpc")
+	var committed := ESSENCE.commit_host_training(_character_authority, transport, peer, character,
+		"altar_spend", intent.spend_id, intent, proposal)
+	if committed.get("durable") != true:
+		refuse.code = committed.get("code", "training_journal_failed")
+		return refuse
+	transport.call("publish_creature_training", peer, character, committed.receipt)
+	return {"ok": false, "resolved": false, "durable": true, "saved": false,
+		"receipt": committed.receipt, "code": "awaiting_saved_decision"}
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_spend(envelope: Dictionary) -> void:
+	if not is_host(): return
+	var peer := multiplayer.get_remote_sender_id()
+	var result := _handle_altar_spend(peer, envelope)
+	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_altar_spend_result", envelope, result)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_spend_result(envelope: Dictionary, result: Dictionary) -> void:
+	if is_host() or not ESSENCE._equivalent(envelope, _altar_spend_request) \
+			or envelope.get("session_epoch") != _altar_current_epoch() \
+			or envelope.get("character_id") != _local_character_id() \
+			or envelope.get("world_namespace") != _game().get("world").reward_delivery_namespace: return
+	# A reply is correlation/presentation only, never a portable state import.
+	if result.get("ok") == true:
+		var row := _owner_training_row()
+		if row.is_empty() or _training_decision(local_peer_id(), row).get("ok") != true \
+				or not row.after.redesign_character.transaction_receipts.has(result.get("receipt")): return
+	altar_essence_spend_completed.emit(envelope.station_key, envelope.intent.spend_id, result.duplicate(true))
+
+
+func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
+	var world: RefCounted=_game().get("world")
+	if row.get("status")!="accepted" or not ESSENCE._equivalent(world.reward_deliveries.get(row.get("delivery_id")),row): return false
+	var character := _authority_character(peer)
+	if character.is_empty() or character != row.get("character_id"): return false
+	if _character_authority.call("creature_training_is_pending", character) != true:
+		# A recovered saved marker is history, not permission to rewrite live HP.
+		return _character_authority.call("acknowledge_creature_training", character, row) == true
+	if _character_authority.call("creature_training_pending_matches", character, row) != true: return false
+	if row.get("kind") == "altar_building": return _character_authority.call("acknowledge_creature_training", character, row) == true
+	var bundle: Dictionary=_training_actor_baseline_proposals(peer,row)
+	if bundle.get("ok")!=true: return false
+	# Private actor commits have no publishing/reentrant callback. All proposed
+	# changes were checked before the accepted row's writer and again here.
+	for proposal: Dictionary in bundle.proposals:
+		if proposal.host.call("commit_actor_training_baseline",proposal.stage,row,bundle.admitted,
+			bundle.revision,world.reward_deliveries,world.reward_delivery_namespace,world.world_id)!=true: return false
+	return _character_authority.call("acknowledge_creature_training",_authority_character(peer),row)==true
+
+
+func _training_decision(peer: int, row: Dictionary) -> Dictionary:
+	var world: RefCounted = _game().get("world")
+	if not TRAINING_WORLD.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+			or row.character_id != _authority_character(peer) \
+			or not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row):
+		return {"ok": false, "resolved": false, "code": "decision_unavailable"}
+	if row.status != "accepted" or (is_host() and _character_authority.call("creature_training_is_pending", str(row.character_id)) == true):
+		return {"ok": false, "resolved": false, "durable": true, "saved": false,
+			"receipt": row.receipt, "code": "awaiting_saved_decision"}
+	if peer == local_peer_id() and not _game().get("local").redesign_character.transaction_receipts.has(row.receipt):
+		return {"ok": false, "resolved": false, "code": "decision_unavailable"}
+	return {"ok": true, "resolved": true, "durable": true, "saved": true, "receipt": row.receipt,
+		"character_revision": row.character_revision, "journal_revision": row.journal_revision}
+
+
+func _deliver_training_decision(peer: int, row: Dictionary) -> void:
+	if not is_host(): return
+	if peer == local_peer_id():
+		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+	elif bool(_registry.call("has", peer)):
+		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: String) -> void:
+	if is_host() or epoch != _altar_current_epoch(): return
+	# Host published its saved accepted delta first on this SAME channel.
+	# While bootstrap is closed that delta is queued; finish the existing path.
+	if _training_bootstrap_waiting:
+		_finalize_snapshot_receive()
+	var row := _owner_training_row()
+	if row.get("delivery_id") == id and row.get("journal_revision") == revision and row.get("receipt") == receipt:
+		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+
+
+## One local pending identity points at the durable row already in WorldState.
+## It stores no party/inventory/balance or alternative receipt history.
+func _owner_training_row() -> Dictionary:
+	var game := _game()
+	if game == null or not game.get("local") is RefCounted or not game.get("world") is RefCounted: return {}
+	var world: RefCounted = game.get("world")
+	var character := str(game.get("local").character_id)
+	return TRAINING_WORLD.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
+
+
+func _owner_training_mutation_blocked(player: RefCounted) -> bool:
+	var game := _game()
+	if game == null or player == null or player != game.get("local"): return false
+	var row := _owner_training_row()
+	if _pending_portal_for(str(player.character_id)): return true
+	if is_host() and _character_authority.call("creature_training_is_pending", str(player.character_id)) == true:
+		return true
+	if row.is_empty(): return not _owner_training_retry.is_empty() # Missing recovery truth cannot unlock.
+	if row.status == "pending": return true
+	return not _owner_training_retry.is_empty()
+
+
+## Compose the existing input-owner and story-modal graph; closing Altar UI
+## cannot unlock movement/menu/care while a real saved decision is pending.
+func owns_input() -> bool:
+	return _game() != null and _owner_training_mutation_blocked(_game().get("local"))
+
+
+func is_open() -> bool:
+	return owns_input()
+
+
+func _bind_training_container_guards() -> void:
+	var game := _game()
+	if game == null or not game.get("local") is RefCounted: return
+	var player: RefCounted = game.get("local")
+	var inv: Variant = player.get("inventory")
+	var party: Variant = player.get("party")
+	if inv is RefCounted and inv.has_method("bind_owner_mutation_guard"):
+		inv.call("bind_owner_mutation_guard", _owner_training_mutation_blocked.bind(player),
+			_owner_training_inventory_write_allowed.bind(player))
+	if party is RefCounted and party.has_method("bind_owner_mutation_guard"):
+		party.call("bind_owner_mutation_guard", _owner_training_mutation_blocked.bind(player))
+
+
+func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
+	var game := _game()
+	if game == null or game.get("local") != player or game.get("world") != world \
+			or not ESSENCE._equivalent(_owner_training_row(), row) or row.status != "pending": return false
+	if not _owner_training_retry.is_empty() and (_owner_training_retry.player.get_ref() != player \
+		or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt): return false
+	_owner_training_retry = {"player": weakref(player), "world": weakref(world),
+		"delivery_id": row.delivery_id, "journal_revision": row.journal_revision, "receipt": row.receipt,
+		"saved": _owner_training_retry.get("saved", false)}
+	_bind_training_container_guards()
+	return true
+
+
+func _begin_owner_training_install(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
+	if _owner_training_retry.is_empty() or _owner_training_retry.player.get_ref() != player \
+			or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt \
+			or not ESSENCE._equivalent(_owner_training_row(), row): return false
+	_owner_training_install = true
+	return true
+
+
+func _end_owner_training_install() -> void:
+	_owner_training_install = false
+
+
+func _owner_training_inventory_write_allowed(index: int, stack: Variant, player: RefCounted) -> bool:
+	if _owner_portal_inventory_write_allowed(index, stack, player): return true
+	var row := _owner_training_row()
+	return _owner_training_install and not _owner_training_retry.is_empty() \
+		and _owner_training_retry.player.get_ref() == player and row.status == "pending" \
+		and _owner_training_retry.receipt == row.receipt and index >= 0 and index < row.after.inventory.size() \
+		and ESSENCE._equivalent(row.after.inventory[index], stack)
+
+
+func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
+	if _owner_training_retry.is_empty() or _owner_training_retry.player.get_ref() != player \
+			or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt \
+			or not ESSENCE._equivalent(_owner_training_row(), row) \
+			or not ESSENCE._equivalent(ESSENCE.training_projection(player.call("save_data")), row.after): return false
+	_owner_training_retry.saved = true
+	return true
+
+
+func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
+	if _pending_portal_for(str(player.character_id)):
+		return not _owner_portal_conflicting_transaction(player) and _owner_portal_snapshot_allowed(player, payload)
+	if not _owner_training_mutation_blocked(player): return true
+	var row := _owner_training_row()
+	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
+		and ESSENCE._equivalent(ESSENCE.training_projection(payload), row.after) \
+		and payload.redesign_character.transaction_receipts.has(row.receipt)
+
+
+func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
+	if _game() == null or _game().get("local") != player or _game().get("world") != world \
+			or row.get("status") != "accepted" or not ESSENCE._equivalent(_owner_training_row(), row) \
+			or not player.redesign_character.transaction_receipts.has(row.receipt): return false
+	if is_host() and _character_authority.call("creature_training_is_pending", str(player.character_id)) == true: return false
+	if not _owner_training_retry.is_empty():
+		if _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
+			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
+			or not ESSENCE._equivalent(ESSENCE.training_projection(player.call("save_data")), row.after): return false
+		_owner_training_retry = {}
+	if not _altar_spend_request.is_empty() and _altar_spend_request.get("intent", {}).get("spend_id") == row.action_id:
+		var request := _altar_spend_request.duplicate(true)
+		_altar_spend_request = {}
+		altar_essence_spend_completed.emit(request.station_key, row.action_id,
+			_training_decision(local_peer_id(), row))
+	return true
+
+
+func _altar_peer_in_combat(peer: int) -> bool:
+	var root := get_tree().current_scene
+	if root == null: return true
+	var nodes: Array[Node] = [root]
+	var found_host := false
+	var found_local_manager := false
+	while not nodes.is_empty():
+		var node: Node = nodes.pop_back()
+		for child: Node in node.get_children(): nodes.append(child)
+		var script: Script = node.get_script()
+		if script != null and script.resource_path == "res://scripts/combat/encounter_director.gd":
+			var host: Variant = node.get("_encounter_host")
+			if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
+				found_host = true
+				var records: Variant = host.get("encounters")
+				if not records is Dictionary: return true
+				for id: Variant in records:
+					var record: Variant = records[id]
+					if not record is Dictionary: return true
+					if record.get("phase") != "done" and host.call("is_participant", str(id), peer) == true: return true
+		if peer == local_peer_id() and script != null and script.resource_path == "res://scripts/combat/combat_manager.gd":
+			if not node.has_method("is_fighting"): return true
+			found_local_manager = true
+			if node.call("is_fighting") == true: return true
+	return not found_host if peer != local_peer_id() else not found_local_manager
+
+
+func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dictionary:
+	var game:=_game()
+	if not is_host() or game==null or game.get("world")==null or get_tree().current_scene==null: return {"ok":false}
+	var world: RefCounted=game.get("world")
+	var character:=_authority_character(peer)
+	if character.is_empty() or character!=training.get("character_id") \
+		or not TRAINING_WORLD.training_row_valid(training,world.reward_delivery_namespace,world.world_id): return {"ok":false}
+	var admitted: Dictionary=_character_authority.call("state",character)
+	var revision:=int(_character_authority.call("revision",character))
+	var nodes: Array[Node]=[get_tree().current_scene]
+	var seen: Dictionary={}
+	var proposals: Array[Dictionary]=[]
+	while not nodes.is_empty():
+		var node: Node=nodes.pop_back()
+		for child: Node in node.get_children(): nodes.append(child)
+		var script: Script=node.get_script()
+		if script==null or not script.resource_path in ["res://scripts/combat/encounter_director.gd","res://scripts/combat/stormwood_encounter_director.gd"]: continue
+		var host: Variant=node.get("_encounter_host")
+		if not host is RefCounted or not host.has_method("stage_actor_training_baseline"): return {"ok":false}
+		if seen.has(host.get_instance_id()): continue
+		seen[host.get_instance_id()]=true
+		var stage: Dictionary=host.call("stage_actor_training_baseline",training,admitted,revision,world.reward_delivery_namespace,world.world_id)
+		if stage.get("ok")!=true: return {"ok":false,"code":stage.get("code")}
+		proposals.append({"host":host,"stage":stage})
+	return {"ok":not proposals.is_empty(),"proposals":proposals,"admitted":admitted,"revision":revision}
+
+func training_actor_baseline_ready(peer: int, training: Dictionary) -> bool:
+	if training.get("kind") == "altar_building": return TRAINING_WORLD.altar_build_row_valid(training, _game().get("world").reward_delivery_namespace, _game().get("world").world_id) and training.character_id == _authority_character(peer)
+	return _training_actor_baseline_proposals(peer,training).get("ok")==true
+
+
+## OFF until the coherent paid placement+mounted training path is proved.
+## Method presence does not authorize a free or client-priced placement.
+func altar_canonical_producer_available() -> bool:
+	var cfg := ESSENCE.config()
+	var game := _game()
+	return cfg.get("altar_runtime_enabled") is bool and cfg.altar_runtime_enabled == true \
+		and cfg.get("altar_building_runtime_enabled") is bool and cfg.altar_building_runtime_enabled == true \
+		and not TRAINING_WORLD.altar_recipe().is_empty() and game != null and game.get("world") != null \
+		and not str(game.get("world").reward_delivery_namespace).is_empty() \
+		and get_node_or_null(^"LedgerRpc") != null and game.has_method("altar_placement_is_authorized")
+
+
+func altar_building_placement_available() -> bool:
+	var cfg := ESSENCE.config()
+	return cfg.get("altar_building_runtime_enabled") is bool and cfg.altar_building_runtime_enabled == true \
+		and cfg.get("altar_runtime_enabled") is bool and cfg.altar_runtime_enabled == true \
+		and not TRAINING_WORLD.altar_recipe().is_empty() and _game() != null and snapshot_ready() \
+		and not _owner_training_mutation_blocked(_game().get("local")) \
+		and (is_host() or cfg.get("altar_remote_spend_enabled") == true)
+
+
+## Existing place/dismantle ingress calls this only after sender resolution.
+## Request supplies a pose or UID, never stock, recipe, character or proposed state.
+func host_altar_building(peer: int, request: Dictionary) -> Dictionary:
+	var refusal := {"ok": false, "pending": false, "kind": request.get("kind", ""), "peer": peer,
+		"code": "altar_not_ready", "reason": "Altar building is not ready yet.", "txn_id": request.get("txn_id", ""), "delta": {"ops": []}}
+	if not is_host() or not _altar_hex_id(request.get("txn_id")) or request.get("realm") != "meadows": return refusal
+	var game := _game()
+	var character := _authority_character(peer)
+	if game == null or character.is_empty(): return refusal
+	var world: RefCounted = game.get("world")
+	if not ESSENCE._integer(world.next_building_uid, 1, 2147483646): return refusal
+	var id := TRAINING_WORLD.altar_build_id(world.reward_delivery_namespace, character, request.txn_id)
+	var prior: Variant = world.reward_deliveries.get(id)
+	if prior is Dictionary:
+		# Reconcile the frozen ID before probing a now-removed building or stock.
+		if not TRAINING_WORLD.altar_build_row_valid(prior, world.reward_delivery_namespace, world.world_id) \
+			or not ESSENCE._equivalent(prior.intent.request, request):
+			refusal.code = "building_receipt_conflict"
+			return refusal
+		var transport := get_node_or_null(^"LedgerRpc")
+		if transport != null: transport.call("_process_creature_training", prior)
+		return {"ok": true, "pending": true, "kind": prior.action, "peer": peer, "code": "duplicate",
+			"reason": "", "txn_id": prior.action_id, "uid": prior.intent.record.uid, "delta": {"ops": []}}
+	if not altar_building_placement_available() or peer != local_peer_id():
+		# Actual remote full-state care/buff drift remains a closed dependency.
+		return refusal
+	var saver: RefCounted = game.get("save_system")
+	if saver == null: return refusal
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or _authority_character(peer) != character \
+		or not altar_building_placement_available() or _altar_peer_in_combat(peer) \
+		or admitted_character_state(peer).is_empty(): return refusal
+	var actor: Node3D = game.call("_find_player") as Node3D
+	if not is_instance_valid(actor) or not actor.is_inside_tree() or not actor.global_position.is_finite() \
+		or game.get("current_realm") != "meadows": return refusal
+	var full: Dictionary = _character_authority.call("state", character)
+	var revision := int(_character_authority.call("revision", character))
+	var record: Dictionary = {}
+	var placer: Node
+	for node: Node in get_tree().get_nodes_in_group("build_placer"):
+		if node.is_inside_tree() and get_tree().current_scene.is_ancestor_of(node) \
+			and node.get_script() != null and node.get_script().resource_path == "res://scripts/build/build_placer.gd":
+			if placer != null: return refusal
+			placer = node
+	if placer == null: return refusal
+	if request.get("kind") == "place_building":
+		if request.size() != 7 or request.get("id") != "altar" or request.get("paid") != true \
+			or not request.get("position") is Array or request.position.size() != 3 \
+			or not (request.get("yaw_deg") is int or request.get("yaw_deg") is float) \
+			or not is_finite(float(request.yaw_deg)): return refusal
+		for cell: Variant in request.position:
+			if not (cell is int or cell is float) or not is_finite(float(cell)): return refusal
+		var position := Vector3(float(request.position[0]), float(request.position[1]), float(request.position[2]))
+		var inv := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(full.inventory)
+		var plan: Dictionary = placer.call("validate_altar_placement", game, "meadows", position, float(request.yaw_deg), inv, actor)
+		if plan.get("ok") != true or not ESSENCE._equivalent(plan.get("cost"), TRAINING_WORLD.altar_recipe()): return refusal
+		record = {"id": "altar", "realm": "meadows", "uid": "b%d" % int(world.next_building_uid),
+			"position": plan.position.duplicate(true), "yaw_deg": plan.yaw_deg, "paid": true}
+	elif request.get("kind") == "dismantle":
+		if request.size() != 4 or not request.get("uid") is String: return refusal
+		var key := "altar:meadows:" + request.uid
+		var weak: WeakRef = _altar_stations.get(key)
+		var building := weak.get_ref() as Node3D if weak != null else null
+		if not is_instance_valid(building) or not _altar_station_for_peer(peer, key): return refusal
+		var resolved: Dictionary = placer.call("resolve_altar_station", game, key, building)
+		if resolved.get("ok") != true: return refusal
+		record = resolved.record.duplicate(true)
+		if TRAINING_WORLD.altar_paid_provenance(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, record, character).is_empty(): return refusal
+	else: return refusal
+	var proposal := TRAINING_WORLD.altar_build_transition(full, character, revision, request.kind,
+		request.txn_id, record, world.reward_delivery_namespace)
+	if proposal.is_empty():
+		refusal.code = "building_stock_or_receipt_refused"
+		return refusal
+	var stage: Dictionary = _character_authority.call("stage_altar_building", character, proposal)
+	if stage.get("ok") != true:
+		refusal.code = stage.get("code", "building_stage_refused")
+		return refusal
+	var transport := get_node_or_null(^"LedgerRpc")
+	var result: Dictionary = transport.call("journal_altar_building_prepared", peer, stage, request) if transport != null else {}
+	if _character_authority.call("finish_creature_training", stage, result.get("durable") == true) != true: return refusal
+	if result.get("durable") != true:
+		refusal.code = result.get("code", "building_journal_failed")
+		return refusal
+	transport.call("publish_altar_building", peer, character, result.delivery_id, stage.receipt)
+	return result.verdict
+
+
+## Cost/refund-only owner import. Party/body objects are never replaced or
+## rewritten by a building delivery. Every replay still performs a bool save.
+func apply_altar_building_owner(row: Dictionary) -> Dictionary:
+	var game := _game()
+	var saver: RefCounted = game.get("save_system") if game != null else null
+	if saver == null or not saver.has_method("save_character_prepared"): return {"ok": false}
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or game != _game(): return {"ok": false}
+	var player: RefCounted = game.get("local")
+	var world: RefCounted = game.get("world")
+	if not TRAINING_WORLD.altar_build_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+		or row.character_id != player.get("character_id") or row.status != "pending" \
+		or not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return {"ok": false}
+	var snapshot: Dictionary = player.call("save_data")
+	var projected := ESSENCE.training_projection(snapshot)
+	var applied: bool = snapshot.redesign_character.transaction_receipts.has(row.receipt)
+	if not ESSENCE._equivalent(projected, row.after if applied else row.before): return {"ok": false}
+	if not _retain_owner_training_retry(player, world, row) or not _begin_owner_training_install(player, world, row): return {"ok": false}
+	if not applied:
+		for index: int in row.after.inventory.size():
+			var stack: Variant = row.after.inventory[index]
+			if not ESSENCE._equivalent(snapshot.inventory[index], stack):
+				player.get("inventory").call("set_slot", index, stack.duplicate(true) if stack is Dictionary else null)
+		player.set("redesign_character", row.after.redesign_character.duplicate(true))
+	_end_owner_training_install()
+	if not ESSENCE._equivalent(ESSENCE.training_projection(player.call("save_data")), row.after) \
+		or saver.call("save_character_prepared", game, str(player.character_id)) != true:
+		return {"ok": false, "pending": true, "code": "owner_building_save_failed"}
+	if not _mark_owner_training_saved(player, world, row): return {"ok": false, "saved": true}
+	return {"ok": true, "saved": true}
+
+## Actual owning world and SAME prepared writers, including offline solo.
+## Presence alone is not capability: the coherent runtime opt-in stays OFF.
+func _host_wild_training_context() -> Dictionary:
+	var unavailable := {"ready": false}
+	var game := _game()
+	var cfg := ESSENCE.config()
+	if not is_host() or game == null or game.get("session") != self \
+		or not cfg.get("wild_victory_runtime_enabled") is bool or cfg.wild_victory_runtime_enabled != true \
+		or not game.get("world") is RefCounted or not game.get("local") is RefCounted \
+		or not _bind_character_authority(): return unavailable
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	var transport := get_node_or_null(^"LedgerRpc")
+	if saver == null or not saver.has_method("save_world_prepared") \
+		or not saver.has_method("save_character_prepared") or transport == null \
+		or not transport.has_method("journal_creature_training_prepared") \
+		or not ESSENCE._opaque_id(world.get("world_id")) \
+		or not ESSENCE._opaque_id(world.get("reward_delivery_namespace")) \
+		or not ESSENCE._opaque_id(_altar_epoch): return unavailable
+	return {"ready": true, "world_id": str(world.world_id),
+		"world_namespace": str(world.reward_delivery_namespace), "session_id": _altar_epoch}
+
+
+## Resolve the real mounted runtime's ORIGINAL retained capture, never a
+## claimed dead enemy/participant packet. Combat owns this read-only seam.
+## Missing source/lifecycle producer closes this actual door.
+func _retained_host_wild_source(frozen: Dictionary) -> Dictionary:
+	var context := _host_wild_training_context()
+	if context.get("ready") != true or get_tree().current_scene == null \
+		or frozen.get("world_id") != context.world_id \
+		or frozen.get("world_namespace") != context.world_namespace \
+		or frozen.get("session_id") != context.session_id \
+		or not frozen.get("record") is Dictionary: return {}
+	var id: Variant = frozen.record.get("encounter_id")
+	if not id is String or id.is_empty(): return {}
+	var nodes: Array[Node] = [get_tree().current_scene]
+	var found: Dictionary = {}
+	while not nodes.is_empty():
+		var node: Node = nodes.pop_back()
+		for child: Node in node.get_children(): nodes.append(child)
+		if node.get_script() == null or node.get_script().resource_path != "res://scripts/combat/encounter_director.gd": continue
+		if not node.has_method("host_wild_victory_source"): continue
+		var retained: Variant = node.call("host_wild_victory_source", id)
+		if not retained is Dictionary or not ESSENCE._equivalent(retained, frozen): continue
+		if not found.is_empty(): return {} # Never resolve an ambiguous host.
+		var host: Variant = node.get("_encounter_host")
+		if not host is RefCounted or not host.has_method("record"): return {}
+		var current: Dictionary = host.call("record", id)
+		if current.get("phase") != "done" or current.get("kind") != "wild" \
+			or not current.get("opponent") is Dictionary or not frozen.record.get("opponent") is Dictionary \
+			or not ESSENCE._equivalent(current.opponent, frozen.record.opponent) \
+			or not current.get("participants") is Dictionary: return {}
+		# Departure may move lifetime records to the existing retained map;
+		# initial solo scope intentionally requires the actual current owner.
+		found = {"director": node, "host": host, "current": current}
+	return found
+
+
+## Host-internal only; no reward RPC and no new source/balance store. The
+## combat runtime retains ORIGINAL source through refusal, disconnect and
+## terminal rendering. Existing saved rows are the only durable recovery.
+func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
+	var refused := {"ok": false, "durable": false, "resolved": false, "code": "wild_training_unavailable"}
+	var source := _retained_host_wild_source(frozen)
+	if source.is_empty() or not frozen.get("record", {}).get("participants") is Dictionary \
+		or not frozen.get("deployments") is Array: return refused
+	var participants: Dictionary = frozen.record.participants
+	# Current full-state care/bond/condition reconciliation remains a remote
+	# activation blocker. Do not pay only the host and silently discard peers.
+	if participants.size() != 1 or not participants.has(local_peer_id()):
+		refused.code = "remote_training_baseline_not_ready"
+		return refused
+	var peer := local_peer_id()
+	var character := _authority_character(peer)
+	var participant: Variant = participants[peer]
+	if character.is_empty() or not participant is Dictionary \
+		or participant.get("character_id") != character: return refused
+	var game := _game()
+	var saver: RefCounted = game.get("save_system")
+	if saver == null: return refused
+	saver.call("finish_fallback") # Callbacks before refreezing source/state.
+	if saver.call("fallback_busy") == true or _authority_character(peer) != character \
+		or _retained_host_wild_source(frozen).is_empty() \
+		or admitted_character_state(peer).is_empty(): return refused
+	var world: RefCounted = game.get("world")
+	var full: Dictionary = _character_authority.call("state", character)
+	var revision := int(_character_authority.call("revision", character))
+	var proposal := ESSENCE.stage_captured_host_victory(full, character, revision, peer, frozen,
+		ESSENCE.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	if proposal.get("ok") != true: return proposal
+	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
+	var old: Variant = world.reward_deliveries.get(id)
+	var transport := get_node_or_null(^"LedgerRpc")
+	if proposal.get("duplicate") == true:
+		# A later accepted row can supersede this original event, but only its
+		# exact immutable personal receipt proves prior durable application.
+		if not TRAINING_WORLD.training_row_valid(old, world.reward_delivery_namespace, world.world_id) \
+			or not old.after.redesign_character.transaction_receipts.has(proposal.receipt): return refused
+		if old.get("action_id") == frozen.get("source_id"):
+			if old.status == "pending" and transport != null: transport.call("_process_creature_training", old)
+			return {"ok": true, "durable": true, "resolved": old.status == "accepted",
+				"receipt": proposal.receipt, "delivery_id": old.delivery_id}
+		if old.status != "accepted": return refused
+		return {"ok": true, "durable": true, "resolved": true, "receipt": proposal.receipt,
+			"code": "previous_saved_event"}
+	if transport == null or proposal.get("action") != "wild_defeat" \
+		or proposal.get("action_id") != frozen.get("source_id"): return refused
+	var committed := ESSENCE.commit_host_training(_character_authority, transport, peer, character,
+		"wild_defeat", proposal.action_id, proposal.intent, proposal)
+	if committed.get("durable") != true: return committed
+	# Same typed owner importer/real bool-save/receipt-only ACK as Altar.
+	# Return only transfer durability; completion UI never causes a second XP.
+	transport.call("publish_creature_training", peer, character, committed.receipt)
+	return {"ok": true, "durable": true, "resolved": false, "receipt": committed.receipt,
+		"delivery_id": committed.delivery_id, "code": "awaiting_saved_decision"}
+
+## Appended to the existing Session; all state remains its existing admission
+## registry, WorldState.reward_deliveries and the owner's transaction receipts.
+const PORTAL_POLICY := preload("res://scripts/net/portal_action_policy.gd")
+const PORTAL_RECEIPT := preload("res://scripts/net/portal_delivery.gd")
+var _portal_policy: RefCounted = PORTAL_POLICY.new()
+var _portal_request_serial := 0
+var _portal_requests: Dictionary = {}
+var _portal_waiters: Dictionary = {}
+
+
+func portal_runtime_ready() -> bool:
+	return config().get("redesign_portal_runtime_enabled", false) == true
+
+
+func portal_character_state() -> Dictionary:
+	var game := _game()
+	if game == null or game.get("local") == null: return {}
+	var player: RefCounted = game.get("local")
+	return {"character_id": player.character_id,
+		"waystones_activated": player.redesign_character.waystones_activated.duplicate(true),
+		"last_waystones": player.redesign_character.last_waystones.duplicate(true)}
+
+
+func portal_view(arch_id: String) -> Dictionary:
+	var unavailable := {"ready": false, "open": false, "has_key": false, "fifth_arch_stirred": false}
+	var game := _game()
+	if not portal_runtime_ready() or game == null or game.get("local") == null or game.get("world") == null: return unavailable
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
+	if not raw is Dictionary: return unavailable
+	var arch := PORTAL_POLICY._find_arch(raw, arch_id)
+	if arch.is_empty(): return unavailable
+	var player: RefCounted = game.get("local")
+	var world: RefCounted = game.get("world")
+	var biome: String = arch.biome
+	var stirred := false
+	for row: Variant in player.satchel_escrow.values():
+		if PORTAL_RECEIPT.valid(row, player.character_id) and row.biome == "biome5" and row.status == "settled": stirred = true
+	return {"ready": not player.character_id.is_empty(), "open": arch.kind == "live" and
+		(biome == "meadows" or world.redesign_world.portal_unlocks.has(biome) or player.redesign_character.portal_unlocks.has(biome)),
+		"has_key": not str(arch.key_item).is_empty() and player.inventory.count(arch.key_item) == 1,
+		"fifth_arch_stirred": stirred or world.redesign_world.fifth_arch_stirred,
+		"destination_label": preload("res://scripts/data/biome_order.gd").display_name(biome),
+		"recommended_level": arch.get("recommended_level", 0)}
+
+
+func request_portal_action(payload: Dictionary) -> Dictionary:
+	if not portal_runtime_ready() or not PORTAL_POLICY.valid_payload(payload): return {"ok": false, "reason": "Travel is not ready yet."}
+	var game := _game()
+	if game == null or game.get("world") == null or game.get("local") == null: return {"ok": false, "reason": "Your character is not ready."}
+	var world: RefCounted = game.get("world")
+	var character := str(game.get("local").character_id)
+	var generation := _altar_current_epoch()
+	if character.is_empty() or world.reward_delivery_namespace.is_empty() or generation.is_empty(): return {"ok": false, "reason": "Your character is still joining."}
+	_portal_request_serial += 1
+	var id := "%s:%d" % [generation, _portal_request_serial]
+	var frozen := {"request_id": id, "world_instance_id": world.reward_delivery_namespace,
+		"session_epoch": generation, "character_id": character, "payload": payload.duplicate(true)}
+	_portal_requests[id] = frozen.duplicate(true)
+	if is_host(): _host_portal_action.call_deferred(local_peer_id(), frozen)
+	else: _send_portal_action.call_deferred(frozen)
+	return {"ok": true, "request_id": id}
+
+
+func _send_portal_action(frozen: Dictionary) -> void:
+	if is_host() or not is_active() or frozen.session_epoch != _altar_current_epoch(): return
+	rpc_id(HOST_PEER_ID, "_rpc_portal_action", frozen.duplicate(true))
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_portal_action(envelope: Dictionary) -> void:
+	if is_host(): _host_portal_action(multiplayer.get_remote_sender_id(), envelope)
+
+
+func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
+	var game := _game()
+	return (is_host() and portal_runtime_ready() and game != null and game.get("world") != null and
+		envelope.size() == 5 and envelope.get("request_id") is String and envelope.request_id.length() <= 192 and
+		envelope.request_id.begins_with(_altar_epoch + ":") and envelope.get("session_epoch") == _altar_epoch and
+		envelope.get("character_id") == _authority_character(peer) and not str(envelope.character_id).is_empty() and
+		envelope.get("world_instance_id") == game.get("world").reward_delivery_namespace and
+		envelope.get("payload") is Dictionary and PORTAL_POLICY.valid_payload(envelope.payload))
+
+
+func _host_portal_action(peer: int, envelope: Dictionary) -> void:
+	if not _portal_envelope_valid(peer, envelope): return
+	var context := _host_portal_context(peer)
+	if context.is_empty():
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your authoritative travel state is not ready."})
+		return
+	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
+	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
+	if not cfg is Dictionary or not stones is Dictionary: return
+	_portal_policy.call("bind_world", envelope.world_instance_id)
+	var result: Dictionary = _portal_policy.call("evaluate", envelope.payload.duplicate(true), context, cfg, stones, Time.get_ticks_msec())
+	if result.get("ok") != true:
+		_portal_reply(peer, envelope, result)
+		return
+	match str(envelope.payload.kind):
+		"portal_unlock":
+			_commit_portal_unlock(peer, envelope, result.prepared)
+		"waystone_touch":
+			_commit_waystone_touch(peer, envelope, result.prepared)
+		"home_key_begin", "home_key_cancel":
+			_portal_reply(peer, envelope, result)
+		"home_key_finish", "portal_enter":
+			# Consume and carry only the host-minted destination permit. The
+			# actual movement/grounded durable arrival consumer is a separate
+			# gate; an issued permit cannot be reported as an arrival success.
+			_portal_reply(peer, envelope, {"ok": false, "reason": "The grounded arrival consumer is not ready."})
+
+
+func _commit_portal_unlock(peer: int, envelope: Dictionary, result: Dictionary) -> void:
+	var game := _game()
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or not bool(saver.call("finish_fallback")) or saver.call("fallback_busy") == true:
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your save is still being written."})
+		return
+	# Flush can deliver callbacks, so re-read all current binding/state before
+	# freezing the debit; no mutable envelope survives across that callback.
+	if not _portal_envelope_valid(peer, envelope) or _host_portal_context(peer).is_empty(): return
+	var receipt := PORTAL_RECEIPT.receipt(envelope.world_instance_id, result.biome, envelope.character_id)
+	var existing: Variant = game.get("world").reward_deliveries.get(receipt)
+	var ledger: Node = get_node_or_null("LedgerRpc")
+	if ledger == null: return
+	_portal_waiters[receipt] = {"peer": peer, "envelope": envelope.duplicate(true)}
+	if PORTAL_RECEIPT.valid(existing, envelope.character_id, envelope.world_instance_id):
+		ledger.call("publish_portal_delivery", peer, envelope.character_id, receipt)
+		if existing.status == "accepted": _portal_delivery_accepted(peer, existing)
+		return
+	var stage := host_stage_portal_debit(peer, result.biome, receipt)
+	if stage.get("ok") != true or stage.get("duplicate") == true or not host_commit_portal_debit(stage):
+		if stage.get("ok") == true and stage.get("duplicate") != true: host_finish_portal_debit(stage, false)
+		_portal_waiters.erase(receipt)
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your protected key is not ready to spend."})
+		return
+	var journal: Dictionary = ledger.call("journal_portal_delivery_prepared", peer, envelope.character_id, result.biome, int(stage.key_slot))
+	var saved := journal.get("ok") == true and journal.get("durable") == true
+	host_finish_portal_debit(stage, saved)
+	if not saved:
+		_portal_waiters.erase(receipt)
+		_portal_reply(peer, envelope, {"ok": false, "reason": "The portal could not save. Your key is safe."})
+		return
+	ledger.call("publish_portal_delivery", peer, envelope.character_id, receipt)
+
+
+func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
+	var waiter: Dictionary = _portal_waiters.get(row.get("receipt"), {})
+	if waiter.is_empty() or waiter.peer != peer or not _portal_envelope_valid(peer, waiter.envelope): return
+	var game := _game()
+	var canonical: Variant = game.get("world").reward_deliveries.get(row.receipt)
+	if row.status != "accepted" or not PORTAL_RECEIPT.equivalent(canonical, row): return
+	_portal_waiters.erase(row.receipt)
+	_portal_reply(peer, waiter.envelope, {"ok": true, "durable": true, "receipt": row.receipt, "biome": row.biome})
+
+
+func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary) -> void:
+	# Remote portable CAS waits for its typed owner mutation protocol. A
+	# client-supplied activated set is never imported into admitted authority.
+	if peer != local_peer_id():
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone save is not ready."})
+		return
+	var game := _game()
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return
+	var player: RefCounted = game.get("local")
+	if _owner_training_mutation_blocked(player): return
+	var before: Dictionary = player.redesign_character.duplicate(true)
+	var biome: String = result.waystone.biome
+	var stone: String = result.waystone.id
+	var active: Array = player.redesign_character.waystones_activated.get(biome, []).duplicate()
+	var first := not active.has(stone)
+	if first: active.append(stone)
+	player.redesign_character.waystones_activated[biome] = active
+	player.redesign_character.last_waystones[biome] = stone
+	if not bool(saver.call("save_character_prepared", game, player.character_id)):
+		player.redesign_character = before
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+		return
+	_portal_reply(peer, envelope, {"ok": true, "durable": true, "waystone_id": stone, "first_activation": first})
+
+
+func _portal_reply(peer: int, envelope: Dictionary, result: Dictionary) -> void:
+	if not _portal_envelope_valid(peer, envelope): return
+	var reply := result.duplicate(true)
+	if reply.get("prepared") is Dictionary:
+		for key: Variant in reply.prepared:
+			if key not in ["request_id", "kind", "character_id", "world_instance_id", "session_epoch", "ok", "durable"]: reply[key] = reply.prepared[key]
+		reply.erase("prepared")
+	reply.merge({"request_id": envelope.request_id, "kind": envelope.payload.kind,
+		"character_id": envelope.character_id, "world_instance_id": envelope.world_instance_id,
+		"session_epoch": envelope.session_epoch}, true)
+	if peer == local_peer_id(): _receive_portal_reply.call_deferred(reply)
+	else: rpc_id(peer, "_rpc_portal_result", reply)
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_portal_result(reply: Dictionary) -> void:
+	if not is_host(): _receive_portal_reply(reply)
+
+
+func _receive_portal_reply(reply: Dictionary) -> void:
+	var frozen: Dictionary = _portal_requests.get(reply.get("request_id"), {})
+	var game := _game()
+	if frozen.is_empty() or game == null or game.get("world") == null or game.get("local") == null: return
+	if (reply.get("character_id") != frozen.character_id or reply.get("world_instance_id") != frozen.world_instance_id or
+		reply.get("session_epoch") != frozen.session_epoch or reply.get("kind") != frozen.payload.kind or
+		frozen.character_id != game.get("local").character_id or frozen.world_instance_id != game.get("world").reward_delivery_namespace or
+		frozen.session_epoch != _altar_current_epoch()): return
+	_portal_requests.erase(frozen.request_id)
+	game.emit_signal("portal_action_result", reply.duplicate(true))
+
+
+func _portal_world_node(realm: String) -> Node3D:
+	var scene := get_tree().current_scene
+	var node: Node3D = scene as Node3D if realm == _local_realm() else realms().call("shell", realm) as Node3D
+	if node == null or (node.has_method("shell_build_complete") and node.call("shell_build_complete") != true): return null
+	return node
+
+
+func _host_portal_context(peer: int) -> Dictionary:
+	if not is_host() or not portal_runtime_ready(): return {}
+	var admitted := admitted_character_state(peer)
+	if admitted.is_empty(): return {}
+	# Remote panels, traversal and trainer hazard revision currently have no
+	# host-approved lifecycle. Absence must not become safe=false. This closed
+	# door remains explicit until their owning real producers are integrated.
+	if peer != local_peer_id(): return {}
+	var game := _game()
+	var player := game.call("find_player") as CharacterBody3D
+	var realm := _local_realm()
+	var world_node := _portal_world_node(realm)
+	if player == null or world_node == null or not world_node.is_ancestor_of(player): return {}
+	var swim: Node = player.get("swim_controller")
+	var fly: Node = player.get("fly_controller")
+	var downed := game.get_node_or_null("DownedState")
+	var vitals: RefCounted = player.get("vitals")
+	if swim == null or fly == null or downed == null or vitals == null: return {}
+	var input_owner := preload("res://scripts/ui/input_owner.gd").current(get_tree())
+	var key := game.get_node_or_null("HomeKey")
+	var dialogue := false
+	var cutscene := input_owner != null and input_owner != key
+	for node: Node in get_tree().get_nodes_in_group("progression_restore"):
+		if world_node.is_ancestor_of(node) and node.has_method("is_fading") and node.call("is_fading") == true: cutscene = true
+	for node: Node in get_tree().get_nodes_in_group("story_modal"):
+		if node.has_method("is_open") and node.call("is_open") == true: dialogue = true
+	var combat := false
+	var directors: Array[Node] = []
+	for node: Node in world_node.find_children("*", "Node", true, false):
+		if node.has_method("trainer_battle_active") and node.has_method("encounter_record"): directors.append(node)
+	if directors.is_empty(): return {}
+	for director: Node in directors:
+		if director.call("trainer_battle_active") == true: combat = true
+		var manager: Node = director.get("_manager")
+		if manager != null and manager.has_method("is_fighting") and manager.call("is_fighting") == true: combat = true
+		var host_record: RefCounted = director.get("_encounter_host")
+		if host_record != null:
+			for record: Variant in host_record.get("encounters").values():
+				if record is Dictionary and record.get("realm") == realm and record.get("phase") in ["active", "catching", "resolving"] and record.get("participants", {}).has(peer): combat = true
+	var positions: Dictionary = {}
+	var arches: Dictionary = {}
+	for hall: Node in get_tree().get_nodes_in_group("crossing_halls"):
+		if world_node.is_ancestor_of(hall):
+			for id: String in ["home", "tidewake", "cloudreach", "stormwood", "biome5", "biome6", "biome7", "biome8"]:
+				var arch: Node3D = hall.call("arch", id)
+				if arch != null: arches[id] = arch.global_position
+	for stone: Node in get_tree().get_nodes_in_group("waystones"):
+		if world_node.is_ancestor_of(stone) and stone.get("realm_id") == realm:
+			var id := str(stone.get("waystone_id"))
+			if positions.has(id): return {}
+			positions[id] = (stone as Node3D).global_position
+	var personal: Dictionary = _character_authority.call("state", admitted.character_id)
+	return {"world_instance_id": game.get("world").reward_delivery_namespace, "character_id": admitted.character_id,
+		"peer_id": peer, "realm": realm, "position": player.global_position, "damage_revision": vitals.get("damage_revision"),
+		"combat": combat, "dialogue": dialogue, "cutscene": cutscene, "swimming": bool(swim.call("is_swimming")),
+		"flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
+		"home_key_owned": game.get("local").inventory.count("home_key") == 1,
+		"character_unlocks": personal.redesign_character.portal_unlocks.duplicate(),
+		"world_unlocks": game.get("world").redesign_world.portal_unlocks.duplicate(),
+		"character_stirred": _character_authority.call("character_fifth_stirred", admitted.character_id),
+		"owned_portal_keys": admitted_portal_keys(peer), "last_waystones": personal.redesign_character.last_waystones.duplicate(true),
+		"waystones_activated": personal.redesign_character.waystones_activated.duplicate(true),
+		"waystone_positions": positions, "arch_positions": arches}
+
+
+func home_key_refusal() -> String:
+	if not portal_runtime_ready(): return "The Home Key is not ready yet."
+	if not is_host(): return "Your authoritative travel state is not ready."
+	var context := _host_portal_context(local_peer_id())
+	if context.is_empty(): return "Your travel state is not ready."
+	return PORTAL_POLICY.refusal(context)
+
+## Read-only pending predicate over the one durable world carrier. Unknown
+## matching rows fail closed; this is not a new pending store or inventory.
+func _pending_portal_for(character: String) -> bool:
+	var game := _game()
+	if game == null or game.get("world") == null: return true
+	var world: RefCounted = game.get("world")
+	for row: Variant in world.reward_deliveries.values():
+		if row is Dictionary and row.get("kind") == "portal_unlock" and row.get("character_id") == character:
+			if not PORTAL_RECEIPT.valid(row, character, world.reward_delivery_namespace) or row.status not in ["accepted"]: return true
+	return false
+
+
+var _owner_portal_install: Dictionary = {}
+
+func _owner_portal_conflicting_transaction(player: RefCounted) -> bool:
+	var row := _owner_training_row()
+	return not _owner_training_retry.is_empty() or (not row.is_empty() and row.status == "pending") or (is_host() and _character_authority.call("creature_training_is_pending", player.character_id) == true)
+
+
+func _begin_owner_portal_install(player: RefCounted, world: RefCounted, row: Dictionary, slot: int) -> bool:
+	var game := _game()
+	if game == null or player != game.get("local") or world != game.get("world") or not _owner_portal_install.is_empty() or _owner_portal_conflicting_transaction(player): return false
+	if not PORTAL_RECEIPT.valid(row, player.character_id, world.reward_delivery_namespace) or row.status != "pending" or not PORTAL_RECEIPT.equivalent(world.reward_deliveries.get(row.receipt), row): return false
+	if slot < 0 or player.inventory.stack_at(slot) != {"id": row.item, "n": 1}: return false
+	_owner_portal_install = {"player": weakref(player), "world": weakref(world), "receipt": row.receipt, "slot": slot, "item": row.item, "rollback": false}
+	return true
+
+
+func _end_owner_portal_install() -> void:
+	_owner_portal_install.clear()
+
+
+func _owner_portal_inventory_write_allowed(index: int, stack: Variant, player: RefCounted) -> bool:
+	var game := _game()
+	if game == null or _owner_portal_install.is_empty() or _owner_portal_install.player.get_ref() != player or _owner_portal_install.world.get_ref() != game.get("world") or index != _owner_portal_install.slot: return false
+	var row: Variant = game.get("world").reward_deliveries.get(_owner_portal_install.receipt)
+	if not PORTAL_RECEIPT.valid(row, player.character_id, game.get("world").reward_delivery_namespace) or row.status != "pending": return false
+	return stack == {"id": _owner_portal_install.item, "n": 1} if _owner_portal_install.rollback else stack == null
+
+
+func _owner_portal_snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
+	var game := _game()
+	if game == null or player != game.get("local"): return false
+	var world: RefCounted = game.get("world")
+	for row: Variant in world.reward_deliveries.values():
+		if not row is Dictionary or row.get("kind") != "portal_unlock" or row.get("character_id") != player.character_id or row.get("status") != "pending": continue
+		if not PORTAL_RECEIPT.valid(row, player.character_id, world.reward_delivery_namespace): return false
+		var expected := row.duplicate(true)
+		expected.status = "settled"
+		if not PORTAL_RECEIPT.equivalent(payload.get("satchel_escrow", {}).get(row.receipt), expected): return false
+		if not payload.get("redesign_character", {}).get("transaction_receipts", []).has(row.receipt): return false
+		for stack: Variant in payload.get("inventory", []):
+			if stack is Dictionary and stack.get("id") == row.item: return false
+	return true

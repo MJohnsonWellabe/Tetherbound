@@ -11,7 +11,11 @@ const PORTAL := preload("res://scripts/net/portal_escrow_validation.gd")
 const REWARD := preload("res://scripts/net/reward_delivery.gd")
 const EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 const BIOMES := preload("res://scripts/data/biome_order.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
+var _training_stages: Dictionary = {}
+var _training_pending: Dictionary = {}
 var _records: Dictionary = {}
 var _world_instance := ""
 var _portal_stages: Dictionary = {}
@@ -27,7 +31,7 @@ func bind_world(world_instance: String) -> bool:
 	if world_instance.is_empty():
 		return false
 	if world_instance != _world_instance:
-		if not _portal_stages.is_empty() or not _loadout_pending.is_empty() or not _vitals_pending.is_empty():
+		if not _training_stages.is_empty() or not _training_pending.is_empty() or not _portal_stages.is_empty() or not _loadout_pending.is_empty() or not _vitals_pending.is_empty():
 			return false
 		_records.clear()
 		_portal_stages.clear()
@@ -183,7 +187,8 @@ func revision(character_id: String) -> int:
 ## packets never reach this arm: their baseline is retained by admission. This
 ## tracks host-earned party/gifts without taking a client's proposed refresh.
 func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
-	if _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_pending.has(character_id):
+	if _portal_mutation_pending(character_id): return {"ok": true, "revision": revision(character_id), "state": state(character_id), "pending_transaction": true}
+	if _training_locked(character_id) or _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_pending.has(character_id):
 		return {"ok": true, "revision": revision(character_id), "state": state(character_id), "pending_transaction": true}
 	var seeded := seed_admitted_character(raw, character_id)
 	if not bool(seeded.get("ok", false)) or not bool(seeded.get("already_seeded", false)):
@@ -219,7 +224,8 @@ func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
 func commit_creature_mastery(character_id: String, uid: String, expected_revision: int,
 		expected_uses: Dictionary, expected_receipts: Dictionary, next_uses: Dictionary,
 		next_receipts: Dictionary) -> Dictionary:
-	if _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_stages.has(character_id):
+	if _portal_mutation_pending(character_id): return {"ok": false, "code": "portal_owner_save_pending", "revision": revision(character_id)}
+	if _training_locked(character_id) or _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_stages.has(character_id):
 		return {"ok": false, "code": "transaction_busy", "revision": revision(character_id)}
 	if expected_revision < 0 or revision(character_id) != expected_revision:
 		return {"ok": false, "code": "stale_revision", "revision": revision(character_id)}
@@ -272,7 +278,8 @@ func commit_creature_mastery(character_id: String, uid: String, expected_revisio
 func commit_creature_loadout(character_id: String, uid: String, expected_revision: int,
 		expected_loadout_revision: int, expected_last_edit: Dictionary, next_loadout: Dictionary,
 		next_loadout_revision: int, next_edit_receipt: Dictionary) -> Dictionary:
-	if _portal_stages.has(character_id) or _vitals_stages.has(character_id):
+	if _portal_mutation_pending(character_id): return {"ok": false, "code": "portal_owner_save_pending", "revision": revision(character_id)}
+	if _training_locked(character_id) or _portal_stages.has(character_id) or _vitals_stages.has(character_id):
 		return {"ok": false, "code": "transaction_busy", "revision": revision(character_id)}
 	if _loadout_pending.has(character_id):
 		var pending: Dictionary = _loadout_pending[character_id]
@@ -345,15 +352,18 @@ func pending_creature_loadout(character_id: String) -> Dictionary:
 ## success. A pending stage excludes other writers until its explicit finish.
 func stage_portal_debit(character_id: String, biome: String, receipt: String,
 		accepted_deliveries: Array = []) -> Dictionary:
-	if _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_stages.has(character_id):
+	if _portal_mutation_pending(character_id): return {"ok": false, "code": "portal_owner_save_pending"}
+	if _training_locked(character_id) or _portal_stages.has(character_id) or _loadout_pending.has(character_id) or _vitals_stages.has(character_id):
 		return {"ok": false, "code": "transaction_busy"}
 	var candidate := state(character_id)
 	if candidate.is_empty() or not PORTAL.KEYS.has(biome) \
-			or receipt != PORTAL.receipt(biome, character_id):
+			or receipt != PORTAL.receipt(biome, character_id, _world_instance):
 		return {"ok": false, "code": "not_admitted"}
 	var personal: Dictionary = candidate.redesign_character
 	if personal.transaction_receipts.has(receipt):
 		return {"ok": true, "duplicate": true, "revision": revision(character_id)}
+	if biome == "biome5" and character_fifth_stirred(character_id):
+		return {"ok": false, "code": "already_stirred"}
 	var slot := -1
 	for index: int in candidate.inventory.size():
 		var stack: Variant = candidate.inventory[index]
@@ -364,8 +374,9 @@ func stage_portal_debit(character_id: String, biome: String, receipt: String,
 	var keys := protected_keys(character_id, accepted_deliveries)
 	if int(keys.get(PORTAL.KEYS[biome], 0)) != 1:
 		return {"ok": false, "code": "missing_owned_key"}
-	if slot >= 0:
-		candidate.inventory[slot] = null
+	if slot < 0:
+		return {"ok": false, "code": "key_delivery_pending"}
+	candidate.inventory[slot] = null
 	if biome != "biome5" and not personal.portal_unlocks.has(biome):
 		personal.portal_unlocks.append(biome)
 	personal.transaction_receipts.append(receipt)
@@ -379,7 +390,7 @@ func stage_portal_debit(character_id: String, biome: String, receipt: String,
 	# The caller can carry only the frozen stage identity, not a replacement
 	# inventory/party payload to the promotion seam.
 	return {"ok": true, "duplicate": false, "character_id": character_id,
-		"token": token, "revision": revision(character_id)}
+		"token": token, "revision": revision(character_id), "key_slot": slot}
 
 
 ## Protected keys cannot leave via drops, death, sale or trade. Later grants
@@ -394,7 +405,7 @@ func protected_keys(character_id: String, accepted_deliveries: Array = []) -> Di
 		return result
 	for biome: String in PORTAL.KEYS:
 		var item: String = PORTAL.KEYS[biome]
-		if owned.redesign_character.transaction_receipts.has(PORTAL.receipt(biome, character_id)):
+		if owned.redesign_character.transaction_receipts.has(PORTAL.receipt(biome, character_id, _world_instance)):
 			result[item] = 0
 			continue
 		var count := 0
@@ -462,7 +473,8 @@ func finish_portal_debit(stage: Dictionary, world_saved: bool) -> bool:
 func commit_creature_vitals(character_id: String, uid: String, expected_revision: int,
 		expected_hp: float, expected_fainted: bool, next_hp: float, next_fainted: bool,
 		receipt: Dictionary) -> Dictionary:
-	if _portal_stages.has(character_id) or _vitals_stages.has(character_id):
+	if _portal_mutation_pending(character_id): return {"ok": false, "code": "portal_owner_save_pending", "revision": revision(character_id)}
+	if _training_locked(character_id) or _portal_stages.has(character_id) or _vitals_stages.has(character_id):
 		return {"ok": false, "code": "transaction_busy"}
 	if not valid_vitals_receipt(receipt, uid):
 		return {"ok": false, "code": "invalid_vitals_receipt"}
@@ -681,3 +693,184 @@ static func equivalent(left: Variant, right: Variant) -> bool:
 				return false
 		return true
 	return typeof(left) == typeof(right) and left == right
+
+
+## Only the same admitted full record is staged. Proposed before/state are
+## internal frozen outputs, recomputed here rather than packet baselines.
+func _training_locked(character: String) -> bool:
+	return _training_stages.has(character) or _training_pending.has(character)
+
+
+func stage_creature_training(character: String, action: String, action_id: String,
+		expected_revision: int, intent: Dictionary, before: Dictionary,
+		next: Dictionary, receipt: String) -> Dictionary:
+	if _portal_mutation_pending(character): return {"ok": false, "code": "portal_owner_save_pending"}
+	if not action in ["altar_spend", "wild_defeat"] or not _records.has(character) or _training_locked(character) \
+			or _portal_stages.has(character) or _loadout_pending.has(character) \
+			or _vitals_pending.has(character) or _vitals_stages.has(character):
+		return {"ok": false, "code": "transaction_busy"}
+	if expected_revision < 0 or expected_revision >= 2147483647 or revision(character) != expected_revision \
+			or intent.get("spend_id" if action == "altar_spend" else "event_id") != action_id or not equivalent(before, state(character)):
+		return {"ok": false, "code": "stale_revision"}
+	var actual: Dictionary = ESSENCE.stage_core_spend(state(character), character, expected_revision, intent,
+		ESSENCE.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror) if action == "altar_spend" else ESSENCE.stage_core_defeat(state(character), character, intent, expected_revision,
+		ESSENCE.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	if actual.get("ok") != true or actual.get("duplicate") == true \
+			or actual.get("receipt") != receipt or not equivalent(actual.get("state"), next) \
+			or not errors(next, character).is_empty():
+		return {"ok": false, "code": "training_proposal_conflict"}
+	var token := Crypto.new().generate_random_bytes(16).hex_encode()
+	var accepted := {"ok": true, "token": token, "character_id": character,
+		"action": action, "action_id": action_id, "intent": intent.duplicate(true),
+		"before": before.duplicate(true), "state": next.duplicate(true), "receipt": receipt,
+		"character_revision": expected_revision + 1}
+	_training_stages[character] = {"token": token, "record": _records[character].duplicate(true),
+		"accepted": accepted.duplicate(true)}
+	# Hidden promotion: no yield/signal/publication before prepared world save.
+	_records[character] = {"revision": expected_revision + 1, "state": next.duplicate(true)}
+	return accepted
+
+
+func staged_creature_training(stage: Dictionary) -> Dictionary:
+	var saved: Dictionary = _training_stages.get(str(stage.get("character_id", "")), {})
+	return saved.accepted.duplicate(true) if not saved.is_empty() and saved.token == stage.get("token") else {}
+
+
+func finish_creature_training(stage: Dictionary, world_saved: bool) -> bool:
+	var character := str(stage.get("character_id", ""))
+	var saved: Dictionary = _training_stages.get(character, {})
+	if saved.is_empty() or saved.token != stage.get("token"):
+		return false
+	if not world_saved:
+		_records[character] = saved.record.duplicate(true)
+	else:
+		_training_pending[character] = saved.accepted.duplicate(true)
+	_training_stages.erase(character)
+	return true
+
+
+func acknowledge_creature_training(character: String, row: Dictionary) -> bool:
+	if row.get("status") != "accepted" or row.get("character_id") != character \
+			or not preload("res://autoload/world_state.gd").training_row_valid(row, _world_instance):
+		return false
+	var pending: Dictionary = _training_pending.get(character, {})
+	if pending.is_empty():
+		return _records.has(character) and state(character).redesign_character.transaction_receipts.has(row.receipt)
+	if pending.receipt != row.receipt or pending.character_revision != row.character_revision \
+			or revision(character) != int(row.character_revision) \
+			or not equivalent(ESSENCE.training_projection(state(character)), row.after):
+		return false
+	_training_pending.erase(character)
+	return true
+
+
+## Host restart recovers one typed decision from the existing world document.
+## Portable before/after must match exactly; never trust a packet balance.
+func recover_durable_training(character: String, deliveries: Dictionary) -> Dictionary:
+	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
+	var row: Dictionary = preload("res://autoload/world_state.gd").training_owner_row(deliveries, _world_instance, "", character)
+	if row.is_empty():
+		for raw: Variant in deliveries.values():
+			if raw is Dictionary and raw.get("character_id") == character and raw.get("kind") in ["creature_training", "altar_building"]: return {"ok": false, "code": "invalid_training_journal"}
+		return {"ok": true}
+	if not preload("res://autoload/world_state.gd").training_row_valid(row, _world_instance) \
+			or row.character_id != character:
+		return {"ok": false, "code": "invalid_training_journal"}
+	var current := state(character)
+	if row.status == "accepted":
+		# Old accepted history must never replace a later earned portable state.
+		if not current.redesign_character.transaction_receipts.has(row.receipt):
+			return {"ok": false, "code": "accepted_training_marker_missing"}
+		_records[character].revision = maxi(revision(character), int(row.character_revision))
+		return {"ok": true}
+	if _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
+			or _vitals_stages.has(character) or _training_stages.has(character):
+		return {"ok": false, "code": "transaction_busy"}
+	var projected := ESSENCE.training_projection(current)
+	if not equivalent(projected, row.before) and not equivalent(projected, row.after):
+		return {"ok": false, "code": "unsettled_training_conflict"}
+	for field: String in ["party", "inventory", "redesign_character"]:
+		current[field] = row.after[field].duplicate(true)
+	if not errors(current, character).is_empty(): return {"ok": false, "code": "invalid_training_candidate"}
+	_records[character] = {"revision": int(row.character_revision), "state": current}
+	_training_pending[character] = {"receipt": row.receipt, "character_revision": row.character_revision}
+	return {"ok": true, "pending": true}
+
+
+func creature_training_is_pending(character: String) -> bool:
+	return _training_locked(character)
+
+
+func creature_training_pending_matches(character: String, row: Dictionary) -> bool:
+	var pending: Dictionary = _training_pending.get(character, {})
+	return not pending.is_empty() and pending.get("receipt") == row.get("receipt") \
+		and pending.get("character_revision") == row.get("character_revision") \
+		and revision(character) == int(row.get("character_revision", -1)) \
+		and equivalent(ESSENCE.training_projection(state(character)), row.get("after"))
+
+
+## The same private stage/pending fence as Altar training. No separate
+## inventory ledger; full admitted state remains the only mutable baseline.
+func stage_altar_building(character: String, proposal: Dictionary) -> Dictionary:
+	if _portal_mutation_pending(character): return {"ok": false, "code": "portal_owner_save_pending"}
+	if not _records.has(character) or _training_locked(character) \
+		or _portal_stages.has(character) or _loadout_pending.has(character) \
+		or _vitals_pending.has(character) or _vitals_stages.has(character):
+		return {"ok": false, "code": "transaction_busy"}
+	if proposal.get("ok") != true or proposal.get("character_id") != character \
+		or proposal.get("character_revision") != revision(character) + 1 \
+		or not equivalent(proposal.get("before"), state(character)): return {"ok": false, "code": "stale_revision"}
+	var actual := preload("res://autoload/world_state.gd").altar_build_transition(state(character),
+		character, revision(character), proposal.action, proposal.action_id, proposal.record, _world_instance)
+	if actual.is_empty() or not equivalent(actual, proposal) or not errors(actual.state, character).is_empty():
+		return {"ok": false, "code": "invalid_building_candidate"}
+	var token := Crypto.new().generate_random_bytes(16).hex_encode()
+	actual.token = token
+	_training_stages[character] = {"token": token, "record": _records[character].duplicate(true), "accepted": actual.duplicate(true)}
+	_records[character] = {"revision": actual.character_revision, "state": actual.state.duplicate(true)}
+	return actual
+
+
+func character_fifth_stirred(character_id: String) -> bool:
+	var personal := state(character_id)
+	if personal.is_empty(): return false
+	for raw: Variant in personal.portal_escrow.values():
+		if PORTAL.valid_row(raw, character_id) and raw.biome == "biome5" and raw.status == "settled": return true
+	return false
+
+
+## Reconstruct the hidden debit from the already saved world journal before
+## an admitted rejoin can use another key. Never accept a client replacement.
+func recover_durable_portals(character_id: String, deliveries: Dictionary) -> Dictionary:
+	const DELIVERY = preload("res://scripts/net/portal_delivery.gd")
+	var current := state(character_id)
+	if current.is_empty(): return {"ok": false, "code": "not_admitted"}
+	var candidate := current.duplicate(true)
+	for raw: Variant in deliveries.values():
+		if not raw is Dictionary or raw.get("kind") != DELIVERY.KIND or raw.get("character_id") != character_id: continue
+		if not DELIVERY.valid(raw, character_id, _world_instance) or raw.status not in ["pending", "accepted"]:
+			return {"ok": false, "code": "invalid_portal_journal"}
+		if candidate.redesign_character.transaction_receipts.has(raw.receipt): continue
+		if _portal_stages.has(character_id) or _training_stages.has(character_id) or _training_pending.has(character_id) or _loadout_pending.has(character_id) or _vitals_pending.has(character_id): return {"ok": false, "code": "transaction_busy"}
+		var slot := -1
+		for index: int in candidate.inventory.size():
+			var stack: Variant = candidate.inventory[index]
+			if stack is Dictionary and stack.id == raw.item:
+				if slot >= 0 or stack.n != 1: return {"ok": false, "code": "invalid_owned_key"}
+				slot = index
+		if slot >= 0: candidate.inventory[slot] = null
+		candidate.redesign_character.transaction_receipts.append(raw.receipt)
+		if raw.biome != "biome5" and not candidate.redesign_character.portal_unlocks.has(raw.biome):
+			candidate.redesign_character.portal_unlocks.append(raw.biome)
+	if not errors(candidate, character_id).is_empty(): return {"ok": false, "code": "invalid_portal_recovery"}
+	if not equivalent(current, candidate): _records[character_id] = {"revision": revision(character_id) + 1, "state": candidate}
+	return {"ok": true, "revision": revision(character_id)}
+
+
+var _portal_pending_reader: Callable
+
+func bind_portal_pending_reader(reader: Callable) -> void:
+	_portal_pending_reader = reader
+
+func _portal_mutation_pending(character_id: String) -> bool:
+	return _portal_pending_reader.is_valid() and _portal_pending_reader.call(character_id) == true

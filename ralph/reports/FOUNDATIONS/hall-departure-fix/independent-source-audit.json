@@ -1,0 +1,199 @@
+{
+  "sealed": true,
+  "verdict": "SOURCE PASS",
+  "base": "784b5cee71a4ba42b7fd6b5b3b39bea76b67910e",
+  "scope": "Foundation deliberate goodbye only; ignored unapplied proposal; no acceptance credit",
+  "checks": [
+    {
+      "check": "patch immutable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "envelope immutable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "two owned paths",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "scripts/net/session.gd pinned before",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "scripts/net/session.gd after hash",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "scripts/net/session.gd no modified or deleted parent lines",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "scripts/net/realm_transition.gd pinned before",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "scripts/net/realm_transition.gd after hash",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "scripts/net/realm_transition.gd no modified or deleted parent lines",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "host admitted sender then flag refresh disconnect",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "same existing flag no new registry",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "all three concrete policy denies",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "unchanged disconnect and Session reset erase flag",
+      "pass": true,
+      "detail": "All original parent lines retained. Existing erase precedes coordinator cleanup. Existing clear empties Session flag."
+    },
+    {
+      "check": "scope pinned actual source",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "observer zero evaluates concrete recipients and registered live refresh",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "engine cached state retired",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "engine channel causal mapping",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "endpoint retained until later poll",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "native removal before script callback prevents readmission on flag erase",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "original failure host.log",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "original failure native.txt",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "original failure receipt.json",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "all four original transport errors preserved",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "exact_insertions": {
+    "scripts/net/session.gd": [
+      "\t\t# Retire existing scene senders while this endpoint still has channels.\n\t\t# ENet removes it only on a later poll; cached Sync visibility must not\n\t\t# keep targeting the disconnecting endpoint in that interval.\n\t\tif realm_transition != null:\n\t\t\trealm_transition.call(\"_refresh_scopes\")\n",
+      "\n\n## The existing goodbye lifetime, read by the scene replication coordinator.\n## It is not an admission, world-readiness or held-seat decision.\nfunc peer_is_departing(peer_id: int) -> bool:\n\treturn bool(_departing_peers.get(peer_id, false))\n"
+    ],
+    "scripts/net/realm_transition.gd": [
+      "\tif _observer_departing(observer): return false\n",
+      "\tif _observer_departing(observer): return false\n",
+      "\tif _observer_departing(observer): return false\n",
+      "\n\n## Consume Session's one goodbye flag, not another peer/readiness registry.\n## Observer zero is expanded by the existing replication-scope recipient\n## predicate; every concrete outgoing/admission observer is checked here.\nfunc _observer_departing(observer: int) -> bool:\n\tvar session := get_parent()\n\treturn session != null and session.has_method(\"peer_is_departing\") \\\n\t\tand session.call(\"peer_is_departing\", observer) == true\n"
+    ]
+  },
+  "packet_sha256": {
+    "proposal.patch": "c084cfc87afce0d1ee70d5806c0c5a66753b871f517b7212428960ea7932c8d4",
+    "source-cut.patch.json": "e41046cc386e76f1916f51e3dca19072c2ae715eef3b55e65133213ffa4b4fe1",
+    "cause-and-scope.md": "f8c7b27cba3c629b85a3f1acb0918c8a809901e15e716ad438e79a27c08afb71"
+  },
+  "files": [
+    {
+      "path": "scripts/net/session.gd",
+      "before_sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+      "after_sha256": "412df1418d3fe00d9a78d129cd98395bb06dfd3a81ba0dc23b0d91bff63a37ef",
+      "ownership": "Foundation exclusive ignored proposal only"
+    },
+    {
+      "path": "scripts/net/realm_transition.gd",
+      "before_sha256": "56eeeae34bde60450a35500386760d5214d3f830025f3661b6f76def11d17265",
+      "after_sha256": "b9852aca0df3ce34400aec1384d29c7b5c383710eba2e00b1cdadf5f8cb0c2b5",
+      "ownership": "Foundation exclusive ignored proposal only"
+    }
+  ],
+  "engine_sources": {
+    "modules/enet/enet_multiplayer_peer.cpp": {
+      "sha256": "972c0f8aaeffc200683a16c8d2ca1364588b77c897eb30aa6f76e715c7ed97f1",
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/enet/enet_multiplayer_peer.cpp"
+    },
+    "modules/enet/enet_multiplayer_peer.h": {
+      "sha256": "b1eb9bbb4d674bfd5b4f12d6b422b930bb2cf7af664fa117fd7ed99fa4858321",
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/enet/enet_multiplayer_peer.h"
+    },
+    "modules/enet/enet_packet_peer.cpp": {
+      "sha256": "15d77c8fec6da4877674c5db322a27a664ad96392790c2aa1f55d5da6185cde0",
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/enet/enet_packet_peer.cpp"
+    },
+    "modules/multiplayer/scene_multiplayer.cpp": {
+      "sha256": "71d62fede101f834482346f1066023dbc126596012fcf7d2cb7689480b254494",
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/multiplayer/scene_multiplayer.cpp"
+    },
+    "modules/multiplayer/scene_replication_interface.cpp": {
+      "sha256": "5d2fe013df7b18ef16e51b2b1ececde9c7368f0d4c7dec80addb9b6715e3e9e9",
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/multiplayer/scene_replication_interface.cpp"
+    }
+  },
+  "preserved_failures": {
+    "host.log": {
+      "source": "D:\\tetherbound\\hall-agreement-native-r4\\net\\peer-0.log",
+      "sha256": "4bff891adf1e8dd0fb05bbba1da26045faad181fea587f9c392b4eb07665c83d"
+    },
+    "native.txt": {
+      "source": "D:\\tetherbound\\hall-agreement-native-r4\\native.txt",
+      "sha256": "8aaf117cfc1c0290028a57cf87493d23b968a61143005664f1b2ea0ad7748558"
+    },
+    "receipt.json": {
+      "source": "D:\\tetherbound\\hall-agreement-native-r4\\receipt.json",
+      "sha256": "c05067dbf8a4439fd899981dc2e77642e0f0c7fd2af45ab3fa2c4cbc56b676b1"
+    }
+  },
+  "engine_runs": 0,
+  "finding": "Existing flag is set by host for admitted remote sender; registered scopes retire concrete state/admission recipients before unchanged graceful ENet disconnect. Existing policy and lifecycle retained. Engine erases connected recipient/PeerInfo before script disconnect callback; clearing flag cannot re-add old cached synchronizers. Returning admission is normal.",
+  "causal_limit": "Channel1 default unreliable scene synchronization is consistent with native teardown race, while app ledger1 maps native2. No per-packet call stacks; no particular sender attribution or runtime fix proven.",
+  "minimum_remaining_gate": "ROOT necessary parser plus one affected actual deliberate guest leave/rejoin and restored replication; inspect ERROR and SCRIPT ERROR on both peers, own portable identity and admission. No whole Hall campaign or broad unit suite solely for this correction.",
+  "limits": [
+    "No clean transport, abrupt loss, unrelated sender/channel, F49 or MET claim.",
+    "Two changed source dependencies require explicit equivalence gate when reusing earlier Hall evidence."
+  ],
+  "checker_correction": "Two unsealed reversal checkers rejected reviewer newline accounting, first an omitted Session getter final LF, then inconsistent rstrip comparison for appended RealmTransition commentary. Changed approach to exact raw before/after hashes plus line-level immutable diff: every original line retained, only explicitly recorded insertions. No proposal changed; no FAIL verdict sealed or sent. Original errors preserved."
+}

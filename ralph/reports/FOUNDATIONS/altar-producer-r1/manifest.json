@@ -1,0 +1,186 @@
+{
+  "base": "7dcd2a8649660553f38702f2de71390efc6f1343",
+  "activation": "closed pending Homestead placement authority, remote full-record lifetime, and typed actor post-training baseline integration",
+  "engine_runs": 0,
+  "tracked_application": false,
+  "files": [
+    {
+      "path": "autoload/game_state.gd",
+      "before_sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+      "after_sha256": "5a40d47a6ee6c63d2aa2fb6abf405f00b9b440813a40f1872af4bb3f160f44e4",
+      "added_lines": 6
+    },
+    {
+      "path": "autoload/inventory.gd",
+      "before_sha256": "116bbb58f5eff43f2ceeeaaecfcd1b75b31ee40939717fb5acfb9dd2f45fa650",
+      "after_sha256": "bb5ae73905ec2c99555d224d49e01e0c2b98b9ed1aaab0f7f3cafb20a0d8e2a5",
+      "added_lines": 21
+    },
+    {
+      "path": "autoload/party.gd",
+      "before_sha256": "d2ae303789477f9027faa7e2bb675c2b76ddc64ddb8c794c49a3a4a9febb6f70",
+      "after_sha256": "b3278c1ee22f8a584a7cea4f275b6992552dfbb4700ae1fec1ef382a691dee01",
+      "added_lines": 20
+    },
+    {
+      "path": "autoload/world_state.gd",
+      "before_sha256": "fd5b167d8cc9a63cf3b4d27d75d467a4c9908c29a3227f5204f5c66e82fc58a6",
+      "after_sha256": "376a6e2e2c0cd79e3a9ad72b478934ef1ccf5e2c7ed4c56eb7933c1aedbce65f",
+      "added_lines": 56
+    },
+    {
+      "path": "data/config/essence.json",
+      "before_sha256": null,
+      "after_sha256": "3fc5d25030286ab7e9736d513bf3506a8cc2c82fd62cbc56014ee03ed7d0560c",
+      "added_lines": 68
+    },
+    {
+      "path": "data/progression/flag_scopes.json",
+      "before_sha256": "087c7c46247680c3a55fb296b396c714eabdf90ee75e4d7a7e62c24fa338f2ed",
+      "after_sha256": "31060435da65745d32fa43aca6b7db2936adc30a69830abc7dba2d6130d29f0c",
+      "added_lines": 6
+    },
+    {
+      "path": "scripts/creatures/essence.gd",
+      "before_sha256": null,
+      "after_sha256": "c08e3af2be663e56d65a826f60dba2137e75fdc08e2cf8cd625d77e3f3275cb2",
+      "added_lines": 803
+    },
+    {
+      "path": "scripts/creatures/progression.gd",
+      "before_sha256": "b82be9c7b70c4f672d25143f2f2c3ed87ef5b4f04900f411c220213b6ac086e9",
+      "after_sha256": "b1e1be3bbf8de7e3238b6bf97d111e39729555eb7e1509c36026e98b2961a954",
+      "added_lines": 216
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "before_sha256": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+      "after_sha256": "646912fe4fc2df43bbaf8bbb224e4e9e7b9fe78a6cc866c6ec75084848fd2f1d",
+      "added_lines": 102
+    },
+    {
+      "path": "scripts/net/ledger_rpc.gd",
+      "before_sha256": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57",
+      "after_sha256": "c6be63429138ce5b5fb560b82b157dec832aa3a1dc147e7d0d0afdb659b95a9f",
+      "added_lines": 144
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "before_sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+      "after_sha256": "53fb083f6b097b5c82a5bd7e6bce1870fa480ae1e3ce77af7154d5b01bbe7ab0",
+      "added_lines": 466
+    },
+    {
+      "path": "scripts/net/world_ledger.gd",
+      "before_sha256": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830",
+      "after_sha256": "81c6c3c5ee0ba64793bd3eaebb2882ea9fc6ab79c30978863fea381d93a8c063",
+      "added_lines": 20
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "before_sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+      "after_sha256": "b6b56122522b6e09be0c424ad2588e163a5c2cb0d9f9453faa2cd53f7277c78f",
+      "added_lines": 4
+    },
+    {
+      "path": "scripts/save/world_save.gd",
+      "before_sha256": "8693e91bb77bf12ae2d4bb39b03afde87f8cdfb8712a34d2a4a732d9a28dd89d",
+      "after_sha256": "13570983a1cc5311920f24c31f0d6c4732ea5ed6ab100b5d54f3f236ee0257aa",
+      "added_lines": 3
+    }
+  ],
+  "patch_sha256": "4d0e6f8fa3eac9aa8047da6027188842771a1f56a1109c23a5ed6777117e03d5",
+  "proposal_status": "UNACCEPTED; source checkpoint only",
+  "training_source_pin": "4839e34",
+  "training_owned_patch_sha256": "79751d6aaf8a91108173793b90143182a09b8dfbc727ca4e4c98047e7d27e990",
+  "dependency_files": [
+    {
+      "path": "data/config/essence.json",
+      "sha256": "a232807812b1d41960596b6dab6f6ea6ea897aceaa02f95fe0a7d9da40510ff4",
+      "bytes": 1533
+    },
+    {
+      "path": "scripts/creatures/essence.gd",
+      "sha256": "a4dfbdda05577c130b121d5d310f4aa67953d3ecf06a09ba3fb22455030a4004",
+      "bytes": 47509
+    },
+    {
+      "path": "scripts/creatures/progression.gd",
+      "sha256": "8f761fdbc2633433358687ec3b756f82b7b6eea5fa45ece8ca54a5d8dd0ad328",
+      "bytes": 20477
+    },
+    {
+      "path": "scripts/ui/altar_panel.gd",
+      "sha256": "5422ac50e1ad95a21c67e8383e77fd0f5ac54c03a105adb999fc36eb6be1e969",
+      "bytes": 17474
+    },
+    {
+      "path": "scripts/ui/altar_service.gd",
+      "sha256": "bbebf43b20e583ec0592318d51b9629e91fa386c8721ee5ce44246847ce1c405",
+      "bytes": 18118
+    },
+    {
+      "path": "scripts/ui/altar_station_interaction.gd",
+      "sha256": "908f55cceead292d2aea46c5216813b25304b2297f1de7ae335bd04d16b17e88",
+      "bytes": 4887
+    }
+  ],
+  "holds": [
+    {
+      "seam": "Homestead placement",
+      "status": "CLOSED",
+      "reason": "Main has no canonical Altar buildable/plot producer. Proposed Game.altar_placement_is_authorized(record,node) is required and absent; no trusted node registration fallback."
+    },
+    {
+      "seam": "Remote full-record lifetime",
+      "status": "CLOSED",
+      "reason": "Remote Game ticks condition/bond/buffs independently of retained host admission. No client refresh is allowed; new remote spend has separate authored false guard until coherent canonical tick/field-scope reconciliation."
+    },
+    {
+      "seam": "Training to actor baseline",
+      "status": "CLOSED",
+      "reason": "Accepted typed training can change maximum and ratio HP. No accepted-row lineage handoff to current actor/vitals generations is implemented; old vitals rows must not reseed or supersede it."
+    },
+    {
+      "seam": "Post-admission earned inventory",
+      "status": "CLOSED",
+      "reason": "New remote currency grants need the existing host-authorized inventory mutation door, not a per-request portable replacement. This proposal does not add an earning mechanic."
+    },
+    {
+      "seam": "Consumer completion",
+      "status": "CLOSED",
+      "reason": "Dependency is the sealed Training4839 contract, not a claimed current UI readiness verdict. ROOT assigned terminal-reconcile/progression consumer corrections; final coherent source gate and actual mounted solo/peer save-loss/rejoin proof remain required."
+    },
+    {
+      "seam": "Legacy creatures",
+      "status": "REFUSE when incompatible",
+      "reason": "No silent modern knowledge initialization or fabricated mastery history; canonical preflight may refuse old uninitialized known-v28 rows."
+    },
+    {
+      "seam": "Mutation exclusion",
+      "status": "PROPOSED, unverified",
+      "reason": "Uses existing Game/input-owner/Inventory/Party and writer surfaces. No complete lifecycle or hostile reentrant behavior verdict has been earned."
+    }
+  ],
+  "durability_order": [
+    "same full admission record stage",
+    "hidden registry promotion",
+    "prepared bool world typed journal write",
+    "finish registry stage",
+    "publish pending delta",
+    "owning character prepared bool write",
+    "receipt-only sender-bound ACK",
+    "second prepared bool world accept",
+    "registry and owner mutation exclusion release"
+  ],
+  "source_checks": {
+    "before_git_bytes": true,
+    "after_manifest_hashes": true,
+    "ordinary_xp_award_function_unchanged": true,
+    "all_old_flag_scope_values_unchanged": true,
+    "eight_portable_fields_unchanged": true,
+    "runtime_and_remote_flags_false": true
+  },
+  "validation_limits": "Python UTF-8/JSON/hash/source equality checks only; no Godot parser, native engine, unit, CI, independent source or acceptance verdict.",
+  "tracked_source_applied": false
+}
