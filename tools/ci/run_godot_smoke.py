@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Keep the native exit verdict and stop aborted GDScript from idling forever."""
+"""Ubuntu CI: preserve native verdicts and terminate the owned process group."""
 
 import os
 import re
@@ -12,26 +12,27 @@ FATAL_SCRIPT = re.compile(r"SCRIPT ERROR:|Parse Error:")
 
 
 def run(command):
-    options = {"stdout": subprocess.PIPE, "stderr": subprocess.STDOUT}
-    if os.name == "nt":
-        options["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
-    else:
-        options["start_new_session"] = True
-    process = subprocess.Popen(command, **options)
+    if os.name != "posix":
+        raise SystemExit("run_godot_smoke.py requires the Ubuntu/POSIX CI runner")
+    process = subprocess.Popen(command, stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT, start_new_session=True)
     failed = threading.Event()
     timer = None
 
     def stop():
-        if process.poll() is not None:
-            return
-        if os.name == "nt":
-            subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        else:
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
+        # The leader can exit while descendants still hold the output pipe.
+        # Its session/group remains ours until every descendant has exited.
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+
+    def terminated(signum, _frame):
+        stop()
+        raise SystemExit(128 + signum)
+
+    previous_handlers = {sig: signal.signal(sig, terminated)
+                         for sig in (signal.SIGTERM, signal.SIGINT)}
 
     try:
         for raw in process.stdout:
@@ -50,6 +51,8 @@ def run(command):
         stop()
         process.stdout.close()
         process.wait()
+        for sig, handler in previous_handlers.items():
+            signal.signal(sig, handler)
 
 
 if __name__ == "__main__":

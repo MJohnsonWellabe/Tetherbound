@@ -1,6 +1,9 @@
 """Exercise real process exits and fatal-script cleanup without a game boot."""
 
 import pathlib
+import os
+import signal
+import select
 import subprocess
 import sys
 import time
@@ -41,6 +44,36 @@ class SmokeRunnerTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn(b"unexpected token", result.stdout)
 
+    def test_exited_leader_does_not_leave_a_pipe_holding_descendant(self):
+        started = time.monotonic()
+        result = self.invoke("import subprocess,sys; subprocess.Popen([sys.executable,'-u','-c','import time; print(\"child alive\"); time.sleep(60)']); print('SCRIPT ERROR: Invalid call'); print('leader exiting'); raise SystemExit(0)")
+        self.assertEqual(result.returncode, 1)
+        self.assertLess(time.monotonic() - started, 5)
+        self.assertIn(b"leader exiting", result.stdout)
+        self.assertIn(b"child alive", result.stdout)
+
+    def test_outer_timeout_cleans_the_separate_native_session(self):
+        source = "import subprocess,sys,time; subprocess.Popen([sys.executable,'-u','-c','import time; print(\"child ready\"); time.sleep(60)']); print('native ready'); time.sleep(60)"
+        process = subprocess.Popen([sys.executable, str(RUNNER), sys.executable, "-u", "-c", source],
+                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=0)
+        try:
+            observed = []
+            for _ in range(2):
+                self.assertTrue(select.select([process.stdout], [], [], 5)[0], "native startup output timed out")
+                observed.append(process.stdout.readline())
+            self.assertIn(b"native ready\n", observed)
+            self.assertIn(b"child ready\n", observed)
+            # GNU timeout sends SIGTERM to the wrapper at the existing deadline.
+            process.send_signal(signal.SIGTERM)
+            output, _ = process.communicate(timeout=5)
+            self.assertEqual(process.returncode, 128 + signal.SIGTERM)
+        finally:
+            if process.poll() is None:
+                process.kill()
+                process.wait()
+
 
 if __name__ == "__main__":
+    if os.name != "posix":
+        raise SystemExit("Run these process-group proofs on Ubuntu/POSIX, as CI does")
     unittest.main()
