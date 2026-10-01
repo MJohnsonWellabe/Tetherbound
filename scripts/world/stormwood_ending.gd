@@ -170,7 +170,10 @@ func receive(event: Dictionary) -> void:
 		"ending_aftermath":
 			_aftermath_announced = true
 			_refresh_presentation()
-			_queue_homecoming_handoff()
+			if _homecoming_runtime_enabled():
+				_queue_homecoming_handoff()
+			else:
+				_start_dialogue_when_free("stormwood_waterward_aftermath")
 		"ending_water_gate_opened":
 			get_node("/root/Game").push_world_message("The Waterward gate is open.")
 		"ending_refused":
@@ -793,13 +796,16 @@ func _party_holds_claim(party: RefCounted, claim: Dictionary) -> bool:
 ## only a presentation request, then wait for the owner's accepted lineage.
 ## It grants nothing to spectators and is disposed with this realm's node.
 func _queue_homecoming_handoff() -> void:
-	if not _homecoming_handoff_presented:
+	if _homecoming_runtime_enabled() and not _homecoming_handoff_presented:
 		_homecoming_handoff_pending = true
 		_homecoming_handoff_left = 0.0
 
 
 func _process_homecoming_handoff(delta: float) -> void:
 	if not _homecoming_handoff_pending or bool(world.get("simulation_only")):
+		return
+	if not _homecoming_runtime_enabled():
+		_homecoming_handoff_pending = false
 		return
 	_homecoming_handoff_left -= delta
 	if _homecoming_handoff_left > 0.0:
@@ -812,6 +818,22 @@ func _process_homecoming_handoff(delta: float) -> void:
 	if _start_dialogue_when_free(handoff):
 		_homecoming_handoff_pending = false
 		_homecoming_handoff_presented = true
+
+
+func _homecoming_runtime_enabled() -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	var owner: Object = game.get("session") as Object if game != null else null
+	if owner == null or not owner.has_method("config"):
+		return false
+	var config: Variant = owner.call("config")
+	return config is Dictionary and homecoming_runtime_enabled(config)
+
+
+static func homecoming_runtime_enabled(config: Dictionary) -> bool:
+	for field: String in ["redesign_ending_runtime_enabled", "redesign_portal_runtime_enabled"]:
+		if config.get(field) is bool and config[field] == true:
+			return true
+	return false
 
 
 func _start_dialogue_when_free(id: String) -> bool:

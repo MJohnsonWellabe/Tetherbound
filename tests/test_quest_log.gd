@@ -19,13 +19,45 @@ func before_each() -> void:
 	log_reader = QUEST_LOG.new()
 
 
-func test_regional_return_feed_follows_receipts_and_current_world_in_every_realm() -> void:
+## Canonical owner double only: no actual finale, arrival or disk proof.
+class CanonicalEndingFixture:
+	extends "res://tests/fixtures/regional_ending_owner.gd"
+	var context_overrides: Dictionary = {}
+
+	func regional_ending_context() -> Dictionary:
+		var value := super.regional_ending_context()
+		if not value.is_empty():
+			value.merge(context_overrides, true)
+		return value
+
+
+func test_regional_return_feed_follows_personal_entitlements_in_every_realm() -> void:
 	for realm_id: String in ["water", "stormwood", "cloudreach", "meadows"]:
-		progression = PROGRESSION_STATE.new()
+		var owner := CanonicalEndingFixture.new()
+		progression = owner.local.flags
+		owner.local.realm = realm_id
+		owner.world.flags.set_flag("stormwood:stormheart_freed")
+		owner.durable_home_return = false
+		owner.home_return_receipt = ""
+		log_reader = QUEST_LOG.new(owner)
 		log_reader.set_realm(realm_id)
+		progression.set_flag("water_currents_restored")
+		progression.set_flag("stormwood:long_storm_ended")
 		var chapter_rows: Array = log_reader.main_entries(progression)
 		var local_rows: Array = log_reader.local_entries(progression)
-		progression.set_flag("water_currents_restored")
+		assert_ne(log_reader.tracked_id(progression), "regional_return_home",
+			"an ahead world alone cannot qualify a nonparticipant")
+		owner.accepted_outcome = true
+		owner.context_overrides = {"character_id": "another-character"}
+		assert_eq(log_reader.main_entries(progression), chapter_rows,
+			"a foreign character's context cannot qualify this traveler")
+		owner.context_overrides = {"party_signature": "stale-speaking-roster"}
+		assert_eq(log_reader.main_entries(progression), chapter_rows,
+			"a stale roster cannot qualify this traveler")
+		owner.context_overrides = {"realm": "unsupported-realm"}
+		assert_eq(log_reader.main_entries(progression), chapter_rows,
+			"a context for another realm cannot suppress this chapter")
+		owner.context_overrides = {}
 		var before: Dictionary = progression.save_data().duplicate(true)
 		var rows: Array = log_reader.main_entries(progression)
 		assert_eq(rows.size(), 2)
@@ -34,24 +66,34 @@ func test_regional_return_feed_follows_receipts_and_current_world_in_every_realm
 		assert_eq(log_reader.guided_entries(progression).size(), 1)
 		assert_eq(log_reader.tracked_text(progression), rows[0].label)
 		assert_eq(log_reader.tracked_hint(progression), rows[0].how)
-		assert_eq(log_reader.tracked_beacon(progression).id, log_reader.tracked_id(progression))
+		assert_true(log_reader.tracked_hint(progression).contains("Home Key"))
+		assert_true(log_reader.tracked_beacon(progression).is_empty(),
+			"before a durable Home Key return no Grandpa beacon is presented")
 		for row: Dictionary in rows:
 			assert_eq(row.scope, "player")
 		assert_eq(log_reader.local_entries(progression), local_rows)
 		assert_eq(progression.save_data(), before, "reading guidance must not grant completion")
+		assert_eq(owner.save_system.calls, 0, "a presentation reader never acknowledges the ending")
+		owner.durable_home_return = true
+		owner.home_return_receipt = "synthetic-durable-home-key-return"
+		if realm_id == "meadows":
+			assert_true(log_reader.tracked_hint(progression).contains("Grandpa"))
+			assert_eq(log_reader.tracked_beacon(progression).get("id"), "regional_return_home")
+		else:
+			assert_true(log_reader.tracked_beacon(progression).is_empty(),
+				"the farm beacon belongs only to Meadows")
 		progression.set_flag("homecoming_seen")
 		assert_eq(log_reader.tracked_id(progression), "regional_finish_homecoming")
 		assert_eq(log_reader.current_index(progression), 1)
 		assert_eq(log_reader.guided_entries(progression).size(), 2)
 		progression.set_flag("regional_credits_seen")
-		assert_eq(log_reader.tracked_text(progression), "")
-		assert_eq(log_reader.tracked_hint(progression), "")
-		assert_eq(log_reader.tracked_id(progression), "")
-		assert_true(log_reader.tracked_beacon(progression).is_empty())
-		assert_eq(log_reader.current_index(progression), -1)
-		progression.set_flag("water_currents_restored", false)
 		assert_eq(log_reader.main_entries(progression), chapter_rows,
-			"portable ending receipts must not suppress another world's chapter")
+			"personal credits release the override and restore ordinary chapter guidance")
+		assert_ne(log_reader.tracked_id(progression), "regional_return_home")
+		assert_ne(log_reader.tracked_id(progression), "regional_finish_homecoming")
+		owner.accepted_outcome = false
+		assert_eq(log_reader.main_entries(progression), chapter_rows,
+			"personal presentation flags alone cannot grant a finale outcome")
 
 
 func test_water_guidance_replaces_meadows_and_uses_scoped_completion() -> void:

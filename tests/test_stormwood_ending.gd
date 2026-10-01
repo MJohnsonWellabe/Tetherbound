@@ -10,6 +10,16 @@ const PARTY := preload("res://autoload/party.gd")
 const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 
 
+func test_homecoming_handoff_keeps_the_legacy_aftermath_until_owner_activation() -> void:
+	assert_false(ENDING.homecoming_runtime_enabled({}))
+	assert_false(ENDING.homecoming_runtime_enabled({"redesign_ending_runtime_enabled": false,
+		"redesign_portal_runtime_enabled": false}))
+	assert_false(ENDING.homecoming_runtime_enabled({"redesign_ending_runtime_enabled": 1,
+		"redesign_portal_runtime_enabled": "true"}), "truthy settings cannot activate the new ending")
+	assert_true(ENDING.homecoming_runtime_enabled({"redesign_ending_runtime_enabled": true}))
+	assert_true(ENDING.homecoming_runtime_enabled({"redesign_portal_runtime_enabled": true}))
+
+
 func test_every_participant_gets_their_own_once_only_offer() -> void:
 	var fought := ["trainer-a", "trainer-b"]
 	assert_false(ENDING.claim_allowed([], fought, "trainer-a", false),

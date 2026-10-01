@@ -141,6 +141,13 @@ func test_dialogue_cannot_manufacture_physical_progression_or_creatures() -> voi
 		allowed[guard["effect"]] = guard
 		assert_eq(_effects(table[guard["conversation"]]), [guard["effect"]])
 		var event: String = guard["event"]
+		if event in ["dialogue:cloudreach_aila_arrival_complete", "dialogue:cloudreach_maela_flight_trial_ready"]:
+			assert_true((guard["requires_flags"] as Array).has("realm_key_cloudreach"),
+				"the default legacy dialogue guard retains actual chapter admission")
+			var unadmitted: Array = (guard["requires_flags"] as Array).duplicate()
+			unadmitted.erase("realm_key_cloudreach")
+			assert_false(LOGIC.dispatch(_flags(unadmitted), chapter, event)["accepted"],
+				"dialogue cannot bypass the legacy chapter entry key")
 		assert_true(event.begins_with("dialogue:") or event == "side:packs_on_the_wrong_side:report_to_neri")
 		var flags := _flags([])
 		assert_false(LOGIC.dispatch(flags, chapter, event)["accepted"], "early " + event)
