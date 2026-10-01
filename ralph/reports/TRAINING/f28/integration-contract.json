@@ -1,0 +1,121 @@
+{
+  "source_base": "b7cb96de89c4c6a9ae827f09e0ad7a2d3a699e70",
+  "feature": "F28#0\u2013#5",
+  "scope": "OWNED_SOURCE_AND_UNAPPLIED_INTEGRATION; zero acceptance credit",
+  "permissions": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never"
+  },
+  "durable_fields": {
+    "redesign_character.master_wins": "character portable; canonical host 1v1 win only",
+    "redesign_character.feast_recipes": "character portable; chest once per stable character",
+    "redesign_character.creatures[uid].cap_level": "character creature mirror; derived contiguous live tiers, never bare level",
+    "redesign_character.creatures[uid].breakthroughs": "character creature mirror; existing tier integers 1..9, live producer1..5",
+    "redesign_character.creatures[uid].evolution_choices": "character creature mirror; existing STRING stay/target per tier; same feed transaction",
+    "transaction_receipts": "EXISTING redesign_character only; no new receipt store",
+    "pending decisions": "EXISTING world.reward_deliveries creature_training absolute before/after rows only"
+  },
+  "typed_producer": "scripts/masters/breakthrough_actions.gd::stage(currentFullEightFieldState,originalRevision,op,exactIntent,hostContext,speciesTypes,F29.prepare_feast_choice,Breakthrough.refresh_feast_moves)",
+  "ops": {
+    "master_win": {
+      "request": [
+        "master_id",
+        "encounter_id",
+        "creature_uid"
+      ],
+      "sender": "NO CLIENT DOOR; bound host director only",
+      "receipt": "master_recipe:<master_id>:<character_id>:win"
+    },
+    "master_chest": {
+      "request": [
+        "master_id"
+      ],
+      "receipt": "master_recipe:<master_id>:<character_id>"
+    },
+    "feast_cook": {
+      "request": [
+        "recipe_id",
+        "craft_id"
+      ],
+      "receipt": "craft:<character_id>:<32hex_original_id>"
+    },
+    "feast_feed": {
+      "request": [
+        "creature_uid",
+        "feast_item",
+        "choice"
+      ],
+      "receipt": "feast_feed:<creature_uid>:<tier>"
+    },
+    "attuned_gather": {
+      "request": [
+        "source_id"
+      ],
+      "receipt": "craft:<character_id>:attuned:<authored_source_id>"
+    }
+  },
+  "identity_contract": [
+    "Authenticated Session binds real sender to stable character; caller character_id is mismatch fence only",
+    "Freeze original op/intent/source key/revision/session epoch/world namespace in same EXISTING creature_training row; reject conflicting replay before receipt lookup",
+    "No packet supplies before/after/items/amount/cost/level/cap/outcome/recipient/save success",
+    "Host validates actual live registered source realm/proximity/current committed building UID/home plot/effective host tier/current combat state",
+    "Registry re-derives plan against CURRENT full authority record inside private stage and compares before/after; client portable snapshot never refreshes earned baseline",
+    "World bool prepared save first; false rolls registry/world/revision/ledger sequence back; true retains exact owner settlement through disconnect",
+    "Owner applies exact accepted candidate with preserved CreatureInstance references and writes bool save_character_prepared; failed write ACKs nothing",
+    "ACK binds original immutable row/stable sender and owner saved revision; accepted status must be durably world-saved before unlocking mutations",
+    "Rejoin restores latest pending row; accepted history high-water only; no old snapshot replay or fake receipt ACK"
+  ],
+  "host_context_fields": [
+    "character_id",
+    "expected_revision",
+    "in_range",
+    "source_key",
+    "owns_character",
+    "in_combat",
+    "station_id",
+    "homestead",
+    "effective_tier",
+    "biome",
+    "source_id",
+    "master_id",
+    "validated_host_outcome",
+    "participant_count",
+    "encounter_id",
+    "creature_uid"
+  ],
+  "source_registration": {
+    "MasterDuel.bind_host": "actual director start_master_duel/void_master_duel; canonical full state closure + existing commit closure",
+    "BreakthroughService.bind_actions": "actual Session typed submit/reconcile closure and owner full state view; no combat-masked actor_stat_state",
+    "BreakthroughService.mount_biome": "chapter ready callback after actual terrain; BIOMES runtime alias supports Tidewake water namespace",
+    "Kitchen": "F31 real homestead Kitchen node invokes service.open_kitchen; cooking uses host world built tier; all camps reject",
+    "Feed": "creature inspect/Altar consumer invokes service.open_feed, modal claims input_owner; cap UI calls Breakthrough.status",
+    "Catch": "actual host catch producer after five-slot admission+Teaching mirror calls initialize_caught, then refresh_feast_moves; never legacy/rejoin inference",
+    "All XP/candy/Altar": "F27 capped arithmetic uses canonical cap and validates contiguous Breakthrough.level_cap; no cfg global100 reward path while redesign active",
+    "Items": "bounded ignored ItemDB patch loads owned feast item definitions only; does NOT expose recipes via ungated generic crafting",
+    "F29": "prepare_feast_choice(card,tier,evolve|stay|empty,HOST-derived-catalyst); cooked catalyst SKU pays stone at cook ONLY; disable legacy independent evolution via evolution_mode gate",
+    "F22": "existing director enforces no switch/flee/spectator hit/XP/tag combo; master patterns and safe hazard question retained; MasterDuel never creates second combat loop"
+  },
+  "dependency_holds": [
+    "F16 current shared producer/replay/save/ACK wiring",
+    "F27 source cap/XP/spend activation + typed catch initialization",
+    "F31 actual Kitchen/attachment/source integration",
+    "F29 evolved source + legacy evolution activation gate",
+    "F22 real master encounter/profile integration"
+  ],
+  "shared_patches": [
+    {
+      "path": "autoload/item_db.gd",
+      "owner": "Foundation ItemDB",
+      "patch": "D:\\tetherbound\\feature-f28\\.tmp\\f28\\autoload_item_db.gd.patch",
+      "before_sha256": "a4783e17379c600a008491162d651fc8697216d65e79864f0665c5de44eacd09",
+      "after_sha256": "e7ea62455510196eff85f85988582d4916d690950bb6e79227244d2dce85b84e"
+    },
+    {
+      "path": "scripts/creatures/essence.gd",
+      "owner": "F27 frozen source owner; source D:/tetherbound/redesign-training",
+      "patch": "D:\\tetherbound\\feature-f28\\.tmp\\f28\\scripts_creatures_essence.gd.patch",
+      "before_sha256": "fe34d0d3a1d64b3243afa28a1e9b05bfd8fa138bb287ef00407a73a723907218",
+      "after_sha256": "a1faefa2e94d4f59809689fe51017e092ac71d03893b1ed8d110438691984398"
+    }
+  ]
+}

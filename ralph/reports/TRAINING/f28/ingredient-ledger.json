@@ -1,0 +1,3604 @@
+{
+  "status": "SOURCE_CANDIDATE_ONLY",
+  "claim": "All recipe inputs have canonical/owned definitions and authored sources in or before recipe biome. New personal herb sources and Kitchen host producer must mount before runtime acceptance.",
+  "biome_order": [
+    "meadows",
+    "tidewake",
+    "cloudreach",
+    "stormwood"
+  ],
+  "recipes": [
+    {
+      "recipe_id": "feast_t1_ground",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.0",
+            "biome": "meadows",
+            "stable_id": "master_garden_ground_0",
+            "position": [
+              490,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_water",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.4",
+            "biome": "meadows",
+            "stable_id": "master_garden_water_0",
+            "position": [
+              496,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_air",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.8",
+            "biome": "meadows",
+            "stable_id": "master_garden_air_0",
+            "position": [
+              502,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_electric",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.12",
+            "biome": "meadows",
+            "stable_id": "master_garden_electric_0",
+            "position": [
+              508,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_fire",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.16",
+            "biome": "meadows",
+            "stable_id": "master_garden_fire_0",
+            "position": [
+              514,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_dark",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.20",
+            "biome": "meadows",
+            "stable_id": "master_garden_dark_0",
+            "position": [
+              520,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_ice",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.24",
+            "biome": "meadows",
+            "stable_id": "master_garden_ice_0",
+            "position": [
+              526,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t1_psychic",
+      "biome": "meadows",
+      "breaks_level": 10,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "berries",
+          "count": 4,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "rootstone",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.0",
+            "biome": "meadows",
+            "stable_id": 12,
+            "position": [
+              394,
+              1797
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.28",
+            "biome": "meadows",
+            "stable_id": "master_garden_psychic_0",
+            "position": [
+              532,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ground",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.0",
+            "biome": "meadows",
+            "stable_id": "master_garden_ground_0",
+            "position": [
+              490,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ground_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.0",
+            "biome": "meadows",
+            "stable_id": "master_garden_ground_0",
+            "position": [
+              490,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ground_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.0",
+            "biome": "meadows",
+            "stable_id": "master_garden_ground_0",
+            "position": [
+              490,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_water",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.4",
+            "biome": "meadows",
+            "stable_id": "master_garden_water_0",
+            "position": [
+              496,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_water_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.4",
+            "biome": "meadows",
+            "stable_id": "master_garden_water_0",
+            "position": [
+              496,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_water_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.4",
+            "biome": "meadows",
+            "stable_id": "master_garden_water_0",
+            "position": [
+              496,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_air",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.8",
+            "biome": "meadows",
+            "stable_id": "master_garden_air_0",
+            "position": [
+              502,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_air_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.8",
+            "biome": "meadows",
+            "stable_id": "master_garden_air_0",
+            "position": [
+              502,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_air_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.8",
+            "biome": "meadows",
+            "stable_id": "master_garden_air_0",
+            "position": [
+              502,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_electric",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.12",
+            "biome": "meadows",
+            "stable_id": "master_garden_electric_0",
+            "position": [
+              508,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_electric_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.12",
+            "biome": "meadows",
+            "stable_id": "master_garden_electric_0",
+            "position": [
+              508,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_electric_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.12",
+            "biome": "meadows",
+            "stable_id": "master_garden_electric_0",
+            "position": [
+              508,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_fire",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.16",
+            "biome": "meadows",
+            "stable_id": "master_garden_fire_0",
+            "position": [
+              514,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_fire_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.16",
+            "biome": "meadows",
+            "stable_id": "master_garden_fire_0",
+            "position": [
+              514,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_fire_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.16",
+            "biome": "meadows",
+            "stable_id": "master_garden_fire_0",
+            "position": [
+              514,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_dark",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.20",
+            "biome": "meadows",
+            "stable_id": "master_garden_dark_0",
+            "position": [
+              520,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_dark_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.20",
+            "biome": "meadows",
+            "stable_id": "master_garden_dark_0",
+            "position": [
+              520,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_dark_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.20",
+            "biome": "meadows",
+            "stable_id": "master_garden_dark_0",
+            "position": [
+              520,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ice",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.24",
+            "biome": "meadows",
+            "stable_id": "master_garden_ice_0",
+            "position": [
+              526,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ice_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.24",
+            "biome": "meadows",
+            "stable_id": "master_garden_ice_0",
+            "position": [
+              526,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_ice_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.24",
+            "biome": "meadows",
+            "stable_id": "master_garden_ice_0",
+            "position": [
+              526,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_psychic",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.28",
+            "biome": "meadows",
+            "stable_id": "master_garden_psychic_0",
+            "position": [
+              532,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_psychic_heartstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.28",
+            "biome": "meadows",
+            "stable_id": "master_garden_psychic_0",
+            "position": [
+              532,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "heartstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/burrow_warrens.json",
+            "json_path": "$.prize",
+            "biome": "meadows",
+            "stable_id": "warrens_heartstone_taken",
+            "position": [
+              0,
+              1
+            ],
+            "amount": 1,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t2_psychic_sunstone",
+      "biome": "meadows",
+      "breaks_level": 20,
+      "catalyst_optional": true,
+      "ingredients": [
+        {
+          "item": "ironwood",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band2_stone_and_root/harvest.json",
+            "json_path": "$.nodes.5",
+            "biome": "meadows",
+            "stable_id": 17,
+            "position": [
+              -321.5,
+              2616.3
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.28",
+            "biome": "meadows",
+            "stable_id": "master_garden_psychic_0",
+            "position": [
+              532,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        },
+        {
+          "item": "sunstone",
+          "count": 1,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "scripts/world/playground_world.gd",
+            "symbol": "SUNSTONE_AT / _spawn_sunstone",
+            "position": [
+              121,
+              7336
+            ],
+            "biome": "meadows",
+            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "berries",
+          "count": 6,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/bands/band1_lower_meadows/harvest.json",
+            "json_path": "$.nodes.10",
+            "biome": "meadows",
+            "stable_id": 10,
+            "position": [
+              -6,
+              -24.5
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_ground",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.0",
+            "biome": "meadows",
+            "stable_id": "master_garden_ground_0",
+            "position": [
+              490,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_water",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.4",
+            "biome": "meadows",
+            "stable_id": "master_garden_water_0",
+            "position": [
+              496,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_air",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.8",
+            "biome": "meadows",
+            "stable_id": "master_garden_air_0",
+            "position": [
+              502,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_electric",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.12",
+            "biome": "meadows",
+            "stable_id": "master_garden_electric_0",
+            "position": [
+              508,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_fire",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.16",
+            "biome": "meadows",
+            "stable_id": "master_garden_fire_0",
+            "position": [
+              514,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_dark",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.20",
+            "biome": "meadows",
+            "stable_id": "master_garden_dark_0",
+            "position": [
+              520,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_ice",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.24",
+            "biome": "meadows",
+            "stable_id": "master_garden_ice_0",
+            "position": [
+              526,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t3_psychic",
+      "biome": "tidewake",
+      "breaks_level": 30,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "tide_bloom",
+          "count": 3,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.9",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:010",
+            "position": [
+              -30,
+              34.1521,
+              -6
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "reef_stone",
+          "count": 2,
+          "catalogue": "data/config/water_crafting.json",
+          "source": {
+            "file": "data/config/water_pickups.json",
+            "json_path": "$.harvest.4",
+            "biome": "tidewake",
+            "stable_id": "water:first_shore:harvest:005",
+            "position": [
+              72,
+              25.3568,
+              -24
+            ],
+            "amount": 2,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.28",
+            "biome": "meadows",
+            "stable_id": "master_garden_psychic_0",
+            "position": [
+              532,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_ground",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.0",
+            "biome": "meadows",
+            "stable_id": "master_garden_ground_0",
+            "position": [
+              490,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_water",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.4",
+            "biome": "meadows",
+            "stable_id": "master_garden_water_0",
+            "position": [
+              496,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_air",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.8",
+            "biome": "meadows",
+            "stable_id": "master_garden_air_0",
+            "position": [
+              502,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_electric",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.12",
+            "biome": "meadows",
+            "stable_id": "master_garden_electric_0",
+            "position": [
+              508,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_fire",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.16",
+            "biome": "meadows",
+            "stable_id": "master_garden_fire_0",
+            "position": [
+              514,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_dark",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.20",
+            "biome": "meadows",
+            "stable_id": "master_garden_dark_0",
+            "position": [
+              520,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_ice",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.24",
+            "biome": "meadows",
+            "stable_id": "master_garden_ice_0",
+            "position": [
+              526,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t4_psychic",
+      "biome": "cloudreach",
+      "breaks_level": 40,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "cloudberry",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.1",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_cloudberry_waycamp",
+            "position": [
+              -400,
+              175,
+              570
+            ],
+            "amount": 4,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "gale_fiber",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/cloudreach_chapter.json",
+            "json_path": "$.resource_tier.nodes.0",
+            "biome": "cloudreach",
+            "stable_id": "cr_node_gale_fiber_gate",
+            "position": [
+              180,
+              210,
+              620
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.28",
+            "biome": "meadows",
+            "stable_id": "master_garden_psychic_0",
+            "position": [
+              532,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_ground",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ground",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.0",
+            "biome": "meadows",
+            "stable_id": "master_garden_ground_0",
+            "position": [
+              490,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_water",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_water",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.4",
+            "biome": "meadows",
+            "stable_id": "master_garden_water_0",
+            "position": [
+              496,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_air",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_air",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.8",
+            "biome": "meadows",
+            "stable_id": "master_garden_air_0",
+            "position": [
+              502,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_electric",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_electric",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.12",
+            "biome": "meadows",
+            "stable_id": "master_garden_electric_0",
+            "position": [
+              508,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_fire",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_fire",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.16",
+            "biome": "meadows",
+            "stable_id": "master_garden_fire_0",
+            "position": [
+              514,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_dark",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_dark",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.20",
+            "biome": "meadows",
+            "stable_id": "master_garden_dark_0",
+            "position": [
+              520,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_ice",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_ice",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.24",
+            "biome": "meadows",
+            "stable_id": "master_garden_ice_0",
+            "position": [
+              526,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    },
+    {
+      "recipe_id": "feast_t5_psychic",
+      "biome": "stormwood",
+      "breaks_level": 50,
+      "catalyst_optional": false,
+      "ingredients": [
+        {
+          "item": "voltcap",
+          "count": 3,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.41",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_glowmoss_hollows_042",
+            "position": [
+              -1720,
+              1270
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "glowmoss",
+          "count": 2,
+          "catalogue": "data/items/items.json",
+          "source": {
+            "file": "data/config/stormwood_harvests.json",
+            "json_path": "$.sites.1",
+            "biome": "stormwood",
+            "stable_id": "stormwood_harvest_cinder_verge_002",
+            "position": [
+              -1725,
+              220
+            ],
+            "amount": 3,
+            "status": "existing_authored_source_no_runtime_reproof"
+          }
+        },
+        {
+          "item": "attuned_psychic",
+          "count": 1,
+          "catalogue": "data/recipes/feasts.json",
+          "source": {
+            "file": "data/recipes/feasts.json",
+            "json_path": "$.attuned_sources.nodes.28",
+            "biome": "meadows",
+            "stable_id": "master_garden_psychic_0",
+            "position": [
+              532,
+              1720
+            ],
+            "amount": 6,
+            "status": "owned_source_requires_typed_host_mount"
+          }
+        }
+      ]
+    }
+  ]
+}

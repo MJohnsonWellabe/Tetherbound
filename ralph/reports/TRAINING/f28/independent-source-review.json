@@ -1,0 +1,111 @@
+{
+  "feature": "F28",
+  "reviewer": "independent agent /root/strict_f28_source_review (different implementation author)",
+  "review_kind": "strict read-only source review plus final delta recheck",
+  "reviewed_head": "1341de115f9d228d2ff2657cff5cf17cb301bd2c",
+  "disposition": "NO_REMAINING_CONCRETE_OWNED_SOURCE_BLOCKER_FOUND",
+  "acceptance": "HELD; no F28 criterion is marked MET by this source review",
+  "mutations": "Only this ignored evidence JSON; no implementation or shared source changed",
+  "engine_or_tests_run": [],
+  "files": [
+    {
+      "path": "data/config/masters.json",
+      "sha256": "d93a2a2064c87f5f27066691c128e7a17a62bf212e878da385c6c7c110aafece"
+    },
+    {
+      "path": "data/recipes/feasts.json",
+      "sha256": "37cca34e965955058d4fdde542013765ab1de0f0ae287b1e3aa409e86325cdc1"
+    },
+    {
+      "path": "scenes/masters/master_t1.tscn",
+      "sha256": "221c94a8b9991db155769492b068d4ac348153fed020b8413714da2077805ae1"
+    },
+    {
+      "path": "scenes/masters/master_t2.tscn",
+      "sha256": "4ad7b9b0664eb737aa6d8a33ccda423bed7985942dc544a6e565e4829b8a1ae8"
+    },
+    {
+      "path": "scenes/masters/master_t3.tscn",
+      "sha256": "d2cfb48bc6779f238adbb1ac5fb31dee8a063f50ce86e3ecb6367936dafaa567"
+    },
+    {
+      "path": "scenes/masters/master_t4.tscn",
+      "sha256": "a97b7f0a1b23924efc91fecc6ba19a833fee942861ad8f447a359b9c93e9b88c"
+    },
+    {
+      "path": "scenes/masters/master_t5.tscn",
+      "sha256": "543be7dbf44f751205d4b2bb96bf543a0b2bc094a3d62ade45c3e129e8c9e47f"
+    },
+    {
+      "path": "scripts/creatures/breakthrough.gd",
+      "sha256": "5b568b142ecd6e748c4c83001eeb21e5685002b8f114c93e09246fa36913bc47"
+    },
+    {
+      "path": "scripts/masters/attuned_herb.gd",
+      "sha256": "f9244980a44651abbfeb5202d6a989090ddd6b999d0109add4305861137afc18"
+    },
+    {
+      "path": "scripts/masters/breakthrough_actions.gd",
+      "sha256": "7570bcb25b0ab976de3581cff33cfc0cc3996d7d0d00b8a05c8c44baf29b77ab"
+    },
+    {
+      "path": "scripts/masters/breakthrough_panel.gd",
+      "sha256": "2a3c48571caa8f19f5fb44d057003b578d71383587e0370961ef470081decbd6"
+    },
+    {
+      "path": "scripts/masters/breakthrough_service.gd",
+      "sha256": "6e08236b29b73f9dd5a950815371e57f25a4f7d244deac86e30f09c9b49926d6"
+    },
+    {
+      "path": "scripts/masters/master_duel.gd",
+      "sha256": "529206af830f49944b1d321f0b6d2324dbc89ccb1e5bf6672d6db6749e69d373"
+    },
+    {
+      "path": "scripts/masters/master_site.gd",
+      "sha256": "e1f581bb7ab34cc5dbfdabdd45b3e040e3b38b017ddf6d0906b545a461a3b926"
+    }
+  ],
+  "dependency_api": {
+    "path": "D:/tetherbound/feature-f29/scripts/creatures/evolution.gd",
+    "sha256": "55c8f5d4b52d760dea7dfde51d7696deffab82686ed0308de0a0e335adf12dd0",
+    "contract": "prepare_feast_choice(card,tier,choice,ingredient); choice empty/evolve/stay; SKU-derived catalyst; empty debit; string evolution choice mirror"
+  },
+  "resolved_findings": [
+    {
+      "finding": "UI sent target species as choice, incompatible with F29",
+      "resolution": "Panel sends evolve and filters branches against cooked SKU catalyst",
+      "reference": "scripts/masters/breakthrough_panel.gd:89"
+    },
+    {
+      "finding": "L20 recipes needed later Cloudreach Sunleaf",
+      "resolution": "All T2 recipes use reachable Meadows berries and ironwood; Sunleaf removed",
+      "reference": "data/recipes/feasts.json:848"
+    },
+    {
+      "finding": "Off-crown Fly pad required pre-existing support before mounting",
+      "resolution": "Authored Fly altitude creates owned floor and registers ellipse at physical floor top",
+      "reference": "scripts/masters/master_site.gd:21"
+    }
+  ],
+  "delta_recheck": [
+    "level_cap admits only finite numeric prefix [1..N] and refuses invalid or oversized tier arrays",
+    "initialize_caught refuses admitted levels outside 1..60 and uses prior tiers only",
+    "T5 keeps Voltarach fallback and only selects Stormursa after F29 readiness gate",
+    "Master reveal carries creature type and profile; lead NPC prompts use installed cast",
+    "Owned feast refresh unions learnset options while preserving equipped moves and mastery"
+  ],
+  "remaining_holds": [
+    "Foundation actual authenticated action mounting, immutable world/epoch/character/revision identity and original-intent replay comparison",
+    "False world save, retained delivery, owner bool save and ACK, disconnect/rejoin reconciliation on actual host/client path",
+    "F27 XP cap enforcement and canonical catch initialization, including late catch traits/ultimate projections",
+    "F29 composed source and species integration; legacy independent stone spending disabled at activation",
+    "Item catalogue registration and Kitchen effective attachment tier; ordinary-input cook/feed entry points",
+    "Actual encounter director singleton 1v1 participant, spectator damage exclusion, no switch/flee/catch, retry and Master combat profiles/hazards",
+    "Ingredient ledger and actual reachability/collision/terrain clearance at five sites, including Fly landing and Stormwood weather shelter",
+    "One combined ROOT-owned runtime proof with separate F28#0 through #5 verdicts"
+  ],
+  "limitations": [
+    "Source reasoning and file reads only; no Godot parsing/import/gameplay/render/export, unit tests or CI",
+    "Reviewed owned source does not prove prerequisite landing or final integrated player path"
+  ]
+}
