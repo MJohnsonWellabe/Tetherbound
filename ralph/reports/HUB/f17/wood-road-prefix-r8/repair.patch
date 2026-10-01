@@ -1,0 +1,147 @@
+diff --git a/tests/helpers/gate_a_npc_gather_segment.gd b/tests/helpers/gate_a_npc_gather_segment.gd
+index cebbfa9f77..2e6da72c59 100644
+--- a/tests/helpers/gate_a_npc_gather_segment.gd
++++ b/tests/helpers/gate_a_npc_gather_segment.gd
+@@ -317,9 +317,12 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
+ 	if node == null:
+ 		_fail("no unspent authored %s node exists in the opening route" % item_id)
+ 		return false
+-	# Stone lies beyond the concave fence corner. Follow the existing painted
+-	# Practice Meadow road before turning toward it, inside the same 1800 frames.
+-	if not await _walk_toward(node.global_position, 1800, 1.55, "Practice Meadow" if item_id == "stone" else ""):
++	# The direct wood leg crossed Grandpa's furnished yard and lost actual floor.
++	# Follow the existing Pond road to its nearest authored node, then leave it
++	# for the resource. Stone retains its existing full Practice Meadow hint.
++	# Every leg shares the same 1800-frame walk and unchanged live floor checks.
++	var road := "The Pond" if item_id == "wood" else ("Practice Meadow" if item_id == "stone" else "")
++	if not await _walk_toward(node.global_position, 1800, 1.55, road, item_id == "wood"):
+ 		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
+ 		return false
+ 	# A visible swing owns the held prop for its full production animation.  Do
+@@ -756,8 +759,8 @@ func _walk_diagnosis(point: Vector3) -> String:
+ 		Vector2(point.x - _player.global_position.x, point.z - _player.global_position.z).length(), colliders]
+ 
+ 
+-func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "") -> bool:
+-	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road)
++func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
++	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road, end_road_at_goal)
+ 	_stop_left_stick()
+ 	if _nav.refused():
+ 		_fail("Native opening refused: " + _nav.refusal_reason())
+diff --git a/tests/helpers/opening_geometry_navigator.gd b/tests/helpers/opening_geometry_navigator.gd
+index 643183cd81..47f17480a8 100644
+--- a/tests/helpers/opening_geometry_navigator.gd
++++ b/tests/helpers/opening_geometry_navigator.gd
+@@ -226,19 +226,27 @@ func push_once(direction: Vector3) -> void:
+ 	_requested = not refused()
+ 
+ 
+-func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "") -> bool:
++func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
+ 	reset()
+ 	_arrival = close_enough
+ 	if budget <= 0 or budget > 3600 or not point.is_finite() \
+ 			or not is_finite(close_enough) or close_enough <= 0.0 or close_enough > 1.65:
+ 		_stop_geometry("invalid bounded walk request")
+ 		return false
++	if end_road_at_goal and authored_road.is_empty():
++		_stop_geometry("road exit requested without an authored road")
++		return false
+ 	if not authored_road.is_empty():
+ 		if not _production_steering or not _authored_roads.has(authored_road) \
+ 				or (_authored_roads[authored_road] as Array).is_empty():
+ 			_stop_geometry("requested authored road is unavailable in production steering")
+ 			return false
+ 		_guided_road.assign(_authored_roads[authored_road])
++		if end_road_at_goal:
++			_guided_road.assign(_road_prefix_to_goal(_guided_road, _xz(point)))
++			if _guided_road.is_empty():
++				_stop_geometry("missing/malformed bounded authored road prefix")
++				return false
+ 		_guided_label = authored_road
+ 	var walked := 0
+ 	var held := 0
+@@ -263,6 +271,27 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
+ 	return false
+ 
+ 
++## A local errand may leave a long authored road at the node nearest its goal.
++## Only an explicit production-road request uses this prefix. Default full-road
++## and predictive walks remain unchanged; no invented waypoint or geometry proof.
++static func _road_prefix_to_goal(road: Array[Vector2], goal: Vector2) -> Array[Vector2]:
++	if road.is_empty() or road.size() > MAX_ROAD_INPUTS or not goal.is_finite():
++		return []
++	for index in road.size():
++		if not road[index].is_finite() or (index > 0 and road[index - 1].distance_to(road[index]) > MAX_EDGE):
++			return []
++	var exit := 0
++	for index in road.size():
++		if goal.distance_squared_to(road[index]) < goal.distance_squared_to(road[exit]):
++			exit = index
++	if goal.distance_to(road[exit]) > MAX_EDGE:
++		return []
++	var prefix: Array[Vector2] = []
++	for index in range(exit + 1):
++		prefix.append(road[index])
++	return prefix
++
++
+ func _spend() -> bool:
+ 	_queries += 1
+ 	_total_queries += 1
+diff --git a/tests/test_gate_a_npc_gather_segment_contract.gd b/tests/test_gate_a_npc_gather_segment_contract.gd
+index f68ab5d508..66557a48ea 100644
+--- a/tests/test_gate_a_npc_gather_segment_contract.gd
++++ b/tests/test_gate_a_npc_gather_segment_contract.gd
+@@ -6,6 +6,7 @@ extends "res://tests/test_case.gd"
+ 
+ const SEGMENT_PATH := "res://tests/helpers/gate_a_npc_gather_segment.gd"
+ const SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
++const NAVIGATOR := preload("res://tests/helpers/opening_geometry_navigator.gd")
+ 
+ 
+ func test_controller_activation_is_confirmed_by_the_live_arbiter_signal() -> void:
+@@ -60,3 +61,42 @@ func test_fatal_approach_failure_stops_at_the_outer_retry_boundary() -> void:
+ 		"a competing activation failure is not terminal at the outer retry boundary")
+ 	assert_true(retry_delay > fatal_guard,
+ 		"the retry delay still runs before the fatal competing-activation guard")
++
++
++func test_local_wood_errand_leaves_the_actual_pond_road_before_the_distant_pond() -> void:
++	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
++	var pond: Array[Vector2] = []
++	for route: Dictionary in (terrain.get("paths", {}) as Dictionary).get("routes", []):
++		if str(route.get("label", "")) == "The Pond":
++			for pair: Array in route.get("points", []):
++				pond.append(Vector2(float(pair[0]), float(pair[1])))
++	assert_eq(pond.size(), 8, "the current painted Pond road is the source of headings")
++	var prefix: Array[Vector2] = NAVIGATOR._road_prefix_to_goal(pond, Vector2(-8.0, 8.0))
++	assert_eq(prefix, [Vector2(20.0, 14.0), Vector2(20.0, -12.0), Vector2(-8.0, -12.0), Vector2(-12.5, 6.5)],
++		"the wood errand follows the painted bends and exits beside the resource")
++	assert_false(prefix.has(Vector2(-105.0, 115.0)), "a local errand must not first walk to the distant pond")
++
++
++func test_road_prefix_keeps_authored_order_and_uses_the_first_nearest_exit() -> void:
++	var road: Array[Vector2] = [Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(8.0, 0.0)]
++	assert_eq(NAVIGATOR._road_prefix_to_goal(road, Vector2(2.0, 1.0)), [road[0]],
++		"equally near road nodes choose the first exit without extending the errand")
++	assert_eq(NAVIGATOR._road_prefix_to_goal(road, Vector2(9.0, 0.0)), road,
++		"a goal at the distant end retains every authored bend")
++	var empty: Array[Vector2] = []
++	assert_eq(NAVIGATOR._road_prefix_to_goal(empty, Vector2.ZERO), empty,
++		"an empty road supplies no synthetic waypoint")
++
++
++func test_road_prefix_refuses_malformed_and_out_of_scope_inputs() -> void:
++	var malformed: Array[Vector2] = [Vector2.ZERO, Vector2.INF]
++	assert_eq(NAVIGATOR._road_prefix_to_goal(malformed, Vector2.ZERO), [], "nonfinite road input supplies no heading")
++	var road: Array[Vector2] = [Vector2.ZERO, Vector2(10.0, 0.0)]
++	assert_eq(NAVIGATOR._road_prefix_to_goal(road, Vector2.INF), [], "nonfinite goal supplies no heading")
++	assert_eq(NAVIGATOR._road_prefix_to_goal(road, Vector2(191.0, 0.0)), [], "an exit beyond the unchanged 180m scope is refused")
++	var broken: Array[Vector2] = [Vector2.ZERO, Vector2(181.0, 0.0)]
++	assert_eq(NAVIGATOR._road_prefix_to_goal(broken, Vector2.ZERO), [], "an invalid distant edge cannot be hidden by clipping the prefix")
++	var oversized: Array[Vector2] = []
++	for index in 65:
++		oversized.append(Vector2(float(index), 0.0))
++	assert_eq(NAVIGATOR._road_prefix_to_goal(oversized, Vector2.ZERO), [], "the original64 road-input bound is retained")

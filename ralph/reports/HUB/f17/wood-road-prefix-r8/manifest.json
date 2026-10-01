@@ -1,0 +1,166 @@
+{
+  "base_commit": "bb16c60ff38dab81538537439bb610db149c209d",
+  "root_actual_head": "3d469614558b9f967adf55f70ade527e48bdf53b",
+  "classification": "SOURCE ONLY; original floor failure retained; F17#4 OPEN",
+  "changed_paths": [
+    "tests/helpers/opening_geometry_navigator.gd",
+    "tests/helpers/gate_a_npc_gather_segment.gd",
+    "tests/test_gate_a_npc_gather_segment_contract.gd"
+  ],
+  "files": {
+    "inputs/assets/props/quaternius_fantasy/Bench.bin": {
+      "bytes": 19304,
+      "sha256": "08d6976112645dc1f6a554019e2fc965d0bceba7a01c4f6013615ac46520b418"
+    },
+    "inputs/assets/props/quaternius_fantasy/Bench.gltf": {
+      "bytes": 4594,
+      "sha256": "17e2e0c568db3845339780b0c0938529a9af43ad6685f4bb1f458138780b0dbd"
+    },
+    "inputs/assets/props/quaternius_fantasy/Bucket_Wooden_1.bin": {
+      "bytes": 32544,
+      "sha256": "be608473cd78557d466be9b9e2f6ff15f1edf1e4f5fcdd27be75d494f52578f2"
+    },
+    "inputs/assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf": {
+      "bytes": 4179,
+      "sha256": "9fbafa8daf454656b1df2186664648b29830164346f7bf93f1b368f9454a0573"
+    },
+    "inputs/assets/props/quaternius_fantasy/FarmCrate_Apple.bin": {
+      "bytes": 134488,
+      "sha256": "9f764bf2f2e960ec32ff31198f6b54787391e71bec166da59372f596299d24e6"
+    },
+    "inputs/assets/props/quaternius_fantasy/FarmCrate_Apple.gltf": {
+      "bytes": 6682,
+      "sha256": "cef7e579afb9f8b71e294f919c068ec746d1de23e2658c8f3dea31cf4424d920"
+    },
+    "inputs/assets/props/quaternius_fantasy/Stool.bin": {
+      "bytes": 11472,
+      "sha256": "6ca3a6bc9b415409d842a338a74c174d0efe4d4972bf8a924fda87c8bda40191"
+    },
+    "inputs/assets/props/quaternius_fantasy/Stool.gltf": {
+      "bytes": 2596,
+      "sha256": "80f660e99d84d6b5a71d83d044193b4779d30a2f0a495e43bb7919f664b233ca"
+    },
+    "inputs/assets/props/quaternius_survival/Bonfire_Fire.mtl": {
+      "bytes": 629,
+      "sha256": "290f7cbd02d75e93ace65123da923e4f9d9fefa88226935f352529eff917e618"
+    },
+    "inputs/assets/props/quaternius_survival/Bonfire_Fire.obj": {
+      "bytes": 35863,
+      "sha256": "7a4c33e72a76134394d47e716f218d56c419054d7dbaf8305d171f261b55b2fa"
+    },
+    "inputs/data/config/bands/band1_lower_meadows/harvest.json": {
+      "bytes": 38543,
+      "sha256": "0e8cbe1a326f698e53accacab7bbb0e40b04dfac0aa746d845ad155b64b73736"
+    },
+    "inputs/data/config/bands/band1_lower_meadows/props.json": {
+      "bytes": 97180,
+      "sha256": "107838edc4b90e370e6dc587c0bcc24f6b82a40d5b7a438336bf9b791efc9776"
+    },
+    "inputs/data/config/bands/band1_lower_meadows/vegetation.json": {
+      "bytes": 58219,
+      "sha256": "497894d689b20a4539b9be0497b4b1f8851b95386c4608c9543b95a17fc44788"
+    },
+    "inputs/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "inputs/data/config/village.json": {
+      "bytes": 12217,
+      "sha256": "24688edacadb6f368e4c62fed73bc923c3da98949fb841b67b15f7ea2f7aee9b"
+    },
+    "inputs/data/config/village_boundary.json": {
+      "bytes": 19086,
+      "sha256": "6833f920ef97436eb33b0242eb46c63f04f8f37bfe17d75eff0246c4524bd3da"
+    },
+    "inputs/data/config/village_npcs.json": {
+      "bytes": 51308,
+      "sha256": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07"
+    },
+    "inputs/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "inputs/scripts/world/grandpa_house.gd": {
+      "bytes": 43387,
+      "sha256": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947"
+    },
+    "inputs/scripts/world/playground_world.gd": {
+      "bytes": 122478,
+      "sha256": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241"
+    },
+    "inputs/scripts/world/props.gd": {
+      "bytes": 32210,
+      "sha256": "c43de6e8ca58fb539982f99e4154ee1d4880aa9c8704b7b3817045adcc2fff80"
+    },
+    "inputs/tests/helpers/stick_navigator.gd": {
+      "bytes": 42441,
+      "sha256": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345"
+    },
+    "originals/tests/helpers/gate_a_npc_gather_segment.gd": {
+      "bytes": 42713,
+      "sha256": "414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d"
+    },
+    "originals/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 70104,
+      "sha256": "6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55"
+    },
+    "originals/tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "bytes": 3470,
+      "sha256": "09562adaad68e7226d3656ffdc445661fa47f8e89f82d2ac2c8463a2135d408f"
+    },
+    "prior-failure/native.log": {
+      "bytes": 70739,
+      "sha256": "98c26aaec2eb75fd6e8a10ec68b0593a51cca8b6673ab3a04ee97001d90ba179"
+    },
+    "prior-failure/parser.log": {
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    "prior-failure/receipt.json": {
+      "bytes": 495800,
+      "sha256": "ded044f0d654a5e8aa3f68aebf462871fcca2910c318c344fbb102376cd0abbc"
+    },
+    "proposal/tests/helpers/gate_a_npc_gather_segment.gd": {
+      "bytes": 42994,
+      "sha256": "5807ae64deb8482e996aa5beb039746e5781f235e53aab6a4b949331110c7340"
+    },
+    "proposal/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 71351,
+      "sha256": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+    },
+    "proposal/tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "bytes": 6088,
+      "sha256": "ff2d391130bd1307f32f6b2be3e9ce6e5e75aa9914c63bba254ba8519ac2ee99"
+    },
+    "root-actual/tests/helpers/gate_a_npc_gather_segment.gd": {
+      "bytes": 42713,
+      "sha256": "414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d"
+    },
+    "root-actual/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 70104,
+      "sha256": "6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55"
+    },
+    "root-actual/tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "bytes": 3470,
+      "sha256": "09562adaad68e7226d3656ffdc445661fa47f8e89f82d2ac2c8463a2135d408f"
+    }
+  },
+  "unchanged_runtime_and_config_sha256": {
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+    "data/config/village_boundary.json": "2e3ba93eb7212ba4d02a524fc0e9711481a75304808955cfa6e1bceb1b51ce86",
+    "data/config/bands/band1_lower_meadows/props.json": "7948969367b466e38582f273bbfb4e9a1b4f0001355837814198369bea9867d1",
+    "data/config/bands/band1_lower_meadows/vegetation.json": "70de3bc0102396daafc8123e35e542e6288a38bd2ad79abd1c394b9b5d2d5e18",
+    "data/config/bands/band1_lower_meadows/harvest.json": "bc15d97d65091da5871bd9f5be32f29df469abe67446a52879e1be6828c924f2",
+    "data/config/village_npcs.json": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "scripts/world/playground_world.gd": "20c4dca965c67f62b7e6115a109918d87d59accbff45cca90663190daa91dbea",
+    "scripts/world/grandpa_house.gd": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+    "scripts/world/props.gd": "c43de6e8ca58fb539982f99e4154ee1d4880aa9c8704b7b3817045adcc2fff80",
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345"
+  },
+  "root_input_logical_equivalence": [
+    "data/config/bands/band1_lower_meadows/props.json",
+    "data/config/bands/band1_lower_meadows/vegetation.json"
+  ]
+}
