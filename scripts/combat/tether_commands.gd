@@ -295,7 +295,7 @@ static func stage_joint_attack(effect: Dictionary, frozen_moves: Array,
 			float(actor.attack), float(target.defence), float(host.rolls[index]),
 			float(move.power), type_scale) * float(actor.bonus_product) if connected else 0.0
 		damage = clampf(damage, 0.0, hp)
-		var receipt := strike.duplicate(true)
+		var receipt: Dictionary = strike.duplicate(true)
 		receipt["action_id"] = strike.parent_action_id
 		receipt["move_id"] = move.move_id
 		receipt["landed"] = damage > 0.0
