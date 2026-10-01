@@ -1,0 +1,18 @@
+{
+  "tests/helpers/opening_geometry_navigator.gd": "d078109a915db0c936ca1cb29fce8a7e7f66b1297abf249c5400f71d2183ae3f",
+  "tests/helpers/gate_a_opening_drive.gd": "489c4e43a08170faa19d1ea90b62b90b781c43805d041078a54afe5498341058",
+  "scripts/player/player_controller.gd": "df8b89efa2f5dffd96b46e808662d398b5496aa7cb3d290a436b24f3cd5bfe2e",
+  "scripts/player/player_vitals.gd": "48d24bc7837cc119aa9cba73e02d2b47ed589ea4e503ced0b1d89b4f0ea4143d",
+  "scripts/player/camera_rig.gd": "6dcb52196d92a454ddda8124864799b0e7b126c8fdf174971affd5616b6391d4",
+  "autoload/game_state.gd": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+  "project.godot": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a",
+  "data/config/movement.json": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+  "data/config/vitals.json": "03eb74c748e77569993e2ef8fe175bbc93e5f78e5329c30039c23819eefa4d65",
+  "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+  "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+  "data/config/building_prefabs.json": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36",
+  "scenes/player/player.tscn": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+  "tests/smoke_gate_b_continuous.gd": "49e9f4415d6e7e921938e613df0e374e6a3339deec2654670f4a9c421641bed1",
+  "tests/test_opening_beats.gd": "f22d3de3823772a1ba0ec9bbf8b893b0e188b4a8ce09fa2ee883569131f1fa95",
+  "tests/test_player_runaway_velocity_guard.gd": "c9d2fe5a6beaa500746358049c2fa7466e27c54c2d661e7ad5a46d6b7833a2f5"
+}

@@ -1,0 +1,26 @@
+{
+  "route": [
+    {
+      "line": 7461,
+      "raw_line": "MIRA PROVISIONAL APPROACH [(30.0, -40.0), (21.0, -37.5), (14.6, -31.0), (20.0, -26.0), (20.0, -18.0), (20.0, -12.0), (20.0, 6.3), (27.0, 6.65)] original_standoff=(27.0, 0.85, 7.6)"
+    }
+  ],
+  "errors": [
+    {
+      "line": 7513,
+      "raw_line": "ERROR: could not reach actual door standoff: player=(23.87909, 0.900843, 6.558722) target=(27.0, 0.85, 5.0) distance=3.49 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Terrain\"]"
+    },
+    {
+      "line": 7521,
+      "raw_line": "ERROR: could not naturally enter Mira's building"
+    },
+    {
+      "line": 7530,
+      "raw_line": "ERROR: village tools: could not reach actual door standoff: player=(23.87909, 0.900843, 6.558722) target=(27.0, 0.85, 5.0) distance=3.49 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Terrain\"]"
+    },
+    {
+      "line": 7541,
+      "raw_line": "ERROR: village tools: could not naturally enter Mira's building"
+    }
+  ]
+}
