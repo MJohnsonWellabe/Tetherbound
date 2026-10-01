@@ -73,4 +73,3 @@ func run(tree: SceneTree, live_world: Node3D, live_game: Node) -> Dictionary:
 			source.disconnect(callback)
 	_connections.clear()
 	return result()
-

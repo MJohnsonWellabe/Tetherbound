@@ -38,4 +38,3 @@ func run(tree: SceneTree, actual_world: Node3D, actual_game: Node) -> Dictionary
 	Engine.time_scale = previous_scale
 	Engine.physics_ticks_per_second = previous_hz
 	return result()
-

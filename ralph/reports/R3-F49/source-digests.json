@@ -12,7 +12,7 @@
     },
     {
       "path": "tests/helpers/f49_cloudreach_chapter.gd",
-      "sha256": "2a8947092951339d7b682b1d0784736c489c56a472398478a1faf40e037fe95c"
+      "sha256": "57b3469429cc119bb62444608c88fa33800973631b60320cb4f46f2a9a591078"
     },
     {
       "path": "tests/helpers/f49_disk_handoff.gd",
@@ -28,7 +28,7 @@
     },
     {
       "path": "tests/helpers/f49_tidewake_opening.gd",
-      "sha256": "513a34be2d7744458b92024971f1a7e83899437dea3c14062b252894d1cf2995"
+      "sha256": "659b4e33b77e703356c08a2a288fb3846eb57e7ecdc10c092781b01ef718dad8"
     },
     {
       "path": "tests/helpers/f49_warden_finale.gd",
@@ -117,5 +117,6 @@
     "tests/smoke_four_biome_continuous.gd (ROOT integration/CI repairs only)"
   ],
   "acceptance": "unproved; no engine/native/device/owner/publication proof",
-  "evidence_digest_scope": "Source files only; this manifest and SOURCE_EVIDENCE.md are excluded to avoid a self-referential digest."
+  "evidence_digest_scope": "Source files only; this manifest and SOURCE_EVIDENCE.md are excluded to avoid a self-referential digest.",
+  "digest_bytes": "Canonical Git index blob bytes, independent of checkout line endings"
 }
