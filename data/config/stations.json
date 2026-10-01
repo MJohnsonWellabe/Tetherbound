@@ -1,0 +1,1222 @@
+{
+  "schema_version": 1,
+  "status": "flag_off_whole_F31_source_candidate",
+  "_comment": "F31 canonical F16 station/attachment identities. World buildings, personal blueprints; all production actions use Foundation durable transactions. No passive production, inventory registry or receipt journal here.",
+  "forge": {
+    "runtime_enabled": false,
+    "id": "forge",
+    "realm": "meadows",
+    "maximum_manual_units": 20,
+    "maximum_tick_delta_seconds": 0.25,
+    "_comment_tuning": "Starting bounds for one present tap-start channel; F47 may tune them. Recipe seconds/radius remain in recipes_forge.json. No catch-up production after an oversized host tick, no automatic retry or saved/offline channel.",
+    "_comment_authority": "The host-only station actor resolves a stable built UID and an actual body. A trusted canonical context reader supplies current world/character snapshots and per-character modal/combat/homestead policy. The existing canonical commit adapter owns each completed unit's authenticated inventory CAS, debit/output, stable receipt and durable result. Missing/unknown context or adapter refuses; source-only plans are never Craft success."
+  },
+  "stations": [
+    {
+      "id": "workbench",
+      "home_only": true,
+      "attachment_slots": 0
+    },
+    {
+      "id": "forge",
+      "home_only": true,
+      "attachment_slots": 8
+    },
+    {
+      "id": "kitchen",
+      "home_only": true,
+      "attachment_slots": 8
+    },
+    {
+      "id": "altar",
+      "home_only": true,
+      "attachment_slots": 8
+    },
+    {
+      "id": "den",
+      "home_only": true,
+      "attachment_slots": 8
+    },
+    {
+      "id": "farm",
+      "home_only": true,
+      "attachment_slots": 0
+    }
+  ],
+  "homestead_plot": {
+    "realm": "meadows",
+    "centre": [
+      -4,
+      19
+    ],
+    "size_m": [
+      40,
+      30
+    ],
+    "exclusions": [
+      {
+        "id": "farmhouse",
+        "min": [
+          -3.5,
+          10.5
+        ],
+        "max": [
+          7.5,
+          17.5
+        ]
+      },
+      {
+        "id": "village_road",
+        "min": [
+          7.5,
+          10.9
+        ],
+        "max": [
+          91,
+          17.1
+        ]
+      },
+      {
+        "id": "berry_beds",
+        "min": [
+          -1.6,
+          19.8
+        ],
+        "max": [
+          5.6,
+          24.6
+        ]
+      }
+    ],
+    "_comment": "HOMESTEAD section 2 starting 40x30m bound, centre 6m west/5m south of actual village road_plan.home_centre [2,14]. House exterior is 10x6m, road z14 width5.2m with shoulder. Existing crop beds retained. Exclusions keep authored house/road/crops clear; physics/terrain still decides legality. No geometry moves."
+  },
+  "altar": {
+    "id": "altar",
+    "realm": "meadows",
+    "mesh": "res://assets/props/quaternius_fantasy/BookStand.gltf",
+    "model_min": [
+      -0.2534816861152649,
+      -0.00249952613376081,
+      -0.2555173337459564
+    ],
+    "model_max": [
+      0.25363287329673767,
+      1.444292664527893,
+      0.2556697130203247
+    ],
+    "placement_clearance_m": 0.25,
+    "maximum_slope_rise_m": 0.15,
+    "ground_tolerance_m": 0.1,
+    "maximum_place_distance_m": 8,
+    "_comment": "Native-scale glTF POSITION bounds, identity mesh node, reused by build_piece collider; footprint plus tunable clearance. Capability supplied only by actual Foundation producer, never config runtime_enabled."
+  },
+  "runtime_enabled": false,
+  "craft_runtime_enabled": false,
+  "farm_runtime_enabled": false,
+  "den_runtime_enabled": false,
+  "maximum_place_distance_m": 8.0,
+  "maximum_slope_rise_m": 0.15,
+  "ground_tolerance_m": 0.1,
+  "placement_clearance_m": 0.12,
+  "attachment_spacing_m": 1.8,
+  "attachment_snap_tolerance_m": 0.1,
+  "interaction_radius_m": 3.0,
+  "interaction_height_m": 0.9,
+  "den": {
+    "runtime_enabled": false,
+    "capacity": 5,
+    "comfort_bonus_per_tier": 0.25,
+    "radius_m": 3.0,
+    "id": "den",
+    "realm": "meadows"
+  },
+  "pieces": {
+    "workbench": {
+      "size_m": [
+        2.0,
+        1.3,
+        1.2
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        0.85
+      ]
+    },
+    "forge": {
+      "size_m": [
+        2.0,
+        2.8,
+        1.6
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        1.05
+      ]
+    },
+    "kitchen": {
+      "size_m": [
+        2.4,
+        2.0,
+        1.4
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        0.95
+      ]
+    },
+    "altar": {
+      "size_m": [
+        0.51,
+        1.45,
+        0.51
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        0.505
+      ]
+    },
+    "den": {
+      "size_m": [
+        4.4,
+        2.5,
+        3.2
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        1.85
+      ]
+    },
+    "farm": {
+      "size_m": [
+        1.4,
+        0.22,
+        1.4
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        0.95
+      ]
+    },
+    "storage": {
+      "size_m": [
+        1.4,
+        1.0,
+        1.0
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        0.75
+      ]
+    },
+    "greenhouse": {
+      "size_m": [
+        3.2,
+        2.8,
+        2.6
+      ],
+      "prompt_offset": [
+        0,
+        0.9,
+        1.55
+      ]
+    }
+  },
+  "attachments": [
+    {
+      "id": "forge_meadows",
+      "station_id": "forge",
+      "biome": "meadows",
+      "tier": 1,
+      "status": "live",
+      "display_name": "Bellows",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Meadows forge recipes",
+      "cost": [
+        {
+          "id": "rootstone",
+          "n": 8,
+          "name": "Rootstone",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "ironwood",
+          "n": 8,
+          "name": "Ironwood",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "rootiron_ingot",
+          "n": 2,
+          "name": "Rootiron Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "forge_tidewake",
+      "station_id": "forge",
+      "biome": "tidewake",
+      "tier": 2,
+      "status": "live",
+      "display_name": "Tide quench tank",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Tidewake forge recipes",
+      "cost": [
+        {
+          "id": "sluice_metal",
+          "n": 8,
+          "name": "Sluice Metal",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "reef_stone",
+          "n": 8,
+          "name": "Reef Stone",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "tidesteel_ingot",
+          "n": 2,
+          "name": "Tidesteel Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "forge_cloudreach",
+      "station_id": "forge",
+      "biome": "cloudreach",
+      "tier": 3,
+      "status": "live",
+      "display_name": "Wind furnace",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Cloudreach forge recipes",
+      "cost": [
+        {
+          "id": "cliffglass_ore",
+          "n": 8,
+          "name": "Cliffglass Ore",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 8,
+          "name": "Windworn Heartwood",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "skyglass_ingot",
+          "n": 2,
+          "name": "Skyglass Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "forge_stormwood",
+      "station_id": "forge",
+      "biome": "stormwood",
+      "tier": 4,
+      "status": "live",
+      "display_name": "Storm coil",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Stormwood forge recipes",
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 8,
+          "name": "Stormglass",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "thunderwood",
+          "n": 8,
+          "name": "Thunderwood",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "stormglass_plate",
+          "n": 2,
+          "name": "Stormglass Plate",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "forge_biome5",
+      "station_id": "forge",
+      "biome": "biome5",
+      "tier": 5,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "forge_biome6",
+      "station_id": "forge",
+      "biome": "biome6",
+      "tier": 6,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "forge_biome7",
+      "station_id": "forge",
+      "biome": "biome7",
+      "tier": 7,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "forge_biome8",
+      "station_id": "forge",
+      "biome": "biome8",
+      "tier": 8,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "kitchen_meadows",
+      "station_id": "kitchen",
+      "biome": "meadows",
+      "tier": 1,
+      "status": "live",
+      "display_name": "Spice rack",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Meadows kitchen recipes",
+      "cost": [
+        {
+          "id": "rootstone",
+          "n": 8,
+          "name": "Rootstone",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "ironwood",
+          "n": 8,
+          "name": "Ironwood",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "rootiron_ingot",
+          "n": 2,
+          "name": "Rootiron Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "kitchen_tidewake",
+      "station_id": "kitchen",
+      "biome": "tidewake",
+      "tier": 2,
+      "status": "live",
+      "display_name": "Smoker",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Tidewake kitchen recipes",
+      "cost": [
+        {
+          "id": "sluice_metal",
+          "n": 8,
+          "name": "Sluice Metal",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "reef_stone",
+          "n": 8,
+          "name": "Reef Stone",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "tidesteel_ingot",
+          "n": 2,
+          "name": "Tidesteel Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "kitchen_cloudreach",
+      "station_id": "kitchen",
+      "biome": "cloudreach",
+      "tier": 3,
+      "status": "live",
+      "display_name": "Cold cellar",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Cloudreach kitchen recipes",
+      "cost": [
+        {
+          "id": "cliffglass_ore",
+          "n": 8,
+          "name": "Cliffglass Ore",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 8,
+          "name": "Windworn Heartwood",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "skyglass_ingot",
+          "n": 2,
+          "name": "Skyglass Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "kitchen_stormwood",
+      "station_id": "kitchen",
+      "biome": "stormwood",
+      "tier": 4,
+      "status": "live",
+      "display_name": "Storm oven",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Stormwood kitchen recipes",
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 8,
+          "name": "Stormglass",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "thunderwood",
+          "n": 8,
+          "name": "Thunderwood",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "stormglass_plate",
+          "n": 2,
+          "name": "Stormglass Plate",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "kitchen_biome5",
+      "station_id": "kitchen",
+      "biome": "biome5",
+      "tier": 5,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "kitchen_biome6",
+      "station_id": "kitchen",
+      "biome": "biome6",
+      "tier": 6,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "kitchen_biome7",
+      "station_id": "kitchen",
+      "biome": "biome7",
+      "tier": 7,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "kitchen_biome8",
+      "station_id": "kitchen",
+      "biome": "biome8",
+      "tier": 8,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "altar_meadows",
+      "station_id": "altar",
+      "biome": "meadows",
+      "tier": 1,
+      "status": "live",
+      "display_name": "Meadow lens",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Meadows altar recipes",
+      "cost": [
+        {
+          "id": "rootstone",
+          "n": 8,
+          "name": "Rootstone",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "ironwood",
+          "n": 8,
+          "name": "Ironwood",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "rootiron_ingot",
+          "n": 2,
+          "name": "Rootiron Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "altar_tidewake",
+      "station_id": "altar",
+      "biome": "tidewake",
+      "tier": 2,
+      "status": "live",
+      "display_name": "Tide lens",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Tidewake altar recipes",
+      "cost": [
+        {
+          "id": "sluice_metal",
+          "n": 8,
+          "name": "Sluice Metal",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "reef_stone",
+          "n": 8,
+          "name": "Reef Stone",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "tidesteel_ingot",
+          "n": 2,
+          "name": "Tidesteel Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "altar_cloudreach",
+      "station_id": "altar",
+      "biome": "cloudreach",
+      "tier": 3,
+      "status": "live",
+      "display_name": "Sky lens",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Cloudreach altar recipes",
+      "cost": [
+        {
+          "id": "cliffglass_ore",
+          "n": 8,
+          "name": "Cliffglass Ore",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 8,
+          "name": "Windworn Heartwood",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "skyglass_ingot",
+          "n": 2,
+          "name": "Skyglass Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "altar_stormwood",
+      "station_id": "altar",
+      "biome": "stormwood",
+      "tier": 4,
+      "status": "live",
+      "display_name": "Storm lens",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Stormwood altar recipes",
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 8,
+          "name": "Stormglass",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "thunderwood",
+          "n": 8,
+          "name": "Thunderwood",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "stormglass_plate",
+          "n": 2,
+          "name": "Stormglass Plate",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "altar_biome5",
+      "station_id": "altar",
+      "biome": "biome5",
+      "tier": 5,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "altar_biome6",
+      "station_id": "altar",
+      "biome": "biome6",
+      "tier": 6,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "altar_biome7",
+      "station_id": "altar",
+      "biome": "biome7",
+      "tier": 7,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "altar_biome8",
+      "station_id": "altar",
+      "biome": "biome8",
+      "tier": 8,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "den_meadows",
+      "station_id": "den",
+      "biome": "meadows",
+      "tier": 1,
+      "status": "live",
+      "display_name": "Straw bedding",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Meadows den recipes",
+      "cost": [
+        {
+          "id": "rootstone",
+          "n": 8,
+          "name": "Rootstone",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "ironwood",
+          "n": 8,
+          "name": "Ironwood",
+          "source_hint": "Gather in Meadows"
+        },
+        {
+          "id": "rootiron_ingot",
+          "n": 2,
+          "name": "Rootiron Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "den_tidewake",
+      "station_id": "den",
+      "biome": "tidewake",
+      "tier": 2,
+      "status": "live",
+      "display_name": "Hot spring",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Tidewake den recipes",
+      "cost": [
+        {
+          "id": "sluice_metal",
+          "n": 8,
+          "name": "Sluice Metal",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "reef_stone",
+          "n": 8,
+          "name": "Reef Stone",
+          "source_hint": "Gather in Tidewake"
+        },
+        {
+          "id": "tidesteel_ingot",
+          "n": 2,
+          "name": "Tidesteel Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "den_cloudreach",
+      "station_id": "den",
+      "biome": "cloudreach",
+      "tier": 3,
+      "status": "live",
+      "display_name": "Cliff perches",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Cloudreach den recipes",
+      "cost": [
+        {
+          "id": "cliffglass_ore",
+          "n": 8,
+          "name": "Cliffglass Ore",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "windworn_heartwood",
+          "n": 8,
+          "name": "Windworn Heartwood",
+          "source_hint": "Gather in Cloudreach"
+        },
+        {
+          "id": "skyglass_ingot",
+          "n": 2,
+          "name": "Skyglass Ingot",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "den_stormwood",
+      "station_id": "den",
+      "biome": "stormwood",
+      "tier": 4,
+      "status": "live",
+      "display_name": "Grounded bedding",
+      "registered": true,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Stormwood den recipes",
+      "cost": [
+        {
+          "id": "stormglass",
+          "n": 8,
+          "name": "Stormglass",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "thunderwood",
+          "n": 8,
+          "name": "Thunderwood",
+          "source_hint": "Gather in Stormwood"
+        },
+        {
+          "id": "stormglass_plate",
+          "n": 2,
+          "name": "Stormglass Plate",
+          "source_hint": "Refine at the Forge"
+        }
+      ]
+    },
+    {
+      "id": "den_biome5",
+      "station_id": "den",
+      "biome": "biome5",
+      "tier": 5,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "den_biome6",
+      "station_id": "den",
+      "biome": "biome6",
+      "tier": 6,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "den_biome7",
+      "station_id": "den",
+      "biome": "biome7",
+      "tier": 7,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    },
+    {
+      "id": "den_biome8",
+      "station_id": "den",
+      "biome": "biome8",
+      "tier": 8,
+      "status": "reserved",
+      "display_name": "Sealed",
+      "registered": false,
+      "size_m": [
+        1.1,
+        1.3,
+        1.1
+      ],
+      "unlocks": "Future biome recipes",
+      "cost": []
+    }
+  ],
+  "farm": {
+    "grow_days": 1,
+    "seed_id": "berry_seeds",
+    "crop_id": "berries",
+    "yield": 4,
+    "requires_tool": "hoe"
+  },
+  "recipe_routes": {
+    "default_station": "workbench",
+    "kitchen_outputs": [
+      "potion_small",
+      "potion_medium",
+      "trail_ration"
+    ],
+    "forge_recipe_prefixes": [
+      "reinforce_",
+      "brace_"
+    ],
+    "minimum_tier_by_station": {
+      "workbench": 0,
+      "forge": 1,
+      "kitchen": 1,
+      "altar": 1
+    },
+    "recipes": {
+      "orb_basic": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "potion_small": {
+        "station_id": "kitchen",
+        "tier": 1
+      },
+      "axe": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "pickaxe": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "knife": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "hoe": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "berry_seeds": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "cloudreach_camp_boards": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "cloudreach_camp_cordage": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "cloudreach_perch_padding": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "cloudreach_axe_bracing": {
+        "station_id": "forge",
+        "tier": 3
+      },
+      "cloudreach_pickaxe_bracing": {
+        "station_id": "forge",
+        "tier": 3
+      },
+      "cloudreach_recovery_tonic": {
+        "station_id": "kitchen",
+        "tier": 3
+      },
+      "cloudreach_trail_preserve": {
+        "station_id": "kitchen",
+        "tier": 3
+      },
+      "orb_prime": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "ironwood_haft_axe": {
+        "station_id": "forge",
+        "tier": 1
+      },
+      "ironwood_haft_pickaxe": {
+        "station_id": "forge",
+        "tier": 1
+      },
+      "potion_large": {
+        "station_id": "kitchen",
+        "tier": 1
+      },
+      "orb_greater": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "reinforce_axe": {
+        "station_id": "forge",
+        "tier": 1
+      },
+      "reinforce_pickaxe": {
+        "station_id": "forge",
+        "tier": 1
+      },
+      "saddle_frame": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "saddle": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "insulated_helm": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "insulated_vest": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "rod_mast": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "voltcap_stew": {
+        "station_id": "kitchen",
+        "tier": 4
+      },
+      "glowmoss_tonic": {
+        "station_id": "kitchen",
+        "tier": 4
+      },
+      "stormglass_orb_socket": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "stormglass_lining": {
+        "station_id": "workbench",
+        "tier": 0
+      },
+      "thunderwood_frame": {
+        "station_id": "workbench",
+        "tier": 0
+      }
+    },
+    "field_allowed": [
+      "orb_basic",
+      "potion_small",
+      "axe",
+      "pickaxe",
+      "knife",
+      "hoe",
+      "berry_seeds"
+    ]
+  },
+  "auxiliary_buildables": [
+    "greenhouse"
+  ],
+  "greenhouse": {
+    "id": "greenhouse",
+    "station_id": "farm",
+    "runtime_enabled": false,
+    "maximum_per_world": 1,
+    "recipe_known_from_start": true,
+    "unlocks": "Grow non-native type crops",
+    "_comment": "Single Farm building, no attachment track. Authored F32 costs; source candidate OFF."
+  },
+  "attachment_maximum_height_difference_m": 0.5
+}

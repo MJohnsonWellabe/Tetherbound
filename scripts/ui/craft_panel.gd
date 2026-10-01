@@ -55,6 +55,250 @@ const ROW_HEIGHT := 80
 ## shop_panel.gd's PANEL_HEIGHT/scroll pairing).
 const LIST_VISIBLE_HEIGHT := 6 * ROW_HEIGHT + 5 * 8
 
+const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const STATION_NEXT := preload("res://scripts/build/station_next_upgrade.gd")
+var _station: Node3D
+var _station_intent: Dictionary = {}
+var _station_operation := ""
+var _station_source: Node3D
+var _upgrade_label: Label
+var _station_buttons: Array[Button] = []
+var _producer: Node
+var _original_revision := -1
+var _gear_cfg: Dictionary = {}
+var _gear_rules: Script
+
+func open_station(station: Node3D) -> void:
+	if not is_instance_valid(station) or STATION_RULES.config().get("runtime_enabled") != true: return
+	var session: Node = game.get("session") as Node if game != null else null
+	if session == null or not session.has_method("homestead_submit_action") \
+			or not session.has_method("homestead_personal_view"): return
+	_producer=session
+	_gear_cfg={}
+	_gear_rules=null
+	var gear_path := "res://scripts/creatures/creature_gear.gd"
+	if FileAccess.file_exists("res://data/config/gear.json") and ResourceLoader.exists(gear_path):
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/gear.json"))
+		if raw is Dictionary and raw.get("feature_flags",{}).get("runtime_enabled") == true:
+			_gear_cfg=raw
+			_gear_rules=load(gear_path) as Script
+	if _producer.has_signal("homestead_action_completed") \
+			and not _producer.is_connected("homestead_action_completed",_station_completed):
+		_producer.connect("homestead_action_completed",_station_completed)
+	open(station)
+
+func _station_view() -> Dictionary:
+	if not is_instance_valid(_producer) or not _producer.has_method("homestead_personal_view"): return {}
+	var raw: Variant = _producer.call("homestead_personal_view")
+	return raw if raw is Dictionary else {}
+
+func _build_station_controls(outer: VBoxContainer) -> void:
+	_station_buttons.clear()
+	_upgrade_label=Label.new()
+	_upgrade_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	_upgrade_label.add_theme_font_size_override("font_size",UITokens.FONT_READ)
+	outer.add_child(_upgrade_label)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size=Vector2(780,210 if _station.get_meta("building_id","") == "forge" else 80)
+	if _station.get_meta("building_id","") in ["farm","den"]: scroll.custom_minimum_size.y=460
+	outer.add_child(scroll)
+	var controls := VBoxContainer.new()
+	controls.custom_minimum_size.x=740
+	scroll.add_child(controls)
+	var id: String = str(_station.get_meta("building_id",""))
+	match id:
+		"kitchen": _station_button(controls,"Cook learned Ascension Feasts",_open_feasts)
+		"forge":
+			var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/recipes/recipes_forge.json"))
+			if raw is Dictionary:
+				for recipe_id: String in raw.get("recipes",{}):
+					var name: String = str(raw.recipes[recipe_id].get("name",recipe_id))
+					_station_button(controls,"Refine one "+name,func() -> void: _start_refining(recipe_id))
+		"altar": _station_button(controls,"Creature training",_open_altar)
+		"den":
+			var view := _station_view()
+			var party: Variant = view.get("party")
+			if party is Array and party.size() <= 5:
+				for row: Variant in party:
+					if not row is Dictionary or not row.get("uid") is String: continue
+					var uid: String = row.uid
+					var label: String = str(row.get("nickname",row.get("species_id",uid)))
+					var action := "wake" if row.get("resting") == true else "rest"
+					_station_button(controls,action.capitalize()+" "+label,func() -> void: _station_action("den_rest",{"creature_uid":uid,"action":action}))
+					_station_button(controls,"Groom "+label,func() -> void: _station_action("groom",{"creature_uid":uid}))
+		"farm":
+			_station_button(controls,"Till plot",func() -> void: _farm_action("till",""))
+			_station_button(controls,"Sow berries",func() -> void: _farm_action("sow","berries"))
+			var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/farm.json"))
+			if raw is Dictionary:
+				var crops: Variant = raw.get("crops",{})
+				if crops is Dictionary:
+					for crop: String in raw.get("crop_order",crops.keys()):
+						if crop == "berries" or not crops.has(crop): continue
+						_station_button(controls,str(crops[crop].get("sow_label","Sow "+crop.replace("_"," "))),func() -> void: _farm_action("sow",crop))
+			_station_button(controls,"Harvest ripe crop",func() -> void: _farm_action("harvest",""))
+	_build_gear_controls(controls,id)
+	_station_button(controls,"Retry original transaction",_retry_station)
+	for i: int in _station_buttons.size():
+		if i > 0: _station_buttons[i].focus_neighbor_top=_station_buttons[i].get_path_to(_station_buttons[i-1])
+		if i+1 < _station_buttons.size(): _station_buttons[i].focus_neighbor_bottom=_station_buttons[i].get_path_to(_station_buttons[i+1])
+	if not _rows.is_empty() and not _station_buttons.is_empty():
+		_rows[-1].focus_neighbor_bottom=_rows[-1].get_path_to(_station_buttons[0])
+		_station_buttons[0].focus_neighbor_top=_station_buttons[0].get_path_to(_rows[-1])
+	_refresh_next_upgrade()
+
+## Read the admitted personal projection for choices only. F33 re-derives
+## ownership, recipe, costs, return room and actual station inside its stage.
+func _build_gear_controls(controls: VBoxContainer, station_id: String) -> void:
+	if _gear_cfg.is_empty() or _gear_rules == null: return
+	var view := _station_view()
+	var inventory: Variant = view.get("inventory")
+	if not inventory is Array: return
+	var personal: Variant = view.get("redesign_character")
+	if not personal is Dictionary: return
+	if station_id == "workbench":
+		var equipment: Variant = view.get("equipment")
+		if not equipment is Dictionary: return
+		for slot: String in ["helmet","upper_body","lower_body","boots","backpack"]:
+			var equipped: Variant = equipment.get(slot)
+			if not equipped is String: continue
+			if not equipped.is_empty():
+				_gear_button(controls,"Remove "+_gear_name(equipped),"trainer_unequip","",slot,"")
+			for id: String in _gear_inventory_ids(inventory):
+				var item: Dictionary = _gear_cfg.get("items",{}).get(id,{})
+				if item.get("kind") == "armor" and item.get("armor_slot") == slot:
+					_gear_button(controls,"Wear "+_gear_name(id),"trainer_equip","",slot,id)
+	elif station_id in ["den","forge","altar"]:
+		var party: Variant = view.get("party")
+		if not party is Array or party.size() > 5: return
+		for row: Variant in party:
+			if not row is Dictionary or not row.get("uid") is String: continue
+			var uid: String = row.uid
+			var card: Variant = personal.get("creatures",{}).get(uid)
+			if not card is Dictionary or not card.get("gear") is Dictionary: continue
+			var companion: String = str(row.get("nickname",row.get("species_id",uid)))
+			for slot: String in ["harness","charm"]:
+				var equipped: Variant = card.gear.get(slot)
+				if not equipped is String: continue
+				if station_id == "den":
+					if not equipped.is_empty():
+						_gear_button(controls,"Remove %s from %s" % [_gear_name(equipped),companion],"unequip",uid,slot,"")
+					for id: String in _gear_inventory_ids(inventory):
+						var item: Dictionary = _gear_cfg.get("items",{}).get(id,{})
+						if item.get("kind") == "creature_gear" and item.get("gear_slot") == slot:
+							_gear_button(controls,"Give %s to %s" % [_gear_name(id),companion],"equip",uid,slot,id)
+				else:
+					var upgrade: Dictionary = _gear_cfg.get("upgrades",{}).get(equipped,{})
+					if upgrade.get("station_id") == station_id and _gear_rules.call("recipe_known",view,upgrade,_gear_cfg) == true:
+						_gear_button(controls,"Upgrade %s's %s" % [companion,slot.capitalize()],"upgrade",uid,slot,equipped)
+
+func _gear_inventory_ids(inventory: Array) -> Array[String]:
+	var result: Array[String] = []
+	for stack: Variant in inventory:
+		if stack is Dictionary and stack.get("id") is String and stack.get("n",0) > 0 and not result.has(stack.id): result.append(stack.id)
+	return result
+
+func _gear_name(id: String) -> String:
+	return str(_gear_cfg.get("items",{}).get(id,{}).get("name",id.replace("_"," ").capitalize()))
+
+func _gear_button(controls: VBoxContainer, label: String, action: String, uid: String, slot: String, id: String) -> void:
+	_station_button(controls,label,func() -> void: _station_action("gear",{"action":action,"creature_uid":uid,"slot":slot,"item_id":id}))
+
+func _station_button(parent: VBoxContainer, label: String, action: Callable) -> void:
+	var button := Button.new()
+	button.text=label
+	button.custom_minimum_size=Vector2(740,42)
+	button.add_theme_font_size_override("font_size",UITokens.FONT_READ)
+	button.pressed.connect(action)
+	parent.add_child(button)
+	button.focus_entered.connect(func() -> void:
+		var scroll := parent.get_parent() as ScrollContainer
+		if scroll != null: scroll.ensure_control_visible(button))
+	_station_buttons.append(button)
+	if _rows.is_empty() and _station_buttons.size() == 1: button.call_deferred("grab_focus")
+
+func _refresh_next_upgrade() -> void:
+	if _upgrade_label == null or not is_instance_valid(_station): return
+	var view := _station_view()
+	var world: RefCounted = game.get("world") if game != null else null
+	var upgrade := STATION_NEXT.for_building(STATION_RULES.config(),game.get("placed_buildings"),str(_station.get_meta("building_uid","")),
+		str(world.get("world_id")) if world != null else "",view,game.get("items").call("buildable","greenhouse").get("cost",[])) if game != null else {}
+	_upgrade_label.visible=upgrade.get("visible") == true
+	if _upgrade_label.visible:
+		_upgrade_label.text="Next upgrade: %s — %s. %s" % [str(upgrade.get("name","")),str(upgrade.get("unlocks","")),str(upgrade.get("missing_requirement",""))]
+	for button: Button in _station_buttons:
+		button.disabled=not _station_intent.is_empty() and button.text != "Retry original transaction"
+
+func _farm_action(action: String, crop: String) -> void:
+	if not is_instance_valid(_station): return
+	var view := _station_view()
+	var uid: String = str(_station.get_meta("building_uid",""))
+	var stock: Variant = view.get("farm_stock_revisions",{}).get(uid)
+	if not STATION_RULES.number(stock) or float(stock) != floor(float(stock)):
+		_status.text="The host's crop state is unavailable."
+		return
+	_station_action("farm",{"plot_id":uid,"action":action,"crop_id":crop,"expected_stock_revision":int(stock)})
+
+func _station_action(op: String, fields: Dictionary) -> void:
+	if not _station_intent.is_empty(): return
+	var view := _station_view()
+	var revision: Variant = view.get("registry_revision")
+	if not STATION_RULES.number(revision) or float(revision) != floor(float(revision)) or revision < 0:
+		_status.text="The character's saved station state is unavailable."
+		return
+	_original_revision=int(revision)
+	_station_source=_station
+	_station_operation=op
+	_station_intent=fields.duplicate(true)
+	_station_intent["craft_id" if op == "station_craft" else "action_id"]=Crypto.new().generate_random_bytes(16).hex_encode()
+	_retry_station()
+
+func _retry_station() -> void:
+	if _station_intent.is_empty() or not is_instance_valid(_producer): return
+	var raw: Variant = _producer.call("homestead_submit_action",_station_operation,_station_intent.duplicate(true),_station_source,_original_revision)
+	if raw is Dictionary: _station_completed(_station_operation,_station_intent.duplicate(true),raw)
+	else: _status.text="Waiting for the original station transaction."
+
+## Trusted producer callback only. A displayed success needs both saves/ACK;
+## unknown, contradictory and lost-ACK replies retain the original identity.
+func _station_completed(op: String, original: Dictionary, result: Dictionary) -> void:
+	if _station_intent.is_empty() or op != _station_operation or original != _station_intent: return
+	_status.text=str(result.get("reason",result.get("code","Waiting for the original station transaction.")))
+	var terminal: bool = result.get("settled") is bool and result.settled == true \
+		and result.get("durable") is bool and result.durable == true
+	if terminal and result.get("ok") is bool and result.ok == true:
+		_status.text="Completed. Saved to your character."
+		_station_intent={}
+	elif result.get("ok") is bool and result.ok == false \
+			and result.get("terminal_refusal") is bool and result.terminal_refusal == true:
+		_station_intent={}
+	if _station_intent.is_empty() and _open: _build()
+	_refresh_next_upgrade()
+
+func _open_feasts() -> void:
+	if not _station_intent.is_empty() or not is_instance_valid(_producer) \
+			or not _producer.has_method("homestead_breakthrough_service"): return
+	var service: Variant = _producer.call("homestead_breakthrough_service")
+	if service is Node and service.has_method("open_kitchen"):
+		var source := _station
+		close()
+		service.call("open_kitchen",source)
+
+func _open_altar() -> void:
+	if not _station_intent.is_empty() or not is_instance_valid(_station): return
+	var interaction := _station.get_node_or_null(^"AltarInteraction")
+	if interaction != null and interaction.has_method("_open"):
+		close()
+		interaction.call("_open")
+
+func _start_refining(recipe: String) -> void:
+	if not _station_intent.is_empty() or not is_instance_valid(_producer) \
+			or not _producer.has_method("homestead_start_refining"): return
+	var source := _station
+	close() # Present channel runs in the world; another modal cancels it.
+	var result: Variant = _producer.call("homestead_start_refining",source,recipe,1)
+	if result is Dictionary and game != null:
+		game.call("push_world_message",str(result.get("reason","Refining started; stay beside the Forge.")))
 var game: Node = null
 
 var _root: Control = null
@@ -113,7 +357,22 @@ func is_open() -> bool:
 func _known_ids() -> Array:
 	if game == null:
 		return []
-	return game.call("known_recipe_ids") as Array
+	var ids: Array = game.call("known_recipe_ids") as Array
+	if not is_instance_valid(_station):
+		if STATION_RULES.config().get("runtime_enabled") != true: return ids
+		var field: Array = STATION_RULES.config().recipe_routes.get("field_allowed",[])
+		return ids.filter(func(id: Variant) -> bool: return field.has(str(id)))
+	var station_id: String = str(_station.get_meta("building_id", ""))
+	var result: Array = []
+	var cfg := STATION_RULES.config()
+	var db := _items()
+	for raw: Variant in ids:
+		var recipe: Dictionary = db.call("recipe",str(raw))
+		if recipe.has("personal_gear_tier") or _gear_cfg.get("recipes",{}).has(str(raw)):
+			if _gear_rules == null or _gear_rules.call("recipe_known",_station_view(),recipe,_gear_cfg) != true: continue
+		var route := STATION_RULES.recipe_route(cfg,str(raw),recipe)
+		if route.get("ok") == true and route.station_id == station_id: result.append(raw)
+	return result
 
 
 func _known_ids_differ_from_the_list_on_screen() -> bool:
@@ -126,10 +385,13 @@ func _known_ids_differ_from_the_list_on_screen() -> bool:
 	return false
 
 
-func open() -> void:
+func open(station: Node3D = null) -> void:
 	if _open:
 		return
-	if _known_ids_differ_from_the_list_on_screen():
+	if not _station_intent.is_empty() and station != _station_source:
+		return # Keep unresolved original source/intent; no competing craft.
+	_station = station
+	if is_instance_valid(_station) or _known_ids_differ_from_the_list_on_screen():
 		_build()
 	_open = true
 	visible = true
@@ -207,7 +469,7 @@ func _build() -> void:
 	panel.add_child(outer)
 
 	var title := Label.new()
-	title.text = "Craft"
+	title.text = str(_station.get_meta("building_id", "")).capitalize() if is_instance_valid(_station) else "Craft"
 	title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
 	title.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	outer.add_child(title)
@@ -216,9 +478,15 @@ func _build() -> void:
 	zones.add_theme_constant_override("separation", 22)
 	outer.add_child(zones)
 
-	zones.add_child(_build_list_zone())
-	zones.add_child(_build_center_zone())
-	zones.add_child(_build_right_zone())
+	if not is_instance_valid(_station) or _station.get_meta("building_id", "") not in ["den", "farm"]:
+		zones.add_child(_build_list_zone())
+		zones.add_child(_build_center_zone())
+		zones.add_child(_build_right_zone())
+	else:
+		_status = Label.new()
+		_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		outer.add_child(_status)
+	if is_instance_valid(_station): _build_station_controls(outer)
 
 	var hint := Label.new()
 	hint.text = "Leave: %s" % _cancel_glyph()
@@ -474,6 +742,10 @@ func _process(delta: float) -> void:
 		INPUT_OWNER.suppress_pause_reopen(get_tree())
 		close()
 		return
+	if is_instance_valid(_station):
+		_refresh_next_upgrade()
+	elif not _station_intent.is_empty():
+		_status.text = "Waiting for the original station transaction to reconcile."
 	if _status_left > 0.0:
 		_status_left -= delta
 		if _status_left <= 0.0:
@@ -482,6 +754,14 @@ func _process(delta: float) -> void:
 
 
 func _craft(id: String) -> void:
+	if is_instance_valid(_station):
+		_station_action("station_craft", {"recipe_id":id})
+		return
+	# Once enabled, home station recipes cannot fall through the campfire's
+	# legacy inventory-only craft path; host producer remains the only writer.
+	if STATION_RULES.config().get("runtime_enabled") == true and not STATION_RULES.config().recipe_routes.get("field_allowed",[]).has(id):
+		_status.text = "Use the homestead station for this recipe."
+		return
 	var ok := bool(game.call("craft", id)) if game != null else false
 	var db := _items()
 	var name := str(db.call("recipe", id).get("name", id)) if db != null else id
@@ -506,6 +786,11 @@ func _poll() -> void:
 			continue
 		var id := _recipe_ids[i]
 		var affordable: bool = bool(game.call("can_craft", id)) if game != null else false
+		if is_instance_valid(_station):
+			var route := STATION_RULES.recipe_route(STATION_RULES.config(),id,_items().call("recipe",id))
+			var cfg := STATION_RULES.config()
+			var tier := STATION_RULES.effective_tier(cfg,game.get("placed_buildings"),str(_station.get_meta("building_uid", "")))
+			affordable = affordable and _station_intent.is_empty() and tier.get("ok") == true and route.get("ok") == true and int(tier.get("effective_tier",0)) >= int(route.get("required_tier",9))
 		var colour := UITokens.SUCCESS if affordable else UITokens.DANGER
 		if i < _cost_labels.size():
 			_cost_labels[i].add_theme_color_override("font_color", colour)
