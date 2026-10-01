@@ -32,6 +32,7 @@ func _process(delta: float) -> void:
 	if _left > 0.0: return
 	_left = 1.0
 	get_parent().call("_retry_foundation_camp")
+	get_parent().call("_retry_foundation_events")
 	var game: Node = get_parent().call("_game")
 	var world_node: Node3D = get_parent().call("_portal_world_node", str(game.get("current_realm")))
 	var player: Node3D = game.call("find_player")

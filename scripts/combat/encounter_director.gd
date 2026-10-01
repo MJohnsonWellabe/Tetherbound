@@ -439,6 +439,26 @@ var _rematch_outcome_writer: Callable
 var _rematch_pending_outcome: Variant = null
 var _master_duel: Dictionary = {}
 var _master_pending_win := false
+var _foundation_pending_sources: Array[Dictionary] = []
+var _trainer_character_participants: Array[String] = []
+var _boss_pending_win := false
+
+func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null) -> bool:
+	if _session == null or not _is_host(): return true
+	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
+		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
+	var result: Dictionary = _session.call("foundation_research_source", self, encounter_id, peer, kind, source.source_id, species, move_id, night)
+	if result.get("durable") != true and not _foundation_pending_sources.has(source): _foundation_pending_sources.append(source)
+	return result.get("durable") == true
+
+func _retry_research_sources() -> void:
+	if _session == null or not _is_host(): return
+	for source: Dictionary in _foundation_pending_sources.duplicate(true):
+		var result: Dictionary = _session.call("foundation_research_source", self, source.encounter_id, source.peer, source.kind, source.source_id, source.species, source.move_id, source.night)
+		if result.get("durable") == true: _foundation_pending_sources.erase(source)
+
+func retained_boss_participants() -> Array[String]:
+	return _trainer_character_participants.duplicate()
 
 ## Uses the existing owned trainer combat manager and its authoritative local
 ## host vitals. The selected UID is the only member passed to that manager.
@@ -2422,6 +2442,7 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	var verdict: Dictionary = _encounter_host.call("join", encounter_id, peer_id,
 		active_uid if tournament_round else "", character_id)
 	if bool(verdict.get("ok", false)):
+		_retain_research(encounter_id, peer_id, "sight", str(record.get("opponent", {}).get("species_id", "")), "engage")
 		if tournament_round:
 			_freeze_tournament_roster(encounter_id, peer_id, tournament_ids)
 		_host_after_encounter_change(encounter_id)
@@ -2692,6 +2713,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	if bool(rolled.get("killed", false)):
 		# Retain the original killing verdict before any terminal publication.
 		_capture_wild_victory_source(encounter_id, verdict)
+	_retain_research(encounter_id, peer_id, "cast", str(current_card.get("species_id", "")), str(launch.action_id), str(launch.move_id))
 	_emit_f22_accepted_hit(encounter_id, peer_id, striker, delta, move, str(launch.slot))
 	if bool(rolled.get("killed", false)):
 		# This opponent's round is done for every participant, including observers
@@ -2895,6 +2917,13 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, refused)
 			_host_after_encounter_change(encounter_id)
 			return refused
+	if caught:
+		var look := get_tree().get_first_node_in_group("day_cycle")
+		if look != null and look.get("_cycle") is RefCounted:
+			var cycle: RefCounted = look.get("_cycle")
+			var dark: bool = cycle.call("is_dark", cycle.call("hour_at", float(look.get("_elapsed_seconds"))))
+			if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", dark):
+				return {"ok": false, "pending": true, "code": "capture_event_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 	_catch_arbiter.call("release", encounter_id, peer_id)
 	if caught:
 		_encounter_host.call("set_phase", encounter_id, "done")
@@ -4271,6 +4300,7 @@ func interaction_activate() -> void:
 
 
 func _process(delta: float) -> void:
+	_retry_research_sources()
 	_tick_pending_shared_join()
 	_tick_pending_tournament_join()
 	_tick_respawn(delta)
@@ -4883,6 +4913,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			_manager.set_meta(&"canonical_wild_encounter", _shared_active_id)
 	if opponent_owned:
 		_note_trainer_participants(str(rec["encounter_id"]))
+	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
 			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [rec])
@@ -5887,6 +5918,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	_trainer_send_delay = 0.0
 	_trainer_cleanup_delay = 0.0
 	_trainer_battle_participants = {}
+	_trainer_character_participants.clear()
 	# Taken BEFORE the first round places anyone, so it is where the player was
 	# actually standing when they accepted — not where the first fight's
 	# `_stand_the_trainer_aside()` will shortly put them. See
@@ -6238,6 +6270,9 @@ func _on_trainer_round_ended(outcome: String) -> void:
 ## same shape as `_tick_respawn` above, and kept separate from it because a
 ## trainer's creature never respawns.
 func _tick_trainer_battle(delta: float) -> void:
+	if _boss_pending_win:
+		_finish_trainer_battle(true)
+		return
 	if _master_pending_win:
 		_finish_trainer_battle(true)
 		return
@@ -6260,6 +6295,12 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	if won and not spec.has("master") and not spec.has("rematch") and _session != null and _is_host():
+		var handoff: Dictionary = _session.call("foundation_boss_outcome", self, spec.duplicate(true), _encounter.duplicate(true))
+		if handoff.get("durable") != true:
+			_boss_pending_win = true
+			return
+		_boss_pending_win = false
 	if spec.has("master"):
 		if won:
 			_master_pending_win = true
@@ -6979,6 +7020,9 @@ func _note_trainer_participants(encounter_id: String) -> void:
 		return
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 		_trainer_battle_participants[peer_id] = true
+		var record: Dictionary = _encounter_host.call("record", encounter_id)
+		var character := str(record.get("participants", {}).get(peer_id, {}).get("character_id", ""))
+		if not character.is_empty() and not _trainer_character_participants.has(character): _trainer_character_participants.append(character)
 
 
 ## The same fight, one creature later: bring `encounter_id` back to `active` and

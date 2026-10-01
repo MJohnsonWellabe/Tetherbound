@@ -456,6 +456,20 @@ func _apply_op(op: Dictionary) -> bool:
 			reward_deliveries[id] = (delivery as Dictionary).duplicate(true)
 			revision += 1
 			return true
+		"foundation_event_journal":
+			var row: Variant = op.get("delivery")
+			if not preload("res://scripts/net/foundation_event.gd").valid(row, reward_delivery_namespace, world_id) \
+				or op.get("delivery_id") != row.delivery_id or reward_deliveries.has(row.delivery_id): return false
+			reward_deliveries[row.delivery_id] = row.duplicate(true)
+			revision += 1
+			return true
+		"foundation_shrine_display":
+			var row: Variant = reward_deliveries.get(op.get("delivery_id", ""))
+			if not training_row_valid(row, reward_delivery_namespace, world_id) or row.get("action") != "relic_hang" \
+				or row.receipt != op.get("receipt") or row.intent.biome != op.get("biome"): return false
+			redesign_world.shrine_display[row.intent.biome] = true
+			revision += 1
+			return true
 		"satchel_add":
 			var uid := str(op.get("uid", ""))
 			if uid.is_empty() or death_satchel_index_of(uid) >= 0:

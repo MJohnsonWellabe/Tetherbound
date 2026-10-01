@@ -115,6 +115,12 @@ var _storage_revisions: Dictionary = {}
 ## `transfer_item`/`drop_item` is refused rather than duplicating a stack.
 var _seen_txns: Dictionary = {}
 
+func commit_foundation_event(row: Dictionary) -> Dictionary:
+	if world == null or not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): return {"ok": false}
+	if world.reward_deliveries.has(row.delivery_id):
+		return {"ok": world.reward_deliveries[row.delivery_id] == row, "duplicate": true}
+	return _commit([{"op": "foundation_event_journal", "scope": "world", "delivery_id": row.delivery_id, "delivery": row.duplicate(true)}], "foundation_event", 1, "")
+
 
 func _init(world_state: RefCounted = null) -> void:
 	world = world_state
@@ -1343,8 +1349,10 @@ func commit_creature_training_delivery(row: Dictionary, peer_id: int) -> Diction
 	if world == null or not preload("res://autoload/world_state.gd").training_world_op_valid(op,
 		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
 		return _refuse("creature_training", peer_id, "invalid_training", "That training decision is invalid.")
-	return _commit([op, {"op": "creature_training_settle", "scope": "player", "peers": [peer_id],
-		"delivery": row.duplicate(true)}], "creature_training", peer_id, "meadows")
+	var ops: Array = [op]
+	if row.get("action") == "relic_hang": ops.append({"op": "foundation_shrine_display", "scope": "world", "delivery_id": row.delivery_id, "receipt": row.receipt, "biome": row.intent.biome})
+	ops.append({"op": "creature_training_settle", "scope": "player", "peers": [peer_id], "delivery": row.duplicate(true)})
+	return _commit(ops, "creature_training", peer_id, "meadows")
 
 func _commit_foundation_camp(row: Dictionary, peer: int) -> Dictionary:
 	if world == null or not preload("res://autoload/world_state.gd").training_row_valid(row, world.reward_delivery_namespace, world.world_id) \

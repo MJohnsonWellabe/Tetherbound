@@ -7,10 +7,22 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build"]
+const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
+
+static func commit(registry: RefCounted, writer: Node, peer: int, character: String, revision: int, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if action not in ACTIONS or registry == null or writer == null: return deny("action_unavailable")
+	var token: Dictionary = registry.call("stage_character_action", character, revision, action, intent, context)
+	if token.get("ok") != true: return token
+	var accepted: Dictionary = registry.call("staged_creature_training", token)
+	var result: Dictionary = writer.call("journal_creature_training_prepared", peer, character, accepted)
+	var saved := result.get("ok") == true and result.get("durable") == true
+	if registry.call("finish_creature_training", token, saved) != true: return deny("stage_changed")
+	if not saved: return result
+	writer.call("publish_creature_training", peer, character, accepted.receipt)
+	return {"ok": true, "durable": true, "resolved": false, "receipt": accepted.receipt}
 
 static func stage(current: Dictionary, revision: int, action: String,
 		intent: Dictionary, context: Dictionary, schema_check: Callable) -> Dictionary:
@@ -30,12 +42,38 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"loadout": proposal = _loadout(current, intent, context)
 		"camp_rest": proposal = preload("res://scripts/build/forward_camp_actions.gd").stage_team_bed(current, revision, intent, context, true)
 		"camp_build": proposal = camp_plan(current, revision, intent, context)
+		"relic_hang", "boss_relic": proposal = _relic(current, action, intent, context)
 	if proposal.get("ok") != true: return proposal
 	if not schema_check.call(proposal.state, current.character_id).is_empty(): return deny("invalid_station_candidate")
 	return {"ok": true, "action": action, "character_id": current.character_id,
 		"before": current.duplicate(true), "state": proposal.state.duplicate(true),
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
+
+static func _relic(current: Dictionary, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if not intent.get("biome") is String or not preload("res://scripts/data/biome_order.gd").ids(false).has(intent.biome): return deny("invalid_relic")
+	var next := current.duplicate(true)
+	var receipt := "relic_hang:%s:%s" % [intent.biome, current.character_id]
+	if action == "relic_hang":
+		if intent.size() != 1 or context.get("pedestal_biome") != intent.biome or context.get("realm") != "meadows": return deny("actual_shrine_pedestal_required")
+		if not next.redesign_character.relics_held.has(intent.biome): return deny("personal_relic_required")
+		next.redesign_character.relics_held.erase(intent.biome)
+		if not next.redesign_character.relics_hung.has(intent.biome): next.redesign_character.relics_hung.append(intent.biome)
+	else:
+		var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(intent.get("trainer_id", "")), str(context.get("realm", "")))
+		if intent.size() != 3 or grant.is_empty() or grant.relic_biome != intent.biome \
+			or context.get("validated_host_outcome") != "win" or context.get("encounter_id") != intent.get("encounter_id") \
+			or not context.get("participants") is Array or not context.participants.has(current.character_id): return deny("actual_boss_participant_required")
+		receipt = "defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]
+		if next.redesign_character.relics_held.has(intent.biome) or next.redesign_character.relics_hung.has(intent.biome): return deny("reconcile_original_decision")
+		var bag_rules := preload("res://scripts/world/death_satchel_rules.gd")
+		var bag := bag_rules.inventory_from(current.inventory)
+		if not bag_rules.give_stack(bag, {"id": grant.portal_key_item, "n": 1}): return deny("boss_handoff_make_satchel_room")
+		next.inventory = bag_rules.slots(bag)
+		next.redesign_character.relics_held.append(intent.biome)
+	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
 
 static func camp_plan(current: Dictionary, revision: int, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if context.get("foundation_runtime_authorized") != true or not context.get("world_before") is Array \

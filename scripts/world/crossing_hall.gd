@@ -133,6 +133,15 @@ func _build_pedestal(entry: Dictionary) -> void:
 	arrival.position = Vector3(0, .05, 1.8)
 	slot.add_child(arrival)
 	_pedestals[str(entry.biome)] = slot
+	var prompt := preload("res://scripts/world/interactable.gd").new()
+	prompt.configure("Hang your %s relic" % ORDER.display_name(str(entry.biome)), float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
+	prompt.connect("activated", func() -> void:
+		var game := get_node_or_null(^"/root/Game")
+		var session: Node = game.get("session") if game != null else null
+		if session != null:
+			var verdict: Dictionary = session.call("request_relic_hang", str(entry.biome))
+			if verdict.get("ok") != true: game.call("push_world_message", str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))))
+	slot.add_child(prompt)
 
 
 func _add_model(parent: Node3D, path: String) -> void:

@@ -94,6 +94,31 @@ var _satchel_retry_at: Dictionary = {}
 var _satchel_poll := 0.0
 var _reward_retry_at: Dictionary = {}
 
+## Host-internal append, before personal actions/terminal source cleanup.
+## A failed atomic world write restores the same ledger state and sequence.
+func journal_foundation_event(source: String, duties: Array) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or game.call("is_host") != true or ledger == null: return {"ok": false, "durable": false}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
+	var row := preload("res://scripts/net/foundation_event.gd").make(world, game.get("session").call("_altar_current_epoch"), source, duties)
+	if row.is_empty(): return {"ok": false, "durable": false}
+	var before: Dictionary = world.call("save_data")
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var result: Dictionary = ledger.call("commit_foundation_event", row)
+	if result.get("ok") != true: return {"ok": false, "durable": false}
+	if result.get("duplicate") != true:
+		if saver.call("save_world_prepared", game, world.world_id) != true:
+			world.call("load_data", before)
+			world.revision = revision
+			ledger.seq = sequence
+			return {"ok": false, "durable": false}
+		publish_journaled_delta(result.delta)
+	return {"ok": true, "durable": true, "delivery_id": row.delivery_id}
+
 func _process(delta: float) -> void:
 	_satchel_poll -= delta
 	if _satchel_poll > 0.0:
@@ -1051,7 +1076,7 @@ func journal_creature_training_prepared(peer: int, character: String, accepted: 
 			return {"ok": false, "durable": false, "code": "action_stage_changed"}
 		var codec: Script = preload("res://scripts/net/foundation_delivery.gd") if accepted.get("action") in preload("res://scripts/net/foundation_actions.gd").ACTIONS else preload("res://scripts/net/character_action_delivery.gd")
 		row = codec.make_record(
-			world.world_id, world.reward_delivery_namespace, str(owner_session.call("_altar_current_epoch")),
+			world.world_id, world.reward_delivery_namespace, str(owner_session.call("foundation_event_stage_epoch", accepted)),
 			accepted, world.reward_deliveries.get(id), preload("res://scripts/net/character_record_rules.gd").errors)
 	else:
 		row = ESSENCE.next_training_delivery(world.world_id, world.reward_delivery_namespace,

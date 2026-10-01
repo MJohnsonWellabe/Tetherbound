@@ -1415,6 +1415,7 @@ func _read_use() -> void:
 	var def := db.call("definition", id) as Dictionary
 	if id == "home_key":
 		var game := get_node_or_null(^"/root/Game")
+		if menu != null: menu.call("close")
 		if game != null: game.call("use_home_key")
 		return
 	if str(db.call("kind", id)) == "armor":

@@ -24,7 +24,8 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 		var loaded: bool = await game.call("enter_realm", permit.realm, "", true)
 		if not loaded or not _same_owner(): _refuse("The destination could not load."); return
 	var frames := 0
-	while not str(game.call("pending_entry_for", permit.realm)).is_empty() and frames < 240:
+	var deadline := Time.get_ticks_msec() + int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.response_timeout_seconds) * 1000.0)
+	while not str(game.call("pending_entry_for", permit.realm)).is_empty() and Time.get_ticks_msec() < deadline:
 		await get_tree().physics_frame
 		frames += 1
 		if not _same_owner(): _refuse("Your travel session changed."); return
@@ -68,8 +69,21 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 		_refuse("The arrival anchor is obstructed."); return
 	actor.global_position = landing
 	if actor is CharacterBody3D: actor.velocity = Vector3.ZERO
+	_pending.anchor = landing
+	_pending.radius = radius
+	# A terrain sample is only a proposed landing. The live physics body must
+	# move through its ordinary controller and report actual walkable contact.
+	await get_tree().physics_frame
+	while _same_owner() and not _grounded_actor(actor) and Time.get_ticks_msec() < deadline:
+		await get_tree().physics_frame
+	if not _same_owner() or not _grounded_actor(actor): _refuse("The arrival has not reached supported ground."); return
 	_pending.seated = true
 	_save_arrival()
+
+func _grounded_actor(actor: CharacterBody3D) -> bool:
+	return is_instance_valid(actor) and actor.is_on_floor() \
+		and actor.get_floor_normal().angle_to(Vector3.UP) <= actor.floor_max_angle \
+		and _pending.has("anchor") and actor.global_position.distance_to(_pending.anchor) <= float(_pending.radius)
 
 func _process(delta: float) -> void:
 	_retry_left -= delta
@@ -92,10 +106,12 @@ func _save_arrival() -> void:
 	var session: Node = _pending.session.get_ref()
 	var game: Node = _pending.game.get_ref()
 	var saver: RefCounted = game.get("save_system")
+	var actor := game.call("find_player") as CharacterBody3D
+	if actor == null or not _grounded_actor(actor): _refuse("The arrival support changed before it was saved."); return
 	if saver == null or saver.call("fallback_busy") == true: return
 	game.call("_capture_player_pose")
 	if saver.call("save_character_prepared", game, _pending.envelope.character_id) != true: return
-	if not _same_owner(): _refuse("Your travel session changed."); return
+	if not _same_owner() or not _grounded_actor(actor): _refuse("Your travel session changed."); return
 	var envelope: Dictionary = _pending.envelope
 	var peer: int = _pending.peer
 	_pending.clear()
