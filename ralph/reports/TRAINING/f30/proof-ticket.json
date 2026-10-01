@@ -1,0 +1,50 @@
+{
+  "feature": "F30",
+  "criteria": [
+    "F30#0",
+    "F30#1",
+    "F30#2",
+    "F30#3",
+    "F30#4"
+  ],
+  "source_sha": "07b522d5fd55693cd8bc7212ef6affcd5a9f302b",
+  "status": "QUEUED_ROOT_ONLY",
+  "acceptance_credit": 0,
+  "engine_run": false,
+  "dependency": "F27 accepted producer; Foundation exact same-record/current-generation portable writer; F28 breakthroughs",
+  "shared_packet": "D:/tetherbound/feature-f30/.tmp/f30-authority",
+  "named_logic_batch": "tests/run_tests.gd -- --only=test_f30_traits.gd",
+  "tests_authored_not_run": true,
+  "required_host_hooks": [
+    "TraitSpawnHooks.prepare_host_spawn: actual registered namespace/id/generation and host alpha/night/weather; retain existing spawn record",
+    "TraitSpawnHooks.prepare_catch: exact same identity/retained host packet -> canonical UID row; no client-roll or roster replacement",
+    "Session.quote_altar_traits/submit_altar_trait/reconcile_altar_trait/altar_trait_completed: existing journal only",
+    "EncounterHost.stage_actor_heal_utility host-only view.host_trait_row from same admitted UID/generation"
+  ],
+  "runtime_batch": [
+    {
+      "criterion": "F30#0",
+      "witness": "Ordinary/alpha/night/weather registered spawns, 0/1/2/3 rolls, exact retained catch identity; 4096 configured seeds/profile"
+    },
+    {
+      "criterion": "F30#1",
+      "witness": "Ordinary lawful wild catch aim and owned inspect readout; 1920x1080 and 1280x800 controller/readability captures"
+    },
+    {
+      "criterion": "F30#2",
+      "witness": "Chosen seed+F27 essence same-UID release: once, forged trait/foreign UID/stale generation/retry/join reject; full satchel no partial payout"
+    },
+    {
+      "criterion": "F30#3",
+      "witness": "Earn tiers1/3/5, pay 10/20/30 type essence plus seed, overwrite destroys old trait; seed-present essence-missing unchanged; Hardy HP fraction preserved"
+    },
+    {
+      "criterion": "F30#4",
+      "witness": "All30 actual live combat/traversal dispatch paths; bond secondary unlock/dedup and IV baseline; two-peer save/rejoin same UID/trait row, failed bool-save and ACK recover original decision once"
+    }
+  ],
+  "independent_source_review": {
+    "reviewer": "/root/f30_review",
+    "result": "No remaining identified source blockers for draft freeze; runtime OPEN"
+  }
+}

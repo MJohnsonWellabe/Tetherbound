@@ -1,0 +1,122 @@
+[
+  {
+    "path": "scripts/ui/altar_panel.gd",
+    "group": "altar-F27-cut",
+    "before_sha256": "fb4c8b95fd873528fc80a70f68eeb02c8cb25c6a762660560fa087a8b64413d5",
+    "after_sha256": "b919fcfbcdbafa623c86870986d79316c53229d3e7e14c66818a956387d3d666"
+  },
+  {
+    "path": "scripts/net/character_authority.gd",
+    "group": "foundation-admission",
+    "before_sha256": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "after_sha256": "709846e0875be6d867a5999a19d08d2b767aa73d136871a1d9c7cbfb76c93eb4"
+  },
+  {
+    "path": "scripts/combat/encounter_director.gd",
+    "group": "host-card",
+    "before_sha256": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "after_sha256": "643c150cc3d19ceff0ca4f3b44038b3a664890bdb9abe279ce093e461d968dfb"
+  },
+  {
+    "path": "scripts/net/encounter_host.gd",
+    "group": "host-heal",
+    "before_sha256": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "after_sha256": "909243fbf8a43c7601684f0b60e7ae54dad96d6bf6c296abde49d5a10d462fc6"
+  },
+  {
+    "path": "data/items/items.json",
+    "group": "items",
+    "before_sha256": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff",
+    "after_sha256": "ed308f6ac59e57881a3fcecada032fb6d3e69e3b4711cbdf56b08ceda9fe8324"
+  },
+  {
+    "path": "scripts/ui/combat_hud.gd",
+    "group": "readout",
+    "before_sha256": "0674f1d6e0fb5dd7300f4a8290839a607d87d231f6a3d1b5d5745b0f40ab7af4",
+    "after_sha256": "ad8dd276d1d155feaa3252b68853c1f235f423e869a30ef16837ef1138daef17"
+  },
+  {
+    "path": "scripts/ui/tab_creatures.gd",
+    "group": "readout",
+    "before_sha256": "2b71e0d0e7bc2247578c0da7f9043aad4335003ab59a9b3edcfe47e88055204c",
+    "after_sha256": "1e0c19f19cc440820c44922bd99f640e2085f264d03dc9304d2046ed0e8b86f4"
+  },
+  {
+    "path": "data/traits/traits.json",
+    "group": "runtime",
+    "before_sha256": "984ad812c97c8fa16cc573b94b63f4767b224f3f3f6fa97e86294774b2a5ba9a",
+    "after_sha256": "5ab079c77b50a31cfb45c29bd32782db6d4dea2d285778b910e50cdf6034c739"
+  },
+  {
+    "path": "scripts/combat/combat_manager.gd",
+    "group": "runtime",
+    "before_sha256": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "after_sha256": "3a223abe0848645759d9f16acf506b0620e267f3fe73eec8f6a7a769972a016c"
+  },
+  {
+    "path": "scripts/creatures/creature_instance.gd",
+    "group": "runtime",
+    "before_sha256": "6f91aa87b11a5f9600f8f2a08ef09e6de38029fa825214229c751a4fc9b31ea8",
+    "after_sha256": "d777d769d6f1a70780eaba259ed12bc7ab9e3b201612035ed83e72d3a7194a70"
+  },
+  {
+    "path": "scripts/save/save_game.gd",
+    "group": "runtime",
+    "before_sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1",
+    "after_sha256": "518d96448b53cd6d8956f57eafb1c962f814d1d6f457b32528ac2e016ce3c156"
+  },
+  {
+    "path": "data/progression/flag_scopes.json",
+    "group": "schema",
+    "before_sha256": "087c7c46247680c3a55fb296b396c714eabdf90ee75e4d7a7e62c24fa338f2ed",
+    "after_sha256": "a413105aead1e21ff26753818de4622d62c3280e18691960256341efff2fc89c"
+  },
+  {
+    "path": "data/schema/character_state.schema.json",
+    "group": "schema",
+    "before_sha256": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+    "after_sha256": "492014d5d0e6eb0b1e234b2a766629b59bc8c25b94c8bcda1554cefde83f78ea"
+  },
+  {
+    "path": "data/schema/traits.json",
+    "group": "schema",
+    "before_sha256": "cbf31b2f23e300df1664ee24116585bc97ada33d391ccb97bec2866aa05cca97",
+    "after_sha256": "94cd5c31c26d8b87a7fd1edc919b8e67e10fab719de94bbd71e88343f137aa43"
+  },
+  {
+    "path": "data/schema/traits.schema.json",
+    "group": "schema",
+    "before_sha256": "75be535a8a97a98d4b46502e29087cd7e74c3b4f3fd19060ed03066c79233ed1",
+    "after_sha256": "945dbeeeefe8dcf568a6919516c36e0faeee49158dde9aefc310da9df8d35471"
+  },
+  {
+    "path": "scripts/player/fly_controller.gd",
+    "group": "traversal",
+    "before_sha256": "6fdaba5d46d699dc00cdcea55885a21f0c86f6b53c7f5d40341d7e84a2f16160",
+    "after_sha256": "cfe504b6c67a2ef0d2c4edd917bd928af8d793abbd80e8df017c1506bd72b66c"
+  },
+  {
+    "path": "scripts/world/riding_controller.gd",
+    "group": "traversal",
+    "before_sha256": "53e7d6adeaa92195a365a3b64b0663a13901053409f109c82de25486f810daa0",
+    "after_sha256": "431dec3a45270177ff762860e6ce59d770be80f4ff94401c44ed9a3c3b9f6e9f"
+  },
+  {
+    "path": "scripts/world/water_mounted_swim.gd",
+    "group": "traversal",
+    "before_sha256": "ec972a4df40f2a863098f2bf8687adcafec0d2b474a10fa4f5519900c5a94bd9",
+    "after_sha256": "fb2b256c7a22a32113b3589a9fce8cd63d29108b88aa5cbd5a9c8e863e52f4b4"
+  },
+  {
+    "path": "scripts/world/water_riding_controller.gd",
+    "group": "traversal",
+    "before_sha256": "9d6ea801b470be11e6d21c05baa2c56ba0c795698937e081a6a71430bd19a5e2",
+    "after_sha256": "22830fd9f17a5c9fda39f653322e0dc7835e03e45e09e4e3c0f23d285b2911c5"
+  },
+  {
+    "path": "scripts/combat/water_alpha.gd",
+    "group": "water-alpha",
+    "before_sha256": "9c7dd3724183b88c2331dbc820c7472d6f3b9620b8802d6a3a64a0fd58a38e3a",
+    "after_sha256": "b66d873b5a070d437ba8d3dd07e21db55c7aa82c9d7ff14f59705f7f97a76119"
+  }
+]
