@@ -1,0 +1,1141 @@
+[
+  {
+    "job": 110511919635,
+    "observation": {
+      "acceptance": false,
+      "actual_delta": [],
+      "authored_road_hint": "",
+      "ceiling_frames": 0,
+      "controller_observation_available": false,
+      "controller_wanted_dir": [],
+      "delivered_input": [
+        0.0,
+        0.0
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "failed_original_pre_sample": {
+        "acceptance": false,
+        "backend_identity_proven": false,
+        "body_pose": {
+          "basis_x": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "basis_y": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "basis_z": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            41.6246871948242,
+            0.919726610183716,
+            1.1388475894928
+          ]
+        },
+        "capsule": {
+          "height": 1.79999995231628,
+          "radius": 0.400000005960464,
+          "rid": "RID(9908489551872)"
+        },
+        "collide_shape_points": [
+          [
+            41.6246871948242,
+            0.919726610183716,
+            1.1388475894928
+          ],
+          [
+            41.6246871948242,
+            0.919999957084656,
+            1.1388475894928
+          ],
+          [
+            41.2246856689453,
+            2.31972646713257,
+            1.1388475894928
+          ],
+          [
+            41.2249984741211,
+            2.31972646713257,
+            1.1388475894928
+          ],
+          [
+            41.2246856689453,
+            1.31972658634186,
+            1.1388475894928
+          ],
+          [
+            41.2249984741211,
+            1.31972658634186,
+            1.1388475894928
+          ]
+        ],
+        "complete": true,
+        "configured_backend": "DEFAULT",
+        "elapsed_us": 137,
+        "excluded_self_only": "RID(10651518894080)",
+        "original_motion_contact_geometry": [
+          {
+            "body_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                44.0,
+                0.769999980926514,
+                2.0
+              ]
+            },
+            "index": 0,
+            "path": "/root/MeadowsPlayground/Village/inn_5/Interior/@StaticBody3D@59116",
+            "rid": "RID(362018498413954)",
+            "shape_data": [
+              2.99000000953674,
+              0.150000005960464,
+              4.98999977111816
+            ],
+            "shape_index": 0,
+            "shape_local_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "shape_rid": "RID(362022793381410)",
+            "shape_type": 3,
+            "shape_world_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                44.0,
+                0.769999980926514,
+                2.0
+              ]
+            }
+          },
+          {
+            "body_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                44.0,
+                0.849999964237213,
+                2.0
+              ]
+            },
+            "index": 1,
+            "path": "/root/MeadowsPlayground/Village/inn_5/Collision",
+            "rid": "RID(361962663839104)",
+            "shape_data": [
+              0.224999994039536,
+              1.55999994277954,
+              5.19999980926514
+            ],
+            "shape_index": 0,
+            "shape_local_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                -3.0,
+                1.55999994277954,
+                0.0
+              ]
+            },
+            "shape_rid": "RID(361966958806570)",
+            "shape_type": 3,
+            "shape_world_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                41.0,
+                2.40999984741211,
+                2.0
+              ]
+            }
+          },
+          {
+            "body_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                44.0,
+                0.849999964237213,
+                2.0
+              ]
+            },
+            "index": 2,
+            "path": "/root/MeadowsPlayground/Village/inn_5/Collision",
+            "rid": "RID(361962663839104)",
+            "shape_data": [
+              0.224999994039536,
+              1.55999994277954,
+              5.19999980926514
+            ],
+            "shape_index": 0,
+            "shape_local_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                -3.0,
+                1.55999994277954,
+                0.0
+              ]
+            },
+            "shape_rid": "RID(361966958806570)",
+            "shape_type": 3,
+            "shape_world_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                41.0,
+                2.40999984741211,
+                2.0
+              ]
+            }
+          }
+        ],
+        "pair_limit": 8,
+        "pair_limit_reached": false,
+        "phase": "original_pre",
+        "queries_after": 3,
+        "queries_before": 1,
+        "query_margin": 0.0,
+        "query_mask": 1,
+        "query_motion": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "query_pose": {
+          "basis_x": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "basis_y": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "basis_z": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            41.6246871948242,
+            1.81972658634186,
+            1.1388475894928
+          ]
+        },
+        "raw_pairs_are_not_a_penetration_certificate": true,
+        "rest_info": {
+          "collider_id": 4463796629992,
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            41.2249984741211,
+            2.31972646713257,
+            1.1388475894928
+          ],
+          "rid": "RID(361962663839104)",
+          "shape": 0
+        },
+        "server_class": "PhysicsServer3D",
+        "trigger": "zero-motion recovery exceeds unchanged skin"
+      },
+      "floor_angle": 0.785399973392487,
+      "frame": 3490,
+      "live_contacts": [
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/inn_5/Interior/@StaticBody3D@59116",
+          "collider_rid": "RID(362018498413954)",
+          "collider_shape": 0,
+          "depth": 0.000208437442779541,
+          "local_shape": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            41.6259307861328,
+            0.919999957084656,
+            1.1388475894928
+          ]
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/inn_5/Collision",
+          "collider_rid": "RID(361962663839104)",
+          "collider_shape": 0,
+          "depth": 6.866455078125e-05,
+          "local_shape": 0,
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            41.2249984741211,
+            2.32079148292542,
+            1.1388475894928
+          ]
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/inn_5/Collision",
+          "collider_rid": "RID(361962663839104)",
+          "collider_shape": 0,
+          "depth": 6.866455078125e-05,
+          "local_shape": 0,
+          "normal": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            41.2249984741211,
+            1.32079148292542,
+            1.1388475894928
+          ]
+        }
+      ],
+      "live_recovery_travel": [
+        0.00124359130859375,
+        0.00106483697891235,
+        0.0
+      ],
+      "live_state_phase": "pre",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": true,
+      "on_wall": true,
+      "physics_frame": 7525,
+      "plans": 15,
+      "player": [
+        41.6246871948242,
+        0.919726610183716,
+        1.1388475894928
+      ],
+      "progress_m": 285.530287844595,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "prediction_motion": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "retry_choice": 0,
+        "source": "none",
+        "wall_normal": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "request": [
+        44.0,
+        1.96799993515015,
+        -2.39000010490417
+      ],
+      "requests": 3491,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": -1,
+      "slide_motion": [],
+      "slide_point_counts": [],
+      "snap": 0.400000005960464,
+      "stall_frames": 0,
+      "swept_depth": -1.0,
+      "timing": {
+        "callback_cap_us": 10000,
+        "input_flush_us": 0,
+        "live_pre_us": 273,
+        "pre_us": 329,
+        "stage": "pre_refused"
+      },
+      "total_queries": 10470,
+      "wall_frames": 2
+    }
+  },
+  {
+    "job": 110511919652,
+    "observation": {
+      "acceptance": false,
+      "actual_delta": [
+        0.00367927551269531,
+        5.54323196411133e-06,
+        0.0491933822631836
+      ],
+      "authored_road_hint": "",
+      "callback_own_us": 580,
+      "ceiling_frames": 0,
+      "checked_start": false,
+      "controller_observation_available": true,
+      "controller_wanted_dir": [
+        0.242535650730133,
+        0.0,
+        0.970142483711243
+      ],
+      "delivered_input": [
+        0.707123816013336,
+        0.707089602947235
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "floor_angle": 0.785399973392487,
+      "frame": 784,
+      "live_contacts": [
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Collision",
+          "collider_rid": "RID(360364936004980)",
+          "collider_shape": 1,
+          "depth": 5.91278076171875e-05,
+          "local_shape": 0,
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            27.7749996185303,
+            2.30094170570374,
+            1.70154702663422
+          ]
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Collision",
+          "collider_rid": "RID(360364936004980)",
+          "collider_shape": 1,
+          "depth": 5.91278076171875e-05,
+          "local_shape": 0,
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            27.7749996185303,
+            1.30094170570374,
+            1.70154702663422
+          ]
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Interior/@StaticBody3D@58985",
+          "collider_rid": "RID(360420770579830)",
+          "collider_shape": 0,
+          "depth": 5.82337379455566e-05,
+          "local_shape": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.374059677124,
+            0.899999976158142,
+            1.70154702663422
+          ]
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Terrain",
+          "collider_rid": "RID(67602785239043)",
+          "collider_shape": 33,
+          "depth": 5.82337379455566e-05,
+          "local_shape": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.374059677124,
+            0.899999976158142,
+            1.70154702663422
+          ]
+        }
+      ],
+      "live_recovery_travel": [
+        -1.33514404296875e-05,
+        0.0,
+        0.0
+      ],
+      "live_state_phase": "post",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": true,
+      "on_wall": true,
+      "physics_frame": 3748,
+      "plans": 3,
+      "player": [
+        27.3740730285645,
+        0.900941669940948,
+        1.70154702663422
+      ],
+      "progress_m": 61.9026171830483,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          0.242535635828972,
+          0.0,
+          0.970142543315887
+        ],
+        "prediction_motion": [
+          -0.370393753051758,
+          0.0,
+          1.14764630794525
+        ],
+        "retry_choice": 0,
+        "source": "prospective_step",
+        "wall_normal": [
+          1.0,
+          0.0,
+          0.0
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "actual production contact observation cap",
+      "request": [
+        27.0,
+        0.849999964237213,
+        2.79999995231628
+      ],
+      "requests": 785,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Interior/@StaticBody3D@58985",
+          "collider_rid": "RID(360420770579830)",
+          "collider_shape": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.3705463409424,
+            0.899999976158142,
+            1.65369880199432
+          ],
+          "slide": 0,
+          "swept_depth": 0.00096970796585083
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Terrain",
+          "collider_rid": "RID(67602785239043)",
+          "collider_shape": 33,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.3705463409424,
+            0.899999976158142,
+            1.65369880199432
+          ],
+          "slide": 0,
+          "swept_depth": 0.00096970796585083
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Collision",
+          "collider_rid": "RID(360364936004980)",
+          "collider_shape": 1,
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            27.7749996185303,
+            2.30093598365784,
+            1.69686031341553
+          ],
+          "slide": 1,
+          "swept_depth": 0.00141143798828125
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Collision",
+          "collider_rid": "RID(360364936004980)",
+          "collider_shape": 1,
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            27.7749996185303,
+            1.30093610286713,
+            1.69686031341553
+          ],
+          "slide": 1,
+          "swept_depth": 0.00141143798828125
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Interior/@StaticBody3D@58985",
+          "collider_rid": "RID(360420770579830)",
+          "collider_shape": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.3754119873047,
+            0.899999976158142,
+            1.69686031341553
+          ],
+          "slide": 1,
+          "swept_depth": 0.00141143798828125
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Terrain",
+          "collider_rid": "RID(67602785239043)",
+          "collider_shape": 33,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            27.3754119873047,
+            0.899999976158142,
+            1.69686031341553
+          ],
+          "slide": 1,
+          "swept_depth": 0.00141143798828125
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Collision",
+          "collider_rid": "RID(360364936004980)",
+          "collider_shape": 1,
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            27.7749996185303,
+            2.30094170570374,
+            1.70154702663422
+          ],
+          "slide": 2,
+          "swept_depth": 7.2479248046875e-05
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Village/cottage_a_3/Collision",
+          "collider_rid": "RID(360364936004980)",
+          "collider_shape": 1,
+          "normal": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "point": [
+            27.7749996185303,
+            1.30094170570374,
+            1.70154702663422
+          ],
+          "slide": 2,
+          "swept_depth": 7.2479248046875e-05
+        }
+      ],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": 3,
+      "slide_motion": [
+        0.00367927551269531,
+        5.54323196411133e-06,
+        0.0491933822631836
+      ],
+      "slide_point_counts": [
+        2,
+        4,
+        4
+      ],
+      "snap": 0.400000005960464,
+      "stall_frames": 7,
+      "swept_depth": 0.00141143798828125,
+      "timing": {
+        "between_callbacks": "controller and other nodes; excluded; not controller-only",
+        "between_callbacks_us": 3299,
+        "callback_cap_us": 10000,
+        "input_flush_us": 48,
+        "live_post_us": 93,
+        "live_pre_us": 108,
+        "movement_progress_us": 0,
+        "post_contract_us": 16,
+        "post_us": 193,
+        "pre_us": 335,
+        "provisional_steering_us": 94,
+        "serialization_and_print": "deferred; excluded; snapshot included",
+        "slide_validation_us": 13,
+        "snapshot_us": 69,
+        "stage": "post"
+      },
+      "total_queries": 2350,
+      "wall_frames": 9
+    }
+  },
+  {
+    "job": 110511919754,
+    "observation": {
+      "acceptance": false,
+      "actual_delta": [
+        -0.00633430480957031,
+        -0.0329374372959137,
+        0.0833663940429688
+      ],
+      "authored_road_hint": "",
+      "callback_own_us": 395,
+      "ceiling_frames": 0,
+      "checked_start": false,
+      "controller_observation_available": true,
+      "controller_wanted_dir": [
+        -0.0780006945133209,
+        0.0,
+        0.996953308582306
+      ],
+      "delivered_input": [
+        -0.337477028369904,
+        0.941333770751953
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "floor_angle": 0.785399973392487,
+      "frame": 212,
+      "live_contacts": [],
+      "live_recovery_travel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "live_state_phase": "post",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": false,
+      "on_wall": false,
+      "physics_frame": 3518,
+      "plans": 1,
+      "player": [
+        29.5568695068359,
+        0.170185074210167,
+        -25.0778121948242
+      ],
+      "progress_m": 17.8133420394734,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          -0.0780006945133209,
+          0.0,
+          0.996953368186951
+        ],
+        "prediction_motion": [
+          -0.156001389026642,
+          0.0,
+          1.9939067363739
+        ],
+        "retry_choice": 0,
+        "source": "prospective_step",
+        "wall_normal": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "actual production walk lost grounded floor",
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "requests": 213,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": 0,
+      "slide_motion": [
+        -0.00633430480957031,
+        -0.0329374372959137,
+        0.0833663940429688
+      ],
+      "slide_point_counts": [],
+      "snap": 0.400000005960464,
+      "stall_frames": 1,
+      "swept_depth": 0.0,
+      "timing": {
+        "between_callbacks": "controller and other nodes; excluded; not controller-only",
+        "between_callbacks_us": 4721,
+        "callback_cap_us": 10000,
+        "input_flush_us": 29,
+        "live_post_us": 52,
+        "live_pre_us": 70,
+        "movement_progress_us": 0,
+        "post_contract_us": 17,
+        "post_us": 104,
+        "pre_us": 239,
+        "provisional_steering_us": 67,
+        "serialization_and_print": "deferred; excluded; snapshot included",
+        "slide_validation_us": 7,
+        "snapshot_us": 27,
+        "stage": "post"
+      },
+      "total_queries": 639,
+      "wall_frames": 3
+    }
+  },
+  {
+    "job": 110511919754,
+    "observation": {
+      "acceptance": false,
+      "actual_delta": [
+        -0.0495338439941406,
+        0.0079878568649292,
+        0.0385284423828125
+      ],
+      "authored_road_hint": "",
+      "callback_own_us": 654,
+      "ceiling_frames": 0,
+      "checked_start": false,
+      "controller_observation_available": true,
+      "controller_wanted_dir": [
+        -0.933807015419006,
+        0.0,
+        0.357777059078217
+      ],
+      "delivered_input": [
+        -0.580356359481812,
+        -0.814362525939941
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "floor_angle": 0.785399973392487,
+      "frame": 174,
+      "live_contacts": [
+        {
+          "collider_path": "/root/MeadowsPlayground/Props/trainer_camp/camp_bed_Collision",
+          "collider_rid": "RID(370449519216087)",
+          "collider_shape": 0,
+          "depth": 6.98464718880132e-05,
+          "local_shape": 0,
+          "normal": [
+            -0.573576211929321,
+            0.0,
+            -0.819152235984802
+          ],
+          "point": [
+            25.44846534729,
+            1.1605236530304,
+            -26.4548797607422
+          ]
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Props/trainer_camp/camp_bed_Collision",
+          "collider_rid": "RID(370449519216087)",
+          "collider_shape": 0,
+          "depth": 6.98464718880132e-05,
+          "local_shape": 0,
+          "normal": [
+            -0.573576211929321,
+            0.0,
+            -0.819152235984802
+          ],
+          "point": [
+            25.44846534729,
+            0.980088472366333,
+            -26.4548797607422
+          ]
+        }
+      ],
+      "live_recovery_travel": [
+        -0.000688552856445312,
+        0.0,
+        -0.000986099243164062
+      ],
+      "live_state_phase": "post",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": true,
+      "on_wall": true,
+      "physics_frame": 3527,
+      "plans": 1,
+      "player": [
+        25.2191886901855,
+        0.580088555812836,
+        -26.7823162078857
+      ],
+      "progress_m": 12.8002818152308,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          -0.933806955814362,
+          0.0,
+          0.357777029275894
+        ],
+        "prediction_motion": [
+          0.100467711687088,
+          0.0,
+          1.99747502803802
+        ],
+        "retry_choice": 0,
+        "source": "prospective_step",
+        "wall_normal": [
+          -0.573576211929321,
+          0.0,
+          -0.819152235984802
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "requests": 175,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [
+        {
+          "collider_path": "/root/MeadowsPlayground/Terrain",
+          "collider_rid": "RID(67542655696899)",
+          "collider_shape": 41,
+          "normal": [
+            0.108396634459496,
+            0.992006957530975,
+            -0.0645939707756042
+          ],
+          "point": [
+            25.2238960266113,
+            0.574720084667206,
+            -26.7938575744629
+          ],
+          "slide": 0,
+          "swept_depth": 0.00130971614271402
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Terrain",
+          "collider_rid": "RID(67542655696899)",
+          "collider_shape": 41,
+          "normal": [
+            0.130456030368805,
+            0.987643182277679,
+            -0.0868460461497307
+          ],
+          "point": [
+            25.2150535583496,
+            0.576266944408417,
+            -26.7849464416504
+          ],
+          "slide": 0,
+          "swept_depth": 0.00130971614271402
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Props/trainer_camp/camp_bed_Collision",
+          "collider_rid": "RID(370449519216087)",
+          "collider_shape": 0,
+          "normal": [
+            -0.573576211929321,
+            0.0,
+            -0.819152235984802
+          ],
+          "point": [
+            25.4484634399414,
+            1.1605236530304,
+            -26.4548778533936
+          ],
+          "slide": 1,
+          "swept_depth": 0.00127208139747381
+        },
+        {
+          "collider_path": "/root/MeadowsPlayground/Props/trainer_camp/camp_bed_Collision",
+          "collider_rid": "RID(370449519216087)",
+          "collider_shape": 0,
+          "normal": [
+            -0.573576211929321,
+            0.0,
+            -0.819152235984802
+          ],
+          "point": [
+            25.4484634399414,
+            0.980088472366333,
+            -26.4548778533936
+          ],
+          "slide": 1,
+          "swept_depth": 0.00127208139747381
+        }
+      ],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": 2,
+      "slide_motion": [
+        -0.0495338439941406,
+        0.0079878568649292,
+        0.0385284386575222
+      ],
+      "slide_point_counts": [
+        2,
+        2
+      ],
+      "snap": 0.400000005960464,
+      "stall_frames": 1,
+      "swept_depth": 0.00127447105478495,
+      "timing": {
+        "between_callbacks": "controller and other nodes; excluded; not controller-only",
+        "between_callbacks_us": 6390,
+        "callback_cap_us": 10000,
+        "input_flush_us": 31,
+        "live_post_us": 105,
+        "live_pre_us": 99,
+        "movement_progress_us": 1,
+        "post_contract_us": 17,
+        "post_us": 188,
+        "pre_us": 369,
+        "provisional_steering_us": 134,
+        "serialization_and_print": "deferred; excluded; snapshot included",
+        "slide_validation_us": 4,
+        "snapshot_us": 60,
+        "stage": "post"
+      },
+      "total_queries": 523,
+      "wall_frames": 5
+    }
+  }
+]
