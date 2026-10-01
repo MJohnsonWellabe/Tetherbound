@@ -269,7 +269,9 @@ func _foundation_relic_context(peer: int, biome: String) -> Dictionary:
 func foundation_research_source(director: Node, encounter_id: String, peer: int, kind: String, source_id: String, species: String, move_id: String = "", night: Variant = null) -> Dictionary:
 	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
 		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false}
-	if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
+	var research_enabled := preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
+	var bounty_enabled := preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
+	if not research_enabled and not (bounty_enabled and kind == "catch"): return {"ok": true, "durable": true, "disabled": true}
 	var host: RefCounted = director.get("_encounter_host")
 	var original: Dictionary = director.call("retained_research_source", source_id)
 	if original.get("world_namespace") != _game().get("world").reward_delivery_namespace or original.get("session_id") != _altar_current_epoch() \
@@ -279,7 +281,7 @@ func foundation_research_source(director: Node, encounter_id: String, peer: int,
 	var character := str(record.get("participants", {}).get(peer, {}).get("character_id", ""))
 	if character.is_empty(): return {"ok": false}
 	if kind in ["sight", "catch"] and record.get("opponent", {}).get("species_id") != species: return {"ok": false}
-	if kind == "catch" and (record.get("kind") != "wild" or not night is bool): return {"ok": false}
+	if kind == "catch" and (record.get("kind") != "wild" or (research_enabled and not night is bool)): return {"ok": false}
 	var context := {"source_key": "encounter:" + encounter_id, "event_confirmed": true,
 		"world_namespace": _game().get("world").reward_delivery_namespace, "session_id": _altar_current_epoch(),
 		"event_id": source_id, "participants": [character], "species_id": species, "kind": kind}
@@ -287,7 +289,20 @@ func foundation_research_source(director: Node, encounter_id: String, peer: int,
 	if kind == "catch":
 		context.wild = true
 		context.night = night
-	return get_node(^"LedgerRpc").call("journal_foundation_event", source_id, [{"character_id": character, "action": "research_event", "intent": {}, "context": context}])
+	var duties: Array = []
+	if research_enabled: duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": context})
+	if bounty_enabled and kind == "catch":
+		var captured: Dictionary = original.get("capture_card", {})
+		if captured.get("species_id") != species or str(captured.get("uid", "")).is_empty(): return {"ok": false}
+		var instances: Array = record.participants[peer].get("foundation_bounty_instances", [])
+		if not instances.is_empty():
+			duties.append({"character_id": character, "action": "bounty_event", "intent": {}, "context": {
+				"source_key": "halda_bounty_event", "event_confirmed": true, "world_namespace": original.world_namespace,
+				"session_id": original.session_id, "event_id": source_id, "participants": [character],
+				"issued_instances": instances.duplicate(), "kind": "catch_trait", "biome": preload("res://scripts/data/biome_order.gd").canonical_id(str(record.realm)),
+				"traits": captured.get("rolled_traits", []).duplicate()}})
+	if duties.is_empty(): return {"ok": true, "durable": true, "disabled": true}
+	return get_node(^"LedgerRpc").call("journal_foundation_event", source_id, duties)
 
 func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dictionary:
 	if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
@@ -344,13 +359,17 @@ func _retry_foundation_events() -> void:
 			var result: Dictionary
 			if duty.action == "research_event":
 				result = preload("res://scripts/creatures/research_actions.gd").commit(self, peer, duty.action, duty.intent, context)
+			elif duty.action == "bounty_event":
+				var bounty := get_node_or_null(^"FoundationComposition/BountyHost")
+				if bounty == null: continue
+				result = bounty.call("confirmed_event", peer, str(duty.context.event_id))
 			else:
 				context.in_combat = false
 				context.foundation_runtime_authorized = true
 				if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 					result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 				else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
-			if result.get("resolved") != true and result.get("code") != "research_no_progress": handled[duty.character_id] = true
+			if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
@@ -358,6 +377,7 @@ func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "research_event":
 		var event := duty.context
 		return "research:event_%s:%s" % [JSON.stringify([event.world_namespace, event.session_id, event.event_id, event.species_id, event.kind]).sha256_text(), duty.character_id]
+	if duty.action == "bounty_event": return "bounty:event_%s:%s" % [JSON.stringify([duty.context.world_namespace, duty.context.event_id]).sha256_text(), duty.character_id]
 	return ""
 
 func foundation_event_stage_epoch(accepted: Dictionary) -> String:
@@ -1647,6 +1667,7 @@ func _finalize_snapshot_receive() -> bool:
 	# mutation. WorldState's void loader refusal must never be acknowledged.
 	var redesign_errors := REDESIGN_STATE.validate("world",
 		data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+	redesign_errors.append_array(TRAINING_WORLD.foundation_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))
 	redesign_errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(
 		data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
 	redesign_errors.append_array(TRAINING_WORLD.training_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))

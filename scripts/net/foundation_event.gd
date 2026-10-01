@@ -25,7 +25,7 @@ static func valid(raw: Variant, namespace: String, world_id: String) -> bool:
 		or not raw.duties is Array or raw.duties.is_empty(): return false
 	for duty: Variant in raw.duties:
 		if not duty is Dictionary or duty.size() != 4 or not duty.get("character_id") is String or duty.character_id.is_empty() \
-			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win"] \
+			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event"] \
 			or not duty.get("intent") is Dictionary or not duty.get("context") is Dictionary: return false
 	return true
 

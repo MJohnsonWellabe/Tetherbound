@@ -8,6 +8,12 @@ func _observe_training_boundary(row: Dictionary, phase: String) -> void:
 		"character_id": row.character_id, "world_namespace": row.world_namespace,
 		"session_id": row.session_id, "delivery_id": row.delivery_id, "receipt": row.receipt,
 		"journal_revision": row.journal_revision, "character_revision": row.character_revision})
+
+func _observe_portal_boundary(row: Dictionary, phase: String, epoch: String) -> void:
+	transaction_boundary.emit({"phase": phase, "kind": row.kind, "action": "portal_key",
+		"character_id": row.character_id, "world_namespace": row.world_instance_id,
+		"session_id": epoch, "delivery_id": row.receipt, "receipt": row.receipt,
+		"biome": row.biome, "key_slot": row.key_slot})
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -1372,6 +1378,8 @@ func publish_portal_delivery(peer: int, character: String, receipt: String) -> b
 	var world: RefCounted = game.get("world")
 	var row: Variant = world.reward_deliveries.get(receipt)
 	if not PORTAL_DELIVERY.valid(row, character, world.reward_delivery_namespace): return false
+	_observe_portal_boundary(row, "after_host_write_before_delivery", str(game.get("session").call("_altar_current_epoch")))
+	if not PORTAL_DELIVERY.equivalent(world.reward_deliveries.get(receipt), row): return false
 	var publication: Dictionary = _portal_publications.get(receipt, {})
 	if not publication.is_empty():
 		if publication.peer != peer or publication.character != character: return false
@@ -1414,6 +1422,9 @@ func _process_portal_delivery(row: Dictionary, generation: String = "") -> void:
 	if not PORTAL_DELIVERY.equivalent(canonical, row): return
 	var result := PORTAL_DELIVERY.settle_owner(game, row.duplicate(true))
 	if result.get("ok") != true: return
+	_observe_portal_boundary(row, "after_owner_write_before_ack", current_generation)
+	if game.get("world") != world or game.get("local") != player or session.call("_altar_current_epoch") != current_generation \
+		or not PORTAL_DELIVERY.equivalent(world.reward_deliveries.get(row.receipt), row): return
 	var now := Time.get_ticks_msec()
 	if now < int(_portal_retry_at.get(row.receipt, 0)): return
 	_portal_retry_at[row.receipt] = now + 1000

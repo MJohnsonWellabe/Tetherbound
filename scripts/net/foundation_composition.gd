@@ -71,9 +71,18 @@ func bounty_context(peer: int) -> Dictionary:
 		"world_namespace": world.reward_delivery_namespace, "host_day": world.redesign_world.bounty_day,
 		"host_unlocks": world.redesign_world.portal_unlocks.duplicate(), "clock_confirmed": world.day >= 1}
 
-func accepted_bounty_event(_peer: int, _token: String) -> Dictionary:
-	# Retained capture/alpha/rematch event producers are absent in this base.
-	# Admission-time instance freezes cannot be reconstructed from today's board.
+func accepted_bounty_event(peer: int, token: String) -> Dictionary:
+	var session := get_parent()
+	var game: Node = session.call("_game")
+	var world: RefCounted = game.get("world")
+	var character: String = session.call("_authority_character", peer)
+	for row: Variant in world.reward_deliveries.values():
+		if not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): continue
+		for duty: Dictionary in row.duties:
+			if duty.character_id == character and duty.action == "bounty_event" and duty.context.event_id == token:
+				var result: Dictionary = duty.context.duplicate(true)
+				result.character_id = character
+				return result
 	return {}
 
 func bounty_view() -> Dictionary:

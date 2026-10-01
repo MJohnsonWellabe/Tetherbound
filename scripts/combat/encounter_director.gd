@@ -443,13 +443,26 @@ var _foundation_pending_sources: Array[Dictionary] = []
 var _trainer_character_participants: Array[String] = []
 var _boss_pending_win := false
 
-func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null) -> bool:
+func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
+	if _session == null or not _is_host(): return
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	var participant: Dictionary = record.get("participants", {}).get(peer, {})
+	if participant.is_empty() or participant.has("foundation_bounty_instances"): return
+	var registry: RefCounted = _session.get("_character_authority")
+	var current: Dictionary = registry.call("state", str(participant.get("character_id", "")))
+	var instances: Array[String] = []
+	for slot: Dictionary in current.get("redesign_character", {}).get("bounties", {}).get("slots", []):
+		if slot.get("complete") != true: instances.append(str(slot.instance))
+	participant.foundation_bounty_instances = instances
+
+func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null, capture_card: Dictionary = {}) -> bool:
 	if _session == null or not _is_host(): return true
 	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
 		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
 	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
 	source.world_namespace = _session.call("_game").get("world").reward_delivery_namespace
 	source.session_id = _session.call("_altar_current_epoch")
+	if kind == "catch": source.capture_card = capture_card.duplicate(true)
 	var retained := retained_research_source(source.source_id)
 	if not retained.is_empty(): source = retained
 	else: _foundation_pending_sources.append(source)
@@ -2453,6 +2466,7 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	var verdict: Dictionary = _encounter_host.call("join", encounter_id, peer_id,
 		active_uid if tournament_round else "", character_id)
 	if bool(verdict.get("ok", false)):
+		_freeze_bounty_instances(encounter_id, peer_id)
 		_retain_research(encounter_id, peer_id, "sight", str(record.get("opponent", {}).get("species_id", "")), "engage")
 		if tournament_round:
 			_freeze_tournament_roster(encounter_id, peer_id, tournament_ids)
@@ -2936,7 +2950,7 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			runtime.set_meta("foundation_catch_night", dark)
 		if not runtime.has_meta("foundation_catch_night") and preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
 			return {"ok": false, "pending": true, "code": "capture_clock_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
-		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null)):
+		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null), creature_card):
 			return {"ok": false, "pending": true, "code": "capture_event_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 	_catch_arbiter.call("release", encounter_id, peer_id)
 	if caught:
@@ -4927,6 +4941,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			_manager.set_meta(&"canonical_wild_encounter", _shared_active_id)
 	if opponent_owned:
 		_note_trainer_participants(str(rec["encounter_id"]))
+	_freeze_bounty_instances(str(rec["encounter_id"]), _local_peer_id())
 	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
