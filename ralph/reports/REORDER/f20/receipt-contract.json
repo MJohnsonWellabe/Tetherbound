@@ -1,0 +1,57 @@
+{
+  "feature": "F20",
+  "consumer": "scripts/story/regional_homecoming.gd",
+  "schema_version": 1,
+  "foundations_methods": {
+    "regional_ending_context() -> Dictionary": {
+      "empty_until": "Canonical host-accepted captain_marrow_dynamo_core participant outcome is durable for this stable character. A shared stormheart_freed flag alone grants nothing.",
+      "required_fields": {
+        "version": "int = 1",
+        "world_instance_id": "nonempty String, validated current world identity",
+        "session_epoch": "nonempty String, current validated authority session generation",
+        "character_id": "nonempty String, current stable local character",
+        "outcome_id": "nonempty String, accepted canonical finale participant receipt",
+        "accepted_outcome": "bool = true, derived only by authority",
+        "party_revision": "int >= 0, current canonical owner Party.revision",
+        "party_signature": "nonempty String = RegionalHomecoming.party_signature(current canonical owner party). It binds uid, current rendered nickname/display name and the four real bond counters; this is a transient comparison, not a stored roster.",
+        "starter_uid": "nonempty String, persisted original starter identity from accepted adoption; must remain available after release. Never infer from current slot/species.",
+        "chapter_choices": "Array[String], zero or one resolved canonical personal offer decision per biome, using meadows|water|cloudreach|stormwood:accepted|refused. Unanswered remains omitted; accepted does not imply creature still owned.",
+        "homecoming_seen": "bool, globally portable stable-character receipt",
+        "regional_credits_seen": "bool, globally portable stable-character receipt",
+        "realm": "String, current authoritative local realm",
+        "at_farm": "bool, authoritative farm proximity",
+        "safe": "bool, grounded/safe/no combat/dialogue/flight/swimming/transition at acknowledgement",
+        "durable_home_return": "bool, canonical HomeKey permit accepted AFTER this outcome and grounded Hall arrival durably finalized",
+        "home_return_receipt": "nonempty String after durable HomeKey arrival; may be empty before arrival"
+      },
+      "prearrival": "Journey context with accepted outcome guides Home Key; it cannot open farm dialogue or credits. Even Meadows residents must perform the post-finale key use. Host and guest must validate their own ending lineage.",
+      "reconnect": "Reconstruct canonical accepted outcome and HomeKey arrival lineage from durable receipts. Reject stale session/world/character bindings; never trust client ending claims. Globally completed credits must remain true across hosts."
+    },
+    "commit_regional_ending_ack(intent: Dictionary) -> Dictionary": {
+      "intent_fields": "kind='regional_ending_ack', version=1, stage='homecoming_seen'|'regional_credits_seen', world_instance_id, session_epoch, character_id, outcome_id, home_return_receipt, party_revision, party_signature, transaction_id",
+      "transaction_id": "regional_ending:<stable_character_id>:<stage>",
+      "validation": "Host derives identity from peer binding and independently checks accepted finale participant outcome, durable post-outcome key arrival, actual grounded safe farm location, canonical live party revision/signature and prerequisite saved homecoming for credits. Reject client-supplied facts. Capture immutable request envelope through bool-save wait; recheck generation before ACK.",
+      "mutation_scope": "Only globally portable personal homecoming_seen or regional_credits_seen acknowledgement, plus the owner's required transaction receipt. No inventory, creatures, rewards, privileges, teleport or world pause.",
+      "return": "status='pending'|'rejected'|'committed'. Committed requires durable=true and echoes the FULL typed intent envelope only after durable owner bool-save success; bool alone is rejected. Failed save rolls back tentative acknowledgement. Replay validates new context then echoes current envelope against same globally stable transaction without new save/payout.",
+      "crash_window": "If committed save succeeds and ACK is lost, reconnect sees durable receipt and cannot reopen acknowledged credits. An interrupted/failed precommit presentation remains pending for next Grandpa greeting. Completion means Continue/Skip, not watching every line.",
+      "postcredits": "Derive endgame access from personal regional_credits_seen and canonical world aftermath. Preserve grounded farm/Hall pose, remaining activities and NPC/world aftermath; no new private fake completed-world flag. F43/F44/F45 consume canonical flags, never erase them."
+    },
+    "regional_ending_ack_result(transaction_id: String) -> Dictionary": "Returns pending/rejected or fully matching committed typed envelope, scoped to current bound peer/character request. F20 timeout is configurable 8 seconds. No optimistic success."
+  },
+  "shared_callers": {
+    "ignored_patch": ".tmp/f20-shared-callers.patch",
+    "apply_check": "git apply --check --recount --unidiff-zero --ignore-space-change .tmp/f20-shared-callers.patch",
+    "sequence_director": "Freeze context BEFORE first spoken line; await saved homecoming; revalidate frozen context before deferred overlay; overlay itself awaits credits receipt. Remove old second credits acknowledgement callback. Interrupted dialogue cannot acknowledge.",
+    "quest_log": "_active_main must use owner Game.regional_ending_context plus RegionalHomecoming.journey_context, not only the shared required_world_flag. Resolve same reader for journal/HUD/map/beacon. Return normal realm feed for nonparticipant or completed personal credits; personalize homecoming/credits done bits from canonical context.",
+    "stormwood_handoff": "Deliver ending_aftermath only from the canonical accepted finale outcome when personal ending context is synchronized; legacy waterward view/physical gate is not a required trigger. Existing owned adapter fails closed if context not ready."
+  },
+  "f18": {
+    "arch_id": "biome5",
+    "key_item": "fifth_portal_key",
+    "personal_receipt": "fifth_arch_stirred",
+    "accepted_surface": "Game.portal_action_result kind=portal_unlock, durable=true after validated world/owner saves; portal_view('biome5') fifth_arch_stirred/has_key/ready",
+    "presentation": "On first durable result: glow, low hum, dust, one line 'It stirred, but it is not ready yet.' Reload glow restored silently. No realm entry, quest, marker, cliffhanger or sequel prompt; use allowed before/after homecoming.",
+    "homekey_lineage": "F18 final accepted grounded Hall arrival and stable permit/outcome IDs feed Foundations; F18 presentation never asserts ending eligibility."
+  },
+  "proof_gate": "No MET from this contract or synthetic test doubles. ROOT alone runs frozen named Godot checks, actual solo/two-peer ending with disconnect/reload and safe completed-world continuation; independent reviewer then scores exact F20#0-#4 after F18/F19 prerequisites."
+}
