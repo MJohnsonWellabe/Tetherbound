@@ -1,0 +1,11 @@
+{
+  "head": "5e82c8991d9dde5108e70af5c19ae0f5003de97d",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_vegetation_human_prompt_height.gd",
+  "summary": [
+    "8 tests, 59 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-5e82c8991d9d-8250ff4c\\tests.log",
+  "raw_log_sha256": "9db2bf37cca08e4e498d331755334d33544ec1ccb3176492885c5c2090f67523"
+}

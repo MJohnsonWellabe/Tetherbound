@@ -1,0 +1,366 @@
+diff --git a/tests/helpers/gate_a_npc_gather_segment.gd b/tests/helpers/gate_a_npc_gather_segment.gd
+index 141d9c3d02..6a9787c490 100644
+--- a/tests/helpers/gate_a_npc_gather_segment.gd
++++ b/tests/helpers/gate_a_npc_gather_segment.gd
+@@ -536,7 +536,14 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
+ 	var outward := _door_outward(door, inside_target)
+ 	if not bool(door.call("is_open")):
+ 		# Require the actual axial standoff within its existing 900-frame budget.
+-		if not await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0):
++		var hints: Array[Vector2] = []
++		if _nav.uses_production_steering() and str(door.get_parent().get_meta("village_role", "")) == "mira_shop":
++			hints = _mira_approach_hint(door)
++			if hints.is_empty():
++				_fail("missing bounded Mira road/doorstep approach metadata")
++				return false
++			print("MIRA PROVISIONAL APPROACH ", hints, " original_standoff=", door.global_position + outward * DOOR_STANDOFF)
++		if not await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0, "", false, hints):
+ 			_fail("could not reach actual door standoff: " + _walk_diagnosis(door.global_position))
+ 			return false
+ 		if not await _walk_to_and_activate(prompt, 1200):
+@@ -569,6 +576,58 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
+ 	return true
+ 
+ 
++func _mira_approach_hint(door: Node3D) -> Array[Vector2]:
++	var village := _world.get_node_or_null(^"Village")
++	var capsule := _player.get_node_or_null(^"Collision") as CollisionShape3D
++	if village == null or village.get_child_count() > NAVIGATOR.MAX_ROAD_INPUTS \
++			or capsule == null or not capsule.shape is CapsuleShape3D \
++			or absf(capsule.shape.height - 1.8) > 0.000001 \
++			or capsule.transform.origin.distance_to(Vector3(0, 0.9, 0)) > 0.000001:
++		return []
++	var threshold: Node3D = null
++	for candidate: Node in village.get_children():
++		if str(candidate.get_meta("village_role", "")) == "mira_shop_threshold":
++			if threshold != null or not candidate is Node3D:
++				return []
++			threshold = candidate as Node3D
++	if threshold == null:
++		return []
++	var body := threshold.get_node_or_null(^"Collision") as StaticBody3D
++	if body == null or body.get_child_count() != 1:
++		return []
++	var shape := body.get_child(0) as CollisionShape3D
++	if shape == null or shape.disabled or not shape.shape is BoxShape3D \
++			or shape.global_transform.basis != Basis.IDENTITY or door.global_transform.basis != Basis.IDENTITY:
++		return []
++	return mira_approach_hint(_player.global_position, door.global_position, shape.global_position,
++		shape.shape.size, capsule.shape.radius, _player.safe_margin, _nav.authored_road_points("Practice Meadow"))
++
++
++## Current Mira only: return along the painted road, then approach sideways
++## inside the ORIGINAL standoff radius from the terrain strip behind the lip.
++## These are ordinary stick hints. Neither this box nor any road is admitted.
++static func mira_approach_hint(from: Vector3, door: Vector3, box: Vector3, size: Vector3,
++		radius: float, skin: float, road: Array[Vector2]) -> Array[Vector2]:
++	if not from.is_finite() or not door.is_finite() or not box.is_finite() or not size.is_finite() \
++			or not is_finite(radius) or not is_finite(skin) or absf(radius - 0.4) > 0.00001 \
++			or absf(skin - 0.001) > 0.00000001 or size.distance_to(Vector3(4, 0.1, 2)) > 0.0001 \
++			or absf(door.x - 27.0) > 0.0001 or absf(door.z - 5.0) > 0.0001 \
++			or absf(box.x - door.x) > 0.0001 or absf(box.z - door.z - 2.9) > 0.0001 \
++			or absf(box.y - door.y - 0.05) > 0.0001:
++		return []
++	var strip_z := door.z + DOOR_STANDOFF - 0.95
++	var gap := box.z - size.z * 0.5 - strip_z - 0.04 # SOURCE tracking reserve at the lip.
++	var expanded := radius + skin
++	if gap <= 0.0 or gap >= expanded or radius - sqrt(expanded * expanded - gap * gap) <= size.y * 0.5 + skin:
++		return [] # Full bottom hemisphere, not a point-sized or smaller trainer.
++	var corner := Vector2(20, strip_z - 0.35)
++	var result := NAVIGATOR.road_slice(road, Vector2(from.x, from.z), corner)
++	if result.is_empty() or result.back().distance_to(corner) > 0.0001 or result.size() >= NAVIGATOR.MAX_CHOICES:
++		return []
++	result.append(Vector2(door.x, strip_z))
++	return result
++
++
+ ## Reproduced twice running this segment for real (OWNER-0901-PLAYER-SLEEP-V2):
+ ## after Bram's third dialogue/shop cycle, `_prove_movement_resumed()`'s own
+ ## exploratory nudge (four cardinal directions, whichever moves first) can
+@@ -801,8 +860,8 @@ func _walk_diagnosis(point: Vector3) -> String:
+ 		Vector2(point.x - _player.global_position.x, point.z - _player.global_position.z).length(), colliders]
+ 
+ 
+-func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
+-	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road, end_road_at_goal)
++func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
++	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road, end_road_at_goal, provisional_path)
+ 	_stop_left_stick()
+ 	if _nav.refused():
+ 		_fail("Native opening refused: " + _nav.refusal_reason())
+@@ -848,13 +907,23 @@ func _prove_movement_resumed() -> bool:
+ 	# naturally ended.
+ 	for axis: Vector2 in [Vector2(0, -1), Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0)]:
+ 		var before := _player.global_position
+-		_send_axis(JOY_AXIS_LEFT_X, axis.x)
+-		_send_axis(JOY_AXIS_LEFT_Y, axis.y)
++		_nav.reset()
+ 		for _i in 22:
++			var basis: Basis = _rig.call("planar_basis")
++			var requested := basis * Vector3(axis.x, 0.0, axis.y)
++			_nav.push_once(requested)
+ 			await _tree.physics_frame
++			if _nav.refused():
++				_stop_left_stick()
++				_fail("Native opening refused during movement resume: " + _nav.refusal_reason())
++				return false
+ 		_stop_left_stick()
+ 		for _i in 4:
++			_nav.push_once(Vector3.ZERO)
+ 			await _tree.physics_frame
++			if _nav.refused():
++				_fail("Native opening refused during movement-resume settle: " + _nav.refusal_reason())
++				return false
+ 		if Vector2(_player.global_position.x - before.x,
+ 				_player.global_position.z - before.z).length() >= 0.3:
+ 			return true
+diff --git a/tests/helpers/opening_geometry_navigator.gd b/tests/helpers/opening_geometry_navigator.gd
+index cdf3dae296..ae7a4d884c 100644
+--- a/tests/helpers/opening_geometry_navigator.gd
++++ b/tests/helpers/opening_geometry_navigator.gd
+@@ -50,6 +50,7 @@ var _roads: Array[Vector2] = []
+ var _authored_roads: Dictionary = {}
+ var _guided_road: Array[Vector2] = []
+ var _guided_label := ""
++var _provisional_path: Array[Vector2] = []
+ var _recipes: Dictionary = {}
+ var _route: Array[Vector2] = []
+ var _goal := Vector2.INF
+@@ -192,6 +193,7 @@ func reset() -> void:
+ 	_route.clear()
+ 	_guided_road.clear()
+ 	_guided_label = ""
++	_provisional_path.clear()
+ 	_goal = Vector2.INF
+ 	_arrival = 0.05
+ 	_stalled = 0
+@@ -226,7 +228,7 @@ func push_once(direction: Vector3) -> void:
+ 	_requested = not refused()
+ 
+ 
+-func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
++func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
+ 	reset()
+ 	_arrival = close_enough
+ 	if budget <= 0 or budget > 3600 or not point.is_finite() \
+@@ -236,6 +238,17 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
+ 	if end_road_at_goal and authored_road.is_empty():
+ 		_stop_geometry("road exit requested without an authored road")
+ 		return false
++	if not provisional_path.is_empty():
++		if not _production_steering or not authored_road.is_empty() or provisional_path.size() > MAX_CHOICES:
++			_stop_geometry("invalid bounded provisional path")
++			return false
++		var previous := _xz(_player.global_position)
++		for at: Vector2 in provisional_path:
++			if not at.is_finite() or previous.distance_to(at) > MAX_EDGE:
++				_stop_geometry("nonfinite/out-of-scope provisional path")
++				return false
++			previous = at
++		_provisional_path.assign(provisional_path)
+ 	if not authored_road.is_empty():
+ 		if not _production_steering or not _authored_roads.has(authored_road) \
+ 				or (_authored_roads[authored_road] as Array).is_empty():
+@@ -271,6 +284,61 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
+ 	return false
+ 
+ 
++func authored_road_points(label: String) -> Array[Vector2]:
++	var points: Array[Vector2] = []
++	if _production_steering and _authored_roads.has(label):
++		points.assign(_authored_roads[label])
++	return points
++
++
++func uses_production_steering() -> bool:
++	return _production_steering
++
++
++## A slice of the existing polyline, in either direction. Projections supply
++## headings only; neither the road nor its unwalked join is certified clear.
++static func road_slice(road: Array[Vector2], from: Vector2, to: Vector2) -> Array[Vector2]:
++	var result: Array[Vector2] = []
++	if road.size() < 2 or road.size() > MAX_ROAD_INPUTS or not from.is_finite() or not to.is_finite():
++		return result
++	var lengths: Array[float] = [0.0]
++	var start := Vector2.INF
++	var finish := Vector2.INF
++	var start_distance := INF
++	var finish_distance := INF
++	var start_arc := 0.0
++	var finish_arc := 0.0
++	for index in road.size() - 1:
++		var a := road[index]
++		var b := road[index + 1]
++		var length := a.distance_to(b)
++		if not a.is_finite() or not b.is_finite() or length <= CONTACT_EPS or length > MAX_EDGE:
++			return []
++		var first := Geometry2D.get_closest_point_to_segment(from, a, b)
++		var last := Geometry2D.get_closest_point_to_segment(to, a, b)
++		if from.distance_squared_to(first) < start_distance:
++			start_distance = from.distance_squared_to(first)
++			start = first
++			start_arc = lengths[index] + a.distance_to(first)
++		if to.distance_squared_to(last) < finish_distance:
++			finish_distance = to.distance_squared_to(last)
++			finish = last
++			finish_arc = lengths[index] + a.distance_to(last)
++		lengths.append(lengths[index] + length)
++	if from.distance_to(start) > MAX_EDGE or to.distance_to(finish) > MAX_EDGE:
++		return []
++	result.append(start)
++	var forward := finish_arc >= start_arc
++	for offset in road.size():
++		var index := offset if forward else road.size() - 1 - offset
++		if lengths[index] > minf(start_arc, finish_arc) + CONTACT_EPS \
++				and lengths[index] < maxf(start_arc, finish_arc) - CONTACT_EPS:
++			result.append(road[index])
++	if result.back().distance_to(finish) > CONTACT_EPS:
++		result.append(finish)
++	return result
++
++
+ ## A local errand may leave a long authored road at the node nearest its goal.
+ ## Only an explicit production-road request uses this prefix. Default full-road
+ ## and predictive walks remain unchanged; no invented waypoint or geometry proof.
+@@ -1366,10 +1434,14 @@ func _production_heading(direction: Vector3) -> Vector3:
+ 		# ONE prospective max-speed ordinary step from the real registered pose.
+ 		# _motion charges the SAME query/lifetime/deadline caps and unchanged
+ 		# capsule, mask, skin and no extra exclusions. This is never clearance.
+-		var speed: float = float(_body.get("_max_speed"))
+-		var reach: float = speed * _production_delta
+-		if not is_finite(speed) or speed <= 0.0 or not is_finite(_production_delta) \
+-				or _production_delta <= 0.0 or not is_finite(reach) or reach > MAX_EDGE:
++		var vitals: RefCounted = _body.get("vitals")
++		if vitals == null or not vitals.has_method("move_speed_scale"):
++			_stop_geometry("missing production ground-speed state")
++			return Vector3.ZERO
++		var reach := ordinary_preview_reach(float(_body.get("_walk_speed")), float(_body.get("_sprint_speed")),
++			float(vitals.call("move_speed_scale")), Vector2(_body.velocity.x, _body.velocity.z).length(),
++			float(_body.get("_max_speed")), _production_delta)
++		if not is_finite(reach) or reach <= 0.0 or reach > MAX_EDGE:
+ 			_stop_geometry("invalid bounded provisional production step")
+ 			return Vector3.ZERO
+ 		# A position walk ends at the current route waypoint. Geometry beyond it
+@@ -1409,7 +1481,7 @@ func _production_heading(direction: Vector3) -> Vector3:
+ 	_production_hint_normal = opposing
+ 	for choice in 2: # Two headings, below unchanged MAX_CHOICES; no native query.
+ 		var along := tangent if choice == 0 else -tangent
+-		var heading := (along + opposing * 0.25).normalized()
++		var heading := wall_heading(along, opposing, _production_hint_source == &"live_pre")
+ 		var outward := true
+ 		for wall: Vector3 in walls: # At most seven reported normals, no dedup.
+ 			if heading.dot(wall) < -CONTACT_EPS:
+@@ -1424,6 +1496,24 @@ func _production_heading(direction: Vector3) -> Vector3:
+ 	return Vector3.ZERO
+ 
+ 
++## The configured walk/sprint target and cached momentum bound an ordinary
++## horizontal step. The 120m/s emergency ceiling still bounds actual movement.
++static func ordinary_preview_reach(walk: float, sprint: float, scale: float, momentum: float, ceiling: float, delta: float) -> float:
++	for value: float in [walk, sprint, scale, momentum, ceiling, delta]:
++		if not is_finite(value):
++			return NAN
++	if walk <= 0.0 or sprint < walk or scale <= 0.0 or momentum < 0.0 or ceiling <= 0.0 or delta <= 0.0:
++		return NAN
++	var speed := maxf(maxf(walk, sprint) * scale, momentum)
++	return minf(speed, ceiling) * delta if is_finite(speed) else NAN
++
++
++## A prospective surface needs a tangent, not a lateral shove toward an
++## unreported opposite wall. Live shallow contact keeps the original relief.
++static func wall_heading(along: Vector3, opposing: Vector3, live: bool) -> Vector3:
++	return (along + opposing * (0.25 if live else 0.0)).normalized()
++
++
+ func _choose_route(point: Vector2, tolerance: float) -> bool:
+ 	if not _production_steering:
+ 		return _choose(point, tolerance)
+@@ -1433,6 +1523,23 @@ func _choose_route(point: Vector2, tolerance: float) -> bool:
+ 		_stop_geometry("observed route scope/plan/candidate cap")
+ 		return false
+ 	_route.clear()
++	if not _provisional_path.is_empty() and _departure.is_empty():
++		var nearest := 0
++		for index in _provisional_path.size():
++			if from.distance_squared_to(_provisional_path[index]) < from.distance_squared_to(_provisional_path[nearest]):
++				nearest = index
++		var previous := from
++		for index in range(nearest, _provisional_path.size()):
++			if from.distance_to(_provisional_path[index]) > MAX_EDGE or previous.distance_to(_provisional_path[index]) > MAX_EDGE:
++				_stop_geometry("provisional path exceeds unchanged edge scope")
++				return false
++			_route.append(_provisional_path[index])
++			previous = _provisional_path[index]
++		if previous.distance_to(point) > MAX_EDGE:
++			_stop_geometry("provisional final heading exceeds unchanged edge scope")
++			return false
++		_route.append(point)
++		return true # Only a heading list; both original actual-pose guards run.
+ 	if not _guided_road.is_empty() and _departure.is_empty():
+ 		# Follow the current named painted road from its nearest authored node.
+ 		# A hint changes stick headings, never certifies geometry or resets the
+diff --git a/tests/test_gate_a_npc_gather_segment_contract.gd b/tests/test_gate_a_npc_gather_segment_contract.gd
+index 1f7e0a8495..dac376bc58 100644
+--- a/tests/test_gate_a_npc_gather_segment_contract.gd
++++ b/tests/test_gate_a_npc_gather_segment_contract.gd
+@@ -139,3 +139,59 @@ func test_stone_fence_hint_keeps_clearance_and_refuses_invalid_scope() -> void:
+ 	for index in 65:
+ 		oversized.append(Vector2(float(index), float(index % 2)))
+ 	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2.ONE, oversized, 1.55), SEGMENT.StoneRoadHint.INVALID)
++
++
++func test_ordinary_preview_uses_locomotion_speed_and_preserves_cached_momentum() -> void:
++	assert_almost_eq(NAVIGATOR.ordinary_preview_reach(5.0, 8.6, 1.0, 5.0, 120.0, 1.0 / 60.0), 8.6 / 60.0, 0.000001,
++		"the 120m/s safety ceiling must not create a 2m ordinary-step preview")
++	assert_almost_eq(NAVIGATOR.ordinary_preview_reach(5.0, 8.6, 1.0, 12.0, 120.0, 1.0 / 60.0), 0.2, 0.000001)
++	assert_almost_eq(NAVIGATOR.ordinary_preview_reach(5.0, 8.6, 0.8, 0.0, 120.0, 1.0 / 60.0), 6.88 / 60.0, 0.000001)
++	assert_true(is_nan(NAVIGATOR.ordinary_preview_reach(5.0, 8.6, INF, 0.0, 120.0, 1.0 / 60.0)))
++	assert_true(is_nan(NAVIGATOR.ordinary_preview_reach(5.0, 8.6, 1.0, -1.0, 120.0, 1.0 / 60.0)))
++	assert_true(is_nan(NAVIGATOR.ordinary_preview_reach(5.0, 4.0, 1.0, 0.0, 120.0, 1.0 / 60.0)))
++
++
++func test_prospective_tangent_does_not_push_into_the_unreported_opposite_wall() -> void:
++	var future := NAVIGATOR.wall_heading(Vector3.BACK, Vector3.RIGHT, false)
++	assert_eq(future, Vector3.BACK)
++	assert_almost_eq(future.dot(Vector3.LEFT), 0.0, 0.000001,
++		"Mira's future counter hint cannot shove the capsule into her east wall")
++	var live := NAVIGATOR.wall_heading(Vector3.BACK, Vector3.RIGHT, true)
++	assert_true(live.x > 0.0, "actual shallow wall contact retains its original outward relief")
++	assert_almost_eq(live.length(), 1.0, 0.000001)
++
++
++func test_road_slice_returns_in_original_reverse_order_and_refuses_broken_input() -> void:
++	var road: Array[Vector2] = [Vector2.ZERO, Vector2(4, 0), Vector2(8, 0), Vector2(10, 0)]
++	assert_eq(NAVIGATOR.road_slice(road, Vector2(9, 1), Vector2(1, 1)),
++		[Vector2(9, 0), Vector2(8, 0), Vector2(4, 0), Vector2(1, 0)])
++	assert_eq(NAVIGATOR.road_slice(road, Vector2(1, 1), Vector2(9, 1)),
++		[Vector2(1, 0), Vector2(4, 0), Vector2(8, 0), Vector2(9, 0)])
++	var malformed: Array[Vector2] = [Vector2.ZERO, Vector2.INF]
++	assert_eq(NAVIGATOR.road_slice(malformed, Vector2.ZERO, Vector2.ONE), [])
++	assert_eq(NAVIGATOR.road_slice(road, Vector2.INF, Vector2.ZERO), [])
++	assert_eq(NAVIGATOR.road_slice(road, Vector2(0, 181), Vector2.ZERO), [])
++
++
++func test_mira_return_uses_painted_bends_and_same_standoff_without_stepping_onto_lip() -> void:
++	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
++	var road: Array[Vector2] = []
++	for route: Dictionary in terrain.paths.routes:
++		if str(route.get("label", "")) == "Practice Meadow":
++			for pair: Array in route.points:
++				road.append(Vector2(float(pair[0]), float(pair[1])))
++	var hint := SEGMENT.mira_approach_hint(Vector3(31.15487, -0.028295, -42.58252), Vector3(27, 0.85, 5),
++		Vector3(27, 0.9, 7.9), Vector3(4, 0.1, 2), 0.4, 0.001, road)
++	assert_eq(hint.size(), 8)
++	assert_true(hint.has(Vector2(14.6, -31)), "return around the camp uses the original painted bend")
++	assert_eq(hint[hint.size() - 2], Vector2(20, 6.3))
++	assert_eq(hint.back(), Vector2(27, 6.65))
++	assert_true(hint.back().distance_to(Vector2(27, 7.6)) < 1.0, "the original1m standoff threshold still decides arrival")
++	assert_almost_eq(SEGMENT.DOOR_STANDOFF, 2.6, 0.000001)
++	assert_almost_eq(SEGMENT.DOOR_STEP_IN, 2.2, 0.000001)
++	assert_eq(SEGMENT.mira_approach_hint(Vector3.ZERO, Vector3(27, 0.85, 5), Vector3(27, 0.9, 7.9),
++		Vector3(4, 0.1, 2), 0.2, 0.001, road), [], "the route cannot shrink the capsule")
++	assert_eq(SEGMENT.mira_approach_hint(Vector3.ZERO, Vector3(27, 0.85, 5), Vector3(27, 0.9, 7.9),
++		Vector3(4, 0.2, 2), 0.4, 0.001, road), [], "a higher lip cannot inherit this full-capsule corridor")
++	assert_eq(SEGMENT.mira_approach_hint(Vector3.ZERO, Vector3(27, 0.85, 5), Vector3(27, 0.9, 7.9),
++		Vector3(4, 0.1, 2), 0.4, 0.01, road), [], "the original skin remains mandatory")

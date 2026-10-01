@@ -1,0 +1,136 @@
+{
+  "scope": "R25 actual native route hint/preview/resume source repair; native opening UNRUN",
+  "hub_parent": "ee561498a5807e841fa4ee513ecef9fec0a36e40",
+  "logical_paths": [
+    "tests/helpers/opening_geometry_navigator.gd",
+    "tests/helpers/gate_a_npc_gather_segment.gd",
+    "tests/test_gate_a_npc_gather_segment_contract.gd"
+  ],
+  "logical_changes": {
+    "tests/helpers/opening_geometry_navigator.gd": {
+      "original_sha256": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2",
+      "new_sha256": "d078109a915db0c936ca1cb29fce8a7e7f66b1297abf249c5400f71d2183ae3f"
+    },
+    "tests/helpers/gate_a_npc_gather_segment.gd": {
+      "original_sha256": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d",
+      "new_sha256": "ffc982baccb56745cf622d323eaa18f5d750b3232d790db140ef58f957fe7793"
+    },
+    "tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "original_sha256": "3c2a81db5fe378fe009ebcdd3794cea5e9b89edb8b876044042cbd771238c3d7",
+      "new_sha256": "61eb645b288fd1c8cbdd642161d52be996b2ba3f91aaa0d8ee4eac7fe5b0d045"
+    }
+  },
+  "author_checks": 184,
+  "gd_new_cases": 4,
+  "gd_original_cases_byte_preserved": 9,
+  "production_changes": 0,
+  "extra_frames": 0,
+  "native_query_api_calls_added": 0,
+  "resume_queries": "Previously unobserved original22+4frame inputs now consume existing guarded query/lifetime caps; no increase in allowances",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "ci6172/ci6172-job-110511919635.log.gz": {
+      "bytes": 63177,
+      "sha256": "5cd9e3cd9815dc05f5ec6022e2d8105120dc765eda1cb43b002c683404d6deb3"
+    },
+    "ci6172/ci6172-job-110511919652.log.gz": {
+      "bytes": 51173,
+      "sha256": "15bfe508a35808ecf6b408bac4d77105fb8ce35a75b2c4cb4dd7b6c9c8549e73"
+    },
+    "ci6172/ci6172-job-110511919754.log.gz": {
+      "bytes": 60474,
+      "sha256": "9bb2f784353bff77e72d99fb3c639d802ab7689b33213b96427e43b190b17da7"
+    },
+    "ci6172/failed-observations.json": {
+      "bytes": 28993,
+      "sha256": "3a666ece8a13e3e724fe7da8fdfdb821fbe7445fdea15171982ca225ecc6283e"
+    },
+    "ci6172/first-observations.json": {
+      "bytes": 18759,
+      "sha256": "1638566bbb19e294f7cc37d4f3032b7667061746ed870cd70eed3697cbedc748"
+    },
+    "ci6172/opening-failures.json": {
+      "bytes": 5241,
+      "sha256": "b64e3352d49ccb91ff168d95352dfa0017f5b242cca258730656e320f9242a1a"
+    },
+    "ci6172/raw-provenance.json": {
+      "bytes": 738,
+      "sha256": "2ef8175781071afbb6334d346e279942332d9f6c65298f047592b4d003afe823"
+    },
+    "ci6172/run.json": {
+      "bytes": 255,
+      "sha256": "6e5c1ada562c9a89916eede51fee7f453e414bf6a8653a6ff229e1a8160a6444"
+    },
+    "originals/tests/helpers/gate_a_npc_gather_segment.gd": {
+      "bytes": 45256,
+      "sha256": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d"
+    },
+    "originals/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 76459,
+      "sha256": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2"
+    },
+    "originals/tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "bytes": 9109,
+      "sha256": "3c2a81db5fe378fe009ebcdd3794cea5e9b89edb8b876044042cbd771238c3d7"
+    },
+    "prior-mira/ci6170-job.log.gz": {
+      "bytes": 64411,
+      "sha256": "48e4047a7d3c4bf14f587f2e523845aa29dd2cc81f8b315ea0f96c5d258f12d1"
+    },
+    "prior-mira/ci6170-observations.json": {
+      "bytes": 10377,
+      "sha256": "4821aec0eb6bfb3f8339f6a57c502e294188021a78d6da34f5157222a560a2a0"
+    },
+    "proposal/tests/helpers/gate_a_npc_gather_segment.gd": {
+      "bytes": 48963,
+      "sha256": "ffc982baccb56745cf622d323eaa18f5d750b3232d790db140ef58f957fe7793"
+    },
+    "proposal/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 81265,
+      "sha256": "d078109a915db0c936ca1cb29fce8a7e7f66b1297abf249c5400f71d2183ae3f"
+    },
+    "proposal/tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "bytes": 12793,
+      "sha256": "61eb645b288fd1c8cbdd642161d52be996b2ba3f91aaa0d8ee4eac7fe5b0d045"
+    },
+    "repair.patch": {
+      "bytes": 19536,
+      "sha256": "99760f33a539e43eab3d6fae5175abc619f3d25e4520391db555f6abeca4da32"
+    },
+    "review-context.json": {
+      "bytes": 4128,
+      "sha256": "37e17c193f56e0aa840f32a96fe84afd464b147effeac59e89a017c052ad6ce8"
+    },
+    "source-check.py": {
+      "bytes": 13242,
+      "sha256": "674e17869245590518e24fa1862ed27d2865077e937dbadf995eb8203076e4a1"
+    },
+    "source-results.json": {
+      "bytes": 305467,
+      "sha256": "6746a2b046e3e4b292bd74fa19520df67eb9ad077ffa25f473d18419b65966ee"
+    },
+    "tree-passed/tree-result.json": {
+      "bytes": 399,
+      "sha256": "d0e11b2042d4fe115cd623670e9347facb8758fe35d24904df7cd9bf59522090"
+    },
+    "tree-passed/tree-smoke.log.gz": {
+      "bytes": 10030,
+      "sha256": "2629c37c88a1c47a8775b24aaebb74e19a72aa3b1bceae340b112066e34e9611"
+    },
+    "tree-passed/unit-result.json": {
+      "bytes": 422,
+      "sha256": "585e58d183bea40c06371c5cde87d850c5b450b16bae7a3283d135c9d09f590c"
+    },
+    "tree-passed/unit-tests.log.gz": {
+      "bytes": 2281,
+      "sha256": "c0f70fe64fd9fba7175019db87f680f777c7a34113f2789315c6ea8dfd847404"
+    },
+    "unchanged-paths.json": {
+      "bytes": 1610,
+      "sha256": "63b78f702aed76f7b211a819987fbb722ac9d7df9b04e48b526a70b88a1949c7"
+    }
+  }
+}

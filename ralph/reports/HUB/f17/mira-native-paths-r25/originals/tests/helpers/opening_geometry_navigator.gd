@@ -50,7 +50,6 @@ var _roads: Array[Vector2] = []
 var _authored_roads: Dictionary = {}
 var _guided_road: Array[Vector2] = []
 var _guided_label := ""
-var _provisional_path: Array[Vector2] = []
 var _recipes: Dictionary = {}
 var _route: Array[Vector2] = []
 var _goal := Vector2.INF
@@ -193,7 +192,6 @@ func reset() -> void:
 	_route.clear()
 	_guided_road.clear()
 	_guided_label = ""
-	_provisional_path.clear()
 	_goal = Vector2.INF
 	_arrival = 0.05
 	_stalled = 0
@@ -228,7 +226,7 @@ func push_once(direction: Vector3) -> void:
 	_requested = not refused()
 
 
-func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
+func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
 	reset()
 	_arrival = close_enough
 	if budget <= 0 or budget > 3600 or not point.is_finite() \
@@ -238,17 +236,6 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
 	if end_road_at_goal and authored_road.is_empty():
 		_stop_geometry("road exit requested without an authored road")
 		return false
-	if not provisional_path.is_empty():
-		if not _production_steering or not authored_road.is_empty() or provisional_path.size() > MAX_CHOICES:
-			_stop_geometry("invalid bounded provisional path")
-			return false
-		var previous := _xz(_player.global_position)
-		for at: Vector2 in provisional_path:
-			if not at.is_finite() or previous.distance_to(at) > MAX_EDGE:
-				_stop_geometry("nonfinite/out-of-scope provisional path")
-				return false
-			previous = at
-		_provisional_path.assign(provisional_path)
 	if not authored_road.is_empty():
 		if not _production_steering or not _authored_roads.has(authored_road) \
 				or (_authored_roads[authored_road] as Array).is_empty():
@@ -282,61 +269,6 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_ro
 	_requested = false
 	_drive.call(0.0, 0.0)
 	return false
-
-
-func authored_road_points(label: String) -> Array[Vector2]:
-	var points: Array[Vector2] = []
-	if _production_steering and _authored_roads.has(label):
-		points.assign(_authored_roads[label])
-	return points
-
-
-func uses_production_steering() -> bool:
-	return _production_steering
-
-
-## A slice of the existing polyline, in either direction. Projections supply
-## headings only; neither the road nor its unwalked join is certified clear.
-static func road_slice(road: Array[Vector2], from: Vector2, to: Vector2) -> Array[Vector2]:
-	var result: Array[Vector2] = []
-	if road.size() < 2 or road.size() > MAX_ROAD_INPUTS or not from.is_finite() or not to.is_finite():
-		return result
-	var lengths: Array[float] = [0.0]
-	var start := Vector2.INF
-	var finish := Vector2.INF
-	var start_distance := INF
-	var finish_distance := INF
-	var start_arc := 0.0
-	var finish_arc := 0.0
-	for index in road.size() - 1:
-		var a := road[index]
-		var b := road[index + 1]
-		var length := a.distance_to(b)
-		if not a.is_finite() or not b.is_finite() or length <= CONTACT_EPS or length > MAX_EDGE:
-			return []
-		var first := Geometry2D.get_closest_point_to_segment(from, a, b)
-		var last := Geometry2D.get_closest_point_to_segment(to, a, b)
-		if from.distance_squared_to(first) < start_distance:
-			start_distance = from.distance_squared_to(first)
-			start = first
-			start_arc = lengths[index] + a.distance_to(first)
-		if to.distance_squared_to(last) < finish_distance:
-			finish_distance = to.distance_squared_to(last)
-			finish = last
-			finish_arc = lengths[index] + a.distance_to(last)
-		lengths.append(lengths[index] + length)
-	if from.distance_to(start) > MAX_EDGE or to.distance_to(finish) > MAX_EDGE:
-		return []
-	result.append(start)
-	var forward := finish_arc >= start_arc
-	for offset in road.size():
-		var index := offset if forward else road.size() - 1 - offset
-		if lengths[index] > minf(start_arc, finish_arc) + CONTACT_EPS \
-				and lengths[index] < maxf(start_arc, finish_arc) - CONTACT_EPS:
-			result.append(road[index])
-	if result.back().distance_to(finish) > CONTACT_EPS:
-		result.append(finish)
-	return result
 
 
 ## A local errand may leave a long authored road at the node nearest its goal.
@@ -1434,14 +1366,10 @@ func _production_heading(direction: Vector3) -> Vector3:
 		# ONE prospective max-speed ordinary step from the real registered pose.
 		# _motion charges the SAME query/lifetime/deadline caps and unchanged
 		# capsule, mask, skin and no extra exclusions. This is never clearance.
-		var vitals: RefCounted = _body.get("vitals")
-		if vitals == null or not vitals.has_method("move_speed_scale"):
-			_stop_geometry("missing production ground-speed state")
-			return Vector3.ZERO
-		var reach := ordinary_preview_reach(float(_body.get("_walk_speed")), float(_body.get("_sprint_speed")),
-			float(vitals.call("move_speed_scale")), Vector2(_body.velocity.x, _body.velocity.z).length(),
-			float(_body.get("_max_speed")), _production_delta)
-		if not is_finite(reach) or reach <= 0.0 or reach > MAX_EDGE:
+		var speed: float = float(_body.get("_max_speed"))
+		var reach: float = speed * _production_delta
+		if not is_finite(speed) or speed <= 0.0 or not is_finite(_production_delta) \
+				or _production_delta <= 0.0 or not is_finite(reach) or reach > MAX_EDGE:
 			_stop_geometry("invalid bounded provisional production step")
 			return Vector3.ZERO
 		# A position walk ends at the current route waypoint. Geometry beyond it
@@ -1481,7 +1409,7 @@ func _production_heading(direction: Vector3) -> Vector3:
 	_production_hint_normal = opposing
 	for choice in 2: # Two headings, below unchanged MAX_CHOICES; no native query.
 		var along := tangent if choice == 0 else -tangent
-		var heading := wall_heading(along, opposing, _production_hint_source == &"live_pre")
+		var heading := (along + opposing * 0.25).normalized()
 		var outward := true
 		for wall: Vector3 in walls: # At most seven reported normals, no dedup.
 			if heading.dot(wall) < -CONTACT_EPS:
@@ -1496,24 +1424,6 @@ func _production_heading(direction: Vector3) -> Vector3:
 	return Vector3.ZERO
 
 
-## The configured walk/sprint target and cached momentum bound an ordinary
-## horizontal step. The 120m/s emergency ceiling still bounds actual movement.
-static func ordinary_preview_reach(walk: float, sprint: float, scale: float, momentum: float, ceiling: float, delta: float) -> float:
-	for value: float in [walk, sprint, scale, momentum, ceiling, delta]:
-		if not is_finite(value):
-			return NAN
-	if walk <= 0.0 or sprint < walk or scale <= 0.0 or momentum < 0.0 or ceiling <= 0.0 or delta <= 0.0:
-		return NAN
-	var speed := maxf(maxf(walk, sprint) * scale, momentum)
-	return minf(speed, ceiling) * delta if is_finite(speed) else NAN
-
-
-## A prospective surface needs a tangent, not a lateral shove toward an
-## unreported opposite wall. Live shallow contact keeps the original relief.
-static func wall_heading(along: Vector3, opposing: Vector3, live: bool) -> Vector3:
-	return (along + opposing * (0.25 if live else 0.0)).normalized()
-
-
 func _choose_route(point: Vector2, tolerance: float) -> bool:
 	if not _production_steering:
 		return _choose(point, tolerance)
@@ -1523,23 +1433,6 @@ func _choose_route(point: Vector2, tolerance: float) -> bool:
 		_stop_geometry("observed route scope/plan/candidate cap")
 		return false
 	_route.clear()
-	if not _provisional_path.is_empty() and _departure.is_empty():
-		var nearest := 0
-		for index in _provisional_path.size():
-			if from.distance_squared_to(_provisional_path[index]) < from.distance_squared_to(_provisional_path[nearest]):
-				nearest = index
-		var previous := from
-		for index in range(nearest, _provisional_path.size()):
-			if from.distance_to(_provisional_path[index]) > MAX_EDGE or previous.distance_to(_provisional_path[index]) > MAX_EDGE:
-				_stop_geometry("provisional path exceeds unchanged edge scope")
-				return false
-			_route.append(_provisional_path[index])
-			previous = _provisional_path[index]
-		if previous.distance_to(point) > MAX_EDGE:
-			_stop_geometry("provisional final heading exceeds unchanged edge scope")
-			return false
-		_route.append(point)
-		return true # Only a heading list; both original actual-pose guards run.
 	if not _guided_road.is_empty() and _departure.is_empty():
 		# Follow the current named painted road from its nearest authored node.
 		# A hint changes stick headings, never certifies geometry or resets the

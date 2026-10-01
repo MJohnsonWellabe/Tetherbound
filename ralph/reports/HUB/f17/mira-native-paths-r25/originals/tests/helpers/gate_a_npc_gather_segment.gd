@@ -536,14 +536,7 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 	var outward := _door_outward(door, inside_target)
 	if not bool(door.call("is_open")):
 		# Require the actual axial standoff within its existing 900-frame budget.
-		var hints: Array[Vector2] = []
-		if _nav.uses_production_steering() and str(door.get_parent().get_meta("village_role", "")) == "mira_shop":
-			hints = _mira_approach_hint(door)
-			if hints.is_empty():
-				_fail("missing bounded Mira road/doorstep approach metadata")
-				return false
-			print("MIRA PROVISIONAL APPROACH ", hints, " original_standoff=", door.global_position + outward * DOOR_STANDOFF)
-		if not await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0, "", false, hints):
+		if not await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0):
 			_fail("could not reach actual door standoff: " + _walk_diagnosis(door.global_position))
 			return false
 		if not await _walk_to_and_activate(prompt, 1200):
@@ -574,58 +567,6 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 			door.name, str(step.round()), _player.global_position.distance_to(step)])
 		return false
 	return true
-
-
-func _mira_approach_hint(door: Node3D) -> Array[Vector2]:
-	var village := _world.get_node_or_null(^"Village")
-	var capsule := _player.get_node_or_null(^"Collision") as CollisionShape3D
-	if village == null or village.get_child_count() > NAVIGATOR.MAX_ROAD_INPUTS \
-			or capsule == null or not capsule.shape is CapsuleShape3D \
-			or absf(capsule.shape.height - 1.8) > 0.000001 \
-			or capsule.transform.origin.distance_to(Vector3(0, 0.9, 0)) > 0.000001:
-		return []
-	var threshold: Node3D = null
-	for candidate: Node in village.get_children():
-		if str(candidate.get_meta("village_role", "")) == "mira_shop_threshold":
-			if threshold != null or not candidate is Node3D:
-				return []
-			threshold = candidate as Node3D
-	if threshold == null:
-		return []
-	var body := threshold.get_node_or_null(^"Collision") as StaticBody3D
-	if body == null or body.get_child_count() != 1:
-		return []
-	var shape := body.get_child(0) as CollisionShape3D
-	if shape == null or shape.disabled or not shape.shape is BoxShape3D \
-			or shape.global_transform.basis != Basis.IDENTITY or door.global_transform.basis != Basis.IDENTITY:
-		return []
-	return mira_approach_hint(_player.global_position, door.global_position, shape.global_position,
-		shape.shape.size, capsule.shape.radius, _player.safe_margin, _nav.authored_road_points("Practice Meadow"))
-
-
-## Current Mira only: return along the painted road, then approach sideways
-## inside the ORIGINAL standoff radius from the terrain strip behind the lip.
-## These are ordinary stick hints. Neither this box nor any road is admitted.
-static func mira_approach_hint(from: Vector3, door: Vector3, box: Vector3, size: Vector3,
-		radius: float, skin: float, road: Array[Vector2]) -> Array[Vector2]:
-	if not from.is_finite() or not door.is_finite() or not box.is_finite() or not size.is_finite() \
-			or not is_finite(radius) or not is_finite(skin) or absf(radius - 0.4) > 0.00001 \
-			or absf(skin - 0.001) > 0.00000001 or size.distance_to(Vector3(4, 0.1, 2)) > 0.0001 \
-			or absf(door.x - 27.0) > 0.0001 or absf(door.z - 5.0) > 0.0001 \
-			or absf(box.x - door.x) > 0.0001 or absf(box.z - door.z - 2.9) > 0.0001 \
-			or absf(box.y - door.y - 0.05) > 0.0001:
-		return []
-	var strip_z := door.z + DOOR_STANDOFF - 0.95
-	var gap := box.z - size.z * 0.5 - strip_z - 0.04 # SOURCE tracking reserve at the lip.
-	var expanded := radius + skin
-	if gap <= 0.0 or gap >= expanded or radius - sqrt(expanded * expanded - gap * gap) <= size.y * 0.5 + skin:
-		return [] # Full bottom hemisphere, not a point-sized or smaller trainer.
-	var corner := Vector2(20, strip_z - 0.35)
-	var result := NAVIGATOR.road_slice(road, Vector2(from.x, from.z), corner)
-	if result.is_empty() or result.back().distance_to(corner) > 0.0001 or result.size() >= NAVIGATOR.MAX_CHOICES:
-		return []
-	result.append(Vector2(door.x, strip_z))
-	return result
 
 
 ## Reproduced twice running this segment for real (OWNER-0901-PLAYER-SLEEP-V2):
@@ -860,8 +801,8 @@ func _walk_diagnosis(point: Vector3) -> String:
 		Vector2(point.x - _player.global_position.x, point.z - _player.global_position.z).length(), colliders]
 
 
-func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
-	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road, end_road_at_goal, provisional_path)
+func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false) -> bool:
+	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road, end_road_at_goal)
 	_stop_left_stick()
 	if _nav.refused():
 		_fail("Native opening refused: " + _nav.refusal_reason())
@@ -907,23 +848,13 @@ func _prove_movement_resumed() -> bool:
 	# naturally ended.
 	for axis: Vector2 in [Vector2(0, -1), Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0)]:
 		var before := _player.global_position
-		_nav.reset()
+		_send_axis(JOY_AXIS_LEFT_X, axis.x)
+		_send_axis(JOY_AXIS_LEFT_Y, axis.y)
 		for _i in 22:
-			var basis: Basis = _rig.call("planar_basis")
-			var requested := basis * Vector3(axis.x, 0.0, axis.y)
-			_nav.push_once(requested)
 			await _tree.physics_frame
-			if _nav.refused():
-				_stop_left_stick()
-				_fail("Native opening refused during movement resume: " + _nav.refusal_reason())
-				return false
 		_stop_left_stick()
 		for _i in 4:
-			_nav.push_once(Vector3.ZERO)
 			await _tree.physics_frame
-			if _nav.refused():
-				_fail("Native opening refused during movement-resume settle: " + _nav.refusal_reason())
-				return false
 		if Vector2(_player.global_position.x - before.x,
 				_player.global_position.z - before.z).length() >= 0.3:
 			return true
