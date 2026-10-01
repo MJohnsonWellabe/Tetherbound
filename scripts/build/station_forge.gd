@@ -16,6 +16,7 @@ signal channel_stopped(code: String, reason: String)
 signal unit_completed(recipe_id: String, completed_units: int)
 
 const RULES_PATH := "res://scripts/world/homestead_refining.gd"
+const POLICY := preload("res://scripts/build/station_rules.gd")
 var RULES: Script
 const CONFIG_PATH := "res://data/config/stations.json"
 const RECIPE_PATH := "res://data/recipes/recipes_forge.json"
@@ -208,6 +209,10 @@ func _current_plan(actor: CharacterBody3D) -> Dictionary:
 		return _refusal("combat", "Entering combat stops refining.")
 	if raw["plot_allowed"] != true:
 		return _refusal("needs_homestead", "Refine at the homestead Forge.")
+	var canonical := POLICY.record(POLICY.config(),raw["world"].get("placed_buildings",[]),_uid)
+	if canonical.get("ok") != true or canonical.record.id != "forge" \
+			or absf(wrapf(rad_to_deg(global_rotation.y)-float(canonical.record.yaw_deg),-180,180)) > 0.01:
+		return _refusal("station_gone", "This Forge no longer matches its paid world record.")
 	var plan: Dictionary = RULES.unit_plan(_recipes, _recipe_id, _uid, "meadows", raw["world"], raw["character"])
 	if not bool(plan.get("ok", false)):
 		return plan
@@ -223,8 +228,9 @@ func _current_plan(actor: CharacterBody3D) -> Dictionary:
 			if not global_position.is_equal_approx(station_at):
 				return _refusal("station_moved", "This Forge no longer matches its world record.")
 	var channel: Dictionary = plan["channel"]
-	if not actor.global_position.is_finite() or not global_position.is_finite() \
-			or actor.global_position.distance_to(global_position) > float(channel["radius_m"]):
+	var origin: Vector3 = get_parent().call("interaction_origin") if get_parent().has_method("interaction_origin") else global_position
+	if not actor.global_position.is_finite() or not origin.is_finite() \
+			or actor.global_position.distance_to(origin) > float(channel["radius_m"]):
 		return _refusal("out_of_radius", "Stay beside the Forge to refine.")
 	plan["world_namespace"] = world_namespace
 	return plan

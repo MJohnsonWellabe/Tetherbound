@@ -28,6 +28,11 @@ static func _load_config() -> Dictionary:
 		if not raw.get(key) is bool: return {}
 	for key: String in ["maximum_place_distance_m", "maximum_slope_rise_m", "ground_tolerance_m", "placement_clearance_m", "attachment_spacing_m", "attachment_snap_tolerance_m", "attachment_maximum_height_difference_m", "interaction_radius_m"]:
 		if not number(raw.get(key)) or float(raw[key]) <= 0.0: return {}
+	for key: String in ["forge","den","greenhouse"]:
+		if not raw.get(key) is Dictionary or not raw[key].get("runtime_enabled") is bool: return {}
+	if not number(raw.forge.get("maximum_manual_units")) or raw.forge.maximum_manual_units < 1 \
+			or float(raw.forge.maximum_manual_units) != floor(float(raw.forge.maximum_manual_units)): return {}
+	if not number(raw.den.get("comfort_bonus_per_tier")) or raw.den.comfort_bonus_per_tier < 0: return {}
 	if not raw.get("pieces") is Dictionary or not raw.get("attachments") is Array: return {}
 	for station: Dictionary in raw.stations:
 		if not raw.pieces.get(station.id) is Dictionary \
@@ -42,7 +47,9 @@ static func _load_config() -> Dictionary:
 		if not row is Dictionary: return {}
 		for key: String in ["id", "station_id", "biome", "tier", "status", "display_name"]:
 			if row.get(key) != attachments.data[i][key]: return {}
-		if row.get("registered") != (row.status == "live") or not PLOT.numbers(row.get("size_m"), 3): return {}
+		if not row.get("registered") is bool or row.registered != (row.status == "live") or not PLOT.numbers(row.get("size_m"), 3): return {}
+		for n: Variant in row.size_m:
+			if float(n) <= 0.0: return {}
 		if row.status == "live" and not valid_cost(row.get("cost")): return {}
 	return raw
 

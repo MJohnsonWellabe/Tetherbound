@@ -1203,8 +1203,29 @@
       "pickaxe",
       "knife",
       "hoe",
-      "berry_seeds"
-    ]
+      "berry_seeds",
+      "orb_greater",
+      "orb_prime",
+      "potion_large",
+      "cloudreach_camp_boards",
+      "cloudreach_camp_cordage",
+      "cloudreach_perch_padding",
+      "cloudreach_recovery_tonic",
+      "cloudreach_trail_preserve",
+      "rod_mast",
+      "voltcap_stew",
+      "glowmoss_tonic",
+      "water_camp_boards",
+      "water_camp_cordage",
+      "water_camp_aggregate",
+      "water_small_potion",
+      "water_ridge_tonic",
+      "water_revive",
+      "water_trail_preserve",
+      "water_swift_tonic",
+      "water_stoneguard_brew"
+    ],
+    "_comment_field": "Preserve existing camp orbs, medicines, basic tools/seeds and authored realm travel supplies. Gear, saddles, refining, attachments and essence spending remain homestead-only. No F34 forward-camp kit is authored here."
   },
   "auxiliary_buildables": [
     "greenhouse"

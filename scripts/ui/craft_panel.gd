@@ -67,6 +67,8 @@ var _producer: Node
 var _original_revision := -1
 var _gear_cfg: Dictionary = {}
 var _gear_rules: Script
+var _refining_amount := 1
+var _refining_label: Label
 
 func open_station(station: Node3D) -> void:
 	if not is_instance_valid(station) or STATION_RULES.config().get("runtime_enabled") != true: return
@@ -101,6 +103,8 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size=Vector2(780,210 if _station.get_meta("building_id","") == "forge" else 80)
 	if _station.get_meta("building_id","") in ["farm","den"]: scroll.custom_minimum_size.y=460
+	var viewport_height := get_viewport().get_visible_rect().size.y
+	scroll.custom_minimum_size.y=minf(scroll.custom_minimum_size.y,maxf(120,viewport_height*0.28 if _station.get_meta("building_id","") == "forge" else viewport_height*0.5))
 	outer.add_child(scroll)
 	var controls := VBoxContainer.new()
 	controls.custom_minimum_size.x=740
@@ -109,11 +113,17 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	match id:
 		"kitchen": _station_button(controls,"Cook learned Ascension Feasts",_open_feasts)
 		"forge":
+			_refining_label=Label.new()
+			_refining_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+			controls.add_child(_refining_label)
+			_change_refining_amount(0)
+			_station_button(controls,"Fewer refining units",func() -> void: _change_refining_amount(-1))
+			_station_button(controls,"More refining units",func() -> void: _change_refining_amount(1))
 			var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/recipes/recipes_forge.json"))
 			if raw is Dictionary:
 				for recipe_id: String in raw.get("recipes",{}):
 					var name: String = str(raw.recipes[recipe_id].get("name",recipe_id))
-					_station_button(controls,"Refine one "+name,func() -> void: _start_refining(recipe_id))
+					_station_button(controls,"Refine "+name,func() -> void: _start_refining(recipe_id))
 		"altar": _station_button(controls,"Creature training",_open_altar)
 		"den":
 			var view := _station_view()
@@ -174,11 +184,11 @@ func _build_gear_controls(controls: VBoxContainer, station_id: String) -> void:
 		for row: Variant in party:
 			if not row is Dictionary or not row.get("uid") is String: continue
 			var uid: String = row.uid
-			var card: Variant = personal.get("creatures",{}).get(uid)
-			if not card is Dictionary or not card.get("gear") is Dictionary: continue
+			var gear: Variant = _gear_rules.call("gear_for",view,uid)
+			if not gear is Dictionary: continue
 			var companion: String = str(row.get("nickname",row.get("species_id",uid)))
 			for slot: String in ["harness","charm"]:
-				var equipped: Variant = card.gear.get(slot)
+				var equipped: Variant = gear.get(slot)
 				if not equipped is String: continue
 				if station_id == "den":
 					if not equipped.is_empty():
@@ -272,7 +282,13 @@ func _station_completed(op: String, original: Dictionary, result: Dictionary) ->
 	elif result.get("ok") is bool and result.ok == false \
 			and result.get("terminal_refusal") is bool and result.terminal_refusal == true:
 		_station_intent={}
-	if _station_intent.is_empty() and _open: _build()
+	if _station_intent.is_empty() and _open:
+		var message := _status.text
+		_build()
+		_status.text=message
+		_status_left=STATUS_SECONDS
+		if not _rows.is_empty(): _rows[clampi(_selected,0,_rows.size()-1)].call_deferred("grab_focus")
+		elif not _station_buttons.is_empty(): _station_buttons[0].call_deferred("grab_focus")
 	_refresh_next_upgrade()
 
 func _open_feasts() -> void:
@@ -295,10 +311,15 @@ func _start_refining(recipe: String) -> void:
 	if not _station_intent.is_empty() or not is_instance_valid(_producer) \
 			or not _producer.has_method("homestead_start_refining"): return
 	var source := _station
+	var amount := _refining_amount
 	close() # Present channel runs in the world; another modal cancels it.
-	var result: Variant = _producer.call("homestead_start_refining",source,recipe,1)
+	var result: Variant = _producer.call("homestead_start_refining",source,recipe,amount)
 	if result is Dictionary and game != null:
 		game.call("push_world_message",str(result.get("reason","Refining started; stay beside the Forge.")))
+
+func _change_refining_amount(delta: int) -> void:
+	_refining_amount=clampi(_refining_amount+delta,1,int(STATION_RULES.config().forge.maximum_manual_units))
+	_refining_label.text="Refine %d units — each completes while you stay beside the Forge" % _refining_amount
 var game: Node = null
 
 var _root: Control = null
@@ -523,6 +544,10 @@ func _build_list_zone() -> Control:
 	if _readable_recipe_rows:
 		var visible_rows := maxi(1, int(_presentation.get("visible_rows", 3)))
 		list_height = visible_rows * float(_presentation.get("row_height", 208)) + (visible_rows - 1) * 8.0
+	if is_instance_valid(_station):
+		# Leave room for the single upgrade line and actual station controls.
+		# Existing explicit D-pad links keep clipped recipe rows reachable.
+		list_height=minf(list_height,maxf(float(ROW_HEIGHT),get_viewport().get_visible_rect().size.y*0.38))
 	_list_scroll.custom_minimum_size = Vector2(list_width, list_height)
 	_list_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	side.add_child(_list_scroll)
