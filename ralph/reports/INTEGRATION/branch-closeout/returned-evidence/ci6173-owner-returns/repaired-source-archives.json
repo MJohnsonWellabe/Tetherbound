@@ -1,0 +1,28 @@
+[
+  {
+    "feature": "F17",
+    "head": "1c7e04b350dd2a559f71492655bd31ae8bc5287f",
+    "expected_head": true,
+    "tracked_clean": true,
+    "contained_in_local_consolidated_head": true,
+    "untracked_production_source": [],
+    "untracked_nonproduction_files_retained": 676,
+    "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+    "confirmed_archived": true,
+    "local_consolidated_head": "b9391ee21b67589b209fe96711a67f4a33aaa057",
+    "proof_limit": "Source cleanup only; original full route CI/criteria unverified. Reviewed source is locally committed; coherent remote push waits for remaining boss repair, preventing an incomplete new full CI."
+  },
+  {
+    "feature": "F20",
+    "head": "66d90261efe9b4ffbb3fb3255ab44652fdd14bba",
+    "expected_head": true,
+    "tracked_clean": true,
+    "contained_in_local_consolidated_head": true,
+    "untracked_production_source": [],
+    "untracked_nonproduction_files_retained": 0,
+    "thread_id": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+    "confirmed_archived": true,
+    "local_consolidated_head": "b9391ee21b67589b209fe96711a67f4a33aaa057",
+    "proof_limit": "Source cleanup only; original full route CI/criteria unverified. Reviewed source is locally committed; coherent remote push waits for remaining boss repair, preventing an incomplete new full CI."
+  }
+]
