@@ -12,6 +12,11 @@ var _pending: Dictionary = {}
 var _original_context: Dictionary = {}
 var _retry_left := 0.0
 var _connection := Callable()
+var _return_route := Callable()
+
+func configure_return_route(route: Callable) -> void:
+	_return_route = route
+	if is_instance_valid(_panel): _panel.set("return_to", route)
 
 static func attach(game: Node) -> Node:
 	if game == null: return null
@@ -60,6 +65,7 @@ func open(station_key: String) -> bool:
 	if not is_instance_valid(_panel):
 		_panel = PANEL.new()
 		add_child(_panel)
+	_panel.set("return_to", _return_route)
 	return _panel.call("open",self,station_key) == true
 
 func creature_choices() -> Array[Dictionary]:

@@ -492,6 +492,14 @@ func current_tab_id() -> String:
 		return ""
 	return str((_tabs[_index] as Dictionary).get("id", ""))
 
+## F42/F45 integration seam; the shell keeps ownership of tab discovery.
+func configure_research_view(reader: Callable) -> bool:
+	if not reader.is_valid(): return false
+	for body: Node in _bodies:
+		if body.has_method("configure_research_view"):
+			return body.call("configure_research_view", reader) == true
+	return false
+
 
 func select(index: int) -> void:
 	if _tabs.is_empty():

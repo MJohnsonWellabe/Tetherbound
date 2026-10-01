@@ -5,6 +5,7 @@ extends VBoxContainer
 const COMMANDS := preload("res://scripts/combat/tether_commands.gd")
 const GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
+const SYSTEM_SCREEN := preload("res://scripts/ui/system_screen.gd")
 var _bar: ProgressBar
 var _title: Label
 var _reason: Label
@@ -21,6 +22,9 @@ class CostBar extends ProgressBar:
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var ui: Dictionary = COMMANDS.config().get("ui", {})
+	if SYSTEM_SCREEN.config().get("enabled") == true:
+		ui = ui.duplicate(true)
+		ui["font_size"] = maxi(int(ui.get("font_size", 22)), TOKENS.FONT_READ)
 	custom_minimum_size.x = float(ui.get("width", 580))
 	_title = Label.new()
 	_title.add_theme_font_size_override("font_size", int(ui.get("font_size", 22)))

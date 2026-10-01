@@ -24,6 +24,18 @@ var _panel: CanvasLayer = null
 var _pending: Dictionary = {}
 var _retry_left := 0.0
 var _last_code := "authority_missing"
+var _loadout_ui_service: Node
+
+## F23 mounts its station-bound canonical transport here. Existing essence
+## requests keep their original service and receipt path.
+func configure_loadout_ui(service: Node) -> bool:
+	if not is_instance_valid(service): return false
+	for method: String in ["quote_loadout", "submit_loadout", "reconcile_loadout"]:
+		if not service.has_method(method): return false
+	if not service.has_signal("loadout_completed"): return false
+	_loadout_ui_service = service
+	if is_instance_valid(_panel): _panel.call("configure_loadout_service", service)
+	return true
 
 
 ## The owning homestead interaction calls attach(Game).open(station_key)
@@ -115,6 +127,7 @@ func open(station_key: String) -> bool:
 		_panel = PANEL.new()
 		add_child(_panel)
 		if _panel.call("configure_service", self) != true: return false
+	if is_instance_valid(_loadout_ui_service): _panel.call("configure_loadout_service", _loadout_ui_service)
 	return _panel.call("open", station_key) == true
 
 

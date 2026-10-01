@@ -171,6 +171,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	outer.add_child(_upgrade_label)
 	var scroll := ScrollContainer.new()
 	scroll.custom_minimum_size=Vector2(780,210 if _station.get_meta("building_id","") == "forge" else 80)
+	scroll.follow_focus = true
 	if not _gear_cfg.is_empty() and _station.get_meta("building_id","") in ["workbench","altar"]: scroll.custom_minimum_size.y=210
 	if _station.get_meta("building_id","") in ["farm","den"]: scroll.custom_minimum_size.y=460
 	var viewport_height := get_viewport().get_visible_rect().size.y

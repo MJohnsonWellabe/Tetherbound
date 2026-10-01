@@ -207,6 +207,24 @@ var _row_bond_counts: Array = []
 var _row_content: Array = []
 
 var _focused: int = 0
+const COMPANION_DETAILS := preload("res://scripts/ui/companion_details_panel.gd")
+var _companion_details: CanvasLayer
+
+func _open_companion_details() -> void:
+	if not _release_stage.is_empty() or not _evolution_stage.is_empty() or _renaming != null: return
+	var creature := _creature_at(_focused)
+	var game := state()
+	if creature == null or game == null or _focused >= PARTY.MAX_CREATURES: return
+	if not is_instance_valid(_companion_details):
+		_companion_details = COMPANION_DETAILS.new()
+		_companion_details.set("return_to", _return_to_creatures)
+		game.add_child(_companion_details)
+	menu.call("close")
+	if _companion_details.call("open", game, str(creature.get("uid")), "Gear") != true:
+		menu.call("open", "creatures")
+
+func _return_to_creatures() -> void:
+	if is_instance_valid(menu): menu.call("open", "creatures")
 var _held: int = -1
 
 var _viewport: SubViewportContainer = null
@@ -393,6 +411,13 @@ func build() -> void:
 	_header = Label.new()
 	_header.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	add_child(_header)
+	if COMPANION_DETAILS.config().get("enabled") == true:
+		var details := Button.new()
+		details.text = "Harness, Charm, Loadout and Mastery"
+		details.custom_minimum_size.y = 66
+		details.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
+		details.pressed.connect(_open_companion_details)
+		add_child(details)
 
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 24)

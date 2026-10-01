@@ -28,6 +28,37 @@ extends "res://scripts/ui/menu_tab.gd"
 ## Still no state of its own, still one reader, still no condition in the data.
 
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const RESEARCH_PANEL := preload("res://scripts/ui/research_log_panel.gd")
+var _research_panel: CanvasLayer
+var _research_reader := Callable()
+var _research_button: Button
+
+## F45 supplies its character-bound read-only task projection here.
+func configure_research_view(reader: Callable) -> bool:
+	if not reader.is_valid(): return false
+	_research_reader = reader
+	return true
+
+func _research_view(biome: String) -> Dictionary:
+	if not _research_reader.is_valid(): return {"ready": false}
+	var raw: Variant = _research_reader.call(biome)
+	return raw if raw is Dictionary else {"ready": false}
+
+func _open_research() -> void:
+	var game := state()
+	if game == null: return
+	if not is_instance_valid(_research_panel):
+		_research_panel = RESEARCH_PANEL.new()
+		_research_panel.set("return_to", _return_to_journal)
+		game.add_child(_research_panel)
+	menu.call("close")
+	if _research_panel.call("open", _research_view) != true: menu.call("open", "quest_log")
+
+func _return_to_journal() -> void:
+	if is_instance_valid(menu): menu.call("open", "quest_log")
+
+func first_focus() -> Control:
+	return _research_button if is_instance_valid(_research_button) else null
 
 const DONE_MARK := "✓"  ## a check
 const OPEN_MARK := "▸"  ## a small right-pointing triangle, matches the tab row's own ◆ accent language
@@ -50,6 +81,14 @@ func build() -> void:
 	for child in get_children():
 		child.queue_free()
 	_last_progression_revision = -1
+	_research_button = null
+	if RESEARCH_PANEL.config().get("enabled") == true:
+		_research_button = Button.new()
+		_research_button.text = "Research log · Species and task rewards"
+		_research_button.custom_minimum_size.y = 66
+		_research_button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
+		_research_button.pressed.connect(_open_research)
+		add_child(_research_button)
 
 	# ONE scroll container for the whole tab (mirrors tab_settings.gd's own
 	# `_scroll`, OP21-04): the log's last line used to clip against the
@@ -76,9 +115,33 @@ func build() -> void:
 	if game != null: _log.call("set_realm", str(game.get("current_realm")))
 	_main_list = _section(page, str(_log.call("chapter_heading")))
 	_local_list = _section(page, "LOCAL REQUESTS")
+	if RESEARCH_PANEL.config().get("enabled") == true: _build_bounties(page)
 
 	poll()
 	UITokens.make_text_legible(self)
+
+func _build_bounties(page: VBoxContainer) -> void:
+	var list := _section(page, "ACTIVE BOUNTIES · Claim at Halda's board")
+	var path := "res://scripts/world/bounty_board.gd"
+	if not ResourceLoader.exists(path):
+		var missing := Label.new()
+		missing.text = "The bounty board is unavailable."
+		missing.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		list.add_child(missing)
+		return
+	var game := state()
+	var local: RefCounted = game.get("local") if game != null else null
+	if local == null: return
+	var board: Script = load(path)
+	var raw: Variant = board.call("view", local.get("redesign_character"), str(local.get("character_id")))
+	if not raw is Dictionary: return
+	for row: Dictionary in raw.get("rows", []):
+		var label := Label.new()
+		label.text = "%s · %s · %s" % [str(row.get("title", "Bounty")), str(row.get("biome", "")).capitalize(),
+			"Claimed" if row.get("paid") == true else "Return to board" if row.get("complete") == true else "In progress"]
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		list.add_child(label)
 
 
 func _section(parent: VBoxContainer, heading_text: String) -> VBoxContainer:
