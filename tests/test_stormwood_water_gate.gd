@@ -9,7 +9,7 @@ const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 func before_each() -> void:
 	# Keep the retired transaction regressions under an explicit same-flag
-	# fixture; production default-off refusal has its own negative control.
+	# fixture; the retirement control explicitly activates its own Session.
 	assert_true(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 
 
@@ -28,7 +28,14 @@ class Saver extends RefCounted:
 		return false if fail_write else store.write(id, WORLD_SAVE.partition(snapshot))
 
 
+class PortalSession extends RefCounted:
+	var enabled := false
+	func portal_runtime_ready() -> bool:
+		return enabled
+
+
 class GameFixture extends RefCounted:
+	var session: RefCounted = PortalSession.new()
 	var host := true
 	var world: RefCounted = WORLD.new()
 	var save_system: RefCounted = Saver.new()
@@ -62,24 +69,36 @@ func fixture() -> RefCounted:
 	return game
 
 
-func test_default_retired_gate_refuses_without_key_consumption_or_journal() -> void:
+func test_active_portals_retire_gate_without_key_consumption_or_journal() -> void:
 	BIOME_ORDER.clear_test_overrides()
-	assert_false(BIOME_ORDER.legacy_physical_crossings())
 	var game := fixture()
+	game.session.set("enabled", true)
+	assert_true(BIOME_ORDER.portal_runtime_ready(game))
+	assert_false(BIOME_ORDER.legacy_physical_crossings(game))
 	var ledger := LEDGER.new(game.world)
 	var before: Dictionary = game.world.save_data().duplicate(true)
 	var sequence := int(ledger.seq)
+	var world_revision := int(game.world.revision)
+	var flag_revision := int(game.world.flags.revision)
 	var result := GATE.host_commit(game, ledger)
 	assert_false(result.ok)
 	assert_eq(result.code, "legacy_physical_crossings_disabled")
 	assert_eq(game.world.save_data(), before)
 	assert_eq(ledger.seq, sequence)
+	assert_eq(game.world.revision, world_revision)
+	assert_eq(game.world.flags.revision, flag_revision)
 	assert_eq(game.save_system.writes, 0)
-	assert_false(GATE.request_allowed(game.world.flags, Vector3.ZERO, Vector3.ZERO, 6.0))
+	assert_true(game.world.flags.has(GATE.WATER_KEY_FLAG))
+	assert_false(game.world.flags.has(GATE.WATER_GATE_FLAG))
+	assert_false(GATE.request_allowed(game.world.flags, Vector3.ZERO, Vector3.ZERO, 6.0, game))
 
 
 func test_unlock_consumes_key_and_opens_gate_in_one_saved_delta() -> void:
+	BIOME_ORDER.clear_test_overrides()
 	var game := fixture()
+	assert_false(BIOME_ORDER.portal_runtime_ready(game))
+	assert_true(BIOME_ORDER.legacy_physical_crossings(game),
+		"inactive portals retain the real legacy transaction without a debug legacy override")
 	var ledger := LEDGER.new(game.world)
 	var result: Dictionary = GATE.host_commit(game, ledger)
 	assert_true(result.ok)
@@ -127,9 +146,9 @@ func test_unlock_requires_host_waterward_key_and_host_observed_proximity() -> vo
 	game.world.flags.set_flag(GATE.WATER_KEY_FLAG, false)
 	assert_eq(GATE.host_commit(game, ledger).code, "missing_key")
 	game.world.flags.set_flag(GATE.WATER_KEY_FLAG)
-	assert_true(GATE.request_allowed(game.world.flags, Vector3(1, 2, 3), Vector3(4, 2, 3), 6.0))
-	assert_false(GATE.request_allowed(game.world.flags, Vector3(1, 2, 3), Vector3(8, 2, 3), 6.0))
-	assert_false(GATE.request_allowed(game.world.flags, Vector3(NAN, 2, 3), Vector3(4, 2, 3), 6.0))
+	assert_true(GATE.request_allowed(game.world.flags, Vector3(1, 2, 3), Vector3(4, 2, 3), 6.0, game))
+	assert_false(GATE.request_allowed(game.world.flags, Vector3(1, 2, 3), Vector3(8, 2, 3), 6.0, game))
+	assert_false(GATE.request_allowed(game.world.flags, Vector3(NAN, 2, 3), Vector3(4, 2, 3), 6.0, game))
 
 
 func test_open_gate_is_idempotent_and_routes_to_authored_water_arrival() -> void:
