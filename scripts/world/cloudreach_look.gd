@@ -136,6 +136,7 @@ var _route_verges: Node3D
 func dress(world: Node3D) -> void:
 	_world = world
 	_cfg = _read_json(LOOK_CONFIG_PATH)
+	_cfg = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_cfg, "look")
 	_materials = world.get("_materials") as Dictionary
 	if _materials == null:
 		_materials = {}

@@ -354,6 +354,7 @@ func _ready() -> void:
 
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
+	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
 	var look := get_node_or_null(^"WorldLook")
 	if look != null and not simulation_only:
 		var local_look: Dictionary = (look.get("_config") as Dictionary).duplicate(true)
@@ -4429,6 +4430,7 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	aviary_veil.albedo_color.a = 0.13
 	aviary_veil.emission_energy_multiplier = 0.3
 	var aviary_spec := _read_json(AVIARY_CONFIG_PATH)
+	aviary_spec = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(aviary_spec, "aviary")
 	var aviary_surface: Dictionary = aviary_spec.get("surface", {})
 	var aviary_gold := _material(Color(str(aviary_surface.get("rib_tint", "#a88a48"))), 0.42)
 	aviary_gold.metallic = 0.55
@@ -4453,6 +4455,8 @@ func _build_summit_stronghold(root: Node3D) -> void:
 		"cloth": _aviary_cloth_material(),
 	}
 	var aviary: Dictionary = AVIARY.build(root, aviary_materials, aviary_spec)
+	preload("res://scripts/world/cloudreach_aviary_sanctuary.gd").build(
+		root, aviary_spec.get("sanctuary", {}), aviary["arches"], aviary_materials, self)
 	_seat_aviary_on_summit_carve(root, aviary)
 	AVIARY_CROWN.build(root, aviary_spec.get("crown_arcade", {}), aviary_spec.get("drum", {}),
 		aviary_materials["stone"], aviary_materials["masonry"])
