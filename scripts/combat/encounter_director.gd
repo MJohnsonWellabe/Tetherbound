@@ -2249,6 +2249,7 @@ func _receive_catch_finish_verdict(verdict: Dictionary) -> void:
 		"claim_id": claim_id, "code": str(verdict.get("code", "")),
 		"reason": str(verdict.get("reason", "")),
 		"creature": (delta.get("creature", {}) as Dictionary).duplicate(true),
+		"capture_traits": (delta.get("capture_traits", {}) as Dictionary).duplicate(true),
 	}
 	_shared_catch_finish_pending = {}
 
@@ -3027,6 +3028,8 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 		var caught_body: Node3D = runtime.call("body") as Node3D
 		var caught_instance: Variant = caught_body.get("instance") \
 			if caught_body != null and is_instance_valid(caught_body) else null
+		if caught_instance != null and int(caught_instance.get("caught_on_day")) <= 0:
+			caught_instance.set("caught_on_day", maxi(1, int(get_node("/root/Game").get("day"))))
 		creature_card = WATER_CAPTURE_CODEC.encode(caught_instance as RefCounted)
 		if creature_card.is_empty():
 			_catch_arbiter.call("release", encounter_id, peer_id)
@@ -3045,8 +3048,31 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, refused)
 			_host_after_encounter_change(encounter_id)
 			return refused
+	var capture_traits: Dictionary = {}
 	if caught:
-		if _session.call("foundation_alpha_resolution", self, encounter_id, "catch").get("durable") != true:
+		var alpha_body: Node3D = runtime.call("body")
+		if alpha_body.has_meta("foundation_alpha_packet"):
+			var game := get_node("/root/Game")
+			var world_ref: WeakRef = alpha_body.get_meta("foundation_alpha_world", null)
+			var identity := {"world_namespace": game.world.reward_delivery_namespace,
+				"spawn_id": alpha_body.get_meta("foundation_alpha_site", ""),
+				"spawn_generation": alpha_body.get_meta("foundation_alpha_generation", 0)}
+			var retained: Dictionary = alpha_body.get_meta("foundation_alpha_packet", {})
+			var prepared := preload("res://scripts/creatures/trait_spawn_hooks.gd").prepare_catch(identity, retained, creature_card)
+			if world_ref == null or world_ref.get_ref() != game.world or alpha_body.get_meta("foundation_alpha_epoch", "") != _session.call("_altar_current_epoch") \
+				or prepared.is_empty() or not WATER_CAPTURE_CODEC.valid_capture_traits(retained):
+				return {"ok": false, "pending": true, "code": "capture_traits_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+				capture_traits[field] = prepared[field]
+		var capture_offer: Dictionary = {}
+		if not capture_traits.is_empty():
+			var game := get_node("/root/Game")
+			var offer_id := JSON.stringify([game.world.reward_delivery_namespace, claim_id, creature_card.uid]).sha256_text()
+			capture_offer = {"offer_id": offer_id, "source_key": "capture:" + offer_id,
+				"world_namespace": game.world.reward_delivery_namespace, "session_id": _session.call("_altar_current_epoch"),
+				"participants": [_session.call("_authority_character", peer_id)], "realm": _encounter_realm(),
+				"creature": creature_card.duplicate(true), "capture_traits": capture_traits.duplicate(true)}
+		if _session.call("foundation_alpha_resolution", self, encounter_id, "catch", capture_offer).get("durable") != true:
 			return {"ok": false, "pending": true, "code": "alpha_resolution_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 		if runtime.get_meta("foundation_catch_night_claim", "") != claim_id:
 			runtime.remove_meta("foundation_catch_night")
@@ -3085,7 +3111,7 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 		"encounter_id": encounter_id, "claim_id": claim_id, "code": "",
 		"reason": "", "pending": false,
 		"delta": {"caught": caught, "claim_id": claim_id,
-			"creature": creature_card.duplicate(true)}}
+			"creature": creature_card.duplicate(true), "capture_traits": capture_traits.duplicate(true)}}
 	_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, result)
 	_host_after_encounter_change(encounter_id, 0, peer_id if caught else 0)
 	if caught:
@@ -5865,6 +5891,13 @@ func _resolve_catch(kept: RefCounted) -> void:
 	var party: RefCounted = game.get("party")
 	if party == null:
 		push_error("the Game autoload has no party")
+		return
+
+	if kept.has_meta("foundation_capture_traits"):
+		# The retained world offer survives cleanup/rejoin. An enabled alpha
+		# cannot use the old local Party.add path and lose canonical traits.
+		var captures := _session.get_node_or_null(^"FoundationComposition/Captures") if _session != null else null
+		if captures != null: captures.call("present_from_catch", kept)
 		return
 
 	# Prompt 67's history: stamp the day it joined you, once, at the moment it

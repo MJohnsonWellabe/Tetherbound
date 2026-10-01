@@ -17,7 +17,7 @@ func _ready() -> void:
 func session() -> Node:
 	return get_parent().get_parent()
 
-func resolution(director: Node, encounter_id: String, outcome: String) -> Dictionary:
+func resolution(director: Node, encounter_id: String, outcome: String, capture: Dictionary = {}) -> Dictionary:
 	var owner := session()
 	if RULES.config().get("runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
 	if owner.call("is_host") != true or not is_instance_valid(director) or director.get("_session") != owner \
@@ -42,6 +42,16 @@ func resolution(director: Node, encounter_id: String, outcome: String) -> Dictio
 	if body.get_meta("foundation_alpha_world", null) == null \
 		or body.get_meta("foundation_alpha_world").get_ref() != world \
 		or body.get_meta("foundation_alpha_epoch", "") != owner.call("_altar_current_epoch"): return {"ok": false, "durable": false}
+	var capture_row: Dictionary = {}
+	if not capture.is_empty():
+		if outcome != "catch" or not preload("res://scripts/net/foundation_capture_rules.gd").offer_valid(capture) \
+			or capture.creature != preload("res://scripts/save/water_capture_codec.gd").encode(body.get("instance")) \
+			or capture.capture_traits != body.get_meta("foundation_alpha_packet", {}) \
+			or capture.participants[0] != owner.call("_authority_character", int(runtime.get("catch_claimant"))) \
+			or capture.world_namespace != world.reward_delivery_namespace or capture.session_id != owner.call("_altar_current_epoch"): return {"ok": false, "durable": false}
+		capture_row = preload("res://scripts/net/foundation_event.gd").make(world, capture.session_id, capture.source_key,
+			[{"character_id": capture.participants[0], "action": "capture_offer", "intent": {}, "context": capture}])
+		if capture_row.is_empty(): return {"ok": false, "durable": false}
 	var key := JSON.stringify([world.reward_delivery_namespace, owner.call("_altar_current_epoch"), id, generation]).sha256_text()
 	if _settled.has(key): return {"ok": true, "durable": true}
 	if not _pending.has(key):
@@ -50,7 +60,7 @@ func resolution(director: Node, encounter_id: String, outcome: String) -> Dictio
 		if seconds < 0 or census.is_empty(): return {"ok": false, "durable": false, "code": "alpha_live_census_clock_required"}
 		_pending[key] = {"world": weakref(world), "world_namespace": world.reward_delivery_namespace,
 			"world_id": world.world_id, "epoch": owner.call("_altar_current_epoch"), "site_id": id,
-			"generation": generation, "seconds": seconds, "characters": census, "outcome": outcome}
+			"generation": generation, "seconds": seconds, "characters": census, "outcome": outcome, "capture_offer": capture_row}
 	return _retry(key)
 
 func _seconds() -> int:
@@ -87,7 +97,8 @@ func _retry(key: String) -> Dictionary:
 		or world.world_id != frozen.world_id or owner.call("_altar_current_epoch") != frozen.epoch: return {"ok": false, "durable": false, "code": "alpha_original_owner_required"}
 	var saved: Dictionary = world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(frozen.site_id, {})
 	if saved.get("status") == "waiting" and saved.get("generation") == frozen.generation \
-		and saved.get("resolved_at_seconds") == frozen.seconds and saved.get("required_departures") == frozen.characters:
+		and saved.get("resolved_at_seconds") == frozen.seconds and saved.get("required_departures") == frozen.characters \
+		and (frozen.capture_offer.is_empty() or world.reward_deliveries.get(frozen.capture_offer.delivery_id) == frozen.capture_offer):
 		_settled[key] = true
 		_pending.erase(key)
 		return {"ok": true, "durable": true}
@@ -100,7 +111,12 @@ func _retry(key: String) -> Dictionary:
 	return result
 
 func _commit(plan: Dictionary) -> Dictionary:
-	return session().get_node(^"LedgerRpc").call("commit_alpha_plan", plan)
+	var offer: Dictionary = {}
+	if plan.get("operation") == "alpha_resolve":
+		for frozen: Dictionary in _pending.values():
+			if frozen.site_id == plan.site_id and frozen.generation == plan.source.generation \
+				and frozen.world.get_ref() == session().call("_game").world and frozen.epoch == session().call("_altar_current_epoch"): offer = frozen.capture_offer
+	return session().get_node(^"LedgerRpc").call("commit_alpha_plan", plan, offer)
 
 func _host_context(id: String) -> Dictionary:
 	var owner := session()

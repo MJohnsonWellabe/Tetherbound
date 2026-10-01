@@ -25,7 +25,7 @@ static func valid(raw: Variant, namespace_id: String, world_id: String) -> bool:
 		or not raw.duties is Array or raw.duties.is_empty(): return false
 	for duty: Variant in raw.duties:
 		if not duty is Dictionary or duty.size() != 4 or not duty.get("character_id") is String or duty.character_id.is_empty() \
-			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event"] \
+			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer"] \
 			or not duty.get("intent") is Dictionary or not duty.get("context") is Dictionary: return false
 		if not _duty_valid(duty, raw): return false
 	return true
@@ -55,6 +55,9 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if context.kind == "cast" and not ESSENCE._opaque_id(context.get("move_id")): return false
 		if context.kind == "catch" and (context.get("wild") != true or not context.get("night") is bool): return false
 		if context.kind == "defeat" and context.get("opponent_defeated") != true: return false
+	elif duty.action == "capture_offer":
+		if not intent.is_empty() or load("res://scripts/net/foundation_capture_rules.gd").call("offer_valid", context) != true \
+			or row.source_id != context.source_key or context.world_namespace != row.world_namespace or context.session_id != row.session_id: return false
 	elif duty.action == "bounty_event":
 		if context.source_key != "halda_bounty_event" or context.get("kind") not in ["catch_trait", "defeat_alpha", "rematch"] \
 			or context.event_id != row.source_id \

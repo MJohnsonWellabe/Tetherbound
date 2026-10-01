@@ -25,6 +25,7 @@ var revision: int = 0
 var _owner_mutation_guard := Callable()
 var _owner_training_release_guard := Callable()
 var _owner_training_release_rollback_guard := Callable()
+var _owner_capture_roster_guard := Callable()
 var _creatures: Array = []
 var _active: int = 0
 var _tournament_selection: Array[String] = []
@@ -305,10 +306,11 @@ func all_fainted() -> bool:
 	return true
 
 
-func bind_owner_mutation_guard(blocked: Callable, release_allowed := Callable(), rollback_allowed := Callable()) -> void:
+func bind_owner_mutation_guard(blocked: Callable, release_allowed := Callable(), rollback_allowed := Callable(), capture_allowed := Callable()) -> void:
 	_owner_mutation_guard = blocked
 	_owner_training_release_guard = release_allowed
 	_owner_training_release_rollback_guard = rollback_allowed
+	_owner_capture_roster_guard = capture_allowed
 
 
 func _owner_mutation_blocked() -> bool:
@@ -331,4 +333,27 @@ func restore_owner_training_release(snapshot: Dictionary) -> bool:
 	_best = int(snapshot.best)
 	_tournament_selection.assign(snapshot.tournament)
 	revision = int(snapshot.revision)
+	return true
+
+## Exact typed catch promotion only; survivors keep their original objects.
+func install_owner_capture_roster(members: Array) -> bool:
+	if not _owner_capture_roster_guard.is_valid() or _owner_capture_roster_guard.call(members, false) != true: return false
+	var active_uid := str(at(_active).get("uid")) if at(_active) != null else ""
+	var best_uid := str(at(_best).get("uid")) if at(_best) != null else ""
+	var next: Array[RefCounted] = []
+	for member: RefCounted in members: next.append(member)
+	_creatures = next
+	_active = 0
+	_best = -1
+	for index: int in _creatures.size():
+		if _creatures[index].get("uid") == active_uid: _active = index
+		if _creatures[index].get("uid") == best_uid: _best = index
+	for uid: String in _tournament_selection:
+		var present := false
+		for member: RefCounted in _creatures:
+			if member.get("uid") == uid: present = true
+		if not present:
+			_tournament_selection.clear()
+			break
+	revision += 1
 	return true

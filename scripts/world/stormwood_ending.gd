@@ -342,8 +342,9 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 			_refuse(peer, "The world could not record the ceremony. Try again.")
 			return
 	_submit_resolution(bool(claim["kept"]), character)
+	var staged_environment: Dictionary = original_world.realm_environment.duplicate(true)
 	if not _save_world_claim():
-		original_world.set("realm_environment", original_environment)
+		if original_world.realm_environment == staged_environment: original_world.set("realm_environment", original_environment)
 		_refuse(peer, "The world could not save the ceremony. Try again.")
 		return
 	session.call("foundation_stormwood_answer", self, peer, claim)

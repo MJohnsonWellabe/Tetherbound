@@ -102,7 +102,7 @@ var _reward_retry_at: Dictionary = {}
 
 ## Internal alpha service uses the existing host-world CAS and BOOL writer.
 ## No body is published by this method, and no portable reward is granted.
-func commit_alpha_plan(plan: Dictionary) -> Dictionary:
+func commit_alpha_plan(plan: Dictionary, capture_offer: Dictionary = {}) -> Dictionary:
 	_ensure_ledger()
 	var game := _game()
 	if game == null or game.call("is_host") != true or ledger == null or ledger.world != game.world: return {"ok": false, "durable": false}
@@ -113,12 +113,27 @@ func commit_alpha_plan(plan: Dictionary) -> Dictionary:
 	var world_id := str(world.world_id)
 	var namespace_id := str(world.reward_delivery_namespace)
 	var epoch := str(session.call("_altar_current_epoch"))
+	if not capture_offer.is_empty():
+		if not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(plan, world.redesign_world, namespace_id): return {"ok": false, "durable": false}
+		if plan.get("operation") != "alpha_resolve" or not preload("res://scripts/net/foundation_event.gd").valid(capture_offer, namespace_id, world_id) \
+			or capture_offer.session_id != epoch or capture_offer.duties.size() != 1 or capture_offer.duties[0].action != "capture_offer" \
+			or capture_offer.duties[0].context.capture_traits.captured_from.spawn_id != plan.site_id \
+			or capture_offer.duties[0].context.capture_traits.captured_from.spawn_generation != plan.source.generation \
+			or not plan.source.region_characters.has(capture_offer.duties[0].character_id): return {"ok": false, "durable": false, "code": "alpha_capture_binding_changed"}
 	game.call("_sync_clock_state")
 	var before: Dictionary = world.call("save_data")
 	var revision := int(world.revision)
 	var sequence := int(ledger.seq)
 	var result: Dictionary = ledger.call("commit_alpha_plan", plan)
 	if result.get("ok") != true: return {"ok": false, "durable": false, "code": "alpha_stale_plan"}
+	var offer_result: Dictionary = {}
+	if not capture_offer.is_empty():
+		offer_result = ledger.call("commit_foundation_event", capture_offer)
+		if offer_result.get("ok") != true:
+			world.call("load_data", before)
+			world.revision = revision
+			ledger.seq = sequence
+			return {"ok": false, "durable": false, "code": "alpha_capture_offer_refused"}
 	if saver.call("save_world_prepared", game, world_id) != true:
 		world.call("load_data", before)
 		world.revision = revision
@@ -128,6 +143,7 @@ func commit_alpha_plan(plan: Dictionary) -> Dictionary:
 		or str(world.world_id) != world_id or str(world.reward_delivery_namespace) != namespace_id \
 		or str(session.call("_altar_current_epoch")) != epoch: return {"ok": false, "durable": false, "code": "alpha_owner_changed"}
 	publish_journaled_delta(result.delta)
+	if not offer_result.is_empty() and offer_result.get("duplicate") != true: publish_journaled_delta(offer_result.delta)
 	return {"ok": true, "durable": true}
 
 ## Host-internal append, before personal actions/terminal source cleanup.

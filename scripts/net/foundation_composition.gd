@@ -32,6 +32,9 @@ func _ready() -> void:
 	var alphas: Node = preload("res://scripts/net/foundation_alphas.gd").new()
 	alphas.name = "Alphas"
 	add_child(alphas)
+	var captures: Node = preload("res://scripts/net/foundation_capture.gd").new()
+	captures.name = "Captures"
+	add_child(captures)
 
 func _process(delta: float) -> void:
 	_left -= delta
