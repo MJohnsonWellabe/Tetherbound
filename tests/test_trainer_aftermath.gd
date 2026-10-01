@@ -152,6 +152,13 @@ func test_the_aftermath_beats_happen_inside_the_victory_lines() -> void:
 var _native_lifecycle_completed := false
 var _native_lifecycle_observation: Dictionary = {}
 
+## SceneTree timers consume frame delta, including the current frame's delta
+## when armed from a deferred callback. Observe that clock, not wall time.
+class NativeAftermathClock extends Node:
+	var elapsed_s := 0.0
+	func _process(delta: float) -> void:
+		elapsed_s += delta
+
 func _aftermath_until(condition: Callable, allowance_ms: int) -> bool:
 	var deadline := Time.get_ticks_msec() + allowance_ms
 	while not bool(condition.call()) and Time.get_ticks_msec() < deadline:
@@ -173,6 +180,8 @@ func _case_native_victory_fallback_after_handover_or_scene_teardown() -> void:
 	var players: Array[Node3D] = []
 	var tokens: Array[Node3D] = []
 	var refs: Array[WeakRef] = []
+	var clock := NativeAftermathClock.new()
+	world.add_child(clock)
 	var started_ms := Time.get_ticks_msec()
 	for index in 4:
 		var player := Node3D.new()
@@ -212,8 +221,9 @@ func _case_native_victory_fallback_after_handover_or_scene_teardown() -> void:
 		return live != null and live.has_meta(&"handed"), int((seconds + 3.0) * 1000.0)),
 		"the actual original fallback starts a handover for a still-live token and player")
 	var fallback_ms := Time.get_ticks_msec() - started_ms
-	assert_true(fallback_ms >= int(seconds * 1000.0) - 100,
-		"the fallback cannot fire early to make the lifecycle fixture pass")
+	var fallback_scene_seconds := clock.elapsed_s
+	assert_true(fallback_scene_seconds >= seconds - 0.001,
+		"the original fallback consumes its full duration on the SceneTree clock")
 	var without_player: Node = refs[1].get_ref() as Node
 	assert_true(without_player != null and without_player.has_meta(&"handed"),
 		"the same fallback hands over a surviving token safely after its player was freed")
@@ -225,7 +235,8 @@ func _case_native_victory_fallback_after_handover_or_scene_teardown() -> void:
 			if ref.get_ref() != null: return false
 		return true, 4000), "both fallback handover tweens free their actual tokens")
 	_native_lifecycle_observation = {"original_fallback_seconds": seconds,
-		"fallback_observed_ms": fallback_ms, "elapsed_ms": Time.get_ticks_msec() - started_ms,
+		"fallback_scene_seconds": fallback_scene_seconds, "fallback_observed_ms": fallback_ms,
+		"elapsed_ms": Time.get_ticks_msec() - started_ms,
 		"early_handover_freed_before_fallback": early_ref.get_ref() == null,
 		"all_four_tokens_freed": true, "scope": "local presentation lifecycle only"}
 	world.free()
