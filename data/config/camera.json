@@ -51,7 +51,7 @@
     "_comment": "F21#4 presentation framing from both measured rendered bounds. All nine pair offsets preserve actual body scale. Solver diagnostics do not replace the code-blind size-matrix judge. Spring-arm/world sweep and manual-look grace remain authoritative for the local camera.",
     "enabled": true,
     "readability": {
-      "_comment": "Camera only: every whole actor projected rectangle must clear actual occupied HUD panels plus measured pixel margin; head and torso rays must clear visible foreground creature ellipsoids. No HUD fade, hidden bystanders, model scaling or collision changes.",
+      "_comment": "Camera-only conservative oriented whole-render envelopes include the trainer and foreground creatures. Actual projected envelope intersection is checked for front-to-back depth, including lower silhouettes; no hidden body, scale/collision change or sparse ellipsoid shortcut. Independent whole-frame pixels remain required.",
       "hud_margin_px": 12.0,
       "hud_paths": [
         "Root/EnemyPanel",
@@ -84,6 +84,7 @@
     "separation_distance_steps": 8,
     "separation_distance_scale": 1.2,
     "separation_guard_m": 0.15,
+    "safe_fit_distance_slack_m": 0.75,
     "_comment_orbit_refinement": "Only after every coarse constrained view fails, refine around its best angle. Same pitch, measured model guard and world sweeps; manual-look grace disables it. At most12 extra candidates and the existing distance cap remain enforced.",
     "orbit_refinement_step_deg": 2.5,
     "orbit_refinement_span_deg": 15.0,

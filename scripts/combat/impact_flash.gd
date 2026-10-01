@@ -75,6 +75,10 @@ func _ready() -> void:
 
 	_ring = _billboard(_ring_mesh, _colour)
 	_streaks = _billboard(_streak_mesh, _colour)
+	# The existing opted-in softness writes vertex alpha in _draw_streaks.
+	# Enable that input on this material only; historical zero-softness
+	# callers keep the old material and all clocks/geometry/leases unchanged.
+	(_streaks.material_override as StandardMaterial3D).vertex_color_use_as_albedo = _spike_softness>0.0
 
 	# The core is a real sphere rather than a billboard: at the instant of
 	# contact it sits between two bodies, and a flat quad there flickers as it

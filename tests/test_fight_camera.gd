@@ -154,3 +154,16 @@ func test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_l
 func _body(height: float, feet: Vector3) -> AABB:
 	var width := height * 0.7
 	return AABB(feet - Vector3(width*0.5,0,width*0.5), Vector3(width,height,width))
+
+
+func test_foreground_envelopes_cover_feet_but_bodies_behind_do_not_occlude() -> void:
+	var box := AABB(Vector3(-1,0,-1),Vector3(2,2,2))
+	var pose := Transform3D(Basis.IDENTITY,Vector3(0,0,-8))
+	var actor := {"box":box,"pose":pose,"inverse":pose.affine_inverse(),"points":FIT.box_points(box,pose)}
+	var cover_box := AABB(Vector3(-0.35,0,-0.3),Vector3(0.7,0.6,0.6))
+	var cover_pose := Transform3D(Basis.IDENTITY,Vector3(0,0,-4))
+	var cover := {"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
+	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"foreground lower body must count even with clear head and torso")
+	cover_pose.origin.z=-12.0
+	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
+	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"a projected overlap behind the actor is not foreground cover")

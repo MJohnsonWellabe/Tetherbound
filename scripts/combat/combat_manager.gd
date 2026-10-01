@@ -1506,7 +1506,8 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
 		if bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false)) \
 			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap) \
-			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)):
+			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)) \
+			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))):
 			selected = current
 			selected_yaw = yaw
 	var offset: Vector3 = solution.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
@@ -4882,58 +4883,79 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 		if rect.has_area(): rectangles.append(rect)
 	var occluders: Array = []
 	var overflow: bool = false
-	var centre := (_ally_body.global_position+_wild.global_position)*0.5
-	var radius := clampf(float(cfg.get("occluder_radius_m", 80.0)), 1.0, 200.0)
-	var cap := clampi(int(cfg.get("occluder_limit", 32)), 1, 64)
-	for candidate: Node in get_tree().get_nodes_in_group(&"creature_voice"):
+	var geometry_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
+	var centre: Vector3 = (_ally_body.global_position+_wild.global_position)*0.5
+	var radius: float = clampf(float(cfg.get("occluder_radius_m",80.0)),1.0,200.0)
+	var cap: int = clampi(int(cfg.get("occluder_limit",32)),1,64)
+	var candidates: Array[Node] = get_tree().get_nodes_in_group(&"creature_voice")
+	# The trainer is a real foreground body too. Never hide/move it to obtain
+	# a clear frame, and never substitute a capsule for its authored Model.
+	if is_instance_valid(_player) and not candidates.has(_player): candidates.append(_player)
+	for candidate: Node in candidates:
 		if not candidate is Node3D or candidate==_ally_body or candidate==_wild \
 			or not candidate.is_inside_tree() or candidate.is_queued_for_deletion() \
 			or not (candidate as Node3D).is_visible_in_tree() \
-			or not candidate.has_method("model_pivot") \
 			or (candidate as Node3D).global_position.distance_squared_to(centre)>radius*radius: continue
-		var bounds := _body_render_bounds(candidate as Node3D)
-		var model := candidate.call("model_pivot") as Node3D
-		if bounds.size.is_zero_approx() or not is_instance_valid(model) or not model.is_visible_in_tree(): continue
+		var model: Node3D = candidate.call("model_pivot") as Node3D if candidate.has_method("model_pivot") \
+			else candidate.get_node_or_null(^"Model") as Node3D
+		if not is_instance_valid(model) or not model.is_visible_in_tree(): continue
+		var bounds: AABB = RENDER_BOUNDS.measure(model)
+		if not bounds.position.is_finite() or not bounds.size.is_finite() \
+			or bounds.size.x<=0.0 or bounds.size.y<=0.0 or bounds.size.z<=0.0:
+			geometry_valid = false
+			continue
 		if occluders.size()==cap:
 			overflow = true
 			break
-		occluders.append({"box":bounds, "pose":model.global_transform})
-	# Never silently drop a foreground body at the budget. The view is marked
-	# unavailable until a fully checked candidate can be built within budget.
-	# The first additional confirmed body marks overflow; retain the checked
-	# bounded set for diagnostics without scanning any remaining bodies.
-	var subjects: Array[Vector3] = []
-	for body: Node3D in [_ally_body, _wild]:
-		var world := _body_world_bounds(body)
-		var base := Vector3(body.global_position.x,world.position.y,body.global_position.z)
-		var facing: Vector3 = body.call("facing")
-		subjects.append(OCCLUSION_FADE.head_point(base,world.size,facing,
-			clampf(float(cfg.get("head_forward_fraction",0.35)),0.0,1.0),
-			clampf(float(cfg.get("head_height_fraction",0.8)),0.1,1.0)))
-		subjects.append(base+Vector3.UP*world.size.y*clampf(float(cfg.get("torso_height_fraction",0.5)),0.1,0.9))
+		var pose: Transform3D = model.global_transform
+		if not pose.origin.is_finite() or not pose.basis.x.is_finite() \
+			or not pose.basis.y.is_finite() or not pose.basis.z.is_finite() \
+			or absf(pose.basis.determinant())<=0.000001:
+			geometry_valid = false
+			continue
+		occluders.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
+			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":candidate.get_instance_id()})
+	# Conservative whole model envelopes replace the inscribed ellipsoid and
+	# sparse head/torso rays that missed feet. These bounds are not a claim of
+	# exact skinned pixels: blind review still owns whole-silhouette quality.
+	var subjects: Array = []
+	for body: Node3D in [_ally_body,_wild]:
+		var model: Node3D = body.call("model_pivot") as Node3D
+		var bounds: AABB = RENDER_BOUNDS.measure(model)
+		var pose: Transform3D = model.global_transform
+		if not bounds.position.is_finite() or not bounds.size.is_finite() \
+			or bounds.size.x<=0.0 or bounds.size.y<=0.0 or bounds.size.z<=0.0 \
+			or not pose.origin.is_finite() or not pose.basis.x.is_finite() \
+			or not pose.basis.y.is_finite() or not pose.basis.z.is_finite() \
+			or absf(pose.basis.determinant())<=0.000001:
+			geometry_valid = false
+			continue
+		subjects.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
+			"points":FIGHT_CAMERA.box_points(bounds,pose)})
 	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
-		"overflow":overflow,"hud_available":hud!=null and hud_valid,
-		"invalid_hud_paths":invalid_hud,"viewport":extent}
+		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
+		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
 
-## Sight checks use the existing ellipsoid helper already used to protect
-## creature faces in this manager. This inscribed ellipsoid is an approximate
-## visibility guard, not proof of complete mesh silhouettes. Fresh blind
-## pixel review remains required. They move only the camera, never a body.
+
+## Whole oriented render envelopes are conservative sight constraints, not
+## exact mesh silhouettes. Human and creature foreground bodies participate;
+## fresh independent pixels still decide whether the actual view is readable.
 func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2,
 		context: Dictionary) -> Dictionary:
 	var hud_overlap := 0.0
 	for occupied: Rect2 in context.hud_rects:
 		for subject: Rect2 in [ally_rect,foe_rect]:
 			hud_overlap += subject.intersection(occupied).get_area()
-	var hidden := 0
-	if not bool(context.overflow):
-		for subject: Vector3 in context.subjects:
+	var hidden: int = 0
+	if not bool(context.overflow) and bool(context.geometry_valid):
+		for subject: Dictionary in context.subjects:
 			for occluder: Dictionary in context.occluders:
-				if OCCLUSION_FADE.segment_hits_ellipsoid(transform.origin,subject,occluder.pose,occluder.box):
+				if FIGHT_CAMERA.bounds_occlude(transform,subject,occluder,float(context.fov),
+					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
 					hidden += 1
 					break
 	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
-	var sight_clear: bool = not bool(context.overflow) and hidden==0
+	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
 	var occupied_records: Array = []
 	for rect: Rect2 in context.hud_rects:
 		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
@@ -4942,5 +4964,5 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
 		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
 		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,
-		"occluder_count":context.occluders.size(),
-		"penalty":hud_overlap+float(hidden)+(1.0 if bool(context.overflow) or not bool(context.hud_available) else 0.0)}
+		"occluder_count":context.occluders.size(),"geometry_valid":bool(context.geometry_valid),
+		"penalty":hud_overlap+float(hidden)+(1.0 if bool(context.overflow) or not bool(context.hud_available) or not bool(context.geometry_valid) else 0.0)}

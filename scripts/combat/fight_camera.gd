@@ -135,6 +135,8 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var distance_steps := clampi(int(config.get("separation_distance_steps",8)),1,12)
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
 	var best: Dictionary = {}
+	var nearest_safe: Dictionary = {}
+	var near_slack: float = clampf(float(config.get("safe_fit_distance_slack_m",0.75)),0.0,3.0)
 	# Reserve separation beyond the exact measured edge so the live tracker can
 	# ease toward its chosen angle without spending its dead zone in overlap.
 	var guard := maxf(0.0,float(config.get("separation_guard_m",0.0)))
@@ -194,8 +196,14 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 						or (overlap == float(best.overlap) and float(visibility.get("penalty",0.0))
 							< float((best.get("visibility",{}) as Dictionary).get("penalty",0.0))))):
 				best = candidate
-			if passed: return candidate
+			if passed:
+				if nearest_safe.is_empty() or actual_distance<float(nearest_safe.distance)-near_slack \
+					or (actual_distance<=float(nearest_safe.distance)+near_slack \
+						and absf(offset)<absf(float(nearest_safe.yaw_offset_deg))):
+					nearest_safe = candidate
+				break # First passing distance on this angle; no larger zoom needed.
 			if distance >= maximum: break
+	if not nearest_safe.is_empty(): return nearest_safe
 	# A coarse orbit can straddle a narrow clear interval: one neighbour is
 	# body-blocked and the other overlaps in projection. Refine only after the
 	# complete coarse search fails, keeping the same constrained lens query.
@@ -229,3 +237,65 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 		refined_fit["refinement_candidate_count"] = refined_offsets.size()
 		return refined_fit
 	return best
+
+
+## Project the convex oriented envelope, preserving actual perspective/depth.
+## A near-plane crossing is unavailable rather than silently a clear view.
+static func _bounds_hull(points: PackedVector3Array, lens: Transform3D,
+		fov: float, aspect: float, near_plane: float) -> PackedVector2Array:
+	var inverse: Transform3D = lens.affine_inverse()
+	var tangent: float = tan(deg_to_rad(fov)*0.5)
+	var projected := PackedVector2Array()
+	for point: Vector3 in points:
+		var local: Vector3 = inverse*point
+		var depth: float = -local.z
+		if depth<=near_plane: return PackedVector2Array()
+		projected.append(Vector2(0.5+local.x/(2.0*depth*tangent*aspect),
+			0.5-local.y/(2.0*depth*tangent)))
+	return Geometry2D.convex_hull(projected)
+
+## Read-only conservative envelope occlusion. Projected overlap alone does
+## not imply occlusion: the foreground entry must precede actor entry on
+## actual world-space rays through their shared projected polygon.
+static func bounds_occlude(lens: Transform3D, actor: Dictionary, other: Dictionary,
+		fov: float, aspect: float, near_plane: float) -> bool:
+	if not is_finite(fov) or not is_finite(aspect) or not is_finite(near_plane) \
+		or fov<=0.0 or fov>=179.0 or aspect<=0.0 or near_plane<0.0 \
+		or not lens.origin.is_finite() or not lens.basis.x.is_finite() \
+		or not lens.basis.y.is_finite() or not lens.basis.z.is_finite() \
+		or absf(lens.basis.determinant())<=0.000001: return true
+	var actor_hull: PackedVector2Array = _bounds_hull(actor.points,lens,fov,aspect,near_plane)
+	var other_hull: PackedVector2Array = _bounds_hull(other.points,lens,fov,aspect,near_plane)
+	if actor_hull.size()<3: return true
+	if other_hull.size()<3:
+		var furthest_depth: float = -INF
+		var lens_inverse: Transform3D = lens.affine_inverse()
+		for point: Vector3 in other.points: furthest_depth=maxf(furthest_depth,-(lens_inverse*point).z)
+		return furthest_depth>near_plane # Entirely behind is harmless; straddling is unavailable.
+	var intersections: Array[PackedVector2Array] = Geometry2D.intersect_polygons(actor_hull,other_hull)
+	var tangent: float = tan(deg_to_rad(fov)*0.5)
+	var reach: float = 1.0
+	for point: Vector3 in actor.points: reach=maxf(reach,lens.origin.distance_to(point)*2.0)
+	var actor_inverse: Transform3D = actor.inverse
+	var other_inverse: Transform3D = other.inverse
+	var actor_box: AABB = actor.box
+	var other_box: AABB = other.box
+	for polygon: PackedVector2Array in intersections:
+		if polygon.size()<3: continue
+		var centre := Vector2.ZERO
+		for point: Vector2 in polygon: centre+=point
+		centre/=float(polygon.size())
+		var samples := PackedVector2Array([centre])
+		for point: Vector2 in polygon: samples.append(point.lerp(centre,0.02))
+		for point: Vector2 in samples:
+			var ray: Vector3 = lens.basis*Vector3((point.x*2.0-1.0)*tangent*aspect,
+				(1.0-point.y*2.0)*tangent,-1.0).normalized()
+			var hit: Variant = actor_box.intersects_segment(actor_inverse*lens.origin,actor_inverse*(lens.origin+ray*reach))
+			if not hit is Vector3: continue
+			var actor_entry: Vector3 = (actor.pose as Transform3D)*(hit as Vector3)
+			if other_box.has_point(other_inverse*lens.origin): return true
+			var cover: Variant = other_box.intersects_segment(other_inverse*lens.origin,other_inverse*actor_entry)
+			if cover is Vector3:
+				var other_entry: Vector3 = (other.pose as Transform3D)*(cover as Vector3)
+				if lens.origin.distance_squared_to(other_entry)<lens.origin.distance_squared_to(actor_entry): return true
+	return false

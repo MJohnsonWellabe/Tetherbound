@@ -141,6 +141,10 @@ var _party_strip: Control = null
 var _strip_fader: Control = null
 ## Per-panel subject-fade level, 1.0 = opaque (see `_update_subject_fade`).
 var _subject_fade := {}
+# Actual authored identity art in the current Chip footprint; no placeholder
+# creature render, scene-model scale or per-frame texture reload.
+var _ally_portrait: TextureRect = null
+var _ally_portrait_species := ""
 ## OWNER-0902-HUD-TEAM-MENU: edge-detects the fight-just-ended frame for
 ## `_show_fight(false)`'s `hide_now()` call below -- `_process()` calls
 ## `_show_fight(false)` on EVERY frame nothing is fighting, not just the one
@@ -560,6 +564,10 @@ func _update_subject_fade(delta: float) -> void:
 	var low := float(cfg.get("alpha", 0.3))
 	var rate := float(cfg.get("rate", 6.0))
 	var min_overlap := float(cfg.get("min_overlap", 0.1))
+	var raw_floor: Variant = cfg.get("foreground_alpha_floor",1.0)
+	var foreground_floor := 1.0
+	if (raw_floor is int or raw_floor is float) and is_finite(float(raw_floor)):
+		foreground_floor = clampf(float(raw_floor),0.0,1.0)
 	var subjects: Array[Rect2] = _subject_rects() if enabled else []
 	# Enemy plate and grid: their own draw code resets `modulate.a` every
 	# frame, so the fade multiplies. Ally panel, orbs plate and strip holder
@@ -580,9 +588,20 @@ func _update_subject_fade(delta: float) -> void:
 			if measured.is_visible_in_tree() else 1.0
 		var level := move_toward(float(_subject_fade.get(panel, 1.0)), want, delta * rate)
 		_subject_fade[panel] = level
-		if bool(entry[1]):
+		if panel is PanelContainer:
+			# Preserve the SAME subject backing fade (including its easing),
+			# while retaining legible labels/bars/glyphs. self_modulate affects
+			# this panel's backing only; descendants retain the foreground floor.
+			# An intentional catch-state base alpha is still multiplied normally.
+			var foreground := maxf(level,foreground_floor)
+			var base_alpha := panel.modulate.a if bool(entry[1]) else 1.0
+			panel.modulate.a = base_alpha*foreground
+			panel.self_modulate.a = level/foreground if foreground>0.0 else 0.0
+		elif bool(entry[1]):
 			panel.modulate.a *= level
 		else:
+			# PartyStrip owns its internal draw/fade lifecycle; do not invent a
+			# second row-opacity controller in this no-draw parent holder.
 			panel.modulate.a = level
 
 
@@ -662,6 +681,7 @@ func _show_fight(visible_now: bool, just_ended: bool = false) -> void:
 		for panel: Control in [_ally_panel, _orbs_panel, _strip_fader]:
 			if panel != null:
 				panel.modulate.a = 1.0
+				panel.self_modulate.a = 1.0
 		if _party_strip != null:
 			if just_ended:
 				# OWNER-0902-HUD-TEAM-MENU: `set_pinned(false)` merely starts
@@ -857,7 +877,7 @@ func _draw_ally() -> void:
 		return
 	_ally_name.text = creature.label()
 	_ally_level.text = "Lv %d" % int(creature.level)
-	_ally_chip.color = _species_colour(str(creature.species_id))
+	_draw_ally_portrait(str(creature.species_id))
 
 	var fraction: float = creature.hp_fraction()
 	_ally_health.value = fraction * 100.0
@@ -878,6 +898,26 @@ func _draw_ally() -> void:
 	if now_full and not _energy_was_full:
 		_pulse(_energy_pulse)
 	_energy_was_full = now_full
+
+
+## The same species resolver used by the roster supplies real identity art.
+## Missing authored texture remains an honest swatch, not another species.
+func _draw_ally_portrait(species_id: String) -> void:
+	if species_id==_ally_portrait_species: return
+	_ally_portrait_species = species_id
+	if _ally_portrait==null:
+		_ally_portrait = TextureRect.new()
+		_ally_portrait.name = "AuthoredPortrait"
+		_ally_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ally_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_ally_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_ally_chip.add_child(_ally_portrait)
+		_ally_portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var path := CREATURE_PORTRAIT.resolve(species_id)
+	var texture: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	_ally_portrait.texture = texture
+	_ally_portrait.visible = texture!=null
+	_ally_chip.color = Color.TRANSPARENT if texture!=null else _species_colour(species_id)
 
 
 func _species_colour(species_id: String) -> Color:
