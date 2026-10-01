@@ -556,6 +556,7 @@ func _handle_peer_line(p: Dictionary, line: String) -> void:
 			p["last_value"] = msg
 		"heartbeat":
 			p["last_heartbeat_t"] = Time.get_ticks_msec() / 1000.0
+			p["last_heartbeat_received_s"] = p["last_heartbeat_t"]
 			p["last_heartbeat"] = msg
 			# Item 2 (review): `null` means the peer could not produce a hash
 			# at all (peer_runner.gd::_compute_state_hash's own contract) --
@@ -757,15 +758,17 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 		if Time.get_ticks_msec() > deadline:
 			var observed_ms := Time.get_ticks_msec()
 			var timeout_heartbeat: Variant = p.get("last_heartbeat")
-			var received_s := float(p.get("last_heartbeat_t", 0.0))
+			var received_s: Variant = p.get("last_heartbeat_received_s")
+			var receive_time_known := timeout_heartbeat is Dictionary and received_s != null
 			# One detached copy of our bounded peer heartbeat, before finish()
 			# pumps cleanup frames. Receive age is not the peer's sample age.
 			p["command_timeout_observation"] = {
 				"id": id, "action": action.left(96), "phase": "timeout_before_finish",
 				"coordinator_observed_ms": observed_ms, "coordinator_deadline_ms": deadline,
 				"heartbeat_known": timeout_heartbeat is Dictionary,
-				"heartbeat_received_ms": received_s * 1000.0 if received_s > 0.0 else null,
-				"heartbeat_receive_age_ms": float(observed_ms) - received_s * 1000.0 if received_s > 0.0 else null,
+				"heartbeat_receive_time_known": receive_time_known,
+				"heartbeat_received_ms": float(received_s) * 1000.0 if receive_time_known else null,
+				"heartbeat_receive_age_ms": float(observed_ms) - float(received_s) * 1000.0 if receive_time_known else null,
 				"heartbeat": (timeout_heartbeat as Dictionary).duplicate(true) if timeout_heartbeat is Dictionary else null,
 			}
 			p["heartbeat_deferred_until_s"] = 0.0

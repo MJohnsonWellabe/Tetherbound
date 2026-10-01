@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "TEST_ONLY_RECEIVE_METADATA_SOURCE_SUCCESSOR_NATIVE_PENDING",
+  "foundation_parent_head": "f2fa698cb01b35e9f30ca6dab6a16437fc607b87",
+  "root_preimage_head": "f38f71cc3a6d2bc4afbae93efe7f64a9874da3aa",
+  "root_base_source_commit": "31e28029bcfd9c4bd14150e70986db176a038fe2",
+  "preimages": [
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "parent_git_blob": "36a287fd385d85d1eca53f01c9273d0287bc9aec",
+      "parent_sha256": "c3cd3e09b86daf3d4617490a60684b449f5549ab1afc3297bd68caf1fac78b16",
+      "parent_preimage_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-receive-source/net_harness.gd.parent-preimage",
+      "root_git_blob": "4c51636340bd0fbbbff939ef9afa8e0856830ec5",
+      "root_sha256": "c578766ea3a850e2203db860a6e07315bb484158cc26f2e1b067f45c6ecd654d",
+      "root_preimage_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-receive-source/net_harness.gd.root-preimage",
+      "candidate_git_blob": "ae3f14848e3333e011015f961f94d3206ad1d58a",
+      "candidate_sha256": "1aeee3fd2cd092e0d23519b248d60afa8405ed482f9ef392888db6a74d5692e0"
+    },
+    {
+      "path": "tools/net/peer_runner.gd",
+      "parent_git_blob": "7b13f62cb6df5fa907992dd9cda40f9eb64a4cf0",
+      "parent_sha256": "560e68eb1570bc69488f3fcbf411f4044eb3fe8a3b146fbea181d19b047f7690",
+      "parent_preimage_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-receive-source/peer_runner.gd.parent-preimage",
+      "root_git_blob": "12c1deaf7c5b4f168fa9e2841d3be33f0558578c",
+      "root_sha256": "cacd5493f4b027c1eca6455872d748484b404b7dfe0eb0b2555c69c495c8946f",
+      "root_preimage_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-receive-source/peer_runner.gd.root-preimage",
+      "candidate_git_blob": "f699c6f51ed24a86e8fe45709db909ca0dde3c6d",
+      "candidate_sha256": "d2c2b417217f7f0104026f91f9a63ea533d64e723f07e06f3785eb2bc50cf691"
+    }
+  ],
+  "incremental_patch": {
+    "path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-receive-source/receive-only-successor.patch",
+    "sha256": "b0504253fa3cfc36e3bafb9532b6e0d2f6b1eb72ee51e2968a005df42fbcfb73",
+    "candidate_reverse_apply_check": "PASS_READ_ONLY"
+  },
+  "cumulative_root_patch": {
+    "path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-receive-source/retention-with-receive-fix-root.patch",
+    "sha256": "34534f2e694842694a6468078011373f6e69493e37ce45a45c12e0c51560b898",
+    "root_apply_check": "PASS_READ_ONLY"
+  },
+  "static_preservation": {
+    "full_harness_inverse_to_f2fa": "PASS",
+    "full_peer_inverse_to_f2fa": "PASS",
+    "dedicated_receive_stamp_writes": 1,
+    "new_time_samples_in_receive_branch": 0,
+    "liveness_completion_function_unchanged": "PASS",
+    "watchdog_function_unchanged": "PASS",
+    "NET_RUN_writer_unchanged": "PASS",
+    "kill_encounter_target_intent_action_accepted_action_anchors_unchanged": "PASS",
+    "round_ID_rewrite": false,
+    "current_opponent_kill_claim": false,
+    "protected_paths_unchanged": [
+      "scripts/combat/encounter_director.gd",
+      "scripts/combat/combat_manager.gd",
+      "tools/net/press_inject.gd",
+      "tests/smoke_net_veridian_relic_key.gd",
+      "autoload/game_state.gd",
+      "scripts/save/save_game.gd",
+      "ralph/reports/FOUNDATIONS/trainer-fight-retention-source/review.md",
+      "ralph/reports/FOUNDATIONS/trainer-fight-retention-source/source-cut.json",
+      "ralph/reports/FOUNDATIONS/trainer-fight-retention-source/failed-net-run-83d9.json"
+    ]
+  },
+  "pure_policy_controls": {
+    "cases": 6,
+    "sha256": "f88d5a3602b546c60eb1eabd6145d2bcc82e83baad156833d3786bf128f221f7",
+    "native_execution": false
+  },
+  "native_engine_parser_import_render_export_ci_runs_here": 0,
+  "production_budget_action_verdict_send_pump_cleanup_changes": 0
+}

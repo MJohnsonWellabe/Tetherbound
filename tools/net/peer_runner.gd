@@ -625,6 +625,7 @@ func _trainer_fight_note_killing_verdict(intent: Dictionary, peer_id: int, verdi
 		return
 	var impact: Dictionary = delta.get("impact", {})
 	_trainer_fight_killing_verdict = {
+		"scope": "last_observed_kill_in_bound_encounter", "current_opponent_kill_known": false,
 		"known": true, "signal_ms": Time.get_ticks_msec(), "author_peer_id": peer_id,
 		"encounter_id": str(intent["encounter_id"]).left(96) if intent.has("encounter_id") else null,
 		"intent_action": int(intent["action"]) if intent.has("action") else null,

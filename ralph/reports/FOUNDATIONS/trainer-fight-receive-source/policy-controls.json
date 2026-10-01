@@ -1,0 +1,109 @@
+{
+  "status": "PURE_PYTHON_RECEIVE_POLICY_CONTROLS_NOT_GODOT",
+  "cases": [
+    {
+      "case": "packet_then_world_completion",
+      "actual_receive_s": 10.0,
+      "liveness_watchdog_s": 50.0,
+      "coordinator_observed_ms": 95000,
+      "expected": {
+        "known": true,
+        "received_ms": 10000.0,
+        "receive_age_ms": 85000.0
+      },
+      "actual": {
+        "known": true,
+        "received_ms": 10000.0,
+        "receive_age_ms": 85000.0
+      },
+      "pass": true
+    },
+    {
+      "case": "completion_without_packet",
+      "actual_receive_s": null,
+      "liveness_watchdog_s": 50.0,
+      "coordinator_observed_ms": 95000,
+      "expected": {
+        "known": false,
+        "received_ms": null,
+        "receive_age_ms": null
+      },
+      "actual": {
+        "known": false,
+        "received_ms": null,
+        "receive_age_ms": null
+      },
+      "pass": true
+    },
+    {
+      "case": "heartbeat_without_stamp_unknown",
+      "actual_receive_s": null,
+      "liveness_watchdog_s": 50.0,
+      "coordinator_observed_ms": 95000,
+      "expected": {
+        "known": false,
+        "received_ms": null,
+        "receive_age_ms": null
+      },
+      "actual": {
+        "known": false,
+        "received_ms": null,
+        "receive_age_ms": null
+      },
+      "pass": true
+    },
+    {
+      "case": "zero_time_real_packet",
+      "actual_receive_s": 0.0,
+      "liveness_watchdog_s": 50.0,
+      "coordinator_observed_ms": 95000,
+      "expected": {
+        "known": true,
+        "received_ms": 0.0,
+        "receive_age_ms": 95000.0
+      },
+      "actual": {
+        "known": true,
+        "received_ms": 0.0,
+        "receive_age_ms": 95000.0
+      },
+      "pass": true
+    },
+    {
+      "case": "later_packet_updates_receive",
+      "actual_receive_s": 80.0,
+      "liveness_watchdog_s": 80.0,
+      "coordinator_observed_ms": 95000,
+      "expected": {
+        "known": true,
+        "received_ms": 80000.0,
+        "receive_age_ms": 15000.0
+      },
+      "actual": {
+        "known": true,
+        "received_ms": 80000.0,
+        "receive_age_ms": 15000.0
+      },
+      "pass": true
+    },
+    {
+      "case": "stamp_without_packet_unknown",
+      "actual_receive_s": 10.0,
+      "liveness_watchdog_s": 50.0,
+      "coordinator_observed_ms": 95000,
+      "expected": {
+        "known": false,
+        "received_ms": null,
+        "receive_age_ms": null
+      },
+      "actual": {
+        "known": false,
+        "received_ms": null,
+        "receive_age_ms": null
+      },
+      "pass": true
+    }
+  ],
+  "passed": 6,
+  "native_execution": false
+}
