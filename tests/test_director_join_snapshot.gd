@@ -5,6 +5,11 @@ const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 class SessionStub extends Node:
 	var applied := false
 	var multi_peer := true
+	var owners: Dictionary = {}
+	func _authority_character(peer_id: int) -> String:
+		return str(owners.get(peer_id, ""))
+	func peers() -> Array:
+		return owners.keys()
 	func is_active() -> bool:
 		return true
 	func is_host() -> bool:
@@ -330,6 +335,269 @@ func test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unread
 			result = JSON.parse_string(line.trim_prefix("DIRECTOR_TRANSPORT_RESULT="))
 	assert_eq(result.get("failures", ["missing result"]), [], combined)
 	assert_eq(int(result.get("assertions", 0)), EXPECTED_NATIVE_TRANSPORT_ASSERTIONS, "every native-network assertion must finish")
+	assert_false(combined.contains("ERROR:"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
+	assert_eq(code, 0, combined)
+
+
+## Scene presentation only. Creature HP/fainted, move profiles, cooldown/Wind,
+## host admission, snapshots, verdict consumption, XP and round exit are real.
+class NativeTrainerBody extends Node3D:
+	signal strike_ready()
+	signal telegraph_started(seconds: float)
+	var instance: RefCounted
+	var species_id := ""
+	var owner_peer_id := 0
+	var arena: Node3D
+	var combat_override: Dictionary = {}
+	var engaged := false
+	var faint_presentations := 0
+	var faint_notifications := 0
+	func centre() -> Vector3:
+		return global_position + Vector3.UP
+	func facing() -> Vector3:
+		return Vector3.FORWARD
+	func body_radius() -> float:
+		return 0.45
+	func body_height() -> float:
+		return 2.0
+	func combat_config() -> Dictionary:
+		return {}
+	func set_engaged(value: bool, _target: Node3D = null) -> void:
+		engaged = value
+	func add_impulse(_direction: Vector3, _amount: float) -> void:
+		pass
+	func play_hit() -> void:
+		pass
+	func play_faint() -> void:
+		faint_presentations += 1
+	func notify_fainted() -> void:
+		faint_notifications += 1
+
+class NativeTrainerManager extends "res://scripts/combat/combat_manager.gd":
+	func _open_arena() -> void:
+		_arena = Node3D.new()
+		_player.get_parent().add_child(_arena)
+	func _place_fighters() -> void:
+		# Both sides use the same fixed host-held geometry; no terrain in this fixture.
+		pass
+	func _flash_host_impact(_where: Vector3, _charged: bool, _tint: Variant = null,
+			_struck: Node3D = null, _damage_fraction: float = 0.0,
+			_impact: Dictionary = {}, _shake_camera: bool = true) -> void:
+		pass
+
+const NATIVE_COMBAT := preload("res://scripts/combat/combat_manager.gd")
+const NATIVE_SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const NATIVE_CREATURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
+var _native_trainer_completed := false
+var _native_trainer_observation: Dictionary = {}
+
+func _native_trainer_body(parent: Node, creature: RefCounted, at: Vector3,
+		owner: int = 0) -> NativeTrainerBody:
+	var body := NativeTrainerBody.new()
+	body.instance = creature
+	body.species_id = str(creature.get("species_id"))
+	body.owner_peer_id = owner
+	parent.add_child(body)
+	body.global_position = at
+	return body
+
+func _native_trainer_request(intent: Dictionary, completed: Array[Dictionary]) -> Dictionary:
+	completed.clear()
+	var pending := _native_guest.submit_encounter_intent(intent)
+	assert_true(bool(pending.get("pending", false)), "the guest sends over actual ENet, without a host fast path")
+	var arrived := _native_until(func() -> bool: return not completed.is_empty())
+	assert_true(arrived, "the native sender reached ordinary host strike arbitration")
+	if not arrived: return {}
+	_native_drain()
+	return completed.back().duplicate(true)
+
+func _case_native_guest_kill_advances_host_trainer_round() -> void:
+	if not _native_build(): return
+	assert_false(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
+		"this regression covers the current ordinary trainer path without enabling actor vitals")
+	var guest_id := _native_guest_api.get_unique_id()
+	var owners := {1: "native-trainer-host", guest_id: "native-trainer-guest"}
+	for director: NativeDirector in [_native_host, _native_guest]:
+		var session := director.get("_session") as SessionStub
+		session.applied = true
+		session.owners = owners.duplicate()
+		(director.get("_manager") as Node).free()
+	var host_root := _native_fixture.get_node("Host")
+	var guest_root := _native_fixture.get_node("Guest")
+	var host_manager := NativeTrainerManager.new()
+	var guest_manager := NativeTrainerManager.new()
+	host_root.add_child(host_manager)
+	guest_root.add_child(guest_manager)
+	host_manager.set_physics_process(false)
+	guest_manager.set_physics_process(false)
+	_native_host.set("_manager", host_manager)
+	_native_guest.set("_manager", guest_manager)
+	var host_creature := NATIVE_SPECIES.spawn("terrapup")
+	var guest_creature := NATIVE_SPECIES.spawn("trailpup")
+	var enemy := NATIVE_SPECIES.spawn("bramblebun")
+	var mirror := NATIVE_CREATURE_CODEC.decode(NATIVE_CREATURE_CODEC.encode(enemy))
+	assert_true(mirror != null, "the production creature codec reconstructs the host opponent")
+	if mirror == null: return
+	assert_eq(str(mirror.get("uid")), str(enemy.get("uid")), "the author's verdict targets the actual mirrored UID")
+	var next_creature := NATIVE_SPECIES.spawn("mudsnout")
+	var host_ally := _native_trainer_body(host_root, host_creature, Vector3(-4.0, 0.0, 0.0), 1)
+	var guest_proxy := _native_trainer_body(host_root, guest_creature, Vector3(0.0, 0.0, 1.1), guest_id)
+	var guest_ally := _native_trainer_body(guest_root, guest_creature, guest_proxy.global_position, guest_id)
+	host_ally.add_to_group("deployed_creature")
+	guest_proxy.add_to_group("deployed_creature")
+	var foe := _native_trainer_body(host_root, enemy, Vector3.ZERO)
+	var guest_foe := _native_trainer_body(guest_root, mirror, Vector3.ZERO)
+	var host_player := Node3D.new()
+	var guest_player := Node3D.new()
+	host_root.add_child(host_player)
+	guest_root.add_child(guest_player)
+	host_player.global_position = Vector3(-8.0, 0.0, 0.0)
+	guest_player.global_position = Vector3(-8.0, 0.0, 0.0)
+	_native_host.set("_ally", host_creature)
+	_native_host.set("_ally_body", host_ally)
+	_native_host.set("_player", host_player)
+	_native_host.set("_trainer_spec", {"id": "native-trainer-regression"})
+	_native_host.set("_trainer_queue", [next_creature] as Array[RefCounted])
+	_native_host.set("_trainer_body", foe)
+	_native_host.set("_trainer_sent", 1)
+	_native_host.set("_engaged_with", foe)
+	_native_host._host_set_deployed(guest_id, {"creature_uid": guest_creature.uid,
+		"species_id": guest_creature.species_id, "shiny": false,
+		"card": _native_host._creature_card(guest_creature)})
+	_native_host._ensure_encounter_arbiters()
+	var arbiter: RefCounted = _native_host.get("_encounter_host")
+	var rec: Dictionary = arbiter.call("open", 1, "meadows", "trainer", {
+		"species_id": enemy.species_id, "level": enemy.level, "hp": enemy.hp,
+		"hp_max": enemy.max_hp, "owner_npc": "native-trainer-regression",
+		"position": [foe.centre().x, foe.centre().y, foe.centre().z]}, host_creature.uid, owners[1])
+	var encounter_id := str(rec.encounter_id)
+	_native_host.set("_encounter", rec)
+	assert_true(host_manager.begin(host_player, foe, host_ally, [host_creature] as Array[RefCounted], null, null, true),
+		"production begin opens the host's full-health trainer round")
+	assert_true(guest_manager.begin(guest_player, guest_foe, guest_ally, [guest_creature] as Array[RefCounted], null, null, true),
+		"production begin opens the guest's full-health presentation")
+	host_manager.bind_encounter(_native_host, encounter_id, "trainer")
+	guest_manager.bind_encounter(_native_guest, encounter_id, "trainer")
+	host_manager.exited.connect(_native_host._on_combat_exited)
+	var exits: Array[String] = []
+	host_manager.exited.connect(func(outcome: String) -> void: exits.append(outcome))
+	var joined := _native_guest.submit_encounter_intent({"kind": "engage",
+		"encounter_id": encounter_id, "character_id": owners[guest_id]})
+	assert_true(bool(joined.get("pending", false)))
+	assert_true(_native_until(func() -> bool: return (arbiter.call("participants_of", encounter_id) as Array).has(guest_id)),
+		"the actual guest sender is admitted through production engage and join")
+	_native_drain()
+	_native_host._note_trainer_participants(encounter_id)
+	var roster_before: Dictionary = (_native_host.get("_trainer_battle_participants") as Dictionary).duplicate()
+	assert_eq(roster_before.size(), 2, "the battle retains both fighting participants for its eventual payout")
+	assert_almost_eq(float(enemy.hp), float(enemy.max_hp), 0.001, "no HP cap or damage fixture")
+	assert_eq(str(guest_creature.move_quick), "pack_bite", "use the species' real named quick move")
+	var completed: Array[Dictionary] = []
+	_native_host.host_strike_finished.connect(func(_intent: Dictionary, author: int, verdict: Dictionary) -> void:
+		completed.append({"author": author, "verdict": verdict.duplicate(true)}))
+	var intent := {"kind": "strike_intent", "encounter_id": encounter_id, "action": 1,
+		"slot": "quick", "move_id": guest_creature.move_quick,
+		"origin": [guest_proxy.centre().x, guest_proxy.centre().y, guest_proxy.centre().z],
+		"facing": [0.0, 0.0, -1.0]}
+	var first := _native_trainer_request(intent, completed)
+	var first_verdict: Dictionary = first.get("verdict", {})
+	assert_eq(int(first.get("author", 0)), guest_id, "authorship is the real remote sender, not the listen host")
+	assert_true(bool(first_verdict.get("ok", false)))
+	assert_true(bool(first_verdict.get("delta", {}).get("hit", false)))
+	assert_false(bool(first_verdict.get("delta", {}).get("killed", true)), "a non-killing hit cannot advance a round")
+	assert_true(float(enemy.hp) > 0.0 and float(enemy.hp) < float(enemy.max_hp))
+	assert_eq(host_manager.state, NATIVE_COMBAT.State.ACTIVE)
+	assert_true(exits.is_empty())
+	assert_almost_eq(float(_native_host.get("_trainer_send_delay")), 0.0)
+	assert_eq(int(host_creature.battles_fought), 0)
+	assert_eq(int(guest_creature.battles_fought), 0)
+	assert_almost_eq(float(mirror.hp), float(enemy.hp), 0.001, "the ordinary snapshot/verdict reconciles absolute HP")
+	var hp_after_first := float(enemy.hp)
+	var duplicate := _native_trainer_request(intent, completed)
+	assert_eq(str(duplicate.get("verdict", {}).get("code", "")), "replayed_action")
+	assert_almost_eq(float(enemy.hp), hp_after_first)
+	assert_true(exits.is_empty(), "replayed non-killing intent cannot fake a won round")
+	var host_energy_before := float(host_creature.energy)
+	var killing: Dictionary = {}
+	for action in range(2, 65):
+		var deadline := int((arbiter.call("strike_authority_state", encounter_id, guest_id) as Dictionary).get("deadline_ms", 0))
+		if not _native_until(func() -> bool: return Time.get_ticks_msec() >= deadline): break
+		intent["action"] = action
+		var answer := _native_trainer_request(intent, completed)
+		var verdict: Dictionary = answer.get("verdict", {})
+		if not bool(verdict.get("ok", false)): break
+		if bool(verdict.get("delta", {}).get("killed", false)):
+			killing = answer
+			break
+	assert_false(killing.is_empty(), "ordinary admitted strikes must cause a real CreatureInstance faint")
+	assert_eq(int(killing.get("author", 0)), guest_id)
+	assert_almost_eq(float(enemy.hp), 0.0)
+	assert_true(bool(enemy.fainted), "the host's actual take_damage caused the faint")
+	_native_trainer_observation = {"host_state": host_manager.state, "guest_state": guest_manager.state,
+		"record_phase": str(arbiter.call("phase", encounter_id)), "enemy_hp": enemy.hp,
+		"enemy_fainted": enemy.fainted, "author": killing.get("author", 0), "guest_id": guest_id}
+	assert_eq(host_manager.state, NATIVE_COMBAT.State.RESOLVING, "a guest kill must start the host's ordinary faint pause")
+	assert_eq(guest_manager.state, NATIVE_COMBAT.State.RESOLVING, "the author consumes its richer killing verdict")
+	assert_almost_eq(float(host_creature.energy), host_energy_before, 0.001, "the observer must not gain energy for the guest's strike")
+	var guest_energy := float(guest_creature.energy)
+	var guest_battles := int(guest_creature.battles_fought)
+	var delta: Dictionary = killing.get("verdict", {}).get("delta", {})
+	guest_manager.apply_host_strike_verdict(delta)
+	_native_host._host_after_encounter_change(encounter_id, guest_id)
+	assert_almost_eq(float(guest_creature.energy), guest_energy)
+	assert_eq(int(guest_creature.battles_fought), guest_battles, "duplicate verdict cannot pay another round award")
+	assert_true(exits.is_empty(), "the faint pause is preserved; no immediate exit shortcut")
+	var pause := float(NATIVE_COMBAT.MATH.config().get("flow", {}).get("faint_pause", 1.6))
+	for _tick in int(ceil(pause * 60.0)) + 1:
+		# Elapse the unchanged production resolution clock; never set state/timer/outcome.
+		if host_manager.state == NATIVE_COMBAT.State.RESOLVING: host_manager._physics_process(1.0 / 60.0)
+		if guest_manager.state == NATIVE_COMBAT.State.RESOLVING: guest_manager._physics_process(1.0 / 60.0)
+	_native_drain()
+	assert_eq(exits, ["won"] as Array[String], "the real manager exit advances the host trainer round exactly once")
+	assert_eq(host_manager.state, NATIVE_COMBAT.State.INACTIVE)
+	assert_eq(foe.faint_notifications, 1, "production trainer round teardown notifies the original fainted body")
+	assert_eq(_native_host.get("_trainer_body"), null)
+	assert_true(float(_native_host.get("_trainer_send_delay")) > 0.0, "the ordinary next-send-out clock is armed")
+	assert_eq(_native_host.get("_trainer_queue"), [next_creature] as Array[RefCounted], "the next creature remains queued until that clock expires")
+	assert_true(_native_host.trainer_battle_active(), "a won round is not a fabricated complete trainer victory")
+	assert_eq(_native_host.get("_trainer_battle_participants"), roster_before, "round teardown preserves the eventual participant payout roster")
+	assert_eq(int(host_creature.battles_fought), 1, "the observing host receives one ordinary round award")
+	assert_eq(int(guest_creature.battles_fought), 1, "the guest author receives one ordinary round award")
+	_native_trainer_observation.merge({"host_state_after_pause": host_manager.state,
+		"host_exits": exits.duplicate(), "send_delay": _native_host.get("_trainer_send_delay"),
+		"queued": (_native_host.get("_trainer_queue") as Array).size(),
+		"host_round_awards": host_creature.battles_fought, "guest_round_awards": guest_creature.battles_fought})
+	var stale := _native_trainer_request(intent, completed)
+	assert_false(bool(stale.get("verdict", {}).get("ok", true)), "a stale killing intent cannot be admitted in the completed round")
+	guest_manager.apply_host_strike_verdict(delta)
+	_native_host._host_after_encounter_change(encounter_id, guest_id)
+	assert_eq(exits, ["won"] as Array[String])
+	assert_eq(foe.faint_notifications, 1)
+	assert_eq(int(host_creature.battles_fought), 1)
+	assert_eq(int(guest_creature.battles_fought), 1)
+	_native_trainer_completed = true
+
+func test_native_guest_killing_strike_advances_host_trainer_round_once() -> void:
+	var runner_path := "user://director_guest_trainer_regression_runner.gd"
+	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null: return
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_director_join_snapshot.gd").new()\n\ttest._case_native_guest_kill_advances_host_trainer_round()\n\ttest._native_cleanup()\n\tprint("DIRECTOR_GUEST_TRAINER_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures,"completed":test._native_trainer_completed,"observation":test._native_trainer_observation}))\n\tquit(0 if test.failures.is_empty() and test._native_trainer_completed else 1)\n')
+	runner.close()
+	var output: Array = []
+	var absolute := ProjectSettings.globalize_path(runner_path)
+	var log_path := ProjectSettings.globalize_path("user://director-guest-trainer-regression-child.log")
+	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", absolute, "--log-file", log_path], output, true)
+	DirAccess.remove_absolute(absolute)
+	var combined := "\n".join(output)
+	var result: Dictionary = {}
+	for line: String in combined.split("\n"):
+		if line.begins_with("DIRECTOR_GUEST_TRAINER_RESULT="):
+			result = JSON.parse_string(line.trim_prefix("DIRECTOR_GUEST_TRAINER_RESULT="))
+	assert_true(bool(result.get("completed", false)), combined)
+	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_true(int(result.get("assertions", 0)) >= 45, "the native cause and advancement assertions must finish")
 	assert_false(combined.contains("ERROR:"), combined)
 	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
 	assert_eq(code, 0, combined)
