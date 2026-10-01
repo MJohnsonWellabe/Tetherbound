@@ -1,0 +1,20 @@
+{
+  "reviewer": "f18_strict_source (/root/f18_strict_source), independent read-only agent",
+  "initial_source_head": "a18e12819ab207d667a1efc7caec8ebdb860cb45",
+  "initial_verdict": "FAIL",
+  "findings": [
+    {"priority": 2, "file": "scripts/world/home_key.gd", "issue": "Remote visual timeout retained stale dictionary entries", "fix": "tree_exited removes matching retained instance without removing replacement", "recheck": "PASS"},
+    {"priority": 2, "file": ".tmp/f18-authority/portal_action_policy.gd", "issue": "Valid canonical saved biome entry marker refused", "fix": "Validate activated membership then normalize same-biome entry marker to configured actual entry", "recheck": "PASS"},
+    {"priority": 2, "file": ".tmp/f18-authority/portal_action_policy.gd", "issue": "Raw second fifth key spend bypassed UI personal stir check", "fix": "Require host-derived durable personal stir bool, deny existing personal stir before preparing spend", "recheck": "PASS"}
+  ],
+  "rechecked_source_head": "f92a43e8403a6ded53db42398ed3e243c61a5e99",
+  "source_quality_result": "PASS",
+  "policy_sha256": "BDF9FDCF1021CC03D69D53B0758C67A31D1C15D456E51C76564FBA13170210A3",
+  "delivery_sha256": "9759A635E2EFD166A6EE1C959E387A051EA31444E2D1F5511506AA5F7FCA2297",
+  "protection_patch_sha256": "5C5D3EC7C1169018152F4309FC44A80EE2C589C75CE72C217E4F04F3118AA7C4",
+  "hall_mount_compatibility": {"result": "PASS API ONLY", "patch_sha256": "B7781AADF592C0E06B004752459AFDF2DFD9CDE60D4D4C5A6DEF04EF3992EF3E", "after_source_sha256": "D0B58C9AF5EDC4BC048519F3AB0FBC2BE4758F9D209BE0C34ACC21D52D24EDC7", "remaining_contract": "ROOT must route durable fifth world result to PortalInteraction.show_committed_stir; refresh is silent restoration only"},
+  "reviewer_statement": "Focused source recheck PASS at f92a43e8403a6ded53db42398ed3e243c61a5e99. All three prior findings are resolved. Added rule cases correctly cover entry fallback and a raw second fifth spend, but remain UNRUN. F18#0–#5 remain UNPROVEN. Overall landing remains HOLD for ROOT’s integration/runtime proofs and outstanding F17#4/#6. No edits or engine execution performed.",
+  "criteria_verdicts": {"F18#0": "UNPROVEN", "F18#1": "UNPROVEN", "F18#2": "UNPROVEN", "F18#3": "UNPROVEN", "F18#4": "UNPROVEN", "F18#5": "UNPROVEN"},
+  "landing_disposition": "HOLD",
+  "engine_execution": "zero, ROOT-only token"
+}

@@ -6,8 +6,8 @@ Frozen proposal files:
 
 | Artifact | SHA256 |
 | --- | --- |
-| `.tmp/f18-authority/portal_action_policy.gd` | `37CC4E26BB0C06BD853EF8A2EA5502FE345943454236C6F0C4E76F7570380EC8` |
-| `.tmp/f18-authority/portal_delivery.gd` | `04A203739FAD754624416F3799D1C3379BBB4C13C101F22DC0F5459B262383B9` |
+| `.tmp/f18-authority/portal_action_policy.gd` | `BDF9FDCF1021CC03D69D53B0758C67A31D1C15D456E51C76564FBA13170210A3` |
+| `.tmp/f18-authority/portal_delivery.gd` | `9759A635E2EFD166A6EE1C959E387A051EA31444E2D1F5511506AA5F7FCA2297` |
 | `.tmp/f18-authority/protected-keys-and-waystones.patch` | `5C5D3EC7C1169018152F4309FC44A80EE2C589C75CE72C217E4F04F3118AA7C4` |
 
 `git apply --check --ignore-space-change .tmp/f18-authority/protected-keys-and-waystones.patch` passed against this checkout. Plain `git apply --check` rejected CRLF working-file context; this was corrected with the whitespace-aware read-only check. Python alias was absent, so the generator used `C:/Users/mattj/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`. Neither result is an engine or gameplay proof.

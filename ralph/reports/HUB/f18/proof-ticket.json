@@ -1,0 +1,187 @@
+{
+  "ticket": "F18-INTEGRATED-R1",
+  "workspace": "D:\\tetherbound\\feature-f18",
+  "branch": "tb/f18",
+  "source_head": "f92a43e8403a6ded53db42398ed3e243c61a5e99",
+  "runtime_initial_head": "74eba8ac9c4845f9563c9b00ab59f94dfaae0f50",
+  "base_main": "b7cb96de89c4c6a9ae827f09e0ad7a2d3a699e70",
+  "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/504",
+  "permission_context": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never"
+  },
+  "engine_owner": "ROOT 01a0ef9f-30ec-7f32-97fe-db84fef05f27 ONLY",
+  "owned_source_bindings": [
+    {
+      "path": "scripts/world/home_key.gd",
+      "git_blob_sha256": "5442000e7a46a8668a6bdef6fe43bef6b9fad594be60fd7a7f366ebd29a5b086",
+      "working_bytes_sha256": "5442000e7a46a8668a6bdef6fe43bef6b9fad594be60fd7a7f366ebd29a5b086"
+    },
+    {
+      "path": "scripts/world/portal_arch.gd",
+      "git_blob_sha256": "3332f7e5420a817b2039e966cdc63e8206e10670644c0b56fd494b286eb647ea",
+      "working_bytes_sha256": "3332f7e5420a817b2039e966cdc63e8206e10670644c0b56fd494b286eb647ea"
+    },
+    {
+      "path": "scripts/world/waystone.gd",
+      "git_blob_sha256": "aa9a52a8a2322d3c650422187feefadbad1f4b551b3c96509d77f6880d6669ab",
+      "working_bytes_sha256": "aa9a52a8a2322d3c650422187feefadbad1f4b551b3c96509d77f6880d6669ab"
+    },
+    {
+      "path": "scripts/world/realm_gate.gd",
+      "git_blob_sha256": "aff4bcb7ba7d7826513be44ed54216e7c3c12364d50be18a6e3551282865940a",
+      "working_bytes_sha256": "aff4bcb7ba7d7826513be44ed54216e7c3c12364d50be18a6e3551282865940a"
+    },
+    {
+      "path": "scripts/world/rift_crossing.gd",
+      "git_blob_sha256": "e860b1202da0de3e1e75a772efebdec2c3f8177f87b9f5196a88819d79ef5fc0",
+      "working_bytes_sha256": "e860b1202da0de3e1e75a772efebdec2c3f8177f87b9f5196a88819d79ef5fc0"
+    },
+    {
+      "path": "scripts/world/stormwood_water_gate.gd",
+      "git_blob_sha256": "599b577b84f0c1807169905fca82e9338133f4996ee8c05a0c774e2976457b0c",
+      "working_bytes_sha256": "599b577b84f0c1807169905fca82e9338133f4996ee8c05a0c774e2976457b0c"
+    },
+    {
+      "path": "data/config/portals.json",
+      "git_blob_sha256": "6f5dd33d3aac202c7fd8fe62d4bd4e7c64b4f0e4946d2d0ea58e79b0e6ec712c",
+      "working_bytes_sha256": "6f5dd33d3aac202c7fd8fe62d4bd4e7c64b4f0e4946d2d0ea58e79b0e6ec712c"
+    },
+    {
+      "path": "data/config/waystones.json",
+      "git_blob_sha256": "f561d703d3c3ba3657dbae10d57dad46ade3a1a765534bd2887a13202e4189c4",
+      "working_bytes_sha256": "4e98dc6bde5b4eea9b9d87c89b7f437cac0cf9b7c0f2c8b084b2673923328e83"
+    },
+    {
+      "path": "data/items/items.json",
+      "git_blob_sha256": "0d4f40728494a83edadd860c29322b3528b9c28bf2c563e4dd91ae5ece39d9a6",
+      "working_bytes_sha256": "0d4f40728494a83edadd860c29322b3528b9c28bf2c563e4dd91ae5ece39d9a6"
+    },
+    {
+      "path": "data/dialogue/opening.json",
+      "git_blob_sha256": "26b54717989601921f33089576b1f2df726fc55221d363fc4748bdf1bb1f8908",
+      "working_bytes_sha256": "26b54717989601921f33089576b1f2df726fc55221d363fc4748bdf1bb1f8908"
+    },
+    {
+      "path": "ralph/reports/HUB/f18/component_rules.gd",
+      "git_blob_sha256": "9a49a08b28615030e6a36a24eab279a5afd994b80c6a41015892772e12c256b1",
+      "working_bytes_sha256": "9a49a08b28615030e6a36a24eab279a5afd994b80c6a41015892772e12c256b1"
+    }
+  ],
+  "isolated_shared_proposals": [
+    {
+      "ignored_path": ".tmp/f18-authority/portal_action_policy.gd",
+      "sha256": "bdf9fdcf1021cc03d69d53b0758c67a31d1c15d456e51c76564fba13170210a3",
+      "evidence_archive": "proposals/portal_action_policy.gd.gz",
+      "archive_sha256": "9fa5722df849a3f7a29b7bd7748b6841c36f7e979b7cd6fe1fb9e6d1b0a72e05",
+      "status": "unmounted ROOT-owned proposal"
+    },
+    {
+      "ignored_path": ".tmp/f18-authority/portal_delivery.gd",
+      "sha256": "9759a635e2efd166a6ee1c959e387a051ea31444e2d1f5511506aa5f7fca2297",
+      "evidence_archive": "proposals/portal_delivery.gd.gz",
+      "archive_sha256": "25309db7b4e789275ca30c7fa59fe67dc2f89c8b549d65e82b15d8d5fd99303c",
+      "status": "unmounted ROOT-owned proposal"
+    },
+    {
+      "ignored_path": ".tmp/f18-authority/protected-keys-and-waystones.patch",
+      "sha256": "5c5d3ec7c1169018152f4309fc44a80ee2c589c75ce72c217e4f04f3118aa7c4",
+      "evidence_archive": "proposals/protected-keys-and-waystones.patch.gz",
+      "archive_sha256": "4c974d82cfab63eab43888e49eb38425a2eccfb5d7e93db2994c63f8bc749d36",
+      "status": "unmounted ROOT-owned proposal"
+    }
+  ],
+  "reuse": {
+    "F18-authored-content-integrity": "PASS: content-result.json; data unchanged by f92 source correction",
+    "git-diff-whitespace": "PASS",
+    "draft-PR-traceability": "PASS",
+    "independent-source-recheck": "PASS: f18_strict_source, exact f92a43e840; zero engine execution",
+    "Hall-mount-API-compatibility": "PASS ONLY: shared patch b7781aadf592c0e06b004752459afdf2dfd9cde60d4d4c5a6def04ef3992ef3e"
+  },
+  "named_checks": [
+    {
+      "name": "F18-component-rules",
+      "status": "UNRUN",
+      "criteria": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "root_engine_arguments": [
+        "--headless",
+        "--path",
+        "<exact integrated ROOT checkout>",
+        "--script",
+        "ralph/reports/HUB/f18/component_rules.gd",
+        "--",
+        "--policy-path=res://scripts/net/portal_action_policy.gd"
+      ],
+      "scope": "Synthetic UNIT host contexts only; all changed components preload, authority/refusal/channel/permit/access and entry/stir negative cases. Use accepted equivalent policy path if ROOT chooses another name."
+    },
+    {
+      "name": "F18-earned-opening-and-protected-backpack",
+      "status": "UNPROVEN",
+      "criteria": [
+        0,
+        2,
+        4
+      ],
+      "witness": "Actual opening grandpa_first_catch gives each character HomeKey once; full backpack leaves saved owed gift; use/repeat/reload/rejoin cannot grant twice. Actual Drop, sale, trade, chest/death satchel attempts preserve all protected keys; ordinary consumables still work."
+    },
+    {
+      "name": "F18-native-home-key",
+      "status": "UNPROVEN",
+      "criteria": [
+        1,
+        4
+      ],
+      "witness": "One ordinary quick-slot or Satchel Use closes screen, ~2s visible raised key/glow/sound, fade/loading, only requester safely arrives at home arch. Refuse fight/dialogue/cutscene/swim/flight/downed; B, damage, combat admission, delayed begin/cancel, lost result and disconnect keep safe authority; no spend/cooldown."
+    },
+    {
+      "name": "F18-portal-only-and-durable-unlock",
+      "status": "UNPROVEN",
+      "criteria": [
+        2,
+        4
+      ],
+      "witness": "Earn actual key via F19 participant producer and use matching arch once. World+character durable unlock; failed world/owner bool saves, lost ACK and rejoin recover immutable receipt without second debit. Locked reason readable. Raw client-selected realm and every retired physical crossing cannot enter another biome. Two peers move individually; behind friend gains no key/personal unlock; personal unlock works on a second host."
+    },
+    {
+      "name": "F18-mounted-waystones",
+      "status": "UNPROVEN",
+      "criteria": [
+        3
+      ],
+      "witness": "All19 configured anchors resolve to dry collision-safe supported installed shrines/arrival pads (5/5/4/5). Walk/touch actual stones out of combat, own last touch survives reload/rejoin; no-activation and valid saved entry marker use actual entry. Inspect line readable, source changed anchor fails visibly. Check production camera and native scale."
+    },
+    {
+      "name": "F18-ordinary-station-loop",
+      "status": "UNPROVEN",
+      "criteria": [
+        5
+      ],
+      "witness": "Record continuous ordinary-input earned character deep in a biome -> HomeKey -> walk farm road -> real homestead station interaction -> save/reload -> walk Hall -> matching portal -> own actual last-touched stone. No fixture, direct teleport, synthetic grant, stub station or source-presence closure. Disclose any harness input."
+    },
+    {
+      "name": "F18-F20-fifth-stir",
+      "status": "UNPROVEN",
+      "criteria": [
+        "F20#2"
+      ],
+      "witness": "Earn fifth key, ordinary arch use durably debits exactly once and writes personal receipt/world stir; biome5 never opens. Native glow/hum/dust+single settled line, duplicate result/reload silent glow; raw second key spend refused. Trusted other-peer moment uses show_committed_stir."
+    }
+  ],
+  "criteria_verdicts": {
+    "F18#0": "UNPROVEN",
+    "F18#1": "UNPROVEN",
+    "F18#2": "UNPROVEN",
+    "F18#3": "UNPROVEN",
+    "F18#4": "UNPROVEN",
+    "F18#5": "UNPROVEN"
+  },
+  "landing_gate": "HOLD: required F17#4/#6 remain open; #5 main via PR503. ROOT shared integration+targeted runtime/co-op/save/visual/ordinary-path proof and independent strict evidence recheck required.",
+  "owner_needs": [],
+  "lane_engine_executions": 0
+}
