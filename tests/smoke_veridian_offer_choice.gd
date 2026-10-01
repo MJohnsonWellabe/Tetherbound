@@ -44,6 +44,14 @@ const SLOT := 3
 const CHOICE_FRAME_BUDGET := 900
 const NO_REOFFER_FRAMES := 240
 
+## CI runs independent two-case groups on separate runners. An ordinary
+## invocation still executes the complete six-case witness in its old order.
+const CI_CASE_GROUPS := {
+	"space": ["space-accept", "space-refuse"],
+	"capacity": ["capacity-refuse-at-prompt", "capacity-accept-then-let-newcomer-go"],
+	"recovery": ["capacity-accept-release-one", "save-while-choice-open"],
+}
+
 var _failures: Array[String] = []
 var _game: Node = null
 var _world: Node = null
@@ -60,6 +68,18 @@ func _fail(message: String) -> void:
 
 
 func _run() -> void:
+	var selected: Array = []
+	var group := OS.get_environment("TB_VERIDIAN_CASE_GROUP")
+	if group.is_empty():
+		for cases: Array in CI_CASE_GROUPS.values():
+			selected.append_array(cases)
+	elif CI_CASE_GROUPS.has(group):
+		selected = CI_CASE_GROUPS[group]
+	else:
+		print("veridian-offer-choice FAIL: unknown CI case group '%s'" % group)
+		quit(2)
+		return
+	print("veridian offer cases: %s" % str(selected))
 	await _boot_world()
 	_game = root.get_node_or_null(^"Game")
 	if _game == null:
@@ -67,12 +87,18 @@ func _run() -> void:
 		quit(1)
 		return
 
-	await _scenario("space-accept", 4, "accept", "")
-	await _scenario("space-refuse", 4, "refuse", "")
-	await _scenario("capacity-refuse-at-prompt", 5, "refuse", "")
-	await _scenario("capacity-accept-then-let-newcomer-go", 5, "accept", "newcomer")
-	await _scenario("capacity-accept-release-one", 5, "accept", "slot0")
-	await _a_save_while_the_choice_is_open_keeps_the_offer()
+	if selected.has("space-accept"):
+		await _scenario("space-accept", 4, "accept", "")
+	if selected.has("space-refuse"):
+		await _scenario("space-refuse", 4, "refuse", "")
+	if selected.has("capacity-refuse-at-prompt"):
+		await _scenario("capacity-refuse-at-prompt", 5, "refuse", "")
+	if selected.has("capacity-accept-then-let-newcomer-go"):
+		await _scenario("capacity-accept-then-let-newcomer-go", 5, "accept", "newcomer")
+	if selected.has("capacity-accept-release-one"):
+		await _scenario("capacity-accept-release-one", 5, "accept", "slot0")
+	if selected.has("save-while-choice-open"):
+		await _a_save_while_the_choice_is_open_keeps_the_offer()
 
 	print("")
 	if _max_party_seen > 5:

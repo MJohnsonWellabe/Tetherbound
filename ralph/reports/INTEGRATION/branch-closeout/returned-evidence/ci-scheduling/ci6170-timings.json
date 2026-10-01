@@ -1,0 +1,2117 @@
+{
+  "run": {
+    "id": 36882902951,
+    "head_sha": "91c3e4a344489dd4fb38f461769fcd98d2bdf150",
+    "created_at": "2026-10-01T15:16:11Z",
+    "run_started_at": "2026-10-01T15:16:11Z",
+    "updated_at": "2026-10-01T16:20:36Z",
+    "status": "completed",
+    "conclusion": "failure"
+  },
+  "jobs": [
+    {
+      "id": 110438899309,
+      "name": "changes",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:16:14Z",
+      "completed_at": "2026-10-01T15:25:16Z",
+      "seconds": 542.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 535.0
+        },
+        {
+          "name": "Verify rolling release reference helper",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Decide whether anything but documentation changed",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Decide the tier (fast on every PR/push, full every 8 hours)",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934092,
+      "name": "verify-bake-freshness",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:21Z",
+      "completed_at": "2026-10-01T15:28:12Z",
+      "seconds": 171.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 85.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 72.0
+        },
+        {
+          "name": "Check the playground scatter bake is fresh",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Check the playground terrain bake is fresh",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Check initialized shared terrain mipmaps",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934247,
+      "name": "verify-catching",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:26Z",
+      "completed_at": "2026-10-01T15:35:44Z",
+      "seconds": 618.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 83.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 62.0
+        },
+        {
+          "name": "Verify catching",
+          "conclusion": "success",
+          "seconds": 400.0
+        },
+        {
+          "name": "Verify catch aim slowdown",
+          "conclusion": "success",
+          "seconds": 68.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934259,
+      "name": "verify-regions-relay",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:22Z",
+      "completed_at": "2026-10-01T15:53:29Z",
+      "seconds": 1687.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 139.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 73.0
+        },
+        {
+          "name": "Verify relay",
+          "conclusion": "success",
+          "seconds": 268.0
+        },
+        {
+          "name": "Verify stronghold",
+          "conclusion": "success",
+          "seconds": 166.0
+        },
+        {
+          "name": "Verify art",
+          "conclusion": "success",
+          "seconds": 82.0
+        },
+        {
+          "name": "Verify Tidewake land loops walked (reed root, brine terrace)",
+          "conclusion": "success",
+          "seconds": 330.0
+        },
+        {
+          "name": "Verify Tidewake land loops walked (salt shrine, sluice patrol)",
+          "conclusion": "success",
+          "seconds": 352.0
+        },
+        {
+          "name": "Verify Tidewake return shortcuts closed then open and shorter",
+          "conclusion": "success",
+          "seconds": 270.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934335,
+      "name": "verify-core-verb-shard",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:21Z",
+      "completed_at": "2026-10-01T15:40:09Z",
+      "seconds": 888.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 167.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 70.0
+        },
+        {
+          "name": "Verify playground",
+          "conclusion": "success",
+          "seconds": 79.0
+        },
+        {
+          "name": "Verify input",
+          "conclusion": "success",
+          "seconds": 71.0
+        },
+        {
+          "name": "Verify unstick",
+          "conclusion": "success",
+          "seconds": 19.0
+        },
+        {
+          "name": "Verify traversal",
+          "conclusion": "success",
+          "seconds": 379.0
+        },
+        {
+          "name": "Verify audio",
+          "conclusion": "success",
+          "seconds": 94.0
+        },
+        {
+          "name": "Verify backpack_player_eats",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934381,
+      "name": "verify-unit-tests (1)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:23Z",
+      "completed_at": "2026-10-01T15:32:37Z",
+      "seconds": 434.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 76.0
+        },
+        {
+          "name": "Materialize committed Meadows evidence fixtures",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Cache Godot editor and export templates",
+          "conclusion": "success",
+          "seconds": 10.0
+        },
+        {
+          "name": "Install Godot",
+          "conclusion": "skipped",
+          "seconds": 0.0
+        },
+        {
+          "name": "Add Godot to PATH",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Cache the import artifacts",
+          "conclusion": "success",
+          "seconds": 14.0
+        },
+        {
+          "name": "Import project (cold)",
+          "conclusion": "success",
+          "seconds": 23.0
+        },
+        {
+          "name": "Import project (verify)",
+          "conclusion": "success",
+          "seconds": 6.0
+        },
+        {
+          "name": "Run tests",
+          "conclusion": "success",
+          "seconds": 297.0
+        },
+        {
+          "name": "Post Cache the import artifacts",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Cache Godot editor and export templates",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934417,
+      "name": "verify-unit-tests (2)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:23Z",
+      "completed_at": "2026-10-01T15:33:54Z",
+      "seconds": 511.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 102.0
+        },
+        {
+          "name": "Materialize committed Meadows evidence fixtures",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Cache Godot editor and export templates",
+          "conclusion": "success",
+          "seconds": 41.0
+        },
+        {
+          "name": "Install Godot",
+          "conclusion": "skipped",
+          "seconds": 0.0
+        },
+        {
+          "name": "Add Godot to PATH",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Cache the import artifacts",
+          "conclusion": "success",
+          "seconds": 17.0
+        },
+        {
+          "name": "Import project (cold)",
+          "conclusion": "success",
+          "seconds": 22.0
+        },
+        {
+          "name": "Import project (verify)",
+          "conclusion": "success",
+          "seconds": 5.0
+        },
+        {
+          "name": "Run tests",
+          "conclusion": "success",
+          "seconds": 317.0
+        },
+        {
+          "name": "Post Cache the import artifacts",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Cache Godot editor and export templates",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934429,
+      "name": "verify-scatter-rules",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:25Z",
+      "completed_at": "2026-10-01T15:43:51Z",
+      "seconds": 1106.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 114.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 83.0
+        },
+        {
+          "name": "Run the scatter rules regression checks",
+          "conclusion": "success",
+          "seconds": 902.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934439,
+      "name": "verify-regions-shard",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T15:25:22Z",
+      "completed_at": "2026-10-01T16:05:23Z",
+      "seconds": 2401.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 81.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 59.0
+        },
+        {
+          "name": "Verify earned aim cancellation and native entry guard",
+          "conclusion": "success",
+          "seconds": 19.0
+        },
+        {
+          "name": "Verify character texture binding and material cache isolation",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Verify actual Game crossing and native scoped receiver lifecycle",
+          "conclusion": "success",
+          "seconds": 25.0
+        },
+        {
+          "name": "Retain realm lifecycle first-attempt receipts",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Verify warrens",
+          "conclusion": "success",
+          "seconds": 111.0
+        },
+        {
+          "name": "Verify relay_station",
+          "conclusion": "success",
+          "seconds": 94.0
+        },
+        {
+          "name": "Verify continuous Relay ramp and deck walk",
+          "conclusion": "success",
+          "seconds": 8.0
+        },
+        {
+          "name": "Verify Stormheart approach and open ramp entrance",
+          "conclusion": "success",
+          "seconds": 47.0
+        },
+        {
+          "name": "Verify earned material prompt approach",
+          "conclusion": "success",
+          "seconds": 18.0
+        },
+        {
+          "name": "Verify exact baked tree prompt at trunk contact",
+          "conclusion": "failure",
+          "seconds": 7.0
+        },
+        {
+          "name": "Verify live road coverage observation",
+          "conclusion": "success",
+          "seconds": 5.0
+        },
+        {
+          "name": "Verify felled resource destruction",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify earned material source selection",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify earned Stormwood input clocks",
+          "conclusion": "success",
+          "seconds": 8.0
+        },
+        {
+          "name": "Verify cloudreach_arrival_walk",
+          "conclusion": "success",
+          "seconds": 149.0
+        },
+        {
+          "name": "Verify Cloudreach persistence tail",
+          "conclusion": "success",
+          "seconds": 8.0
+        },
+        {
+          "name": "Verify Stormwood constructed arch journey",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify solo Stormwood hosted rewards",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify Stormwood Deepwood Circuit wiring",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify Stormwood finalized death lifecycle",
+          "conclusion": "success",
+          "seconds": 11.0
+        },
+        {
+          "name": "Verify Stormwood combat telemetry",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify Relay cable socket supports",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify Stormwood equipped lightning protection",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify controller equipment and disk save",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify Stormwood lightning warning cleanup",
+          "conclusion": "success",
+          "seconds": 9.0
+        },
+        {
+          "name": "Verify Stormwood authoritative opponent teardown",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify Stormwood heartstone interaction",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Verify Stormwood Crown records side chain",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify Stormwood per-participant Stormheart offers",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify Stormwood Stormheart accept/refuse choice",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Stormwood Dynamo Break faint recovery",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Stormwood ordinary and electric TM pickups",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify ordinary Stormwood to Water gate path",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Stormwood Surge audio observer",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Stormwood hosted encounter admission",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Stormwood Nysa press",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake closed-gate tide-race seal",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake dismount leaves no mounted state",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake drowning and safe shore",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake drowned recovery",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake reload mid-water",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake mounted reload mid-water",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake combat pause while swimming",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake Guardian offer keeps controller focus across a drop",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake chain side_water_lantern_return",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake chain side_water_gull_research",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake chain side_water_cradle_care",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake chain side_water_garden_records",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake chain side_water_deep_watch_chart",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify Tidewake chain side_water_lastlight_shelter",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify regional credits survive a disk reload",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify pending regional ending receipts and reconnect rejection",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify wild_streaming",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify bramblebun_colourway_binding",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": null,
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "id": 110442934450,
+      "name": "verify-gate-b-full-known-red",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T15:25:23Z",
+      "completed_at": "2026-10-01T15:31:13Z",
+      "seconds": 350.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 127.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 80.0
+        },
+        {
+          "name": "Verify gate_b_continuous (FULL CHAIN \u2014 gather route and tail, KNOWN RED)",
+          "conclusion": "failure",
+          "seconds": 139.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934453,
+      "name": "verify-cloudreach-persistence",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:20Z",
+      "completed_at": "2026-10-01T15:27:52Z",
+      "seconds": 152.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 83.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 54.0
+        },
+        {
+          "name": "Verify Cloudreach persistence tail",
+          "conclusion": "success",
+          "seconds": 9.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934463,
+      "name": "verify-harvest",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:22Z",
+      "completed_at": "2026-10-01T15:33:46Z",
+      "seconds": 504.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 90.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 64.0
+        },
+        {
+          "name": "Run the harvest regression checks",
+          "conclusion": "success",
+          "seconds": 345.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934476,
+      "name": "verify-combat-shard",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:20Z",
+      "completed_at": "2026-10-01T15:39:37Z",
+      "seconds": 857.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 107.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 59.0
+        },
+        {
+          "name": "Verify combat",
+          "conclusion": "success",
+          "seconds": 92.0
+        },
+        {
+          "name": "Verify throw preview physical occlusion",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify earned party controller cycle",
+          "conclusion": "success",
+          "seconds": 5.0
+        },
+        {
+          "name": "Verify same-live Water Alpha retirement",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify riding",
+          "conclusion": "success",
+          "seconds": 86.0
+        },
+        {
+          "name": "Verify boss",
+          "conclusion": "success",
+          "seconds": 166.0
+        },
+        {
+          "name": "Verify trainer_battle",
+          "conclusion": "success",
+          "seconds": 105.0
+        },
+        {
+          "name": "Verify aggression",
+          "conclusion": "success",
+          "seconds": 144.0
+        },
+        {
+          "name": "Verify encounter_scaling",
+          "conclusion": "success",
+          "seconds": 80.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934478,
+      "name": "verify-veg-corridor",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:24Z",
+      "completed_at": "2026-10-01T15:39:51Z",
+      "seconds": 867.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 80.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 62.0
+        },
+        {
+          "name": "Run the corridor vegetation regression checks",
+          "conclusion": "success",
+          "seconds": 720.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934515,
+      "name": "discover-net-smokes",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:20Z",
+      "completed_at": "2026-10-01T15:26:41Z",
+      "seconds": 81.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 78.0
+        },
+        {
+          "name": "Discover peers:2 net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934537,
+      "name": "verify-cloudreach-midride-rejoin",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:20Z",
+      "completed_at": "2026-10-01T15:39:37Z",
+      "seconds": 857.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 101.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 56.0
+        },
+        {
+          "name": "Verify F06 mid-ride two-peer rejoin proof",
+          "conclusion": "success",
+          "seconds": 695.0
+        },
+        {
+          "name": "Upload F06 mid-ride proof",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934568,
+      "name": "verify-owner-regressions-shard",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T15:25:20Z",
+      "completed_at": "2026-10-01T15:58:20Z",
+      "seconds": 1980.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 107.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 72.0
+        },
+        {
+          "name": "Verify title_load_game",
+          "conclusion": "success",
+          "seconds": 147.0
+        },
+        {
+          "name": "Verify title_new_game",
+          "conclusion": "success",
+          "seconds": 7.0
+        },
+        {
+          "name": "Verify party_count_after_catches",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify satchel_owns_hotbar",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify build_owns_creature_cycle",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify trainer_battle_camera",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify arena_contain",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify menu_open_does_not_offer_to_drop",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": null,
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "id": 110442934573,
+      "name": "export",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:24Z",
+      "completed_at": "2026-10-01T15:40:12Z",
+      "seconds": 888.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 491.0
+        },
+        {
+          "name": "Cache Godot editor and export templates",
+          "conclusion": "success",
+          "seconds": 23.0
+        },
+        {
+          "name": "Install Godot",
+          "conclusion": "skipped",
+          "seconds": 0.0
+        },
+        {
+          "name": "Add Godot to PATH",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Cache the import artifacts",
+          "conclusion": "success",
+          "seconds": 32.0
+        },
+        {
+          "name": "Import project (cold)",
+          "conclusion": "success",
+          "seconds": 30.0
+        },
+        {
+          "name": "Import project (verify)",
+          "conclusion": "success",
+          "seconds": 7.0
+        },
+        {
+          "name": "Export Windows build",
+          "conclusion": "success",
+          "seconds": 20.0
+        },
+        {
+          "name": "Verify the export is a real Windows binary",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Verify the exported build runs and has ground under the player",
+          "conclusion": "success",
+          "seconds": 224.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 50.0
+        },
+        {
+          "name": "Post Cache the import artifacts",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Post Cache Godot editor and export templates",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934580,
+      "name": "verify-continuous-core-known-red",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T15:25:23Z",
+      "completed_at": "2026-10-01T15:30:53Z",
+      "seconds": 330.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 77.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 68.0
+        },
+        {
+          "name": "Verify the village, material and paid-build continuation (KNOWN RED)",
+          "conclusion": "failure",
+          "seconds": 180.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934589,
+      "name": "verify-gate-evidence-shard",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:27:57Z",
+      "completed_at": "2026-10-01T15:41:12Z",
+      "seconds": 795.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 37.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 65.0
+        },
+        {
+          "name": "Verify post-miss wander aim lifecycle",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify stick navigator slope and obstacle clearance",
+          "conclusion": "success",
+          "seconds": 51.0
+        },
+        {
+          "name": "Verify gate_a_opening_segment",
+          "conclusion": "success",
+          "seconds": 155.0
+        },
+        {
+          "name": "Verify gate_a_build_house",
+          "conclusion": "success",
+          "seconds": 7.0
+        },
+        {
+          "name": "Verify build_two_creature_beds",
+          "conclusion": "success",
+          "seconds": 105.0
+        },
+        {
+          "name": "Verify gate_a_rest_torch",
+          "conclusion": "success",
+          "seconds": 83.0
+        },
+        {
+          "name": "Verify authored_camps",
+          "conclusion": "success",
+          "seconds": 65.0
+        },
+        {
+          "name": "Verify trainer_no_usable_ally",
+          "conclusion": "success",
+          "seconds": 64.0
+        },
+        {
+          "name": "Verify night_ecology",
+          "conclusion": "success",
+          "seconds": 63.0
+        },
+        {
+          "name": "Verify post_modal_control",
+          "conclusion": "success",
+          "seconds": 92.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934649,
+      "name": "verify-gate-a-ui-build-shard",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:25:23Z",
+      "completed_at": "2026-10-01T15:35:10Z",
+      "seconds": 587.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 78.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 62.0
+        },
+        {
+          "name": "Verify free_build",
+          "conclusion": "success",
+          "seconds": 86.0
+        },
+        {
+          "name": "Verify opening",
+          "conclusion": "success",
+          "seconds": 133.0
+        },
+        {
+          "name": "Verify starter_picker",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify modal_stacking",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify menu",
+          "conclusion": "success",
+          "seconds": 104.0
+        },
+        {
+          "name": "Verify settings",
+          "conclusion": "success",
+          "seconds": 95.0
+        },
+        {
+          "name": "Verify objective_hint_card",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Verify station_panels_hide_world_hud",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify combat_hud_left_column",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify dialogue_clears_the_world_hud",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Verify hud_freed_combat_prompt_lifecycle",
+          "conclusion": "success",
+          "seconds": 4.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934661,
+      "name": "verify-gate-b-core",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T15:26:47Z",
+      "completed_at": "2026-10-01T15:33:16Z",
+      "seconds": 389.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 34.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 70.0
+        },
+        {
+          "name": "Verify gate_b_continuous (CORE \u2014 opening through tournament readiness)",
+          "conclusion": "failure",
+          "seconds": 281.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110442934710,
+      "name": "verify-veridian-offer",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T15:25:26Z",
+      "completed_at": "2026-10-01T16:20:26Z",
+      "seconds": 3300.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 76.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 56.0
+        },
+        {
+          "name": "Verify veridian_offer_choice",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Verify rift gate opens once",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": null,
+          "seconds": null
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": null,
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "id": 110442934880,
+      "name": "verify-gate-evidence-finale",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:28:16Z",
+      "completed_at": "2026-10-01T15:38:57Z",
+      "seconds": 641.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 84.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 61.0
+        },
+        {
+          "name": "Verify tournament_bracket",
+          "conclusion": "success",
+          "seconds": 275.0
+        },
+        {
+          "name": "Verify gate_e_finale",
+          "conclusion": "success",
+          "seconds": 215.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110443557370,
+      "name": "verify-multiplayer-shard (4)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:33:18Z",
+      "completed_at": "2026-10-01T15:57:09Z",
+      "seconds": 1431.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 81.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 56.0
+        },
+        {
+          "name": "Select this shard's net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run net smokes",
+          "conclusion": "success",
+          "seconds": 1286.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110443557443,
+      "name": "verify-multiplayer-shard (1)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:31:18Z",
+      "completed_at": "2026-10-01T15:51:51Z",
+      "seconds": 1233.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 103.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 88.0
+        },
+        {
+          "name": "Select this shard's net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run net smokes",
+          "conclusion": "success",
+          "seconds": 1033.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110443557451,
+      "name": "verify-multiplayer-shard (7)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:32:39Z",
+      "completed_at": "2026-10-01T15:37:16Z",
+      "seconds": 277.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 34.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 58.0
+        },
+        {
+          "name": "Select this shard's net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run net smokes",
+          "conclusion": "success",
+          "seconds": 178.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110443557481,
+      "name": "verify-multiplayer-shard (5)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:35:51Z",
+      "completed_at": "2026-10-01T15:55:54Z",
+      "seconds": 1203.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 31.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 53.0
+        },
+        {
+          "name": "Select this shard's net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run net smokes",
+          "conclusion": "success",
+          "seconds": 1113.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110443557525,
+      "name": "verify-multiplayer-shard (3)",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T15:30:59Z",
+      "completed_at": "2026-10-01T15:51:35Z",
+      "seconds": 1236.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 98.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 64.0
+        },
+        {
+          "name": "Select this shard's net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run net smokes",
+          "conclusion": "failure",
+          "seconds": 1068.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110443557566,
+      "name": "verify-multiplayer-shard (6)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:34:00Z",
+      "completed_at": "2026-10-01T16:00:41Z",
+      "seconds": 1601.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 115.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 71.0
+        },
+        {
+          "name": "Select this shard's net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run net smokes",
+          "conclusion": "success",
+          "seconds": 1405.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110443557730,
+      "name": "verify-multiplayer-shard (2)",
+      "conclusion": "success",
+      "started_at": "2026-10-01T15:35:14Z",
+      "completed_at": "2026-10-01T16:03:27Z",
+      "seconds": 1693.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 1.0
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 140.0
+        },
+        {
+          "name": "Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 82.0
+        },
+        {
+          "name": "Select this shard's net smokes",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Run net smokes",
+          "conclusion": "success",
+          "seconds": 1461.0
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success",
+          "seconds": 3.0
+        },
+        {
+          "name": "Post Run ./.github/actions/setup-godot",
+          "conclusion": "success",
+          "seconds": 2.0
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    },
+    {
+      "id": 110460631579,
+      "name": "verify-solo-regression",
+      "conclusion": "skipped",
+      "started_at": "2026-10-01T16:05:23Z",
+      "completed_at": "2026-10-01T16:05:23Z",
+      "seconds": 0.0,
+      "steps": []
+    },
+    {
+      "id": 110467120254,
+      "name": "ci-gate",
+      "conclusion": "failure",
+      "started_at": "2026-10-01T16:20:31Z",
+      "completed_at": "2026-10-01T16:20:35Z",
+      "seconds": 4.0,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "seconds": 0.0
+        },
+        {
+          "name": "Confirm active verification and export",
+          "conclusion": "failure",
+          "seconds": 1.0
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "seconds": 0.0
+        }
+      ]
+    }
+  ]
+}

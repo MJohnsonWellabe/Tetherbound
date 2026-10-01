@@ -194,6 +194,11 @@ jobs:
           # still the right call for CI cost, but it multiplies exactly this,
           # so the filter is what keeps it affordable.
           filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/
+            /tests/test_release_latest_tag.mjs
+            /tools/release_latest_tag.mjs
 
       - name: Verify rolling release reference helper
         run: node --test tests/test_release_latest_tag.mjs
@@ -1364,6 +1369,11 @@ jobs:
 
   verify-regions-shard:
     runs-on: ubuntu-latest
+    # Independent original checks; the matrix retains an exact one-time cover.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [world, stormwood, tidewake]
     # Sum of these six tests' own run time measured 2026-09-01: 1,034s
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
@@ -1392,26 +1402,26 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify earned aim cancellation and native entry guard
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         timeout-minutes: 3
         run: bash tools/ci/verify-earned-aim.sh
       - name: Verify character texture binding and material cache isolation
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         timeout-minutes: 2
         run: bash tools/ci/verify-character-texture.sh
       - name: Verify actual Game crossing and native scoped receiver lifecycle
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         timeout-minutes: 6
         run: python3 tools/ci/verify-realm-transition.py
       - name: Retain realm lifecycle first-attempt receipts
-        if: ${{ always() && env.REALM_TRANSITION_RECEIPTS != '' }}
+        if: ${{ matrix.group == 'world' && (always() && env.REALM_TRANSITION_RECEIPTS != '') }}
         uses: actions/upload-artifact@v4
         with:
           name: realm-transition-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ env.REALM_TRANSITION_RECEIPTS }}
           if-no-files-found: error
       - name: Verify warrens
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: warrens, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1428,7 +1438,7 @@ jobs:
           done
           exit 1
       - name: Verify relay_station
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: relay_station, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1445,7 +1455,7 @@ jobs:
           done
           exit 1
       - name: Verify continuous Relay ramp and deck walk
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           godot --headless --path . --log-file /tmp/relay-deck-walk.log --script tests/smoke_relay_deck_walk.gd
@@ -1454,7 +1464,7 @@ jobs:
             exit 1
           fi
       - name: Verify Stormheart approach and open ramp entrance
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$(mktemp -d)"
@@ -1463,7 +1473,7 @@ jobs:
             exit 1
           fi
       - name: Verify earned material prompt approach
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$(mktemp -d)"
@@ -1472,7 +1482,7 @@ jobs:
             exit 1
           fi
       - name: Verify exact baked tree prompt at trunk contact
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           run_dir="$(mktemp -d)"
@@ -1484,7 +1494,7 @@ jobs:
             exit 1
           fi
       - name: Verify live road coverage observation
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           run_dir="$(mktemp -d)"
@@ -1496,7 +1506,7 @@ jobs:
             exit 1
           fi
       - name: Verify felled resource destruction
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$(mktemp -d)"
@@ -1505,7 +1515,7 @@ jobs:
             exit 1
           fi
       - name: Verify earned material source selection
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           godot --headless --path . --log-file /tmp/earned-material-selection.log --script tests/smoke_earned_material_selection.gd
@@ -1514,7 +1524,7 @@ jobs:
             exit 1
           fi
       - name: Verify earned Stormwood input clocks
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           godot --headless --path . --log-file /tmp/stormwood-engage-clock.log --script tools/probe_stormwood_alpha_admission.gd
@@ -1528,7 +1538,7 @@ jobs:
       # art.json comment key; ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/). This
       # walks the real arrival route on the production scene, ~8 min.
       - name: Verify cloudreach_arrival_walk
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: cloudreach_arrival_walk, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1547,20 +1557,20 @@ jobs:
       # F08: Cloudreach's completed tail (wind roads, Wings/shrine, Stormwood
       # key) is written once and survives a disk reload with nothing re-granted.
       - name: Verify Cloudreach persistence tail
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: timeout 180s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
       - name: Verify Stormwood constructed arch journey
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
       - name: Verify solo Stormwood hosted rewards
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-hosted-rewards.log --script tests/smoke_stormwood_hosted_rewards.gd
           test -s /tmp/stormwood-hosted-rewards.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-hosted-rewards.log; then exit 1; fi
       - name: Verify Stormwood Deepwood Circuit wiring
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         env: { SMOKE: stormwood_deepwood_circuit_wiring, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1577,14 +1587,14 @@ jobs:
           done
           exit 1
       - name: Verify Stormwood finalized death lifecycle
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-finalized-death.log --script tests/smoke_stormwood_finalized_death.gd
           test -s /tmp/stormwood-finalized-death.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-finalized-death.log; then exit 1; fi
       - name: Verify Stormwood combat telemetry
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         env:
           TETHERBOUND_TELEMETRY_OUTPUT: /tmp/stormwood-combat-telemetry.json
         run: |
@@ -1593,7 +1603,7 @@ jobs:
           test -s /tmp/stormwood-combat-telemetry.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-combat-telemetry.log; then exit 1; fi
       - name: Verify Relay cable socket supports
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         timeout-minutes: 1
         run: |
           set -euo pipefail
@@ -1601,7 +1611,7 @@ jobs:
           test -s /tmp/relay-cable-sockets.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/relay-cable-sockets.log; then exit 1; fi
       - name: Verify Stormwood equipped lightning protection
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         timeout-minutes: 1
         run: |
           set -euo pipefail
@@ -1609,7 +1619,7 @@ jobs:
           test -s /tmp/stormwood-lightning-equipment.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-equipment.log; then exit 1; fi
       - name: Verify controller equipment and disk save
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         timeout-minutes: 1
         run: |
           set -euo pipefail
@@ -1617,77 +1627,77 @@ jobs:
           test -s /tmp/backpack-equipment.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/backpack-equipment.log; then exit 1; fi
       - name: Verify Stormwood lightning warning cleanup
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-cleanup.log --script tests/smoke_stormwood_lightning_cleanup.gd
           test -s /tmp/stormwood-lightning-cleanup.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-cleanup.log; then exit 1; fi
       - name: Verify Stormwood authoritative opponent teardown
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-authoritative-teardown.log --script tests/smoke_stormwood_authoritative_teardown.gd
           test -s /tmp/stormwood-authoritative-teardown.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-authoritative-teardown.log; then exit 1; fi
       - name: Verify Stormwood heartstone interaction
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
       - name: Verify Stormwood Crown records side chain
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_records.gd
       - name: Verify Stormwood per-participant Stormheart offers
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_participants.gd
       - name: Verify Stormwood Stormheart accept/refuse choice
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
       - name: Verify Stormwood Dynamo Break faint recovery
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_dynamo_break_faint.gd
       - name: Verify Stormwood ordinary and electric TM pickups
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_pickup_runtime.gd
       - name: Verify ordinary Stormwood to Water gate path
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
       - name: Verify Stormwood Surge audio observer
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_surge_audio.gd
       - name: Verify Stormwood hosted encounter admission
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
       - name: Verify Stormwood Nysa press
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         # 420 s, not 240: the walk to Nysa's stance can legitimately draw a wild
         # route encounter first (~55 s), which the segment resolves before the
         # ~160 s trainer fight. Two main-based runs hit 240 s on that path.
         run: timeout 420s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
       - name: Verify Tidewake closed-gate tide-race seal
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
       - name: Verify Tidewake dismount leaves no mounted state
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
       # F12 (ACCEPTANCE 6.1): drowning and the safe shore, the fully drowned
       # recovery, and a disk reload mid-water (human and mounted) agree.
       - name: Verify Tidewake drowning and safe shore
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_swimming.gd
       - name: Verify Tidewake drowned recovery
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_player_death.gd
       - name: Verify Tidewake reload mid-water
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_reconnect_save.gd
       - name: Verify Tidewake mounted reload mid-water
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd
       - name: Verify Tidewake combat pause while swimming
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
       - name: Verify Tidewake Guardian offer keeps controller focus across a drop
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_guardian_drop_refocus.gd
       # F13 (ACCEPTANCE 6.1): the six selected Tidewake local chains, one per
       # island group, each show lure/action/payoff/acknowledgement in the
@@ -1696,28 +1706,28 @@ jobs:
       # completion, ACCEPTANCE 5). Each measured ~50-55s locally, three in
       # parallel (2026-09-26); 120s leaves headroom for slower CI runners.
       - name: Verify Tidewake chain side_water_lantern_return
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_lantern_return.gd
       - name: Verify Tidewake chain side_water_gull_research
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_gull_research.gd
       - name: Verify Tidewake chain side_water_cradle_care
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_cradle_care.gd
       - name: Verify Tidewake chain side_water_garden_records
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_garden_records.gd
       - name: Verify Tidewake chain side_water_deep_watch_chart
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_deep_watch_chart.gd
       - name: Verify Tidewake chain side_water_lastlight_shelter
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
       - name: Verify regional credits survive a disk reload
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
       - name: Verify pending regional ending receipts and reconnect rejection
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: |
           set -euo pipefail
           pending_log="$RUNNER_TEMP/regional-homecoming-pending.log"
@@ -1727,7 +1737,7 @@ jobs:
             exit 1
           fi
       - name: Verify wild_streaming
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: wild_streaming, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1746,7 +1756,7 @@ jobs:
       # GATE-D. smoke_art.gd was in NO ci job at all; docs/WORKFLOW.md §5
       # requires it and nothing ran it. Kept here, now as its own leg.
       - name: Verify bramblebun_colourway_binding
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: bramblebun_colourway_binding, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1766,6 +1776,11 @@ jobs:
   verify-regions-relay:
     # Split from verify-regions-shard (CI wall-clock): identical steps, own runner.
     runs-on: ubuntu-latest
+    # Independent original checks; the matrix retains an exact one-time cover.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [meadows, tidewake]
     # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
     # Tidewake loops steps. Those three are bounded at 1430 s (23.8 min) in
     # total, so the worst case is ~32 min plus runner variance; 45 min keeps
@@ -1796,7 +1811,7 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify relay
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
         env: { SMOKE: relay, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1813,7 +1828,7 @@ jobs:
           done
           exit 1
       - name: Verify stronghold
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
         env: { SMOKE: stronghold, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1830,7 +1845,7 @@ jobs:
           done
           exit 1
       - name: Verify art
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
         env: { SMOKE: art, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1857,17 +1872,22 @@ jobs:
       # so its timeout is 430 s).
       # Each timeout is 1.5x its group's measured wall.
       - name: Verify Tidewake land loops walked (reed root, brine terrace)
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 460s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reed_root_circuit,brine_terrace_circuit
       - name: Verify Tidewake land loops walked (salt shrine, sluice patrol)
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 540s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=salt_shrine_circuit,sluice_patrol_circuit
       - name: Verify Tidewake return shortcuts closed then open and shorter
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 430s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reedhaven_maintenance_ramp,shellwatch_pump_return_channel,deep_watch_current_cut
 
   verify-owner-regressions-shard:
     runs-on: ubuntu-latest
+    # Independent original checks; the matrix retains an exact one-time cover.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [catching, controls]
     # Sum of these seven tests' own run time measured 2026-09-01: 1,272s
     # (21.2 min). 28 min covers checkout/setup with margin. title_new_game
     # (AUDIT-K §K2a) folded back in as an eighth sequential step; its own
@@ -1898,7 +1918,7 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify title_load_game
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: title_load_game, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1917,7 +1937,7 @@ jobs:
       # AUDIT-K §K2a. The New Game front door had no CI coverage at all --
       # only title_load_game was wired here.
       - name: Verify title_new_game
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: title_new_game, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1938,7 +1958,7 @@ jobs:
       # reason stick_navigator is withheld from it. One leg of its own means
       # its flake no longer takes the other six regressions down with it.
       - name: Verify party_count_after_catches
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'catching' && (!cancelled()) }}
         env: { SMOKE: party_count_after_catches, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1955,7 +1975,7 @@ jobs:
           done
           exit 1
       - name: Verify satchel_owns_hotbar
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: satchel_owns_hotbar, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1972,7 +1992,7 @@ jobs:
           done
           exit 1
       - name: Verify build_owns_creature_cycle
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: build_owns_creature_cycle, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1989,7 +2009,7 @@ jobs:
           done
           exit 1
       - name: Verify trainer_battle_camera
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: trainer_battle_camera, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2006,7 +2026,7 @@ jobs:
           done
           exit 1
       - name: Verify arena_contain
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: arena_contain, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2023,7 +2043,7 @@ jobs:
           done
           exit 1
       - name: Verify menu_open_does_not_offer_to_drop
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: menu_open_does_not_offer_to_drop, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -3015,6 +3035,11 @@ jobs:
     # gate-opens-once smoke (~4 min), on their own runner so the long smoke
     # runs in parallel with the other jobs instead of lengthening one of them.
     runs-on: ubuntu-latest
+    # Six original offer scenarios, two per isolated process; no path omitted.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [space, capacity, recovery]
     timeout-minutes: 50
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -3048,7 +3073,7 @@ jobs:
       - name: Verify veridian_offer_choice
         if: ${{ !cancelled() }}
         timeout-minutes: 45
-        env: { SMOKE: veridian_offer_choice, RETRIES: 1 }
+        env: { SMOKE: veridian_offer_choice, RETRIES: 1, TB_VERIDIAN_CASE_GROUP: "${{ matrix.group }}" }
         run: |
           set -uo pipefail
           n=0
@@ -3064,7 +3089,7 @@ jobs:
           done
           exit 1
       - name: Verify rift gate opens once
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.group == 'space' }}
         run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
   verify-cloudreach-persistence:

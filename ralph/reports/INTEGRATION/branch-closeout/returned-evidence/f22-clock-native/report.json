@@ -1,0 +1,229 @@
+{
+  "scope": "Actual HP fixture and local victory callback lifecycle; full Warden and acceptance remain pending.",
+  "phases": {
+    "original": {
+      "result": {
+        "head": "20363cf572e24bf15f3ab12f9def8f67ca66e9d1",
+        "exit": 1,
+        "timed_out": false,
+        "selection": "test_trainer_aftermath.gd",
+        "summary": [
+          "  FAIL  test_trainer_aftermath.gd :: test_native_victory_fallback_after_handover_or_scene_teardown",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "9 tests, 68 assertions, 1 failed",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead."
+        ],
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-20363cf572e2-d4464217\\tests.log",
+        "raw_log_sha256": "4fdc67c1f7b5eae4c8b525b5e7df1dfb69a62ae0b787a1b5527bad2caed8da08"
+      },
+      "files": {
+        "original-tests.log.gz": {
+          "raw_bytes": 19535,
+          "raw_sha256": "4fdc67c1f7b5eae4c8b525b5e7df1dfb69a62ae0b787a1b5527bad2caed8da08",
+          "gzip_sha256": "cdfee7e053a1b07c34a712f2f658c6492f1e96dae625d162dcaf9ff7ba05d411"
+        },
+        "original-result.json.gz": {
+          "raw_bytes": 2364,
+          "raw_sha256": "4fbd9584ab8832404d9eb4a813e7c60bc5f4b25e3d64b2e2c70dafc2c9195bbf",
+          "gzip_sha256": "8e859880a3c69841b89ce4379049c0bcd19a25cda8c1c49fc9f475084ce63e32"
+        },
+        "original-trainer-aftermath-lifecycle-child.log.gz": {
+          "raw_bytes": 988,
+          "raw_sha256": "2b7e7eb7be6fe7339d6fca0f949b3a4e316528339d42eb8ac9c40b33d1a2e9f7",
+          "gzip_sha256": "a2e16dad29a5e949f6c00a430a10acedd61bb48514551d59d8a5d8475099416f"
+        }
+      },
+      "children": {
+        "TRAINER_AFTERMATH_LIFECYCLE_RESULT": {
+          "assertions": 16,
+          "completed": true,
+          "failures": [
+            "expected true, got false  (the fallback cannot fire early to make the lifecycle fixture pass)"
+          ],
+          "observation": {
+            "all_four_tokens_freed": true,
+            "early_handover_freed_before_fallback": true,
+            "elapsed_ms": 15017,
+            "fallback_observed_ms": 13817,
+            "original_fallback_seconds": 14.0,
+            "scope": "local presentation lifecycle only"
+          }
+        }
+      }
+    },
+    "callback_repaired_wall_observer_failed": {
+      "result": {
+        "head": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+        "exit": 1,
+        "timed_out": false,
+        "selection": "test_director_join_snapshot.gd,test_trainer_aftermath.gd",
+        "summary": [
+          "  FAIL  test_trainer_aftermath.gd :: test_native_victory_fallback_after_handover_or_scene_teardown",
+          "15 tests, 105 assertions, 1 failed"
+        ],
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-7f18f5e75dc2-47b7504f\\tests.log",
+        "raw_log_sha256": "2663a925d8840bcced078be28d1eba970a21e05a9e960ea21292e49a2bee61af"
+      },
+      "files": {
+        "callback_repaired_wall_observer_failed-tests.log.gz": {
+          "raw_bytes": 22229,
+          "raw_sha256": "2663a925d8840bcced078be28d1eba970a21e05a9e960ea21292e49a2bee61af",
+          "gzip_sha256": "74ec6e7970a9a9fdaa1d69073fc1571be5ffa6cd94e9db068f42ec0256a6d31f"
+        },
+        "callback_repaired_wall_observer_failed-result.json.gz": {
+          "raw_bytes": 549,
+          "raw_sha256": "8cf1a6e0d43c42584190534c683acb8b596354d591e8fd9b0151a81e6c719920",
+          "gzip_sha256": "bd99562072f5639d500382460a9ebc3b04116a8588e771707c51d2fcc8024bef"
+        },
+        "callback_repaired_wall_observer_failed-director-guest-trainer-regression-child.log.gz": {
+          "raw_bytes": 579,
+          "raw_sha256": "74013fbaed38945de0fe4a1ac498b79f1469135dbffdbc17625102511b1db761",
+          "gzip_sha256": "92677ba655f7cd8a1a9c11a5d57f32a15579b33b44c48ff88abc3cce95e2d998"
+        },
+        "callback_repaired_wall_observer_failed-director-hp-fixture-regression-child.log.gz": {
+          "raw_bytes": 316,
+          "raw_sha256": "fa788dbffd4846084b08316542af2330f0994308ab97b55ce5117f8c7dc4b925",
+          "gzip_sha256": "ae15f3d89d91cfcd09ea4a864dd415caea7822304dc461aad0600edfa0823bdb"
+        },
+        "callback_repaired_wall_observer_failed-director-transport-regression-child.log.gz": {
+          "raw_bytes": 129,
+          "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+          "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8"
+        },
+        "callback_repaired_wall_observer_failed-trainer-aftermath-lifecycle-child.log.gz": {
+          "raw_bytes": 464,
+          "raw_sha256": "115923934da6acb943e9b06515090855d59ce146c8631d0c78a110033d3ff6c8",
+          "gzip_sha256": "d361cb9756a8d720c3f290521675eb1da26ba08a3d88326513facf0909067db0"
+        }
+      },
+      "children": {
+        "TRAINER_AFTERMATH_LIFECYCLE_RESULT": {
+          "assertions": 16,
+          "completed": true,
+          "failures": [
+            "expected true, got false  (the fallback cannot fire early to make the lifecycle fixture pass)"
+          ],
+          "observation": {
+            "all_four_tokens_freed": true,
+            "early_handover_freed_before_fallback": true,
+            "elapsed_ms": 15024,
+            "fallback_observed_ms": 13824,
+            "original_fallback_seconds": 14.0,
+            "scope": "local presentation lifecycle only"
+          }
+        },
+        "DIRECTOR_HP_FIXTURE_RESULT": {
+          "assertions": 47,
+          "completed": true,
+          "failures": [],
+          "observation": {
+            "accepted_arrivals": 3,
+            "ceiling": 6.0,
+            "full_hp": 95.0,
+            "hp_after_control": 85.7067892193794,
+            "killed_by_host_arrival": true,
+            "max_hp": 95.0,
+            "record_phase": "done"
+          }
+        }
+      }
+    },
+    "scene_clock_corrected": {
+      "result": {
+        "head": "8216aa3cfc90bdffd852544c7a7d41d0ead6042e",
+        "exit": 0,
+        "timed_out": false,
+        "selection": "test_director_join_snapshot.gd,test_trainer_aftermath.gd",
+        "summary": [
+          "15 tests, 105 assertions, 0 failed"
+        ],
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-8216aa3cfc90-47b7504f\\tests.log",
+        "raw_log_sha256": "d3913ae07aa08796425cf0d9c9d68b47f9732ffd2ec819d0f984555c28a9089e"
+      },
+      "files": {
+        "scene_clock_corrected-tests.log.gz": {
+          "raw_bytes": 19859,
+          "raw_sha256": "d3913ae07aa08796425cf0d9c9d68b47f9732ffd2ec819d0f984555c28a9089e",
+          "gzip_sha256": "009ad7abee46156ef6140e52153f4bc36668716a45301257de847151ea25fe2e"
+        },
+        "scene_clock_corrected-result.json.gz": {
+          "raw_bytes": 442,
+          "raw_sha256": "57c7ac9295809a349748165b43d845994c0315a8bc81adfccc21ac1eb811dcac",
+          "gzip_sha256": "f82659b044ce26fb1d43d68d032ccf3d4d9879e03bc3bc6df5e4f3d96be1c2f9"
+        },
+        "scene_clock_corrected-director-guest-trainer-regression-child.log.gz": {
+          "raw_bytes": 579,
+          "raw_sha256": "5e55a67e107d21826c0b1d330286fe00a0182f3f0bf16bfa32872f6aff9f87dc",
+          "gzip_sha256": "985b3302c6d7885f1d87cce02bdfc5efede116532661056a3a639dcd7045a36b"
+        },
+        "scene_clock_corrected-director-hp-fixture-regression-child.log.gz": {
+          "raw_bytes": 316,
+          "raw_sha256": "a993808ae42c6d381e805f65783f6e02d1fe9d23c4a90b19c13df8040b5e1b69",
+          "gzip_sha256": "4f26fe90a6c543ff7fc82898f64dec539f7105a2fc3d5213a1092bc8fd210506"
+        },
+        "scene_clock_corrected-director-transport-regression-child.log.gz": {
+          "raw_bytes": 129,
+          "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+          "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8"
+        },
+        "scene_clock_corrected-trainer-aftermath-lifecycle-child.log.gz": {
+          "raw_bytes": 411,
+          "raw_sha256": "f6ef1f15f1c1fa6dcaf0bc5128e27b7bb1b16f1d701011dffbc33424b2c4c128",
+          "gzip_sha256": "0d95f77f034185a6267c3f489f41af9276eead95a51355ad452bbe793a89794d"
+        }
+      },
+      "children": {
+        "DIRECTOR_HP_FIXTURE_RESULT": {
+          "assertions": 47,
+          "completed": true,
+          "failures": [],
+          "observation": {
+            "accepted_arrivals": 3,
+            "ceiling": 6.0,
+            "full_hp": 95.0,
+            "hp_after_control": 86.9925288110971,
+            "killed_by_host_arrival": true,
+            "max_hp": 95.0,
+            "record_phase": "done"
+          }
+        },
+        "TRAINER_AFTERMATH_LIFECYCLE_RESULT": {
+          "assertions": 16,
+          "completed": true,
+          "failures": [],
+          "observation": {
+            "all_four_tokens_freed": true,
+            "early_handover_freed_before_fallback": true,
+            "elapsed_ms": 15010,
+            "fallback_observed_ms": 13822,
+            "fallback_scene_seconds": 14.0065876666661,
+            "original_fallback_seconds": 14.0,
+            "scope": "local presentation lifecycle only"
+          }
+        }
+      }
+    }
+  }
+}
