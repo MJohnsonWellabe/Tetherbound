@@ -1,0 +1,12 @@
+{
+  "head": "862385aa92f4b198cc5ccf22448d66f8acfb6e28",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_item_cache_pickup.gd,test_pickup_glow.gd",
+  "summary": [
+    "28 tests, 64 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-862385aa92f4-4408c5fc\\tests.log",
+  "raw_log_sha256": "a2065a8ed551a47794a983c24bea7f8f0dc37484b1d32a36685f35eaea89754a",
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}

@@ -1,0 +1,12 @@
+{
+  "head": "0c52428a2109d30755b4ee6a3da36b38efadbf50",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_creature_viewport_framing.gd,test_hud_widgets.gd",
+  "summary": [
+    "54 tests, 312 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-0c52428a2109-5e44e2dd\\tests.log",
+  "raw_log_sha256": "d33b52cc0d70b6ebfa53ffb93156e435d9c092bdb2cb5fcc71c8a2c9be41b37b",
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}

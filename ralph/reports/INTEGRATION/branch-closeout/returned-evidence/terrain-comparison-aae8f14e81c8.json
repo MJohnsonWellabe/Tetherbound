@@ -1,0 +1,16 @@
+{
+  "head": "aae8f14e81c840d23cf50d922b9020e147af4951",
+  "generated": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\stormwood-bake-aae8f14e81c8\\terrain",
+  "exit": 0,
+  "timed_out": false,
+  "errors": [],
+  "summary": [
+    "COMPARE regions=108 height_map_differs=0 color_map_differs=0 height_range_differs=0 control_differs=0",
+    "COMPARE height sha256 over all regions a=56dcc98c752ebe0c4bef5ad78fe96111fbc82e00e1953f34654bddd7fa65e7d2",
+    "COMPARE height sha256 over all regions b=56dcc98c752ebe0c4bef5ad78fe96111fbc82e00e1953f34654bddd7fa65e7d2",
+    "COMPARE non-default control texels a=29580 b=29580 values_b={ \"18c00000\": 29580 }"
+  ],
+  "all_108_channels_equal": true,
+  "raw_log_sha256": "dc523ea8f0ff06ae8e43d049c5e678bb84ff89dd077aa6237abcc43cc87dde46",
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}

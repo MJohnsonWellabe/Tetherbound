@@ -1,0 +1,11 @@
+{
+  "head": "87aa762fe5be1c4ad0565f95250bfb1809e163df",
+  "exit": 0,
+  "selection": "test_motion_prefs.gd,test_hit_feedback.gd,test_move_effects.gd,test_combat_vfx.gd,test_texture_import_policy.gd,test_audio_cues.gd,test_impact_audio.gd,test_audio.gd",
+  "summary": [
+    "76 tests, 1898 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-87aa762fe5be-3cdaa5d4\\tests.log",
+  "raw_log_sha256": "56706547966bd3fa888aa846dc0353bde35055113d67da27d63236fb95761654",
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}

@@ -1,0 +1,19 @@
+{
+  "head": "12a2ede365be2bf0a65b30c9bfb5ab1221b3d670",
+  "outcome": "FAIL: orchestration timeout before suite completion; no pass inferred",
+  "timed_out": true,
+  "budget_seconds": 240,
+  "exit": null,
+  "raw_log_sha256": "7c01a677b2d9424845506f196da0abc62bdf0f5d755066d66d0a49099267047c",
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-12a2ede365be-f1381d60\\tests.log",
+  "retained_case_failures": [
+    "  FAIL  test_gate_a_npc_gather_segment_contract.gd :: test_pre_press_winner_snapshot_is_not_returned_as_success",
+    "  FAIL  test_progression.gd :: could not be parsed or instantiated",
+    "  FAIL  test_stormwood_road_surface.gd :: test_bake_manifest_is_fresh_and_covers_routes_and_surface"
+  ],
+  "native_error_count": 132,
+  "script_error_count": 5,
+  "completed_suite_summary": false,
+  "correction": "Subsequent tooling uses Popen and kills its full process tree at the same 240s limit. The heavy terrain case will be isolated; original test assertions and source budgets remain unchanged.",
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}

@@ -1,0 +1,35 @@
+{
+  "head": "aae8f14e81c840d23cf50d922b9020e147af4951",
+  "diagnostic_only": true,
+  "exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 8.983999999938533,
+  "errors": [],
+  "source_before": {
+    "data/config/terrain_stormwood.json": "2b56527ce1ab72053cbfe3a0377f34f7e9f44d69294c7eff96e52cee4b88635a",
+    "data/config/stormwood_world.json": "018de59fd7fafc00fa33b3fcf2f4838cee4a4b055f6e0b0716f633104f3a1651",
+    "scripts/world/build_stormwood_terrain.gd": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+    "scripts/world/stormwood_heightfield.gd": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+    "data/config/stormwood_road_surface.json": "d16b3ee1f851c94d816363bae321d460bea827cc0b4d430a190413c488957019",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+  },
+  "source_after": {
+    "data/config/terrain_stormwood.json": "2b56527ce1ab72053cbfe3a0377f34f7e9f44d69294c7eff96e52cee4b88635a",
+    "data/config/stormwood_world.json": "018de59fd7fafc00fa33b3fcf2f4838cee4a4b055f6e0b0716f633104f3a1651",
+    "scripts/world/build_stormwood_terrain.gd": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+    "scripts/world/stormwood_heightfield.gd": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+    "data/config/stormwood_road_surface.json": "d16b3ee1f851c94d816363bae321d460bea827cc0b4d430a190413c488957019",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+  },
+  "raw_log_sha256": "ed87100e97dad472cd4a07bac15c05c9debbf6b2ddbdfccf04a0d20b28732270",
+  "generated_regions": 1,
+  "byte_identical_regions": 0,
+  "different_regions": [
+    "terrain3d_00_00.res"
+  ],
+  "manifest": null,
+  "output": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\stormwood-bake-diagnostic-aae8f14e81c8",
+  "valid_output": true,
+  "tracked_terrain_untouched": true,
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}

@@ -1,0 +1,12 @@
+{
+  "head": "862385aa92f4b198cc5ccf22448d66f8acfb6e28",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_level_curve_policy.gd,test_redesign_chapter_curve.gd,test_f19_curve.gd,test_chapter_curve.gd,test_stormwood_trainers_data.gd,test_trainers_data.gd,test_cloudreach_route_ledger.gd,test_meadows_earned_relay_segment.gd,test_meadows_earned_warden_segment.gd,test_stormwood_critical_spawn_clearance.gd,test_stormwood_glass_field_identity.gd,test_road_creature_visibility.gd,test_progression.gd,test_combat_progression.gd",
+  "summary": [
+    "200 tests, 10092 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-862385aa92f4-4524cc6b\\tests.log",
+  "raw_log_sha256": "bc14362bfa384227e948cfcdbb3fff83b2f2333d410f4ace4ae62c149bd047b1",
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}
