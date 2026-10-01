@@ -1,0 +1,12 @@
+{
+  "head": "09cbbf981d12ef04b675d95662f5730b07c23d4e",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_stormwood_road_surface.gd::test_bake_manifest_is_fresh_and_covers_routes_and_surface",
+  "summary": [
+    "1 tests, 8 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-09cbbf981d12-13138994\\tests.log",
+  "raw_log_sha256": "a682a22866c9d629399c209ca283767d24e42c09f1da80cacbe992b2f9de2d3c",
+  "scope": "Exact local diagnostic only. Native errors and timeouts remain failures; main/criteria unchanged."
+}

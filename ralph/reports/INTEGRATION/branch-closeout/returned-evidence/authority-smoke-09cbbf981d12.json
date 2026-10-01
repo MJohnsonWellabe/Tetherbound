@@ -1,0 +1,22 @@
+{
+  "head": "09cbbf981d12ef04b675d95662f5730b07c23d4e",
+  "script": "tests/smoke_encounter_scaling.gd",
+  "exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 129.7970000000205,
+  "errors": [
+    "ERROR: Condition \"!is_inside_tree() || !get_multiplayer()->has_multiplayer_peer() || !is_multiplayer_authority()\" is true. Returning: nullptr"
+  ],
+  "known_dummy_renderer_material_diagnostics": 0,
+  "summary": [],
+  "actual_smoke_ok": false,
+  "raw_log_sha256": "8fb5b739931f7e3edf4a1d619da32716d6bf1b9a98eb7257736ef7ce75e91eca",
+  "source_closure_sha256": "9af3131ba49b3e7ac664032368546228170e120f32d07d557be5047e83c62671",
+  "source_unchanged": true,
+  "scope": "Exact local diagnostic only. Native errors and timeouts remain failures; main/criteria unchanged.",
+  "supplemental_actual_summary": [
+    "\u00a710 scaling: 66 assertion(s) run, 0 failure(s)",
+    "encounter scaling: OK -- \u00a710's multiplier reaches the creature, exactly once, at every row."
+  ],
+  "wrapper_note": "First wrapper used the generic smoke summary pattern; raw summary independently extracted here. Native spawner error still fails this run."
+}
