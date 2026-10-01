@@ -1,0 +1,20 @@
+{
+  "scope": "source_only",
+  "native_acceptance": false,
+  "parsed_scripts": [
+    "scripts/world/bounty_board.gd",
+    "scripts/world/bounty_host_adapter.gd",
+    "scripts/world/bounty_interaction_adapter.gd",
+    "scripts/net/character_action_rules.gd",
+    "scripts/data/redesign_state.gd",
+    "tests/test_bounty_board.gd"
+  ],
+  "templates": 16,
+  "catalog_references": "pass",
+  "additive_v28_defaults": "pass",
+  "old_v28_without_carrier": "pass",
+  "issued_board_schema": "pass",
+  "partial_board_refusal": "pass",
+  "json_carrier_roundtrip": "pass",
+  "godot_typecheck_unit_reconnect_and_player_path": "pending_shared_queue"
+}

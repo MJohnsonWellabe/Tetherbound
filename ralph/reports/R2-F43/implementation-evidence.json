@@ -1,0 +1,86 @@
+{
+  "feature": "F43",
+  "branch": "tb/r2-f43",
+  "base": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "acceptance": "OPEN: source implementation; no criteria MET",
+  "runtime_enabled": false,
+  "implemented": [
+    "16 bounty templates across four live biomes; all four kinds and reward families",
+    "Three deterministic host-issued personal instances per rotation",
+    "World changes only reanchor: no immediate reroll or duplicate reward instances",
+    "Confirmed participant events require frozen issued instance IDs",
+    "Inventory delivery debit, reward stacks, board completion and receipts in one existing character_action stage",
+    "Existing creature_training journal and owner bool-save/ACK recovery reused",
+    "Additive optional bounties carrier in redesign_character preserves existing v28 records",
+    "F42 view/interaction API with frozen instance, character and world identity"
+  ],
+  "source_audit": {
+    "board": "READ-ONLY D:/tetherbound/redesign-board/ralph/reports/COORDINATOR/dashboard/criteria.json: F43 four not_started",
+    "base": "unfinished flag-off redesign integrations; not accepted main",
+    "existing_carriers": "bounty_receipts and transaction_receipts; world bounty_day already declared. Frozen base had no board payload: added optional bounties field without top-level save changes.",
+    "reused": "character_action_rules/character_authority/character_action_delivery/character_action_owner; ItemDB/Inventory/death_satchel_rules"
+  },
+  "overlapping_files": [
+    "data/schema/character_state.json",
+    "data/schema/character_state.schema.json",
+    "scripts/data/redesign_state.gd",
+    "scripts/net/character_action_rules.gd"
+  ],
+  "dependencies": [
+    {
+      "owner": "Foundation/ROOT",
+      "required": "Compose BountyHostAdapter with actual Session and authenticated source context; wire claim gateway and original-decision lookup through existing generation-bound Session transport. No client event/progress gateway."
+    },
+    {
+      "owner": "Foundation/ROOT",
+      "required": "Source context contains exact character_id, expected_revision, source_key, actual measured in_range, in_combat, world_namespace, host_day, host_unlocks and clock_confirmed. Use existing saved world bounty_day as the actual morning index; advance from real host morning/rest lifecycle, never client clock. Poll must reanchor once on admission/world change."
+    },
+    {
+      "owner": "F30/catch producer",
+      "required": "Accepted host catch event lookup returns event_confirmed, event_id, actual rolled traits, biome, participant character IDs and issued_instances frozen at capture admission. Preserve event until transaction durable; no client trait/progress input."
+    },
+    {
+      "owner": "F44",
+      "required": "Accepted alpha/rematch event lookup with stable encounter/cycle event identity and actual participant characters; freeze issued_instances before fight. Source resolver retries after registry contention until accepted; never award on replay."
+    },
+    {
+      "owner": "F42",
+      "required": "Bind BountyInteractionAdapter view, authenticated submit and original-decision lookup; mount its Interactable at existing Halda tournament board. Render open_requested rows with controller/input_owner. Settlement reply must carry exact receipt and owner_saved/owner_acknowledged after durable ACK."
+    },
+    {
+      "owner": "F27/F30/F32",
+      "required": "Reconcile current inventory/progression/trait/material producers against green main after prior batch; retain Compatibility default and runtime_enabled=false until actual producer proofs."
+    }
+  ],
+  "checks_completed": [
+    "gdtoolkit parser: six scripts",
+    "JSON catalog foreign keys: 16 templates",
+    "Draft202012 schema: current defaults, existing v28 without bounties, issued three-slot board, partial-board refusal",
+    "JSON carrier preservation",
+    "git diff --check"
+  ],
+  "proof_queue": [
+    {
+      "name": "F43-unit-and-journal-recovery",
+      "command": "godot --headless --path D:/tetherbound/r2-f43 --script tests/run_tests.gd -- --only=test_bounty_board.gd,test_schema_redesign.gd",
+      "status": "PENDING ROOT serialized engine queue; syntax parsing is not Godot typecheck or test execution"
+    },
+    {
+      "name": "F43-personal-board-real-two-peer-reconnect",
+      "command": null,
+      "status": "PENDING shared producer composition; existing proof runner has no bounty action doorway at this base, so no runnable scenario is claimed",
+      "required": "Two separate production peers: exactly3 each, unlocked-biome draw, catch/alpha/delivery/rematch events, replay client progress rejected, claim once, failed world write rollback, failed owner write retained pending, disconnect before ACK, rejoin new peer generation, restart host, both character reloads, world-hop no reroll; assert exact inventory deltas and durable receipts."
+    },
+    {
+      "name": "F43-F42-native-board-capture-1080",
+      "command": "godot --path D:/tetherbound/r2-f43 --resolution 1920x1080",
+      "status": "PENDING ROOT queue and F42 mounting; capture ordinary Halda interaction, focused claim, refusal and paid row; code-blind judge"
+    },
+    {
+      "name": "F43-F42-native-board-capture-800",
+      "command": "godot --path D:/tetherbound/r2-f43 --resolution 1280x800",
+      "status": "PENDING ROOT queue and F42 mounting; controller/input_owner/readability witness"
+    }
+  ],
+  "balance": "game: 4 feature/config files + 4 narrow shared seams; tests/tools: 1 focused unit file + 1 static audit script; runtime proofs pending"
+}

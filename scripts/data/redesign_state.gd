@@ -18,6 +18,11 @@ static func validate(scope: String, value: Variant, owned_uids: Array = []) -> A
 	var errors := DATA.validate(value, schema)
 	if not value is Dictionary: return errors
 	if scope == "character":
+		# Additive F43 carrier: v28 records without a board remain valid. Load
+		# lazily to avoid a static cycle through Essence's existing state checker.
+		if value.has("bounties"):
+			var bounty_rules: GDScript = load("res://scripts/world/bounty_board.gd")
+			errors.append_array(bounty_rules.board_errors(value.bounties))
 		for field: String in ["waystones_activated", "last_waystones"]:
 			var by_biome: Variant = value.get(field, {})
 			if not by_biome is Dictionary: continue
