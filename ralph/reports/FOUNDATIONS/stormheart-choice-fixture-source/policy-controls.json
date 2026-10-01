@@ -1,0 +1,238 @@
+{
+  "kind": "source checks and independent pure Python data-policy models; no GDScript execution/parser",
+  "count": 54,
+  "checks": [
+    {
+      "name": "retained actual job bytes bound",
+      "passed": true
+    },
+    {
+      "name": "actual CI checkout head bound",
+      "passed": true
+    },
+    {
+      "name": "one actual refusal snapshot",
+      "passed": true
+    },
+    {
+      "name": "actual serialized snapshot exact digest",
+      "passed": true
+    },
+    {
+      "name": "actual exact refusal stage/error",
+      "passed": true
+    },
+    {
+      "name": "actual rejected ordinary stand-in is a renamed Fulgocobra",
+      "passed": true
+    },
+    {
+      "name": "actual rejected UID differs from real Stormheart",
+      "passed": true
+    },
+    {
+      "name": "actual stack reaches original Stormheart save",
+      "passed": true
+    },
+    {
+      "name": "original CI smoke invocation remains 120 seconds",
+      "passed": true
+    },
+    {
+      "name": "selected preimage equals reviewed ROOT",
+      "passed": true
+    },
+    {
+      "name": "ROOT working selected file still unchanged",
+      "passed": true
+    },
+    {
+      "name": "full-file inverse preserves every original path/assertion/budget",
+      "passed": true
+    },
+    {
+      "name": "original await sites and frame counts exactly unchanged",
+      "passed": true
+    },
+    {
+      "name": "all remaining helpers byte-identical",
+      "passed": true
+    },
+    {
+      "name": "candidate uses actual registered factory with no species rename",
+      "passed": true
+    },
+    {
+      "name": "production codec preflight runs before pending assignment",
+      "passed": true
+    },
+    {
+      "name": "real UID validity/codec identity/claim distinction checks precede assignment",
+      "passed": true
+    },
+    {
+      "name": "failed factory cannot produce test success",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: make_creature",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: make_creature",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: _species",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: from_species",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: mint_uid",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: valid_uid",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: encode",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: _valid",
+      "passed": true
+    },
+    {
+      "name": "called factory/codec/UID function matches reviewed ROOT: claim_id",
+      "passed": true
+    },
+    {
+      "name": "ordinary fixture registered and not legendary",
+      "passed": true
+    },
+    {
+      "name": "original unregistered stand-in absent from catalogue",
+      "passed": true
+    },
+    {
+      "name": "actual rejected renamed Fulgocobra refuses policy",
+      "passed": true
+    },
+    {
+      "name": "actual real Fulgocobra remains valid policy",
+      "passed": true
+    },
+    {
+      "name": "ordinary authored level1 defaults/knowledge/mastery valid policy",
+      "passed": true
+    },
+    {
+      "name": "ordinary model UID well-formed and distinct; not native UID evidence",
+      "passed": true
+    },
+    {
+      "name": "unregistered identity still refuses",
+      "passed": true
+    },
+    {
+      "name": "borrowed legendary knowledge still refuses",
+      "passed": true
+    },
+    {
+      "name": "duplicate known move still refuses",
+      "passed": true
+    },
+    {
+      "name": "wrong equipped slot still refuses",
+      "passed": true
+    },
+    {
+      "name": "mastery use without receipt still refuses",
+      "passed": true
+    },
+    {
+      "name": "replayed mastery receipt still refuses",
+      "passed": true
+    },
+    {
+      "name": "negative mastery still refuses",
+      "passed": true
+    },
+    {
+      "name": "incompatible mastery knowledge mutation refuses: known_moves",
+      "passed": true
+    },
+    {
+      "name": "incompatible mastery knowledge mutation refuses: move_mastery_uses",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: autoload/game_state.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: autoload/player_state.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: scripts/creatures/creature_instance.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: scripts/save/water_capture_codec.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: scripts/world/stormwood_ending.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: scripts/creatures/teaching.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: scripts/creatures/move_mastery.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: scripts/save/save_game.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: data/creatures/species.json",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: data/moves/learnsets.json",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: data/moves/moves.json",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched locally: data/config/move_mastery.json",
+      "passed": true
+    }
+  ],
+  "ordinary_policy_model_selected_loadout": {
+    "species_id": "terrapup",
+    "level": 1,
+    "uid": "creature-0123456789abcdef0123456789abcdef",
+    "known_moves": [
+      "pebble_toss",
+      "stone_rush",
+      "ultimate_terrapup"
+    ],
+    "move_quick": "pebble_toss",
+    "move_charged": "stone_rush",
+    "move_utility": "",
+    "move_ultimate": "ultimate_terrapup",
+    "move_mastery_uses": {},
+    "move_mastery_receipts": {}
+  }
+}
