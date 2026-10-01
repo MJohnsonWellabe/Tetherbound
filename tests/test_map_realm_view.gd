@@ -35,6 +35,13 @@ const THREE_REALM_MAPS := {
 
 var _nodes: Array[Node] = []
 
+## Synthetic mode fixture; it never enables the shipping Session config or
+## grants an unlock. The real Game predicate still reads this fixture's owner.
+class PortalSessionFixture extends Node:
+	var ready := false
+	func portal_runtime_ready() -> bool:
+		return ready
+
 
 func after_each() -> void:
 	for node: Node in _nodes:
@@ -42,10 +49,14 @@ func after_each() -> void:
 	_nodes.clear()
 
 
-func _game() -> Node:
+func _game(portal_mode: bool = true) -> Node:
 	var game := GAME.new()
 	game.reset_for_new_game()
 	_nodes.append(game)
+	var session := PortalSessionFixture.new()
+	session.ready = portal_mode
+	game.session = session
+	_nodes.append(session)
 	return game
 
 
@@ -211,3 +222,21 @@ func test_only_host_world_or_personal_unlocks_expose_live_destinations() -> void
 	var other := _game()
 	assert_false(bool(_tab(other).call("_realm_unlocked", "cloudreach")),
 		"another character/world does not inherit this portal unlock")
+
+
+func test_runtime_off_preserves_legacy_keys_discovery_and_crossing_marker() -> void:
+	var game := _game(false)
+	var tab := _tab(game)
+	assert_eq(tab.call("_available_realms"), ["meadows"])
+	game.progression.set_flag("realm_key_cloudreach")
+	assert_eq(tab.call("_available_realms"), ["meadows", "cloudreach"])
+	assert_true(bool(tab.call("_realm_link_visible")), "flag-off still exposes the real legacy crossing")
+	tab.call("_on_realm_button_pressed", "cloudreach")
+	assert_false(bool(tab.call("_should_draw_player_marker")))
+	assert_eq(game.current_realm, "meadows", "viewing another map never moves the trainer")
+	var discovered := _game(false)
+	discovered.realm_map_for("cloudreach").mark_visited(CLOUDREACH_AT)
+	assert_true(bool(_tab(discovered).call("_cloudreach_unlocked")), "flag-off preserves this player's own fog")
+	var alternate := _game(false)
+	alternate.progression.set_flag("cloudreach_chapter_started")
+	assert_true(bool(_tab(alternate).call("_cloudreach_unlocked")), "historical alternate flag remains readable")

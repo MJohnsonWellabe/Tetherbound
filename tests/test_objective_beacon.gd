@@ -5,6 +5,8 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const OBJECTIVES_PATH := "res://data/progression/objectives.json"
 const MAP_STATE := preload("res://autoload/map_state.gd")
+const HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
+const ENDING_OWNER := preload("res://tests/fixtures/regional_ending_owner.gd")
 
 class FightFixture extends Node:
 	var fighting := false
@@ -26,23 +28,35 @@ func before_each() -> void:
 	objectives = JSON.parse_string(FileAccess.get_file_as_string(OBJECTIVES_PATH)) as Dictionary
 
 
-func test_return_targets_match_authored_gates_and_grandpa() -> void:
-	var water: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
-	var stormwood: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
-	var cloudreach: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
-	var destinations := {
-		"water": water.entry_anchors.return_to_stormwood.position,
-		"stormwood": stormwood.transition_points.cloudreach_return.position,
-		"cloudreach": cloudreach.transition_points.meadows_return.position,
-	}
-	progression.set_flag("water_currents_restored")
-	for realm_id: String in destinations:
-		log_reader.set_realm(realm_id)
-		var at: Array = destinations[realm_id]
-		assert_eq(log_reader.tracked_beacon(progression).position, Vector2(at[0], at[2]))
-	log_reader.set_realm("meadows")
+func test_return_targets_require_personal_ending_and_durable_home_arrival() -> void:
+	# Existing synthetic owner fixture, not a gameplay/save witness. A raw
+	# world finale never entitles a visiting character to a personal ending.
+	var game := ENDING_OWNER.new()
+	game.world.flags.set_flag("water_currents_restored")
+	game.world.flags.set_flag(HOMECOMING.WORLD_FLAG)
+	assert_true(HOMECOMING.objective_rows(game).is_empty())
+	game.accepted_outcome = true
+	game.durable_home_return = false
+	for realm_id: String in ["water", "stormwood", "cloudreach", "meadows"]:
+		game.local.realm = realm_id
+		var before_return := HOMECOMING.objective_rows(game, {}, realm_id)
+		assert_eq(before_return.size(), 2)
+		for row: Dictionary in before_return:
+			assert_true(str(row.get("how", "")).contains("Home Key"))
+			assert_false(row.has("beacon"), "Home Key travel must not point at a retired physical gate")
+			assert_true(log_reader._beacon_for(row, progression).is_empty(), "no premature world/map beacon")
+	game.local.realm = "meadows"
+	game.durable_home_return = true
+	var arrived := HOMECOMING.objective_rows(game, {}, "meadows")
+	assert_eq(arrived.size(), 2)
+	if arrived.is_empty(): return
+	var target: Dictionary = log_reader._beacon_for(arrived[0], progression)
+	assert_true(target.get("position") is Vector2, "durable home arrival exposes an authored farm target")
 	var home: Array = _entry("opening_hear_grandpa").beacon.position
-	assert_eq(log_reader.tracked_beacon(progression).position, Vector2(home[0], home[1]))
+	assert_eq(target.get("position"), Vector2(home[0], home[1]), "homecoming matches the actual Grandpa destination")
+	assert_eq(target.get("display_name"), "Grandpa")
+	game.local.flags.set_flag(HOMECOMING.CREDITS_SEEN_FLAG)
+	assert_true(HOMECOMING.objective_rows(game).is_empty(), "completed credits remove the ending beacon")
 
 
 func test_old_beacon_cleanup_cannot_erase_new_owner_or_another_realms_marker() -> void:
