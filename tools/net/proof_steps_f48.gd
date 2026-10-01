@@ -43,7 +43,7 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var path := output.path_join("f48-boundaries").path_join(token.validate_filename() + ".json")
 	if FileAccess.file_exists(path): return _result(false, "Boundary token already exists; fresh output required")
 	var world_ref := weakref(game.world)
-	var namespace := str(game.world.reward_delivery_namespace)
+	var namespace_id := str(game.world.reward_delivery_namespace)
 	var epoch := str(game.session.call("_altar_current_epoch"))
 	var previous_receipts: Array[String] = []
 	for row: Variant in game.world.reward_deliveries.values():
@@ -51,7 +51,7 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var observer := func(observation: Dictionary) -> void:
 		if tree.get_meta("f48_boundary_fired", false) == true or observation.get("phase") != phase \
 			or observation.get("action") != actions[transaction] or observation.get("character_id") != character \
-			or observation.get("world_namespace") != namespace or game.world != world_ref.get_ref() \
+			or observation.get("world_namespace") != namespace_id or game.world != world_ref.get_ref() \
 			or game.session.call("_altar_current_epoch") != epoch: return
 		if str(observation.get("delivery_id", "")).is_empty() or str(observation.get("receipt", "")).is_empty(): return
 		if previous_receipts.has(str(observation.receipt)): return
