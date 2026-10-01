@@ -1,0 +1,67 @@
+{
+  "kind": "Bounded shared-source repair proposal; no ROOT edits or engine execution",
+  "consolidated_base": "cd3d798b0e21cce68181e827b0a376d60b125fef",
+  "f35_source": "df0a7d79756533f60d213daa5d25b20ae66df28c",
+  "ci_failure_run": "36820599627",
+  "logs": [
+    ".tmp/closeout/ci-110236201556-failures.txt",
+    ".tmp/closeout/ci-110236201632-failures.txt"
+  ],
+  "patch_sha256": "b64bdc7c6093adc71299dc6ccdb011aec65339d039e4f3509e9071ecd408b786",
+  "files": [
+    {
+      "path": "scripts/ui/motion_prefs.gd",
+      "before_sha256": "8c7c8b17950e6075d6d4a94001ff5af0133d228f44b8995ccf1e800df7191ad9",
+      "after_sha256": "65aaec104e83c028ccfe5bb4257ed153df51516f9b7475ea63f81106536bb027"
+    },
+    {
+      "path": "data/config/audio.json",
+      "before_sha256": "dd7469a7b82ebfe1d64891b7042080b19b5d811afc4b5268e03a5d7b4766e2f0",
+      "after_sha256": "cb17dca3e7a919e11d1797fba15c5e50fa639508083a6ccb216620652d15dcde"
+    },
+    {
+      "path": "data/config/combat.json",
+      "before_sha256": "cbbc3558e81f0b66e1137400d3e7e52bc1c05774ff0cd694ef6cb5af64edab73",
+      "after_sha256": "e1e87b66885be0d43f42928944855d59b81d59f155f23def02aa28bb0c179012"
+    },
+    {
+      "path": "assets/props/stat_draughts/bottle_base_Image_0.jpg.import",
+      "before_sha256": "c2e5718bb27815a3250d82bddd7435e95cf59af7e2570d2e23b7f0a26009b8de",
+      "after_sha256": "38981cf20de3863e3ce942af762e42598d0ee0c8f825b1f28a84d8024bba7b1a"
+    },
+    {
+      "path": "assets/vfx/textures/flame_tongue_v2.png.import",
+      "before_sha256": "2fd25e0d1fde903d635461e8b7fb572b11419c8f868cdaff011e07b081ed9d39",
+      "after_sha256": "f907ffb55be3cd2b9f99800d1efdc554acaf28a754a54fd22003f308749725d6"
+    }
+  ],
+  "provenance": {
+    "rumble": "Restore exact a16ebb5b97 API, persistence, clamp and immediate vibration stop deleted by ecd45e2b1e.",
+    "audio": "Restore all 175 cue registrations from 5ccac56dbe, removed by ecd45e2b1e. CI output listed only first three stone roles; current consolidated source has zero registrations. Do not restore unrelated removed impact_feedback activation.",
+    "spikes": "Remove only quick/charged spike_softness 0.7/0.8 introduced by a5f16a39c2; retain catch-only softness and all other impact settings.",
+    "textures": "Sidecars introduced by 091f5096af (bottle) and 5ccac56dbe (flame). Apply existing texture_import_policy.py parameter policy only: compress/mode=2 and detect_3d/compress_to=0; preserve UID, mipmaps and all other authored settings."
+  },
+  "source_checks": {
+    "all_24_archetype_cues_have_existing_files": true,
+    "original_175_cues_preserved": true,
+    "unrelated_audio_unchanged": true,
+    "only_two_attack_softness_keys_removed": true,
+    "rumble_matches_original_author_source": true,
+    "move_library_and_ultimates_off": true,
+    "git_apply_check_against_root_working_files": true
+  },
+  "root_followup": [
+    "Review the five file hashes against current integration source, then apply this patch as the serialized shared-file owner. The pinned F35 branch intentionally does not import the whole integration tree.",
+    "Run one ROOT-owned Godot import to regenerate both texture sidecars/payloads. Current patch intentionally retains preimport metadata; texture policy check is not yet a pass.",
+    "Run the selected test_hit_feedback, test_combat_vfx, test_move_effects and test_texture_import_policy checks in the consolidated tree. No test was modified.",
+    "F35 acceptance F35#0..4 remains open; no runtime, judged visual or CI pass is claimed."
+  ],
+  "unrun": [
+    "Godot/parser",
+    "import",
+    "render/GPU",
+    "export",
+    "unit tests",
+    "CI"
+  ]
+}
