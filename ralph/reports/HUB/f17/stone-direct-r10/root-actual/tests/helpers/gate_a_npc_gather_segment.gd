@@ -319,10 +319,9 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 		return false
 	# The direct wood leg crossed Grandpa's furnished yard and lost actual floor.
 	# Follow the existing Pond road to its nearest authored node, then leave it
-	# for the resource. From wood, nearby stone is west of the yard; approach it
-	# directly instead of returning east through the yard to Practice Meadow.
+	# for the resource. Stone retains its existing full Practice Meadow hint.
 	# Every leg shares the same 1800-frame walk and unchanged live floor checks.
-	var road := "The Pond" if item_id == "wood" else ""
+	var road := "The Pond" if item_id == "wood" else ("Practice Meadow" if item_id == "stone" else "")
 	if not await _walk_toward(node.global_position, 1800, 1.55, road, item_id == "wood"):
 		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
 		return false
