@@ -1,0 +1,106 @@
+extends "res://tests/test_case.gd"
+
+## Exercises the real permit consumer and retained arrival coordinator.
+## Contact and durable writer are doubles: physical co-op/save proof is separate.
+const POLICY := preload("res://scripts/net/portal_action_policy.gd")
+const LIFECYCLE := preload("res://scripts/net/foundation_travel_lifecycle.gd")
+const WORLD := preload("res://autoload/world_state.gd")
+const DATA := preload("res://scripts/data/redesign_data.gd")
+
+class GameFixture extends Node:
+	var world := WORLD.new()
+
+class SessionFixture extends Node:
+	signal peer_left(peer: int)
+	signal session_ended(reason: String)
+	var game := GameFixture.new()
+	var _portal_policy := POLICY.new()
+	var context: Dictionary = {}
+	var sent: Dictionary = {}
+	var reply: Dictionary = {}
+	var writer_saved: bool = false
+	var journal_calls: int = 0
+	func is_host() -> bool: return true
+	func local_peer_id() -> int: return 1
+	func _game() -> Node: return game
+	func _host_portal_context(_peer: int) -> Dictionary: return context
+	func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
+		return peer == 2 and envelope.character_id == "guest_a" and envelope.session_epoch == "epoch_a"
+	func send_portal_owner_permit(_producer: Node, _peer: int, envelope: Dictionary, permit: Dictionary) -> void:
+		sent = {"envelope": envelope.duplicate(true), "permit": permit.duplicate(true)}
+	func _portal_reply(_peer: int, _envelope: Dictionary, result: Dictionary) -> void: reply = result.duplicate(true)
+	func foundation_grounded_arrival(_producer: Node, _envelope: Dictionary, _permit: Dictionary) -> Dictionary:
+		journal_calls += 1
+		return {"ok": writer_saved, "saved": writer_saved, "durable": true}
+
+class ArrivalFixture extends "res://scripts/net/foundation_portal_arrival.gd":
+	var actual_contact: bool = false
+	func _remote_binding(_peer: int, _original: Dictionary) -> bool: return actual_contact
+
+func _sample() -> Dictionary:
+	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a",
+		"realm": "meadows", "sequence": 1, "damage_revision": 0, "dialogue": false,
+		"cutscene": false, "swimming": false, "flying": false, "downed": false}
+
+func test_lifecycle_has_no_action_or_coordinates_and_requires_every_observation() -> void:
+	var sample := _sample()
+	assert_true(LIFECYCLE.valid_sample(sample))
+	sample.position = Vector3.ZERO
+	assert_false(LIFECYCLE.valid_sample(sample))
+	sample = _sample()
+	sample.erase("downed")
+	assert_false(LIFECYCLE.valid_sample(sample))
+	sample = _sample()
+	sample.sequence = 0
+	assert_false(LIFECYCLE.valid_sample(sample))
+	sample = _sample()
+	sample.damage_revision = -1
+	assert_false(LIFECYCLE.valid_sample(sample))
+
+func test_consumed_guest_permit_survives_failed_save_and_requires_correlated_notice() -> void:
+	var session := SessionFixture.new()
+	session.game.world.reward_delivery_namespace = "world_a"
+	session.context = {"world_instance_id": "world_a", "character_id": "guest_a", "peer_id": 2,
+		"realm": "meadows", "position": Vector3.ZERO, "damage_revision": 0, "combat": false,
+		"dialogue": false, "cutscene": false, "swimming": false, "flying": false, "downed": false,
+		"character_unlocks": [], "world_unlocks": [], "last_waystones": {}, "waystones_activated": {},
+		"arch_positions": {"home": Vector3.ZERO}}
+	session._portal_policy.bind_world("world_a")
+	var envelope := {"request_id": "epoch_a:44", "session_epoch": "epoch_a", "character_id": "guest_a",
+		"world_instance_id": "world_a", "payload": {"kind": "portal_enter", "arch_id": "home"}}
+	var result := session._portal_policy.evaluate(envelope.payload, session.context,
+		DATA.json("res://data/config/portals.json"), DATA.json("res://data/config/waystones.json"), 100)
+	assert_true(result.get("ok", false))
+	if result.get("ok") != true:
+		session.game.free()
+		session.free()
+		return
+	var arrival := ArrivalFixture.new()
+	arrival.travel(session, 2, envelope, result)
+	var permit: Dictionary = session.sent.permit
+	assert_true(permit.request_id != envelope.request_id)
+	assert_true(session._portal_policy.consume_permit(permit.request_id, 2, "guest_a", "world_a", "meadows").is_empty())
+	assert_true(arrival._remote.has(2))
+	arrival.owner_notice(2, envelope, envelope.request_id)
+	assert_false(arrival._remote[2].owner_saved)
+	var stale := envelope.duplicate(true)
+	stale.session_epoch = "old_epoch"
+	arrival.owner_notice(2, stale, permit.request_id)
+	assert_false(arrival._remote[2].owner_saved)
+	arrival.owner_notice(2, envelope, permit.request_id)
+	arrival._process(1.0)
+	assert_eq(session.journal_calls, 0) # A notice cannot substitute for contact.
+	arrival.actual_contact = true
+	arrival._process(1.0)
+	assert_eq(session.journal_calls, 1)
+	assert_true(arrival._remote.has(2))
+	assert_true(session.reply.is_empty()) # Saved acceptance has not happened.
+	assert_eq(arrival._remote[2].permit, permit)
+	session.writer_saved = true
+	arrival._process(1.0)
+	assert_false(arrival._remote.has(2))
+	assert_true(session.reply.saved)
+	assert_eq(session.reply.permit_id, permit.request_id)
+	arrival.free()
+	session.game.free()
+	session.free()
