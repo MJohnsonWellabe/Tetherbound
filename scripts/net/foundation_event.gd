@@ -74,7 +74,11 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("trainer_id")) or not ESSENCE._opaque_id(intent.get("encounter_id")) \
 			or context.get("encounter_id") != intent.encounter_id or context.get("validated_host_outcome") != "win" \
 			or context.source_key != "boss:" + str(intent.trainer_id): return false
-		var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(intent.trainer_id, str(context.get("realm", "")))
+		# WorldState preflights these rows while loading. Loading the authored
+		# reward router lazily avoids its NPC/Session/WorldLedger preload cycle.
+		var rewards: Script = load("res://scripts/net/encounter_rewards.gd")
+		if rewards == null: return false
+		var handoff: Dictionary = rewards.call("chapter_hand_off", intent.trainer_id, str(context.get("realm", "")))
 		if handoff.is_empty() or handoff.relic_biome != intent.get("biome"): return false
 	elif duty.action == "rematch_win":
 		if intent.size() != 3 or not ESSENCE._opaque_id(intent.get("trainer_id")) or not ESSENCE._opaque_id(intent.get("encounter_id")) \
