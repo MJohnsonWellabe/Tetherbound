@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-01T00:03:37Z",
+ "updated": "2026-10-01T00:33:51Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met: 109 of 280. Original:95/101; redesign:14/179. F16 all5, F17#0\u2013#3, F26#0/#1/#2/#4 and F27#0 landed by this cut. F26 material path strict MET; full visual bar and Ally/default gates remain open. F17 M1/co-op/full craft remain open.",
-  "Owner priority: quality, a good game and verified main closures. Majority closure by Friday morning is a target, not a claimed result. PR500 actor lifetime/Heal core is main7dcd; runtime OFF and real callers open. Camera, opening, Hall agreement and mounted Altar code advance in parallel. Minimal named/batched checks under RD36/RD37; required player proofs remain.",
+  "Criteria met:110 of280 on this closure landing. Original95/101; redesign15/179. F17#5 actual host/guest layout/arch/shrine join/reload agreement independently PASS under RD36 immutable-record reuse. Original whole smoke budgetFAIL and fourENeterrors remain; no cleantransport/F49 or visual-craft credit.",
+  "Priority is main closures and quality. Hall F17#5 strict criterion PASS; camera readabilityR2 actual9numericPASS awaits freshblind/fullbar. OpeningR5 actualfloor refusalFAIL retained, changing steering approach; Foundation approved departure fix tracked555318, actualleave/rejoin proof next. Altar integration source remains gated/OFF.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -370,7 +370,7 @@
   },
   {
    "lane": "tb/hub",
-   "now": "F17#0-#3 main. Actual M1 contactR4 FAIL before Mira: paired shallow Terrain floor-cone refusal measured; narrow correction independently reviewed. HallR4 all263 functional comparisons PASS then nativeFAIL budget plus4hostENet errors. Separate immutable-record finalizer coding under RD36; no MET yet.",
+   "now": "F17#0-#3 main; #5 independent actual-record criterionPASS on this closure landing. M1R5 actualfloor refusalFAIL; steering approach changing. Halloriginal budgetFAIL+fourENeterrors retained; transportfix trackedFoundation555318 awaiting affectedproof.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
@@ -518,7 +518,7 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-10-01T00:03:37Z",
+ "last_lane_refresh": "2026-10-01T00:33:51Z",
  "lane_activity": [
   {
    "lane": "Shared authority \u00b7 tb/foundations",
@@ -541,8 +541,8 @@
   {
    "criterion": "F21#4",
    "lane": "tb/combat",
-   "source": "bf9df4536c numericPASS; blindFAIL archived375fe2; readabilityR2 patch54b722",
-   "state": "sevenpair readabilityFAIL/all9 craftFAIL; source-gated HUD/foreground successor freezing before native; OPEN"
+   "source": "8cff actualreadabilityR2 native0; archive d3f718",
+   "state": "All9numericPASS/277 scored draws; fresh54PNG blind review active; prior craftFAIL retained; OPEN"
   },
   {
    "criterion": "F23 actual actor incoming HP/Heal",
@@ -553,14 +553,14 @@
   {
    "criterion": "F17#4",
    "lane": "tb/hub",
-   "source": "784b5cee; actualM1 contactR4 FAIL; ignoredfixb05d1655",
-   "state": "actual pairedfloor contact measured; narrow livegrounded correction independent source gate; originalFAIL retained"
+   "source": "95e6d5fa; actualM1 contactfixR5 native1",
+   "state": "Actualgroundedpairedfloor refusal remains; failure retained, changing to production-controller steering observation; no unchanged retry"
   },
   {
    "criterion": "F17#5",
    "lane": "tb/hub",
-   "source": "actualHallR4 0485c7b7 on784b5;263 functionalPASS, native2",
-   "state": "budgetfinalizationFAIL plus4hostENeterrors retained; independent RD36 recordreuse eligible, immutable finalizer coding; no MET"
+   "source": "R4 actual784b/0485; metadata617a/527PASS; independent24c58/189PASS",
+   "state": "Literal criterion MET on closure landing; original native2/budget/fourENet errors retained; F49/transportclean OPEN"
   },
   {
    "criterion": "F27#2/#3 mounted Altar",
