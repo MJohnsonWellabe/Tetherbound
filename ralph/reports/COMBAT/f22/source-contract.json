@@ -1,0 +1,20 @@
+{
+  "kind": "cheap source structure/ownership check; not GDScript parse or engine/gameplay proof",
+  "ok": true,
+  "roles": 5,
+  "attacks": 22,
+  "species": 57,
+  "named": 24,
+  "source_sha256": {
+    "scripts/combat/combat_ai.gd": "07ce89e0d0c23ffd7baafcdbcc8fe7f04a4aafb6c97f1a10f8efc7611617a6e6",
+    "scripts/combat/encounter_director.gd": "f3e5c715be9393571f2f1a596d481559aeff212bc840f8fd74990365b39882d7",
+    "scripts/combat/enemy_pattern_telegraph.gd": "99f975dc331d67c6b00c85f1930569538238f62ba778de433602d92c8e873e16",
+    "scripts/combat/enemy_pattern_cast.gd": "c051553a80848b5eb68ca13098e0d56f6002fe5fa42f552b3762beaf2ee78a03",
+    "tests/helpers/f22_pattern_pilot.gd": "a06bc9d9f414a65fab48365eec5fbfe9222614784e4c435afca5f77efea30f74",
+    "tests/smoke_f22_pattern_bands.gd": "68647c9ec14d60bd9990b56f2bfa4602a0a4afcd8e9ce61f25c16e7cea6d4c05",
+    "tests/smoke_f22_pattern_contract.gd": "f6b73fdd4644cd8b61ccc863ebe4e5f05fdf9614c872e38d20d5814af45115b3",
+    "tests/smoke_meadows_named_c2c3.gd": "cb821a4029a3b706aadd038e9ec656e5208ba259074311438592aaf8544978cb",
+    "data/config/combat.json": "656cc038c9bfc0c36c97ba9fc590c23e67cdb3c4e005ebf2843c54aa9732833e"
+  },
+  "errors": []
+}

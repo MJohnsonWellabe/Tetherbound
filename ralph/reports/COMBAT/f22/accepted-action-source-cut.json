@@ -1,0 +1,34 @@
+{
+  "kind": "ignored exact accepted-action source proposal; no activation, parse, engine or MET",
+  "foundation_input": "D:/tetherbound/redesign-foundations/.tmp/shared-successor-r1/after/scripts/net/encounter_host.gd",
+  "input_sha256": "9f052c80726d5629728cf0bb0b710c50de7bfa9d76c92d2e03680f73582eecdb",
+  "current_foundation_input_sha256": "9f052c80726d5629728cf0bb0b710c50de7bfa9d76c92d2e03680f73582eecdb",
+  "changes": [
+    {
+      "path": "scripts/net/encounter_host.gd",
+      "before_sha256": "9f052c80726d5629728cf0bb0b710c50de7bfa9d76c92d2e03680f73582eecdb",
+      "after_sha256": "8158db7b066ea8e2de59f468bcf5789d903b5dad1b6640ffe616a14d6731f496",
+      "source": "D:/tetherbound/redesign-foundations/.tmp/shared-successor-r1/after/scripts/net/encounter_host.gd"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "before_sha256": "f3e5c715be9393571f2f1a596d481559aeff212bc840f8fd74990365b39882d7",
+      "after_sha256": "15fa5211dbf2829461a86876bee5aea3dba99c9629bffbc6d11a55c8bbf00b9e",
+      "source": "owned 0453683; frozen local source"
+    },
+    {
+      "path": "scripts/creatures/move_mastery.gd",
+      "before_sha256": "68642e587972f1ed5970c2a7e9e9c32c630582646a3f37c98b34145d2c309929",
+      "after_sha256": "fe6892f6eac927d6d1c63fa3579e374028932565a236e351e9e007bd023305f0",
+      "source": "F23 actual39ca697f87; ROOT-requested governing cut, later71bf requires composition"
+    },
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "before_sha256": "7544f866a11944f384b44c0c745cb6d782e7d41f3bfb604572bcb1de40a63647",
+      "after_sha256": "e177262621c0ad2b772465bf75a533c16f5ddd04e40ce6fe796110ea3ac716be",
+      "source": "F23 frozen shared manager proposal; token + canonical terminal resolution ONLY, root F21/F24/F25 composition remains"
+    }
+  ],
+  "source_cut": ".tmp/f22-accepted-actions/source-cut.patch.json",
+  "source_cut_sha256": "18576547d3a1fe36a6c6b02eb9b1a48add50a8c58792fcdaaf240a2fc68bd89f"
+}
