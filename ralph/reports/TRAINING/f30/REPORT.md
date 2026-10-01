@@ -1,6 +1,11 @@
 # F30 source packet
 
 Source freeze: `0fa45bff2ea8b8fc7ef17cdecd974abe012a2599`, branch `tb/f30`.
+Returned parser repair: the coordinator's combined Godot 4.7 parse identified
+an inference failure at `traits.gd:137`. The initialization comparison now
+has an explicit `bool` declaration; its existing `== true` guard and all
+configuration remain unchanged. The refreshed source check covers this
+repair. Coordinator parser verification is pending; all criteria remain OPEN.
 Anchor: CODEX_START_HERE §6 F30, RD-30/§8.1, TRAINING §6,
 CREATURES §3 and ACCEPTANCE F30#0–#4. Effective permissions verified from
 session context: danger-full-access, approval never. No Godot, imports,
