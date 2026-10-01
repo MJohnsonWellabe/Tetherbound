@@ -58,12 +58,22 @@ func _initialize() -> void:
 	context.world_unlocks = []
 	context.character_unlocks = ["tidewake"]
 	_check(bool(_evaluate(policy, {"kind": "portal_enter", "arch_id": "tidewake"}, context, config, stones, 5000).get("ok", false)), "portable personal unlock admits traveler")
+	context.last_waystones = {"tidewake": "tidewake_entry"}
+	context.waystones_activated = {"tidewake": ["tidewake_entry"]}
+	var fallback := _evaluate(policy, {"kind": "portal_enter", "arch_id": "tidewake"}, context, config, stones, 5000)
+	_check(bool(fallback.get("ok", false)), "canonical saved entry marker admits traveler")
+	var fallback_id := str((fallback.get("prepared", {}) as Dictionary).get("travel_permit", ""))
+	var fallback_permit: Dictionary = policy.call("consume_permit", fallback_id, 1, "unit-character", "unit-world-instance", "meadows")
+	_check(fallback_permit.get("entry_id") == config.arches[1].entry_id, "entry marker resolves actual authored entry")
 	context.last_waystones = {"tidewake": "stormwood_ashfoot_waycamp"}
 	context.waystones_activated = {"tidewake": ["stormwood_ashfoot_waycamp"]}
 	_check(not bool(_evaluate(policy, {"kind": "portal_enter", "arch_id": "tidewake"}, context, config, stones, 5000).get("ok", false)), "cross-biome saved return refuses")
 	_check(not bool(_evaluate(policy, {"kind": "portal_enter", "arch_id": "biome5"}, context, config, stones, 5000).get("ok", false)), "fifth never yields travel")
 	context.owned_portal_keys = {"fifth_portal_key": 1}
+	context.character_stirred = false
 	_check(bool(_evaluate(policy, {"kind": "portal_unlock", "arch_id": "biome5"}, context, config, stones, 5000).get("ok", false)), "fifth prepares spend only")
+	context.character_stirred = true
+	_check(not bool(_evaluate(policy, {"kind": "portal_unlock", "arch_id": "biome5"}, context, config, stones, 5000).get("ok", false)), "durable personal fifth stir refuses raw second spend")
 	var fifth: Dictionary = config.arches[4]
 	_check(ARCH.prompt_text(fifth, {"ready": true, "has_key": true}) == "Use the fifth key", "sealed fifth offers real key")
 	_check(ARCH.prompt_text(fifth, {"ready": true, "character_stirred": true, "fifth_arch_stirred": true}) == "The arch is quiet.", "stir reload quiet")

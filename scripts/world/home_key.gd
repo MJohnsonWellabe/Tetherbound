@@ -227,7 +227,15 @@ func show_remote_raise(actor: Node3D, use_id: String) -> bool:
 		visual.queue_free()
 		return false
 	_remote_raises[use_id] = visual
+	visual.tree_exited.connect(_remote_raise_exited.bind(use_id, visual.get_instance_id()))
 	return true
+
+
+func _remote_raise_exited(use_id: String, instance_id: int) -> void:
+	var current: Variant = _remote_raises.get(use_id)
+	if is_instance_valid(current) and current.get_instance_id() != instance_id:
+		return
+	_remote_raises.erase(use_id)
 
 
 func end_remote_raise(use_id: String) -> void:
