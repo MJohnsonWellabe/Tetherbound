@@ -91,13 +91,13 @@ static func commit_host_action(registry: RefCounted, prepared_writer: Node, peer
 		registry.call("finish_creature_training", stage, false)
 		return deny("action_stage_unavailable")
 	var journal: Variant = prepared_writer.call("journal_creature_training_prepared", peer, character, accepted)
-	var saved := journal is Dictionary and journal.get("ok") == true and journal.get("durable") == true
+	var saved: Variant = journal is Dictionary and journal.get("ok") == true and journal.get("durable") == true
 	if registry.call("finish_creature_training", stage, saved) != true:
 		return {"ok": false, "code": "action_stage_changed", "durable": saved, "resolved": false}
 	if not saved: return journal if journal is Dictionary else deny("action_journal_failed")
 	# Publication may cause local owner delivery. It is allowed only AFTER the
 	# hidden token has finished and the registry retained its owner-save fence.
-	var published := prepared_writer.call("publish_creature_training", peer, character, accepted.receipt) == true
+	var published: Variant = prepared_writer.call("publish_creature_training", peer, character, accepted.receipt) == true
 	return {"ok": true, "durable": true, "resolved": false, "saved": false,
 		"pending_owner_save": true, "published": published, "receipt": accepted.receipt,
 		"action_id": accepted.action_id, "delivery_id": journal.get("delivery_id", ""),

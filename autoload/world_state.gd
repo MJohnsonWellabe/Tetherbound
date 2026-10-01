@@ -699,7 +699,7 @@ static func altar_build_row_valid(raw: Variant, world_namespace: String, world_i
 		if request.size() != 4 or request.get("uid") != raw.intent.record.get("uid"): return false
 	# Canonical projection preserves the unchanged party and every personal field;
 	# recompute only the unchanged party/inventory/personal projection. No missing gear/portal carrier is invented here.
-	var full := raw.before.duplicate(true)
+	var full: Dictionary = raw.before.duplicate(true)
 	full.character_id = raw.character_id
 	var proposal := altar_build_transition(full, raw.character_id, int(raw.character_revision) - 1,
 		raw.action, raw.action_id, raw.intent.record, world_namespace)
