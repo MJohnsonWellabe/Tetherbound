@@ -625,5 +625,80 @@
     "production_source_data_or_flags_mutated": false,
     "scope": "Patch target is integration: F27 detached APIs/essence input are absent from the older owned branch. No production API introduced; no runtime activation, route, earning, transaction, or save credit.",
     "godot_parser_and_execution": "NOT RUN; ROOT owns the affected progression and combat progression engine checks"
+  },
+  "ci6165_bounded_followup": {
+    "runtime_sha": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+    "root_coordination_sha": "41f03d7f4f7b2cf7687fab4ddbe418a8245196b9",
+    "returned_ci": {
+      "job": "110344653258",
+      "tests": 2728,
+      "assertions": 297840,
+      "failed": 6,
+      "raw_log_path": ".tmp/closeout/ci6165-110344653258.log",
+      "raw_log_sha256": "6aa22f8f9759f4fdfce3fdb1fce372037582ca809f71d5f08304c8ff76b7b3ce",
+      "status": "FAIL: six cases and12 leaked objects; this receipt is not acceptance"
+    },
+    "owned_cases": [
+      "test_cloudreach_no_legendary_offer.gd::test_no_line_in_scripts_ties_cloudreach_to_a_legendary",
+      "test_stormwood_encounters_data.gd::test_tables_are_replaceable_and_obey_role_and_crown_limits"
+    ],
+    "source_files": [
+      {
+        "path": "tests/test_cloudreach_no_legendary_offer.gd",
+        "before_blob": "cf6a1ffd0ffcbd4e2971ca54b8115cf7507d910a",
+        "after_blob": "657149bf1de5b67e0f3086e53108319ab6141b62"
+      },
+      {
+        "path": "tests/test_stormwood_encounters_data.gd",
+        "before_blob": "eba76fed7dc42e4bfc65d319c4aff0a0b5c7a80d",
+        "after_blob": "6224dc32ddc9b4cbc92a6b875b4927f67939bdd7"
+      }
+    ],
+    "exact_source_packet_sha256": "762fd71fb42eeaa80b10979bcaddc34cb8a75514761b4881117589487c109f33",
+    "cloudreach_scope": {
+      "allowance": "Exact pair of policy source path and one full stripped numeric inventory literal; no helper/file/prefix exemption.",
+      "numeric_target": [
+        "legendary",
+        "level"
+      ],
+      "shipping_candidate_flag": false,
+      "old_scanner_and_all_existing_test_methods_unchanged": true,
+      "new_negative_controls": [
+        "same policy appended offer call",
+        "same policy look-alike config literal",
+        "identical approved literal in a different script"
+      ]
+    },
+    "stormwood_scope": {
+      "legacy_off_crown": [
+        38,
+        40
+      ],
+      "detached_on_crown": [
+        48,
+        50
+      ],
+      "both_views_retain": "12 tables, one Crown Surge, replaceability, role minimum, no night clock, valid nonstarter species, explicit replacements",
+      "strict_literal_boolean_activation_controls": [
+        false,
+        1,
+        "true"
+      ],
+      "numeric_endpoints": "finite integral exact comparisons; no int truncation",
+      "base_and_nonlevel_tables_unchanged": true
+    },
+    "checks": "PASS source/data and read-only apply check only; no Godot/import/native/CI execution here",
+    "independent_review": {
+      "reviewer": "existing /root/f19_strict_review agent reused at explicit ROOT request",
+      "verdict": "PASS: no actionable source findings",
+      "reviewed_sha256": {
+        "tests/test_cloudreach_no_legendary_offer.gd": "5712159bb4627a85b1c426951311da4c6baee41205cb39aa50a6fbb72a6181c1",
+        "tests/test_stormwood_encounters_data.gd": "fd1aa8ed10c3cca04da9f34c0b41086d231c9b88704dd8fa09318711be96fa80"
+      },
+      "scope": "Two-file bounded diff only; original blobs match a795 runtime. No edits, new agents/sessions, engine/import/native/CI or ROOT writes.",
+      "findings": "One exact file+line inventory allowance with unchanged scanner and added offer/look-alike/cross-file negative controls. Exact finite integral OFF38–40 / detachedON48–50 with all prior role/species/starter/night/replacement checks applied to both views. No skipped/weakened tests; GDScript typing/context appears consistent.",
+      "limitations": "Independent source/data review only; execution proof and runtime activation/acceptance remain open."
+    },
+    "engine_after_fix": "NOT RUN: ROOT batches returned fixes after independent review. Runtime activation/actual earning/route/solvency acceptance stays open."
   }
 }
