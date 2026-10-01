@@ -1,0 +1,38 @@
+{
+  "scope": "F23 sole-writer bounded F25 VFX owner/alias + F33 landed gear multiplier successor",
+  "previous_owned_commit": "39ca697f876f463b555b022e183f0747a6ffdc20",
+  "previous_evidence_commit": "e4d6cf1ca1c67a8c0ef50776e96ad38c7dd02ed2",
+  "previous_packet_sha256": "f6dc54f9bc6cef6ede2890c45156f2e80c3a00205bb8422489376f16601b12fe",
+  "shared_proposal_unchanged_sha256": "9479e602c6289e20501b0e518e30dc97a590a17182933e9275fd010377a26ec2",
+  "successor_patch_sha256": "bebe434e2f3ecc7e15dec9dc9fa5ad5688407bd8b332136fbfc8486812ac550d",
+  "paths": [
+    {
+      "path": "data/moves/moves.json",
+      "before_raw_sha256": "3da86de7bd8f45918ce4b9037d7f9bc1cfd0382d512de7a3a2deb0fce6987e6e",
+      "after_raw_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+      "before_lf_sha256": "be1e24e5e0acecae3eaf165f376d9fbb5248372d294b1eb35d88e9f246a7aced",
+      "after_lf_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375"
+    },
+    {
+      "path": "scripts/creatures/move_mastery.gd",
+      "before_raw_sha256": "68642e587972f1ed5970c2a7e9e9c32c630582646a3f37c98b34145d2c309929",
+      "after_raw_sha256": "cf1c3797df7e2cd6042b208d463efd6b4d6d7e3c38aa49cab7cd89e1bd7c93bd",
+      "before_lf_sha256": "68642e587972f1ed5970c2a7e9e9c32c630582646a3f37c98b34145d2c309929",
+      "after_lf_sha256": "cf1c3797df7e2cd6042b208d463efd6b4d6d7e3c38aa49cab7cd89e1bd7c93bd"
+    }
+  ],
+  "runtime_activation": "OFF",
+  "acceptance": {
+    "F23#0": "OPEN",
+    "F23#1": "OPEN",
+    "F23#2": "OPEN",
+    "F23#3": "OPEN",
+    "F23#4": "OPEN",
+    "F23#5": "OPEN"
+  },
+  "producer_dependencies": [
+    "F25 full frozenrow/context launch",
+    "F33 canonical freeze and trustedcap copied to meter_config",
+    "Foundation/Director canonical writer/action seams"
+  ]
+}

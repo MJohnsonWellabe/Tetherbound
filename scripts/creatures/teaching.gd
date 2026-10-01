@@ -80,17 +80,109 @@ static func stage_tm_knowledge(creature: RefCounted, tm_id: String, tms: RefCoun
 	if not MASTERY.valid_document(next, uses, receipts, next): return {"ok": false, "reason": "knowledge_full"}
 	return {"ok": true, "replayed": false, "move_id": move, "known_moves": next}
 
+## The Foundation transaction supplies its admitted WHOLE character candidate,
+## frozen immutable intent and expected revision. This planner adds no receipt
+## store: the existing writer/journal owns save failure, ACK and replay identity.
+## Inventory debit and learned option are staged together; no slot auto-equip.
+static func stage_tm_candidate(admitted: Dictionary, creature_uid: String, tm_id: String,
+		tms: RefCounted, moves: RefCounted) -> Dictionary:
+	if not admitted_party_errors(admitted.get("party"), admitted.get("redesign_character")).is_empty() \
+			or not admitted.get("inventory") is Array:
+		return {"ok": false, "code": "invalid_character"}
+	var candidate := admitted.duplicate(true)
+	var selected: Dictionary = {}
+	for row: Dictionary in candidate.party:
+		if row.uid == creature_uid: selected = row
+	if selected.is_empty(): return {"ok": false, "code": "not_owner"}
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	var primary := str(species.definition(str(selected.species_id)).get("type", ""))
+	if primary.is_empty() or selected.get("creature_type") != primary:
+		return {"ok": false, "code": "invalid_primary_type"}
+	var record := MASTERY.owned_record(selected)
+	# OwnedRecord holds canonical mastery only; use a detached full instance
+	# for this typed rule rather than changing the registry's live creature.
+	var instance := load("res://scripts/creatures/creature_instance.gd") as GDScript
+	var learned: RefCounted = instance.new()
+	learned.creature_type = primary
+	learned.known_moves = record.known_moves
+	learned.move_mastery_uses = record.move_mastery_uses
+	learned.move_mastery_receipts = record.move_mastery_receipts
+	var staged := stage_tm_knowledge(learned, tm_id, tms, moves)
+	if not bool(staged.get("ok", false)): return {"ok": false, "code": staged.get("reason", "invalid_tm")}
+	if bool(staged.get("replayed", false)): return {"ok": false, "code": "already_known"}
+	var found := -1
+	for index: int in candidate.inventory.size():
+		var stack: Variant = candidate.inventory[index]
+		if stack is Dictionary and stack.get("id") == tm_id:
+			if not MASTERY._whole_nonnegative(stack.get("n")) or int(stack.n) < 1:
+				return {"ok": false, "code": "invalid_inventory"}
+			found = index
+			break
+	if found < 0: return {"ok": false, "code": "missing_tm"}
+	var stack: Dictionary = candidate.inventory[found]
+	if int(stack.n) == 1:
+		candidate.inventory[found] = null
+	else:
+		stack.n = int(stack.n) - 1
+	selected.known_moves = staged.known_moves
+	candidate.redesign_character = character_loadout_mirror(candidate.party, candidate.redesign_character)
+	return {"ok": true, "state": candidate, "move_id": staged.move_id}
+
 
 const LEARNSETS_PATH := "res://data/moves/learnsets.json"
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 static var _learnsets: Dictionary = {}
+static var _learnsets_loaded := false
 
 static func learnsets() -> Dictionary:
-	if _learnsets.is_empty():
+	if not _learnsets_loaded:
+		_learnsets_loaded = true
 		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(LEARNSETS_PATH))
-		if raw is Dictionary: _learnsets = raw.get("species",{})
+		var errors := learnset_errors(raw, MOVE_DB.load_default())
+		if errors.is_empty():
+			_learnsets = raw.species
+		else:
+			push_error("Creature learnsets refused: %s" % "; ".join(errors))
 	return _learnsets
+
+## Reserved species are authored and checked even while acquisition is off.
+static func learnset_errors(raw: Variant, moves: RefCounted) -> Array[String]:
+	var errors: Array[String] = []
+	if not raw is Dictionary or not raw.get("species") is Dictionary or moves == null:
+		return ["learnsets require a species object and move registry"]
+	for species_id: String in raw.species:
+		var row: Variant = raw.species[species_id]
+		if not row is Dictionary or not row.get("unlocks") is Array \
+				or not ["WALL", "CHARGER", "DIVER", "CURRENT"].has(row.get("role_family")):
+			errors.append("%s: invalid learnset" % species_id)
+			continue
+		var base_slots := {}
+		var utility_levels := {}
+		for unlock: Variant in row.unlocks:
+			if not unlock is Dictionary or not unlock.get("move_id") is String \
+					or not moves.has(str(unlock.get("move_id", ""))):
+				errors.append("%s: unknown move" % species_id)
+				continue
+			if unlock.has("level") == unlock.has("breakthrough_tier"):
+				errors.append("%s: exactly one unlock gate required" % species_id)
+				continue
+			var gate: Variant = unlock.get("level", unlock.get("breakthrough_tier"))
+			var maximum := 100 if unlock.has("level") else 5
+			if not MASTERY._whole_nonnegative(gate) or int(gate) < 1 or int(gate) > maximum:
+				errors.append("%s: invalid unlock gate" % species_id)
+				continue
+			var slot := str(moves.slot(unlock.move_id))
+			if unlock.get("level", 0) == 1: base_slots[slot] = true
+			if slot == "utility" and unlock.has("level"): utility_levels[int(gate)] = true
+		for slot: String in ["quick", "charged", "ultimate"]:
+			if not base_slots.has(slot): errors.append("%s: missing L1 %s" % [species_id, slot])
+		if not utility_levels.has(5) or not utility_levels.has(15):
+			errors.append("%s: missing L5/L15 utility options" % species_id)
+		if not moves.has(str(row.get("ultimate", ""))) \
+				or str(moves.slot(str(row.get("ultimate", "")))) != "ultimate":
+			errors.append("%s: missing signature" % species_id)
+	return errors
 
 ## The host supplies actual completed tiers from F28; requesting a level or
 ## tier in an edit payload is never a substitute for that earned character state.
@@ -127,7 +219,11 @@ static func allowed_saved_moves(saved: Dictionary, character: Dictionary) -> Arr
 		var changed := false
 		for candidate: String in species:
 			var target: Variant = species[candidate].get("evolves_into","")
-			var targets: Array = target if target is Array else [target]
+			var targets: Array = target.duplicate() if target is Array else [target]
+			var variants: Variant = species[candidate].get("evolves_into_variants", {})
+			if variants is Dictionary:
+				for variant: Variant in variants.values():
+					if not targets.has(variant): targets.append(variant)
 			for descendant: Variant in targets:
 				if ancestry.has(str(descendant)) and not ancestry.has(candidate):
 					ancestry.append(candidate)
@@ -239,6 +335,11 @@ static func admitted_party_errors(entries: Variant, character: Variant) -> Array
 		seen[uid] = true
 		if not saved.get("species_id") is String or not species.has(str(saved.species_id)):
 			errors.append("admitted party[%d] has unknown species" % index)
+		# Detached construction and tolerant old local rows may be incomplete;
+		# a canonical owned admission may never remove its required verbs.
+		for slot: String in ["quick", "charged", "ultimate"]:
+			if not saved.get("move_" + slot) is String or str(saved.get("move_" + slot, "")).is_empty():
+				errors.append("admitted party[%d] has no %s move" % [index, slot])
 	return errors
 
 ## Typed carrier projection at a serialization boundary. The live instance is
@@ -295,10 +396,29 @@ static func initialize_loadout(creature: RefCounted, definition: Dictionary) -> 
 		if not id.is_empty() and not known.has(id): known.append(id)
 	creature.set("known_moves",known)
 	refresh_known_moves(creature)
+	if str(creature.get("move_ultimate")).is_empty():
+		var signature_row: Dictionary = learnsets().get(str(creature.get("species_id")), {})
+		var signature := str(signature_row.get("ultimate", ""))
+		if (creature.get("known_moves") as Array).has(signature): creature.set("move_ultimate", signature)
 	if str(creature.get("move_utility")).is_empty():
 		var row: Dictionary = learnsets().get(str(creature.get("species_id")),{})
 		var first := str(row.get("first_utility",""))
 		if (creature.get("known_moves") as Array).has(first): creature.set("move_utility",first)
+
+## Detached learning projection for a level/feast/evolution character candidate.
+## Foundation calls before its atomic writer, preserving taught moves/mastery.
+## Learning an option never edits an equipped slot in the field.
+static func stage_unlocks(saved: Dictionary, completed_tiers: Array) -> Dictionary:
+	var known: Variant = saved.get("known_moves")
+	if not known is Array or not MASTERY.valid_document(known,
+			saved.get("move_mastery_uses"), saved.get("move_mastery_receipts"), known):
+		return {"ok": false, "reason": "invalid_knowledge"}
+	var next: Array = known.duplicate()
+	for move: String in available_moves(str(saved.get("species_id", "")), int(saved.get("level", 1)), completed_tiers):
+		if not next.has(move): next.append(move)
+	if not MASTERY.valid_document(next, saved.move_mastery_uses, saved.move_mastery_receipts, next):
+		return {"ok": false, "reason": "knowledge_full"}
+	return {"ok": true, "known_moves": next}
 
 ## Pure compare-and-swap staging. The actual host station service must create
 ## context from live ownership, station ID/geometry and encounter state; this
@@ -308,14 +428,15 @@ static func stage_loadout_edit(creature: RefCounted, request: Dictionary, host_c
 		moves: RefCounted) -> Dictionary:
 	if creature == null or moves == null: return {"ok":false,"reason":"missing_creature"}
 	var uid := str(creature.get("uid"))
-	if not (host_context.get("owned_creature_uids",[]) as Array).has(uid): return {"ok":false,"reason":"not_owner"}
+	var owned: Variant = host_context.get("owned_creature_uids")
+	if not owned is Array or owned.size() > 5 or not owned.has(uid): return {"ok":false,"reason":"not_owner"}
 	if str(request.get("creature_uid","")) != uid: return {"ok":false,"reason":"wrong_creature"}
 	var allowed := ["edit_id","expected_revision","creature_uid","quick","charged","utility"]
 	for key: Variant in request:
 		if not allowed.has(key): return {"ok":false,"reason":"unsupported_field"}
 	var expected: Variant = request.get("expected_revision")
 	if not (expected is int or expected is float) or not is_finite(float(expected)) or float(expected) < 0.0 \
-			or floor(float(expected)) != float(expected): return {"ok":false,"reason":"invalid_revision"}
+			or float(expected) >= 2147483647.0 or floor(float(expected)) != float(expected): return {"ok":false,"reason":"invalid_revision"}
 	if not request.get("edit_id") is String: return {"ok":false,"reason":"invalid_edit_id"}
 	var edit_id := str(request.get("edit_id",""))
 	if edit_id.is_empty() or edit_id.length() > 64: return {"ok":false,"reason":"invalid_edit_id"}

@@ -26,7 +26,8 @@
         "speed": 20.0,
         "spread": 0.0,
         "trail": 1.2,
-        "impact_scale": 1.3
+        "impact_scale": 1.3,
+        "mastery_owner": "f25"
       }
     },
     "pebble_toss": {
@@ -50,7 +51,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "stone_throw"
+        "archetype": "stone_throw",
+        "mastery_owner": "f25"
       }
     },
     "stone_rush": {
@@ -74,7 +76,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "bramble_whip": {
@@ -98,7 +101,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "warren_charge": {
@@ -122,7 +126,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "root_nibble": {
@@ -146,7 +151,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "rootquake": {
@@ -170,7 +176,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "quake_ring"
+        "archetype": "quake_ring",
+        "mastery_owner": "f25"
       }
     },
     "pack_bite": {
@@ -194,7 +201,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "trailblaze_pounce": {
@@ -218,7 +226,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "burrow_strike": {
@@ -242,7 +251,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "area",
-        "archetype": "root_stone_spikes"
+        "archetype": "root_stone_spikes",
+        "mastery_owner": "f25"
       }
     },
     "tremor_roll": {
@@ -266,7 +276,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "hoofbeat": {
@@ -290,7 +301,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "verdant_burst": {
@@ -314,7 +326,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "root_stone_spikes"
+        "archetype": "root_stone_spikes",
+        "mastery_owner": "f25"
       }
     },
     "antler_slam": {
@@ -338,7 +351,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "ripple_jab": {
@@ -362,7 +376,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "undertow": {
@@ -386,7 +401,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tidal_wave"
+        "archetype": "tidal_wave",
+        "mastery_owner": "f25"
       }
     },
     "splash_snap": {
@@ -410,7 +426,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "riptide_rush": {
@@ -434,7 +451,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "shell_bash": {
@@ -458,7 +476,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "tail_splash": {
@@ -482,7 +501,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "bubble_volley"
+        "archetype": "bubble_volley",
+        "mastery_owner": "f25"
       }
     },
     "gale_peck": {
@@ -506,7 +526,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "sky_rend": {
@@ -530,7 +551,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "wind_blade"
+        "archetype": "wind_blade",
+        "mastery_owner": "f25"
       }
     },
     "talon_dive": {
@@ -554,7 +576,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "storm_strike": {
@@ -578,7 +601,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "quick_flit": {
@@ -602,7 +626,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "night_swoop": {
@@ -626,7 +651,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "gust_burst": {
@@ -650,7 +676,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tornado"
+        "archetype": "tornado",
+        "mastery_owner": "f25"
       }
     },
     "rock_throw": {
@@ -674,7 +701,8 @@
         "trail": 1.0,
         "impact_scale": 1.3,
         "kind": "projectile",
-        "archetype": "stone_throw"
+        "archetype": "stone_throw",
+        "mastery_owner": "f25"
       }
     },
     "stone_spike": {
@@ -698,7 +726,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "root_stone_spikes"
+        "archetype": "root_stone_spikes",
+        "mastery_owner": "f25"
       }
     },
     "earth_fist": {
@@ -722,7 +751,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "earthshatter": {
@@ -746,7 +776,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "quake_ring"
+        "archetype": "quake_ring",
+        "mastery_owner": "f25"
       }
     },
     "aqua_shot": {
@@ -770,7 +801,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "water_jet"
+        "archetype": "water_jet",
+        "mastery_owner": "f25"
       }
     },
     "tidal_burst": {
@@ -794,7 +826,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tidal_wave"
+        "archetype": "tidal_wave",
+        "mastery_owner": "f25"
       }
     },
     "riptide_lance": {
@@ -818,7 +851,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "water_jet"
+        "archetype": "water_jet",
+        "mastery_owner": "f25"
       }
     },
     "leviathan_surge": {
@@ -842,7 +876,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "tidal_wave"
+        "archetype": "tidal_wave",
+        "mastery_owner": "f25"
       }
     },
     "wind_blade": {
@@ -866,7 +901,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "wind_blade"
+        "archetype": "wind_blade",
+        "mastery_owner": "f25"
       }
     },
     "aerial_flash": {
@@ -890,7 +926,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "charge_dash"
+        "archetype": "charge_dash",
+        "mastery_owner": "f25"
       }
     },
     "cyclone": {
@@ -914,7 +951,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "tornado"
+        "archetype": "tornado",
+        "mastery_owner": "f25"
       }
     },
     "heavenfall": {
@@ -938,7 +976,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "wind_blade"
+        "archetype": "wind_blade",
+        "mastery_owner": "f25"
       }
     },
     "shadow_nip": {
@@ -962,7 +1001,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "gloom_surge": {
@@ -986,7 +1026,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "shadow_bolt"
+        "archetype": "shadow_bolt",
+        "mastery_owner": "f25"
       }
     },
     "spark_bite": {
@@ -1010,7 +1051,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "arc_lash": {
@@ -1034,7 +1076,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "chain_lightning"
+        "archetype": "chain_lightning",
+        "mastery_owner": "f25"
       }
     },
     "ember_bite": {
@@ -1058,7 +1101,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "area",
-        "archetype": "ember_burst"
+        "archetype": "ember_burst",
+        "mastery_owner": "f25"
       }
     },
     "cinder_burst": {
@@ -1082,7 +1126,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "flame_cone"
+        "archetype": "flame_cone",
+        "mastery_owner": "f25"
       }
     },
     "mind_ripple": {
@@ -1106,7 +1151,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "projectile",
-        "archetype": "psychic_pulse"
+        "archetype": "psychic_pulse",
+        "mastery_owner": "f25"
       }
     },
     "rift_pulse": {
@@ -1130,7 +1176,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "psychic_pulse"
+        "archetype": "psychic_pulse",
+        "mastery_owner": "f25"
       }
     },
     "frost_claw": {
@@ -1154,7 +1201,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "glacier_break": {
@@ -1178,7 +1226,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "static_snap": {
@@ -1202,7 +1251,8 @@
         "trail": 1.0,
         "impact_scale": 1.0,
         "kind": "melee",
-        "archetype": "slash_trail"
+        "archetype": "slash_trail",
+        "mastery_owner": "f25"
       }
     },
     "voltaic_whip": {
@@ -1226,7 +1276,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "projectile",
-        "archetype": "chain_lightning"
+        "archetype": "chain_lightning",
+        "mastery_owner": "f25"
       }
     },
     "thunder_break": {
@@ -1250,7 +1301,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "area",
-        "archetype": "sky_lightning"
+        "archetype": "sky_lightning",
+        "mastery_owner": "f25"
       }
     },
     "stormfall": {
@@ -1274,7 +1326,8 @@
         "trail": 1.0,
         "impact_scale": 1.2,
         "kind": "cone",
-        "archetype": "sky_lightning"
+        "archetype": "sky_lightning",
+        "mastery_owner": "f25"
       }
     },
     "snare": {
@@ -1311,7 +1364,8 @@
         "speed": 24.0,
         "spread": 0.42,
         "trail": 1.0,
-        "impact_scale": 1.2
+        "impact_scale": 1.2,
+        "mastery_owner": "f25"
       }
     },
     "slow_field": {
@@ -1348,7 +1402,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.0,
-        "impact_scale": 0.55
+        "impact_scale": 0.55,
+        "mastery_owner": "f25"
       }
     },
     "shove": {
@@ -1385,7 +1440,8 @@
         "speed": 24.0,
         "spread": 0.55,
         "trail": 0.75,
-        "impact_scale": 1.0
+        "impact_scale": 1.0,
+        "mastery_owner": "f25"
       }
     },
     "dash_strike": {
@@ -1423,7 +1479,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.35,
-        "impact_scale": 1.0
+        "impact_scale": 1.0,
+        "mastery_owner": "f25"
       }
     },
     "veil": {
@@ -1461,7 +1518,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.25,
-        "impact_scale": 0.6
+        "impact_scale": 0.6,
+        "mastery_owner": "f25"
       }
     },
     "heal_pulse": {
@@ -1497,7 +1555,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 0.8,
-        "impact_scale": 0.7
+        "impact_scale": 0.7,
+        "mastery_owner": "f25"
       }
     },
     "bramble_trap": {
@@ -1538,7 +1597,8 @@
         "speed": 24.0,
         "spread": 0.85,
         "trail": 0.7,
-        "impact_scale": 1.1
+        "impact_scale": 1.1,
+        "mastery_owner": "f25"
       }
     },
     "hearten": {
@@ -1575,7 +1635,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.05,
-        "impact_scale": 0.8
+        "impact_scale": 0.8,
+        "mastery_owner": "f25"
       }
     },
     "sap": {
@@ -1611,7 +1672,8 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 1.0,
-        "impact_scale": 0.75
+        "impact_scale": 0.75,
+        "mastery_owner": "f25"
       }
     },
     "quake_ring": {
@@ -1649,10 +1711,1097 @@
         "speed": 24.0,
         "spread": 0.0,
         "trail": 0.7,
-        "impact_scale": 0.7
+        "impact_scale": 0.7,
+        "mastery_owner": "f25"
+      }
+    },
+    "ultimate_terrapup": {
+      "display_name": "Mountain Home",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ripplet": {
+      "display_name": "Turning Tide",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_galewisp": {
+      "display_name": "Sky Ribbon",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_current": {
+      "display_name": "Ground Current Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_wall": {
+      "display_name": "Ground Wall Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_charger": {
+      "display_name": "Ground Charger Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ground_diver": {
+      "display_name": "Ground Diver Finale",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_tuskroot": {
+      "display_name": "Rootquake",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_current": {
+      "display_name": "Water Current Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_wall": {
+      "display_name": "Water Wall Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_charger": {
+      "display_name": "Water Charger Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_charger": {
+      "display_name": "Air Charger Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_diver": {
+      "display_name": "Air Diver Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_veridian": {
+      "display_name": "Verdant Rebirth",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ashtusk": {
+      "display_name": "Cinder Stampede",
+      "type": "ground",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "stone_throw",
+        "colour": "#c1a078",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_charger": {
+      "display_name": "Electric Charger Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 9.0,
+      "cone_degrees": 65.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "lane"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_fire_wall": {
+      "display_name": "Fire Wall Finale",
+      "type": "fire",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "fireball",
+        "colour": "#f6a132",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_dark_diver": {
+      "display_name": "Dark Diver Finale",
+      "type": "dark",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "shadow_bolt",
+        "colour": "#9e80ca",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_ice_current": {
+      "display_name": "Ice Current Finale",
+      "type": "ice",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "ice_shard_volley",
+        "colour": "#a8dcf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_cannonback": {
+      "display_name": "Broadside Bloom",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_water_diver": {
+      "display_name": "Water Diver Finale",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_abyssal_guardian": {
+      "display_name": "Abyssal Crown",
+      "type": "water",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "tidal_wave",
+        "colour": "#64cddd",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_current": {
+      "display_name": "Electric Current Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_diver": {
+      "display_name": "Electric Diver Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_electric_wall": {
+      "display_name": "Electric Wall Finale",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_fulgocobra": {
+      "display_name": "Stormheart Coil",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_current": {
+      "display_name": "Air Current Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 8.0,
+      "cone_degrees": 120.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "cone"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_air_wall": {
+      "display_name": "Air Wall Finale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": false,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_stormcapra": {
+      "display_name": "Summit Thunder",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_solmane": {
+      "display_name": "Solar Gale",
+      "type": "air",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 10.0,
+      "cone_degrees": 45.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "fan"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "wind_blade",
+        "colour": "#beddf0",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
+      }
+    },
+    "ultimate_stormursa": {
+      "display_name": "Thunder Roar",
+      "type": "electric",
+      "slot": "ultimate",
+      "power": 1.0,
+      "base_power": 84.0,
+      "range": 6.0,
+      "cone_degrees": 360.0,
+      "windup": 0.6,
+      "recovery": 1.8,
+      "cooldown": 0.0,
+      "lunge": 0.0,
+      "energy_gain": 0,
+      "energy_cost": 0,
+      "wind_cost": 0.0,
+      "weight": "ultimate",
+      "ultimate": {
+        "presentation_seconds": 2.4,
+        "growth_per_breakthrough": 0.1,
+        "unique": true,
+        "shape": "ring"
+      },
+      "vfx": {
+        "kind": "area",
+        "archetype": "sky_lightning",
+        "colour": "#f5d24a",
+        "count": 4,
+        "size": 1.6,
+        "speed": 18.0,
+        "arc": 0.0,
+        "spread": 0.4,
+        "trail": 1.0,
+        "impact_scale": 2.0
       }
     }
   },
   "_comment_new_types": "T3-CREATURES. Ten moves for the five types the owner's creature-expansion brief brings into the Meadows. Two per type -- one quick, one charged -- because a dual-typed creature whose moves are both its PRIMARY type wears its second type as pure defence and the player never sees it; Nightburrow throwing a Dark move is the only way Ground/Dark reads as anything at all. Powers sit in the SPECIES band (0.95-1.10), not the TM ladder (1.15-2.0): these are birth moves, and a creature the player catches should not arrive holding a reward-economy multiplier. Balance note worth keeping: data/config/type_chart.json authors NO matchup rows for these five types, so every one of these moves resolves at exactly 1.0 against every defender. They are strictly LESS swingy than a ground/water/air move, never more -- a wild Stormtrail's Electric attack cannot roll 1.25 into anything, and neither can the player's once it is caught. Identity therefore lives in the timing and reach numbers rather than in effectiveness: electric has the lowest windup of any quick in this file (0.11), psychic the highest and the longest quick reach, ice the longest charged lunge, fire the only `area` quick. `vfx.colour` follows the move's type as this file's header rule requires, each taken from that creature's own palette swatch on the owner's sheets in docs/art/reference/creature-expansion-2026-08-30/.",
-  "_comment_vfx": "`vfx.kind` is how the move reads on screen: `melee` (impact only, at the target), `projectile` (a travelling bolt drawn from the attacker to the target, arriving as the impact plays), `cone` (a spreading wash) and `area` (a ring centred on the attacker). `colour` is the elemental tint and follows the move's type, so ground/water/air stay tellable apart at a glance. The hit itself is still resolved instantly by the same cone arithmetic (owner's call: a visible projectile, not a dodgeable object) -- the travel time only delays the IMPACT, never the damage."
+  "_comment_vfx": "`vfx.kind` is how the move reads on screen: `melee` (impact only, at the target), `projectile` (a travelling bolt drawn from the attacker to the target, arriving as the impact plays), `cone` (a spreading wash) and `area` (a ring centred on the attacker). `colour` is the elemental tint and follows the move's type, so ground/water/air stay tellable apart at a glance. The hit itself is still resolved instantly by the same cone arithmetic (owner's call: a visible projectile, not a dodgeable object) -- the travel time only delays the IMPACT, never the damage.",
+  "_comment_f23": "Quick/charged/utility/ultimate slot definitions. Utility and ultimate use tap-start actions. Damage/effect tiers are frozen at host acceptance; meter and personal rewards never come from VFX."
 }

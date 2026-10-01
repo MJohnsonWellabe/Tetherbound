@@ -1,0 +1,32 @@
+{
+  "version": "f23-source-r1",
+  "activation": "OFF",
+  "shared_baseline": "a5f16a39c25c2c562014baca22911153afc15ea6",
+  "producer_owner": "Foundation Session + existing CharacterAuthority writer/journal; EncounterDirector",
+  "station_methods": {
+    "move_station_available": ["station_key"],
+    "quote_creature_loadout": ["station_key", "creature_uid"],
+    "submit_creature_loadout": ["station_key", "intent"],
+    "reconcile_creature_loadout": ["station_key", "original_intent"],
+    "submit_creature_tm_knowledge": ["intent"]
+  },
+  "quote_required_fields": ["ok", "character_id", "creature_uid", "station_key", "session_epoch", "world_namespace", "character_revision", "loadout_revision", "loadout", "options"],
+  "quote_loadout_slots": ["quick", "charged", "utility", "ultimate"],
+  "quote_option_slots": ["quick", "charged", "utility"],
+  "quote_optional_rejoin_field": "pending_intent",
+  "loadout_intent_fields": ["edit_id", "character_id", "creature_uid", "session_epoch", "world_namespace", "expected_character_revision", "expected_revision", "quick", "charged", "utility"],
+  "loadout_signal": {"name": "creature_loadout_completed", "arguments": ["station_key", "edit_id", "result"]},
+  "loadout_result_fields": ["character_id", "creature_uid", "edit_id", "resolved", "ok", "durable", "saved", "acknowledged"],
+  "result_optional_display_fields": ["code", "reason"],
+  "completion_rule": "Success requires resolved + saved + acknowledged. Refusal clears only resolved + !ok + !durable. Retain exact original immutable intent for all other results.",
+  "tm_client_intent_fields": ["teach_id", "creature_uid", "tm_id"],
+  "tm_authority_context": "Foundation enriches trusted stable character, session epoch, world namespace and current admitted revisions before freezing durable intent; UI never supplies inventory/knowledge or debit authority.",
+  "combat_intent": {"kind": "move_action_start", "peer_fields": ["kind", "encounter_id", "creature_uid", "slot", "move_id"]},
+  "combat_view_method": {"name": "local_move_action_view", "arguments": ["encounter_id", "creature_uid"], "fields": ["ready_slots", "ultimate_meter"]},
+  "combat_delivery_method": "CombatManager.apply_host_move_action",
+  "combat_common_delta_fields": ["phase", "creature_uid", "action_id", "body_generation"],
+  "combat_started_fields": ["frozen_move"],
+  "combat_resolved_fields": ["hp", "damage", "hit"],
+  "receipt_rule": "Host rechecks original action/actor/generation and marks meter_credited on SAME original accepted receipt only with actual positive clamped HP debit. No new ledger.",
+  "acceptance": {"F23#0": "OPEN", "F23#1": "OPEN", "F23#2": "OPEN", "F23#3": "OPEN", "F23#4": "OPEN", "F23#5": "OPEN"}
+}

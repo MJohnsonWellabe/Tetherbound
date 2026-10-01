@@ -1,0 +1,47 @@
+{
+  "scope": "F25 final producer dependency; no F23 gameplay source changes or acceptance credit",
+  "f23_owned_commit": "71bf3746bd63668e945095d895a91b61c8f57d01",
+  "f25_game_source_commit": "a93815e497dfd17f0b4c985797d95ab229ac119f",
+  "f25_evidence_head": "79b74f0d9aaef5056b4dc761b5335cbbc4aa9703",
+  "f25_draft_pr": "https://github.com/MJohnsonWellabe/Tetherbound/pull/517",
+  "f25_source_packet_sha256": "cffc91cdf74b9309ae9d9ec5d55aa658ca66d0e36b03b2ce1567acb43024da29",
+  "contract_sha256": "df8937081ba059aa3cbe07e42647055840d9f2d2dc2127617dd090579424647b",
+  "integrated_moves_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+  "ordinary_birth": "MoveProjectile.launch(parent,from,to,F23_full_frozen_row,context)",
+  "frozen_fields": [
+    "move_id",
+    "slot",
+    "vfx with mastery_owner=f25 and eightparameters",
+    "mastery_rank1..5",
+    "action_id",
+    "actor_binding.character_id/creature_uid/encounter_id/generation/action"
+  ],
+  "required_context": [
+    "current_actor including SAMEaction atbirth",
+    "travel_seconds finite0..3 from immutableacceptedhostschedule",
+    "source_ground finiteVector3",
+    "target_ground finiteVector3"
+  ],
+  "optional_context": [
+    "target_visual_bounds positivefiniteVector3position/size; invalidoptionalbounds usecontact"
+  ],
+  "arrival": "Host/currenttargetgeneration checks/cancellation/timeout ownsthesame acceptedreceipt. Build/confirmcontact before HP/HUDnumber. Animation/node removal cannot authorizeHP.",
+  "impact_cue": "MoveProjectile.impact_cue(frozen_row)->{cue_id,path,gain_db}; existingacceptedreceipt owner resolves and plays once aftercontact. Renderer freezes impact_audio_owner=receipt.",
+  "lifecycle": [
+    "cancel_action(tree,action_id)",
+    "cancel_encounter(tree,encounter_id)",
+    "confirm_impact(tree,action_id)",
+    "reconcile_actor(tree,current) scopes SAMEcharacter+encounter thenbody/generation/faint; lateractionalone preservesflight"
+  ],
+  "producer_integration": "OPEN",
+  "activation": "OFF",
+  "runtime_proof": "UNRUN; ROOT only",
+  "acceptance": {
+    "F23#0": "OPEN",
+    "F23#1": "OPEN",
+    "F23#2": "OPEN",
+    "F23#3": "OPEN",
+    "F23#4": "OPEN",
+    "F23#5": "OPEN"
+  }
+}
