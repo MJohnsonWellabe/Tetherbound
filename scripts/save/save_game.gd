@@ -427,8 +427,17 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_training_snapshot_allowed") \
 			and session.call("_owner_training_snapshot_allowed", portal_owner, initial_data) != true:
 		return {}
-	if not _redesign_errors(initial_data, portal_character).is_empty():
+	var redesign_errors := _redesign_errors(initial_data, portal_character)
+	if not redesign_errors.is_empty():
 		push_error("Save refused: invalid redesign state")
+		# Preserve the rejected pre-identity candidate in the existing log only.
+		# A serialized string and its hash survive disposal of scratch saves.
+		var snapshot_json := JSON.stringify(initial_data)
+		print("SAVE_SNAPSHOT_REFUSAL " + JSON.stringify({"schema_version": 1,
+			"stage": "redesign_pre_identity", "errors": redesign_errors,
+			"slot": slot, "write_split": write_split, "character_only": character_only,
+			"character_id": portal_character, "snapshot_sha256": snapshot_json.sha256_text(),
+			"snapshot_json": snapshot_json}))
 		return {}
 	var world_id := ""
 	var character_id := character_only
