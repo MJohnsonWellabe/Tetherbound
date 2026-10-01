@@ -1,0 +1,28 @@
+{
+  "source": "8cff5ee2821941c68b43657ba4f9e96cbc83d8e6",
+  "verdict": "FAIL",
+  "camera_readability_failed_pairs": 6,
+  "camera_readability_failed_stills": 14,
+  "full_craft_failed_pairs": 9,
+  "originals_inspected": 54,
+  "reused_independent_session": true,
+  "prior_bf9_failure_unchanged": true,
+  "no_acceptance_credit": true,
+  "files": {
+    "strict-review.txt": {
+      "raw_sha256": "87dfa6c845bc6aec9d2f445fb7dc168d198dc6031e180895e164a0017e88628f",
+      "readable_sha256": "87dfa6c845bc6aec9d2f445fb7dc168d198dc6031e180895e164a0017e88628f",
+      "raw_git_path": "ralph/reports/COMBAT/f21/camera-readability-r2/blind-r1/strict-review.txt.raw"
+    },
+    "review.json": {
+      "raw_sha256": "965e8fb2a954866689e97680417e19bfe61dc3eb39ee6a20de63fa8d9b5a1e11",
+      "readable_sha256": "965e8fb2a954866689e97680417e19bfe61dc3eb39ee6a20de63fa8d9b5a1e11",
+      "raw_git_path": "ralph/reports/COMBAT/f21/camera-readability-r2/blind-r1/review.json.raw"
+    },
+    "pins.json": {
+      "raw_sha256": "85b4ef4ddb72032bf4ea70ba8491486f6b6b4fb9c64c9e3df14eedb3d50c964d",
+      "readable_sha256": "85b4ef4ddb72032bf4ea70ba8491486f6b6b4fb9c64c9e3df14eedb3d50c964d",
+      "raw_git_path": "ralph/reports/COMBAT/f21/camera-readability-r2/blind-r1/pins.json.raw"
+    }
+  }
+}
