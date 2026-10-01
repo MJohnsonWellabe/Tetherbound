@@ -96,9 +96,9 @@ func _admitted() -> Dictionary:
 	bag.add("trait_seed_hardy",2)
 	return {"character_id":"owner-a","redesign_character":state,
 		"inventory":preload("res://scripts/world/death_satchel_rules.gd").slots(bag),
-		"party":[{"uid":"caught-a","species_id":"bramblebun","level":10,
+		"party":[{"uid":"caught-a","species_id":"bramblebun","creature_type":"ground","secondary_type":"","level":10,
 			"base_hp":95.0,"iv_hp":0.5,"boost_hp":0,"max_hp":100.0,"hp":50.0},
-			{"uid":"kept-b","species_id":"mudsnout","level":10}]}
+			{"uid":"kept-b","species_id":"mudsnout","creature_type":"ground","secondary_type":"","level":10}]}
 
 func _request(action: String, trait_id: String = "hardy") -> Dictionary:
 	return {"action_id":"action-a","action":action,"creature_uid":"caught-a",
