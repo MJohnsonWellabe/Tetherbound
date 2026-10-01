@@ -1,0 +1,69 @@
+--- a/tests/helpers/meadows_earned_team_segment.gd
++++ b/tests/helpers/meadows_earned_team_segment.gd
+@@ -340,6 +340,7 @@
+ 	var closest := INF
+ 	var boundary := _boundary_approach(target)
+ 	if bool(boundary.required) and (boundary.points as Array).is_empty():
++		_receipt("wild_boundary_refused", boundary.get("diagnostic", {}))
+ 		return _fail("The selected wild needs a physical village crossing but no current open gate route is available")
+ 	var waypoint := 0
+ 	var refusals := 0
+@@ -536,8 +537,56 @@
+ 		var id := str(entry.get("id", ""))
+ 		if _open_boundary_gate(id):
+ 			open_ids.append(id)
+-	return boundary_approach(config, Vector2(_player.global_position.x, _player.global_position.z),
+-		Vector2(target.global_position.x, target.global_position.z), open_ids)
++	var from := Vector2(_player.global_position.x, _player.global_position.z)
++	var to := Vector2(target.global_position.x, target.global_position.z)
++	var route := boundary_approach(config, from, to, open_ids)
++	if bool(route.required) and (route.points as Array).is_empty():
++		route["diagnostic"] = _boundary_refusal_diagnostic(config, target, from, to, open_ids)
++	return route
++
++
++## Refusal evidence only. No admission/LOS query, route fallback or state write.
++func _boundary_refusal_diagnostic(config: Dictionary, target: Node3D, from: Vector2,
++		to: Vector2, open_ids: Array[String]) -> Dictionary:
++	var polygon := PackedVector2Array()
++	for raw: Array in (config.get("outline", {}) as Dictionary).get("points", []):
++		polygon.append(Vector2(float(raw[0]), float(raw[1])))
++	var from_inside := Geometry2D.is_point_in_polygon(from, polygon)
++	var target_inside := Geometry2D.is_point_in_polygon(to, polygon)
++	var crossing := crosses_boundary(from, to, polygon)
++	var clearance := float((config.get("wall", {}) as Dictionary).get("gate_clear_m", 0.0))
++	var kind := "no_valid_single_gate_path"
++	if polygon.size() < 3:
++		kind = "invalid_outline"
++	elif from_inside == target_inside and crossing:
++		kind = "same_side_chord_crosses_fence"
++	elif clearance <= 1.0:
++		kind = "invalid_gate_clearance"
++	elif open_ids.is_empty():
++		kind = "no_authorized_live_open_leaf"
++	var gates: Array[Dictionary] = []
++	for entry: Dictionary in (config.get("gates", {}) as Dictionary).get("entries", []):
++		var id := str(entry.get("id", ""))
++		var gate := _world.get_node_or_null("VillageBoundary/" + id)
++		var row := {"id": id, "authorized_by_original_check": open_ids.has(id), "present": gate != null}
++		if gate != null:
++			var script := gate.get_script() as Script
++			var leaf := gate.get("_shape") as CollisionShape3D
++			row["node"] = str(gate.get_path())
++			row["script"] = script.resource_path if script != null else ""
++			row["flag_id"] = str(gate.get("flag_id"))
++			row["logical_open"] = bool(gate.get("_open"))
++			row["leaf_present"] = leaf != null
++			row["leaf_disabled"] = leaf != null and leaf.disabled
++		gates.append(row)
++	return {"kind": kind, "physics_frame": Engine.get_physics_frames(),
++		"target": str(target.get_path()), "target_name": str(target.name),
++		"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
++		"target_position": [target.global_position.x, target.global_position.y, target.global_position.z],
++		"from_xz": [from.x, from.y], "target_xz": [to.x, to.y],
++		"from_inside": from_inside, "target_inside": target_inside, "direct_chord_crosses": crossing,
++		"outline_points": polygon.size(), "gate_clear_m": clearance,
++		"open_ids": open_ids.duplicate(), "gates": gates}
+ 
+ 
+ func _open_boundary_gate(id: String) -> bool:
