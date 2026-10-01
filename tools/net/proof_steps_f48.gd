@@ -6,6 +6,7 @@ extends RefCounted
 const DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 const UIDS := preload("res://scripts/data/redesign_state.gd")
 const ATOMIC := preload("res://scripts/save/atomic_save_file.gd")
+const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
@@ -66,11 +67,7 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 			"coordinator_pid": coordinator_pid, "process_identity": process_identity,
 			"observation": observation.duplicate(true), "files": _observe(tree)}
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
-		var file := FileAccess.open(path, FileAccess.WRITE)
-		if file == null: return
-		file.store_string(JSON.stringify(evidence, "\t"))
-		file.flush()
-		file.close()
+		if not DETACHED.publish(path, evidence): return
 		tree.set_meta("f48_boundary_fired", true)
 		# The coordinator owns the child. It reads this immutable exact-cut
 		# marker while pumping the pending input step, kills through a kernel
@@ -85,11 +82,8 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 				and ack.get("process_identity") == process_identity:
 				if ack.get("exit", {}).get("ok") == true and ack.get("exit", {}).get("exited") == true \
 					and ack.get("exit", {}).get("identity") == process_identity:
-					var resumed := FileAccess.open(path + ".resume.json", FileAccess.WRITE)
-					if resumed != null:
-						resumed.store_string(JSON.stringify({"token": token, "marker_sha256": marker_sha,
-							"ack_sha256": FileAccess.get_sha256(ack_path), "observer_pid": OS.get_process_id()}, "\t"))
-						resumed.close()
+					DETACHED.publish(path + ".resume.json", {"token": token, "marker_sha256": marker_sha,
+						"ack_sha256": FileAccess.get_sha256(ack_path), "observer_pid": OS.get_process_id()})
 				return
 			OS.delay_msec(1)
 	writer.connect("transaction_boundary", observer)

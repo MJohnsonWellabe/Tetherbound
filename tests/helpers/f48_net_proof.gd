@@ -8,6 +8,7 @@ const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button"]
 const TRANSACTIONS := ["craft", "release", "feast", "key", "relic", "essence_spend"]
 const CUTS := ["before_input", "after_settlement", "after_host_write_before_delivery", "after_owner_write_before_ack"]
 const REPLAY_FIELDS := ["inventory", "redesign_character", "satchel_escrow"]
+const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 var _profile: Dictionary = {}
 var _profile_errors: Array[String] = []
 var _boundary_pending: Dictionary = {}
@@ -50,11 +51,7 @@ func _pump_once() -> void:
 				"coordinator_pid": OS.get_process_id(), "process_identity": _boundary_pending.identity,
 				"marker_sha256": FileAccess.get_sha256(path), "exit": exit_witness}
 			_boundary_pending.ack = ack
-			var file := FileAccess.open(path + ".ack.json", FileAccess.WRITE)
-			if file != null:
-				file.store_string(JSON.stringify(ack, "\t"))
-				file.flush()
-				file.close()
+			DETACHED.publish(path + ".ack.json", ack)
 			if exit_witness.get("ok") == true and exit_witness.get("exited") == true:
 				_peers[_boundary_pending.peer].exited = true
 				_peers[_boundary_pending.peer].f48_exit_confirmed = ack

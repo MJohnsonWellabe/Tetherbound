@@ -1,15 +1,17 @@
 {
   "base": "09b836562f8b10cf69b15dce165de567fbd1ea73",
   "source_sha256": {
-    "tests/helpers/f48_net_proof.gd": "dd46a62516eff76e2b08051ee790919989a7e9fbec0d6701d662ec23a51f9194",
-    "tools/net/proof_steps_f48.gd": "72f7ac4ff546e7d7bbc829fbd8dd59dfd7112f18f5cacec5ca7b2904e6f091df",
-    "tools/net/f48_process_guard.py": "2722654af0ec2f6628609c6e44840eafcb9052f7b7bc5a7ead79ec2ad24493fd"
+    "tests/helpers/f48_net_proof.gd": "7a0c23515f776091db7326b2b63120de60ad5df5b3a67561c6069d6db0f788e4",
+    "tools/net/proof_steps_f48.gd": "82c17c9e377ade2d5e5d95619e6a971c289b7fa13860d5d5ace338737895631a",
+    "tools/net/f48_process_guard.py": "2722654af0ec2f6628609c6e44840eafcb9052f7b7bc5a7ead79ec2ad24493fd",
+    "tools/net/f48_detached_file.gd": "ce9e8fa607caf2db6599ac33e380b0a44698e1f4f8bee9d67594b0f0a909907d"
   },
   "checks": {
-    "standalone_gdtoolkit_grammar": "PASS for two changed GDScript files",
+    "standalone_gdtoolkit_grammar": "PASS for three changed GDScript files",
     "python_ast": "PASS",
     "git_diff_check": "PASS"
   },
   "native_runtime": "UNRUN: ROOT owns serialized Godot/native process verification",
-  "acceptance": "OPEN: no F48 criterion closed"
+  "acceptance": "OPEN: no F48 criterion closed",
+  "publication": "Marker, ACK and resume receipt are flushed/closed at a fresh temporary path then renamed atomically before readers see final paths"
 }
