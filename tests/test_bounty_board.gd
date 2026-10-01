@@ -39,7 +39,7 @@ func test_rotation_exactly_three_unlocked_deterministic_personal_and_no_reroll()
 		assert_eq(BOARD.template(slot.template).biome, "meadows")
 	assert_false(BOARD.stage(first.state, 1, "bounty_rotate", {}, _context(first.state, 1)).ok)
 	var other := _record("character-f43-b")
-	var other_board := BOARD.stage(other, 0, "bounty_rotate", {}, _context(other)).state.redesign_character.bounties
+	var other_board: Dictionary = BOARD.stage(other, 0, "bounty_rotate", {}, _context(other)).state.redesign_character.bounties
 	assert_ne(other_board.slots, first.state.redesign_character.bounties.slots)
 	var tomorrow := BOARD.stage(first.state, 1, "bounty_rotate", {}, _context(first.state, 1, 2))
 	assert_true(tomorrow.ok)

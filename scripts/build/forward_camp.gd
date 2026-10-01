@@ -59,7 +59,7 @@ func source_key() -> String:
 func _process(_delta: float) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	var session: Node = game.get("session") as Node if game != null else null
-	var available := RULES.config().get("runtime_enabled") == true and session != null \
+	var available: bool = RULES.config().get("runtime_enabled") == true and session != null \
 		and session.has_method("forward_camp_available") and session.call("forward_camp_available",self) == true
 	for prompt: Node3D in _prompts: prompt.set("actionable",available)
 

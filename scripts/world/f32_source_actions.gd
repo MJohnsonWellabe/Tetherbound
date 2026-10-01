@@ -105,7 +105,7 @@ static func _node(intent: Dictionary, host: Dictionary) -> Dictionary:
 		var roll: Variant = host.get("retained_seed_roll")
 		if not _number(roll) or float(roll) < 0 or float(roll) >= 1: return _deny("host_seed_roll_required")
 		if float(roll) < float(seed.chance): outputs[str(seed.item)] = int(seed.amount)
-	var next_stock := stock.duplicate(true)
+	var next_stock: Dictionary = stock.duplicate(true)
 	next_stock.revision = int(stock.revision) + 1
 	next_stock.generation = int(stock.generation) + 1
 	next_stock.next_ready_day = int(host.host_day) + int(site.respawn_days)

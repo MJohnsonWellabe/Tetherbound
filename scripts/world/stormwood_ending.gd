@@ -1015,7 +1015,7 @@ func _save_world_claim() -> bool:
 	if saver.call("fallback_busy") == true or game.world != world_state or game.save_system != saver \
 		or game.session != session or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
 		or session.call("_altar_current_epoch") != epoch or world_state.realm_environment != expected_environment: return false
-	var saved := saver.call("save_world_prepared", game, id) == true
+	var saved: bool = saver.call("save_world_prepared", game, id) == true
 	if game.world != world_state or game.save_system != saver or game.session != session \
 		or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
 		or session.call("_altar_current_epoch") != epoch: return false

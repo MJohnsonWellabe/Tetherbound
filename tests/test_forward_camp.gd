@@ -111,7 +111,7 @@ func test_atomic_kit_place_pack_replay_and_stale_revision() -> void:
 	assert_eq(ACTIONS.BAG.inventory_from(packed.state.inventory).call("count","forward_camp_kit"),1)
 	context.all_parties_awake=false
 	assert_false(ACTIONS._stage_build(cfg,stage.state,0,stage.placed_buildings,2,pack,context).ok)
-	var guest := stage.state.duplicate(true)
+	var guest: Dictionary = stage.state.duplicate(true)
 	guest.character_id="guest"
 	context.character_id="guest"
 	context.all_parties_awake=true
