@@ -1,0 +1,27 @@
+{
+  "head": "3e7bc7cfe0f2dbac967383382074bf61a7225c58",
+  "script": "res://.tmp/f31-bed-diagnostic/rest-torch.gd",
+  "wrapper_sha256": "c4529b001973180f01969b3ddef65aef26ef394dc812856af9a43327d42f06dc",
+  "budget_seconds": 240,
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "counts_as_acceptance": false,
+  "pid": 16428,
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--verbose",
+    "--path",
+    "D:\\tetherbound\\foundations-batch-check",
+    "--script",
+    "res://.tmp/f31-bed-diagnostic/rest-torch.gd"
+  ],
+  "timed_out": true,
+  "exit": 1,
+  "elapsed_seconds": 240.125,
+  "raw_log_sha256": "07a956b20951385fa73dd5fa984853aa43ad8340340cba356c348900535f5fa0",
+  "observations": [],
+  "errors": [],
+  "frozen_source_count": 2180,
+  "source_closure_sha256": "02dfb62f2d7cb334294ce0c326c507ee90340761f52440c045c6e820c7bb8f91",
+  "raw_log_gzip": "bed-diagnostic.log.gz"
+}
