@@ -2,7 +2,7 @@
   "_comment": "Aquaryn host-owned encounter tuning. Starting numbers; runtime fight and shoreline basin integration remain required before acceptance.",
   "id": "water_aquaryn_alpha",
   "species_id": "water_aquaryn",
-  "level": 26,
+  "level": 49,
   "island_id": "tidal_cradle",
   "encounter_kind": "wild",
   "completion_flag": "water_aquaryn_resolved",
