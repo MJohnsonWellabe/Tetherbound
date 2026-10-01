@@ -298,8 +298,10 @@ func _the_advertised_chance_is_the_chance_the_throw_would_use() -> void:
 		_fail("no enemy for the advertised-chance check")
 		return
 
-	# Swung well off the body, so the aim is definitely unassisted.
-	var away := (foe_body.global_position - _player.global_position).rotated(Vector3.UP, deg_to_rad(50.0))
+	# Turn away from the aim camera's positive shoulder offset. Turning toward
+	# it put the reticle outside the body while the hand's ballistic arc still
+	# crossed the creature in CI. Keep the same 50-degree turn and 12-frame settle.
+	var away := (foe_body.global_position - _player.global_position).rotated(Vector3.UP, deg_to_rad(-50.0))
 	_aim_camera_along(away)
 	for i in 12:
 		await physics_frame
@@ -308,6 +310,9 @@ func _the_advertised_chance_is_the_chance_the_throw_would_use() -> void:
 	var report: Dictionary = throw.call("aim_report") if throw != null else {}
 	if bool(report.get("inside_body", true)):
 		_fail("the 50-degree miss setup did not actually put the live reticle outside the creature: %s" % str(report))
+		return
+	if bool(report.get("eligible", true)) or bool(report.get("trajectory_hits_target", true)):
+		_fail("the 50-degree miss setup must refuse assist and physically miss the creature: %s" % str(report))
 		return
 	if bool(_manager.call("catch_aim_is_locked")):
 		_fail("aimed 50 degrees off the creature and the aim still reports locked: player_range=%.3f report=%s" % [
@@ -331,6 +336,9 @@ func _the_advertised_chance_is_the_chance_the_throw_would_use() -> void:
 		)
 	if float(_manager.call("catch_aim_offset", radius)) <= 0.0:
 		_fail("an unassisted aim 50 degrees off the body reports a zero placement offset")
+	print("catch aim miss fixture: player_range=%.3f report=%s advertised=%.3f dead_centre=%.3f" % [
+		_player.global_position.distance_to(foe_body.global_position), str(report), advertised, dead_centre,
+	])
 
 	_aim_camera_along(foe_body.global_position - _player.global_position)
 	for i in 10:
