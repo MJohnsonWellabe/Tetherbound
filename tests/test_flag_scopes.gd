@@ -23,6 +23,8 @@ extends "res://tests/test_case.gd"
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const CREATURE_TRADE := preload("res://scripts/trade/creature_trade.gd")
 const RIDING := preload("res://scripts/world/riding_controller.gd")
+const ENCOUNTER_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
+const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
 
 const SCOPES_PATH := "res://data/progression/flag_scopes.json"
 const OBJECTIVES_PATH := "res://data/progression/objectives.json"
@@ -209,6 +211,30 @@ func test_every_prefixed_id_resolves_through_its_prefix() -> void:
 	for id: String in PREFIXED_SAMPLES:
 		assert_false(PROGRESSION_STATE.scope_of(id).is_empty(),
 			"'%s' matches no prefix in flag_scopes.json" % id)
+
+
+func test_warden_host_journal_xp_receipts_resolve_world() -> void:
+	# Actual CI6170 host reload receipts; derive their ids through the writers.
+	var source := ENCOUNTER_REWARDS.source_for("warden_aldis", "xp")
+	var receipts: Array[String] = []
+	for peer: int in [1, 1790841056]:
+		var receipt := WORLD_LEDGER.reward_flag(source, peer)
+		receipts.append(receipt)
+		assert_eq(receipt, "reward:trainer:warden_aldis:xp:%d" % peer)
+		assert_eq(PROGRESSION_STATE.scope_of(receipt), "world",
+			"host journal XP receipt must remain in world flags on reload")
+		assert_true(WORLD_LEDGER.host_only_allowed(receipt, 1, WORLD_LEDGER.HOST_ONLY_FLAG_PREFIXES))
+		assert_false(WORLD_LEDGER.host_only_allowed(receipt, 2, WORLD_LEDGER.HOST_ONLY_FLAG_PREFIXES),
+			"declaring save scope must not authorize a guest to forge the receipt")
+	assert_eq(PROGRESSION_STATE.scope_of("reward:trainer:unregistered:xp:1"), "",
+		"the exact Warden declaration must not classify unrelated trainer receipts")
+	var world_flags := PROGRESSION_STATE.new()
+	var player_flags := PROGRESSION_STATE.new()
+	var merged := preload("res://autoload/merged_progression.gd").new(world_flags, player_flags)
+	merged.load_data({"flags": receipts})
+	assert_eq(world_flags.save_data().flags, receipts,
+		"ordinary reload retains both original reward ids in world storage")
+	assert_true(player_flags.all_set().is_empty(), "host receipts never migrate into personal flags")
 
 
 func test_generated_ids_from_their_own_helpers_resolve() -> void:

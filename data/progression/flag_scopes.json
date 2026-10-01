@@ -158,6 +158,7 @@
     ],
     "prefixes": [
       "reward:trainer:warrens_cleared:xp:",
+      "reward:trainer:warden_aldis:xp:",
       "water_claim:",
       "defeated_water_trainer_",
       "cache:",

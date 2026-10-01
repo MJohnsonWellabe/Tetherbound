@@ -1,0 +1,174 @@
+{
+  "kind": "source preservation and independent pure Python scope/host/reload models; no GDScript execution/parser",
+  "checks": [
+    {
+      "name": "original artifact digest",
+      "passed": true
+    },
+    {
+      "name": "original receipt has no assertion failures or fatal",
+      "passed": true
+    },
+    {
+      "name": "two actual host scope errors exactly bound",
+      "passed": true
+    },
+    {
+      "name": "actual original reload stack retained",
+      "passed": true
+    },
+    {
+      "name": "allocated file preimage equals pinned ROOT: data/progression/flag_scopes.json",
+      "passed": true
+    },
+    {
+      "name": "ROOT working preimage still matches: data/progression/flag_scopes.json",
+      "passed": true
+    },
+    {
+      "name": "registry bytes differ only by exact Warden XP prefix",
+      "passed": true
+    },
+    {
+      "name": "allocated file preimage equals pinned ROOT: tests/test_flag_scopes.gd",
+      "passed": true
+    },
+    {
+      "name": "ROOT working preimage still matches: tests/test_flag_scopes.gd",
+      "passed": true
+    },
+    {
+      "name": "all existing registry test bytes preserved",
+      "passed": true
+    },
+    {
+      "name": "new native test uses actual generators and scope",
+      "passed": true
+    },
+    {
+      "name": "new native test preserves host/guest guard and actual reload",
+      "passed": true
+    },
+    {
+      "name": "actual receipt previously undeclared: reward:trainer:warden_aldis:xp:1",
+      "passed": true
+    },
+    {
+      "name": "actual receipt declared world: reward:trainer:warden_aldis:xp:1",
+      "passed": true
+    },
+    {
+      "name": "actual receipt previously undeclared: reward:trainer:warden_aldis:xp:1790841056",
+      "passed": true
+    },
+    {
+      "name": "actual receipt declared world: reward:trainer:warden_aldis:xp:1790841056",
+      "passed": true
+    },
+    {
+      "name": "all exact world ids unchanged",
+      "passed": true
+    },
+    {
+      "name": "all exact player ids unchanged",
+      "passed": true
+    },
+    {
+      "name": "every prior exact id and prefix representative keeps scope",
+      "passed": true
+    },
+    {
+      "name": "unrelated or incomplete declaration still unknown: 'reward:trainer:unregistered:xp:1'",
+      "passed": true
+    },
+    {
+      "name": "unrelated or incomplete declaration still unknown: 'reward:trainer:warden_aldi:xp:1'",
+      "passed": true
+    },
+    {
+      "name": "unrelated or incomplete declaration still unknown: 'reward:trainer:warden_aldis:coins:1'",
+      "passed": true
+    },
+    {
+      "name": "unrelated or incomplete declaration still unknown: 'reward:trainer:warden_aldis:xp'",
+      "passed": true
+    },
+    {
+      "name": "unrelated or incomplete declaration still unknown: 'a_flag_nobody_ever_declared'",
+      "passed": true
+    },
+    {
+      "name": "unrelated or incomplete declaration still unknown: ''",
+      "passed": true
+    },
+    {
+      "name": "existing player prefixes unchanged",
+      "passed": true
+    },
+    {
+      "name": "all existing registry metadata unchanged",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched in own working tree: scripts/net/world_ledger.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched in own working tree: scripts/net/encounter_rewards.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched in own working tree: autoload/progression_state.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched in own working tree: autoload/merged_progression.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched in own working tree: scripts/save/realm_reward_migration.gd",
+      "passed": true
+    },
+    {
+      "name": "production dependency untouched in own working tree: scripts/save/save_game.gd",
+      "passed": true
+    },
+    {
+      "name": "existing host-only Warden journal contract exactly bound",
+      "passed": true
+    },
+    {
+      "name": "existing unchanged receipt writer format bound",
+      "passed": true
+    },
+    {
+      "name": "existing unchanged trainer component writer format bound",
+      "passed": true
+    },
+    {
+      "name": "existing unchanged XP grant source uses component",
+      "passed": true
+    },
+    {
+      "name": "host-only policy allows original host: reward:trainer:warden_aldis:xp:1",
+      "passed": true
+    },
+    {
+      "name": "host-only policy rejects guest forgery: reward:trainer:warden_aldis:xp:1",
+      "passed": true
+    },
+    {
+      "name": "host-only policy allows original host: reward:trainer:warden_aldis:xp:1790841056",
+      "passed": true
+    },
+    {
+      "name": "host-only policy rejects guest forgery: reward:trainer:warden_aldis:xp:1790841056",
+      "passed": true
+    },
+    {
+      "name": "reload policy preserves original receipt ids in world storage",
+      "passed": true
+    }
+  ],
+  "count": 42
+}
