@@ -1,0 +1,286 @@
+{
+  "classification": "SOURCEPASS",
+  "acceptance": "F17#4 OPEN; no engine/parser/CI run for this proposal; ROOT raw failure retained",
+  "passed": 53,
+  "total": 53,
+  "manifest_sha256": "83e6303beb964ddc57aaf7491c16357c8ddf41bb102b2cccf99c137b79bc3304",
+  "sampling": {
+    "old_length_m": 2493.9843909260153,
+    "current_length_m": 2481.815282955849,
+    "shortening_m": 12.169107970166351,
+    "old_count": 251,
+    "current_count": 250,
+    "step_m": 10,
+    "failure_ceilings": [
+      124,
+      130.0
+    ]
+  },
+  "checks": [
+    {
+      "name": "frozen input originals/tests/test_road_creature_visibility.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input proposal/tests/test_road_creature_visibility.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input originals/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input proposal/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/visibility-model.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/current-terrain.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/gather-helper.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/historical-terrain.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input prior-failure/tests.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only first-road sample count changes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all visibility test functions unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact meadows/band1_lower_meadows",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact meadows/band2_stone_and_root",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact meadows/band3_the_river_lock",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact meadows/band4_upper_meadows_ironwood",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact meadows/band5_stronghold_approach",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact cloudreach/arrival_gate_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact cloudreach/lower_cliff_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact cloudreach/broken_causeway_main",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact cloudreach/windscar_floor_loop",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact cloudreach/windscar_counterweight_pass",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact cloudreach/upper_summit_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact stormwood/ash_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact stormwood/conductor_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failure budgets remain exact stormwood/deepwood_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "visibility calibration preserved const SAMPLE_STEP_M := 10.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "visibility calibration preserved const REQUIRED_VISIBLE := 2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "visibility calibration preserved const MIN_VISIBLE_HEIGHT_PX := 15.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "visibility calibration preserved const REFERENCE_DISTANCE_M := 40.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "visibility calibration preserved const REFERENCE_PROJECTED_HEIGHT_PX := 15.0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "same entire road tail and point count",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only accepted first point moves",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "historical unchanged sampler yields251",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "accepted unchanged sampler yields250",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact approved first-leg shortening",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "old count remains a failing negative control",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "new count matches while ceiling is unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "contract entrypoints unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "every other controller/activation test unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only declaration boundary and failed-bounds guard added",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all original activation/controller assertions retained exactly",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gather helper raw hash remains exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "retired comment really is absent after approach",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "declaration bounds actual next function",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual isolated approach passes all original checks",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stale snapshot success negative control rejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "removed no-activation retry negative control rejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "competing activation retry negative control rejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "signal observed by controller contract remains",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "target success requires post-press verdict",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no test skip added",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "retained original sole road count failure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "retained actual all-critical-route visibility pass",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

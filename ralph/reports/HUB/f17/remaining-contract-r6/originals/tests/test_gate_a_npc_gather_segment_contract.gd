@@ -33,12 +33,8 @@ func test_activation_verdict_distinguishes_target_competitor_and_nothing() -> vo
 func test_pre_press_winner_snapshot_is_not_returned_as_success() -> void:
 	var source := FileAccess.get_file_as_string(SEGMENT_PATH).replace("\r\n", "\n")
 	var start := source.find("func _one_approach(")
-	# Isolate the actual function by its next declaration, independent of
-	# travel-comment wording or helpers subsequently added after the approach.
-	var finish := source.find("\nfunc ", start + 1)
+	var finish := source.find("\n\n## Travel one leg", start)
 	assert_true(start >= 0 and finish > start, "could not isolate the approach helper")
-	if start < 0 or finish <= start:
-		return
 	var approach := source.substr(start, finish - start)
 	assert_false(approach.contains("await _tap_action(&\"interact\")\n\t\t\treturn true"),
 		"a stale pre-press winner is still being reported as a successful activation")
