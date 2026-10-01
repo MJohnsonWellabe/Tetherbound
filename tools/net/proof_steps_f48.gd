@@ -32,16 +32,21 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var pid := int(args.get("guest_pid", -1))
 	var character := str(args.get("character_id", ""))
 	var token := str(args.get("token", ""))
+	var coordinator_pid := int(args.get("coordinator_pid", -1))
+	var process_identity := str(args.get("process_identity", ""))
 	if writer == null or game == null or not writer.has_signal("transaction_boundary") or not actions.has(transaction) \
 		or phase not in ["after_host_write_before_delivery", "after_owner_write_before_ack"] \
-		or pid <= 0 or character.is_empty() or token.is_empty() or tree.has_meta("f48_boundary_armed"): return _result(false, "Exact production boundary cannot be armed")
+		or pid <= 0 or coordinator_pid <= 0 or coordinator_pid == pid or process_identity.is_empty() \
+		or character.is_empty() or token.is_empty() or tree.has_meta("f48_boundary_armed"): return _result(false, "Exact production boundary cannot be armed")
 	if (phase == "after_host_write_before_delivery") != bool(game.call("is_host")) \
 		or (phase == "after_owner_write_before_ack" and (pid != OS.get_process_id() or character != game.local.character_id)):
 		return _result(false, "Boundary observer is not the actual host/owner process")
 	var output := OS.get_environment("TB_PROOF_OUT")
 	if output.is_empty(): return _result(false, "Detached boundary evidence directory unavailable")
 	var path := output.path_join("f48-boundaries").path_join(token.validate_filename() + ".json")
-	if FileAccess.file_exists(path): return _result(false, "Boundary token already exists; fresh output required")
+	var ack_path := path + ".ack.json"
+	if FileAccess.file_exists(path) or FileAccess.file_exists(ack_path) or FileAccess.file_exists(path + ".resume.json"):
+		return _result(false, "Boundary token already exists; fresh output required")
 	var world_ref := weakref(game.world)
 	var namespace_id := str(game.world.reward_delivery_namespace)
 	var epoch := str(game.session.call("_altar_current_epoch"))
@@ -58,6 +63,7 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if transaction == "key" and observation.get("biome") != "tidewake": return
 		var evidence := {"token": token, "phase": phase, "transaction": transaction,
 			"guest_pid": pid, "observer_pid": OS.get_process_id(), "session_epoch": epoch,
+			"coordinator_pid": coordinator_pid, "process_identity": process_identity,
 			"observation": observation.duplicate(true), "files": _observe(tree)}
 		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 		var file := FileAccess.open(path, FileAccess.WRITE)
@@ -66,23 +72,26 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 		file.flush()
 		file.close()
 		tree.set_meta("f48_boundary_fired", true)
-		# Hard death occurs inside the synchronous production writer edge,
-		# before it can proceed to delivery/ACK. No graceful quit or autosave.
-		if OS.kill(pid) != OK:
-			evidence.kill_failed = true
-			var failed := FileAccess.open(path, FileAccess.WRITE)
-			if failed != null:
-				failed.store_string(JSON.stringify(evidence, "\t"))
-				failed.close()
-			return
-		if pid != OS.get_process_id():
-			var deadline := Time.get_ticks_msec() + 2000
-			while OS.is_process_running(pid) and Time.get_ticks_msec() < deadline: OS.delay_msec(1)
-			evidence.guest_exit_observed = not OS.is_process_running(pid)
-			var confirmed := FileAccess.open(path, FileAccess.WRITE)
-			if confirmed != null:
-				confirmed.store_string(JSON.stringify(evidence, "\t"))
-				confirmed.close()
+		# The coordinator owns the child. It reads this immutable exact-cut
+		# marker while pumping the pending input step, kills through a kernel
+		# process handle/pidfd, waits for real exit, then writes a correlated ACK.
+		# Neither Godot OS.kill nor its process-local PID map is an exit witness.
+		var marker_sha := FileAccess.get_sha256(path)
+		var deadline := Time.get_ticks_msec() + 10000
+		while Time.get_ticks_msec() < deadline:
+			var ack: Variant = JSON.parse_string(FileAccess.get_file_as_string(ack_path)) if FileAccess.file_exists(ack_path) else null
+			if ack is Dictionary and ack.get("token") == token and ack.get("marker_sha256") == marker_sha \
+				and ack.get("coordinator_pid") == coordinator_pid and ack.get("guest_pid") == pid \
+				and ack.get("process_identity") == process_identity:
+				if ack.get("exit", {}).get("ok") == true and ack.get("exit", {}).get("exited") == true \
+					and ack.get("exit", {}).get("identity") == process_identity:
+					var resumed := FileAccess.open(path + ".resume.json", FileAccess.WRITE)
+					if resumed != null:
+						resumed.store_string(JSON.stringify({"token": token, "marker_sha256": marker_sha,
+							"ack_sha256": FileAccess.get_sha256(ack_path), "observer_pid": OS.get_process_id()}, "\t"))
+						resumed.close()
+				return
+			OS.delay_msec(1)
 	writer.connect("transaction_boundary", observer)
 	tree.set_meta("f48_boundary_armed", observer)
 	return _result(true, "Armed real writer boundary for original admitted character; no state mutation")
