@@ -84,6 +84,7 @@ const REMOTE_CREATURE_SCRIPT := preload("res://scripts/creatures/remote_creature
 ## No rule from either file is repeated here: if a refusal reason lives in two
 ## files, the two files eventually disagree.
 const ENCOUNTER_HOST_SCRIPT := preload("res://scripts/net/encounter_host.gd")
+const F22_ACTION_HOST_SCRIPT := preload("res://scripts/combat/accepted_action_host.gd")
 const CATCH_ARBITER_SCRIPT := preload("res://scripts/net/catch_arbiter.gd")
 ## Lane 4.D. What a beaten trainer owes, as plain intents -- pure, so the
 ## arithmetic (and above all the division that does NOT happen) is asserted
@@ -2409,6 +2410,50 @@ func _tournament_combat_identity_valid(encounter_id: String, peer_id: int) -> bo
 
 ## §5. The host takes its OWN position for both bodies, rebuilds the move from
 ## its own config, and rolls with its own `_rng`.
+func _f22_publication_binding(id: String, peer: int, body: Node3D) -> Dictionary:
+	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true: return {}
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or _session == null or game.get("session") != _session \
+		or not is_instance_valid(body) or not _session.has_method("_authority_character") \
+		or not _session.has_method("admitted_character_state"): return {}
+	var character := str(_session.call("_authority_character", peer))
+	var card := _creature_card_for(peer)
+	var uid := str(card.get("creature_uid", ""))
+	var admitted: Dictionary = _session.call("admitted_character_state", peer)
+	if character.is_empty() or admitted.get("character_id") != character \
+		or not admitted.get("party") is Array or admitted.party.size() > 5: return {}
+	var matches := 0
+	for owned: Variant in admitted.party:
+		if owned is Dictionary and owned.get("uid") == uid: matches += 1
+	if matches != 1: return {}
+	var participant: Dictionary = (_encounter_host.call("record", id) as Dictionary).get("participants", {}).get(peer, {})
+	var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+	if participant.get("character_id") != character or participant.get("actor_bound_uid") != uid \
+		or actor.get("body_instance_id") != body.get_instance_id() \
+		or int(actor.get("body_generation", 0)) <= 0: return {}
+	var binding := {"character_id": character, "creature_uid": uid,
+		"actor_generation": int(actor.body_generation), "deployment_generation": int(actor.body_generation),
+		"body_instance_id": body.get_instance_id()}
+	# The integrated legacy timer also observes switch-away/back on its reused
+	# body. Preserve that actual deployment epoch when that adapter is mounted.
+	if has_method("_strike_actor_binding"):
+		var observed: Dictionary = call("_strike_actor_binding", id, peer, body)
+		if observed.is_empty(): return {}
+		binding["deployment_generation"] = int(observed.get("deployment_generation", 0))
+	return binding
+
+
+func _f22_begin_publication(id: String, peer: int, action: int, source: Node3D, target: Node3D) -> Dictionary:
+	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true:
+		return {"ok": true, "tracked": false}
+	var opponent: Variant = target.get("instance")
+	if not opponent is RefCounted: return {"ok": false}
+	var rec: Dictionary = _encounter_host.call("record", id)
+	return _encounter_host.call("begin_move_action_resolution", id, peer, action,
+		_f22_publication_binding(id, peer, source), str(opponent.get("uid")),
+		int(rec.get("opponent", {}).get("body_generation", 0)))
+
+
 func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
 	if not _tournament_combat_identity_valid(encounter_id, peer_id):
@@ -2469,6 +2514,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		"now_ms": now_ms,
 		"origin": striker.call("centre"),
 		"bodies": _encounter_body_rows(),
+		"f22_actor_binding": _f22_publication_binding(encounter_id, peer_id, striker),
 	}
 	var verdict: Dictionary = _encounter_host.call("validate_strike", host_intent, peer_id, view)
 	if not bool(verdict.get("ok", false)):
@@ -2497,7 +2543,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	launch["attacker_binding"] = attacker_binding
 	launch.make_read_only()
 	if float(launch.travel_seconds) <= 0.0:
-		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false)
+		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false, intent.duplicate(true))
 	delta["scheduled"] = true
 	delta["launch"] = launch
 	_publish_host_attack_launch(encounter_id, peer_id, launch)
@@ -2528,6 +2574,8 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		int(runtime.get("body_generation")) if runtime != null else 0): return {}
 	var enemy_profile: Dictionary = wild.call("combat_config")
 	var armor := COMBAT_AI.armored_front_scale(enemy_profile, wild.call("centre"), wild.call("facing"), striker.call("centre"))
+	var publication := _f22_begin_publication(encounter_id, peer_id, int(intent.get("action", 0)), striker, wild)
+	if publication.get("ok") != true: return {}
 	var rolled: Dictionary = engine.call("host_roll_damage", card,
 		str(launch.move_id), float(move.get("power", 9.0)) * armor, str(launch.slot) == "charged",
 		{"action_id": str(launch.action_id), "striker_body": striker,
@@ -2545,12 +2593,18 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	delta.merge(rolled, true)
 	_encounter_host.call("set_opponent_hp", encounter_id,
 		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)), rolled)
+	if publication.get("tracked") == true and not _encounter_host.call("record_move_action_outcome",
+			encounter_id, peer_id, str(publication.action_id), rolled, verdict): return verdict
 	if bool(rolled.get("killed", false)):
 		# Retain the original killing verdict before any terminal publication.
 		_capture_wild_victory_source(encounter_id, verdict)
 	_emit_f22_accepted_hit(encounter_id, peer_id, striker, delta, move, str(launch.slot))
 	if bool(rolled.get("killed", false)):
-		_encounter_host.call("set_phase", encounter_id, "done" if runtime != null else "resolving")
+		if publication.get("tracked") == true:
+			if not _encounter_host.call("publish_move_action_terminal", encounter_id, peer_id,
+					str(publication.action_id), "done" if runtime != null else "resolving"): return verdict
+		else:
+			_encounter_host.call("set_phase", encounter_id, "done" if runtime != null else "resolving")
 	# Reconcile observer contact before the reliable absolute-HP snapshot.
 	_host_publish_peer_impact(encounter_id, peer_id, impact)
 	_host_after_encounter_change(encounter_id, peer_id, 0, impact)
@@ -2558,6 +2612,8 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
 		if peer_id == _local_peer_id(): _deliver_encounter_verdict(verdict)
 		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [verdict])
+	if publication.get("tracked") == true and not _encounter_host.call("acknowledge_move_action_publication",
+			encounter_id, peer_id, str(publication.action_id), verdict): return verdict
 	if bool(rolled.get("killed", false)): _finalize_shared_host_fight(encounter_id, "won")
 	return verdict
 
@@ -3128,7 +3184,7 @@ func _broadcast_shared_cue(payload: Dictionary) -> void:
 
 func _ensure_encounter_arbiters() -> void:
 	if _encounter_host == null:
-		_encounter_host = ENCOUNTER_HOST_SCRIPT.new(_local_peer_id())
+		_encounter_host = F22_ACTION_HOST_SCRIPT.new(_local_peer_id())
 	if _catch_arbiter == null:
 		_catch_arbiter = CATCH_ARBITER_SCRIPT.new()
 
