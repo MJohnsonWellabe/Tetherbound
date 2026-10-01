@@ -57,8 +57,11 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if context.kind == "defeat" and context.get("opponent_defeated") != true: return false
 	elif duty.action == "bounty_event":
 		if context.source_key != "halda_bounty_event" or context.get("kind") not in ["catch_trait", "defeat_alpha", "rematch"] \
+			or context.event_id != row.source_id \
 			or not preload("res://scripts/data/biome_order.gd").ids(false).has(context.get("biome")) \
 			or not _strings(context.get("issued_instances")) or not _strings(context.get("traits"), true): return false
+		for instance: String in context.issued_instances:
+			if instance.length() != 64 or not instance.is_valid_hex_number(false): return false
 		for trait: String in context.traits:
 			if not preload("res://scripts/creatures/traits.gd").config().get("traits", {}).has(trait): return false
 	elif duty.action == "master_win":
