@@ -182,6 +182,11 @@ func _case_native_victory_fallback_after_handover_or_scene_teardown() -> void:
 	var refs: Array[WeakRef] = []
 	var clock := NativeAftermathClock.new()
 	world.add_child(clock)
+	# Godot 4.7 emits process_frame before Node processing, then subtracts the
+	# same frame delta from SceneTree timers. Arm here so the observer sees every
+	# delta the real fallback consumes, including its first one.
+	await tree.process_frame
+	clock.elapsed_s = 0.0
 	var started_ms := Time.get_ticks_msec()
 	for index in 4:
 		var player := Node3D.new()
