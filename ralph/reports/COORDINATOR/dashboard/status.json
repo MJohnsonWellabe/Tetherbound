@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-01T00:33:51Z",
+ "updated": "2026-10-01T01:43:07Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met:110 of280 on this closure landing. Original95/101; redesign15/179. F17#5 actual host/guest layout/arch/shrine join/reload agreement independently PASS under RD36 immutable-record reuse. Original whole smoke budgetFAIL and fourENeterrors remain; no cleantransport/F49 or visual-craft credit.",
-  "Priority is main closures and quality. Hall F17#5 strict criterion PASS; camera readabilityR2 actual9numericPASS awaits freshblind/fullbar. OpeningR5 actualfloor refusalFAIL retained, changing steering approach; Foundation approved departure fix tracked555318, actualleave/rejoin proof next. Altar integration source remains gated/OFF.",
+  "Criteria met:110 of280 on main b7cb96de89 via PR503. Original95/101; redesign15/179. F17#5 strict join/reload agreement PASS; original whole native timeout/four ENet errors retained. No additional source-only criterion credit.",
+  "Owner source pipeline: whole-feature visible local tasks; F18/F19/F20 owned drafts source-reviewed in PR504/505/506, all their criteria UNPROVEN. F22/F23/F28/F29/F30 code in parallel; F17#4 actual M1 deadline failure gets a separate fix task. Shared authority integration precedes combined necessary runtime/visual batches; one engine/GPU writer.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -365,22 +365,22 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "PR500 main7dcd actor lifetime/Heal core PASS, runtime OFF. Altar93aee evidence-only14-path proposal: consumer/buildable/actor-lineage/remote state gaps open. Actual Hall departure fourENet errors source fix active; no new criterion credit.",
+   "now": "F16 main; paidAltar/wild17path integration sourceOFF. Departure r1/r2 pre-admission loading FAIL; actual responsive scheduler proposal under review.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
    "lane": "tb/hub",
-   "now": "F17#0-#3 main; #5 independent actual-record criterionPASS on this closure landing. M1R5 actualfloor refusalFAIL; steering approach changing. Halloriginal budgetFAIL+fourENeterrors retained; transportfix trackedFoundation555318 awaiting affectedproof.",
+   "now": "F17#0-#3/#5 main. M1 steering native FAIL; F17#4 visible fix. F18 full owned draftPR504 sourcePASS, shared integration/proofs held.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
    "lane": "tb/reorder",
-   "now": "Homecoming567798 preserved; F18/F19 dependencies held, F20 open.",
+   "now": "F19/F20 full owned draftPR505/506 sourcePASS, ceremony reward/ending shared integration and real earned proof held. Historical567798 preserved.",
    "next": "Resume preserved code after the shared integration lands and ROOT allocates a bounded player path."
   },
   {
    "lane": "tb/combat",
-   "now": "F21#4 bf9 all9 numeric pairs PASS; independent54PNG review seven readability FAIL and all9 broader craft FAIL, archived375fe2. Exact HUD/foreground successor source gate PASS, parser/native next. Incoming HP R4 ignored, Heal/remote readiness OFF.",
+   "now": "R2 blind readability6/9 FAIL/fullcraft9 FAIL; R5 camera/C2C4 source successor under review. Visible F22/F23 source generation; no new acceptance.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
@@ -395,7 +395,7 @@
   },
   {
    "lane": "tb/training",
-   "now": "F27#0 main. Altar4839 consumer SOURCE HOLD: unknown terminal result and missing progression prerequisite fixes active. Foundation14-path producer ignored; actual earned essence/spend proof absent. XP reduction held.",
+   "now": "F27#0 main; actual earned/spend authority converging. Visible F28/F29/F30 write complete features; all unproved.",
    "next": "Finish the bounded current-main landing and required proof before expanding."
   },
   {
@@ -518,31 +518,31 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-10-01T00:33:51Z",
+ "last_lane_refresh": "2026-10-01T01:43:07Z",
  "lane_activity": [
   {
    "lane": "Shared authority \u00b7 tb/foundations",
-   "checkpoint": "PR500 main7dcd actor lifetime/Heal core PASS, runtime OFF. Altar93aee evidence-only14-path proposal: consumer/buildable/actor-lineage/remote state gaps open. Actual Hall departure fourENet errors source fix active; no new criterion credit. Original broad batch RED retained; final core strict PASS reuses source-bound evidence. No new acceptance credit."
+   "checkpoint": "Shared owner visible task01a0f51f, full access confirmed. F27 paid build/spend/earned victory source proposals OFF; actual Director and actor settlement integration active. Departure r1/r2 FAIL before leave retained. Responsive startup plus actual JoinDriver world-complete guard independently SOURCEPASS; affected leave/rejoin proof next, no acceptance credit."
   },
   {
    "lane": "F21#4 \u00b7 tb/combat",
-   "checkpoint": "F21#4 bf9 all9 numeric pairs PASS; independent54PNG review seven readability FAIL and all9 broader craft FAIL, archived375fe2. Exact HUD/foreground successor source gate PASS, parser/native next. Incoming HP R4 ignored, Heal/remote readiness OFF. Camera source/capture cuts preserve native sizes. Full visual-craft bar and F21#5 remain unproved."
+   "checkpoint": "F21#4 actual R2 numeric PASS; independent54PNG blind review6/9 readability FAIL and all9 full craft FAIL. R5 minimal predicate plus C2/C4 source independently PASS; expensive fresh capture deferred for coherent craft batch. Incoming HP/remote readiness OFF. No criterion credit."
   },
   {
    "lane": "F17#4 \u00b7 ROOT on tb/hub",
-   "checkpoint": "F17#0-#3 main. Actual M1 contactR4 FAIL before Mira: paired shallow Terrain floor-cone refusal measured; narrow correction independently reviewed. HallR4 all263 functional comparisons PASS then nativeFAIL budget plus4hostENet errors. Separate immutable-record finalizer coding under RD36; no MET yet."
+   "checkpoint": "F17#0-#3 and F17#5 MET on main b7cb via PR503; original whole Hall timeout/four ENet errors retained. F17#4 production steering native1/253.172s FAIL at first Mira callback deadline. Separate visible helper-fix task/source review active; original budgets retained. F17#4/#6 OPEN."
   },
   {
    "lane": "Preserved targets \u00b7 other lanes",
-   "checkpoint": "Other F23 drafts, F25#0, F26#3, F27#3 and F32#1 remain held/unaccepted. Existing code and evidence preserved."
+   "checkpoint": "Whole-feature visible tasks F18/F19/F20 source-reviewed drafts PR504/505/506, unproved. F29 source-reviewed draft PR507, art/evolution flags OFF. F22/F23/F28/F30 source coding continues. Shared authority and one coherent necessary proof batch precede acceptance; no source-only MET."
   }
  ],
  "active_work": [
   {
    "criterion": "F21#4",
    "lane": "tb/combat",
-   "source": "8cff actualreadabilityR2 native0; archive d3f718",
-   "state": "All9numericPASS/277 scored draws; fresh54PNG blind review active; prior craftFAIL retained; OPEN"
+   "source": "8cff actual numericPASS; fresh blind R2 FAIL6/9 readability, all9 craft; R5 one-predicate successor",
+   "state": "OPEN; full-bar failures retained. Combined source gate reused narrowly; expensive fresh proof held for coherent code batch"
   },
   {
    "criterion": "F23 actual actor incoming HP/Heal",
@@ -553,20 +553,82 @@
   {
    "criterion": "F17#4",
    "lane": "tb/hub",
-   "source": "95e6d5fa; actualM1 contactfixR5 native1",
-   "state": "Actualgroundedpairedfloor refusal remains; failure retained, changing to production-controller steering observation; no unchanged retry"
+   "source": "Hub f65692df; actual production-steering-r1 native1/253.172s",
+   "state": "Starter/catch/roadgate PASS, first Mira approach refused callback deadline; F17#4 OPEN. Visible fix task, no unchanged retry"
   },
   {
    "criterion": "F17#5",
    "lane": "tb/hub",
-   "source": "R4 actual784b/0485; metadata617a/527PASS; independent24c58/189PASS",
-   "state": "Literal criterion MET on closure landing; original native2/budget/fourENet errors retained; F49/transportclean OPEN"
+   "source": "main b7cb96de89 PR503; independent189+packaging217 PASS",
+   "state": "MET on main; original timeout/fourENet failures retained, no clean transport/F49 claim"
   },
   {
    "criterion": "F27#2/#3 mounted Altar",
    "lane": "tb/training + tb/foundations + tb/homestead",
-   "source": "4839e34 consumerHOLD;93aee5 evidence-only14-path producer; ignored4-path buildable",
-   "state": "consumer unknownresult/prerequisites fixes; canonicalactor lineage/remoteowner state/actualhostplacementcost gaps; XP reduction held"
+   "source": "Foundation ignored F27 coherent17path591501; Training actual-r3; paid Building sealed36ccc",
+   "state": "All runtime flags OFF; real solo Director/settled actor handoff being integrated by F22 and Foundations. No runtime/criterion credit"
+  },
+  {
+   "criterion": "Affected departure/loading regression",
+   "lane": "tb/foundations",
+   "source": "555318; actual r1 native2/172.484s and r2 native2/313.688s; loader proposal34bf8",
+   "state": "Both FAIL before leave; r2 host completed, guest build watchdog. Changed approach: actual responsive Compatibility/pre-admission construction, same limits; independent source review active"
+  },
+  {
+   "criterion": "F18#0-#5",
+   "lane": "tb/f18",
+   "source": "a2dc43094a; PR504",
+   "state": "Owned source/recheck PASS only; shared authority/protected consumers and full player proofs missing; no MET credit",
+   "thread": "01a0f4f8-e11a-71d2-8984-caa18c9bad04"
+  },
+  {
+   "criterion": "F19#0-#5",
+   "lane": "tb/f19",
+   "source": "f09e16cdb3; PR505",
+   "state": "Owned curve/content source PASS only; ceremony-timed rewards/shared readers/earned route unproved; no MET credit",
+   "thread": "01a0f4f8-e65f-7591-94a7-b4799df734b7"
+  },
+  {
+   "criterion": "F20#0-#4",
+   "lane": "tb/f20",
+   "source": "38069a117d; PR506",
+   "state": "Owned ending/source recheck PASS only; canonical HomeKey arrival, owner ACK and shared coroutine/quest integration unproved; no MET credit",
+   "thread": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf"
+  },
+  {
+   "criterion": "F22#0-#4",
+   "lane": "tb/f22",
+   "source": "source coding",
+   "state": "AI/role/named patterns and real solo Director/victory lifecycle; no MET credit",
+   "thread": "01a0f510-cc96-7090-8e99-bf47054aed88"
+  },
+  {
+   "criterion": "F23#0-#5",
+   "lane": "tb/f23",
+   "source": "source coding",
+   "state": "Learnsets/moves/teaching/mastery; shared dispatch/HUD proposals; no MET credit",
+   "thread": "01a0f512-a7d7-7f91-b47f-922a18d234d6"
+  },
+  {
+   "criterion": "F28#0-#5",
+   "lane": "tb/f28",
+   "source": "source coding",
+   "state": "Masters/caps/feasts; canonical same-receipt Kitchen feed contracts; no MET credit",
+   "thread": "01a0f512-ab97-7c93-a96c-45705ff3d26a"
+  },
+  {
+   "criterion": "F29#0-#4",
+   "lane": "tb/f29",
+   "source": "Visible task01a0f512-b160-7053-8f6a-e84f072c2d94; owned source b40b9c0203, draft PR507,38 source checks + independent source PASS",
+   "state": "Source ready for F28 feed/shared integration; actual art absent and all criteria OPEN. Source/metadata is not runtime or art proof.",
+   "thread": "01a0f512-b160-7053-8f6a-e84f072c2d94"
+  },
+  {
+   "criterion": "F30#0-#4",
+   "lane": "tb/f30",
+   "source": "source coding",
+   "state": "Wild traits/seed/consumer effects; same release and portable authority contracts; no MET credit",
+   "thread": "01a0f512-b8f3-7522-a5bf-59c1a4a901da"
   }
  ],
  "preserved_work": [
