@@ -1,0 +1,34 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+const host=fs.readFileSync('scripts/combat/accepted_action_host.gd','utf8');
+const director=fs.readFileSync('scripts/combat/encounter_director.gd','utf8');
+const tests=fs.readFileSync('tests/test_f22_action_publication.gd','utf8');
+const base=fs.readFileSync('scripts/net/encounter_host.gd','utf8');
+const inheritedNames=new Set([...base.matchAll(/^func (\w+)\(/gm)].map(match=>match[1]));
+for(const match of host.matchAll(/super\.(\w+)\(/g)) assert(inheritedNames.has(match[1]),`Inherited seam ${match[1]} exists`);
+assert(host.startsWith('extends "res://scripts/net/encounter_host.gd"'));
+assert(!/^var /m.test(host),'No second member journal');
+assert(host.includes('state.get("accepted_actions", {})'));
+for(const name of ['validate_strike','begin_move_action_resolution','record_move_action_outcome','move_action_publication_pending','publish_move_action_terminal','acknowledge_move_action_publication']) assert(host.includes(`func ${name}(`));
+assert(host.includes('super.validate_strike(intent, peer_id, view)'));
+assert(host.includes('"actual_hp_debit": before - after'));
+assert(host.includes('entry.outcome.verdict != verdict'));
+assert(host.includes('entry.admission.binding == binding'));
+assert(!/\b(?:save_world|save_character|credit_landed_use|stage_landed|saved|acknowledged|durable)\b/.test(host),'Observer adds no save, ACK or credit writer');
+assert(director.includes('_encounter_host = F22_ACTION_HOST_SCRIPT.new(_local_peer_id())'));
+assert(director.includes('game.get("session") != _session'));
+assert(director.includes('"f22_actor_binding": _f22_publication_binding'));
+const strike=director.slice(director.indexOf('func _host_strike('),director.indexOf('func _host_burst('));
+const ordered=['_f22_begin_publication','host_roll_damage','set_opponent_hp','record_move_action_outcome','_capture_wild_victory_source','_emit_f22_accepted_hit','publish_move_action_terminal','_host_after_encounter_change','acknowledge_move_action_publication','_finalize_shared_host_fight'];
+let at=-1;
+for(const name of ordered){const next=strike.indexOf(name,at+1);assert(next>at,`Owned strike order ${name}`);at=next;}
+assert.equal([...tests.matchAll(/^func test_/gm)].length,4);
+const config=JSON.parse(fs.readFileSync('data/config/combat.json','utf8'));
+assert.equal(config.actor_vitals.runtime_enabled,false);
+assert.equal(config.patterns.runtime_enabled,false);
+assert.notEqual(config.move_loadout_runtime_enabled,true);
+const changed=[...execFileSync('git',['diff','--name-only'],{encoding:'utf8'}).trim().split('\n'),
+  ...execFileSync('git',['diff','--cached','--name-only'],{encoding:'utf8'}).trim().split('\n')];
+assert(!changed.some(file=>file.startsWith('scripts/net/')),'No tracked Foundation edits');
+console.log(JSON.stringify({source_checks:'PASS',regressions:'UNRUN',runtime:'UNRUN',acceptance:'OPEN',flags:'OFF',scope:'Owned Host subclass, Director, regression and F22 evidence only'},null,2));
