@@ -1,4 +1,13 @@
 extends Node
+signal transaction_boundary(observation: Dictionary)
+
+## Exact identity at the real writer edge, for ROOT's deterministic loss
+## witnesses. This is observation only; it cannot ACK, save or grant anything.
+func _observe_training_boundary(row: Dictionary, phase: String) -> void:
+	transaction_boundary.emit({"phase": phase, "kind": row.kind, "action": row.action,
+		"character_id": row.character_id, "world_namespace": row.world_namespace,
+		"session_id": row.session_id, "delivery_id": row.delivery_id, "receipt": row.receipt,
+		"journal_revision": row.journal_revision, "character_revision": row.character_revision})
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -1077,6 +1086,9 @@ func publish_creature_training(peer: int, character: String, receipt: String) ->
 	if pending.is_empty() or pending.peer != peer or not WORLD_STATE.training_row_valid(latest,
 		world.reward_delivery_namespace, world.world_id) or latest.receipt != receipt \
 		or not ESSENCE._equivalent(latest, pending.row): return false
+	_observe_training_boundary(latest, "after_host_write_before_delivery")
+	# Observers may interrupt a process; never publish a replaced decision.
+	if not ESSENCE._equivalent(world.reward_deliveries.get(id), latest): return false
 	_training_publications.erase(id)
 	publish_journaled_delta(pending.delta)
 	return true
@@ -1105,6 +1117,8 @@ func _process_creature_training(row: Dictionary) -> void:
 	elif row.get("version") in [2, 3]: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
 	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if outcome.get("ok") != true or outcome.get("saved") != true: return
+	_observe_training_boundary(row, "after_owner_write_before_ack")
+	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return
 	if bool(game.call("is_host")):
 		_accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id())
 	elif _can_rpc():

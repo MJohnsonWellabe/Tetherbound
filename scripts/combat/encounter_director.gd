@@ -437,6 +437,48 @@ var _trainer_spec: Dictionary = {}
 ## before this director discards its encounter/participant evidence.
 var _rematch_outcome_writer: Callable
 var _rematch_pending_outcome: Variant = null
+var _master_duel: Dictionary = {}
+var _master_pending_win := false
+
+## Uses the existing owned trainer combat manager and its authoritative local
+## host vitals. The selected UID is the only member passed to that manager.
+func start_master_duel(site: Node3D, character_id: String, uid: String, definition: Dictionary) -> Dictionary:
+	if not _is_host() or _session == null or _player == null or _ally == null or trainer_battle_active() \
+		or character_id != _local_character_id() or str(_ally.get("uid")) != uid:
+		return {"ok": false, "code": "deploy_chosen_owned_creature"}
+	if not is_instance_valid(site) or site.get_script() != preload("res://scripts/masters/master_site.gd") \
+		or site.get("_mounted") != true or not get_parent().is_ancestor_of(site) \
+		or definition != preload("res://scripts/creatures/breakthrough.gd").master(str(site.get("master_id"))) \
+		or _player.global_position.distance_to(site.get_node(^"Master").global_position) > float(definition.prompt_radius_m):
+		return {"ok": false, "code": "actual_master_arena_required"}
+	var admitted: Dictionary = _session.call("admitted_character_state", _local_peer_id())
+	var owned := false
+	for card: Dictionary in admitted.get("party", []):
+		if card.uid == uid and card.get("fainted") == false and float(card.get("hp", 0)) > 0: owned = true
+	if not owned: return {"ok": false, "code": "conscious_owned_creature_required"}
+	_master_duel = {"character_id": character_id, "creature_uid": uid, "master_id": definition.id,
+		"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
+		"session_id": _session.call("_game").get("world").world_id}
+	var spec := {"id": definition.id, "name": definition.name, "master": true,
+		"team": [{"species": definition.species_id, "level": definition.cap_level, "combat": definition.combat.duplicate(true)}]}
+	if not begin_trainer_battle(spec, site.get_node(^"Master")):
+		_master_duel.clear()
+		return {"ok": false, "code": "encounter_refused"}
+	_master_duel.encounter_id = str(_encounter.get("encounter_id", ""))
+	_master_duel.participants = _encounter.get("participants", {}).duplicate(true)
+	if _master_duel.encounter_id.is_empty():
+		void_master_duel("", character_id)
+		return {"ok": false, "code": "encounter_identity_required"}
+	return {"ok": true, "encounter_id": _master_duel.encounter_id, "resolved": false}
+
+func void_master_duel(encounter_id: String, character_id: String) -> void:
+	if _master_duel.is_empty() or _master_duel.get("encounter_id", "") != encounter_id \
+		or _master_duel.character_id != character_id or _master_pending_win: return
+	if _manager != null and _manager.call("is_fighting") == true: _manager.call("_begin_resolve", "fled")
+	_finish_trainer_battle(false)
+
+func retained_master_win() -> Dictionary:
+	return _master_duel.duplicate(true) if _master_pending_win else {}
 
 func bind_rematch_outcome_writer(writer: Callable) -> bool:
 	if not writer.is_valid() or trainer_battle_active(): return false
@@ -2347,6 +2389,8 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 			"reason": "That fight did not say which fight it was.", "pending": false,
 			"delta": {}}
 	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	if str(record.get("opponent", {}).get("owner_npc", "")).begins_with("master_"):
+		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "single_challenger_duel", "pending": false, "delta": {}}
 	var character_id := str(intent.get("character_id", ""))
 	var tournament_round := _record_is_tournament(record)
 	var tournament_ids: Array[String] = []
@@ -4746,7 +4790,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 ## below runs.
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
-	if not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
+	if not _trainer_spec.has("master") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()
 	var instance: Variant = wild.get("instance")
@@ -5307,6 +5351,9 @@ func nearest_live_wild() -> Node3D:
 ## wild one where it does not is a rule the player would have to discover.
 func _fight_party() -> Array[RefCounted]:
 	var out: Array[RefCounted] = []
+	if not _master_duel.is_empty():
+		if _ally != null and str(_ally.get("uid")) == _master_duel.creature_uid: out.append(_ally)
+		return out
 	if not _tournament_members.is_empty():
 		if _ally != null and _tournament_members.has(_ally) and not bool(_ally.get("fainted")):
 			out.append(_ally)
@@ -6191,6 +6238,9 @@ func _on_trainer_round_ended(outcome: String) -> void:
 ## same shape as `_tick_respawn` above, and kept separate from it because a
 ## trainer's creature never respawns.
 func _tick_trainer_battle(delta: float) -> void:
+	if _master_pending_win:
+		_finish_trainer_battle(true)
+		return
 	if _trainer_send_delay > 0.0:
 		_trainer_send_delay -= delta
 		if _trainer_send_delay > 0.0:
@@ -6210,6 +6260,13 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	if spec.has("master"):
+		if won:
+			_master_pending_win = true
+			var retained: Dictionary = _session.call("foundation_master_outcome", self, _master_duel.duplicate(true)) if _session != null else {}
+			if retained.get("ok") != true or retained.get("durable") != true: return
+		_master_pending_win = false
+		_master_duel.clear()
 	if spec.has("rematch"):
 		# Exact director/host record is read by the bound writer. Never reuse a
 		# client trainer_victory intent or close/forget a win before durable save.
@@ -6244,7 +6301,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	# battle still ends with the player standing beside the fight they just won.
 	_has_trainer_battle_anchor = false
 	_set_exploration_active(true)
-	if won and not spec.has("rematch"):
+	if won and not spec.has("rematch") and not spec.has("master"):
 		_record_trainer_defeat(spec)
 		call_deferred("_present_trainer_victory", spec, victory_speaker)
 	# NOW the battle's one encounter record is over, and not one creature

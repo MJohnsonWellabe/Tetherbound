@@ -6,6 +6,10 @@ const STATIONS := preload("res://scripts/build/station_rules.gd")
 const LIVE := ["meadows", "tidewake", "cloudreach", "stormwood"]
 const ID := "forward_camp"
 const KIT := "forward_camp_kit"
+const BIOMES := preload("res://scripts/data/biome_order.gd")
+
+static func live_realm(realm: String) -> bool:
+	return LIVE.has(BIOMES.canonical_id(realm))
 
 static func config() -> Dictionary:
 	var cfg: Variant = DATA.json("res://data/config/forward_camps.json")
@@ -40,7 +44,7 @@ static func record(records: Array, uid: String) -> Dictionary:
 			found=i
 	if found < 0: return deny("camp_unavailable")
 	var row: Dictionary = records[found]
-	if row.get("id") != ID or not LIVE.has(row.get("realm")) or row.get("paid") != true \
+	if row.get("id") != ID or not row.get("realm") is String or not live_realm(row.realm) or row.get("paid") != true \
 			or not row.get("paid") is bool or row.get("removed",false) != false \
 			or not row.get("removed",false) is bool or not row.get("character_id") is String \
 			or row.character_id.is_empty() or not transaction_id(row.get("txn_id")) \
@@ -67,7 +71,7 @@ static func saved_errors(records: Array) -> Array[String]:
 			errors.append("Invalid forward camp record")
 			continue
 		if raw.get("removed",false) == true: continue
-		var key: Array = [raw.character_id,raw.realm]
+		var key: Array = [raw.character_id,BIOMES.canonical_id(raw.realm)]
 		if slots.has(key): errors.append("Duplicate character/biome forward camp")
 		slots[key]=true
 	return errors
@@ -75,12 +79,12 @@ static func saved_errors(records: Array) -> Array[String]:
 static func placement(cfg: Dictionary, records: Array, character: String, realm: String,
 		at: Vector3, yaw: float) -> Dictionary:
 	if cfg.get("runtime_enabled") != true: return deny("camp_disabled")
-	if character.is_empty() or not LIVE.has(realm) or not at.is_finite() or not is_finite(yaw): return deny("camp_ground")
+	if character.is_empty() or not live_realm(realm) or not at.is_finite() or not is_finite(yaw): return deny("camp_ground")
 	for row: Variant in records:
 		if row is Dictionary and row.get("id") == ID and row.get("removed",false) == false:
 			var checked := record(records,str(row.get("uid","")))
 			if checked.get("ok") != true: return checked
-			if row.character_id == character and row.realm == realm: return deny("camp_limit")
+			if row.character_id == character and BIOMES.canonical_id(row.realm) == BIOMES.canonical_id(realm): return deny("camp_limit")
 	return {"ok":true}
 
 static func transaction_id(raw: Variant) -> bool:

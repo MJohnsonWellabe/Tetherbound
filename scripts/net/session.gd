@@ -2,6 +2,7 @@ extends Node
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
 signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
 signal homestead_personal_view_completed()
 signal foundation_reply_received(envelope: Dictionary, result: Dictionary)
@@ -52,6 +53,23 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
 		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
 	if envelope.op == "personal_view": return _foundation_personal_view(peer)
+	if envelope.op == "master_duel":
+		if envelope.intent.size() != 2 or not envelope.intent.get("master_id") is String or not envelope.intent.get("creature_uid") is String: return _foundation_refusal("invalid_duel_intent")
+		var site := _foundation_master_site(peer, envelope.intent.master_id, false)
+		var director := _foundation_master_director(site)
+		if site == null or director == null: return _foundation_refusal("master_arena_unavailable")
+		return director.call("start_master_duel", site, _authority_character(peer), envelope.intent.creature_uid, preload("res://scripts/creatures/breakthrough.gd").master(envelope.intent.master_id))
+	if envelope.op == "research_claim":
+		if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return _foundation_refusal("research_disabled")
+		if envelope.intent.size() != 2 or not envelope.intent.get("species_id") is String or not envelope.intent.get("task_id") is String: return _foundation_refusal("invalid_research_claim")
+		var world: RefCounted = _game().get("world")
+		var character := _authority_character(peer)
+		var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
+		if row is Dictionary and row.get("action") == "research_claim" and row.get("intent") == envelope.intent: return _foundation_decision(peer, row)
+		var result := preload("res://scripts/creatures/research_actions.gd").commit(self, peer, "research_claim", envelope.intent)
+		if result.get("durable") != true: return _foundation_refusal(str(result.get("code", "research_claim_refused")))
+		row = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
+		return _foundation_decision(peer, row) if row is Dictionary else FOUNDATION_ACTIONS.deny("research_decision_unavailable")
 	if envelope.op in ["bounty_view", "bounty_claim", "bounty_reconcile"]:
 		var composition := get_node_or_null(^"FoundationComposition")
 		var host_adapter := composition.get_node_or_null(^"BountyHost") if composition != null else null
@@ -79,7 +97,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			if card.uid == envelope.intent.get("creature_uid"):
 				return {"ok": true, "creature_uid": card.uid, "loadout_revision": card.get("loadout_revision", 0), "registry_revision": view.registry_revision}
 		return FOUNDATION_ACTIONS.deny("not_owned")
-	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS: return FOUNDATION_ACTIONS.deny("action_unavailable")
+	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
 	var character := _authority_character(peer)
 	var world: RefCounted = _game().get("world")
 	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
@@ -89,16 +107,28 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	var saver: RefCounted = _game().get("save_system")
 	if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
 	saver.call("finish_fallback")
-	if saver.call("fallback_busy") == true or admitted_character_state(peer).is_empty(): return FOUNDATION_ACTIONS.deny("character_busy")
+	if saver.call("fallback_busy") == true or not _altar_envelope_matches(peer, envelope,
+		["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
+		or admitted_character_state(peer).is_empty(): return FOUNDATION_ACTIONS.deny("character_busy")
 	var part := "bed" if envelope.op == "camp_rest" else "workbench"
 	if envelope.op == "station_craft":
 		var recipe: Dictionary = _game().get("items").call("recipe", str(envelope.intent.get("recipe_id", "")))
 		var route := preload("res://scripts/build/forward_camp_rules.gd").recipe(str(envelope.intent.get("recipe_id", "")), recipe)
 		if route.get("ok") == true: part = route.part
 	var context := _foundation_build_context(peer, envelope.intent) if envelope.op == "camp_build" else _foundation_source(peer, envelope.station_key, part)
+	if envelope.op == "master_chest":
+		if envelope.intent.size() != 1 or not envelope.intent.get("master_id") is String: return _foundation_refusal("invalid_chest_intent")
+		var site := _foundation_master_site(peer, envelope.intent.master_id, true)
+		if site != null:
+			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)), "in_range": true,
+				"master_id": envelope.intent.master_id, "source_key": "master_chest:" + envelope.intent.master_id}
+	if envelope.op == "feast_feed" and STATION_RULES.config().get("runtime_enabled") == true and not _altar_peer_in_combat(peer):
+		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+			"in_range": true, "in_combat": false, "owns_character": true, "source_key": "personal_feast_feed"}
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
 	if envelope.op == "station_craft" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
+	if envelope.op == "feast_cook" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
 	if envelope.op == "den" and cfg.get("den_runtime_enabled") != true: return _foundation_refusal("den_disabled")
 	if envelope.op == "gear":
 		if preload("res://scripts/creatures/creature_gear.gd").config().get("feature_flags", {}).get("runtime_enabled") != true: return _foundation_refusal("gear_disabled")
@@ -156,6 +186,70 @@ func homestead_personal_view() -> Dictionary:
 	if is_host(): return _foundation_personal_view(local_peer_id())
 	_foundation_send("personal_view", "homestead_view", {}, -1)
 	return _foundation_personal_cache.duplicate(true)
+
+func request_research_claim(intent: Dictionary) -> Dictionary:
+	return _foundation_send("research_claim", "research_journal", intent, -1)
+
+func homestead_breakthrough_service() -> Node:
+	return get_node_or_null(^"FoundationComposition/BreakthroughService")
+
+func _foundation_breakthrough_submit(action: String, intent: Dictionary, source: Node) -> Dictionary:
+	if action not in ["feast_cook", "feast_feed", "master_duel", "master_chest"]: return _foundation_refusal("action_unavailable")
+	var key := "personal_feast_feed"
+	if action in ["master_duel", "master_chest"]:
+		if not is_instance_valid(source) or source.get_script() != preload("res://scripts/masters/master_site.gd") or source.get("master_id") != intent.get("master_id"): return _foundation_refusal("actual_master_site_required")
+		key = "master:" + str(intent.master_id)
+	if action == "feast_cook":
+		if not is_instance_valid(source) or not source.is_in_group("placed_building"): return _foundation_refusal("actual_kitchen_required")
+		key = "%s:%s:%s" % [source.get_meta("building_id", ""), source.get_meta("realm", ""), source.get_meta("building_uid", "")]
+	var view := homestead_personal_view()
+	return _foundation_send(action, key, intent, int(view.get("registry_revision", -1)))
+
+func _foundation_master_site(peer: int, master_id: String, chest: bool) -> Node3D:
+	if STATION_RULES.config().get("runtime_enabled") != true or _altar_peer_in_combat(peer): return null
+	var definition := preload("res://scripts/creatures/breakthrough.gd").master(master_id)
+	var writer := get_node_or_null(^"LedgerRpc")
+	if definition.is_empty() or writer == null or admitted_character_state(peer).is_empty(): return null
+	var actor: Dictionary = writer.call("_water_actor_context", peer, {})
+	if not actor.get("position") is Vector3 or actor.get("realm") != preload("res://scripts/data/biome_order.gd").runtime_id(definition.biome): return null
+	var world_node := _portal_world_node(actor.realm)
+	if world_node == null: return null
+	var found: Node3D
+	for node: Node in world_node.find_children("*", "Node3D", true, false):
+		if node.get_script() != preload("res://scripts/masters/master_site.gd") or node.get("master_id") != master_id or node.get("_mounted") != true: continue
+		if found != null: return null
+		found = node as Node3D
+	if found == null: return null
+	var anchor := found.get_node_or_null(^"RecipeChest" if chest else ^"Master") as Node3D
+	return found if anchor != null and actor.position.distance_to(anchor.global_position) <= float(definition.prompt_radius_m) else null
+
+func _foundation_master_director(site: Node3D) -> Node:
+	if site == null: return null
+	for node: Node in site.get_parent().find_children("*", "Node", true, false):
+		if node.get_script() != null and FOUNDATION_DIRECTORS.has(node.get_script().resource_path): return node
+	return null
+
+## Called only from the bound live host director after CombatManager's actual
+## won outcome. It is deliberately excluded from the public action RPC.
+func foundation_master_outcome(director: Node, frozen: Dictionary) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get_script() == null \
+		or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		or director.get("_session") != self or director.call("retained_master_win") != frozen \
+		or director.get("_manager").call("outcome") != "won" or frozen.get("character_id") != _authority_character(local_peer_id()) \
+		or frozen.get("world_namespace") != _game().get("world").reward_delivery_namespace \
+		or frozen.get("session_id") != _game().get("world").world_id \
+		or not frozen.get("participants") is Dictionary or frozen.participants.size() != 1 \
+		or not frozen.participants.has(local_peer_id()): return FOUNDATION_ACTIONS.deny("canonical_duel_win_required")
+	var intent := {"master_id": frozen.master_id, "creature_uid": frozen.creature_uid, "encounter_id": frozen.encounter_id}
+	var character: String = frozen.character_id
+	var world: RefCounted = _game().get("world")
+	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+	if row.get("action") == "master_win" and row.get("intent") == intent: return {"ok": true, "durable": true}
+	var revision := int(_character_authority.call("revision", character))
+	var context := {"character_id": character, "expected_revision": revision, "in_range": true,
+		"source_key": "master_encounter:" + frozen.encounter_id, "validated_host_outcome": "win", "participant_count": frozen.participants.size(),
+		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
+	return preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node_or_null(^"LedgerRpc"), local_peer_id(), character, revision, "master_win", intent, context)
 
 func homestead_submit_action(action: String, original: Dictionary, station: Node3D, revision: int) -> Dictionary:
 	var key := "homestead_recovery"
@@ -2862,7 +2956,7 @@ func _altar_peer_in_combat(peer: int) -> bool:
 		var node: Node = nodes.pop_back()
 		for child: Node in node.get_children(): nodes.append(child)
 		var script: Script = node.get_script()
-		if script != null and script.resource_path == "res://scripts/combat/encounter_director.gd":
+		if script != null and FOUNDATION_DIRECTORS.has(script.resource_path):
 			var host: Variant = node.get("_encounter_host")
 			if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
 				found_host = true
@@ -2895,7 +2989,7 @@ func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dict
 		var node: Node=nodes.pop_back()
 		for child: Node in node.get_children(): nodes.append(child)
 		var script: Script=node.get_script()
-		if script==null or not script.resource_path in ["res://scripts/combat/encounter_director.gd","res://scripts/combat/stormwood_encounter_director.gd"]: continue
+		if script==null or not FOUNDATION_DIRECTORS.has(script.resource_path): continue
 		var host: Variant=node.get("_encounter_host")
 		if not host is RefCounted or not host.has_method("stage_actor_training_baseline"): return {"ok":false}
 		if seen.has(host.get_instance_id()): continue
@@ -3090,7 +3184,7 @@ func _retained_host_wild_source(frozen: Dictionary) -> Dictionary:
 	while not nodes.is_empty():
 		var node: Node = nodes.pop_back()
 		for child: Node in node.get_children(): nodes.append(child)
-		if node.get_script() == null or node.get_script().resource_path != "res://scripts/combat/encounter_director.gd": continue
+		if node.get_script() == null or not FOUNDATION_DIRECTORS.has(node.get_script().resource_path): continue
 		if not node.has_method("host_wild_victory_source"): continue
 		var retained: Variant = node.call("host_wild_victory_source", id)
 		if not retained is Dictionary or not ESSENCE._equivalent(retained, frozen): continue

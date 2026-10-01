@@ -6,8 +6,13 @@ var _interaction: Node
 var _board: WeakRef
 var _left := 0.0
 var _cached_view: Dictionary = {}
+var _master_world: WeakRef
 
 func _ready() -> void:
+	var breakthrough: Node = preload("res://scripts/masters/breakthrough_service.gd").new()
+	breakthrough.name = "BreakthroughService"
+	add_child(breakthrough)
+	breakthrough.call("bind_actions", Callable(get_parent(), "_foundation_breakthrough_submit"), Callable(get_parent(), "homestead_personal_view"))
 	var arrival: Node = preload("res://scripts/net/foundation_portal_arrival.gd").new()
 	arrival.name = "PortalArrival"
 	add_child(arrival)
@@ -27,6 +32,14 @@ func _process(delta: float) -> void:
 	if _left > 0.0: return
 	_left = 1.0
 	get_parent().call("_retry_foundation_camp")
+	var game: Node = get_parent().call("_game")
+	var world_node: Node3D = get_parent().call("_portal_world_node", str(game.get("current_realm")))
+	var player: Node3D = game.call("find_player")
+	if world_node != null and player != null and world_node.is_ancestor_of(player) \
+		and preload("res://scripts/build/station_rules.gd").config().get("runtime_enabled") == true \
+		and (_master_world == null or _master_world.get_ref() != world_node):
+		get_node(^"BreakthroughService").call("mount_biome", world_node, player, str(game.get("current_realm")))
+		_master_world = weakref(world_node)
 	if _board != null and _board.get_ref() != null: return
 	# Resolve Halda's actual grounded tournament board, never a packet name.
 	for node: Node in get_tree().root.find_children("*", "Node3D", true, false):

@@ -3005,6 +3005,15 @@ func portal_character_state() -> Dictionary:
 func home_key_refusal() -> String:
 	return str(session.call("home_key_refusal")) if session != null else "The Home Key is not ready yet."
 
+func use_home_key() -> bool:
+	if local == null or local.inventory.count("home_key") != 1 or session == null: return false
+	var key := get_node_or_null(^"HomeKey")
+	if key == null:
+		key = preload("res://scripts/world/home_key.gd").new()
+		key.name = "HomeKey"
+		add_child(key)
+	return key.call("use") == true
+
 ## Appended to Game. Only the mounted opening director may call these local
 ## producer doors. They are not RPCs and do not accept an imported roster.
 func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:

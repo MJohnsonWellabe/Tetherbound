@@ -48,10 +48,25 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 	if not is_finite(height): _refuse("The arrival anchor has no supported ground."); return
 	# The actual actor's collision footprint must fit. Terrain support is
 	# sampled at four surrounding points; no saved height or invented landing.
-	for offset: Vector2 in [Vector2(-0.45, -0.45), Vector2(-0.45, 0.45), Vector2(0.45, -0.45), Vector2(0.45, 0.45)]:
+	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
+	if not actor is CharacterBody3D or collision == null or not collision.shape is CapsuleShape3D \
+		or collision.disabled or actor.global_basis.get_scale() != Vector3.ONE:
+		_refuse("The arrival collision is not ready."); return
+	var radius := (collision.shape as CapsuleShape3D).radius
+	var tolerance := tan(actor.floor_max_angle) * radius
+	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
 		var support := float(world_node.call("ground_height_at", target.x + offset.x, target.z + offset.y))
-		if not is_finite(support) or absf(support - height) > 0.45: _refuse("The arrival anchor is not supported."); return
-	actor.global_position = Vector3(target.x, height + 0.08, target.z)
+		if not is_finite(support) or absf(support - height) > tolerance: _refuse("The arrival anchor is not supported."); return
+	var landing := Vector3(target.x, height + actor.safe_margin, target.z)
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.transform = collision.global_transform
+	query.transform.origin += landing - actor.global_position
+	query.collision_mask = actor.collision_mask
+	query.exclude = [actor.get_rid()]
+	if not actor.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty():
+		_refuse("The arrival anchor is obstructed."); return
+	actor.global_position = landing
 	if actor is CharacterBody3D: actor.velocity = Vector3.ZERO
 	_pending.seated = true
 	_save_arrival()
@@ -66,6 +81,7 @@ func _same_owner() -> bool:
 	if _pending.is_empty(): return false
 	var session: Node = _pending.session.get_ref()
 	var game: Node = _pending.game.get_ref()
+	if game != null and _pending.get("seated") == true and str(game.get("current_realm")) != _pending.permit.realm: return false
 	return session != null and game != null and session.call("is_host") == true \
 		and session.call("_authority_character", _pending.peer) == _pending.envelope.character_id \
 		and game.get("world").reward_delivery_namespace == _pending.envelope.world_instance_id \
