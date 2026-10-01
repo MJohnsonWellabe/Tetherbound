@@ -30,20 +30,20 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 | Lane | Features | State |
 |---|---|---|
-| `tb/foundations` | F16 | PR500 main/OFF. F27 coherent17path ignored; departure r1/r2 buildFAIL, loader source gate. |
-| `tb/hub` | F17, F18 | #0-#3/#5 main. M1 steering native1/253s callback FAIL; visible fix. F18 PR504 draft. |
+| `tb/foundations` | F16 | Main/OFF; r5 shared27path SOURCEPASS only. DepartureR3 nativeFAIL155s; Terrain64region preload source, finalmaps unproved. |
+| `tb/hub` | F17, F18 | #0–#3/#5 main. M1R3 wood12-point contactFAIL; physics-aware input successor, bounds retained. F18 PR504 source draft. |
 | `tb/reorder` | F19, F20 | PR505/506 owned-source PASS; shared integration/earned proof held;567798 preserved. |
-| `tb/combat` | F21–F24 | R2 numericPASS/blind6FAIL+craft9FAIL; R5 source gate. Visible F22/F23 code; caller OFF. |
-| `tb/vfx` | F25, F35 | 8fae held; stone PASS/full craft FAIL; OFF. |
+| `tb/combat` | F21–F24 | R5/C2/C4 source bc07; oldblind6/fullcraft9FAIL. F22/23/24 PR513/512/511; actualaction producers OFF. |
+| `tb/vfx` | F25, F35 | F25 active24archetypes; F35 PR51431ultimates source. Actualarrival/HighMediumjudge OPEN/OFF. |
 | `tb/lookdev` | F26 | #0/#1/#2/#4 main; cliff OFF; full bar/Ally open. |
-| `tb/training` | F27–F30, F37 | #0 main; Altar4839 consumerHOLD fixes; producer ignored, XP held. |
-| `tb/homestead` | F31–F34 | 499e8 held; Altar4-path proposal frozen; host placement-cost transaction OPEN. |
+| `tb/training` | F27–F30, F37 | F27#0 main; actualpaidAltar/XP sourceOFF. F28/29/30 PR508/507/510; feed/traits/save/art proofs OPEN. |
+| `tb/homestead` | F31–F34 | F31/32/33 PR516/515/518 source; canonical station/material/gear producers and actual proofs OPEN. |
 | `tb/creature-art` | F36 | Wave 2 (after the F26 look bar) |
 | `tb/visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood` | F38–F41 | Wave 2 (after F26) |
 | `tb/hud` | F42 | Wave 2 |
 | `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43–F49 | Wave 3 |
 
-**Active ownership:** visible `tb/f18`, `tb/f19`, `tb/f20` drafts PR504/505/506 have owned-source reviews, zero criterion credit; shared integration/proofs remain. New visible F22/F23/F28/F29/F30 write whole features, then batch validation (owner 2026-09-30; CODEX §7.1). Foundations owns shared authority/saves; ROOT owns Hall/board and one Godot/GPU writer. F17#4 has a visible fix task. Exact task IDs/cuts: board status.json. Reference boards restored.
+**Active ownership:** visible whole-feature drafts PR504–516/518 remain unaccepted. F18–24/F28–33/F35 owned source; F25 active. Shared authority/saves have one Foundations writer; ROOT owns Hall/board and serial Godot/GPU. Next are real producers, batched necessary proof, independent strict criterion verdict, then main. Atomic rows now show In progress, never source-only MET. Exact cuts/tasks: board status. References restored.
 
 ### Open owner decisions
 
