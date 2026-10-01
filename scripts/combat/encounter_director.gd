@@ -551,6 +551,8 @@ var _scaling_base_owner: RefCounted = null
 ## The row last WRITTEN onto `_scaling_base_owner`, so an unchanged row costs
 ## nothing. `_host_after_encounter_change()` runs on every landed strike.
 var _scaling_applied: Dictionary = {}
+## Invalidates population continuations even if this node is later reattached.
+var _population_generation := 0
 
 
 func _ready() -> void:
@@ -566,15 +568,32 @@ func _ready() -> void:
 
 	# `_ready` runs while the parent is still setting up its children, and
 	# add_child() is refused during that. One frame is enough to be out of it.
-	await get_tree().process_frame
+	var population_world := get_parent()
+	var population_tree := get_tree()
+	var population_generation := _population_generation
+	await population_tree.process_frame
+	if not _population_lifetime_matches(population_world, population_tree, population_generation): return
 	# `Vegetation` is a runtime child `playground_world.gd::_dress_the_meadow()`
 	# adds during ITS OWN `_ready()`, which (children ready bottom-up) has not
 	# necessarily run yet at the top of this function -- resolved here,
 	# post-yield, rather than at the top, so the lookup runs after the world
 	# has actually dressed the meadow instead of racing it.
-	_vegetation = get_parent().get_node_or_null(^"Vegetation")
+	_vegetation = population_world.get_node_or_null(^"Vegetation")
 	_wire_creature_replication()
+	if not _population_lifetime_matches(population_world, population_tree, population_generation): return
 	await _spawn_creatures()
+
+
+## A frame wait may outlive a failed realm's rollback. Match the exact
+## world/tree lifetime before touching replication or building population.
+func _population_lifetime_matches(world: Variant, tree: SceneTree, generation: int) -> bool:
+	return generation == _population_generation and is_inside_tree() and not is_queued_for_deletion() \
+		and is_instance_valid(world) and world == get_parent() \
+		and world.is_inside_tree() and not world.is_queued_for_deletion() \
+		and is_instance_valid(tree) and get_tree() == tree and world.get_tree() == tree \
+		and is_instance_valid(_player) and _player.is_inside_tree() and not _player.is_queued_for_deletion() \
+		and is_instance_valid(_manager) and _manager.is_inside_tree() and not _manager.is_queued_for_deletion() \
+		and world.is_ancestor_of(_player) and world.is_ancestor_of(_manager)
 
 
 ## Stage B lane 4.B. Wire this director to the session and to D97's authored
@@ -586,13 +605,18 @@ func _ready() -> void:
 ## `_is_host()` for why a spawn before a real peer exists is a phantom that
 ## breaks the session on join.
 func _wire_creature_replication() -> void:
+	if not is_inside_tree() or is_queued_for_deletion(): return
 	var world := get_parent()
+	var population_tree := get_tree()
+	var population_generation := _population_generation
+	if not _population_lifetime_matches(world, population_tree, population_generation): return
 	if world != null:
 		_creature_spawner = world.get_node_or_null(CREATURE_SPAWNER_PATH) as MultiplayerSpawner
 	if _creature_spawner != null:
 		_creature_spawner.spawn_function = _spawn_deployed_creature
 	REPLICATION_SCOPE.attach(_creature_spawner, _encounter_realm(), self)
 
+	if not _population_lifetime_matches(world, population_tree, population_generation): return
 	_session = get_node_or_null(SESSION_PATH)
 	if _session == null:
 		return
@@ -6693,6 +6717,7 @@ func _clear_trainer_victory_retries() -> void:
 
 
 func _exit_tree() -> void:
+	_population_generation += 1
 	_clear_trainer_victory_retries()
 
 

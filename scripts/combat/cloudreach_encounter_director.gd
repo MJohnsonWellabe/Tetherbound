@@ -328,7 +328,15 @@ func _install_circuit_rematch() -> void:
 
 func _spawn_creatures() -> void:
 	# Deliberately never calls the Meadows population or default-starter builder.
-	await get_tree().physics_frame
+	if not is_inside_tree() or is_queued_for_deletion(): return
+	var population_world := get_parent()
+	var population_tree := get_tree()
+	var population_generation := _population_generation
+	if realm_world != population_world \
+		or not _population_lifetime_matches(population_world, population_tree, population_generation): return
+	await population_tree.physics_frame
+	if realm_world != population_world \
+		or not _population_lifetime_matches(population_world, population_tree, population_generation): return
 	_build_trainers()
 	_spawn_available_sites()
 	population_ready.emit()
