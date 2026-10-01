@@ -66,6 +66,57 @@ func test_preview_agrees_with_live_for_a_legal_floor() -> void:
 	assert_eq(str(preview.get("reason", "")), "")
 
 
+func _gentle_ground(at: Vector3) -> float:
+	return at.z * 0.5
+
+
+func _steep_ground(at: Vector3) -> float:
+	return at.z * 0.9
+
+
+func _missing_grid_ground(at: Vector3) -> float:
+	return NAN if at.x == 0.0 and at.z == 2.0 else 0.0
+
+
+func test_grid_aim_phase_does_not_change_slope_or_ground_height() -> void:
+	var game := _new_game()
+	var terrain := Callable(self, "_gentle_ground")
+	# Both aims resolve to the same 2m grid cell. Its real 1.2m slope rise
+	# is 0.6m; comparing to raw z=1 instead would falsely report 1.1m.
+	var edge := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), [], terrain)
+	var centre := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 2), [], terrain)
+	assert_true(bool(edge.ok), "a legal cell must remain legal when aimed from its grid edge")
+	assert_true(bool(centre.ok))
+	assert_eq(edge.position, Vector3(0, 1, 2), "the bed must sit on the snapped cell's ground")
+	assert_eq(edge.position, centre.position)
+	assert_eq(edge.reason, centre.reason)
+
+
+func test_grid_centre_still_refuses_a_truly_steep_slope() -> void:
+	var game := _new_game()
+	var preview := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), [], Callable(self, "_steep_ground"))
+	assert_false(bool(preview.ok), "a 1.08m centre rise must still exceed the existing 0.8m limit")
+	assert_eq(preview.reason, "Too steep to build here")
+
+
+func test_grid_destination_without_ground_is_refused() -> void:
+	var game := _new_game()
+	var preview := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), [], Callable(self, "_missing_grid_ground"))
+	assert_false(bool(preview.has_ground), "ground at the raw aim cannot authorize a grid cell without ground")
+	assert_false(bool(preview.ok))
+	assert_eq(preview.position, Vector3.INF)
+
+
+func test_neighbour_snap_keeps_inherited_height_and_skips_terrain_slope() -> void:
+	var game := _new_game()
+	var records := [{"id": "creature_bed", "position": [0.0, 12.0, 0.0]}]
+	var preview := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), records, Callable(self, "_steep_ground"))
+	assert_true(bool(preview.snapped_to_neighbour))
+	assert_true(bool(preview.ok), "neighbour height inheritance must retain its existing slope exemption")
+	var spot: Vector3 = preview.position
+	assert_eq(spot.y, 12.0)
+
+
 func test_preview_agrees_with_live_for_an_occupied_structural_anchor() -> void:
 	var game := _new_game()
 	var floor_record := {"id": "floor", "position": [0.0, 0.0, 1.0]}

@@ -893,6 +893,21 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 	# ghost: the target inherits its placed neighbour's ground-clamped height.
 	var rise := 0.0
 	if not snapped_to_neighbour:
+		# Grid snapping moves X/Z away from the raw aim. Ground-clamp and
+		# measure slope around that resolved centre, or a legal cell can turn
+		# red just because the aim sits on its uphill/downhill edge.
+		ground = float(ground_height.call(spot))
+		if is_nan(ground):
+			return {
+				"has_ground": false,
+				"ok": false,
+				"reason": "",
+				"position": Vector3.INF,
+				"snapped_to_neighbour": false,
+				"structural": false,
+				"yaw_deg": NAN,
+			}
+		spot.y = ground
 		for corner: Vector3 in [Vector3(1.2, 0, 0), Vector3(-1.2, 0, 0), Vector3(0, 0, 1.2), Vector3(0, 0, -1.2)]:
 			var h := float(ground_height.call(spot + corner))
 			if not is_nan(h):
