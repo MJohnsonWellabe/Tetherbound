@@ -129,4 +129,18 @@ static func valid_plan(plan: Variant, current: Dictionary, namespace_id: String)
 ## increment the generation or run resolve/spawn again on load/reconnect.
 static func retained_spawn(world: Dictionary, id: String) -> Dictionary:
 	var record: Dictionary = _sites(world).get(id, {})
-	return record.spawn_traits.duplicate(true) if record.get("status") == "active" else {}
+	if record.get("status") != "active" or not TRAITS.integer(record.get("generation"), 1, 2147483647): return {}
+	var packet: Variant = record.get("spawn_traits")
+	if not packet is Dictionary or packet.size() != 4 or packet.get("traits_initialized") != true \
+		or packet.get("taught_traits") != {} or not TRAITS.trait_state_errors(packet).is_empty(): return {}
+	var source: Variant = packet.get("captured_from")
+	if not source is Dictionary or source.size() != 4 or source.get("kind") != "wild" \
+		or not TRAITS.component(source.get("world_namespace")) or source.get("spawn_id") != id \
+		or not TRAITS.integer(source.get("spawn_generation"), 1, 2147483647) \
+		or int(source.spawn_generation) != int(record.generation): return {}
+	# JSON decodes integral generations as floats. Normalize only that already
+	# validated integer field at the runtime packet boundary; never truncate a
+	# fractional/foreign generation, alter traits, or mutate the retained save.
+	var retained: Dictionary = packet.duplicate(true)
+	retained.captured_from.spawn_generation = int(source.spawn_generation)
+	return retained
