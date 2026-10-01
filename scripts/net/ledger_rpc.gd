@@ -1191,7 +1191,7 @@ func _altar_building_request(intent: Dictionary, peer: int) -> Dictionary:
 	var uid := str(intent.get("uid", ""))
 	var index := int(world.call("building_index_of", uid)) if not uid.is_empty() else -1
 	if index < 0 and intent.get("index") is int: index = int(intent.index)
-	var target_is_altar := index >= 0 and index < world.placed_buildings.size() \
+	var target_is_altar: bool = index >= 0 and index < world.placed_buildings.size() \
 		and world.placed_buildings[index].get("id") == "altar"
 	var id := WORLD_STATE.altar_build_id(world.reward_delivery_namespace, character, str(intent.get("txn_id", "")))
 	var frozen: Variant = world.reward_deliveries.get(id)
@@ -1391,7 +1391,7 @@ func _accept_portal_delivery(echo: Dictionary, peer: int, generation: String) ->
 	var before: Dictionary = world.save_data()
 	var revision := int(world.revision)
 	var sequence := int(ledger.seq)
-	var accepted := prior.duplicate(true)
+	var accepted: Dictionary = prior.duplicate(true)
 	accepted.status = "accepted"
 	var verdict: Dictionary = ledger.call("accept_portal_delivery", accepted, peer)
 	if verdict.get("ok") != true: return false
