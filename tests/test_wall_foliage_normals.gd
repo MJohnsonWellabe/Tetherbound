@@ -26,6 +26,62 @@ func test_the_shipped_vine_really_faces_up() -> void:
 	scene.free()
 
 
+func test_repeated_prefab_placements_retain_modules_until_composer_release() -> void:
+	var prefabs: RefCounted = PREFABS.new()
+	prefabs.set("_recipes", {"cache_vines": {"modules": [
+		{"module": "Prop_Vine1", "at": [1.0, 0.0, 0.0]},
+		{"module": "Prop_Vine1", "at": [-1.0, 0.0, 0.0], "yaw_deg": 180.0, "scale": 0.5},
+	]}})
+	var first: Node3D = prefabs.call("instantiate", "cache_vines")
+	# No strong test reference: keeping the scene alive is the composer's job.
+	var module_ref := weakref(load(VINE))
+	assert_true(module_ref.get_ref() != null, "placement retains the imported scene for cache reuse")
+	if module_ref.get_ref() == null:
+		first.free()
+		return
+	var module_id: int = module_ref.get_ref().get_instance_id()
+	var second: Node3D = prefabs.call("instantiate", "cache_vines")
+	assert_eq(module_ref.get_ref().get_instance_id(), module_id, "repeated placement keeps the same module resource")
+	assert_true(first != second, "each placement owns a distinct node tree")
+	assert_eq(first.get_child_count(), 2, "repeated modules preserve composition")
+	assert_eq(second.get_child_count(), 2, "duplicate preserves composition")
+	for index in 2:
+		var a := first.get_child(index) as Node3D
+		var b := second.get_child(index) as Node3D
+		assert_true(a != b, "module nodes are distinct between placements")
+		assert_eq(a.transform, b.transform, "duplicate keeps module placement")
+	assert_eq((first.get_child(0) as Node3D).position, Vector3(1.0, 0.0, 0.0))
+	assert_eq((first.get_child(1) as Node3D).position, Vector3(-1.0, 0.0, 0.0))
+	assert_almost_eq((first.get_child(1) as Node3D).rotation.y, PI)
+	assert_eq((first.get_child(1) as Node3D).scale, Vector3.ONE * 0.5)
+	var original: Node3D = (load(VINE) as PackedScene).instantiate()
+	var source := _first_mesh(original).mesh
+	var first_mesh := _first_mesh(first)
+	var second_mesh := _first_mesh(second)
+	assert_eq(first_mesh.mesh.get_aabb(), source.get_aabb(), "same imported geometry bounds")
+	assert_eq(first_mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX],
+		source.surface_get_arrays(0)[Mesh.ARRAY_VERTEX], "same imported vertices")
+	var source_material := source.surface_get_material(0) as StandardMaterial3D
+	var source_colour := source_material.albedo_color
+	var sibling_material := second_mesh.get_active_material(0)
+	prefabs.call("apply_retint", first, {source_material.resource_name: "#123456"})
+	assert_eq((first_mesh.get_active_material(0) as StandardMaterial3D).albedo_color, Color("#123456"))
+	assert_eq(second_mesh.get_active_material(0), sibling_material, "retint leaves sibling material untouched")
+	assert_eq(source_material.albedo_color, source_colour, "retint leaves imported material untouched")
+	var third: Node3D = prefabs.call("instantiate", "cache_vines")
+	assert_eq(_first_mesh(third).get_active_material(0), sibling_material, "retint leaves cached template untouched")
+	original.free()
+	prefabs = null
+	assert_true(module_ref.get_ref() == null, "composer release drops the PackedScene even with placed nodes alive")
+	assert_eq(first_mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX],
+		source.surface_get_arrays(0)[Mesh.ARRAY_VERTEX], "placed meshes survive composer release")
+	assert_eq((first_mesh.get_active_material(0) as StandardMaterial3D).albedo_color,
+		Color("#123456"), "placed retint survives composer release")
+	first.free()
+	second.free()
+	third.free()
+
+
 func test_every_vine_normal_faces_out_of_the_wall_and_nothing_else_changes() -> void:
 	var prefabs: RefCounted = PREFABS.new()
 	var scene: Node = (load(VINE) as PackedScene).instantiate()

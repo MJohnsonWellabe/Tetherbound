@@ -72,6 +72,10 @@ const WALL_FOLIAGE_MODULES: Array[String] = ["Prop_Vine1", "Prop_Vine2", "Prop_V
 
 var _recipes: Dictionary = {}
 var _templates: Dictionary = {}
+## Keep imported scenes alive for both template assembly and duplicate()'s
+## default re-instantiation of their children. Node instances alone do not
+## retain the PackedScene in ResourceLoader's reference-counted cache.
+var _module_resources: Dictionary = {}
 ## source mesh -> its outward-facing wall-foliage copy (`wall_foliage_mesh()`).
 var _wall_foliage_meshes: Dictionary = {}
 ## (material name, colour) -> tinted duplicate, shared across every surface
@@ -145,6 +149,7 @@ func _notification(what: int) -> void:
 		if is_instance_valid(template) and template is Node:
 			(template as Node).free()
 	_templates.clear()
+	_module_resources.clear()
 	_wall_foliage_meshes.clear()
 
 
@@ -259,10 +264,10 @@ func _build_template(prefab_name: String) -> Node3D:
 		var gltf_path := "%s/%s.gltf" % [dir, module]
 		var obj_path := "%s/%s.obj" % [dir, module]
 		if ResourceLoader.exists(gltf_path):
-			var scene: PackedScene = load(gltf_path)
+			var scene := _module_resource(gltf_path) as PackedScene
 			node = scene.instantiate() as Node3D
 		elif ResourceLoader.exists(obj_path):
-			var mesh: Mesh = load(obj_path)
+			var mesh := _module_resource(obj_path) as Mesh
 			var mi := MeshInstance3D.new()
 			mi.name = module
 			mi.mesh = mesh
@@ -293,6 +298,15 @@ func _build_template(prefab_name: String) -> Node3D:
 		root.visible = false
 		_holder.add_child(root)
 	return root
+
+
+func _module_resource(path: String) -> Resource:
+	if _module_resources.has(path):
+		return _module_resources[path] as Resource
+	var resource := load(path)
+	if resource != null:
+		_module_resources[path] = resource
+	return resource
 
 
 func _face_wall_foliage_outward(node: Node) -> void:
