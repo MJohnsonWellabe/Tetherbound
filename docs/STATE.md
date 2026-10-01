@@ -43,7 +43,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | `tb/hud` | F42 | Wave 2 |
 | `tb/loop`, `tb/balance`, `tb/coop`, `tb/release` | F43–F49 | Wave 3 |
 
-**Ownership:** Foundation alone writes shared saves; F17 repairs opening; existing F29 reviews; ROOT integrates and serializes Godot/GPU. All14 drafts remain unaccepted; ten archives only clean the sidebar. Scoped checks, actual proof, CI and main precede verified criterion closure; source alone never earns MET. Board has cuts; references restored.
+**Ownership:** Foundation alone writes shared saves; F17 repairs opening; existing F29 reviews; ROOT integrates and serializes Godot/GPU. Closed14 superseded PRs: every exact head is in pushedaba5268; only draft519 remains open. Branches/local repairs preserved. Ten session archives; no acceptance credit. Audit: branch-closeout/superseded-pr-closures.json. Scoped checks, actual proof, CI and main precede criterion closure; source alone never earns MET.
 
 ### Open owner decisions
 
