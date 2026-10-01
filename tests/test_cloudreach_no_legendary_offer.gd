@@ -125,6 +125,9 @@ const CROSS_SCAN_ALLOWED := [
 	["res://scripts/ui/tab_map.gd", "## `realm_key_cloudreach` at the same beat `legendary_freed` is set;"],
 	["res://scripts/ui/tab_map.gd", "\"legendary_freed\", \"realm_key_cloudreach\", \"cloudreach_chapter_started\","],
 	["res://scripts/world/rift_crossing.gd", "## `realm_key_cloudreach` at the same moment as `legendary_freed`, so this"],
+	# One numeric-overlay inventory literal for the existing authorized climax.
+	# The file and full stripped line are pinned; code/other references still scan.
+	["res://scripts/creatures/level_curve_policy.gd", "\"res://data/config/cloudreach_solmane_climax.json\","],
 ]
 
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
@@ -1409,6 +1412,40 @@ func test_negative_control_cross_scan_line() -> void:
 		return
 	sources[path] = str(sources[path]) + "\n## Cloudreach's summit hands the player Solmane.\n"
 	_control("cross scan", _cross_scan_violations(sources, _legendary_species(), _offer_vocabulary()), "solmane")
+
+
+func test_numeric_curve_inventory_keeps_the_existing_authorized_solmane_shape() -> void:
+	var path := "res://scripts/creatures/level_curve_policy.gd"
+	var source := _text(path)
+	assert_false(source.is_empty())
+	var inventory := "\"res://data/config/cloudreach_solmane_climax.json\","
+	var references := 0
+	for line: String in source.split("\n"):
+		if line.strip_edges() == inventory:
+			references += 1
+	assert_eq(references, 1, "the allowance is one inventory literal, never an offer implementation")
+	_report("numeric inventory", _cross_scan_violations({path: source}, _legendary_species(), _offer_vocabulary()))
+	var candidate := _dict("res://data/config/redesign_level_curve.json")
+	assert_true(candidate.get("runtime_enabled") is bool)
+	assert_eq(candidate.get("runtime_enabled"), false)
+	var rows: Variant = _at(candidate, ["overlays", "data/config/cloudreach_solmane_climax.json"])
+	if not _need(rows, true, "numeric Solmane overlay"):
+		return
+	assert_eq(rows.size(), 1)
+	for row: Dictionary in rows:
+		assert_eq(row.get("at", []), ["legendary", "level"], "the detached inventory changes only a numeric level")
+
+
+func test_negative_control_numeric_inventory_does_not_authorize_offer_code_or_lookalikes() -> void:
+	var path := "res://scripts/creatures/level_curve_policy.gd"
+	var source := _text(path)
+	var cases := [
+		{path: source + "\nparty.add_creature(\"solmane\", \"cloudreach\")\n"},
+		{path: source + "\n\"res://data/config/cloudreach_solmane_extra_climax.json\",\n"},
+		{"res://scripts/world/cloudreach_other_inventory.gd": "\"res://data/config/cloudreach_solmane_climax.json\","},
+	]
+	for fake: Dictionary in cases:
+		_control("numeric inventory boundary", _cross_scan_violations(fake, _legendary_species(), _offer_vocabulary()), "solmane")
 
 
 func test_negative_control_fake_dialogue_offer_effect() -> void:
