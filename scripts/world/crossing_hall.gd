@@ -7,6 +7,7 @@ const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
+const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -28,6 +29,10 @@ func build(config: Dictionary) -> bool:
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
 	_build_frontage()
+	var catalog := CATALOG_PRESENTATION.new()
+	catalog.name = "MeadowsCatalogPresentation"
+	add_child(catalog)
+	catalog.build("hall")
 	refresh_from_game()
 	set_process(true)
 	return true
