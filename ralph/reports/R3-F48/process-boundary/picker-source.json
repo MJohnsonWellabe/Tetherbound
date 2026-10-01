@@ -1,0 +1,13 @@
+{
+  "base": "eb019e2d3743a2c1f46cc494ea9fddad0e8b9184",
+  "source_sha256": {
+    "tools/net/peer_runner.gd": "8ef7b328423a3a5e299864721af95abeef857742b0f3dd6d9f3bc40b7be82b59"
+  },
+  "fix": "Only pick_saved=true retains fresh live character identity until real title picker callback. Nonpicker/R1 callers preserve prior conditional result. No boss-strike, motion, input or timing changes",
+  "checks": {
+    "standalone_gdtoolkit_grammar": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "native_runtime": "UNRUN; ROOTserializes actual saved picker/restart proof",
+  "acceptance": "OPEN"
+}

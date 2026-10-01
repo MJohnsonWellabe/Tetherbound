@@ -1999,7 +1999,10 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 			# both clears the subject it later inspects and asks the world to build a
 			# nonexistent model. Keep its old identity fixture exactly, while the new
 			# appearance-shaped caller above goes through the production title owner.
-			if local != null and not wanted_id.is_empty():
+			# A fresh process must keep its fresh live identity until the real
+			# saved-character picker selects the original owner. Preselecting it
+			# here makes title._join_via bypass the picker we then try to press.
+			if local != null and not wanted_id.is_empty() and not pick_saved:
 				(local as RefCounted).set("character_id", wanted_id)
 			if local != null and not str(summary.get("display_name", "")).is_empty():
 				(local as RefCounted).set("display_name", str(summary.get("display_name")))
