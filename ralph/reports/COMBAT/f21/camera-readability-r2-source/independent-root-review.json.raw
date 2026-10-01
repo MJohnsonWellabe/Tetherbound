@@ -1,0 +1,24 @@
+{
+  "verdict": "BOUNDED SOURCE PASS FOR ONE NECESSARY PARSER AND ACTUAL MATRIX ONLY",
+  "reviewer": "ROOT independent of Combat author",
+  "base_current": "375fe2b4fbb36fa83d35034c3a325216ff4a1029",
+  "patch_sha256": "54b72242066bed68fb2f17e5a1deb6b0e5806a4b0c6c12500155dc86a1b77c32",
+  "checks": {
+    "scripts/combat/combat_manager.gd": true,
+    "scripts/combat/fight_camera.gd": true,
+    "data/config/camera.json": true,
+    "tests/smoke_combat_camera.gd": true
+  },
+  "findings": [
+    "Retains actual HUD canvas rectangles plus margin; mandatory missing or invalid geometry fails closed",
+    "Bounded foreground model ellipsoid checks stop at cap+1; approximation disclosed and blind pixels mandatory",
+    "Existing constrained lens/model sweeps, distance cap, strict0 actor overlap, manual grace, liveAI/HP/physicalinput/samples/milestones preserved",
+    "Post-draw scoring remeasures visibility and adds requirements rather than weakening assertions",
+    "Final bf9 blindFAIL archived losslessly375; all7pairfailures/all9craftfailures remain OPEN"
+  ],
+  "limits": [
+    "Source review does not establish parser/runtime/performance/fullsilhouette coverage",
+    "No criterion or craft credit until actual native and fresh independent blind review",
+    "Config32 cap may mark dense vicinity unavailable; diagnose measured native failure, do not waive tests"
+  ]
+}

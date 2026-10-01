@@ -1,0 +1,44 @@
+{
+  "base": "502e24b7cf207ac8008c691c16f8c858dea3f1fb",
+  "original_executed_source": "bf9df4536c4290516570072502b958883531d423",
+  "trigger": "Independent blind preliminary actual antlers/status-panel, body-parts/grid and foreground-creature failures; final exact frame verdict pending.",
+  "files": {
+    "scripts/combat/combat_manager.gd": {
+      "base_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+      "candidate_sha256": "b41440e4dce55a540b92baefd21c9c1df52c3f326001889abc7c3eb50f0c4812"
+    },
+    "scripts/combat/fight_camera.gd": {
+      "base_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+      "candidate_sha256": "e03e402a0a94760fb025a8a091daaa0ef265a9aa4d29caeeb6a92806f786755f"
+    },
+    "data/config/camera.json": {
+      "base_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+      "candidate_sha256": "7c5bb9b173306c5d060e5dccb47c54ae9ce893ec5d4e1fa759e7ce934d138c4e"
+    },
+    "tests/smoke_combat_camera.gd": {
+      "base_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d",
+      "candidate_sha256": "fef4c7fddcca47d6d03d315ee17b8c6aa38bbbfad95e8647128e6aaf8b12527a"
+    }
+  },
+  "patch_sha256": "54b72242066bed68fb2f17e5a1deb6b0e5806a4b0c6c12500155dc86a1b77c32",
+  "status": "Independent bounded SOURCEPASS applied exactly; unparsed/unrendered; bf9 numeric PASS and blind readability FAIL retained; F21#4 OPEN",
+  "preserved": [
+    "54 immutable native PNGs/59 originals",
+    "actor-to-actor strict zero overlap/full framing",
+    "actual body scales/AI/collision/HP/input",
+    "normal manual orbit grace",
+    "world/model lens sweeps/existing distance cap"
+  ],
+  "visibility_limit": "Foreground checks use existing inscribed model-bounds ellipsoids; complete mesh silhouette visibility remains an independent blind pixel judgment, not a numeric guarantee.",
+  "hardening": [
+    "Missing/non-Control configured HUD path fails context",
+    "Positive finite viewport and finite Canvas transform required before division",
+    "Stop after first confirmed occluder beyond cap; retain bounded diagnostics"
+  ],
+  "next_required": [
+    "Final blind exact frame/report archive",
+    "Actual current HUD measurements/foreground constraint source review",
+    "One selected native proof and fresh blind review only after source gate/token grant"
+  ],
+  "independent_review_raw_sha256": "38f148de3addbeee6fd230514c0389e9110e7659f6a254ea8713685df31f0313"
+}

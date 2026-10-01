@@ -112,7 +112,7 @@ static func oriented_body_limit(pivot_position: Vector3, arm_end: Vector3, box: 
 static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 		vertical_fov_deg: float, aspect: float, base_distance: float, config: Dictionary, apply_pitch_offset: bool = true,
 		ally_points: PackedVector3Array = PackedVector3Array(), foe_points: PackedVector3Array = PackedVector3Array(),
-		constrain_pose: Callable = Callable()) -> Dictionary:
+		constrain_pose: Callable = Callable(), visibility_score: Callable = Callable()) -> Dictionary:
 	var axis_ally := ally_points.is_empty()
 	var axis_foe := foe_points.is_empty()
 	if ally_points.is_empty(): ally_points = box_points(ally)
@@ -174,16 +174,25 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			var guarded_b := project_points(guarded_foe,transform,vertical_fov_deg,aspect,0.05)
 			var clear := bool(guarded_a.get("valid",false)) and bool(guarded_b.get("valid",false)) \
 				and overlap_ratio(guarded_a.rect,guarded_b.rect)<=float(config.get("max_actor_overlap",0.0))
-			var passed := bool(a.in_frame) and bool(b.in_frame) and clear
+			var visibility: Dictionary = {}
+			if visibility_score.is_valid():
+				var checked: Variant = visibility_score.call(transform,a.rect,b.rect)
+				if not checked is Dictionary or typeof(checked.get("pass"))!=TYPE_BOOL: continue
+				visibility = checked
+			var visibility_pass: bool = visibility.is_empty() or bool(visibility.get("pass",false))
+			var passed := bool(a.in_frame) and bool(b.in_frame) and clear and visibility_pass
 			var framed := bool(a.in_frame) and bool(b.in_frame)
 			var candidate := {"pair": profile.pair, "pivot": actual_pivot, "distance": actual_distance, "pitch": start_pitch,
 				"transform":transform,"requested_pivot":point,"requested_distance":distance,
 				"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect, "pass": passed, "framed": framed}
+			candidate["visibility"] = visibility
 			if not constraint_info.is_empty():
 				candidate["world_room"] = constraint_info.get("world_room",null)
 				candidate["model_room"] = constraint_info.get("model_room",INF)
 			if best.is_empty() or (framed and not bool(best.framed)) \
-					or (framed == bool(best.framed) and overlap < float(best.overlap)):
+					or (framed == bool(best.framed) and (overlap < float(best.overlap)
+						or (overlap == float(best.overlap) and float(visibility.get("penalty",0.0))
+							< float((best.get("visibility",{}) as Dictionary).get("penalty",0.0))))):
 				best = candidate
 			if passed: return candidate
 			if distance >= maximum: break
@@ -211,7 +220,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	refined_config["allow_pair_side_views"] = false
 	refined_config["orbit_refinement_step_deg"] = 0.0
 	var refined_fit := solve(ally,foe,yaw,pitch,vertical_fov_deg,aspect,base_distance,
-		refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose)
+		refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose,visibility_score)
 	if not refined_fit.is_empty() and (bool(refined_fit.get("pass",false)) \
 		or (bool(refined_fit.framed) and not bool(best.framed)) \
 		or (bool(refined_fit.framed)==bool(best.framed) and float(refined_fit.overlap)<float(best.overlap))):

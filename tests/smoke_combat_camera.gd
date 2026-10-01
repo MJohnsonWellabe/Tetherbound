@@ -392,7 +392,13 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 				var measured_pair := FIT.size_class(a_bounds.size.y,cfg)+"/"+FIT.size_class(b_bounds.size.y,cfg)
 				var framed := bool(a.get("in_frame",false)) and bool(b.get("in_frame",false))
 				var overlap := FIT.overlap_ratio(a.rect,b.rect) if bool(a.get("valid",false)) and bool(b.get("valid",false)) else 1.0
-				var good: bool = live and measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap)
+				# Re-measure current post-draw HUD/sight, rather than trusting
+				# only a requested solution or its earlier idle diagnostics.
+				var visibility_context: Dictionary = _manager.call("_fight_visibility_context",_camera,cfg.get("readability",{}))
+				var visibility: Dictionary = _manager.call("_fight_visibility_score",_camera.get_camera_transform(),
+					a.get("rect",Rect2()),b.get("rect",Rect2()),visibility_context)
+				var good: bool = live and measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap) \
+					and bool(visibility.get("pass",false))
 				var body_limit: float = _rig.call("body_limit")
 				if observed_frame >= 0 and not good: passed = false
 				render_samples.append({"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),
@@ -407,7 +413,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 						"hitstop_remaining_seconds":stop_left,"hitstop_maximum_seconds":stop_max,
 						"bounded_hitstop":bounded_stop,"ally_accepted_hitstop":ally_stop,"foe_accepted_hitstop":foe_stop},
 					"ally_bounds":_bounds_record(a_bounds),"foe_bounds":_bounds_record(b_bounds),"ally_model_corners":a_corners,"foe_model_corners":b_corners,
-					"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),"framed":framed,"overlap":overlap,
+					"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),"framed":framed,"overlap":overlap,"visibility":visibility,
 					"world_aabb_ally_rect":_rect_record(axis_a),"world_aabb_foe_rect":_rect_record(axis_b),
 					"world_aabb_overlap":FIT.overlap_ratio(axis_a.rect,axis_b.rect) if bool(axis_a.get("valid",false)) and bool(axis_b.get("valid",false)) else 1.0,
 					"actual_camera_position":_point_record(_camera.global_position),"actual_camera_basis":[_point_record(_camera.global_basis.x),_point_record(_camera.global_basis.y),_point_record(_camera.global_basis.z)],
@@ -472,7 +478,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 	else:
 		output.store_string(JSON.stringify({"source_commit":source,"camera_config_sha256":FileAccess.get_sha256("res://data/config/camera.json"),
 			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
-			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap, inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
+			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap/full frame plus actual HUD exclusion and approximate foreground head/torso sight; inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
 			"physics_ticks_per_second":Engine.physics_ticks_per_second,"input_timing":"Pre-physics boundaries: left Y -0.85 at observed30, release90; physical quick trigger at120, release122, buffered-event flush at both trigger edges before manager physics. Six PNG milestones0/30/60/90/120/179 use distinct actual draws with actual boundary recorded; every post-draw view including terminal/aborted view retained.",
 			"scope":"Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded physics ticks and rendered observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
 			"cases":cases,"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))

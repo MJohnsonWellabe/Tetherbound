@@ -1487,8 +1487,11 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var probe := func(point: Vector3, basis: Basis, distance: float) -> Dictionary:
 		return _camera_rig.call("probe_fight_camera_pose",point,basis,distance,box,pose,
 			float(clear.get("margin_m",0.35)),float(clear.get("min_length_m",2.0)))
+	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary)
+	var visibility_score := func(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2) -> Dictionary:
+		return _fight_visibility_score(transform,ally_rect,foe_rect,visibility_context)
 	var solution := FIGHT_CAMERA.solve(ally,foe,yaw,float(_camera_rig.get("pitch")),camera.fov,
-		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe)
+		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score)
 	if solution.is_empty(): return false
 	_fight_camera_solution = solution
 	# Retain smooth follow/current yaw whenever its freshly queried constrained
@@ -1502,7 +1505,8 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		var current_a := FIGHT_CAMERA.project_points(ally_points,current.transform,camera.fov,aspect,camera.near)
 		var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
 		if bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false)) \
-			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap):
+			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap) \
+			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)):
 			selected = current
 			selected_yaw = yaw
 	var offset: Vector3 = solution.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
@@ -1521,6 +1525,8 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	_fight_camera_solution["actual_framed"] = bool(actual_a.get("in_frame",false)) and bool(actual_b.get("in_frame",false))
 	_fight_camera_solution["actual_overlap"] = FIGHT_CAMERA.overlap_ratio(actual_a.rect,actual_b.rect) \
 		if bool(actual_a.get("valid",false)) and bool(actual_b.get("valid",false)) else 1.0
+	_fight_camera_solution["actual_visibility"] = _fight_visibility_score(camera.get_camera_transform(),
+		actual_a.get("rect",Rect2()),actual_b.get("rect",Rect2()),visibility_context)
 	_fight_camera_solution["clock"] = "final_idle_after_physics_follow_and_roll"
 	return true
 
@@ -4823,3 +4829,118 @@ func arena_focus() -> Vector3:
 	if _player != null:
 		return _player.global_position
 	return Vector3.ZERO
+
+
+## Read actual occupied HUD geometry; no panel fade, layout or visibility is
+## changed by the camera. The Canvas transform keeps the rectangles correct
+## for the current viewport rather than assuming the scene's original offsets.
+func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
+	var extent := camera.get_viewport().get_visible_rect().size
+	var rectangles: Array[Rect2] = []
+	var hud_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
+	var invalid_hud: Array[String] = []
+	var hud := (_camera_rig as Node).get_parent().get_node_or_null(^"CombatHUD")
+	var controls: Array[Control] = []
+	if hud != null:
+		for path: String in cfg.get("hud_paths", []):
+			var control := hud.get_node_or_null(NodePath(path)) as Control
+			if control != null:
+				controls.append(control)
+			else:
+				hud_valid = false
+				invalid_hud.append(path)
+		for property: String in cfg.get("hud_dynamic_controls", []):
+			var value: Variant = hud.get(property)
+			if value is Control: controls.append(value)
+	var margin := clampf(float(cfg.get("hud_margin_px", 12.0)), 0.0, 64.0)
+	if not is_finite(margin): hud_valid = false
+	for control: Control in controls:
+		if not control.is_visible_in_tree(): continue
+		if not control.size.is_finite():
+			hud_valid = false
+			continue
+		if control.size.x<=0.0 or control.size.y<=0.0: continue
+		var transform := control.get_global_transform_with_canvas()
+		if not transform.x.is_finite() or not transform.y.is_finite() or not transform.origin.is_finite():
+			hud_valid = false
+			continue
+		if not extent.is_finite() or extent.x<=0.0 or extent.y<=0.0: continue
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		var finite_corners: bool = true
+		for corner: Vector2 in [Vector2.ZERO, Vector2(control.size.x,0.0), control.size, Vector2(0.0,control.size.y)]:
+			var point := transform * corner
+			if not point.is_finite():
+				finite_corners = false
+				break
+			lo = lo.min(point)
+			hi = hi.max(point)
+		if not finite_corners:
+			hud_valid = false
+			continue
+		var rect := Rect2((lo-Vector2.ONE*margin)/extent, (hi-lo+Vector2.ONE*margin*2.0)/extent)
+		if rect.has_area(): rectangles.append(rect)
+	var occluders: Array = []
+	var overflow: bool = false
+	var centre := (_ally_body.global_position+_wild.global_position)*0.5
+	var radius := clampf(float(cfg.get("occluder_radius_m", 80.0)), 1.0, 200.0)
+	var cap := clampi(int(cfg.get("occluder_limit", 32)), 1, 64)
+	for candidate: Node in get_tree().get_nodes_in_group(&"creature_voice"):
+		if not candidate is Node3D or candidate==_ally_body or candidate==_wild \
+			or not candidate.is_inside_tree() or candidate.is_queued_for_deletion() \
+			or not (candidate as Node3D).is_visible_in_tree() \
+			or not candidate.has_method("model_pivot") \
+			or (candidate as Node3D).global_position.distance_squared_to(centre)>radius*radius: continue
+		var bounds := _body_render_bounds(candidate as Node3D)
+		var model := candidate.call("model_pivot") as Node3D
+		if bounds.size.is_zero_approx() or not is_instance_valid(model) or not model.is_visible_in_tree(): continue
+		if occluders.size()==cap:
+			overflow = true
+			break
+		occluders.append({"box":bounds, "pose":model.global_transform})
+	# Never silently drop a foreground body at the budget. The view is marked
+	# unavailable until a fully checked candidate can be built within budget.
+	# The first additional confirmed body marks overflow; retain the checked
+	# bounded set for diagnostics without scanning any remaining bodies.
+	var subjects: Array[Vector3] = []
+	for body: Node3D in [_ally_body, _wild]:
+		var world := _body_world_bounds(body)
+		var base := Vector3(body.global_position.x,world.position.y,body.global_position.z)
+		var facing: Vector3 = body.call("facing")
+		subjects.append(OCCLUSION_FADE.head_point(base,world.size,facing,
+			clampf(float(cfg.get("head_forward_fraction",0.35)),0.0,1.0),
+			clampf(float(cfg.get("head_height_fraction",0.8)),0.1,1.0)))
+		subjects.append(base+Vector3.UP*world.size.y*clampf(float(cfg.get("torso_height_fraction",0.5)),0.1,0.9))
+	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
+		"overflow":overflow,"hud_available":hud!=null and hud_valid,
+		"invalid_hud_paths":invalid_hud,"viewport":extent}
+
+## Sight checks use the existing ellipsoid helper already used to protect
+## creature faces in this manager. This inscribed ellipsoid is an approximate
+## visibility guard, not proof of complete mesh silhouettes. Fresh blind
+## pixel review remains required. They move only the camera, never a body.
+func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2,
+		context: Dictionary) -> Dictionary:
+	var hud_overlap := 0.0
+	for occupied: Rect2 in context.hud_rects:
+		for subject: Rect2 in [ally_rect,foe_rect]:
+			hud_overlap += subject.intersection(occupied).get_area()
+	var hidden := 0
+	if not bool(context.overflow):
+		for subject: Vector3 in context.subjects:
+			for occluder: Dictionary in context.occluders:
+				if OCCLUSION_FADE.segment_hits_ellipsoid(transform.origin,subject,occluder.pose,occluder.box):
+					hidden += 1
+					break
+	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
+	var sight_clear: bool = not bool(context.overflow) and hidden==0
+	var occupied_records: Array = []
+	for rect: Rect2 in context.hud_rects:
+		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
+	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
+		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
+		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
+		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
+		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,
+		"occluder_count":context.occluders.size(),
+		"penalty":hud_overlap+float(hidden)+(1.0 if bool(context.overflow) or not bool(context.hud_available) else 0.0)}

@@ -50,6 +50,26 @@
   "fight": {
     "_comment": "F21#4 presentation framing from both measured rendered bounds. All nine pair offsets preserve actual body scale. Solver diagnostics do not replace the code-blind size-matrix judge. Spring-arm/world sweep and manual-look grace remain authoritative for the local camera.",
     "enabled": true,
+    "readability": {
+      "_comment": "Camera only: every whole actor projected rectangle must clear actual occupied HUD panels plus measured pixel margin; head and torso rays must clear visible foreground creature ellipsoids. No HUD fade, hidden bystanders, model scaling or collision changes.",
+      "hud_margin_px": 12.0,
+      "hud_paths": [
+        "Root/EnemyPanel",
+        "Root/AllyPanel",
+        "Root/GridPanel",
+        "Root/OrbsPanel"
+      ],
+      "hud_dynamic_controls": [
+        "_party_strip",
+        "_orb_cluster",
+        "_effect_banner"
+      ],
+      "occluder_radius_m": 80.0,
+      "occluder_limit": 32,
+      "head_forward_fraction": 0.35,
+      "head_height_fraction": 0.8,
+      "torso_height_fraction": 0.5
+    },
     "size_classes": {
       "small_max_m": 2.5,
       "normal_max_m": 5.0
