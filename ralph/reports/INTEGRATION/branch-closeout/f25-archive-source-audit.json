@@ -1,0 +1,38 @@
+{
+  "head": "426de65195cafa5a5c7659eb514b7a590fe6348b",
+  "branch": "tb/f25",
+  "feature_head": "66b24e8aa01e9a6f51cf4b985e14fdfde9a71de7",
+  "failed_integration_head": "1fdf209383252556a67fc32a55ae954ddcf1a5a4",
+  "ancestor": true,
+  "feature_worktree_clean": true,
+  "all_original_cue_mappings_preserved": 175,
+  "cue_composition_findings": [
+    {
+      "cue": "vfx_stone_throw_launch",
+      "original_feature_path": "res://assets/vfx/audio/stone_throw_launch.wav",
+      "failed_integration_has_cue": false,
+      "current_path_matches_original_feature": true,
+      "wave_sha256": "3e8b736b60e86065de4a00e8689645e78002753e2a6d69e073b2a9b80476982e"
+    },
+    {
+      "cue": "vfx_stone_throw_travel",
+      "original_feature_path": "res://assets/vfx/audio/stone_throw_travel.wav",
+      "failed_integration_has_cue": false,
+      "current_path_matches_original_feature": true,
+      "wave_sha256": "d55cc77e8758cb9cba810148e5da901c98640658bcd3ec23b96dbdd24f038b82"
+    },
+    {
+      "cue": "vfx_stone_throw_launch_travel",
+      "original_feature_path": "res://assets/vfx/audio/stone_throw_launch_travel.wav",
+      "failed_integration_has_cue": false,
+      "current_path_matches_original_feature": true,
+      "wave_sha256": "42622c1eaa546262bae0f4567766955e8db53d5bc785985356d935c979aa3194"
+    }
+  ],
+  "unchanged_test_sha256": "7f1e89664968d058ac72a90712137b1aff7d12d7fd9c4b220674e4b63e8f0a23",
+  "test_provenance": "Existing assembled test, byte-identical between failed CI and current candidate; not present in the original F25 feature tree. No assertion modified.",
+  "actual_named_clean_batch_head": "87aa762fe5be",
+  "actual_batch_raw_sha256": "56706547966bd3fa888aa846dc0353bde35055113d67da27d63236fb95761654",
+  "actual_batch": "76 tests, 1898 assertions, zero failures and engine/cleanup errors; all five unchanged Move Effects tests passed",
+  "scope": "The original F25 cue mapping contains all three keys rejected by the failed integration; the failed assembled audio config omitted them. Their restored original mapping and byte-identical assets pass the unchanged tests. No F25-owned source failure remains attributed in the recorded CI failure excerpts. This permits sidebar archive under the user override, without criterion credit/main landing/full-CI acceptance."
+}

@@ -9,39 +9,50 @@
   "archived": [
     {
       "threadId": "01a0f52e-4cbe-79b0-82d4-31dc392af2cd",
-      "title": "F24 — Tether Commands, complete feature…",
+      "title": "F24 \u00e2\u20ac\u201d Tether Commands, complete feature\u00e2\u20ac\u00a6",
       "branch": "tb/f24",
       "head": "5e0481bb5ac80b17906e7b2756251766d6678c0b",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f512-ab97-7c93-a96c-45705ff3d26a",
-      "title": "F28 — Masters, breakthroughs and feasts",
+      "title": "F28 \u00e2\u20ac\u201d Masters, breakthroughs and feasts",
       "branch": "tb/f28",
       "head": "a07c26cc5866d4845f8dd7c76e4807e452535173",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f512-b8f3-7522-a5bf-59c1a4a901da",
-      "title": "F30 — Wild traits and Trait Seeds",
+      "title": "F30 \u00e2\u20ac\u201d Wild traits and Trait Seeds",
       "branch": "tb/f30",
       "head": "26b0a1a0e008fe65c0f20fc4ad9c10ee3e4e9227",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f512-a7d7-7f91-b47f-922a18d234d6",
-      "title": "F23 — Move slots, learnsets and mastery",
+      "title": "F23 \u00e2\u20ac\u201d Move slots, learnsets and mastery",
       "branch": "tb/f23",
       "head": "1e24ef9f5037fbd5f8b00cfb5d37dc32f169b943",
       "confirmed_archived": true
     },
     {
       "threadId": "01a0f538-279e-74f1-8b67-e9d9baacab02",
-      "title": "F32 — Materials, essence nodes and farming,…",
+      "title": "F32 \u00e2\u20ac\u201d Materials, essence nodes and farming,\u00e2\u20ac\u00a6",
       "branch": "tb/f32",
       "head": "810881e7a8ff4056eeafd5fbbf30994825fd06fd",
       "confirmed_archived": true
+    },
+    {
+      "threadId": "01a0f546-24b0-7e61-930f-07eae74b0746",
+      "title": "F25 \u2014 Move effects library, complete\u2026",
+      "branch": "tb/f25",
+      "head": "66b24e8aa01e9a6f51cf4b985e14fdfde9a71de7",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "426de65195cafa5a5c7659eb514b7a590fe6348b",
+      "audit": "f25-archive-source-audit.json",
+      "reason": "Original cue mappings were lost in the assembled audio config, not absent in F25. All original mappings are restored; actual unchanged Move Effects tests pass. Complete feature branch ancestry and clean worktree verified."
     }
   ],
-  "retained": "Sessions owning failures or active shared repairs/review remain visible."
+  "retained": "Existing conversations owning failures or active shared repairs/review remain visible. Six archived sessions do not imply main landing or acceptance.",
+  "latest_archive_consolidated_head": "426de65195cafa5a5c7659eb514b7a590fe6348b"
 }
