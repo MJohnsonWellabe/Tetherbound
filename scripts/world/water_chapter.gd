@@ -19,6 +19,7 @@ var _named: RefCounted
 var _dock_prompt: Node3D
 var _dock_pending: Dictionary = {}
 var _dock_retry_seconds := 0.0
+var _dock_afterword: Dictionary = {}
 
 
 func build(owner_world: Node3D) -> void:
@@ -35,6 +36,7 @@ func build(owner_world: Node3D) -> void:
 	world.add_child(cast)
 	npc_bodies = cast.build(world)
 	cast.guarded_event_requested.connect(_on_dialogue_request)
+	cast.authored_conversation_finished.connect(_on_dock_afterword)
 	var mara: Node3D = npc_bodies.get("water_mara")
 	if mara != null and not world.simulation_only:
 		_dock_prompt = preload("res://scripts/world/interactable.gd").new()
@@ -102,11 +104,17 @@ func _on_dialogue_request(event: String, npc_id: String, peer: int) -> void:
 ## Deliberately not a `progression_restore` member: that sweep runs on every
 ## client delta and would swallow a local write not yet forwarded. A flag that
 ## arrives by load/snapshot after build is at worst forwarded once as a no-op.
+func _on_dock_afterword(conversation: String, npc: String, peer: int) -> void:
+	if conversation != "water_mara_post" or npc != "water_mara" or peer != _game.session.local_peer_id() \
+		or not _game.world.flags.has("water_currents_restored"): return
+	_dock_afterword = {"character_id": _game.local.character_id, "world_namespace": _game.world.reward_delivery_namespace}
+
 func dock_departure_ready() -> bool:
 	if _game == null or world == null or world.simulation_only or not is_instance_valid(_dock_prompt) \
 		or _game.current_realm != "water" or not bool(_game.call("is_host")) \
 		or _game.session.config().get("redesign_ending_runtime_enabled") != true \
-		or not _game.world.flags.has("water_currents_restored"): return false
+		or not _game.world.flags.has("water_currents_restored") \
+		or _dock_afterword != {"character_id": _game.local.character_id, "world_namespace": _game.world.reward_delivery_namespace}: return false
 	var actor: Node3D = world.local_rig()
 	return actor != null and actor.global_position.distance_to(_dock_prompt.global_position) <= float(_dock_prompt.get("radius"))
 
