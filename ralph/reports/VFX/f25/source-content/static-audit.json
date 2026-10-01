@@ -1,0 +1,888 @@
+{
+  "scope": "Static source audit; no engine grammar/visual/runtime/authority/performance proof",
+  "moves_path": "D:\\tetherbound\\feature-f25\\.tmp\\f25\\moves-vfx-only.after.json",
+  "moves_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+  "move_count": 94,
+  "archetype_count": 24,
+  "cue_count": 175,
+  "audio_pcm": {
+    "vfx_bubble_volley_impact": {
+      "duration_seconds": 0.38,
+      "peak": 13821,
+      "sha256": "c7632223457f720c69ac2abf351a12537f7573d649623669bb61d9a7e07627d9"
+    },
+    "vfx_bubble_volley_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 12383,
+      "sha256": "15310ef0953577ff927c57173660285518be493be7498587270e074f51930edd"
+    },
+    "vfx_bubble_volley_launch": {
+      "duration_seconds": 0.16,
+      "peak": 13807,
+      "sha256": "7c714011a28bf2be5114e38acf50b0c36dae03836830b4854101130f48079b4c"
+    },
+    "vfx_bubble_volley_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 12855,
+      "sha256": "b19c1082f5a29dbffe188a527ee00b661e6617822d1fa45c66bfd04cfc6f672b"
+    },
+    "vfx_bubble_volley_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 15101,
+      "sha256": "15954e282a3a2a6ed00da6f89272c8d8b3dbf06c3c1dfc46f05514394c341737"
+    },
+    "vfx_bubble_volley_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 13684,
+      "sha256": "ba729d537cec4a67a83b2f13d72935ab46eff8cc1cfe10e5940a19d2f2d94282"
+    },
+    "vfx_bubble_volley_travel": {
+      "duration_seconds": 0.56,
+      "peak": 14768,
+      "sha256": "04076ae010c38e33e4047547fb0bb0d95a5674e914bcb7078684088da777224f"
+    },
+    "vfx_buff_aura_impact": {
+      "duration_seconds": 0.38,
+      "peak": 9556,
+      "sha256": "c548b1e3c385a59d7b0a248a8fc7b403f46f3510dd0f2c6153eb429bb6f35d95"
+    },
+    "vfx_buff_aura_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 8988,
+      "sha256": "3a2cdd7e209ad9401fed8b3b64e4dd5e57a5ac22ea7e3b2bd063d7cac01fedb2"
+    },
+    "vfx_buff_aura_launch": {
+      "duration_seconds": 0.16,
+      "peak": 10151,
+      "sha256": "2167dae0c3f5631edbf663ffefec206b4f640e2d6c3f0e5b598c467ae0bf3c42"
+    },
+    "vfx_buff_aura_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 8489,
+      "sha256": "10bc82c349bf32bc94f58623e6b13646c04148cf6f23c4096fdbd97f32d089f6"
+    },
+    "vfx_buff_aura_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 10397,
+      "sha256": "ed75266b061073accfafa9707e629c62aa07578ce27f4d93e3e6689c84453af2"
+    },
+    "vfx_buff_aura_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 9089,
+      "sha256": "549c52670e2117a24f8eefca4bcb2186f0ce1478ccff89ea302a64c8a795b2cc"
+    },
+    "vfx_buff_aura_travel": {
+      "duration_seconds": 0.56,
+      "peak": 10775,
+      "sha256": "f20869bd5c238d60d7cded2a7b7435df4656d3d262a996dc1e9f890c911babe6"
+    },
+    "vfx_catch_tether_beam_impact": {
+      "duration_seconds": 0.38,
+      "peak": 9728,
+      "sha256": "20bec24dc5cc272542a7bf9d75af2d25357129769f60d61644651e1f878115f5"
+    },
+    "vfx_catch_tether_beam_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 8537,
+      "sha256": "82b43eaffc00dc1963c2360ee4a4d83eeaeb85db9a66a0785324f0f0e590d007"
+    },
+    "vfx_catch_tether_beam_launch": {
+      "duration_seconds": 0.16,
+      "peak": 10085,
+      "sha256": "7315582e8096ad7783b800f2ea1d3ab4f676074d3d8bf063202c1661aea9c31d"
+    },
+    "vfx_catch_tether_beam_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 8209,
+      "sha256": "667b7093f1a03ff4628e1a41ff23f4699fa7a6e6722a3faaf548be6866094db2"
+    },
+    "vfx_catch_tether_beam_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 10405,
+      "sha256": "3628a7bb9f92f10d8bb220e3bb5836e5b3d935f2a61ea1547cf5f4eda26b701f"
+    },
+    "vfx_catch_tether_beam_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 9520,
+      "sha256": "b08ebe929ec522b52a6b61e83783793d612b66b1150167bcc9a9193c69d2dacb"
+    },
+    "vfx_catch_tether_beam_travel": {
+      "duration_seconds": 0.56,
+      "peak": 11240,
+      "sha256": "8743bd8804712ab45d6cf09186abef0af2c8de5fb5ead3a5bd766bd080c8bee9"
+    },
+    "vfx_chain_lightning_impact": {
+      "duration_seconds": 0.38,
+      "peak": 10552,
+      "sha256": "b811863ae6ea7cf0d1d3929ea6e6eceb6150111dc0578a792cca87a5ee9dc300"
+    },
+    "vfx_chain_lightning_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 9592,
+      "sha256": "98da2d25702bd6d52a4da41abba7966aca839360f3e8fea2a469c82f0233e0c4"
+    },
+    "vfx_chain_lightning_launch": {
+      "duration_seconds": 0.16,
+      "peak": 11269,
+      "sha256": "cb6f77a3edd74c74fd7fe7d381aeacd683799729c8656e67da474c796b62a26b"
+    },
+    "vfx_chain_lightning_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 9532,
+      "sha256": "4669b29843a10d12e0dde8fd18ca7e4f1cd0e5fc43c8577832e15dcb200d5607"
+    },
+    "vfx_chain_lightning_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 12630,
+      "sha256": "4b02fb7505dee6e9ced33fd00d707ffc5a9817634f149c3bbab0f307d0963043"
+    },
+    "vfx_chain_lightning_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 10929,
+      "sha256": "262d392709201f3378ed8821c79ff4837db4fb71c48c1cee789727b4a5796883"
+    },
+    "vfx_chain_lightning_travel": {
+      "duration_seconds": 0.56,
+      "peak": 12014,
+      "sha256": "0302e609d0fea1d77c7458a935834fb29d73b1c8a73ca670494b119945f5bfaa"
+    },
+    "vfx_charge_dash_impact": {
+      "duration_seconds": 0.38,
+      "peak": 15599,
+      "sha256": "2a63883bcc922ca6a5f7027272069aee4fd61d95c6fa69945ceeff8c76401e76"
+    },
+    "vfx_charge_dash_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 13341,
+      "sha256": "212901d63248c6cc5e601cfb352f535ca6585b673a9a09b902ee2e87d189246c"
+    },
+    "vfx_charge_dash_launch": {
+      "duration_seconds": 0.16,
+      "peak": 15366,
+      "sha256": "0e94c0a3e36736a000b2971b9ea15936a11b2222d82252cc977b0ce5eda57876"
+    },
+    "vfx_charge_dash_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 13471,
+      "sha256": "969fad69bf08fbd9f85cae1afbe5f762e83ae80c2c8b6dfa9fab41e4a72e4be8"
+    },
+    "vfx_charge_dash_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16912,
+      "sha256": "e5b10e9d6c67f24d4c0dbc006646e61d7bad6bcc98e03aeb9fca125023976a60"
+    },
+    "vfx_charge_dash_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 15260,
+      "sha256": "47039e2a8510f91960e993c5f893b873cc56cc98ede8dba77be395e0107dec67"
+    },
+    "vfx_charge_dash_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16845,
+      "sha256": "d8842dc3f2134d183a6369462572a307ebc95853aeaacfeedf46a7b428f6f903"
+    },
+    "vfx_debuff_hex_impact": {
+      "duration_seconds": 0.38,
+      "peak": 9695,
+      "sha256": "cfc026c5d874a7d60d6e49d1e2f5104f5055193f8d677e1e1fadb9932d4afb78"
+    },
+    "vfx_debuff_hex_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 9901,
+      "sha256": "1b863ba32a17cd60c5f4f58c001c75f58ee06dfcd1f7fe11daa3bdba98d7da2b"
+    },
+    "vfx_debuff_hex_launch": {
+      "duration_seconds": 0.16,
+      "peak": 10158,
+      "sha256": "b4b0bdd5aa2d36b01194e816e71f64a392be1a3cb79ed2cb03d8df5e1ca886a8"
+    },
+    "vfx_debuff_hex_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 9307,
+      "sha256": "3690ebd92c21db826832bcaf24ae6a0c8313e1026ca729ccc82a723ba8bf39d8"
+    },
+    "vfx_debuff_hex_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 11284,
+      "sha256": "c1070cf1aee11e98ccad44c9edd15668f5aa1e94d47cd549cc2c2a7c0ddfb9f9"
+    },
+    "vfx_debuff_hex_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 9875,
+      "sha256": "8acf11cb56038e9dccf75c87216b4c758db3ebc6225302f6ab9b2f3ba1f182c5"
+    },
+    "vfx_debuff_hex_travel": {
+      "duration_seconds": 0.56,
+      "peak": 10548,
+      "sha256": "6c00e7e6ac5bbcf1828d506cab573f2f706d7b8bc6e8b5fbb457398afcb51d29"
+    },
+    "vfx_ember_burst_impact": {
+      "duration_seconds": 0.38,
+      "peak": 13214,
+      "sha256": "2613c18c6b289fde1a9811413633152421897562d5c41c9200eb3f5bd5d410d6"
+    },
+    "vfx_ember_burst_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 12294,
+      "sha256": "0d413f23366561f97465a8e73ec68ccbb99529493f2120192853dce3da1cc4bd"
+    },
+    "vfx_ember_burst_launch": {
+      "duration_seconds": 0.16,
+      "peak": 12273,
+      "sha256": "c666175905944940f5f12b2ecbe092d145be2120c485fa942eee0de4d89c3ff1"
+    },
+    "vfx_ember_burst_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 12674,
+      "sha256": "d2b3e6780bb3df12bddab9586cc17d9aa1cc6e2c1cc0280e36985c950a8f2456"
+    },
+    "vfx_ember_burst_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 13897,
+      "sha256": "cadedbd48ff7b2574f5ecc3497f1ecbf44776664d41b42860243bfecb08317f5"
+    },
+    "vfx_ember_burst_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 13110,
+      "sha256": "e378eefcd194c0d0fc407e27d47ccd23e3988ef36527846a7306c5e7a3c0bd6c"
+    },
+    "vfx_ember_burst_travel": {
+      "duration_seconds": 0.56,
+      "peak": 13847,
+      "sha256": "11b308726028a9c7c23212f6723da12f1cbc64696466665db2fa366231f2e360"
+    },
+    "vfx_fireball_impact": {
+      "duration_seconds": 0.38,
+      "peak": 12901,
+      "sha256": "5cac47696c527e600b3483e57648350cd65e923882f6d2932d7a90819858a34b"
+    },
+    "vfx_fireball_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 12116,
+      "sha256": "6dbd2969d15ea34274ee2c2267fbda9afdfc8096e67c5ed42484615c5f656a48"
+    },
+    "vfx_fireball_launch": {
+      "duration_seconds": 0.16,
+      "peak": 14090,
+      "sha256": "b9d9188fd9c9da7d16da2fefbaa71be3b3356fd75d95dfba6844e4816383a160"
+    },
+    "vfx_fireball_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 11251,
+      "sha256": "d4afe6f8cf327b36b33395741c8c315a6de6fbb0259acf09e6728e46d702cd19"
+    },
+    "vfx_fireball_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 14537,
+      "sha256": "cee5e9d0719c7943bafa7d490e164f78e6ee9b1ce499c3a71f70d79f0de75404"
+    },
+    "vfx_fireball_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 13098,
+      "sha256": "58645c591f6c012b6e564ed0caea2a8ef8257014d698e6468e3c7285bb64a2f9"
+    },
+    "vfx_fireball_travel": {
+      "duration_seconds": 0.56,
+      "peak": 15100,
+      "sha256": "98dce3ef95966f8be25afbd8f1d5a67296697b4973ac5ad43afda311718c05d0"
+    },
+    "vfx_flame_cone_impact": {
+      "duration_seconds": 0.38,
+      "peak": 13941,
+      "sha256": "453e5de868f7ee2c2141d4e6ef09099553767b744151c0a0653b74fd5ef13887"
+    },
+    "vfx_flame_cone_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 10796,
+      "sha256": "b86567a2819a07b6ef4e0577f1c2f252cc4acd543d8c369d8fe7a1f1a78bc97e"
+    },
+    "vfx_flame_cone_launch": {
+      "duration_seconds": 0.16,
+      "peak": 13978,
+      "sha256": "dad04e0054f9ca201c5049d4905eeb4e6692c0ed60e32c760d9d26827e1a5d91"
+    },
+    "vfx_flame_cone_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 11032,
+      "sha256": "f51eb3d6523e50771bf45d0bdfd9833e6f4c68ac025e10fb1e943634b293eaac"
+    },
+    "vfx_flame_cone_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 13600,
+      "sha256": "70a1137d3d18df65426958eb0cc985797b08e0121fd1cded57c8ab4517c61365"
+    },
+    "vfx_flame_cone_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 12228,
+      "sha256": "f05f283b2ea0428c68507bf2be60bdaa5c3a62b5aa795e4ffb6fc11ac85b726c"
+    },
+    "vfx_flame_cone_travel": {
+      "duration_seconds": 0.56,
+      "peak": 14377,
+      "sha256": "84ff630447098c239b5db0c9c62804df8c052fc61ccd428c9aca1e7873005912"
+    },
+    "vfx_frost_breath_impact": {
+      "duration_seconds": 0.38,
+      "peak": 10446,
+      "sha256": "87eced16d9d25e66b8a976063c7c6fd38821559aca4646a3119802f0e4e602dc"
+    },
+    "vfx_frost_breath_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 10626,
+      "sha256": "7283d776ecad6acddc18df2fc2dbd2b70a0ce9a8700a4e5ce57dacd88de951e9"
+    },
+    "vfx_frost_breath_launch": {
+      "duration_seconds": 0.16,
+      "peak": 11304,
+      "sha256": "8f021df790a5af7a70b2496a0cc161b566d4c9bee0f9cf4d0fbf6ab29edecfb3"
+    },
+    "vfx_frost_breath_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 11264,
+      "sha256": "8ec55c690f1a0d990c393ff7d6de3a17431995f27e95c95e613cb5e9e53d376e"
+    },
+    "vfx_frost_breath_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 12612,
+      "sha256": "c2b89e8a393a1d64a6af216142697aa45449c3cec8caf2d8f0cb7b80278ebda9"
+    },
+    "vfx_frost_breath_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 11741,
+      "sha256": "9a38bc598bff0b2b4b2389ffe53928e2948e739d54dbe328a97f474b7c10ca92"
+    },
+    "vfx_frost_breath_travel": {
+      "duration_seconds": 0.56,
+      "peak": 13156,
+      "sha256": "4b7a2cdfc7ea7856fcec85ba295a297d06f7bd853c35231f8f1ab7e36a2e7097"
+    },
+    "vfx_guard_flash_impact": {
+      "duration_seconds": 0.38,
+      "peak": 9957,
+      "sha256": "ea5a89f31a4f8c974b65810d2634a0317fe08afaa1090b375d8d581d5928675e"
+    },
+    "vfx_guard_flash_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 9736,
+      "sha256": "04574c90980652b65f2ca3fc5a138cf73a1ad7205beca93b643e74d5210af3c2"
+    },
+    "vfx_guard_flash_launch": {
+      "duration_seconds": 0.16,
+      "peak": 9744,
+      "sha256": "573a93108a56331447168c75fa92d98a7d68d11dc6ea4e5624aa795523fd3908"
+    },
+    "vfx_guard_flash_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 9515,
+      "sha256": "d65ae679ef103204f2572db9a820a32a4e02b0a2e1755c6b69c227dbf96d71b1"
+    },
+    "vfx_guard_flash_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 11134,
+      "sha256": "07f777ae3e9ce7a0f15105a3716473ec8f02bb78c3b50a786c7873100511c297"
+    },
+    "vfx_guard_flash_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 9536,
+      "sha256": "1d078153d76f84f1c4f1c06523104cb5d1a3b7d805260dd9dca720904e56e053"
+    },
+    "vfx_guard_flash_travel": {
+      "duration_seconds": 0.56,
+      "peak": 10961,
+      "sha256": "c28cfc315acf2e0674adbc7cde21b63031ba4bf3abfd9e14d986df43bc127d2e"
+    },
+    "vfx_heal_pulse_impact": {
+      "duration_seconds": 0.38,
+      "peak": 9691,
+      "sha256": "c12ecc35800f979142117e69ff92762ecc0d9757b1e071a33b3b450f458832af"
+    },
+    "vfx_heal_pulse_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 9271,
+      "sha256": "c22fb88e8a233eec3ef0968e7b88e257d5d8d42537d1d92345f23e1ec69ec600"
+    },
+    "vfx_heal_pulse_launch": {
+      "duration_seconds": 0.16,
+      "peak": 10023,
+      "sha256": "98e135966c232c5d35a8ec73f4b9ac35930fb2e228d34bf17a891f2443558316"
+    },
+    "vfx_heal_pulse_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 9144,
+      "sha256": "943d7166c55df335c67f3eda8f4e16a519ddd3fe4ecf93e11364eadcda495b92"
+    },
+    "vfx_heal_pulse_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 10792,
+      "sha256": "a74ee4591376cfa781856e15f69118675308d0efec23fea53c092200f60fc1ce"
+    },
+    "vfx_heal_pulse_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 9672,
+      "sha256": "32f910bf402abe96e59972dcae596602afa570cee398d84c03824b48fa8cf8cf"
+    },
+    "vfx_heal_pulse_travel": {
+      "duration_seconds": 0.56,
+      "peak": 10618,
+      "sha256": "891f4adac9cc93e22c29075a86e029306a4bb275578cd390fb44ac3bec95149e"
+    },
+    "vfx_ice_shard_volley_impact": {
+      "duration_seconds": 0.38,
+      "peak": 16269,
+      "sha256": "4a309a6d97f145c39e9d1899a2729e063a77803342f8b9e40ece1f27e5f44489"
+    },
+    "vfx_ice_shard_volley_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 14005,
+      "sha256": "58b0c929c958c2a6f02bf2e0e532bd1f1748fa8a470e8d9d589872628889a366"
+    },
+    "vfx_ice_shard_volley_launch": {
+      "duration_seconds": 0.16,
+      "peak": 14604,
+      "sha256": "dc8a9a95b214b70f96f5b30628354cf7e0badb9dbf9d98264d46dbcf302a33d5"
+    },
+    "vfx_ice_shard_volley_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 13145,
+      "sha256": "78164dad09903dd05b0d0ce55f5fb57bb266730cb90d1dac8859677665aed7e2"
+    },
+    "vfx_ice_shard_volley_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 17094,
+      "sha256": "45c251c2bec05c26e43a905dc46a418ed66d6435ed78f535bbe796afa2a0328f"
+    },
+    "vfx_ice_shard_volley_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 15539,
+      "sha256": "b97b5a896af0103be2d9cacf5ddd30dcd9aec1755d2b8396ac53dd2f18f1809f"
+    },
+    "vfx_ice_shard_volley_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16593,
+      "sha256": "c80724760a1703e550658d950d6f64ee49562bd002a7bcd5ec0fac63fa9a963a"
+    },
+    "vfx_psychic_pulse_impact": {
+      "duration_seconds": 0.38,
+      "peak": 15917,
+      "sha256": "16a38e4e1e72e1dbabf7ebbeed9cb6c7d9699f5b855834768ba2e0745ba34624"
+    },
+    "vfx_psychic_pulse_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 13088,
+      "sha256": "2b681bff754dbd1adc3311b059b18713f787a87d22f0ddf54aa6bfa54b9db3ba"
+    },
+    "vfx_psychic_pulse_launch": {
+      "duration_seconds": 0.16,
+      "peak": 15206,
+      "sha256": "997671734c689a9aaf742b7503c06d8fc613340115d135077e902812f715b463"
+    },
+    "vfx_psychic_pulse_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 14129,
+      "sha256": "d46e70d827609f9c9d4575db834c1f76e9acf4ab64bead56fe651cce40f4b851"
+    },
+    "vfx_psychic_pulse_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 15627,
+      "sha256": "90f937517025982cd169c5efc961dbd0694e18c53d5df4c47a89b838db6043d3"
+    },
+    "vfx_psychic_pulse_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 15671,
+      "sha256": "ff64408b37ded003023dac05ac941a160e40112bf2ee3d7b17d27ba6f48eea80"
+    },
+    "vfx_psychic_pulse_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16741,
+      "sha256": "4288d6c8df4f9d000798f461b551e2ad1735f257d9c9c7627d49a8323d9c56bf"
+    },
+    "vfx_quake_ring_impact": {
+      "duration_seconds": 0.38,
+      "peak": 14720,
+      "sha256": "0acf9c84118d46632983704ba83ef243994682ecb036729eecf886d052781a91"
+    },
+    "vfx_quake_ring_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 14100,
+      "sha256": "f4847877dfa760b3104232a0b229630ca08cacb40a160dfa415484fc2cb11ea4"
+    },
+    "vfx_quake_ring_launch": {
+      "duration_seconds": 0.16,
+      "peak": 15130,
+      "sha256": "6e997693e1c7b4096e0454a0318fe9cd97f5ddcc8e5b297aa10fa76109799f97"
+    },
+    "vfx_quake_ring_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 13291,
+      "sha256": "3d48a04fcfac2ff535016f754566308a01d8197cb8d6772c513dba1a32531414"
+    },
+    "vfx_quake_ring_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16859,
+      "sha256": "aa907c1ffd54ea8f013123d1c6964ee0e5d025bd934385b5d60dd3eff00cfb51"
+    },
+    "vfx_quake_ring_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 15172,
+      "sha256": "a5f870d88dedfd0c94305b18de69cf10857bff3dad9a49948fd606acc11ae611"
+    },
+    "vfx_quake_ring_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16147,
+      "sha256": "a5b80ec8e7d902f3857d73534425eb3a0985da0178446685bd8336cc8df36e2e"
+    },
+    "vfx_root_stone_spikes_impact": {
+      "duration_seconds": 0.38,
+      "peak": 14782,
+      "sha256": "0e0170f8c0ee547830c74a3f2d920593475e63044a48028bc6e12ef32bfa3529"
+    },
+    "vfx_root_stone_spikes_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 12717,
+      "sha256": "18134fa7a9bdbaffe1b09225e8fe746c8cfb4f127d557e8f453fcdff0902691c"
+    },
+    "vfx_root_stone_spikes_launch": {
+      "duration_seconds": 0.16,
+      "peak": 15202,
+      "sha256": "259f62eb8e1edb92b7ba6202bdc58f8736d4039e36b8a390ea2543bfac4b3f2c"
+    },
+    "vfx_root_stone_spikes_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 13455,
+      "sha256": "8a7779ddf3235c6aa3b3d909a4e64ba15244d76f8ad32870b840ec707f5b90ce"
+    },
+    "vfx_root_stone_spikes_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16855,
+      "sha256": "25e7ec7be3aed16673f2aa6398748bbbf439ac057c1ab891cc7d3c197dfd4698"
+    },
+    "vfx_root_stone_spikes_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 14296,
+      "sha256": "7f927e6c31b8ba198000dcb74356e5bf21bb726441ba3084f9d574051aa258d2"
+    },
+    "vfx_root_stone_spikes_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16825,
+      "sha256": "45fe63a902d6ee5903ad34201a9ca5d04d40e6092e168fb261844a4290df87fe"
+    },
+    "vfx_shadow_bolt_impact": {
+      "duration_seconds": 0.38,
+      "peak": 15628,
+      "sha256": "a9a6e084b2a01f5acd68652ed7ad8c91fe10a1293b2dc9e0b2815a762ae3323e"
+    },
+    "vfx_shadow_bolt_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 13891,
+      "sha256": "e4239fd9a10c54c8e758d5292ae8f26b184e09da61bd7df4c5e0590f0a07b1e1"
+    },
+    "vfx_shadow_bolt_launch": {
+      "duration_seconds": 0.16,
+      "peak": 14580,
+      "sha256": "a4cdeb4995546ea0b78e0e141fc1e40a65c44f8f4b81cb6af251faf865c0b603"
+    },
+    "vfx_shadow_bolt_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 13351,
+      "sha256": "02354f8654927698266dc2459e54727608af51240946c8f37ca9e04f1859f977"
+    },
+    "vfx_shadow_bolt_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16690,
+      "sha256": "a99e6886fb2982e5d73416a1bb3267c60c8911f23b1b4c442dbddf8680f8551a"
+    },
+    "vfx_shadow_bolt_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 14932,
+      "sha256": "a6bb16a7b1d85f31b596ed20c4b8738266232732eee1978eb467b0ac9a0333fb"
+    },
+    "vfx_shadow_bolt_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16243,
+      "sha256": "ba65fa8a032026309cf1a0a1bc0afc7bc004d7d2240fa60cf2628a4f438e445b"
+    },
+    "vfx_sky_lightning_impact": {
+      "duration_seconds": 0.38,
+      "peak": 10549,
+      "sha256": "8af527446fd0a6a0498f0c47ee193720674260d6d04f2a8dd0dd169353adb26f"
+    },
+    "vfx_sky_lightning_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 8464,
+      "sha256": "b67351163e626b3c2932e378521b4a4482b6989f65c48883e7a1e4a7c683917d"
+    },
+    "vfx_sky_lightning_launch": {
+      "duration_seconds": 0.16,
+      "peak": 10990,
+      "sha256": "333429a480f634d10520994053d936673cdcc1c4e4f29e0cc0c6667c19ea8390"
+    },
+    "vfx_sky_lightning_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 8872,
+      "sha256": "aa2c2732060d052c62dbcdc13eadec51058fbd3a9ef79a8b4c58846676874c39"
+    },
+    "vfx_sky_lightning_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 11657,
+      "sha256": "b82c7c5316fd5db8df51b65cc41709472d602e822415ed8b81de1163a5512988"
+    },
+    "vfx_sky_lightning_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 11110,
+      "sha256": "cd6a7f35fdef88a2b442fd5621ca8883a0c971f5ba7123e17136a295c2647f94"
+    },
+    "vfx_sky_lightning_travel": {
+      "duration_seconds": 0.56,
+      "peak": 11760,
+      "sha256": "f78c0fd76906282e7bdb020492439418fc3a53ae0c79985c973292a06149df16"
+    },
+    "vfx_slash_trail_impact": {
+      "duration_seconds": 0.38,
+      "peak": 14880,
+      "sha256": "5b2443ef396d9b72f0202d192376ffebfa56094b9da4035eba4bb8dfddc09bdd"
+    },
+    "vfx_slash_trail_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 13650,
+      "sha256": "47d574c153d1d8f40037245c2897cc0263c528b1fc8d67266babf58b95ce67d4"
+    },
+    "vfx_slash_trail_launch": {
+      "duration_seconds": 0.16,
+      "peak": 15643,
+      "sha256": "d8d5119f7b25f050f78945cd4f3f0ee3d222d5aa6e078c70e6858301ba49f080"
+    },
+    "vfx_slash_trail_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 12872,
+      "sha256": "e24d3568d354a14bc6069382106b9d3bac30b06d3ed591faa13249946dcf7b8d"
+    },
+    "vfx_slash_trail_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 15949,
+      "sha256": "cc514875357e2863c30c0a78e054389ab0333adcaf23cf2dc5200df6746fd61c"
+    },
+    "vfx_slash_trail_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 13869,
+      "sha256": "4de2da0dd7700a65f48af90937d098498ae4b738de0279856f237c6bc3f36307"
+    },
+    "vfx_slash_trail_travel": {
+      "duration_seconds": 0.56,
+      "peak": 17007,
+      "sha256": "4de883a5d3c367d6642a40ce8edea253dd600a2750adfb5b1b3bab4ee93cf89c"
+    },
+    "vfx_stone_boulder_impact": {
+      "duration_seconds": 0.38,
+      "peak": 15236,
+      "sha256": "3d279d1cb90159903705983a51a66e5517db9f06b2510bec64751dbbcbc77ef2"
+    },
+    "vfx_stone_boulder_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 13639,
+      "sha256": "300336cd0197c055cb638b94d14413fb06afdb6a1ed41e388b1e1256c01b7404"
+    },
+    "vfx_stone_boulder_launch": {
+      "duration_seconds": 0.16,
+      "peak": 15583,
+      "sha256": "d318f303f0afe440b919c2ae4d02dd4a538c160ad8cf3085189c23198a0cc6b1"
+    },
+    "vfx_stone_boulder_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 14564,
+      "sha256": "4b1ffc6b2403d660a50df518f9bcdda02752a565ce23ffff76f1e123def2a1df"
+    },
+    "vfx_stone_boulder_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16717,
+      "sha256": "7ff8b4fc80e5205aded4387ea46477c3744049d0921c11310b79c19d647f77c7"
+    },
+    "vfx_stone_boulder_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 15241,
+      "sha256": "83a25244b110b4bd822a69b7e6ed140dfcc1381f95fffd158dd39033f4b8e948"
+    },
+    "vfx_stone_boulder_travel": {
+      "duration_seconds": 0.56,
+      "peak": 16588,
+      "sha256": "f45da1e97d3394133a40160e5484546891d50fc46f96304d5e1d36099256aea7"
+    },
+    "vfx_stone_throw_impact": {
+      "duration_seconds": 0.38,
+      "peak": 14579,
+      "sha256": "94e27c02e4088859998d1f2c7db4b758cfb7892752d7653793efa2d63a99361a"
+    },
+    "vfx_stone_throw_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 11254,
+      "sha256": "f8816296f6e2ea7f028099e7751bfd1f724ac30de7dd227448b6f0f68610fd9f"
+    },
+    "vfx_stone_throw_launch": {
+      "duration_seconds": 0.16,
+      "peak": 15215,
+      "sha256": "3e8b736b60e86065de4a00e8689645e78002753e2a6d69e073b2a9b80476982e"
+    },
+    "vfx_stone_throw_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 11826,
+      "sha256": "3ebdb3bdea32b2ea215740ff2ec6ddda5dfa5e2eb6ace0a22c34ff82c148dfbd"
+    },
+    "vfx_stone_throw_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 14848,
+      "sha256": "42622c1eaa546262bae0f4567766955e8db53d5bc785985356d935c979aa3194"
+    },
+    "vfx_stone_throw_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 11659,
+      "sha256": "477b97700909fab6607f518c772b38adab9478688c37e34ade8948aad9363268"
+    },
+    "vfx_stone_throw_travel": {
+      "duration_seconds": 0.56,
+      "peak": 15624,
+      "sha256": "d55cc77e8758cb9cba810148e5da901c98640658bcd3ec23b96dbdd24f038b82"
+    },
+    "vfx_tidal_wave_impact": {
+      "duration_seconds": 0.38,
+      "peak": 13007,
+      "sha256": "0817d76d5aa0f5146575a5dfed2943b8febf1dece9b1c9e5df255016d5090bf9"
+    },
+    "vfx_tidal_wave_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 11099,
+      "sha256": "8a76d40e2d821c8d3e77a8bfb2de1fc94207dbf204a4c093bef1d8fb7b225b17"
+    },
+    "vfx_tidal_wave_launch": {
+      "duration_seconds": 0.16,
+      "peak": 12758,
+      "sha256": "cdbe5511ccdb6ec8dfccc86301711f7a7f56cf9279081a89734a4d993dbefa82"
+    },
+    "vfx_tidal_wave_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 11464,
+      "sha256": "23521c96d14347d404e6416fc20801c6a339722da9e0a886f5bab507f5caf9b9"
+    },
+    "vfx_tidal_wave_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 14891,
+      "sha256": "f9322e1dc8e22a58082243d539bb0b906be6baf7429ca2002ca9b709efea81ec"
+    },
+    "vfx_tidal_wave_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 12515,
+      "sha256": "b0042f91bffa94a0ecd11c8396418e1ff80c54d0d74903fa21ad11dcddd76d75"
+    },
+    "vfx_tidal_wave_travel": {
+      "duration_seconds": 0.56,
+      "peak": 15531,
+      "sha256": "e0e8fcca750a4ceb6fc8c79aa174a1b3c638c2cfa182c798dc1e283b20c7eda1"
+    },
+    "vfx_tornado_impact": {
+      "duration_seconds": 0.38,
+      "peak": 11918,
+      "sha256": "adb3e9e081e8f4c91f0c1beb3471751f0f6504155014fd036087ab70edd1f20d"
+    },
+    "vfx_tornado_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 10191,
+      "sha256": "1a0605c862b59c176cf5be98225aeaafb2d987e98035b1512119a0886226b92b"
+    },
+    "vfx_tornado_launch": {
+      "duration_seconds": 0.16,
+      "peak": 11366,
+      "sha256": "73f6555c7521249d1d0ccc57135dbde81df98f8c2bcf5c89d4925c3e07d7d68a"
+    },
+    "vfx_tornado_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 10396,
+      "sha256": "d578795dfc1d6b481c311d42e7149dbc356f041bd07309bd04177fb2d9640902"
+    },
+    "vfx_tornado_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 12833,
+      "sha256": "febb3b982653d718c28a6299b6f88e9cf729c2ec39482d357443c045afcb89f3"
+    },
+    "vfx_tornado_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 11712,
+      "sha256": "82d2e8254cf2ed524712bbb47c6ee537f7d2aff9e842300e623c2e5af7569738"
+    },
+    "vfx_tornado_travel": {
+      "duration_seconds": 0.56,
+      "peak": 12458,
+      "sha256": "566e080fda4285a9f56f83fd32f60d70847715369cf6c4ee5cd3ce3553a3fb47"
+    },
+    "vfx_water_jet_impact": {
+      "duration_seconds": 0.38,
+      "peak": 13875,
+      "sha256": "3cb7103cc04550ee9e05446d3bc7492d2aba7ca5ac5630545c1b438d17005af0"
+    },
+    "vfx_water_jet_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 11788,
+      "sha256": "371da7d566556108647c9ca3f9eebd8dbdf133024e94f021e635c9ab81580176"
+    },
+    "vfx_water_jet_launch": {
+      "duration_seconds": 0.16,
+      "peak": 14290,
+      "sha256": "e8a0f06c7f3d720f371671f125b6c782615d6289fd3f85ae143b84cc8ee042f4"
+    },
+    "vfx_water_jet_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 11330,
+      "sha256": "fddc35d9c99b9fedaa5d38074bd70b0b62844d0142f6372b760b7b686a0614b5"
+    },
+    "vfx_water_jet_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 14812,
+      "sha256": "d9c8fa8a1dfdb9c5a7144f94ac5d874f651893ad63a4634b45af3bfc2f43a818"
+    },
+    "vfx_water_jet_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 12381,
+      "sha256": "e405741d931d250ef0d585dcab17026f428c211001523f16aa759fe6aaae5bb4"
+    },
+    "vfx_water_jet_travel": {
+      "duration_seconds": 0.56,
+      "peak": 15510,
+      "sha256": "b31899016e2e7e9d8131620100fe57ab4c066aa168492f7d2c09e868192fa114"
+    },
+    "vfx_wind_blade_impact": {
+      "duration_seconds": 0.38,
+      "peak": 11428,
+      "sha256": "725917f4df8e42147a8e92722abb534d1fbad9905f15224c3fcb1eba6d7fff64"
+    },
+    "vfx_wind_blade_impact_mastery": {
+      "duration_seconds": 0.38,
+      "peak": 10329,
+      "sha256": "bcc01ddbb9d87170a555890c7919c722b2e92a2743b3caa93ea54c87f61726d5"
+    },
+    "vfx_wind_blade_launch": {
+      "duration_seconds": 0.16,
+      "peak": 11576,
+      "sha256": "5e397b3724d275e88eb1c4a13e82a745a15c1516e5001385b88f7492c0a51ff3"
+    },
+    "vfx_wind_blade_launch_mastery": {
+      "duration_seconds": 0.16,
+      "peak": 10866,
+      "sha256": "8e6628196a05645546fd9c48b13b37713ba6dbe0abb12dd745a7b594c768d45e"
+    },
+    "vfx_wind_blade_launch_travel": {
+      "duration_seconds": 0.56,
+      "peak": 13352,
+      "sha256": "9ae3a7672f55a77f30910873ef17b1bafd9ec1443bbb3c12b23d63ee530c12a4"
+    },
+    "vfx_wind_blade_launch_travel_mastery": {
+      "duration_seconds": 0.56,
+      "peak": 10981,
+      "sha256": "f9a6c26994abf8fda4ac1232296570eea3f2f46513c0614992a1331b64a7e6d6"
+    },
+    "vfx_wind_blade_travel": {
+      "duration_seconds": 0.56,
+      "peak": 12656,
+      "sha256": "924ae6cc499189cf3310416f2f34a29f0aa353f484f49ce410f4e2093cd376d7"
+    }
+  },
+  "source_reference_files": 23,
+  "failures": [],
+  "pass": true
+}

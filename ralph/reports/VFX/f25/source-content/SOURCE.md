@@ -1,0 +1,11 @@
+# F25 inactive source/content candidate
+
+Game source `a93815e497dfd17f0b4c985797d95ab229ac119f` on `tb/f25`, based on `30fcc38fc591d5df3a7cfb122b9da58445467021`. Effective permissions: full access / approval never. Old `redesign-vfx` source `a9ef7a0328190ec11838aa8ef38663812455d38d` was reused read-only. No engine, check-only, import, render, export, GPU, ImageGen or Meshy ran; no cache was copied.
+
+All 24 archetypes have authored mesh bodies, leased trails/contact debris, impact profiles, sound IDs, finite parameter rows and five mastery profiles. Several profiles use original parametric ribs, tapered slashes, root spires, curling waves, flowing tubes, shards, rocky bodies and fire/ion materials. These are inactive visual content candidates. Prior stone/identity judgments and full-craft FAIL are retained in the old lane, and do not prove this cut or the full player bar. Audible mix and all native family craft still need proof.
+
+Named static mapping/reference/PCM audit passes on the ignored F23 proposal: 94 moves, 24 archetypes, 175 cues. The deliberate missing-archetype witness fails as required. Static GDScript grammar passes for 11 owned scripts; it verifies no Godot type or shader behavior. Independent read-only review passes the inactive owned source after five repaired findings; REVIEW.md records the exact scope and source hashes.
+
+`moves.json` remains F23-owned and untouched here. Exact ignored proposal: `.tmp/f25/moves-vfx-only.patch` / `.blocks.json`, plus `.tmp/f25/mastery-visual-owner.patch`. F23 acknowledged sole-writer integration. It prevents double visual scaling and preserves one mastered boulder; the 31 signature rows only normalize five VFX archetype aliases. All IDs, power, costs, slots, timings and utility/ultimate mechanics remain F23-owned. F35 receives full frozen signature rows through the dynamic facade and owns its entire ultimate library.
+
+SOURCE READINESS: **NOT MET for the integrated experience**. All F25#0–#5 remain **NOT MET**, library OFF. The baseline manager applies HP before travel; canonical accepted-action/current-target arrival, HUD/contact-audio and lifecycle consumers remain shared-owner integrations. `integration-contract.json` names the missing producer calls; `proof-ticket.json` is the single combined ROOT-only unrun ticket. No board, STATE or main write and no acceptance credit.

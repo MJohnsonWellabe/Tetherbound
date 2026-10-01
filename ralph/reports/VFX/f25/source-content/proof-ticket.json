@@ -1,0 +1,56 @@
+{
+  "ticket": "ONE combined F25/F23/F35/ROOT acceptedarrival-and-fullcraft batch",
+  "status": "UNRUN until ROOT integration; exclusiveengine/GPU owner ROOT",
+  "game_source_commit": "a93815e497dfd17f0b4c985797d95ab229ac119f",
+  "proposed_moves_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+  "required_integrated_source": "Freeze exactRoot+F23solewritermetadata+Foundationhostarrival+Director+F35sourceSHAs and worktreehashes beforelaunch",
+  "synthetic_limits": "Fixtures may inspect mapping/budget/lifecycle only. Fixturestarts/teleports/harnessinput disclosed; never countasactualplayerauthority/craftproof.",
+  "batch": [
+    {
+      "part": "mapping/reference",
+      "criteria": [
+        "F25#0",
+        "F25#1"
+      ],
+      "checks": "Run shipped scripts/vfx/validate_move_content.py on ACTUALintegrated moves.json (no --movesproposal); retain negativeunmappedwitness; nativeparseall24body/trail/impact/soundprofilesonLow/Medium."
+    },
+    {
+      "part": "fourkeyordinaryplayeridentities",
+      "criteria": [
+        "F25#2",
+        "F25#5"
+      ],
+      "checks": "Controller-operated PebbleToss3smallstones,RockThrow1boulder,Fireballburningorb+trail+explosion,SkyLightningboltfromabove atmastery1,3,5 inordinarycamera. Originalframes+continuousmotion at1920x1080and1280x800, gameplayenvironments/weather; independentcodeblind fullPalworld/Animo/Valheimbar. Captureallotherfamiliesrepresentativerealpaths; growth visible withoutsilhouette/targetocclusion."
+    },
+    {
+      "part": "hostarrivaldamage",
+      "criteria": [
+        "F25#3"
+      ],
+      "checks": "SAMEF23accepted action observed atbirth/contact/HPdebit/HUDnumber/contactaudio. Noearlydamage/number. Positiveflight+zero/melee/no-damageexceptions. Cancel/refusal/timeout/currenttargetdeath+replacement/stalegeneration+duplicateconfirm/rejoin cases neverhit/spend/awardtwice; currentactor/target andacceptedreceipt hostrechecks. Rendererdisabled/deleted never createsauthoritativehit."
+    },
+    {
+      "part": "fourcreatureMedium",
+      "criteria": [
+        "F25#4"
+      ],
+      "checks": "Worst-case real fourcreature fight withmastery5mix/maxleases/ultimates andmultipleencounterIDs visible. ActualMediumrenderer/preset/P95/P99+fps+particle/light/mesh caps/reclamation. F35shares384decorativepool; exhaustioncullstrailsfirstwhilebodies/contactremain. AlsoCompatibilityfallbacknativeframes; noGPUonlyobject. No estimatedfpspass."
+    },
+    {
+      "part": "twopeercoherence",
+      "criteria": [
+        "F25#3",
+        "F25#4",
+        "F25#5"
+      ],
+      "checks": "Real twoENet peers executeadmittedactions,lateimpact/duplicates/refusal/death/swaps/rejoin; scopeoneplayerreconcilepreservesotherplayerflight. Peers confirmvisiblecontactbeforeacceptednumber, same31ultimate IDs/rank/breakthrough/frozenclock. No clientreportedarrival authorizesHP."
+    }
+  ],
+  "required_evidence": [
+    "exactcommands/rawexit/assertions andfreezehashes",
+    "originalstills+motion+audio logs/frameorder",
+    "actualpreset/renderer/performance telemetry",
+    "independentstrictverdict perliteralF25#0..#5"
+  ],
+  "enable_rule": "Keep libraryOFF untilrealproofandindependentMET. Repair samePR afterfreeze; no blanketunit/fullCIdefault."
+}

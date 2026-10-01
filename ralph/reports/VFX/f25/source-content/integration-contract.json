@@ -1,0 +1,50 @@
+{
+  "game_source_commit": "a93815e497dfd17f0b4c985797d95ab229ac119f",
+  "f23_input_moves_sha256": "3da86de7bd8f45918ce4b9037d7f9bc1cfd0382d512de7a3a2deb0fce6987e6e",
+  "ignored_vfx_proposal_sha256": "7b493539378a2b726fdb719bf02eeffb2a28dd62b9c84549ffbba8172236d35e",
+  "proposed_moves_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375",
+  "moves_writer": "F23 only; no moves.json write in F25",
+  "scope": "94metadata vfx blocks;63ordinary visual owner tags+31ultimate aliasnormalizations",
+  "ordinary_birth": "MoveProjectile.launch(parent,from,to,F23_full_frozen_row,context)",
+  "frozen_fields": [
+    "move_id",
+    "slot",
+    "vfx with mastery_owner=f25 and eightparameters",
+    "mastery_rank1..5",
+    "action_id",
+    "actor_binding.character_id/creature_uid/encounter_id/generation/action"
+  ],
+  "required_context": [
+    "current_actor including SAMEaction atbirth",
+    "travel_seconds finite0..3 from immutableacceptedhostschedule",
+    "source_ground finiteVector3",
+    "target_ground finiteVector3"
+  ],
+  "optional_context": [
+    "target_visual_bounds positivefiniteVector3position/size; invalidoptionalbounds usecontact"
+  ],
+  "seed": "sha256 of SAMEaction_id; localvisualonly; never extraaction/receiptidentity",
+  "mastery": "F23 honors paired effect_tier early-return for ordinarymastery_owner=f25; F25 applies authoredtier once; singleboulder staysone",
+  "zero_delay": "Contactgeometryexistsbeforelaunchreturns; arrived notification deferred or finished earlier by confirm_impact; guarded exactlyonce",
+  "arrival": "Host/currenttargetgeneration checks/cancellation/timeout ownsthesame acceptedreceipt. Build/confirmcontact before HP/HUDnumber. Animation/node removal cannot authorizeHP.",
+  "impact_cue": "MoveProjectile.impact_cue(frozen_row)->{cue_id,path,gain_db}; existingacceptedreceipt owner resolves and plays once aftercontact. Renderer freezes impact_audio_owner=receipt.",
+  "lifecycle": [
+    "cancel_action(tree,action_id)",
+    "cancel_encounter(tree,encounter_id)",
+    "confirm_impact(tree,action_id)",
+    "reconcile_actor(tree,current) scopes SAMEcharacter+encounter thenbody/generation/faint; lateractionalone preservesflight"
+  ],
+  "f35": "Dynamic load res://scripts/vfx/ultimates/ultimate_library.gd only for fullspec.slot=ultimate;31canonicalIDs (19shared12unique),58species12aliases;2.4s=.6windup+1.8recovery, acceptedpresentationbirthclock. F35 owns allultimates files and targethold/root/peer attenuation; no F25stat/control/HPwriter.",
+  "shared_api_compatibility": {
+    "geometry": "shape(kind,size,profile)->Mesh; unchanged oldshape signatures plus opt-in ribs/slash/rootprofiles",
+    "budget": "reserve(encounter_id,impact,trail,cap)->token; allocation(token),release(token); reserve_light/lights_used; existing48ordinary/160ultimate/384encounter/4globalshadowlesslights",
+    "audio": "move_effect_library.config().archetypes[*].sound and AudioManager.section(move_effect_cues); same175IDs"
+  },
+  "missing_producer_integrations": [
+    "CombatManager acceptedaction presentation birth currently passes VFX-only/oldlaunch; must pass fullfrozenrow/context under ROOT ownership.",
+    "Canonical Foundation/EncounterDirector hostarrival commit must recheck currentactor,target,generation and SAMEacceptedreceipt; neverclientarrivalreport or timeoutdamagefallback.",
+    "Acceptedreceipt impact/HUD/audio consumer must call confirm_impact before number and play resolvedcontactcue once.",
+    "Actor/targetdeath,bodyswap,generationchange,encounterexit,refusal/expiry must cancel sameacceptedaction via existingauthoritylifecycle."
+  ],
+  "runtime": "UNRUN; OFF; no acceptance credit"
+}
