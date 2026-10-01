@@ -35,7 +35,7 @@ func _run() -> void:
 		game.progression.set_flag(flag)
 	for species: String in ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]:
 		var member: RefCounted = SPECIES.spawn(species)
-		member.set_level(25, PROGRESSION.config())
+		member.set_level(_fixture_level(), PROGRESSION.config())
 		game.party.add(member)
 	world = SCENE.instantiate()
 	root.add_child(world)
@@ -88,6 +88,10 @@ func _sample_fight() -> void:
 	_phase2_last_sample = now
 	_phase2_shot_pending = true
 	_shot.call_deferred("live-%04d" % now)
+
+
+func _fixture_level() -> int:
+	return 25
 
 
 func _capture(label: String) -> void:

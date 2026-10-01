@@ -1,0 +1,37 @@
+{
+  "status": "PENDING shared ROOT engine queue; commands prepared, none executed",
+  "matrix_commands": [
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=High --source-commit=<CAPTURE_HEAD_SHA> --output=res://.artifacts/f40/baseline-high-r1",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=High --source-commit=<CAPTURE_HEAD_SHA> --output=res://.artifacts/f40/candidate-high-r1 --f40-candidate",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Medium --source-commit=<CAPTURE_HEAD_SHA> --output=res://.artifacts/f40/baseline-medium-r1",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Medium --source-commit=<CAPTURE_HEAD_SHA> --output=res://.artifacts/f40/candidate-medium-r1 --f40-candidate",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method gl_compatibility --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --source-commit=<CAPTURE_HEAD_SHA> --output=res://.artifacts/f40/baseline-low-r1",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method gl_compatibility --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --source-commit=<CAPTURE_HEAD_SHA> --output=res://.artifacts/f40/candidate-low-r1 --f40-candidate"
+  ],
+  "frames_per_preset_per_case": 384,
+  "disclosures": "Catalogue teleports plus explicit offsets, seeded upper-route flags, production clock/weather/camera; no earned campaign or fight. Unsupported/obstructed stands require new matched receipts; image count is not PASS.",
+  "native_type_geometry_command": "godot --headless --path D:/tetherbound/r2-f40 --script tests/run_tests.gd -- --only=test_cloudreach_f40_presentation.gd,test_cloudreach_belvedere_geometry.gd,test_cloudreach_aviary_architecture.gd,test_cloudreach_route_verges.gd",
+  "regression_commands": [
+    "godot --headless --path D:/tetherbound/r2-f40 --script tests/smoke_cloudreach_route_blockers.gd",
+    "godot --headless --path D:/tetherbound/r2-f40 --script tests/smoke_cloudreach_closed_gate_seal.gd",
+    "godot --headless --path D:/tetherbound/r2-f40 --script tests/smoke_cloudreach_fly_training_witness.gd",
+    "godot --headless --path D:/tetherbound/r2-f40 --script tests/smoke_cloudreach_saddle_remount.gd"
+  ],
+  "full_chapter_matrix_command": "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_cloudreach_frame_matrix.gd -- --output=res://.artifacts/f40/chapter-matrix-r1",
+  "real_fight_commands": [
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_fight.gd -- --preset=High --source-commit=<CAPTURE_HEAD_SHA> --output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-baseline-fight-high-r1 --seed=2042",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_fight.gd -- --preset=High --source-commit=<CAPTURE_HEAD_SHA> --output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-candidate-fight-high-r1 --seed=2042 --f40-candidate",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_fight.gd -- --preset=Medium --source-commit=<CAPTURE_HEAD_SHA> --output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-baseline-fight-medium-r1 --seed=2042",
+    "godot --path D:/tetherbound/r2-f40 --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_cloudreach_f40_fight.gd -- --preset=Medium --source-commit=<CAPTURE_HEAD_SHA> --output=res://ralph/reports/VISUAL/phase2/cloudreach/f40-candidate-fight-medium-r1 --seed=2042 --f40-candidate"
+  ],
+  "fight_limitation": "New wrapper prepares current-band L44 fixture and explicit preset/source metadata, reuses legacy real-interaction/input pilot. Runtime success and fixture caps/teams must be reconciled after prior batch; the still matrix does not cover combat.",
+  "additional_required": [
+    "Matched Aviary 400m/100m entry/interior/post-restoration frames on High and Medium",
+    "30s ordinary motion/flight/vegetation/weather contact witness",
+    "independent code-blind full-bar A/B and matched before/after judge",
+    "Ally/device proof owned by ROOT/F26/F49",
+    "all TEN ready and prior batch GREEN ON MAIN before consolidation"
+  ],
+  "rescore_command": "python tools/rescore_cloudreach_f40.py --catalog D:/tetherbound/redesign-board/ralph/reports/VISUAL/phase2/catalog.csv --reviews ralph/reports/R2-F40/independent-reviews.json --output ralph/reports/R2-F40/recaptured-catalog.csv",
+  "rescore_status": "PENDING independent actual native-image review; source-audit retains original scores without inventing new judgments."
+}

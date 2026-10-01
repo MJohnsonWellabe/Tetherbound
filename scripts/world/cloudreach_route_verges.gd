@@ -168,6 +168,8 @@ func build(world: Node3D, routes: Array, cfg: Dictionary) -> void:
 					_stone_count += 1
 		if station_used:
 			_station_count += 1
+		_build_middle_ground(world, station, station_index, cfg.get("middle_ground", {}),
+			rng, buckets)
 
 	_route_count = route_ids.size()
 	var plant_visibility := float(cfg.get("plant_visibility_m", 520.0))
@@ -182,6 +184,48 @@ func build(world: Node3D, routes: Array, cfg: Dictionary) -> void:
 
 func _supported_ground(world: Node3D, at: Vector3) -> float:
 	return float(world.call("_route_detail_ground", at))
+
+
+func _build_middle_ground(world: Node3D, station: Dictionary, index: int, cfg: Dictionary,
+		rng: RandomNumberGenerator, buckets: Dictionary) -> void:
+	if not bool(cfg.get("enabled", false)) or index % maxi(1, int(cfg.get("station_every", 2))) != 0:
+		return
+	var centre: Vector3 = station.centre
+	var right: Vector3 = station.right
+	var forward: Vector3 = station.forward
+	var stone_range := _float_range(cfg.get("stone_scale", [3.4, 5.6]), 3.4, 5.6)
+	var bush_range := _float_range(cfg.get("bush_scale", [1.8, 2.7]), 1.8, 2.7)
+	for side: float in [-1.0, 1.0]:
+		var at := centre + right * side * float(cfg.get("offset_m", 12.0)) \
+			+ forward * side * float(cfg.get("along_offset_m", 7.0))
+		var height := _supported_ground(world, at)
+		if not is_finite(height) or bool(world.call("_inside_settlement_clearance", at)):
+			continue
+		# A centre hit alone can float a large prop across an eroded edge.
+		# Reject the whole mass unless its surrounding support stays level.
+		var supported := true
+		var probe := float(cfg.get("support_radius_m", 3.0))
+		for offset: Vector3 in [right * probe, -right * probe, forward * probe, -forward * probe]:
+			var support := _supported_ground(world, at + offset)
+			if not is_finite(support) or absf(support - height) > float(cfg.get("maximum_support_delta_m", 1.4)):
+				supported = false
+		if not supported:
+			continue
+		at.y = height - float(cfg.get("stone_embed_m", 0.6))
+		var scale := rng.randf_range(stone_range.x, stone_range.y)
+		var stone_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3(scale, scale * 0.85, scale))
+		(buckets["ScreeA" if side < 0.0 else "ScreeB"] as Array).append(Transform3D(stone_basis, at))
+		_stone_count += 1
+		# Keep vegetation on the checked footprint, beside the stone rather
+		# than carpeting the visible path or creating a wall across the view.
+		at += forward * (probe * 0.5)
+		at.y = _supported_ground(world, at)
+		if not is_finite(at.y) or absf(at.y - height) > float(cfg.get("maximum_support_delta_m", 1.4)):
+			continue
+		scale = rng.randf_range(bush_range.x, bush_range.y)
+		var bush_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3.ONE * scale)
+		(buckets["Bush"] as Array).append(Transform3D(bush_basis, at))
+		_plant_count += 1
 
 
 func _prepared_mesh(world: Node3D, scene: PackedScene, foliage: bool, palette_seed: int,
