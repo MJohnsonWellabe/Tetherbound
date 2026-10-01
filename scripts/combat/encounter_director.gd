@@ -1858,6 +1858,8 @@ func _on_net_session_ended(_reason: Variant = null) -> void:
 	_cancel_pending_shared_join("", false)
 	_cancel_pending_tournament_join("", false)
 	_end_shared_guest_presentation()
+	if _legacy_mirror != null and is_instance_valid(_legacy_mirror) and _manager != null:
+		_manager.call("end_shared_opponent_presentation", _legacy_mirror)
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
 		_dispose_shared_host_fight(encounter_id, false)
 	_creature_proxies.clear()
@@ -2116,6 +2118,8 @@ func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		var encounter_id := str(rec.get("encounter_id", ""))
 		if _manager != null and bool(_manager.call("is_fighting")) \
 				and str(_manager.get("_encounter_id")) == encounter_id:
+			if int(rec.get("seq", 0)) < int(_manager.get("_encounter_seq")):
+				return
 			_encounter = rec
 			_refresh_legacy_mirror(rec.get("opponent", {}) as Dictionary)
 			_manager.call("apply_encounter_record", rec, quiet)
@@ -4760,6 +4764,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			"foot_position": [feet.x, feet.y, feet.z],
 			"facing": [facing.x, facing.y, facing.z],
 			"round": _trainer_sent,
+			"round_continues": not _trainer_queue.is_empty(),
 		})
 	if not opponent_owned:
 		_shared_body_generation += 1
@@ -5584,6 +5589,7 @@ func _refresh_legacy_mirror(opponent: Dictionary) -> void:
 			return
 		_legacy_mirror_key = key
 		_legacy_mirror_pose_seq = 0
+		_legacy_mirror.set("last_pose_seq", 0)
 		# The manager captured the previous member's instance at `begin()`;
 		# the round continues against the new one without a second begin.
 		if _manager != null:

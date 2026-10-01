@@ -1047,6 +1047,9 @@ func close(encounter_id: String) -> void:
 	if rec.is_empty():
 		return
 	rec["phase"] = "done"
+	var opponent: Dictionary = rec.get("opponent", {})
+	if opponent.has("round_continues"):
+		opponent["round_continues"] = false
 	_strike_authority.erase(encounter_id)
 	_strike_receipts.erase(encounter_id)
 	seq += 1
@@ -1107,7 +1110,7 @@ static func _opponent_row(opponent: Dictionary) -> Dictionary:
 	# still reads the established fields above.
 	for key: String in ["card", "foot_position", "facing", "body_generation",
 			"presentation_seq", "cue_serial", "telegraph_count", "strike_count", "cue",
-			"body_scale", "alpha", "round"]:
+			"body_scale", "alpha", "round", "round_continues"]:
 		if opponent.has(key):
 			out[key] = opponent[key].duplicate(true) if opponent[key] is Dictionary \
 				or opponent[key] is Array else opponent[key]
