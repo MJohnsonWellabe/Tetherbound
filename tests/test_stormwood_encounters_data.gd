@@ -39,7 +39,7 @@ func test_tables_are_replaceable_and_obey_role_and_crown_limits() -> void:
 		var levels: Array = table.get("level_range", [])
 		assert_eq(levels.size(), 2)
 		if str(table.get("id", "")) == "crown_surge":
-			assert_true(int(levels[1]) <= 40, "ordinary Crown Surge field stays at the exit-level cap")
+			assert_eq(int(levels[1]), 50, "RD-10/F19: Crown Surge ends at L50 before Deepwood/Dynamo; ordinary field never exceeds the region exit")
 		for role: Dictionary in table.get("roles", []):
 			var species := str(role.get("placeholder_species", ""))
 			assert_true(SPECIES.has(species), "missing placeholder species " + species)

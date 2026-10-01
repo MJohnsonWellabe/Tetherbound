@@ -679,7 +679,7 @@
         -20.0
       ],
       "critical": false,
-      "ace_level": 43,
+      "ace_level": 21,
       "rank": "local",
       "body_profile": "young_trainer",
       "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
@@ -689,12 +689,12 @@
         {
           "trainer_owned": true,
           "species": "torrentoad",
-          "level": 43
+          "level": 20
         },
         {
           "trainer_owned": true,
           "species": "mosshell",
-          "level": 43
+          "level": 21
         }
       ],
       "intro_conversation": "water_trainer_pell_trial_intro",
@@ -713,7 +713,7 @@
         -30.0
       ],
       "critical": false,
-      "ace_level": 44,
+      "ace_level": 22,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -723,12 +723,12 @@
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 44
+          "level": 21
         },
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 44
+          "level": 22
         }
       ],
       "intro_conversation": "water_trainer_fen_intro",
@@ -747,7 +747,7 @@
         -40.0
       ],
       "critical": true,
-      "ace_level": 45,
+      "ace_level": 23,
       "rank": "grunt",
       "body_profile": "grunt_a",
       "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
@@ -757,12 +757,12 @@
         {
           "trainer_owned": true,
           "species": "cragclaw",
-          "level": 45
+          "level": 22
         },
         {
           "trainer_owned": true,
           "species": "mirejaw",
-          "level": 45
+          "level": 23
         }
       ],
       "intro_conversation": "water_trainer_lysa_intro",
@@ -781,7 +781,7 @@
         -20.0
       ],
       "critical": false,
-      "ace_level": 45,
+      "ace_level": 23,
       "rank": "local",
       "body_profile": "young_trainer",
       "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
@@ -791,12 +791,12 @@
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 45
+          "level": 22
         },
         {
           "trainer_owned": true,
           "species": "torrentoad",
-          "level": 45
+          "level": 23
         }
       ],
       "intro_conversation": "water_trainer_daro_intro",
@@ -815,7 +815,7 @@
         -30.0
       ],
       "critical": true,
-      "ace_level": 46,
+      "ace_level": 24,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -825,12 +825,12 @@
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 46
+          "level": 23
         },
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 46
+          "level": 24
         }
       ],
       "intro_conversation": "water_trainer_tovin_intro",
@@ -849,7 +849,7 @@
         -40.0
       ],
       "critical": false,
-      "ace_level": 46,
+      "ace_level": 24,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -859,12 +859,12 @@
         {
           "trainer_owned": true,
           "species": "mosshell",
-          "level": 46
+          "level": 23
         },
         {
           "trainer_owned": true,
           "species": "cragclaw",
-          "level": 46
+          "level": 24
         }
       ],
       "intro_conversation": "water_trainer_keir_intro",
@@ -883,7 +883,7 @@
         -20.0
       ],
       "critical": false,
-      "ace_level": 47,
+      "ace_level": 25,
       "rank": "local",
       "body_profile": "young_trainer",
       "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
@@ -893,12 +893,12 @@
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 47
+          "level": 24
         },
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 47
+          "level": 25
         }
       ],
       "intro_conversation": "water_trainer_rune_intro",
@@ -917,7 +917,7 @@
         -30.0
       ],
       "critical": true,
-      "ace_level": 47,
+      "ace_level": 25,
       "rank": "grunt",
       "body_profile": "grunt_b",
       "model": "res://assets/characters/grunt_b/grunt_b_lod0.glb",
@@ -927,12 +927,12 @@
         {
           "trainer_owned": true,
           "species": "mirejaw",
-          "level": 47
+          "level": 24
         },
         {
           "trainer_owned": true,
           "species": "mangrove_monitor",
-          "level": 47
+          "level": 25
         }
       ],
       "intro_conversation": "water_trainer_solm_intro",
@@ -951,7 +951,7 @@
         -40.0
       ],
       "critical": true,
-      "ace_level": 48,
+      "ace_level": 26,
       "rank": "grunt",
       "body_profile": "grunt_c",
       "model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
@@ -961,12 +961,12 @@
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 48
+          "level": 25
         },
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 48
+          "level": 26
         }
       ],
       "intro_conversation": "water_trainer_irva_intro",
@@ -985,7 +985,7 @@
         -20.0
       ],
       "critical": false,
-      "ace_level": 47,
+      "ace_level": 25,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -995,12 +995,12 @@
         {
           "trainer_owned": true,
           "species": "torrentoad",
-          "level": 47
+          "level": 24
         },
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 47
+          "level": 25
         }
       ],
       "intro_conversation": "water_trainer_nel_intro",
@@ -1019,7 +1019,7 @@
         -30.0
       ],
       "critical": true,
-      "ace_level": 48,
+      "ace_level": 26,
       "rank": "grunt",
       "body_profile": "grunt_a",
       "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
@@ -1029,12 +1029,12 @@
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 48
+          "level": 25
         },
         {
           "trainer_owned": true,
           "species": "mirejaw",
-          "level": 48
+          "level": 26
         }
       ],
       "intro_conversation": "water_trainer_oswin_intro",
@@ -1053,7 +1053,7 @@
         -40.0
       ],
       "critical": false,
-      "ace_level": 49,
+      "ace_level": 27,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -1063,12 +1063,12 @@
         {
           "trainer_owned": true,
           "species": "mosshell",
-          "level": 49
+          "level": 26
         },
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 49
+          "level": 27
         }
       ],
       "intro_conversation": "water_trainer_tal_intro",
@@ -1087,7 +1087,7 @@
         -20.0
       ],
       "critical": true,
-      "ace_level": 50,
+      "ace_level": 28,
       "rank": "grunt",
       "body_profile": "grunt_b",
       "model": "res://assets/characters/grunt_b/grunt_b_lod0.glb",
@@ -1097,12 +1097,12 @@
         {
           "trainer_owned": true,
           "species": "mangrove_monitor",
-          "level": 50
+          "level": 27
         },
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 50
+          "level": 28
         }
       ],
       "intro_conversation": "water_trainer_sera_intro",
@@ -1121,7 +1121,7 @@
         -30.0
       ],
       "critical": false,
-      "ace_level": 50,
+      "ace_level": 28,
       "rank": "local",
       "body_profile": "young_trainer",
       "model": "res://assets/characters/young_trainer/young_trainer_lod0.glb",
@@ -1131,12 +1131,12 @@
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 50
+          "level": 27
         },
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 50
+          "level": 28
         }
       ],
       "intro_conversation": "water_trainer_odan_intro",
@@ -1155,7 +1155,7 @@
         -40.0
       ],
       "critical": false,
-      "ace_level": 51,
+      "ace_level": 28,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -1165,17 +1165,17 @@
         {
           "trainer_owned": true,
           "species": "mosshell",
-          "level": 51
+          "level": 27
         },
         {
           "trainer_owned": true,
           "species": "mangrove_monitor",
-          "level": 51
+          "level": 28
         },
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 51
+          "level": 28
         }
       ],
       "intro_conversation": "water_trainer_yara_intro",
@@ -1194,7 +1194,7 @@
         -155.0
       ],
       "critical": true,
-      "ace_level": 51,
+      "ace_level": 29,
       "rank": "grunt",
       "body_profile": "grunt_c",
       "model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
@@ -1204,12 +1204,12 @@
         {
           "trainer_owned": true,
           "species": "cragclaw",
-          "level": 51
+          "level": 28
         },
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 51
+          "level": 29
         }
       ],
       "intro_conversation": "water_trainer_bex_intro",
@@ -1229,7 +1229,7 @@
         216.0
       ],
       "critical": true,
-      "ace_level": 52,
+      "ace_level": 30,
       "rank": "officer",
       "body_profile": "officer_a",
       "model": "res://assets/characters/officer_a/officer_a_lod0.glb",
@@ -1239,17 +1239,17 @@
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 52
+          "level": 28
         },
         {
           "trainer_owned": true,
           "species": "torrentoad",
-          "level": 52
+          "level": 29
         },
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 52
+          "level": 30
         }
       ],
       "intro_conversation": "water_trainer_calder_intro",
@@ -1269,7 +1269,7 @@
         -40.0
       ],
       "critical": false,
-      "ace_level": 52,
+      "ace_level": 30,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -1279,12 +1279,12 @@
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 52
+          "level": 29
         },
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 52
+          "level": 30
         }
       ],
       "intro_conversation": "water_trainer_vera_intro",
@@ -1305,7 +1305,7 @@
       "_why_offset_0927_visuals": "F14#0 C3 (tb/tidewake-visuals): 8 m north of the crown stand below. Her fights form about 7.8 m in front of her (capture r2t/r4t arena centre (1366.0, 3495.8)), where the crown is flat only to a 6 m radius (worst deviation 1.25 m at 6 m, 14.8 m at 11 m), so the ring spilled over the crown's edge and the fight slid down the cliff with the camera against the rock. From here the ring forms on the crown's middle.",
       "_why_offset_0927": "F14#0 C3 (tb/tidewake-full): 13 m east onto the open crown of Deep Watch (1.8 m arena deviation, 0.9 m max rise). The old stand dropped 7.5 m inside the 11 m arena and in-world captures showed the fight sliding off the shoulder, the camera facing the cliff and the READER pilot wiping.",
       "critical": false,
-      "ace_level": 54,
+      "ace_level": 32,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -1317,19 +1317,19 @@
         {
           "trainer_owned": true,
           "species": "mirejaw",
-          "level": 54,
+          "level": 30,
           "combat": {"tell_camera_swing": true, "camera_composition_yaw_deg": 70.0, "camera_trainer_beside_ally": true}
         },
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 54,
+          "level": 31,
           "combat": {"tell_camera_swing": true}
         },
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 54,
+          "level": 32,
           "combat": {"tell_camera_swing": true}
         }
       ],
@@ -1349,7 +1349,7 @@
         -30.0
       ],
       "critical": true,
-      "ace_level": 53,
+      "ace_level": 31,
       "rank": "grunt",
       "body_profile": "grunt_a",
       "model": "res://assets/characters/grunt_a/grunt_a_lod0.glb",
@@ -1359,12 +1359,12 @@
         {
           "trainer_owned": true,
           "species": "mirejaw",
-          "level": 53
+          "level": 30
         },
         {
           "trainer_owned": true,
           "species": "mangrove_monitor",
-          "level": 53
+          "level": 31
         }
       ],
       "intro_conversation": "water_trainer_fennel_intro",
@@ -1383,7 +1383,7 @@
         -40.0
       ],
       "critical": true,
-      "ace_level": 53,
+      "ace_level": 31,
       "rank": "officer",
       "body_profile": "officer_b",
       "model": "res://assets/characters/officer_b/officer_b_lod0.glb",
@@ -1393,12 +1393,12 @@
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 53
+          "level": 30
         },
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 53,
+          "level": 31,
           "combat": {
             "preferred_range": 4.5,
             "lunge": 7.0,
@@ -1411,7 +1411,7 @@
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 53
+          "level": 31
         }
       ],
       "intro_conversation": "water_trainer_venn_intro",
@@ -1430,7 +1430,7 @@
         -20.0
       ],
       "critical": true,
-      "ace_level": 54,
+      "ace_level": 32,
       "rank": "officer",
       "body_profile": "officer_a",
       "model": "res://assets/characters/officer_a/officer_a_lod0.glb",
@@ -1440,17 +1440,17 @@
         {
           "trainer_owned": true,
           "species": "cragclaw",
-          "level": 54
+          "level": 31
         },
         {
           "trainer_owned": true,
           "species": "mirejaw",
-          "level": 54
+          "level": 31
         },
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 54
+          "level": 32
         }
       ],
       "intro_conversation": "water_trainer_morra_intro",
@@ -1469,7 +1469,7 @@
         -30.0
       ],
       "critical": false,
-      "ace_level": 54,
+      "ace_level": 32,
       "rank": "local",
       "body_profile": "wandering_trainer",
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
@@ -1479,17 +1479,17 @@
         {
           "trainer_owned": true,
           "species": "sirenseal",
-          "level": 54
+          "level": 31
         },
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 54
+          "level": 32
         },
         {
           "trainer_owned": true,
           "species": "mosshell",
-          "level": 54
+          "level": 32
         }
       ],
       "intro_conversation": "water_trainer_evi_intro",
@@ -1508,7 +1508,7 @@
         -40.0
       ],
       "critical": true,
-      "ace_level": 55,
+      "ace_level": 33,
       "rank": "captain",
       "body_profile": "captain_b",
       "model": "res://assets/characters/captain_b/captain_b_lod0.glb",
@@ -1518,25 +1518,25 @@
         {
           "trainer_owned": true,
           "species": "cannonback",
-          "level": 55,
+          "level": 32,
           "combat": {"tell_camera_swing": true}
         },
         {
           "trainer_owned": true,
           "species": "mirejaw",
-          "level": 55,
+          "level": 32,
           "combat": {"tell_camera_swing": true}
         },
         {
           "trainer_owned": true,
           "species": "riverdrake",
-          "level": 55,
+          "level": 33,
           "combat": {"tell_camera_swing": true}
         },
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 55,
+          "level": 33,
           "combat": {
             "telegraph": 1.1,
             "recovery": 0.9,

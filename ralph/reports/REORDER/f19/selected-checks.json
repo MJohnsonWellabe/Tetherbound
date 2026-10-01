@@ -1,0 +1,109 @@
+{
+  "source": "8fd1dab219d6887c577f294a17771623a6622eba",
+  "checks": [
+    {
+      "command": "node tests/test_f19_curve.mjs",
+      "observed": {
+        "proof": "F19-owned-curve",
+        "named_teams": 88,
+        "regional_wild_tables": 36,
+        "biome_order": [
+          "meadows",
+          "tidewake",
+          "cloudreach",
+          "stormwood"
+        ],
+        "result": "PASS",
+        "scope": "content only; no engine, earning, transaction or legendary-offer proof"
+      },
+      "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a"
+    },
+    {
+      "command": "node tests/test_f19_gate_scan.mjs",
+      "observed": {
+        "proof": "F19-authored-gate-scan",
+        "gate_fields": 1272,
+        "result": "PASS",
+        "scope": "JSON prerequisite fields; runtime route proof still required"
+      },
+      "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "data/config/bands/band3_the_river_lock/trainers.json",
+      "sha256": "48a6b00b853e6b1cda85ab3504ce2819a23614c68b53ade2de83d1785a7ab5ad"
+    },
+    {
+      "path": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "sha256": "563cf425f58c5547d6464366d5fa0f2663c832286dc4d8189f7a2ec3d9c975f2"
+    },
+    {
+      "path": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "sha256": "fe5214e4b0cda49fa5e5f2497ca04806ff99ba6ec379cc69d3d65e1d3609153d"
+    },
+    {
+      "path": "data/config/chapter_curve.json",
+      "sha256": "6ea2511cacd3a7c23371290454ca45f94d59415daab64141a835fdec9a023466"
+    },
+    {
+      "path": "data/config/chapter_rewards.json",
+      "sha256": "066ddab332ccf3ef7bb90ce0f40b572a4faec8e4783e71e763462688d493c5bf"
+    },
+    {
+      "path": "data/config/cloudreach_chapter.json",
+      "sha256": "3e754ce104396e7b0f00145c4da1b3179ffec4ba288c9b898962602e8c03ad09"
+    },
+    {
+      "path": "data/config/realm_hearts.json",
+      "sha256": "b50d16ac88deed90d781b6e3628a51b597f66893a9174228acdea8e5c117b2a2"
+    },
+    {
+      "path": "data/config/stormwood_encounters.json",
+      "sha256": "dfe996c8091d128b362273262c9145927b4af15bd2ed139e20b19dd38b635049"
+    },
+    {
+      "path": "data/config/stormwood_trainers.json",
+      "sha256": "6ecfcd8b80483a4a764e3b7058598de89dd0d2b46460792bf915adb196bc8881"
+    },
+    {
+      "path": "data/config/water_characters.json",
+      "sha256": "e9765ab8739f9696f0321bb4e5fd567a98b3ce7dab6bbc043044def361a4a622"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "sha256": "9a1b08a071dc3bceeaf9bff333056615d75103d6c16bdcb963695d8c8ba5a057"
+    },
+    {
+      "path": "tests/fixtures/band_split_baseline/trainers.json",
+      "sha256": "74b8354e70850bc7edb62cb1fe838494649af291c8007a9d3b7c19abf125ffb6"
+    },
+    {
+      "path": "tests/test_f19_curve.gd",
+      "sha256": "3695172ac790047898be1d7cc9fdcbc62c614107df0a60cee9d8677683ffb0ac"
+    },
+    {
+      "path": "tests/test_f19_curve.mjs",
+      "sha256": "3f1e08894dbd8b390fa7a3590587830a1c283a1e0ebc76c882181e0ca7b7da6e"
+    },
+    {
+      "path": "tests/test_f19_gate_scan.mjs",
+      "sha256": "9b55da4ee4189ad4548d072f2c28fbf90807e391adaeb0804196f8517117a086"
+    },
+    {
+      "path": "tests/test_stormwood_encounters_data.gd",
+      "sha256": "8c89a64d7d6ebd7d8dc04d7b19cf78c457d56f575c77c0f10f0bfdc78e7512da"
+    }
+  ],
+  "reused_evidence": {
+    "checked_source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a",
+    "current_source": "8fd1dab219d6887c577f294a17771623a6622eba",
+    "reason": "comment/evidence-only delta; no broad or default rerun under RD36/RD37",
+    "changed_source_files": [
+      {
+        "path": "data/config/realm_hearts.json",
+        "reason": "comment-only target/current distinction; JSON gameplay values identical"
+      }
+    ]
+  }
+}

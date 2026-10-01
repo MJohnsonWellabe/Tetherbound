@@ -1,0 +1,92 @@
+{
+  "feature": "F19",
+  "workspace": "D:/tetherbound/feature-f19",
+  "branch": "tb/f19",
+  "baseline": "5c2c964ebaa8e25f933355324725be324218bc44",
+  "phase": "owned_curve_content_implemented_shared_integration_required",
+  "criteria_status": {
+    "F19#0": "config done; F18 sign/F20 credits binding pending",
+    "F19#1": "owned curve and explicit teams done; outside-owner live levels + queued engine pin pending",
+    "F19#2": "boss_handoffs content defined; canonical boss transaction consumer required",
+    "F19#3": "structured gate scan PASS1272 plus16 adversarial fixtures independently checked; no engine route witness",
+    "F19#4": "offers require canonical stable boss participant transaction; proof pending",
+    "F19#5": "earned current-schema boundaries require ROOT ordinary route; historical fixtures preserved, never fabricated"
+  },
+  "f18_contract": {
+    "curve_source": "res://data/config/chapter_curve.json",
+    "field": "biomes[canonical_biome].recommended_level",
+    "recommendations": {
+      "tidewake": 20,
+      "cloudreach": 31,
+      "stormwood": 42
+    },
+    "items": [
+      "tidewake_portal_key",
+      "cloudreach_portal_key",
+      "stormwood_portal_key",
+      "fifth_portal_key"
+    ],
+    "level_is_guidance_only": true,
+    "alias": "tidewake canonical maps to runtime water through BiomeOrder"
+  },
+  "f20_contract": {
+    "finale_boss": "captain_marrow_dynamo_core",
+    "finale_key": "fifth_portal_key",
+    "ending_biome": "stormwood",
+    "order_source": "res://data/config/biome_order.json",
+    "required_homecoming": "Home Key after Stormwood, Tidewake dock closes own chapter"
+  },
+  "root_shared_requests": [
+    {
+      "path": "scripts/net/encounter_rewards.gd + encounter_director/cloudreach/dynamo accepted victory call sites",
+      "contract": "Accepted host boss victory captures and journals admitted stable participant IDs before defeat publication. chapter_rewards.boss_handoffs.delivery_phase controls actual key/relic release: Warden/Veyra accepted victory; Nerissa only after water_guardian_settled; Marrow only after validated canonical legendary settlement (stormwood:legendary_offer_made is emitted by the accepted first accept/refuse, not merely an offer display). Keep all captured participants, including disconnected IDs. First valid accept OR refusal releases captured boss drops and restores the world without waiting for absent players. Reuse RewardDelivery/WorldLedger/LedgerRpc portable escrow; no solo direct-pay fallback or client flag shortcut on failed journal. Save before publish/ACK; same receipt on replay/rejoin, full inventory pending. Receipt source boss_drop:<biome>:<character_id> inside world-instance namespace."
+    },
+    {
+      "path": "data/config/stormwood_dynamo.json",
+      "delta": {
+        "captive.placeholder_species": "fulgocobra",
+        "captive.level": 55
+      },
+      "note": "Preserve nickname the Stormheart; existing Legendary, no roster expansion."
+    },
+    {
+      "path": "data/config/water_veilfall.json",
+      "delta": {
+        "guardian_level": 33
+      }
+    },
+    {
+      "path": "data/config/water_alpha.json",
+      "delta": {
+        "level": 27
+      }
+    },
+    {
+      "path": "data/config/cloudreach_solmane_climax.json",
+      "delta": {
+        "legendary.level": 44
+      },
+      "note": "Confirmed legendary.level; source level34, ignored patch proposes44."
+    },
+    {
+      "path": "data/config/stormwood_chapter.json",
+      "delta": {"legendary_level": 55},
+      "note": "Existing nested finale metadata level44; exact ignored shared-content patch and SHA256 manifest sent to ROOT."
+    },
+    {
+      "path": "scripts/world/stormwood_ending.gd::_make_legendary",
+      "contract": "Read owned stormwood_encounters.legendary_placeholder species/level instead of L44 constant; Fulgocobra55. Ignored offer-reader patch verified git apply --check, ROOT sole shared integration. F20 owns disjoint aftermath slice."
+    },
+    {
+      "path": "scripts/world/crossing_hall.gd",
+      "contract": "Sign recommendations use chapter_curve.biomes; no min_level condition. ROOT/F18 writer."
+    },
+    {
+      "path": "tests/smoke_four_biome_continuous.gd + current M1 helpers",
+      "contract": "ROOT owns. New continuous earned path must portal Meadows -> Tidewake -> Cloudreach -> Stormwood; collect real boss/portal save receipts, no injected grants or fake earning."
+    }
+  ],
+  "godot_runs_launched": 0,
+  "owner_needs": [],
+  "landing_gate": "F16 main; F18 actual landing and named proof required; do not merge prematurely"
+}
