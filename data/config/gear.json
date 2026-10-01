@@ -1375,6 +1375,7 @@
     }
   },
   "accent": {
+    "refresh_ms": 100,
     "band_center": 0.56,
     "band_width": 0.12,
     "charm_band_center": 0.78,
@@ -1429,5 +1430,31 @@
   ],
   "limits": {
     "ultimate_gain_multiplier_cap": 1.52
+  },
+  "refusals": {
+    "disabled": "Gear is not available in this build.",
+    "invalid_intent": "This gear choice is invalid. Reopen the station.",
+    "invalid_baseline": "Your current equipment could not be verified.",
+    "invalid_inventory": "Your satchel could not be verified.",
+    "ownership": "Choose one of your own creatures.",
+    "stale_revision": "Your equipment changed. Reopen the station.",
+    "replayed": "This gear action was already applied.",
+    "needs_home_station_outside_combat": "Use your homestead station outside combat.",
+    "invalid_slot_or_station": "Use the Workbench for trainer equipment.",
+    "needs_den": "Use the Den to change creature gear.",
+    "empty_slot": "There is no piece to remove from this slot.",
+    "stale_piece": "This piece changed. Reopen the station.",
+    "maximum_upgrade": "This piece is already at its highest upgrade.",
+    "station_tier": "Improve this station's attachment to upgrade the piece.",
+    "personal_recipe_locked": "Hang the preceding region's relic to learn this upgrade.",
+    "materials": "You need more upgrade materials.",
+    "invalid_piece": "This piece does not fit the selected slot.",
+    "missing_piece": "This piece is no longer in your satchel.",
+    "satchel_full": "Make room in your satchel for the returned piece.",
+    "frozen_authorization_required": "The saved gear authorization could not be verified.",
+    "already_prepared": "Creature gear was already included in these stats.",
+    "intrinsic_baseline_mismatch": "Creature stats changed. Prepare a fresh profile.",
+    "invalid_gear_gain": "The creature's gear bonus could not be verified.",
+    "invalid_actor_vitals": "The creature's current health could not be verified."
   }
 }
