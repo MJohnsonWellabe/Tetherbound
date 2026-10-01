@@ -19,6 +19,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
+const BUILD_READY_TIMEOUT_MSEC := preload("res://autoload/game_state.gd").REALM_SCENE_READY_TIMEOUT_MSEC
 const MAX_DROP := 60.0
 const TERRAIN_BAKE_TOLERANCE := 0.35
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
@@ -127,6 +128,26 @@ func _run() -> void:
 
 	var world: Node = packed.instantiate()
 	root.add_child(world)
+	# Responsive startup yields while the real player remains held. The
+	# ordinary realm-entry readiness contract ends only after construction and
+	# player release; settling physics before that probes an unfinished world.
+	if not world.has_method("shell_build_complete"):
+		print("smoke FAIL: world has no construction readiness contract")
+		quit(1)
+		return
+	var build_deadline := Time.get_ticks_msec() + BUILD_READY_TIMEOUT_MSEC
+	while true:
+		if not is_instance_valid(world):
+			print("smoke FAIL: world was freed during construction")
+			quit(1)
+			return
+		if world.call("shell_build_complete") == true:
+			break
+		if Time.get_ticks_msec() >= build_deadline:
+			print("smoke FAIL: world construction exceeded the realm-entry readiness deadline")
+			quit(1)
+			return
+		await process_frame
 
 	# Terrain3D streams regions in over several frames and builds collision
 	# after that, so a single frame proves nothing.
