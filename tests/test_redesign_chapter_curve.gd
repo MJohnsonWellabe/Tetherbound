@@ -258,6 +258,8 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
 
 
 func test_inactive_curve_retains_legacy_chapter_arrival_prerequisites() -> void:
+	var expected_entry := {"cloudreach": ["realm_key_cloudreach"], "stormwood": ["realm_key_stormwood"]}
+	var expected_arrival := {"cloudreach": "cloudreach_arrive", "stormwood": "stormwood_chapter_started"}
 	for realm: String in ["cloudreach", "stormwood"]:
 		var old_key := "realm_key_" + realm
 		var path := "res://data/config/%s_chapter.json" % realm
@@ -266,11 +268,17 @@ func test_inactive_curve_retains_legacy_chapter_arrival_prerequisites() -> void:
 		assert_false(acts.is_empty(), "legacy arrival remains authored")
 		assert_eq(_read(path).get("acts", []), acts, "a numeric candidate never changes admission guards")
 		if not acts.is_empty():
-			assert_true((acts[0].get("entry_flags", []) as Array).has(old_key),
-				"OFF retains the actual legacy arrival key")
+			assert_eq(acts[0].get("entry_flags", []), expected_entry[realm],
+				"OFF preserves each realm's exact pinned legacy entry contract")
+		var legacy_arrivals := 0
 		for act: Dictionary in acts:
 			for row: Dictionary in act.get("objectives", []):
-				assert_false((row.get("requires_flags", []) as Array).has(old_key))
+				if str(row.get("id", "")) == expected_arrival[realm]:
+					legacy_arrivals += 1
+					assert_eq(row.get("requires_flags", []), [old_key], "the OFF arrival objective retains its key guard")
+				else:
+					assert_false((row.get("requires_flags", []) as Array).has(old_key))
+		assert_eq(legacy_arrivals, 1, "retain each realm's exact guarded arrival identity")
 	var npc_config := _read("res://data/config/cloudreach_npc_runtime.json")
 	var expected_guards := {"cloudreach_aila_arrival": ["realm_key_cloudreach", "cloudreach_chapter_started"],
 		"cloudreach_maela_flight_trial": ["realm_key_cloudreach", "windscar_aerie_prepared"]}
@@ -292,7 +300,7 @@ func test_inactive_curve_retains_legacy_chapter_arrival_prerequisites() -> void:
 	assert_true(trial_found, "actual Maela trial greeting remains available after canonical portal arrival")
 
 
-func test_stormwood_aftermath_closes_the_chapter_without_another_key_grant() -> void:
+func test_inactive_stormwood_aftermath_retains_legacy_view_and_consumed_key_contract() -> void:
 	var chapter := _read("res://data/config/stormwood_chapter.json")
 	var rewards: Dictionary = chapter.get("rewards", {})
 	assert_eq(rewards.get("next_realm_key"), "portal_key_biome5")
@@ -305,11 +313,14 @@ func test_stormwood_aftermath_closes_the_chapter_without_another_key_grant() -> 
 			aftermath_found = true
 			assert_eq(objective.get("completion_event"), "aftermath:waterward_view",
 				"retain the existing durable event identity")
-			assert_eq(objective.get("grants_flags"), ["waterward_route_revealed", "stormwood:chapter_complete"],
-				"compatibility presentation/chapter facts cannot replace a protected participant payout")
-			assert_eq(objective.get("consumed_grants"), {})
-			assert_true(str(objective.get("how", "")).contains("HOME ARCH"))
-			assert_true(str(objective.get("how", "")).contains("village road back to Grandpa"))
+			assert_eq(objective.get("requires_flags"), ["stormwood:legendary_offer_made"],
+				"OFF preserves the legacy aftermath story prerequisite")
+			assert_eq(objective.get("grants_flags"), ["realm_key_water", "waterward_route_revealed", "stormwood:chapter_complete"],
+				"OFF retains the exact legacy view grants without mounting a homecoming candidate")
+			assert_eq(objective.get("consumed_grants"), {"realm_key_water": "realm_gate_water_unlocked"},
+				"the legacy key keeps its existing gate consumption mapping")
+			assert_eq(objective.get("how"), "Return to the high platform for the newly clear view of water.",
+				"OFF retains the exact legacy view instruction")
 	assert_true(aftermath_found, "actual Stormwood aftermath remains authored")
 
 
