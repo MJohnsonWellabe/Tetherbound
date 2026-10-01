@@ -1,0 +1,51 @@
+{
+  "check": "f30_source_check",
+  "result": "PASS",
+  "engine_executed": false,
+  "rarity_counts": {
+    "common": 12,
+    "rare": 10,
+    "epic": 8
+  },
+  "profiles": {
+    "ordinary": {
+      "expected_rolled_count": 0.75,
+      "expected_epic_fraction": 0.02
+    },
+    "unusual": {
+      "expected_rolled_count": 1.34,
+      "expected_epic_fraction": 0.07
+    },
+    "alpha": {
+      "expected_rolled_count": 2.02,
+      "expected_epic_fraction": 0.15
+    },
+    "alpha_unusual": {
+      "expected_rolled_count": 2.3,
+      "expected_epic_fraction": 0.21
+    }
+  },
+  "shared_paths": 20,
+  "owned_hashes": {
+    "scripts/creatures/traits.gd": "a0ae6b1a7a18963eee36791fd4677f72f2a0b04fc433c42469dc213b05af7c3f",
+    "scripts/creatures/trait_actor_projection.gd": "b88ea23957b93b240a2103bb5bb2200a02bb7232f12b544a0fc85e187ff15285",
+    "scripts/creatures/trait_db.gd": "16c49ddb38bff242fe653c7f5514ab844b7c93ed196fb9801243623ff36a6b55",
+    "scripts/creatures/trait_spawn_hooks.gd": "c78ce6cf2833ec9439c1142e2f23325c6ded0c787e3f14814ed84961449ef24d",
+    "scripts/combat/trait_effects.gd": "2e1547f4d13bf008a152b919695ac08d18c7af5fab29148539d64fc4b45724c4",
+    "scripts/world/trait_traversal.gd": "a61b62a7eb5822b423cbba25526bf48f8d595ae92896eaea421e33a769800c83",
+    "scripts/ui/altar_traits_panel.gd": "78536ad19f61fe795f1ed8d19b38c7da9594957871266a8816a4dc9045601581",
+    "scripts/ui/altar_traits_service.gd": "8b9fed05d621bd0a9abc6aae29f2c16a401b69db35e5ce287329731d8eb31ae5",
+    "scripts/ui/creature_portrait.gd": "c06172c44a591fee0ce36fcd2fee29f647c8626753fa75dc3213108399de4fa7",
+    "scripts/ui/creature_trait_readout.gd": "59762c17850dc1e93cdba37306c718d18efa15d83602d13584e0bf6bd5086a8b",
+    "data/config/traits.json": "339e4988c6166b831b21dadabbce111ab3698165e64fcb17e2c46bb13b65f387",
+    "tests/smoke_trainer_refusal_portrait.gd": "d8b8f56dbe2f46eaccb6c24aec65994683e7eaf4bef3b876e61f0e5e5692557f",
+    "tests/test_dialogue_portraits.gd": "c91ab0379372cbf749671171dc61c593f64f28d50f235ce7387706f5a29ecf17",
+    "tests/test_f30_traits.gd": "62dd6f0f4a8acfe95e28a8518fc05cedbca0705f91521f9b2eab4e3866f10b30",
+    "tests/test_stormwood_portrait_presentation.gd": "9ad8b33d1ac34edf87e0ea4c87519849ac006c8b42025d041bdbd28607b6b5aa",
+    "tests/test_trait_ui.gd": "f3a827e83e57916602e69671e082c3d81e5c079c4195c9adb94f50f9cc6b7d82",
+    "tools/f30_build_content.py": "8072faacfa1b853ceb98ba1a83990799e1cf00f85d249835bccc35d4fe2e38e0",
+    "tools/f30_build_shared_patches.py": "589921db3d8cb0044d3fb2239231cf5853fe2e1f8546ea700af0567ab40bf3b1",
+    "tools/f30_source_check.py": "766bb0809e783b84e395aa32a2e82650b9b544bbb951711ff8b26b0ed2178a83",
+    "tools/_capture_portraits.gd": "e19541a690b49fc235abcca479d6ba08ac05be1f6e87a1ceb04866edd0a1a365"
+  }
+}
