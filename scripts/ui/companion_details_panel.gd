@@ -15,6 +15,7 @@ var _station_key := ""
 var _loadout_service: Node
 var _pending_edit := ""
 var _pending_durable := false
+var _choose_owned := false
 var level_route := Callable()
 var traits_route := Callable()
 
@@ -36,6 +37,7 @@ func open(game: Node, uid: String, tab: String = "Loadout", loadout_only: bool =
 	if not _pending_edit.is_empty() or config().get("enabled") != true or game == null: return false
 	_game = game
 	_uid = uid
+	_choose_owned = loadout_only
 	_tabs = ["Loadout"] if loadout_only else ["Loadout", "Mastery", "Gear"]
 	if not loadout_only and level_route.is_valid() and traits_route.is_valid(): _tabs = ["Level", "Loadout", "Traits", "Mastery", "Gear"]
 	_tab = tab if _tabs.has(tab) else "Loadout"
@@ -61,6 +63,10 @@ func _rebuild() -> void:
 		close()
 		return
 	heading.text = "%s · %s" % [str(creature.call("label")), _tab]
+	if _choose_owned:
+		for member: RefCounted in _game.get("local").party.call("members"):
+			button(body, ("● " if str(member.uid) == _uid else "") + str(member.call("label")),
+				_select_owned.bind(str(member.uid)), "creature:" + str(member.uid), _pending_edit.is_empty())
 	for tab: String in _tabs:
 		button(body, ("● " if tab == _tab else "") + tab, _select_tab.bind(tab), "tab:" + tab)
 	var local: RefCounted = _game.get("local")
@@ -77,8 +83,6 @@ func _rebuild() -> void:
 			if not _slot.is_empty() and _moves.call("slot", id) == _slot:
 				button(body, "Equip " + str(_moves.call("display_name", id)), _equip.bind(id), "move:" + id, is_instance_valid(_loadout_service) and _pending_edit.is_empty())
 			_move_line(id, creature)
-		# No public station request doorway exists in the frozen F23 source.
-		# Never call host_commit_creature_loadout as a client UI fallback.
 		status.text = "Waiting for the host to save this loadout." if not _pending_edit.is_empty() else "Choose a slot, then a legal known move." if is_instance_valid(_loadout_service) else "Loadout changes are unavailable at this station."
 		if not _pending_edit.is_empty(): button(body, "Check original loadout change", _reconcile_loadout, "reconcile")
 	elif _tab == "Mastery":
@@ -118,6 +122,16 @@ func _rebuild() -> void:
 				int(equipment.call("command_pouch_tier")), int(commands.get("pouch_size", 0)), float(commands.get("meter_rate", 1)),
 				float(commands.get("movement_multiplier", 1)) * 100, float(commands.get("catch_bonus", 0)) * 100])
 	finish(focus if not focus.is_empty() else "tab:" + _tab)
+
+func _select_owned(uid: String) -> void:
+	if not _choose_owned or not _pending_edit.is_empty(): return
+	var previous := _uid
+	_uid = uid
+	if _owned() == null:
+		_uid = previous
+		return
+	_slot = ""
+	_rebuild()
 
 func _move_line(id: String, creature: RefCounted) -> void:
 	var row: Dictionary = _moves.call("move", id)

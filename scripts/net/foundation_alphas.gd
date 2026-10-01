@@ -124,10 +124,11 @@ func _host_context(id: String) -> Dictionary:
 func _publish(id: String, packet: Dictionary) -> bool:
 	var owner := session()
 	var site := RULES.site(id)
-	var realm: Node3D = owner.call("_portal_world_node", "meadows") if site.get("biome") == "meadows" else null
+	var realm_id := "water" if site.get("biome") == "tidewake" else str(site.get("biome", ""))
+	var realm: Node3D = owner.call("_portal_world_node", realm_id)
 	if realm == null: return false
 	for node: Node in realm.find_children("*", "Node", true, false):
-		if node.get_script() != preload("res://scripts/combat/encounter_director.gd"): continue
+		if node.get_script() == null or node.get_script().resource_path not in ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/water_encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd"]: continue
 		for wild: Node3D in node.get("_wild_creatures"):
 			if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == id \
 				and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return true

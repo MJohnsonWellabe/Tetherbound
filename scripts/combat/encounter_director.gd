@@ -811,14 +811,15 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 	var game := get_node_or_null("/root/Game")
 	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
 	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
-	if site.get("biome") != "meadows" or get_script() != preload("res://scripts/combat/encounter_director.gd"): return
+	if site.get("biome") != preload("res://scripts/data/biome_order.gd").canonical_id(_encounter_realm()) \
+		or get_script().resource_path not in ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd"]: return
 	for wild: Node3D in _wild_creatures:
 		if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == site_id \
 			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return
 	if has_meta("foundation_alpha_spawning_" + site_id): return
 	var entry: Dictionary = {}
 	for raw: Dictionary in spawns_config().get("spawns", []):
-		if raw.get("order") == site.source_order:
+		if (site.has("source_order") and raw.get("order") == site.source_order) or raw.get("stormwood_named_id") == site_id:
 			entry = raw.duplicate(true)
 			break
 	if entry.is_empty(): return
@@ -904,6 +905,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 		var once_id := ""
 		if not once_alpha.is_empty() or not once_elder.is_empty():
 			once_id = "wild_once_%d" % int(spawn.get("order", index))
+		var alpha_site := str(spawn.get("stormwood_named_id", once_id))
 		var once_already_cleared := _once_cleared(once_id)
 
 		for n in count:
@@ -981,7 +983,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			if not repeat_packet.is_empty():
 				var live_game := get_node_or_null("/root/Game")
 				if live_game == null or live_game.world != repeat_world or _session == null or _session.call("_altar_current_epoch") != repeat_epoch \
-					or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(live_game.world.redesign_world, once_id) != repeat_packet:
+					or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(live_game.world.redesign_world, alpha_site) != repeat_packet:
 					wild.queue_free()
 					continue
 			# PW2 (BAND1-D1): the optional per-entry `elder` descriptor, read
@@ -1106,18 +1108,9 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 				wild_cfg = _apply_elder(wild, elder, wild_cfg)
 				if once_id != "":
 					_once_only[wild] = once_id
-			if n == 0 and not preload("res://scripts/repeatables/alpha_respawns.gd").site(once_id).is_empty():
-				wild.set_meta("foundation_alpha_site", once_id)
-				wild.set_meta("foundation_alpha_generation", int(repeat_packet.captured_from.spawn_generation) if not repeat_packet.is_empty() else 1)
-				wild.set_meta("foundation_alpha_world", weakref(get_node("/root/Game").world))
-				wild.set_meta("foundation_alpha_epoch", _session.call("_altar_current_epoch") if _session != null else "")
-				if not repeat_packet.is_empty():
-					var alpha_instance: RefCounted = wild.get("instance")
-					alpha_instance.set("traits_initialized", true)
-					alpha_instance.set("rolled_traits", repeat_packet.rolled_traits.duplicate())
-					alpha_instance.set("taught_traits", repeat_packet.taught_traits.duplicate(true))
-					wild.set_meta("foundation_alpha_packet", repeat_packet.duplicate(true))
-					wild.visible = true
+			if n == 0:
+				foundation_register_alpha(wild, alpha_site, repeat_packet)
+				if not repeat_packet.is_empty(): wild.visible = true
 			wild.call("configure", wild_cfg)
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
@@ -1156,6 +1149,24 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 	# starting position, rather than leaving the whole freshly spawned meadow
 	# processing until the first `_process()` tick happens to run.
 	_tick_streaming()
+
+func foundation_register_alpha(wild: Node3D, site_id: String, packet: Dictionary = {}) -> bool:
+	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
+	if wild == null or site.is_empty() or _session == null: return false
+	var game := get_node("/root/Game")
+	if not packet.is_empty() and preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return false
+	wild.set_meta("foundation_alpha_site", site_id)
+	wild.set_meta("foundation_alpha_generation", int(packet.captured_from.spawn_generation) if not packet.is_empty() else 1)
+	wild.set_meta("foundation_alpha_world", weakref(game.world))
+	wild.set_meta("foundation_alpha_epoch", _session.call("_altar_current_epoch"))
+	if not packet.is_empty():
+		var instance: RefCounted = wild.get("instance")
+		instance.set("traits_initialized", true)
+		instance.set("rolled_traits", packet.rolled_traits.duplicate())
+		instance.set("taught_traits", packet.taught_traits.duplicate(true))
+		wild.set_meta("foundation_alpha_packet", packet.duplicate(true))
+		wild.remove_meta("once_completion_reward")
+	return true
 
 	if default_starter != "":
 		# Awaited: `adopt_starter` waits for ground under the spawn point, so
