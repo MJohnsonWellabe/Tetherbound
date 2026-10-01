@@ -61,5 +61,28 @@ static func ordered_runtime_ids(available: Array) -> Array[String]:
 static func display_name(id: String) -> String:
 	return str((config().get("display_names", {}) as Dictionary).get(canonical_id(id), "Unknown biome"))
 
-static func legacy_physical_crossings() -> bool:
+## Portal retirement is effective only when its replacement is actually active.
+## Prefer the live Session (including its isolated fixtures); off-tree consumers
+## use the same canonical session config, with missing/malformed flags OFF.
+static func portal_runtime_ready(game: Object = null) -> bool:
+	if game == null:
+		var tree := Engine.get_main_loop() as SceneTree
+		if tree != null: game = tree.root.get_node_or_null("Game")
+	if game != null:
+		for property: Dictionary in game.get_property_list():
+			if str(property.name) != "session": continue
+			var session: Variant = game.get("session")
+			if session != null:
+				if not session is Object: return false
+				if not session.has_method("portal_runtime_ready"): return false
+				var ready: Variant = session.call("portal_runtime_ready")
+				return ready is bool and ready
+			break
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/multiplayer.json"))
+	if not raw is Dictionary or not raw.get("session") is Dictionary: return false
+	var enabled: Variant = raw.session.get("redesign_portal_runtime_enabled", false)
+	return enabled is bool and enabled
+
+static func legacy_physical_crossings(game: Object = null) -> bool:
+	if not portal_runtime_ready(game): return true
 	return bool(config().get("legacy_physical_crossings", false))
