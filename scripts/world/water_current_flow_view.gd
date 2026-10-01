@@ -18,7 +18,8 @@ const RESTORED_FLAG := "water_currents_restored"
 const POLL_SECONDS := 1.0
 const VISUAL_CONFIG := "res://data/config/water_current_flow_visual.json"
 const VISUAL_UNIFORMS := ["visual_cell_width_m", "visual_cell_length_m",
-	"visual_density", "visual_breakup", "visual_band_gain"]
+	"visual_density", "visual_breakup", "visual_band_gain",
+	"visual_ridge_spacing_m", "visual_ridge_width_m", "visual_ridge_gain"]
 
 var ribbon_count := 0
 var _flags: RefCounted
@@ -73,6 +74,9 @@ func apply_visual_settings(settings: Dictionary) -> void:
 		return
 	var enabled := bool(settings.get("enabled", false))
 	material.set_shader_parameter("visual_groups_enabled", enabled)
+	# A second local gate lets the judge compare grouped foam with/without
+	# standing crests. It never changes the physical current or saved flags.
+	material.set_shader_parameter("visual_ridges_enabled", enabled and bool(settings.get("ridges_enabled", false)))
 	if enabled:
 		var values: Dictionary = settings.get("shader", {})
 		for key: String in VISUAL_UNIFORMS:

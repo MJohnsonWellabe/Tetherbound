@@ -1,0 +1,10 @@
+{
+  "_comment": "F39/P2-010 local presentation candidate: preserve production fall ribbons, installed rock masses, plunge spray and all terrain/traversal geometry. A continuous distant water core bridges sub-pixel noise breaks while retaining near flowing strands. Default-off until matched native High/Medium and Low readability review. No persistent state, new asset or renderer default.",
+  "enabled": false,
+  "shader": {
+    "visual_far_core_floor": 0.64,
+    "visual_far_edge_floor": 0.82,
+    "visual_far_start_m": 850.0,
+    "visual_far_end_m": 2100.0
+  }
+}
