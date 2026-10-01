@@ -1,0 +1,479 @@
+{
+  "schema_version": 1,
+  "status": "READ_ONLY_DIAGNOSIS_NO_RUNTIME_REPAIR",
+  "ci_source_head": "fd96f9031383cf51239de7d229dc4963c29e98b7",
+  "ci_source_branch_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+  "workflow_run_id": 36861410922,
+  "job_id": 110368540279,
+  "raw_job_log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6169-job-110368540279.log",
+  "raw_job_sha256": "af0e78a4b84490d4b86fc32651743efc1f253adfd62ed769f738f77ab05bc039",
+  "artifact_id": 11163725543,
+  "artifact_sha256": "066b336bf9ac3fffdc29a3629d5e429b7d91c881dd3a7d34ba049074f1a3c406",
+  "original_zip_local_path": "D:\\tetherbound\\redesign-foundations\\.tmp\\net-relic-diagnosis\\artifact.zip",
+  "extracted_warden_folder": "D:\\tetherbound\\redesign-foundations\\.tmp\\net-relic-diagnosis\\extracted\\net-veridian_relic_key-20261001T124344Z",
+  "artifact_entries": [
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/NET_RUN.json",
+      "bytes": 2508,
+      "sha256": "c8ae2dc461f7d9ffa29fd14ce221f92303ce6687216c08bbc3086d03852469ba"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/SUMMARY.md",
+      "bytes": 275,
+      "sha256": "d47e6be0a484c2379403067da362b7f5dce71df11f26603484672cdc5412e950"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2664,
+      "sha256": "bacc0f0583420a7dbeff502c2994e552086102a518e2cce82f0ff599e499e9a5"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609,
+      "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48,
+      "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-13ac3d282c1d30e976028155f0a1d9ab/character.json",
+      "bytes": 2781879,
+      "sha256": "e871f4ff88463d5e766aa6ccdf5d74812c3835fad7c9a64b3ab1ce69bdf97280"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 16215,
+      "sha256": "a72f73d2319da5a75f39d8a4dbaf2d795d6d2ce4e55a1624c79a933b0a9ce9ad"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+      "bytes": 4195916,
+      "sha256": "2ee2dd53f075a75de05175113ef71b41c1216674d2fd3f91d942d930e0e4144d"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+      "bytes": 15867,
+      "sha256": "e673ca57f782b9a1ad7384a76ee3e056084cae1df22bbcfdb79d631ee63ab400"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2665,
+      "sha256": "050afecd3b94aa0be7dd392848445cf9c66e84d0a6223f6f87451e27db14fb07"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609,
+      "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48,
+      "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-25e6e06b47779698e41730d95e7a8a6b/character.json",
+      "bytes": 2781881,
+      "sha256": "60169df34000aedaee1e3c3c560e37bdcc649190c2c70d4065003bd082eea427"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 11198,
+      "sha256": "d7c5df89419baead65a6cf2164922fbedac05fa596dd4ee6a405a550381df1a5"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+      "bytes": 4195912,
+      "sha256": "8ef949ddcaeec43f79943b4216d580f857c7a053c4f93796ac615dfc96763810"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+      "bytes": 15861,
+      "sha256": "12fae8559cddba88c25311a3d20fb1914d4efa7484e01dc85f824e642653ccbb"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/peer-0.log",
+      "bytes": 16329,
+      "sha256": "abce04558bb31ac0050cce2ea39b35268beda40806aa3c11e859e1fed90c916c"
+    },
+    {
+      "entry": "net-veridian_relic_key-20261001T124344Z/peer-1.log",
+      "bytes": 11302,
+      "sha256": "e8ace0053648f2dfb1adb86f197c508a663d0adc88101b7733817739dfdbea97"
+    }
+  ],
+  "sources": [
+    {
+      "path": "tests/smoke_net_veridian_relic_key.gd",
+      "ci_lf_sha256": "50908fce831c1b29a32ddb38064b9279ff3db2268a45cae621876751f6689242",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "ci_lf_sha256": "031af5ec2d01c97a87e623e107898fa0e220d0b4013efec67000331f0d7a9a9c",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "tools/net/peer_runner.gd",
+      "ci_lf_sha256": "a97758ec9d8419ffc47af7e8d0ddd1943798a4c39a0b439a640c0547021cc52e",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "tools/net/press_inject.gd",
+      "ci_lf_sha256": "e8f127599591a2d3cca15c3c3a49da76bbb1f8dce3b9947f56b5baca772d6758",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "autoload/game_state.gd",
+      "ci_lf_sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "ci_lf_sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "scripts/save/fallback_save_worker.gd",
+      "ci_lf_sha256": "5d33571656dfd0c437abbaa6e72da3a97eece09e84a261cc54d642a2015491ed",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "ci_lf_sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162",
+      "current_integration_matches_ci": true
+    },
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "ci_lf_sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a",
+      "current_integration_matches_ci": true
+    }
+  ],
+  "actual_failure_timeline": [
+    {
+      "line": 4862,
+      "text": "2026-10-01T12:45:31.7595766Z coordinator: peer 0 hello: {\"enet_port\":32501.0,\"godot_version\":\"4.7-stable (official)\",\"main_sha\":\"fd96f9031383\",\"peer\":0.0,\"pid\":3048.0,\"role\":\"host\",\"type\":\"hello\",\"user_data_dir\":\"/tmp/net-ci/net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound\"}"
+    },
+    {
+      "line": 4863,
+      "text": "2026-10-01T12:45:31.7802174Z coordinator: peer 1 hello: {\"enet_port\":32502.0,\"godot_version\":\"4.7-stable (official)\",\"main_sha\":\"fd96f9031383\",\"peer\":1.0,\"pid\":3049.0,\"role\":\"client\",\"type\":\"hello\",\"user_data_dir\":\"/tmp/net-ci/net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound\"}"
+    },
+    {
+      "line": 4875,
+      "text": "2026-10-01T12:45:33.6017765Z PASS: host hosted and guest joined (hosting udp/32501 as peer 1 / joined 127.0.0.1:32501 as peer 343582804 after 28 frames; snapshot applied; 2 peer(s) in registry)"
+    },
+    {
+      "line": 4879,
+      "text": "2026-10-01T12:45:38.8389366Z PASS: host challenged the Warden (challenged warden_aldis; bound to encounter '1:1' (4 creatures to come))"
+    },
+    {
+      "line": 4880,
+      "text": "2026-10-01T12:45:39.2806682Z PASS: guest joined the Warden's own fight"
+    },
+    {
+      "line": 4881,
+      "text": "2026-10-01T12:46:49.1828181Z ERROR: Could not create directory: 'user://saves'."
+    },
+    {
+      "line": 4886,
+      "text": "2026-10-01T12:46:49.2452298Z WARNING: fallback autosave: could not commit save"
+    },
+    {
+      "line": 4894,
+      "text": "2026-10-01T12:47:14.2842291Z FAIL: both peers felled the Warden (no verdict)"
+    },
+    {
+      "line": 4895,
+      "text": "2026-10-01T12:47:19.4081347Z FAIL: both peers felled the Warden (no verdict)"
+    },
+    {
+      "line": 4904,
+      "text": "2026-10-01T12:47:19.4744021Z - peer 0 (host) pid=3048 exited=false unexpected_exit=false"
+    },
+    {
+      "line": 4905,
+      "text": "2026-10-01T12:47:19.4744775Z - peer 1 (client) pid=3049 exited=true unexpected_exit=false"
+    }
+  ],
+  "command_frame_budget": 5400,
+  "nominal_physics_hz": 60,
+  "wall_slack_seconds": 5,
+  "derived_wall_deadline_seconds": 95,
+  "peer_loop_counter_ceiling": 5160,
+  "heartbeat_record": {
+    "budgets": {
+      "desync_frames": 240.0,
+      "heartbeat_frames": 60.0,
+      "hello_budget_s": 360.0,
+      "near_tolerance_motion_m": 4.0,
+      "near_tolerance_rest_m": 1.5,
+      "smoke_step_budget_s_2peer": 1500.0,
+      "smoke_step_budget_s_wide": 1500.0,
+      "step_budget_frames": 3000.0
+    },
+    "failures": [
+      "both peers felled the Warden (no verdict)"
+    ],
+    "fatal": "",
+    "net_conditions": {},
+    "peers": [
+      {
+        "control_port": 44147,
+        "exited": false,
+        "hashes": [
+          949396019,
+          949396019,
+          949396019
+        ],
+        "hello": {
+          "enet_port": 32501.0,
+          "godot_version": "4.7-stable (official)",
+          "main_sha": "fd96f9031383",
+          "peer": 0.0,
+          "pid": 3048.0,
+          "role": "host",
+          "type": "hello",
+          "user_data_dir": "/tmp/net-ci/net-veridian_relic_key-20261001T124344Z/home-0/godot/app_userdata/Tetherbound"
+        },
+        "index": 0,
+        "last_heartbeat": {
+          "context": "combat",
+          "frame": 942.0,
+          "physics_frame": 4560.0,
+          "pos": [
+            5.54423522949219,
+            6.17194271087646,
+            7659.1435546875
+          ],
+          "session_peers": [
+            1.0
+          ],
+          "state_hash": 949396019.0,
+          "t": 210.173,
+          "type": "heartbeat"
+        },
+        "pid": 3048,
+        "role": "host",
+        "unexpected_exit": false
+      },
+      {
+        "control_port": 42731,
+        "exited": true,
+        "hashes": [
+          949396019,
+          949396019,
+          949396019
+        ],
+        "hello": {
+          "enet_port": 32502.0,
+          "godot_version": "4.7-stable (official)",
+          "main_sha": "fd96f9031383",
+          "peer": 1.0,
+          "pid": 3049.0,
+          "role": "client",
+          "type": "hello",
+          "user_data_dir": "/tmp/net-ci/net-veridian_relic_key-20261001T124344Z/home-1/godot/app_userdata/Tetherbound"
+        },
+        "index": 1,
+        "last_heartbeat": {
+          "context": "combat",
+          "frame": 921.0,
+          "physics_frame": 4560.0,
+          "pos": [
+            10.0,
+            6.17109346389771,
+            7650.2001953125
+          ],
+          "session_peers": [
+            1.0,
+            343582804.0
+          ],
+          "state_hash": 949396019.0,
+          "t": 205.554,
+          "type": "heartbeat"
+        },
+        "pid": 3049,
+        "role": "client",
+        "unexpected_exit": false
+      }
+    ],
+    "proxies": [],
+    "run_id": "net-20261001T124344Z-3024",
+    "scene": "world",
+    "state_hash_excluded_keys": [
+      "party",
+      "inventory",
+      "hotbar",
+      "satiety",
+      "map",
+      "realm_maps",
+      "alpha_pins",
+      "player_pose",
+      "clock_elapsed_seconds",
+      "current_realm",
+      "pending_realm_entry",
+      "realm_hearts",
+      "version"
+    ],
+    "state_hash_hashed_keys": [
+      "flags",
+      "placed_buildings",
+      "farm_plots",
+      "death_satchels",
+      "harvested_vegetation",
+      "felled_vegetation",
+      "day"
+    ]
+  },
+  "saved_prefight_parties": [
+    {
+      "peer": 0,
+      "party": [
+        {
+          "species_id": "terrapup",
+          "level": 18,
+          "hp": 242.4,
+          "max_hp": 242.4
+        },
+        {
+          "species_id": "bramblebun",
+          "level": 18,
+          "hp": 191.9,
+          "max_hp": 191.9
+        },
+        {
+          "species_id": "trailpup",
+          "level": 18,
+          "hp": 212.1,
+          "max_hp": 212.1
+        },
+        {
+          "species_id": "mudsnout",
+          "level": 18,
+          "hp": 202.0,
+          "max_hp": 202.0
+        }
+      ],
+      "saved_pose": {
+        "camera_pitch": -0.20943951023932,
+        "camera_yaw": 0.0,
+        "model_yaw": 0.0,
+        "position": [
+          -1.40000009536743,
+          4.65012788772583,
+          14.2999992370605
+        ],
+        "realm": "meadows",
+        "traversal": {
+          "active_index": 0,
+          "mode": "grounded",
+          "realm": "meadows",
+          "safe_anchor": [
+            -1.40000009536743,
+            4.65012788772583,
+            14.2999992370605
+          ],
+          "stamina_fraction": 1.0,
+          "velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "version": 1
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "party": [
+        {
+          "species_id": "terrapup",
+          "level": 18,
+          "hp": 242.4,
+          "max_hp": 242.4
+        },
+        {
+          "species_id": "bramblebun",
+          "level": 18,
+          "hp": 191.9,
+          "max_hp": 191.9
+        },
+        {
+          "species_id": "trailpup",
+          "level": 18,
+          "hp": 212.1,
+          "max_hp": 212.1
+        },
+        {
+          "species_id": "mudsnout",
+          "level": 18,
+          "hp": 202.0,
+          "max_hp": 202.0
+        }
+      ],
+      "saved_pose": {
+        "camera_pitch": -0.20943951023932,
+        "camera_yaw": 0.0,
+        "model_yaw": 0.0,
+        "position": [
+          -1.40000009536743,
+          4.65012788772583,
+          14.2999992370605
+        ],
+        "realm": "meadows",
+        "traversal": {
+          "active_index": 0,
+          "mode": "grounded",
+          "realm": "meadows",
+          "safe_anchor": [
+            -1.40000009536743,
+            4.65012788772583,
+            14.2999992370605
+          ],
+          "stamina_fraction": 1.0,
+          "velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "version": 1
+        }
+      }
+    }
+  ],
+  "proven": [
+    "coordinator command wall deadline expired while both peers were still producing combat heartbeats",
+    "serial awaited win command blocks processing queued quit until completion",
+    "last recorded cumulative physics_frame4560 does not establish reaching the internal5160 counter ceiling",
+    "adjacent save directory error is absent from both peer logs and both peer godot.logs; reported by coordinator",
+    "six actual host unknown-peer RPC errors occur after logged guest disconnect",
+    "harness coordinator save ownership is relinquished during SceneTree _initialize before autoload _ready; Game._ready resets ownership true afterward"
+  ],
+  "not_proven": [
+    "specific reason the Warden fight failed to win before deadline: no live encounter HP/refusal/strike/queue snapshots retained",
+    "any payout/key/Heart durability failure: fixture stopped before those assertions",
+    "save directory error caused fight failure",
+    "filesystem errno/root directory condition behind coordinator mkdir failure",
+    "performance improvement or full acceptance"
+  ],
+  "source_owned_fault_proposal": "If allocated, reassert existing coordinator isolation after autoload readiness in the harness; preserve production Game ownership gates and all budgets. No edit made.",
+  "shared_combat_fault_proposal": "Late publication targets disconnected guest via _send_realm_rpc without live transport membership guard. ROOT determines owner/allocation; no shared director edit.",
+  "runtime_actions_here": "NONE",
+  "native_source_links": [
+    {
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/scene/main/scene_tree.cpp#L547",
+      "claim": "MainLoop.initialize precedes root tree mount"
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/core/os/main_loop.cpp#L52",
+      "claim": "initialize invokes script _initialize"
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/core/io/dir_access.cpp#L126",
+      "claim": "recursive user path creates segments beneath user root, error does not identify underlying errno"
+    }
+  ],
+  "guest_join_check_to_first_failure_seconds": 95.0035609,
+  "win_command_exact_send_timestamp": "Not recorded; issued as the next step after guest join check"
+}
