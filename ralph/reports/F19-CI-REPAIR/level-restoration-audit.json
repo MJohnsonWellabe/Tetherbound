@@ -601,5 +601,29 @@
     "unchanged_scope": "Every other live data leaf/runtime flag, F20 Aila/Maela guards, candidate targets/strict-number/legendary55+OFF44 assertions and typed handoff negative controls unchanged.",
     "source_checks": "PASS: exact pinned-main input comparisons and detached two-leaf guard restoration; no assertions dropped or tests skipped",
     "engine_after_correction": "NOT RUN here; ROOT owns named affected engine checks and runtime route/acceptance gates remain open"
+  },
+  "progression_xp_compatibility_followup": {
+    "root_source_sha": "12a2ede365be2bf0a65b30c9bfb5ab1221b3d670",
+    "target": "tests/test_progression.gd",
+    "patch": "ralph/reports/F19-CI-REPAIR/test-progression-xp-compatibility.patch",
+    "patch_sha256": "2d964692a1eb6648801997c6df89a66e4d8d772a6b43615570aaf168ca7eaa49",
+    "existing_root_api_source_sha256": "72b6604008370ee0d8b77d898b7e7f36a199b7fc4baf63dd7ed7b14bfffdea68",
+    "existing_root_essence_source_sha256": "b9ba8eb22f1803d6205b565e16d8fce3a64f20bce3d61302f1542a647121d1a2",
+    "diagnosis": "F27 test invoked nonexistent combat_xp_config, passed a third argument to two-argument live xp_award_for, asserted detached reduction on ordinary live XP, and replaced legacy party floor with detached positive floor.",
+    "replacement_methods": [
+      "test_automatic_combat_xp_preserves_ordinary_awards_and_legacy_party_floor",
+      "test_explicit_staged_combat_xp_uses_one_positive_configured_reduction"
+    ],
+    "ordinary_contract": "Exact ordinary base/per-level formula for levels1..100; separately tuned fractional formula fixtures and legacy zero-floor tiny party share.",
+    "detached_contract": "Existing scaled_combat_xp/scaled_party_combat_xp APIs only, explicit supplied essence inputs, exact configured/0.5 single reduction and positive staging floor, retained invalid false/true/0/negative/1/INF/NAN refusals, unchanged subsequent live awards and config snapshots.",
+    "shipping_wild_victory_runtime_enabled": false,
+    "other_test_methods_unchanged": true,
+    "tests_before": 50,
+    "tests_after": 51,
+    "authored_numeric_range_checks": 100,
+    "readonly_apply_check": "PASS --whitespace=error-all against ROOT12a2",
+    "production_source_data_or_flags_mutated": false,
+    "scope": "Patch target is integration: F27 detached APIs/essence input are absent from the older owned branch. No production API introduced; no runtime activation, route, earning, transaction, or save credit.",
+    "godot_parser_and_execution": "NOT RUN; ROOT owns the affected progression and combat progression engine checks"
   }
 }
