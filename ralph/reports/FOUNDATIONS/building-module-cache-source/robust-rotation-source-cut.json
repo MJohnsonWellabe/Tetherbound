@@ -1,0 +1,30 @@
+{
+  "status": "SOURCE_ONLY_ROBUST_ANGULAR_TOLERANCE_RUNTIME_PENDING",
+  "foundation_parent": "f7c467b6357ccaf06a4f645cc1445e677fa08b6f",
+  "integration_patch_baseline": "2360b9d664cbf2e26b701604f2dddc1301165657",
+  "integration_head_at_read_only_check": "42682af54a0f293956d1c44e19ad722ac4414fdc",
+  "held_previous_rotation_head": "f7c467b6357ccaf06a4f645cc1445e677fa08b6f",
+  "hold_reason": "float32 dot product rounded1 for errors larger than0.0001; acos-based effective tolerance was insufficient",
+  "changed_path": "tests/test_wall_foliage_normals.gd",
+  "old_lf_sha256": "6fd178628e001672c455e0612d872122e65c82cb8954aed9c83cab04e16cc10e",
+  "new_lf_sha256": "f211427f8f08ca5f74207697695928a518e85e7c117a1f9eca7978274d36f2a8",
+  "cumulative_test_patch_sha256": "5b6e3f776679b1edcb53d3ba51910ac2139178e2cfca9cb939b9267ca5623cbc",
+  "comparison_reversal_matches_entire_previous_test": true,
+  "assert_call_sites_preserved": 20,
+  "production_cache_unchanged_sha256": "a851bb5a526b4665b93318bbdd0c355a405081531365d0b6d956f3d2a252cbc0",
+  "comparison": "normalize expected and actual; normalize inverse(expected)*actual; 2*atan2(length(relative.xyz),abs(relative.w))",
+  "tolerance_radians": 0.0001,
+  "source_math_script_sha256": "a8bd7eb907874c36a9d6b8bdbabab7640d575b6e7b235c02f0682ee01909d29d",
+  "source_math_controls_sha256": "f82e64c7707fb4b15c2b0375bc6ca2c56aae29e13458626a7a4702cf3c128453",
+  "source_math_control_count": 31,
+  "all_source_math_expected_outcomes_match": true,
+  "read_only_cumulative_integration_apply_check": 0,
+  "runtime_execution_here": "NONE",
+  "last_native_result": "b42 original3cases188assertions1yawfailure remainsFAIL; no new native success inferred",
+  "pinned_engine_sources": [
+    "https://github.com/godotengine/godot/blob/5b4e0cb0f/core/math/basis.cpp#L370",
+    "https://github.com/godotengine/godot/blob/5b4e0cb0f/core/math/quaternion.cpp#L33",
+    "https://github.com/godotengine/godot/blob/5b4e0cb0f/core/math/quaternion.cpp#L69",
+    "https://github.com/godotengine/godot/blob/5b4e0cb0f/core/math/quaternion.h#L220"
+  ]
+}
