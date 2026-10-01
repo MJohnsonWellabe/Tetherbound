@@ -143,6 +143,17 @@ These targets define the ordinary-camera judgment for Bar A and Bar B together. 
 
 **Frame matrix and judgment.** Each biome uses the same ordinary-camera approach, forward gameplay, reverse view and near detail, plus a real fight. Meadows/Tidewake/Cloudreach add morning, noon, golden hour, night, clear and authored bad weather; Stormwood substitutes all four Surge phases and pre/post-release weather. The Hall adds farm-door approach, nave, each arch/sign and Shrine Room. Capture matched High and Medium views at 1920×1080 and Low readability controls; record preset, actual renderer, time/phase/weather, position, route revision and frame timing. A code-blind judge receives images/motion and these references without source changes or defect-only prompts. Any missing material, clipped body, floating object, unreadable route, magenta slab or placeholder silhouette blocks the full bar. F26#3/#4 remain open until those actual matrices and route measurements exist.
 
+Cloudreach stone must read as related exposed beds and weathered ledges at the
+ordinary camera, with moss following shelf orientation. Grain must retain a
+believable metre scale across cliff walls and crown banks; it must not turn the
+grey-green authored palette brown, form continuous barcode rings, shimmer at
+distance or rotate a wall's lighting normal toward the sky. The F26 cliff-course
+surface in `art.json` is a candidate, OFF in Low/Medium/High pending matched native
+review (`ralph/reports/VISUAL/lookdev/f26-cliff-courses/`). It addresses material
+coherence only; the archived Cloudreach High/Medium full-bar FAILs and F26#3 remain
+open. Terrain shape, ecology, creature appeal and atmosphere still require their
+own integrated matrix evidence.
+
 ### 4.2 Reference boards
 
 For Bar A's chapter-specific comparison, use:

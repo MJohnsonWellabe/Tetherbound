@@ -10,7 +10,11 @@ void vertex() {
 void fragment() {
 	vec3 rock_albedo;
 	vec3 rock_normal_world;
-	cloudreach_rock(world_position, world_normal, rock_albedo, rock_normal_world);
+	float rock_footprint = 0.0;
+	if (cloudreach_rock_courses.x > 0.0) {
+		rock_footprint = max(length(dFdx(world_position)), length(dFdy(world_position)));
+	}
+	cloudreach_rock(world_position, world_normal, rock_footprint, rock_albedo, rock_normal_world);
 	ALBEDO = rock_albedo;
 	NORMAL = normalize((VIEW_MATRIX * vec4(rock_normal_world, 0.0)).xyz);
 	ROUGHNESS = 0.96;

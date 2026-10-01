@@ -106,12 +106,34 @@ func _ready() -> void:
 
 
 func refresh_graphics() -> void:
+	_apply_cliff_surface_candidate()
 	if _cycle != null:
 		_apply_blended(_cycle.hour_at(_elapsed_seconds))
 	GRAPHICS_PREFS.apply_viewport(get_viewport())
 	var viewport := get_viewport()
 	if viewport != null:
 		GRAPHICS_PREFS.apply_camera(viewport.get_camera_3d())
+
+
+## F26 presentation-only candidate on the existing Cloudreach rock family.
+## The preset hooks are OFF in shipped data. Shared shader globals also reach
+## crown banks, so an exposed bank cannot acquire a different stone language.
+## Never edits meshes, collision, placement, creature scale or durable state.
+func _apply_cliff_surface_candidate() -> void:
+	var cfg: Dictionary = _config.get("cloudreach_rock_surface", {})
+	var enabled := bool(GRAPHICS_PREFS.values().get("cloudreach_rock_candidate", false))
+	RenderingServer.global_shader_parameter_set("cloudreach_rock_courses", Vector4(
+		1.0 if enabled else 0.0,
+		maxf(float(cfg.get("texture_scale", 0.36)), 0.01),
+		maxf(float(cfg.get("course_height_m", 4.8)), 0.5),
+		clampf(float(cfg.get("joint_strength", 0.20)), 0.0, 0.35)))
+	RenderingServer.global_shader_parameter_set("cloudreach_rock_weathering", Vector4(
+		clampf(float(cfg.get("course_warp_m", 0.75)), 0.0, 1.5),
+		clampf(float(cfg.get("stain_strength", 0.18)), 0.0, 0.3),
+		clampf(float(cfg.get("normal_strength", 0.24)), 0.0, 0.5),
+		clampf(float(cfg.get("texture_contrast", 0.24)), 0.0, 0.5)))
+	RenderingServer.global_shader_parameter_set("cloudreach_rock_joint_width",
+		clampf(float(cfg.get("joint_width_m", 0.07)), 0.025, 0.2))
 
 
 ## Real time passing, not gameplay -- there is no pause here on purpose: the

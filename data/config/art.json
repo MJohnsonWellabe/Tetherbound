@@ -1098,8 +1098,20 @@
     },
     "animation_libraries": []
   },
+  "cloudreach_rock_surface": {
+    "_comment": "F26 cliff-course candidate: keep installed Rock030 and the current grey-green stone/moss palette; put surface grain at 2.78m per repeat, layer interrupted sedimentary beds and restrained sheltered stains across cliff walls and exposed crown banks. No geometry, extra texture fetches, lights or exposure change. Candidate stays OFF in every graphics preset until matched native frames pass independent visual review. WorldLook binds these presentation-only values through shader globals.",
+    "texture_scale": 0.36,
+    "course_height_m": 4.8,
+    "joint_strength": 0.20,
+    "joint_width_m": 0.07,
+    "course_warp_m": 0.75,
+    "stain_strength": 0.18,
+    "normal_strength": 0.24,
+    "texture_contrast": 0.24
+  },
   "graphics_presets": {
     "Low": {
+      "cloudreach_rock_candidate": false,
       "renderer": "gl_compatibility",
       "volumetric_fog": false,
       "ssao": false,
@@ -1109,6 +1121,7 @@
       "draw_distance": "Near"
     },
     "Medium": {
+      "cloudreach_rock_candidate": false,
       "renderer": "forward_plus",
       "volumetric_fog": true,
       "ssao": true,
@@ -1121,6 +1134,7 @@
       "volumetric_fog_sky_affect": 0.0
     },
     "High": {
+      "cloudreach_rock_candidate": false,
       "renderer": "forward_plus",
       "volumetric_fog": true,
       "ssao": true,
