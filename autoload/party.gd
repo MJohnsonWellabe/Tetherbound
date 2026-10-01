@@ -23,6 +23,8 @@ const MAX_CREATURES := 5
 var revision: int = 0
 
 var _owner_mutation_guard := Callable()
+var _owner_training_release_guard := Callable()
+var _owner_training_release_rollback_guard := Callable()
 var _creatures: Array = []
 var _active: int = 0
 var _tournament_selection: Array[String] = []
@@ -76,7 +78,7 @@ func add(creature: RefCounted) -> bool:
 ## Remove a creature by slot. Used by the release ceremony (M5) and by nothing else
 ## yet; returns the instance so the caller can show it one last time.
 func remove_at(index: int) -> RefCounted:
-	if _owner_mutation_blocked(): return null
+	if _owner_mutation_blocked() and (not _owner_training_release_guard.is_valid() or _owner_training_release_guard.call(index) != true): return null
 	if index < 0 or index >= _creatures.size():
 		return null
 	var gone: RefCounted = _creatures[index]
@@ -303,9 +305,30 @@ func all_fainted() -> bool:
 	return true
 
 
-func bind_owner_mutation_guard(blocked: Callable) -> void:
+func bind_owner_mutation_guard(blocked: Callable, release_allowed := Callable(), rollback_allowed := Callable()) -> void:
 	_owner_mutation_guard = blocked
+	_owner_training_release_guard = release_allowed
+	_owner_training_release_rollback_guard = rollback_allowed
 
 
 func _owner_mutation_blocked() -> bool:
 	return _owner_mutation_guard.is_valid() and _owner_mutation_guard.call() == true
+
+
+## Local stack rollback material, never persisted or sent across a network.
+## The caller keeps only this transaction's original five live instances.
+func owner_training_release_snapshot() -> Dictionary:
+	return {"members": _creatures.duplicate(), "active": _active, "best": _best,
+		"tournament": _tournament_selection.duplicate(), "revision": revision}
+
+
+func restore_owner_training_release(snapshot: Dictionary) -> bool:
+	if not _owner_training_release_rollback_guard.is_valid() or _owner_training_release_rollback_guard.call(snapshot) != true:
+		return false
+	if not snapshot.get("members") is Array or snapshot.members.is_empty() or snapshot.members.size() > MAX_CREATURES: return false
+	_creatures = snapshot.members.duplicate()
+	_active = int(snapshot.active)
+	_best = int(snapshot.best)
+	_tournament_selection.assign(snapshot.tournament)
+	revision = int(snapshot.revision)
+	return true

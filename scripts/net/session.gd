@@ -95,6 +95,7 @@ var _altar_quote_request: Dictionary = {}
 var _altar_spend_request: Dictionary = {}
 var _owner_training_retry: Dictionary = {} # Only weak refs + exact row identity, no balances.
 var _owner_training_install := false
+var _owner_training_install_rollback := false
 var _training_bootstrap_waiting := false
 var _character_authority: RefCounted = CHARACTER_AUTHORITY.new()
 
@@ -2433,7 +2434,8 @@ func _bind_training_container_guards() -> void:
 		inv.call("bind_owner_mutation_guard", _owner_training_mutation_blocked.bind(player),
 			_owner_training_inventory_write_allowed.bind(player))
 	if party is RefCounted and party.has_method("bind_owner_mutation_guard"):
-		party.call("bind_owner_mutation_guard", _owner_training_mutation_blocked.bind(player))
+		party.call("bind_owner_mutation_guard", _owner_training_mutation_blocked.bind(player),
+			_owner_training_release_write_allowed.bind(player), _owner_training_release_rollback_allowed.bind(player))
 
 
 func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
@@ -2442,9 +2444,16 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 			or not ESSENCE._equivalent(_owner_training_row(), row) or row.status != "pending": return false
 	if not _owner_training_retry.is_empty() and (_owner_training_retry.player.get_ref() != player \
 		or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt): return false
+	var released: Variant = _owner_training_retry.get("release_instance")
+	if row.get("version") == 2 and row.get("action") == "trait_release" and released == null:
+		# Bind identity while the real original instance is still owned. A weak
+		# identity is not a sixth creature or a second authoritative roster.
+		if ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), row.before):
+			for instance: RefCounted in player.get("party").call("members"):
+				if instance.get("uid") == row.intent.creature_uid: released = weakref(instance)
 	_owner_training_retry = {"player": weakref(player), "world": weakref(world),
 		"delivery_id": row.delivery_id, "journal_revision": row.journal_revision, "receipt": row.receipt,
-		"saved": _owner_training_retry.get("saved", false)}
+		"saved": _owner_training_retry.get("saved", false), "release_instance": released}
 	_bind_training_container_guards()
 	return true
 
@@ -2459,6 +2468,7 @@ func _begin_owner_training_install(player: RefCounted, world: RefCounted, row: D
 
 func _end_owner_training_install() -> void:
 	_owner_training_install = false
+	_owner_training_install_rollback = false
 
 
 func _owner_training_inventory_write_allowed(index: int, stack: Variant, player: RefCounted) -> bool:
@@ -2467,7 +2477,7 @@ func _owner_training_inventory_write_allowed(index: int, stack: Variant, player:
 	return _owner_training_install and not _owner_training_retry.is_empty() \
 		and _owner_training_retry.player.get_ref() == player and row.status == "pending" \
 		and _owner_training_retry.receipt == row.receipt and index >= 0 and index < row.after.inventory.size() \
-		and ESSENCE._equivalent(row.after.inventory[index], stack)
+		and ESSENCE._equivalent((row.before if _owner_training_install_rollback else row.after).inventory[index], stack)
 
 
 func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
@@ -3177,3 +3187,46 @@ func character_action_stage_matches(peer: int, accepted: Dictionary) -> bool:
 	if accepted.get("action") not in preload("res://scripts/net/character_action_rules.gd").ACTIONS: return false
 	var stage: Variant = _character_authority.call("staged_creature_training", accepted)
 	return stage is Dictionary and not stage.is_empty() and ESSENCE._equivalent(stage, accepted)
+
+
+func _begin_owner_training_rollback(player: RefCounted, world: RefCounted, row: Dictionary) -> bool:
+	if not _owner_training_install or _owner_training_retry.is_empty() \
+		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
+		or _owner_training_retry.receipt != row.get("receipt") or not ESSENCE._equivalent(_owner_training_row(), row): return false
+	_owner_training_install_rollback = true
+	return true
+
+
+func _owner_training_release_write_allowed(index: int, player: RefCounted) -> bool:
+	var row := _owner_training_row()
+	if not _owner_training_install or _owner_training_install_rollback or row.get("version") != 2 \
+		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
+	var original: Variant = _owner_training_retry.get("release_instance")
+	var member: RefCounted = player.get("party").call("at", index)
+	return original is WeakRef and original.get_ref() == member and member != null \
+		and member.get("uid") == row.intent.creature_uid \
+		and ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), row.before)
+
+
+func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefCounted) -> bool:
+	var row := _owner_training_row()
+	if not _owner_training_install or not _owner_training_install_rollback or row.get("version") != 2 \
+		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt \
+		or not snapshot.get("members") is Array or snapshot.members.size() != row.before.party.size(): return false
+	var original: Variant = _owner_training_retry.get("release_instance")
+	if not original is WeakRef or original.get_ref() == null: return false
+	var survivors: Array = []
+	var expected := row.before.duplicate(true)
+	var removed := -1
+	for index: int in snapshot.members.size():
+		var member: Variant = snapshot.members[index]
+		if not member is RefCounted or member.get("uid") != row.before.party[index].uid: return false
+		if member.get("uid") == row.intent.creature_uid:
+			if removed >= 0 or member != original.get_ref(): return false
+			removed = index
+		else: survivors.append(member)
+	if removed < 0 or player.get("party").call("members") != survivors: return false
+	expected.party.remove_at(removed)
+	return ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), expected)

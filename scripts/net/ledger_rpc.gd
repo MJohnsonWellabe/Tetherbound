@@ -1081,8 +1081,10 @@ func _process_creature_training(row: Dictionary) -> void:
 	# Bootstrap installs the real world before this arm. It intentionally does
 	# not require handshake_snapshot_applied, which waits on this owner save.
 	if session.call("_altar_current_epoch") == "": return
-	var outcome: Dictionary = session.call("apply_altar_building_owner", row) if row.kind == "altar_building" else ESSENCE.apply_training_owner(game, row,
-		TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	var outcome: Dictionary
+	if row.kind == "altar_building": outcome = session.call("apply_altar_building_owner", row)
+	elif row.get("version") == 2: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
+	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if outcome.get("ok") != true or outcome.get("saved") != true: return
 	if bool(game.call("is_host")):
 		_accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id())
