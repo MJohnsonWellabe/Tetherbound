@@ -8,6 +8,7 @@ const STATE := preload("res://scripts/data/redesign_state.gd")
 const BAG := preload("res://scripts/world/death_satchel_rules.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const ALPHA_PRODUCER := preload("res://scripts/net/foundation_alphas.gd")
 
 func _current(character: String = "character_a") -> Dictionary:
 	return {"character_id": character, "inventory": BAG.slots(BAG.inventory_from([])),
@@ -177,3 +178,10 @@ func test_first_alpha_roll_is_durable_without_invented_resolution_and_rejects_fo
 	var resolved := ALPHA.resolve(reload, id, 1, 100, ["character_a"], "catch")
 	assert_false(resolved.is_empty())
 	if not resolved.is_empty(): assert_true(STATE.validate("world", resolved.state, [], "world_a").is_empty())
+
+func test_actual_clear_weather_metadata_does_not_choose_unusual_alpha_odds() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/weather.json"))
+	assert_false(ALPHA_PRODUCER.unusual_weather({}))
+	assert_false(ALPHA_PRODUCER.unusual_weather(config.presets.clear))
+	assert_true(ALPHA_PRODUCER.unusual_weather(config.presets.rain))
+	assert_true(ALPHA_PRODUCER.unusual_weather(config.presets.fog))

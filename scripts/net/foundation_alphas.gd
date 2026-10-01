@@ -44,7 +44,7 @@ func first_spawn(director: Node, id: String) -> Dictionary:
 	if realm == null or not realm.is_ancestor_of(director) or look == null: return {}
 	if not frozen.has("night"):
 		frozen.night = bool(look.call("is_dark"))
-		frozen.weather = not look.get("_weather").is_empty()
+		frozen.weather = unusual_weather(look.get("_weather"))
 	var plan := RULES.first_spawn(world.redesign_world, id, frozen.world_namespace, frozen.night, frozen.weather)
 	if plan.is_empty(): return {}
 	var result: Dictionary = _commit(plan)
@@ -110,6 +110,14 @@ func _realm_look(site: Dictionary) -> Node:
 		found = candidate
 	return found if found != null and found.has_method("is_dark") \
 		and found.has_method("elapsed_seconds") and found.get("_weather") is Dictionary else null
+
+static func unusual_weather(delta: Dictionary) -> bool:
+	# WorldWeather applies the whole preset, including clear's weight/comment
+	# metadata. Only its effective atmosphere/rain overrides are weather.
+	if delta.get("rain") == true: return true
+	for field: String in ["sun", "sky", "environment"]:
+		if delta.get(field) is Dictionary and not delta[field].is_empty(): return true
+	return false
 
 func _seconds(site: Dictionary) -> int:
 	var clock := _realm_look(site)
@@ -188,7 +196,7 @@ func _host_context(id: String) -> Dictionary:
 	if not _census(site).is_empty() or seconds < 0 or clock == null: return {}
 	host.world_seconds = seconds
 	host.night = bool(clock.call("is_dark"))
-	host.weather = not clock.get("_weather").is_empty()
+	host.weather = unusual_weather(clock.get("_weather"))
 	return host
 
 func _publish(id: String, packet: Dictionary) -> bool:
