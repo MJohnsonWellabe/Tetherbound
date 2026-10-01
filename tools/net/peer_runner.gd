@@ -3560,6 +3560,47 @@ func _step_trainer_battle(args: Dictionary) -> Dictionary:
 			int(director.call("trainer_creatures_left"))]}
 
 
+## TEST FIXTURE ONLY. The record is HP authority; stage the disclosed ceiling
+## there as well as on its host-owned creature before the existing input.
+## This is the same setup pattern as _step_stormwood_hosted_fixture_health.
+static func _stage_trainer_hp_ceiling(director: Node, manager: Node,
+		opponent: Node3D, ceiling: float) -> Dictionary:
+	if not is_finite(ceiling) or ceiling <= 0.0:
+		return {"ok": false, "why": "trainer HP fixture needs a positive finite ceiling"}
+	var creature := opponent.get("instance") as RefCounted
+	if creature == null:
+		return {"ok": false, "why": "fixture has no opponent creature"}
+	var hp := float(creature.get("hp"))
+	if hp <= 0.0 or bool(creature.get("fainted")):
+		return {"ok": true}
+	var staged := minf(hp, ceiling)
+	var encounter_id := str(manager.call("encounter_id"))
+	if not encounter_id.is_empty():
+		if not bool(director.call("_is_host")):
+			return {"ok": false, "why": "shared trainer HP fixture is host-only"}
+		var authority := director.get("_encounter_host") as RefCounted
+		if authority == null:
+			return {"ok": false, "why": "shared trainer HP fixture has no authority"}
+		var rec: Dictionary = authority.call("record", encounter_id)
+		if str(rec.get("phase", "")) != "active":
+			return {"ok": true}
+		if str(rec.get("kind", "")) != "trainer" \
+				or director.get("_engaged_with") != opponent or manager.get("_enemy") != creature:
+			return {"ok": false, "why": "shared trainer HP fixture is not bound to this opponent"}
+		var row: Dictionary = rec.get("opponent", {})
+		staged = minf(staged, float(row.get("hp", 0.0)))
+		if staged <= 0.0:
+			return {"ok": false, "why": "shared trainer HP fixture cannot revive a terminal opponent"}
+		if is_equal_approx(hp, staged) and is_equal_approx(float(row.get("hp", 0.0)), staged):
+			return {"ok": true}
+		authority.call("set_opponent_hp", encounter_id, staged, float(row.get("hp_max", creature.get("max_hp"))))
+		creature.set("hp", staged)
+		director.call("_host_after_encounter_change", encounter_id)
+	else:
+		creature.set("hp", staged)
+	return {"ok": true}
+
+
 ## Fight the trainer's whole team and win it, through the production strike
 ## path. `smoke_trainer_battle.gd`'s own loop, with the presses replaced by real
 ## `strike_intent` submissions so the HOST arbitrates every blow.
@@ -3643,9 +3684,9 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		# arm. `smoke_net_shared_boss.gd` does, and says so.
 		var ceiling := float(args.get("enemy_hp_ceiling", 0.0))
 		if ceiling > 0.0:
-			var theirs: Variant = (opponent as Node3D).get("instance")
-			if theirs != null and float((theirs as RefCounted).get("hp")) > ceiling:
-				(theirs as RefCounted).set("hp", ceiling)
+			var staged := _stage_trainer_hp_ceiling(director, manager, opponent as Node3D, ceiling)
+			if not bool(staged.get("ok", false)):
+				return {"verdict": "ERROR", "detail": str(staged.get("why", "trainer HP fixture failed"))}
 		var target: Vector3 = (opponent as Node3D).call("centre")
 		var stand := target + Vector3(1.1, 0.0, 0.0)
 		if (body as Node3D).has_method("place_on_ground"):

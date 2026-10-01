@@ -340,6 +340,181 @@ func test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unread
 	assert_eq(code, 0, combined)
 
 
+var _native_hp_fixture_completed := false
+var _native_hp_fixture_observation: Dictionary = {}
+
+## Real scene timers must advance for the projectile's host-owned arrival.
+func _native_projectile_until(condition: Callable) -> bool:
+	var deadline := Time.get_ticks_msec() + 3000
+	while not bool(condition.call()) and Time.get_ticks_msec() < deadline:
+		_native_poll()
+		await (Engine.get_main_loop() as SceneTree).process_frame
+	_native_drain()
+	return bool(condition.call())
+
+## The old live-only six-HP setup is a negative control, followed by the exact
+## helper used by win_trainer_battle. Production authority/presentation stays
+## unchanged; this witnesses the fixture and arrival, not a complete Warden win.
+func _case_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
+	if not _native_build(): return
+	assert_false(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
+		"the disclosed HP fixture covers ordinary authority with the tracked path off")
+	var guest_id := _native_guest_api.get_unique_id()
+	var owners := {1: "native-hp-host", guest_id: "native-hp-guest"}
+	for director: NativeDirector in [_native_host, _native_guest]:
+		var session := director.get("_session") as SessionStub
+		session.applied = true
+		session.owners = owners.duplicate()
+		(director.get("_manager") as Node).free()
+	var host_root := _native_fixture.get_node("Host")
+	var guest_root := _native_fixture.get_node("Guest")
+	var host_manager := NativeTrainerManager.new()
+	var guest_manager := NativeTrainerManager.new()
+	host_root.add_child(host_manager)
+	guest_root.add_child(guest_manager)
+	host_manager.set_physics_process(false)
+	guest_manager.set_physics_process(false)
+	_native_host.set("_manager", host_manager)
+	_native_guest.set("_manager", guest_manager)
+	var striker := NATIVE_SPECIES.spawn("terrapup")
+	var guest_creature := NATIVE_SPECIES.spawn("trailpup")
+	var enemy := NATIVE_SPECIES.spawn("bramblebun")
+	var mirror := NATIVE_CREATURE_CODEC.decode(NATIVE_CREATURE_CODEC.encode(enemy))
+	assert_true(mirror != null)
+	if mirror == null: return
+	var ally := _native_trainer_body(host_root, striker, Vector3(0.0, 0.0, 1.1), 1)
+	ally.add_to_group("deployed_creature")
+	var guest_ally := _native_trainer_body(guest_root, guest_creature, Vector3(4.0, 0.0, 0.0), guest_id)
+	var foe := _native_trainer_body(host_root, enemy, Vector3.ZERO)
+	var guest_foe := _native_trainer_body(guest_root, mirror, Vector3.ZERO)
+	var player := Node3D.new()
+	var guest_player := Node3D.new()
+	host_root.add_child(player)
+	guest_root.add_child(guest_player)
+	_native_host.set("_ally", striker)
+	_native_host.set("_ally_body", ally)
+	_native_host.set("_player", player)
+	_native_host.set("_trainer_spec", {"id": "native-hp-fixture"})
+	_native_host.set("_trainer_body", foe)
+	_native_host.set("_engaged_with", foe)
+	_native_host._host_set_deployed(1, {"creature_uid": striker.uid,
+		"species_id": striker.species_id, "shiny": false, "card": _native_host._creature_card(striker)})
+	_native_host._ensure_encounter_arbiters()
+	var arbiter: RefCounted = _native_host.get("_encounter_host")
+	var rec: Dictionary = arbiter.call("open", 1, "meadows", "trainer", {
+		"species_id": enemy.species_id, "level": enemy.level, "hp": enemy.hp,
+		"hp_max": enemy.max_hp, "owner_npc": "native-hp-fixture",
+		"position": [foe.centre().x, foe.centre().y, foe.centre().z]}, striker.uid, owners[1])
+	var encounter_id := str(rec.encounter_id)
+	_native_host.set("_encounter", rec)
+	assert_true(host_manager.begin(player, foe, ally, [striker] as Array[RefCounted], null, null, true))
+	assert_true(guest_manager.begin(guest_player, guest_foe, guest_ally, [guest_creature] as Array[RefCounted], null, null, true))
+	host_manager.bind_encounter(_native_host, encounter_id, "trainer")
+	guest_manager.bind_encounter(_native_guest, encounter_id, "trainer")
+	var join := _native_guest.submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+		"character_id": owners[guest_id]})
+	assert_true(bool(join.get("pending", false)))
+	assert_true(_native_until(func() -> bool: return (arbiter.call("participants_of", encounter_id) as Array).has(guest_id)))
+	_native_drain()
+	var exits: Array[String] = []
+	host_manager.exited.connect(func(outcome: String) -> void: exits.append(outcome))
+	var finished: Array[Dictionary] = []
+	_native_host.host_strike_finished.connect(func(_intent: Dictionary, author: int, verdict: Dictionary) -> void:
+		finished.append({"author": author, "verdict": verdict.duplicate(true)}))
+	var pending := host_manager._move_profile("player_quick", str(striker.move_quick))
+	pending["is_quick"] = true
+	host_manager.set("_pending_move", pending)
+	assert_eq(str(striker.move_quick), "pebble_toss")
+	var hp_full := float(enemy.hp)
+	# Ordinary full-health control: admission does not change HP; arrival does.
+	host_manager._submit_strike_intent()
+	assert_almost_eq(float(enemy.hp), hp_full)
+	assert_true(await _native_projectile_until(func() -> bool: return finished.size() == 1))
+	assert_true(bool(finished.back().get("verdict", {}).get("delta", {}).get("hit", false)))
+	assert_true(float(enemy.hp) > 6.0 and float(enemy.hp) < hp_full)
+	assert_almost_eq(float(arbiter.call("opponent_hp", encounter_id)), float(enemy.hp))
+	assert_almost_eq(float(mirror.hp), float(enemy.hp))
+	var hp_after_control := float(enemy.hp)
+	var deadline := int((arbiter.call("strike_authority_state", encounter_id, 1) as Dictionary).get("deadline_ms", 0))
+	assert_true(await _native_projectile_until(func() -> bool: return Time.get_ticks_msec() >= deadline))
+	# Reproduce only the original smoke's live-only cap, without changing authority.
+	enemy.set("hp", 6.0)
+	host_manager._submit_strike_intent()
+	assert_almost_eq(float(enemy.hp), hp_after_control, 0.001, "the authoritative launch snapshot correctly overwrites the invalid live-only fixture")
+	assert_true(await _native_projectile_until(func() -> bool: return finished.size() == 2))
+	assert_true(float(enemy.hp) > 6.0 and float(enemy.hp) < hp_after_control)
+	var fixture_script: Script = load("res://tools/net/peer_runner.gd")
+	var before_authority: Dictionary = arbiter.call("strike_authority_state", encounter_id, 1)
+	var max_hp_before := float(enemy.max_hp)
+	var phase_before := str(arbiter.call("phase", encounter_id))
+	var staged: Dictionary = fixture_script.call("_stage_trainer_hp_ceiling", _native_host, host_manager, foe, 6.0)
+	assert_true(bool(staged.get("ok", false)))
+	_native_drain()
+	assert_almost_eq(float(enemy.hp), 6.0)
+	assert_almost_eq(float(arbiter.call("opponent_hp", encounter_id)), 6.0)
+	assert_almost_eq(float(mirror.hp), 6.0)
+	assert_almost_eq(float(enemy.max_hp), max_hp_before)
+	assert_eq(str(arbiter.call("phase", encounter_id)), phase_before)
+	assert_eq(arbiter.call("strike_authority_state", encounter_id, 1), before_authority, "setup cannot reset cooldown or accepted-action authority")
+	assert_false(bool(enemy.fainted), "HP setup cannot cause a faint or won outcome")
+	assert_eq(host_manager.state, NATIVE_COMBAT.State.ACTIVE)
+	assert_true(exits.is_empty())
+	assert_eq(int(striker.battles_fought), 0)
+	var staged_seq := int((arbiter.call("record", encounter_id) as Dictionary).get("seq", 0))
+	assert_true(bool((fixture_script.call("_stage_trainer_hp_ceiling", _native_host, host_manager, foe, 6.0) as Dictionary).get("ok", false)))
+	assert_eq(int((arbiter.call("record", encounter_id) as Dictionary).get("seq", 0)), staged_seq,
+		"an already consistent ceiling cannot churn state sequence")
+	var refused: Dictionary = fixture_script.call("_stage_trainer_hp_ceiling", _native_guest, guest_manager, guest_foe, 6.0)
+	assert_false(bool(refused.get("ok", true)), "a guest cannot stage shared authoritative HP")
+	assert_almost_eq(float(mirror.hp), 6.0)
+	# The same six-HP fixture must survive the next real scheduled projectile.
+	for attempt in 8:
+		deadline = int((arbiter.call("strike_authority_state", encounter_id, 1) as Dictionary).get("deadline_ms", 0))
+		assert_true(await _native_projectile_until(func() -> bool: return Time.get_ticks_msec() >= deadline))
+		var hp_before := float(enemy.hp)
+		var count_before := finished.size()
+		host_manager._submit_strike_intent()
+		assert_almost_eq(float(enemy.hp), hp_before, 0.001, "launch cannot undo the consistent canonical fixture")
+		assert_true(await _native_projectile_until(func() -> bool: return finished.size() > count_before))
+		assert_true(float(enemy.hp) < hp_before, "only the real host arrival reduces HP")
+		if bool(enemy.fainted): break
+	assert_true(bool(enemy.fainted), "the real CreatureInstance.take_damage, never fixture setup, causes the faint")
+	assert_true(bool(finished.back().get("verdict", {}).get("delta", {}).get("killed", false)))
+	assert_almost_eq(float(enemy.hp), 0.0)
+	assert_eq(str(arbiter.call("phase", encounter_id)), "done")
+	assert_eq(host_manager.state, NATIVE_COMBAT.State.RESOLVING)
+	assert_eq(guest_manager.state, NATIVE_COMBAT.State.RESOLVING)
+	assert_true(exits.is_empty(), "the original faint pause still precedes round exit")
+	_native_hp_fixture_observation = {"full_hp": hp_full, "hp_after_control": hp_after_control,
+		"ceiling": 6.0, "max_hp": enemy.max_hp, "accepted_arrivals": finished.size(),
+		"killed_by_host_arrival": enemy.fainted, "record_phase": arbiter.call("phase", encounter_id)}
+	_native_hp_fixture_completed = true
+
+func test_native_trainer_hp_fixture_survives_projectile_snapshot() -> void:
+	var runner_path := "user://director_hp_fixture_regression_runner.gd"
+	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null: return
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_director_join_snapshot.gd").new()\n\tawait test._case_native_trainer_hp_fixture_survives_projectile_snapshot()\n\ttest._native_cleanup()\n\tprint("DIRECTOR_HP_FIXTURE_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures,"completed":test._native_hp_fixture_completed,"observation":test._native_hp_fixture_observation}))\n\tquit(0 if test.failures.is_empty() and test._native_hp_fixture_completed else 1)\n')
+	runner.close()
+	var output: Array = []
+	var absolute := ProjectSettings.globalize_path(runner_path)
+	var log_path := ProjectSettings.globalize_path("user://director-hp-fixture-regression-child.log")
+	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", absolute, "--log-file", log_path], output, true)
+	DirAccess.remove_absolute(absolute)
+	var combined := "\n".join(output)
+	var result: Dictionary = {}
+	for line: String in combined.split("\n"):
+		if line.begins_with("DIRECTOR_HP_FIXTURE_RESULT="):
+			result = JSON.parse_string(line.trim_prefix("DIRECTOR_HP_FIXTURE_RESULT="))
+	assert_true(bool(result.get("completed", false)), combined)
+	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_true(int(result.get("assertions", 0)) >= 45)
+	assert_false(combined.contains("ERROR:"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
+	assert_eq(code, 0, combined)
+
+
 ## Scene presentation only. Creature HP/fainted, move profiles, cooldown/Wind,
 ## host admission, snapshots, verdict consumption, XP and round exit are real.
 class NativeTrainerBody extends Node3D:
