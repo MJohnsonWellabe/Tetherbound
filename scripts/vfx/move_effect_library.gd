@@ -104,6 +104,22 @@ static func frozen_copy(value: Variant) -> Variant:
 		return copy
 	return value
 
+## Resolve the one contact cue for the accepted receipt owner. This does not
+## play, deduplicate or authorize it; the existing transaction owns all three.
+static func impact_cue(frozen_move: Dictionary) -> Dictionary:
+	if not CONTRACT.whole(frozen_move.get("mastery_rank"), 1, 5) \
+			or not frozen_move.get("vfx") is Dictionary \
+			or not CONTRACT.visual(frozen_move.vfx): return {}
+	var row := resolve(frozen_move.vfx, int(frozen_move.mastery_rank))
+	if row.is_empty(): return {}
+	var sound: Dictionary = row.sound
+	var phase := "impact_mastery" if int(frozen_move.mastery_rank) >= 5 else "impact"
+	var cue_id := str(sound.get(phase, ""))
+	var audio := preload("res://scripts/audio/audio_manager.gd")
+	var path := str(audio.section("move_effect_cues").get(cue_id, ""))
+	if path.is_empty(): return {}
+	return {"cue_id": cue_id, "path": path, "gain_db": float(sound.get("gain_db", -7.0))}
+
 static func cancel_action(tree: SceneTree, action_id: String) -> void:
 	if tree == null or action_id.is_empty(): return
 	for effect: Node in tree.get_nodes_in_group("move_effect_presentation"):

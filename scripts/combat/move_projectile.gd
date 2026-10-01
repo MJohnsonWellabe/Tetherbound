@@ -32,6 +32,9 @@ static func travel_seconds(from: Vector3, to: Vector3, spec: Dictionary,
 static func cancel_action(tree: SceneTree, action_id: String) -> void:
 	LIBRARY.cancel_action(tree, action_id)
 
+static func impact_cue(frozen_move: Dictionary) -> Dictionary:
+	return LIBRARY.impact_cue(frozen_move)
+
 static func confirm_impact(tree: SceneTree, action_id: String) -> void:
 	if tree == null or action_id.is_empty(): return
 	for effect: Node in tree.get_nodes_in_group("move_effect_presentation"):
