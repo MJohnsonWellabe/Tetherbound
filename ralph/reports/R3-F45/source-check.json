@@ -1,0 +1,20 @@
+{
+  "kind": "non_engine_source_only",
+  "species": 69,
+  "tasks": 207,
+  "parsed_scripts": [
+    "scripts/creatures/research_log.gd",
+    "scripts/creatures/research_actions.gd",
+    "scripts/ui/research_log_panel.gd",
+    "scripts/ui/tab_quest_log.gd",
+    "scripts/data/redesign_state.gd",
+    "scripts/net/character_action_rules.gd",
+    "scripts/net/character_action_delivery.gd",
+    "scripts/net/session.gd",
+    "scripts/combat/encounter_director.gd",
+    "tests/test_research_log.gd"
+  ],
+  "runtime_enabled": false,
+  "checks": "PASS",
+  "limits": "Pure Lark grammar only; no Godot type resolution, execution, persistence or ACK proof."
+}

@@ -49,6 +49,11 @@ static func validate(scope: String, value: Variant, owned_uids: Array = []) -> A
 					errors.append("invalid alpha trait %s" % id)
 				seen.append(trait)
 	if scope == "character":
+		# Optional additive personal carrier. Lazy load preserves the existing
+		# Essence -> state dependency without creating a static preload cycle.
+		if value.has("research"):
+			var research: GDScript = load("res://scripts/creatures/research_log.gd")
+			errors.append_array(research.personal_errors(value, research.config()))
 		# Additive F43 carrier: v28 records without a board remain valid. Load
 		# lazily to avoid a static cycle through Essence's existing state checker.
 		if value.has("bounties"):

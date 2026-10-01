@@ -349,6 +349,12 @@
       "transaction": "domain:<character_id>:<sequence>; host validates; atomically debit/grant; replay no mutation",
       "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
     },
+    "redesign_character.research": {
+      "scope": "character",
+      "authority": "host-confirmed actual encounter sight/cast/catch/defeat; stable admitted participants",
+      "transaction": "research_event replay digest includes world namespace/session/original event/species/kind; research_claim pays canonical type essence and research:<species>:<task>:<character_id> in one existing character_action prepared journal; no release mutation",
+      "persistence": "optional additive v28 carrier; absent is empty; independent species history/event receipts/titles survives release, reload and other worlds; host bool-save, owner bool-save, exact ACK and accepted world save precede readiness"
+    },
     "redesign_character.research_receipts": {
       "scope": "character",
       "authority": "host validates; owning peer persists character",
