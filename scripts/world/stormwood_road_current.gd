@@ -29,7 +29,14 @@ var _spur_tints: Dictionary = {}
 
 
 static func config() -> Dictionary:
-	return JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH)) as Dictionary
+	var resolved: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var finish: Dictionary = resolved.get("finish_candidate", {})
+	if bool(finish.get("enabled", false)):
+		for key: String in ["core_energy", "edge_energy", "vein_width", "vein_breakup",
+				"vein_wander", "pulse_spacing_m", "pulse_sharpness"]:
+			if finish.has(key):
+				resolved[key] = finish[key]
+	return resolved
 
 
 ## `route.points` as Vector2s ordered so the current flows toward the Dynamo:

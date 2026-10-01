@@ -19,6 +19,10 @@ var _wood: StandardMaterial3D
 var _metal: StandardMaterial3D
 var _bark: StandardMaterial3D
 var _cut_wood: ShaderMaterial
+var _core_material: StandardMaterial3D
+var _core_lights: Array[OmniLight3D] = []
+var _core_revision := -1
+var _core_flags_id := 0
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -39,6 +43,7 @@ func build() -> void:
 	# The upper chamber is reached from the arena along the inside east trunk.
 	_ramp("CrownStair",Vector3(34,CORE_HEIGHT,0),Vector3(-16,CORE_HEIGHT+24,0),6)
 	if simulation_only:
+		set_process(false)
 		return
 	_presentation = _read_presentation()
 	_bark = _wood.duplicate() as StandardMaterial3D
@@ -50,6 +55,7 @@ func build() -> void:
 	_ascent_dressing()
 	_ascent_wayfinding()
 	_energy_seam()
+	set_process(_core_material != null)
 	if _presentation_enabled("built_detail"):
 		_built_detail()
 
@@ -782,6 +788,9 @@ func _mesh_bounds(node: Node,pose: Transform3D,result: Array[AABB]) -> void:
 		_mesh_bounds(child,pose,result)
 
 func _energy_seam() -> void:
+	if _presentation_enabled("core_finish"):
+		_finished_energy_seam()
+		return
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.albedo_color = Color("76cfff")
@@ -801,3 +810,72 @@ func _energy_seam() -> void:
 		light.light_energy = 4
 		light.omni_range = 75
 		add_child(light)
+
+
+## Presentation reads the existing authoritative world flag. No local award,
+## durable write, RNG consumption or shell geometry is introduced here.
+func _finished_energy_seam() -> void:
+	var settings: Dictionary = _presentation.core_finish
+	_core_material = StandardMaterial3D.new()
+	_core_material.albedo_color = Color(str(settings.colour))
+	_core_material.emission_enabled = true
+	_core_material.emission = Color(str(settings.emission))
+	_core_material.emission_energy_multiplier = float(settings.energy)
+	_core_material.roughness = 0.62
+	var root := Node3D.new()
+	root.name = "ForkedHeartCharge"
+	add_child(root)
+	var poses: Array[Transform3D] = []
+	for index in 32:
+		var p := Vector3(sin(index * 1.9) * 3.0, 8.0 + index * 7.0, 5.0)
+		var q := Vector3(sin((index + 1) * 1.9) * 3.0, 15.0 + index * 7.0, 5.0)
+		var width := float(settings.width_m)
+		poses.append(Transform3D(Basis.looking_at((q-p).normalized()).scaled(
+			Vector3(width, width, p.distance_to(q))), (p+q)*0.5))
+		if index % 5 == 2:
+			var tip := q + Vector3(-6.0 if index % 2 else 6.0, 5.0, 2.0)
+			var branch_width := float(settings.branch_width_m)
+			poses.append(Transform3D(Basis.looking_at((tip-q).normalized()).scaled(
+				Vector3(branch_width, branch_width, q.distance_to(tip))), (q+tip)*0.5))
+	_instances(root, poses, _core_material)
+	for y in [12.0, 75.0, 150.0, 200.0]:
+		var light := OmniLight3D.new()
+		light.position = Vector3(0.0, y, 5.0)
+		light.light_color = Color(str(settings.emission))
+		light.light_energy = float(settings.light_energy)
+		light.omni_range = float(settings.light_range_m)
+		light.shadow_enabled = false
+		root.add_child(light)
+		_core_lights.append(light)
+	_refresh_core_state()
+
+
+func _process(_delta: float) -> void:
+	if _core_material != null:
+		_refresh_core_state()
+
+
+func _refresh_core_state() -> void:
+	if not is_inside_tree():
+		return
+	var game := get_node_or_null("/root/Game")
+	if game == null:
+		return
+	var flags: RefCounted = game.get("progression")
+	if flags == null:
+		return
+	if flags.get_instance_id() == _core_flags_id and int(flags.get("revision")) == _core_revision:
+		return
+	_core_flags_id = flags.get_instance_id()
+	_core_revision = int(flags.get("revision"))
+	set_core_released(bool(flags.call("has", "stormwood:long_storm_ended")))
+
+
+func set_core_released(released: bool) -> void:
+	if _core_material == null:
+		return
+	var settings: Dictionary = _presentation.core_finish
+	_core_material.albedo_color = Color(str(settings.cooled_colour if released else settings.colour))
+	_core_material.emission_energy_multiplier = float(settings.cooled_energy if released else settings.energy)
+	for light: OmniLight3D in _core_lights:
+		light.visible = not released
