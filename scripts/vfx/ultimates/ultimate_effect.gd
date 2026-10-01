@@ -214,6 +214,9 @@ func confirm_presentation_impact() -> void:
 
 func reconcile_actor(current: Dictionary) -> void:
 	# Called from the existing registry/body lifecycle owner, never a peer card.
+	if bool(current.get("fainted", false)):
+		cancel_presentation()
+		return
 	# A newer accepted action on the same body must not erase an earlier
 	# airborne visual. Explicit action refusal uses cancel_action separately.
 	for key: String in ["character_id", "creature_uid", "encounter_id", "generation"]:
