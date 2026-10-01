@@ -1,0 +1,222 @@
+{
+  "main": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "ci_runs": [
+    {
+      "id": 36926263338,
+      "run_number": 6174,
+      "head_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+      "event": "schedule",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-01T21:05:20Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36926263338"
+    },
+    {
+      "id": 36884826950,
+      "run_number": 6171,
+      "head_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+      "event": "schedule",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-01T15:30:39Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36884826950"
+    },
+    {
+      "id": 36823163142,
+      "run_number": 6155,
+      "head_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+      "event": "schedule",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-01T06:07:53Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36823163142"
+    },
+    {
+      "id": 36803904688,
+      "run_number": 6109,
+      "head_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-01T02:02:00Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36803904688"
+    },
+    {
+      "id": 36798992271,
+      "run_number": 6088,
+      "head_sha": "b7cb96de89c4c6a9ae827f09e0ad7a2d3a699e70",
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-01T01:00:33Z",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36798992271"
+    }
+  ],
+  "latest_same_head_jobs": [
+    {
+      "name": "changes",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-harvest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-bake-freshness",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-combat-shard",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-veg-corridor",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-scatter-rules",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-unit-tests (1)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-unit-tests (2)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-core-verb-shard",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "export",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-regions-shard",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-cloudreach-midride-rejoin",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-veridian-offer",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-owner-regressions-shard",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-gate-evidence-shard",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-cloudreach-persistence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-gate-a-ui-build-shard",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-regions-relay",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-catching",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-continuous-core-known-red",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-gate-b-core",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-gate-evidence-finale",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-gate-b-full-known-red",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "discover-net-smokes",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-multiplayer-shard (5)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-multiplayer-shard (4)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-multiplayer-shard (7)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-multiplayer-shard (6)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-multiplayer-shard (2)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-multiplayer-shard (3)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "verify-multiplayer-shard (1)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify-solo-regression",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "ci-gate",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ]
+}
