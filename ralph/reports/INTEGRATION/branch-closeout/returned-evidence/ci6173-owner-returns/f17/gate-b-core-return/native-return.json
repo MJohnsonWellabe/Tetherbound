@@ -1,0 +1,717 @@
+{
+  "native": {
+    "head": "c7917ea506d44143c416cecc82d869edda1810c4",
+    "watchdog_seconds": 1200,
+    "elapsed_seconds": 474.5,
+    "timed_out": false,
+    "script": "tests/smoke_gate_b_continuous.gd",
+    "exit": 1,
+    "errors": [
+      "ERROR: could not reach actual door standoff: player=(23.87909, 0.900843, 6.558722) target=(27.0, 0.85, 5.0) distance=3.49 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Terrain\"]",
+      "ERROR: could not naturally enter Mira's building",
+      "ERROR: village tools: could not reach actual door standoff: player=(23.87909, 0.900843, 6.558722) target=(27.0, 0.85, 5.0) distance=3.49 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Terrain\"]",
+      "ERROR: village tools: could not naturally enter Mira's building"
+    ],
+    "summary": [],
+    "raw_log_sha256": "ee552a1fd9553539d6e33a3e14709756666e07067d38e236a763dfa9ca3cb7ef",
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-c7917ea506d4-smoke_gate_b_continuous\\smoke.log"
+  },
+  "raw_bytes": 1394919,
+  "lossless_log": "smoke.log.gz",
+  "source_pins": {
+    "scripts/player/player_controller.gd": "df8b89efa2f5dffd96b46e808662d398b5496aa7cb3d290a436b24f3cd5bfe2e",
+    "tests/helpers/opening_geometry_navigator.gd": "d078109a915db0c936ca1cb29fce8a7e7f66b1297abf249c5400f71d2183ae3f",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "5debb89039b9c1ae3e93d3f3bfb1975e4db38551d6471589a972d0543924ded5",
+    "tests/smoke_gate_b_continuous.gd": "49e9f4415d6e7e921938e613df0e374e6a3339deec2654670f4a9c421641bed1"
+  },
+  "new_failure_owner": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+  "owner_restored": true,
+  "source_candidate": "1c7e04b350dd2a559f71492655bd31ae8bc5287f",
+  "door_route_observations": [
+    {
+      "frame": 1,
+      "physics_frame": 3722,
+      "player": [
+        38.8166694641113,
+        -1.00154685974121,
+        -48.6163024902344
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.00823974609375,
+        -1.9073486328125e-06,
+        0.0082550048828125
+      ],
+      "slide_motion": [
+        -0.00823974609375,
+        -1.9073486328125e-06,
+        0.0082550048828125
+      ],
+      "controller_wanted_dir": [
+        -0.715178489685059,
+        0.0,
+        0.698941886425018
+      ],
+      "delivered_input": [
+        -0.964626312255859,
+        -0.26362144947052
+      ],
+      "progress_m": 0.0116635551676154,
+      "stall_frames": 1,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 3
+    },
+    {
+      "frame": 2,
+      "physics_frame": 3723,
+      "player": [
+        38.8000869750977,
+        -1.00151646137238,
+        -48.5998878479004
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0165824890136719,
+        3.03983688354492e-05,
+        0.0164146423339844
+      ],
+      "slide_motion": [
+        -0.0165824890136719,
+        3.03983688354492e-05,
+        0.0164146423339844
+      ],
+      "controller_wanted_dir": [
+        -0.715186774730682,
+        0.0,
+        0.69893342256546
+      ],
+      "delivered_input": [
+        -0.964623093605042,
+        -0.263632774353027
+      ],
+      "progress_m": 0.0349963707849383,
+      "stall_frames": 2,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 6
+    },
+    {
+      "frame": 3,
+      "physics_frame": 3724,
+      "player": [
+        38.7751579284668,
+        -1.00146007537842,
+        -48.5753211975098
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0249290466308594,
+        5.63859939575195e-05,
+        0.024566650390625
+      ],
+      "slide_motion": [
+        -0.0249290466308594,
+        5.63859939575195e-05,
+        0.024566650390625
+      ],
+      "controller_wanted_dir": [
+        -0.71519523859024,
+        0.0,
+        0.698924720287323
+      ],
+      "delivered_input": [
+        -0.964619874954224,
+        -0.263644486665726
+      ],
+      "progress_m": 0.0699960989877582,
+      "stall_frames": 3,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 9
+    },
+    {
+      "frame": 4,
+      "physics_frame": 3725,
+      "player": [
+        38.7419395446777,
+        -1.00145041942596,
+        -48.5425491333008
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0332183837890625,
+        9.65595245361328e-06,
+        0.0327720642089844
+      ],
+      "slide_motion": [
+        -0.0332183837890625,
+        9.65595154411858e-06,
+        0.0327720642089844
+      ],
+      "controller_wanted_dir": [
+        -0.715203583240509,
+        0.0,
+        0.69891619682312
+      ],
+      "delivered_input": [
+        -0.96461683511734,
+        -0.263655990362167
+      ],
+      "progress_m": 0.116659461520612,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 12
+    },
+    {
+      "frame": 5,
+      "physics_frame": 3726,
+      "player": [
+        38.7003288269043,
+        -1.00127637386322,
+        -48.5016670227051
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0416107177734375,
+        0.000174045562744141,
+        0.0408821105957031
+      ],
+      "slide_motion": [
+        -0.0416107177734375,
+        0.000174045562744141,
+        0.0408821105957031
+      ],
+      "controller_wanted_dir": [
+        -0.715216279029846,
+        0.0,
+        0.698903262615204
+      ],
+      "delivered_input": [
+        -0.964612066745758,
+        -0.263673514127731
+      ],
+      "progress_m": 0.174993234686553,
+      "stall_frames": 1,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 15
+    },
+    {
+      "frame": 6,
+      "physics_frame": 3727,
+      "player": [
+        38.6503677368164,
+        -1.00113236904144,
+        -48.4526405334473
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0499610900878906,
+        0.000144004821777344,
+        0.0490264892578125
+      ],
+      "slide_motion": [
+        -0.0499610900878906,
+        0.000144004836329259,
+        0.0490264892578125
+      ],
+      "controller_wanted_dir": [
+        -0.715225279331207,
+        0.0,
+        0.698894023895264
+      ],
+      "delivered_input": [
+        -0.964608550071716,
+        -0.263685971498489
+      ],
+      "progress_m": 0.244991290383041,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 18
+    },
+    {
+      "frame": 7,
+      "physics_frame": 3728,
+      "player": [
+        38.5920639038086,
+        -1.00095963478088,
+        -48.3954582214355
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0583038330078125,
+        0.000172734260559082,
+        0.0571823120117188
+      ],
+      "slide_motion": [
+        -0.0583038330078125,
+        0.000172734260559082,
+        0.0571823120117188
+      ],
+      "controller_wanted_dir": [
+        -0.715233862400055,
+        0.0,
+        0.698885262012482
+      ],
+      "delivered_input": [
+        -0.964605331420898,
+        -0.263697773218155
+      ],
+      "progress_m": 0.326656359247863,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 21
+    },
+    {
+      "frame": 8,
+      "physics_frame": 3729,
+      "player": [
+        38.5325660705566,
+        -1.00078547000885,
+        -48.3371162414551
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0594978332519531,
+        0.000174164772033691,
+        0.0583419799804688
+      ],
+      "slide_motion": [
+        -0.0594978332519531,
+        0.000174164772033691,
+        0.0583419799804688
+      ],
+      "controller_wanted_dir": [
+        -0.715242564678192,
+        0.0,
+        0.698876261711121
+      ],
+      "delivered_input": [
+        -0.964602053165436,
+        -0.263709872961044
+      ],
+      "progress_m": 0.409985880367458,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 24
+    },
+    {
+      "frame": 90,
+      "physics_frame": 3811,
+      "player": [
+        33.669132232666,
+        -0.528785228729248,
+        -43.5724563598633
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.058990478515625,
+        0.0110237598419189,
+        0.0576705932617188
+      ],
+      "slide_motion": [
+        -0.058990478515625,
+        0.0110237598419189,
+        0.0576705932617188
+      ],
+      "controller_wanted_dir": [
+        -0.716460406780243,
+        0.0,
+        0.697627782821655
+      ],
+      "delivered_input": [
+        -0.964140713214874,
+        -0.265391826629639
+      ],
+      "progress_m": 7.2391553921625,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 270
+    },
+    {
+      "frame": 180,
+      "physics_frame": 3901,
+      "player": [
+        27.7483539581299,
+        0.442862659692764,
+        -39.4245796203613
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0794868469238281,
+        0.00988656282424927,
+        0.0227241516113281
+      ],
+      "slide_motion": [
+        -0.0794868394732475,
+        0.00988656189292669,
+        0.0227241516113281
+      ],
+      "controller_wanted_dir": [
+        -0.961654365062714,
+        0.0,
+        0.274264335632324
+      ],
+      "delivered_input": [
+        -0.722858071327209,
+        -0.690996587276459
+      ],
+      "progress_m": 14.725556964986,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 540
+    },
+    {
+      "frame": 270,
+      "physics_frame": 3991,
+      "player": [
+        20.7056674957275,
+        0.99402117729187,
+        -37.1336555480957
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.0587482452392578,
+        -0.00023728609085083,
+        0.0591049194335938
+      ],
+      "slide_motion": [
+        -0.0587482452392578,
+        -0.00023728609085083,
+        0.0591049194335938
+      ],
+      "controller_wanted_dir": [
+        -0.705482959747314,
+        0.0,
+        0.70872688293457
+      ],
+      "delivered_input": [
+        -0.968166053295136,
+        -0.250308990478516
+      ],
+      "progress_m": 22.2142735449597,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 810
+    },
+    {
+      "frame": 360,
+      "physics_frame": 4081,
+      "player": [
+        15.4151382446289,
+        0.87485808134079,
+        -31.8177547454834
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.058833122253418,
+        -0.000326037406921387,
+        0.0590190887451172
+      ],
+      "slide_motion": [
+        -0.058833122253418,
+        -0.000326037406921387,
+        0.0590190887451172
+      ],
+      "controller_wanted_dir": [
+        -0.705973923206329,
+        0.0,
+        0.708237886428833
+      ],
+      "delivered_input": [
+        -0.967992305755615,
+        -0.250979781150818
+      ],
+      "progress_m": 29.715570311062,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 1080
+    },
+    {
+      "frame": 450,
+      "physics_frame": 4171,
+      "player": [
+        19.1236057281494,
+        0.88760906457901,
+        -26.7773094177246
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        0.0623455047607422,
+        0.000253081321716309,
+        0.0552883148193359
+      ],
+      "slide_motion": [
+        0.0623455047607422,
+        0.000253081321716309,
+        0.0552883148193359
+      ],
+      "controller_wanted_dir": [
+        0.748136043548584,
+        0.0,
+        0.663545370101929
+      ],
+      "delivered_input": [
+        -0.194200962781906,
+        0.980961799621582
+      ],
+      "progress_m": 37.047407570295,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 1350
+    },
+    {
+      "frame": 540,
+      "physics_frame": 4261,
+      "player": [
+        20.0055046081543,
+        0.900919258594513,
+        -19.6818561553955
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -0.000263214111328125,
+        1.49011611938477e-06,
+        0.0833339691162109
+      ],
+      "slide_motion": [
+        -0.000263214111328125,
+        1.49011611938477e-06,
+        0.0833339691162109
+      ],
+      "controller_wanted_dir": [
+        -0.00326752662658691,
+        0.0,
+        0.999994695186615
+      ],
+      "delivered_input": [
+        -0.864401578903198,
+        0.502802133560181
+      ],
+      "progress_m": 44.5199551833794,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 1620
+    },
+    {
+      "frame": 630,
+      "physics_frame": 4351,
+      "player": [
+        20.0000190734863,
+        0.900936126708984,
+        -12.1818761825562
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -9.5367431640625e-06,
+        0.0,
+        0.0833330154418945
+      ],
+      "slide_motion": [
+        -9.5367422545678e-06,
+        0.0,
+        0.0833330154418945
+      ],
+      "controller_wanted_dir": [
+        -0.000107834734080825,
+        0.0,
+        1.0
+      ],
+      "delivered_input": [
+        -0.129421293735504,
+        0.0758296325802803
+      ],
+      "progress_m": 52.019943180494,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 1890
+    },
+    {
+      "frame": 720,
+      "physics_frame": 4441,
+      "player": [
+        20.0000343322754,
+        0.900936126708984,
+        -4.68193197250366
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        0.0,
+        0.0,
+        0.0833334922790527
+      ],
+      "slide_motion": [
+        0.0,
+        0.0,
+        0.0833334922790527
+      ],
+      "controller_wanted_dir": [
+        -3.09944175569399e-06,
+        0.0,
+        1.0
+      ],
+      "delivered_input": [
+        -0.862755537033081,
+        0.505621194839478
+      ],
+      "progress_m": 59.5198873905465,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 2160
+    },
+    {
+      "frame": 810,
+      "physics_frame": 4531,
+      "player": [
+        20.0000400543213,
+        0.900936126708984,
+        2.81801581382751
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        -1.9073486328125e-06,
+        0.0,
+        0.0833332538604736
+      ],
+      "slide_motion": [
+        -1.9073486328125e-06,
+        0.0,
+        0.0833332538604736
+      ],
+      "controller_wanted_dir": [
+        -1.1742115020752e-05,
+        0.0,
+        1.0
+      ],
+      "delivered_input": [
+        -0.862759947776794,
+        0.505613744258881
+      ],
+      "progress_m": 67.0198351768777,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 2430
+    },
+    {
+      "frame": 900,
+      "physics_frame": 4621,
+      "player": [
+        23.8790855407715,
+        0.900842666625977,
+        6.55872201919556
+      ],
+      "request": [
+        27.0,
+        0.849999964237213,
+        7.59999990463257
+      ],
+      "actual_delta": [
+        0.0832977294921875,
+        0.0,
+        0.00243616104125977
+      ],
+      "slide_motion": [
+        0.0832977294921875,
+        0.0,
+        0.00243616080842912
+      ],
+      "controller_wanted_dir": [
+        0.999572575092316,
+        0.0,
+        0.0292347390204668
+      ],
+      "delivered_input": [
+        0.480185389518738,
+        0.877166986465454
+      ],
+      "progress_m": 74.3753220429644,
+      "stall_frames": 0,
+      "refusal": "",
+      "queries": 3,
+      "total_queries": 2700
+    }
+  ],
+  "limits": "Original default Gate B CORE failed at village tools/Mira door. Source reached the new failure; no full opening PASS, no acceptance credit. Earlier source and affected-unit passes remain scoped. Terrain named as actual contact, not a proven root cause. No unchanged rerun; exact failure returned for source repair."
+}
