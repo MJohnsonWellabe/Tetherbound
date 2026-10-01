@@ -1,0 +1,60 @@
+{
+  "scope": "Source/static evidence only; all F39 criteria remain OPEN",
+  "base_sha": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "checks": [
+    {
+      "check": "GDScript grammar only",
+      "file": "scripts/world/water_current_flow_view.gd",
+      "result": "PASS"
+    },
+    {
+      "check": "GDScript grammar only",
+      "file": "scripts/world/water_veilfall_falls.gd",
+      "result": "PASS"
+    },
+    {
+      "check": "GDScript grammar only",
+      "file": "tools/capture_f39_catalogue.gd",
+      "result": "PASS"
+    },
+    {
+      "check": "JSON, false gates and shader uniform links",
+      "config": "water_current_flow_visual",
+      "result": "PASS"
+    },
+    {
+      "check": "JSON, false gates and shader uniform links",
+      "config": "water_veilfall_falls_visual",
+      "result": "PASS"
+    },
+    {
+      "check": "Static full recapture plan",
+      "destinations": 24,
+      "planned_frames_per_preset_weather_pack": 240,
+      "result": "PASS",
+      "captured_frames": 0
+    },
+    {
+      "check": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "historical_catalog_source": "D:\\tetherbound\\redesign-board\\ralph\\reports\\VISUAL\\phase2\\catalog.csv",
+  "historical_catalog_sha256": "afa40b952af84083c94f81a82fb67826ed10c187d3f64efb18d873a08ff6da2a",
+  "tidewake_rows": 44,
+  "tidewake_impact_over_12": 43,
+  "source_sha256": {
+    "scripts/world/water_current_flow_view.gd": "65a0f622ba1505e7eec30896f321f88f61c71e90071da366f3d5426448e0aea6",
+    "scripts/world/water_veilfall_falls.gd": "e1cd280136346f05ebfa2f4a5e3a850d3b41960a2b09dcab6e552eb847ec7528",
+    "tools/capture_f39_catalogue.gd": "a4cfac981825d065a6fadaa6701326a902f15d0efb84edd19f93aeea9552f10d",
+    "data/config/water_current_flow_visual.json": "e1342f53c7515ae46404910563ffdf8f2c2d4536a56417a4090a28dd89da82db",
+    "data/config/water_veilfall_falls_visual.json": "2c76e8631f8c056dfdeb8fb23282bc7bc8069e674c5e65de6d7fac5918971106",
+    "shaders/water_current_flow.gdshader": "16c80bfb85839fb7b9168d05885c945cae4ead1b5dbd0b0da3143bc27e771154",
+    "shaders/water_veilfall_fall.gdshader": "f56d2386c5658adade245215c34eb5d331548996c381b116a2cd8be69d4f5ce0"
+  },
+  "runtime_executed": false,
+  "native_frames_captured": 0,
+  "code_blind_judge": "PENDING",
+  "multiplayer": "No durable mutation/RPC/identity/transaction added. Existing world flag drives every peer current look on build/poll; rejoin proof pending.",
+  "preserved": "P2-008 shore, physical terrain/route/ribbons/current strength, F37 dive, creature assets, renderer default, saves, global STATE, dashboard and CI"
+}
