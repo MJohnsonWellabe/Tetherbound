@@ -83,6 +83,8 @@ const REDESIGN_DATA := preload("res://scripts/data/redesign_data.gd")
 const BUILDING_UID_META := "building_uid"
 const STATIONS_CONFIG := "res://data/config/stations.json"
 const ALTAR_INTERACTION := "res://scripts/ui/altar_station_interaction.gd"
+var _station_view_producer: Node
+var _station_view_refresh_pending := false
 static var _home_config: Dictionary = {}
 static var _home_config_loaded := false
 
@@ -461,7 +463,38 @@ func _ready() -> void:
 	_camera_rig = get_node_or_null(camera_rig_path)
 	add_to_group(BUILD_PLACER_GROUP)
 	_connect_ledger()
+	_connect_station_view(_game())
 	restore_from_game(_game())
+
+func _connect_station_view(game: Node) -> void:
+	if game == null or STATION_RULES.config().get("runtime_enabled") != true: return
+	var producer := game.get("session") as Node
+	if producer == _station_view_producer: return
+	if is_instance_valid(_station_view_producer) and _station_view_producer.has_signal("homestead_personal_view_completed") \
+			and _station_view_producer.is_connected("homestead_personal_view_completed",_station_view_completed):
+		_station_view_producer.disconnect("homestead_personal_view_completed",_station_view_completed)
+	_station_view_producer=producer
+	if producer != null and producer.has_signal("homestead_personal_view_completed"):
+		producer.connect("homestead_personal_view_completed",_station_view_completed)
+
+func _station_view_completed() -> void:
+	if _station_view_refresh_pending: return
+	_station_view_refresh_pending=true
+	call_deferred("_refresh_station_preview")
+
+func _refresh_station_preview() -> void:
+	_station_view_refresh_pending=false
+	var game := _game()
+	if game == null or game.get("session") != _station_view_producer \
+			or not is_instance_valid(_player) or not _pending_placements.is_empty() \
+			or not _pending_dismantles.is_empty(): return
+	var armed := str(game.get("pending_build"))
+	if not armed.is_empty() and _station_path(armed): _show_ghost(game,armed)
+
+func _exit_tree() -> void:
+	if is_instance_valid(_station_view_producer) and _station_view_producer.has_signal("homestead_personal_view_completed") \
+			and _station_view_producer.is_connected("homestead_personal_view_completed",_station_view_completed):
+		_station_view_producer.disconnect("homestead_personal_view_completed",_station_view_completed)
 
 
 func _game() -> Node:
@@ -501,6 +534,7 @@ func _physics_process(_delta: float) -> void:
 	var game := _game()
 	if game == null or _player == null:
 		return
+	_connect_station_view(game)
 	# Capability can arrive after scene restoration. Retry mounting the same
 	# committed nodes; the frozen Training attach() is idempotent.
 	_mount_current_altars(game)
