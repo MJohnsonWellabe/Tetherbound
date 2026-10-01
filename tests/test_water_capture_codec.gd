@@ -91,3 +91,45 @@ func test_repeat_decode_does_not_add_to_any_gameplay_party() -> void:
 	assert_false(owner.add(first))
 	assert_false(owner.add(second))
 	assert_eq(owner.members().size(), 5)
+
+func test_complete_legacy_capture_shape_remains_valid_without_loadout_adoption() -> void:
+	var original := populated()
+	original.loadout_initialized = false
+	original.known_moves = []
+	original.move_mastery_uses = {}
+	original.move_mastery_receipts = {}
+	original.move_utility = ""
+	original.move_ultimate = ""
+	original.loadout_revision = 0
+	original.loadout_last_edit = {}
+	var payload := CODEC.encode(original)
+	assert_false(payload.is_empty())
+	assert_false(payload.has("known_moves"))
+	var restored := CODEC.decode(JSON.parse_string(JSON.stringify(payload)))
+	assert_true(restored != null)
+	if restored == null: return
+	assert_false(restored.loadout_initialized)
+	assert_eq(restored.uid, original.uid)
+	var actual := CODEC.encode(restored)
+	assert_eq(actual.size(), payload.size())
+	for key: String in payload:
+		if payload[key] is float:
+			assert_true(is_equal_approx(float(actual[key]), float(payload[key])), "Legacy saved float survives: " + key)
+		else:
+			assert_eq(actual[key], payload[key], "Legacy saved field survives: " + key)
+
+func test_new_capture_loadout_is_complete_and_semantically_valid_or_refused() -> void:
+	var valid := CODEC.encode(populated())
+	assert_false(valid.is_empty())
+	assert_true(valid.has("known_moves"))
+	assert_true(CODEC.decode(valid) != null)
+	for field: String in ["known_moves", "move_mastery_uses", "move_mastery_receipts",
+		"move_utility", "move_ultimate", "loadout_revision", "loadout_last_edit"]:
+		var partial := valid.duplicate(true)
+		partial.erase(field)
+		assert_true(CODEC.decode(partial) == null, "Partial new document never enters legacy path: " + field)
+	for pair: Array in [["known_moves", ["invented_move"]], ["move_mastery_uses", {"invented_move": 1}],
+		["loadout_revision", 0.5], ["move_utility", "invented_move"], ["loadout_last_edit", {"edit_id": "forged"}]]:
+		var malformed := valid.duplicate(true)
+		malformed[pair[0]] = pair[1]
+		assert_true(CODEC.decode(malformed) == null, "Refuse malformed new document: " + str(pair[0]))

@@ -1090,7 +1090,9 @@ func _finalize_snapshot_receive() -> bool:
 			or not bool(ledger_rpc.call("reconcile_actor_vitals_before_ready"))):
 		_fail_snapshot_receive("Your accepted vitality receipt could not be saved. It remains recoverable on the host.", true)
 		return false
-	if ledger_rpc != null and not bool(ledger_rpc.call("reconcile_creature_training_before_ready")):
+	var training_ready: Variant = ledger_rpc.call("reconcile_creature_training_before_ready") \
+		if ledger_rpc != null and ledger_rpc.has_method("reconcile_creature_training_before_ready") else null
+	if not training_ready is bool or not training_ready:
 		_training_bootstrap_waiting = true
 		return true # Existing bootstrap stays closed; exact saved decision resumes it.
 	_training_bootstrap_waiting = false
@@ -1452,7 +1454,7 @@ func _process(delta: float) -> void:
 		if not portal_context.is_empty(): _portal_policy.call("cancel_invalid", portal_context)
 	if _training_bootstrap_waiting:
 		var training_transport := get_node_or_null(^"LedgerRpc")
-		if training_transport != null:
+		if training_transport != null and training_transport.has_method("reconcile_creature_training_before_ready"):
 			training_transport.call("reconcile_creature_training_before_ready")
 	_poll_lingering_peer()
 	if _closing_frames > 0:
