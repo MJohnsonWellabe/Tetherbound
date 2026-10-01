@@ -37,6 +37,17 @@ const DEFINITION := {
 	"base_hp": 100.0, "base_attack": 20.0, "base_defence": 20.0,
 }
 
+var _managers: Array[Node] = []
+
+
+func after_each() -> void:
+	# Bare Nodes have no tree to own their lifetime; RefCounted test teardown
+	# alone cannot free the manager or the party records it still holds.
+	for manager: Node in _managers:
+		if is_instance_valid(manager):
+			manager.free()
+	_managers.clear()
+
 
 func _creature(level: int, nickname: String) -> RefCounted:
 	var creature: RefCounted = CREATURE.from_species("terrapup", DEFINITION)
@@ -46,7 +57,9 @@ func _creature(level: int, nickname: String) -> RefCounted:
 
 
 func _manager() -> Node:
-	return COMBAT_MANAGER.new()
+	var manager: Node = COMBAT_MANAGER.new()
+	_managers.append(manager)
+	return manager
 
 
 ## A manager pre-set to a live, active fight with `party` seated and `active`
