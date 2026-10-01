@@ -53,7 +53,11 @@ static func board_errors(raw: Variant) -> Array[String]:
 		or not ESSENCE._integer(raw.get("cycle"), 0, 2147483646) or not raw.get("slots") is Array:
 		return ["invalid bounty clock"]
 	if raw.cycle == 0:
-		return [] if raw == empty_board() else ["invalid initial bounty board"]
+		# JSON restores integral numbers as floats. Validate the exact empty
+		# carrier by value after the integer/type checks above, so fresh and
+		# reloaded characters share the same valid initial state.
+		return [] if raw.anchor_world.is_empty() and raw.anchor_day == 0 and raw.slots.is_empty() \
+			else ["invalid initial bounty board"]
 	if raw.anchor_world.is_empty() or raw.anchor_day < 1 or raw.slots.size() != 3: return ["bounty board requires three slots"]
 	var seen: Array[String] = []
 	var definitions: Array[String] = []

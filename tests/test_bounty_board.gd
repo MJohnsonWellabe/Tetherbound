@@ -27,6 +27,20 @@ func _issued() -> Dictionary:
 			{"instance": "delivery".sha256_text(), "template": "meadows_material_delivery", "complete": false}]}
 	return current
 
+func test_empty_board_survives_character_json_reload_without_accepting_partial_state() -> void:
+	var current := _record()
+	var restored: Dictionary = JSON.parse_string(JSON.stringify(current))
+	assert_true(STATE.validate("character", restored.redesign_character).is_empty())
+	assert_true(BOARD.stage(restored, 0, "bounty_rotate", {}, _context(restored)).ok)
+	for field: String in ["anchor_world", "anchor_day", "cycle", "slots"]:
+		var malformed: Dictionary = restored.redesign_character.bounties.duplicate(true)
+		match field:
+			"anchor_world": malformed.anchor_world = "world-partial"
+			"anchor_day": malformed.anchor_day = 1
+			"cycle": malformed.cycle = 0.5
+			"slots": malformed.slots = [{"partial": true}]
+		assert_false(BOARD.board_errors(malformed).is_empty(), field)
+
 func test_rotation_exactly_three_unlocked_deterministic_personal_and_no_reroll() -> void:
 	var current := _record()
 	var context := _context(current)
