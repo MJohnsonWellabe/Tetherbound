@@ -1,0 +1,30 @@
+{
+  "source_pin": "9696b2c3286209b825428ec0b3d8ee548e907503",
+  "source_checks": 88,
+  "native_executed_here": false,
+  "readonly_root_head": "e8d872ed185f0172df68c89d1fbce9dbd0f2b34e",
+  "readonly_root_apply_check": true,
+  "production_changes": [],
+  "patch": {
+    "path": "D:\\tetherbound\\redesign-foundations\\.tmp\\shared-boss-9696\\host-strike-geometry.patch",
+    "bytes": 14489,
+    "sha256": "fb60ea8e055a5e9005f72b917181dfb06fd0ec7bba19f5d065bf06dccfa856c7"
+  },
+  "paths": [
+    {
+      "path": "tests/smoke_net_shared_boss.gd",
+      "sha256_lf": "b1e4374816a50aa52efc16237a64b982148e3486fb05d6ff653db2c539829ab6",
+      "blob": "1668ae34597ef15a96b3dd2a6dd397a051146ca2"
+    },
+    {
+      "path": "tools/net/peer_runner.gd",
+      "sha256_lf": "9912463f7fd660263b6c67f3fa03336c85f87f46cc4fe162476645f7740cdfa0",
+      "blob": "30d9fdd204f342aabf7ff916b6cc804d6682b013"
+    },
+    {
+      "path": "tests/test_net_boss_snapshot.gd",
+      "sha256_lf": "fc12a058e2282c6f7c1ec267ffc8dd8e111939c930256b45cd8b087704f2f088",
+      "blob": "7b44e8cba8dec1ea155fe55c57602670fac68823"
+    }
+  ]
+}

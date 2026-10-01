@@ -175,9 +175,9 @@ const ALLOWED_SCALING_KEYS: Array[String] = ["stat_multiplier", "attack_cooldown
 ## player who misses swings again. The claim is that the peer CAN land a blow on
 ## the shared record, not that any particular swing connects.
 ##
-## A swing is only submitted once the HOST holds the creature within
-## `SWING_REACH_M` of the boss, so an attempt spent waiting for the host's view
-## to catch up is a re-place and not one of these.
+## A swing is only submitted once the HOST's actual quick profile can reach
+## the boss from the creature's centre. An attempt waiting for that host
+## geometry is a re-place and not one of these.
 const SWINGS := 14
 const PLACE_SETTLE := 20
 const STRIKE_SETTLE := 30
@@ -203,15 +203,14 @@ const FRIENDLY_TRIES := 12
 ## A short settle for that staging, for the same reason: a long one gives each
 ## manager time to pull its creature back.
 const FRIENDLY_SETTLE := 8
-## What "within one swing" means here, used by both halves: the gate the
-## shared-damage loop waits for before it submits, and the diagnostic the
-## friendly-fire staging is reported against.
+## The unchanged conservative distance used by friendly-fire staging. The
+## boss-damage half reads the live host quick profile instead: production
+## floors reach at the rendered pair's contact spacing plus 0.5 m.
 ## `combat_manager.gd::_with_reach_for_the_bodies` floors the real quick reach at
 ## (r + r) * body_clearance 2.75 + 0.5, a little over 3 m for two ordinary bodies;
 ## 4.0 is that with room for two of unequal size. Deliberately CONSERVATIVE
-## against the boss, whose body is larger than an ordinary one: runs that landed a
-## blow from 5.2 m are on record, so a gate at 4.0 never lets through a swing that
-## could not reach.
+## for bringing the two allies together; this is not a replacement for the
+## boss's production body-scaled reach or its centre-to-centre cone predicate.
 const SWING_REACH_M := 4.0
 
 ## `smoke_boss.gd`'s allowance, by its own name and for its own stated reason.
@@ -642,23 +641,31 @@ func _run() -> void:
 				break
 			# Where the HOST holds this peer's creature, and where it holds the
 			# boss, both read as late as possible.
-			var fresh: Dictionary = (await _boss(0)).get("record", {}) as Dictionary
+			var fresh_view := await _boss(0, true)
+			var fresh: Dictionary = fresh_view.get("record", {}) as Dictionary
 			var aim := _vec(fresh.get("position", []))
 			if aim == Vector3.INF:
 				aim = boss_at
-			var really_at := await _host_view_of_creature(mover)
-			if really_at == Vector3.INF:
-				continue
-			last_gap = really_at.distance_to(aim)
-			if last_gap >= SWING_REACH_M:
-				# The host does not hold this creature beside the boss yet. Place
-				# it again rather than swinging into empty grass.
+			# Production tests horizontal centre-to-centre reach, including the
+			# rendered pair's contact floor. Feet-to-centre against a fixed 4 m
+			# gate can reject a legally spaced pair through all 28 attempts.
+			var geometry: Dictionary = {}
+			for row: Dictionary in fresh_view.get("strike_geometry", []):
+				if bool(row.get("is_local", false)) == (mover == 0) \
+						and str(row.get("encounter_id", "")) == str(fresh.get("id", "")):
+					geometry = row
+					break
+			last_gap = float(geometry.get("distance_m", INF))
+			print("[shared-boss geometry] pilot=%d %s" % [mover, JSON.stringify(geometry)])
+			if geometry.get("can_reach", false) != true:
+				# An absent body/profile or an actually out-of-range target is
+				# still a placement attempt, never an admitted hit.
 				continue
 			swings += 1
-			var toward := aim - really_at
 			var struck: Dictionary = await step(mover, "strike",
-				{"facing": [toward.x, toward.y, toward.z], "slot": "quick",
+				{"target": [aim.x, aim.y, aim.z], "slot": "quick",
 				 "settle": STRIKE_SETTLE})
+			print("[shared-boss strike] pilot=%d %s" % [mover, JSON.stringify(struck)])
 			if str(struck.get("verdict", "")) != "PASS":
 				check(false, "peer %d swung at the boss (%s)" % [mover, str(struck.get("detail", ""))])
 				break
@@ -1763,8 +1770,11 @@ func _tournament_accepted_characters(deliveries: Dictionary, source: String) -> 
 ## This peer's view of the boss fight, from `tools/net/peer_runner.gd`'s `boss`
 ## probe: the host record, the creature actually on the field, the same team
 ## entry rebuilt UNSCALED, and the last refusal this peer was given.
-func _boss(peer: int) -> Dictionary:
-	var value = await probe(peer, "boss", {"trainer": BOSS})
+func _boss(peer: int, strike_geometry: bool = false) -> Dictionary:
+	var args := {"trainer": BOSS}
+	if strike_geometry:
+		args["strike_geometry"] = true
+	var value = await probe(peer, "boss", args)
 	return value if value is Dictionary else {}
 
 
