@@ -66,7 +66,7 @@
         },
         {
           "species": "mosshell",
-          "level": 17,
+          "level": 16,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -77,7 +77,7 @@
         },
         {
           "species": "meadowhart",
-          "level": 17,
+          "level": 16,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,
@@ -176,7 +176,7 @@
         },
         {
           "species": "tuskroot",
-          "level": 17,
+          "level": 16,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -187,7 +187,7 @@
         },
         {
           "species": "galecrest",
-          "level": 17,
+          "level": 16,
           "combat": {
             "telegraph": 0.4,
             "lunge": 5.5,
@@ -247,11 +247,11 @@
       "team": [
         {
           "species": "burrowback",
-          "level": 15
+          "level": 13
         },
         {
           "species": "galecrest",
-          "level": 16
+          "level": 14
         }
       ],
       "reward": {
@@ -293,11 +293,11 @@
       "team": [
         {
           "species": "burrowback",
-          "level": 15
+          "level": 13
         },
         {
           "species": "mudsnout",
-          "level": 15
+          "level": 13
         }
       ],
       "_why_team": "Both already resident in this band (spawns.json orders 4002/4003). Originally one level under Halder's own weakest (12, against his burrowback 13) -- WARRENS-LAND-0829A: that undershot chapter_curve.json's own band4_upper_meadows_ironwood floor of 13 (test_chapter_curve.gd::test_every_trainer_fights_at_their_own_regions_strength), which every other trainer in this file (11/13/14/15, 14/15/16, 13/14) already respects. 13 is the lowest level inside the band, so it is still a step below Halder's own 14/15 members without being a duplicate of his weakest -- the intended 'warm-up, not a formality' reading survives at the floor.",
@@ -333,11 +333,11 @@
       "team": [
         {
           "species": "burrowback",
-          "level": 16
+          "level": 14
         },
         {
           "species": "trailpup",
-          "level": 17
+          "level": 15
         }
       ],
       "_why_team": "The patrol's own creatures, not the stolen Meadowhart -- the player is not asked to fight the animal they are here to recover. Both species are already resident to Band 4 (spawns.json); levels sit mid-band, inside chapter_curve.json's [13,16] floor/ceiling for this region.",
