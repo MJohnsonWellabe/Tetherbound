@@ -8,7 +8,7 @@ const STATE := preload("res://scripts/data/redesign_state.gd")
 const CAMP := preload("res://scripts/build/forward_camp_rules.gd")
 
 static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
-		context: Dictionary, canonical_recipe: Dictionary) -> Dictionary:
+		context: Dictionary, canonical_recipe: Dictionary, frozen_authorization: bool = false) -> Dictionary:
 	if intent.size() != 2 or not intent.get("recipe_id") is String \
 			or not transaction_id(intent.get("craft_id")): return RULES.deny("invalid_craft_intent")
 	if current.get("character_id", "") == "" or current.get("character_id") != context.get("character_id") \
@@ -20,6 +20,9 @@ static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
 			or context.recipe_known != true: return RULES.deny("craft_not_available")
 	if not context.get("source_key") is String or context.source_key.is_empty(): return RULES.deny("station_context_invalid")
 	var cfg := RULES.config()
+	if frozen_authorization and context.get("foundation_runtime_authorized") == true:
+		cfg.runtime_enabled = true
+		cfg.craft_runtime_enabled = true
 	if cfg.get("runtime_enabled") != true or cfg.get("craft_runtime_enabled") != true: return RULES.deny("station_disabled")
 	var route := CAMP.recipe(intent.recipe_id,canonical_recipe,str(context.get("part",""))) if field else RULES.recipe_route(cfg,intent.recipe_id,canonical_recipe)
 	if route.get("ok") != true: return route
@@ -67,11 +70,14 @@ static func transaction_id(raw: Variant) -> bool:
 ## Den uses the existing portable resting/rested/rest_bed_index fields and
 ## ordinary sleep completion. No instant XP, second rest credit or care payout.
 static func stage_den_rest(current: Dictionary, revision: int, intent: Dictionary,
-		context: Dictionary) -> Dictionary:
+		context: Dictionary, frozen_authorization: bool = false) -> Dictionary:
 	if intent.size() != 3 or not intent.get("creature_uid") is String \
 			or intent.get("action") not in ["rest","wake"] or not transaction_id(intent.get("action_id")):
 		return RULES.deny("invalid_den_intent")
 	var cfg := RULES.config()
+	if frozen_authorization and context.get("foundation_runtime_authorized") == true:
+		cfg.runtime_enabled = true
+		cfg.den_runtime_enabled = true
 	if cfg.get("runtime_enabled") != true or cfg.get("den_runtime_enabled") != true: return RULES.deny("station_disabled")
 	if current.get("character_id","") == "" or current.get("character_id") != context.get("character_id") \
 			or context.get("expected_revision") != revision or context.get("station_id") != "den" \

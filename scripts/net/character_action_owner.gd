@@ -51,6 +51,8 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 			if not ESSENCE._equivalent(snapshot.inventory[slot], stack):
 				inventory.call("set_slot", slot, stack.duplicate(true) if stack is Dictionary else null)
 		player.set("redesign_character", row.after.redesign_character.duplicate(true))
+		if not ESSENCE._equivalent(current.equipment, row.after.equipment):
+			player.get("equipment").call("load_data", row.after.equipment)
 	var installed: Dictionary = player.call("save_data")
 	if not ESSENCE._equivalent(RECORD.portable_projection(installed), row.after):
 		return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_action_install_conflict") if proposal.get("duplicate") != true else _end_refused(session, "owner_action_install_conflict")
@@ -122,6 +124,8 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 		var stack: Variant = snapshot.inventory[slot]
 		inventory.call("set_slot", slot, stack.duplicate(true) if stack is Dictionary else null)
 	player.set("redesign_character", snapshot.redesign_character.duplicate(true))
+	if not ESSENCE._equivalent(snapshot.equipment, row.after.equipment):
+		player.get("equipment").call("load_data", snapshot.equipment)
 	if plan.release_index >= 0 and party_restore(player, roster) != true: return _end_refused(session, "owner_roster_rollback_failed")
 	var restored := ESSENCE._equivalent(RECORD.portable_projection(player.call("save_data")), row.before)
 	session.call("_end_owner_training_install")

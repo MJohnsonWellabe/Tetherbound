@@ -833,6 +833,14 @@ func _mount_session() -> void:
 	session = SESSION.new()
 	session.name = "Session"
 	add_child(session)
+	var loadout_service: Node = preload("res://scripts/ui/foundation_loadout_service.gd").new()
+	loadout_service.name = "FoundationLoadoutService"
+	add_child(loadout_service)
+	loadout_service.call("configure", session)
+	preload("res://scripts/ui/altar_service.gd").attach(self).call("configure_loadout_ui", loadout_service)
+	var composition: Node = preload("res://scripts/net/foundation_composition.gd").new()
+	composition.name = "FoundationComposition"
+	session.add_child(composition)
 	# D103/lane 3.A. The ledger transport is mounted here, with the session,
 	# rather than by whichever consumer happens to submit the first intent.
 	# Its RPCs only resolve because every process holds it at the identical
@@ -980,7 +988,10 @@ func _input(event: InputEvent) -> void:
 func advance_day() -> int:
 	if not is_host():
 		return day
-	return int(world.call("advance_day"))
+	var advanced := int(world.call("advance_day"))
+	# The real host morning/rest lifecycle alone advances the saved board clock.
+	world.redesign_world.bounty_day = int(world.redesign_world.bounty_day) + 1
+	return advanced
 
 
 ## R7.6. The state of farm bed `index`, or a fresh fallow one.

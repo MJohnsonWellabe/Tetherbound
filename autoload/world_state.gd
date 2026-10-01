@@ -487,12 +487,16 @@ func _apply_op(op: Dictionary) -> bool:
 			return true
 		"building_add":
 			if op.get("id") == "altar" and not _altar_building_op_bound(op, false): return false
+			if op.get("id") == "forward_camp" and not _foundation_camp_op_bound(op, false): return false
 			# Through `register_building()`, not a hand-built Dictionary: the
 			# shape of a placed-building record keeps exactly one construction
 			# site, so a delta and a solo placement can never disagree about it.
-			register_building(str(op.get("id", "")), _op_position(op.get("position")),
+			var placed_index := register_building(str(op.get("id", "")), _op_position(op.get("position")),
 				float(op.get("yaw_deg", 0.0)), bool(op.get("paid", true)),
 				str(op.get("realm", "meadows")), str(op.get("uid", "")))
+			if op.get("id") == "forward_camp" and placed_index >= 0:
+				placed_buildings[placed_index].character_id = op.character_id
+				placed_buildings[placed_index].txn_id = op.txn_id
 			return true
 		"building_arch_link":
 			var index := building_index_of(str(op.get("uid", "")))
@@ -520,6 +524,11 @@ func _apply_op(op: Dictionary) -> bool:
 				index = int(op.get("index", -1))
 			if index < 0 or index >= placed_buildings.size():
 				return false
+			if placed_buildings[index].get("id") == "forward_camp":
+				if not _foundation_camp_op_bound(op, true): return false
+				placed_buildings[index].removed = true
+				revision += 1
+				return true
 			placed_buildings.remove_at(index)
 			revision += 1
 			return true
@@ -550,10 +559,27 @@ func _op_position(raw: Variant) -> Vector3:
 		return Vector3(float(a[0]), float(a[1]), float(a[2]))
 	return Vector3.ZERO
 
+func _foundation_camp_op_bound(op: Dictionary, removing: bool) -> bool:
+	const E = preload("res://scripts/creatures/essence.gd")
+	var character := str(op.get("character_id", ""))
+	var row: Variant = reward_deliveries.get(E.training_delivery_id(reward_delivery_namespace, character))
+	if not training_row_valid(row, reward_delivery_namespace, world_id) or row.get("action") != "camp_build" \
+		or row.status != "pending" or row.intent.get("action") != ("pack" if removing else "place") \
+		or row.intent.get("action_id") != op.get("txn_id") \
+		or not E._equivalent(placed_buildings, row.host_context.world_before): return false
+	var plan := preload("res://scripts/net/foundation_actions.gd").camp_plan(row.before, int(row.character_revision) - 1, row.intent, row.host_context)
+	if plan.get("ok") != true or plan.record.uid != op.get("uid"): return false
+	if removing: return building_index_of(plan.record.uid) >= 0
+	for field: String in ["id", "uid", "realm", "position", "yaw_deg", "paid", "character_id", "txn_id"]:
+		if not E._equivalent(op.get(field), plan.record.get(field)): return false
+	return int(next_building_uid) == row.host_context.next_building_uid
+
 
 ## Canonical validation for the discriminated EXISTING world carrier; the
 ## same guard runs for split/flat reads, snapshots, typed ops and both saves.
 static func training_row_valid(row: Variant, world_namespace: String, expected_world: String = "") -> bool:
+	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 3:
+		return not world_namespace.is_empty() and preload("res://scripts/net/foundation_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", world_namespace, expected_world)
 	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 2:
 		return not world_namespace.is_empty() and preload("res://scripts/net/character_action_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", world_namespace, expected_world)
 	if row is Dictionary and row.get("kind") == "altar_building": return altar_build_row_valid(row, world_namespace, expected_world)

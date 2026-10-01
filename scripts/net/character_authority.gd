@@ -706,7 +706,7 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 	var projected := RECORD_RULES.training_projection(current, row, ESSENCE.training_projection)
 	if not equivalent(projected, row.before) and not equivalent(projected, row.after):
 		return {"ok": false, "code": "unsettled_training_conflict"}
-	for field: String in ["party", "inventory", "redesign_character"]:
+	for field: String in ["party", "inventory", "redesign_character", "equipment"]:
 		current[field] = row.after[field].duplicate(true)
 	if not errors(current, character).is_empty(): return {"ok": false, "code": "invalid_training_candidate"}
 	_records[character] = {"revision": int(row.character_revision), "state": current}
@@ -808,7 +808,8 @@ func stage_character_action(character: String, expected_revision: int,
 		return {"ok": false, "code": "transaction_busy", "durable": false}
 	if expected_revision < 0 or expected_revision >= 2147483647 or revision(character) != expected_revision:
 		return {"ok": false, "code": "stale_revision", "revision": revision(character), "durable": false}
-	var proposal := CHARACTER_ACTIONS.stage(state(character), expected_revision, action,
+	var action_rules: Script = preload("res://scripts/net/foundation_actions.gd") if action in preload("res://scripts/net/foundation_actions.gd").ACTIONS else CHARACTER_ACTIONS
+	var proposal := action_rules.stage(state(character), expected_revision, action,
 		original_intent, host_context, errors)
 	if proposal.get("ok") != true: return proposal.duplicate(true)
 	# A callback is re-staged inside the actual canonical registry. It cannot

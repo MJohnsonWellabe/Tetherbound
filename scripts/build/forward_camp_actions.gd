@@ -80,9 +80,11 @@ static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
 ## Prepare all five at this bed, then the existing SleepVote/NightRest path
 ## completes recovery, rest bonus and autosave. No instant second rest reward.
 static func stage_team_bed(current: Dictionary, revision: int, intent: Dictionary,
-		context: Dictionary) -> Dictionary:
+		context: Dictionary, frozen_authorization: bool = false) -> Dictionary:
+	var cfg := RULES.config()
+	if frozen_authorization and context.get("foundation_runtime_authorized") == true: cfg.runtime_enabled = true
 	if intent.size() != 1 or not RULES.transaction_id(intent.get("action_id")) \
-			or not _context(current,revision,context) or context.get("station_kind") != RULES.ID \
+			or not _context(current,revision,context,cfg) or context.get("station_kind") != RULES.ID \
 			or context.get("part") != "bed" or not context.get("camp_index") is int or context.camp_index < 0 \
 			or not context.get("source_key") is String or context.source_key.is_empty():
 		return RULES.deny("camp_unavailable")

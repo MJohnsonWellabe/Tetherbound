@@ -666,6 +666,7 @@ static func _redesign_payload(owner: Variant, scope: String) -> Dictionary:
 
 static func _redesign_errors(data: Dictionary, character_id: String = "") -> Array[String]:
 	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+	errors.append_array(preload("res://scripts/build/forward_camp_rules.gd").saved_errors(data.get("placed_buildings", [])))
 	errors.append_array(REDESIGN_STATE.validate("character", data.get("redesign_character", REDESIGN_STATE.defaults("character")), REDESIGN_STATE.uids(data.get("party", []))))
 	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
 	errors.append_array(trait_party_errors(data.get("party", []), data.get("redesign_character", {})))
