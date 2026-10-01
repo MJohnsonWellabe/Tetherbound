@@ -126,12 +126,15 @@ func _rebuild_station_presentation() -> void:
 	var message := _status.text if is_instance_valid(_status) else ""
 	var remaining := _status_left
 	var focus := get_viewport().gui_get_focus_owner() as Button
-	var button_text := focus.text if is_instance_valid(focus) and _station_buttons.has(focus) else ""
+	var focus_key := str(focus.get_meta("station_focus_key","")) if is_instance_valid(focus) and _station_buttons.has(focus) else ""
+	var recipe_id := _recipe_ids[_selected] if _selected >= 0 and _selected < _recipe_ids.size() else ""
 	_build()
 	_status.text=message
 	_status_left=remaining
+	var recipe_index := _recipe_ids.find(recipe_id)
+	if recipe_index >= 0: _selected=recipe_index
 	for button: Button in _station_buttons:
-		if button.text == button_text:
+		if not focus_key.is_empty() and str(button.get_meta("station_focus_key","")) == focus_key:
 			button.call_deferred("grab_focus")
 			return
 	if not _rows.is_empty(): _rows[clampi(_selected,0,_rows.size()-1)].call_deferred("grab_focus")
@@ -176,7 +179,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 			if raw is Dictionary:
 				for recipe_id: String in raw.get("recipes",{}):
 					var name: String = str(raw.recipes[recipe_id].get("name",recipe_id))
-					_station_button(controls,"Refine "+name,func() -> void: _start_refining(recipe_id))
+					_station_button(controls,"Refine "+name,func() -> void: _start_refining(recipe_id),"refine:"+recipe_id)
 		"altar": _station_button(controls,"Creature training",_open_altar)
 		"den":
 			var view := _station_view()
@@ -187,8 +190,8 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 					var uid: String = row.uid
 					var label: String = str(row.get("nickname",row.get("species_id",uid)))
 					var action := "wake" if row.get("resting") == true else "rest"
-					_station_button(controls,action.capitalize()+" "+label,func() -> void: _station_action("den_rest",{"creature_uid":uid,"action":action}))
-					_station_button(controls,"Groom "+label,func() -> void: _station_action("groom",{"creature_uid":uid}))
+					_station_button(controls,action.capitalize()+" "+label,func() -> void: _station_action("den_rest",{"creature_uid":uid,"action":action}),"den_rest:"+uid)
+					_station_button(controls,"Groom "+label,func() -> void: _station_action("groom",{"creature_uid":uid}),"groom:"+uid)
 		"farm":
 			_station_button(controls,"Till plot",func() -> void: _farm_action("till",""))
 			_station_button(controls,"Sow berries",func() -> void: _farm_action("sow","berries"))
@@ -265,11 +268,12 @@ func _gear_name(id: String) -> String:
 	return str(_gear_cfg.get("items",{}).get(id,{}).get("name",id.replace("_"," ").capitalize()))
 
 func _gear_button(controls: VBoxContainer, label: String, action: String, uid: String, slot: String, id: String) -> void:
-	_station_button(controls,label,func() -> void: _station_action("gear",{"action":action,"creature_uid":uid,"slot":slot,"item_id":id}))
+	_station_button(controls,label,func() -> void: _station_action("gear",{"action":action,"creature_uid":uid,"slot":slot,"item_id":id}),JSON.stringify(["gear",action,uid,slot,id]))
 
-func _station_button(parent: VBoxContainer, label: String, action: Callable) -> void:
+func _station_button(parent: VBoxContainer, label: String, action: Callable, focus_key: String = "") -> void:
 	var button := Button.new()
 	button.text=label
+	button.set_meta("station_focus_key",focus_key if not focus_key.is_empty() else label)
 	button.custom_minimum_size=Vector2(740,42)
 	button.add_theme_font_size_override("font_size",UITokens.FONT_READ)
 	button.pressed.connect(action)
