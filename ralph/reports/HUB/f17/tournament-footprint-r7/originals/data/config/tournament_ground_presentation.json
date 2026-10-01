@@ -17,8 +17,8 @@
   },
   "marshal_canopy": {
     "at": [
-      90.1,
-      47.3
+      85.2,
+      51.1
     ],
     "yaw_deg": 205.0,
     "model": "Stall_Empty",
@@ -42,7 +42,7 @@
     "cloth_tint": "#d8b66a",
     "_why_cloth_tint": "X04 RED-AUDIT: the installed stall and Banner_*_Cloth MI_Banner surfaces carry oxblood COLOR_0 vertex colour. The canopy cloth ignores that tint and multiplies this Meadows straw ochre over the kit cloth texture instead. Material and colour only; no geometry.",
     "_why_night_cloth": "MEADOWS-BANNER-TREATMENT-0912 / R7. The bounded 4.8m lantern pool remains close to the eaves. Round 05 proved that its light reached the lower swag but the roof's outward face still collapsed to black, while the white source clipped. The visible bulb emission stays at the accepted 0.55 and only this canopy's imported MI_Banner surfaces keep the accepted low 0.07 texture-preserving exposure floor plus warm thin-cloth backlight. Round 06 retained one geometric defect: the globe appeared as a white half-disc sliced flush by the lower valance. The globe now hangs 1.24m below the roof and 0.62m toward the visible interior side, with a short dark hanger, while the invisible practical light remains at its accepted roof-modelling position. This keeps the roof's atlas variation and sag judgeable at night without flattening daylight or touching the accepted road, Relay, and Hall materials.",
-    "_why": "F17/RD-29 boundary repair: the old [85.2,51.1] translation left only 0.62m to the fence and put part of the fitted stall outside it. The single judging canopy now stands beside Halda at [90.1,47.3], clear of the unchanged bracket face, road and marked floor. Its complete fitted stall footprint stays more than 2m inside the existing boundary and on the existing 16m lawn pad. The board and NPC positions remain unchanged. The same 205-degree yaw, 4.65m height, 1.58 frontage scale, two cloth accents and bounded night lighting preserve the singular timber-and-roof event silhouette; no collision, interaction, arena, player or progression changes."
+    "_why": "One installed, production-authored market stall sits directly behind the bracket as a marshal's judging canopy. The board faces 205 degrees and the canopy shares that yaw; its centre is 1.12m behind the board, beyond the stall's measured half-depth at this fit, so the painted face stays unobstructed. This position retains 2.31m to the village boundary and 5.54m centre clearance from the nearest shrine. R3 scales the same single installed silhouette only across its frontage: about 5.1m wide and 4.65m tall, broad enough to outrank one 4.8m shrine without making a second stall clone or deepening its footprint toward the board/fence. Two installed cloth-only banner pieces hang beneath its outer eaves as canopy trim, not the freestanding flags the owner rejected around this ring. It is deliberately singular, timber and roofed rather than arched, so the training ground has a primary event read that cannot be mistaken for another cloned relic shrine."
   },
   "equipment": [
     {

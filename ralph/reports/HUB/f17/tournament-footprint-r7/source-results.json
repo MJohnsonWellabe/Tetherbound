@@ -1,0 +1,517 @@
+{
+  "classification": "SOURCEPASS",
+  "acceptance": "F17#4 OPEN; original actual failure retained; no engine/CI/new independent review",
+  "passed": 81,
+  "total": 81,
+  "manifest_sha256": "e206e5cf5ae1ac47febbec0b57339d0175f99b50eb7af0fea23313c7f171ae50",
+  "geometry": {
+    "asset_vertex_bounds": {
+      "min": [
+        -0.9224295020103455,
+        -0.0048178937286138535,
+        -0.4607115387916565
+      ],
+      "max": [
+        0.9224295020103455,
+        2.6223647594451904,
+        0.47154372930526733
+      ],
+      "decoded_vertices": 1650
+    },
+    "uniform_height_fit": 1.7699568754317496,
+    "width_scale": 1.58,
+    "yaw_deg": 205.0,
+    "old": {
+      "at": [
+        85.2,
+        51.1
+      ],
+      "corners": [
+        [
+          87.88253438157265,
+          50.74885167458901
+        ],
+        [
+          83.20670491357534,
+          52.92922676374297
+        ],
+        [
+          82.50936296554602,
+          51.43377213023248
+        ],
+        [
+          87.18519243354334,
+          49.25339704107852
+        ]
+      ],
+      "centre_boundary_m": 0.622271450571099,
+      "minimum_signed_corner_boundary_m": -1.4555208403596565
+    },
+    "proposal": {
+      "at": [
+        90.1,
+        47.3
+      ],
+      "corners": [
+        [
+          92.78253438157265,
+          46.94885167458901
+        ],
+        [
+          88.10670491357533,
+          49.12922676374296
+        ],
+        [
+          87.40936296554601,
+          47.63377213023247
+        ],
+        [
+          92.08519243354333,
+          45.45339704107852
+        ]
+      ],
+      "centre_boundary_m": 5.039479136644799,
+      "minimum_signed_corner_boundary_m": 2.9616868457140453,
+      "maximum_lawn_extent_m": 15.07378681490168,
+      "real_road_centre_clearance_m": 3.911521443121584,
+      "board_prompt_clearance_m": 3.183635526675608,
+      "marshal_capsule_clearance_m": 0.5666233826638499,
+      "fight_floor_clearance_m": 10.086645196091862
+    },
+    "scope": "Static full fitted stall footprint. No Godot render/native contact/arrival/earned proof."
+  },
+  "checks": [
+    {
+      "name": "frozen input originals/data/config/tournament_ground_presentation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input proposal/data/config/tournament_ground_presentation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input originals/tests/test_tournament_ground_presentation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input proposal/tests/test_tournament_ground_presentation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/tournament.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/realm_transitions.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/bands/band1_lower_meadows/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/scripts/world/tournament.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/scripts/world/tournament_ground_presentation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/scripts/characters/render_bounds.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/scripts/combat/encounter_director.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/assets/props/quaternius_fantasy/Stall_Empty.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input inputs/assets/props/quaternius_fantasy/Stall_Empty.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen input prior-failure/tests.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact canopy pose/rationale scope",
+      "passed": true,
+      "detail": [
+        [
+          [
+            "marshal_canopy",
+            "at",
+            0
+          ],
+          85.2,
+          90.1
+        ],
+        [
+          [
+            "marshal_canopy",
+            "at",
+            1
+          ],
+          51.1,
+          47.3
+        ],
+        [
+          [
+            "marshal_canopy",
+            "_why"
+          ],
+          "One installed, production-authored market stall sits directly behind the bracket as a marshal's judging canopy. The board faces 205 degrees and the canopy shares that yaw; its centre is 1.12m behind the board, beyond the stall's measured half-depth at this fit, so the painted face stays unobstructed. This position retains 2.31m to the village boundary and 5.54m centre clearance from the nearest shrine. R3 scales the same single installed silhouette only across its frontage: about 5.1m wide and 4.65m tall, broad enough to outrank one 4.8m shrine without making a second stall clone or deepening its footprint toward the board/fence. Two installed cloth-only banner pieces hang beneath its outer eaves as canopy trim, not the freestanding flags the owner rejected around this ring. It is deliberately singular, timber and roofed rather than arched, so the training ground has a primary event read that cannot be mistaken for another cloned relic shrine.",
+          "F17/RD-29 boundary repair: the old [85.2,51.1] translation left only 0.62m to the fence and put part of the fitted stall outside it. The single judging canopy now stands beside Halda at [90.1,47.3], clear of the unchanged bracket face, road and marked floor. Its complete fitted stall footprint stays more than 2m inside the existing boundary and on the existing 16m lawn pad. The board and NPC positions remain unchanged. The same 205-degree yaw, 4.65m height, 1.58 frontage scale, two cloth accents and bounded night lighting preserve the singular timber-and-roof event silhouette; no collision, interaction, arena, player or progression changes."
+        ]
+      ]
+    },
+    {
+      "name": "same authored lawn centre",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "same presentation collision ban",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "same yaw/scale/height/lighting/accent budgets",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment/light all unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "every original test entrypoint retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all other original function bodies unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "every original assertion except retired centre pin exact",
+      "passed": true,
+      "detail": 18
+    },
+    {
+      "name": "current authoritative clearance anchor const BRYN := Vector2(78.0, 44.0)",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current authoritative clearance anchor const HALDA := Vector2(88.5, 46.5)",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "current authoritative clearance anchor const PRACTICE_BERRY := Vector2(30.0, 8.0)",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "new footprint model is cleaned up",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip/quarantine",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "marking reads actual practice/lawn anchor",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "three rounds retain existing source positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "live null-body fight deployment stays player-relative",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual presentation consumer top_level = true",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual presentation consumer global_transform = Transform3D.IDENTITY",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual presentation consumer var centre := _xz(spec.get(\"centre\", []))",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual presentation consumer PRESENTATION_BOUNDS.measure(stall)",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "presentation still creates no body/area",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "board unchanged current anchor",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "marshal unchanged current anchor",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "practice berry unchanged identity/anchor",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stall root has no transform/skin ambiguity",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "float32 vertex positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "declared accessor bounds match real vertices",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "float32 vertex positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "declared accessor bounds match real vertices",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "float32 vertex positions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "declared accessor bounds match real vertices",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing full-flatten lawn unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "old centre fails original2m negative control",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "old full stall crosses actual fence negative control",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "new centre retains original2m clearance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner inside with original2m guard 0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner on unchanged lawn pad 0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner inside with original2m guard 1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner on unchanged lawn pad 1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner inside with original2m guard 2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner on unchanged lawn pad 2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner inside with original2m guard 3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fitted corner on unchanged lawn pad 3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "full stall clears unchanged board prompt plus player capsule",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "full stall clears actual marshal player capsule",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "full stall remains outside marked fight floor",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "canopy original3.5m real-road guard retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment actual lawn guard PracticeDummy",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment actual practice/halda/berry guards PracticeDummy",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment original road/boundary guards PracticeDummy",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment existing furniture guard PracticeDummy",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment actual lawn guard PracticeWeaponStand",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment actual practice/halda/berry guards PracticeWeaponStand",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment original road/boundary guards PracticeWeaponStand",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment existing furniture guard PracticeWeaponStand",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment actual lawn guard PracticeShield",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment actual practice/halda/berry guards PracticeShield",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment original road/boundary guards PracticeShield",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "equipment existing furniture guard PracticeShield",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "standing light original road/boundary/berry guards retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original centre failure retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original fence failure retained",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}
