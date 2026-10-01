@@ -1,6 +1,6 @@
 # F30 source packet
 
-Source freeze: `07b522d5fd55693cd8bc7212ef6affcd5a9f302b`, branch `tb/f30`.
+Source freeze: `0fa45bff2ea8b8fc7ef17cdecd974abe012a2599`, branch `tb/f30`.
 Anchor: CODEX_START_HERE §6 F30, RD-30/§8.1, TRAINING §6,
 CREATURES §3 and ACCEPTANCE F30#0–#4. Effective permissions verified from
 session context: danger-full-access, approval never. No Godot, imports,
@@ -58,6 +58,9 @@ blockers for draft freeze**. Review found and prompted corrections to real
 swim movement, host cooldown/Burst costs, water alpha damage, canonical
 healing, typed actor arrays, legacy admission normalization and Hardy HP.
 This verdict is source-only. No criterion is MET.
+The reviewer also confirmed `0fa45bff2e` changes only the two producer test
+fixtures to carry their canonical ground type. Gameplay source is unchanged
+and the draft-freeze verdict stands.
 
 ## Typed integration contract
 

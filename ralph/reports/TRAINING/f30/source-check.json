@@ -40,7 +40,7 @@
     "data/config/traits.json": "339e4988c6166b831b21dadabbce111ab3698165e64fcb17e2c46bb13b65f387",
     "tests/smoke_trainer_refusal_portrait.gd": "d8b8f56dbe2f46eaccb6c24aec65994683e7eaf4bef3b876e61f0e5e5692557f",
     "tests/test_dialogue_portraits.gd": "c91ab0379372cbf749671171dc61c593f64f28d50f235ce7387706f5a29ecf17",
-    "tests/test_f30_traits.gd": "f640e9e26b80eb42a4b220465cf5ee9d14a9a8e151756e89acc32bfef7d2e3db",
+    "tests/test_f30_traits.gd": "62dd6f0f4a8acfe95e28a8518fc05cedbca0705f91521f9b2eab4e3866f10b30",
     "tests/test_stormwood_portrait_presentation.gd": "9ad8b33d1ac34edf87e0ea4c87519849ac006c8b42025d041bdbd28607b6b5aa",
     "tests/test_trait_ui.gd": "f3a827e83e57916602e69671e082c3d81e5c079c4195c9adb94f50f9cc6b7d82",
     "tools/f30_build_content.py": "8072faacfa1b853ceb98ba1a83990799e1cf00f85d249835bccc35d4fe2e38e0",
