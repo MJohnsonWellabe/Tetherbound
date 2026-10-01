@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": false,
+  "status": "owned_source_candidate_no_player_proof",
+  "authority": "Foundation existing character_training/world_harvest transaction and owner bool-save/ACK",
+  "stock_scope": "world",
+  "outputs_scope": "character",
+  "maximum_transaction_receipts": 4096,
+  "interaction_radius_m": 2.4,
+  "manual_taps_only": true,
+  "offline_production": false,
+  "automatic_harvest": false,
+  "farm_plot_prefix": "authored:",
+  "dependencies": [
+    "F16",
+    "F27",
+    "F31"
+  ],
+  "ordinary_legacy_mounts": "Replace only matching renewable IDs when enabled; never duplicate these alongside legacy nodes."
+}

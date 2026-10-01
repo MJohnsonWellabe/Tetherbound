@@ -1,0 +1,1587 @@
+{
+  "schema_version": 1,
+  "status": "authored_candidates_not_runtime_mounted",
+  "_comment": "F32#2: one attuned essence node per type in each live biome. Stable realm/site IDs; world stock and host in-game-day respawn, character inventory outputs. Coordinates offset existing authored resource pockets by 6m; horizontal distance is planning geometry only. Terrain, footprint clearance and real body reach require the serialized engine pass before acceptance. Existing harvest positions, IDs and bakes are untouched. Host data owns yields and seed rolls; clients submit identity/revision only. No timers or offline yield.",
+  "clock": "host_world_day",
+  "scope": "world",
+  "outputs_scope": "character",
+  "off_route_minimum_m": 15,
+  "respawn_days": 3,
+  "nodes": [
+    {
+      "id": "essence_meadows_ground_01",
+      "order": "essence:meadows:ground:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "ground",
+      "item": "essence_ground",
+      "amount": 3,
+      "outputs": {
+        "essence_ground": 3,
+        "attuned_ground": 1
+      },
+      "seed_drop": {
+        "item": "seed_ground",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        22.0,
+        -28.0
+      ],
+      "label": "Gather Ground Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:0",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_meadows_water_01",
+      "order": "essence:meadows:water:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "water",
+      "item": "essence_water",
+      "amount": 3,
+      "outputs": {
+        "essence_water": 3,
+        "attuned_water": 1
+      },
+      "seed_drop": {
+        "item": "seed_water",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        32.0,
+        -44.0
+      ],
+      "label": "Gather Water Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:1",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_meadows_air_01",
+      "order": "essence:meadows:air:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "air",
+      "item": "essence_air",
+      "amount": 3,
+      "outputs": {
+        "essence_air": 3,
+        "attuned_air": 1
+      },
+      "seed_drop": {
+        "item": "seed_air",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        46.5,
+        -28.0
+      ],
+      "label": "Gather Air Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:2",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_meadows_electric_01",
+      "order": "essence:meadows:electric:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "electric",
+      "item": "essence_electric",
+      "amount": 3,
+      "outputs": {
+        "essence_electric": 3,
+        "attuned_electric": 1
+      },
+      "seed_drop": {
+        "item": "seed_electric",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -2.0,
+        8.0
+      ],
+      "label": "Gather Electric Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:3",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_meadows_fire_01",
+      "order": "essence:meadows:fire:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "fire",
+      "item": "essence_fire",
+      "amount": 3,
+      "outputs": {
+        "essence_fire": 3,
+        "attuned_fire": 1
+      },
+      "seed_drop": {
+        "item": "seed_fire",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        28.0,
+        -34.0
+      ],
+      "label": "Gather Fire Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:4",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_meadows_dark_01",
+      "order": "essence:meadows:dark:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "dark",
+      "item": "essence_dark",
+      "amount": 3,
+      "outputs": {
+        "essence_dark": 3,
+        "attuned_dark": 1
+      },
+      "seed_drop": {
+        "item": "seed_dark",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        53.0,
+        -34.5
+      ],
+      "label": "Gather Dark Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:5",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_meadows_ice_01",
+      "order": "essence:meadows:ice:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "ice",
+      "item": "essence_ice",
+      "amount": 3,
+      "outputs": {
+        "essence_ice": 3,
+        "attuned_ice": 1
+      },
+      "seed_drop": {
+        "item": "seed_ice",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -12.0,
+        6.0
+      ],
+      "label": "Gather Ice Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:6",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_meadows_psychic_01",
+      "order": "essence:meadows:psychic:01",
+      "realm": "meadows",
+      "region_id": "band1_lower_meadows",
+      "type": "psychic",
+      "item": "essence_psychic",
+      "amount": 3,
+      "outputs": {
+        "essence_psychic": 3,
+        "attuned_psychic": 1
+      },
+      "seed_drop": {
+        "item": "seed_psychic",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        18.0,
+        -22.0
+      ],
+      "label": "Gather Psychic Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "order:7",
+        "config": "data/config/bands/band1_lower_meadows/harvest.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "off_route": true,
+        "main_route_distance_m": null,
+        "terrain_and_player_path_proven": false
+      },
+      "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
+    },
+    {
+      "id": "essence_cloudreach_ground_01",
+      "order": "essence:cloudreach:ground:01",
+      "realm": "cloudreach",
+      "region_id": "gate_lower_cliffs",
+      "type": "ground",
+      "item": "essence_ground",
+      "amount": 3,
+      "outputs": {
+        "essence_ground": 3,
+        "attuned_ground": 1
+      },
+      "seed_drop": {
+        "item": "seed_ground",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -394.0,
+        570.0
+      ],
+      "label": "Gather Ground Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_cloudberry_waycamp",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 124.483,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_cloudreach_water_01",
+      "order": "essence:cloudreach:water:01",
+      "realm": "cloudreach",
+      "region_id": "high_roost_sky_shrine",
+      "type": "water",
+      "item": "essence_water",
+      "amount": 3,
+      "outputs": {
+        "essence_water": 3,
+        "attuned_water": 1
+      },
+      "seed_drop": {
+        "item": "seed_water",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        1206.0,
+        3100.0
+      ],
+      "label": "Gather Water Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_sunleaf_shrine",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 186.59,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_cloudreach_air_01",
+      "order": "essence:cloudreach:air:01",
+      "realm": "cloudreach",
+      "region_id": "windscar_ravine",
+      "type": "air",
+      "item": "essence_air",
+      "amount": 3,
+      "outputs": {
+        "essence_air": 3,
+        "attuned_air": 1
+      },
+      "seed_drop": {
+        "item": "seed_air",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -262.3,
+        3117.5
+      ],
+      "label": "Gather Air Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_cliffglass_ravine",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 206.764,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_cloudreach_electric_01",
+      "order": "essence:cloudreach:electric:01",
+      "realm": "cloudreach",
+      "region_id": "summit_final_stronghold",
+      "type": "electric",
+      "item": "essence_electric",
+      "amount": 3,
+      "outputs": {
+        "essence_electric": 3,
+        "attuned_electric": 1
+      },
+      "seed_drop": {
+        "item": "seed_electric",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -211.2,
+        5327.4
+      ],
+      "label": "Gather Electric Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_cliffglass_summit",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 312.02,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_cloudreach_fire_01",
+      "order": "essence:cloudreach:fire:01",
+      "realm": "cloudreach",
+      "region_id": "broken_causeways",
+      "type": "fire",
+      "item": "essence_fire",
+      "amount": 3,
+      "outputs": {
+        "essence_fire": 3,
+        "attuned_fire": 1
+      },
+      "seed_drop": {
+        "item": "seed_fire",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -1083.4,
+        1495.1
+      ],
+      "label": "Gather Fire Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_heartwood_west",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 584.424,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_cloudreach_dark_01",
+      "order": "essence:cloudreach:dark:01",
+      "realm": "cloudreach",
+      "region_id": "gate_lower_cliffs",
+      "type": "dark",
+      "item": "essence_dark",
+      "amount": 3,
+      "outputs": {
+        "essence_dark": 3,
+        "attuned_dark": 1
+      },
+      "seed_drop": {
+        "item": "seed_dark",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        186.0,
+        620.0
+      ],
+      "label": "Gather Dark Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_gale_fiber_gate",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 316.285,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_cloudreach_ice_01",
+      "order": "essence:cloudreach:ice:01",
+      "realm": "cloudreach",
+      "region_id": "summit_final_stronghold",
+      "type": "ice",
+      "item": "essence_ice",
+      "amount": 3,
+      "outputs": {
+        "essence_ice": 3,
+        "attuned_ice": 1
+      },
+      "seed_drop": {
+        "item": "seed_ice",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -342.5,
+        5011.0
+      ],
+      "label": "Gather Ice Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_cliffglass_latch_landing",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 324.088,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_cloudreach_psychic_01",
+      "order": "essence:cloudreach:psychic:01",
+      "realm": "cloudreach",
+      "region_id": "summit_final_stronghold",
+      "type": "psychic",
+      "item": "essence_psychic",
+      "amount": 3,
+      "outputs": {
+        "essence_psychic": 3,
+        "attuned_psychic": 1
+      },
+      "seed_drop": {
+        "item": "seed_psychic",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -515.5,
+        5301.5
+      ],
+      "label": "Gather Psychic Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "cr_node_cliffglass_latch_head",
+        "config": "data/config/cloudreach_chapter.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 617.408,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_ground_01",
+      "order": "essence:stormwood:ground:01",
+      "realm": "stormwood",
+      "region_id": "deepwood",
+      "type": "ground",
+      "item": "essence_ground",
+      "amount": 3,
+      "outputs": {
+        "essence_ground": 3,
+        "attuned_ground": 1
+      },
+      "seed_drop": {
+        "item": "seed_ground",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -794.0,
+        4430.0
+      ],
+      "label": "Gather Ground Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_deepwood_169",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 35.538,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_water_01",
+      "order": "essence:stormwood:water:01",
+      "realm": "stormwood",
+      "region_id": "conductor_run",
+      "type": "water",
+      "item": "essence_water",
+      "amount": 3,
+      "outputs": {
+        "essence_water": 3,
+        "attuned_water": 1
+      },
+      "seed_drop": {
+        "item": "seed_water",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -1144.0,
+        3160.0
+      ],
+      "label": "Gather Water Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_conductor_run_105",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 42.792,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_air_01",
+      "order": "essence:stormwood:air:01",
+      "realm": "stormwood",
+      "region_id": "glowmoss_hollows",
+      "type": "air",
+      "item": "essence_air",
+      "amount": 3,
+      "outputs": {
+        "essence_air": 3,
+        "attuned_air": 1
+      },
+      "seed_drop": {
+        "item": "seed_air",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -986.0,
+        1857.0
+      ],
+      "label": "Gather Air Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_glowmoss_hollows_039",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 107.909,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_electric_01",
+      "order": "essence:stormwood:electric:01",
+      "realm": "stormwood",
+      "region_id": "deepwood",
+      "type": "electric",
+      "item": "essence_electric",
+      "amount": 3,
+      "outputs": {
+        "essence_electric": 3,
+        "attuned_electric": 1
+      },
+      "seed_drop": {
+        "item": "seed_electric",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -344.0,
+        4430.0
+      ],
+      "label": "Gather Electric Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_deepwood_170",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 37.834,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_fire_01",
+      "order": "essence:stormwood:fire:01",
+      "realm": "stormwood",
+      "region_id": "conductor_run",
+      "type": "fire",
+      "item": "essence_fire",
+      "amount": 3,
+      "outputs": {
+        "essence_fire": 3,
+        "attuned_fire": 1
+      },
+      "seed_drop": {
+        "item": "seed_fire",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -1144.0,
+        3030.0
+      ],
+      "label": "Gather Fire Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_conductor_run_100",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 61.844,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_dark_01",
+      "order": "essence:stormwood:dark:01",
+      "realm": "stormwood",
+      "region_id": "glowmoss_hollows",
+      "type": "dark",
+      "item": "essence_dark",
+      "amount": 3,
+      "outputs": {
+        "essence_dark": 3,
+        "attuned_dark": 1
+      },
+      "seed_drop": {
+        "item": "seed_dark",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -1324.0,
+        1750.0
+      ],
+      "label": "Gather Dark Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_glowmoss_hollows_065",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 425.06,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_ice_01",
+      "order": "essence:stormwood:ice:01",
+      "realm": "stormwood",
+      "region_id": "deepwood",
+      "type": "ice",
+      "item": "essence_ice",
+      "amount": 3,
+      "outputs": {
+        "essence_ice": 3,
+        "attuned_ice": 1
+      },
+      "seed_drop": {
+        "item": "seed_ice",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -794.0,
+        4280.0
+      ],
+      "label": "Gather Ice Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_deepwood_164",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 60.275,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_stormwood_psychic_01",
+      "order": "essence:stormwood:psychic:01",
+      "realm": "stormwood",
+      "region_id": "conductor_run",
+      "type": "psychic",
+      "item": "essence_psychic",
+      "amount": 3,
+      "outputs": {
+        "essence_psychic": 3,
+        "attuned_psychic": 1
+      },
+      "seed_drop": {
+        "item": "seed_psychic",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -1144.0,
+        2900.0
+      ],
+      "label": "Gather Psychic Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "stormwood_harvest_conductor_run_095",
+        "config": "data/config/stormwood_harvests.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 136.0,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_ground_01",
+      "order": "essence:water:ground:01",
+      "realm": "water",
+      "region_id": "tidal_cradle",
+      "type": "ground",
+      "item": "essence_ground",
+      "amount": 3,
+      "outputs": {
+        "essence_ground": 3,
+        "attuned_ground": 1
+      },
+      "seed_drop": {
+        "item": "seed_ground",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        574.0,
+        1344.0
+      ],
+      "label": "Gather Ground Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:tidal_cradle:harvest:005",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 34.024,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_water_01",
+      "order": "essence:water:water:01",
+      "realm": "water",
+      "region_id": "sluice_isle",
+      "type": "water",
+      "item": "essence_water",
+      "amount": 3,
+      "outputs": {
+        "essence_water": 3,
+        "attuned_water": 1
+      },
+      "seed_drop": {
+        "item": "seed_water",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        814.0,
+        2900.0
+      ],
+      "label": "Gather Water Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:sluice_isle:harvest:006",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 33.032,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_air_01",
+      "order": "essence:water:air:01",
+      "realm": "water",
+      "region_id": "salt_crown",
+      "type": "air",
+      "item": "essence_air",
+      "amount": 3,
+      "outputs": {
+        "essence_air": 3,
+        "attuned_air": 1
+      },
+      "seed_drop": {
+        "item": "seed_air",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        84.0,
+        2304.0
+      ],
+      "label": "Gather Air Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:salt_crown:harvest:008",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 32.827,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_electric_01",
+      "order": "essence:water:electric:01",
+      "realm": "water",
+      "region_id": "reedhaven",
+      "type": "electric",
+      "item": "essence_electric",
+      "amount": 3,
+      "outputs": {
+        "essence_electric": 3,
+        "attuned_electric": 1
+      },
+      "seed_drop": {
+        "item": "seed_electric",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        24.0,
+        452.0
+      ],
+      "label": "Gather Electric Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:reedhaven:harvest:020",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 38.524,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_fire_01",
+      "order": "essence:water:fire:01",
+      "realm": "water",
+      "region_id": "veilfall",
+      "type": "fire",
+      "item": "essence_fire",
+      "amount": 3,
+      "outputs": {
+        "essence_fire": 3,
+        "attuned_fire": 1
+      },
+      "seed_drop": {
+        "item": "seed_fire",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        344.0,
+        3792.0
+      ],
+      "label": "Gather Fire Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:veilfall:harvest:002",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 41.776,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_dark_01",
+      "order": "essence:water:dark:01",
+      "realm": "water",
+      "region_id": "first_shore",
+      "type": "dark",
+      "item": "essence_dark",
+      "amount": 3,
+      "outputs": {
+        "essence_dark": 3,
+        "attuned_dark": 1
+      },
+      "seed_drop": {
+        "item": "seed_dark",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        -90.0,
+        18.0
+      ],
+      "label": "Gather Dark Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:first_shore:harvest:016",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 26.426,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_ice_01",
+      "order": "essence:water:ice:01",
+      "realm": "water",
+      "region_id": "shellwatch",
+      "type": "ice",
+      "item": "essence_ice",
+      "amount": 3,
+      "outputs": {
+        "essence_ice": 3,
+        "attuned_ice": 1
+      },
+      "seed_drop": {
+        "item": "seed_ice",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        482.0,
+        1216.0
+      ],
+      "label": "Gather Ice Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:shellwatch:harvest:004",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 54.233,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    },
+    {
+      "id": "essence_water_psychic_01",
+      "order": "essence:water:psychic:01",
+      "realm": "water",
+      "region_id": "brine_steps",
+      "type": "psychic",
+      "item": "essence_psychic",
+      "amount": 3,
+      "outputs": {
+        "essence_psychic": 3,
+        "attuned_psychic": 1
+      },
+      "seed_drop": {
+        "item": "seed_psychic",
+        "amount": 1,
+        "chance": 0.25
+      },
+      "respawn_days": 3,
+      "at": [
+        504.0,
+        828.0
+      ],
+      "label": "Gather Psychic Essence",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.8,
+      "anchor": {
+        "id": "water:brine_steps:harvest:003",
+        "config": "data/config/water_pickups.json",
+        "offset_xz_m": [
+          6,
+          0
+        ]
+      },
+      "placement": {
+        "main_route_distance_m": 69.424,
+        "off_route": true,
+        "terrain_and_player_path_proven": false
+      }
+    }
+  ],
+  "placement_validation": {
+    "maximum_slope_degrees": 35.0,
+    "slope_sample_m": 0.75,
+    "body_ground_clearance_m": 0.06,
+    "requires_actual_trainer_collision_shape": true,
+    "requires_registered_host_site": true,
+    "player_path_proven": false
+  },
+  "presentation_candidate": {
+    "enabled": false,
+    "status": "unrendered_prototype_flag_off_pending_production_capture_and_code_blind_full_bar_pass",
+    "_comment": "F32 bounded presentation proposal only. Preserve all32 site IDs, coordinates, stock, yields, prompts and body/reach checks. Whole candidate stays OFF until ordinary production Medium/High captures and an independent code-blind full Palworld/Animo world + Valheim atmosphere verdict pass, with Low readability. Silhouette descriptions are intentions, not validated results. No labels substitute for shape. No Meshy/new creature art/lighting/particles/colliders or durable state.",
+    "maximum_parts_per_node": 3,
+    "family": "Quaternius Stylized Nature",
+    "reference_sources": [
+      "docs/reference/owner-board-2026-08-15-creature-colors.png: inspected owner palette/material/ground-water-air and subtle emissive language; future-type icons are historical, current eight types remain canonical.",
+      "scripts/ui/ui_tokens.gd: canonical eight owner-reference-derived type swatches; Fire uses orange; oxblood/red reserved for Team Tether.",
+      "docs/design/ART_DIRECTION.md sections1,5,7: readable pickup silhouettes, established nature family, no full-bar claim from one defect."
+    ],
+    "profiles": {
+      "ground": {
+        "intended_silhouette": "A low, broad rootstone cluster, with one offset shoulder; warm ochre mineral texture.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+            "scale": 0.4,
+            "at": [
+              0,
+              0.127,
+              0
+            ],
+            "yaw_deg": 20,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#B99050",
+                "emission_energy": 0.08
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.2,
+            "at": [
+              0.55,
+              0.011,
+              -0.25
+            ],
+            "yaw_deg": 125,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#B99050",
+                "emission_energy": 0.08
+              }
+            }
+          }
+        ]
+      },
+      "water": {
+        "intended_silhouette": "One broad upright fan with overlapping blue leaf blades, not a mineral deposit.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Plant_1_Big.gltf",
+            "scale": 0.38,
+            "at": [
+              0,
+              0.022,
+              0
+            ],
+            "yaw_deg": 30,
+            "surface_accents": {
+              "Leaves": {
+                "tint": "#4AADE8",
+                "emission_energy": 0.18
+              }
+            }
+          }
+        ]
+      },
+      "air": {
+        "intended_silhouette": "A tall loose three-flower spray, sky-blue petals above natural green stems.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+            "scale": 0.66,
+            "at": [
+              0,
+              0.023,
+              0
+            ],
+            "yaw_deg": 65,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#73C8ED",
+                "emission_energy": 0.18
+              }
+            }
+          }
+        ]
+      },
+      "electric": {
+        "intended_silhouette": "A dense upright branched crown of gold buds, more compact and rigid than Air.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Group.gltf",
+            "scale": 0.6,
+            "at": [
+              0,
+              0.035,
+              0
+            ],
+            "yaw_deg": 15,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F5D33A",
+                "emission_energy": 0.22
+              }
+            }
+          }
+        ]
+      },
+      "fire": {
+        "intended_silhouette": "Three staggered orange blooms make a flared low crown; orange, never oxblood/red.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+            "scale": 0.45,
+            "at": [
+              -0.32,
+              0.03,
+              -0.2
+            ],
+            "yaw_deg": 0,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#EE7B33",
+                "emission_energy": 0.2
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+            "scale": 0.55,
+            "at": [
+              0.12,
+              0.03,
+              0.12
+            ],
+            "yaw_deg": 115,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#EE7B33",
+                "emission_energy": 0.2
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_4_Single.gltf",
+            "scale": 0.35,
+            "at": [
+              0.43,
+              0.03,
+              -0.12
+            ],
+            "yaw_deg": 230,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#EE7B33",
+                "emission_energy": 0.2
+              }
+            }
+          }
+        ]
+      },
+      "dark": {
+        "intended_silhouette": "An asymmetric violet shelf-fungus stack with a round cap at its foot.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf",
+            "scale": 0.6,
+            "at": [
+              0,
+              0.104,
+              0
+            ],
+            "yaw_deg": 35,
+            "surface_accents": {
+              "Mushrooms": {
+                "tint": "#9B7BEA",
+                "emission_energy": 0.12
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+            "scale": 1.2,
+            "at": [
+              0.55,
+              0.022,
+              0.34
+            ],
+            "yaw_deg": 100,
+            "surface_accents": {
+              "Mushrooms": {
+                "tint": "#9B7BEA",
+                "emission_energy": 0.12
+              }
+            }
+          }
+        ]
+      },
+      "ice": {
+        "intended_silhouette": "Three pale froststone uprights with a dominant central peak; an upright triad rather than Ground's low shoulder.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.3,
+            "at": [
+              -0.46,
+              0.016,
+              -0.05
+            ],
+            "yaw_deg": 10,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#A8E6EC",
+                "emission_energy": 0.12
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.52,
+            "at": [
+              0,
+              0.027,
+              0.1
+            ],
+            "yaw_deg": 100,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#A8E6EC",
+                "emission_energy": 0.12
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+            "scale": 0.32,
+            "at": [
+              0.52,
+              0.017,
+              -0.08
+            ],
+            "yaw_deg": 205,
+            "surface_accents": {
+              "Rocks": {
+                "tint": "#A8E6EC",
+                "emission_energy": 0.12
+              }
+            }
+          }
+        ]
+      },
+      "psychic": {
+        "intended_silhouette": "A mirrored pair of lilac blooms framing one raised central bloom, reading as a shallow arch.",
+        "parts": [
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+            "scale": 0.42,
+            "at": [
+              -0.48,
+              0.025,
+              0
+            ],
+            "yaw_deg": 0,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F09ADB",
+                "emission_energy": 0.22
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+            "scale": 0.64,
+            "at": [
+              0,
+              0.035,
+              0.1
+            ],
+            "yaw_deg": 100,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F09ADB",
+                "emission_energy": 0.22
+              }
+            }
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Flower_3_Single.gltf",
+            "scale": 0.42,
+            "at": [
+              0.48,
+              0.025,
+              0
+            ],
+            "yaw_deg": 210,
+            "surface_accents": {
+              "Flowers": {
+                "tint": "#F09ADB",
+                "emission_energy": 0.22
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "runtime_enabled": false
+}
