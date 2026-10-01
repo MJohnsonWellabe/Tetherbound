@@ -12,7 +12,14 @@ const GATE := preload("res://scripts/world/realm_gate.gd")
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 
+class PortalSession extends Node:
+	var enabled := false
+	func portal_runtime_ready() -> bool:
+		return enabled
+
+
 class FakeGame extends Node:
+	var session: Node = null
 	var progression: RefCounted = null
 	var realm_hearts: RefCounted = null
 	var entered_realm := ""
@@ -33,6 +40,7 @@ func before_each() -> void:
 	# branch. The default-off control below verifies shipping behavior.
 	assert_true(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 	game = FakeGame.new()
+	game.session = PortalSession.new()
 	game.progression = PROGRESSION.new()
 	game.realm_hearts = REALM_HEARTS.new({
 		"hearts": {
@@ -51,12 +59,14 @@ func after_each() -> void:
 	BIOME_ORDER.clear_test_overrides()
 	shrine.free()
 	gate.free()
+	game.session.free()
 	game.free()
 
 
-func test_default_retired_gate_neither_unlocks_nor_routes_with_an_earned_key() -> void:
+func test_active_portal_runtime_retires_gate_even_with_an_earned_key() -> void:
 	BIOME_ORDER.clear_test_overrides()
-	assert_false(BIOME_ORDER.legacy_physical_crossings())
+	game.session.set("enabled", true)
+	assert_false(BIOME_ORDER.legacy_physical_crossings(game))
 	game.progression.set_flag("realm_key_cloudreach")
 	var before: Dictionary = game.progression.save_data().duplicate(true)
 	assert_false(gate.try_unlock(game))
@@ -66,6 +76,16 @@ func test_default_retired_gate_neither_unlocks_nor_routes_with_an_earned_key() -
 	assert_false(gate.try_enter(game))
 	assert_eq(game.entered_realm, "")
 	assert_eq(game.progression.save_data(), before)
+
+
+func test_inactive_portals_preserve_real_gate_unlock_and_route() -> void:
+	BIOME_ORDER.clear_test_overrides()
+	assert_false(BIOME_ORDER.portal_runtime_ready(game))
+	assert_true(BIOME_ORDER.legacy_physical_crossings(game))
+	game.progression.set_flag("realm_key_cloudreach")
+	assert_true(gate.try_unlock(game))
+	assert_true(gate.try_enter(game))
+	assert_eq(game.entered_realm, "cloudreach")
 
 
 func test_shrine_exposes_all_four_durable_states() -> void:

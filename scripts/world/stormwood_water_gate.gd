@@ -50,7 +50,7 @@ func _on_water_activated() -> void:
 
 
 func try_unlock(game: Node) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	if is_unlocked(game):
 		return true
@@ -66,7 +66,7 @@ func try_unlock(game: Node) -> bool:
 
 
 func try_enter(game: Node) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	if game == null or not is_unlocked(game) or destination_realm.is_empty():
 		return false
@@ -97,7 +97,7 @@ static func request_allowed(flags: RefCounted, actor_position: Vector3,
 ## delta is published until both mutations have reached the world save. Any
 ## refusal or failed journal restores the whole world and sequence first.
 static func host_commit(game: Object, ledger: RefCounted) -> Dictionary:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return _refuse("legacy_physical_crossings_disabled", "Use the Crossing Hall portals.")
 	if game == null or not game.has_method("is_host") or not bool(game.call("is_host")):
 		return _refuse("not_host", "Only the host can open the Waterward gate.")
