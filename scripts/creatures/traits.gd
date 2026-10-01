@@ -357,8 +357,8 @@ static func initialize_legacy_record(owned: Dictionary, existing: Dictionary,
 	if result.has("traits_initialized"): return result
 	if result.has("rolled_traits") and not result.rolled_traits is Array: return result
 	var rolled: Array = result.get("rolled_traits",[]).duplicate()
-	var primary: String = owned.get("trait_primary","")
-	if rolled.is_empty() and rules.get("traits",{}).has(primary): rolled.append(primary)
+	var primary: Variant = owned.get("trait_primary","")
+	if rolled.is_empty() and primary is String and rules.get("traits",{}).has(primary): rolled.append(primary)
 	result["traits_initialized"] = true
 	result["rolled_traits"] = rolled
 	if not result.has("taught_traits"): result["taught_traits"] = {}

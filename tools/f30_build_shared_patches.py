@@ -127,7 +127,7 @@ edit('scripts/net/character_authority.gd',
      '\t\t"realm_hearts": personal.get("realm_hearts", {"active_id": ""})})','foundation-admission')
 edit('scripts/net/character_authority.gd',
      '\tfailures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))',
-     '\tfailures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))\n\tfor uid: String in raw.redesign_character.get("creatures",{}):\n\t\tfailures.append_array(preload("res://scripts/creatures/traits.gd").trait_state_errors(raw.redesign_character.creatures[uid]))','foundation-admission')
+     '\tfailures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))\n\tif raw.redesign_character is Dictionary and raw.redesign_character.get("creatures") is Dictionary:\n\t\tfor uid: Variant in raw.redesign_character.creatures:\n\t\t\tfailures.append_array(preload("res://scripts/creatures/traits.gd").trait_state_errors(raw.redesign_character.creatures[uid]))','foundation-admission')
 
 # Formula dispatch. Host damage override is never multiplied a second time.
 edit('scripts/combat/combat_manager.gd','const CATCH := preload("res://scripts/combat/catch_math.gd")',
