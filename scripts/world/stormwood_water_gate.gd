@@ -82,9 +82,11 @@ func try_enter(game: Node) -> bool:
 
 ## Pure host-side proximity policy. The actor position comes from
 ## StormwoodEncounterHub.actor_for(peer), never from the request.
+## Explicit Game uses the same runtime mode as host_commit; ordinary callers
+## resolve the current root Game when this optional argument is omitted.
 static func request_allowed(flags: RefCounted, actor_position: Vector3,
-		gate_position: Vector3, radius_m: float) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		gate_position: Vector3, radius_m: float, game: Object = null) -> bool:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	return flags != null and bool(flags.call("has", WATERWARD_FLAG)) \
 		and actor_position.is_finite() and gate_position.is_finite() \
