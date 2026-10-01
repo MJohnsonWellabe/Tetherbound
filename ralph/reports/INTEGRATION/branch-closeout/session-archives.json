@@ -176,5 +176,10 @@
       "reason": "All assigned independent source/native receipt reviews complete; restore same reviewer when needed"
     }
   ],
-  "next_batch_archives": "Ten confirmed R2 archives and exact source reachability are retained on tb/integration-next in ralph/reports/R2-consolidation; six source-only R3 sessions started from the consolidated R2 source. No R3 CI started."
+  "next_batch_archives": "Ten confirmed R2 archives and exact source reachability are retained on tb/integration-next in ralph/reports/R2-consolidation; six source-only R3 sessions started from the consolidated R2 source. No R3 CI started.",
+  "latest_reopened": {
+    "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+    "currently_archived": false,
+    "reason": "Actual CI6173 opening failure on63429; original session restored for source repair"
+  }
 }

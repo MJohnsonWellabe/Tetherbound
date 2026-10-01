@@ -1,0 +1,44 @@
+{
+  "run": 36915534683,
+  "run_number": 6173,
+  "head": "63429ee77e31341ed82b106ce5489b6479916e3f",
+  "status": "PARTIAL_LIVE; overall API queued does not reflect already executed jobs",
+  "export": {
+    "seconds": 426,
+    "native_windows_bytes": 102948352,
+    "windows_pe": true,
+    "linux_packaged_ground": true,
+    "raw_errors": 0
+  },
+  "catching": "Actual CI job110548567448 PASS; fixes original throw miss path",
+  "required_failure": "GateBcore: actual tutorial catch approach exhaustion then Bramcycle3 groundedfloor refusal; returned original F17",
+  "optional_failure": "GateBfull known-red: Tamcycle1 recovery exceeds unchangedskin; no nativeguard weakening",
+  "files": [
+    {
+      "source": "current-ci-63429ee77e31.json",
+      "sealed": "current-ci-63429ee77e31.json.gz",
+      "sha256": "d65052f551774698d0b17c616cd12fef1772fd61eb1e58bc083fcaa83286332a",
+      "bytes": 10263
+    },
+    {
+      "source": "ci6173-job-110548567437.log",
+      "sealed": "ci6173-job-110548567437.log.gz",
+      "sha256": "3f46912ea003e9cefd47da3521a864df94142517957afa5db174d86bdec1256f",
+      "bytes": 621453
+    },
+    {
+      "source": "ci6173-job-110548567544.log",
+      "sealed": "ci6173-job-110548567544.log.gz",
+      "sha256": "63dd06178e65314f8630e5453b321289635d6dbd3a8e3dcf780c7786ee7e2607",
+      "bytes": 513708
+    },
+    {
+      "source": "ci6173-job-110548567267.log",
+      "sealed": "ci6173-job-110548567267.log.gz",
+      "sha256": "176441f647b66c006dad1546a7bf26aed832cd54eec84367eb5647c6e49f1260",
+      "bytes": 1760935
+    }
+  ],
+  "source_only_next": "All10R2+F45\u201349 source included in separate tb/integration-next; all15authors archived; R3Foundation stillimplements shared producers",
+  "no_main_or_criterion_credit": true
+}
