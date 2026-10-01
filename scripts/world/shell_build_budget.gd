@@ -44,9 +44,8 @@ extends RefCounted
 ## 177006 barriers (9912336 bytes), exceeding the engine's 8 MiB stack.
 ## Existing inner-loop breathe calls allow uploads between construction slices;
 ## every placement, collision, harvest identity and model remains present.
-## Compatibility/headless real startup builds also yield existing CPU slices.
-## Initial join has no admitted second peer yet, and ordinary title startup
-## must remain responsive without pretending a multiplayer session exists.
+## Compatibility/headless real startup CPU slicing is an opt-in candidate.
+## It remains off until production consumers obey real build readiness.
 ## World roots hold their local player until actual floor/build readiness.
 
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
@@ -74,9 +73,9 @@ const DEFAULT_BUDGET_MS := 8
 ## harness both give up on. So the slice here is coarse -- the build stays
 ## nearly as fast as it was -- and its only job is that frames keep happening.
 ##
-## Compatibility real startup uses this same CPU slice budget, independently
-## from network-only content staging. Forward+ solo retains its separate
-## renderer-upload budget below.
+## Opt-in Compatibility real startup uses this same CPU slice budget,
+## independently from network-only content staging. Forward+ solo retains
+## its separate renderer-upload budget below.
 const CROSSING_BUDGET_MS := 100
 const FORWARD_BUILD_BUDGET_MS := 16
 
@@ -135,9 +134,9 @@ var _profile_step_ms := 0
 ##      only thing that must survive is their connection;
 ##   3. Forward+ solo -- allow resource uploads through existing inner-loop
 ##      yields rather than queuing the whole world in one construction slice;
-##   4. Compatibility/headless real startup, including a preparing guest --
-##      CPU slices yield while ordinary loading and network polling run. This
-##      never enables network-only placeholder/content staging.
+##   4. opt-in Compatibility/headless real startup, including a preparing guest
+##      -- CPU slices yield while ordinary loading and network polling run.
+##      This never enables network-only placeholder/content staging.
 func begin(world: Node, shell: bool) -> void:
 	_multiplayer_staging = false
 	_forward_upload = false
@@ -167,12 +166,16 @@ func begin(world: Node, shell: bool) -> void:
 			and DisplayServer.get_name() != "headless":
 		_forward_upload = true
 		_budget_ms = maxi(1, int(cfg.get("forward_build_budget_ms", FORWARD_BUILD_BUDGET_MS)))
-	else:
+	elif typeof(cfg.get("responsive_startup_cpu_slicing", false)) == TYPE_BOOL \
+			and cfg.get("responsive_startup_cpu_slicing", false) == true:
 		# An initial join is not multi-peer until admission; using that as
 		# the CPU-yield gate starves its real ENet/control polling beforehand.
 		# Also keep ordinary solo/title loading responsive. Content staging
 		# stays false and the complete real authored world still mounts.
 		_budget_ms = maxi(1, int(cfg.get("crossing_build_budget_ms", CROSSING_BUDGET_MS)))
+	else:
+		_active = false
+		return
 	_frame_started_ms = Time.get_ticks_msec()
 	_step_started_ms = _frame_started_ms
 	_began_ms = _frame_started_ms
