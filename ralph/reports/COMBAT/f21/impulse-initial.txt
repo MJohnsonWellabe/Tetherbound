@@ -1,7 +1,0 @@
-Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-
-Overlapping host hitstop leases / manager ownership: false
-Single 6m/s impulse: peak horizontal speed 5.100m/s
-Arena diagonal 6m/s impulse: peak horizontal speed 3.587m/s
-FAIL: impulse missing, amplified, or retained a locomotion tail (0.0004, 0.0002)
-Native Godot exit status: 1

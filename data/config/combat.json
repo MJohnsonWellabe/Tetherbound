@@ -154,6 +154,8 @@
     "_why": "F10#6 device profile (UX section 1.4: the HUD supports direction, team state and danger without covering the trainer, the active creature, the target or the attack geometry). combat_hud.gd::_update_subject_fade: a fight panel (target plate, move grid, ally card, orbs plate, team list) that covers at least min_overlap of the trainer's, the active creature's or the target's projected screen rect eases to alpha at rate per second, and back to opaque once clear. TUNABLE.",
     "enabled": true,
     "alpha": 0.3,
+    "_comment_foreground_alpha_floor": "Combat-only C2 candidate: fading PanelContainer backing keeps the same alpha/easing; descendants retain this readable floor. PartyStrip and deliberate catch-state alpha preserve their existing lifecycle. Camera independently excludes actual occupied panels from actor views.",
+    "foreground_alpha_floor": 0.9,
     "rate": 6.0,
     "min_overlap": 0.1
   },
@@ -328,137 +330,18 @@
       "colour": "#ffe19a",
       "radius": 0.9,
       "duration": 0.3,
-      "strength": 1.3
+      "strength": 1.3,
+      "spike_softness": 0.7
     },
     "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
     "charged": {
       "colour": "#ffc063",
       "radius": 1.2,
       "duration": 0.4,
-      "strength": 1.5
+      "strength": 1.5,
+      "spike_softness": 0.8
     },
-    "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion.",
-    "feedback": {
-      "slot_weights": {
-        "quick": "light",
-        "utility": "medium",
-        "charged": "heavy",
-        "ultimate": "ultimate"
-      },
-      "weights": {
-        "light": {
-          "hitstop_seconds": 0.03,
-          "knockback_m": 0.3,
-          "recoil_m": 0.14,
-          "recoil_up_m": 0.012,
-          "recoil_degrees": -4,
-          "reaction_out_seconds": 0.045,
-          "reaction_back_seconds": 0.11
-        },
-        "medium": {
-          "hitstop_seconds": 0.04,
-          "knockback_m": 0.6,
-          "recoil_m": 0.18,
-          "recoil_up_m": 0.012,
-          "recoil_degrees": -6,
-          "reaction_out_seconds": 0.045,
-          "reaction_back_seconds": 0.11
-        },
-        "heavy": {
-          "hitstop_seconds": 0.07,
-          "knockback_m": 1.2,
-          "recoil_m": 0.24,
-          "recoil_up_m": 0.012,
-          "recoil_degrees": -8,
-          "reaction_out_seconds": 0.045,
-          "reaction_back_seconds": 0.11
-        },
-        "ultimate": {
-          "hitstop_seconds": 0.14,
-          "knockback_m": 2.0,
-          "recoil_m": 0.3,
-          "recoil_up_m": 0.012,
-          "recoil_degrees": -10,
-          "reaction_out_seconds": 0.045,
-          "reaction_back_seconds": 0.11
-        }
-      },
-      "rumble": {
-        "heavy": {"weak": 0.2, "strong": 0.35, "seconds": 0.09},
-        "ultimate": {"weak": 0.3, "strong": 0.5, "seconds": 0.14}
-      },
-      "critical_hitstop_seconds": 0.12,
-      "giant_height_m": 5.0,
-      "giant_knockback_scale": 0.5,
-      "default_profile_knockback_scale": 1.0,
-      "receipt_history_limit": 256,
-      "receipt_sequence_window": 256,
-      "flashes": {
-        "ordinary": {
-          "radius_scale": 1.0,
-          "strength_scale": 1.0,
-          "duration_scale": 1.0
-        },
-        "critical": {
-          "colour": "#ffe4a0",
-          "radius_scale": 1.25,
-          "strength_scale": 1.6,
-          "duration_scale": 1.15
-        },
-        "effective": {
-          "colour": "#b0fff1",
-          "radius_scale": 1.1,
-          "strength_scale": 1.2,
-          "duration_scale": 1.0
-        },
-        "resisted": {
-          "colour": "#b7bfc5",
-          "radius_scale": 0.8,
-          "strength_scale": 0.6,
-          "duration_scale": 0.8
-        }
-      },
-      "numbers": {
-        "enabled": true,
-        "mode": "on",
-        "font_px": 28,
-        "min_font_px": 22,
-        "own_target_scale": 0.85,
-        "peer_size_scale": 0.8,
-        "peer_opacity": 0.6,
-        "duration_seconds": 0.8,
-        "rise_px": 56,
-        "target_offset_m": 0.15,
-        "max_live": 12,
-        "outline_px": 3,
-        "styles": {
-          "ordinary": {
-            "colour": "#f2f0df",
-            "outline": "#151c23",
-            "size_scale": 1,
-            "prefix": ""
-          },
-          "critical": {
-            "colour": "#ffe19a",
-            "outline": "#8f6a20",
-            "size_scale": 1.35,
-            "prefix": "✦ "
-          },
-          "effective": {
-            "colour": "#e2fff1",
-            "outline": "#428e85",
-            "size_scale": 1.15,
-            "prefix": "▲ "
-          },
-          "resisted": {
-            "colour": "#b7bfc5",
-            "outline": "#151c23",
-            "size_scale": 0.85,
-            "prefix": "▼ "
-          }
-        }
-      }
-    }
+    "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
   },
   "telegraph": {
     "_comment_heavy_tell_s": "F04#0: a wind-up authored at or above this reads as a HEAVY on the HUD (combat_hud.gd, combat_manager.gd::enemy_windup_is_heavy). BOSSES/C3 name 1.1s as the heavy tell: Earth Fist and the ACE. TUNABLE.",

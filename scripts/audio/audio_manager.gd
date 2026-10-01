@@ -308,23 +308,6 @@ static func play_file_at(path: String, label: String, where: Vector3,
 	return player
 
 
-## A precomposed contact stream occupies exactly one existing positional voice.
-static func play_stream_at(found: AudioStream, label: String, where: Vector3,
-		bus: String = "SFX", volume_db: float = 0.0,
-		pitch: float = 1.0) -> AudioStreamPlayer3D:
-	if found == null: return null
-	_record(label, bus, "composed:" + label, pitch, volume_db, where, true)
-	var player := _take_pool_3d()
-	if player == null: return null
-	player.stream = found
-	player.bus = bus
-	player.volume_db = volume_db
-	player.pitch_scale = maxf(0.01, pitch)
-	player.global_position = where
-	player.play()
-	return player
-
-
 ## The pool root, created lazily under the tree root.
 ##
 ## Under `root` rather than under the world scene on purpose: a sound that is

@@ -50,18 +50,47 @@
   "fight": {
     "_comment": "F21#4 presentation framing from both measured rendered bounds. All nine pair offsets preserve actual body scale. Solver diagnostics do not replace the code-blind size-matrix judge. Spring-arm/world sweep and manual-look grace remain authoritative for the local camera.",
     "enabled": true,
+    "readability": {
+      "_comment": "Camera-only conservative oriented whole-render envelopes include the trainer and foreground creatures. Actual projected envelope intersection is checked for front-to-back depth, including lower silhouettes; no hidden body, scale/collision change or sparse ellipsoid shortcut. Independent whole-frame pixels remain required.",
+      "hud_margin_px": 12.0,
+      "hud_paths": [
+        "Root/EnemyPanel",
+        "Root/AllyPanel",
+        "Root/GridPanel",
+        "Root/OrbsPanel"
+      ],
+      "hud_dynamic_controls": [
+        "_party_strip",
+        "_orb_cluster",
+        "_effect_banner"
+      ],
+      "occluder_radius_m": 80.0,
+      "occluder_limit": 32,
+      "head_forward_fraction": 0.35,
+      "head_height_fraction": 0.8,
+      "torso_height_fraction": 0.5
+    },
     "size_classes": {
       "small_max_m": 2.5,
       "normal_max_m": 5.0
     },
     "midpoint_bias": 0.5,
-    "max_actor_overlap": 0.1,
+    "max_actor_overlap": 0.0,
     "frame_fill": 0.82,
     "near_clearance_m": 0.5,
     "max_distance_m": 48.0,
     "lag": 4.0,
-    "orbit_speed_deg_s": 90.0,
-    "tracking_dead_zone_deg": 1.0,
+    "orbit_speed_deg_s": 180.0,
+    "separation_distance_steps": 8,
+    "separation_distance_scale": 1.2,
+    "separation_guard_m": 0.15,
+    "safe_fit_distance_slack_m": 0.75,
+    "_comment_orbit_refinement": "Only after every coarse constrained view fails, refine around its best angle. Same pitch, measured model guard and world sweeps; manual-look grace disables it. At most12 extra candidates and the existing distance cap remain enforced.",
+    "orbit_refinement_step_deg": 2.5,
+    "orbit_refinement_span_deg": 15.0,
+    "orbit_refinement_max_candidates": 12,
+    "tracking_dead_zone_deg": 0.0,
+    "tracking_strength": 18.0,
     "orbit_candidates_deg": [
       0.0,
       15.0,

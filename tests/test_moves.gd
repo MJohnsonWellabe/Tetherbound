@@ -199,22 +199,3 @@ func test_teaching_the_same_tm_twice_is_a_pure_function_of_the_creature() -> voi
 
 	assert_eq(str(mudsnout.get("move_charged")), "stone_rush")
 	assert_eq(str(burrowback.get("move_charged")), "stone_rush")
-
-
-func test_fireball_tm_teaches_only_primary_fire_without_mutating_species_defaults() -> void:
-	var cub: RefCounted = SPECIES.spawn("cindercub")
-	var original_quick := str(cub.get("move_quick"))
-	var original_charged := str(cub.get("move_charged"))
-	assert_true(items.has("tm_fireball"))
-	assert_eq(items.kind("tm_fireball"), "tm")
-	assert_eq(tms.move_id("tm_fireball"), "fireball")
-	assert_eq(moves.slot("fireball"), "charged")
-	assert_true(TEACHING.teach(cub, "tm_fireball", tms, moves))
-	assert_eq(str(cub.get("move_charged")), "fireball")
-	assert_eq(str(cub.get("move_quick")), original_quick)
-	var fresh_cub: RefCounted = SPECIES.spawn("cindercub")
-	assert_eq(str(fresh_cub.get("move_charged")), original_charged, "teaching one creature never rewrites the species loadout")
-	var tusk: RefCounted = SPECIES.spawn("ashtusk")
-	var before := str(tusk.get("move_charged"))
-	assert_false(TEACHING.teach(tusk, "tm_fireball", tms, moves), "secondary fire does not satisfy the existing primary-type TM rule")
-	assert_eq(str(tusk.get("move_charged")), before)

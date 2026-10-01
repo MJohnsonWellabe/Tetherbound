@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_fight_camera.gd::test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_lens_collapse: 1 of 671 test files
+  ok    test_fight_camera.gd :: test_rotated_model_corners_separate_without_world_aabb_inflation_or_false_lens_collapse
+
+1 tests, 18 assertions, 0 failed

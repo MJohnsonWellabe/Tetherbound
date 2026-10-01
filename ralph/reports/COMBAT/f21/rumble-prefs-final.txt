@@ -1,7 +1,0 @@
-Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-
-only test_hit_feedback.gd::test_rumble_off_and_weight_do_not_modify_host_receipt_or_timing,test_combat_feedback.gd::test_only_charged_landing_requests_camera_nudge: 2 of 670 test files
-  ok    test_combat_feedback.gd :: test_only_charged_landing_requests_camera_nudge
-  ok    test_hit_feedback.gd :: test_rumble_off_and_weight_do_not_modify_host_receipt_or_timing
-
-2 tests, 13 assertions, 0 failed
