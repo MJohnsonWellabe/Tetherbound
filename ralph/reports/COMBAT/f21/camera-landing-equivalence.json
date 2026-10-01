@@ -3,7 +3,7 @@
   "integration_base": "7dcd2a8649660553f38702f2de71390efc6f1343",
   "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
   "observed_source": "bf9df4536c4290516570072502b958883531d423",
-  "status": "F21#4 candidate runtime PASS at bf9, nine moving pairs; independent strict/code-blind dynamic verdict and main landing pending. Previous native failures retained.",
+  "status": "F21#4 numeric runtime PASS at8cff includes measured occupied HUD exclusion and approximate foreground sight; independent strict and fresh blind verdict/main landing pending. bf9 numericPASS/blindFAIL retained.",
   "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
   "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
   "missing": [
@@ -438,5 +438,18 @@
       }
     },
     "scope": "Actual moving-camera proof belongs to these bytes. Historical static blind verdict is not transferred; fresh dynamic judge remains pending."
+  },
+  "camera_readability_r2": {
+    "source": "8cff5ee2821941c68b43657ba4f9e96cbc83d8e6",
+    "proof": "camera-live-r4-types-r2/source-proof.json",
+    "native_exit": 0,
+    "elapsed_seconds": 326.0,
+    "complete_cases": 9,
+    "original_png_count": 54,
+    "scored_render_count": 277,
+    "scope": "Physical movement and Quick input with actual authored bodies/enemy AI/rig/collision live, staged pair roster/start/action baselines; measured canonical bounded hitstop remains live presentation.",
+    "independent_review": "pending; numeric success alone is not acceptance",
+    "visibility_scope": "Measured real HUD exclusion and approximate foreground creature ellipsoid head/torso rays; not a whole mesh silhouette proof",
+    "performance": "Not measured; raw draw counts alone do not establish FPS"
   }
 }
