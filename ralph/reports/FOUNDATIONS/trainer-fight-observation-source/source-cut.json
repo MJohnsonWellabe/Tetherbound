@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "status": "TEST_ONLY_SOURCE_PROPOSAL_NATIVE_PENDING",
+  "foundation_parent_head": "843196939e2adbebfda6ff7908cd898f30e71d3c",
+  "root_preimage_head": "223e1ca72705702bab2b09072d0056dec6d14e79",
+  "source": {
+    "path": "tools/net/peer_runner.gd",
+    "preimage_git_blob": "9d1e10ebbac1a972fa2fbf8ea9de9ae804652233",
+    "preimage_sha256": "a97758ec9d8419ffc47af7e8d0ddd1943798a4c39a0b439a640c0547021cc52e",
+    "preimage_bytes": 357861,
+    "preimage_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-observation-source/peer_runner.gd.preimage",
+    "candidate_sha256": "cacd5493f4b027c1eca6455872d748484b404b7dfe0eb0b2555c69c495c8946f",
+    "candidate_bytes": 363263
+  },
+  "patch": {
+    "path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-observation-source/trainer-fight-observation.patch",
+    "sha256": "27b3c6988d82e95b28e5ea632739fea53a83a854e3df6bb935264bd946ec747c",
+    "bytes": 10236,
+    "root_apply_check": "PASS_READ_ONLY"
+  },
+  "static_preservation": {
+    "full_file_exact_inverse": "PASS",
+    "trainer_driver_exact_inverse": "PASS",
+    "heartbeat_base_exact_inverse": "PASS",
+    "step_dispatch_exact_inverse": "PASS",
+    "unchanged_existing_function_count": 176,
+    "all_constants_unchanged": "PASS",
+    "driver_await_sequence_unchanged": "PASS",
+    "sampler_no_await_send_print": "PASS",
+    "retained_sample_limit": 4,
+    "capped_string_sites": 7,
+    "sampler_call_sites": 1,
+    "protected_paths": [
+      {
+        "path": "scripts/combat/encounter_director.gd",
+        "root_git_lf_sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162",
+        "root_git_blob": "69dadc148ceba037918e88a776120386f20295e0",
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "scripts/combat/combat_manager.gd",
+        "root_git_lf_sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a",
+        "root_git_blob": "842333b69a967f0935c1cdf257bb8c0762712f81",
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "scripts/net/encounter_host.gd",
+        "root_git_lf_sha256": "e4ce9eb2868014d507bdbddceb4c8a55068287593d2f8eab6e0053486126445a",
+        "root_git_blob": "8e93a2ba23d4fe25293a45f8c6edfeac1361383b",
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "autoload/game_state.gd",
+        "root_git_lf_sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156",
+        "root_git_blob": "ae8c5948f6670b646c05e7e4564bf2f270c4723a",
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "scripts/save/save_game.gd",
+        "root_git_lf_sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8",
+        "root_git_blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "tools/net/press_inject.gd",
+        "root_git_lf_sha256": "e8f127599591a2d3cca15c3c3a49da76bbb1f8dce3b9947f56b5baca772d6758",
+        "root_git_blob": "f78ce51f126ab62ea543b78b527cb98a3e258db1",
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "tests/helpers/net_harness.gd",
+        "root_git_lf_sha256": "031af5ec2d01c97a87e623e107898fa0e220d0b4013efec67000331f0d7a9a9c",
+        "root_git_blob": "8d79700b5c17215190ab569614ee6a5380d0a4ea",
+        "foundation_unchanged_from_parent": true
+      },
+      {
+        "path": "tests/smoke_net_veridian_relic_key.gd",
+        "root_git_lf_sha256": "50908fce831c1b29a32ddb38064b9279ff3db2268a45cae621876751f6689242",
+        "root_git_blob": "531dcff8342541698589cc3965f02c622e790f64",
+        "foundation_unchanged_from_parent": true
+      }
+    ]
+  },
+  "native_engine_parser_import_render_export_ci_runs_here": 0,
+  "production_changes": 0,
+  "new_protocol_message_types": 0,
+  "new_ticks_timeouts_frame_allowances": 0
+}
