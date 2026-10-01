@@ -129,6 +129,7 @@ func test_release_uses_f27_same_uid_receipt_chosen_seed_once() -> void:
 
 func test_teach_debit_slots_overwrite_and_hardy_fraction_atomically() -> void:
 	var before := _admitted()
+	before.redesign_character.creatures["caught-a"].taught_traits = {"1":"gentle"}
 	var essence: GDScript = load("res://scripts/creatures/essence.gd")
 	assert_true(essence != null)
 	if essence == null: return
@@ -141,6 +142,9 @@ func test_teach_debit_slots_overwrite_and_hardy_fraction_atomically() -> void:
 	assert_eq(bag.count("essence_ground"),90)
 	assert_eq(bag.count("trait_seed_hardy"),1)
 	assert_eq(result.state.redesign_character.creatures["caught-a"].taught_traits,{"1":"hardy"})
+	var replaced := result.state.party[0].duplicate(true)
+	replaced.merge(result.state.redesign_character.creatures["caught-a"],true)
+	assert_false(TRAITS.effective_ids(replaced).has("gentle"),"overwritten trait remained active")
 	assert_almost_eq(result.state.party[0].hp/result.state.party[0].max_hp,0.5)
 	var duplicate := _request("teach")
 	duplicate.action_id = "action-b"
@@ -149,7 +153,23 @@ func test_teach_debit_slots_overwrite_and_hardy_fraction_atomically() -> void:
 	locked.redesign_character.creatures["caught-a"].breakthroughs = []
 	assert_false(TRAITS.stage_action(locked,"owner-a",_request("teach"),0,essence.config()).get("ok",false))
 	var no_money := before.duplicate(true)
-	no_money.inventory.fill(null)
+	var no_money_bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(no_money.inventory)
+	no_money_bag.remove("essence_ground",100)
+	no_money.inventory = preload("res://scripts/world/death_satchel_rules.gd").slots(no_money_bag)
 	var untouched := no_money.duplicate(true)
 	assert_false(TRAITS.stage_action(no_money,"owner-a",_request("teach"),0,essence.config()).get("ok",false))
 	assert_eq(no_money,untouched,"refusal partially consumed seed or essence")
+
+func test_missing_v28_fields_normalize_before_admission_without_reroll() -> void:
+	var portable := _admitted()
+	portable.party[0]["trait_primary"] = "calm"
+	portable.redesign_character.creatures["caught-a"].erase("traits_initialized")
+	portable.redesign_character.creatures["caught-a"].rolled_traits = []
+	var result := TRAITS.normalize_admitted(portable)
+	assert_eq(result.redesign_character.creatures["caught-a"].rolled_traits,["calm"])
+	assert_false(portable.redesign_character.creatures["caught-a"].has("traits_initialized"))
+	assert_eq(TRAITS.normalize_admitted(result),result)
+	var malformed := portable.duplicate(true)
+	malformed.redesign_character.creatures["caught-a"].rolled_traits = "forged"
+	var unchanged := TRAITS.normalize_admitted(malformed)
+	assert_false(TRAITS.trait_state_errors(unchanged.redesign_character.creatures["caught-a"]).is_empty())
