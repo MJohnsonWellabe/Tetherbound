@@ -164,7 +164,10 @@ func receive(event: Dictionary) -> void:
 		"ending_aftermath":
 			_aftermath_announced = true
 			_refresh_presentation()
-			_start_dialogue_when_free("stormwood_waterward_aftermath")
+			var handoff := preload("res://scripts/story/regional_homecoming.gd").aftermath_conversation(
+				get_node("/root/Game"))
+			if not handoff.is_empty():
+				_start_dialogue_when_free(handoff)
 		"ending_water_gate_opened":
 			get_node("/root/Game").push_world_message("The Waterward gate is open.")
 		"ending_refused":

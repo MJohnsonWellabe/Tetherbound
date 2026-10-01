@@ -1,11 +1,11 @@
 extends "res://tests/test_case.gd"
 
-## F15 ending invariants (ACCEPTANCE §6.1, WORLD §6.5). The homecoming and the
+## F20 ending invariants (ACCEPTANCE §6.2, WORLD §2.8). The homecoming and the
 ## credits are a player-local acknowledgement, nothing more: they must not add
-## a fifth realm key, promise a sequel, claim every force was freed, resurrect
+## any reward or key, promise a sequel, claim every force was freed, resurrect
 ## a released companion, or hand out anything a second time.
 ##
-## Driven the same way `test_regional_homecoming.gd` drives it (runner +
+## Synthetic contract proof, not an earned ending. Driven with runner +
 ## `regional_homecoming.gd` transaction, the calls `sequence_director.gd`
 ## makes on completion and on credits acknowledgement), but over the REAL
 ## `player_state.gd` / `world_state.gd` stores so the whole portable character
@@ -25,9 +25,9 @@ const WATER_DIALOGUE_PATH := "res://data/dialogue/water.json"
 const HOMECOMING_SCRIPT_PATH := "res://scripts/story/regional_homecoming.gd"
 const CREDITS_SCRIPT_PATH := "res://scripts/ui/regional_credits.gd"
 
-## The three keys this four-chapter pass earns: Meadows->Cloudreach,
-## Cloudreach->Stormwood, Stormwood->Water. A fourth chapter's ending has no
-## door to open, so a fifth entry would be an invented next realm.
+## Retired physical-crossing flags remain declared for existing source readers.
+## RD-22's fifth portal key is an F19 boss reward/F18 item consumption; this
+## ending adapter grants no keys and must not invent another legacy key flag.
 const EXPECTED_REALM_KEYS: Array[String] = [
 	"realm_key_cloudreach", "realm_key_stormwood", "realm_key_water",
 ]
@@ -63,40 +63,21 @@ const DOCUMENTED_ENDING_FLAGS: Array[String] = [
 ]
 
 
-class SaverStub:
-	extends RefCounted
-	var calls := 0
-	var saved_character := ""
-
-	func save_character(_game: Object, character_id: String) -> bool:
-		calls += 1
-		saved_character = character_id
-		return true
-
-
 ## The fields `regional_homecoming.gd` reads off `Game`, backed by the real
 ## per-character and per-world stores.
 class GameStub:
-	extends RefCounted
-	var world: RefCounted = null
-	var local: RefCounted = null
-	var party: RefCounted = null
-	var save_system: RefCounted = SaverStub.new()
-	var messages: Array[String] = []
-
-	func push_world_message(message: String) -> void:
-		messages.append(message)
+	extends "res://tests/fixtures/regional_ending_owner.gd"
 
 
 # --- 1: no fifth key ---------------------------------------------------------
 
-func test_only_three_realm_keys_are_declared() -> void:
+func test_legacy_realm_key_flags_remain_the_declared_three() -> void:
 	var scopes: Dictionary = _json(FLAG_SCOPES_PATH)
 	var found: Array[String] = []
 	_collect_realm_key_strings(scopes, found)
 	found.sort()
 	assert_eq(found, EXPECTED_REALM_KEYS,
-		"flag_scopes.json declares exactly the three chapter keys and no fifth")
+		"legacy flag keys remain separate from RD-22's real portal key items")
 
 
 func test_ending_sources_never_name_a_realm_key() -> void:
@@ -116,7 +97,7 @@ func test_ending_path_adds_no_realm_key_to_either_store() -> void:
 	var game := _ending_game([["terrapup", "Pip"]])
 	var before := _realm_keys(game)
 	assert_eq(before, ["realm_key_water"], "fixture carries the earned Water key")
-	_run_homecoming_and_credits(game)
+	await _run_homecoming_and_credits(game)
 	assert_eq(_realm_keys(game), before, "ending path adds or removes no realm key")
 
 
@@ -203,7 +184,7 @@ func test_homecoming_and_credits_change_only_documented_player_flags() -> void:
 	var skills_before := JSON.stringify(game.local.skills.save_data())
 	var inventory_before := JSON.stringify(local_before.get("inventory"))
 
-	_run_homecoming_and_credits(game)
+	await _run_homecoming_and_credits(game)
 
 	var local_after: Dictionary = game.local.save_data()
 	assert_eq(JSON.stringify(game.world.save_data()), world_before,
@@ -232,7 +213,7 @@ func test_homecoming_and_credits_change_only_documented_player_flags() -> void:
 
 func test_second_visit_changes_nothing_and_grants_nothing() -> void:
 	var game := _ending_game([["terrapup", "Pip"], ["mosshell", ""]])
-	_run_homecoming_and_credits(game)
+	await _run_homecoming_and_credits(game)
 	var world_once := JSON.stringify(game.world.save_data())
 	var local_once := JSON.stringify(game.local.save_data())
 	var saves_once: int = game.save_system.calls
@@ -244,8 +225,8 @@ func test_second_visit_changes_nothing_and_grants_nothing() -> void:
 	assert_eq(completed, [HOMECOMING.REPEAT_ID])
 	assert_false(HOMECOMING.credits_pending(game), "credits do not reopen after completion")
 	# Even a stray re-entry of both transactions is an idempotent no-op.
-	assert_true(HOMECOMING.complete(game, HOMECOMING.character_id(game)))
-	assert_true(HOMECOMING.complete_credits(game, HOMECOMING.character_id(game)))
+	assert_true(await HOMECOMING.complete(game, HOMECOMING.character_id(game), HOMECOMING.context(game)))
+	assert_true(await HOMECOMING.complete_credits(game, HOMECOMING.character_id(game), HOMECOMING.context(game)))
 
 	assert_eq(JSON.stringify(game.world.save_data()), world_once, "second visit leaves the world as it was")
 	assert_eq(JSON.stringify(game.local.save_data()), local_once, "second visit grants nothing")
@@ -311,6 +292,8 @@ func _ending_game(members: Array) -> GameStub:
 	game.world = world
 	game.local = local
 	game.party = local.party
+	game.accepted_outcome = true
+	game.starter_uid = str(local.party.members()[0].uid) if local.party.members().size() > 0 else "released-starter"
 	return game
 
 
@@ -323,9 +306,9 @@ func _run_homecoming_and_credits(game: GameStub) -> void:
 	var character := HOMECOMING.character_id(game)
 	var completed := _talk(game, id, HOMECOMING.substitutions(game))
 	assert_eq(completed, [id])
-	assert_true(HOMECOMING.complete(game, character))
+	assert_true(await HOMECOMING.complete(game, character, HOMECOMING.context(game)))
 	assert_true(HOMECOMING.credits_pending(game), "credits open after the saved homecoming")
-	assert_true(HOMECOMING.complete_credits(game, character))
+	assert_true(await HOMECOMING.complete_credits(game, character, HOMECOMING.context(game)))
 	assert_false(HOMECOMING.credits_pending(game))
 
 

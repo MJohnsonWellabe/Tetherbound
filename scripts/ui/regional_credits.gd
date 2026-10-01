@@ -9,6 +9,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const GAME_MENU := preload("res://scripts/ui/game_menu.gd")
 const UI := preload("res://scripts/ui/ui_tokens.gd")
 const HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
+const MOTION := preload("res://scripts/ui/motion_prefs.gd")
 
 signal acknowledged(character_id: String)
 
@@ -24,6 +25,10 @@ var _scroll: ScrollContainer = null
 var _continue: Button = null
 var _scroll_position := 0.0
 var _config: Dictionary = {}
+var _ending_context: Dictionary = {}
+var _acknowledging := false
+var _closing_interact := false
+var _presentation_serial := 0
 
 
 func _ready() -> void:
@@ -40,10 +45,21 @@ func is_open() -> bool:
 	return _open
 
 
+func owns_input() -> bool:
+	return _open or (_closing_interact and Input.is_action_pressed("interact"))
+
+
 func open_for(character_id: String, world: Object) -> bool:
 	if _open or character_id.is_empty() or world == null or not _config.get("ok", false):
 		return false
+	if INPUT_OWNER.current(get_tree()) != null:
+		return false
 	var game := get_node_or_null(^"/root/Game")
+	if game == null or game.get("world") != world \
+			or HOMECOMING.character_id(game) != character_id \
+			or not HOMECOMING.credits_pending(game):
+		return false
+	_ending_context = HOMECOMING.context(game)
 	_expected_character_id = character_id
 	_expected_world = world
 	_expected_session = game.get("session") as Node if game != null else null
@@ -53,6 +69,8 @@ func open_for(character_id: String, world: Object) -> bool:
 			and not _expected_session.is_connected("transport_closed", _on_transport_closed):
 		_expected_session.connect("transport_closed", _on_transport_closed)
 	_elapsed = 0.0
+	_presentation_serial += 1
+	_acknowledging = false
 	_open = true
 	visible = true
 	_mouse_before = Input.mouse_mode
@@ -69,14 +87,25 @@ func close_without_acknowledgement() -> void:
 
 
 func _process(delta: float) -> void:
+	if _closing_interact and not Input.is_action_pressed("interact"):
+		_closing_interact = false
+		if INPUT_OWNER.current(get_tree()) == null:
+			INPUT_OWNER.set_world_hud_visible(get_tree(), true)
 	if not _open:
 		return
 	if not _context_is_current():
 		_close(false)
 		return
+	if _acknowledging:
+		return
 	_elapsed += delta
 	var motion: Dictionary = _config.get("motion", {}) as Dictionary
-	if _elapsed >= float(motion.get("auto_scroll_delay_seconds", 1.5)):
+	if Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down"):
+		var direction := -1 if Input.is_action_just_pressed("ui_up") else 1
+		_scroll.scroll_vertical += direction * int(motion.get("manual_scroll_step_px", 96))
+		_scroll_position = float(_scroll.scroll_vertical)
+	if not MOTION.reduced_motion() \
+			and _elapsed >= float(motion.get("auto_scroll_delay_seconds", 1.5)):
 		var bar := _scroll.get_v_scroll_bar()
 		var bottom := maxi(0, int(ceil(bar.max_value - bar.page)))
 		_scroll_position = maxf(_scroll_position, float(_scroll.scroll_vertical))
@@ -96,21 +125,42 @@ func _on_continue_pressed() -> void:
 
 
 func _acknowledge() -> void:
+	if _acknowledging:
+		return
 	if not _open or not _context_is_current():
 		_close(false)
 		return
+	_acknowledging = true
+	_continue.disabled = true
 	var character_id := _expected_character_id
-	_close(true)
-	acknowledged.emit(character_id)
+	var game := get_node_or_null(^"/root/Game")
+	var frozen_context := _ending_context.duplicate(true)
+	var frozen_world := _expected_world
+	var serial := _presentation_serial
+	var committed := await HOMECOMING.complete_credits(game, character_id, frozen_context)
+	if serial != _presentation_serial:
+		return
+	if not _open or _expected_world != frozen_world \
+			or _expected_character_id != character_id \
+			or not HOMECOMING.context_matches(game, frozen_context):
+		_acknowledging = false
+		return
+	_close(committed)
+	_acknowledging = false
+	if committed:
+		acknowledged.emit(character_id)
 
 
 func _close(_was_acknowledged: bool) -> void:
 	if not _open:
 		return
 	_open = false
+	_closing_interact = Input.is_action_pressed("interact")
 	visible = false
+	_continue.disabled = false
 	_expected_character_id = ""
 	_expected_world = null
+	_ending_context = {}
 	if _expected_session != null and is_instance_valid(_expected_session) \
 			and _expected_session.has_signal("transport_closed") \
 			and _expected_session.is_connected("transport_closed", _on_transport_closed):
@@ -142,7 +192,8 @@ func _context_is_current() -> bool:
 			or not _expected_session.has_method("is_active") \
 			or not bool(_expected_session.call("is_active"))):
 		return false
-	return HOMECOMING.credits_pending(game)
+	return HOMECOMING.context_matches(game, _ending_context) \
+		and (_acknowledging or HOMECOMING.credits_pending(game))
 
 
 func _build() -> void:
