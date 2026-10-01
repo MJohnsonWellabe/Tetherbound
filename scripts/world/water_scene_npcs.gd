@@ -5,6 +5,7 @@ extends Node3D
 ## awards items, completes objectives, starts combat, or opens a dock. Iona's
 ## post-victory attunement is likewise only a request to host authority.
 signal guarded_event_requested(event_id: String, npc_id: String, peer_id: int)
+signal authored_conversation_finished(conversation_id: String, npc_id: String, peer_id: int)
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const CHARACTER := preload("res://scripts/characters/character_model.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
@@ -242,6 +243,7 @@ func _on_finished(conversation: String) -> void:
 	var game := get_node_or_null("/root/Game")
 	if not delivered or game == null or str(game.get("current_realm")) != "water":
 		return
+	authored_conversation_finished.emit(conversation, id, game.session.local_peer_id())
 	for guard: Dictionary in _guards:
 		if str(guard.get("conversation", "")) == conversation and _guard_holds(guard):
 			guarded_event_requested.emit(str(guard.effect), id, game.session.local_peer_id())

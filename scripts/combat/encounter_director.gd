@@ -437,6 +437,106 @@ var _trainer_spec: Dictionary = {}
 ## before this director discards its encounter/participant evidence.
 var _rematch_outcome_writer: Callable
 var _rematch_pending_outcome: Variant = null
+var _master_duel: Dictionary = {}
+var _master_pending_win := false
+var _foundation_pending_sources: Array[Dictionary] = []
+var _trainer_character_participants: Array[String] = []
+var _trainer_foundation_admissions: Dictionary = {}
+var _boss_pending_win := false
+
+func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
+	if _session == null or not _is_host(): return
+	var record: Dictionary = _encounter_host.call("record", encounter_id)
+	var participant: Dictionary = record.get("participants", {}).get(peer, {})
+	if participant.is_empty() or participant.has("foundation_bounty_instances"): return
+	var registry: RefCounted = _session.get("_character_authority")
+	var current: Dictionary = registry.call("state", str(participant.get("character_id", "")))
+	var instances: Array[String] = []
+	for slot: Dictionary in current.get("redesign_character", {}).get("bounties", {}).get("slots", []):
+		if slot.get("complete") != true: instances.append(str(slot.instance))
+	participant.foundation_bounty_instances = instances
+
+func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null, capture_card: Dictionary = {}) -> bool:
+	if _session == null or not _is_host(): return true
+	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
+		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
+	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
+	source.world_namespace = _session.call("_game").get("world").reward_delivery_namespace
+	source.session_id = _session.call("_altar_current_epoch")
+	if kind == "catch": source.capture_card = capture_card.duplicate(true)
+	var retained := retained_research_source(source.source_id)
+	if not retained.is_empty(): source = retained
+	else: _foundation_pending_sources.append(source)
+	var result: Dictionary = _session.call("foundation_research_source", self, source.encounter_id, source.peer, source.kind, source.source_id, source.species, source.move_id, source.night)
+	if result.get("durable") == true: _foundation_pending_sources.erase(source)
+	return result.get("durable") == true
+
+func _retry_research_sources() -> void:
+	if _session == null or not _is_host(): return
+	for source: Dictionary in _foundation_pending_sources.duplicate(true):
+		var result: Dictionary = _session.call("foundation_research_source", self, source.encounter_id, source.peer, source.kind, source.source_id, source.species, source.move_id, source.night)
+		if result.get("durable") == true: _foundation_pending_sources.erase(source)
+
+func retained_boss_participants() -> Array[String]:
+	return _trainer_character_participants.duplicate()
+
+func retained_research_source(source_id: String) -> Dictionary:
+	for source: Dictionary in _foundation_pending_sources:
+		if source.source_id == source_id: return source.duplicate(true)
+	return {}
+
+## Uses the existing owned trainer combat manager and its authoritative local
+## host vitals. The selected UID is the only member passed to that manager.
+func start_master_duel(site: Node3D, character_id: String, uid: String, definition: Dictionary) -> Dictionary:
+	if not _is_host() or _session == null or _player == null or _ally == null or trainer_battle_active() \
+		or character_id != _local_character_id() or str(_ally.get("uid")) != uid:
+		return {"ok": false, "code": "deploy_chosen_owned_creature"}
+	if not is_instance_valid(site) or site.get_script() != preload("res://scripts/masters/master_site.gd") \
+		or site.get("_mounted") != true or not get_parent().is_ancestor_of(site) \
+		or definition != preload("res://scripts/creatures/breakthrough.gd").master(str(site.get("master_id"))) \
+		or _player.global_position.distance_to(site.get_node(^"Master").global_position) > float(definition.prompt_radius_m):
+		return {"ok": false, "code": "actual_master_arena_required"}
+	var admitted: Dictionary = _session.call("admitted_character_state", _local_peer_id())
+	var owned := false
+	for card: Dictionary in admitted.get("party", []):
+		if card.uid == uid and card.get("fainted") == false and float(card.get("hp", 0)) > 0: owned = true
+	if not owned: return {"ok": false, "code": "conscious_owned_creature_required"}
+	_master_duel = {"character_id": character_id, "creature_uid": uid, "master_id": definition.id,
+		"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
+		"session_id": _session.call("_game").get("world").world_id}
+	var spec := {"id": definition.id, "name": definition.name, "master": true,
+		"team": [{"species": definition.species_id, "level": definition.cap_level, "combat": definition.combat.duplicate(true)}]}
+	if not begin_trainer_battle(spec, site.get_node(^"Master")):
+		_master_duel.clear()
+		return {"ok": false, "code": "encounter_refused"}
+	_master_duel.encounter_id = str(_encounter.get("encounter_id", ""))
+	_master_duel.participants = _encounter.get("participants", {}).duplicate(true)
+	if _master_duel.encounter_id.is_empty():
+		void_master_duel("", character_id)
+		return {"ok": false, "code": "encounter_identity_required"}
+	return {"ok": true, "encounter_id": _master_duel.encounter_id, "resolved": false}
+
+func void_master_duel(encounter_id: String, character_id: String) -> void:
+	if _master_duel.is_empty() or _master_duel.get("encounter_id", "") != encounter_id \
+		or _master_duel.character_id != character_id or _master_pending_win: return
+	if _manager != null and _manager.call("is_fighting") == true: _manager.call("_begin_resolve", "fled")
+	_finish_trainer_battle(false)
+
+func start_master_rematch(site: Node3D, character: String, uid: String, spec: Dictionary) -> bool:
+	if not _is_host() or _session == null or character != _local_character_id() or _ally == null \
+		or str(_ally.get("uid")) != uid or bool(_ally.get("fainted")) or float(_ally.get("hp")) <= 0 \
+		or not is_instance_valid(site) or site.get_script() != preload("res://scripts/masters/master_site.gd") \
+		or site.get("_mounted") != true or site.get("master_id") != spec.get("id") \
+		or not get_parent().is_ancestor_of(site) or trainer_battle_active(): return false
+	_master_duel = {"character_id": character, "creature_uid": uid, "master_id": str(spec.id)}
+	if not begin_trainer_battle(spec, site.get_node(^"Master")):
+		_master_duel.clear()
+		return false
+	_master_duel.encounter_id = str(_encounter.get("encounter_id", ""))
+	return not _master_duel.encounter_id.is_empty()
+
+func retained_master_win() -> Dictionary:
+	return _master_duel.duplicate(true) if _master_pending_win else {}
 
 func bind_rematch_outcome_writer(writer: Callable) -> bool:
 	if not writer.is_valid() or trainer_battle_active(): return false
@@ -2347,7 +2447,11 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 			"reason": "That fight did not say which fight it was.", "pending": false,
 			"delta": {}}
 	var record: Dictionary = _encounter_host.call("record", encounter_id)
-	var character_id := str(intent.get("character_id", ""))
+	if str(record.get("opponent", {}).get("owner_npc", "")).begins_with("master_"):
+		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "single_challenger_duel", "pending": false, "delta": {}}
+	var character_id := str(_session.call("_authority_character", peer_id)) if _session != null else ""
+	if _trainer_spec.has("rematch") and (_session == null or not bool(_session.call("foundation_rematch_join_allowed", peer_id, _trainer_spec))):
+		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "rematch_tier_locked", "pending": false, "delta": {}}
 	var tournament_round := _record_is_tournament(record)
 	var tournament_ids: Array[String] = []
 	var active_uid := str(intent.get("creature_uid", ""))
@@ -2378,6 +2482,8 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	var verdict: Dictionary = _encounter_host.call("join", encounter_id, peer_id,
 		active_uid if tournament_round else "", character_id)
 	if bool(verdict.get("ok", false)):
+		_freeze_bounty_instances(encounter_id, peer_id)
+		_retain_research(encounter_id, peer_id, "sight", str(record.get("opponent", {}).get("species_id", "")), "engage")
 		if tournament_round:
 			_freeze_tournament_roster(encounter_id, peer_id, tournament_ids)
 		_host_after_encounter_change(encounter_id)
@@ -2648,6 +2754,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	if bool(rolled.get("killed", false)):
 		# Retain the original killing verdict before any terminal publication.
 		_capture_wild_victory_source(encounter_id, verdict)
+	_retain_research(encounter_id, peer_id, "cast", str(current_card.get("species_id", "")), str(launch.action_id), str(launch.move_id))
 	_emit_f22_accepted_hit(encounter_id, peer_id, striker, delta, move, str(launch.slot))
 	if bool(rolled.get("killed", false)):
 		# This opponent's round is done for every participant, including observers
@@ -2752,6 +2859,13 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 			"code": "unknown_encounter", "reason": "That fight is over.",
 			"pending": false, "delta": {}}
 	var hp_max := maxf(1.0, float(opponent.get("hp_max", 1.0)))
+	var catch_night: Variant = null
+	var catch_clock := get_tree().get_first_node_in_group("day_cycle")
+	if catch_clock != null and catch_clock.get("_cycle") is RefCounted:
+		var cycle: RefCounted = catch_clock.get("_cycle")
+		catch_night = cycle.call("is_dark", cycle.call("hour_at", float(catch_clock.get("_elapsed_seconds"))))
+	elif preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
+		return {"ok": false, "kind": "catch_attempt", "peer": peer_id, "encounter_id": encounter_id, "code": "capture_clock_unavailable", "pending": false, "delta": {}}
 	var verdict: Dictionary = _catch_arbiter.call("attempt", encounter_id, peer_id, {
 		"kind": str(_encounter_host.call("kind", encounter_id)),
 		"phase": str(_encounter_host.call("phase", encounter_id)),
@@ -2778,6 +2892,9 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 			runtime.set_meta("catch_decision", (verdict.get("delta", {}) as Dictionary).duplicate(true))
 			runtime.set_meta("catch_claim_id",
 				str((verdict.get("delta", {}) as Dictionary).get("claim_id", "")))
+			runtime.set_meta("foundation_catch_night_claim", str(runtime.get_meta("catch_claim_id", "")))
+			if catch_night is bool: runtime.set_meta("foundation_catch_night", catch_night)
+			else: runtime.remove_meta("foundation_catch_night")
 			runtime.call("pause_for_catch")
 		else:
 			_catch_claimant = peer_id
@@ -2851,6 +2968,13 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 			_cache_shared_catch_finish_result(encounter_id, claim_id, peer_id, refused)
 			_host_after_encounter_change(encounter_id)
 			return refused
+	if caught:
+		if runtime.get_meta("foundation_catch_night_claim", "") != claim_id:
+			runtime.remove_meta("foundation_catch_night")
+		if not runtime.has_meta("foundation_catch_night") and preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
+			return {"ok": false, "pending": true, "code": "capture_clock_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
+		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null), creature_card):
+			return {"ok": false, "pending": true, "code": "capture_event_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 	_catch_arbiter.call("release", encounter_id, peer_id)
 	if caught:
 		_encounter_host.call("set_phase", encounter_id, "done")
@@ -4227,6 +4351,7 @@ func interaction_activate() -> void:
 
 
 func _process(delta: float) -> void:
+	_retry_research_sources()
 	_tick_pending_shared_join()
 	_tick_pending_tournament_join()
 	_tick_respawn(delta)
@@ -4746,7 +4871,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 ## below runs.
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
-	if not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
+	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()
 	var instance: Variant = wild.get("instance")
@@ -4839,6 +4964,8 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			_manager.set_meta(&"canonical_wild_encounter", _shared_active_id)
 	if opponent_owned:
 		_note_trainer_participants(str(rec["encounter_id"]))
+	_freeze_bounty_instances(str(rec["encounter_id"]), _local_peer_id())
+	_retain_research(str(rec["encounter_id"]), _local_peer_id(), "sight", str(opponent.species_id), "engage")
 	if _can_encounter_rpc():
 		for peer_id: int in multiplayer.get_peers():
 			_send_realm_rpc(peer_id, "_rpc_encounter_opened", [rec])
@@ -5307,6 +5434,9 @@ func nearest_live_wild() -> Node3D:
 ## wild one where it does not is a rule the player would have to discover.
 func _fight_party() -> Array[RefCounted]:
 	var out: Array[RefCounted] = []
+	if not _master_duel.is_empty():
+		if _ally != null and str(_ally.get("uid")) == _master_duel.creature_uid: out.append(_ally)
+		return out
 	if not _tournament_members.is_empty():
 		if _ally != null and _tournament_members.has(_ally) and not bool(_ally.get("fainted")):
 			out.append(_ally)
@@ -5840,6 +5970,8 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 	_trainer_send_delay = 0.0
 	_trainer_cleanup_delay = 0.0
 	_trainer_battle_participants = {}
+	_trainer_character_participants.clear()
+	_trainer_foundation_admissions.clear()
 	# Taken BEFORE the first round places anyone, so it is where the player was
 	# actually standing when they accepted — not where the first fight's
 	# `_stand_the_trainer_aside()` will shortly put them. See
@@ -6191,6 +6323,12 @@ func _on_trainer_round_ended(outcome: String) -> void:
 ## same shape as `_tick_respawn` above, and kept separate from it because a
 ## trainer's creature never respawns.
 func _tick_trainer_battle(delta: float) -> void:
+	if _boss_pending_win:
+		_finish_trainer_battle(true)
+		return
+	if _master_pending_win:
+		_finish_trainer_battle(true)
+		return
 	if _trainer_send_delay > 0.0:
 		_trainer_send_delay -= delta
 		if _trainer_send_delay > 0.0:
@@ -6210,6 +6348,19 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	if won and not spec.has("master") and not spec.has("rematch") and _session != null and _is_host():
+		var handoff: Dictionary = _session.call("foundation_boss_outcome", self, spec.duplicate(true), _encounter.duplicate(true))
+		if handoff.get("durable") != true:
+			_boss_pending_win = true
+			return
+		_boss_pending_win = false
+	if spec.has("master"):
+		if won:
+			_master_pending_win = true
+			var retained: Dictionary = _session.call("foundation_master_outcome", self, _master_duel.duplicate(true)) if _session != null else {}
+			if retained.get("ok") != true or retained.get("durable") != true: return
+		_master_pending_win = false
+		_master_duel.clear()
 	if spec.has("rematch"):
 		# Exact director/host record is read by the bound writer. Never reuse a
 		# client trainer_victory intent or close/forget a win before durable save.
@@ -6218,6 +6369,7 @@ func _finish_trainer_battle(won: bool) -> void:
 			_rematch_pending_outcome = won
 			return
 		_rematch_pending_outcome = null
+		_master_duel.clear()
 	var tournament_encounter_id := _tournament_host_encounter_id
 	if not won and not _tournament_members.is_empty():
 		# The tournament retry exception restores the entered three, not the
@@ -6244,7 +6396,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	# battle still ends with the player standing beside the fight they just won.
 	_has_trainer_battle_anchor = false
 	_set_exploration_active(true)
-	if won and not spec.has("rematch"):
+	if won and not spec.has("rematch") and not spec.has("master"):
 		_record_trainer_defeat(spec)
 		call_deferred("_present_trainer_victory", spec, victory_speaker)
 	# NOW the battle's one encounter record is over, and not one creature
@@ -6922,6 +7074,11 @@ func _note_trainer_participants(encounter_id: String) -> void:
 		return
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 		_trainer_battle_participants[peer_id] = true
+		var record: Dictionary = _encounter_host.call("record", encounter_id)
+		var character := str(record.get("participants", {}).get(peer_id, {}).get("character_id", ""))
+		if not character.is_empty() and not _trainer_character_participants.has(character): _trainer_character_participants.append(character)
+		if not character.is_empty() and not _trainer_foundation_admissions.has(character) and _session != null:
+			_trainer_foundation_admissions[character] = _session.call("foundation_rematch_participant_context", peer_id)
 
 
 ## The same fight, one creature later: bring `encounter_id` back to `active` and
@@ -7198,6 +7355,7 @@ func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) ->
 			"record": (_encounter_host.call("record", encounter_id) as Dictionary).duplicate(true)})
 		return
 	runtime.set_meta(&"wild_victory_source", capture.duplicate(true))
+	_session.call("foundation_defeat_obligations", self, capture)
 	runtime.set_meta(&"wild_victory_resolved", false)
 	runtime.set_meta(&"wild_victory_retry_left_s", 0.0)
 
@@ -7227,6 +7385,7 @@ func _tick_wild_victory_settlement(encounter_id: String, delta: float) -> void:
 			or not (_encounter_host.call("pending_actor_vitals", encounter_id) as Array).is_empty():
 		return
 	var original := host_wild_victory_source(encounter_id)
+	if not original.is_empty() and _session.call("foundation_defeat_obligations", self, original).get("durable") != true: return
 	if original.is_empty() or not _session.has_method("admitted_pending_vitals"):
 		return
 	for deployment: Dictionary in original.get("deployments", []):
@@ -7245,8 +7404,8 @@ func _tick_wild_victory_settlement(encounter_id: String, delta: float) -> void:
 		runtime.set_meta(&"wild_victory_training_resolved", true)
 		# Research consumes the same retained actual killing-hit source after
 		# F27 settles. Keep that lifetime until its separate personal ACK settles.
-		var research: Dictionary = preload("res://scripts/creatures/research_actions.gd").defeated_source(_session, original)
-		if research.get("resolved") != true: return
+		# The original defeat duties were durably appended before F27 staging.
+		# Their owner-save/ACK retry survives this actor lifetime independently.
 		runtime.set_meta(&"wild_victory_resolved", true)
 		if bool(runtime.get_meta(&"dispose_after_wild_victory", false)):
 			_dispose_shared_host_fight(encounter_id, false)

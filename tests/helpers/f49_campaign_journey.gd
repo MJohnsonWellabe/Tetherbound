@@ -79,8 +79,11 @@ func run(owner: SceneTree) -> void:
 	if driver.reached != "tidewake_ending_earned":
 		_fail("F49 Tidewake did not settle its real chapter")
 		return
-	if not _dock_conclusion_available(): return
+	if not await _dock_conclusion_available(): return
 	if not await _boundary("tidewake_settled"): return
+	if not _dock_saved():
+		_fail("F49 Tidewake departure lost its actual world conclusion or owner receipt on disk reload")
+		return
 	if not await travel.home_key() or not await travel.hang_relic("tidewake") or not await travel.enter("cloudreach", "cloudreach"):
 		_failures(travel.failures)
 		return
@@ -132,9 +135,63 @@ func _failures(lines: Array) -> void:
 	driver._finish(false)
 
 func _dock_conclusion_available() -> bool:
-	# WORLD §6.5 distinguishes the Guardian settlement from the dock aftermath
-	# and final shared departure. The current earned ending helper stops inside
-	# Veilfall. No public producer/earned helper exists for that final departure.
-	# Keep the later composition reviewable, but never credit this skipped beat.
-	_fail("F49 missing producer: WORLD §6.5 final dock aftermath/shared departure has no earned ordinary-input continuation from the Guardian chamber; F20 must expose its actual chapter-conclusion path before F49 can continue")
+	var chains: RefCounted = driver.local_chains
+	var world := driver.current_scene as Node3D
+	var cave := world.get_node_or_null("WaterVeilfall")
+	if chains == null or chains.mount == null or cave == null or not chains.continuous \
+		or not chains.earned or not cave.call("contains_interior", chains.player.global_position):
+		_fail("F49 dock continuation requires the same earned swimmer and actual Veilfall chamber")
+		return false
+	var party_before := _dock_party_uids()
+	var origin: Vector3 = cave.get("interior").global_position
+	var interior: Array = driver.VEILFALL_INTERIOR_PATH.duplicate()
+	interior.reverse()
+	for point: Vector3 in interior:
+		if not await chains.navigator.walk_to(origin + point, 2400, 1.5):
+			_fail("F49 ordinary Veilfall exit walk stalled")
+			return false
+	var exit_prompt: Node3D = cave.get("_exit_prompt")
+	if not await chains._approach_prompt(exit_prompt, exit_prompt.global_position):
+		_fail("F49 actual Veilfall exit provider did not own Interact")
+		return false
+	await chains._press_interact()
+	await chains._frames(30)
+	if cave.call("contains_interior", chains.player.global_position):
+		_fail("F49 ordinary exit input did not leave Veilfall")
+		return false
+	chains.last_island = "veilfall"
+	# _talk uses the existing continuous island path, paid swimmer, ground
+	# navigator, exact NPC provider and Interact-driven natural completion.
+	var heard: Array = await chains._talk("water_mara")
+	if heard.is_empty() or heard[0] != "water_mara_post" or not chains.failures.is_empty():
+		_failures(chains.failures)
+		return false
+	var chapter := world.get_node_or_null("WaterChapter")
+	var prompt: Node3D = chapter.get("_dock_prompt") if chapter != null else null
+	if prompt == null or not await chains._approach_prompt(prompt, prompt.global_position):
+		_fail("F49 civilian departure provider did not own ordinary Interact after Mara's afterword")
+		return false
+	await chains._press_interact()
+	for frame in 600:
+		if _dock_saved():
+			if _dock_party_uids() != party_before:
+				_fail("F49 dock continuation replaced the earned party")
+				return false
+			return true
+		await driver.physics_frame
+	_fail("F49 actual dock handoff did not settle its saved world and owner receipt")
 	return false
+
+func _dock_party_uids() -> Array[String]:
+	var uids: Array[String] = []
+	for member: RefCounted in game.party.members(): uids.append(str(member.get("uid")))
+	return uids
+
+func _dock_saved() -> bool:
+	var receipt := "craft:water_dock_departure:" + game.local.character_id
+	var row: Dictionary = game.session.call("_owner_training_row")
+	var decision: Dictionary = game.session.call("_training_decision", game.session.call("local_peer_id"), row)
+	return decision.get("ok") == true and decision.get("saved") == true \
+		and row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).has(receipt) \
+		and game.world.flags.has("water_civilian_departure_complete") \
+		and game.local.redesign_character.transaction_receipts.has(receipt)

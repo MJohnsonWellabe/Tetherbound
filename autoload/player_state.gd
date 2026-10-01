@@ -310,6 +310,7 @@ func hotbar_can_hold(item_id: String) -> bool:
 	var definition := items.call("definition", item_id) as Dictionary
 	if definition.is_empty():
 		return false
+	if item_id == "home_key": return true
 	return HOTBAR_KINDS_ALLOWED.has(str(items.call("kind", item_id)))
 
 

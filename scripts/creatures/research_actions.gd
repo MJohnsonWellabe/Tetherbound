@@ -6,7 +6,7 @@ const LOG := preload("res://scripts/creatures/research_log.gd")
 const ACTIONS := preload("res://scripts/net/character_action_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 
-static func commit(session: Node, peer: int, action: String, intent: Dictionary, event: Dictionary = {}) -> Dictionary:
+static func commit(session: Node, peer: int, action: String, intent: Dictionary, event: Dictionary = {}, admission_guard: Callable = Callable()) -> Dictionary:
 	if session == null or not session.call("is_host") or LOG.config().get("runtime_enabled") != true:
 		return ACTIONS.deny("Research rewards are unavailable.")
 	if action not in LOG.ACTIONS: return ACTIONS.deny("invalid_research_action")
@@ -16,6 +16,9 @@ static func commit(session: Node, peer: int, action: String, intent: Dictionary,
 	if saver == null: return ACTIONS.deny("research_writer_unavailable")
 	saver.call("finish_fallback")
 	if saver.call("fallback_busy") == true: return ACTIONS.deny("fallback_busy")
+	if admission_guard.is_valid() and admission_guard.call() != true: return ACTIONS.deny("research_generation_changed")
+	game = session.call("_game")
+	if game == null or game.get("session") != session or game.get("save_system") != saver: return ACTIONS.deny("research_session_changed")
 	var character := str(session.call("_authority_character", peer))
 	var admitted: Dictionary = session.call("admitted_character_state", peer)
 	var registry: RefCounted = session.get("_character_authority")

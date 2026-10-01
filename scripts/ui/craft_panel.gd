@@ -303,8 +303,8 @@ func _gear_name(id: String) -> String:
 ## substitute its player, guessed proximity or world revision for this seam.
 func _gear_context(view: Dictionary) -> Dictionary:
 	if not is_instance_valid(_station) or not is_instance_valid(_producer) or game == null \
-			or game.get("session") != _producer or not _producer.has_method("homestead_station_context"): return {}
-	var raw: Variant = _producer.call("homestead_station_context",_station)
+			or game.get("session") != _producer or not _producer.has_method("homestead_gear_context"): return {}
+	var raw: Variant = _producer.call("homestead_gear_context",_station,int(view.get("registry_revision", -1)))
 	if not raw is Dictionary: return {}
 	var revision: Variant = view.get("registry_revision")
 	var id := str(_station.get_meta("building_id",""))

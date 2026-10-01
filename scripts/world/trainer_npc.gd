@@ -185,6 +185,7 @@ func _spawn(spec: Dictionary, positions: Dictionary = {}, facings: Dictionary = 
 	var npc: Node3D = NPC.new()
 	npc.name = display_name
 	npc.set_meta("trainer_id", id)
+	npc.set_meta("foundation_trainer_spec", spec.duplicate(true))
 	add_child(npc)
 	if not bool(npc.call("setup_from_config", model_config(spec), _player)):
 		push_error("trainer '%s' has no model; nothing will stand there" % id)

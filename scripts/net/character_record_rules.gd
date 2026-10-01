@@ -126,7 +126,7 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
 ## canonical function. V2 uses exactly the existing full admission fields.
 ## Injecting a pure callable here avoids an Essence/record-codec preload cycle.
 static func training_projection(raw: Dictionary, row: Dictionary, legacy: Callable) -> Dictionary:
-	if row.get("kind") == "creature_training" and row.get("version") == 2:
+	if row.get("kind") == "creature_training" and row.get("version") in [2, 3]:
 		if raw.size() == FIELDS.size() and raw.has("portal_escrow") and raw.has("vitals_escrow"):
 			return raw.duplicate(true)
 		return portable_projection(raw)

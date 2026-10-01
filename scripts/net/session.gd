@@ -1,5 +1,652 @@
 extends Node
 
+const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
+const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
+signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
+signal homestead_personal_view_completed()
+signal foundation_reply_received(envelope: Dictionary, result: Dictionary)
+var _homestead_stations: Dictionary = {}
+var _foundation_requests: Dictionary = {}
+var _foundation_personal_cache: Dictionary = {}
+var _foundation_camp_pending: Dictionary = {}
+
+## All transport envelopes reuse the Session generation/character/world fence.
+## The peer sends a source key and original intent, never a price or context.
+func _foundation_send(op: String, key: String, intent: Dictionary, revision: int) -> Dictionary:
+	var envelope := _altar_envelope(op, key)
+	if envelope.is_empty(): return FOUNDATION_ACTIONS.deny("authority_missing")
+	envelope.intent = intent.duplicate(true)
+	envelope.revision = revision
+	var correlation := JSON.stringify([op, key, intent, revision]).sha256_text()
+	_foundation_requests[correlation] = envelope.duplicate(true)
+	if is_host(): return _foundation_handle(local_peer_id(), envelope)
+	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
+	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
+	return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_foundation_action(envelope: Dictionary) -> void:
+	if not is_host(): return
+	var peer := multiplayer.get_remote_sender_id()
+	var result := _foundation_handle(peer, envelope)
+	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_foundation_reply", envelope, result)
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
+	if is_host() or envelope.get("session_epoch") != _altar_current_epoch() \
+		or envelope.get("character_id") != _local_character_id() \
+		or envelope.get("world_namespace") != _game().get("world").reward_delivery_namespace: return
+	var correlation := JSON.stringify([envelope.get("op"), envelope.get("station_key"), envelope.get("intent"), envelope.get("revision")]).sha256_text()
+	if not ESSENCE._equivalent(_foundation_requests.get(correlation), envelope): return
+	if result.get("ok") == true and result.get("resolved") == true:
+		var row := _owner_training_row()
+		if row.get("receipt") != result.get("receipt") or _training_decision(local_peer_id(), row).get("ok") != true: return
+	if envelope.op == "personal_view":
+		_foundation_personal_cache = result.duplicate(true)
+		homestead_personal_view_completed.emit()
+	elif envelope.op in FOUNDATION_ACTIONS.ACTIONS:
+		homestead_action_completed.emit(envelope.op, envelope.intent, result)
+	foundation_reply_received.emit(envelope.duplicate(true), result.duplicate(true))
+
+func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
+	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
+		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
+	if envelope.op == "personal_view": return _foundation_personal_view(peer)
+	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion"]: return _foundation_refusal("host_producer_required")
+	if envelope.op == "master_duel":
+		if envelope.intent.size() != 2 or not envelope.intent.get("master_id") is String or not envelope.intent.get("creature_uid") is String: return _foundation_refusal("invalid_duel_intent")
+		var site := _foundation_master_site(peer, envelope.intent.master_id, false)
+		var director := _foundation_master_director(site)
+		if site == null or director == null: return _foundation_refusal("master_arena_unavailable")
+		return director.call("start_master_duel", site, _authority_character(peer), envelope.intent.creature_uid, preload("res://scripts/creatures/breakthrough.gd").master(envelope.intent.master_id))
+	if envelope.op == "research_claim":
+		if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return _foundation_refusal("research_disabled")
+		if envelope.intent.size() != 2 or not envelope.intent.get("species_id") is String or not envelope.intent.get("task_id") is String: return _foundation_refusal("invalid_research_claim")
+		var world: RefCounted = _game().get("world")
+		var character := _authority_character(peer)
+		var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
+		if row is Dictionary and row.get("action") == "research_claim" and row.get("intent") == envelope.intent: return _foundation_decision(peer, row)
+		var result := preload("res://scripts/creatures/research_actions.gd").commit(self, peer, "research_claim", envelope.intent, {}, Callable(self, "_foundation_envelope_live").bind(peer, envelope.duplicate(true)))
+		if result.get("durable") != true: return _foundation_refusal(str(result.get("code", "research_claim_refused")))
+		row = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
+		return _foundation_decision(peer, row) if row is Dictionary else FOUNDATION_ACTIONS.deny("research_decision_unavailable")
+	if envelope.op in ["bounty_view", "bounty_claim", "bounty_reconcile"]:
+		var composition := get_node_or_null(^"FoundationComposition")
+		var host_adapter := composition.get_node_or_null(^"BountyHost") if composition != null else null
+		if host_adapter == null: return FOUNDATION_ACTIONS.deny("bounty_unavailable")
+		if envelope.op == "bounty_view": return host_adapter.call("personal_view", peer)
+		if envelope.intent.size() != 1 or not envelope.intent.get("instance") is String: return _foundation_refusal("invalid_claim")
+		var world: RefCounted = _game().get("world")
+		var character := _authority_character(peer)
+		var existing: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
+		if existing is Dictionary and existing.get("action") == "bounty_claim" and existing.get("intent") == envelope.intent:
+			return _foundation_decision(peer, existing)
+		if envelope.op == "bounty_reconcile": return FOUNDATION_ACTIONS.deny("original_decision_unavailable")
+		var saver: RefCounted = _game().get("save_system")
+		if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
+		saver.call("finish_fallback")
+		if saver.call("fallback_busy") == true or not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]): return FOUNDATION_ACTIONS.deny("writer_busy")
+		var result: Dictionary = host_adapter.call("claim", peer, envelope.intent)
+		if result.get("durable") != true: return _foundation_refusal(str(result.get("code", "claim_refused")))
+		var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+		return _foundation_decision(peer, row)
+	if envelope.op == "loadout_quote":
+		if _foundation_source(peer, envelope.station_key).is_empty(): return FOUNDATION_ACTIONS.deny("station_unavailable")
+		var view := _foundation_personal_view(peer)
+		for card: Dictionary in view.get("party", []):
+			if card.uid == envelope.intent.get("creature_uid"):
+				return {"ok": true, "creature_uid": card.uid, "loadout_revision": card.get("loadout_revision", 0), "registry_revision": view.registry_revision}
+		return FOUNDATION_ACTIONS.deny("not_owned")
+	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
+	var character := _authority_character(peer)
+	var world: RefCounted = _game().get("world")
+	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
+	if row is Dictionary and row.get("action") == envelope.op and ESSENCE._equivalent(row.get("intent"), envelope.intent):
+		return _foundation_decision(peer, row)
+	# A removed source is allowed only when recovering that exact durable row.
+	var saver: RefCounted = _game().get("save_system")
+	if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or not _altar_envelope_matches(peer, envelope,
+		["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
+		or admitted_character_state(peer).is_empty(): return FOUNDATION_ACTIONS.deny("character_busy")
+	var part := "bed" if envelope.op == "camp_rest" else "workbench"
+	if envelope.op == "station_craft":
+		var recipe: Dictionary = _game().get("items").call("recipe", str(envelope.intent.get("recipe_id", "")))
+		var route := preload("res://scripts/build/forward_camp_rules.gd").recipe(str(envelope.intent.get("recipe_id", "")), recipe)
+		if route.get("ok") == true: part = route.part
+	var context := _foundation_build_context(peer, envelope.intent) if envelope.op == "camp_build" else _foundation_source(peer, envelope.station_key, part)
+	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
+	if envelope.op == "regional_ack":
+		var ending := preload("res://scripts/story/regional_homecoming.gd")
+		if peer != local_peer_id() or config().get("redesign_ending_runtime_enabled") != true \
+			or ending.acknowledgement_intent(ending.context(_game()), str(envelope.intent.get("stage", ""))) != envelope.intent: return _foundation_refusal("ending_context_changed")
+		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+			"in_range": true, "in_combat": false, "earned_ending_ack": true, "source_key": "regional_ending:" + character}
+	if envelope.op == "master_chest":
+		if envelope.intent.size() != 1 or not envelope.intent.get("master_id") is String: return _foundation_refusal("invalid_chest_intent")
+		var site := _foundation_master_site(peer, envelope.intent.master_id, true)
+		if site != null:
+			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)), "in_range": true,
+				"master_id": envelope.intent.master_id, "source_key": "master_chest:" + envelope.intent.master_id}
+	if envelope.op == "feast_feed" and STATION_RULES.config().get("runtime_enabled") == true and not _altar_peer_in_combat(peer):
+		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+			"in_range": true, "in_combat": false, "owns_character": true, "source_key": "personal_feast_feed"}
+	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
+	var cfg := STATION_RULES.config()
+	if envelope.op == "boss_relic": return _foundation_refusal("host_outcome_required")
+	if envelope.op == "station_craft" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
+	if envelope.op == "feast_cook" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
+	if envelope.op == "den" and cfg.get("den_runtime_enabled") != true: return _foundation_refusal("den_disabled")
+	if envelope.op == "gear":
+		if preload("res://scripts/creatures/creature_gear.gd").config().get("feature_flags", {}).get("runtime_enabled") != true: return _foundation_refusal("gear_disabled")
+		context.gear_runtime_authorized = true
+	context.foundation_runtime_authorized = true
+	var full: Dictionary = _character_authority.call("state", character)
+	if envelope.op == "station_craft":
+		var recipe_id := str(envelope.intent.get("recipe_id", ""))
+		var recipe: Dictionary = _game().get("items").call("recipe", recipe_id)
+		var unlock := str(recipe.get("unlocked_by", ""))
+		# Flags are the admitted character's actual portable progression, not the host's merged view.
+		var flags: Dictionary = _foundation_flags(peer)
+		context.recipe_known = not recipe.is_empty() and (unlock.is_empty() or flags.get(unlock) == true) \
+			and preload("res://scripts/creatures/creature_gear.gd").recipe_known(full, recipe, preload("res://scripts/creatures/creature_gear.gd").config())
+		for flag: String in recipe.get("requires_personal_flags", []):
+			if flags.get(flag) != true: context.recipe_known = false
+	var stage: Dictionary = _character_authority.call("stage_character_action", character, envelope.revision, envelope.op, envelope.intent, context)
+	if stage.get("ok") != true: return _foundation_refusal(str(stage.get("code", stage.get("reason", "stage_refused"))))
+	var accepted: Dictionary = _character_authority.call("staged_creature_training", stage)
+	var writer := get_node_or_null(^"LedgerRpc")
+	var journal: Dictionary = writer.call("journal_creature_training_prepared", peer, character, accepted) if writer != null else {}
+	var saved := journal.get("ok") == true and journal.get("durable") == true
+	if _character_authority.call("finish_creature_training", stage, saved) != true: return FOUNDATION_ACTIONS.deny("stage_changed")
+	if not saved: return _foundation_refusal(str(journal.get("code", "world_save_failed")))
+	writer.call("publish_creature_training", peer, character, accepted.receipt)
+	return _foundation_decision(peer, world.reward_deliveries.get(journal.delivery_id, {}))
+
+func _foundation_refusal(code: String) -> Dictionary:
+	return {"ok": false, "code": code, "reason": code, "resolved": true, "durable": false, "terminal_refusal": true}
+
+func _foundation_envelope_live(peer: int, envelope: Dictionary) -> bool:
+	return _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) and not admitted_character_state(peer).is_empty()
+
+func _foundation_decision(peer: int, row: Dictionary) -> Dictionary:
+	var result := _training_decision(peer, row)
+	result.settled = result.get("ok") == true and result.get("saved") == true
+	result.owner_saved = result.settled
+	result.owner_acknowledged = result.settled
+	return result
+
+func _foundation_flags(peer: int) -> Dictionary:
+	if peer == local_peer_id():
+		var flags := {}
+		for id: String in _game().get("local").flags.call("save_data").get("flags", []): flags[id] = true
+		return flags
+	return _character_authority.call("personal_flags", _authority_character(peer))
+
+func foundation_record_personal_flags(delta: Dictionary) -> void:
+	if not is_host() or _character_authority == null: return
+	for op: Variant in delta.get("ops", []):
+		if not op is Dictionary or op.get("scope") != "player" or op.get("op") != "flag": continue
+		for peer: int in op.get("peers", []):
+			var character := _authority_character(peer)
+			if not character.is_empty(): _character_authority.call("record_personal_flag", character, str(op.get("id", "")), op.get("value", true) == true)
+
+func _foundation_personal_view(peer: int) -> Dictionary:
+	if admitted_character_state(peer).is_empty(): return {}
+	var character := _authority_character(peer)
+	var full: Dictionary = _character_authority.call("state", character)
+	full.registry_revision = int(_character_authority.call("revision", character))
+	return full
+
+func homestead_personal_view() -> Dictionary:
+	if is_host(): return _foundation_personal_view(local_peer_id())
+	_foundation_send("personal_view", "homestead_view", {}, -1)
+	return _foundation_personal_cache.duplicate(true)
+
+func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionary:
+	if not is_host() or not is_instance_valid(source) or source.get_script() == null \
+		or source.get_script().resource_path != "res://scripts/world/water_chapter.gd" \
+		or source.get("_game") != _game() or source.get("_dock_pending") != original \
+		or config().get("redesign_ending_runtime_enabled") != true: return FOUNDATION_ACTIONS.deny("actual_dock_producer_required")
+	var character := _authority_character(local_peer_id())
+	var world: RefCounted = _game().get("world")
+	if original.get("character_id") != character or original.get("world_namespace") != world.reward_delivery_namespace: return FOUNDATION_ACTIONS.deny("dock_context_changed")
+	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+	if row.get("action") == "dock_conclusion" and row.get("intent") == original:
+		return _foundation_decision(local_peer_id(), row)
+	if source.call("dock_departure_ready") != true or _altar_peer_in_combat(local_peer_id()): return FOUNDATION_ACTIONS.deny("dock_departure_not_ready")
+	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+		"source_key": original.dock_id, "world_namespace": world.reward_delivery_namespace, "realm": "water",
+		"in_range": true, "in_combat": false, "civilian_departure_ready": true, "foundation_runtime_authorized": true}
+	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), local_peer_id(), character,
+		context.expected_revision, "dock_conclusion", original, context)
+	if result.get("durable") != true: return result
+	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
+func request_research_claim(intent: Dictionary) -> Dictionary:
+	return _foundation_send("research_claim", "research_journal", intent, -1)
+
+func request_relic_hang(biome: String) -> Dictionary:
+	var view := homestead_personal_view()
+	return _foundation_send("relic_hang", "shrine:" + biome, {"biome": biome}, int(view.get("registry_revision", -1)))
+
+func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: Dictionary) -> Dictionary:
+	if producer != get_node_or_null(^"FoundationComposition/PortalArrival") or not is_host() \
+		or envelope.get("session_epoch") != _altar_current_epoch() or envelope.get("character_id") != _authority_character(local_peer_id()) \
+		or envelope.get("world_instance_id") != _game().get("world").reward_delivery_namespace \
+		or producer.call("arrival_binding", envelope, permit) != true: return FOUNDATION_ACTIONS.deny("arrival_binding_changed")
+	var character: String = envelope.character_id
+	var intent := {"permit_id": str(permit.request_id), "realm": str(permit.realm), "entry_id": str(permit.entry_id)}
+	var world: RefCounted = _game().get("world")
+	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+	if row.get("action") == "portal_arrival" and row.get("intent") == intent:
+		get_node(^"LedgerRpc").call("_process_creature_training", row)
+		return _foundation_decision(local_peer_id(), row)
+	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
+		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
+		"world_namespace": world.reward_delivery_namespace}
+	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), local_peer_id(), character, context.expected_revision, "portal_arrival", intent, context)
+	if result.get("durable") != true: return result
+	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
+func _foundation_relic_context(peer: int, biome: String) -> Dictionary:
+	if not portal_runtime_ready() or _altar_peer_in_combat(peer): return {}
+	var writer := get_node_or_null(^"LedgerRpc")
+	if writer == null: return {}
+	var actor: Dictionary = writer.call("_water_actor_context", peer, {})
+	if actor.get("realm") != "meadows" or not actor.get("position") is Vector3: return {}
+	var found: Node3D
+	var meadows := _portal_world_node("meadows")
+	if meadows == null: return {}
+	for pedestal: Node in get_tree().get_nodes_in_group("crossing_hall_pedestals"):
+		if pedestal.get_meta("biome", "") != biome or not meadows.is_ancestor_of(pedestal): continue
+		if found != null: return {}
+		found = pedestal as Node3D
+	if found == null or actor.position.distance_to(found.global_position) > float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m): return {}
+	return {"character_id": _authority_character(peer), "expected_revision": int(_character_authority.call("revision", _authority_character(peer))),
+		"in_range": true, "in_combat": false, "realm": "meadows", "pedestal_biome": biome, "source_key": "shrine:" + biome}
+
+func foundation_research_source(director: Node, encounter_id: String, peer: int, kind: String, source_id: String, species: String, move_id: String = "", night: Variant = null) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
+		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false}
+	var research_enabled := preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
+	var bounty_enabled := preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
+	if not research_enabled and not (bounty_enabled and kind == "catch"): return {"ok": true, "durable": true, "disabled": true}
+	var host: RefCounted = director.get("_encounter_host")
+	var original: Dictionary = director.call("retained_research_source", source_id)
+	if original.get("world_namespace") != _game().get("world").reward_delivery_namespace or original.get("session_id") != _altar_current_epoch() \
+		or original.get("encounter_id") != encounter_id or original.get("peer") != peer or original.get("kind") != kind \
+		or original.get("species") != species or original.get("move_id") != move_id or original.get("night") != night: return {"ok": false}
+	var record: Dictionary = original.get("record", {})
+	var character := str(record.get("participants", {}).get(peer, {}).get("character_id", ""))
+	if character.is_empty(): return {"ok": false}
+	if kind in ["sight", "catch"] and record.get("opponent", {}).get("species_id") != species: return {"ok": false}
+	if kind == "catch" and (record.get("kind") != "wild" or (research_enabled and not night is bool)): return {"ok": false}
+	var context := {"source_key": "encounter:" + encounter_id, "event_confirmed": true,
+		"world_namespace": _game().get("world").reward_delivery_namespace, "session_id": _altar_current_epoch(),
+		"event_id": source_id, "participants": [character], "species_id": species, "kind": kind}
+	if kind == "cast": context.move_id = move_id
+	if kind == "catch":
+		context.wild = true
+		context.night = night
+	var duties: Array = []
+	if research_enabled: duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": context})
+	if bounty_enabled and kind == "catch":
+		var captured: Dictionary = original.get("capture_card", {})
+		if captured.get("species_id") != species or str(captured.get("uid", "")).is_empty(): return {"ok": false}
+		var instances: Array = record.participants[peer].get("foundation_bounty_instances", [])
+		if not instances.is_empty():
+			duties.append({"character_id": character, "action": "bounty_event", "intent": {}, "context": {
+				"source_key": "halda_bounty_event", "event_confirmed": true, "world_namespace": original.world_namespace,
+				"session_id": original.session_id, "event_id": source_id, "participants": [character],
+				"issued_instances": instances.duplicate(), "kind": "catch_trait", "biome": preload("res://scripts/data/biome_order.gd").canonical_id(str(record.realm)),
+				"traits": captured.get("rolled_traits", []).duplicate()}})
+	if duties.is_empty(): return {"ok": true, "durable": true, "disabled": true}
+	return get_node(^"LedgerRpc").call("journal_foundation_event", source_id, duties)
+
+func foundation_defeat_obligations(director: Node, original: Dictionary) -> Dictionary:
+	if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
+	if not is_host() or director.get("_session") != self or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		or director.call("host_wild_victory_source", str(original.get("record", {}).get("encounter_id", ""))) != original \
+		or original.get("world_namespace") != _game().get("world").reward_delivery_namespace or original.get("session_id") != _altar_current_epoch() \
+		or original.get("accepted", {}).get("delta", {}).get("killed") != true or original.get("enemy_record", {}).get("fainted") != true: return {"ok": false, "durable": false}
+	var participants: Array[String] = []
+	for participant: Variant in original.record.participants.values():
+		if not participant is Dictionary or str(participant.get("character_id", "")).is_empty(): return {"ok": false, "durable": false}
+		participants.append(participant.character_id)
+	var duties: Array = []
+	for character: String in participants:
+		duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": {
+			"source_key": "encounter:" + str(original.record.encounter_id), "event_confirmed": true,
+			"world_namespace": original.world_namespace, "session_id": original.session_id, "event_id": original.source_id,
+			"participants": participants.duplicate(), "species_id": original.enemy_record.species_id, "kind": "defeat", "opponent_defeated": true}})
+	return get_node(^"LedgerRpc").call("journal_foundation_event", "defeat:" + str(original.source_id), duties)
+
+func foundation_rematch_participant_context(peer: int) -> Dictionary:
+	if not is_host() or admitted_character_state(peer).is_empty(): return {}
+	var character := _authority_character(peer)
+	var flags := _foundation_flags(peer)
+	var full: Dictionary = _character_authority.call("state", character)
+	if full.redesign_character.transaction_receipts.has("craft:regional_ending_regional_credits_seen:" + character): flags.regional_credits_seen = true
+	return {"character_id": character, "world_flags": _game().world.flags.call("all_set"), "personal_flags": flags.keys()}
+
+func foundation_rematch_join_allowed(peer: int, spec: Dictionary) -> bool:
+	var context := foundation_rematch_participant_context(peer)
+	return not context.is_empty() and preload("res://scripts/repeatables/rematch_rules.gd").available(str(spec.get("id", "")),
+		str(spec.get("rematch", {}).get("tier", "")), context.world_flags, context.personal_flags)
+
+func foundation_rematch_outcome(director: Node, spec: Dictionary, won: bool) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
+		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		or spec != director.get("_trainer_spec") or not spec.get("rematch") is Dictionary: return {"ok": false}
+	var outcome: String = director.get("_manager").call("outcome")
+	if not won: return {"ok": outcome in ["lost", "fled"], "durable": outcome in ["lost", "fled"]}
+	if outcome != "won": return {"ok": false}
+	var original: Dictionary = director.get_meta("foundation_rematch_pending", {})
+	if original.is_empty():
+		var record: Dictionary = director.get("_encounter")
+		var participants: Array = director.call("retained_boss_participants")
+		if participants.is_empty() or str(record.get("encounter_id", "")).is_empty(): return {"ok": false}
+		var game := _game()
+		game.call("_sync_clock_state")
+		if not is_finite(float(game.world.clock_elapsed_seconds)) or float(game.world.clock_elapsed_seconds) < 0: return {"ok": false}
+		var duties: Array = []
+		for character: String in participants:
+			var admission: Dictionary = director.get("_trainer_foundation_admissions").get(character, {})
+			if admission.get("character_id") != character: return {"ok": false}
+			var intent := {"trainer_id": str(spec.id), "tier": str(spec.rematch.tier), "encounter_id": str(record.encounter_id)}
+			duties.append({"character_id": character, "action": "rematch_win", "intent": intent, "context": {
+				"source_key": "rematch:" + str(spec.id), "validated_host_outcome": "win", "encounter_id": record.encounter_id,
+				"trainer_id": str(spec.id), "tier": str(spec.rematch.tier), "participants": participants.duplicate(),
+				"world_namespace": game.world.reward_delivery_namespace, "session_id": _altar_current_epoch(),
+				"world_seconds": int(floor(game.world.clock_elapsed_seconds)), "world_flags": admission.world_flags.duplicate(),
+				"personal_flags": admission.personal_flags.duplicate()}})
+			if preload("res://scripts/repeatables/rematch_rules.gd").profile(str(spec.id)).kind == "master":
+				duties.back().context.single_creature_duel = true
+				duties.back().context.creature_uid = str(director.get("_master_duel").get("creature_uid", ""))
+		original = {"source_id": "rematch:%s:%s" % [spec.id, record.encounter_id], "duties": duties}
+		director.set_meta("foundation_rematch_pending", original.duplicate(true))
+	var result: Dictionary = get_node(^"LedgerRpc").call("journal_foundation_event", original.source_id, original.duties)
+	if result.get("durable") == true: director.remove_meta("foundation_rematch_pending")
+	return result
+
+func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionary) -> Dictionary:
+	var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(spec.get("id", "")), str(director.call("_encounter_realm")))
+	if handoff.is_empty() or config().get("redesign_boss_handoff_runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
+	if not is_host() or director.get("_session") != self or director.get_script() == null \
+		or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) or director.get("_trainer_spec") != spec \
+		or director.get("_manager").call("outcome") != "won" or str(record.get("encounter_id", "")).is_empty(): return {"ok": false, "durable": false}
+	var participants: Array = director.call("retained_boss_participants")
+	if participants.is_empty(): return {"ok": false, "durable": false}
+	var duties: Array = []
+	for character: String in participants:
+		duties.append({"character_id": character, "action": "boss_relic",
+			"intent": {"trainer_id": str(spec.id), "biome": handoff.relic_biome, "encounter_id": record.encounter_id},
+			"context": {"source_key": "boss:" + str(spec.id), "realm": handoff.runtime_realm,
+				"validated_host_outcome": "win", "encounter_id": record.encounter_id, "participants": participants.duplicate()}})
+	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + str(record.encounter_id), duties)
+
+func _retry_foundation_events() -> void:
+	if not is_host() or _game() == null or _character_authority == null: return
+	var world: RefCounted = _game().get("world")
+	var handled := {}
+	for raw: Variant in world.reward_deliveries.values():
+		if not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
+		for duty: Dictionary in raw.duties:
+			var peer := int(_registry.call("peer_for_character", duty.character_id))
+			if peer < 1 or handled.has(duty.character_id) or admitted_character_state(peer).is_empty(): continue
+			var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
+			var receipt := _foundation_duty_receipt(duty)
+			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
+				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+			var context: Dictionary = duty.context.duplicate(true)
+			context.character_id = duty.character_id
+			context.expected_revision = int(_character_authority.call("revision", duty.character_id))
+			context.in_range = true
+			context.retained_event = raw.delivery_id
+			var result: Dictionary
+			if duty.action == "research_event":
+				result = preload("res://scripts/creatures/research_actions.gd").commit(self, peer, duty.action, duty.intent, context)
+			elif duty.action == "bounty_event":
+				var bounty := get_node_or_null(^"FoundationComposition/BountyHost")
+				if bounty == null: continue
+				result = bounty.call("confirmed_event", peer, str(duty.context.event_id))
+			else:
+				context.in_combat = false
+				context.foundation_runtime_authorized = true
+				if duty.action in FOUNDATION_ACTIONS.ACTIONS:
+					result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+				else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+			if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
+
+func _foundation_duty_receipt(duty: Dictionary) -> String:
+	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
+	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
+	if duty.action == "boss_relic": return "defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]
+	if duty.action == "research_event":
+		var event := duty.context
+		return "research:event_%s:%s" % [JSON.stringify([event.world_namespace, event.session_id, event.event_id, event.species_id, event.kind]).sha256_text(), duty.character_id]
+	if duty.action == "bounty_event": return "bounty:event_%s:%s" % [JSON.stringify([duty.context.world_namespace, duty.context.event_id]).sha256_text(), duty.character_id]
+	return ""
+
+func foundation_event_stage_epoch(accepted: Dictionary) -> String:
+	var context: Dictionary = accepted.get("host_context", {})
+	var world: RefCounted = _game().get("world")
+	var row: Variant = world.reward_deliveries.get(context.get("retained_event", ""))
+	if not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): return _altar_current_epoch()
+	for duty: Dictionary in row.duties:
+		if duty.character_id != accepted.get("character_id") or duty.action != accepted.get("action") or duty.intent != accepted.get("intent"): continue
+		var canonical: Dictionary = context.duplicate(true)
+		for field: String in ["character_id", "expected_revision", "in_range", "retained_event", "in_combat", "foundation_runtime_authorized"]: canonical.erase(field)
+		if canonical == duty.context: return row.session_id
+	return ""
+
+func homestead_breakthrough_service() -> Node:
+	return get_node_or_null(^"FoundationComposition/BreakthroughService")
+
+func _foundation_breakthrough_submit(action: String, intent: Dictionary, source: Node) -> Dictionary:
+	if action not in ["feast_cook", "feast_feed", "master_duel", "master_chest"]: return _foundation_refusal("action_unavailable")
+	var key := "personal_feast_feed"
+	if action in ["master_duel", "master_chest"]:
+		if not is_instance_valid(source) or source.get_script() != preload("res://scripts/masters/master_site.gd") or source.get("master_id") != intent.get("master_id"): return _foundation_refusal("actual_master_site_required")
+		key = "master:" + str(intent.master_id)
+	if action == "feast_cook":
+		if not is_instance_valid(source) or not source.is_in_group("placed_building"): return _foundation_refusal("actual_kitchen_required")
+		key = "%s:%s:%s" % [source.get_meta("building_id", ""), source.get_meta("realm", ""), source.get_meta("building_uid", "")]
+	var view := homestead_personal_view()
+	return _foundation_send(action, key, intent, int(view.get("registry_revision", -1)))
+
+func _foundation_master_site(peer: int, master_id: String, chest: bool) -> Node3D:
+	if STATION_RULES.config().get("runtime_enabled") != true or _altar_peer_in_combat(peer): return null
+	var definition := preload("res://scripts/creatures/breakthrough.gd").master(master_id)
+	var writer := get_node_or_null(^"LedgerRpc")
+	if definition.is_empty() or writer == null or admitted_character_state(peer).is_empty(): return null
+	var actor: Dictionary = writer.call("_water_actor_context", peer, {})
+	if not actor.get("position") is Vector3 or actor.get("realm") != preload("res://scripts/data/biome_order.gd").runtime_id(definition.biome): return null
+	var world_node := _portal_world_node(actor.realm)
+	if world_node == null: return null
+	var found: Node3D
+	for node: Node in world_node.find_children("*", "Node3D", true, false):
+		if node.get_script() != preload("res://scripts/masters/master_site.gd") or node.get("master_id") != master_id or node.get("_mounted") != true: continue
+		if found != null: return null
+		found = node as Node3D
+	if found == null: return null
+	var anchor := found.get_node_or_null(^"RecipeChest" if chest else ^"Master") as Node3D
+	return found if anchor != null and actor.position.distance_to(anchor.global_position) <= float(definition.prompt_radius_m) else null
+
+func _foundation_master_director(site: Node3D) -> Node:
+	if site == null: return null
+	for node: Node in site.get_parent().find_children("*", "Node", true, false):
+		if node.get_script() != null and FOUNDATION_DIRECTORS.has(node.get_script().resource_path): return node
+	return null
+
+## Called only from the bound live host director after CombatManager's actual
+## won outcome. It is deliberately excluded from the public action RPC.
+func foundation_master_outcome(director: Node, frozen: Dictionary) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get_script() == null \
+		or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		or director.get("_session") != self or director.call("retained_master_win") != frozen \
+		or director.get("_manager").call("outcome") != "won" or frozen.get("character_id") != _authority_character(local_peer_id()) \
+		or frozen.get("world_namespace") != _game().get("world").reward_delivery_namespace \
+		or frozen.get("session_id") != _game().get("world").world_id \
+		or not frozen.get("participants") is Dictionary or frozen.participants.size() != 1 \
+		or not frozen.participants.has(local_peer_id()): return FOUNDATION_ACTIONS.deny("canonical_duel_win_required")
+	var intent := {"master_id": frozen.master_id, "creature_uid": frozen.creature_uid, "encounter_id": frozen.encounter_id}
+	var character: String = frozen.character_id
+	var world: RefCounted = _game().get("world")
+	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+	if row.get("action") == "master_win" and row.get("intent") == intent: return {"ok": true, "durable": true}
+	var context := {"source_key": "master_encounter:" + frozen.encounter_id, "validated_host_outcome": "win", "participant_count": frozen.participants.size(),
+		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
+	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:%s:%s" % [frozen.master_id, frozen.encounter_id], [{"character_id": character, "action": "master_win", "intent": intent, "context": context}])
+
+func homestead_submit_action(action: String, original: Dictionary, station: Node3D, revision: int) -> Dictionary:
+	var key := "homestead_recovery"
+	if is_instance_valid(station): key = "%s:%s:%s" % [station.get_meta("building_id", ""), station.get_meta("realm", ""), station.get_meta("building_uid", "")]
+	return _foundation_send(action, key, original, revision)
+
+func _register_homestead_station_node(key: String, station: Node3D) -> bool:
+	if not is_instance_valid(station) or not station.is_in_group("placed_building"): return false
+	var checked := STATION_RULES.record(STATION_RULES.config(), _game().get("world").placed_buildings, str(station.get_meta("building_uid", "")))
+	if checked.get("ok") != true or checked.key != key: return false
+	var prior: WeakRef = _homestead_stations.get(key)
+	if prior != null and prior.get_ref() != null and prior.get_ref() != station: return false
+	_homestead_stations[key] = weakref(station)
+	return true
+
+func _unregister_homestead_station_node(key: String, station: Node3D) -> void:
+	var prior: WeakRef = _homestead_stations.get(key)
+	if prior != null and prior.get_ref() == station: _homestead_stations.erase(key)
+
+func _foundation_source(peer: int, key: String, part: String = "workbench") -> Dictionary:
+	if not is_host() or admitted_character_state(peer).is_empty(): return {}
+	var actor_transport := get_node_or_null(^"LedgerRpc")
+	if actor_transport == null: return {}
+	var actor: Dictionary = actor_transport.call("_water_actor_context", peer, {})
+	if actor.get("character_id") != _authority_character(peer) or not actor.get("position") is Vector3 or _altar_peer_in_combat(peer): return {}
+	if key.begins_with("forward_camp:"): return _foundation_camp_context(peer, key, actor, part)
+	var weak: WeakRef = _homestead_stations.get(key, _altar_stations.get(key))
+	var station := weak.get_ref() as Node3D if weak != null else null
+	if station == null or not station.is_inside_tree(): return {}
+	var cfg := STATION_RULES.config()
+	if cfg.get("runtime_enabled") != true: return {}
+	var checked := STATION_RULES.record(cfg, _game().get("world").placed_buildings, str(station.get_meta("building_uid", "")))
+	if checked.get("ok") != true or checked.key != key or actor.get("realm") != checked.record.realm: return {}
+	var p: Array = checked.record.position
+	if station.global_position.distance_to(Vector3(p[0], p[1], p[2])) > 0.01 \
+		or absf(wrapf(rad_to_deg(station.global_rotation.y) - checked.record.yaw_deg, -180, 180)) > 0.01 \
+		or actor.position.distance_to(station.global_position) > float(cfg.interaction_radius_m): return {}
+	var tier := STATION_RULES.effective_tier(cfg, _game().get("world").placed_buildings, checked.record.uid)
+	if tier.get("ok") != true: return {}
+	return {"character_id": _authority_character(peer), "expected_revision": int(_character_authority.call("revision", _authority_character(peer))),
+		"source_key": key, "station_id": checked.record.id, "station_kind": checked.record.id,
+		"homestead": true, "in_range": true, "in_combat": false, "effective_tier": tier.effective_tier, "den_index": checked.index}
+
+func homestead_station_available(key: String) -> bool:
+	if not snapshot_ready() or _owner_training_mutation_blocked(_game().get("local")): return false
+	if is_host(): return _foundation_source(local_peer_id(), key).get("in_range") == true
+	return not _altar_current_epoch().is_empty() and _homestead_stations.has(key)
+
+func homestead_gear_context(station: Node3D, revision: int) -> Dictionary:
+	if not is_instance_valid(station) or not is_host(): return {}
+	var key := "%s:%s:%s" % [station.get_meta("building_id", ""), station.get_meta("realm", ""), station.get_meta("building_uid", "")]
+	var context := _foundation_source(local_peer_id(), key)
+	return context if context.get("expected_revision") == revision else {}
+
+func _foundation_camp_context(peer: int, key: String, actor: Dictionary, part: String) -> Dictionary:
+	const CAMP = preload("res://scripts/build/forward_camp_rules.gd")
+	var camp: Node3D
+	for node: Node in get_tree().get_nodes_in_group("placed_building"):
+		if node.get_script() != preload("res://scripts/build/forward_camp.gd") or node.call("source_key") != key: continue
+		if camp != null: return {}
+		camp = node as Node3D
+	if camp == null or not camp.is_inside_tree() or camp.scale != Vector3.ONE: return {}
+	var context := CAMP.source_context(CAMP.config(), _game().get("world").placed_buildings,
+		str(camp.get_meta("building_uid", "")), actor.position, actor.realm, _authority_character(peer),
+		int(_character_authority.call("revision", _authority_character(peer))), false, part)
+	var source := CAMP.record(_game().get("world").placed_buildings, str(camp.get_meta("building_uid", "")))
+	if context.is_empty() or source.get("ok") != true: return {}
+	var p: Array = source.record.position
+	if camp.global_position.distance_to(Vector3(p[0], p[1], p[2])) > 0.01 \
+		or absf(wrapf(rad_to_deg(camp.global_rotation.y) - source.record.yaw_deg, -180, 180)) > 0.01: return {}
+	return context
+
+func forward_camp_available(camp: Node3D) -> bool:
+	if not is_instance_valid(camp): return false
+	for part: String in ["bed", "workbench", "cookpot"]:
+		if _foundation_source(local_peer_id(), camp.call("source_key"), part).get("in_range") == true: return true
+	return false
+
+func forward_camp_prepare_rest(camp: Node3D, original: Dictionary) -> Dictionary:
+	if not is_instance_valid(camp): return FOUNDATION_ACTIONS.deny("camp_unavailable")
+	var view := homestead_personal_view()
+	return _foundation_send("camp_rest", camp.call("source_key"), original, int(view.get("registry_revision", -1)))
+
+func forward_camp_placement_available() -> bool:
+	return preload("res://scripts/build/forward_camp_rules.gd").config().get("runtime_enabled") == true \
+		and snapshot_ready() and _foundation_camp_pending.is_empty() and not _owner_training_mutation_blocked(_game().get("local"))
+
+func forward_camp_submit_build(original: Dictionary, placer: Node) -> Dictionary:
+	if not is_instance_valid(placer) or placer.get_script() != preload("res://scripts/build/build_placer.gd"): return FOUNDATION_ACTIONS.deny("actual_placer_required")
+	if not _foundation_camp_pending.is_empty():
+		return FOUNDATION_ACTIONS.deny("reconcile_original_camp")
+	var view := homestead_personal_view()
+	_foundation_camp_pending = {"original": original.duplicate(true), "revision": int(view.get("registry_revision", -1)),
+		"character_id": _local_character_id(), "world_namespace": _game().get("world").reward_delivery_namespace}
+	return _retry_foundation_camp()
+
+func _retry_foundation_camp() -> Dictionary:
+	if _foundation_camp_pending.is_empty(): return {}
+	if _foundation_camp_pending.character_id != _local_character_id() \
+		or _foundation_camp_pending.world_namespace != _game().get("world").reward_delivery_namespace: return FOUNDATION_ACTIONS.deny("original_character_world_required")
+	var result := _foundation_send("camp_build", "forward_camp_build", _foundation_camp_pending.original, _foundation_camp_pending.revision)
+	if result.get("settled") == true or result.get("terminal_refusal") == true: _foundation_camp_pending.clear()
+	return result
+
+func _foundation_build_context(peer: int, original: Dictionary) -> Dictionary:
+	if preload("res://scripts/build/forward_camp_rules.gd").config().get("runtime_enabled") != true \
+		or peer != local_peer_id() or _altar_peer_in_combat(peer): return {}
+	var game := _game()
+	var actor := game.call("find_player") as Node3D
+	if actor == null or admitted_character_state(peer).is_empty(): return {}
+	var character := _authority_character(peer)
+	var revision := int(_character_authority.call("revision", character))
+	var context := {}
+	for placer: Node in get_tree().get_nodes_in_group("build_placer"):
+		if not placer.get_parent().is_ancestor_of(actor): continue
+		if original.get("action") == "place":
+			context = preload("res://scripts/build/forward_camp_host.gd").placement_context(placer, game, actor, character, revision, _local_realm(), false, original)
+		elif original.get("action") == "pack":
+			var parties: Array = []
+			var complete := true
+			var peers: Array = _registry.call("peer_ids")
+			if not peers.has(peer): peers.append(peer)
+			for admitted_peer: int in peers:
+				if admitted_character_state(admitted_peer).is_empty(): complete = false; break
+				parties.append(_character_authority.call("state", _authority_character(admitted_peer)).party)
+			for node: Node in get_tree().get_nodes_in_group("placed_building"):
+				if node.get_meta("building_uid", "") != original.get("uid"): continue
+				context = preload("res://scripts/build/forward_camp_host.gd").pack_context(placer, game, node as Node3D, actor, character, revision, _local_realm(), false, parties, complete)
+		break
+	if context.is_empty(): return {}
+	context.source_key = "forward_camp_build"
+	context.world_before = game.get("world").placed_buildings.duplicate(true)
+	context.next_building_uid = int(game.get("world").next_building_uid)
+	return context
+
+func open_creature_loadouts(camp: Node3D, key: String) -> bool:
+	if not forward_camp_available(camp) or camp.call("source_key") != key: return false
+	var members: Array = _game().get("local").party.call("members")
+	if members.is_empty(): return false
+	var panel: CanvasLayer = preload("res://scripts/ui/companion_details_panel.gd").new()
+	_game().add_child(panel)
+	var service := _game().get_node_or_null(^"FoundationLoadoutService")
+	if panel.call("configure_loadout_service", service, key) != true: panel.queue_free(); return false
+	return panel.call("open", _game(), str(members[0].uid), "Loadout", true) == true
+
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 
 ## Stage B Wave 2 lane 2.A. THE SESSION: host, join, leave, and the handshake.
@@ -429,6 +1076,7 @@ func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 	var admission_game := _game()
 	if admission_game != null and admission_game.get("local") != null:
 		summary["portable_authority"] = CHARACTER_AUTHORITY.portable_projection(admission_game.get("local").save_data())
+		summary["personal_flags"] = admission_game.get("local").flags.call("save_data").duplicate(true)
 	# Always this process's own fingerprint: a caller cannot claim another build.
 	summary["build"] = BUILD_FINGERPRINT.current()
 	_pending_hello = summary
@@ -797,6 +1445,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 		return
 	var portable: Variant = summary.get("portable_authority")
 	var authority_errors := CHARACTER_AUTHORITY.errors(portable, character_id)
+	if not CHARACTER_AUTHORITY.personal_flags_valid(summary.get("personal_flags", {"flags": []})): authority_errors.append("Invalid portable personal flags")
 	if not authority_errors.is_empty():
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
 		return
@@ -813,6 +1462,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 			"That character is already connected to this world.")
 		return
 	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
+	if seeded.get("ok") == true and _character_authority.call("seed_personal_flags", character_id, summary.get("personal_flags", {"flags": []})) != true: seeded = {"ok": false}
 	if bool(seeded.get("ok", false)):
 		seeded = _character_authority.call("recover_durable_vitals", character_id, _game().get("world").reward_deliveries)
 	if bool(seeded.get("ok", false)):
@@ -1069,6 +1719,7 @@ func _finalize_snapshot_receive() -> bool:
 	# mutation. WorldState's void loader refusal must never be acknowledged.
 	var redesign_errors := REDESIGN_STATE.validate("world",
 		data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+	redesign_errors.append_array(TRAINING_WORLD.foundation_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))
 	redesign_errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(
 		data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
 	redesign_errors.append_array(TRAINING_WORLD.training_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))
@@ -2479,7 +3130,7 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 	if not _owner_training_retry.is_empty() and (_owner_training_retry.player.get_ref() != player \
 		or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt): return false
 	var released: Variant = _owner_training_retry.get("release_instance")
-	if row.get("version") == 2 and row.get("action") == "trait_release" and released == null:
+	if row.get("version") in [2, 3] and row.get("action") == "trait_release" and released == null:
 		# Bind identity while the real original instance is still owned. A weak
 		# identity is not a sixth creature or a second authoritative roster.
 		if ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), row.before):
@@ -2561,7 +3212,7 @@ func _altar_peer_in_combat(peer: int) -> bool:
 		var node: Node = nodes.pop_back()
 		for child: Node in node.get_children(): nodes.append(child)
 		var script: Script = node.get_script()
-		if script != null and script.resource_path == "res://scripts/combat/encounter_director.gd":
+		if script != null and FOUNDATION_DIRECTORS.has(script.resource_path):
 			var host: Variant = node.get("_encounter_host")
 			if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
 				found_host = true
@@ -2594,7 +3245,7 @@ func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dict
 		var node: Node=nodes.pop_back()
 		for child: Node in node.get_children(): nodes.append(child)
 		var script: Script=node.get_script()
-		if script==null or not script.resource_path in ["res://scripts/combat/encounter_director.gd","res://scripts/combat/stormwood_encounter_director.gd"]: continue
+		if script==null or not FOUNDATION_DIRECTORS.has(script.resource_path): continue
 		var host: Variant=node.get("_encounter_host")
 		if not host is RefCounted or not host.has_method("stage_actor_training_baseline"): return {"ok":false}
 		if seen.has(host.get_instance_id()): continue
@@ -2789,7 +3440,7 @@ func _retained_host_wild_source(frozen: Dictionary) -> Dictionary:
 	while not nodes.is_empty():
 		var node: Node = nodes.pop_back()
 		for child: Node in node.get_children(): nodes.append(child)
-		if node.get_script() == null or node.get_script().resource_path != "res://scripts/combat/encounter_director.gd": continue
+		if node.get_script() == null or not FOUNDATION_DIRECTORS.has(node.get_script().resource_path): continue
 		if not node.has_method("host_wild_victory_source"): continue
 		var retained: Variant = node.call("host_wild_victory_source", id)
 		if not retained is Dictionary or not ESSENCE._equivalent(retained, frozen): continue
@@ -2970,10 +3621,9 @@ func _host_portal_action(peer: int, envelope: Dictionary) -> void:
 		"home_key_begin", "home_key_cancel":
 			_portal_reply(peer, envelope, result)
 		"home_key_finish", "portal_enter":
-			# Consume and carry only the host-minted destination permit. The
-			# actual movement/grounded durable arrival consumer is a separate
-			# gate; an issued permit cannot be reported as an arrival success.
-			_portal_reply(peer, envelope, {"ok": false, "reason": "The grounded arrival consumer is not ready."})
+			var consumer := get_node_or_null(^"FoundationComposition/PortalArrival")
+			if consumer == null: _portal_reply(peer, envelope, {"ok": false, "reason": "The arrival service is unavailable."})
+			else: consumer.call("travel", self, peer, envelope.duplicate(true), result.duplicate(true))
 
 
 func _commit_portal_unlock(peer: int, envelope: Dictionary, result: Dictionary) -> void:
@@ -3218,7 +3868,7 @@ func character_action_stage_matches(peer: int, accepted: Dictionary) -> bool:
 	if not is_host() or _character_authority == null or _altar_current_epoch().is_empty(): return false
 	var character := _authority_character(peer)
 	if character.is_empty() or character != accepted.get("character_id"): return false
-	if accepted.get("action") not in preload("res://scripts/net/character_action_rules.gd").ACTIONS: return false
+	if accepted.get("action") not in preload("res://scripts/net/character_action_rules.gd").ACTIONS and accepted.get("action") not in preload("res://scripts/net/foundation_actions.gd").ACTIONS: return false
 	var stage: Variant = _character_authority.call("staged_creature_training", accepted)
 	return stage is Dictionary and not stage.is_empty() and ESSENCE._equivalent(stage, accepted)
 
@@ -3233,7 +3883,7 @@ func _begin_owner_training_rollback(player: RefCounted, world: RefCounted, row: 
 
 func _owner_training_release_write_allowed(index: int, player: RefCounted) -> bool:
 	var row := _owner_training_row()
-	if not _owner_training_install or _owner_training_install_rollback or row.get("version") != 2 \
+	if not _owner_training_install or _owner_training_install_rollback or row.get("version") not in [2, 3] \
 		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
 	var original: Variant = _owner_training_retry.get("release_instance")
@@ -3245,7 +3895,7 @@ func _owner_training_release_write_allowed(index: int, player: RefCounted) -> bo
 
 func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefCounted) -> bool:
 	var row := _owner_training_row()
-	if not _owner_training_install or not _owner_training_install_rollback or row.get("version") != 2 \
+	if not _owner_training_install or not _owner_training_install_rollback or row.get("version") not in [2, 3] \
 		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt \
 		or not snapshot.get("members") is Array or snapshot.members.size() != row.before.party.size(): return false

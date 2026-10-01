@@ -1,18 +1,17 @@
 extends RefCounted
 
-## Version 2 of EXISTING creature_training rows, at the same per-character
+## Version 3 of EXISTING creature_training rows, at the same per-character
 ## delivery ID. Version 1 keeps its old F27 meaning and validates unchanged.
 ## This codec stages/rechecks a detached action; it has no mutable registry.
-const ACTIONS := preload("res://scripts/net/character_action_rules.gd")
+const ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
-const VERSION := 2
+const VERSION := 3
 const KIND := "creature_training"
 const FIELDS := ["version", "kind", "delivery_id", "world_id", "world_namespace", "session_id", "character_id", "action", "action_id", "intent", "host_context", "source_key", "before", "after", "receipt", "character_revision", "journal_revision", "status"]
 
 
 static func valid(raw: Variant, schema_check: Callable,
 		character: String = "", world_namespace: String = "", world: String = "") -> bool:
-	if raw is Dictionary and raw.get("version") == 3: return load("res://scripts/net/foundation_delivery.gd").valid(raw, schema_check, character, world_namespace, world)
 	if not raw is Dictionary or raw.size() != FIELDS.size(): return false
 	for field: String in FIELDS:
 		if not raw.has(field): return false
@@ -24,7 +23,7 @@ static func valid(raw: Variant, schema_check: Callable,
 	if raw.delivery_id != ESSENCE.training_delivery_id(raw.world_namespace, raw.character_id) or raw.action_id != raw.receipt.sha256_text(): return false
 	if not raw.intent is Dictionary or not raw.host_context is Dictionary or not raw.before is Dictionary or not raw.after is Dictionary: return false
 	if raw.host_context.get("source_key") != raw.source_key or raw.before.get("character_id") != raw.character_id or raw.after.get("character_id") != raw.character_id: return false
-	if raw.action in ["rematch_win", "research_event"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
+	if raw.action == "rematch_win" and (raw.host_context.get("world_namespace") != raw.world_namespace \
 		or raw.host_context.get("session_id") != raw.session_id): return false
 	# Re-run the exact canonical callback against the frozen pre-decision full
 	# record. An imported balance, alternative trait seed or changed choice

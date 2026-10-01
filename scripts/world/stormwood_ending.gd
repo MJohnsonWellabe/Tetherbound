@@ -604,6 +604,11 @@ static func record_answer(player_flags: RefCounted, id: String, kept: bool, part
 	player_flags.call("set_flag", PERSONAL_RECEIPT_FLAG)
 	if not id.is_empty():
 		player_flags.call("set_flag", answer_flag(id, kept))
+		var original := ""
+		for flag: String in player_flags.call("all_set"):
+			if flag.begins_with("stormwood:regional_outcome:"): original = flag
+		if original.is_empty():
+			player_flags.call("set_flag", "stormwood:regional_outcome:%s:%s" % [id, "accepted" if kept else "refused"])
 	# Only a Stormheart that actually joined (or was kept through the release
 	# ceremony) is an acceptance another world must respect.
 	if kept:

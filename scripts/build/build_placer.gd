@@ -155,7 +155,7 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 			if not is_finite(height) or absf(height-base) > float(cfg.maximum_slope_rise_m): return CAMP_RULES.deny("camp_ground")
 			sample.y=height
 			if world.has_method("water_depth_at") and float(world.call("water_depth_at",sample)) > 0.0: return CAMP_RULES.deny("camp_ground")
-			if realm == "tidewake" and not world.has_method("water_depth_at"): return CAMP_RULES.deny("camp_ground")
+			if preload("res://scripts/data/biome_order.gd").canonical_id(realm) == "tidewake" and not world.has_method("water_depth_at"): return CAMP_RULES.deny("camp_ground")
 			# Actual support must exist, independently of analytic terrain height.
 			var ray := PhysicsRayQueryParameters3D.create(sample+Vector3.UP*0.5,sample-Vector3.UP*0.5,1)
 			ray.exclude=_bodies_that_are_not_buildings()

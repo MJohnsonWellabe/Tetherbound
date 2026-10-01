@@ -4547,6 +4547,9 @@ func _use_hotbar_slot(slot_index: int) -> void:
 	var stack: Dictionary = inventory.call("stack_at", index)
 	if stack.is_empty():
 		return
+	if id == "home_key":
+		_game.call("use_home_key")
+		return
 
 	# Owner directive: "press slot, tool in hand". A tool slot EQUIPS now --
 	# pressing it again puts the tool away, so one button is both draw and

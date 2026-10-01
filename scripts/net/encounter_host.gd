@@ -1482,7 +1482,7 @@ func _authorize_actor_self_heal(intent: Dictionary, peer_id: int, view: Dictiona
 ## inactive actor binding. No current participant or unsettled damage is reset.
 func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 		character_revision: int, world_namespace: String, world_id: String) -> Dictionary:
-	var full_action: bool = training.get("version") == 2 and training.get("kind") == "creature_training"
+	var full_action: bool = training.get("version") in [2, 3] and training.get("kind") == "creature_training"
 	if not TRAINING_WORLD.training_row_valid(training, world_namespace, world_id) \
 		or (not full_action and not training.action in ["altar_spend", "wild_defeat"]) or admitted.get("character_id") != training.character_id \
 		or character_revision < int(training.character_revision) or not admitted.get("party") is Array \
