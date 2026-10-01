@@ -1,0 +1,14 @@
+{
+  "owner_instruction": "Archive other sessions; ROOT and local subagents handle everything until all on main. Consolidate all coded work into one branch.",
+  "integration_before_takeover": "09b836562f8b10cf69b15dce165de567fbd1ea73",
+  "preserved_unverified_author_wip": "cd291c9326e52b441b70f9dc62fc9b3a59fb0e34",
+  "archived_final_sessions": [
+    "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+    "01a0f51f-eae6-7400-8a76-16b642c262ad",
+    "01a0f8ec-f553-77d1-8975-10f7fe056137",
+    "01a0f512-b160-7053-8f6a-e84f072c2d94"
+  ],
+  "verification": "Fresh app list reports only ROOT as an unarchived thread in project581a2e2d-0e34-411f-900c-29649b733b9c; archived R3 section item keys remain in listing. TenR2 and fiveR3 initial author sessions already archived; all fiveR3 archive settings reaffirmed. Unrelated projects/chats untouched.",
+  "preservation": "No worktrees or source deleted; foundation tracked clean with local WIP commit, untracked reports/.deps retained. F29 made no source writes. All final active external writers confirmed idle before archival.",
+  "acceptance": "OPEN: main/CI/criteria unchanged by archival. Local subagents run in ROOT conversation; no new app sessions."
+}
