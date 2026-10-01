@@ -170,8 +170,20 @@ func _run() -> void:
 	_reset_character(game)
 	await _offer(ending, panel, game)
 	await _to_question(panel)
-	var other_catch: RefCounted = ending.call("_make_legendary")
-	other_catch.set("species_id", "stand_in_wild_catch")
+	# A disclosed ordinary catch fixture, with its own authored loadout and UID.
+	var other_catch: RefCounted = game.make_creature("terrapup", "Other catch fixture")
+	_check(other_catch != null, "the registered ordinary pending catch is created")
+	if other_catch == null:
+		_finish()
+		return
+	var other_payload := CAPTURE_CODEC.encode(other_catch)
+	_check(not other_payload.is_empty(),
+		"the ordinary pending catch passes the production capture/loadout codec")
+	var other_uid := str(other_catch.get("uid"))
+	_check(preload("res://scripts/creatures/creature_instance.gd").valid_uid(other_uid)
+		and str(other_payload.get("uid", "")) == other_uid
+		and other_uid != ENDING.claim_id(ending.get("_local_claim") as Dictionary),
+		"the ordinary pending catch has its own stable UID distinct from the Stormheart")
 	game.pending_catch = other_catch
 	panel.runner().advance()
 	await _frames(3)
