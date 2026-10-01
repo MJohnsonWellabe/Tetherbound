@@ -93,3 +93,78 @@ The broader terrain/grass hierarchy, stacked-cliff identity, full settlement and
 route matrix, night integration and creature/material quality remain open.
 The added curved segments/lights have not received device performance telemetry.
 No whole-region, whole-game, earned-playthrough or engine-PR-CI acceptance claim.
+
+## Night practical lighting — PR #363
+
+Follow-up on current main `8bd3a6462479afe316fc0d5a48bc264174c7a93d`, on the same
+owned branch. The earlier architecture change (#338) is already merged. This
+follow-up addresses V22's missing night emphasis at Windscar Beacon, Cliffhold
+and the aviary. Claude owns merge. **DRY RUN — does not count** as earned chapter
+acceptance; full Bars A/B and V22 remain open.
+
+Ten installed Quaternius wall lanterns provide physical sources: four on the
+Cliffhold tower, two on the beacon's approach-facing posts, and four on the
+aviary. The aviary reuses its four existing entry lights, retaining the six
+interior lights and its original light count. Two lamps hang from the side-arch
+keystones; two retain symmetrical front-pier positions. An isolated dusk/dawn
+controller follows the existing clock, including when the tree is paused.
+Added lights have no shadows. No collision, passage, progression, camera,
+global exposure or shared material is changed.
+
+The beacon previously used a handheld-size flame on its 9.6 m frame. Local
+duplicates enlarge its outer/core billboard meshes to 1.76/0.60 m world size;
+the existing signal light now coincides with the actual flame instead of a
+point 1.12 m above it. Night energy/range rise to 5/24 m and return to the
+original 1.45/10 m by day. Other torches, stick geometry and embers are unchanged.
+This uses existing assets; no new generation or licence expenditure.
+
+Independent source review measured the source lantern depth, tower shaft,
+aviary pier shafts and curved arch crown before positioning fixtures. The
+keystone lanterns' upper brackets seat 1 cm into stone; the bodies hang below
+the crown, wholly above the original 7 m clearance. The entire mounting bar is
+not backed by stone. Beacon Y follows its production terrain-fit frame base.
+Final source review found no blocker or shared-resource mutation.
+
+The first native candidate (`mounted`) was deliberately not accepted as a V22
+closure. Image-only review found localized tower/pier warmth and preserved day
+views, but a weak beacon and an off-axis aviary hotspot. The doorway revision
+moves two sources to the entry axes and makes the existing beacon signal
+readable. Native review of this revision is recorded with the evidence below.
+
+Capture adapter `capture_cloudreach_night_landmarks.gd` uses the production
+world and camera with disclosed stand, progression, clock and companion poses.
+Original shrine views are occluded; the added crown diagnostic also snaps
+below the terrain. Both are excluded from shrine acceptance, and no shrine
+lighting change is claimed. Existing `fly_tutorial_completed` unscoped-flag and
+unsupported broken-route candy diagnostics remain unrelated baseline errors.
+
+Verification for the lighting follow-up:
+
+- Baseline 14 frames, mounted revision 16, doorway revision 8: each run exited 0
+  with zero mechanical skips. All 38 raw PNG headers are **1920×1080**. Matched
+  subject/time camera, feet, target and pitch/yaw receipts agree exactly.
+- Godot 4.7 `5b4e0cb0f`, Compatibility/OpenGL 3.3, GTX 1060 3 GB, driver 560.94.
+  Desktop visual evidence only; no Ally performance claim.
+- Final real-tree lighting smoke: **61 checks, zero failures**, including paused
+  clock changes, existing-light reuse, beacon/source alignment and unchanged
+  control-torch geometry/material. No diagnostic in that smoke.
+- Existing aviary/beacon suites: **6 tests, 158 assertions, zero failures**.
+  Production captures retain only the two baseline diagnostics described above.
+- The raw image SHA-256s, source fingerprints, camera/clock/energy receipts and
+  run summaries are in [cloudreach-night-evidence.json](cloudreach-night-evidence.json).
+  Raw images remain local under `shots/cloudreach-night-{baseline,mounted,doorway}`.
+
+![Matched night views, baseline left and latest site candidate right](_sheet_cloudreach_night.jpg)
+
+Independent image-only review (`attack_visual_judge`) inspected all 30 initial
+and all eight final native frames against the Cloudreach board and existing
+Palworld gameplay comparisons. **Final doorway version accepted as a bounded
+improvement:** central arch emphasis, warmer readable interior floor/chains and
+recognizable beacon signaling. Masonry/metal detail survives without broad
+white clipping; the trainer becomes bright, and the beacon now has a visible
+daytime dot. The distant aviary entrance/dome, deep interior and full night
+hierarchy still fail the intended reference read. The beacon's pale round
+flame can read as an orb with unresolved support; housing and warm timber spill
+need a future art pass. Cliffhold's tower gains do not establish an inhabited
+settlement arrival. **V22 / Bar A / Bar B remain open.** This is not READY,
+earned traversal, continuous-play or device-performance evidence.
