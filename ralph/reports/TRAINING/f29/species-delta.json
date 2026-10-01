@@ -1,0 +1,52 @@
+{
+  "schema": "F29 bounded F23 sole-writer proposal v1",
+  "baseline": "b7cb96de89",
+  "owner": "F23",
+  "path": "data/creatures/species.json",
+  "existing_delta": [
+    {"species":"mudsnout","field":"evolution_breaks_level","old_present":false,"new":20},
+    {"species":"mudsnout","field":"evolution_trigger","old_present":false,"new":"breakthrough_feast"},
+    {"species":"mosshell","field":"evolves_into","old_present":false,"new":"cannonback"},
+    {"species":"mosshell","field":"evolution_breaks_level","old_present":false,"new":30},
+    {"species":"mosshell","field":"evolution_trigger","old_present":false,"new":"breakthrough_feast"},
+    {"species":"cannonback","field":"evolution_source","old_present":false,"new":"mosshell"},
+    {"species":"cannonback","field":"wild_evolution_form","old_present":false,"new":true},
+    {"species":"craghorn","field":"evolves_into","old_present":false,"new":"stormcapra"},
+    {"species":"craghorn","field":"evolution_breaks_level","old_present":false,"new":40},
+    {"species":"craghorn","field":"evolution_trigger","old_present":false,"new":"breakthrough_feast"},
+    {"species":"stormcapra","field":"evolution_source","old_present":false,"new":"craghorn"},
+    {"species":"stormcapra","field":"wild_evolution_form","old_present":false,"new":true},
+    {"species":"staticub","field":"evolves_into","old_present":false,"new":"stormursa"},
+    {"species":"staticub","field":"evolution_breaks_level","old_present":false,"new":50},
+    {"species":"staticub","field":"evolution_trigger","old_present":false,"new":"breakthrough_feast"},
+    {"species":"staticub","field":"evolution_enabled","old_present":false,"new":false}
+  ],
+  "new_species": {
+    "id":"stormursa",
+    "old_present":false,
+    "value": {
+      "display_name":"Stormursa",
+      "type":"electric",
+      "evolves_from":"staticub",
+      "evolution_authorized":true,
+      "evolution_enabled":false,
+      "evolution_trigger":"breakthrough_feast",
+      "evolution_breaks_level":50,
+      "wild_evolution_form":false,
+      "base_hp":150.0,
+      "base_attack":30.0,
+      "base_defence":24.0,
+      "catch_rate":0.0,
+      "aggressive":false,
+      "moves":{"quick":"spark_bite","charged":"arc_lash"},
+      "learnset_id":"stormursa",
+      "_comment":"RD-28 sole authorized new species. Tuning authored by F29; target art 4.10m versus current Staticub3.25m. No placeholder/model path: acquisition and visual activation OFF until reference/Meshy/rig/animation/scale/full in-engine code-blind art bar PASS. F23 supplies unique ultimate from its authored stormursa learnset."
+    }
+  },
+  "consumer_contract": {
+    "ancestry":"F23 allowed_saved_moves must follow evolves_into AND evolves_into_variants; direct target ancestry may read evolves_from or evolution_source. All existing known_moves/mastery/loadout remain allowed after transformation.",
+    "wild":"Use evolution_source for Cannonback/Stormcapra rather than evolves_from, preserving existing authored wild tables and old no-evolves_from wild invariant. Distinction is explicit metadata, not a test exclusion. Tuskroot/Ashtusk/Stormursa retain evolves_from and remain nonwild.",
+    "legacy":"Training/Foundation activation sets progression cfg evolution_mode=breakthrough; legacy standalone held-stone UI refuses. New canonical consumer always uses F28 feast planner.",
+    "preserve":"Existing types, stats, visuals, wild tables and mudsnout.evolves_into/variants remain unchanged. New Stormursa has no asset or placeholder visual entry before PASS."
+  }
+}

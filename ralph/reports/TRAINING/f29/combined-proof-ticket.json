@@ -1,0 +1,35 @@
+{
+  "feature": "F29",
+  "scope": "whole-feature source packet, not acceptance",
+  "source_cut": "b40b9c0203d0900cb749a5fd6e8b3f4b6d8d1d92",
+  "permission_context": {"sandbox_mode":"danger-full-access","approval_policy":"never","confirmed_from":"effective developer permission context"},
+  "ownership": ["scripts/creatures/evolution.gd","data/config/evolution_lines.json","assets/creatures/tetherbound/stormursa/source/","ralph/reports/TRAINING/f29/"],
+  "engine_runs": 0,
+  "gpu_runs": 0,
+  "acceptance_credit": 0,
+  "source_check": {"name":"node ralph/reports/TRAINING/f29/check_source.mjs","observed":"38 SOURCE_RELATION_PASS checks; source-check.json hashes; does not parse or execute GDScript"},
+  "shared_contracts": {
+    "F23": "species-delta.json guarded metadata patch; sole species writer; ancestor/variant known-move preservation; new Stormursa row electric150/30/24 and no active visual until PASS",
+    "F28": "prepare_feast_choice(admitted_party_card_plus_evolution_choices,tier_1_to_5,choice_empty_or_evolve_or_stay,ingredient_host_derived_from_SKU) returns clone with only species/derived stats plus temporary evolution_choices, debit:{}, choice_record:{tier:String,value:String}. Host applies record to redesign_character.creatures[uid].evolution_choices, strips temporary mirror from party. Cooking pays catalyst once in immutable typed SKU. One feast_feed transaction, never replacement or second debit.",
+    "Foundation_Training": "Canonical host full admitted state, stable character/owned UID, exact original request/world/revision/feast SKU/choice binding; existing creature_training durable world+owner-save/ACK/rejoin path. Progression activation source cut supplies evolution_mode=breakthrough so old team-tab standalone evolution refuses. No new journal/registry or file writes here.",
+    "F36_ROOT": "reference_brief.json and provenance.json are explicit art generation ticket, all gates false, no generated image/mesh/task claims. Full bar and actual checked assets required before line and model metadata activation."
+  },
+  "criterion_verdicts": [
+    {"id":"F29#0","verdict":"OPEN","source":"All four lines and five branch rows authored; F28 cooked catalyst consumer integrated in its source; F23 metadata proposal ready","remaining":"Land shared producer/metadata dependencies and run real feast path for every line; bear branch waits F36"},
+    {"id":"F29#1","verdict":"OPEN","source":"Explicit evolve/stay required for eligible line; permanent schema-string decision; no offer for disabled bear","remaining":"Ordinary controller choice, stay reload/rejoin and duplicate/conflicting same-request proof"},
+    {"id":"F29#2","verdict":"OPEN","source":"Pure cloned card, only species/derived stat patch, same UID/level/nickname/IV/history/condition/traits/loadout/mastery retained","remaining":"Actual canonical save/reload/rejoin on five-member roster; F23 ancestor validation and F28 refresh preserve equipped slots/mastery"},
+    {"id":"F29#3","verdict":"OPEN","source":"Original reference and Meshy prompts, scale/animation/capture requirements and all-false provenance manifest; fail-closed flag plus artifact checks","remaining":"ROOT must draft/inspect actual image, Meshy+rig+animation+scale, full High/Medium in-engine code-blind PASS, hashes/license provenance and active visual metadata"},
+    {"id":"F29#4","verdict":"OPEN","source":"Encounter/spawn JSON unchanged; Cannonback and Stormcapra remain authored wild; Tuskroot/Ashtusk/Stormursa absent","remaining":"Integrated current source loader/actual wild observation in combined pass; no metadata test exclusions"}
+  ],
+  "minimal_combined_proof": {
+    "runner":"ROOT only, after source convergence; integrate once, no repeated per-criterion full suite",
+    "component":"Run --script res://ralph/reports/TRAINING/f29/feast_choice_proof.gd on integrated source; required per-line and identity edge cases. This is component proof, not ordinary input or SaveGame proof.",
+    "real_path":"Use F28 ordinary Master/learn/cook/feed witness at legitimate current caps. Test Mudsnout heartstone and sunstone cooked variants plus stay; Mosshell evolve/stay, Craghorn evolve/stay; Staticub flag-off T5 cap lifts with no choice recorded. No extra sixth creature, no grant/spawn shortcut hidden; any fixture declared.",
+    "identity":"Snapshot all five UID/nickname/level/XP/bond tasks/IV/rolled+taught traits/equipped loadout/known ancestor moves/mastery/boosts/condition/Best and HP fraction before feeding, then compare after canonical commit/reload/host-guest rejoin. Evolved target derived stats may change; equipped ultimate remains until deliberate Altar edit.",
+    "failures":"Forced bool world-save false, owner-save false, lost owner ACK, retry after UI closed/station gone, rejoin same transaction, conflicting SKU/choice/revision/world replay, another owned/foreign UID, full roster unchanged. No success until existing durable accepted row. Same request recovery, no new payment or choice.",
+    "wild":"Reuse unchanged F19 curve/encounter source proof where hashes identical. Observe existing Cannonback/Stormcapra wild locations; assert no Tuskroot/Ashtusk/bear wild paths.",
+    "bear":"Separate criterion verdict within same batch; exact reference/model/settings/task IDs/rig/animation/scale plus gameplay captures, before/after and independent code-blind High/Medium full art bar. Failed bear stays OFF; successful other criteria can retain their own verdicts."
+  },
+  "balance":"game/source/content 1; tests-tools 1 bounded source-risk check plus unrun named acceptance component proof",
+  "landing_gate":"Independent source review plus required combined source/authority/runtime/art dependencies; draft PR is held, no MET claims"
+}

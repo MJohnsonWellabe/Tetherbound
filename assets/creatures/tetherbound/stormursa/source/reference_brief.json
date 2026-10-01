@@ -1,0 +1,34 @@
+{
+  "subject": "stormursa",
+  "evolution_source": "staticub",
+  "working_name": "Stormursa",
+  "owner_name_decision": "Keep working name until owner supplies final name; no extra roster slot.",
+  "reference_status": "PROMPT_ONLY; ROOT must generate and inspect the actual original image before Meshy",
+  "reference_prompt": "Original full-body creature reference for Tetherbound: Stormursa, a powerful adult storm bear evolved from Staticub. Study the installed Staticub reference/body first and preserve its face, rounded ears, muzzle and recognizable electric markings. A massive believable quadruped bear with broad shoulders, thick neck, broad planted paws, short tail, clear leg separations, and a friendly but formidable intelligent expression. Stormwood identity: muted slate-violet fur, warm copper horn-like shoulder ridges, restrained translucent glass accents and small white-violet lightning seams. Natural fur masses and readable anatomy, tactile stylized materials with the appeal of a high-quality creature adventure game, original design, no copied comparison-game characters, no Team Tether red, no clothes, no mechanical armor. Neutral balanced standing pose, mouth closed, claws visible, all four feet visible and separable, no VFX obscuring anatomy. Plain neutral light-gray background, even studio illumination, clean 3/4 view suitable for image-to-3D, no lettering, no logo, no trainer, no contact shadows painted into texture. Include separate front and side orthographic references if needed for rig assessment. Target withers height 4.10 meters, measurably larger than installed Staticub at 3.25 meters; do not shrink Staticub or existing larger creatures.",
+  "scale": {
+    "trainer_m": 1.80,
+    "current_staticub_m": 3.25,
+    "target_withers_m": 4.10,
+    "rule": "Final mesh bounds and in-engine posture must clear BOTH source and trainer, grow smaller side on repair. These values are targets, not measured evidence."
+  },
+  "meshy_prompt": "Use only the inspected original Stormursa reference. Preserve bear anatomy, broad shoulder silhouette, four separate articulated legs and toes, short tail, broad paws, rounded ears, visible face, slate-violet/copper/glass palette. Game-ready closed connected surface with clean deforming joints, separate muzzle/neck/paw articulation and UV textures. No baked lightning haze, no floating decorative shells, no fused front legs or occluded underbelly. Record actual settings and every task ID.",
+  "rig_and_animation": {
+    "rig": "Existing quadruped workflow or installed-model animation retarget only after actual topology and full art review; preserve source-license record.",
+    "required": ["idle", "walk", "run", "attack", "charged", "hurt", "faint", "swim", "fly_grip", "ride"],
+    "review": "F36 pose set; gait ground contact and slope placement; shoulders/paws/head must remain readable during charged and ultimate. Mark anatomically inapplicable traversal poses explicitly against F36 contract, do not silently omit.",
+    "budget": "Reuse F36 creature mesh/texture/LOD/performance budgets. ROOT records actual imported statistics and verifies Medium fight frames."
+  },
+  "submission": {
+    "runner": "ROOT exclusive GPU/ImageGen/Meshy/Godot writer",
+    "priority": "ART_DIRECTION F36 priority subject 24; F36 may rerank on evidence",
+    "nightly_cap": 30,
+    "counts": "Every image-to-3D, refine, retexture and retry task consumes nightly Meshy count.",
+    "failure": "Flag off on any failed gate; after two failed same-approach attempts change approach. No generated reference or asset claimed here."
+  },
+  "acceptance_capture": {
+    "before": "Actual Staticub at same camera and scene, plus trainer scale comparison; no nonexistent previous bear image",
+    "after": "Candidate Stormursa at gameplay distance, day/Stormwood purple light, idle and motion, High and Medium, with trainer and Staticub size comparison",
+    "judge": "Different author code-blind full Bars A/B review, not merely anatomy preference or attractive studio render",
+    "activate": "Set all provenance gates only after actual PASS, record reference/model/captures/judge hashes and task IDs, add ART_DIRECTION provenance ledger row through its owner, then enable staticub_stormursa config row and approved species visual metadata together."
+  }
+}

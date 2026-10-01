@@ -1,0 +1,7 @@
+[
+  {"id":"mudsnout_tuskroot","source":"mudsnout","target":"tuskroot","breaks_level":20,"extra_ingredient":"heartstone","enabled":true},
+  {"id":"mudsnout_ashtusk","source":"mudsnout","target":"ashtusk","breaks_level":20,"extra_ingredient":"sunstone","enabled":true},
+  {"id":"mosshell_cannonback","source":"mosshell","target":"cannonback","breaks_level":30,"extra_ingredient":"","enabled":true},
+  {"id":"craghorn_stormcapra","source":"craghorn","target":"stormcapra","breaks_level":40,"extra_ingredient":"","enabled":true},
+  {"id":"staticub_stormursa","source":"staticub","target":"stormursa","breaks_level":50,"extra_ingredient":"","enabled":false}
+]
