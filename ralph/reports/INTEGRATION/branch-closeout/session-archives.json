@@ -1,5 +1,5 @@
 {
-  "policy": "Latest user override: archive idle sessions with their complete content consolidated and no currently attributed CI failure requiring their session. Inactivity alone is not fault attribution. Reopen the same archived session if a later actual failure maps to it. Sidebar archives do not close criteria or imply main landing.",
+  "policy": "Latest explicit user override: archive when committed source is on a consolidated branch; native/CI proof and criteria may remain OPEN. Reopen original session for attributable CI repairs. Preserve all branches, checkouts and diagnostic evidence.",
   "consolidated_head": "c03cd139ae39dacfeef88e7f684cae7debd6bfd6",
   "main_head": "30fcc38fc591d5df3a7cfb122b9da58445467021",
   "ci_run": 36820599627,
@@ -60,8 +60,9 @@
       "confirmed_archived": true,
       "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
       "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved.",
-      "currently_archived": false,
-      "reopened_reason": "Concrete CI6172 regional credits smoke parser failure; same F20 session reopened for test-only async API alignment. No new session."
+      "currently_archived": true,
+      "reopened_reason": "Concrete CI6172 regional credits smoke parser failure; same F20 session reopened for test-only async API alignment. No new session.",
+      "rearchived_after_source_consolidation": true
     },
     {
       "threadId": "01a0f510-cc96-7090-8e99-bf47054aed88",
@@ -71,8 +72,9 @@
       "confirmed_archived": true,
       "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
       "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved.",
-      "currently_archived": false,
-      "reopened_reason": "Concrete CI6169 post-disconnect encounter director publication fault, owned F22. Same session reopened; source branch preserved. Warden timeout earlier causal relation unproved."
+      "currently_archived": true,
+      "reopened_reason": "Concrete CI6169 post-disconnect encounter director publication fault, owned F22. Same session reopened; source branch preserved. Warden timeout earlier causal relation unproved.",
+      "rearchived_after_source_consolidation": true
     },
     {
       "threadId": "01a0f53f-0dcd-7070-a370-e361e9e308f6",
@@ -125,5 +127,35 @@
   "latest_archive_ci_run": 36854264014,
   "latest_archive_ci_status": "Actual unit/runtime failures returned to existing owners; shared CI remains unaccepted.",
   "total_confirmed_archived": 13,
-  "currently_archived_count": 11
+  "currently_archived_count": 11,
+  "source_archive_events_2026_10_01": [
+    {
+      "thread_id": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "head": "d22e8453ede7c880e840d16cce1eea423f3c8a70",
+      "feature": "F20",
+      "confirmed_archived": true,
+      "source_contained_at": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+      "tracked_clean": true,
+      "untracked_source": []
+    },
+    {
+      "thread_id": "01a0f510-cc96-7090-8e99-bf47054aed88",
+      "head": "134e72b70989848a5adeac949e11880f193fbccf",
+      "feature": "F22",
+      "confirmed_archived": true,
+      "source_contained_at": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+      "tracked_clean": true,
+      "untracked_source": []
+    },
+    {
+      "thread_id": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+      "head": "b15039048291cb66f7c218f59982776cef683183",
+      "feature": "Foundation",
+      "confirmed_archived": true,
+      "source_contained_at": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+      "tracked_clean": true,
+      "untracked_source": []
+    }
+  ],
+  "next_batch_archives": "Ten confirmed R2 archives and exact source reachability are retained on tb/integration-next in ralph/reports/R2-consolidation; six source-only R3 sessions started from the consolidated R2 source. No R3 CI started."
 }
