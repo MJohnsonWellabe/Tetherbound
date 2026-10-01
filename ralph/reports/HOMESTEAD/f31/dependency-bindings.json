@@ -1,0 +1,76 @@
+{
+  "kind": "exact_source_dependency_and_reuse_provenance",
+  "runtime_acceptance": "OPEN",
+  "bindings": [
+    {
+      "label": "Foundation coherent r5 source cut",
+      "path": "D:/tetherbound/redesign-foundations/.tmp/shared-successor-r5/source-cut.patch.json",
+      "expected_sha256": "8884f29dd6be92e87fda510d4c82a9ebfdfefbae2b19093284a2a769a40fc29d",
+      "observed_sha256": "8884f29dd6be92e87fda510d4c82a9ebfdfefbae2b19093284a2a769a40fc29d",
+      "match": true
+    },
+    {
+      "label": "Foundation coherent r5 patch",
+      "path": "D:/tetherbound/redesign-foundations/.tmp/shared-successor-r5/proposal.patch",
+      "expected_sha256": "da5697ab8ad7b673b27f403812c6de8be7c7ff7818ea62c6f89a931fc37c9c91",
+      "observed_sha256": "da5697ab8ad7b673b27f403812c6de8be7c7ff7818ea62c6f89a931fc37c9c91",
+      "match": true
+    },
+    {
+      "label": "Foundation r5 independent source verdict",
+      "path": "D:/tetherbound/redesign-foundations/.tmp/portal-journal-review-r5/verdict.json",
+      "expected_sha256": "c4f278a2032baebd38a43c09b5acb5896ce27d3d8e2210895dd291b5edad91d3",
+      "observed_sha256": "c4f278a2032baebd38a43c09b5acb5896ce27d3d8e2210895dd291b5edad91d3",
+      "match": true
+    },
+    {
+      "label": "Paid-Altar owned BuildPlacer reuse provenance",
+      "path": "D:/tetherbound/redesign-foundations/.tmp/altar-producer-r1/paid-building-r1/buildplacer-handoff-r2/after.gd.txt",
+      "expected_sha256": "2f91ee62a9c34232fc9a1521c312ce261fbe6c3f9ce44b693d85de5ebf87243f",
+      "observed_sha256": "2f91ee62a9c34232fc9a1521c312ce261fbe6c3f9ce44b693d85de5ebf87243f",
+      "match": true
+    },
+    {
+      "label": "F33 frozen gear config",
+      "path": "D:/tetherbound/feature-f33/data/config/gear.json",
+      "expected_sha256": "47b65886fe6b801ed4965b8f606e24657038f6de726ad54d3eca9b290726daf9",
+      "observed_sha256": "47b65886fe6b801ed4965b8f606e24657038f6de726ad54d3eca9b290726daf9",
+      "match": true
+    }
+  ],
+  "observed_lane_heads": {
+    "D:\\tetherbound\\feature-f28": "a07c26cc5866d4845f8dd7c76e4807e452535173",
+    "D:\\tetherbound\\feature-f32": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df",
+    "D:\\tetherbound\\feature-f33": "5ab0d753d7499a112903853052ec9f92006d88e2"
+  },
+  "prior_homestead_reuse_head": "499e8e38e6b4e6d9be37dcdabe01c447693e1276",
+  "reuse": [
+    {
+      "path": "D:\\tetherbound\\redesign-homestead\\scripts\\build\\station_next_upgrade.gd",
+      "observed_prior_working_sha256": "23f7662d59cb9eebff658a56c7a1467958161a2f13bded4176b879a1d199d334",
+      "disposition": "Read-only reuse input; current F31 reviewed source-cut supersedes it"
+    },
+    {
+      "path": "D:\\tetherbound\\redesign-homestead\\scripts\\build\\station_forge.gd",
+      "observed_prior_working_sha256": "dc3519857600b1557ac7af93a47e1fa67e01dce6d040af8e0dc697ee94c135e6",
+      "disposition": "Read-only reuse input; current F31 reviewed source-cut supersedes it"
+    },
+    {
+      "path": "D:\\tetherbound\\redesign-homestead\\scripts\\build\\station_den.gd",
+      "observed_prior_working_sha256": "2e5e0260a61f33d8aa0724d79e1f8d11140cc416cf47e19d7550c0f2de3ca73b",
+      "disposition": "Read-only reuse input; current F31 reviewed source-cut supersedes it"
+    },
+    {
+      "path": "D:\\tetherbound\\redesign-homestead\\.tmp\\altar-buildable-r1\\after\\scripts\\build\\home_plot_rules.gd",
+      "observed_prior_working_sha256": "b95f16e2fe92d92c3e4d1df11df12a0e55b11c1294e01c8ec0868f72bd3a60c7",
+      "disposition": "Read-only reuse input; current F31 reviewed source-cut supersedes it"
+    },
+    {
+      "path": "D:\\tetherbound\\redesign-homestead\\.tmp\\altar-buildable-r1\\after\\data\\config\\stations.json",
+      "observed_prior_working_sha256": "7d563a0cb7faf52cb1b60250a1a24dc44e2c8800bfe3d9a57b4fc29b9e055469",
+      "disposition": "Read-only reuse input; current F31 reviewed source-cut supersedes it"
+    }
+  ],
+  "foundation_generic_homestead_adapter": "OPEN: new typed extension of same existing registry/journal required",
+  "stale_locator": ".tmp/source-shared-proposal-bindings.json is superseded; not required"
+}

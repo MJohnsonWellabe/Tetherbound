@@ -1,0 +1,52 @@
+{
+  "kind": "cheap_source_checks_not_engine_execution",
+  "acceptance_credit": 0,
+  "runtime_visual_coop_save_acceptance": "OPEN",
+  "checks": [
+    {
+      "check": "All seven F31 runtime flags OFF",
+      "passed": true,
+      "detail": {
+        "runtime_enabled": false,
+        "craft_runtime_enabled": false,
+        "farm_runtime_enabled": false,
+        "den_runtime_enabled": false,
+        "forge.runtime_enabled": false,
+        "den.runtime_enabled": false,
+        "greenhouse.runtime_enabled": false
+      }
+    },
+    {
+      "check": "Buildable IDs unique",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "All six home stations and greenhouse catalogued",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Reserved attachment IDs absent from build menu",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Existing world chest catalogue unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "Every owned static preload exists without F32/F33 dependency imports",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "Tracked source changes stay inside F31 ownership",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "passed": 7,
+  "total": 7
+}
