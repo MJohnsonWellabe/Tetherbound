@@ -1,0 +1,20 @@
+{
+  "commit": "5ab1c5c269c591ee42101fc8489d60f904f3959f",
+  "applied_source_head": "33585c520399ff5e5b56cc3e6e5e60b4a2bdcfe7",
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "independent_source_verdict": "PASS",
+  "review_delivered_to_root": "Exact independent audit message remains in ROOT conversation. Reviewer confirms all40 seal-listed files and exact applied3 proposals.",
+  "source_pins": {
+    "tests/helpers/opening_geometry_navigator.gd": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "5807ae64deb8482e996aa5beb039746e5781f235e53aab6a4b949331110c7340",
+    "tests/test_gate_a_npc_gather_segment_contract.gd": "ff2d391130bd1307f32f6b2be3e9ce6e5e75aa9914c63bba254ba8519ac2ee99"
+  },
+  "patch_sha256": "32e39eb0eecb0f19e6c5eb40806713a5f5f9e088236f08e6fea8926da36a35ed",
+  "manifest_sha256": "6fafecb678ecee01f40221233d77c96a1c8fddc758b25c42e0647ffd83c18ffe",
+  "seal_sha256": "8b3b485457c17194a56ca235dcdebecb71a0a3997dcefffd686f6090fefc2b20",
+  "source_results_sha256": "d5b79df8bdebe1e21dadd913ed1b343d92c917719196428653dcecd694a5b942",
+  "scope": "Three helper/test paths only. Actual authored Pond prefix then original wood goal, one original1800-frame/1.55m walk, one entry reset/counter/step loop; all remaining helper bytes/caps/query/physics/guard/activation/payout checks exact. No world runtime/config change. All4 old tests exact;3 meaningful tests appended.",
+  "provenance": "Six manifest runtime-input hashes describe CRLF checkout bytes; independently verified LF Git content and CRLF expansion. Binary archived models exact, text model inputs differ only by line endings. Static clearances/nominal timing are not native floor or earned traversal proof.",
+  "native": "Fresh original-budget/no-checkpoints run pending. Original3d469 floor refusal remains FAILED and cause unproven.",
+  "criterion_credit_added": 0
+}

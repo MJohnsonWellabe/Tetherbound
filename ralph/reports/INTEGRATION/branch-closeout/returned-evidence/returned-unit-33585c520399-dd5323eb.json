@@ -1,0 +1,11 @@
+{
+  "head": "33585c520399ff5e5b56cc3e6e5e60b4a2bdcfe7",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_gate_a_npc_gather_segment_contract.gd",
+  "summary": [
+    "7 tests, 25 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-33585c520399-dd5323eb\\tests.log",
+  "raw_log_sha256": "3061bfb1b68b71a87c4b837523e65e6068b0991cbb6a77d2b351cdec393c88c1"
+}
