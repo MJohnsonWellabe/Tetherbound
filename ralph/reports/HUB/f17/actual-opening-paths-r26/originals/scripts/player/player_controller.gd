@@ -770,9 +770,9 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 	# Godot's floor-stop mode is for an idle body, but leaving it enabled while
 	# the player actively climbs can pin the capsule to a perfectly valid floor
 	# without any wall contact. Production Rise receipts reproduced this on
-	# 20-degree authored treads. Keep idle slope stability and retain native
-	# shallow recovery on flat floors; active movement releases the stop mode.
-	floor_stop_on_slope = idle_slope_stop(direction, get_floor_normal(), up_direction)
+	# 20-degree authored treads. Keep idle slope stability, and release the stop
+	# mode only while locomotion is actually requesting horizontal travel.
+	floor_stop_on_slope = direction == Vector3.ZERO
 	floor_constant_speed = direction != Vector3.ZERO
 
 	var game := get_node_or_null(^"/root/Game")
@@ -797,13 +797,6 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
-
-
-## On a flat floor the native idle slope-stop branch can undo a shallow
-## recovery by subtracting its travel. Keep that recovery in the one ordinary
-## move_and_slide pass; sloped floors still need their original idle stop.
-static func idle_slope_stop(direction: Vector3, floor_normal: Vector3, up: Vector3) -> bool:
-	return direction == Vector3.ZERO and not floor_normal.is_equal_approx(up)
 
 
 func _face(direction: Vector3, delta: float) -> void:

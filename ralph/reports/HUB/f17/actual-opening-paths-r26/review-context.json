@@ -1,0 +1,27 @@
+{
+  "request": "ROOT: audit actual CI6173 failures after integrated reviewed R25; change approach, preserve original guards/caps/named tests/controller inputs/budgets, source-only existing HUB; ROOT owns live CI and runtime queue.",
+  "candidate_scope": "Six named paths: one narrow production idle floor policy, two ordinary controller traversal helpers, and four added meaningful cases in three existing named test files. Entire navigator is unchanged.",
+  "tam": "Actual PRE after Tam modal, before any resumed stick, rejected full capsule at body(26.254693985,.899729669,16.831148148) against Terrain shape33. Actual shape-query origin and height put its foot .2703667mm below the recorded UP plane. Raw recovery1.0621548mm still exceeds original1.01000005mm guard, despite reported depth.208199mm. Pinned native Godot5b4e0cb0f idle slope-stop can cancel recovery<=margin; the production policy now releases idle stop only on native flat floor normal matching current up. Sloped idle retains stop, active movement retains its prior policy. No body writes, fake grounding, query changes, capsule/skin/owner changes or guard relaxation. Initial causal controller frame is absent in this raw; the source mechanism is an inference pending native reproduction.",
+  "bram": "Actual POST cycle3 origin(45.2478523,1.06301785,1.8348552), delta(-.05844498,-.03319371,.00002623), no live/slide contacts, is_on_floor=false. Prior resume camera heading(.885616,0,.464418) sends the probe toward guest furniture; exact collider of the earlier perch is not captured. First indoor resume candidate now uses the same original doorway-axis point as _exit_through in its existing22 moving/4neutral frames. For the current inn this is(44,.85,4.8). Remaining three original camera-relative cardinal candidates and all outdoor probes retain their inputs. This changes indoor steering, not controls or the displacement witness. Same unmodified navigator validates actual travel. No extra leg or frame allowance; corrected runtime is pending.",
+  "legacy_tutorial": "Two actual sparse failures: required core attempt1 closest49.57m/final54.69m at19:44:06; required gate-evidence first/only attempt closest37.89m/final38.02m at19:42:58. Neither log has the actual final body/road-index/colliders. No invented geometry cause. Existing legacy driver re-aims actual body/current camera each requested frame, delivers original physical axes immediately via flush, and yields even for neutral heading. Original road, total2600frame budget, ready/actionable/actual engageable target, physical Interact and sidestep caps remain unchanged. A terminal non-admission record will expose actual pose/waypoint index if failure persists. These input defects are source-established; unique CI failure cause and fixed outcome remain unproven.",
+  "preservation": "Whole tests/helpers/opening_geometry_navigator.gd byte-exact SHA d078109a915db0c936ca1cb29fce8a7e7f66b1297abf249c5400f71d2183ae3f. Both actual PRE/POST, full registered capsule/owner, raw recovery/depth, all8raw cached aggregate contacts, no dedup/exclusions,96queries/frame,250000lifetime,24000requests,10000us combinedcallbacks,90stall/26retry and all other native bounds remain. No original named test changed or removed. Original resumes retain120frame readiness, at most4*(22+4)frame candidates and>=.3m real displacement. Original production single move_and_slide, gravity, friction, step-up/unstick, mask and ceiling120 remain.",
+  "root_integration": "Six touched baseline files are byte-identical to exact CI6173 ROOT63429ee77e31341ed82b106ce5489b6479916e3f blobs. Preserve ROOT camera-composition and vitals damage-revision changes during integration; those two unchanged dependency versions differ from older HUB checkout and are frozen separately. Required planar_basis/move_speed_scale functions match. Village/prefab raw differences are only CRLF versus LF. See baseline-provenance.json.",
+  "source_checks": 259,
+  "new_named_cases": 4,
+  "named_case_counts": {
+    "tests/test_player_runaway_velocity_guard.gd": {
+      "original": 2,
+      "added": 2
+    },
+    "tests/test_gate_a_npc_gather_segment_contract.gd": {
+      "original": 13,
+      "added": 1
+    },
+    "tests/test_opening_beats.gd": {
+      "original": 21,
+      "added": 1
+    }
+  },
+  "local_runtime": "UNRUN. No engine, import, parser launch, units, render, CI, push, ROOT writes, new chat or new agents. Standard Python byte/source checks only; no ideal travel model used for acceptance.",
+  "authoritative_status": "Original CI6173 opening still FAIL. R25 focused unit13/69 PASS and current catching/export PASS are ROOT-reported separate evidence. Prior tree unit8/59 and original probe PASS remain in R25 original sealed packet. All R20\u2013R25 seals immutable. F17#4 OPEN; R9 general raw recovery/query replacement HOLD. ROOT owns independent review and selected actual native checks."
+}

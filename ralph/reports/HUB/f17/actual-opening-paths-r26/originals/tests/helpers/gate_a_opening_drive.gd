@@ -1275,11 +1275,6 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 			continue
 		await _drive_body_toward(_player, goal, 1)
 	_stop_left_stick()
-	print("WILD_APPROACH_FINAL ", JSON.stringify({"acceptance": false,
-		"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
-		"target": [target.global_position.x, target.global_position.y, target.global_position.z],
-		"road_index": road_index, "road_size": road.size(), "on_floor": _player.is_on_floor(),
-		"physics_frames": int(Engine.get_physics_frames() - started_frame), "budget": budget}))
 	print("wild approach: exhausted after closest %.2fm; final %.2fm; visible=%s alive=%s prompt='%s' winner=%s" % [
 		closest,
 		_player.global_position.distance_to(target.global_position),
@@ -1306,33 +1301,17 @@ func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> boo
 
 
 func _drive_body_toward(body: Node3D, point: Vector3, frames: int) -> void:
-	for _i in frames:
-		# Re-aim against the actual body and current camera on every requested
-		# tick. A zero heading must still yield: otherwise a close airborne
-		# waypoint can exhaust the loop without letting gravity settle it.
-		var direction := point - body.global_position
-		var basis: Basis = _rig.call("planar_basis")
-		var axis := drive_axis(direction, basis)
-		if not axis.is_finite():
-			_stop_left_stick()
-			_fail("nonfinite legacy ordinary stick heading")
-			return
-		_send_axis(JOY_AXIS_LEFT_X, axis.x)
-		_send_axis(JOY_AXIS_LEFT_Y, axis.y)
-		# Parsed axes otherwise wait for a process-frame flush. Several physics
-		# ticks can then use an older camera-relative heading before delivery.
-		Input.flush_buffered_events()
-		await _tree.physics_frame
-
-
-static func drive_axis(direction: Vector3, basis: Basis) -> Vector2:
-	if not direction.is_finite() or not basis.is_finite() or absf(basis.determinant()) < 0.00001:
-		return Vector2.INF
+	var direction := point - body.global_position
 	direction.y = 0.0
 	if direction.length_squared() < 0.01:
-		return Vector2.ZERO
+		_stop_left_stick()
+		return
+	var basis: Basis = _rig.call("planar_basis")
 	var local := basis.inverse() * direction.normalized()
-	return Vector2(local.x, local.z)
+	_send_axis(JOY_AXIS_LEFT_X, local.x)
+	_send_axis(JOY_AXIS_LEFT_Y, local.z)
+	for _i in frames:
+		await _tree.physics_frame
 
 
 func _close_dialogue(max_presses: int) -> bool:

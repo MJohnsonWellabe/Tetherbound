@@ -226,7 +226,7 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		elif not await _wait_world_owned(30):
 			_fail("%s cycle %d left stale dialogue ownership" % [who, cycle + 1])
 			return false
-		if not await _prove_movement_resumed(door, npc.global_position):
+		if not await _prove_movement_resumed():
 			_fail("%s cycle %d returned visually but world movement stayed dead" % [who, cycle + 1])
 			return false
 		_checkpoint("%s cycle %d exited and movement resumed" % [who, cycle + 1])
@@ -872,7 +872,7 @@ func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, author
 	return arrived
 
 
-func _prove_movement_resumed(door: Node3D = null, inside_target: Vector3 = Vector3.ZERO) -> bool:
+func _prove_movement_resumed() -> bool:
 	# Say WHICH of the four ways this fails. "Movement stayed dead" covers a
 	# paused tree, a stale input owner, a cleared locomotion flag and a player
 	# who simply could not walk anywhere, and those are four different bugs
@@ -901,15 +901,6 @@ func _prove_movement_resumed(door: Node3D = null, inside_target: Vector3 = Vecto
 	if not bool(_player.call("locomotion_enabled")):
 		print("movement dead: locomotion_enabled is false after two seconds of waiting")
 		return false
-	# An indoor greeting first returns toward the SAME doorway-axis point already
-	# used by _exit_through. The camera's forward nudge pointed into guest
-	# furniture in CI6173; the aisle uses these existing frames instead.
-	var aisle := Vector3.INF
-	if door != null:
-		aisle = doorway_resume_goal(door.global_position, _door_outward(door, inside_target))
-		if not aisle.is_finite():
-			_fail("invalid doorway-axis movement-resume hint")
-			return false
 	# Try four physical directions because a villager counter or wall can block
 	# one without implying dead world input.  This is ordinary walking, not a
 	# relocation shortcut, and leaves the player wherever the successful step
@@ -918,13 +909,10 @@ func _prove_movement_resumed(door: Node3D = null, inside_target: Vector3 = Vecto
 		var before := _player.global_position
 		_nav.reset()
 		for _i in 22:
-			if axis == Vector2(0, -1) and aisle.is_finite():
-				await _nav.step(aisle)
-			else:
-				var basis: Basis = _rig.call("planar_basis")
-				var requested := basis * Vector3(axis.x, 0.0, axis.y)
-				_nav.push_once(requested)
-				await _tree.physics_frame
+			var basis: Basis = _rig.call("planar_basis")
+			var requested := basis * Vector3(axis.x, 0.0, axis.y)
+			_nav.push_once(requested)
+			await _tree.physics_frame
 			if _nav.refused():
 				_stop_left_stick()
 				_fail("Native opening refused during movement resume: " + _nav.refusal_reason())
@@ -943,15 +931,6 @@ func _prove_movement_resumed(door: Node3D = null, inside_target: Vector3 = Vecto
 		_player.global_position.x, _player.global_position.y, _player.global_position.z,
 	])
 	return false
-
-
-## Heading only. Original door, inward distance, stick input, frame allowance,
-## displacement witness and both actual native guards remain decisive.
-static func doorway_resume_goal(door: Vector3, outward: Vector3) -> Vector3:
-	if not door.is_finite() or not outward.is_finite() or absf(outward.y) > 0.00001 \
-			or absf(outward.length_squared() - 1.0) > 0.00001:
-		return Vector3.INF
-	return door - outward * DOOR_STEP_IN
 
 
 func _wait_dialogue_open(budget: int) -> bool:

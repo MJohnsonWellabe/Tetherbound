@@ -195,15 +195,3 @@ func test_mira_return_uses_painted_bends_and_same_standoff_without_stepping_onto
 		Vector3(4, 0.2, 2), 0.4, 0.001, road), [], "a higher lip cannot inherit this full-capsule corridor")
 	assert_eq(SEGMENT.mira_approach_hint(Vector3.ZERO, Vector3(27, 0.85, 5), Vector3(27, 0.9, 7.9),
 		Vector3(4, 0.1, 2), 0.4, 0.01, road), [], "the original skin remains mandatory")
-
-
-func test_indoor_movement_resume_uses_the_existing_doorway_axis() -> void:
-	assert_true(SEGMENT.doorway_resume_goal(Vector3(44, 0.85, 7), Vector3.BACK).is_equal_approx(Vector3(44, 0.85, 4.8)),
-		"Bram's first resume heads along the central aisle rather than into the guest furniture")
-	assert_true(SEGMENT.doorway_resume_goal(Vector3(27, 0.85, 5), Vector3.BACK).is_equal_approx(Vector3(27, 0.85, 2.8)),
-		"Mira uses the same inward point as the original exit leg")
-	assert_true(SEGMENT.doorway_resume_goal(Vector3(5, 1, 8), Vector3.LEFT).is_equal_approx(Vector3(7.2, 1, 8)))
-	assert_false(SEGMENT.doorway_resume_goal(Vector3.INF, Vector3.BACK).is_finite())
-	assert_false(SEGMENT.doorway_resume_goal(Vector3.ZERO, Vector3.ZERO).is_finite())
-	assert_false(SEGMENT.doorway_resume_goal(Vector3.ZERO, Vector3.UP).is_finite())
-	assert_false(SEGMENT.doorway_resume_goal(Vector3.ZERO, Vector3.BACK * 2.0).is_finite())

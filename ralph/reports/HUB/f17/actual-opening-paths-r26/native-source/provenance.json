@@ -1,0 +1,16 @@
+{
+  "commit": "5b4e0cb0f",
+  "raw_sha256": "97f7a62669d7fea06a450be8eecad53d2d1523f4323425af2ac6bf1b19c68383",
+  "url": "https://github.com/godotengine/godot/blob/5b4e0cb0f/scene/3d/physics/character_body_3d.cpp",
+  "prior_authority": ".tmp/opening-production-steering-r1/independent/review.json engine_primary_sources",
+  "ci_engine_header": "Godot Engine v4.7.stable.official.5b4e0cb0f",
+  "idle_branch_lines": [
+    156,
+    172,
+    196,
+    199,
+    200
+  ],
+  "branch_fact": "sliding_enabled=!floor_stop_on_slope; idle DOWN floor branch subtracts result.travel when its length<=margin+CMP_EPSILON. Setting stop=false for a native UP flat floor retains recovery in the same ordinary move_and_slide call.",
+  "limit": "The original idle controller frame that first acquired the Tam penetration was not logged. This source mechanism fits the recorded flat idle floor failure; exact first frame causal reproduction and corrected original opening are still required from ROOT."
+}

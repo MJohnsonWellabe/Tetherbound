@@ -1,0 +1,394 @@
+[
+  {
+    "job": "110548567437",
+    "line": 5068,
+    "utc_time": "2026-10-01T19:47:05.4098767Z",
+    "observation": {
+      "acceptance": false,
+      "actual_delta": [
+        -0.0584449768066406,
+        -0.0331937074661255,
+        2.62260437011719e-05
+      ],
+      "authored_road_hint": "",
+      "callback_own_us": 426,
+      "ceiling_frames": 0,
+      "checked_start": false,
+      "controller_observation_available": true,
+      "controller_wanted_dir": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "delivered_input": [
+        0.464417785406113,
+        0.88561624288559
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "floor_angle": 0.785399973392487,
+      "frame": 3845,
+      "live_contacts": [],
+      "live_recovery_travel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "live_state_phase": "post",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": false,
+      "on_wall": false,
+      "physics_frame": 7822,
+      "plans": 17,
+      "player": [
+        45.2478523254395,
+        1.06301784515381,
+        1.83485519886017
+      ],
+      "progress_m": 312.361807616195,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "prediction_motion": [
+          -0.042340274900198,
+          0.0,
+          -0.136936992406845
+        ],
+        "retry_choice": 0,
+        "source": "prospective_step",
+        "wall_normal": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "actual production walk lost grounded floor",
+      "request": [
+        44.0,
+        1.96799993515015,
+        -2.39000010490417
+      ],
+      "requests": 3846,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": 0,
+      "slide_motion": [
+        -0.0584449768066406,
+        -0.0331937074661255,
+        2.62260437011719e-05
+      ],
+      "slide_point_counts": [],
+      "snap": 0.400000005960464,
+      "stall_frames": 0,
+      "swept_depth": 0.0,
+      "timing": {
+        "between_callbacks": "controller and other nodes; excluded; not controller-only",
+        "between_callbacks_us": 3540,
+        "callback_cap_us": 10000,
+        "input_flush_us": 41,
+        "live_post_us": 51,
+        "live_pre_us": 86,
+        "movement_progress_us": 0,
+        "post_contract_us": 14,
+        "post_us": 100,
+        "pre_us": 277,
+        "provisional_steering_us": 84,
+        "serialization_and_print": "deferred; excluded; snapshot included",
+        "slide_validation_us": 7,
+        "snapshot_us": 27,
+        "stage": "post"
+      },
+      "total_queries": 11504,
+      "wall_frames": 16
+    }
+  },
+  {
+    "job": "110548567544",
+    "line": 4785,
+    "utc_time": "2026-10-01T19:41:52.8032297Z",
+    "observation": {
+      "acceptance": false,
+      "actual_delta": [],
+      "authored_road_hint": "",
+      "ceiling_frames": 0,
+      "controller_observation_available": false,
+      "controller_wanted_dir": [],
+      "delivered_input": [
+        0.0,
+        0.0
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "failed_original_pre_sample": {
+        "acceptance": false,
+        "backend_identity_proven": false,
+        "body_pose": {
+          "basis_x": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "basis_y": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "basis_z": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            26.2546939849854,
+            0.899729669094086,
+            16.831148147583
+          ]
+        },
+        "capsule": {
+          "height": 1.79999995231628,
+          "radius": 0.400000005960464,
+          "rid": "RID(9908489551872)"
+        },
+        "collide_shape_points": [
+          [
+            26.2546939849854,
+            0.899729609489441,
+            16.831148147583
+          ],
+          [
+            26.2546939849854,
+            0.899999976158142,
+            16.831148147583
+          ]
+        ],
+        "complete": true,
+        "configured_backend": "DEFAULT",
+        "elapsed_us": 96,
+        "excluded_self_only": "RID(10651518894080)",
+        "original_motion_contact_geometry": [
+          {
+            "body_pose": {
+              "basis_x": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "origin": [
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "index": 0,
+            "path": "/root/MeadowsPlayground/Terrain",
+            "rid": "RID(67602785239043)",
+            "shape_data": "<unsupported bounded geometry>",
+            "shape_index": 33,
+            "shape_local_pose": {
+              "basis_x": [
+                -8.74227765734759e-08,
+                0.0,
+                -2.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                2.0,
+                0.0,
+                -8.74227765734759e-08
+              ],
+              "origin": [
+                64.0,
+                0.0,
+                64.0
+              ]
+            },
+            "shape_rid": "RID(67748814129256)",
+            "shape_type": 8,
+            "shape_world_pose": {
+              "basis_x": [
+                -8.74227765734759e-08,
+                0.0,
+                -2.0
+              ],
+              "basis_y": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "basis_z": [
+                2.0,
+                0.0,
+                -8.74227765734759e-08
+              ],
+              "origin": [
+                64.0,
+                0.0,
+                64.0
+              ]
+            }
+          }
+        ],
+        "pair_limit": 8,
+        "pair_limit_reached": false,
+        "phase": "original_pre",
+        "queries_after": 3,
+        "queries_before": 1,
+        "query_margin": 0.0,
+        "query_mask": 1,
+        "query_motion": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "query_pose": {
+          "basis_x": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "basis_y": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "basis_z": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            26.2546939849854,
+            1.79972958564758,
+            16.831148147583
+          ]
+        },
+        "raw_pairs_are_not_a_penetration_certificate": true,
+        "rest_info": {
+          "collider_id": 381346123690,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            26.2546939849854,
+            0.899999976158142,
+            16.831148147583
+          ],
+          "rid": "RID(67602785239043)",
+          "shape": 33
+        },
+        "server_class": "PhysicsServer3D",
+        "trigger": "zero-motion recovery exceeds unchanged skin"
+      },
+      "floor_angle": 0.785399973392487,
+      "frame": 1085,
+      "live_contacts": [
+        {
+          "collider_path": "/root/MeadowsPlayground/Terrain",
+          "collider_rid": "RID(67602785239043)",
+          "collider_shape": 33,
+          "depth": 0.000208199024200439,
+          "local_shape": 0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "point": [
+            26.2546939849854,
+            0.899999976158142,
+            16.831148147583
+          ]
+        }
+      ],
+      "live_recovery_travel": [
+        0.0,
+        0.00106215476989746,
+        0.0
+      ],
+      "live_state_phase": "pre",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": true,
+      "on_wall": false,
+      "physics_frame": 4617,
+      "plans": 7,
+      "player": [
+        26.2546939849854,
+        0.899729669094086,
+        16.831148147583
+      ],
+      "progress_m": 88.0938050914556,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "prediction_motion": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "retry_choice": 0,
+        "source": "none",
+        "wall_normal": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "request": [
+        0.0815808027982712,
+        0.0,
+        0.996666729450226
+      ],
+      "requests": 1086,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": -1,
+      "slide_motion": [],
+      "slide_point_counts": [],
+      "snap": 0.400000005960464,
+      "stall_frames": 0,
+      "swept_depth": -1.0,
+      "timing": {
+        "callback_cap_us": 10000,
+        "input_flush_us": 0,
+        "live_pre_us": 236,
+        "pre_us": 276,
+        "stage": "pre_refused"
+      },
+      "total_queries": 3253,
+      "wall_frames": 1
+    }
+  }
+]

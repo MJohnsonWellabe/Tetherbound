@@ -287,16 +287,3 @@ func _beat_effects_in_the_dialogue() -> Array[String]:
 				if str(parts[0]) == "beat" and not out.has(str(parts[1])):
 					out.append(str(parts[1]))
 	return out
-
-
-func test_legacy_drive_axis_reaims_against_current_camera_basis() -> void:
-	var yaw := Basis(Vector3.UP, PI / 2.0)
-	var axis := OPENING_DRIVE.drive_axis(Vector3(4, 7, 0), yaw)
-	var world := yaw * Vector3(axis.x, 0, axis.y)
-	assert_true(world.is_equal_approx(Vector3.RIGHT), "vertical target height cannot steer horizontal travel")
-	assert_true(OPENING_DRIVE.drive_axis(Vector3.FORWARD, Basis.IDENTITY).is_equal_approx(Vector2(0, -1)))
-	assert_true(OPENING_DRIVE.drive_axis(Vector3.FORWARD, yaw).is_equal_approx(Vector2.RIGHT))
-	assert_eq(OPENING_DRIVE.drive_axis(Vector3(0.01, 7, 0), yaw), Vector2.ZERO,
-		"an arrived horizontal heading supplies neutral stick while its requested physics tick still settles")
-	assert_false(OPENING_DRIVE.drive_axis(Vector3.INF, yaw).is_finite())
-	assert_false(OPENING_DRIVE.drive_axis(Vector3.FORWARD, Basis(Vector3.ZERO, Vector3.ZERO, Vector3.ZERO)).is_finite())

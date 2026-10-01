@@ -1,0 +1,22 @@
+{
+  "tests/helpers/opening_geometry_navigator.gd": "d078109a915db0c936ca1cb29fce8a7e7f66b1297abf249c5400f71d2183ae3f",
+  "scripts/player/player_vitals.gd": "48d24bc7837cc119aa9cba73e02d2b47ed589ea4e503ced0b1d89b4f0ea4143d",
+  "scripts/player/camera_rig.gd": "6dcb52196d92a454ddda8124864799b0e7b126c8fdf174971affd5616b6391d4",
+  "scripts/world/inn_interior.gd": "57e8e51aa9aee52f81a932430dcee084b94f86e5d08aabf0d7e1d0513e14402f",
+  "scripts/world/shop_interior.gd": "752a211ffc19ab9a59bce2891aea552bbf4f5ecdf166ce5c8d03f220e06e3646",
+  "scripts/world/village.gd": "7c7732796e25f3982c1cf0b93b46894c78c733145c8737361539c48827deed0b",
+  "scripts/world/village_npcs.gd": "3d5b9bcda084ea06e0297e1655103023f9125799bbb04f40bf7011e25bfe72d0",
+  "scripts/world/village_door.gd": "498abf2ea10103001f68ed0f9dabf16141653ed8ff74476c142028967d90a6d9",
+  "scripts/world/playground_heightfield.gd": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf",
+  "scripts/world/build_playground_terrain.gd": "c5f5209115e2174af4f32e487a07406a1c68439d3a0a227ae8918d0f1a57d549",
+  "scripts/world/interaction_arbiter.gd": "e602c42c44734a2f65d499e059d1f7310939fe42a054938f573a4c9892ad5206",
+  "scenes/player/player.tscn": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+  "data/config/movement.json": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+  "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+  "data/config/village_npcs.json": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07",
+  "data/config/building_prefabs.json": "8cf16d9a32310ed3ba8691caad19749b7aae7a3c5358bd8b05547166e6d2bf36",
+  "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+  "tools/_probe_scatter_tree_prompt_height.gd": "e5731c54a6eb9ee4d55aefa2bf0956c42365d777e8994ab03cfa29946b48fa38",
+  "tests/test_vegetation_human_prompt_height.gd": "fb2b90dc7a91b1e42e0a68b2549a8415fb9e4b06a4f0a20daf8227ed92b7b19c",
+  "tests/fixtures/scatter_tree_corridor_r23.json": "184e967c295ee6ae4e379248525a9ae239cc9ab424b433bd8319afc1e538128e"
+}
