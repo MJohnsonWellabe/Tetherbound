@@ -1,0 +1,33 @@
+{
+  "status": "SOURCE_ONLY_EQUIVALENT_ROTATION_ASSERTION_RUNTIME_PENDING",
+  "foundation_parent": "2360b9d664cbf2e26b701604f2dddc1301165657",
+  "failed_combined_head": "b42e92f90f224e1d499f26cf8dec2035bb6fdfc0",
+  "native_log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-b42e92f90f22-aae7e721\\tests.log",
+  "native_log_sha256": "89e38301a2a1c773b616804c33b3e78e19ecc29671583201dc37eded36048d26",
+  "actual_native_result": {
+    "exit": 1,
+    "tests": 3,
+    "assertions": 188,
+    "failed": 1,
+    "only_failure": "raw Euler yaw was -PI rather than PI; other assertions executed and passed"
+  },
+  "changed_path": "tests/test_wall_foliage_normals.gd",
+  "old_lf_sha256": "f1f5692f1c7559e33a8099a58b4ba6cd5548b46cf7c1d243715ba1a514ec82ce",
+  "new_lf_sha256": "6fd178628e001672c455e0612d872122e65c82cb8954aed9c83cab04e16cc10e",
+  "patch_sha256": "61da237a27a4382eb344ec0457aa4799abf952487f57f600ca8d969e31614e49",
+  "rotation_assertion_reversal_matches_entire_original_test": true,
+  "regression_assert_call_sites_preserved": 20,
+  "production_cache_unchanged_sha256": "a851bb5a526b4665b93318bbdd0c355a405081531365d0b6d956f3d2a252cbc0",
+  "comparison": "Quaternion angular distance between actual basis rotation and Basis(Vector3.UP, PI), expected0.0",
+  "angular_tolerance_radians": 0.0001,
+  "standard_math_witness_only": {
+    "3.141592653589793": 0.0,
+    "-3.141592653589793": 0.0,
+    "0.0": 3.141592653589793,
+    "1.5707963267948966": 1.5707963267948963,
+    "3.142592653589793": 0.0009999999997701238
+  },
+  "read_only_integration_patch_check": 0,
+  "runtime_execution_here": "NONE",
+  "actual_success_status": "Pending coordinator rerun; no native, smoke, performance or acceptance success inferred."
+}
