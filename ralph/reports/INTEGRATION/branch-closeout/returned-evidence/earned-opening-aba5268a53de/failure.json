@@ -1,0 +1,274 @@
+{
+  "head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+  "tree": "850bb44f4bd8269a8f73253b604d74a050318fbc",
+  "source_closure_sha256": "7dc62d6991716bd63a1f2bac4771f7162b98bf4e489d98d7a7e5bd34517092bf",
+  "source_count": 2180,
+  "frozen_before_after_equal": true,
+  "raw_sha256": {
+    "receipt.json": "d7bfca783aa1904f9428a0b5545ea9096301c7750e384edf198f14967bd7d094",
+    "native.log": "83134c1592a40f597fd175b11b98458a3b0238145ecab7b23c7b8d426e94e856",
+    "parser.log": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+  },
+  "compressed_raw_logs_and_receipt_preserved": true,
+  "runs": [
+    {
+      "name": "parser",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--check-only",
+        "--script",
+        "tests/smoke_four_biome_continuous.gd"
+      ],
+      "budget_seconds": 90,
+      "pid": 11996,
+      "exit": 0,
+      "elapsed_seconds": 13.155999999959022,
+      "raw_log_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "distinct_errors": [],
+      "unexpected_errors": []
+    },
+    {
+      "name": "native",
+      "command": [
+        "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_four_biome_continuous.gd",
+        "--",
+        "--through-tournament",
+        "--world-seed=4",
+        "--no-checkpoints",
+        "--opening-contact-diagnostics"
+      ],
+      "budget_seconds": 5400,
+      "pid": 10588,
+      "exit": 1,
+      "elapsed_seconds": 275.2029999999795,
+      "raw_log_sha256": "83134c1592a40f597fd175b11b98458a3b0238145ecab7b23c7b8d426e94e856",
+      "distinct_errors": [
+        "ERROR: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+        "ERROR: could not naturally leave Bram's building (player 8.3m from door at (42.0, 1.0, -1.0))"
+      ],
+      "unexpected_errors": [
+        "ERROR: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+        "ERROR: could not naturally leave Bram's building (player 8.3m from door at (42.0, 1.0, -1.0))"
+      ]
+    }
+  ],
+  "campaign": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": true,
+    "cumulative_elapsed_seconds": 259.909,
+    "dry_run": false,
+    "elapsed_seconds": 259.909,
+    "failures": [
+      "Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "could not naturally leave Bram's building (player 8.3m from door at (42.0, 1.0, -1.0))"
+    ],
+    "local_chains": [],
+    "reached": "road_gate",
+    "requested_prefix_passed": false,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": "user://four_biome_fresh_21024_13152"
+  },
+  "actual_partial_milestones": [
+    "GATE A OPENING +0.14s \u00e2\u20ac\u201d title interactive",
+    "GATE A OPENING +0.29s \u00e2\u20ac\u201d answered the character-choice step",
+    "GATE A OPENING +3.48s \u00e2\u20ac\u201d confirmed the configured trainer-name prefill",
+    "GATE A OPENING +3.50s \u00e2\u20ac\u201d new game world entered",
+    "GATE A OPENING +135.19s \u00e2\u20ac\u201d wake/Get Up complete",
+    "GATE A OPENING +139.43s \u00e2\u20ac\u201d Grandpa briefing and pack complete",
+    "GATE A OPENING +139.47s \u00e2\u20ac\u201d starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
+    "GATE A OPENING +143.58s \u00e2\u20ac\u201d starter selected and named (terrapup, uid creature-7408c071ac3bc89f4a517d52f5973c84)",
+    "GATE A OPENING +145.18s \u00e2\u20ac\u201d Grandpa's first-catch supplies received (50 Basic Orbs)",
+    "GATE A OPENING +146.82s \u00e2\u20ac\u201d usable house/front doorway exited",
+    "GATE A OPENING +164.79s \u00e2\u20ac\u201d engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+    "GATE A OPENING +164.82s \u00e2\u20ac\u201d tutorial Bramblebun combat entered",
+    "GATE A OPENING +174.82s \u00e2\u20ac\u201d Bramblebun naturally weakened to 27/106 HP",
+    "GATE A OPENING +174.85s \u00e2\u20ac\u201d live catch begins with 50 earned orbs; no HP or inventory fixture",
+    "GATE A OPENING +183.39s \u00e2\u20ac\u201d catch complete; exploration resumed with two-creature party",
+    "GATE A OPENING +192.74s \u00e2\u20ac\u201d village key earned and consumed by the real gate",
+    "GATE A NPC/GATHER +8.88s \u00e2\u20ac\u201d Mira cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +10.18s \u00e2\u20ac\u201d Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue",
+    "GATE A NPC/GATHER +13.21s \u00e2\u20ac\u201d Tam cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +13.24s \u00e2\u20ac\u201d Tam handed over knife, torch and build hammer through dialogue",
+    "GATE A NPC/GATHER +16.76s \u00e2\u20ac\u201d Satchel assigned four tools by focused controller input",
+    "GATE A NPC/GATHER +33.60s \u00e2\u20ac\u201d axe equipped, swung, gathered +4 Wood",
+    "GATE A NPC/GATHER +36.31s \u00e2\u20ac\u201d pickaxe equipped, swung, gathered +4 Stone",
+    "GATE A NPC/GATHER +41.48s \u00e2\u20ac\u201d knife equipped, swung, gathered +4 Fiber",
+    "GATE A NPC/GATHER +58.35s \u00e2\u20ac\u201d Oskar cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +64.83s \u00e2\u20ac\u201d Bram cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +65.80s \u00e2\u20ac\u201d Bram cycle 2 exited and movement resumed",
+    "GATE A NPC/GATHER +66.75s \u00e2\u20ac\u201d Bram cycle 3 exited and movement resumed"
+  ],
+  "failed_original_sample": {
+    "acceptance": false,
+    "actual_delta": [],
+    "authored_road_hint": "",
+    "ceiling_frames": 0,
+    "controller_observation_available": false,
+    "controller_wanted_dir": [],
+    "delivered_input": [
+      0.0,
+      0.0
+    ],
+    "diagnostic_output_outside_physics_cap": true,
+    "floor_angle": 0.785399973392487,
+    "frame": 3113,
+    "live_contacts": [
+      {
+        "collider_path": "/root/MeadowsPlayground/Village/inn_5/Interior/@StaticBody3D@59121",
+        "collider_rid": "RID(362740052919684)",
+        "collider_shape": 0,
+        "depth": 0.0002288818359375,
+        "local_shape": 0,
+        "normal": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "point": [
+          41.7385330200195,
+          1.92741644382477,
+          -1.08546316623688
+        ]
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/Village/inn_5/Interior/@StaticBody3D@59121",
+        "collider_rid": "RID(362740052919684)",
+        "collider_shape": 0,
+        "depth": 0.0002288818359375,
+        "local_shape": 0,
+        "normal": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "point": [
+          41.7385330200195,
+          1.32084202766418,
+          -1.08546316623688
+        ]
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/Village/inn_5/Interior/@StaticBody3D@59115",
+        "collider_rid": "RID(362211771942274)",
+        "collider_shape": 0,
+        "depth": 0.00015789270401001,
+        "local_shape": 0,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          42.1393051147461,
+          0.919999957084656,
+          -1.08546316623688
+        ]
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/Village/inn_5/Interior/@StaticBody3D@59119",
+        "collider_rid": "RID(362469469980035)",
+        "collider_shape": 0,
+        "depth": 0.000118535099318251,
+        "local_shape": 0,
+        "normal": [
+          -0.650309145450592,
+          0.0,
+          0.759669661521912
+        ],
+        "point": [
+          42.4000015258789,
+          1.32084202766418,
+          -1.39000010490417
+        ]
+      }
+    ],
+    "live_recovery_travel": [
+      -0.000171661376953125,
+      0.000724852085113525,
+      0.000878691673278809
+    ],
+    "live_state_phase": "pre",
+    "mask": 1,
+    "on_ceiling": false,
+    "on_floor": true,
+    "on_wall": true,
+    "physics_frame": 7473,
+    "plans": 15,
+    "player": [
+      42.139476776123,
+      0.920117139816284,
+      -1.08634185791016
+    ],
+    "progress_m": 256.12679804489,
+    "provisional_choice": 0,
+    "provisional_steering": {
+      "acceptance": false,
+      "heading": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "prediction_motion": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "retry_choice": 0,
+      "source": "none",
+      "wall_normal": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "queries": 1,
+    "recoveries": 0,
+    "refusal": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+    "request": [
+      44.0,
+      0.849999964237213,
+      4.80000019073486
+    ],
+    "requests": 3114,
+    "safe_margin": 0.00100000004749745,
+    "slide_contacts": [],
+    "slide_contacts_are_capped_prefix": true,
+    "slide_count": -1,
+    "slide_motion": [],
+    "slide_point_counts": [],
+    "snap": 0.400000005960464,
+    "stall_frames": 0,
+    "swept_depth": -1.0,
+    "timing": {
+      "callback_cap_us": 10000,
+      "input_flush_us": 0,
+      "live_pre_us": 132,
+      "pre_us": 173,
+      "stage": "pre_refused"
+    },
+    "total_queries": 9338,
+    "wall_frames": 0
+  },
+  "save_refusal_markers": 0,
+  "owner": "Existing F17 conversation01a0f519-0f68-7f12-b4a0-f3c4051860c0; failure returned with exact raw trace/pins",
+  "independent_review": "Existing F29 asked to verify exact failure closure and milestone limits; verdict not yet included at seal time",
+  "acceptance": "FAILED, F17#4 OPEN. Practicecatch and all three material gathers occurred in this run; camp/rest/beds/tournament not proved. Raw native recovery travel and post-recovery contact depths do not certify initial penetration. No native metric/guard/budget reinterpretation or waiver. Actual autosave cause still unproved.",
+  "shared_ci": {
+    "run": 36861410922,
+    "number": 6169,
+    "head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+    "status": "live; outcome unverified"
+  },
+  "main": "30fcc38fc591d5df3a7cfb122b9da58445467021 unchanged",
+  "draft_pr": 519
+}
