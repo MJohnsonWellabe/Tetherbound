@@ -66,6 +66,9 @@ static func _acknowledgement(current: Dictionary, action: String, intent: Dictio
 	var next := current.duplicate(true)
 	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
 	next.redesign_character.transaction_receipts.append(receipt)
+	if action == "portal_arrival" and intent.realm == "meadows" and intent.entry_id == "hall_home":
+		var home := "craft:home_return_%s:%s" % [intent.permit_id, current.character_id]
+		if not next.redesign_character.transaction_receipts.has(home): next.redesign_character.transaction_receipts.append(home)
 	return {"ok": true, "state": next, "receipt": receipt}
 
 static func _relic(current: Dictionary, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:

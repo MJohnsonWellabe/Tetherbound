@@ -428,7 +428,7 @@ func _apply_op(op: Dictionary) -> bool:
 		"reward_delivery_accept":
 			var accept_id := str(op.get("delivery_id", ""))
 			var accept_character := str(op.get("character_id", ""))
-			if accept_id.begins_with("actor_vitals:") or accept_id.begins_with("creature_training:") or accept_id.begins_with("altar_building:"):
+			if accept_id.begins_with("actor_vitals:") or accept_id.begins_with("creature_training:") or accept_id.begins_with("altar_building:") or accept_id.begins_with("foundation_event:"):
 				return false
 			var accepted: Variant = reward_deliveries.get(accept_id)
 			if not accepted is Dictionary or str((accepted as Dictionary).get("status", "")) != "pending" \
@@ -440,7 +440,7 @@ func _apply_op(op: Dictionary) -> bool:
 		"reward_delivery_journal":
 			var delivery: Variant = op.get("delivery", {})
 			var id := str(op.get("delivery_id", ""))
-			if id.begins_with("actor_vitals:") or id.begins_with("creature_training:") or id.begins_with("altar_building:") or (delivery is Dictionary and delivery.get("kind") in ["actor_vitals", "creature_training", "altar_building"]):
+			if id.begins_with("actor_vitals:") or id.begins_with("creature_training:") or id.begins_with("altar_building:") or id.begins_with("foundation_event:") or (delivery is Dictionary and delivery.get("kind") in ["actor_vitals", "creature_training", "altar_building", "foundation_event"]):
 				return false
 			if id.is_empty() or not delivery is Dictionary:
 				return false

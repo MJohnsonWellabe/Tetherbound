@@ -121,7 +121,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if envelope.op == "regional_ack":
 		var ending := preload("res://scripts/story/regional_homecoming.gd")
 		if peer != local_peer_id() or config().get("redesign_ending_runtime_enabled") != true \
-			or not ending.context_matches(_game(), envelope.intent): return _foundation_refusal("ending_context_changed")
+			or ending.acknowledgement_intent(ending.context(_game()), str(envelope.intent.get("stage", ""))) != envelope.intent: return _foundation_refusal("ending_context_changed")
 		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 			"in_range": true, "in_combat": false, "earned_ending_ack": true, "source_key": "regional_ending:" + character}
 	if envelope.op == "master_chest":
@@ -409,7 +409,7 @@ func foundation_master_outcome(director: Node, frozen: Dictionary) -> Dictionary
 	if row.get("action") == "master_win" and row.get("intent") == intent: return {"ok": true, "durable": true}
 	var context := {"source_key": "master_encounter:" + frozen.encounter_id, "validated_host_outcome": "win", "participant_count": frozen.participants.size(),
 		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
-	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:" + frozen.encounter_id, [{"character_id": character, "action": "master_win", "intent": intent, "context": context}])
+	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:%s:%s" % [frozen.master_id, frozen.encounter_id], [{"character_id": character, "action": "master_win", "intent": intent, "context": context}])
 
 func homestead_submit_action(action: String, original: Dictionary, station: Node3D, revision: int) -> Dictionary:
 	var key := "homestead_recovery"

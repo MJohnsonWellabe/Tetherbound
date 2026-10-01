@@ -31,6 +31,24 @@ var _decline_settled: Dictionary = {}
 ## slot (and a resend of it never overwrites a queued ordinary capture).
 var _deferred: Dictionary = {}
 var _poll := 0.0
+var _answer_save_pending: Dictionary = {}
+
+func _record_declined_answer(id: String) -> void:
+	var game := _game()
+	if game == null or game.local == null or game.world == null or id.is_empty(): return
+	_answer_save_pending = {"character_id": game.local.character_id, "world_namespace": game.world.reward_delivery_namespace, "claim_id": id}
+	_retry_declined_answer()
+
+func _retry_declined_answer() -> void:
+	if _answer_save_pending.is_empty(): return
+	var game := _game()
+	if game == null or game.local.character_id != _answer_save_pending.character_id or game.world.reward_delivery_namespace != _answer_save_pending.world_namespace: return
+	var before: Dictionary = game.local.flags.call("save_data")
+	game.local.flags.call("set_flag", "water:legendary_refused")
+	if game.save_system == null or game.save_system.call("save_character", game, game.local.character_id) != true:
+		game.local.flags.call("load_data", before)
+		return
+	_answer_save_pending.clear()
 
 ## Seams (overridden by unit fixtures): the Game autoload, the host ledger
 ## bridge that resolves a peer to its actor, and the RPC sender id.
@@ -56,6 +74,7 @@ func _process(delta: float) -> void:
 	# and pure unit fixtures may never create player/world state at all.
 	if game == null or game.get("world") == null or game.get("local") == null:
 		return
+	_retry_declined_answer()
 	if not _active.is_empty() and (game.pending_catch == null or not _is_local_claim(_active)):
 		_active = {}
 	# A queued claim from another world instance or character (world change,
@@ -274,6 +293,7 @@ func release_decline(id: String) -> void:
 func confirm_declined(id: String) -> void:
 	if id.is_empty():
 		return
+	_record_declined_answer(id)
 	_decline_holds.erase(id)
 	_declined[id] = true
 	var game := _game()
@@ -317,6 +337,7 @@ func _confirm_decline_to(peer: int, id: String) -> void:
 	var game := _game()
 	if peer == int(game.session.local_peer_id()):
 		_decline_settled[id] = true
+		_record_declined_answer(id)
 	elif is_inside_tree() and multiplayer.has_multiplayer_peer():
 		_decline_done.rpc_id(peer, id)
 
@@ -324,6 +345,7 @@ func _confirm_decline_to(peer: int, id: String) -> void:
 func _decline_done(id: String) -> void:
 	if not id.is_empty():
 		_decline_settled[id] = true
+		_record_declined_answer(id)
 
 func _resolve_guardian(peer: int, id: String, accepted: bool) -> Dictionary:
 	var game := _game()
