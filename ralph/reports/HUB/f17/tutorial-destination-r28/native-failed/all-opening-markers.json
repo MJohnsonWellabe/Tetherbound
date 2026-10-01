@@ -1,0 +1,62 @@
+[
+  {
+    "line": 182,
+    "text": "GATE A OPENING +3.68s \u2014 title interactive"
+  },
+  {
+    "line": 195,
+    "text": "GATE A OPENING +4.49s \u2014 answered the character-choice step"
+  },
+  {
+    "line": 625,
+    "text": "GATE A OPENING +23.26s \u2014 confirmed the configured trainer-name prefill"
+  },
+  {
+    "line": 626,
+    "text": "GATE A OPENING +23.28s \u2014 new game world entered"
+  },
+  {
+    "line": 7187,
+    "text": "GATE A OPENING +346.27s \u2014 wake/Get Up complete"
+  },
+  {
+    "line": 7263,
+    "text": "GATE A OPENING +352.66s \u2014 Grandpa briefing and pack complete"
+  },
+  {
+    "line": 7264,
+    "text": "GATE A OPENING +352.69s \u2014 starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'"
+  },
+  {
+    "line": 7277,
+    "text": "GATE A OPENING +357.13s \u2014 starter selected and named (terrapup, uid creature-8967591d3d23cc5f44bade72c76e6360)"
+  },
+  {
+    "line": 7284,
+    "text": "GATE A OPENING +358.76s \u2014 Grandpa's first-catch supplies received (50 Basic Orbs)"
+  },
+  {
+    "line": 7288,
+    "text": "GATE A OPENING +360.38s \u2014 usable house/front doorway exited"
+  },
+  {
+    "line": 7289,
+    "text": "wild approach: legacy controller uses farmhouse/Practice Meadow road [(10.1, 0.9, 14.0), (20.0, 0.900843, 14.0), (20.0, 0.900843, -12.0), (20.0, 0.900843, -18.0), (20.0, 0.900843, -26.0), (14.6, 0.900843, -31.0), (21.0, 0.900843, -37.5), (30.0, 0.900843, -40.0)]"
+  },
+  {
+    "line": 7317,
+    "text": "WILD_APPROACH_FINAL {\"acceptance\":false,\"budget\":2600,\"on_floor\":true,\"physics_frames\":2600,\"player\":[7.52341222763062,0.900832831859589,11.6486501693726],\"road_index\":8,\"road_size\":8,\"target\":[-7.13181591033936,-0.735385000705719,64.3180465698242]}"
+  },
+  {
+    "line": 7318,
+    "text": "wild approach: exhausted after closest 51.43m; final 54.69m; visible=true alive=true prompt='[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Bud away' winner=EncounterDirector:<Node#354267695766>"
+  },
+  {
+    "line": 7319,
+    "text": "ERROR: natural travel did not reach and engage the tutorial Bramblebun"
+  },
+  {
+    "line": 7336,
+    "text": "ERROR: opening: natural travel did not reach and engage the tutorial Bramblebun"
+  }
+]

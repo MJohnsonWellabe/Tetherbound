@@ -1,0 +1,2094 @@
+extends Node
+
+## The first fifteen minutes: which beat we are on, and what is possible during
+## it. docs/specs/OPENING_SEQUENCE.md is the prose version and the two are meant to be
+## read together.
+##
+## Everything this drives already existed and none of it was connected. There
+## was dialogue with nobody to start it, an interact arbiter with a modal
+## lockout nothing switched, an `Interactable.enabled` flag written for exactly
+## this job and never set, a naming panel nothing opened, and two methods on
+## `encounter_director.gd` — `suspend_default_starter()` and `adopt_starter()` —
+## whose own comments named this file as their caller while this file did not
+## exist. The slice was built systems-first and the sequence was never built at
+## all; this is the sequence.
+##
+## Split the same way `encounter_director.gd` is split from `combat_manager.gd`.
+## The manager knows how a fight resolves and nothing about the world; the
+## encounter director knows about the world and nothing about damage; this knows
+## about the ORDER OF THINGS and nothing about either. It starts conversations
+## rather than drawing them, asks for a creature rather than spawning one, and reads
+## the outcome of a fight rather than running one.
+##
+## It does spawn Grandpa, because nothing else does and his placement is
+## already written down in data/config/opening.json. That is placement, not
+## behaviour: Grandpa turns to look at you because `npc_body.gd` does that.
+##
+## The three starters no longer get bodies of their own in the meadow
+## (`SA0-orbs`, owner directive 2026-08-11 — see docs/specs/OPENING_SEQUENCE.md's
+## own record of the reversal). They are previewed live, in orbs, by
+## `starter_picker.gd`, which this file opens once Grandpa's briefing ends and
+## reads back a choice from — the same "ask a panel, read the outcome" split
+## this file already keeps with `dialogue_panel.gd` and `name_prompt.gd`.
+##
+## Beat order and the per-beat conversations are DATA
+## (`data/config/opening.json`, read through `opening_beats.gd`). This file
+## names six beats in code because the machine has to recognise them —
+## `opening_beats.missing_beats()` fails loudly at boot if the data no longer
+## contains one, which is the difference between a renamed beat and a gate that
+## silently never opens.
+
+const BEATS := preload("res://scripts/story/opening_beats.gd")
+const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const NPC := preload("res://scripts/npc/npc_body.gd")
+## Measures a SKINNED rig the way the renderer draws it — see `_refresh_lying_lift()`.
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+## F3/GATE-F-LEG-S10CDE. `greeting_for()` is what reads a villager's
+## `greeting_when` ladder; `_grandpa_conversation_id()` reuses it for
+## Grandpa's own ladder (opening_beats.gd's `grandpa_conversations_when()`)
+## rather than re-implementing the same first-match-wins lookup a second time.
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const REGIONAL_HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
+const REGIONAL_CREDITS := preload("res://scripts/ui/regional_credits.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const CATCH := preload("res://scripts/combat/catch_math.gd")
+## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
+const SHOP_PANEL := preload("res://scripts/ui/shop_panel.gd")
+const SWAP_PANEL := preload("res://scripts/ui/swap_panel.gd")
+const SHOP_GOODS := "goods"
+const SHOP_CREATURES := "creatures"
+
+## RG7. Opening progress belongs in the existing flat progression store. One
+## stable flag per reached beat preserves an in-progress save without growing
+## ProgressionState into a story object; the latest flag in opening.json's
+## canonical order is the resumed beat. STARTER_GRANTED is a separate fact so
+## the grant is guarded even if old/corrupt beat flags are absent.
+const OPENING_BEAT_PREFIX := "opening:beat:"
+const STARTER_GRANTED_FLAG := "opening:starter_granted"
+
+## The tier the tutorial's orb floor restocks. Named rather than derived from
+## `catch_math.best_orb()`: the floor exists to keep the opening playable, not
+## to hand out a tier the player has not earned, and at this point in the game
+## the basic orb is the only one that exists anyway.
+const TUTORIAL_ORB := "orb_basic"
+
+## SC12/SC13. The table `battle:<trainer_id>` reads from — the same reader
+## `trainer_npc.gd` itself uses, so a villager's challenge and a standalone
+## trainer's challenge look up the exact same data.
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+
+## G3-OPENING-FIX-0904 (2.10). `heal_party` reuses the exact rest a Creature
+## Bed gives one member (`home_recovery.gd::rest()` -- heal_fully() plus the
+## same flat overnight rest XP), applied to the whole party at once.
+const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+
+## Stage B lane 5.A. How a story effect reaches the world ledger, and how this
+## node asks the WORLD (never the merged view) what has already happened.
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+## D99's residual home/creature-bed grants, re-evaluated when the world gains
+## the pieces rather than only on the frame somebody placed them -- see
+## `_share_the_camp()`.
+const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
+## OWNER-0912-WAYFINDING. Personal map knowledge handed over by an NPC; kept
+## out of the shared story ledger because each trainer owns their own map.
+const DIALOGUE_MAP_REVEAL := preload("res://scripts/world/dialogue_map_reveal.gd")
+const INVENTORY := preload("res://autoload/inventory.gd")
+
+## Mirrors CombatManager.OUTCOME_CAUGHT rather than typing "caught" twice, so a
+## renamed outcome cannot silently stop matching here. Same reason
+## encounter_director.gd declares its own.
+const CAUGHT := "caught"
+
+## The dialogue key `$name` is substituted from. data/dialogue/opening.json
+## writes `$name` and this is the other half of that agreement.
+const NAME_KEY := "name"
+
+## Stage B directive rule 3: "the main story advances once for the world, and a
+## character who is behind is never locked out." These are the WORLD-scope flags
+## that say the chapter has moved past its own opening. Any one of them set in
+## `WorldState.flags` means somebody in this world has already done work the
+## opening exists to teach -- and from that moment the opening's GATES stand
+## down for anybody who has not personally done it (`_catch_up_a_behind_
+## character()`).
+##
+## Every id here is `world` in `data/progression/flag_scopes.json`, and
+## `tests/test_story_world_catchup.gd` pins that: a personal flag in this list
+## would make a player's own tutorial progress open the door for them, which is
+## exactly the collapse D99 exists to prevent, in the wrong direction.
+##
+## Deliberately not "any world flag at all": picking a berry writes
+## `harvest_node:`, and a friend gathering in the yard is not the story moving on.
+const WORLD_MOVED_ON_FLAGS: Array[String] = [
+	"defeated_warden",
+	"legendary_freed",
+	"relay_disabled",
+	"tournament_won",
+	"south_bridge_open",
+	"trainer_defeated_practice",
+	"meadows_acknowledged",
+]
+
+## How many physics frames to keep trying to stand something on the ground.
+##
+## Terrain3D builds its collision over several frames after the data directory
+## loads, and anything placed before then ends up at the world origin under the
+## terrain with no error printed. Same value and same reason as
+## encounter_director.GROUND_WAIT_FRAMES.
+const GROUND_WAIT_FRAMES := 300
+
+## OF8. How far, along the bed's own length, the player's feet land from the
+## "bed" marker — which sits near the headboard/pillow end (confirmed against
+## `BedTwin.obj`'s vertices: the marker falls just past the taller, more
+## decorative end of the two). Feet-out rather than head-out because
+## `character_model.gd::set_lying()`'s rotation pivots the body around its
+## feet and swings the head end toward -Z from there.
+##
+## 1.5 was reasoned to, never measured. The rendered lying body is exactly
+## 1.800 m long in Z, spanning `feet_z − 1.8 … feet_z`
+## (`tools/gate_f/probe_loft_bed_wake_pose.gd`), and the bed a player sees
+## runs z −1.564 … 0.565 in house-local metres — so 1.5 put the feet at 0.400
+## and the head at −1.300, a body shoved toward the headboard with a third of
+## the bed empty past its boots.
+##
+## 1.40 is where a code-blind judge put it. Given four rungs 0.10 m apart
+## along the bed's length, in scrambled order, and told only that the panels
+## differed in one respect, it ranked this one first and alone: *"the only
+## panel with real clearance at both ends... the head is genuinely ON the
+## pillow, with dark pillow visible both in front of and behind the skull"* —
+## ~0.12 m clear of the headboard, ~0.11 m clear of the footboard. It called
+## the rung 0.20 m headboard-ward *"broken... the headboard's top-rail corner
+## cuts a hard straight vertical edge across the character's face"*, and the
+## rung 0.10 m footboard-ward a body *"slipped down in the night"* with its
+## toes fused into the footboard rail.
+##
+## This number only became reachable once `grandpa_house.gd::
+## _bed_mattress_collider()` was corrected to stand where the bed mesh
+## actually is: it used to sit 0.30 m toward the headboard, so feet this far
+## out fell off the blocker onto the loft floor.
+##
+## TUNABLE — a different bed model changes both numbers, and the probe
+## re-measures them rather than asserting these.
+const BED_LIE_REACH := 1.40
+
+## Above the dialogue panel (5) and the naming panel (6), below the pause menu
+## (20). A fade-in that the HUD draws over is not a fade-in.
+const FADE_LAYER := 15
+
+signal beat_changed(beat: String)
+
+@export var player_path: NodePath
+@export var arbiter_path: NodePath
+@export var encounter_path: NodePath
+@export var manager_path: NodePath
+@export var camera_rig_path: NodePath
+@export var dialogue_path: NodePath
+@export var name_prompt_path: NodePath
+@export var starter_picker_path: NodePath
+
+var _player: Node3D = null
+var _arbiter: Node = null
+var _encounter: Node = null
+var _manager: Node = null
+var _camera_rig: Node = null
+var _dialogue: CanvasLayer = null
+var _name_prompt: CanvasLayer = null
+var _starter_picker: CanvasLayer = null
+
+var _beat: String = ""
+
+var _grandpa: Node3D = null
+var _grandpa_prompt: Node3D = null
+var _homecoming_character_id: String = ""
+var _homecoming_context: Dictionary = {}
+var _regional_credits: CanvasLayer = null
+var _bed_prompt: Node3D = null
+## The house, if this world built one — SA2's door gate lives on it (a
+## collision box across the doorway; this director only decides when it is
+## solid). Null in a bare test scene, which is a legal world and simply has
+## no door to gate.
+var _house: Node3D = null
+## Where the bed is, in world space. Held separately from `_bed_prompt` because
+## the wake beat's positional fallback has to work even when no prompt was ever
+## built — which is the second, harder route into the same soft-lock: a world
+## with no house builds no bed prompt, and `wake` then has NO exit at all.
+var _bed_anchor: Variant = null
+## The three starter species, in the order the orb picker shows them. The
+## index IS the choice and it is what both the picker and the naming panel
+## come back with.
+var _starter_species: Array[String] = []
+var _choice: int = -1
+## Set the instant the beat reaches `choose`, cleared once the picker actually
+## opens. The beat can only change while the dialogue that carries the effect
+## is still open (`_drain_effects` runs before the player has closed it), so
+## the picker cannot open the same frame — it waits for the box to clear.
+var _picker_pending: bool = false
+
+## D39 (OF31). `[kind, vendor_id]` while a villager's `shop:` effect is waiting
+## for the dialogue box to close, empty otherwise. Same "wait for the box"
+## problem `_picker_pending` above solves, same shape.
+var _shop_pending: Array = []
+var _shop_panel: CanvasLayer = null
+
+## SC12/SC13. The trainer id a `battle:` effect named, while it waits for the
+## dialogue box to close — same "wait for the box" shape as `_shop_pending`,
+## and for the identical reason: `_drain_effects` reads the last line of a
+## challenge conversation while that line is STILL ON SCREEN, and opening a
+## fight under an open dialogue box is the bug both of these avoid.
+var _battle_pending: String = ""
+var _swap_panel: CanvasLayer = null
+
+## Stage B lane 5.A, directive rule 3. True once this character has been let
+## into a world that had already moved past the opening. A latch rather than a
+## per-frame recompute because the catch-up ADOPTS a creature, and a second pass
+## while the first one is still awaiting ground would adopt twice.
+var _caught_up: bool = false
+## Set the instant the late-arrival adoption starts and NEVER cleared. `_caught_up`
+## is re-armed by `restore_progression_from_game()` (a load can bring in a world
+## further along than this character), and re-arming it while `adopt_starter()`
+## is still awaiting ground would adopt a second creature into a five-slot party.
+var _late_arrival_handled: bool = false
+## True only while `adopt_starter()` is awaiting ground for a late arrival.
+## `restore_progression_from_game()` clears `_adopting` -- correct for a mid-
+## session Load, wrong in the middle of an adoption, and now reachable because
+## that function also runs on every world delta.
+var _late_arrival_in_flight: bool = false
+## The species `encounter_director.gd` would have handed a player who never ran
+## the opening at all -- its own `default_starter` export, read before
+## `suspend_default_starter()` clears it in `_ready`. That is the game's own
+## answer to "what creature does somebody get when the opening does not run",
+## and a late joiner is exactly that case.
+var _sandbox_starter: String = ""
+## The last delta seq this node re-posed the world for, so the double delivery
+## documented on `story_ledger.gd::listen()` costs one integer compare rather
+## than one full sweep.
+var _last_delta_seq: int = -1
+
+## True from the moment a name is confirmed until the creature is standing beside the
+## trainer. `adopt_starter` waits for ground, so there are frames in there where
+## no panel is open and the player must still not be able to walk off.
+var _adopting: bool = false
+
+var _fade_layer: CanvasLayer = null
+var _fade_rect: ColorRect = null
+var _fade_hold: float = 0.0
+var _fade_left: float = 0.0
+var _fade_total: float = 0.0
+
+
+func _ready() -> void:
+	add_to_group("progression_restore")
+	add_to_group("input_owner")
+	add_to_group("story_modal")
+	_encounter = get_node_or_null(encounter_path)
+	# FIRST, before anything else in this function and before any await.
+	#
+	# encounter_director spawns its sandbox starter behind
+	# `await get_tree().process_frame`, and every `_ready` in the tree completes
+	# before the next idle frame does — so this is the only window in which the
+	# default creature can be called off. Move it below an await and the player is
+	# given a terrapup they did not choose, and `adopt_starter` then refuses the
+	# one they did.
+	if _encounter != null:
+		# Read before it is cleared: `_catch_up_a_behind_character()` needs the
+		# creature the sandbox would have given, and suspension erases it.
+		_sandbox_starter = str(_encounter.get("default_starter"))
+		_encounter.call("suspend_default_starter")
+
+	_player = get_node_or_null(player_path) as Node3D
+	_arbiter = get_node_or_null(arbiter_path)
+	_manager = get_node_or_null(manager_path)
+	_camera_rig = get_node_or_null(camera_rig_path)
+	_dialogue = get_node_or_null(dialogue_path) as CanvasLayer
+	_name_prompt = get_node_or_null(name_prompt_path) as CanvasLayer
+	_starter_picker = get_node_or_null(starter_picker_path) as CanvasLayer
+
+	if _player == null or _arbiter == null or _encounter == null or _manager == null \
+			or _dialogue == null or _name_prompt == null or _starter_picker == null:
+		push_error("the sequence director is missing wiring: player=%s arbiter=%s encounter=%s manager=%s dialogue=%s name_prompt=%s starter_picker=%s" % [
+			_player != null, _arbiter != null, _encounter != null, _manager != null,
+			_dialogue != null, _name_prompt != null, _starter_picker != null
+		])
+		set_process(false)
+		return
+
+	# The panels are in the tree — but are they the panels?
+	#
+	# A .tscn whose script failed to parse instantiates as a bare CanvasLayer:
+	# the node is there, the path resolves, and every call into it fails. It is
+	# not hypothetical. `name_prompt.gd` had a type-inference parse error under
+	# 4.7 and the scene was loading with no script at all, which showed up as
+	# `_process` throwing "nonexistent function 'is_open'" once a frame forever.
+	# One error at boot naming the node beats sixty a second naming a method.
+	if not _dialogue.has_method("start") or not _dialogue.has_method("drain_effects") \
+			or not _name_prompt.has_method("open") or not _name_prompt.has_signal("confirmed") \
+			or not _starter_picker.has_method("open") or not _starter_picker.has_signal("chosen"):
+		push_error("%s, %s and/or %s are in the scene but are not answering their own API; check for a parse error in their scripts" % [
+			_dialogue.name, _name_prompt.name, _starter_picker.name
+		])
+		set_process(false)
+		return
+
+	_check_the_data()
+
+	# The arbiter becomes the one voice for the prompt line and the one reader of
+	# the interact button. Without this the encounter director keeps its own
+	# hardcoded "Engage X" and two nodes read the same press, so walking between
+	# Grandpa and a wild creature talks to him AND starts a fight.
+	_encounter.call("set_arbiter", _arbiter)
+	# Late binding rather than making the scene set `arbiter.player_path`: this
+	# node already had to be given the player, and two places naming the same
+	# body is one of them being wrong.
+	_arbiter.call("set_player", _player)
+
+	_manager.connect("entered", _on_combat_entered)
+	_manager.connect("exited", _on_combat_exited)
+	_manager.connect("catch_refused", _on_catch_refused)
+	_name_prompt.connect("confirmed", _on_name_confirmed)
+	_starter_picker.connect("chosen", _on_starter_picker_chosen)
+	_dialogue.connect("completed", _on_dialogue_completed)
+
+	_restore_opening_beat()
+	# Stage B lane 5.A. A world delta is the only thing that tells this process
+	# a gate somebody ELSE opened is open, and `ledger_rpc.gd` delivers it two
+	# different ways depending on who committed it -- see
+	# `story_ledger.gd::listen()` for the ordering trap this answers.
+	STORY_LEDGER.listen(self, _on_ledger_delta)
+	if _beat == BEATS.WAKE:
+		_build_fade()
+
+	# One frame, for the same reason encounter_director waits: add_child() is
+	# refused while the parent is still setting up its children, and the world's
+	# own `_ready` — which drops the player onto the baked ground — has not run
+	# yet, so `_player.global_position` is still whatever the scene said.
+	await get_tree().process_frame
+	await _spawn_the_cast()
+
+
+## Fail at boot rather than at the beat.
+##
+## A beat id renamed in data/config/opening.json, or a dialogue effect pointing
+## at a beat that is not in the list, produces a sequence that plays perfectly up
+## to the point where it silently stops advancing. That is the worst possible
+## shape for this bug: nothing errors, the player just stands in a meadow with
+## nothing to do.
+func _check_the_data() -> void:
+	var missing: Array[String] = BEATS.missing_beats()
+	if not missing.is_empty():
+		push_error("data/config/opening.json has no beat(s) named %s; the gates gated by them will never open" % ", ".join(missing))
+	var broken: Array[String] = BEATS.broken_effects()
+	if not broken.is_empty():
+		push_error("opening.json maps effect(s) %s to a beat that is not in the list; those conversations will end and change nothing" % ", ".join(broken))
+
+
+## --- the beat -----------------------------------------------------------------
+
+func beat() -> String:
+	return _beat
+
+
+func is_fading() -> bool:
+	return _fade_rect != null and is_instance_valid(_fade_rect)
+
+
+## Move to a named beat. The only way `_beat` changes.
+##
+## Refuses to go backwards. Nothing in the opening should, and the way it would
+## happen is a conversation the player can re-run emitting its effect a second
+## time — which would put the starters back on offer after they had been chosen.
+func _set_beat(target: String) -> void:
+	if target == "" or target == _beat:
+		return
+	if not BEATS.has(target):
+		push_error("no beat named '%s' in data/config/opening.json" % target)
+		return
+	if BEATS.index_of(target) < BEATS.index_of(_beat):
+		push_warning("refused to move the opening back from '%s' to '%s'" % [_beat, target])
+		return
+	_beat = target
+	_persist_beat_history(_beat)
+	beat_changed.emit(_beat)
+	if _beat == BEATS.CHOOSE:
+		# Not opened here directly: this fires while `_drain_effects` is still
+		# reading the line that carries `beat:starter_choice`, and the dialogue
+		# box is still on screen over it. `_maybe_open_picker` waits for that
+		# box to close.
+		_picker_pending = true
+
+
+## Restore the latest reached beat, including an older save written before RG7
+## had opening flags. A party member is definitive evidence that the starter
+## opportunity must not be offered again; two members additionally mean the
+## old tutorial catch has already happened. Compatibility inference is used
+## ONLY when no saved opening beat exists: a current save with two creatures at
+## `road` still needs Grandpa's post-catch conversation, and must not silently
+## skip Mira and tournament registration.
+func _restore_opening_beat() -> void:
+	var restored := ""
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null:
+		for candidate: String in BEATS.order():
+			if bool(progression.call("has", OPENING_BEAT_PREFIX + candidate)):
+				restored = candidate
+	var party: RefCounted = game.get("party") if game != null else null
+	var party_size := int(party.call("size")) if party != null else 0
+	var starter_recorded := progression != null and bool(progression.call("has", STARTER_GRANTED_FLAG))
+	# `name` was transient before this opening gained its required return to
+	# Grandpa. A save made in that small post-adoption window already owns the
+	# starter, so resume at the first meaningful next action instead of showing
+	# the obsolete "still deciding" line forever.
+	if restored == BEATS.NAMED and party_size > 0:
+		restored = BEATS.RETURN_STARTER
+	if restored == "" and party_size > 1:
+		restored = BEATS.FREE_PLAY
+	elif restored == "" and (party_size > 0 or starter_recorded):
+		restored = BEATS.WALK_OUT
+	if party_size > 0:
+		_persist_opening_fact(STARTER_GRANTED_FLAG)
+	if restored == "":
+		restored = BEATS.first()
+	_force_restore_beat(restored)
+
+
+## Called through Game's progression_restore seam after a mid-session Load.
+## Unlike ordinary transitions, loading an earlier slot is allowed to move the
+## machine backwards because the slot—not the pre-load scene—is authoritative.
+func restore_progression_from_game(_game: Node) -> void:
+	# Idempotent by contract (`story_ledger.gd::listen()`): this runs on a save
+	# load, on a joiner's world snapshot, and on every world delta, and must
+	# read the same on the second call as on the first.
+	STORY_LEDGER.listen(self, _on_ledger_delta)
+	_restore_opening_beat()
+	_picker_pending = _beat == BEATS.CHOOSE
+	_choice = -1
+	if not _late_arrival_in_flight:
+		_adopting = false
+	# A load can bring in a world that is further along than this character.
+	# Re-arm rather than re-run: `_catch_up_a_behind_character()` decides, on
+	# the next frame, whether there is anything to catch up to.
+	_caught_up = false
+	if _beat == BEATS.WAKE:
+		_set_player_lying(true)
+	else:
+		_set_player_lying(false)
+		_clear_fade()
+	_refresh_prompts()
+	_refresh_door_gate()
+
+
+func _force_restore_beat(target: String) -> void:
+	if not BEATS.has(target):
+		target = BEATS.first()
+	var changed := target != _beat
+	_beat = target
+	_picker_pending = _beat == BEATS.CHOOSE
+	_persist_beat_history(_beat)
+	if changed:
+		beat_changed.emit(_beat)
+
+
+## Every beat at or before `beat`, not just `beat` itself.
+##
+## OP-0830-4. The beat flags were only ever written one at a time, as the
+## machine stepped through them, which is correct for the machine's own resume
+## (`_restore_opening_beat` takes the LAST one set). It is wrong for anything
+## that reads them as history — and `data/progression/objectives.json` now
+## does, because the opening's rungs are those flags. Two ways a save reaches a
+## beat without having written the ones before it: the compatibility inference
+## in `_restore_opening_beat` (a party of one with no beat flags at all resumes
+## straight at `walk_out`), and a mid-session Load. Either left the guided
+## objective ladder pointing at "Go down and hear Grandpa out" for a player
+## already outside with a named creature.
+##
+## The beats are a strictly ordered list nobody may skip, so "reached beat N"
+## genuinely does mean "passed 1..N-1"; this writes what was already true.
+func _persist_beat_history(beat: String) -> void:
+	var reached := BEATS.index_of(beat)
+	if reached < 0:
+		return
+	var order := BEATS.order()
+	for i in reached + 1:
+		_persist_opening_fact(OPENING_BEAT_PREFIX + order[i])
+
+
+func _persist_opening_fact(flag_id: String) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null:
+		progression.call("set_flag", flag_id)
+
+
+func _clear_fade() -> void:
+	if _fade_layer != null and is_instance_valid(_fade_layer):
+		_fade_layer.queue_free()
+	_fade_layer = null
+	_fade_rect = null
+	_fade_hold = 0.0
+	_fade_left = 0.0
+
+
+## `_advance()` used to live here — `_set_beat(BEATS.next(_beat))`, with no
+## callers anywhere in `scripts/`, `tests/` or `tools/`. Deleted by R9.4's
+## soft-lock investigation rather than wired up: a generic "go to the next beat"
+## is the wrong shape for this machine. Every real transition is caused by
+## something specific (a prompt, a dialogue effect, a fight ending), and a
+## caller-less shortcut that skips whatever that thing was is how a beat gets
+## entered without its staging.
+
+func _process(delta: float) -> void:
+	_tick_fade(delta)
+	_retry_original_starter_save()
+	_drain_effects()
+	if not _pending_starter_adoption.is_empty() or not _f18_pending_home_key.is_empty():
+		_refresh_lockout()
+		return
+	_advance_from_external_progression()
+	_catch_up_a_behind_character()
+	_refresh_lockout()
+	_refresh_prompts()
+	_refresh_door_gate()
+	_refresh_lying_lift()
+	_check_left_the_bed()
+	_maybe_open_picker()
+	_maybe_open_shop()
+	_maybe_start_battle()
+	_hold_the_tutorial_orb_floor()
+	_hold_the_tutorial_team_floor()
+
+
+## Mira and the registrar already own their interactions, rewards and one-time
+## facts. The opening observes only the fact written by those existing systems,
+## then advances its own persisted beat. This is intentionally a poll: a flag
+## can be restored from a save while this node is asleep, and a signal-only
+## connection would miss exactly that case.
+func _advance_from_external_progression() -> void:
+	var required_flag := BEATS.advance_flag_for(_beat)
+	if required_flag == "":
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var progression: RefCounted = game.get("progression")
+	if progression == null or not bool(progression.call("has", required_flag)):
+		return
+	var next := BEATS.next(_beat)
+	if next == "":
+		push_error("opening beat '%s' waits for '%s' but has no following beat" % [_beat, required_flag])
+		return
+	_set_beat(next)
+
+
+## Effects are drained in production, here, every frame.
+##
+## `dialogue_panel.drain_effects()` has existed since the panel was written and
+## its only caller was a unit test, which is how a conversation carrying
+## `beat:starter_choice` could play end to end and unlock nothing. Drained per
+## frame rather than on `finished`, so an effect takes hold when its line is
+## SPOKEN — the intro's last line offers the choice while it is still on screen,
+## and the prompts are live the instant the box closes.
+##
+## Conversation-blind on purpose, and OF30 is what proved that matters: the
+## panel this drains is the ONE dialogue panel, found by `village_npcs.gd`
+## through the `dialogue_panel` group. Tam the blacksmith hands his tools over
+## through the same `give:` effects Grandpa's briefing uses, and not a line of
+## routing had to be written for it — a villager's conversation arrives in this
+## queue exactly like the opening's own.
+var _f18_pending_effects: Array[String] = []
+var _f18_pending_home_key: Dictionary = {}
+var _f18_home_key_retry_at := 0
+
+func _drain_effects() -> void:
+	# A spoken line may couple a physical gift to the fact that it was handed
+	# over. Prove the whole batch fits before applying any part of it, otherwise
+	# a full satchel can consume the fact and permanently remove the only source
+	# of a required item (Sela's Mill Bridge Gear is the critical case).
+	var effects: Array[String] = _f18_pending_effects.duplicate()
+	effects.append_array(_dialogue.call("drain_effects"))
+	_f18_pending_effects.clear()
+	# Preserve the actual spoken effect and following beats until the world
+	# journal is durable. Closing the panel cannot consume its only source.
+	var opening_game := _effect_game()
+	var finite_gift_enabled: bool = opening_game != null and opening_game.get("session") != null and opening_game.get("session").call("portal_runtime_ready") == true
+	if effects.has("home_key:grant") and finite_gift_enabled:
+		if Time.get_ticks_msec() < _f18_home_key_retry_at:
+			_f18_pending_effects = effects.duplicate()
+			return
+		_f18_home_key_retry_at = Time.get_ticks_msec() + 3000
+		if _f18_pending_home_key.is_empty() and opening_game != null and _f18_opening_conversation_id == "grandpa_first_catch":
+			_f18_pending_home_key = {"character_id": opening_game.get("local").character_id, "world_instance_id": opening_game.get("world").reward_delivery_namespace, "session_epoch": opening_game.get("session").call("_altar_current_epoch")}
+		if opening_game == null or opening_game.call("grant_home_key_from_opening", self) != true:
+			_f18_pending_effects = effects.duplicate()
+			return
+		_f18_pending_home_key.clear()
+	if not _gift_batch_fits(effects):
+		_dialogue.call("close")
+		var game := _effect_game()
+		if game != null and game.has_method("push_world_message"):
+			game.call("push_world_message", "Make room in your satchel, then speak again.")
+		return
+	for effect: String in effects:
+		var parts: Array = RUNNER.parse_effect(effect)
+		match str(parts[0]):
+			"beat":
+				var target := BEATS.beat_for_effect(str(parts[1]))
+				if target == "":
+					push_warning("dialogue asked for '%s' but opening.json's beats.effects does not map it" % effect)
+					continue
+				_set_beat(target)
+			"give":
+				_give_items(parts)
+			"flag":
+				_set_progression_flag(str(parts[1]))
+			"shop":
+				_queue_shop(str(parts[1]))
+			"battle":
+				_queue_battle(str(parts[1]))
+			"heal_party":
+				_heal_party()
+			"map_reveal":
+				_reveal_map(str(parts[1]))
+			"home_key":
+				pass # The retained spoken batch journals the finite gift above.
+			_:
+				push_warning("the opening ignored dialogue effect '%s'; it knows 'beat:', 'give:', 'flag:', 'shop:', 'battle:', 'map_reveal:' and 'heal_party' and nothing else" % effect)
+
+
+## Capacity is preflighted for every gift before this drained batch applies any
+## effects. Copy through Inventory's public slot API, then use its real add()
+## rules so stacked room, empty slots and several gifts competing for one slot
+## behave exactly as they will in the live satchel. Once this succeeds, flag
+## authority and the existing effect order below are unchanged.
+func _gift_batch_fits(effects: Array[String]) -> bool:
+	var gifts: Array[Dictionary] = []
+	var game := _effect_game()
+	for effect: String in effects:
+		var parts: Array = RUNNER.parse_effect(effect)
+		if str(parts[0]) != "give":
+			continue
+		var rest := str(parts[1]).split(":")
+		if rest.size() != 2 or str(rest[0]).is_empty() or not str(rest[1]).is_valid_int():
+			push_warning("a give: effect reads give:<item_id>:<count>; got '%s'" % effect)
+			return false
+		var item_id := str(rest[0])
+		var count := int(str(rest[1]))
+		if count <= 0:
+			push_warning("a give: effect count must be positive; got '%s'" % effect)
+			return false
+		if game == null:
+			push_error("no Game autoload; '%s' was given to nobody" % item_id)
+			return false
+		var items: RefCounted = game.get("items")
+		if items == null or not bool(items.call("has", item_id)):
+			push_warning("dialogue gives '%s', which data/items/items.json does not define" % item_id)
+			return false
+		gifts.append({"id": item_id, "count": count})
+	if gifts.is_empty():
+		return true
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		push_error("the Game autoload has no inventory; dialogue gifts were given to nobody")
+		return false
+	var scratch: RefCounted = INVENTORY.new(game.get("items"))
+	for index in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", index)
+		scratch.call("set_slot", index, null if stack.is_empty() else stack)
+	for gift: Dictionary in gifts:
+		if int(scratch.call("add", str(gift["id"]), int(gift["count"]))) > 0:
+			return false
+	return true
+
+
+## Kept as a narrow seam so the capacity-checked effect path can be exercised
+## without replacing the production Inventory implementation in unit tests.
+func _effect_game() -> Node:
+	return get_node_or_null(^"/root/Game")
+
+
+func _reveal_map(reveal_id: String) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var map_state: RefCounted = game.get("map")
+	if DIALOGUE_MAP_REVEAL.apply(map_state, reveal_id):
+		game.call("push_world_message", "Map updated: %s" % DIALOGUE_MAP_REVEAL.display_name(reveal_id))
+
+
+## `shop:goods:mira` / `shop:creatures:oskar` — D39 (OF31). A villager opens a
+## trading screen at the end of their line.
+##
+## Two kinds, because there are two genuinely different transactions and the
+## owner settled them differently: `goods` is Mira's coin store (buy and sell,
+## `shop_panel.gd`), `creatures` is Oskar's straight swap (`swap_panel.gd`, no
+## coins at all). The second half of the effect names WHO, and is a key in
+## data/config/trade.json's `vendors`/`creature_traders` — so a second merchant
+## is a data entry plus a dialogue line, not a change here.
+##
+## Queued rather than opened, for exactly the reason `_maybe_open_picker` is:
+## effects are drained while the line that carries them is still ON SCREEN, so
+## opening here would put a shop behind an open dialogue box. `_maybe_open_shop`
+## waits for the box to close, the same way the starter picker does.
+func _queue_shop(payload: String) -> void:
+	var pieces := payload.split(":")
+	if pieces.size() != 2 or str(pieces[0]).is_empty() or str(pieces[1]).is_empty():
+		push_warning("a shop: effect reads shop:<goods|creatures>:<vendor_id>; got 'shop:%s'" % payload)
+		return
+	if str(pieces[0]) != SHOP_GOODS and str(pieces[0]) != SHOP_CREATURES:
+		push_warning("dialogue asked for a '%s' shop; only '%s' and '%s' exist" % [
+			str(pieces[0]), SHOP_GOODS, SHOP_CREATURES
+		])
+		return
+	_shop_pending = [str(pieces[0]), str(pieces[1])]
+
+
+## The other half of `_queue_shop`, polled every frame beside the picker's own.
+##
+## The panels are made on first use and kept, under the SceneTree root rather
+## than under this node — the same lazy-instance shape `camp.gd` uses for the
+## craft panel and `storage_container.gd` for the storage panel, and for the
+## same reason: they pause the tree themselves and must not be children of
+## anything that gets freed while they are open.
+func _maybe_open_shop() -> void:
+	if _shop_pending.is_empty():
+		return
+	if bool(_dialogue.call("is_open")):
+		return
+	var kind: String = str(_shop_pending[0])
+	var vendor: String = str(_shop_pending[1])
+	_shop_pending = []
+	if kind == SHOP_GOODS:
+		if _shop_panel == null or not is_instance_valid(_shop_panel):
+			_shop_panel = SHOP_PANEL.new()
+			_shop_panel.name = "ShopPanel"
+			get_tree().root.add_child(_shop_panel)
+		_shop_panel.call("open", vendor)
+	else:
+		if _swap_panel == null or not is_instance_valid(_swap_panel):
+			_swap_panel = SWAP_PANEL.new()
+			_swap_panel.name = "SwapPanel"
+			get_tree().root.add_child(_swap_panel)
+		_swap_panel.call("open", vendor)
+
+
+## `battle:trainer_mira` — SC12/SC13. A villager's challenge line ends the
+## conversation with a fight, the same way `trainer_npc.gd::_on_challenged` /
+## `_on_conversation_finished` starts one for a standalone trainer body — this
+## is the village-greeting half of that same contract, because Mira, Oskar and
+## Tam are challenged through `village_npcs.gd`'s ordinary greeting flow
+## (`greeting_when`), never through `trainer_npc.gd`'s own placement and prompt
+## (spec §3 Band 1: "possible existing village NPCs can fill these roles" — no
+## fourth body). `trainers.json`'s entries for the three of them carry
+## `placed_by: "village_npcs"` precisely so `trainer_npc.gd::build()` never
+## stands up a duplicate.
+##
+## Queued rather than started here, for the exact reason `_queue_shop` is:
+## effects drain while the line that carries them is still ON SCREEN, and a
+## battle dropped on top of an open dialogue box is the bug this avoids.
+func _queue_battle(trainer_id: String) -> void:
+	if trainer_id == "":
+		push_warning("a battle: effect reads battle:<trainer_id>; got an empty id")
+		return
+	_battle_pending = trainer_id
+
+
+## The other half of `_queue_battle`, polled every frame beside the shop and
+## the picker's own. Waits for the dialogue box to close, then hands the
+## fight to `encounter_director.gd` exactly the way `trainer_npc.gd` does:
+## `can_challenge()` decides, `begin_trainer_battle()` starts it, and a
+## refusal (the ally already fainted to something else, say) is quiet rather
+## than an error — the player can walk back and ask again.
+##
+## The second argument `trainer_npc.gd` passes is the trainer's own placed
+## body, used only to decide which direction their creature steps out from
+## (`encounter_director._send_out_spot()`). A villager has no such body
+## registered here — `village_npcs.gd` places them and keeps no lookup this
+## file has any business reaching into — so `null` is passed, the same
+## "smallest honest thing" `_send_out_spot()` already falls back to for a
+## battle with no trainer body at all: the creature steps out in front of the
+## player instead, exactly where a wild encounter would have put it.
+func _maybe_start_battle() -> void:
+	if _battle_pending.is_empty():
+		return
+	if bool(_dialogue.call("is_open")):
+		return
+	var trainer_id := _battle_pending
+	_battle_pending = ""
+	if _encounter == null:
+		push_error("no EncounterDirector; '%s' offered a battle nobody can run" % trainer_id)
+		return
+	var spec := TRAINERS.trainer(trainer_id)
+	if spec.is_empty():
+		push_error("battle: named '%s', which trainers.json does not define" % trainer_id)
+		return
+	if battle_already_answered(_encounter, trainer_id):
+		return
+	if not bool(_encounter.call("begin_trainer_battle", spec, null)):
+		print("[village] '%s' offered a battle that could not start" % trainer_id)
+
+
+## F02 / earned-save blocker B1. A standalone trainer's challenge line (the
+## South Bridge guardian's, the Old Champion's...) carries `battle:<id>` AND is
+## started on finish by `trainer_npc.gd::_on_conversation_finished`, which
+## hears the panel's `finished` signal a frame before this poll. That fight is
+## the answer to this effect, not a refusal of it: logging "could not start"
+## for it sent the earned-save lane hunting a stale offer that never existed.
+static func battle_already_answered(encounter: Object, trainer_id: String) -> bool:
+	return encounter != null and not trainer_id.is_empty() \
+		and bool(encounter.call("trainer_battle_active")) \
+		and str(encounter.call("trainer_battle_id")) == trainer_id
+
+
+## `flag:tam_tools_given` — OF30. Write one progression flag, on the line that
+## earns it.
+##
+## The store is `autoload/progression_state.gd`, the same flat flag store the
+## road gate (`item_gate.gd`) and the TM pickups already write to; there is no
+## second one and there must never be. What reads these: `village_npcs.gd`'s
+## `greeting_for()` (which conversation a villager opens next, and therefore
+## whether a one-time gift can be taken twice) and `game_state.recipe_known()`
+## (`recipes.json`'s `unlocked_by`).
+##
+## Deliberately NOT a beat. Beats are the opening's own spine, ordered and
+## refusing to run backwards; these are flat, unordered facts about the save.
+## A villager's handover is the second kind and folding it into the first would
+## put the village in the opening's state machine.
+## Stage B lane 5.A. A dialogue `flag:` effect is now an INTENT, not a local
+## write.
+##
+## The conversation itself stays local -- the box, the portrait, the button are
+## one player's screen and nobody else's -- but what a line CHANGES is not. D99
+## says which: a world fact (`relay_disabled`, `south_bridge_open`) is one thing
+## that happened to the world and is committed once for everybody, and a
+## personal fact (`tournament_entered`, `tam_tools_given`) belongs to the player
+## who was standing there. `story_ledger.gd::write_flag()` is where that
+## classification becomes `set_world_flag` or `grant_player_flag`; this only
+## hands it the id.
+##
+## The grant is addressed to the SPEAKER's peer -- which is the asking peer, the
+## ledger's own default -- rather than broadcast, with D99's residual home and
+## creature-bed flags as the named exception. Nothing is written locally here on
+## the way past: the committed delta is what writes the flag, on the host in
+## `commit()` and on every client in `apply()`, so two peers can never disagree
+## about whether the line fired.
+##
+## A refusal is one sentence the player sees (`ledger_claim.gd::submit()` says
+## it); a client's `pending` verdict is not a failure and is deliberately not
+## reported, exactly as lane 3.B's pickups do not report theirs.
+func _set_progression_flag(flag_id: String) -> void:
+	if flag_id == "":
+		push_warning("a flag: effect reads flag:<flag_id>; got an empty id")
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; the flag '%s' was written nowhere" % flag_id)
+		return
+	var verdict := STORY_LEDGER.write_flag(self, flag_id)
+	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
+		return
+	# No transport at all (a bare fixture, a capture tool with no `Game.ledger`)
+	# is the one case that still writes straight to the store: the alternative
+	# is a conversation that plays and changes nothing, which is the exact
+	# failure `_drain_effects`' own header was written about.
+	if str(verdict.get("code", "")) != "offline":
+		return
+	var progression: RefCounted = game.get("progression")
+	if progression == null:
+		push_error("the Game autoload has no progression store; '%s' was written nowhere" % flag_id)
+		return
+	progression.call("set_flag", flag_id)
+
+
+## --- rule 3: a character who is behind is never locked out ---------------------
+
+## Whether THE WORLD has moved past its own opening -- read off `WorldState`,
+## never off the merged view, so one player's personal tutorial progress can
+## never answer it. See `WORLD_MOVED_ON_FLAGS`.
+func world_has_moved_on() -> bool:
+	for id: String in WORLD_MOVED_ON_FLAGS:
+		if STORY_LEDGER.world_flag(self, id):
+			return true
+	return false
+
+
+## Stage B directive rule 3, as a player experience rather than a data-model
+## claim: **a character who has not done the opening can join a world where the
+## boss is already dead, and act immediately.**
+##
+## Everything the opening does to a player is a gate: the fade holds the screen
+## black, the lying pose pins them to the bed, Grandpa's front door is a solid
+## box until `walk_out`, and the starter is suspended so the sandbox creature
+## never arrives. Every one of those is right for the player this world's
+## opening is FOR, and every one of them is a soft-lock for somebody who walked
+## into a finished world -- an invisible wall in a farmhouse, in a chapter whose
+## boss is already dead.
+##
+## So when the world says the story moved on, the opening stands down for this
+## character: the beat is carried to the end (which persists as their own
+## `opening:beat:` history, a PLAYER fact, so it survives their next login), the
+## fade and the bed pose are cleared, and -- because a trainer with no creature
+## cannot act at all -- they are handed the same companion
+## `encounter_director.gd` would have given them if this node had never run.
+##
+## Deliberate calls, recorded rather than defaulted:
+##   * The creature is the sandbox `default_starter`, NOT a choice of three. The
+##     starter picker is a modal panel: opening it here would answer "can they
+##     act at once" with "no, first read this menu". A late arrival gets a
+##     companion, not a ceremony.
+##   * It does not run backwards. A character who is AHEAD of the world (their
+##     own save carries beats this world has not seen) is untouched, because
+##     `_force_restore_beat` is only called when the beat is genuinely behind.
+##   * It is per-CHARACTER, not per-session. A host loading a solo save into a
+##     world they themselves finished takes the same path, and should.
+func _catch_up_a_behind_character() -> void:
+	if _caught_up or _adopting:
+		return
+	if not world_has_moved_on():
+		return
+	_caught_up = true
+	var last := BEATS.order()[-1] if not BEATS.order().is_empty() else BEATS.FREE_PLAY
+	if not BEATS.at_or_after(_beat, last):
+		_force_restore_beat(last)
+	_clear_fade()
+	_set_player_lying(false)
+	_picker_pending = false
+	_refresh_prompts()
+	_refresh_door_gate()
+	_hand_a_late_arrival_a_companion()
+
+
+## The other half of the catch-up: a trainer with nothing at their heel cannot
+## act, whatever the gates say. Awaited rather than fired and forgotten because
+## `adopt_starter()` waits for Terrain3D's collision the same way every other
+## spawn in this file does, and `_adopting` holds the arbiter off for that
+## window exactly as the ordinary adoption does.
+func _hand_a_late_arrival_a_companion() -> void:
+	if _late_arrival_handled or _sandbox_starter.is_empty() or _encounter == null:
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null or int(party.call("size")) > 0:
+		return
+	if _starter_already_granted():
+		return
+	_late_arrival_handled = true
+	_late_arrival_in_flight = true
+	_adopting = true
+	var adopted: bool = await _encounter.call("adopt_starter", _sandbox_starter)
+	_late_arrival_in_flight = false
+	_adopting = false
+	if not adopted:
+		push_warning("a late arrival could not be given a '%s'" % _sandbox_starter)
+		return
+	if _give_to_party(_encounter.call("ally_instance"), ""):
+		_persist_opening_fact(STARTER_GRANTED_FLAG)
+
+
+## --- world deltas ---------------------------------------------------------------
+
+## A committed delta landed on THIS peer. Directive rule 3's third clause: a
+## gate another player opened is open for you, and the only thing that can say
+## so is the delta.
+##
+## `story_ledger.gd::restore_all()` re-runs the same `progression_restore` sweep
+## `ledger_rpc.gd::_rpc_delta` runs on a client -- run from here because
+## `_commit_here()` (the HOST's path, and solo's) does not run it at all, so
+## without this a client's opened gate re-poses on every peer except the one
+## that committed it. On a client the sweep therefore runs twice per delta;
+## every restore path in it is idempotent by contract, which it has to be anyway
+## because a save reload calls it too.
+##
+## The `seq` guard is ordered AFTER the world-flag test rather than before it,
+## because `_rpc_delta` sweeps the group before it emits -- a guard that
+## remembered "already handled" from the sweep would skip the emit on clients
+## only, which is lane 3.B's finding restated.
+func _on_ledger_delta(delta: Dictionary) -> void:
+	var seq := int(delta.get("seq", 0))
+	var already_seen := seq != 0 and seq == _last_delta_seq
+	_last_delta_seq = seq
+	if already_seen:
+		return
+	# Runs on EVERY delta, not only a flag one: the world gaining a camp is a
+	# `place_building` op, and that is precisely the delta the residual grant is
+	# about.
+	_share_the_camp()
+	if not STORY_LEDGER.delta_has_world_flag(delta):
+		return
+	STORY_LEDGER.restore_all(self)
+
+
+## D99's residual table, applied when the world gains the pieces rather than
+## only on the frame somebody placed them.
+##
+## `home_progress.gd` grants `home_built`, `home_materials_gathered` and the
+## creature-bed ladder to every connected peer -- but it is only ever CALLED
+## from a build placement, which happens in one process. The peer who was
+## across the meadow when the hut went up, and the peer who joined after it was
+## already standing, never evaluated it. A shared camp is everyone's camp, so
+## the evaluation runs again on every peer whenever the world's building list
+## moves, which is exactly what a `place_building` delta is.
+func _share_the_camp() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	HOME_PROGRESS.maybe_set_home_built(game)
+	HOME_PROGRESS.maybe_set_creature_beds(game)
+
+
+## `heal_party` — G3-OPENING-FIX-0904 (2.10), the owner instruction "give
+## revives after the tournament" (2026-09-03), given a real mechanism.
+##
+## The tournament's three rounds reliably leave three of five creatures on 0
+## HP (GATE2-EVIDENCE-0903), and nothing between the arena and the South
+## Bridge gatekeeper ever picked the team back up -- the player was walking
+## the Lower Meadows route on a battered team while the satchel carried the
+## cure the whole way. Rejected alternatives, and why: Halda or Mira SELLING
+## recovery adds a shop transaction to a beat that is already handing the
+## player a reward (the saddle pattern) -- charging for the fix to a problem
+## the tournament itself caused reads as the game taxing its own design. The
+## Trail Camp becoming the authored stop was the other candidate, and it sits
+## roughly 900m south, past Old Bram's own fight -- recovery that only lands
+## AFTER the first post-tournament battle does not answer the battered walk
+## OUT of the arena, only the walk into whatever comes next. Restoring the
+## team at the champion beat is the one place that answers the state the
+## tournament itself produces, at the moment the game is already crowning
+## the win, and it costs nothing else in the beat: no new panel, no new
+## vendor inventory, no new site.
+##
+## Reuses `home_recovery.gd::rest()` -- the exact thing a Creature Bed does
+## to one party member -- for every member at once, so the champion beat
+## reads as "the same kind of rest", not a bespoke heal-everything spell.
+func _heal_party() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; heal_party healed nobody")
+		return
+	var party: RefCounted = game.get("party")
+	if party == null:
+		push_error("the Game autoload has no party; heal_party healed nobody")
+		return
+	var cfg := PROGRESSION.config()
+	for i in int(party.call("size")):
+		var creature: RefCounted = party.call("at", i)
+		if creature != null:
+			HOME_RECOVERY.rest(creature, cfg)
+
+
+## `give:orb_basic:50` — Grandpa's parting gifts, granted on the line that
+## mentions them so the words and the satchel agree. Into the REAL inventory
+## through the same autoload everything else uses; a full satchel is warned
+## about rather than silently swallowed, because a player who was promised
+## fifty orbs and got twelve has no way to know.
+##
+## `parse_effect` splits on the FIRST colon only, so parts[1] here is
+## "orb_basic:50" and the id/count split is this function's own job.
+func _give_items(parts: Array) -> void:
+	var rest := str(parts[1]).split(":")
+	if rest.size() != 2 or not str(rest[1]).is_valid_int():
+		push_warning("a give: effect reads give:<item_id>:<count>; got 'give:%s'" % parts[1])
+		return
+	var item_id := str(rest[0])
+	var count := int(str(rest[1]))
+	var game := _effect_game()
+	if game == null:
+		push_error("no Game autoload; '%s' was given to nobody" % item_id)
+		return
+	var items: RefCounted = game.get("items")
+	if items != null and not bool(items.call("has", item_id)):
+		push_error("dialogue gives '%s', which data/items/items.json does not define" % item_id)
+		return
+	var inventory: RefCounted = game.get("inventory")
+	var leftover := int(inventory.call("add", item_id, count))
+	if leftover > 0:
+		push_warning("the satchel was full; %d of the %d %s did not fit" % [leftover, count, item_id])
+
+
+## --- what is possible right now -------------------------------------------------
+##
+## Polled, not pushed. Same house rule as `combat_hud.gd` and the pause menu: the
+## gates are recomputed from the beat every frame and nothing keeps a second copy
+## of "are the starters offering". A gate that is set once when a beat changes is
+## a gate that is wrong the first time something else touches it.
+
+## The modal lockout, through the mechanism built for it.
+##
+## `InteractionArbiter.set_enabled()` was written with the comment "cleared while
+## a conversation, a naming prompt or a fight owns the screen" and had no callers
+## at all. These are those three, plus the fade.
+##
+## The fight case is not decoration. `interact` and `combat_charged` are the same
+## physical button (X), so with the arbiter live during a fight, one press both
+## swings your creature and opens a conversation with Grandpa if the fight happened to
+## start near him.
+##
+## The build case is the identical argument one context along, and it is the
+## other half of the owner's "building doesn't work" report: `interact` and
+## `build_place` are ALSO the same physical button (X). With the arbiter live
+## while a ghost is armed, the press that plants a wall also opens whatever
+## conversation or harvest prompt happened to be in reach — so building next to
+## anything interactive fought the player for the button. An armed ghost owns
+## the screen the same way a fight does.
+## STAGE B DIRECTIVE RULE 16, and it is the whole of what this function may do:
+## **it locks THE LOCAL RIG AND NOBODY ELSE'S.** One player standing in a
+## conversation must not freeze the other, and the fact that each peer runs this
+## node in its own process is not on its own a guarantee -- the world every peer
+## builds contains the other peers' bodies too (`remote_trainer.gd`, group
+## `remote_trainer`), and every handle this function touches has to be one this
+## process OWNS.
+##
+## The four handles, and why each is local:
+##   * `_arbiter` -- the interaction arbiter reads THIS process's `interact`
+##     button. There is one per process and it is nobody else's.
+##   * `_player` -- `player_path`, the rig this process drives. Checked below
+##     against the `remote_trainer` group rather than assumed, because a wiring
+##     mistake that pointed this at a replicated body would freeze a FRIEND
+##     every time this player opened a conversation, on their screen only, which
+##     is the hardest possible shape of this bug to see.
+##   * `_camera_rig` -- this process's camera.
+##   * `_manager` / `_encounter` -- read, never written; `is_fighting()` is this
+##     peer's own bound encounter (Wave 4), not "somebody is fighting".
+##
+## `modal` is likewise computed only from panels on THIS screen: the dialogue
+## box, the naming prompt, the starter picker and the fade all belong to the
+## player looking at them. A conversation is local; only its EFFECTS cross the
+## wire (`_set_progression_flag`).
+func _refresh_lockout() -> void:
+	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
+	# R8.1: a trainer battle is longer than any one fight inside it — their
+	# next creature is still coming during the beat after the last one fell,
+	# and the fight is not running for that beat. Without this, the arbiter
+	# and the trainer's own legs come back in the gap, and the player can walk
+	# out of a challenge they are in the middle of. `has_method` because a
+	# bare scene may carry an older director.
+	if not fighting and _encounter != null and _encounter.has_method("trainer_battle_active"):
+		fighting = bool(_encounter.call("trainer_battle_active"))
+	var panel: bool = bool(_dialogue.call("is_open")) or bool(_name_prompt.call("is_open")) \
+			or bool(_starter_picker.call("is_open")) \
+			or (_regional_credits != null and is_instance_valid(_regional_credits) \
+				and bool(_regional_credits.call("is_open")))
+	var modal := panel or is_fading() or _adopting or not _f18_pending_home_key.is_empty() or not _pending_starter_adoption.is_empty()
+	# An armed build ghost is a fourth owner of the screen — see the header.
+	var game := get_node_or_null(^"/root/Game")
+	var building: bool = game != null and str(game.get("pending_build")) != ""
+
+	_arbiter.call("set_enabled", not modal and not fighting and not building)
+
+	# Locomotion and the camera belong to combat while a fight is running.
+	# Handing them back here every frame would undo what the encounter director
+	# and the combat manager just did to them.
+	if fighting:
+		# OP23-02 (owner playtest 2026-08-23): "battle start takes the camera,
+		# can't see." `trainer_npc.gd::_on_conversation_finished` opens a fight
+		# SYNCHRONOUSLY the instant the challenge dialogue's `finished` signal
+		# fires -- `panel` and `fighting` can both change on the exact same
+		# frame, unlike Mira's village path (`_maybe_start_battle()`'s own
+		# per-frame poll, which only opens a fight once `panel` has already
+		# read false for a frame). When that lands, this function would have
+		# hit the early `return` below without ever undoing the LAST frame's
+		# `set_process(false)` from the still-open dialogue -- the rig's idle
+		# tick (stick look AND follow both live there) stays off for the
+		# fight's entire duration, a frozen camera rather than a misframed one.
+		# A fight always wants the rig processing; there is no modal case for
+		# combat the way there is for a dialogue box.
+		if _camera_rig != null and is_instance_valid(_camera_rig):
+			_camera_rig.set_process(true)
+		return
+	if _is_local_rig(_player) and _player.has_method("set_locomotion_enabled"):
+		_player.call("set_locomotion_enabled", not modal)
+	if _camera_rig != null and is_instance_valid(_camera_rig):
+		# The rig has no suspend of its own, so its idle tick — which is where
+		# both the stick look and the follow live — is switched off. Not during
+		# the fade: the world is black, but the camera still has to be sitting
+		# behind the player by the time it clears.
+		_camera_rig.set_process(not panel)
+
+
+## Rule 16's guard, spelled once. A body this process replicates from another
+## peer (`remote_trainer.gd` joins `remote_trainer` and holds that peer's
+## authority) is never this node's to freeze, prompt, pose or move. A `false`
+## here is a wiring bug rather than an ordinary state, so it says so -- once,
+## because `_refresh_lockout` runs every frame.
+func _is_local_rig(body: Node) -> bool:
+	if body == null or not is_instance_valid(body):
+		return false
+	if not body.is_in_group(&"remote_trainer"):
+		return true
+	if not _warned_about_a_remote_rig:
+		_warned_about_a_remote_rig = true
+		push_error("the sequence director is pointed at a replicated body (%s); a conversation here would freeze another player" % body.name)
+	return false
+
+var _warned_about_a_remote_rig: bool = false
+
+
+## Grandpa offers his prompt on any beat he has something to say on.
+func _refresh_prompts() -> void:
+	if _grandpa_prompt != null and is_instance_valid(_grandpa_prompt):
+		_grandpa_prompt.call("set_enabled", _grandpa_conversation_id() != "")
+	if _bed_prompt != null and is_instance_valid(_bed_prompt):
+		_bed_prompt.call("set_enabled", _beat == BEATS.WAKE)
+
+
+## SA2 (spec sec1D). "The player cannot leave Grandpa's house until the
+## required Grandpa opening interaction is complete." The physical stop is
+## grandpa_house.gd's own collision box; this decides when it is solid, and
+## opens it for good once the beat that sends the player outdoors is
+## reached — the spec's own "never re-triggers this gate" once earned.
+##
+## The one thing it does beyond blocking: an approach at the door, while the
+## required briefing has not been heard yet, starts it — the same
+## conversation pressing interact on Grandpa would open. Spec sec1D is
+## explicit that a sterile "the door is locked" message is the wrong shape
+## here — the player is meant to walk toward the door, get called back, and
+## end up in the conversation naturally, not read an error about it.
+##
+## Restricted to the beats whose own conversation is a REQUIRED one, not
+## every beat the gate covers. `choose` and `name` are also before
+## `walk_out` (the door stays physically shut through both, correctly), but
+## their own conversation is incidental ("Still deciding?"), not required —
+## and the player is standing right where the briefing left them, close
+## enough to the door to be back inside the callout radius the instant a
+## panel closes. Triggering on those two reopens a new conversation the
+## moment the last one's box clears, which starves `_maybe_open_picker()` of
+## the closed-dialogue frame it needs and the starter picker never opens.
+##
+## OP-0830-4, 2026-08-30 owner playtest: "after the first conversation with
+## grandpa you're trapped in his house with nothing telling you to talk to
+## him again before you can go." `return_starter` is the SECOND required
+## conversation — `grandpa_first_catch`, whose last line carries
+## `beat:first_encounter` and is therefore the only thing in the game that
+## opens this door. It was not in this list, so from that beat onward the
+## doorway was a silent invisible wall: the player pushed on it and nothing
+## at all happened, no callout, no line, no prompt (Grandpa's own 4m radius
+## does not reach the door). It behaves like `house` now, which is what spec
+## §1D describes and never restricted to the first conversation: walk at the
+## door, be called back, end up in the conversation naturally. No picker is
+## pending on this beat, so the starvation reasoning above does not apply.
+const DOOR_CALLOUT_BEATS := [BEATS.HOUSE, BEATS.RETURN_STARTER]
+
+func _refresh_door_gate() -> void:
+	if _house == null or not is_instance_valid(_house):
+		return
+	# `or world_has_moved_on()`: directive rule 3. The physical stop in
+	# `grandpa_house.gd` is the opening's, and in a world whose boss is already
+	# dead it is an invisible wall around a farmhouse. `_catch_up_a_behind_
+	# character()` normally carries the beat past `walk_out` anyway; this is the
+	# same answer stated at the gate itself, so a frame between the world flag
+	# landing and the catch-up running never shows a shut door.
+	var door_open := BEATS.at_or_after(_beat, BEATS.WALK_OUT) or world_has_moved_on()
+	_house.call("set_door_open", door_open)
+	# OWNER-0901: the player's own bed offers "Sleep" (grandpa_house.gd's
+	# `_build_sleep_prompt`) on the same gate as the front door — free to
+	# leave the house is free to nap in it, and before that the player is
+	# still mid-conversation with Grandpa, where a sleep prompt would fire
+	# `night_rest.gd::rest()` out from under an unfinished opening beat.
+	_house.call("set_sleep_enabled", door_open)
+	if door_open or not DOOR_CALLOUT_BEATS.has(_beat):
+		return
+	if bool(_dialogue.call("is_open")) or _adopting or _picker_pending:
+		return
+	if bool(_name_prompt.call("is_open")) or bool(_starter_picker.call("is_open")):
+		return
+	var door: Vector3 = _house.call("marker", "door")
+	if _player.global_position.distance_to(door) > DOOR_CALLOUT_RADIUS:
+		return
+	_start_conversation(BEATS.conversation_for(_beat))
+
+
+## The picker cannot open on the same frame the beat reaches `choose` — the
+## dialogue box carrying that effect is still open on that frame — so this
+## polls until it closes, the same "recomputed every frame, no pushed state"
+## house rule `_refresh_lockout` and `_refresh_prompts` already follow.
+func _maybe_open_picker() -> void:
+	if not _picker_pending:
+		return
+	if bool(_dialogue.call("is_open")):
+		return
+	_picker_pending = false
+	if _choice >= 0:
+		return
+	_starter_picker.call("open", _starter_species)
+
+
+## --- beat 1: the fade ------------------------------------------------------------
+
+## Beat 1 is a fade-in from black rather than an interior, which saves an entire
+## interior art pass for a beat that lasts forty seconds
+## (docs/specs/OPENING_SEQUENCE.md). Both numbers are in data/config/opening.json and
+## until now nothing read them.
+##
+## Built in code rather than added to the scene: it is two nodes with no layout,
+## it belongs to this beat and to nothing else, and a scene the world has to
+## remember to include is a scene one world will be missing.
+func _build_fade() -> void:
+	var cfg := BEATS.fade()
+	_fade_total = maxf(float(cfg.get("seconds", 1.6)), 0.01)
+	_fade_hold = float(cfg.get("hold_seconds", 0.5))
+	_fade_left = _fade_total
+
+	_fade_layer = CanvasLayer.new()
+	_fade_layer.name = "OpeningFade"
+	_fade_layer.layer = FADE_LAYER
+	add_child(_fade_layer)
+
+	_fade_rect = ColorRect.new()
+	_fade_rect.name = "Black"
+	_fade_rect.color = Color(0.0, 0.0, 0.0, 1.0)
+	_fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	# The black must not eat the cursor: the naming panel releases the mouse and
+	# this is the layer above it.
+	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fade_layer.add_child(_fade_rect)
+
+
+func _tick_fade(delta: float) -> void:
+	if not is_fading():
+		return
+	if _fade_hold > 0.0:
+		_fade_hold -= delta
+		return
+
+	_fade_left -= delta
+	_fade_rect.color.a = clampf(_fade_left / _fade_total, 0.0, 1.0)
+	if _fade_left > 0.0:
+		return
+
+	_fade_layer.queue_free()
+	_fade_layer = null
+	_fade_rect = null
+	# The fade clearing no longer advances the beat: the opening starts in bed,
+	# and `wake` ends when the player chooses to get up — the bed's own
+	# interactable carries that. What the fade's end DOES mean is that the
+	# player can see the room; the beat machine does not need telling.
+
+
+## --- the cast ---------------------------------------------------------------------
+
+## The whole staging: the player into the bed, Grandpa downstairs — both read
+## from the HOUSE's own markers, because the building is the authority on
+## where its bed is. A world without a house (a bare test scene) falls back to
+## opening.json's positions.
+##
+## Cast parented to this node's PARENT rather than to this node, matching
+## encounter_director: `creature_body` and `npc_body` both find the ground by walking
+## up the tree looking for `ground_height_at`, and the world root is what offers
+## it. A creature hung under a plain Node is also outside the 3D transform chain.
+func _spawn_the_cast() -> void:
+	var house := await _wait_for_the_house()
+	_house = house
+	var cfg := BEATS.grandpa()
+
+	if house != null:
+		# Into bed, lying down (OF8) rather than standing on top of it. The
+		# world's own _place_player already ran (the house is only built after
+		# it), so nothing later overwrites this.
+		#
+		# X centred on the mattress rather than the old +0.6m offset (which
+		# put a standing capsule near the mattress edge and relied on being
+		# shoved elsewhere by grandpa_house.gd's now-fixed collider); Z
+		# shifted BED_LIE_REACH toward the foot of the bed, so set_lying()'s
+		# rotation swings the head back to roughly where the marker — and
+		# BedPrompt — already are. Y just above the marker's own height: the
+		# mattress collider grandpa_house.gd builds now tops out AT that
+		# height, so gravity and floor-snap settle the capsule there in the
+		# next physics tick rather than fighting a taller box.
+		var bed: Vector3 = house.call("marker", "bed")
+		_bed_anchor = bed
+		_build_bed_prompt(house)
+		# A loaded game has already earned its exact saved position. The cast
+		# still spawns, but only a genuine wake beat stages the trainer in bed.
+		if _beat == BEATS.WAKE:
+			_player.global_position = Vector3(bed.x, bed.y + 0.05, bed.z + BED_LIE_REACH)
+			_player.velocity = Vector3.ZERO
+			_set_player_lying(true)
+	else:
+		# NO HOUSE. The comment above used to claim "the old open-meadow staging
+		# still works" here. It did not, and could not: without a house there is
+		# no bed prompt, and until R9.4's fix the bed prompt was the ONLY exit
+		# from the wake beat — so a houseless world pinned the beat at `wake`
+		# forever and Grandpa never spoke. Anchoring on the player's own start
+		# position gives the positional fallback something to measure against,
+		# so walking away still opens the beat.
+		_bed_anchor = _player.global_position
+
+	_grandpa = NPC.new()
+	_grandpa.name = "Grandpa"
+	get_parent().add_child(_grandpa)
+	_grandpa.call("setup", str(cfg.get("art", "grandpa")), _player)
+
+	if house != null:
+		# Indoors: the house floor is a body, not terrain, so `stand_at`'s
+		# ground query would sink him below the slab. The marker knows better.
+		_grandpa.global_position = (house.call("marker", "grandpa") as Vector3) + Vector3(0.0, 0.12, 0.0)
+		# Facing the foot of the stairs, where the player will appear from.
+		_grandpa.rotation.y = deg_to_rad(-80.0)
+	else:
+		var spot := _player.global_position + _to_vector3(cfg.get("offset", []))
+		if not await _stand_npc(_grandpa, spot):
+			push_error("no ground under Grandpa's spot; the house beat has nobody to talk to")
+		var towards := _player.global_position - _grandpa.global_position
+		towards.y = 0.0
+		if towards.length() > 0.01:
+			_grandpa.rotation.y = atan2(towards.x, towards.z)
+
+	_grandpa_prompt = _grandpa.call("add_prompt",
+		str(cfg.get("prompt", "Talk to Grandpa")),
+		float(cfg.get("prompt_radius", 3.8)))
+	_grandpa_prompt.call("set_enabled", false)
+	_grandpa_prompt.connect("activated", _on_grandpa_activated)
+
+	_load_starter_species()
+
+
+## The house is built by the world root at the end of ITS _ready, several
+## frames after this director's. Null after the wait means this world has no
+## house, which is a legal world — the smoke tests' bare boots included.
+func _wait_for_the_house() -> Node3D:
+	for i in GROUND_WAIT_FRAMES:
+		var house := get_parent().get_node_or_null(^"GrandpaHouse") as Node3D
+		if house != null:
+			return house
+		# A world that will never build one: no point burning five seconds.
+		if get_parent().get_node_or_null(^"Terrain") == null and i > 10:
+			return null
+		await get_tree().physics_frame
+	return null
+
+
+## "Get up." The wake beat's one gate, on the bed itself.
+func _build_bed_prompt(house: Node3D) -> void:
+	var bed_cfg := BEATS.bed()
+	var prompt: Node3D = INTERACTABLE.new()
+	prompt.name = "BedPrompt"
+	prompt.position = (house.call("marker", "bed") as Vector3) + Vector3.UP * 0.4
+	prompt.call("configure", str(bed_cfg.get("prompt", "Get up")), 2.5, true)
+	prompt.connect("activated", _on_bed_activated)
+	get_parent().add_child(prompt)
+	_bed_prompt = prompt
+
+
+func _on_bed_activated() -> void:
+	if _beat != BEATS.WAKE:
+		return
+	_set_player_lying(false)
+	_set_beat(BEATS.HOUSE)
+
+
+## OF8. `trainer_model.gd::_process()` also clears this on its own the
+## instant the trainer starts moving — belt and suspenders with the explicit
+## calls here, not a replacement for them: that self-clear covers the walk-
+## off-the-mattress fallback frame by frame, while this is the definitive
+## "the wake beat is over" moment either exit routes through.
+func _set_player_lying(lying: bool) -> void:
+	if _player == null:
+		return
+	var model := _player.get_node_or_null(^"Model")
+	if model != null and model.has_method("set_lying"):
+		model.call("set_lying", lying)
+	_refresh_lying_lift()
+
+
+## OWNER-0904: *"at the beginning of the game, you are submerged in the bed
+## rather than on it."*
+##
+## `character_model.gd::set_lying()` tips the art onto its back by rotating it
+## −90° about X, and `_fit()` has already put the art's own origin at the
+## character's FEET — so the rotation pivots the body around a point on the
+## surface it is standing on, and the body that was 1.8 m tall above that
+## point becomes a body 0.6 m thick CENTRED on it. Measured, not reasoned
+## (`tools/gate_f/probe_loft_bed_wake_pose.gd`, before this fix): the rendered
+## AABB spanned world y 3.419 … 4.034 with the mattress plane at 3.750 —
+## 0.331 m of the trainer below the sheet. That is the owner's report exactly,
+## and it is independent of where on the bed the body is placed, which is why
+## `OPENING-BED-0903` did not catch it: that round fixed a collapsed skin and
+## read the result by eye for a different defect.
+##
+## The lift is MEASURED off the rig rather than declared, through the same
+## `render_bounds.gd` the model's own `_fit()` uses (a skinned mesh has to be
+## measured the way the GPU draws it, not down its node chain). A rig with a
+## different lying silhouette gets the right number without anyone editing a
+## constant here.
+##
+## Applied to the `Model` node rather than to the body: the capsule still
+## rests on the mattress collider, so nothing about collision, the wake beat's
+## own "walked off the bed" radius, or the Get-up prompt moves. Recomputed
+## every frame from the model's own `is_lying()` — the same "recomputed, never
+## pushed" rule the door gate and the prompts keep — because
+## `trainer_model.gd::_process()` clears the pose on its own the instant the
+## trainer moves, and a lift pushed once at `set_lying(false)` would be a lift
+## left behind on every exit that does not route through this director.
+## How deep the trainer's slung kit is allowed to sink into the bedding.
+##
+## The rig's lowest rendered point when lying is NOT its back: it is the pouch
+## and bedroll slung at the hip, which hang about 0.23 m below the line of the
+## body. A code-blind judge, given a five-rung ladder of lifts (0.00 / 0.08 /
+## 0.16 / 0.24 / 0.33 m) in scrambled order and told only that the panels
+## differed in one respect, put it plainly: *"there is no height at which both
+## the body and the pack sit correctly"*. Lift the pack clear and the body
+## flies — at 0.33 m *"the only thing touching the bed is a large tan pouch
+## strapped at the hip... so the figure reads as a body suspended from a bag,
+## which is exactly backwards"*. Lift nothing and the body sinks — at 0.00 m
+## *"both boot soles are gone... the left forearm and gauntlet punch through
+## the front face of the mattress"*.
+##
+## So the kit sinks, and this is how far. The judge picked the 0.08 m rung
+## unprompted and alone: *"the boot soles sit on the blanket's top plane with
+## the full sole visible and no slicing... this is the only panel in the set
+## with correct contact"*, ranking the two nearest rungs (0.00 and 0.16) both
+## wrong in opposite directions. 0.308 (this rig's measured underhang) minus
+## this number is that rung. TUNABLE, and re-judged if the trainer's kit
+## changes.
+##
+## The judge also noted the band is narrow with no margin either side, and
+## that the real answer is for the trainer not to wear the pack in bed — a
+## rig/asset change, out of this lane's scope, recorded in the report.
+const LIE_KIT_SINK_M := 0.228
+
+## Floor under the lift, so a rig whose underhang is all body and no kit still
+## clears its own boot soles rather than resting exactly on the pivot plane.
+const LIE_MIN_LIFT_M := 0.04
+
+var _lying_lift_m := -1.0
+
+
+## How far a posed-lying `model` has to rise to sit ON the surface its body is
+## resting on rather than in it. Static and public so the capture tool and the
+## probes measure the SHIPPED number rather than a copy of it — a tool that
+## re-derives the fix cannot prove the fix.
+##
+## Measured off the rig through the same `render_bounds.gd` the model's own
+## `_fit()` uses (a skinned mesh has to be measured the way the GPU draws it,
+## not down its node chain), then less the kit allowance above. The trainer
+## measures 0.308 m of underhang, so this returns 0.080 m.
+static func lying_lift_for(model: Node3D) -> float:
+	if model == null:
+		return 0.0
+	var box: AABB = RENDER_BOUNDS.measure(model)
+	var underhang := maxf(0.0, -box.position.y)
+	return clampf(underhang - LIE_KIT_SINK_M, minf(LIE_MIN_LIFT_M, underhang), underhang)
+
+
+func _refresh_lying_lift() -> void:
+	if _player == null:
+		return
+	var model := _player.get_node_or_null(^"Model") as Node3D
+	if model == null or not model.has_method("is_lying"):
+		return
+	var wanted := 0.0
+	if bool(model.call("is_lying")):
+		if _lying_lift_m < 0.0:
+			_lying_lift_m = lying_lift_for(model)
+		wanted = _lying_lift_m
+	if absf(model.position.y - wanted) > 0.0005:
+		model.position.y = wanted
+
+
+## Getting out of bed ends the wake beat, however you do it.
+##
+## THIS IS THE FIX FOR A SOFT-LOCK THAT MADE THE GAME UNCOMPLETABLE, and it is
+## worth spelling out because the shape of it will recur.
+##
+## `wake` had exactly one exit — pressing interact on the bed — and nothing
+## forced the player through it. `_refresh_lockout()` never gated locomotion on
+## the beat, so once the fade cleared you could simply walk off the bed. Do that
+## and the beat stays `wake` forever. `_refresh_prompts()` then keeps Grandpa's
+## interactable disabled (his `conversation_for("wake")` is ""), which makes
+## `interactable.gd` return an empty offer, which means the arbiter never even
+## sees him: no prompt, and the button does nothing. The owner's report —
+## "you still can't interact with grandpa at the beginning, so then you leave
+## the house and never get a starter" — is that state exactly.
+##
+## The lesson generalises: a beat whose only exit is one optional button press
+## is a soft-lock waiting to happen. Any beat gate added later wants a
+## positional fallback like this one, or a lockout that makes the intended
+## action the only available one.
+##
+## Distance from the bed rather than a floor height test: the loft has no
+## collision volume of its own to leave, and a height test would fire while the
+## player is still standing on the mattress. `BED_LEAVE_RADIUS` is comfortably
+## outside the bed prompt's own 2.5 m so pressing the prompt still reads as the
+## intended path, and comfortably inside the loft so descending the stairs
+## cannot outrun it.
+const BED_LEAVE_RADIUS := 3.2
+
+## SA2 (spec sec1D). How close to the exterior doorway counts as "trying to
+## leave" — Grandpa calls out before the player actually collides with the
+## gate, so the redirect reads as noticing them heading for the door rather
+## than as bumping into an invisible wall and only then getting a reaction.
+## Comfortably inside the door's own solid collision (built in
+## grandpa_house.gd, roughly 1.2m short of the "door" marker this measures
+## against).
+const DOOR_CALLOUT_RADIUS := 2.6
+
+func _check_left_the_bed() -> void:
+	if _beat != BEATS.WAKE or _bed_anchor == null:
+		return
+	if _player.global_position.distance_to(_bed_anchor) < BED_LEAVE_RADIUS:
+		return
+	_set_player_lying(false)
+	_set_beat(BEATS.HOUSE)
+
+
+## Read straight off data/config/opening.json's `starters.species`. No bodies,
+## no placement — the orb picker builds its own live previews from this list
+## when the beat reaches `choose` (`_maybe_open_picker`).
+func _load_starter_species() -> void:
+	var species: Array = BEATS.starters().get("species", [])
+	if species.is_empty():
+		push_error("opening.json lists no starter species; the choice has nothing to choose from")
+		return
+	for id: Variant in species:
+		_starter_species.append(str(id))
+
+
+func _display_name(species_id: String) -> String:
+	return str(SPECIES.definition(species_id).get("display_name", species_id))
+
+
+func _stand_npc(npc: Node3D, spot: Vector3) -> bool:
+	for i in GROUND_WAIT_FRAMES:
+		if bool(npc.call("stand_at", spot.x, spot.z)):
+			return true
+		await get_tree().physics_frame
+	return false
+
+
+## `[10.0, 0.0, 32.0]` out of JSON. Y is ignored everywhere in opening.json —
+## everything is stood on the ground by asking the world (docs/decisions/D09) —
+## but it is carried here so a config with a Y in it is not silently reshaped.
+func _to_vector3(raw: Variant) -> Vector3:
+	if not raw is Array or (raw as Array).size() < 3:
+		return Vector3.ZERO
+	var values: Array = raw
+	return Vector3(float(values[0]), float(values[1]), float(values[2]))
+
+
+## --- beat 3: Grandpa ---------------------------------------------------------------
+
+func _on_grandpa_activated() -> void:
+	_start_conversation(_grandpa_conversation_id())
+
+
+## GATE-F-LEG-S10CDE, extended by F3. `free_play` (opening.json's own terminal
+## beat, reached around tournament sign-up) has nothing scripted forever, by
+## design — his opening briefing is one immediate purpose at a time, and the
+## tournament/quest systems own the broader preparation path from there. But
+## the chapter keeps happening around him after that: the tournament is won,
+## the South Bridge and the relay open up, the Hall itself becomes reachable,
+## and finally SG46's ending changes the world. None of that was ever named in
+## `beats.grandpa_conversations`, which only knows the FIRST fifteen minutes.
+##
+## `grandpa_conversations_when()` (opening_beats.gd) is that missing ladder —
+## the same ordered, flag-gated shape `village_npcs.json`'s `greeting_when`
+## already gives every villager, with `conversation_for(_beat)` standing in
+## for a villager's plain `greeting`. Read through `greeting_for()`, the exact
+## function every villager's ladder already goes through, so this is the same
+## lookup the audit's own suggested fix named rather than a second one beside
+## it.
+func _grandpa_conversation_id() -> String:
+	var game := get_node_or_null(^"/root/Game")
+	var homecoming := REGIONAL_HOMECOMING.conversation_id(game)
+	if not homecoming.is_empty():
+		return homecoming
+	var progression: RefCounted = game.get("progression") as RefCounted if game != null else null
+	var spec := {
+		"greeting": BEATS.conversation_for(_beat),
+		"greeting_when": BEATS.grandpa_conversations_when(),
+	}
+	return VILLAGE_NPCS.greeting_for(spec, progression)
+
+
+var _f18_opening_conversation_id := ""
+
+func _start_conversation(id: String) -> bool:
+	if id == "":
+		return false
+	if bool(_dialogue.call("is_open")):
+		return false
+	if REGIONAL_HOMECOMING.is_initial(id) or id == REGIONAL_HOMECOMING.REPEAT_ID:
+		var game := get_node_or_null(^"/root/Game")
+		var values := REGIONAL_HOMECOMING.substitutions(game) \
+			if REGIONAL_HOMECOMING.is_initial(id) else {}
+		# Bind the spoken roster and owner context before dialogue starts; an
+		# acknowledgement must never adopt a later party/world/session.
+		var expected_context: Dictionary = REGIONAL_HOMECOMING.context(game)
+		if expected_context.is_empty(): return false
+		var started := bool(_dialogue.call("start", id, {}, values))
+		if started:
+			_homecoming_character_id = REGIONAL_HOMECOMING.character_id(game)
+			_homecoming_context = expected_context.duplicate(true)
+		return started
+	var opened := bool(_dialogue.call("start", id))
+	if opened: _f18_opening_conversation_id = id
+	return opened
+
+
+func _on_dialogue_completed(id: String) -> void:
+	var initial := REGIONAL_HOMECOMING.is_initial(id)
+	if not initial and id != REGIONAL_HOMECOMING.REPEAT_ID:
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var expected_character_id := _homecoming_character_id
+	var expected_world: Object = game.get("world") as Object if game != null else null
+	var expected_context := _homecoming_context.duplicate(true)
+	# Consume this presentation before yielding so a later conversation cannot
+	# have its identity cleared by completion of the earlier acknowledgement.
+	_homecoming_character_id = ""
+	_homecoming_context = {}
+	var should_open: bool = false
+	if initial:
+		should_open = await REGIONAL_HOMECOMING.complete(game, expected_character_id, expected_context)
+	else:
+		should_open = REGIONAL_HOMECOMING.context_matches(game, expected_context) \
+			and REGIONAL_HOMECOMING.credits_pending(game)
+	if should_open:
+		call_deferred("_open_regional_credits", expected_character_id, expected_world)
+
+
+func _open_regional_credits(expected_character_id: String, expected_world: Object) -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null or game.get("world") != expected_world \
+			or REGIONAL_HOMECOMING.character_id(game) != expected_character_id \
+			or not REGIONAL_HOMECOMING.credits_pending(game):
+		return
+	if _regional_credits == null or not is_instance_valid(_regional_credits):
+		_regional_credits = REGIONAL_CREDITS.new()
+		_regional_credits.name = "RegionalCredits"
+		get_parent().add_child(_regional_credits)
+	_regional_credits.call("open_for", expected_character_id, expected_world)
+
+
+
+## --- beats 4 and 5: the choice, and the name ------------------------------------------
+
+func _on_starter_picker_chosen(index: int) -> void:
+	if _beat != BEATS.CHOOSE or _adopting:
+		return
+	if _starter_already_granted():
+		push_warning("refused to reopen starter selection after a starter was already granted")
+		_restore_opening_beat()
+		return
+	if index < 0 or index >= _starter_species.size():
+		return
+	_choice = index
+	# Naming is mandatory, not skippable (docs/specs/OPENING_SEQUENCE.md): a creature you did
+	# not name is a creature you did not adopt. The panel has no cancel, and the beat
+	# does not advance until it comes back with a word.
+	_name_prompt.call("open", _display_name(_starter_species[index]))
+
+
+func _on_name_confirmed(chosen: String) -> void:
+	if _choice < 0:
+		push_error("a name came back with no starter chosen")
+		return
+	if not _pending_starter_adoption.is_empty():
+		_retry_original_starter_save()
+		return
+	await _adopt(_choice, chosen)
+
+
+func _adopt(index: int, chosen: String) -> void:
+	_adopting = true
+	var species := _starter_species[index]
+
+	# The other two never got bodies at all (SA0-orbs) — there is nothing left
+	# in the world to free. `encounter_director.adopt_starter()` builds the one
+	# real follower body below, for the one the player actually chose.
+	var adopted: bool = await _encounter.call("adopt_starter", species, chosen)
+	if not adopted:
+		_adopting = false
+		push_error("could not give the player the %s they chose" % species)
+		return
+
+	var game := _effect_game()
+	var typed_adoption: bool = game != null and game.get("session") != null and (game.get("session").call("config").get("redesign_ending_runtime_enabled", false) == true or game.get("session").call("portal_runtime_ready") == true)
+	var added := bool(game.call("commit_original_starter", self, _encounter.call("ally_instance"), chosen)) if typed_adoption else _give_to_party(_encounter.call("ally_instance"), chosen)
+	if not added:
+		if typed_adoption:
+			_pending_starter_adoption = {"instance": _encounter.call("ally_instance"), "nickname": chosen, "character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace, "session_epoch": game.get("session").call("_altar_current_epoch"), "retry_at": Time.get_ticks_msec() + 3000}
+			game.call("push_world_message", "Your chosen companion is waiting for the opening save.")
+		else:
+			_adopting = false
+			push_error("the chosen %s is beside the trainer but not in the party" % species)
+		return
+	_finish_original_starter_adoption(chosen, typed_adoption)
+
+
+var _pending_starter_adoption: Dictionary = {}
+
+func _retry_original_starter_save() -> void:
+	if _pending_starter_adoption.is_empty() or Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
+	var game := _effect_game()
+	if game == null or game.get("session") == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return
+	if game.get("local").character_id != _pending_starter_adoption.character_id or game.get("world").reward_delivery_namespace != _pending_starter_adoption.world_instance_id or game.get("session").call("_altar_current_epoch") != _pending_starter_adoption.session_epoch: return
+	_pending_starter_adoption.retry_at = Time.get_ticks_msec() + 3000
+	if game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true: return
+	var chosen: String = _pending_starter_adoption.nickname
+	_pending_starter_adoption.clear()
+	_finish_original_starter_adoption(chosen, true)
+
+
+func _finish_original_starter_adoption(chosen: String, typed_adoption: bool) -> void:
+	_adopting = false
+	if not typed_adoption: _persist_opening_fact(STARTER_GRANTED_FLAG)
+	# The first time this game says a word the player wrote.
+	_dialogue.call("set_value", NAME_KEY, chosen)
+	# The player now has one named companion. Do not automatically pile the next
+	# instruction over the naming panel: the first-catch supplies come from the
+	# required return to Grandpa, which is both the next objective and the point
+	# at which the existing inventory system grants the 15 Basic Orbs.
+	_set_beat(BEATS.RETURN_STARTER)
+
+
+func _starter_already_granted() -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return false
+	var progression: RefCounted = game.get("progression")
+	if progression != null and bool(progression.call("has", STARTER_GRANTED_FLAG)):
+		return true
+	var party: RefCounted = game.get("party")
+	return party != null and int(party.call("size")) > 0
+
+
+## --- beats 6, 7 and 8: the encounter, the fight and the catch ----------------------------
+##
+## None of this is reimplemented here. The wild bramblebun, the engage prompt,
+## the fight and the throw are `encounter_director.gd` and `combat_manager.gd`
+## and they already work; this reads the result and moves the beat.
+##
+## Nothing gates the encounter either, and nothing needs to: the encounter
+## director offers no engagement while the player has no creature, so beats 1 to 5 are
+## already unreachable from a fight.
+
+func _on_combat_entered() -> void:
+	if _beat == BEATS.WALK_OUT:
+		_set_beat(BEATS.ENCOUNTER)
+	# OPENING_SEQUENCE.md promises that the authored practice catch cannot fail
+	# twice. Species rate alone is probability, not a bound, so opt this exact
+	# encounter into CombatManager's narrow landed-throw assist. Checking both
+	# beat and configured species prevents another Bramblebun fought later from
+	# inheriting tutorial odds. Every other fight actively disables the policy.
+	_manager.call(
+		"configure_tutorial_catch_assist",
+		_is_tutorial_catch(),
+		int(BEATS.encounter().get("max_catch_failures", 1))
+	)
+
+
+## The other half of the tutorial's "cannot fail" promise.
+##
+## `configure_tutorial_catch_assist` bounds LANDED throws, and deliberately so —
+## a throw that never reached the creature is not a failed catch. That leaves
+## the miss unbounded, and the miss is the one that dead-ends the opening: the
+## only orbs before the road gate are Grandpa's fifteen, both resupplies (Tam's
+## recipe, the village trader) are past the gate, and the gate is past this
+## catch. Run dry and `throw_aim.gd::try_begin_aim()` refuses every further
+## press with "no orbs left" while the beat waits for a catch that can no longer
+## be attempted. There is no way out of that but a new game.
+##
+## So while THIS encounter is live, running out tops the satchel back up.
+## Deliberately hung off the refusal rather than polled: it fires exactly once
+## per dead-end, at the moment the player presses throw and nothing happens,
+## which is both the only moment it matters and the only moment they would
+## notice. The `_is_tutorial_catch()` predicate is the same beat-and-species one
+## the bound uses, so this cannot leak into any later Bramblebun.
+func _on_catch_refused(reason: String) -> void:
+	if reason != "no orbs left":
+		return
+	_hold_the_tutorial_orb_floor()
+
+
+## Keep the practice catch's satchel off empty.
+##
+## Polled rather than hung off the refusal alone. Reacting to the refusal is one
+## beat too late by construction: the refusal only fires when the player PRESSES
+## throw with nothing to throw, so the restock lands AFTER a press that visibly
+## did nothing. A dead button is the exact failure the opening is supposed not to
+## have, and `playground_hud.gd::_swing_equipped_tool()`'s own header makes the
+## same argument about the combat buttons -- a press that silently does nothing
+## reads as broken. Topping up the moment the count reaches zero means the beat
+## simply never runs dry.
+##
+## The refusal handler stays as the backstop for any drain that lands between
+## frames. Both go through here, so there is one rule and one place to change it.
+func _hold_the_tutorial_orb_floor() -> void:
+	if not _is_tutorial_catch():
+		return
+	var amount := int(BEATS.encounter().get("catch_orb_floor", 0))
+	if amount <= 0:
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var inventory: RefCounted = game.get("inventory")
+	if inventory == null:
+		return
+	# Every tier counts toward the floor, for `throw_aim.gd::stock()`'s reason:
+	# a player carrying only greater orbs is not out of orbs, and handing them
+	# basic ones on top would be a restock they did not need.
+	var held := 0
+	for id: String in CATCH.orb_ids():
+		held += int(inventory.call("count", id))
+	if held >= amount:
+		return
+	inventory.call("add", TUTORIAL_ORB, amount - held)
+
+
+## The third part of the same promise, and the one nothing was keeping.
+##
+## `configure_tutorial_catch_assist` bounds the LANDED throw and
+## `_hold_the_tutorial_orb_floor` bounds the orb supply. Neither bounds the
+## FIGHT. `data/config/catching.json` is explicit that your creature is
+## undefended while you aim and that the opponent does not stop attacking it --
+## "that cost is the whole design" -- and that is right, but nothing anywhere
+## bounded the cost. A run of missed throws ends with the starter fainted, and
+## a fainted starter at this beat is terminal: `creature_instance.heal()`
+## refuses a fainted creature outright (D40), the creature bed that would rest
+## it is a buildable needing Tam's tools from past the road gate, and a night
+## only heals creatures actually put to bed
+## (`night_rest.gd` -> `game_state.complete_creature_bed_rests()`). From there
+## `encounter_director.gd::_engageable()` offers no fight in the entire game
+## while this beat waits for a catch that can no longer be attempted -- the
+## exact dead-end the orb floor exists to prevent, reached through the other
+## door. Measured on four fresh runs, two of which ended in it:
+## `ralph/reports/gate-f-capstone-1/CAP-1-FINDING.md` (CAP-1).
+##
+## Polled rather than hung off the fight's own "lost" outcome, for two reasons
+## the orb floor's header already gives in its own words. It fires one frame
+## after the arena tears down rather than in the middle of `_begin_resolve`,
+## which has already decided the outcome and must not have the creature stand
+## back up underneath it; and a save made in the broken state (the capstone's
+## S03 booted exactly one) recovers on load instead of staying stranded.
+##
+## Gated on the beat alone, not on beat AND species like the two assists above.
+## Those two reach into a LIVE fight, where "which creature is on screen" is
+## both knowable and the thing that must not leak. This runs between fights,
+## where there is no enemy to name -- and the dead-end it answers does not care
+## what fainted the starter. The bound that matters is the same one: the
+## opening's encounter beat ends permanently at the first catch, so this cannot
+## outlive the tutorial.
+func _hold_the_tutorial_team_floor() -> void:
+	if _beat != BEATS.WALK_OUT and _beat != BEATS.ENCOUNTER:
+		return
+	var fraction := float(BEATS.encounter().get("faint_recovery_fraction", 0.0))
+	if fraction <= 0.0:
+		return
+	# Never mid-fight. CombatManager owns the creature for the length of one and
+	# has already decided the outcome by the time the faint is visible.
+	if _manager == null or bool(_manager.call("is_fighting")):
+		return
+	if _encounter != null and _encounter.has_method("trainer_battle_active") \
+			and bool(_encounter.call("trainer_battle_active")):
+		return
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		return
+	var party: RefCounted = game.get("party")
+	# `all_fainted()` and nothing looser. A player who still has one creature
+	# standing has not lost anything they cannot walk out of, and handing them a
+	# free heal would be the opening quietly undoing a fight they are still in.
+	if party == null or not bool(party.call("all_fainted")):
+		return
+	for member: Variant in party.call("members"):
+		var creature := member as RefCounted
+		if creature != null:
+			# D40's dedicated un-fainter: it refuses anything still standing, so
+			# the loop cannot top up a creature this floor is not about.
+			creature.call("revive", fraction)
+	game.call("push_world_message", "Your creature is back on its feet. Try again.")
+
+
+## Is the fight on screen one the opening's dead-end protections must cover?
+## Beat alone, not beat AND species. `_engageable()` (encounter_director.gd)
+## offers the nearest wild creature of ANY species in range, not specifically
+## the tutorial Bramblebun, so a player can reach the ENCOUNTER beat against a
+## different wild creature before ever meeting it -- and that fight can run the
+## satchel dry or faint the starter exactly like the authored one. Found
+## 2026-09-02 by `smoke_gate_a_opening_segment`, whose real interact press
+## engaged a Mudsnout: the orb floor never applied and the opening dead-ended
+## with zero orbs. The beat is the real bound, the same one
+## `_hold_the_tutorial_team_floor()` already relies on alone: it ends
+## permanently at the first catch, so nothing here leaks into a later fight
+## regardless of species.
+func _is_tutorial_catch() -> bool:
+	if _beat != BEATS.ENCOUNTER or _manager == null:
+		return false
+	return _manager.call("enemy") != null
+
+
+func _on_combat_exited(outcome: String) -> void:
+	if outcome != CAUGHT:
+		# They won it instead of catching it, or ran. The encounter director puts
+		# the bramblebun back on its feet after a few seconds, so the beat stays
+		# where it is and they get another go — species.json gives that creature
+		# the highest catch rate in the game precisely so the tutorial catch does
+		# not have to succeed first time.
+		#
+		# CAP-1: "lost" is the fourth case, and it used to fall through this same
+		# return into a beat waiting on a catch the player could no longer
+		# attempt. Staying put is still the right move HERE -- what was missing
+		# was anyone putting the starter back up, which
+		# `_hold_the_tutorial_team_floor()` now does on the next frame, off the
+		# party rather than off this outcome so a save reloaded into the broken
+		# state recovers too.
+		return
+
+	# R4.10: the catch itself reaches `Game.party` through
+	# `encounter_director.gd::_resolve_catch()` now — the one path EVERY catch
+	# takes, this tutorial one included. This handler used to call
+	# `_give_to_party` here because nothing else put a catch anywhere; once the
+	# director's own wiring landed, that second add was refused as a duplicate
+	# on every single catch and push_error'd about it. The story's only job at
+	# this beat is to move the story. (A new capture still keeps its species
+	# name by default — GAME_DESIGN.md 10 — because nothing anywhere nicknames
+	# it.)
+	_set_beat(BEATS.ROAD)
+
+
+## --- the party -------------------------------------------------------------------
+
+## Into the real party, which is `Game`'s.
+##
+## Not through `scripts/story/party_seam.gd`. That file was written while there
+## was no autoload to hold a party, and it says so in its own TODO; there is one
+## now, `autoload/party.gd` enforces the five-creature cap in `add()` and nowhere
+## else, and a second path into the party is a second place the cap can be
+## missed.
+##
+## Looked up by path rather than through the `Game` global so a null is a
+## push_error at the one call site instead of a crash, and so this node can be
+## dropped into a scene run outside the normal boot.
+func _give_to_party(instance: RefCounted, nickname: String) -> bool:
+	if instance == null:
+		return false
+	if nickname != "":
+		instance.set("nickname", nickname)
+
+	var game := get_node_or_null(^"/root/Game")
+	if game == null:
+		push_error("no Game autoload; the creature exists but nobody owns it")
+		return false
+	var party: RefCounted = game.get("party")
+	if party == null:
+		push_error("the Game autoload has no party")
+		return false
+
+	if bool(party.call("is_full")):
+		# The opening cannot reach this — it adds two creatures to an empty party —
+		# but the sixth-creature release ceremony is real design (GAME_DESIGN.md 3)
+		# and a director that silently dropped a creature would hide the day it starts
+		# mattering.
+		push_warning("the party is full; %s was not added" % instance.get("display_name"))
+		return false
+	return bool(party.call("add", instance))
+
+
+## The existing input graph and pause shell poll this actual source. Empty
+## retry bindings preserve its legacy modal behavior and flags-OFF opening.
+func owns_input() -> bool:
+	return not _pending_starter_adoption.is_empty() or not _f18_pending_home_key.is_empty()
+
+
+func is_open() -> bool:
+	return owns_input()
