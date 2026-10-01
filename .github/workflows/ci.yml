@@ -2958,6 +2958,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # CI6172 spent 612 seconds fetching/materialising the full tree.
+          # Use the verification jobs' runtime tree so the package witness
+          # has its original time budget available. Both exports still run.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
 
       - name: Cache Godot editor and export templates
         id: cache-godot
