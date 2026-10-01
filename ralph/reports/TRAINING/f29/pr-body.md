@@ -15,5 +15,5 @@ F29#0–#4 at baseline b7cb96de89; CODEX_START_HERE RD-28 and §6 F29, TRAINING 
 | Shared commit identity | combined-proof-ticket.json | Host binds exact stable character, UID, world, revision, original SKU/choice | F28 callable source integrated; Foundation writer/recovery integration required before landing |
 
 ## Independent review
-Reviewer: F29 independent read-only strict source agent
-Result: in progress; all acceptance verdicts OPEN until required runtime and art proof. No unit suite, Godot import, gameplay, render or GPU launch in this feature task. This draft advances source only; process CI cannot certify engine behavior.
+Reviewer: /root/f29_strict_source_review (different author, read-only)
+Result: pass for owned source cut b40b9c0203: no blocking source defect; all acceptance verdicts OPEN until required runtime and art proof. See independent-source-review.json. Legacy activation and F23 ancestry metadata remain combined integration gates. No unit suite, Godot import, gameplay, render or GPU launch in this feature task. This draft advances source only; process CI cannot certify engine behavior.
