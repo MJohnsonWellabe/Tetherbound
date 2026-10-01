@@ -3090,7 +3090,9 @@ jobs:
       # display. Six world boots, measured 31 min locally (headless).
       - name: Verify veridian_offer_choice
         if: ${{ !cancelled() }}
-        timeout-minutes: 45
+        # Native retains its original45min deadline; this outer minute permits
+        # process cleanup and an artifact instead of runner cancellation.
+        timeout-minutes: 46
         env: { SMOKE: veridian_offer_choice, RETRIES: 1, TB_VERIDIAN_CASE_GROUP: "${{ matrix.group }}" }
         run: |
           set -uo pipefail
@@ -3098,7 +3100,7 @@ jobs:
           until [ "$n" -ge "$RETRIES" ]; do
             n=$((n + 1))
             echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if python3 tools/ci/run_godot_smoke.py godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+            if python3 tools/ci/run_godot_smoke.py --native-timeout-seconds=2700 --native-log="/tmp/veridian-offer/${{ matrix.group }}.log.gz" godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
               echo "::endgroup::"
               exit 0
             fi
@@ -3106,6 +3108,13 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Retain original Veridian native diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: veridian-offer-${{ matrix.group }}-native
+          path: /tmp/veridian-offer/*.log.gz
+          if-no-files-found: warn
       - name: Verify rift gate opens once
         if: ${{ !cancelled() && matrix.group == 'space' }}
         run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd

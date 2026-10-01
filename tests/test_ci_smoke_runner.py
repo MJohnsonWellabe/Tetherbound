@@ -8,11 +8,36 @@ import subprocess
 import sys
 import time
 import unittest
+import gzip
+import tempfile
 
 RUNNER = pathlib.Path(__file__).resolve().parents[1] / "tools/ci/run_godot_smoke.py"
 
 
 class SmokeRunnerTests(unittest.TestCase):
+    def test_original_native_deadline_stops_a_pipe_holding_child(self):
+        source = "import subprocess,sys; subprocess.Popen([sys.executable,'-u','-c','import time; print(\"child alive\"); time.sleep(60)']); print('leader exiting')"
+        started = time.monotonic()
+        result = subprocess.run([sys.executable, str(RUNNER), "--native-timeout-seconds=1", sys.executable, "-u", "-c", source],
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=5)
+        self.assertEqual(result.returncode, 124)
+        self.assertLess(time.monotonic() - started, 4)
+        self.assertIn(b"child alive", result.stdout)
+        self.assertIn(b"original native deadline exceeded", result.stdout)
+
+    def test_large_native_line_is_lossless_in_artifact_and_exit_is_preserved(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = pathlib.Path(directory) / "native.log.gz"
+            source = "print('ERROR: ' + 'x' * 100000); raise SystemExit(7)"
+            result = subprocess.run([sys.executable, str(RUNNER), "--native-timeout-seconds=3", "--native-log=" + str(path),
+                                     sys.executable, "-u", "-c", source],
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=5)
+            self.assertEqual(result.returncode, 7)
+            self.assertEqual(gzip.decompress(path.read_bytes()), b"ERROR: " + b"x" * 100000 + b"\n")
+            self.assertIn(b"ERROR:", result.stdout)
+            self.assertIn(b"lossless gzip artifact", result.stdout)
+            self.assertLess(len(result.stdout), 9000)
+
     def invoke(self, source):
         return subprocess.run([sys.executable, str(RUNNER), sys.executable, "-u", "-c", source],
                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=8)
