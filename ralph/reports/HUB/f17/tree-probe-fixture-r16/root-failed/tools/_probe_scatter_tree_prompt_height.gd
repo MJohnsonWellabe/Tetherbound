@@ -8,9 +8,7 @@ const VEG := preload("res://scripts/world/vegetation.gd")
 const FIELD := preload("res://scripts/world/playground_heightfield.gd")
 const PLAYER := preload("res://scenes/player/player.tscn")
 const ARBITER := preload("res://scripts/world/interaction_arbiter.gd")
-# bf0f38b203 removed trees#320. Pin kept trees#886, the closest non-smaller
-# CommonTree_2 in this region by scale (1.598110499382019 -> 1.6529272198677063).
-const TARGET := Vector3(98.15209197998047, 5.79111909866333, -35.932098388671875)
+const TARGET := Vector3(45.44735, -0.188587, -62.50097)
 var _player: CharacterBody3D
 var _arbiter: Node
 var _prompt: Node3D
