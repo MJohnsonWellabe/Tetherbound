@@ -1,0 +1,32 @@
+{
+  "base": "42682af54a0f293956d1c44e19ad722ac4414fdc",
+  "changed_path": "tests/test_stormwood_road_surface.gd",
+  "original_sha256": "57dd9d1584429bac2e3899d03eb5003429c459f52995151beabfd4d389df87ab",
+  "proposal_sha256": "fc186af1d044913347a36c0f43b11a763e6539bf30424cd0ac792c11d0e73a3b",
+  "patch_sha256": "b05119b17d4e4196fae068e7339cc492a0efd114a1956671c1eda3ba89acfc43",
+  "whole_original_reversal_exact": true,
+  "original_case_names": [
+    "test_surface_config_names_a_real_slot_and_every_route_kind",
+    "test_every_route_centreline_is_painted_path",
+    "test_ground_well_off_every_route_is_not_path",
+    "test_spurs_are_painted_to_their_mouth_and_stop_there",
+    "test_painted_width_matches_config_per_route_kind",
+    "test_spur_junction_flares_so_the_y_reads",
+    "test_bake_manifest_is_fresh_and_covers_routes_and_surface",
+    "test_committed_heights_still_match_the_heightfield",
+    "test_junction_marker_size_and_emission_come_from_config"
+  ],
+  "assertion_sites": 48,
+  "protected": {
+    "data/config/stormwood_road_surface.json": "d16b3ee1f851c94d816363bae321d460bea827cc0b4d430a190413c488957019",
+    "data/config/stormwood_world.json": "018de59fd7fafc00fa33b3fcf2f4838cee4a4b055f6e0b0716f633104f3a1651",
+    "scripts/world/build_stormwood_terrain.gd": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+    "scripts/world/stormwood_pockets.gd": "6ab6963476109374278c5dd360d6dd5ef680feb6460c3a951501ead56bb39619",
+    "scripts/world/stormwood_heightfield.gd": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+    "tests/run_tests.gd": "c3d32b38f49ed2d82c089ef382e771a7e9a0d4186c549d998aeb40c6d9a77f06",
+    "tests/test_case.gd": "51a114c59f2e2e4c3da1edd844552a267a22ccbd9dac9ce9ff715a8108802c7d",
+    ".github/workflows/ci.yml": "a917adead3581eff4ac53c5754fc20ec7cf0ec66bbd8f7e5e189fe5282976557"
+  },
+  "reason": "Actual CI6169 unit2 cancelled at unchanged12-minute job cap. Three Stormwood road methods took134.246/86.447/55.748s. _committed_is_path rereads/reparses immutable surface JSON at each texel. Cache its actual resolved slot only within each test case; original fresh read at first query each case, no test/data/production/threshold/sample/control/CI budget changes. Runtime speedup unverified.",
+  "review": "Independent review and original named file execution required; no acceptance credit"
+}

@@ -1,0 +1,30 @@
+diff --git a/tests/test_stormwood_road_surface.gd b/tests/test_stormwood_road_surface.gd
+index 9eaa156435..e624e71b57 100644
+--- a/tests/test_stormwood_road_surface.gd
++++ b/tests/test_stormwood_road_surface.gd
+@@ -20,6 +20,12 @@ const CENTRELINE_MIN := 0.97
+ const WIDTH_TOLERANCE_M := 0.9
+ 
+ var _regions := {}
++var _path_texture_id := 0
++var _path_texture_id_loaded := false
++
++
++func before_each() -> void:
++	_path_texture_id_loaded = false
+ 
+ 
+ class FixtureWorld extends Node3D:
+@@ -43,7 +49,11 @@ func _surface() -> Dictionary:
+ 
+ 
+ func _path_id() -> int:
+-	return BAKER.texture_id(str(_surface().texture))
++	# The fixture's authored slot is immutable within each test case.
++	if not _path_texture_id_loaded:
++		_path_texture_id = BAKER.texture_id(str(_surface().texture))
++		_path_texture_id_loaded = true
++	return _path_texture_id
+ 
+ 
+ func _xz(raw: Array) -> Vector2:
