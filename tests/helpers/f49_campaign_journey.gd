@@ -188,7 +188,7 @@ func _dock_party_uids() -> Array[String]:
 	return uids
 
 func _dock_saved() -> bool:
-	var receipt := "craft:water_dock_departure:" + game.local.character_id
+	var receipt: String = "craft:water_dock_departure:" + str(game.local.character_id)
 	var row: Dictionary = game.session.call("_owner_training_row")
 	var decision: Dictionary = game.session.call("_training_decision", game.session.call("local_peer_id"), row)
 	return decision.get("ok") == true and decision.get("saved") == true \

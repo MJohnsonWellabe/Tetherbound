@@ -69,7 +69,7 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var ack_path := path + ".ack.json"
 	if FileAccess.file_exists(path) or FileAccess.file_exists(ack_path) or FileAccess.file_exists(path + ".resume.json"):
 		return _result(false, "Boundary token already exists; fresh output required")
-	var world_ref := weakref(game.world)
+	var world_ref: WeakRef = weakref(game.world)
 	var namespace_id := str(game.world.reward_delivery_namespace)
 	var epoch := str(game.session.call("_altar_current_epoch"))
 	var previous_receipts: Array[String] = []
