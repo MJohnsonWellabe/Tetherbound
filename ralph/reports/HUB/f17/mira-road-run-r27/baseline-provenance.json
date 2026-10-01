@@ -1,0 +1,6 @@
+{
+  "hub_parent": "1c7e04b350dd2a559f71492655bd31ae8bc5287f",
+  "native_root_head": "c7917ea506d44143c416cecc82d869edda1810c4",
+  "two_touched_paths_byte_match_exact_native_root": true,
+  "production_input_sources": "Exact c7917ea source blobs frozen separately; no merge or primary writes. ROOT integrated dependencies remain owned by ROOT."
+}

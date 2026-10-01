@@ -1,0 +1,31 @@
+{
+  "scope": "byte-exact R27 candidate and actual failed opening evidence; excludes itself",
+  "files": {
+    ".gitattributes": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c",
+    "actual-analysis.json": "ae044ec247c37edf8c767d929a703848bf4ce7d854319d1060390bd334923680",
+    "baseline-provenance.json": "ea6d1704b1532ef4b86b8d88c924163b391264022630e74c32d2f18e2712ddf8",
+    "manifest.json": "f023a3f79616646733e48c8ca8d5c49767d09bdb3ffe53c4bfe07ca61af9a6f5",
+    "native-failed/all-observations.json": "b50b22a5bba4caad7a01eb166f5399b0dbba83cff0a63194a55de24a780c57bf",
+    "native-failed/provenance.json": "3e1c1a15550ff21f456263fdec30ba79dcd62e6a89518030c63ae683fadef8b8",
+    "native-failed/result.json": "b7db27299b0c31eaa9620982c3e537063980c1fdee702e6c1299c3dd9034c0f6",
+    "native-failed/route-and-errors.json": "fb853d6a4e9c8de5d3694c8348da1eddcca2176b986b8f14b8fc6d89367d99fa",
+    "native-failed/smoke.log.gz": "3f8fe49b6a6e910f5516cde1c031e06cd9130476f992f2177a7faa480dfc7961",
+    "originals/tests/helpers/gate_a_npc_gather_segment.gd": "5debb89039b9c1ae3e93d3f3bfb1975e4db38551d6471589a972d0543924ded5",
+    "originals/tests/test_gate_a_npc_gather_segment_contract.gd": "1a7cf979208a5a810ae74e999a50d19d2f788907845204f12176ba84a11f3e9c",
+    "prior-r26-unit-passed/provenance.json": "5c819ae066af5c12dab444df888b4ee289551d400a85c031c118c6e2c026ed74",
+    "prior-r26-unit-passed/result.json": "28a6122404905dbaff9fd7ab18f38f954706c6810607e7f56e938ef64e09e2d9",
+    "prior-r26-unit-passed/tests.log.gz": "1de2482814e7a3636d25fd46ea56d5ba2abf2c46caa80cca5fd6bc98f475441a",
+    "production-input-source/autoload/game_state.gd": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156",
+    "production-input-source/data/config/movement.json": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+    "production-input-source/project.godot": "05b3fa1ddc651ef460ef0b28a632a0120ba26fddd8120af4f76c6fc3ced29307",
+    "production-input-source/scripts/player/player_controller.gd": "df8b89efa2f5dffd96b46e808662d398b5496aa7cb3d290a436b24f3cd5bfe2e",
+    "production-input-source/scripts/player/player_vitals.gd": "bb64ad1bfefaf838ca1b1ccf0bbfde0954ca2a781f1e825aceb18493abcf69e4",
+    "proposal/tests/helpers/gate_a_npc_gather_segment.gd": "4feeac5160b168b93d7716a0f282678292eb446da31133c25d2e3d62f5674d70",
+    "proposal/tests/test_gate_a_npc_gather_segment_contract.gd": "5dc2fadf7f39300f67f2ca244c2f3c587de5e7c1f15a8c776079265769ba24d3",
+    "repair.patch": "894cd22d31941b6a2fafff7f8f2f076ad1335caca9898ee952d7dad6214fd814",
+    "review-context.json": "3ac6f0b963a704a512fd8e242eab898c7be70135139150d8d70700cb6c823c6d",
+    "source-check.py": "a956edb376a1739f39eee5feff44380b3a0aef38ba797fc5332fb590155cb52e",
+    "source-results.json": "a4a5177b0edd8cacaaf667e3fbcf059719c8eb3b096e2d8da6d7ae4a4948c37e",
+    "unchanged-paths.json": "db37933ca712dcae2a36b7ac09f596f8bdd7b7dcc7a50095fdaee64cf90e5e4a"
+  }
+}

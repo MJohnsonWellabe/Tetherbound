@@ -1,0 +1,184 @@
+{
+  "actual_first_pre_xz": [
+    38.82490921020505,
+    -48.624557495117216
+  ],
+  "actual_last_post": {
+    "acceptance": false,
+    "actual_delta": [
+      0.0832977294921875,
+      0.0,
+      0.00243616104125977
+    ],
+    "authored_road_hint": "",
+    "callback_own_us": 528,
+    "ceiling_frames": 0,
+    "checked_start": true,
+    "controller_observation_available": true,
+    "controller_wanted_dir": [
+      0.999572575092316,
+      0.0,
+      0.0292347390204668
+    ],
+    "delivered_input": [
+      0.480185389518738,
+      0.877166986465454
+    ],
+    "diagnostic_output_outside_physics_cap": true,
+    "floor_angle": 0.785399973392487,
+    "frame": 900,
+    "live_contacts": [
+      {
+        "collider_path": "/root/MeadowsPlayground/Terrain",
+        "collider_rid": "RID(67452461383683)",
+        "collider_shape": 33,
+        "depth": 6.39557838439941e-05,
+        "local_shape": 0,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          23.8790855407715,
+          0.899999976158142,
+          6.55872201919556
+        ]
+      }
+    ],
+    "live_recovery_travel": [
+      0.0,
+      9.34004783630371e-05,
+      0.0
+    ],
+    "live_state_phase": "post",
+    "mask": 1,
+    "on_ceiling": false,
+    "on_floor": true,
+    "on_wall": false,
+    "physics_frame": 4621,
+    "plans": 1,
+    "player": [
+      23.8790855407715,
+      0.900842666625977,
+      6.55872201919556
+    ],
+    "progress_m": 74.3753220429644,
+    "provisional_choice": 0,
+    "provisional_steering": {
+      "acceptance": false,
+      "heading": [
+        0.999572575092316,
+        0.0,
+        0.0292346999049187
+      ],
+      "prediction_motion": [
+        0.143272072076797,
+        0.0,
+        0.00419030711054802
+      ],
+      "retry_choice": 0,
+      "source": "prospective_step",
+      "wall_normal": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "queries": 3,
+    "recoveries": 0,
+    "refusal": "",
+    "request": [
+      27.0,
+      0.849999964237213,
+      7.59999990463257
+    ],
+    "requests": 900,
+    "safe_margin": 0.00100000004749745,
+    "slide_contacts": [
+      {
+        "collider_path": "/root/MeadowsPlayground/Terrain",
+        "collider_rid": "RID(67452461383683)",
+        "collider_shape": 33,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          23.7980651855469,
+          0.899999976158142,
+          6.55635261535645
+        ],
+        "slide": 0,
+        "swept_depth": 0.000975430011749268
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/Terrain",
+        "collider_rid": "RID(67452461383683)",
+        "collider_shape": 33,
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "point": [
+          23.8790855407715,
+          0.899999976158142,
+          6.55872201919556
+        ],
+        "slide": 1,
+        "swept_depth": 0.000157296657562256
+      }
+    ],
+    "slide_contacts_are_capped_prefix": true,
+    "slide_count": 2,
+    "slide_motion": [
+      0.0832977294921875,
+      0.0,
+      0.00243616080842912
+    ],
+    "slide_point_counts": [
+      1,
+      1
+    ],
+    "snap": 0.400000005960464,
+    "stall_frames": 0,
+    "swept_depth": 0.000975430011749268,
+    "timing": {
+      "between_callbacks": "controller and other nodes; excluded; not controller-only",
+      "between_callbacks_us": 3638,
+      "callback_cap_us": 10000,
+      "input_flush_us": 60,
+      "live_post_us": 89,
+      "live_pre_us": 95,
+      "movement_progress_us": 7,
+      "post_contract_us": 22,
+      "post_us": 176,
+      "pre_us": 348,
+      "provisional_steering_us": 87,
+      "serialization_and_print": "deferred; excluded; snapshot included",
+      "slide_validation_us": 6,
+      "snapshot_us": 51,
+      "stage": "post"
+    },
+    "total_queries": 2700,
+    "wall_frames": 0
+  },
+  "actual_goal_xz_distance_m": 3.290040531136615,
+  "door_centre_diagnostic_distance_m": 3.4885127769504605,
+  "observed_requests": 900,
+  "observed_progress_m": 74.3753220429644,
+  "observed_total_queries": 2700,
+  "all18_observations_guard_passed": true,
+  "last_actual_planar_step_m": 0.08333334638170121,
+  "source_attribution": "Actual farther catch endpoint requires a longer return. Same provisional path, successful native contacts and steady configured5m/s input exhausted900requested frames; no collision/terrain/query/stall refusal in these18original observations. The reported3.49m is to the door centre, not the actual standoff request(27,.85,7.6). No novel terrain-causal claim.",
+  "repair": "Use existing physical auto_run InputMap joypad button taps on the same long Practice Meadow return. Production movement owns8.6m/s configured sprint, can_sprint, satiety scaling, acceleration and stamina spending. Restore walking at the existing(20,-12)road waypoint before the village turn/lip.3pressed+5release-gap tap phases are serviced by existing physics ticks, not added waits. Deadline off edge begins900-3-5-2ticks after first on edge; two callback-order ticks reserved. Successful path retains original900walk/1marrival/5settle; refused paths may restore preferences only in unused original900ticks and remain failed.",
+  "real_state_effect": "Production Game.set_auto_run persists the preference. Helper does not call it or write it; real pad taps go through Player._toggle_auto_run. Initially-on preference is preserved without borrowing the toggle. Initially-off is restored physically before successful standoff; unobserved toggle or incomplete restoration fails. Only the helper-owned failed toggle suppresses further stick driving.",
+  "caps": "Navigator, all guards, queries, raw8aggregate contacts, timelines/skin/fullradius/margin and actual target unchanged. No speed/tuning/pose/velocity/stamina writes.900notreset/restarted/extended; unchanged arrival witness required.",
+  "source_only": true,
+  "native_acceptance": false,
+  "ideal_motion_models_used": false,
+  "F17#4": "OPEN",
+  "R9": "HOLD"
+}

@@ -1,0 +1,11 @@
+{
+  "head": "dfba0f60ea515a694a531112eedd4247bb89e6bb",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_player_runaway_velocity_guard.gd,test_gate_a_npc_gather_segment_contract.gd,test_opening_beats.gd",
+  "summary": [
+    "40 tests, 305 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-dfba0f60ea51-fc83410d\\tests.log",
+  "raw_log_sha256": "efbbcfcc4546d159bff85bb2deca69c95569d226e6b7bb7f65776cc7358e5b1c"
+}

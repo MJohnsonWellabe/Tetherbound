@@ -37,56 +37,6 @@ const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 const DOOR_STANDOFF := 2.6
 const DOOR_STEP_IN := 2.2
 
-## Real auto-run taps during the meadow return. Physics ticks already spent
-## walking service the press/release edges; this adds no wait or walk allowance.
-class RoadRunTap extends RefCounted:
-	enum Phase { ARMED, ON_RELEASE, ON_GAP, RUNNING, OFF_RELEASE, OFF_GAP, DONE, FAILED }
-	enum Edge { NONE, PRESS, RELEASE }
-	var phase := Phase.ARMED
-	var finish := false
-	var _cutoff: float
-	var _edge_frame := -1
-	var _started_frame := -1
-	func _init(cutoff: float) -> void:
-		_cutoff = cutoff
-	func advance(frame: int, z: float, driving: bool, running: bool) -> int:
-		if phase == Phase.ARMED:
-			if finish or z >= _cutoff:
-				phase = Phase.DONE
-			elif driving:
-				if running:
-					phase = Phase.FAILED
-				else:
-					phase = Phase.ON_RELEASE
-					_edge_frame = frame
-					_started_frame = frame
-					return Edge.PRESS
-		elif phase == Phase.ON_RELEASE and frame - _edge_frame >= 3:
-			phase = Phase.ON_GAP if running else Phase.FAILED
-			_edge_frame = frame
-			return Edge.RELEASE
-		elif phase == Phase.ON_GAP and frame - _edge_frame >= 5:
-			phase = Phase.RUNNING
-		elif phase == Phase.OFF_RELEASE and frame - _edge_frame >= 3:
-			phase = Phase.OFF_GAP if not running else Phase.FAILED
-			_edge_frame = frame
-			return Edge.RELEASE
-		elif phase == Phase.OFF_GAP and frame - _edge_frame >= 5:
-			phase = Phase.DONE
-		# Reserve the existing3press+5release ticks and two callback-order ticks
-		# before the original900frame deadline; this never adds a tick.
-		if phase == Phase.RUNNING and (finish or (driving and z >= _cutoff) or frame - _started_frame >= 900 - 3 - 5 - 2):
-			if running:
-				phase = Phase.OFF_RELEASE
-				_edge_frame = frame
-				return Edge.PRESS
-			phase = Phase.DONE
-		return Edge.NONE
-
-var _mira_road_run: RoadRunTap = null
-var _mira_run_refused := false
-var _mira_walk_started := -1
-var _mira_run_trace: Array[Dictionary] = []
 var _tree: SceneTree = null
 var _world: Node = null
 var _game: Node = null
@@ -593,11 +543,7 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 				_fail("missing bounded Mira road/doorstep approach metadata")
 				return false
 			print("MIRA PROVISIONAL APPROACH ", hints, " original_standoff=", door.global_position + outward * DOOR_STANDOFF)
-			if not _begin_mira_road_run(hints):
-				return false
-		var arrived := await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0, "", false, hints)
-		var run_restored := await _finish_mira_road_run()
-		if not arrived or not run_restored:
+		if not await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0, "", false, hints):
 			_fail("could not reach actual door standoff: " + _walk_diagnosis(door.global_position))
 			return false
 		if not await _walk_to_and_activate(prompt, 1200):
@@ -680,72 +626,6 @@ static func mira_approach_hint(from: Vector3, door: Vector3, box: Vector3, size:
 		return []
 	result.append(Vector2(door.x, strip_z))
 	return result
-
-
-## The same painted return and original900frames. Tap the existing auto-run
-## control for the long field leg, then walk from the original(20,-12) node
-## through the village turn and low-lip standoff. Stamina and speed are earned
-## by the ordinary production controller; no flag or velocity is written here.
-func _begin_mira_road_run(hints: Array[Vector2]) -> bool:
-	if not hints.has(Vector2(20, -12)) or _player.global_position.z >= -12.0 or bool(_game.get("auto_run")):
-		return true # Short returns and an existing player preference stay unchanged.
-	if not _event_for(&"auto_run", true) is InputEventJoypadButton:
-		_fail("Mira meadow return has no physical auto-run tap binding")
-		return false
-	_mira_road_run = RoadRunTap.new(-12.0)
-	_mira_walk_started = Engine.get_physics_frames()
-	_mira_run_trace.clear()
-	_tree.connect("physics_frame", Callable(self, "_service_mira_road_run"))
-	return true
-
-
-func _service_mira_road_run() -> void:
-	_mira_road_run_edge(false) # Release edges only, except failure-path cleanup.
-
-
-func _mira_road_run_edge(driving: bool) -> void:
-	if _mira_road_run == null:
-		return
-	var edge := _mira_road_run.advance(Engine.get_physics_frames(), _player.global_position.z,
-		driving, bool(_game.get("auto_run")))
-	if edge != RoadRunTap.Edge.NONE:
-		var event := _event_for(&"auto_run", edge == RoadRunTap.Edge.PRESS) as InputEventJoypadButton
-		_mira_run_trace.append({"physics_frame": Engine.get_physics_frames(), "pressed": event.pressed,
-			"pad_button": event.button_index, "auto_run_before_dispatch": bool(_game.get("auto_run")),
-			"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z]})
-		Input.parse_input_event(event)
-		# The native movement callback flushes a press before the controller.
-		# A release must also reach the controller when a refused walk has ended.
-		if not driving:
-			Input.flush_buffered_events()
-	if _mira_road_run.phase == RoadRunTap.Phase.FAILED:
-		_mira_run_refused = true
-		_fail("physical Mira auto-run tap did not restore the observed production state")
-	if _mira_road_run.phase in [RoadRunTap.Phase.DONE, RoadRunTap.Phase.FAILED]:
-		_tree.disconnect("physics_frame", Callable(self, "_service_mira_road_run"))
-		_mira_road_run = null
-
-
-func _finish_mira_road_run() -> bool:
-	if _mira_road_run != null:
-		_mira_road_run.finish = true
-		_mira_road_run_edge(false)
-		# A refused walk can finish its physical off tap using only unused
-		# ticks from the ORIGINAL900 allowance. It remains refused throughout.
-		var remaining := maxi(0, 900 - int(Engine.get_physics_frames() - _mira_walk_started))
-		while _mira_road_run != null and remaining > 0:
-			_stop_left_stick()
-			Input.flush_buffered_events()
-			remaining -= 1
-			await _tree.physics_frame
-		# Never extend the budget or accept an arrival with an owned run toggle.
-		if _mira_road_run != null:
-			_fail("Mira road run did not finish within the original standoff allowance")
-			return false
-	if not _mira_run_trace.is_empty():
-		print("MIRA ROAD RUN INPUT ", JSON.stringify({"acceptance": false, "edges": _mira_run_trace,
-			"auto_run_after": bool(_game.get("auto_run")), "refused": _mira_run_refused}))
-	return _failures.is_empty()
 
 
 ## Reproduced twice running this segment for real (OWNER-0901-PLAYER-SLEEP-V2):
@@ -1169,10 +1049,6 @@ func _send_axis(axis: JoyAxis, value: float) -> void:
 ## would not have been travel by the player's own left stick, and this segment's
 ## header makes that a load-bearing constraint.
 func _send_stick(x: float, y: float) -> void:
-	_mira_road_run_edge(x != 0.0 or y != 0.0)
-	if _mira_run_refused:
-		x = 0.0
-		y = 0.0
 	_send_axis(JOY_AXIS_LEFT_X, x)
 	_send_axis(JOY_AXIS_LEFT_Y, y)
 
