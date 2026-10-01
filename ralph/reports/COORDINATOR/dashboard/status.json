@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-01T01:43:07Z",
+ "updated": "2026-10-01T02:58:07Z",
  "headline": [
   "OWNER REDESIGN: RD-01..RD-37; F16\u2013F49 have 179 criteria. RD-36/RD-37 prioritize content/code, minimum named or substantial-rework-risk checks, batched evidence reuse and next-task implementation while checks run. Unit/full-CI runs are not automatic per change; dependency landing order, required acceptance and independent verdicts remain.",
-  "Criteria met:110 of280 on main b7cb96de89 via PR503. Original95/101; redesign15/179. F17#5 strict join/reload agreement PASS; original whole native timeout/four ENet errors retained. No additional source-only criterion credit.",
-  "Owner source pipeline: whole-feature visible local tasks; F18/F19/F20 owned drafts source-reviewed in PR504/505/506, all their criteria UNPROVEN. F22/F23/F28/F29/F30 code in parallel; F17#4 actual M1 deadline failure gets a separate fix task. Shared authority integration precedes combined necessary runtime/visual batches; one engine/GPU writer.",
+  "Criteria accepted:110/280 on main30fcc38fc5 (original95/101; redesign15/179). Draft-source work is now In progress in atomic rows, with NO new MET. Progress bars include implementation; accepted count includes only MET.",
+  "Whole-feature draft source: PR504\u2013516/518 include F18/F19/F20/F22/F23/F24/F28/F29/F30/F31/F32/F33/F35; F25 effect source active. Shared durable producers being composed; new flags OFF, actual required proof remains OPEN.",
   "Main was green at 8f5dd6ed2 (full CI 36626653020) before the redesign docs; the rolling download is from that commit."
  ],
  "batches": [
@@ -518,23 +518,23 @@
   "M2: the 326 m Hall-exit walk is exempt (owner). M2 still needs its integrated run.",
   "Cloudreach Phase 2c: all 20 owned impact >=12 rows are deferred with reason, owner and required follow-up; no item is claimed fixed. skyline_profile.enabled=false and crown_arcade.enabled=false after paired FAIL. Native 37-row matrix plus four summit views reviewed; regional Bars A/B NO/NO. See VISUAL/phase2/cloudreach/catalog-disposition-audit.json and per-item dispositions. Obstructed rows and P2-053 partial capture are not accepted evidence; motion and earned traversal are not established by stills."
  ],
- "last_lane_refresh": "2026-10-01T01:43:07Z",
+ "last_lane_refresh": "2026-10-01T02:58:07Z",
  "lane_activity": [
   {
    "lane": "Shared authority \u00b7 tb/foundations",
-   "checkpoint": "Shared owner visible task01a0f51f, full access confirmed. F27 paid build/spend/earned victory source proposals OFF; actual Director and actor settlement integration active. Departure r1/r2 FAIL before leave retained. Responsive startup plus actual JoinDriver world-complete guard independently SOURCEPASS; affected leave/rejoin proof next, no acceptance credit."
+   "checkpoint": "Shared27path r5 portal/adoption/finite-gift SOURCEPASS at6d4736; runtime permits/grounded travel/F19/F20 still CLOSED. ActualdepartureR3 native1/178.375 failed155s coordinator step, realheartbeats, noleave/rejoin.66s nativeTerrain region call requires changedloader source, exact3pathreview active; finalnative maps still synchronous/unproved."
   },
   {
    "lane": "F21#4 \u00b7 tb/combat",
-   "checkpoint": "F21#4 actual R2 numeric PASS; independent54PNG blind review6/9 readability FAIL and all9 full craft FAIL. R5 minimal predicate plus C2/C4 source independently PASS; expensive fresh capture deferred for coherent craft batch. Incoming HP/remote readiness OFF. No criterion credit."
+   "checkpoint": "F21 trackedbc07/source8da29 mergedmain30fcc; exact7 cameraR5+C2/C4 source cuts archived, independentSOURCEPASS only. PriorR2 numeric9PASS/blind6FAIL+fullcraft9FAIL retained. F23/F24 actualaction/TM/input/gear/arrival sharedproducers still unconnected; no MET."
   },
   {
    "lane": "F17#4 \u00b7 ROOT on tb/hub",
-   "checkpoint": "F17#0-#3 and F17#5 MET on main b7cb via PR503; original whole Hall timeout/four ENet errors retained. F17#4 production steering native1/253.172s FAIL at first Mira callback deadline. Separate visible helper-fix task/source review active; original budgets retained. F17#4/#6 OPEN."
+   "checkpoint": "F17#0\u2013#3/#5 main; F17#4 actualR3 native1/293.203s FAILED atwood contactcount12 versus8. Floor+wall, secondnodeunknown; inherited Terrain-only errorpaths incomplete. Changedapproach provisional physical sticksteering being authored with originalbounds; no unchangednative retry."
   },
   {
    "lane": "Preserved targets \u00b7 other lanes",
-   "checkpoint": "Whole-feature visible tasks F18/F19/F20 source-reviewed drafts PR504/505/506, unproved. F29 source-reviewed draft PR507, art/evolution flags OFF. F22/F23/F28/F30 source coding continues. Shared authority and one coherent necessary proof batch precede acceptance; no source-only MET."
+   "checkpoint": "Owned draft-source completed across features; F25effects/F31stations/F32materials/F33gear/F35ultimates source packets join existing F18\u201324/F28\u201330. Strict runtime/save/co-op/visual proofs batched only after actualsingle-owner producers; source is NOT acceptance."
   }
  ],
  "active_work": [
@@ -553,8 +553,8 @@
   {
    "criterion": "F17#4",
    "lane": "tb/hub",
-   "source": "Hub f65692df; actual production-steering-r1 native1/253.172s",
-   "state": "Starter/catch/roadgate PASS, first Mira approach refused callback deadline; F17#4 OPEN. Visible fix task, no unchanged retry"
+   "source": "Hub8189ef; actualM1R3 native1/293.203s, campaign277.246s",
+   "state": "OPEN; wood actualfloor+wall12cachedpoints exceedsoriginal8cap. Originalguard/budgets retained; concrete physics-aware source successor next, no genericretry"
   },
   {
    "criterion": "F17#5",
@@ -571,64 +571,100 @@
   {
    "criterion": "Affected departure/loading regression",
    "lane": "tb/foundations",
-   "source": "555318; actual r1 native2/172.484s and r2 native2/313.688s; loader proposal34bf8",
-   "state": "Both FAIL before leave; r2 host completed, guest build watchdog. Changed approach: actual responsive Compatibility/pre-admission construction, same limits; independent source review active"
+   "source": "Foundation6d4736; actualR3 native1/178.375s,155s stepwall; regionloader sourceproposal949bd6",
+   "state": "OPEN; hostactualheartbeats continued, nojoin/departure;64regions native66s. Different-author source review, alloriginallimits unchanged"
   },
   {
    "criterion": "F18#0-#5",
    "lane": "tb/f18",
-   "source": "a2dc43094a; PR504",
-   "state": "Owned source/recheck PASS only; shared authority/protected consumers and full player proofs missing; no MET credit",
+   "source": "DraftPR504 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f4f8-e11a-71d2-8984-caa18c9bad04"
   },
   {
    "criterion": "F19#0-#5",
    "lane": "tb/f19",
-   "source": "f09e16cdb3; PR505",
-   "state": "Owned curve/content source PASS only; ceremony-timed rewards/shared readers/earned route unproved; no MET credit",
+   "source": "DraftPR505 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f4f8-e65f-7591-94a7-b4799df734b7"
   },
   {
    "criterion": "F20#0-#4",
    "lane": "tb/f20",
-   "source": "38069a117d; PR506",
-   "state": "Owned ending/source recheck PASS only; canonical HomeKey arrival, owner ACK and shared coroutine/quest integration unproved; no MET credit",
+   "source": "DraftPR506 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf"
   },
   {
    "criterion": "F22#0-#4",
    "lane": "tb/f22",
-   "source": "source coding",
-   "state": "AI/role/named patterns and real solo Director/victory lifecycle; no MET credit",
+   "source": "DraftPR513 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f510-cc96-7090-8e99-bf47054aed88"
   },
   {
    "criterion": "F23#0-#5",
    "lane": "tb/f23",
-   "source": "source coding",
-   "state": "Learnsets/moves/teaching/mastery; shared dispatch/HUD proposals; no MET credit",
+   "source": "DraftPR512 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f512-a7d7-7f91-b47f-922a18d234d6"
   },
   {
    "criterion": "F28#0-#5",
    "lane": "tb/f28",
-   "source": "source coding",
-   "state": "Masters/caps/feasts; canonical same-receipt Kitchen feed contracts; no MET credit",
+   "source": "DraftPR508 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f512-ab97-7c93-a96c-45705ff3d26a"
   },
   {
    "criterion": "F29#0-#4",
    "lane": "tb/f29",
-   "source": "Visible task01a0f512-b160-7053-8f6a-e84f072c2d94; owned source b40b9c0203, draft PR507,38 source checks + independent source PASS",
-   "state": "Source ready for F28 feed/shared integration; actual art absent and all criteria OPEN. Source/metadata is not runtime or art proof.",
+   "source": "DraftPR507 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f512-b160-7053-8f6a-e84f072c2d94"
   },
   {
    "criterion": "F30#0-#4",
    "lane": "tb/f30",
-   "source": "source coding",
-   "state": "Wild traits/seed/consumer effects; same release and portable authority contracts; no MET credit",
+   "source": "DraftPR510 ownedsource; acceptanceUNPROVEN",
+   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
    "thread": "01a0f512-b8f3-7522-a5bf-59c1a4a901da"
+  },
+  {
+   "criterion": "F24#0\u2013#5",
+   "lane": "tb/f24",
+   "source": "DraftPR511",
+   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
+  },
+  {
+   "criterion": "F25#0\u2013#5",
+   "lane": "tb/f25",
+   "source": "tb/f25 visible task01a0f546-24b0-7e61-930f-07eae74b0746; old24 archetypes reused, source being composed",
+   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
+  },
+  {
+   "criterion": "F31#0\u2013#6",
+   "lane": "tb/f31",
+   "source": "DraftPR516",
+   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
+  },
+  {
+   "criterion": "F32#0\u2013#5",
+   "lane": "tb/f32",
+   "source": "DraftPR515",
+   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
+  },
+  {
+   "criterion": "F33#0\u2013#4",
+   "lane": "tb/f33",
+   "source": "DraftPR518",
+   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
+  },
+  {
+   "criterion": "F35#0\u2013#4",
+   "lane": "tb/f35",
+   "source": "DraftPR514",
+   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
   }
  ],
  "preserved_work": [

@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-01T00:33:51Z",
- "main_sha": "5c2c964ebaa8e25f933355324725be324218bc44",
+ "generated_at": "2026-10-01T02:58:07Z",
+ "main_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
   {
@@ -1018,51 +1018,51 @@
    "title": "Home Key, portal keys and waystones",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Grandpa gives the Home Key during the opening; it sits in the backpack and cannot be dropped, sold, traded or lost in a death satchel.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 504 https://github.com/MJohnsonWellabe/Tetherbound/pull/504; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Using the Home Key is one tap: a ~2 s raise-and-glow animation, then arrival at the home arch; it is refused with a stated reason in combat, dialogue, cutscene, while swimming and mid-flight; free with no cooldown.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 504 https://github.com/MJohnsonWellabe/Tetherbound/pull/504; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Portal keys are real inventory items; using one at its arch unlocks that portal permanently; locked arches refuse with a readable reason; retired physical crossings no longer lead between biomes (test proves portals are the only realm path).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 504 https://github.com/MJohnsonWellabe/Tetherbound/pull/504; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Each live biome has 3\u20135 waystones activated by touch; a portal sends the player to their last activated waystone in that biome (entry point if none); activation persists through reload.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 504 https://github.com/MJohnsonWellabe/Tetherbound/pull/504; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Co-op: every player has their own Home Key and it moves only that player; a portal opens for the whole session when the host world or that character has unlocked it; a guest's own unlock follows their character to another host.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 504 https://github.com/MJohnsonWellabe/Tetherbound/pull/504; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Ordinary-input loop witness: deep in a biome \u2192 Home Key \u2192 use a homestead station \u2192 portal back to the waystone, with a save/reload between steps.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 504 https://github.com/MJohnsonWellabe/Tetherbound/pull/504; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1071,51 +1071,51 @@
    "title": "Biome reorder and level curve",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/reorder",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "The order Meadows \u2192 Tidewake \u2192 Cloudreach \u2192 Stormwood drives the config, map, journal, portal signs and credits.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 505 https://github.com/MJohnsonWellabe/Tetherbound/pull/505; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Level bands: Meadows 3\u219222 (wild 2\u201320, Warden ~21\u201322), Tidewake 20\u219233 (wild 18\u201332, Nerissa ~32\u201333), Cloudreach 31\u219244 (wild 29\u201343, Veyra ~43\u201344), Stormwood 42\u219255 (wild 40\u201354, finale ~54\u201355); wild tables and named trainer teams re-derived; a curve test pins them.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 505 https://github.com/MJohnsonWellabe/Tetherbound/pull/505; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Boss hand-offs: Warden \u2192 Tidewake key; Tidewake finale \u2192 Cloudreach key; Veyra \u2192 Stormwood key; Stormwood finale \u2192 fifth key; each biome relic still granted; every participant receives their own.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 505 https://github.com/MJohnsonWellabe/Tetherbound/pull/505; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Traversal: nothing in Tidewake requires Fly; nothing in Cloudreach or Stormwood assumes a later legendary or relic (gate-scan test).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 505 https://github.com/MJohnsonWellabe/Tetherbound/pull/505; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Per-participant legendary offers (Veridian, Abyssal Guardian, Solmane, Stormwood's legendary) still work in the new order, accept and refuse, at capacity and with space.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 505 https://github.com/MJohnsonWellabe/Tetherbound/pull/505; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 505 https://github.com/MJohnsonWellabe/Tetherbound/pull/505; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1124,45 +1124,45 @@
    "title": "Ending after Stormwood and the fifth key",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/reorder",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Tidewake's dock exchange completes as Tidewake's chapter resolution and no longer rolls credits.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 506 https://github.com/MJohnsonWellabe/Tetherbound/pull/506; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "After the Stormwood finale the player uses the Home Key; Grandpa names the current five, the starter's status, one bond memory and chapter choices; credits roll once per character.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 506 https://github.com/MJohnsonWellabe/Tetherbound/pull/506; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Using the fifth key at the fifth arch makes it stir (glow, sound, one line: not ready yet) but not open; no quest, cliffhanger or sequel prompt.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 506 https://github.com/MJohnsonWellabe/Tetherbound/pull/506; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "After credits, reload resumes a safe completed world with bounties, rematches and remaining activities available.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 506 https://github.com/MJohnsonWellabe/Tetherbound/pull/506; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Two peers each get their own homecoming acknowledgement and credits exactly once through disconnect/reload.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 506 https://github.com/MJohnsonWellabe/Tetherbound/pull/506; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1171,51 +1171,51 @@
    "title": "Combat impact and camera",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Every landed hit produces tunable hitstop, knockback scaled by move weight, a target hit-reaction pose and a damage number; all values live in config.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/combat sourcebc07a6c6df; R5/C2/C4 source gate only, actual prior blind failures retained; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Critical and super-effective hits read differently from ordinary hits (number size/colour, sound, flash); resisted hits read weaker.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/combat sourcebc07a6c6df; R5/C2/C4 source gate only, actual prior blind failures retained; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Poise break produces a visible stagger state with a bonus-damage window.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/combat sourcebc07a6c6df; R5/C2/C4 source gate only, actual prior blind failures retained; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Heavy hits add camera shake and controller rumble, each with an accessibility toggle.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/combat sourcebc07a6c6df; R5/C2/C4 source gate only, actual prior blind failures retained; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Fight camera keeps both actors framed without overlap for small, normal and giant bodies (catalog P2-062/P2-092 class); code-blind judge PASS on a size matrix.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/combat sourcebc07a6c6df; R5/C2/C4 source gate only, actual prior blind failures retained; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Code-blind judge prefers after over before on 'hits feel weighty and readable' from matched frame sequences; fights hold frame rate on the Medium preset capture.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/combat sourcebc07a6c6df; R5/C2/C4 source gate only, actual prior blind failures retained; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1224,45 +1224,45 @@
    "title": "Enemy patterns, anti-mash and role identity",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Each combat role has at least two data-driven attack patterns with readable telegraphs; wild creatures reposition, dodge and punish rather than stand and trade.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 513 https://github.com/MJohnsonWellabe/Tetherbound/pull/513; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win \u22650.9; masher loses the lead creature materially more often).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 513 https://github.com/MJohnsonWellabe/Tetherbound/pull/513; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Switching has measurable value: tag-switch combos and type matchups let a switching reader beat a non-switching reader.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 513 https://github.com/MJohnsonWellabe/Tetherbound/pull/513; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "A code-blind judge names the role of five different creatures from fight footage alone.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 513 https://github.com/MJohnsonWellabe/Tetherbound/pull/513; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 513 https://github.com/MJohnsonWellabe/Tetherbound/pull/513; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1271,21 +1271,21 @@
    "title": "Move loadout: three slots, ultimate, learnsets and mastery",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 12,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 3,
-    "not_started": 3,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Every creature has quick, charged and utility slots plus an ultimate; default mapping X quick, Y charged, B utility, RB+face ultimate, A dodge; no held-button gameplay (charged moves are tap-to-start).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 512 https://github.com/MJohnsonWellabe/Tetherbound/pull/512; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Every species has a learnset unlocking moves at levels and breakthroughs; TMs still work under the primary-type rule.",
@@ -1307,15 +1307,15 @@
     },
     {
      "text": "Move mastery ranks 1\u20135 rise with use; each rank raises damage and upgrades the move's effect tier; mastery persists.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 512 https://github.com/MJohnsonWellabe/Tetherbound/pull/512; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "The ultimate meter fills from landed hits, the HUD shows it, and the ultimate fires only when full.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 512 https://github.com/MJohnsonWellabe/Tetherbound/pull/512; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1324,51 +1324,51 @@
    "title": "Tether Commands (trainer support, no damage)",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "A command meter fills from the piloted creature's hits and powers four commands: quick item throw, Rally (short team buff), tag-switch combo and Tether Snare.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 511 https://github.com/MJohnsonWellabe/Tetherbound/pull/511; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "The trainer never deals damage: a test proves every damage event is creature-attributed.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 511 https://github.com/MJohnsonWellabe/Tetherbound/pull/511; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Switching within the combo window after a hit triggers a joint attack from both creatures.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 511 https://github.com/MJohnsonWellabe/Tetherbound/pull/511; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Tether Snare slows a wild creature and raises catch chance; it cannot target a trainer-owned creature.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 511 https://github.com/MJohnsonWellabe/Tetherbound/pull/511; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Workbench trainer-gear tiers upgrade commands (meter rate, pouch size, snare strength).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 511 https://github.com/MJohnsonWellabe/Tetherbound/pull/511; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Co-op: each player's commands affect only their own creature and are host-validated.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 511 https://github.com/MJohnsonWellabe/Tetherbound/pull/511; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1377,12 +1377,12 @@
    "title": "Move effects library (real pebbles, fireballs, lightning)",
    "chapter": "Wave 1 \u00b7 World, order, combat and look",
    "lane": "tb/vfx",
-   "pct": 4,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 5,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1395,33 +1395,33 @@
     },
     {
      "text": "Every move in data/moves/moves.json maps to an archetype with parameters; a test fails on an unmapped move.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/f25 visible task01a0f546-24b0-7e61-930f-07eae74b0746; old24 archetypes reused, source being composed; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "A code-blind judge identifies from frames: pebble toss shows several small stones in flight, rock throw one boulder, fireball a burning orb with a trail and explosion, lightning a bolt striking the target from above.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/f25 visible task01a0f546-24b0-7e61-930f-07eae74b0746; old24 archetypes reused, source being composed; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Damage resolves when the effect arrives (or the exception is documented per archetype); no damage number appears before the visible hit.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/f25 visible task01a0f546-24b0-7e61-930f-07eae74b0746; old24 archetypes reused, source being composed; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Each effect has a particle budget; a worst-case four-creature fight holds frame rate on the Medium preset capture; nothing depends on an effect the Compatibility preset cannot draw without a fallback.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/f25 visible task01a0f546-24b0-7e61-930f-07eae74b0746; old24 archetypes reused, source being composed; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Mastery ranks visibly upgrade the effect (size, count, trail).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "tb/f25 visible task01a0f546-24b0-7e61-930f-07eae74b0746; old24 archetypes reused, source being composed; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1536,51 +1536,51 @@
    "title": "Breakthroughs, Masters and Ascension Feasts",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 6,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Caps at 10, 20, 30, 40 and 50 (ceiling 60 this pass; data holds up to 100); a capped creature stops gaining levels and shows 'breakthrough needed'.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 508 https://github.com/MJohnsonWellabe/Tetherbound/pull/508; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Five Masters are placed off-path and signposted: L10 mid-Meadows, L20 upper Meadows before the Warden's stronghold, L30 an outer Tidewake island, L40 a Cloudreach high perch (Fly), L50 deep Stormwood.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 508 https://github.com/MJohnsonWellabe/Tetherbound/pull/508; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Each Master fight is a 1v1 with a creature of the player's choice; a win opens a chest teaching that tier's Ascension Feast once per character; a loss is retryable.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 508 https://github.com/MJohnsonWellabe/Tetherbound/pull/508; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "The feast needs that tier's biome materials plus one type-attuned ingredient matching the creature; it is cooked at the Kitchen and fed to one creature to lift its cap.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 508 https://github.com/MJohnsonWellabe/Tetherbound/pull/508; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Each co-op participant earns their own recipe; nobody receives it twice.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 508 https://github.com/MJohnsonWellabe/Tetherbound/pull/508; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "A ledger proves every feast ingredient is reachable in or before its biome.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 508 https://github.com/MJohnsonWellabe/Tetherbound/pull/508; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1589,45 +1589,45 @@
    "title": "Evolution lines (one per biome)",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Four lines: Mudsnout \u2192 Tuskroot or Ashtusk at L20 (heartstone/sunstone as feast ingredient), Mosshell \u2192 Cannonback at L30, Craghorn \u2192 Stormcapra at L40, Staticub \u2192 the new Stormwood storm bear at L50.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 507 https://github.com/MJohnsonWellabe/Tetherbound/pull/507; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "The breakthrough offers evolve or stay; staying is permanent for that tier.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 507 https://github.com/MJohnsonWellabe/Tetherbound/pull/507; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Evolution preserves uid, nickname, level, bond history, IVs, traits and mastery.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 507 https://github.com/MJohnsonWellabe/Tetherbound/pull/507; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "The new storm bear exists via an agent-drafted reference and Meshy, larger than Staticub and taller than the trainer, with provenance recorded and an in-engine code-blind PASS; flag-gated until then.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 507 https://github.com/MJohnsonWellabe/Tetherbound/pull/507; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Cannonback and Stormcapra remain wild where they already appear; Tuskroot, Ashtusk and the storm bear are not wild.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 507 https://github.com/MJohnsonWellabe/Tetherbound/pull/507; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1636,45 +1636,45 @@
    "title": "Traits and Trait Seeds",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "About 30 traits in Common, Rare and Epic tiers; wild creatures roll 0\u20133; alphas and night or weather spawns roll better.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 510 https://github.com/MJohnsonWellabe/Tetherbound/pull/510; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Traits show on the catch readout and creature inspect screens.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 510 https://github.com/MJohnsonWellabe/Tetherbound/pull/510; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Releasing a caught creature at the Altar distils one chosen trait into a Trait Seed.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 510 https://github.com/MJohnsonWellabe/Tetherbound/pull/510; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "A seed teaches into trait slots unlocked at the L10, L30 and L50 breakthroughs and costs essence.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 510 https://github.com/MJohnsonWellabe/Tetherbound/pull/510; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Each trait's effect applies in combat or traversal (unit test per trait); the existing bond second-trait rule is unified with this system.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 510 https://github.com/MJohnsonWellabe/Tetherbound/pull/510; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1683,57 +1683,57 @@
    "title": "Homestead stations and upgrades",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 7,
+    "in_progress": 7,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Workbench, Forge, Kitchen, Altar, Den and Farm plots (plus chests) can be built on the homestead plot.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 516 https://github.com/MJohnsonWellabe/Tetherbound/pull/516; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Forge, Kitchen, Altar and Den each take exactly one attachment per biome (4 live, 8 slots) built from biome materials; recipe tier requires the attachment.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 516 https://github.com/MJohnsonWellabe/Tetherbound/pull/516; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic \u2192 Tidewake tier, and so on; Stormwood's relic \u2192 reserved tier 5); the player then carries one chosen relic power.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 516 https://github.com/MJohnsonWellabe/Tetherbound/pull/516; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Each station shows a single 'next upgrade' target; no tech tree screen is required to understand progress.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 516 https://github.com/MJohnsonWellabe/Tetherbound/pull/516; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "No automation: crops, smelting and cooking need the player's interaction (test).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 516 https://github.com/MJohnsonWellabe/Tetherbound/pull/516; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Co-op: buildings are world-owned; tiers and recipes are personal; a guest uses the host's stations at the host's tier and keeps what they craft.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 516 https://github.com/MJohnsonWellabe/Tetherbound/pull/516; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Stations read as distinct objects at the normal camera (code-blind judge).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 516 https://github.com/MJohnsonWellabe/Tetherbound/pull/516; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1742,21 +1742,21 @@
    "title": "Materials, attuned nodes and essence farming",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 4,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 1,
-    "not_started": 5,
+    "in_progress": 6,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "The four tier material sets (Meadows rootstone/ironwood\u2026, Tidewake driftwood/reef stone/sluice metal/tide bloom/Tide Pearl, Cloudreach heartwood/cliffglass/gale fiber/skyplume, Stormwood thunderwood/stormglass/conductor vine/glowmoss/sparkfur/voltcap) are gatherable in their biome.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 515 https://github.com/MJohnsonWellabe/Tetherbound/pull/515; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "The Forge refines Rootiron, Tidesteel, Skyglass and Stormglass plate.",
@@ -1766,27 +1766,27 @@
     },
     {
      "text": "One or two type-essence nodes per type sit in each biome, mostly off-route, and respawn on a configured timer.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 515 https://github.com/MJohnsonWellabe/Tetherbound/pull/515; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Eight type crops grow on homestead plots; the Greenhouse (a Farm buildable, not an attachment) grows off-biome crops; every harvest is by hand.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 515 https://github.com/MJohnsonWellabe/Tetherbound/pull/515; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Shed items (skyplume, sparkfur and others) drop after wins and from Den grooming; no item implies hunting or butchering (test).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 515 https://github.com/MJohnsonWellabe/Tetherbound/pull/515; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "The ten Tidewake water_crafting proposals are registered at runtime; four-character node contention follows MULTIPLAYER.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 515 https://github.com/MJohnsonWellabe/Tetherbound/pull/515; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1795,45 +1795,45 @@
    "title": "Creature gear and trainer gear",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/homestead",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Creatures have Harness and Charm slots in Rootiron, Tidesteel, Skyglass and Stormglass tiers, each upgradable +1 to +3.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 518 https://github.com/MJohnsonWellabe/Tetherbound/pull/518; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Equipped gear shows on the creature as a trim or glow accent.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 518 https://github.com/MJohnsonWellabe/Tetherbound/pull/518; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 518 https://github.com/MJohnsonWellabe/Tetherbound/pull/518; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Trainer gear mitigates the trainer's actual hazards (falls, storm static, cold heights, drowning and currents, hazard terrain), each covered by a test.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 518 https://github.com/MJohnsonWellabe/Tetherbound/pull/518; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Trainer tool pouch tiers extend Tether Commands; all gear persists and is personal in co-op.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 518 https://github.com/MJohnsonWellabe/Tetherbound/pull/518; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
@@ -1889,45 +1889,45 @@
    "title": "Signature ultimates",
    "chapter": "Wave 2 \u00b7 Creature power, homestead and visuals",
    "lane": "tb/vfx",
-   "pct": 0,
+   "pct": 25,
    "counts": {
     "met": 0,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 5,
+    "in_progress": 5,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "16\u201320 shared type\u00d7role ultimates exist and every non-unique species maps to one (test).",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 514 https://github.com/MJohnsonWellabe/Tetherbound/pull/514; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Unique ultimates exist for Terrapup, Ripplet, Galewisp, Veridian, Abyssal Guardian, Solmane, Fulgocobra (the Stormwood legendary), Tuskroot, Ashtusk, Cannonback, Stormcapra and the storm bear.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 514 https://github.com/MJohnsonWellabe/Tetherbound/pull/514; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Each ultimate visibly grows at breakthroughs.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 514 https://github.com/MJohnsonWellabe/Tetherbound/pull/514; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "Presentation lasts 2\u20133 s with no longer loss of control and stays readable in four-player fights.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 514 https://github.com/MJohnsonWellabe/Tetherbound/pull/514; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     },
     {
      "text": "A code-blind judge distinguishes every unique ultimate from the others.",
-     "status": "not_started",
-     "evidence": "",
-     "gap": "Not started (redesign 2026-09-29)."
+     "status": "in_progress",
+     "evidence": "Draft source PR 514 https://github.com/MJohnsonWellabe/Tetherbound/pull/514; source progress only, NOT acceptance evidence.",
+     "gap": "Shared integration and named ordinary-player/save/co-op/visual proofs remain OPEN as applicable; new runtime flags OFF. No criterion accepted from source checks."
     }
    ]
   },
