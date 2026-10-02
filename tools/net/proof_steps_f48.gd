@@ -206,6 +206,25 @@ static func _path(value: Variant, path: String) -> Variant:
 		value = value[part]
 	return value
 
+## JSON IPC parses integral numbers as floats. Compare every field/key/item
+## without rounding, coercing booleans/strings or accepting lossy large ints.
+static func _json_equal(left: Variant, right: Variant) -> bool:
+	if left is Dictionary and right is Dictionary:
+		if left.size() != right.size(): return false
+		for key: Variant in left:
+			if not right.has(key) or not _json_equal(left[key], right[key]): return false
+		return true
+	if left is Array and right is Array:
+		if left.size() != right.size(): return false
+		for index: int in left.size():
+			if not _json_equal(left[index], right[index]): return false
+		return true
+	if (left is int or left is float) and (right is int or right is float):
+		if not is_finite(float(left)) or not is_finite(float(right)): return false
+		if typeof(left) != typeof(right) and (abs(float(left)) > 9007199254740991.0 or abs(float(right)) > 9007199254740991.0): return false
+		return left == right
+	return typeof(left) == typeof(right) and left == right
+
 static func _counts(payload: Dictionary) -> Dictionary:
 	var out := {}
 	for row: Variant in payload.get("inventory", []):
@@ -257,7 +276,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 				expected_uids.erase(args.released_uid)
 				if party != expected_uids: errors.append(payload + ": release replaced or lost another companion")
 		for path: String in args.get("equals", {}):
-			if _path(state, path) != args.equals[path]: errors.append(payload + ": wrong " + path)
+			if not _json_equal(_path(state, path), args.equals[path]): errors.append(payload + ": wrong " + path)
 		for path: String in args.get("contains", {}):
 			var values: Variant = _path(state, path)
 			if not values is Array or not values.has(args.contains[path]): errors.append(payload + ": missing " + path)
@@ -271,7 +290,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if not prior.is_empty():
 			var before: Dictionary = prior[payload]
 			for path: String in args.get("unchanged", []):
-				if _path(state, path) != _path(before, path): errors.append(payload + ": replay changed " + path)
+				if not _json_equal(_path(state, path), _path(before, path)): errors.append(payload + ": replay changed " + path)
 			var counts := _counts(state)
 			var old_counts := _counts(before)
 			for item: String in args.get("item_delta", {}):
@@ -289,7 +308,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 						if not current.has(receipt): errors.append(payload + ": lost receipt " + path)
 		# Convergence is checked on transaction-bearing fields, not incidental pose/time.
 	for path: String in ["inventory", "redesign_character", "satchel_escrow"]:
-		if _path(now.memory, path) != _path(now.disk, path): errors.append("Memory/disk disagree: " + path)
+		if not _json_equal(_path(now.memory, path), _path(now.disk, path)): errors.append("Memory/disk disagree: " + path)
 	if args.get("boss_rewards") == true:
 		_check_boss(now, errors)
 	if args.has("saved_transaction"):
@@ -303,7 +322,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 			errors.append("Actual guest transaction observation or host-owned file unavailable")
 		else:
 			for scope: String in ["world", "disk_world"]:
-				if now[scope].get("reward_deliveries", {}).get(identity) != expected:
+				if not _json_equal(now[scope].get("reward_deliveries", {}).get(identity), expected):
 					errors.append(scope + ": host file changed/lost original guest saved transaction row")
 	if args.has("participants"):
 		_check_host_journal(now, args.participants, str(tree.get_meta("f48_boss_encounter", "")), errors)
@@ -364,7 +383,7 @@ static func _check_saved_transaction(tree: SceneTree, now: Dictionary, prior: Di
 		errors.append("Admission replaced the original native-cut writer receipt/identity")
 	if args.has("same_transaction_as"):
 		var remembered: Dictionary = tree.get_meta("f48_witness_" + str(args.same_transaction_as), {})
-		if remembered.is_empty() or _transaction_row(remembered, transaction) != row:
+		if remembered.is_empty() or not _json_equal(_transaction_row(remembered, transaction), row):
 			errors.append("Reconnect changed the original accepted transaction or its full immutable intent")
 	elif not prior.is_empty() and _transaction_row(prior, transaction).get("receipt") == receipt:
 		errors.append("Expected one new original transaction, but journal already existed before input")
