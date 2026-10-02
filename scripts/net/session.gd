@@ -4278,6 +4278,26 @@ func send_portal_owner_permit(producer: Node, peer: int, envelope: Dictionary, p
 		or peer == local_peer_id() or not _portal_envelope_valid(peer, envelope): return
 	rpc_id(peer, "_rpc_portal_owner_permit", envelope, permit)
 
+func portal_owner_travel_started(producer: Node, envelope: Dictionary, permit: Dictionary) -> bool:
+	# Presentation handoff only: the original request remains pending until
+	# ordinary supported contact, portable bool-save and accepted host ACK.
+	if producer == null or producer != get_node_or_null(^"FoundationComposition/PortalArrival") \
+		or _portal_requests.get(envelope.get("request_id"), {}) != envelope \
+		or not envelope.get("payload") is Dictionary \
+		or envelope.get("payload", {}).get("kind") != "home_key_finish" \
+		or producer.call("presentation_binding", envelope, permit) != true: return false
+	var key := _game().get_node_or_null(^"HomeKey")
+	if key != null: return await key.call("travel_started", str(envelope.request_id))
+	return false
+
+func portal_owner_save_waiting(producer: Node, envelope: Dictionary, permit: Dictionary) -> void:
+	if producer == null or producer != get_node_or_null(^"FoundationComposition/PortalArrival") \
+		or _portal_requests.get(envelope.get("request_id"), {}) != envelope \
+		or not envelope.get("payload") is Dictionary or envelope.payload.get("kind") != "home_key_finish" \
+		or producer.call("presentation_binding", envelope, permit, true) != true: return
+	var key := _game().get_node_or_null(^"HomeKey")
+	if key != null: key.call("save_waiting", str(envelope.request_id))
+
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_portal_owner_permit(envelope: Dictionary, permit: Dictionary) -> void:
 	if is_host() or not is_active() or not portal_runtime_ready() \

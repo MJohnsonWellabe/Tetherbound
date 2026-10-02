@@ -12,6 +12,8 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F18 candidate:** Ready-world waystone mounts, guest/local durable touch transactions, portal view fields and receiver permit enforcement have scoped passing evidence in `ralph/reports/HUB/f18/runtime-integration.json`. All six criteria remain UNPROVEN pending actual-world, earned-loop and live co-op proof; guest opening Home Key work is separate WIP.
 
+**F18 arrival dependency:** Upstream `cd272f5c51` measures actual nearby physics floor, preserves complete capsule/new contact/save fences, awaits the consumed-permit fade, and releases presentation during retained save retries. Source review and29 tests/377 assertions plus9 synthetic physics checks pass (`ralph/reports/HUB/f18/arrival-support.json`). All19 authored simulation stone/return pads pass after Salt Crown/Summit fixes (`authored-stones.json`). These dependency checks do not close actual arrival or F20 ending acceptance.
+
 **F20 candidate:** Outcome-bound personal Home Key receipts, durable credits ownership and personal fifth-arch presentation are wired; Tidewake's dock prompt remains anchored while Mara turns, and its producer refreshes the exact current host party before journaling. Focused ending checks and synthetic split-writer/reload pass. Actual replay found the canonical Home anchor intersects the Hall floor (F18 dependency) and an earlier dock journal retained a stale party baseline; revised dock recovery and authored arch-approach proofs await the next serialized slot. Actual solo/two-peer ending, disk continuation and visible/audible arch acceptance remain OPEN. Logs and disclosures: `ralph/reports/F20/ending-runtime/evidence.json`.
 
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
@@ -60,7 +62,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
     - The LB+face command layout is an optional preset only.
     - Command unlock: item throw and Snare at the practice catch; Rally and Tag-switch at the first two-creature fight.
 
-11. **Meadows waystones (F18):** recommend home arch returns to last Meadows waystone; keep home-only until owner confirms.
+11. **Meadows waystones (F18):** current CODEX_START_HERE F18#3/#5 settles personal last-waystone return through the home arch (entry if none); candidate live proof remains open.
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 

@@ -1,0 +1,190 @@
+{
+  "status": "Canonical simulation support/mount checks PASS after Summit correction; capsule/native/earned touch UNPROVEN",
+  "source_sha256": "3b857d44fc73fe946171d7d1c81d80868f7b99091cb25ade7f66c9a285107c0f",
+  "fixture": "Direct actual realm simulation shells; no player path; no native rendering",
+  "diagnostics": "Terrain3D camera absent in simulation shells; existing prop/deprecation/shared-tree and Cloudreach authored detail/wild-site warnings retained. These runs are not clean native gameplay evidence.",
+  "runs": [
+    {
+      "earned_play": false,
+      "failures": [],
+      "realm": "meadows",
+      "simulation_shell": true,
+      "stones": [
+        {
+          "arrival": "(344.3, 2.437186, 926.6)",
+          "id": "meadows_trail_camp",
+          "position": "(344.3, 1.983212, 929.6)"
+        },
+        {
+          "arrival": "(-256.4, 8.015899, 2250.1)",
+          "id": "meadows_ranger_camp",
+          "position": "(-256.4, 7.981905, 2253.1)"
+        },
+        {
+          "arrival": "(211.0, -4.412553, 3690.0)",
+          "id": "meadows_riverwatch",
+          "position": "(211.0, -4.66551, 3693.0)"
+        },
+        {
+          "arrival": "(276.7, 7.474513, 5642.5)",
+          "id": "meadows_highfield",
+          "position": "(276.7, 7.538921, 5645.5)"
+        },
+        {
+          "arrival": "(-23.8, 1.183301, 7446.9)",
+          "id": "meadows_sigil_waystop",
+          "position": "(-23.8, 1.27803, 7449.9)"
+        }
+      ],
+      "round": 1,
+      "log": "authored-meadows-r1.log.gz",
+      "warnings": 9,
+      "errors": 1,
+      "script_errors": 0
+    },
+    {
+      "earned_play": false,
+      "failures": [],
+      "realm": "water",
+      "simulation_shell": true,
+      "stones": [
+        {
+          "arrival": "(7.0, 8.244414, 132.0)",
+          "id": "tidewake_first_shore",
+          "position": "(7.0, 7.845682, 135.0)"
+        },
+        {
+          "arrival": "(359.2895, 3.230682, 961.4692)",
+          "id": "tidewake_shellwatch",
+          "position": "(359.2895, 4.081324, 964.4692)"
+        },
+        {
+          "arrival": "(556.0922, 4.652111, 1357.178)",
+          "id": "tidewake_tidal_cradle",
+          "position": "(556.0922, 5.404291, 1360.178)"
+        },
+        {
+          "arrival": "(287.9327, 2.407647, 2116.569)",
+          "id": "tidewake_salt_crown",
+          "position": "(287.9327, 2.799954, 2119.569)"
+        },
+        {
+          "arrival": "(672.3361, 4.221668, 2778.526)",
+          "id": "tidewake_sluice_isle",
+          "position": "(672.3361, 4.933466, 2781.526)"
+        }
+      ],
+      "round": 1,
+      "log": "authored-water-r1.log.gz",
+      "warnings": 1,
+      "errors": 1,
+      "script_errors": 0
+    },
+    {
+      "earned_play": false,
+      "failures": [
+        "cloudreach_summit_bivouac arrival dry supported footprint"
+      ],
+      "realm": "cloudreach",
+      "simulation_shell": true,
+      "stones": [
+        {
+          "arrival": "(-273.0, 180.0, 517.0)",
+          "id": "cloudreach_galefoot_waycamp",
+          "position": "(-273.0, 180.0, 520.0)"
+        },
+        {
+          "arrival": "(388.0, 610.0, 3248.0)",
+          "id": "cloudreach_windscar_flight_aerie_camp",
+          "position": "(388.0, 610.0, 3251.0)"
+        },
+        {
+          "arrival": "(-340.0, 830.0, 3960.0)",
+          "id": "cloudreach_cliffhold_commons",
+          "position": "(-340.0, 830.0, 3963.0)"
+        },
+        {
+          "arrival": "(inf, inf, inf)",
+          "id": "cloudreach_summit_bivouac",
+          "position": "(132.0, 1160.0, 5335.0)"
+        }
+      ],
+      "round": 1,
+      "log": "authored-cloudreach-r1.log.gz",
+      "warnings": 30,
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "earned_play": false,
+      "failures": [],
+      "realm": "cloudreach",
+      "simulation_shell": true,
+      "stones": [
+        {
+          "arrival": "(-273.0, 180.0, 517.0)",
+          "id": "cloudreach_galefoot_waycamp",
+          "position": "(-273.0, 180.0, 520.0)"
+        },
+        {
+          "arrival": "(388.0, 610.0, 3248.0)",
+          "id": "cloudreach_windscar_flight_aerie_camp",
+          "position": "(388.0, 610.0, 3251.0)"
+        },
+        {
+          "arrival": "(-340.0, 830.0, 3960.0)",
+          "id": "cloudreach_cliffhold_commons",
+          "position": "(-340.0, 830.0, 3963.0)"
+        },
+        {
+          "arrival": "(132.0, 1160.0, 5338.0)",
+          "id": "cloudreach_summit_bivouac",
+          "position": "(132.0, 1160.0, 5335.0)"
+        }
+      ],
+      "round": 2,
+      "log": "authored-cloudreach-r2.log.gz",
+      "warnings": 30,
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "earned_play": false,
+      "failures": [],
+      "realm": "stormwood",
+      "simulation_shell": true,
+      "stones": [
+        {
+          "arrival": "(-325.0, 29.55236, 456.0)",
+          "id": "stormwood_ashfoot_waycamp",
+          "position": "(-325.0, 29.28917, 459.0)"
+        },
+        {
+          "arrival": "(-410.0, 34.68501, 1415.0)",
+          "id": "stormwood_lantern_pools_camp",
+          "position": "(-410.0, 34.59017, 1418.0)"
+        },
+        {
+          "arrival": "(-130.0, 32.2854, 2720.0)",
+          "id": "stormwood_still_grove_shelter",
+          "position": "(-130.0, 32.15952, 2723.0)"
+        },
+        {
+          "arrival": "(-422.0, 55.27104, 3914.0)",
+          "id": "stormwood_lantern_hollow_waycamp",
+          "position": "(-422.0, 55.4888, 3917.0)"
+        },
+        {
+          "arrival": "(-140.0, 98.46745, 5232.0)",
+          "id": "stormwood_ember_bivouac",
+          "position": "(-140.0, 98.80744, 5235.0)"
+        }
+      ],
+      "round": 1,
+      "log": "authored-stormwood-r1.log.gz",
+      "warnings": 3,
+      "errors": 1,
+      "script_errors": 0
+    }
+  ]
+}
