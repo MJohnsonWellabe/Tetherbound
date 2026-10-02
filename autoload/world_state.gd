@@ -691,14 +691,25 @@ static func altar_build_id(world_namespace: String, character: String, txn: Stri
 
 static func altar_recipe() -> Array:
 	var data: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/items/buildables.json")
-	if not data is Dictionary or not data.get("buildables") is Array: return []
-	var found: Array = []
-	for raw: Variant in data.buildables:
-		if raw is Dictionary and raw.get("id") == "altar":
-			if not found.is_empty() or not raw.get("cost") is Array: return []
-			found = raw.cost.duplicate(true)
+	return altar_recipe_from_catalogue(data)
+
+## A saved paid placement still validates with runtime gates OFF. The Session
+## separately owns permission to place; this reader owns only authored identity
+## and the settled price across the actual legacy/homestead catalogue tables.
+static func altar_recipe_from_catalogue(data: Variant) -> Array:
+	if not data is Dictionary or not data.get("buildables") is Array \
+		or not data.get("homestead_buildables") is Array: return []
+	var found: Dictionary = {}
+	for table: String in ["buildables", "homestead_buildables"]:
+		for raw: Variant in data[table]:
+			if not raw is Dictionary or raw.get("id") != "altar": continue
+			if not found.is_empty(): return [] # Duplicates never pick a price by order.
+			if raw.get("station_id") != "altar" or raw.get("home_only") != true \
+				or raw.get("category") != "crafting" or not raw.get("cost") is Array: return []
+			found = raw
 	# Binding to the settled recipe, not a request price or Free Build setting.
-	return found if preload("res://scripts/creatures/essence.gd")._equivalent(found, [{"id": "stone", "n": 10}, {"id": "rootstone", "n": 4}, {"id": "ironwood", "n": 2}]) else []
+	var price := [{"id": "stone", "n": 10}, {"id": "rootstone", "n": 4}, {"id": "ironwood", "n": 2}]
+	return price if preload("res://scripts/creatures/essence.gd")._equivalent(found.get("cost"), price) else []
 
 
 static func altar_build_transition(full: Dictionary, character: String, revision: int,
