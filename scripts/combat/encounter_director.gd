@@ -2746,6 +2746,10 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	# The move the peer NAMED, built from the host's own numbers and the host's
 	# own two body radii. A peer cannot post itself a longer reach.
 	var card: Dictionary = _creature_card_for(peer_id)
+	# Admission can bind a missing trainer/boss actor and advance its real
+	# lifetime. Freeze the launch identity only after that authenticated bind,
+	# so the first accepted strike checks the same generation at arrival.
+	var publication_binding := _f22_publication_binding(encounter_id, peer_id, striker)
 	var attacker_binding := _strike_actor_binding(encounter_id, peer_id, striker)
 	if attacker_binding.is_empty():
 		return {"ok": false, "kind": "strike_intent", "peer": peer_id,
@@ -2774,7 +2778,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		"now_ms": now_ms,
 		"origin": striker.call("centre"),
 		"bodies": _encounter_body_rows(),
-		"f22_actor_binding": _f22_publication_binding(encounter_id, peer_id, striker),
+		"f22_actor_binding": publication_binding,
 	}
 	var verdict: Dictionary = _encounter_host.call("validate_strike", host_intent, peer_id, view)
 	if not bool(verdict.get("ok", false)):
