@@ -502,6 +502,7 @@ func _run() -> void:
 	await _check_the_quarry(world, player, failures)
 	await _check_the_river(world, player, failures)
 	await _check_mill_crossing(world, player, failures)
+	await _leave_incidental_wild_fight(world, failures)
 	await _check_sigil_gate(world, player, failures)
 	await _check_village_doors(world, failures)
 	_check_no_severed_spoke_blocks_a_route(failures)
@@ -1310,6 +1311,29 @@ const SIGIL_GATE_OFFSET_OUTSIDE_LEAF := 1.0
 ## test the widest plausible "walk around it" line, without putting the start
 ## point up on the gorge's own carved wall.
 const SIGIL_GATE_OFFSET_NEAR_GORGE := 1.0
+
+
+## The Old Mill Crossing's authored aggressor cluster (band3 spawn order
+## 3037) can engage during that check's walk. The Sigil Gate check then
+## teleports the player ~3 km, which no player can do mid-fight: the camera
+## (and Terrain3D's collision, which follows it) stays at the fight and the
+## player falls through unloaded ground. Leave a wild fight the way a player
+## does -- the flee input (combat_run, RT/Escape) -- before teleporting.
+func _leave_incidental_wild_fight(world: Node, failures: Array[String]) -> void:
+	var manager := world.get_node_or_null(^"CombatManager")
+	if manager == null or not bool(manager.call("is_fighting")):
+		return
+	print("  an incidental wild fight is running before the Sigil Gate check; fleeing it")
+	for _attempt in 10:
+		Input.action_press("combat_run")
+		for _frame in 3:
+			await physics_frame
+		Input.action_release("combat_run")
+		for _frame in 60:
+			await physics_frame
+			if not bool(manager.call("is_fighting")):
+				return
+	failures.append("could not flee the incidental wild fight before the Sigil Gate check (%s)" % str(manager.call("flee_refusal")))
 
 
 func _check_sigil_gate(world: Node, player: CharacterBody3D, failures: Array[String]) -> void:
