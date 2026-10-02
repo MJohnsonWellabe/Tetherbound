@@ -52,15 +52,17 @@ extends SceneTree
 ##
 ## ## The session double, and why there is one
 ##
-## `_scale_opponent_for_the_session()` asks the session exactly four questions --
-## `is_active`, `is_host`, `is_multi_peer` and `local_peer_id` -- plus `peers()`
-## for the re-seat between rounds. Everything else in the path is production: the
+## The Session double supplies membership plus current identity, real portable
+## CharacterAuthority admission and explicit Foundation source hooks. The
+## selected host creature is the real scene party member; arithmetic guests
+## have valid empty portable parties and never submit a strike. Everything
+## else in the path is production: the
 ## real `encounter_host.gd` mints the record and stamps the row, the real
 ## `encounter_director.gd` opens, resumes, joins and leaves it, the real
 ## `wild_creature.gd` body reads the cooldown, and the real `trainer_npc.gd`
 ## builds the roster.
 ##
-## Standing up a genuine two-process session to ask those four questions is
+## Standing up a genuine two-process session is
 ## `tests/smoke_net_shared_boss.gd`'s job, and that file asserts the same claim
 ## over a real ENet link against the real `session.gd` -- so the double here
 ## cannot quietly answer for production. What it buys is the part the net smoke
@@ -138,10 +140,31 @@ var _configured_stat_3: float = 1.0
 var _configured_cooldown_3: float = 1.0
 
 
-## The four questions `_scale_opponent_for_the_session()` asks a session, and the
-## fifth (`peers()`) that `_resume_trainer_encounter()` asks to decide who may be
-## put back into the next round. Nothing else. See this file's header.
+## Explicit endpoint projection shares the actual world carrier and retains
+## its own Session identity/typed registry. It supplies no research writer or
+## earned rematch eligibility and never replaces the autoload's Session.
+class GameProjection extends Node:
+	var world: RefCounted
+	var session: Node
+
 class SessionDouble extends Node:
+	var _character_authority := preload("res://scripts/net/character_authority.gd").new()
+	var game_projection: Node
+	var owners: Dictionary = {}
+	func _game() -> Node: return game_projection
+	func _authority_character(peer: int) -> String: return str(owners.get(peer, ""))
+	func _altar_current_epoch() -> String: return "scaling-fixture-epoch"
+	func admitted_character_state(peer: int) -> Dictionary:
+		return _character_authority.actor_stat_state(_authority_character(peer))
+	func foundation_rematch_participant_context(peer: int) -> Dictionary:
+		return {"character_id": _authority_character(peer), "world_flags": [], "personal_flags": [], "bounty_instances": []}
+	func foundation_research_source(_director: Node, _encounter: String, _peer: int, kind: String,
+		_source: String, _species: String, _move: String = "", _night: Variant = null) -> Dictionary:
+		# No earned research/bounty writer is supplied by this scaling fixture.
+		# Enabled duties remain pending rather than inventing a saved receipt.
+		var disabled: bool = preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true \
+			and (kind != "catch" or preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") != true)
+		return {"ok": disabled, "durable": disabled, "disabled": disabled}
 	## Everybody the session holds. `_resume_trainer_encounter()` reads this to
 	## decide who may be put back into the next round, and refuses to re-seat a
 	## peer the session no longer has -- so a peer that leaves the fight below is
@@ -164,7 +187,7 @@ class SessionDouble extends Node:
 	func peers() -> Array:
 		var rows: Array = []
 		for id: int in ids:
-			rows.append({"peer_id": id})
+			rows.append({"peer_id": id, "character_id": _authority_character(id), "realm": "meadows"})
 		return rows
 
 
@@ -319,7 +342,7 @@ func _collect_nodes() -> bool:
 ## the director caches its session in `_wire_creature_replication()` during
 ## `_ready()`, which has already run by the time this scene is standing, and
 ## swapping an autoload's child out from under everything else in the world would
-## be a much larger lie than answering four questions.
+## be a much larger change than a disclosed endpoint projection.
 ##
 ## The multiplayer peer is cleared at the same time, so `_can_encounter_rpc()`
 ## answers FALSE and the director sends nothing down a wire that does not exist.
@@ -338,7 +361,34 @@ func _seat_the_session_double() -> void:
 	_session = SessionDouble.new()
 	_session.name = "SessionDouble"
 	_world.add_child(_session)
+	var actual_game := root.get_node(^"Game")
+	var projection := GameProjection.new()
+	projection.world = actual_game.world
+	if str(projection.world.reward_delivery_namespace).is_empty():
+		# New unsaved worlds can precede production Session admission. This is
+		# explicit fixture identity, with no disk/reconnect provenance claim.
+		projection.world.reward_delivery_namespace = "scaling-fixture-world-namespace"
+	projection.session = _session
+	_session.add_child(projection)
+	_session.set("game_projection", projection)
+	# Stable identities are fixture setup, never a claim carried by engage or
+	# strike. No extra guest creature/body is generated or credited.
+	if str(actual_game.local.character_id).is_empty(): actual_game.local.character_id = "scaling-fixture-host"
+	_session.set("owners", {PEER_HOST: str(actual_game.local.character_id),
+		PEER_GUEST: "scaling-fixture-guest", PEER_THIRD: "scaling-fixture-third"})
+	var authority: RefCounted = _session.get("_character_authority")
+	_check(authority.call("bind_world", projection.world.reward_delivery_namespace) == true,
+		"the arithmetic endpoint registry binds the actual world namespace")
+	for peer: int in [PEER_HOST, PEER_GUEST, PEER_THIRD]:
+		var player: RefCounted = actual_game.local if peer == PEER_HOST else preload("res://autoload/player_state.gd").new()
+		if peer != PEER_HOST:
+			player.configure(preload("res://autoload/item_db.gd").new())
+			player.character_id = _session.call("_authority_character", peer)
+		var portable: Dictionary = preload("res://scripts/net/character_authority.gd").portable_projection(player.save_data())
+		var seeded: Dictionary = authority.call("seed_admitted_character", portable, portable.character_id)
+		_check(seeded.get("ok") == true, "the real typed registry admits the unchanged fixture portable state: " + str(seeded))
 	_director.set("_session", _session)
+	_director.call("_announce_deployment", _director.call("ally_instance"))
 	_check(bool(_director.call("_is_host")) and bool(_director.call("_is_multi_peer")),
 		"the director reads this process as the host of a multi-peer session (host %s, multi %s)"
 			% [str(_director.call("_is_host")), str(_director.call("_is_multi_peer"))])
