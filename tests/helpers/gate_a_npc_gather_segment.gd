@@ -1021,7 +1021,9 @@ static func oskar_approach_path(meadow: Array[Vector2], street: Array[Vector2], 
 	else:
 		raw.append_array(street_leg)
 	raw.append_array(approach)
-	raw.append(goal)
+	# The actual prompt remains _one_approach's final activation/walking target.
+	# Count only authored headings here; appending that same prompt made an
+	# otherwise valid eight-bend deep-meadow return incorrectly require nine.
 	var result: Array[Vector2] = []
 	for point: Vector2 in raw:
 		if not result.is_empty() and result.back().distance_to(point) <= NAVIGATOR.CONTACT_EPS:

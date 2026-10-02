@@ -26,13 +26,20 @@ func test_oskar_return_preserves_authored_street_and_house_approach_bends() -> v
 	var actual_goal := Vector2(62.0, 20.0)
 	var route := SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(45.371, -17.773), actual_goal)
 	assert_eq(route, [Vector2(20.0, -17.773), Vector2(20.0, 14.0),
-		Vector2(64.0, 14.0), Vector2(64.0, 21.1), Vector2(61.0, 21.1), actual_goal])
+		Vector2(64.0, 14.0), Vector2(64.0, 21.1), Vector2(61.0, 21.1)])
 	var deep_route := SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(30.0, -40.0), actual_goal)
-	assert_true(deep_route.is_empty(),
-		"an over-eight-bend path must refuse instead of dropping bends")
+	assert_eq(deep_route, [Vector2(30.0, -40.0), Vector2(21.0, -37.5), Vector2(14.6, -31.0),
+		Vector2(20.0, -26.0), Vector2(20.0, 14.0), Vector2(64.0, 14.0),
+		Vector2(64.0, 21.1), Vector2(61.0, 21.1)], "retain all eight authored bends before the original prompt fallback")
+	var extra_bend: Array[Vector2] = meadow.duplicate()
+	extra_bend.insert(extra_bend.size() - 1, Vector2(27.0, -42.0))
+	assert_true(SEGMENT.oskar_approach_path(extra_bend, street, approach, Vector2(30, -40), actual_goal).is_empty(),
+		"nine actual authored bends still refuse instead of increasing the unchanged cap")
+	assert_eq(SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(46, -40), actual_goal), deep_route,
+		"the actual fiber-gather return joins the retained deepest road node")
 	var bend_route := SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(14.6, -31.0), actual_goal)
 	assert_eq(bend_route, [Vector2(14.6, -31.0), Vector2(20.0, -26.0), Vector2(20.0, 14.0),
-		Vector2(64.0, 14.0), Vector2(64.0, 21.1), Vector2(61.0, 21.1), actual_goal])
+		Vector2(64.0, 14.0), Vector2(64.0, 21.1), Vector2(61.0, 21.1)])
 
 
 func test_oskar_approach_refuses_unjoined_roads_nonfinite_and_remote_prompt() -> void:
