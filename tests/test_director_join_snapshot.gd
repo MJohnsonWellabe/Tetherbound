@@ -1,8 +1,32 @@
 extends "res://tests/test_case.gd"
 
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
+const AUTHORITY := preload("res://scripts/net/character_authority.gd")
+const WORLD := preload("res://autoload/world_state.gd")
+const RESEARCH := preload("res://scripts/creatures/research_log.gd")
+const BOUNTY := preload("res://scripts/world/bounty_board.gd")
 
 class SessionStub extends Node:
+	# Actual typed character registry behind the transport fixture. No client
+	# baseline or derived stat claim is admitted by a strike request.
+	var _character_authority := AUTHORITY.new()
+	func _init() -> void:
+		_character_authority.bind_world("native_director_namespace")
+	func _game() -> Node: return get_parent()
+	func _altar_current_epoch() -> String: return "native_director_epoch"
+	func admitted_character_state(peer: int) -> Dictionary:
+		return _character_authority.actor_stat_state(_authority_character(peer))
+	func foundation_rematch_participant_context(peer: int) -> Dictionary:
+		var character := _authority_character(peer)
+		if character.is_empty(): return {}
+		return {"character_id": character, "world_flags": [], "personal_flags": [], "bounty_instances": []}
+	func foundation_research_source(_director: Node, _encounter: String, _peer: int, kind: String,
+		_source: String, _species: String, _move: String = "", _night: Variant = null) -> Dictionary:
+		# This native combat fixture has no research/bounty writer. OFF is a
+		# genuine no-duty result; enabled duties remain retained and unpaid.
+		var disabled: bool = RESEARCH.config().get("runtime_enabled") != true \
+			and (kind != "catch" or BOUNTY.config().get("runtime_enabled") != true)
+		return {"ok": disabled, "durable": disabled, "disabled": disabled}
 	var applied := false
 	var multi_peer := true
 	var owners: Dictionary = {}
@@ -124,6 +148,8 @@ class NativeDirector extends "res://scripts/combat/encounter_director.gd":
 		return multiplayer.is_server()
 	func _local_peer_id() -> int:
 		return multiplayer.get_unique_id()
+	func _local_character_id() -> String:
+		return str(_session.call("_authority_character", _local_peer_id())) if _session != null else ""
 	func _encounter_realm() -> String:
 		return "meadows"
 	@rpc("any_peer", "call_remote", "reliable", 1)
@@ -134,6 +160,13 @@ class NativeParticipants extends RefCounted:
 	var ids: Array = []
 	func participants_of(_encounter_id: String) -> Array:
 		return ids.duplicate()
+
+class NativeGame extends Node:
+	var world := WORLD.new()
+	var session: Node
+	func _init() -> void:
+		world.world_id = "native_director_world"
+		world.reward_delivery_namespace = "native_director_namespace"
 
 class NativePresentation extends Node:
 	var _encounter_id := "transport-regression"
@@ -179,7 +212,7 @@ func _native_build() -> bool:
 	tree.root.add_child(_native_fixture)
 	var roots: Array[Node] = []
 	for side: String in ["Host", "Guest"]:
-		var branch := Node.new()
+		var branch := NativeGame.new()
 		branch.name = side
 		_native_fixture.add_child(branch)
 		roots.append(branch)
@@ -209,6 +242,7 @@ func _native_build() -> bool:
 		roots[index].add_child(director)
 		var session := SessionStub.new()
 		session.applied = index == 0
+		roots[index].set("session", session)
 		roots[index].add_child(session)
 		director.set("_session", session)
 		var manager := NativePresentation.new()
@@ -359,8 +393,8 @@ func _native_projectile_until(condition: Callable) -> bool:
 func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: bool = false) -> void:
 	_native_hp_fixture_completed = false
 	if not _native_build(): return
-	assert_false(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
-		"the disclosed HP fixture covers ordinary authority with the tracked path off")
+	assert_true(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
+		"the returned regression now exercises active R1/F22 typed actor publication")
 	var guest_id := _native_guest_api.get_unique_id()
 	var owners := {1: "native-hp-host", guest_id: "native-hp-guest"}
 	for director: NativeDirector in [_native_host, _native_guest]:
@@ -384,6 +418,7 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	var mirror := NATIVE_CREATURE_CODEC.decode(NATIVE_CREATURE_CODEC.encode(enemy))
 	assert_true(mirror != null)
 	if mirror == null: return
+	_native_admit_owned_creatures(owners, {1: striker, guest_id: guest_creature})
 	var ally := _native_trainer_body(host_root, striker, Vector3(0.0, 0.0, 1.1), 1)
 	ally.add_to_group("deployed_creature")
 	var guest_ally := _native_trainer_body(guest_root, guest_creature, Vector3(4.0, 0.0, 0.0), guest_id)
@@ -586,6 +621,23 @@ const NATIVE_CREATURE_CODEC := preload("res://scripts/save/water_capture_codec.g
 var _native_trainer_completed := false
 var _native_trainer_observation: Dictionary = {}
 
+func _native_admit_owned_creatures(owners: Dictionary, creatures: Dictionary) -> void:
+	# Disclosed stock creature fixture, through the real portable serializer and
+	# CharacterAuthority admission. It proves no capture, earned tier, or save.
+	for director: NativeDirector in [_native_host, _native_guest]:
+		var session := director.get("_session") as SessionStub
+		for peer: int in creatures:
+			var player := preload("res://autoload/player_state.gd").new()
+			player.configure(preload("res://autoload/item_db.gd").new())
+			player.character_id = str(owners[peer])
+			assert_true(player.party.add(creatures[peer]), "the actual five-cap portable party owns this fixture creature")
+			var saved: Dictionary = player.save_data()
+			saved.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(saved.party, saved.redesign_character)
+			var admitted: Dictionary = session._character_authority.seed_admitted_character(AUTHORITY.portable_projection(saved), player.character_id)
+			assert_true(admitted.get("ok") == true, "actual CharacterAuthority validates original portable state: " + str(admitted))
+			assert_eq(session.admitted_character_state(peer).party[0].uid, creatures[peer].uid)
+			player.party.remove_at(0)
+
 func _native_trainer_body(parent: Node, creature: RefCounted, at: Vector3,
 		owner: int = 0) -> NativeTrainerBody:
 	var body := NativeTrainerBody.new()
@@ -608,8 +660,8 @@ func _native_trainer_request(intent: Dictionary, completed: Array[Dictionary]) -
 
 func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	if not _native_build(): return
-	assert_false(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
-		"this regression covers the current ordinary trainer path without enabling actor vitals")
+	assert_true(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
+		"ordinary trainer strikes use the active R1/F22 typed actor contract")
 	var guest_id := _native_guest_api.get_unique_id()
 	var owners := {1: "native-trainer-host", guest_id: "native-trainer-guest"}
 	for director: NativeDirector in [_native_host, _native_guest]:
@@ -635,6 +687,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	if mirror == null: return
 	assert_eq(str(mirror.get("uid")), str(enemy.get("uid")), "the author's verdict targets the actual mirrored UID")
 	var next_creature := NATIVE_SPECIES.spawn("mudsnout")
+	_native_admit_owned_creatures(owners, {1: host_creature, guest_id: guest_creature})
 	var host_ally := _native_trainer_body(host_root, host_creature, Vector3(-4.0, 0.0, 0.0), 1)
 	var guest_proxy := _native_trainer_body(host_root, guest_creature, Vector3(0.0, 0.0, 1.1), guest_id)
 	var guest_ally := _native_trainer_body(guest_root, guest_creature, guest_proxy.global_position, guest_id)
@@ -664,6 +717,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	var rec: Dictionary = arbiter.call("open", 1, "meadows", "trainer", {
 		"species_id": enemy.species_id, "level": enemy.level, "hp": enemy.hp,
 		"hp_max": enemy.max_hp, "owner_npc": "native-trainer-regression",
+		"card": NATIVE_CREATURE_CODEC.encode(enemy),
 		"position": [foe.centre().x, foe.centre().y, foe.centre().z]}, host_creature.uid, owners[1])
 	var encounter_id := str(rec.encounter_id)
 	_native_host.set("_encounter", rec)

@@ -2657,7 +2657,9 @@ func _tournament_combat_identity_valid(encounter_id: String, peer_id: int) -> bo
 ## its own config, and rolls with its own `_rng`.
 func _f22_publication_binding(id: String, peer: int, body: Node3D) -> Dictionary:
 	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true: return {}
-	var game := get_node_or_null(^"/root/Game")
+	# The authenticated Session owns the Game. This is the same production
+	# parent used by its registry/writers and by the retained source hooks.
+	var game: Node = _session.call("_game") if _session != null else null
 	if game == null or _session == null or game.get("session") != _session \
 		or not is_instance_valid(body) or not _session.has_method("_authority_character") \
 		or not _session.has_method("admitted_character_state"): return {}
@@ -2668,11 +2670,24 @@ func _f22_publication_binding(id: String, peer: int, body: Node3D) -> Dictionary
 	if character.is_empty() or admitted.get("character_id") != character \
 		or not admitted.get("party") is Array or admitted.party.size() > 5: return {}
 	var matches := 0
+	var owned_row: Dictionary = {}
 	for owned: Variant in admitted.party:
-		if owned is Dictionary and owned.get("uid") == uid: matches += 1
+		if owned is Dictionary and owned.get("uid") == uid:
+			matches += 1
+			owned_row = owned
 	if matches != 1: return {}
 	var participant: Dictionary = (_encounter_host.call("record", id) as Dictionary).get("participants", {}).get(peer, {})
+	if participant.get("character_id") != character or deployed_body_for(peer) != body \
+		or _strike_actor_binding(id, peer, body).is_empty(): return {}
+	# Canonical wild opening already binds its actor. Trainer/boss admission
+	# needs the same real owned card/body before tracked move publication. A
+	# replacement still passes the existing pending-publication/rebind fence.
 	var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+	if actor.is_empty() or participant.get("actor_bound_uid") != uid \
+		or actor.get("body_instance_id") != body.get_instance_id():
+		var binding_result: Dictionary = _encounter_host.call("bind_actor_body", id, peer, character, owned_row, body.get_instance_id())
+		if binding_result.get("ok") != true: return {}
+		actor = participant.get("actor_vitals", {}).get(uid, {})
 	if participant.get("character_id") != character or participant.get("actor_bound_uid") != uid \
 		or actor.get("body_instance_id") != body.get_instance_id() \
 		or int(actor.get("body_generation", 0)) <= 0: return {}
