@@ -25,6 +25,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_measure_layout": return _measure_layout(tree, args)
 		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
 		"f48_fixture_approach": return await _fixture_approach(tree, args)
+		"f48_deploy_owned": return await _deploy_owned(tree)
 		"f48_fixture_join_boss": return await _fixture_join_boss(tree, args)
 		"f48_fixture_capture": return await tree.call("_step_f48_fixture_capture", args)
 		"f48_button": return await _button(tree, args)
@@ -358,6 +359,24 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 	result["data"] = data
 	return result
 
+static func _deploy_owned(tree: SceneTree) -> Dictionary:
+	var director := tree.current_scene.get_node_or_null(^"EncounterDirector") if tree.current_scene != null else null
+	var game := tree.root.get_node_or_null(^"Game")
+	if director == null or game == null: return _result(false, "Actual director and owner required")
+	var local: RefCounted = game.get("local")
+	var original: Array = UIDS.uids(local.call("save_data").get("party", []))
+	if original.is_empty(): return _result(false, "Original owned party required; cannot adopt a substitute")
+	if director.call("ally_body") == null:
+		var pressed: Dictionary = await tree.call("_step_press", {"action": "creature_recall"})
+		if pressed.get("verdict") != "PASS": return pressed
+		for _frame: int in 30: await tree.physics_frame
+	var creature: Variant = director.call("ally_instance")
+	var unchanged := original == UIDS.uids(local.call("save_data").get("party", []))
+	var owned := creature != null and original.has(str(creature.get("uid")))
+	return _result(unchanged and owned and director.call("ally_body") != null,
+		"Ordinary recall input must deploy an original owned companion without changing party UIDs")
+
+
 static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# Explicit mechanics setup at an ACTUAL mounted authored site. The shipping
 	# prompt/chooser, actor contact, admission and transaction fences still run.
@@ -690,6 +709,27 @@ static func _json_equal(left: Variant, right: Variant) -> bool:
 		if typeof(left) != typeof(right) and (abs(float(left)) > 9007199254740991.0 or abs(float(right)) > 9007199254740991.0): return false
 		return left == right
 	return typeof(left) == typeof(right) and left == right
+
+## Read-only diagnostics: JSON's decimal rendering can conceal the very float
+## mismatch under investigation. Preserve primitive Variant bytes as hex text.
+## This does not change the exact comparison or its acceptance conditions.
+static func _json_difference(left: Variant, right: Variant, path: String = "$") -> Dictionary:
+	if _json_equal(left, right): return {}
+	if left is Dictionary and right is Dictionary:
+		for key: Variant in left:
+			if not right.has(key): return {"path": path + "/" + str(key), "reason": "missing right key"}
+			var difference := _json_difference(left[key], right[key], path + "/" + str(key))
+			if not difference.is_empty(): return difference
+		for key: Variant in right:
+			if not left.has(key): return {"path": path + "/" + str(key), "reason": "extra right key"}
+	if left is Array and right is Array:
+		if left.size() != right.size(): return {"path": path, "reason": "array size", "left_size": left.size(), "right_size": right.size()}
+		for index: int in left.size():
+			var difference := _json_difference(left[index], right[index], path + "/" + str(index))
+			if not difference.is_empty(): return difference
+	return {"path": path, "left_type": type_string(typeof(left)), "right_type": type_string(typeof(right)),
+		"left_variant_hex": var_to_bytes(left).hex_encode(), "right_variant_hex": var_to_bytes(right).hex_encode()}
+
 
 static func _counts(payload: Dictionary) -> Dictionary:
 	var out := {}
@@ -1169,7 +1209,19 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		for building: Variant in carrier.get("placed_buildings", []):
 			if _json_equal(building, record): found += 1
 		if found != 1: errors.append(world + ": exact paid Altar record absent or duplicated")
-	return _result(errors.is_empty(), "Actual paid Altar bootstrap; no earned campaign credit. " + "; ".join(errors), {"row": row, "observation": now, "save_edges": edges})
+	var differences := {}
+	if not errors.is_empty():
+		var edge_disk: Dictionary = owner_edge.get("files", {}).get("disk", {})
+		for label: String in ["owner_edge_disk", "latest_disk"]:
+			var saved: Dictionary = edge_disk if label == "owner_edge_disk" else now.disk
+			var projection := {"inventory": saved.get("inventory"), "party": saved.get("party"), "redesign_character": saved.get("redesign_character")}
+			differences[label] = _json_difference(row.get("after"), projection)
+		differences["disk_journal"] = _json_difference(row, now.disk_world.get("reward_deliveries", {}).get(id))
+		for building: Variant in now.disk_world.get("placed_buildings", []):
+			if building is Dictionary and building.get("uid") == uid:
+				differences["disk_building"] = _json_difference(record, building)
+	return _result(errors.is_empty(), "Actual paid Altar bootstrap; no earned campaign credit. " + "; ".join(errors),
+		{"row": row, "observation": now, "save_edges": edges, "exact_differences": differences})
 
 
 static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:

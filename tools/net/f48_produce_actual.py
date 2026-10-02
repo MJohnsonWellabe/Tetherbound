@@ -29,7 +29,7 @@ def boss_profile(source: Path, output: Path) -> Path:
     fixture.require(not output.exists(), "Fresh boss profile required")
     routes = {}
     for peer in range(4):
-        routes[f"boss_prepare_{peer}"] = prepare.approach("warden_aldis")
+        routes[f"boss_prepare_{peer}"] = [prepare.step("f48_deploy_owned")] + prepare.approach("warden_aldis")
         if peer > 0:
             routes[f"boss_join_{peer}"] = [prepare.step("f48_fixture_join_boss",
                 fixture_disclosure="named_mechanics_actual_announced_boss_join_no_earned_credit")]

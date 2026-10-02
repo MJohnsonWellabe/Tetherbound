@@ -7,6 +7,17 @@ const PORTAL := preload("res://scripts/net/portal_delivery.gd")
 var memory: Dictionary
 var edge: Dictionary
 
+func test_float_diagnostic_retains_exact_bits_when_json_hides_difference() -> void:
+	var original := 100.0 - (1.0 / 60.0) * 0.2
+	var saved: float = JSON.parse_string(JSON.stringify(original))
+	assert_false(PROOF._json_equal(original, saved))
+	var difference: Dictionary = PROOF._json_difference({"party": [{"nourishment": original}]}, {"party": [{"nourishment": saved}]})
+	assert_eq(difference.path, "$/party/0/nourishment")
+	assert_eq(difference.left_variant_hex, var_to_bytes(original).hex_encode())
+	assert_eq(difference.right_variant_hex, var_to_bytes(saved).hex_encode())
+	assert_eq(JSON.parse_string(JSON.stringify(difference)), difference)
+	assert_true(PROOF._json_difference({"count": 1}, {"count": 1.0}).is_empty())
+
 func before_each() -> void:
 	var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/f48-passive-card.json"))
 	memory = {"character_id": "owner", "party": [original.card], "inventory": [],

@@ -9,7 +9,7 @@ extends "res://tests/smoke_net_proof_two_peer.gd"
 ## writes and require real floor/proximity before ordinary interaction.
 ## There are no grants or fabricated outcomes/intents/receipts.
 ## Missing producers/routes/cut observation are failures, never skips or PASS.
-const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight", "f48_fixture_approach", "f48_fixture_join_boss"]
+const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight", "f48_fixture_approach", "f48_fixture_join_boss", "f48_deploy_owned"]
 const TRANSACTIONS := ["craft", "release", "feast", "key", "relic", "essence_spend"]
 const CUTS := ["before_input", "after_settlement", "after_host_write_before_delivery", "after_owner_write_before_ack"]
 const REPLAY_FIELDS := ["inventory", "redesign_character", "satchel_escrow"]
