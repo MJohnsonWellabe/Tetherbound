@@ -91,9 +91,32 @@ func _run() -> void:
 			expected_before.sort()
 			check("F23#1", after == expected_after, species_id + " exact completed prefix1.." + str(tier))
 			check("F23#1", before == expected_before, species_id + " exact preceding prefix for tier" + str(tier))
+			# Preserve JSON's restored number types at the production lookup and
+			# saved-carrier boundary. Never normalise tiers in this evidence probe.
+			var restored_prefixes: Dictionary = JSON.parse_string(JSON.stringify({"after": prefix, "before": preceding}))
+			var json_after := TEACHING.available_moves(species_id, 1, restored_prefixes.after)
+			var json_before := TEACHING.available_moves(species_id, 1, restored_prefixes.before)
+			json_after.sort()
+			json_before.sort()
+			check("F23#1", json_after == expected_after, species_id + " JSON-restored exact completed prefix1.." + str(tier))
+			check("F23#1", json_before == expected_before, species_id + " JSON-restored exact preceding prefix for tier" + str(tier))
+			var fixture_uid := "criterion-native-" + species_id
+			var fixture_saved := {"uid": fixture_uid, "species_id": species_id, "level": 1}
+			for boundary: String in ["after", "before"]:
+				var native_tiers: Array = prefix if boundary == "after" else preceding
+				var carrier_rows := {}
+				carrier_rows[fixture_uid] = {"breakthroughs": native_tiers}
+				var native_character := {"creatures": carrier_rows}
+				var saved_bundle: Dictionary = JSON.parse_string(JSON.stringify({"saved": fixture_saved, "character": native_character}))
+				var native_allowed := TEACHING.allowed_saved_moves(fixture_saved, native_character)
+				var restored_allowed := TEACHING.allowed_saved_moves(saved_bundle.saved, saved_bundle.character)
+				native_allowed.sort()
+				restored_allowed.sort()
+				check("F23#1", restored_allowed == native_allowed, species_id + " actual allowed_saved_moves JSON carrier matches native " + boundary + " tier" + str(tier))
 			for id: String in expected_after:
 				if not expected_before.has(id):
 					check("F23#1", not before.has(id) and after.has(id), species_id + " newly unlocked tier" + str(tier) + " excludes preceding tier " + id)
+					check("F23#1", not json_before.has(id) and json_after.has(id), species_id + " JSON-restored newly unlocked tier" + str(tier) + " excludes preceding tier " + id)
 		var legal: Array[String] = []
 		for id: String in at_fifteen:
 			if moves.slot(id) == "utility": legal.append(id)
@@ -135,5 +158,6 @@ func _run() -> void:
 	print("CRITERION_DATA_NATIVE_RESULT " + JSON.stringify({"fixture_source_commit": SOURCE_COMMIT,
 		"checks_by_criterion": checks, "failures": failures, "shared_count": shared.size(), "utility_count": utilities.size(),
 		"live_species": species.size(), "completed": true, "breakthrough_prefixes_checked": [1, 2, 3, 4, 5],
+		"breakthrough_representations": ["native integers", "unmodified JSON-restored arrays", "unmodified JSON-restored saved character carrier through allowed_saved_moves"],
 		"scope": "detached production catalogue/lookup/equip policy; no controller, earned state, save, ACK, co-op or visual proof"}))
 	quit(0 if failures.is_empty() else 1)
