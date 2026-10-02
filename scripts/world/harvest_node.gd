@@ -163,6 +163,7 @@ func _claim_intent(actual_amount: int) -> Dictionary:
 		var txn := "harvest:%s:%s:%d" % [_realm_id, _renewable_site_id, Time.get_ticks_usec()]
 		_claim["txn_id"] = txn
 		_claim["expected_revision"] = int(_renewable_stock.get("revision", -1))
+		_claim["count_before"] = _held_count(get_node_or_null(^"/root/Game"))
 		return {"kind": "renewable_harvest", "realm": _realm_id,
 			"site_id": _renewable_site_id, "expected_revision": int(_renewable_stock.get("revision", -1)),
 			"txn_id": txn}
@@ -616,8 +617,7 @@ func _on_delta_applied(delta: Dictionary) -> void:
 			var game := get_node_or_null(^"/root/Game")
 			if game != null:
 				var items: RefCounted = game.get("items")
-				var label := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
-				game.call("push_world_message", "Gathered %s." % label)
+				game.call("push_world_message", _renewable_gather_message(game, {}))
 				_play_gather_audio(items)
 			_claiming = false
 			_claim = {}
@@ -763,7 +763,8 @@ func _gather_registered_source() -> void:
 		return
 	var action_id := Crypto.new().generate_random_bytes(16).hex_encode()
 	_claiming = true
-	_claim = {"txn_id": action_id, "expected_revision": int(_renewable_stock.revision)}
+	_claim = {"txn_id": action_id, "expected_revision": int(_renewable_stock.revision),
+		"count_before": _held_count(game)}
 	var result: Dictionary = _source_service.call("submit", "node", {
 		"site_id": _renewable_site_id, "expected_stock_revision": int(_renewable_stock.revision),
 		"action_id": action_id}, self)
@@ -778,17 +779,46 @@ func _on_source_settled(op: String, source_id: String, action_id: String, verdic
 	_read_renewable_stock(get_node_or_null(^"/root/Game"))
 	_refresh_renewable_presentation()
 	if not _claiming or action_id != str(_claim.get("txn_id", "")): return
+	var game := get_node_or_null(^"/root/Game")
+	# Read against this claim before it is cleared: its satchel count is the
+	# baseline for the "+N" the player is owed.
+	var message := _renewable_gather_message(game, verdict)
 	_claiming = false
 	_claim = {}
-	var game := get_node_or_null(^"/root/Game")
 	if game == null: return
 	if verdict.get("ok") != true or verdict.get("owner_saved") != true or verdict.get("owner_acknowledged") != true:
 		game.call("push_world_message", str(verdict.get("reason", "Gathering is awaiting settlement.")))
 		return
 	HOME_PROGRESS.maybe_set_materials_gathered(game)
 	var items: RefCounted = game.get("items")
-	game.call("push_world_message", "Gathered %s." % str(items.call("item_name", _item_id)))
+	game.call("push_world_message", message)
 	_play_gather_audio(items)
+
+
+## The renewable source paths keep the first-day pickup contract `_settle()`
+## and `felled_resource.gd` already honour: the player sees "+N Item" for the
+## amount that actually landed in the satchel, not a bare "Gathered Item.".
+## The amount is the settled decision's own output when it carries one, else
+## what this item's satchel count actually rose by since the claim was made
+## (the owner applies the saved inventory before it settles). Only when neither
+## is known does it fall back to naming the item.
+func _renewable_gather_message(game: Node, verdict: Dictionary) -> String:
+	var items: RefCounted = game.get("items") if game != null else null
+	var item_name := str(items.call("item_name", _item_id)) if items != null else _item_id.capitalize()
+	var amount := 0
+	var outputs: Variant = verdict.get("outputs")
+	if outputs is Dictionary and (outputs as Dictionary).has(_item_id):
+		amount = int((outputs as Dictionary)[_item_id])
+	elif _claim.has("count_before"):
+		amount = _held_count(game) - int(_claim["count_before"])
+	if amount > 0:
+		return "+%d %s" % [amount, item_name]
+	return "Gathered %s." % item_name
+
+
+func _held_count(game: Node) -> int:
+	var inventory: RefCounted = game.get("inventory") if game != null else null
+	return int(inventory.call("count", _item_id)) if inventory != null else 0
 
 ## Gather this spot, the same as pressing the interact prompt on it.
 ##
