@@ -10,5 +10,48 @@
   ],
   "verification": "Fresh app list reports only ROOT as an unarchived thread in project581a2e2d-0e34-411f-900c-29649b733b9c; archived R3 section item keys remain in listing. TenR2 and fiveR3 initial author sessions already archived; all fiveR3 archive settings reaffirmed. Unrelated projects/chats untouched.",
   "preservation": "No worktrees or source deleted; foundation tracked clean with local WIP commit, untracked reports/.deps retained. F29 made no source writes. All final active external writers confirmed idle before archival.",
-  "acceptance": "OPEN: main/CI/criteria unchanged by archival. Local subagents run in ROOT conversation; no new app sessions."
+  "acceptance": "OPEN: main/CI/criteria unchanged by archival. Local subagents run in ROOT conversation; no new app sessions.",
+  "owner_authorized_astra_execution": {
+    "ownerInstruction": "Use Astra sessions now to finish integration; after green main assess every criterion, then close criteria with three Astra lanes at a time.",
+    "planCommit": "791d17cef4",
+    "planPath": "docs/STATE.md",
+    "threads": [
+      {
+        "title": "Astra CI failure repairs",
+        "path": "D:/tetherbound/r3-f45",
+        "branch": "tb/astra-ci-closeout",
+        "threadId": "01a0fb3e-a520-7bc3-92d0-e7c7ee2c3c5c",
+        "hostId": "local",
+        "model": "gpt-6-astra",
+        "thinking": "high"
+      },
+      {
+        "title": "Astra authentic CI input completion",
+        "path": "D:/tetherbound/r3-f46",
+        "branch": "tb/astra-input-closeout",
+        "threadId": "01a0fb3e-ab34-76a0-b051-0cdf8be09aeb",
+        "hostId": "local",
+        "model": "gpt-6-astra",
+        "thinking": "high"
+      },
+      {
+        "title": "Astra real player criterion proof",
+        "path": "D:/tetherbound/r3-f47",
+        "branch": "tb/astra-player-closeout",
+        "threadId": "01a0fb3e-b50a-7de2-a4e5-ed2f4a77dd1b",
+        "hostId": "local",
+        "model": "gpt-6-astra",
+        "thinking": "high"
+      }
+    ],
+    "evidenceThreadId": "01a0fa54-ebb4-71d0-bb05-7be8fb895c6d",
+    "automationId": "tetherbound-astra-delivery-and-criterion-closeouts",
+    "automationVerifiedActive": true,
+    "followupMinutes": 10,
+    "followupRuns": 48,
+    "producerSessionId": 23036,
+    "producerOutput": ".tmp/closeout/f48-complete-input-producer-owner-fix-v9",
+    "durableTrackingAction": "Recorded here after native V9 terminal source-exact return; prior archival history preserved.",
+    "acceptance": "main and new criteria remain OPEN until actual required proof; no newMET from plan/session creation."
+  }
 }
