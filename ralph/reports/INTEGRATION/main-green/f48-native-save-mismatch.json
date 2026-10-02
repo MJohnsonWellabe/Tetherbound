@@ -1,0 +1,39 @@
+{
+  "source_run": 37075508544,
+  "source_commit": "c0c5843728a669ff7664483a3c055e66ef5559fe",
+  "artifact_id": 11257165254,
+  "original_observation": "tree\\ralph\\reports\\INTEGRATION\\main-green\\native-f48-loop\\proof\\f48-observations\\f48_assert_altar_build-2458-240801980.json",
+  "original_sha256": "e3b52dfba9eb8f2ff794dd889b6664136d9cb6b982af2c6beeee08ece826e272",
+  "verdict": "FAIL; exact paid Altar oracle unchanged",
+  "exact_differences": {
+    "disk_building": {
+      "left_type": "float",
+      "left_variant_hex": "030000002577723f",
+      "path": "$/position/1",
+      "right_type": "float",
+      "right_variant_hex": "03000100feffff9fe44eee3f"
+    },
+    "disk_journal": {
+      "left_type": "float",
+      "left_variant_hex": "030000002577723f",
+      "path": "$/intent/request/position/1",
+      "right_type": "float",
+      "right_variant_hex": "03000100feffff9fe44eee3f"
+    },
+    "latest_disk": {
+      "left_type": "float",
+      "left_variant_hex": "03000100faff7f8fade82e40",
+      "path": "$/party/0/distance_m_together",
+      "right_type": "float",
+      "right_variant_hex": "030001001200808fade82e40"
+    },
+    "owner_edge_disk": {
+      "left_type": "float",
+      "left_variant_hex": "03000100faff7f8fade82e40",
+      "path": "$/party/0/distance_m_together",
+      "right_type": "float",
+      "right_variant_hex": "030001001200808fade82e40"
+    }
+  },
+  "acceptance_credit": false
+}

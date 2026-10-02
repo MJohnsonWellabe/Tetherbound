@@ -50,3 +50,22 @@ F48 run37073202538 retained the native paid-Altar failure: owner disk versus com
 Four-peer run37073205567 admitted four original identities and retained exact starts, then stopped before combat because no original companion was deployed. Its preparation route now sends the ordinary recall input only when needed, verifies unchanged original party UIDs and an owned deployed UID, then runs the same approach and boss oracle. Both route validators register that bounded action. Independent review found the initially omitted registrations; both were corrected before dispatch. Focused native saved-edge/support checks:11 tests/33 assertions, no failures or engine errors. Python integrity checks:13 passed. No native replay pass claimed.
 
 Salt Crown dependency `1c5baa6bda` integrated as `b25623fb45`: authored shrine pad moved from `[0,-7]` to `[3,-9]` while arrival offset and dry/support limits remain unchanged. Independent source review and the production-resolver analytic regression pass; actual baked-shell support and physical arrival remain pending F20's retained live replay.
+
+## Exact numeric save persistence
+
+Native run37075508544 on `c0c5843728` confirms the paid-Altar failure is real serialization loss. The first differing fields are `party/0/distance_m_together`, `intent/request/position/1`, and the placed building's `position/1`. Original diagnostic hashes, run/artifact identity and exact primitive bytes are retained in `f48-native-save-mismatch.json`. Four-peer run37075511053 is a separate native replay; no pass claimed here.
+
+The candidate now stores character, world and mirrored slot documents through one lossless JSON codec. Finite float64 leaves use explicit eight-byte little-endian hex; large integers use canonical signed64 decimal strings. A versioned outer envelope keeps gameplay schema28 and makes older readers refuse the file. Existing plain JSON still reads unchanged, including reserved-looking gameplay keys. The codec escapes reserved-key dictionaries and refuses malformed tags, nonfinite numbers, unsupported values, unknown versions and excessive nesting. Interned Godot dictionary keys retain their original textual names. No immutable transaction carrier is rounded or normalized.
+
+Atomic recovery validates the codec before preferring canonical over `.previous`. The existing slot ownership lookup also uses the codec-aware recoverable reader; otherwise an encoded slot could appear ownerless. Save-specific proof loaders, Python fixture tools and inspection tests now decode this envelope. Configuration/receipt readers and deliberately old-format negative fixtures remain plain JSON. Byte-copy captures and their original hashes are unchanged.
+
+Scoped native evidence:
+
+- `save-codec-writers.log.gz`:138 tests/1230 assertions pass, including actual pending Altar journal, owner BOOL write, complete exact reload, before/already-paid recovery and ACK, failed grouped-write rollback, malformed-envelope backup recovery, and refusal to mint over an encoded owned slot. Earlier candidate failed because runtime loadout mirrors contain StringName dictionary keys; the codec now handles textual keys explicitly. Original failed logs remain local.
+- `save-codec-consumers.log.gz`:30 tests/666 assertions pass for authoritative split loading, map persistence, redesign old-save refusal and the shared native/Python wire fixture.
+- `save-codec-legacy.log.gz`:34 tests/230 assertions pass for Alpha pins and legacy realm saves. No engine/script errors in these three passing logs; expected warnings exercise invalid/old-file refusal.
+- Python codec3 checks and existing F48 integrity13 checks pass. `proof_peer_runner.gd --check-only` exits0. The shared fixture includes problematic gameplay floats, negative zero, a subnormal, int64 limits and reserved-key collision data.
+
+These are scoped persistence proofs, not F48 gameplay or green-main acceptance. This shared save change still requires the full integration CI batch and real F48 producer/smoke/interruption runs.
+
+Independent final source review approved the codec, ownership guard, textual interned keys, Python/native parity, audited readers and real-writer regressions. Its nonblocking malformed-huge-integer exception finding was corrected by checking bounds before float conversion, with a negative test. Both source producers successfully prepared fresh encoded fixtures without launching an engine; no native acceptance follows from preparation.

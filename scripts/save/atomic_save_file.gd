@@ -60,10 +60,9 @@ static func _is_valid_document(path: String) -> bool:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return false
-	var parser := JSON.new()
-	var parse_error := parser.parse(file.get_as_text())
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	file.close()
-	var valid := parse_error == OK and typeof(parser.data) == TYPE_DICTIONARY
+	var valid := typeof(parsed) == TYPE_DICTIONARY
 	_validity_cache[path] = {"modified": modified, "size": size, "valid": valid}
 	return valid
 

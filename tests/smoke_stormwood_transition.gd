@@ -136,7 +136,7 @@ func _run() -> void:
 	var stormwood_map: RefCounted = game.call("realm_map_for", "stormwood")
 	_expect(stormwood_map != null and stormwood_map != meadows_map and stormwood_map != cloudreach_map,
 		"Stormwood map is not isolated from Meadows/Cloudreach map state")
-	var autosave: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(game.get("save_system").call("slot_path", game.call("autosave_slot"))))
+	var autosave: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(game.get("save_system").call("slot_path", game.call("autosave_slot"))))
 	_expect(str(autosave.get("current_realm", "")) == "stormwood", "settled Stormwood arrival did not autosave its realm")
 	_expect(str((autosave.get("player_pose", {}) as Dictionary).get("realm", "")) == "stormwood",
 		"settled Stormwood arrival did not autosave its player pose")

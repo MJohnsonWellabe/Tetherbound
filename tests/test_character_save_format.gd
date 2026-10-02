@@ -87,7 +87,7 @@ func test_existing_character_id_survives_saves_to_other_slots_and_reload() -> vo
 	assert_true(saver.save(game, 3), "manual save to another slot keeps that character")
 	assert_eq(str(game.local.character_id), "character-explicit-existing")
 	for slot: int in [0, 3]:
-		var flat: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(slot)))
+		var flat: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(saver.slot_path(slot)))
 		var locator := flat.get(SAVE_GAME.SPLIT_LOCATOR_KEY, {}) as Dictionary
 		assert_eq(str(locator.get("world_id", "")), "slot-%d" % slot,
 			"each manual slot still selects its own home world")
@@ -354,7 +354,7 @@ func test_rewriting_character_does_not_turn_malformed_provenance_into_identity()
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var malformed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var malformed: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	malformed["last_world_instance_id"] = 123
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(malformed))
@@ -395,7 +395,7 @@ func test_a_newer_than_this_build_character_file_refuses() -> void:
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = CHARACTER_SAVE.VERSION + 1
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
@@ -407,7 +407,7 @@ func test_version_two_character_remains_readable_with_legacy_escrow_refused_by_r
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 2
 	# The old format already carried death-satchel escrow. Its tolerant default
 	# remains valid while v3 reserves this field for durable reward rows too.
@@ -431,7 +431,7 @@ func test_version_three_character_without_world_instance_remains_readable_refuse
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 3
 	data.erase("last_world_instance_id")
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -459,7 +459,7 @@ func test_version_four_pending_escrow_without_world_instance_is_preserved_refuse
 	}}
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 4
 	data.erase("last_world_instance_id")
 	data["satchel_escrow"] = escrow

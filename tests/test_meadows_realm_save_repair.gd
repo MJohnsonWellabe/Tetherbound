@@ -18,7 +18,7 @@ func test_completed_legacy_save_refuses_without_repair_or_mutation() -> void:
 	written.progression.set_flag("defeated_warden")
 	assert_true(fixture.saver.save(written, 1))
 	var path: String = fixture.saver.slot_path(1)
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 16
 	data.erase("realm_hearts")
 	data.erase("current_realm")

@@ -103,7 +103,7 @@ func test_save_reload_in_existing_realms_retains_configured_payloads_and_ui_cont
 		written.bind_realm_map("cloudreach", Vector3(0, 160, 300))
 		_switch(written, realm_id)
 		assert_true(_save.save(written, 0))
-		var file_data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save.slot_path(0)))
+		var file_data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(_save.slot_path(0)))
 		assert_eq(file_data.version, SAVE.VERSION)
 		assert_eq(file_data.realm_maps.keys().size(), _save._mapped_realm_ids().size())
 		assert_eq(file_data.realm_maps.stormwood.realm_id, "stormwood")
@@ -132,7 +132,7 @@ func test_legacy_single_map_helper_preserves_meadows_while_old_load_refuses() ->
 	written.map.mark_visited(MEADOWS_AT)
 	var original: Dictionary = written.map.save_data()
 	assert_true(_save.save(written, 0))
-	var old: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save.slot_path(0)))
+	var old: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(_save.slot_path(0)))
 	old.version = 18
 	old.current_realm = "cloudreach"
 	old.erase("realm_maps")
@@ -152,7 +152,7 @@ func test_explicit_cloudreach_legacy_tag_stays_owned_by_cloudreach_while_load_re
 	var written := _game()
 	_switch(written, "cloudreach").mark_visited(CLOUDREACH_AT)
 	assert_true(_save.save(written, 0))
-	var old: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save.slot_path(0)))
+	var old: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(_save.slot_path(0)))
 	old.version = 18
 	old.erase("realm_maps")
 	_write(0, old)
@@ -215,7 +215,7 @@ func test_third_configured_realm_round_trips_its_own_fog_and_legacy_owner() -> v
 	_switch(written, "stormwood").mark_visited(STORMWOOD_AT)
 	var storm_payload: Dictionary = written.map.save_data()
 	assert_true(_save.save(written, 0))
-	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save.slot_path(0)))
+	var raw: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(_save.slot_path(0)))
 	assert_eq(raw.realm_maps.keys().size(), 3)
 	_assert_payload(raw.realm_maps.stormwood, storm_payload, "Stormwood has an isolated payload")
 

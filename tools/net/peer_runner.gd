@@ -6802,7 +6802,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				var wrpath := str(wrsave.call("slot_path", slot))
 				var wrf := FileAccess.open(wrpath, FileAccess.READ)
 				if wrf != null:
-					var parsed: Variant = JSON.parse_string(wrf.get_as_text())
+					var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(wrf.get_as_text())
 					wrf.close()
 					if parsed is Dictionary:
 						for entry: Variant in ((parsed as Dictionary).get("placed_buildings", []) as Array):
@@ -7086,7 +7086,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				return null
 			var stext := sf.get_as_text()
 			sf.close()
-			var sparsed: Variant = JSON.parse_string(stext)
+			var sparsed: Variant = preload("res://scripts/save/save_document.gd").parse(stext)
 			if typeof(sparsed) != TYPE_DICTIONARY:
 				return null
 			return _building_rows((sparsed as Dictionary).get("placed_buildings", []))
@@ -7127,7 +7127,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				return {}
 			var adtext := adf.get_as_text()
 			adf.close()
-			var adparsed: Variant = JSON.parse_string(adtext)
+			var adparsed: Variant = preload("res://scripts/save/save_document.gd").parse(adtext)
 			if typeof(adparsed) != TYPE_DICTIONARY:
 				return {}
 			return adparsed as Dictionary
@@ -7217,7 +7217,7 @@ func _save_dictionary() -> Dictionary:
 		return {}
 	var text := f.get_as_text()
 	f.close()
-	var parsed: Variant = JSON.parse_string(text)
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(text)
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}
 	return parsed as Dictionary
@@ -7777,7 +7777,7 @@ func _foundations_payload() -> Dictionary:
 
 func _disk_redesign_world(path: String) -> Variant:
 	if not FileAccess.file_exists(path): return null
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	return (parsed as Dictionary).get("redesign_world") if parsed is Dictionary else null
 
 func _step_foundations_state(args: Dictionary) -> Dictionary:

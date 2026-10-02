@@ -34,6 +34,7 @@ extends RefCounted
 ## applied to a slot (D15).
 
 const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 
@@ -178,7 +179,9 @@ func write(world_id: String, payload: Dictionary, envelope: Dictionary = {}, ret
 	data["created_at"] = str(existing.get("created_at", now))
 	data["last_played"] = now
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
-	if not ATOMIC_SAVE_FILE.new().write(path_for(world_id), JSON.stringify(data, "\t"), retain_previous):
+	var encoded := SAVE_DOCUMENT.stringify(data)
+	if encoded.is_empty(): return false
+	if not ATOMIC_SAVE_FILE.new().write(path_for(world_id), encoded, retain_previous):
 		push_warning("world save: could not commit %s" % path_for(world_id))
 		return false
 	_envelope_cache[world_id] = _envelope_of(data)
@@ -215,7 +218,7 @@ func read(world_id: String) -> Dictionary:
 	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(path_for(world_id)), FileAccess.READ)
 	if file == null:
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = SAVE_DOCUMENT.parse(file.get_as_text())
 	file.close()
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}
