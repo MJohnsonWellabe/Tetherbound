@@ -66,31 +66,64 @@ static func _start_case(tree: SceneTree, args: Dictionary) -> Dictionary:
 static func _result(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
 
+# Journal epochs identify the real writer/source record. The authenticated
+# transport epoch is independently scoped by Session and is not interchangeable.
+static func _boundary_epochs_match(packet: Dictionary, row: Dictionary, journal_epoch: String, transport_epoch: String, current_epoch: String) -> bool:
+	if transport_epoch.is_empty() or current_epoch != transport_epoch or journal_epoch.is_empty(): return false
+	if row.get("kind") == "portal_unlock": return packet.get("session_id") == transport_epoch
+	return row.get("session_id") == journal_epoch and packet.get("session_id") == journal_epoch
+
+static func _owner_transport(game: Node, writer: Node) -> Dictionary:
+	if game.get("local") == null or game.get("world") == null or game.get("session") == null: return {}
+	var session: Node = game.session
+	var transport: Variant = session.get("_peer")
+	var epoch := str(session.call("_altar_current_epoch"))
+	var peer := int(session.call("local_peer_id"))
+	var roster: Variant = session.call("registry")
+	if session.call("is_active") != true or not transport is MultiplayerPeer or epoch.is_empty() \
+		or transport.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED or roster == null \
+		or roster.call("row", peer).get("character_id") != game.local.character_id \
+		or writer != session.get_node_or_null(^"LedgerRpc"): return {}
+	return {"epoch": epoch, "peer": peer, "game_ref": weakref(game), "local_ref": weakref(game.local),
+		"world_ref": weakref(game.world), "session_ref": weakref(session), "writer_ref": weakref(writer), "transport_ref": weakref(transport)}
+
+static func _owner_transport_matches(game: Node, writer: Node, bound: Dictionary) -> bool:
+	var current := _owner_transport(game, writer)
+	if current.is_empty() or bound.is_empty() or current.epoch != bound.epoch or current.peer != bound.peer: return false
+	for field: String in ["game_ref", "local_ref", "world_ref", "session_ref", "writer_ref", "transport_ref"]:
+		if current[field].get_ref() != bound[field].get_ref(): return false
+	return true
+
 static func _watch_owner_saves(tree: SceneTree) -> bool:
 	if tree.has_meta("f48_owner_save_watch"): return true
 	var game := tree.root.get_node_or_null(^"Game")
 	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
 	if game == null or writer == null or not writer.has_signal("transaction_boundary"): return false
+	var session_ref: WeakRef = weakref(game.session)
 	var observer := func(packet: Dictionary) -> void:
 		var callback_started := COMMIT_TRACE.begin("proof.owner.callback")
 		var identity_started := COMMIT_TRACE.begin("proof.owner.identity")
-		if packet.get("phase") != "after_owner_write_before_ack" or game.get("local") == null or game.get("world") == null \
+		if packet.get("phase") != "after_owner_write_before_ack" or tree.root.get_node_or_null(^"Game") != game \
+			or game.session != session_ref.get_ref() or game.get("local") == null or game.get("world") == null \
 			or packet.get("character_id") != game.local.character_id or packet.get("world_namespace") != game.world.reward_delivery_namespace:
 			COMMIT_TRACE.end("proof.owner.identity", identity_started, "refused")
 			COMMIT_TRACE.end("proof.owner.callback", callback_started, "refused")
 			return
-		var epoch := str(game.session.call("_altar_current_epoch"))
-		if epoch.is_empty() or packet.get("session_id") != epoch:
+		var authority := _owner_transport(game, writer)
+		if authority.is_empty():
 			COMMIT_TRACE.end("proof.owner.identity", identity_started, "epoch_refused")
 			COMMIT_TRACE.end("proof.owner.callback", callback_started, "refused")
 			return
+		var epoch := str(authority.epoch)
 		COMMIT_TRACE.end("proof.owner.identity", identity_started, "passed")
 		var row: Variant = game.world.reward_deliveries.get(packet.get("delivery_id"))
 		var validation_started := COMMIT_TRACE.begin("proof.owner.row_validation")
 		var valid: bool = WORLD_STATE.training_row_valid(row, str(game.world.reward_delivery_namespace), str(game.world.world_id))
 		if row is Dictionary and row.get("kind") == "portal_unlock":
 			valid = PORTAL_DELIVERY.valid(row, str(game.local.character_id), str(game.world.reward_delivery_namespace)) and row.get("world_id") == game.world.world_id
-		elif valid: valid = row.get("session_id") == epoch
+		var journal_epoch := str(row.get("session_id", "")) if row is Dictionary else ""
+		if row is Dictionary and row.get("kind") == "portal_unlock": journal_epoch = epoch
+		valid = valid and _boundary_epochs_match(packet, row, journal_epoch, epoch, str(game.session.call("_altar_current_epoch"))) if row is Dictionary else false
 		if not valid or row.get("character_id") != packet.get("character_id") or row.get("receipt") != packet.get("receipt"):
 			COMMIT_TRACE.end("proof.owner.row_validation", validation_started, "refused")
 			COMMIT_TRACE.end("proof.owner.callback", callback_started, "refused")
@@ -100,7 +133,7 @@ static func _watch_owner_saves(tree: SceneTree) -> bool:
 		var data := _observe(tree)
 		COMMIT_TRACE.end("proof.owner.full_observe", observe_started)
 		var evidence := {"packet": packet.duplicate(true), "row": row.duplicate(true), "files": data,
-			"world_ref": weakref(game.world), "session_ref": weakref(game.session), "epoch": epoch, "identity": str(packet.delivery_id)}
+			"world_ref": weakref(game.world), "session_ref": weakref(game.session), "epoch": epoch, "journal_epoch": journal_epoch, "authority": authority, "identity": str(packet.delivery_id)}
 		var receipt := str(row.receipt)
 		var sequence: int = int(tree.get_meta("f48_owner_save_sequence", 0)) + 1
 		tree.set_meta("f48_owner_save_sequence", sequence)
@@ -109,7 +142,10 @@ static func _watch_owner_saves(tree: SceneTree) -> bool:
 			COMMIT_TRACE.end("proof.owner.callback", callback_started, "passive_refused")
 			return
 		evidence.anchor = anchor
-		var disk := {"packet": packet, "row": row, "files": data, "passive": PASSIVE.evidence(tree, anchor), "observer_pid": OS.get_process_id()}
+		if not _owner_transport_matches(game, writer, authority):
+			COMMIT_TRACE.end("proof.owner.callback", callback_started, "transport_changed")
+			return
+		var disk := {"packet": packet, "row": row, "files": data, "session_epoch": epoch, "journal_epoch": journal_epoch, "passive": PASSIVE.evidence(tree, anchor), "observer_pid": OS.get_process_id()}
 		var dir := OS.get_environment("TB_PROOF_OUT").path_join("f48-owner-saves").path_join(str(game.local.character_id))
 		DirAccess.make_dir_recursive_absolute(dir)
 		var path := dir.path_join(anchor + ".json")
@@ -165,6 +201,8 @@ static func _snapshot_errors(tree: SceneTree, now: Dictionary) -> Array[String]:
 	var game := tree.root.get_node_or_null(^"Game")
 	if now.is_empty() or edge.is_empty() or game == null:
 		return ["Actual latest owner BOOL-save or unchanged original admitted-source edge missing"]
+	if not original_source and not _owner_transport_matches(game, game.session.get_node_or_null(^"LedgerRpc"), edge.get("authority", {})):
+		errors.append("Actual saved owner transport/admission lifetime changed")
 	if game.world != edge.world_ref.get_ref() or game.session != edge.session_ref.get_ref() \
 		or game.session.call("_altar_current_epoch") != edge.epoch or now.character_id != edge.files.character_id \
 		or now.world_namespace != edge.files.world_namespace or _digest(str(edge.path)) != edge.sha256:
@@ -969,8 +1007,10 @@ static func _watch_altar_save(tree: SceneTree) -> Dictionary:
 	var character := str(game.local.character_id)
 	var namespace_id := str(game.world.reward_delivery_namespace)
 	var epoch := str(game.session.call("_altar_current_epoch"))
+	var journal_epoch := str(writer.get("_actor_vitals_session_id"))
+	var authority := _owner_transport(game, writer)
 	var output := OS.get_environment("TB_PROOF_OUT")
-	if character.is_empty() or namespace_id.is_empty() or epoch.is_empty() or output.is_empty():
+	if character.is_empty() or namespace_id.is_empty() or epoch.is_empty() or journal_epoch.is_empty() or authority.is_empty() or output.is_empty():
 		return _result(false, "Actual owner/world/session/output required")
 	var prior_receipts: Array = game.local.save_data().redesign_character.transaction_receipts.duplicate()
 	tree.set_meta("f48_altar_save_edges", {})
@@ -981,8 +1021,9 @@ static func _watch_altar_save(tree: SceneTree) -> Dictionary:
 		if phase not in ["after_host_write_before_delivery", "after_owner_write_before_ack"] \
 			or observation.get("kind") != "altar_building" or observation.get("action") != "place_building" \
 			or observation.get("character_id") != character or observation.get("world_namespace") != namespace_id \
-			or observation.get("session_id") != epoch or game.world != world_ref.get_ref() \
-			or game.local.character_id != character or game.session.call("_altar_current_epoch") != epoch:
+			or observation.get("session_id") != journal_epoch or game.world != world_ref.get_ref() \
+			or game.local.character_id != character or not _owner_transport_matches(game, writer, authority) \
+			or writer.get("_actor_vitals_session_id") != journal_epoch:
 			COMMIT_TRACE.end("proof.altar.identity", identity_started, "refused")
 			COMMIT_TRACE.end("proof.altar.callback", callback_started, "refused")
 			return
@@ -991,7 +1032,8 @@ static func _watch_altar_save(tree: SceneTree) -> Dictionary:
 		var validation_started := COMMIT_TRACE.begin("proof.altar.row_validation")
 		if not WORLD_STATE.altar_build_row_valid(row, namespace_id, str(game.world.world_id)) \
 			or row.get("receipt") != observation.get("receipt") or row.get("character_id") != character \
-			or row.get("session_id") != epoch or prior_receipts.has(row.get("receipt")):
+			or not _boundary_epochs_match(observation, row, journal_epoch, epoch, str(game.session.call("_altar_current_epoch"))) \
+			or prior_receipts.has(row.get("receipt")):
 			COMMIT_TRACE.end("proof.altar.row_validation", validation_started, "refused")
 			COMMIT_TRACE.end("proof.altar.callback", callback_started, "refused")
 			return
@@ -1006,7 +1048,7 @@ static func _watch_altar_save(tree: SceneTree) -> Dictionary:
 			return
 		var observe_started := COMMIT_TRACE.begin("proof.altar.full_observe")
 		var evidence := {"phase": phase, "observation": observation.duplicate(true), "row": row.duplicate(true),
-			"files": _observe(tree), "observer_pid": OS.get_process_id(), "session_epoch": epoch}
+			"files": _observe(tree), "observer_pid": OS.get_process_id(), "session_epoch": epoch, "journal_epoch": journal_epoch}
 		COMMIT_TRACE.end("proof.altar.full_observe", observe_started)
 		var dir := output.path_join("f48-altar-save-edges").path_join(character)
 		DirAccess.make_dir_recursive_absolute(dir)

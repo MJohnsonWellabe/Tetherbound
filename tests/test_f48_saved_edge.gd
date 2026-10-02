@@ -59,3 +59,26 @@ func test_portal_edge_requires_full_party_and_exact_settled_receipt_and_key_debi
 	edge.files.disk = memory.duplicate(true)
 	edge.files.disk.inventory = [{"id": "tidewake_portal_key", "n": 1}]
 	assert_false(PROOF._saved_edge_errors(edge).is_empty())
+
+func test_journal_epoch_and_transport_epoch_are_independently_bound() -> void:
+	var packet := {"session_id": "journal"}
+	var row := {"kind": "altar_building", "session_id": "journal"}
+	assert_true(PROOF._boundary_epochs_match(packet, row, "journal", "transport", "transport"))
+	assert_false(PROOF._boundary_epochs_match(packet, row, "transport", "transport", "transport"), "distinct epochs cannot be substituted")
+	assert_false(PROOF._boundary_epochs_match(packet, row, "journal", "transport", "replacement"))
+	assert_false(PROOF._boundary_epochs_match(packet, row, "journal", "", ""))
+	row.session_id = "changed"
+	assert_false(PROOF._boundary_epochs_match(packet, row, "journal", "transport", "transport"))
+
+func test_retained_authenticated_training_epoch_is_not_current_local_writer_epoch() -> void:
+	var packet := {"session_id": "retained-source"}
+	var row := {"kind": "creature_training", "session_id": "retained-source"}
+	assert_true(PROOF._boundary_epochs_match(packet, row, "retained-source", "fresh-transport", "fresh-transport"))
+	packet.session_id = "guest-local-writer"
+	assert_false(PROOF._boundary_epochs_match(packet, row, "retained-source", "fresh-transport", "fresh-transport"))
+
+func test_portal_observation_retains_explicit_live_transport_epoch() -> void:
+	var row := {"kind": "portal_unlock"}
+	assert_true(PROOF._boundary_epochs_match({"session_id": "transport"}, row, "transport", "transport", "transport"))
+	assert_false(PROOF._boundary_epochs_match({"session_id": "journal"}, row, "transport", "transport", "transport"))
+	assert_false(PROOF._boundary_epochs_match({"session_id": "transport"}, row, "transport", "transport", "replacement"))
