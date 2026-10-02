@@ -2657,9 +2657,10 @@ func _tournament_combat_identity_valid(encounter_id: String, peer_id: int) -> bo
 ## its own config, and rolls with its own `_rng`.
 func _f22_publication_binding(id: String, peer: int, body: Node3D) -> Dictionary:
 	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true: return {}
+	if _session == null or not _session.has_method("_game"): return {}
 	# The authenticated Session owns the Game. This is the same production
 	# parent used by its registry/writers and by the retained source hooks.
-	var game: Node = _session.call("_game") if _session != null else null
+	var game: Node = _session.call("_game")
 	if game == null or _session == null or game.get("session") != _session \
 		or not is_instance_valid(body) or not _session.has_method("_authority_character") \
 		or not _session.has_method("admitted_character_state"): return {}
