@@ -36,7 +36,10 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"wild_capture": proposal = preload("res://scripts/net/foundation_capture_rules.gd").stage(current, intent, context)
 		"station_craft":
 			var items := preload("res://scripts/world/death_satchel_rules.gd").db()
-			proposal = STATION.stage_craft(current, revision, intent, context, items.call("recipe", str(intent.get("recipe_id", ""))), true)
+			var recipe: Dictionary = items.call("recipe", str(intent.get("recipe_id", "")))
+			if context.get("completed_manual_refine") == true:
+				recipe = preload("res://scripts/world/homestead_refining.gd").transaction_recipe(str(intent.get("recipe_id", "")))
+			proposal = STATION.stage_craft(current, revision, intent, context, recipe, true)
 		"den": proposal = STATION.stage_den_rest(current, revision, intent, context, true)
 		"gear": proposal = GEAR.stage_frozen_core(current, current.character_id, revision, intent, context,
 			preload("res://scripts/world/death_satchel_rules.gd").db(), GEAR.config())

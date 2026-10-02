@@ -23,8 +23,12 @@ func _process(delta: float) -> void:
 	if _left > 0.0: return
 	_left = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds)
 	var owner: Node = session()
-	if owner.call("portal_runtime_ready") != true: return
+	var portal_ready: bool = owner.call("portal_runtime_ready") == true
+	var stations := preload("res://scripts/build/station_rules.gd").config()
+	var forge_ready: bool = stations.get("runtime_enabled") == true and stations.get("forge", {}).get("runtime_enabled") == true
+	if not portal_ready and not forge_ready: return
 	if owner.call("is_host") == true:
+		if not portal_ready: return
 		for peer: int in _observations.keys():
 			var context := host_context(peer)
 			if context.is_empty():
@@ -61,10 +65,16 @@ func local_sample() -> Dictionary:
 	var key: Node = game.get_node_or_null(^"HomeKey")
 	var dialogue: bool = false
 	var cutscene: bool = input_owner != null and input_owner != key
+	var other_dialogue: bool = false
+	var fading: bool = false
 	for node: Node in get_tree().get_nodes_in_group("progression_restore"):
-		if world_node.is_ancestor_of(node) and node.has_method("is_fading") and node.call("is_fading") == true: cutscene = true
+		if world_node.is_ancestor_of(node) and node.has_method("is_fading") and node.call("is_fading") == true:
+			cutscene = true
+			fading = true
 	for node: Node in get_tree().get_nodes_in_group("story_modal"):
-		if node.has_method("is_open") and node.call("is_open") == true: dialogue = true
+		if node.has_method("is_open") and node.call("is_open") == true:
+			dialogue = true
+			if node != owner: other_dialogue = true
 	var ending_owner: bool = false
 	if realm == "meadows" and input_owner != null:
 		for source: Node in world_node.find_children("*", "Node", true, false):
@@ -81,14 +91,15 @@ func local_sample() -> Dictionary:
 		"session_epoch": owner.call("_altar_current_epoch"), "realm": realm,
 		"damage_revision": vitals.get("damage_revision"), "dialogue": dialogue, "cutscene": cutscene,
 		"swimming": bool(swim.call("is_swimming")), "flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
+		"station_ack_only": input_owner == owner and owner.call("owns_input") == true and not other_dialogue and not fading,
 		"ending_owner": ending_owner, "party_revision": int(party.get("revision")),
 		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party)}
 
 static func valid_sample(sample: Dictionary) -> bool:
-	if sample.size() != 14: return false
+	if sample.size() != 15: return false
 	for field: String in ["character_id", "world_instance_id", "session_epoch", "realm"]:
 		if not sample.get(field) is String or sample[field].is_empty() or sample[field].length() > 192: return false
-	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed", "ending_owner"]:
+	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed", "ending_owner", "station_ack_only"]:
 		if not sample.get(field) is bool: return false
 	return sample.get("sequence") is int and sample.sequence > 0 \
 		and sample.get("damage_revision") is int and sample.damage_revision >= 0 \
@@ -160,6 +171,7 @@ func host_context(peer: int) -> Dictionary:
 	return {"world_instance_id": sample.world_instance_id, "character_id": sample.character_id, "peer_id": peer,
 		"realm": realm, "position": actor.global_position, "damage_revision": sample.damage_revision,
 		"combat": owner.call("_altar_peer_in_combat", peer), "dialogue": sample.dialogue, "cutscene": sample.cutscene,
+		"station_ack_only": sample.station_ack_only,
 		"swimming": sample.swimming or aquatic.get("mode") != preload("res://scripts/player/swim_state.gd").Mode.LAND,
 		"flying": sample.flying or actor.get("net_flying") == true or actor.get("net_carried") == true,
 		"downed": sample.downed or (downed.get("_downed_peers") as Dictionary).has(peer), "home_key_owned": key_count == 1,

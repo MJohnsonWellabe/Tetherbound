@@ -172,6 +172,18 @@ func resolve_pending_unit(verdict: Dictionary) -> bool:
 	return true
 
 
+## Private host adapter asks the actual channel for the unit it just finished.
+## No RPC, elapsed claim or client-supplied completion authorizes payment.
+func completed_unit_plan(ticket: String, actor: CharacterBody3D) -> Dictionary:
+	if not _running or _pending.get("txn_id") != ticket or _actor == null \
+		or _actor.get_ref() != actor or _pending.get("character_id") != _character_id \
+		or _pending.get("world_id") != _world_id: return {}
+	var plan := _current_plan(actor)
+	if plan.get("ok") != true or plan.get("character_id") != _character_id \
+		or plan.get("world_id") != _world_id or plan.get("world_namespace") != _namespace: return {}
+	return plan
+
+
 ## Already committed units belong to the character. Only the unpaid remainder
 ## is canceled; an unresolved canonical unit retains its correlation ticket.
 func stop_refining(code: String = "cancelled", reason: String = "Refining stopped.") -> void:

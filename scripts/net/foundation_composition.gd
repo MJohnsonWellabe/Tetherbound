@@ -19,6 +19,9 @@ func _ready() -> void:
 	var lifecycle: Node = preload("res://scripts/net/foundation_travel_lifecycle.gd").new()
 	lifecycle.name = "TravelLifecycle"
 	add_child(lifecycle)
+	var forge: Node = preload("res://scripts/net/foundation_forge.gd").new()
+	forge.name = "ForgeHost"
+	add_child(forge)
 	_host = preload("res://scripts/world/bounty_host_adapter.gd").new()
 	_host.name = "BountyHost"
 	add_child(_host)

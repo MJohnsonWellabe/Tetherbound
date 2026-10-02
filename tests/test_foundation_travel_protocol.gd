@@ -41,7 +41,7 @@ func _sample() -> Dictionary:
 	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a",
 		"realm": "meadows", "sequence": 1, "damage_revision": 0, "dialogue": false,
 		"cutscene": false, "swimming": false, "flying": false, "downed": false,
-		"ending_owner": false, "party_revision": 0, "party_signature": "[]".sha256_text()}
+		"ending_owner": false, "station_ack_only": false, "party_revision": 0, "party_signature": "[]".sha256_text()}
 
 func test_lifecycle_has_no_action_or_coordinates_and_requires_every_observation() -> void:
 	var sample := _sample()

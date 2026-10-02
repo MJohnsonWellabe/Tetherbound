@@ -22,7 +22,7 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
-	if op == "regional_ack":
+	if op in ["regional_ack", "refine_start"]:
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
@@ -50,12 +50,17 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 		homestead_personal_view_completed.emit()
 	elif envelope.op in FOUNDATION_ACTIONS.ACTIONS:
 		homestead_action_completed.emit(envelope.op, envelope.intent, result)
+	elif envelope.op == "refine_start" and result.get("ok") != true:
+		_game().call("push_world_message", str(result.get("reason", result.get("code", "Refining could not start."))))
 	foundation_reply_received.emit(envelope.duplicate(true), result.duplicate(true))
 
 func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
 		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
 	if envelope.op == "personal_view": return _foundation_personal_view(peer)
+	if envelope.op == "refine_start":
+		var forge := get_node_or_null(^"FoundationComposition/ForgeHost")
+		return forge.call("start", peer, envelope) if forge != null else _foundation_refusal("forge_unavailable")
 	if envelope.op == "wild_capture_quote":
 		var context := _foundation_capture_context(peer, envelope.station_key)
 		if context.is_empty(): return _foundation_refusal("capture_offer_unavailable")
@@ -585,6 +590,19 @@ func homestead_submit_action(action: String, original: Dictionary, station: Node
 	var key := "homestead_recovery"
 	if is_instance_valid(station): key = "%s:%s:%s" % [station.get_meta("building_id", ""), station.get_meta("realm", ""), station.get_meta("building_uid", "")]
 	return _foundation_send(action, key, original, revision)
+
+func homestead_start_refining(station: Node3D, recipe_id: String, amount: int) -> Dictionary:
+	if not is_instance_valid(station) or station.get_script() != preload("res://scripts/build/station_piece.gd") \
+		or station.call("station_id") != "forge": return _foundation_refusal("actual_forge_required")
+	return _foundation_send("refine_start", station.call("source_key"), {"recipe_id": recipe_id, "amount": amount}, -1)
+
+func homestead_actor_context(actor: CharacterBody3D, uid: String) -> Dictionary:
+	var forge := get_node_or_null(^"FoundationComposition/ForgeHost")
+	return forge.call("actor_context", actor, uid) if forge != null else {}
+
+func homestead_commit_refine_unit(plan: Dictionary, ticket: String, actor: CharacterBody3D) -> Dictionary:
+	var forge := get_node_or_null(^"FoundationComposition/ForgeHost")
+	return forge.call("commit_unit", plan, ticket, actor) if forge != null else {}
 
 func retained_training_transaction(actions: Array) -> Dictionary:
 	# Read the existing durable journal after reload. This is a presentation
@@ -2472,7 +2490,7 @@ func _restore_character_here(wanted_id: String) -> bool:
 func _teardown(linger_transport: bool = false) -> void:
 	# Session's altar epoch survives a transport teardown. Explicitly retire
 	# observations and consumed travel identities before a peer can rejoin.
-	for path: NodePath in [^"FoundationComposition/TravelLifecycle", ^"FoundationComposition/PortalArrival"]:
+	for path: NodePath in [^"FoundationComposition/TravelLifecycle", ^"FoundationComposition/PortalArrival", ^"FoundationComposition/ForgeHost"]:
 		var travel_service := get_node_or_null(path)
 		if travel_service != null: travel_service.call("reset")
 	_portal_policy.call("bind_world", "")

@@ -3,7 +3,7 @@ extends RefCounted
 ## F32#1 pure one-unit plan for F31's present, tap-started Forge interaction.
 ## Supply HOST world snapshot, full admitted character, authenticated live realm and
 ## the canonical recipes_forge.json contents, never request/client baselines.
-## This helper is currently uncalled. It neither registers recipes nor starts
+## The present Forge actor and Foundation stage call this helper. It neither registers recipes nor starts
 ## a channel, spends inventory, grants items, writes state or creates receipts.
 ## The canonical ledger must authenticate the actor, resolve the live station,
 ## recheck proximity/modal/combat/channel completion and inventory CAS, and
@@ -11,6 +11,19 @@ extends RefCounted
 
 const REFINING_IDS := ["rootiron_ingot", "tidesteel_ingot", "skyglass_ingot", "stormglass_plate"]
 const STOP_REASONS := ["out_of_radius", "another_modal", "combat"]
+
+
+## Detached recipe for the typed station journal only. Keeping it out of the
+## generic ItemDB book prevents legacy instantaneous Game.craft refinement.
+static func transaction_recipe(recipe_id: String) -> Dictionary:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/recipes/recipes_forge.json"))
+	if not raw is Dictionary or manual_channel(raw).is_empty(): return {}
+	var recipe := recipe_definition(raw, recipe_id)
+	if recipe.is_empty() or not _recipe_prerequisites(recipe).is_empty(): return {}
+	recipe.station_id = "forge"
+	recipe.station_tier = 0
+	recipe.requires_manual_refine = true
+	return recipe
 
 
 static func unit_plan(source: Dictionary, recipe_id: String, station_uid: String,

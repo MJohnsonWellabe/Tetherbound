@@ -11,6 +11,9 @@ static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
 		context: Dictionary, canonical_recipe: Dictionary, frozen_authorization: bool = false) -> Dictionary:
 	if intent.size() != 2 or not intent.get("recipe_id") is String \
 			or not transaction_id(intent.get("craft_id")): return RULES.deny("invalid_craft_intent")
+	if canonical_recipe.get("requires_manual_refine") == true \
+		and (context.get("completed_manual_refine") != true or context.get("manual_unit_ticket") != intent.craft_id):
+		return RULES.deny("present_completed_refining_required")
 	if current.get("character_id", "") == "" or current.get("character_id") != context.get("character_id") \
 			or context.get("expected_revision") != revision: return RULES.deny("character_revision_mismatch")
 	for key: String in ["homestead", "in_range", "in_combat", "recipe_known"]:
