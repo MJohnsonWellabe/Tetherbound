@@ -45,6 +45,11 @@ func request_start(id: String) -> void:
 	session.request_stormwood_encounter({"kind": "start", "trainer_id": id})
 
 
+## A local challenge sent to the host and not yet admitted, refused or withdrawn.
+func challenge_pending() -> bool:
+	return not _pending_challenge.is_empty() or not _pending_state.is_empty()
+
+
 func on_finalized_death() -> void:
 	var id := _local_trainer
 	if id.is_empty():

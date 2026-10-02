@@ -400,6 +400,14 @@ func _tick_aggression(delta: float) -> bool:
 	return true
 
 
+## The director refused this creature's engagement for now (the player is in
+## a conversation or a trainer battle): ask again after `seconds` rather than
+## standing beside the player announced and silent until they walk away.
+func defer_engage(seconds: float) -> void:
+	_has_announced = false
+	_grace_left = maxf(_grace_left, seconds)
+
+
 func _wander(delta: float) -> void:
 	if _pause_left > 0.0:
 		_pause_left -= delta

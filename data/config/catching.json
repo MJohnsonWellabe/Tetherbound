@@ -150,6 +150,8 @@
     "_comment_giveup": "Metres from its home beyond which it loses interest and walks back. Without this an aggressive creature follows you across the whole meadow and the only escape is a fight.",
     "give_up_distance": 26.0,
     "_comment_grace": "Seconds after a fight ends before it will come at you again. Being re-engaged the instant you win is not danger, it is a soft lock.",
-    "grace_after_combat": 8.0
+    "grace_after_combat": 8.0,
+    "_comment_deferred_retry": "Seconds before an aggressive creature asks again after the director deferred it because the player was in a conversation or a trainer battle (open, between rounds or being admitted).",
+    "deferred_retry_seconds": 0.5
   }
 }

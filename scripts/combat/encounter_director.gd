@@ -5347,6 +5347,18 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 		return
 	if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 		return
+	# An aggressive creature waits while this player is in a conversation, or
+	# has accepted a trainer's challenge that has not finished. Starting a wild
+	# fight under an open dialogue made the challenge's closing line find the
+	# player mid-battle, so `begin_trainer_battle` refused and the accepted
+	# challenge vanished with no fight and no message (focused Nysa smoke, CI
+	# 6185). Deferred, not refused: the creature asks again shortly, so the
+	# ambush still lands once the conversation or the trainer battle is over.
+	if wild_engagement_deferred():
+		if wild.has_method("defer_engage"):
+			wild.call("defer_engage", float(CATCH.config().get("aggression", {}).get(
+				"deferred_retry_seconds", 0.5)))
+		return
 	# The Warrens guardian is the authored shared-wild exception: a guest who
 	# reaches its local presentation after the host has opened the fight must
 	# enter that record, not start an unjoinable local copy.  Other wilds retain
@@ -5360,6 +5372,22 @@ func _on_wild_wants_to_engage(wild: Node3D) -> void:
 			join_encounter(guardian_id)
 			return
 	_start_fight(wild)
+
+
+## True while an aggressive creature must not start a fight with this player:
+## this screen's dialogue is open, or a trainer battle is running, between its
+## rounds or still being admitted. Local to this peer, like the conversation.
+func wild_engagement_deferred() -> bool:
+	if trainer_battle_active() or trainer_challenge_pending():
+		return true
+	var panel := get_tree().get_first_node_in_group("dialogue_panel") if is_inside_tree() else null
+	return panel != null and panel.has_method("is_open") and bool(panel.call("is_open"))
+
+
+## A trainer challenge accepted but not yet admitted as a battle. A director
+## whose trainer battles begin synchronously has no such window.
+func trainer_challenge_pending() -> bool:
+	return false
 
 
 ## The local body name makes this a Warrens-only exception; the announced
