@@ -1008,8 +1008,8 @@ static func oskar_approach_path(meadow: Array[Vector2], street: Array[Vector2], 
 		if not result.is_empty() and result.back().distance_to(point) <= NAVIGATOR.CONTACT_EPS:
 			continue
 		if result.size() >= 2:
-			var incoming := result.back() - result[result.size() - 2]
-			var outgoing := point - result.back()
+			var incoming: Vector2 = result.back() - result[result.size() - 2]
+			var outgoing: Vector2 = point - result.back()
 			if absf(incoming.cross(outgoing)) <= NAVIGATOR.CONTACT_EPS \
 					and incoming.dot(outgoing) > 0.0:
 				result.pop_back()
