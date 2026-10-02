@@ -16,6 +16,7 @@ func _build() -> Dictionary:
 	# startup. The original suites and their admitted baseline stay unchanged.
 	if bool(_profile.get("prepare_paid_altar", false)):
 		_admit(steps, saves, 2, "initial-bootstrap")
+		steps.append(_entry(0, "f48_watch_altar_save", {}, "Read-only actual transaction owner BOOL-save edge; no care exclusions or state writes"))
 		steps.append_array(_route("bootstrap_altar", 0))
 		steps.append(_entry(0, "f48_assert_altar_build", {"since": "initial-bootstrap"}))
 		steps.append(_entry(1, "f48_assert", {"since": "initial-bootstrap", "unchanged": ["inventory", "party", "redesign_character", "satchel_escrow"]}))

@@ -6,6 +6,7 @@ extends RefCounted
 const UIDS := preload("res://scripts/data/redesign_state.gd")
 const ATOMIC := preload("res://scripts/save/atomic_save_file.gd")
 const DETACHED := preload("res://tools/net/f48_detached_file.gd")
+const WORLD_STATE := preload("res://autoload/world_state.gd")
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
@@ -20,6 +21,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
+		"f48_watch_altar_save": return _watch_altar_save(tree)
 		"f48_assert_altar_build": return await _sealed_reply(tree, action, args, _assert_altar_build(tree, args))
 		"f48_require_configuration": return _require_configuration(args)
 		"f48_require": return _require(tree, args)
@@ -759,6 +761,54 @@ static func _build_cell(tree: SceneTree, args: Dictionary) -> Dictionary:
 	return await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
 
 
+static func _watch_altar_save(tree: SceneTree) -> Dictionary:
+	# Producer-only read observer. No save, ACK, party write or fake settlement.
+	var game := tree.root.get_node_or_null(^"Game")
+	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
+	if game == null or writer == null or not writer.has_signal("transaction_boundary") \
+		or game.call("is_host") != true or tree.has_meta("f48_altar_save_watch"):
+		return _result(false, "Actual owning host writer required for paid Altar save observer")
+	var world_ref: WeakRef = weakref(game.world)
+	var character := str(game.local.character_id)
+	var namespace_id := str(game.world.reward_delivery_namespace)
+	var epoch := str(game.session.call("_altar_current_epoch"))
+	var output := OS.get_environment("TB_PROOF_OUT")
+	if character.is_empty() or namespace_id.is_empty() or epoch.is_empty() or output.is_empty():
+		return _result(false, "Actual owner/world/session/output required")
+	var prior_receipts: Array = game.local.save_data().redesign_character.transaction_receipts.duplicate()
+	tree.set_meta("f48_altar_save_edges", {})
+	var observer := func(observation: Dictionary) -> void:
+		var phase := str(observation.get("phase", ""))
+		if phase not in ["after_host_write_before_delivery", "after_owner_write_before_ack"] \
+			or observation.get("kind") != "altar_building" or observation.get("action") != "place_building" \
+			or observation.get("character_id") != character or observation.get("world_namespace") != namespace_id \
+			or observation.get("session_id") != epoch or game.world != world_ref.get_ref() \
+			or game.local.character_id != character or game.session.call("_altar_current_epoch") != epoch:
+			return
+		var row: Variant = game.world.reward_deliveries.get(observation.get("delivery_id"))
+		if not WORLD_STATE.altar_build_row_valid(row, namespace_id, str(game.world.world_id)) \
+			or row.get("receipt") != observation.get("receipt") or row.get("character_id") != character \
+			or row.get("session_id") != epoch or prior_receipts.has(row.get("receipt")):
+			return
+		var edges: Dictionary = tree.get_meta("f48_altar_save_edges", {})
+		if edges.has(phase): return
+		if edges.has("after_host_write_before_delivery") \
+			and edges.after_host_write_before_delivery.row.delivery_id != row.delivery_id: return
+		var evidence := {"phase": phase, "observation": observation.duplicate(true), "row": row.duplicate(true),
+			"files": _observe(tree), "observer_pid": OS.get_process_id(), "session_epoch": epoch}
+		var dir := output.path_join("f48-altar-save-edges").path_join(character)
+		DirAccess.make_dir_recursive_absolute(dir)
+		var path := dir.path_join(phase + ".json")
+		if not DETACHED.publish(path, evidence): return
+		evidence.path = path
+		evidence.sha256 = _digest(path)
+		edges[phase] = evidence
+		tree.set_meta("f48_altar_save_edges", edges)
+	writer.connect("transaction_boundary", observer)
+	tree.set_meta("f48_altar_save_watch", observer)
+	return _result(true, "Read-only exact host/owner save edges armed before original paid build input")
+
+
 static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var now := _observe(tree)
 	var prior: Dictionary = _remembered(tree, str(args.get("since", "")))
@@ -775,6 +825,8 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 	var intent: Variant = row.get("intent")
 	if not intent is Dictionary or not intent.get("record") is Dictionary or not intent.get("request") is Dictionary:
 		return _result(false, "Real Altar transaction intent unavailable", now)
+	if not WORLD_STATE.altar_build_row_valid(row, str(now.world_namespace), str(now.world_id)):
+		return _result(false, "Actual complete paid Altar journal schema invalid", {"row": row, "observation": now})
 	var record: Dictionary = intent.record
 	var txn := str(row.get("action_id", ""))
 	var id := "altar_building:" + JSON.stringify([now.world_namespace, now.character_id, txn]).sha256_text()
@@ -802,6 +854,33 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 			if not (coordinate is int or coordinate is float) or not is_finite(float(coordinate)): errors.append("Nonfinite actual build position")
 	var yaw: Variant = record.get("yaw_deg")
 	if not (yaw is int or yaw is float) or not is_finite(float(yaw)): errors.append("Nonfinite actual build yaw")
+	var edges: Dictionary = tree.get_meta("f48_altar_save_edges", {})
+	var host_edge: Dictionary = edges.get("after_host_write_before_delivery", {})
+	var owner_edge: Dictionary = edges.get("after_owner_write_before_ack", {})
+	if host_edge.is_empty() or owner_edge.is_empty():
+		errors.append("Original authenticated before-delivery and owner BOOL-save edges missing")
+	else:
+		for edge: Dictionary in [host_edge, owner_edge]:
+			var pending: Dictionary = edge.row.duplicate(true)
+			var accepted: Dictionary = row.duplicate(true)
+			# The real ACK changes only status; preserve every other full row field.
+			pending.erase("status")
+			accepted.erase("status")
+			if edge.row.get("status") != "pending" or not _json_equal(pending, accepted) \
+				or _digest(str(edge.path)) != edge.sha256:
+				errors.append("Exact immutable original saved row/edge artifact changed")
+		var host_before := {"inventory": host_edge.files.memory.get("inventory"), "party": host_edge.files.memory.get("party"),
+			"redesign_character": host_edge.files.memory.get("redesign_character")}
+		if not _json_equal(row.get("before"), host_before):
+			errors.append("Full original before carrier differs from actual host writer edge")
+		for scope: String in ["memory", "disk"]:
+			var saved: Dictionary = owner_edge.files[scope]
+			var projection := {"inventory": saved.get("inventory"), "party": saved.get("party"), "redesign_character": saved.get("redesign_character")}
+			if not _json_equal(row.get("after"), projection):
+				errors.append(scope + ": full original after carrier differs at actual owner BOOL-save edge")
+	if not row.get("before") is Dictionary or not row.get("after") is Dictionary \
+		or not _json_equal(row.before.get("party"), row.after.get("party")):
+		errors.append("Paid transaction changed a full original owned party/card field")
 	var expected_counts := _counts(prior.memory)
 	for need: Dictionary in cost: expected_counts[need.id] = int(expected_counts.get(need.id, 0)) - int(need.n)
 	var personal: Dictionary = prior.memory.redesign_character.duplicate(true)
@@ -812,13 +891,17 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		var counts := _counts(state)
 		for item: String in _unique(expected_counts.keys() + counts.keys()):
 			if int(counts.get(item, 0)) != int(expected_counts.get(item, 0)): errors.append(scope + ": wrong exact item debit " + item)
-		if not _json_equal(state.get("party"), prior.memory.get("party")) or not _json_equal(state.get("redesign_character"), personal) \
+		if not _json_equal(state.get("redesign_character"), personal) \
 			or not _json_equal(state.get("satchel_escrow"), prior.memory.get("satchel_escrow")):
-			errors.append(scope + ": paid build changed an owned card/progression or did not persist exactly one receipt")
-		var projection := {"inventory": state.get("inventory"), "party": state.get("party"), "redesign_character": state.get("redesign_character")}
-		if not _json_equal(row.get("after"), projection): errors.append(scope + ": accepted full after carrier differs from real owner")
-	var before := {"inventory": prior.memory.get("inventory"), "party": prior.memory.get("party"), "redesign_character": prior.memory.get("redesign_character")}
-	if not _json_equal(row.get("before"), before): errors.append("Accepted original before carrier differs from admitted source")
+			errors.append(scope + ": paid build changed progression/escrow or did not persist exactly one receipt")
+		# Disk must still hold the original complete saved row. Live care resumes
+		# later; its full values remain in now and the sealed owner-edge evidence.
+		if scope == "disk":
+			var projection := {"inventory": state.get("inventory"), "party": state.get("party"), "redesign_character": state.get("redesign_character")}
+			if not _json_equal(row.get("after"), projection): errors.append("Latest disk differs from complete authenticated after carrier")
+	if not _json_equal(row.before.get("inventory"), prior.memory.get("inventory")) \
+		or not _json_equal(row.before.get("redesign_character"), prior.memory.get("redesign_character")):
+		errors.append("Original inventory/progression before carrier differs from admitted source")
 	for world: String in ["world", "disk_world"]:
 		var carrier: Dictionary = now[world]
 		if not _json_equal(carrier.get("reward_deliveries", {}).get(id), row): errors.append(world + ": accepted journal absent or changed")
@@ -826,7 +909,7 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		for building: Variant in carrier.get("placed_buildings", []):
 			if _json_equal(building, record): found += 1
 		if found != 1: errors.append(world + ": exact paid Altar record absent or duplicated")
-	return _result(errors.is_empty(), "Actual paid Altar bootstrap; no earned campaign credit. " + "; ".join(errors), {"row": row, "observation": now})
+	return _result(errors.is_empty(), "Actual paid Altar bootstrap; no earned campaign credit. " + "; ".join(errors), {"row": row, "observation": now, "save_edges": edges})
 
 
 static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
