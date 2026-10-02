@@ -113,10 +113,18 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 static func _positive_number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) > 0.0
 
+## An empty `world_id` means the caller does not know it (a character
+## snapshot carries world identity in the split envelope, not in its payload),
+## exactly as actor_vitals_delivery.world_errors treats it: every other field is
+## still checked and the row must name a world, but not a particular one.
 static func errors(rows: Dictionary, namespace_id: String, world_id: String) -> Array[String]:
 	var result: Array[String] = []
 	for key: Variant in rows:
 		var row: Variant = rows[key]
 		if str(key).begins_with("foundation_event:") or (row is Dictionary and row.get("kind") == "foundation_event"):
-			if not valid(row, namespace_id, world_id) or row.delivery_id != key: result.append("Invalid retained Foundation event")
+			var expected := world_id
+			if expected.is_empty() and row is Dictionary and row.get("world_id") is String:
+				expected = row.world_id
+			if expected.is_empty() or not valid(row, namespace_id, expected) or row.delivery_id != key:
+				result.append("Invalid retained Foundation event")
 	return result

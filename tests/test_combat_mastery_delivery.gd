@@ -72,6 +72,27 @@ func test_retained_hit_rejects_forged_binding_damage_or_epoch_and_preserves_hp()
 	context.in_combat = true
 	assert_false(ACTIONS.stage(before, 0, "combat_mastery", duty.intent, context, RECORD.errors).ok)
 
+func test_character_snapshot_without_world_id_accepts_a_valid_retained_event() -> void:
+	# A character snapshot carries world identity in its split envelope, so the
+	# save validator calls errors() with an empty world_id. A valid retained row
+	# must pass then (it used to refuse every host save after any Foundation
+	# event); a named world still has to match, and a forged row still fails.
+	var fixture := DATA.new()
+	var before: Dictionary = fixture._before()
+	var row := EVENT.make(fixture._world(), "resource-epoch", "mastery:" + ACTION_ID, [_duty(before)])
+	assert_false(row.is_empty())
+	if row.is_empty(): return
+	var rows := {row.delivery_id: JSON.parse_string(JSON.stringify(row))}
+	assert_eq(EVENT.errors(rows, "resource-namespace", ""), [] as Array[String])
+	assert_eq(EVENT.errors(rows, "resource-namespace", "resource-slot"), [] as Array[String])
+	assert_eq(EVENT.errors(rows, "resource-namespace", "another-world").size(), 1)
+	var forged: Dictionary = row.duplicate(true)
+	forged.duties[0].context.outcome.applied_damage = 101.0
+	assert_eq(EVENT.errors({row.delivery_id: forged}, "resource-namespace", "").size(), 1)
+	var nameless: Dictionary = row.duplicate(true)
+	nameless.world_id = ""
+	assert_eq(EVENT.errors({row.delivery_id: nameless}, "resource-namespace", "").size(), 1)
+
 func test_world_and_owner_save_refusal_retry_retains_one_landed_use() -> void:
 	var fixture := DATA.new()
 	var directory := "user://test_mastery_save_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
