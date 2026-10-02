@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f19_boss_epoch.gd: 1 of 733 test files
+  ok    test_f19_boss_epoch.gd :: test_derived_settlement_flags_preserve_the_original_retained_boss_epoch
+
+1 tests, 4 assertions, 0 failed
