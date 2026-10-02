@@ -1,0 +1,244 @@
+{
+  "acceptance_credit": false,
+  "returns": {
+    "76c4_compile": "FAIL Variant bool inference; repaired and actualcompiled",
+    "a9be_compile": "PASS",
+    "b86c_compile": "PASS",
+    "a9be_producer_v3": "FAIL prepeer exact feast selector validation",
+    "b86c_producer_v4": "FAIL after two-peer admission, invalid witness metadata and original15s heartbeat silence; no paidbuild/catch/loop credit",
+    "5d2e_alpha_retirement": "PASS all9 original checks, no script errors/leaks"
+  },
+  "files": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-76c4fbcee769\\0.log",
+      "sealed": "000-0.log.gz",
+      "raw_bytes": 2212,
+      "raw_sha256": "dea70ea0e02d14749ce6f48f220d89f49b79a894ba47b9c91de42ccb7845c3bf",
+      "gzip_sha256": "2b2eeb6188cb568eaac53c317f7ce2a55f4197cf6c4016f32e195186b69aecd9"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-76c4fbcee769\\receipt.json",
+      "sealed": "001-receipt.json.gz",
+      "raw_bytes": 759939,
+      "raw_sha256": "653887f1df9e9384c713c9964e701a19ebb874719bac4a36afcabe0fe40439b7",
+      "gzip_sha256": "5b3a3aeb078ac524f276b8e3419ba79acade5ed178a5d10969c16d702ddb4715"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-76c4fbcee769\\scripts.json",
+      "sealed": "002-scripts.json.gz",
+      "raw_bytes": 122,
+      "raw_sha256": "873f9a07bce66d3759efdd1b3e9559c668caf97a4c8f9eae3cf0e5c67b90086a",
+      "gzip_sha256": "c295bf73ce344d8670a48667cd36f46d05ddced4b7b343318b3ebe12ff9362d6"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-76c4fbcee769\\user\\Godot\\app_userdata\\Tetherbound\\logs\\godot.log",
+      "sealed": "003-godot.log.gz",
+      "raw_bytes": 2177,
+      "raw_sha256": "14f79ad3c49327729682d5fc8d3246a769d2a0d0c24d267b59bb756c15aabf1b",
+      "gzip_sha256": "30b3ba08dd9b5d195e36a6333311ab8f72d606343b78a9b884e20ad8406b2665"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-a9be38ec7624\\0.log",
+      "sealed": "004-0.log.gz",
+      "raw_bytes": 276,
+      "raw_sha256": "81ad2dadfcf0bfba1e103f5d0e0e13b8ff5e7b7c521e37506504edda5460d664",
+      "gzip_sha256": "8acd600297cc964fef735d524df3bcb34cd98480d2e95d5f76978ba05534e4ee"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-a9be38ec7624\\receipt.json",
+      "sealed": "005-receipt.json.gz",
+      "raw_bytes": 758774,
+      "raw_sha256": "3c5af22627cd2a8e5c85497a23680b725eafa704f5daf032ca36a00218da6581",
+      "gzip_sha256": "e4f1733d6d4bf0d2910e1f2d0625093787be0e55bc1331387aca0b2e9aeb6c7f"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-a9be38ec7624\\scripts.json",
+      "sealed": "006-scripts.json.gz",
+      "raw_bytes": 122,
+      "raw_sha256": "873f9a07bce66d3759efdd1b3e9559c668caf97a4c8f9eae3cf0e5c67b90086a",
+      "gzip_sha256": "c295bf73ce344d8670a48667cd36f46d05ddced4b7b343318b3ebe12ff9362d6"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-a9be38ec7624\\user\\Godot\\app_userdata\\Tetherbound\\logs\\godot.log",
+      "sealed": "007-godot.log.gz",
+      "raw_bytes": 269,
+      "raw_sha256": "05942f624d391c2bababea7f6acbacba20000675bbb5126f7b1283ff3f67afb4",
+      "gzip_sha256": "8f9c09f0c10451db4694960bbe01d3ba68529c7767126360960d9ddd525516fa"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-b86c454f8c94\\0.log",
+      "sealed": "008-0.log.gz",
+      "raw_bytes": 155,
+      "raw_sha256": "6f72e184d8d5f3979ba7d2d69deb6324ef5560854fecf5f4eabd997d5719e4c4",
+      "gzip_sha256": "07d1b613216390f9e6b151618404babf48a0fe6aff32fbc6290b595e60ecfb30"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-b86c454f8c94\\receipt.json",
+      "sealed": "009-receipt.json.gz",
+      "raw_bytes": 758671,
+      "raw_sha256": "e22288f6261ef5eeb49929f80bdca37c2534a1acce9dc83a14ece60b1cc586b0",
+      "gzip_sha256": "2e6536b37472a8fdf80f89764149fed687e5bb5648712acd8e98895d4031f2ba"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-b86c454f8c94\\scripts.json",
+      "sealed": "010-scripts.json.gz",
+      "raw_bytes": 34,
+      "raw_sha256": "335873db29b5c2d450781e4b624b86b491eed09056fc1e82db901e70d68dbcc5",
+      "gzip_sha256": "4af6d40596d9839b48d96e283914cf198ea1dc02a2eb132b45e19a0a7f3ac3d2"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-b86c454f8c94\\user\\Godot\\app_userdata\\Tetherbound\\logs\\godot.log",
+      "sealed": "011-godot.log.gz",
+      "raw_bytes": 151,
+      "raw_sha256": "60ded6ede94ad3da406c4fe5b32f3fd55ce9b3f6691a2759a6ab5ff9f8acbc74",
+      "gzip_sha256": "50b12be7057eb72dd35ade0877e8033f2e6a16ec465573eb0a2e2ff653b19512"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-smokes-5d2e63e09a95-384314d5.json",
+      "sealed": "012-combined-smokes-5d2e63e09a95-384314d5.json.gz",
+      "raw_bytes": 758552,
+      "raw_sha256": "b7d05d92f04adff022be4cfbcbc533bfc464fc44a4f3a9e30b5862c7785ae252",
+      "gzip_sha256": "d755ec73f0a06609753f606438f67bf0af41da980acee316907323cf8715394a"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v3\\coordinator.log",
+      "sealed": "013-coordinator.log.gz",
+      "raw_bytes": 237,
+      "raw_sha256": "2d42f9a3575efe8fba3bc87bbb5cff1c33cb2c639f07ca860d9ae85ea85e2d5a",
+      "gzip_sha256": "5015933b97d119471099b786e4db26dc25e0881a9813f2a66cad8aa113fa6cc0"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v3\\invocation.json",
+      "sealed": "014-invocation.json.gz",
+      "raw_bytes": 1732,
+      "raw_sha256": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1",
+      "gzip_sha256": "a52e68067c8dde41c0b3cb84df1bb9e4f5ed8f2a6db55ae90c891d062f740829"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\coordinator.log",
+      "sealed": "015-coordinator.log.gz",
+      "raw_bytes": 3007,
+      "raw_sha256": "a88ce2ac8c4747977bba106b544402fac5f6248b67d6dfb0680a60a82cc250e2",
+      "gzip_sha256": "57a2c51e150bbd47e32003d71b7989e4055e2082236c5a5a33ae7f497f199448"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\invocation.json",
+      "sealed": "016-invocation.json.gz",
+      "raw_bytes": 1732,
+      "raw_sha256": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1",
+      "gzip_sha256": "a52e68067c8dde41c0b3cb84df1bb9e4f5ed8f2a6db55ae90c891d062f740829"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\net-run\\NET_RUN.json",
+      "sealed": "017-NET_RUN.json.gz",
+      "raw_bytes": 2762,
+      "raw_sha256": "776fc96a8798537f2dcd1d1ea3ed884f6468bb60a1be7fb680c63a005225ffbd",
+      "gzip_sha256": "4e130dde3ce59b65214407df500fecffe78f80123ed5257cffb11aebc526117f"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\net-run\\SUMMARY.md",
+      "sealed": "018-SUMMARY.md.gz",
+      "raw_bytes": 269,
+      "raw_sha256": "e9cbd1b9cfc5d340c4d7be442979721f52e9730c61fdfffb181374eee4626020",
+      "gzip_sha256": "7b91805c26eb95902fb0f3991ea78ad9f30650ef6bac284cc902c88e39b05867"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\net-run\\peer-0.log",
+      "sealed": "019-peer-0.log.gz",
+      "raw_bytes": 11535,
+      "raw_sha256": "697eb73c207bdfcac583032480fcc7a86e15a1faa20816373319150fa92e5647",
+      "gzip_sha256": "bfe7994d0bdb3094d343f75a9a801dab117c9a24882433ce8481dbd08cd88da5"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\net-run\\peer-1.log",
+      "sealed": "020-peer-1.log.gz",
+      "raw_bytes": 11002,
+      "raw_sha256": "186ab650efaa842ca885953b38fa3fb4297b9df83d017388840ddb0bc9b3b675",
+      "gzip_sha256": "94c5c488a800f931cfbce27121ec66b6c90f0cf38d1c0d3294d1db8e5d0b15f1"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\proof\\PROOF.md",
+      "sealed": "021-PROOF.md.gz",
+      "raw_bytes": 3491,
+      "raw_sha256": "6e6d8e501d57ef40a830adb7d3c39e2157ea091f0f3d8dc01290eeb140837e74",
+      "gzip_sha256": "256b1dab81540dad8166948f8d04b6e04dc4c1c7c3830d4b432c6b30b225e44a"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-measured-v4\\proof\\f48-witnesses\\character-626300bee616b52bfa1d40ab32fb776a\\initial-bootstrap.json",
+      "sealed": "022-initial-bootstrap.json.gz",
+      "raw_bytes": 5612225,
+      "raw_sha256": "44eb7422ba4c5931a3c45c9ca8690c74b46dccaf0a301cb31f0caaf963d9f143",
+      "gzip_sha256": "0aaad384fa24990f68c77c1a0271ece8ffa65949af2bcd80277149b03a12a2d6"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-producer-wrapper-a9be38ec7624\\receipt.json",
+      "sealed": "023-receipt.json.gz",
+      "raw_bytes": 759301,
+      "raw_sha256": "b5c6a27492769f6c503497beab0ff5f28248c746b8e3bc5b251a69c2b688069a",
+      "gzip_sha256": "3192b45024431e3b63ebc4b9217f748f66b4425804834e93e77d49e66fc82ade"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-producer-wrapper-a9be38ec7624\\wrapper.log",
+      "sealed": "024-wrapper.log.gz",
+      "raw_bytes": 157,
+      "raw_sha256": "b52af0c323dd5a6b4c3d0e9685624e1408aa21a2b74a451dbc8dd378c3fe9c4b",
+      "gzip_sha256": "a94335a91b8450da7018b582ca273dcc9bce644c0e8ebc664c7a3fa96552fa2d"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-producer-wrapper-b86c454f8c94\\receipt.json",
+      "sealed": "025-receipt.json.gz",
+      "raw_bytes": 759961,
+      "raw_sha256": "aa231cfc211a82c68d342b1d4ecd2b8469769acc156e447f7676a28ae4acf58f",
+      "gzip_sha256": "9569ae752479d1404dab9972d9ac7f88e4b20695d840e1c3c4e9f5e11660ec40"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-producer-wrapper-b86c454f8c94\\wrapper.log",
+      "sealed": "026-wrapper.log.gz",
+      "raw_bytes": 157,
+      "raw_sha256": "01abc6e0e8e7959aeb0ebb2906dfe9e43b8ec1f3ffdfa5595985f40849fbb14b",
+      "gzip_sha256": "a332586ad18c407dba388ed3c15d3d991b1337c6861dcf56f9a2f6a9bd9f826a"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-5d2e63e09a95-smoke_water_alpha_retirement\\result.json",
+      "sealed": "027-result.json.gz",
+      "raw_bytes": 519,
+      "raw_sha256": "a5746901a55747b210e2f766ccb9a5100d26430707c70dad4d68f219d30d9d92",
+      "gzip_sha256": "9f1022b71e86fb0d4f98e840b7aec8a501ad43d0440d1bca0091f990aee5426b"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-5d2e63e09a95-smoke_water_alpha_retirement\\smoke.log",
+      "sealed": "028-smoke.log.gz",
+      "raw_bytes": 20721,
+      "raw_sha256": "071c7ab4a32dd7e2eae341fb0d2b45134887d80056f02b9f645e256ccf4ddb8e",
+      "gzip_sha256": "51840af5f6c072e6431117ed7c99f87f27483d6865c544f745d502a7b103092b"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-5d2e63e09a95-smoke_water_alpha_retirement\\user\\Godot\\app_userdata\\Tetherbound\\alpha_retirement_12194345\\worlds\\native-alpha-retirement\\world.json",
+      "sealed": "029-world.json.gz",
+      "raw_bytes": 941,
+      "raw_sha256": "224a7aaea2892f58ecfd077dcae289439a5a1be0ef184f475c73a0e15acf1a97",
+      "gzip_sha256": "15de63dcf69d4f78a7a970baf9510c9cb3dfa9d3f8d26dbf6c370a03169a5e7b"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-5d2e63e09a95-smoke_water_alpha_retirement\\user\\Godot\\app_userdata\\Tetherbound\\logs\\godot.log",
+      "sealed": "030-godot.log.gz",
+      "raw_bytes": 20411,
+      "raw_sha256": "08e141a5b61cc01b6b923b10510a14d2ba7103712042c353ae90fbcaaa67b0f1",
+      "gzip_sha256": "46940d136566fbe67d278e3e841132bbd1d3d0bbd50f1f0bbe61fe1ded060202"
+    },
+    {
+      "source": "D:\\tetherbound\\r3-f48\\.tmp\\f48-preboss-measured-v3-producer\\profile.json",
+      "sealed": "031-profile.json.gz",
+      "raw_bytes": 31360,
+      "raw_sha256": "478a3ff3e465447b625737f4d17ae05e6b12fcb1c92cd4bc8a14ffe1713da015",
+      "gzip_sha256": "7d5a44ac46cf4240b543517951ff4d24c3b12118a32332221f1e88e7cbf09c7b"
+    },
+    {
+      "source": "D:\\tetherbound\\r3-f48\\.tmp\\f48-preboss-measured-v3-producer\\source.json",
+      "sealed": "032-source.json.gz",
+      "raw_bytes": 380,
+      "raw_sha256": "babeeffb8bdc7aa348a53f31f18e52ae20953225c5dad53fc3c204b750eb57d0",
+      "gzip_sha256": "6436cf2debbaf8ea9accfde330dcd8867b3a8cc909851194d143bbfbb5185f7d"
+    }
+  ]
+}
