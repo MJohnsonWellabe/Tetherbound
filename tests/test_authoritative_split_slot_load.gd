@@ -48,16 +48,16 @@ func _split_character(id: String) -> Dictionary:
 	return (saver.call("characters") as RefCounted).call("read", id)
 
 func _rewrite_flat(mutator: Callable) -> void:
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(1)))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(saver.slot_path(1)))
 	mutator.call(data)
 	var file := FileAccess.open(saver.slot_path(1), FileAccess.WRITE)
-	file.store_string(JSON.stringify(data))
+	file.store_string(preload("res://scripts/save/save_document.gd").stringify(data))
 	file.close()
 
 func test_locator_loads_newer_split_journals_not_stale_merged_slot() -> void:
 	var original := _game()
 	assert_true(saver.save(original, 1))
-	var flat: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(1)))
+	var flat: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(saver.slot_path(1)))
 	assert_eq((flat.get("split_locator", {}) as Dictionary).get("world_id"), "slot-1")
 	var world := _split_world("slot-1")
 	world["reward_delivery_namespace"] = "reward-world-uuid"
@@ -139,10 +139,10 @@ func test_newer_locator_half_refuses_without_mutating_live_state() -> void:
 	var original := _game()
 	assert_true(saver.save(original, 1))
 	var character_path := str((saver.call("characters") as RefCounted).call("path_for", "slot-1"))
-	var character: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(character_path))
+	var character: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(character_path))
 	character["version"] = 999999
 	var file := FileAccess.open(character_path, FileAccess.WRITE)
-	file.store_string(JSON.stringify(character))
+	file.store_string(preload("res://scripts/save/save_document.gd").stringify(character))
 	file.close()
 	var loaded := _game()
 	loaded.day = 88

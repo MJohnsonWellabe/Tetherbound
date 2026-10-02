@@ -65,7 +65,7 @@ func _init() -> void:
 		push_error("[seed] cannot read %s" % from)
 		quit(1)
 		return
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	file.close()
 	if not (parsed is Dictionary):
 		push_error("[seed] %s is not a save dictionary" % from)
@@ -121,6 +121,11 @@ func _init() -> void:
 	progression["flags"] = flags
 	data["progression"] = progression
 
+	var encoded := preload("res://scripts/save/save_document.gd").stringify(data)
+	if encoded.is_empty():
+		push_error("[seed] modified save cannot be encoded losslessly")
+		quit(1)
+		return
 	var dir := out.get_base_dir()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
 	var writer := FileAccess.open(out, FileAccess.WRITE)
@@ -128,7 +133,7 @@ func _init() -> void:
 		push_error("[seed] could not open %s for write" % out)
 		quit(1)
 		return
-	writer.store_string(JSON.stringify(data, "\t"))
+	writer.store_string(encoded)
 	writer.close()
 	print("[seed] %s -> %s" % [from, out])
 	print("[seed] party levelled to the tournament floor L%d (min_party_size %d); %d flags"

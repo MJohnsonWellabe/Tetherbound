@@ -171,7 +171,7 @@ func _run() -> void:
 	var out := FileAccess.open(dst, FileAccess.WRITE)
 	out.store_buffer(save_bytes)
 	out.close()
-	var raw: Dictionary = JSON.parse_string(save_bytes.get_string_from_utf8())
+	var raw: Dictionary = preload("res://scripts/save/save_document.gd").parse(save_bytes.get_string_from_utf8())
 	var saved_pose: Array = (raw.get("player_pose", {}) as Dictionary).get("position", [])
 	_receipt = {"activity": _activity, "save": _save_path,
 		"save_sha256": _sha256(save_bytes), "save_version": raw.get("version"),

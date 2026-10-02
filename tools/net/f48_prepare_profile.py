@@ -1,6 +1,7 @@
 """Declare real producer input routes; never a ready CI/earned profile."""
 import argparse, copy, hashlib, json
 from pathlib import Path
+import save_document
 
 def step(step_action, **args): return {"action": step_action, "args": args}
 def approach(target):
@@ -27,7 +28,7 @@ def produce(source: Path, output: Path):
     routes["essence_spend_reopen"]=copy.deepcopy(routes["essence_spend_prepare"])
     for peer in range(2):
         files=list(Path(profile["saves"][peer]).rglob("character.json")); assert len(files)==1
-        owner=json.loads(files[0].read_bytes()); cards=owner["party"]
+        owner=save_document.decode(json.loads(files[0].read_bytes())); cards=owner["party"]
         assert len(cards)==1 and cards[0]["species_id"]=="terrapup" and cards[0]["level"]==9
         uid=cards[0]["uid"]; nickname=cards[0]["nickname"]
         routes[f"hub_{peer}"]=copy.deepcopy(routes["essence_spend_prepare"])+[button("Ground Essence · Cost 20 · Have 100"),wait(120)]+close()
