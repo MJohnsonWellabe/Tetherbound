@@ -11,6 +11,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 	match action:
 		"f48_witness": return _witness(tree, args)
 		"f48_assert": return _assert(tree, args)
+		"f48_assert_snapshot": return _assert_snapshot(tree)
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
@@ -47,6 +48,21 @@ static func _start_case(tree: SceneTree, args: Dictionary) -> Dictionary:
 
 static func _result(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
+
+static func _assert_snapshot(tree: SceneTree) -> Dictionary:
+	# capture_saves performs a disclosed autosave. Establish the existing
+	# durable transaction carriers FIRST so it cannot repair a failed proof.
+	var now := _observe(tree)
+	if now.is_empty() or now.disk.is_empty(): return _result(false, "Actual prior durable owner file unavailable")
+	for field: String in ["inventory", "party", "redesign_character", "satchel_escrow"]:
+		if not _json_equal(now.memory.get(field), now.disk.get(field)):
+			return _result(false, "Snapshot would repair unsaved owner carrier: " + field, now)
+	if now.owns_world:
+		if now.disk_world.is_empty(): return _result(false, "Actual prior durable host world unavailable", now)
+		for field: String in ["reward_deliveries", "placed_buildings", "redesign_world"]:
+			if not _json_equal(now.world.get(field), now.disk_world.get(field)):
+				return _result(false, "Snapshot would repair unsaved host carrier: " + field, now)
+	return _result(true, "Original complete transaction carriers already durable before disclosed capture", now)
 
 static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")

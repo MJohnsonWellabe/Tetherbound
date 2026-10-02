@@ -239,14 +239,21 @@ func _prerequisites(steps: Array) -> void:
 		"nodes": [{"path": "Game/Session", "methods": ["homestead_breakthrough_service"]}]},
 		"Refuse disabled stations or missing actual Foundation Master/Kitchen composition; never bind stand-ins"))
 
-func _loop(steps: Array) -> void:
+func _capture_prepared_start(steps: Array, label: String) -> void:
+	steps.append(_entry("all", "f48_assert_snapshot", {}, "Read actual memory/disk carriers before any capture autosave"))
+	steps.append(_entry("all", "capture_saves", {"label": label}, "Retain actual producer input bytes; no earned campaign credit"))
+
+func _loop(steps: Array, capture_inputs: bool = false) -> void:
 	_prerequisites(steps)
 	for stage: String in ["hub", "craft", "portal", "master", "feast_cook", "feast", "boss", "relic"]:
 		if stage == "boss":
 			_boss(steps, 2)
+			if capture_inputs: _capture_prepared_start(steps, "f48-before-key")
 			continue
 		steps.append(_entry("all", "f48_witness", {"remember": stage + "_before"}))
 		for peer: int in 2:
+			if capture_inputs and peer == 1 and stage in ["craft", "feast", "relic"]:
+				_capture_prepared_start(steps, "f48-before-" + stage)
 			if stage == "portal": steps.append(_entry(peer, "f48_watch_portal"))
 			steps.append_array(_route(stage + "_%d" % peer, peer))
 			steps.append(_entry(peer, "wait", {"frames": 180}))
