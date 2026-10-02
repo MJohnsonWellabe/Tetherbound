@@ -96,11 +96,11 @@ func test_current_merged_slot_cannot_bypass_old_split_version_barrier() -> void:
 	var saver: RefCounted = fixture.saver
 	var game: RefCounted = fixture._game()
 	assert_true(saver.save(game, 1))
-	var slot: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(1)))
+	var slot: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(saver.slot_path(1)))
 	var world_id := str(slot.split_locator.world_id)
 	var worlds: RefCounted = saver.worlds()
 	var path: String = worlds.path_for(world_id)
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data.version = 2
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
@@ -116,11 +116,11 @@ func test_old_character_refusal_survives_valid_or_missing_world() -> void:
 	var saver: RefCounted = fixture.saver
 	var game: RefCounted = fixture._game()
 	assert_true(saver.save(game, 1))
-	var slot: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(1)))
+	var slot: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(saver.slot_path(1)))
 	var character_id := str(slot.split_locator.character_id)
 	var characters: RefCounted = saver.characters()
 	var path: String = characters.path_for(character_id)
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data.version = 6
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))

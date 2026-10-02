@@ -17,11 +17,11 @@ func _read(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		_failures.append("Missing original retained document: " + path)
 		return {}
-	var parser := JSON.new()
-	if parser.parse(FileAccess.get_file_as_string(path)) != OK or not parser.data is Dictionary:
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary:
 		_failures.append("Invalid original retained document: " + path)
 		return {}
-	return parser.data as Dictionary
+	return parsed as Dictionary
 
 func _run() -> void:
 	await process_frame

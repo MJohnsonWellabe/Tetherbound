@@ -79,7 +79,7 @@ func _verify_opening() -> void:
 		_fail("New Game/autosave overwrote the old canonical save")
 	if FileAccess.get_file_as_bytes(_old_character_path) != _old_character_bytes:
 		_fail("New Game/autosave overwrote the old portable character")
-	var disk: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(game.save_system.slot_path(0)))
+	var disk: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(game.save_system.slot_path(0)))
 	if int(disk.get("version", 0)) != 28: _fail("new namespace autosave is not v28")
 	if _failures.is_empty():
 		print("F16#0/#4 title evidence: old merged and portable files preserved; refusal UI displayed; physical New Game, bed wake and complete Grandpa opening dialogue; authored-gifts-only satchel; production autosave v28. Shortcuts: isolated saves, authored v27 fixture, direct refusal/picker/Steam and trainer-name callbacks, teleport from loft to Grandpa, injected physical joypad taps.")

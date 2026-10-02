@@ -37,6 +37,7 @@ extends RefCounted
 ## twice.
 
 const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 
@@ -213,7 +214,9 @@ func write(character_id: String, payload: Dictionary, envelope: Dictionary = {},
 	data["last_world_instance_id"] = instance_raw as String \
 		if typeof(instance_raw) == TYPE_STRING else ""
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
-	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), JSON.stringify(data, "\t"), retain_previous):
+	var encoded := SAVE_DOCUMENT.stringify(data)
+	if encoded.is_empty(): return false
+	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), encoded, retain_previous):
 		push_warning("character save: could not commit %s" % path_for(character_id))
 		return false
 	_envelope_cache[character_id] = _envelope_of(data)
@@ -251,7 +254,7 @@ func read(character_id: String) -> Dictionary:
 	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(_read_path(character_id)), FileAccess.READ)
 	if file == null:
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = SAVE_DOCUMENT.parse(file.get_as_text())
 	file.close()
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}

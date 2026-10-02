@@ -20,6 +20,7 @@ import json
 import math
 import re
 from pathlib import Path
+import save_document
 
 ROOT = Path(__file__).resolve().parents[2]
 STOCK = {"stone": 10, "rootstone": 8, "ironwood": 4, "berries": 8,
@@ -50,7 +51,7 @@ def read(path: Path) -> dict:
     data = path.read_bytes()
     if path.suffix == ".gz":
         data = gzip.decompress(data)
-    row = json.loads(data)
+    row = save_document.decode(json.loads(data))
     require(isinstance(row, dict), f"Expected object: {path}")
     return row
 
@@ -333,7 +334,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
         for original, document in documents:
             relative = original.relative_to(row["root"])
             target = destination / relative
-            write(target, document)
+            write(target, save_document.encode(document))
             pinned.append({"path": str(original), "sha256": digest(original),
                            "fixture_path": str(target), "fixture_sha256": digest(target)})
         manifest["inputs"].append({"peer": index, "character_id": row["id"], "owned_uids": row["uids"], "documents": pinned})

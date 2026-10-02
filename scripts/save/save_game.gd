@@ -591,7 +591,9 @@ func _write_snapshot_locked(request: Dictionary) -> bool:
 	if write_split and bool(request["host"]):
 		slot_data = data.duplicate(true)
 		slot_data[SPLIT_LOCATOR_KEY] = {"world_id": world_id, "character_id": character_id}
-	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(slot_data, "\t"), write_split):
+	var encoded := preload("res://scripts/save/save_document.gd").stringify(slot_data)
+	if encoded.is_empty(): return false
+	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), encoded, write_split):
 		return false
 	if not write_split:
 		return true
@@ -1183,7 +1185,7 @@ func _character_id_for(game: Object, slot: int = -1) -> String:
 func slot_locator_character(slot: int) -> String:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return ""
-	var flat := _read_json_file(slot_path(slot))
+	var flat := _read(slot)
 	var locator: Variant = flat.get(SPLIT_LOCATOR_KEY)
 	if not locator is Dictionary:
 		return ""
@@ -1848,7 +1850,7 @@ func _read(slot: int) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
 
 
