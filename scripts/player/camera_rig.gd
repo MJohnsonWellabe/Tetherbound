@@ -43,6 +43,11 @@ var _mouse_sensitivity: float = 0.16
 var _deadzone: float = 0.18
 var _invert_y: bool = false
 var _follow_lag: float = 14.0
+## A target this far from the rig was teleported (fast travel, respawn, a
+## recovery), not walked: snap instead of gliding. Terrain3D builds collision
+## around this camera, so a rig left lagging kilometres behind leaves the
+## player standing on ground with no collision yet.
+var _teleport_snap_m: float = 50.0
 var _recover_speed: float = 4.0
 ## Exploration's `collision_recover_speed`, restored by an empty profile.
 var _base_recover_speed: float = 4.0
@@ -243,6 +248,7 @@ func _load_config() -> void:
 	_deadzone = float(cfg.get("stick_deadzone", _deadzone))
 	_invert_y = bool(cfg.get("invert_y", false))
 	_follow_lag = float(cfg.get("follow_lag", _follow_lag))
+	_teleport_snap_m = float(cfg.get("teleport_snap_m", _teleport_snap_m))
 	_recover_speed = float(cfg.get("collision_recover_speed", _recover_speed))
 	_base_recover_speed = _recover_speed
 	_collision_margin = float(cfg.get("collision_margin", _collision_margin))
@@ -515,11 +521,23 @@ func _process(delta: float) -> void:
 ## same clock as the box it exists for.
 func _physics_process(delta: float) -> void:
 	if not (_talk_active or _talk_leaving):
+		# The follow runs on the idle tick, which can lag several physics
+		# ticks under load; catch a teleport on the first physics tick so the
+		# collision Terrain3D centres on this camera arrives with the player.
+		_snap_if_teleported()
 		return
 	if _target == null or not is_instance_valid(_target):
 		_target = null
 		return
 	_conversation_follow(delta)
+
+
+func _snap_if_teleported() -> void:
+	if _target == null or not is_instance_valid(_target) or _teleport_snap_m <= 0.0:
+		return
+	var anchor := _pivot_anchor()
+	if global_position.distance_to(anchor) > _teleport_snap_m:
+		global_position = anchor
 
 
 ## CONTROLLER-MAP: R3 (or Home) swings the camera back behind whatever it is
@@ -753,6 +771,8 @@ func _follow(delta: float) -> void:
 	# swap between trainer and creature is a glide rather than a snap.
 	var lag := _retarget_lag if _retarget_lag > 0.0 else _follow_lag
 	var weight := 1.0 - exp(-lag * delta)
+	if _teleport_snap_m > 0.0 and global_position.distance_to(desired) > _teleport_snap_m:
+		weight = 1.0
 	var candidate := global_position.lerp(desired, weight)
 	# The lagged point can approach from a different side than today's desired
 	# shoulder. Sweep that complete anchor-to-candidate leg too, so smoothing
