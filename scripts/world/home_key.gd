@@ -13,6 +13,8 @@ var _pending := ""
 var _use_id := ""
 var _elapsed := 0.0
 var _wait := 0.0
+var _raise_started_msec := 0
+var _wait_started_msec := 0
 var _refusal_at := -INF
 var _rig: Skeleton3D
 var _mixer: AnimationPlayer
@@ -68,24 +70,32 @@ func use() -> bool:
 		return false
 	_phase = "confirming"
 	_wait = 0.0
+	_wait_started_msec = _now_msec()
 	return true
 
 
-func _process(delta: float) -> void:
+func _now_msec() -> int:
+	return Time.get_ticks_msec()
+
+
+func _process(_delta: float) -> void:
 	if _closing_edge and not Input.is_action_pressed("menu_cancel") and not Input.is_action_pressed("hotbar_1"):
 		_closing_edge = false
 	if _remote_only:
 		if not is_instance_valid(_actor) or not is_instance_valid(_rig):
 			queue_free()
 			return
-		_elapsed += delta
+		_elapsed = maxf(0.0, float(_now_msec() - _raise_started_msec) / 1000.0)
 		_animate(clampf(_elapsed / float(_settings.raise_seconds), 0.0, 1.0))
 		if _elapsed >= float(_settings.response_timeout_seconds):
 			queue_free()
 		return
 	if _phase == "idle":
 		return
-	_wait += delta
+	# The host's ready/expiry bounds use monotonic milliseconds. Frame delta
+	# is capped during slow frames and can otherwise stretch a two-second
+	# presentation past the host's deadline in an expensive live world.
+	_wait = maxf(0.0, float(_now_msec() - _wait_started_msec) / 1000.0)
 	if _wait >= float(_settings.response_timeout_seconds):
 		cancel("The Home Key lost its connection. Check your position before trying again.")
 		return
@@ -108,7 +118,7 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(_actor) or not is_instance_valid(_rig):
 		cancel("The Home Key could not finish its raise.")
 		return
-	_elapsed += delta
+	_elapsed = maxf(0.0, float(_now_msec() - _raise_started_msec) / 1000.0)
 	var progress := clampf(_elapsed / float(_settings.raise_seconds), 0.0, 1.0)
 	_animate(progress)
 	if progress >= 1.0:
@@ -120,6 +130,7 @@ func _process(delta: float) -> void:
 		_pending = str(queued.request_id)
 		_phase = "finishing"
 		_wait = 0.0
+		_wait_started_msec = _now_msec()
 
 
 func _result(result: Dictionary) -> void:
@@ -160,6 +171,8 @@ func _result(result: Dictionary) -> void:
 		_phase = "raising"
 		_elapsed = 0.0
 		_wait = 0.0
+		_raise_started_msec = _now_msec()
+		_wait_started_msec = _raise_started_msec
 	elif kind in ["home_key_finish", "home_key_cancel"]:
 		_reset()
 
@@ -222,6 +235,7 @@ func show_remote_raise(actor: Node3D, use_id: String) -> bool:
 	var visual: Node = get_script().new()
 	visual.set("_remote_only", true)
 	visual.set("_actor", actor)
+	visual.set("_raise_started_msec", _now_msec())
 	add_child(visual)
 	if not bool(visual.call("_start_visual", actor)):
 		visual.queue_free()

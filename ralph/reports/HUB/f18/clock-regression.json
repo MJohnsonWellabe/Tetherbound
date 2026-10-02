@@ -1,0 +1,18 @@
+{
+  "proof": "slow-frame-clock-regression",
+  "status": "SCOPED PASS; actual-world replay pending F20",
+  "source_sha256": {
+    "scripts/world/home_key.gd": "704f62d7b0739f848635dfeb84ed9127ba82d49c10f1fc30a5a83a231c238fce",
+    "tests/test_home_key_clock.gd": "e3ee2a4eddc4100f87b2de453a2207e84aed480dbbefd7520aa717faaa8b0644"
+  },
+  "checks": {
+    "tests": 5,
+    "assertions": 46,
+    "failures": 0,
+    "engine_diagnostics": []
+  },
+  "synthetic_clock": true,
+  "authority": "Host monotonic minimum, expiry and safety checks unchanged",
+  "cause": "F20 real begin-to-finish was14.155s across16 process frames for a2s delta-driven raise; maxframe4269ms",
+  "criteria": "No acceptance criterion closed by detached rule proof"
+}
