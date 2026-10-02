@@ -4,6 +4,7 @@ const FOUNDATIONS_STATE := preload("res://scripts/data/redesign_state.gd")
 const FOUNDATIONS_SAVE := preload("res://scripts/save/save_game.gd")
 const FOUNDATIONS_ORDER := preload("res://scripts/data/biome_order.gd")
 const PHYSICS_HEARTBEAT_CLOCK := preload("res://tools/net/physics_heartbeat_clock.gd")
+const PEER_PHASE_TRACE := preload("res://tools/net/peer_phase_trace.gd")
 
 ## Net harness peer process. Stage B Wave 0 lane 0.F.
 ## docs/specs/MP_NET_HARNESS_CONTRACT.md §2-§5.
@@ -16,8 +17,8 @@ const PHYSICS_HEARTBEAT_CLOCK := preload("res://tools/net/physics_heartbeat_cloc
 ## settle), connects OUT to the coordinator's TCP control port (the
 ## coordinator is the TCPServer -- tests/helpers/net_harness.gd), announces
 ## itself with `hello`, then executes `step`/`probe`/`quit` messages as they
-## arrive, replying with `verdict`/`value`, and heartbeats every
-## at most HEARTBEAT_FRAMES physics frames or 1000 ms between genuine physics
+## arrive, replying with `verdict`/`value`, and fresh heartbeats at
+## most HEARTBEAT_FRAMES physics frames or 1000 ms between genuine physics
 ## callbacks, with the same freshly sampled world-state hash (contract §7).
 ##
 ## ## Two existing seams reused, not reinvented
@@ -357,6 +358,7 @@ func _initialize() -> void:
 # --- boot ---------------------------------------------------------------------
 
 func _boot_scene(which: String, settle: int) -> void:
+	var boot_started := PEER_PHASE_TRACE.begin("boot.total", Engine.get_process_frames(), _physics_count)
 	if which == "water":
 		# SceneTree._initialize can precede Game._ready. Let the production
 		# autoload reset and mount Session before standing a Water spawner.
@@ -377,9 +379,12 @@ func _boot_scene(which: String, settle: int) -> void:
 			var water_game := root.get_node_or_null("Game")
 			if water_game != null:
 				water_game.set("current_realm", "water")
+		var load_started := PEER_PHASE_TRACE.begin("boot.load_resource", Engine.get_process_frames(), _physics_count)
 		var packed: PackedScene = load(path)
+		PEER_PHASE_TRACE.end("boot.load_resource", load_started, Engine.get_process_frames(), _physics_count, "missing" if packed == null else "loaded")
 		if packed == null:
 			push_error("peer_runner: could not load scene '%s' (%s)" % [which, path])
+			PEER_PHASE_TRACE.end("boot.total", boot_started, Engine.get_process_frames(), _physics_count, "missing_scene")
 			quit(2)
 			return
 		if current_scene != null:
@@ -387,8 +392,12 @@ func _boot_scene(which: String, settle: int) -> void:
 			root.remove_child(old)
 			old.queue_free()
 			await process_frame
+		var instantiate_started := PEER_PHASE_TRACE.begin("boot.instantiate", Engine.get_process_frames(), _physics_count)
 		var scene: Node = packed.instantiate()
+		PEER_PHASE_TRACE.end("boot.instantiate", instantiate_started, Engine.get_process_frames(), _physics_count)
+		var ready_started := PEER_PHASE_TRACE.begin("boot.add_child_ready", Engine.get_process_frames(), _physics_count)
 		root.add_child(scene)
+		PEER_PHASE_TRACE.end("boot.add_child_ready", ready_started, Engine.get_process_frames(), _physics_count)
 		current_scene = scene
 		if which == "water":
 			for _frame in 900:
@@ -397,11 +406,15 @@ func _boot_scene(which: String, settle: int) -> void:
 				await physics_frame
 			if not scene.has_method("shell_build_complete") or not bool(scene.call("shell_build_complete")):
 				push_error("peer_runner: Water shell did not finish building")
+				PEER_PHASE_TRACE.end("boot.total", boot_started, Engine.get_process_frames(), _physics_count, "water_build_refused")
 				quit(2)
 				return
+	var settle_started := PEER_PHASE_TRACE.begin("boot.settle", Engine.get_process_frames(), _physics_count)
 	for i in maxi(0, settle):
 		await physics_frame
+	PEER_PHASE_TRACE.end("boot.settle", settle_started, Engine.get_process_frames(), _physics_count)
 	_scene_name = which
+	PEER_PHASE_TRACE.end("boot.total", boot_started, Engine.get_process_frames(), _physics_count)
 
 
 ## The Wave-0 loopback world: no packed scene, just the bare Node the ENet
@@ -527,6 +540,7 @@ func _on_physics_frame() -> void:
 
 
 func _send_heartbeat() -> void:
+	var heartbeat_started := PEER_PHASE_TRACE.begin("heartbeat.total", Engine.get_process_frames(), _physics_count)
 	var player := _probe.call("player") as Node3D
 	var pos = null
 	if player != null:
@@ -541,7 +555,10 @@ func _send_heartbeat() -> void:
 		"session_peers": _session_peer_ids()}
 	if not _trainer_fight_progress.is_empty():
 		heartbeat["trainer_fight"] = _trainer_fight_heartbeat_observation()
+	var send_started := PEER_PHASE_TRACE.begin("heartbeat.encode_and_send", Engine.get_process_frames(), _physics_count)
 	_send(heartbeat)
+	PEER_PHASE_TRACE.end("heartbeat.encode_and_send", send_started, Engine.get_process_frames(), _physics_count)
+	PEER_PHASE_TRACE.end("heartbeat.total", heartbeat_started, Engine.get_process_frames(), _physics_count)
 
 
 ## Called only by fresh heartbeat sampling in the actual physics callback. No probing from the
@@ -7076,11 +7093,16 @@ func _compute_state_hash() -> Variant:
 	# It also drops a scratch save-file write from every heartbeat: the snapshot
 	# runs the same four live-scene sync seams `save_game()` runs, and no longer
 	# needs disk to answer.
+	var hash_started := PEER_PHASE_TRACE.begin("heartbeat.state_hash_total", Engine.get_process_frames(), _physics_count)
 	var hgame := root.get_node_or_null(^"Game")
 	if hgame == null or not hgame.has_method("world_snapshot"):
+		PEER_PHASE_TRACE.end("heartbeat.state_hash_total", hash_started, Engine.get_process_frames(), _physics_count, "no_world")
 		return null
+	var snapshot_started := PEER_PHASE_TRACE.begin("heartbeat.world_snapshot", Engine.get_process_frames(), _physics_count)
 	var full: Dictionary = hgame.call("world_snapshot")
+	PEER_PHASE_TRACE.end("heartbeat.world_snapshot", snapshot_started, Engine.get_process_frames(), _physics_count, "empty" if full.is_empty() else "returned")
 	if full.is_empty():
+		PEER_PHASE_TRACE.end("heartbeat.state_hash_total", hash_started, Engine.get_process_frames(), _physics_count, "empty_world")
 		return null
 	# Allowlist, not exclude-list -- see HASHED_KEYS's own comment. `world_seed`
 	# is not in either list: contract §7 (amended) says it is ERASED from the
@@ -7088,7 +7110,11 @@ func _compute_state_hash() -> Variant:
 	# (`probe world_seed`, resolved through `spawn_tables.gd::resolve_seed()`
 	# so it reads what every peer's spawns actually use, not the raw per-process
 	# roll `game_state.gd::new_game()` stores -- see that probe's own comment).
-	return hash(JSON.stringify(hashed_subset(full), "", true))
+	var encoding_started := PEER_PHASE_TRACE.begin("heartbeat.subset_json_hash", Engine.get_process_frames(), _physics_count)
+	var result: int = hash(JSON.stringify(hashed_subset(full), "", true))
+	PEER_PHASE_TRACE.end("heartbeat.subset_json_hash", encoding_started, Engine.get_process_frames(), _physics_count)
+	PEER_PHASE_TRACE.end("heartbeat.state_hash_total", hash_started, Engine.get_process_frames(), _physics_count)
+	return result
 
 
 # --- misc ---------------------------------------------------------------------
