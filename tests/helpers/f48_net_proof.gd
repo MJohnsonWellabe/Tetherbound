@@ -14,6 +14,7 @@ var _profile_errors: Array[String] = []
 var _boundary_pending: Dictionary = {}
 var _boundary_observations: Dictionary = {}
 var _saved_transactions: Dictionary = {}
+var _root_profile: Dictionary = {}
 
 func _process_guard(pid: int, identity: String = "", stop: bool = false) -> Dictionary:
 	var python := OS.get_environment("TB_F48_PROCESS_PYTHON")
@@ -71,6 +72,7 @@ func _run() -> void:
 		quit(await finish())
 		return
 	_profile = raw
+	_root_profile = raw.duplicate(true)
 	if not _profile.get("routes") is Dictionary or not _profile.get("outcomes", {}) is Dictionary:
 		check(false, "Reviewed profile routes/outcomes must be objects")
 		quit(await finish())
@@ -133,6 +135,7 @@ func _route(name: String, peer: int) -> Array:
 func _build() -> Dictionary:
 	var peers := 4 if suite() == "boss_four" else 2
 	var steps: Array = []
+	if not _select_profile("suite_profiles", suite()): return {}
 	var saves: Variant = _profile.get("saves", [])
 	if not saves is Array or saves.size() != peers:
 		_profile_errors.append("F48 requires exactly %d independently captured v28 save directories" % peers)
@@ -144,16 +147,27 @@ func _build() -> Dictionary:
 		var first := true
 		for operation: String in TRANSACTIONS:
 			for boundary: String in CUTS:
+				if not _select_profile("transaction_profiles", operation): return {}
+				var case_saves: Variant = _profile.get("saves", [])
+				if not case_saves is Array or case_saves.size() != peers:
+					_profile_errors.append("Each original transaction start requires exactly %d actual saved inputs: %s" % [peers, operation])
+					return {}
 				var case_id := operation + "_" + boundary
 				if not first:
 					steps.append(_entry(1, "leave", {}, "End prior independent transaction case"))
 					steps.append(_entry(0, "leave", {}, "End prior original host session"))
 				steps.append(_entry("all", "f48_start_case", {"case": case_id}))
-				_admit(steps, saves, peers)
+				_admit(steps, case_saves, peers)
 				_transactions(steps, operation, boundary, case_id)
 				first = false
 		return {"name": "F48 transactions complete6x4 matrix", "claim": "24 independent original saved-input mechanics cases; no earned campaign PASS. " + str(_profile.get("provenance", "")),
 			"peers": peers, "scene": "title", "budget_s": 3600, "build_allowance_s": 300, "steps": steps}
+	if suite() == "transactions" and not _select_profile("transaction_profiles", transaction): return {}
+	if suite() == "transactions":
+		saves = _profile.get("saves", [])
+		if not saves is Array or saves.size() != peers:
+			_profile_errors.append("Explicit original transaction start requires exactly %d saved inputs" % peers)
+			return {}
 	_admit(steps, saves, peers)
 	match suite():
 		"loop": _loop(steps)
@@ -163,6 +177,46 @@ func _build() -> Dictionary:
 		_: _profile_errors.append("Unknown F48 suite")
 	return {"name": "F48 " + suite(), "claim": "Named mechanics proof only; no earned campaign PASS. " + str(_profile.get("provenance", "")),
 		"peers": peers, "scene": "title", "budget_s": 3600, "build_allowance_s": 300, "steps": steps}
+
+func _select_profile(group: String, key: String) -> bool:
+	# Actual producer snapshots may differ by suite/operation: a pre-boss start
+	# must not be replaced by a character already holding the boss rewards.
+	# This selects original saved inputs only; the existing independent oracles,
+	# native cuts, full default matrix and runtime file witnesses stay identical.
+	_profile = _root_profile.duplicate(true)
+	var suites: Variant = _root_profile.get("suite_profiles", {})
+	if suites is Dictionary and suites.has(suite()):
+		if not _apply_profile_start(suites[suite()], "suite " + suite()): return false
+	elif not suites is Dictionary:
+		_profile_errors.append("Actual suite profiles must be an object")
+		return false
+	if group == "transaction_profiles":
+		var starts: Variant = _root_profile.get(group, {})
+		if not starts is Dictionary:
+			_profile_errors.append("Actual transaction profiles must be an object")
+			return false
+		if not starts.is_empty():
+			if not starts.has(key):
+				_profile_errors.append("Missing original actual-input transaction profile: " + key)
+				return false
+			return _apply_profile_start(starts[key], "transaction " + key)
+	return true
+
+func _apply_profile_start(raw: Variant, label: String) -> bool:
+	if not raw is Dictionary or not raw.has_all(["saves", "routes", "outcomes", "provenance"]) \
+		or not raw.saves is Array or not raw.routes is Dictionary or not raw.outcomes is Dictionary \
+		or not raw.provenance is String or str(raw.provenance).is_empty():
+		_profile_errors.append("Require disclosed actual saved inputs, ordinary routes and independent outcomes for " + label)
+		return false
+	for field: Variant in raw:
+		if field not in ["saves", "routes", "outcomes", "provenance"]:
+			_profile_errors.append("Actual-input start cannot replace proof configuration or semantics: " + label + "/" + str(field))
+			return false
+	_profile.saves = raw.saves.duplicate(true)
+	_profile.routes.merge(raw.routes, true)
+	_profile.outcomes.merge(raw.outcomes, true)
+	_profile.provenance = str(_root_profile.get("provenance", "")) + " Actual start: " + raw.provenance
+	return true
 
 func _admit(steps: Array, saves: Array, peers: int) -> void:
 	if _profile.has("test_configuration"):
