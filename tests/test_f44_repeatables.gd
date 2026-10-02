@@ -160,6 +160,7 @@ func test_alpha_timer_waits_for_all_departures_and_retains_fresh_generation_on_r
 
 func test_first_alpha_roll_is_durable_without_invented_resolution_and_rejects_foreign_world() -> void:
 	var before := STATE.defaults("world")
+	assert_true(before.alpha_cycles.is_empty(), "first population starts from the actual empty admitted carrier")
 	var id := "hollows_alpha"
 	var born := ALPHA.first_spawn(before, id, "world_a", true, true)
 	assert_false(born.is_empty())

@@ -47,7 +47,7 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	chest.name = "RecipeChest"
 	chest.position = _vec(_definition.chest_offset)
 	add_child(chest)
-	var packed: Variant = load("res://assets/props/quaternius_fantasy/Chest_Wooden.gltf")
+	var packed: Variant = load("res://assets/props/quaternius_fantasy/Chest_Wood.gltf")
 	if packed is PackedScene: chest.add_child(packed.instantiate())
 	var chest_prompt := INTERACT.new()
 	chest_prompt.configure("Open %s's recipe chest" % str(_definition.name), float(_definition.prompt_radius_m), true)

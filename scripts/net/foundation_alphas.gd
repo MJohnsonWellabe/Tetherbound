@@ -26,9 +26,12 @@ func first_spawn(director: Node, id: String) -> Dictionary:
 		or not owner.FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {}
 	var world: RefCounted = owner.call("_game").world
 	var epoch := str(owner.call("_altar_current_epoch"))
+	if not preload("res://scripts/data/redesign_state.gd").validate("world", world.redesign_world, [], world.reward_delivery_namespace).is_empty(): return {}
 	var retained := RULES.retained_spawn(world.redesign_world, id)
 	if not retained.is_empty(): return retained
-	if not world.redesign_world.alpha_cycles.sites.get(id, {}).is_empty(): return {}
+	# A pristine admitted document carries alpha_cycles={} until the first
+	# durable RULES.first_spawn plan creates sites. Never invent a live packet.
+	if not world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(id, {}).is_empty(): return {}
 	var key := JSON.stringify([world.reward_delivery_namespace, epoch, id]).sha256_text()
 	if not _first_pending.has(key):
 		_first_pending[key] = {"world": weakref(world), "director": weakref(director), "epoch": epoch,
