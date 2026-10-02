@@ -47,15 +47,17 @@ const RECIPES_PATH := "res://data/recipes/recipes_cloudreach.json"
 const CURVE_PATH := "res://data/config/chapter_curve.json"
 const HARNESS_PATH := "res://tests/smoke_cloudreach_continuous.gd"
 
-## --- the team the Meadows hands over ------------------------------------------
-## Lead level: data/config/chapter_curve.json band5_stronghold_approach
-## `team.exit` 21 (the level AFTER the Warden's XP is banked), which is also
-## PROGRESSION.md §3's Meadows row "L3 → L21 lead". The other four: the same
-## row's "other retained members within3 levels", taken at its floor (21-3).
-## WORLD §2.4 names Cloudreach entry "18–21 overlap": this party spans exactly
-## that band. (The continuous harness's L25 fixture is NOT used: it starts
-## above the Meadows exit and would flatter the ledger.)
-const MEADOWS_EXIT_REGION := "band5_stronghold_approach"
+## --- the team Tidewake hands over -------------------------------------------
+## RD-10 (owner, 2026-09-29; PROGRESSION.md §3) reordered the chapters to
+## Meadows -> Tidewake -> Cloudreach -> Stormwood: Tidewake "20->33", Cloudreach
+## "31->44". Same method as the superseded Meadows handoff (which used the
+## Meadows exit, the top of Cloudreach's old "18-21 overlap"): the lead is the
+## previous chapter's exit, data/config/chapter_curve.json
+## `biomes.tidewake.team[1]` (33), the top of Cloudreach's 31-33 overlap. The
+## other four: the same "other retained members within 3 levels", taken at its
+## floor (33-3).
+const PREVIOUS_BIOME := "tidewake"
+const CLOUDREACH_BIOME := "cloudreach"
 const RETAINED_SPREAD := 3
 const TEAM_SIZE := 5
 ## The lead (index 0) is the active creature for every defeat; the other four
@@ -66,16 +68,18 @@ const LEAD_INDEX := 0
 
 ## --- the difficulty band a required fight asks for -----------------------------
 ## LEDGER CRITERIA, CHOSEN HERE -- no spec states a per-fight level band.
-## PROGRESSION.md §3's Cloudreach row says only "L18–21 overlap → L33"; WORLD.md
-## §2.4 gives exit 33 against Veyra's ace 34. (PROGRESSION §3's "deficit≤2" is
-## about a replacement catch relative to regional entry, NOT a fight band, and is
-## not the source of these numbers.) This ledger's chosen criteria: the lead
-## stands at >= ace-2 before each required fight; the weakest retained member at
-## >= ace-2-RETAINED_SPREAD (ace-5); at exit the lead >= 33 (WORLD §2.4) and the
-## weakest >= 30 (33 - RETAINED_SPREAD, again a ledger choice).
+## PROGRESSION.md §3's Cloudreach row (RD-10) says only "31->44" with Veyra's ace
+## "~43-44". (PROGRESSION §3's "deficit<=2" is about a replacement catch relative
+## to regional entry, NOT a fight band, and is not the source of these numbers.)
+## This ledger's chosen criteria: the lead stands at >= ace-2 before each
+## required fight; the weakest retained member at >= ace-2-RETAINED_SPREAD
+## (ace-5); at exit the lead >= the band's exit and the weakest >= exit -
+## RETAINED_SPREAD (again a ledger choice).
 const LEAD_ACE_TOLERANCE := 2
-## WORLD.md §2.4: "Cloudreach | 18–21 overlap | 33 target; Veyra ace 34".
-const CLOUDREACH_EXIT_TARGET := 33
+## PROGRESSION.md §3 (RD-10): "Cloudreach | 31->44"; chapter_curve.json
+## `biomes.cloudreach.team[1]`. Pinned against the data by
+## test_the_ledger_band_is_the_chapter_curves_cloudreach_band.
+const CLOUDREACH_EXIT_TARGET := 44
 ## F07#4 (coordinator-authorised tune): the finale band (Captain Veyra) and the
 ## exit must hold a POSITIVE margin, >= +1 level for the lead and the weakest,
 ## not merely meet the band. The earlier bands (Senn, Maela, Voss) keep >= 0.
@@ -236,12 +240,15 @@ func _cfg() -> Dictionary:
 	return PROGRESSION.config()
 
 
-func _meadows_exit_lead() -> int:
-	for raw: Variant in (_json(CURVE_PATH).get("regions", []) as Array):
-		var region := raw as Dictionary
-		if str(region.get("id", "")) == MEADOWS_EXIT_REGION:
-			return int((region.get("team", {}) as Dictionary).get("exit", 0))
-	return 0
+func _cloudreach_team_band() -> Array:
+	var biome := ((_json(CURVE_PATH).get("biomes", {}) as Dictionary).get(CLOUDREACH_BIOME, {})) as Dictionary
+	return biome.get("team", []) as Array
+
+
+func _cloudreach_entry_lead() -> int:
+	var biome := ((_json(CURVE_PATH).get("biomes", {}) as Dictionary).get(PREVIOUS_BIOME, {})) as Dictionary
+	var band := biome.get("team", []) as Array
+	return int(band[1]) if band.size() == 2 else 0
 
 
 func _slots(trainer_id: String) -> Array:
@@ -554,7 +561,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 	var ignore_gates := bool(options.get("ignore_gates", false))
 	var fraction := float(options.get("wild_fraction", WILD_FRACTION))
 	var on_route := float(options.get("on_route_m", ON_ROUTE_M))
-	var lead := _meadows_exit_lead()
+	var lead := _cloudreach_entry_lead()
 	var party: Array = []
 	for i in TEAM_SIZE:
 		party.append({"level": lead if i == LEAD_INDEX else lead - RETAINED_SPREAD, "xp": 0})
@@ -900,7 +907,7 @@ func test_the_replayed_route_follows_the_harness_and_the_data_gates() -> void:
 		var optional := bool((_ladder()[id] as Dictionary).get("optional", true))
 		assert_eq(id in fought, not optional,
 			"trainer '%s' (optional=%s) disagrees with the ledger's required fights" % [id, str(optional)])
-	assert_true(_meadows_exit_lead() > 0, "chapter_curve.json lost its Meadows exit lead level")
+	assert_true(_cloudreach_entry_lead() > 0, "chapter_curve.json lost its Cloudreach entry lead level")
 	# Every act objective flag is reached by the replay (the route is complete).
 	var reached: Dictionary = {}
 	for flag: String in START_FLAGS:
@@ -1001,11 +1008,21 @@ func test_the_retained_five_leave_cloudreach_inside_the_envelope() -> void:
 	_print_ledger()
 	var exit_levels: Array = ledger()["exit"] as Array
 	assert_true(int(exit_levels[LEAD_INDEX]) >= CLOUDREACH_EXIT_TARGET + LATE_MARGIN,
-		"the lead leaves Cloudreach at L%d against WORLD §2.4's exit target L%d + %d margin"
+		"the lead leaves Cloudreach at L%d against PROGRESSION §3's exit target L%d + %d margin"
 		% [int(exit_levels[LEAD_INDEX]), CLOUDREACH_EXIT_TARGET, LATE_MARGIN])
 	assert_true(_min_level(exit_levels) >= CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD + LATE_MARGIN,
 		"the weakest retained member leaves at L%d against L%d + %d margin"
 		% [_min_level(exit_levels), CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD, LATE_MARGIN])
+
+
+func test_the_ledger_band_is_the_chapter_curves_cloudreach_band() -> void:
+	var band := _cloudreach_team_band()
+	assert_eq(band.size(), 2, "chapter_curve.json has no biomes.cloudreach.team band")
+	var entry := _cloudreach_entry_lead()
+	assert_true(entry >= int(band[0]) and entry <= int(band[1]),
+		"the Tidewake handoff L%d must fall inside Cloudreach's band %s" % [entry, str(band)])
+	assert_eq(CLOUDREACH_EXIT_TARGET, int(band[1]),
+		"the ledger's exit target must be chapter_curve.json's Cloudreach exit (RD-10)")
 
 
 func test_negative_controls_fail_the_same_assertion() -> void:
