@@ -82,7 +82,7 @@ func _run() -> void:
 	# before the last hello arrives. This is the harness's own documented
 	# limit, not a tolerance widened until something passed.
 	heartbeat_silence_tolerance_s = 240.0
-	if not await launch(2, "world"):
+	if not await launch(2, "world", [], {1: ["--joiner"]}):
 		quit(await finish())
 		return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + HOST_EXIT_STEP_BUDGET_S * 1000.0

@@ -333,6 +333,20 @@ func _initialize() -> void:
 		% [_peer_index, _role, _scene_name, _control_port, _enet_port,
 			OS.get_environment("XDG_DATA_HOME"), OS.get_user_data_dir()])
 
+	# `--joiner`: this process only ever joins someone else's world, the way the
+	# title's JoinDriver works (Session.prepare_client_join() relinquishes the
+	# world save BEFORE the world is built). The harness still boots a scene
+	# first, so give up world-save ownership before it does: the booted world
+	# is not a save of record, and active host-side runtimes (e.g. the
+	# Foundation alpha first spawn) would otherwise persist it. Local solo
+	# authority (is_host) is untouched.
+	if args.has("joiner"):
+		# Game._ready's reset_for_new_game() reclaims ownership, and
+		# _initialize can precede it: let the autoload settle first.
+		await process_frame
+		var joiner_game := root.get_node_or_null(^"Game")
+		if joiner_game != null and joiner_game.has_method("relinquish_world_save_ownership"):
+			joiner_game.call("relinquish_world_save_ownership")
 	await _boot_scene(_scene_name, DEFAULT_SETTLE_FRAMES)
 
 	var connected := await _connect_control(_control_port)
@@ -2752,14 +2766,137 @@ func _step_strike(args: Dictionary) -> Dictionary:
 		"origin": [origin.x, origin.y, origin.z],
 		"facing": [facing.x, facing.y, facing.z],
 	}
+	var move_commit_live: bool = director.has_method("supports_host_move_start") \
+		and director.call("supports_host_move_start") == true \
+		and (load("res://scripts/combat/combat_math.gd").config().get("move_commit", {}) as Dictionary).get("runtime_enabled") == true
+	# Harness-aimed swings with move commit live (an explicit/forged action id,
+	# or a `target` the smoke aims at, e.g. a teammate) send BOTH halves the way
+	# a client does: the move_start first (the host arbitrates freshness,
+	# replay, its lock and resources there), then -- only after the host-frozen
+	# wind-up, since a strike before `strike_at_ms` is `stale_move_start` -- the
+	# strike under the same action id. `start_only` stops after the start so a
+	# smoke can probe a second start inside its lock; `move_start: false` with
+	# `windup_wait` later delivers that committed strike.
+	var harness_aimed := args.has("action") or args.has("target")
 	if args.has("action"):
 		intent["action"] = int(args.get("action", 0))
+	var windup_wait := bool(args.get("windup_wait", false))
+	if move_commit_live and harness_aimed and args.get("move_start", true) == true:
+		var start_intent := {"kind": "move_start", "encounter_id": id, "slot": slot}
+		if intent.has("action"):
+			start_intent["action"] = int(intent["action"])
+		var client_start := not bool(director.call("_is_host"))
+		if client_start:
+			manager.set("last_encounter_refusal", {})
+		var forged_start: Dictionary = director.call("submit_encounter_intent", start_intent)
+		intent["action"] = int(director.get("_encounter_action")) if not intent.has("action") else int(intent["action"])
+		# A production client never strikes after its own start is refused;
+		# leave the host's refusal of the start as its verdict.
+		if forged_start.get("ok") != true and forged_start.get("pending") != true:
+			return {"verdict": "PASS", "detail": "move_start refused before the strike (code=%s)" % str(forged_start.get("code", "")),
+				"data": {"ok": false, "pending": false, "code": str(forged_start.get("code", "")),
+					"reason": str(forged_start.get("reason", "")), "submitted_action": int(intent["action"])}}
+		if args.get("start_only", false) == true:
+			# `rapid_action`: a second start in the SAME frame, so the host
+			# arbitrates it inside the first one's lock however slow the
+			# coordinator is (both travel reliable and ordered).
+			var rapid_action := int(args.get("rapid_action", 0))
+			var rapid: Dictionary = {}
+			if rapid_action > 0:
+				rapid = director.call("submit_encounter_intent",
+					{"kind": "move_start", "encounter_id": id, "slot": slot, "action": rapid_action})
+			for _settle_start in maxi(1, int(args.get("settle", 1))):
+				await physics_frame
+			return {"verdict": "PASS", "detail": "sent %s move_start only (action %d, rapid %d)" % [slot, int(intent["action"]), rapid_action],
+				"data": {"ok": bool(forged_start.get("ok", false)), "pending": bool(forged_start.get("pending", false)),
+					"code": str(forged_start.get("code", "")), "submitted_action": int(intent["action"]),
+					"rapid_action": rapid_action, "rapid_code": str(rapid.get("code", ""))}}
+		windup_wait = true
+	var start_refusal_watch: bool = move_commit_live and harness_aimed and args.get("move_start", true) == true \
+		and not bool(director.call("_is_host"))
+	if move_commit_live and windup_wait:
+		# The host freezes a Wind-exhausted start with a scaled wind-up; the
+		# client's synced Wind says which. Late is harmless (only
+		# `now < strike_at_ms` is stale), but a long wait leaves the striker
+		# exposed: an enemy blow during the wind-up cancels the start.
+		var profile: Dictionary = manager.call("_move_profile",
+			"player_quick" if slot == "quick" else "player_charged", str(intent["move_id"]))
+		var exhausted_scale := float((load("res://scripts/combat/combat_math.gd").config().get("wind", {}) as Dictionary).get("exhausted_windup_scale", 2.0))
+		var exhausted := manager.has_method("wind_exhausted") and bool(manager.call("wind_exhausted"))
+		var wait_s := float(profile.get("windup", 0.55)) * (maxf(1.0, exhausted_scale) if exhausted else 1.0) + 0.1
+		for _windup in ceili(wait_s * float(Engine.physics_ticks_per_second)):
+			await physics_frame
+		# The body may have settled during the wind-up: re-read the live origin
+		# and re-derive a target-aimed facing from it, as the strike would.
+		origin = (body as Node3D).call("centre")
+		intent["origin"] = [origin.x, origin.y, origin.z]
+		if args.has("target"):
+			var target_again: Array = args.get("target", []) as Array
+			var refreshed := Vector3(float(target_again[0]), float(target_again[1]), float(target_again[2])) - origin
+			refreshed.y = 0.0
+			if refreshed.length_squared() > 0.000001:
+				refreshed = refreshed.normalized()
+				intent["facing"] = [refreshed.x, refreshed.y, refreshed.z]
+		# A production client never strikes after the host refused its start;
+		# the start's refusal (e.g. replayed_action) is then the verdict.
+		var start_refused: Dictionary = manager.get("last_encounter_refusal") as Dictionary
+		if start_refusal_watch and str(start_refused.get("kind", "")) == "move_start":
+			return {"verdict": "PASS", "detail": "move_start refused before the strike (code=%s)" % str(start_refused.get("code", "")),
+				"data": {"ok": false, "pending": false, "code": str(start_refused.get("code", "")),
+					"reason": str(start_refused.get("reason", "")), "submitted_action": int(intent["action"])}}
+	if args.get("move_start", true) == true and move_commit_live and slot in ["quick", "charged"] and not harness_aimed and not windup_wait:
+		# An ORDINARY swing with move commit live goes through the input path a
+		# player uses: the client's own CombatManager asks the host for the
+		# move_start, waits for its acceptance (apply_host_move_start freezes
+		# the host's move and action number), winds up and only then submits
+		# the strike. A harness-built strike cannot match the host's frozen
+		# start (stale_move_start), so face the body and press the button.
+		if (body as Node3D).has_method("face_towards"):
+			(body as Node3D).call("face_towards", origin + facing * 4.0)
+		var ready_method := "quick_ready" if slot == "quick" else "charged_ready"
+		var ready := false
+		for _wait in maxi(30, int(args.get("ready_budget", 240))):
+			if not manager.has_method(ready_method) or bool(manager.call(ready_method)):
+				ready = true
+				break
+			await physics_frame
+		var action_before := int(director.get("_encounter_action"))
+		if not ready:
+			return {"verdict": "PASS", "detail": "%s never became ready (no swing sent)" % slot,
+				"data": {"ok": false, "pending": false, "code": "not_ready", "submitted_action": action_before}}
+		var pressed := await _inject("combat_quick" if slot == "quick" else "combat_charged", 1)
+		if not bool(pressed.get("ok", false)):
+			return {"verdict": "ERROR", "detail": "could not inject the %s input: %s" % [slot, str(pressed)]}
+		for _settle in maxi(1, int(args.get("settle", 60))):
+			await physics_frame
+		var action_after := int(director.get("_encounter_action"))
+		return {"verdict": "PASS",
+			"detail": "real %s input; action %d -> %d; last refusal=%s" % [slot, action_before, action_after,
+				str(manager.get("last_encounter_refusal"))],
+			"data": {"ok": action_after > action_before, "pending": false, "submitted_action": action_after}}
 	# Intentionally untrusted extras used by the authority smoke. Shipping
 	# EncounterDirector rebuilds `move` and ignores these outcome claims.
 	for key in ["cooldown", "cooldown_multiplier", "damage"]:
 		if args.has(key):
 			intent[key] = args[key]
+	if move_commit_live and windup_wait and not bool(director.call("_is_host")):
+		manager.set("last_encounter_refusal", {})
 	var verdict: Dictionary = director.call("submit_encounter_intent", intent)
+	if move_commit_live and windup_wait and not bool(director.call("_is_host")):
+		# A strike that beat the host's frozen wind-up (`stale_move_start`)
+		# leaves the start unresolved; resend it once the wind-up has surely
+		# elapsed, as a client striking at its own wind-up end would.
+		for _retry in 3:
+			var refused_code := ""
+			for _wait_verdict in 90:
+				await physics_frame
+				refused_code = str((manager.get("last_encounter_refusal") as Dictionary).get("code", ""))
+				if not refused_code.is_empty(): break
+			if refused_code != "stale_move_start": break
+			for _again in 12:
+				await physics_frame
+			manager.set("last_encounter_refusal", {})
+			verdict = director.call("submit_encounter_intent", intent)
 	# An explicit replay keeps its authored action id; an ordinary strike gets
 	# the production counter that submit_encounter_intent just allocated.  Keep
 	# this observable so a stale prior refusal cannot be mistaken for the answer
@@ -7631,8 +7768,17 @@ func _foundations_payload() -> Dictionary:
 		"character": JSON.parse_string(JSON.stringify(local.get("redesign_character"))),
 		"world_id": world_id, "character_id": character_id,
 		"world_disk_sha256": FileAccess.get_sha256(world_path) if FileAccess.file_exists(world_path) else "",
+		# The redesign carrier as the world file on disk holds it, so a smoke can
+		# assert on what was persisted rather than on bytes the host's own
+		# autosaves legitimately rewrite.
+		"world_disk_redesign": _disk_redesign_world(world_path),
 		"character_disk_sha256": FileAccess.get_sha256(character_path) if FileAccess.file_exists(character_path) else "",
 		"schema": FOUNDATIONS_SAVE.VERSION, "host": bool(game.call("is_host"))}
+
+func _disk_redesign_world(path: String) -> Variant:
+	if not FileAccess.file_exists(path): return null
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	return (parsed as Dictionary).get("redesign_world") if parsed is Dictionary else null
 
 func _step_foundations_state(args: Dictionary) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
@@ -7645,9 +7791,17 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		var marker := clampi(int(args.get("marker", 1)), 1, 2)
 		var party: RefCounted = local.get("party")
 		if int(party.call("size")) == 0:
+			# Just after a join the owner's containers can be briefly guarded
+			# while a saved owner decision settles (party.gd add() refuses
+			# then). Wait for that guard as any caller of a one-shot grant must.
+			var guard_frames := 0
+			while party.has_method("owner_mutation_blocked") and bool(party.call("owner_mutation_blocked")) and guard_frames < 900:
+				await physics_frame
+				guard_frames += 1
 			var created_creature: RefCounted = game.call("make_creature", "terrapup", "Storage fixture")
 			if created_creature == null or not bool(party.call("add", created_creature)):
-				return {"verdict": "FAIL", "detail": "could not create one disclosed owned fixture creature"}
+				return {"verdict": "FAIL", "detail": "could not create one disclosed owned fixture creature (owner guard blocked=%s after %d frames)"
+					% [str(party.call("owner_mutation_blocked")) if party.has_method("owner_mutation_blocked") else "?", guard_frames]}
 		var owned_creature: RefCounted = party.call("at", 0)
 		var uid := str(owned_creature.get("uid"))
 		var biome := "tidewake" if marker == 1 else "cloudreach"
