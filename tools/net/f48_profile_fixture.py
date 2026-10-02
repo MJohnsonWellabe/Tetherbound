@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 STOCK = {"stone": 10, "rootstone": 8, "ironwood": 4, "berries": 8,
          "attuned_ground": 2, "essence_ground": 100}
 OPERATIONS = ("craft", "release", "feast", "key", "relic", "essence_spend")
+PREBOSS_LEGACY_FLAGS = ("defeated_warden", "realm_key_cloudreach", "realm_heart_meadows_earned")
 INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice"}
 CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
@@ -185,8 +186,52 @@ def validate_pack(pack: dict) -> None:
                             f"Unbounded ordinary input: {name}/{field}")
 
 
+def preboss_legacy_world(inputs: list[dict]) -> tuple[dict, dict]:
+    """Explicit initial mechanics setup, never resurrect an accepted typed win.
+
+    Only three legacy world gates differ in the detached copy. Personal state,
+    accepted legacy rewards, XP receipts and the original namespace remain.
+    The production boss must still create its actual first typed event/receipt.
+    """
+    original = inputs[0]["world"]
+    journals = original.get("reward_deliveries")
+    require(isinstance(journals, dict), "Require the original complete journal")
+    # This deliberately refuses ALL redesigned journal kinds, including a
+    # retained foundation event whose boss duty has not reached its owner yet.
+    require(all(isinstance(row, dict) and row.get("version") == 1 and
+                not any(field in row for field in ("kind", "action", "duties", "after", "host_context"))
+                for row in journals.values()),
+            "Pre-boss legacy setup refuses any retained typed event or owner decision")
+    for source in inputs:
+        character = source["character"]
+        personal = character["redesign_character"]
+        require(personal.get("transaction_receipts") == [] and
+                personal.get("relics_held") == [] and personal.get("relics_hung") == [] and
+                personal.get("portal_unlocks") == [] and
+                not any(isinstance(stack, dict) and stack.get("id") == "tidewake_portal_key"
+                        and stack.get("n", 0) > 0 for stack in character["inventory"]),
+                "Pre-boss legacy setup refuses any personal typed progression or boss entitlement")
+    flags = original.get("flags", {}).get("flags")
+    require(isinstance(flags, list) and all(isinstance(flag, str) for flag in flags) and
+            len(set(flags)) == len(flags), "Require exact distinct original world flags")
+    require("defeated_warden" in flags, "This explicit option is only for a legacy-completed mechanics source")
+    result = copy.deepcopy(original)
+    result["flags"]["flags"] = [flag for flag in flags if flag not in PREBOSS_LEGACY_FLAGS]
+    require({key: value for key, value in result.items() if key != "flags"} ==
+            {key: value for key, value in original.items() if key != "flags"} and
+            {key: value for key, value in result["flags"].items() if key != "flags"} ==
+            {key: value for key, value in original["flags"].items() if key != "flags"},
+            "Pre-boss setup changed an undeclared world carrier")
+    return result, {"scope": "DISCLOSED initial pre-boss mechanics setup, not earned progression",
+                    "removed_legacy_world_flags": [flag for flag in flags if flag in PREBOSS_LEGACY_FLAGS],
+                    "original_world_flags": flags, "initial_world_flags": result["flags"]["flags"],
+                    "retained_journal_sha256": hashlib.sha256(json.dumps(journals, sort_keys=True,
+                                                    separators=(",", ":"), allow_nan=False).encode()).hexdigest(),
+                    "preserved": "Every original journal row, namespace, XP flag, character and owner receipt; no typed prior win"}
+
+
 def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: Path | None, origin: str,
-             configuration_scope: str = "bootstrap") -> dict:
+             configuration_scope: str = "bootstrap", preboss_legacy_mechanics: bool = False) -> dict:
     require(isinstance(origin, str) and bool(origin.strip()), "Disclose original native run and any earlier source setup")
     require(configuration_scope in ("bootstrap", "full"), "Unknown disclosed configuration scope")
     require(len(sources) in (2, 4), "Use two or four independently captured actual characters")
@@ -197,6 +242,8 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     require(len({row["id"] for row in inputs}) == len(inputs), "Never clone/change character identities for peer count")
     all_uids = [uid for row in inputs for uid in row["uids"]]
     require(len(set(all_uids)) == len(all_uids), "Never clone/change owned creature identities")
+    initial_world, preboss_disclosure = (preboss_legacy_world(inputs) if preboss_legacy_mechanics
+                                       else (copy.deepcopy(inputs[0]["world"]), None))
     cfg = read(ROOT / "data/config/stations.json")
     layout = read(layout_path)
     records = layout_records(layout, cfg)
@@ -230,6 +277,9 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
                "added initial material stock, paid station records and starting pose. No earned campaign claim. "
                "Native producer, routes and terrain validation OPEN. See fixture-manifest.json. " + origin,
                "saves": [], "routes": routes, "outcomes": outcomes}
+    if preboss_disclosure:
+        manifest["preboss_legacy_mechanics"] = preboss_disclosure
+        profile["provenance"] += " Explicit pre-boss legacy mechanics gates removed only in detached initial fixture; original rewards and all personal data retained."
     output.mkdir(parents=True, exist_ok=False)
     for index, row in enumerate(inputs):
         destination = output / f"peer-{index}"
@@ -245,7 +295,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
                 "Fixture mutated undeclared personal progression")
         documents = [(row["character_path"], char)]
         if index == 0:
-            world = copy.deepcopy(row["world"])
+            world = copy.deepcopy(initial_world)
             world["placed_buildings"] = records
             documents += [(row["world_path"], world), (row["slot_path"], read(row["slot_path"]))]
         pinned = []
@@ -314,7 +364,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
         if re.search(r"^func " + re.escape(method) + r"\(", session_source, re.MULTILINE) is None:
             manifest["gaps"].append(f"Ordinary Forge producer Session.{method} source unavailable; candidate button cannot complete")
     manifest["gaps"].append("Kitchen remains tier0; Master win/recipe, boss key/relic and ordinary reopen routes are not fabricated")
-    if "defeated_warden" in inputs[0]["world"].get("flags", {}).get("flags", []):
+    if "defeated_warden" in initial_world.get("flags", {}).get("flags", []):
         manifest["gaps"].append("Original host legacy world already defeated Warden; no flag reset or new-loop boss eligibility claim")
     # Export a separately pinned test overlay; do not change production defaults.
     # ROOT applies these exact bytes only in its serialized isolated native
@@ -365,12 +415,14 @@ def main() -> int:
     parser.add_argument("--route-pack", type=Path)
     parser.add_argument("--configuration-scope", choices=("bootstrap", "full"), default="bootstrap",
                         help="Export separately pinned named-mechanics gates; never apply them to production source")
+    parser.add_argument("--pre-boss-legacy-mechanics", action="store_true",
+                        help="Explicit detached initial gate setup; refuses all prior typed journals/receipts and preserves legacy rewards")
     parser.add_argument("--origin", required=True, help="Original native run and disclosed earlier setup; never relabel as earned")
     args = parser.parse_args()
     try:
         manifest = generate([path.resolve() for path in args.source], args.layout.resolve(),
                             args.output.resolve(), args.route_pack.resolve() if args.route_pack else None,
-                            args.origin, args.configuration_scope)
+                            args.origin, args.configuration_scope, args.pre_boss_legacy_mechanics)
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(json.dumps({"ok": False, "error": str(error)}))
         return 1

@@ -237,5 +237,39 @@
     "ralph/reports/R3-F48/profile.schema.json": "a94d8a8cfbca483ae698ccbc578d07c80f1ae3f3b27890c8965b5d717dd6babc",
     "ralph/reports/R3-F48/mechanics-fixture/layout-candidate.json": "1783b3761b4fe0b6039ad23c37866f8091900c759cc8e86adbd23a2619786cf9"
   },
-  "files_hash_basis": "Exact staged Git blob bytes; native generated fixtures/source input hashes are exact original file bytes"
+  "files_hash_basis": "Exact staged Git blob bytes; native generated fixtures/source input hashes are exact original file bytes",
+  "authorized_initial_preboss_fixture": {
+    "manifest": "D:\\tetherbound\\r3-f48\\.tmp\\f48-preboss-actual8a-full-v1\\fixture-manifest.json",
+    "manifest_sha256": "91b3a34a7ec684fd67ef81529b189b4230fddfd96de6de70f5a7aec8c9613a37",
+    "audit": {
+      "status": "STATIC_DISCLOSURE_AND_REFUSAL_PASS_ONLY",
+      "negative_cases": 12,
+      "disclosure": {
+        "scope": "DISCLOSED initial pre-boss mechanics setup, not earned progression",
+        "removed_legacy_world_flags": [
+          "defeated_warden",
+          "realm_key_cloudreach",
+          "realm_heart_meadows_earned"
+        ],
+        "original_world_flags": [
+          "defeated_warden",
+          "realm_key_cloudreach",
+          "realm_heart_meadows_earned",
+          "reward:trainer:warden_aldis:xp:1",
+          "reward:trainer:warden_aldis:xp:887192150"
+        ],
+        "initial_world_flags": [
+          "reward:trainer:warden_aldis:xp:1",
+          "reward:trainer:warden_aldis:xp:887192150"
+        ],
+        "retained_journal_sha256": "1535ca7534f083f99d0bc8ec407bb93d4c0b167863b6793b04f8f227b89d15eb",
+        "preserved": "Every original journal row, namespace, XP flag, character and owner receipt; no typed prior win"
+      },
+      "profile_sha256": "c16c1345f2d0ad27db3b869124bea87213ff799d1cd722a9c86c2a0260fc0388",
+      "source_sha256": "4dabf151e842b5d7bac936b9d83c1377d634bba2cb3f188e57609e44871913a3",
+      "acceptance_credit": false
+    },
+    "authority": "ROOT latest explicit initial mechanics setup authorization; original source carriers unchanged",
+    "native_status": "NOT_RUN; requires real paid Altar, source catch, Master, cook/feed, boss/key/relic and full24cuts"
+  }
 }
