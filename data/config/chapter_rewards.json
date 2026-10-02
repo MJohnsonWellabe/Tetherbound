@@ -445,7 +445,8 @@
       "next_biome": "biome5",
       "relic_biome": "stormwood",
       "delivery_phase": "accepted_legendary_settlement",
-      "delivery_requires_world_flags": ["stormwood:legendary_offer_made"]
+      "delivery_requires_world_flags": ["stormwood:legendary_offer_made"],
+      "delivery_requires_any_resolution_prefix": ["stormwood:legendary_resolution:accepted:", "stormwood:legendary_resolution:refused:"]
     }
   },
   "boss_handoff_contract": {

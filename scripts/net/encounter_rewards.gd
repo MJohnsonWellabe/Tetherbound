@@ -109,6 +109,12 @@ static func chapter_hand_off(trainer_id: String, realm: String, config: Dictiona
 	for flag: Variant in required:
 		if not flag is String or flag.is_empty() or seen.has(flag): return {}
 		seen[flag] = true
+	var resolutions: Variant = row.get("delivery_requires_any_resolution_prefix", [])
+	if not resolutions is Array: return {}
+	for prefix: Variant in resolutions:
+		if row.delivery_phase != "accepted_legendary_settlement" or not prefix is String \
+				or prefix.is_empty() or not prefix.ends_with(":") or seen.has(prefix): return {}
+		seen[prefix] = true
 	# Schema key IDs and inventory SKUs deliberately have different names.
 	# Resolve both from the authored portal catalogues, never a second reward map.
 	var portals: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/schema/portals.json"))
@@ -130,12 +136,20 @@ static func chapter_hand_off(trainer_id: String, realm: String, config: Dictiona
 
 
 ## The host's saved world flags release a retained boss obligation. An offer
-## being displayed does not settle a ceremony; the controllers journal these
-## markers only after the first accepted/refused participant resolution.
+## being displayed does not settle a ceremony. Stormwood also advances its
+## offer fact for non-owed visitors, so require its actual answer receipt.
 static func chapter_delivery_ready(row: Dictionary, world_flags: Array) -> bool:
 	if row.is_empty() or not row.get("delivery_requires_world_flags") is Array: return false
 	for flag: Variant in row.delivery_requires_world_flags:
 		if not world_flags.has(flag): return false
+	var resolutions: Variant = row.get("delivery_requires_any_resolution_prefix", [])
+	if not resolutions is Array: return false
+	if not resolutions.is_empty():
+		for prefix: String in resolutions:
+			for flag: Variant in world_flags:
+				if flag is String and flag.begins_with(prefix) \
+						and preload("res://scripts/creatures/essence.gd")._opaque_id(flag.trim_prefix(prefix)): return true
+		return false
 	return true
 
 
@@ -143,8 +157,10 @@ static func is_chapter_settlement_flag(id: String) -> bool:
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(CHAPTER_REWARDS_PATH))
 	if not data is Dictionary or not data.get("boss_handoffs") is Dictionary: return false
 	for row: Dictionary in data.boss_handoffs.values():
-		if row.get("delivery_phase") == "accepted_legendary_settlement" \
-				and row.get("delivery_requires_world_flags", []).has(id): return true
+		if row.get("delivery_phase") != "accepted_legendary_settlement": continue
+		if row.get("delivery_requires_world_flags", []).has(id): return true
+		for prefix: String in row.get("delivery_requires_any_resolution_prefix", []):
+			if id.begins_with(prefix): return true
 	return false
 
 

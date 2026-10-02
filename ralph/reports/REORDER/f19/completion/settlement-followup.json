@@ -1,0 +1,20 @@
+{
+  "kind": "f19_boss_settlement_followup",
+  "review": "Coordinator independent review rejected the first cut: guest-first Stormwood decision used the guest peer for its host write, and the offer flag also advances for a non-owed visitor.",
+  "changes": [
+    "Authenticated Stormwood host decision writes shared flags as host while preserving the answering character in the claim and actor context.",
+    "Marrow delivery also requires an actual accepted/refused world resolution receipt; non-owed visibility advancement is insufficient.",
+    "Guest generic flag RPCs cannot forge or clear either resolution prefix. Existing save carriers and receipt identities are retained."
+  ],
+  "validation": {
+    "command": "Godot 4.7 --headless --script tests/run_tests.gd -- --only=test_f19_boss_handoffs.gd,test_f19_stormwood_settlement.gd,test_stormwood_ending.gd",
+    "tests": 33,
+    "assertions": 310,
+    "failures": 0,
+    "engine_errors": 0,
+    "log": "settlement-followup-validated.log",
+    "scope": "Production decision cut, actual WorldLedger, real split world file, guest-first accept/refuse, failed write rollback/retry, non-owed advancement, generic guest forgery. Scene ownership/claim setup are disclosed transaction fixtures; no earned-route claim.",
+    "rejected_attempt": "settlement-followup.log: test fixture omitted the authored act_ii_complete prerequisite; all four new decision tests failed. Corrected fixture then reran the same focused set."
+  },
+  "acceptance": "F19 remains open for actual continuous earned checkpoints and live legendary choice matrix. No GPU, import, or full-world process was used for these checks."
+}

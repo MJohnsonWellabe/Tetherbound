@@ -24,10 +24,12 @@ func _intent(boss: String) -> Dictionary:
 
 func _context(boss: String, settled: bool = true) -> Dictionary:
 	var row := REWARDS.chapter_hand_off(boss, BOSSES[boss][0])
+	var flags: Array = row.get("delivery_requires_world_flags", []).duplicate() if settled else []
+	if settled and boss == "captain_marrow_dynamo_core": flags.append("stormwood:legendary_resolution:refused:character-b")
 	return {"source_key": "boss:" + boss, "realm": BOSSES[boss][0],
 		"validated_host_outcome": "win", "encounter_id": "earned-fight-1",
 		"participants": ["character-a", "character-b"],
-		"boss_settlement_world_flags": row.get("delivery_requires_world_flags", []) if settled else []}
+		"boss_settlement_world_flags": flags}
 
 func test_all_four_shipped_bosses_resolve_canonical_keys_and_personal_relics() -> void:
 	for boss: String in BOSSES:
@@ -59,7 +61,7 @@ func test_ceremony_rewards_wait_for_first_settlement_and_never_for_every_partici
 		if not immediate:
 			assert_eq(pending.get("code"), "boss_ceremony_pending")
 			assert_false(REWARDS.chapter_delivery_ready(row, ["legendary_offer_displayed"]))
-		assert_true(REWARDS.chapter_delivery_ready(row, row.delivery_requires_world_flags))
+		assert_true(REWARDS.chapter_delivery_ready(row, _context(boss).boss_settlement_world_flags))
 		# The second character can resolve the same owed reward with only the
 		# shared first-answer marker, after disconnect/rejoin or host restart.
 		assert_true(ACTIONS._relic(_current("character-b"), "boss_relic", _intent(boss), _context(boss)).get("ok", false))
@@ -120,3 +122,15 @@ func test_guest_generic_flag_rpc_cannot_release_or_clear_boss_settlement() -> vo
 			assert_true(ledger.commit({"kind": "set_world_flag", "realm": row.runtime_realm, "id": flag}, 1).get("ok", false))
 			assert_true(world.flags.has(flag))
 	assert_false(REWARDS.is_chapter_settlement_flag("ordinary_story_flag"))
+	for flag: String in ["stormwood:legendary_resolution:accepted:character-a", "stormwood:legendary_resolution:refused:character-b"]:
+		assert_true(REWARDS.is_chapter_settlement_flag(flag))
+		assert_eq(ledger.commit({"kind": "set_world_flag", "realm": "stormwood", "id": flag}, 2).get("code"), "host_boss_settlement_required")
+
+func test_stormwood_display_and_non_owed_visit_do_not_release_a_boss_drop() -> void:
+	var row := REWARDS.chapter_hand_off("captain_marrow_dynamo_core", "stormwood")
+	var shown := ["stormwood:legendary_offer_made"]
+	assert_false(REWARDS.chapter_delivery_ready(row, shown))
+	for invalid: String in ["stormwood:legendary_resolution:accepted:", "stormwood:legendary_resolution:refused:", "stormwood:legendary_resolution:shown:character-a"]:
+		assert_false(REWARDS.chapter_delivery_ready(row, shown + [invalid]))
+	for answer: String in ["accepted", "refused"]:
+		assert_true(REWARDS.chapter_delivery_ready(row, shown + ["stormwood:legendary_resolution:" + answer + ":character-b"]))
