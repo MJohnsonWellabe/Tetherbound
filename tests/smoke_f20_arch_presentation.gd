@@ -13,6 +13,7 @@ func _run() -> void:
 	if not proof.fixture(game, "Presentation"): finish(); return
 	change_scene_to_file("res://scenes/world/meadows_playground.tscn")
 	if not await proof.ready(self, game): finish(); return
+	proof.diagnose_home_anchor(self, game)
 	var bus := AudioServer.get_bus_index("SFX")
 	if not proof.check(bus >= 0, "production SFX bus exists"): finish(); return
 	var recording := AudioEffectRecord.new()
@@ -29,8 +30,9 @@ func _run() -> void:
 		while Time.get_ticks_msec() < deadline: await process_frame
 	recording.set_recording_active(false)
 	var clip := recording.get_recording()
-	proof.check(clip != null and not clip.data.is_empty() and clip.save_to_wav("user://f20-fifth-sfx.wav") == OK,
-		"actual mixed SFX recorded for audible stir inspection")
+	if passed:
+		proof.check(clip != null and not clip.data.is_empty() and clip.save_to_wav("user://f20-fifth-sfx.wav") == OK,
+			"actual mixed SFX recorded for audible stir inspection")
 	AudioServer.remove_bus_effect(bus, effect)
 	print("F20 PRESENTATION FILES ", OS.get_user_data_dir())
 	finish()

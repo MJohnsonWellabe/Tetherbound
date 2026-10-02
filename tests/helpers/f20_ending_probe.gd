@@ -4,7 +4,7 @@ extends RefCounted
 ## Game/Session, the real world, input, durable writers and UI. This cannot
 ## establish an earned campaign win or replace F19/F49's journey evidence.
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
-const TRAVEL := preload("res://tests/helpers/f49_portal_travel.gd")
+const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 var failures: Array[String] = []
@@ -74,7 +74,7 @@ func ending(tree: SceneTree, game: Node, stir: bool = true) -> bool:
 		if not check(owner == null, "natural aftermath returns input for the Home Key"): return false
 	if not check(HOME.context(game).is_empty(), "older return cannot acknowledge homecoming"): return false
 	var travel := TRAVEL.new(tree, game)
-	if not await travel.home_key():
+	if not await traced_return(tree, game, travel):
 		failures.append_array(travel.failures); return false
 	if not check(HOME.journey_context(game).get("durable_home_return") == true, "actual Home Key arrival saved an outcome-bound return"): return false
 	if stir and not await fifth(tree, game, travel): return false
@@ -85,8 +85,57 @@ func return_home(tree: SceneTree, game: Node) -> bool:
 	if not await ready(tree, game): return false
 	if not check(HOME.context(game).is_empty(), "earlier Home Key visits cannot acknowledge the finale"): return false
 	var travel := TRAVEL.new(tree, game)
-	if not await travel.home_key(): failures.append_array(travel.failures); return false
+	if not await traced_return(tree, game, travel): failures.append_array(travel.failures); return false
 	return check(HOME.journey_context(game).get("durable_home_return") == true, "actual Home Key saved the personal finale return")
+
+func traced_return(tree: SceneTree, game: Node, travel: RefCounted) -> bool:
+	var timing := {"last": Time.get_ticks_msec(), "max_frame_ms": 0, "frames": 0}
+	var frame_trace := func() -> void:
+		var now := Time.get_ticks_msec()
+		timing.max_frame_ms = maxi(timing.max_frame_ms, now - timing.last)
+		timing.last = now
+		timing.frames += 1
+	var result_trace := func(result: Dictionary) -> void:
+		if str(result.get("kind", "")).begins_with("home_key_"):
+			print("F20 HOME TRACE ticks_ms=", Time.get_ticks_msec(), " frames=", timing.frames,
+				" max_frame_ms=", timing.max_frame_ms, " result=", result)
+			if result.get("reason") == "The arrival anchor is obstructed.": diagnose_home_anchor(tree, game)
+	tree.process_frame.connect(frame_trace)
+	game.connect("portal_action_result", result_trace)
+	var passed: bool = await travel.home_key()
+	game.disconnect("portal_action_result", result_trace)
+	tree.process_frame.disconnect(frame_trace)
+	return passed
+
+## Read-only reproduction of the shipping arrival footprint for its owner.
+## It reports real colliders; it never seats an actor or changes a permit.
+func diagnose_home_anchor(tree: SceneTree, game: Node) -> void:
+	var arrival: Node = game.session.get_node_or_null("FoundationComposition/PortalArrival")
+	var player := game.call("find_player") as CharacterBody3D
+	var world := tree.current_scene as Node3D
+	if arrival == null or player == null or world == null or game.current_realm != "meadows": return
+	var target: Vector3 = arrival.call("_arrival_target", world, {"realm": "meadows", "entry_id": "hall_home"})
+	var height: float = arrival.call("_ground_height", world, target)
+	var collision := player.get_node("Collision") as CollisionShape3D
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.transform = collision.global_transform
+	query.transform.origin += Vector3(target.x, height + player.safe_margin, target.z) - player.global_position
+	query.collision_mask = player.collision_mask
+	query.exclude = [player.get_rid()]
+	var paths: Array[String] = []
+	for hit: Dictionary in player.get_world_3d().direct_space_state.intersect_shape(query, 8):
+		var body: Node = hit.collider
+		paths.append(str(body.get_path()) + " class=" + body.get_class())
+	print("F20 HOME ANCHOR target=", target, " sampled_height=", height, " capsule_transform=", query.transform,
+		" capsule_shape=", query.shape, " safe_margin=", player.safe_margin, " collision_mask=", query.collision_mask,
+		" actual_blockers=", paths)
+	var ray := PhysicsRayQueryParameters3D.create(target + Vector3.UP * 2, target - Vector3.UP * 2,
+		player.collision_mask, [player.get_rid()])
+	var floor: Dictionary = player.get_world_3d().direct_space_state.intersect_ray(ray)
+	if not floor.is_empty():
+		print("F20 HOME ANCHOR actual_surface=", floor.position, " normal=", floor.normal,
+			" path=", floor.collider.get_path())
 
 func open_credits(tree: SceneTree, game: Node) -> bool:
 	if not await ready(tree, game): return false
@@ -153,8 +202,9 @@ func finish_credits(tree: SceneTree, game: Node) -> bool:
 func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	if travel == null: travel = TRAVEL.new(tree, game)
 	var arch: Node3D
-	for hall: Node in tree.get_nodes_in_group("crossing_halls"):
-		if tree.current_scene.is_ancestor_of(hall): arch = hall.call("arch", "biome5")
+	for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+		if candidate.get("arch_id") == "biome5" and tree.current_scene.is_ancestor_of(candidate):
+			arch = candidate as Node3D
 	if not check(arch != null, "fifth arch exists in the actual Hall"): return false
 	var messages: Array[String] = []
 	var observer := func() -> void:

@@ -1,7 +1,11 @@
 {
   "feature": "F20",
   "source_delta": "804a66388a",
-  "proof_dependency": {"feature": "F18", "original": "98ff2a89cc", "local": "5a315cef84"},
+  "proof_dependency": {
+    "feature": "F18",
+    "original": "98ff2a89cc",
+    "local": "5a315cef84"
+  },
   "source_review": "PASS: independent read-only f20_review; acceptance remains open",
   "focused": {
     "verdict": "PASS",
@@ -10,14 +14,80 @@
     "assertions": 240,
     "failures": 0,
     "engine_errors": 0,
-    "scope": ["test_ending_return_provenance.gd", "test_foundation_travel_protocol.gd", "test_regional_homecoming.gd", "test_f18_waystones.gd"]
+    "scope": [
+      "test_ending_return_provenance.gd",
+      "test_foundation_travel_protocol.gd",
+      "test_regional_homecoming.gd",
+      "test_f18_waystones.gd"
+    ]
   },
-  "pending_acknowledgement": {"verdict": "PASS", "log": "f20-pending.log.gz", "cases": 2, "assertions": 9},
-  "synthetic_disk": {"verdict": "PASS", "log": "f20-synthetic-disk.log.gz", "checks": 62, "scope": "synthetic facade over actual split writer, Game, credits UI and disk; not earned gameplay"},
+  "pending_acknowledgement": {
+    "verdict": "PASS",
+    "log": "f20-pending.log.gz",
+    "cases": 2,
+    "assertions": 9
+  },
+  "synthetic_disk": {
+    "verdict": "PASS",
+    "log": "f20-synthetic-disk.log.gz",
+    "checks": 62,
+    "scope": "synthetic facade over actual split writer, Game, credits UI and disk; not earned gameplay"
+  },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "queued behind F17 shared full-world lease",
-    "scripts": ["tests/smoke_f20_ending.gd", "tests/smoke_f20_tidewake_close.gd", "tests/smoke_net_f20_ending.gd", "tests/smoke_f20_arch_presentation.gd"]
+    "reason": "Actual Home Key reaches Meadows but shipping footprint intersects Hall floor; F18 owns fix. Tidewake prompt movement fixed; awaiting replay with deferred owner write wait. Fifth arch renderer capture in progress. Two-peer ending/reload awaits solo proof.",
+    "scripts": [
+      "tests/smoke_f20_ending.gd",
+      "tests/smoke_f20_tidewake_close.gd",
+      "tests/smoke_net_f20_ending.gd",
+      "tests/smoke_f20_arch_presentation.gd"
+    ],
+    "attempts": [
+      {
+        "log": "f20-solo-r1.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-solo-r2.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-solo-r3.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-arch-render-r1.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r1.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r2.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r3.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r4.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r5.log.gz",
+        "verdict": "FAIL"
+      }
+    ],
+    "limitations": [
+      "solo-r1/r2: clamped simulation Home Key raise lagged monotonic host expiry; F18 clock fix applied before r3.",
+      "solo-r3: actual Home Key authorizes then canonical Hall footprint obstructed; no credits reached.",
+      "arch-render-r1: wrong proof selector targeted Hall shell marker, not actual portal_arches controller; proof corrected. Any audio from failed run is invalid.",
+      "Tidewake-r1: invalid authored Salt Crown dry support, corrected by F18.",
+      "Tidewake-r2/r3/r4: actual input selected Mara after turning shifted child dock prompt. F20 production anchor fix reviewed independently.",
+      "Tidewake-r5: correct dock input passes, immediate world flag visible but owner receipt/save failed. Smoke stopped before deferred owner handoff; corrected next replay awaits both with monotonic bound."
+    ]
   },
   "disclosures": [
     "World proofs start from explicit saved post-finale/post-Nerissa fixtures; they do not claim earned boss fights or a complete campaign.",
@@ -30,5 +100,48 @@
     "reason": "Sparse Git merge followed F20 asset junctions and removed 3735 coordinator tracked assets/addons. Run invalid despite exit zero.",
     "recovery": "Removed F20 junctions; restored only git ls-files --deleted -z -- assets addons paths via git restore --worktree --pathspec-from-file --pathspec-file-nul. Coordinator missing tracked assets count returned to zero. F17 independent local directories unaffected. F20 assets/addons now ordinary local directories."
   },
-  "landing": "Handoff to coordinator; no direct main mutation or acceptance claim."
+  "landing": "Handoff to coordinator; no direct main mutation or acceptance claim.",
+  "proof_dependencies": [
+    {
+      "feature": "F18",
+      "original": "98ff2a89cc",
+      "local": "5a315cef84"
+    },
+    {
+      "feature": "coordinator admission performance",
+      "original": "41dfee404b3ed8deafe9c04f84220f8a90a8159c",
+      "local": "7ca38cf4b99e859996429175f6813066f2dcdff7"
+    },
+    {
+      "feature": "F18 monotonic Home Key",
+      "original": "538c971f6fa9355113efdd0f4756aa34f889e210",
+      "local": "196a11c37f"
+    },
+    {
+      "feature": "F18 supported Salt Crown",
+      "original": "1c5baa6bda1911af15bdd20700dbc7e30c6315c2",
+      "local": "bf0b18655d"
+    }
+  ],
+  "home_anchor_probe": {
+    "source": "actual renderer r2 read-only production query",
+    "target": [
+      96.2,
+      1.15,
+      14.0
+    ],
+    "sampled_height": 0.89999997615814,
+    "blocker": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/Collision",
+    "actual_surface": [
+      96.2,
+      0.91,
+      14.0
+    ],
+    "normal": [
+      0,
+      1,
+      0
+    ],
+    "verdict": "F18 dependency OPEN; no capsule waiver"
+  }
 }

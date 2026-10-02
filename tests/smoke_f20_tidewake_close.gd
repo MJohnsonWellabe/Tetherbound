@@ -5,7 +5,7 @@ extends SceneTree
 ## No Stormwood outcome is supplied, so this chapter cannot offer credits.
 const PROOF := preload("res://tests/helpers/f20_ending_probe.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
-const TRAVEL := preload("res://tests/helpers/f49_portal_travel.gd")
+const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 var proof := PROOF.new()
 
 func _init() -> void: _run.call_deferred()
@@ -30,6 +30,7 @@ func _run() -> void:
 			if chapter != null and chapter.get("npc_bodies").has("water_mara"): break
 	if not proof.check(chapter != null, "Tidewake chapter and actual Mara are ready"): finish(); return
 	var mara: Node3D = chapter.get("npc_bodies").get("water_mara")
+	var dock_position_before: Vector3 = chapter.get("_dock_prompt").global_position
 	var travel := TRAVEL.new(self, game)
 	if not await travel.activate(mara.call("prompt_node")):
 		proof.failures.append_array(travel.failures); finish(); return
@@ -42,12 +43,39 @@ func _run() -> void:
 		await travel.tap("interact")
 	for frame in 12: await process_frame
 	if not proof.check(not heard.is_empty() and chapter.call("dock_departure_ready"), "natural dock afterword makes civilian departure ready"): finish(); return
+	if not proof.check(chapter.get("_dock_prompt").global_position.distance_to(dock_position_before) < 0.001,
+		"dock action stays anchored while Mara turns to the approaching player"): finish(); return
+	# Mara and the departure prompt are adjacent. A generic 2.5m approach
+	# can leave Mara nearer; walk to this provider before checking the arbiter.
+	var dock: Node3D = chapter.get("_dock_prompt")
+	var player := game.call("find_player") as CharacterBody3D
+	var recoveries_before := int(player.get("_unstick_count"))
+	var navigator := preload("res://tests/helpers/stick_navigator.gd").new(self, player,
+		current_scene.get_node("CameraRig"), Callable(travel, "_stick"))
+	var near_dock: bool = await navigator.walk_to(dock.global_position, 1200, 0.6)
+	travel.call("_stick", 0, 0)
+	if not proof.check(near_dock and int(player.get("_unstick_count")) == recoveries_before,
+		"ordinary capsule walk selects the adjacent dock provider"): finish(); return
 	if not await travel.activate(chapter.get("_dock_prompt")):
 		proof.failures.append_array(travel.failures); finish(); return
-	for frame in 600:
-		await process_frame
-		if game.world.flags.call("has", "water_civilian_departure_complete"): break
 	var receipt := "craft:water_dock_departure:" + str(game.local.character_id)
+	# A journaled world conclusion precedes the deferred personal bool write.
+	# Wait for BOTH real sides; the shared flag alone is not an owner ACK.
+	deadline = Time.get_ticks_msec() + 30000
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		if game.world.flags.call("has", "water_civilian_departure_complete") \
+			and game.local.redesign_character.transaction_receipts.has(receipt): break
+	if not game.local.redesign_character.transaction_receipts.has(receipt):
+		var record := preload("res://scripts/net/character_record_rules.gd")
+		var current: Dictionary = record.portable_projection(game.local.call("save_data"))
+		for row: Dictionary in game.world.reward_deliveries.values():
+			if row.get("receipt") != receipt: continue
+			var plan: Dictionary = preload("res://scripts/net/character_action_delivery.gd").owner_plan(current, row, record.errors)
+			var changed: Array[String] = []
+			for key: String in current:
+				if not preload("res://scripts/creatures/essence.gd")._equivalent(current[key], row.before.get(key)): changed.append(key)
+			print("F20 DOCK OWNER TRACE status=", row.status, " pure_plan_code=", plan.get("code", "ok"), " changed_baseline_fields=", changed)
 	proof.check(game.world.flags.call("has", "water_civilian_departure_complete") \
 		and game.local.redesign_character.transaction_receipts.has(receipt), "dock closes Tidewake with its own saved character and world conclusion")
 	proof.check(HOME.journey_context(game).is_empty() and not HOME.credits_pending(game), "Tidewake conclusion offers no homecoming or credits")
