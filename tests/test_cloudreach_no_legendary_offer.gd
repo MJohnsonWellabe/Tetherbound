@@ -750,14 +750,57 @@ static func _cross_scan_violations(sources: Dictionary, legendaries: Dictionary,
 	return bad
 
 
+## This exact shared callback only validates an already-saved Stormwood claim.
+## It binds the host, actual source script, Session, Stormwood world and saved
+## character claim; its remaining imports call static claim/flag codecs. It
+## neither constructs nor attaches an offer controller. Any body change or any
+## additional import must enter the ordinary closure scan again.
+const SAVED_STORMWOOD_CALLBACK := """func foundation_stormwood_answer(source: Node, peer: int, claim: Dictionary) -> bool:
+	if not is_host() or not is_instance_valid(source) or source.get_script() != preload("res://scripts/world/stormwood_ending.gd") \\
+		or _game() == null or _game().session != self or source.get("session") != self \\
+		or source.get("world") != _portal_world_node("stormwood") or source.get("_foundation_world_binding") == null \\
+		or source.get("_foundation_world_binding").get_ref() != _game().world: return false
+	var character := _authority_character(peer)
+	if character.is_empty() or admitted_character_state(peer).is_empty() or claim.get("settled") != true \\
+		or not claim.get("kept") is bool or source.call("_saved_state").get("claims", {}).get(character, {}) != claim: return false
+	var id := preload("res://scripts/world/stormwood_ending.gd").claim_id(claim)
+	var kept: bool = claim.kept
+	if id.is_empty() or not _game().world.flags.call("has", preload("res://scripts/world/stormwood_ending.gd").resolution_flag(kept, character)): return false
+	var flags: Dictionary = _character_authority.call("personal_flags", character)
+	var marker := "stormwood:regional_outcome:%s:%s" % [id, "accepted" if kept else "refused"]
+	var has_original := false
+	for flag: String in flags:
+		if flag.begins_with("stormwood:regional_outcome:"): has_original = true
+	for flag: String in ["stormwood:legendary_ceremony_settled", preload("res://scripts/world/stormwood_ending.gd").answer_flag(id, kept)]:
+		_character_authority.call("record_personal_flag", character, flag, true)
+	if not has_original: _character_authority.call("record_personal_flag", character, marker, true)
+	if kept: _character_authority.call("record_personal_flag", character, "stormwood:legendary_offer_accepted", true)
+	return true"""
+
+
+static func _saved_stormwood_callback_range(path: String, text: String) -> Vector2i:
+	if path != "res://scripts/net/session.gd": return Vector2i(-1, -1)
+	var start := text.find("func foundation_stormwood_answer(")
+	if start < 0: return Vector2i(-1, -1)
+	var end := text.find("\nfunc ", start + 1)
+	if end < 0: end = text.length()
+	if text.substr(start, end - start).strip_edges() != SAVED_STORMWOOD_CALLBACK:
+		return Vector2i(-1, -1)
+	return Vector2i(start, end)
+
+
 static func _file_refs(path: String, source: String) -> Array[String]:
 	var out: Array[String] = []
-	var text := _code_only(source) if path.ends_with(".gd") else source
+	var text := _code_only(source.replace("\r\n", "\n")) if path.ends_with(".gd") else source
+	var saved_callback := _saved_stormwood_callback_range(path, text)
 	var re := RegEx.create_from_string(
 		"(?:preload|load)\\(\\s*\"(res://[^\"]+\\.(?:gd|tscn))\"|(?m)^extends\\s+\"(res://[^\"]+\\.gd)\"|path=\"(res://[^\"]+\\.(?:gd|tscn))\"")
 	for m: RegExMatch in re.search_all(text):
 		for g in [1, 2, 3]:
 			if m.get_string(g) != "":
+				if m.get_string(g) == "res://scripts/world/stormwood_ending.gd" \
+					and m.get_start() >= saved_callback.x and m.get_end() <= saved_callback.y:
+					continue
 				out.append(m.get_string(g))
 	return out
 
@@ -1403,6 +1446,36 @@ func test_negative_control_fake_offer_controller_preload() -> void:
 	var path := "res://scripts/world/cloudreach_finale_controller.gd"
 	var fake := {path: _text(path) + "\nconst FAKE := preload(\"res://scripts/world/stormwood_ending.gd\")\n"}
 	_control("closure", _closure_violations(fake), "stormwood_ending.gd")
+
+
+func test_saved_stormwood_callback_is_bound_static_claim_validation() -> void:
+	var path := "res://scripts/net/session.gd"
+	var source := _text(path).replace("\r\n", "\n")
+	assert_true(_saved_stormwood_callback_range(path, _code_only(source)).x >= 0,
+		"the reviewed shared callback must retain every source/world/claim guard")
+	assert_false(_file_refs(path, source).has("res://scripts/world/stormwood_ending.gd"))
+	assert_true(_file_refs("res://scripts/world/cloudreach_finale_controller.gd", source).has(
+		"res://scripts/world/stormwood_ending.gd"), "this allowance belongs only to shared Session")
+
+
+func test_negative_control_shared_stormwood_callback_loses_world_guard() -> void:
+	var path := "res://scripts/net/session.gd"
+	var source := _text(path).replace('source.get("world") != _portal_world_node("stormwood")', "false")
+	_control("unbound callback", _closure_violations({path: source}), "stormwood_ending.gd")
+
+
+func test_negative_control_shared_stormwood_callback_constructs_an_offer() -> void:
+	var path := "res://scripts/net/session.gd"
+	var source := _text(path).replace(
+		'preload("res://scripts/world/stormwood_ending.gd").claim_id(claim)',
+		'preload("res://scripts/world/stormwood_ending.gd").new()')
+	_control("offer constructor", _closure_violations({path: source}), "stormwood_ending.gd")
+
+
+func test_negative_control_shared_session_adds_another_offer_reference() -> void:
+	var path := "res://scripts/net/session.gd"
+	var source := _text(path) + '\nconst FAKE_OFFER := preload("res://scripts/world/stormwood_ending.gd")\n'
+	_control("extra shared import", _closure_violations({path: source}), "stormwood_ending.gd")
 
 
 func test_negative_control_cross_scan_line() -> void:
