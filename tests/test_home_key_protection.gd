@@ -31,3 +31,19 @@ func test_actual_backpack_drop_remove_trade_container_and_death_paths_keep_perso
 	restored.configure(DB.new())
 	restored.load_data(saved)
 	assert_eq(restored.inventory.count("home_key"), 1)
+
+func test_host_transfer_and_drop_intents_refuse_key_without_any_world_or_recipient_operations() -> void:
+	var world := preload("res://autoload/world_state.gd").new()
+	world.world_id = "protected-key-world"
+	var ledger := preload("res://scripts/net/world_ledger.gd").new(world)
+	var before: Dictionary = world.save_data()
+	for operation: String in ["transfer_item", "drop_item"]:
+		var intent := {"kind": operation, "realm": "meadows", "txn_id": "home-key-refusal-" + operation,
+			"item": "home_key", "count": 1, "from": 1, "to": 2, "position": [0, 0, 0]}
+		var result: Dictionary = ledger.commit(intent, 1)
+		assert_false(result.get("ok"))
+		assert_eq(result.get("code"), "protected_key")
+		assert_false(str(result.get("reason", "")).is_empty())
+		assert_eq(result.get("delta", {}).get("ops", []), [])
+		assert_eq(world.save_data(), before)
+		assert_eq(ledger.seq, 0)

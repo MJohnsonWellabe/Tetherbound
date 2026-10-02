@@ -1,0 +1,36 @@
+{
+  "status": "PARSER PASS only; live ENet UNPROVEN",
+  "source_sha256": {
+    "tests/helpers/f18_net_peer.gd": "1b2d46670d2f990030c2db87f74c1665cfd2d5e615a3a875a287004c726a0af6",
+    "tests/smoke_net_f18_travel.gd": "a6aa3f8eb2691c1084943017f7ec70f8db5be87d3600e5795718e215bd9627b4",
+    "tests/test_home_key_protection.gd": "ec44c95d863cc60db3431dce9a48c1260c6166982b6485b06bbb7e1ba30511e0"
+  },
+  "scoped_protection": {
+    "tests": 2,
+    "assertions": 27,
+    "failures": 0,
+    "diagnostics": [],
+    "paths": [
+      "backpack remove/drop",
+      "vendor sell",
+      "death satchel exclusion/container",
+      "host ledger peer transfer/drop rejection",
+      "portable key JSON reload"
+    ]
+  },
+  "network_setup": [
+    "3 actual isolated peer processes",
+    "fixture starter/free-play flags and one Home Key per peer; one guest Tidewake key",
+    "guest public portable save before admission",
+    "one grounded guest staging teleport before gameplay witness",
+    "direct production saved-character button callback on rejoin (base harness); parsed controller gameplay inputs"
+  ],
+  "network_actions": [
+    "Host and guest actual Satchel HomeKey with other actor position/realm/key retained",
+    "actual walk/touch to mounted stone, original portable receipt and accepted host disk row",
+    "matching arch input consumes key and opens character and host world",
+    "fresh guest process selects original saved character and joins world-locked second host",
+    "personal unlock permits actual Tidewake entry without unlocking second host world"
+  ],
+  "scope": "Does not prove earned opening, boss reward, rendered presentation or F18#5. All six feature acceptance statuses still UNPROVEN."
+}
