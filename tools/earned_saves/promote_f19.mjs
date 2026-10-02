@@ -80,6 +80,33 @@ for (let index = 0; index < boundaries.length; index++) {
   const boss = bosses[Math.min(index, 3)];
   assert.ok(held.transaction_receipts.some(id => id === `defeat:boss_${boss}:${receipt.state.character_id}` ||
     (id.startsWith(`defeat:boss_${boss}_`) && id.endsWith(`:${receipt.state.character_id}`))), `Exact ${boss} entitlement receipt required`);
+  const characters = files.filter(file => file.endsWith(`${path.sep}character.json`))
+    .map(file => JSON.parse(fs.readFileSync(file, 'utf8')))
+    .filter(saved => saved.character_id === receipt.state.character_id);
+  assert.equal(characters.length, 1, 'Exactly one actual saved owner must match the receipt character');
+  const character = characters[0];
+  assert.deepEqual(character.redesign_character, held, 'Printed entitlement state must match the production character bytes');
+  assert.equal(character.party.length, receipt.state.party.length);
+  for (let slot = 0; slot < character.party.length; slot++) {
+    const saved = character.party[slot], observed = receipt.state.party[slot];
+    assert.equal(saved.uid, observed.uid);
+    assert.equal(saved.species_id, observed.species);
+    assert.equal(saved.level, observed.level);
+    assert.equal(saved.xp, observed.xp);
+    assert.ok(Math.abs(saved.hp - observed.hp) <= 0.05001, 'Only disclosed receipt HP rounding is allowed');
+    assert.equal(saved.fainted, observed.fainted);
+  }
+  const inventory = Object.fromEntries(character.inventory.flatMap((stack, slot) => stack ? [[String(slot), stack]] : []));
+  assert.deepEqual(inventory, receipt.state.inventory, 'Observed inventory must be in the actual saved character');
+  const worlds = files.filter(file => file.endsWith(`${path.sep}world.json`)).map(file => JSON.parse(fs.readFileSync(file, 'utf8')));
+  assert.equal(worlds.length, 1, 'A fresh campaign must retain exactly its actual world');
+  const world = worlds[0];
+  assert.ok(typeof world.reward_delivery_namespace === 'string' && world.reward_delivery_namespace.length > 0);
+  const flags = [...new Set([...world.flags.flags, ...character.flags.flags])].sort();
+  assert.deepEqual(flags, receipt.state.flags, 'Observed progression must match the actual split files');
+  const namespaceHash = crypto.createHash('sha256').update(world.reward_delivery_namespace).digest('hex');
+  assert.ok(held.transaction_receipts.includes(`defeat:boss_${boss}:${receipt.state.character_id}`) ||
+    held.transaction_receipts.includes(`defeat:boss_${boss}_${namespaceHash}:${receipt.state.character_id}`), 'Boss receipt must name the actual saved host world');
   const destination = path.join(targetRoot, boundary);
   assert.ok(!fs.existsSync(destination), `Never overwrite an existing earned fixture: ${destination}`);
   candidates.push({boundary, directory, destination, receipt});

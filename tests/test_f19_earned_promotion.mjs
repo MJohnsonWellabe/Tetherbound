@@ -59,6 +59,12 @@ try {
   fs.writeFileSync(firstSave, JSON.stringify({version: 28}));
   writeLog();
   refused(/Exact warden_aldis entitlement receipt required/);
+  const firstReceipt = path.join(handoffs, boundaries[0], 'receipt.json');
+  const metadata = JSON.parse(fs.readFileSync(firstReceipt, 'utf8'));
+  metadata.state.redesign_character.transaction_receipts.push('defeat:boss_warden_aldis:negative-control');
+  fs.writeFileSync(firstReceipt, JSON.stringify(metadata));
+  writeLog();
+  refused(/Exactly one actual saved owner/);
   console.log(JSON.stringify({test: 'F19-earned-promotion-negative-controls', checks, result: 'PASS', scope: 'fabricated rejection controls only; no earned saves were generated'}));
 } finally {
   assert.ok(path.resolve(dir).startsWith(path.resolve(os.tmpdir()) + path.sep), 'Cleanup stays inside the named temporary root');
