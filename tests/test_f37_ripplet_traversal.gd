@@ -7,26 +7,62 @@ const FLAGS := preload("res://autoload/progression_state.gd")
 const WORLD := preload("res://autoload/world_state.gd")
 const LEDGER := preload("res://scripts/net/world_ledger.gd")
 const UID := "creature-0123456789abcdef0123456789abcdef"
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
+const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 func admitted(tiers: Array = []) -> Dictionary:
 	return {"character_id":"f37-character", "party":[{"uid":UID,"species_id":"ripplet","level":30,"fainted":false,"resting":false}],
-		"inventory":[], "redesign_character":{"creatures":{UID:{"breakthroughs":tiers}}}}
+		"inventory":[], "redesign_character":{"creatures":{UID:{"breakthroughs":tiers,"cap_level":BREAKTHROUGH.level_cap(tiers)}}}}
 
-func actor(tiers: Array = [30]) -> Dictionary:
+func actor(tiers: Array = [1,2,3]) -> Dictionary:
 	return {"peer":2,"character_id":"f37-character","realm":"water","admitted":admitted(tiers),
 		"combat":false,"mounted_uid":UID,"in_water":true,"dive_clearance":true,
 		"sealed":false,"mount_reachable":true,"diving":true,"position":Vector3(-215,-6.6,166)}
 
 func test_level_thirty_is_not_the_breakthrough_and_other_creatures_never_dive() -> void:
 	assert_false(RULE.can_dive(admitted(), UID))
-	assert_true(RULE.can_dive(admitted([10,20,30]), UID))
-	assert_false(RULE.can_dive(admitted([30]), "another-creature"))
-	var other := admitted([30])
+	assert_true(RULE.can_dive(admitted([1,2,3]), UID))
+	assert_false(RULE.can_dive(admitted([1,2,3]), "another-creature"))
+	var other := admitted([1,2,3])
 	other.party[0].species_id = "water_aquaryn"
 	assert_false(RULE.can_dive(other, UID))
-	other = admitted([30])
+	other = admitted([1,2,3])
 	other.party[0].resting = true
 	assert_false(RULE.can_dive(other, UID))
+	for tiers: Array in [[1,2], [3], [1,3], [1,2,2], [1,2,3.5], ["1",2,3], [10,20,30], [30], [1,2,3,4,5,6]]:
+		assert_false(RULE.can_dive(admitted(tiers), UID), "only the actual canonical completed tier prefix grants Dive")
+	other = admitted([1,2,3])
+	other.redesign_character.creatures[UID].cap_level = 30
+	assert_false(RULE.can_dive(other, UID), "the stored cap must match the completed history")
+	other = admitted([1,2,3])
+	other.party[0].level = 9
+	assert_false(RULE.can_dive(other, UID))
+	other = admitted([1,2,3])
+	other.party.append(other.party[0].duplicate(true))
+	assert_false(RULE.can_dive(other, UID), "duplicate owned UID is ambiguous")
+
+func _species_types(id: String) -> Array:
+	return [SPECIES.definition(id).get("type", "")]
+
+func test_actual_f28_water_feast_planner_produces_dive_history_without_a_level_bonus() -> void:
+	# This is the real detached planner, not an earned disk/UI/transport proof.
+	var current := admitted([1,2])
+	current.inventory = [{"id":"feast_t3_water", "n":1}]
+	current.redesign_character.transaction_receipts = []
+	current.redesign_character.creatures[UID].evolution_choices = {}
+	var result := BREAKTHROUGH.prepare_feed(current, UID, "feast_t3_water", "", {"in_combat":false,"owns_character":true},
+		_species_types, Callable(EVOLUTION,"prepare_feast_choice"), Callable(BREAKTHROUGH,"refresh_feast_moves"))
+	assert_true(result.ok)
+	if not result.get("ok", false): return
+	assert_eq(result.state.redesign_character.creatures[UID].breakthroughs, [1,2,3])
+	assert_eq(result.state.redesign_character.creatures[UID].cap_level, 40)
+	assert_eq(result.state.party[0].level, 30, "a feast grants no automatic level")
+	assert_true(RULE.can_dive(result.state, UID))
+	var restored: Dictionary = JSON.parse_string(JSON.stringify(result.state))
+	assert_true(RULE.can_dive(restored, UID), "the actual tier history survives its save representation")
+	assert_eq(current.redesign_character.creatures[UID].breakthroughs, [1,2], "detached planning does not mutate its input")
+	assert_false(RULE.can_dive(current, UID))
 
 func test_host_refuses_closed_water_combat_and_missing_owned_carrier() -> void:
 	var intent := {"action":"dive","creature_uid":UID}
@@ -42,7 +78,10 @@ func test_host_refuses_closed_water_combat_and_missing_owned_carrier() -> void:
 	var context := actor()
 	context.mounted_uid = "another-creature"
 	assert_false(RULE.action(intent,context).ok)
-	assert_false(RULE.action(intent,actor([10,20])).ok)
+	assert_false(RULE.action(intent,actor([1,2])).ok)
+	context = actor()
+	context.character_id = "foreign_character"
+	assert_false(RULE.action(intent,context).ok)
 
 func test_claim_race_commits_one_durable_identity_bound_delivery() -> void:
 	var world := WORLD.new()

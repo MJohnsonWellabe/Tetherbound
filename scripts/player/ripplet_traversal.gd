@@ -2,6 +2,7 @@ extends RefCounted
 
 ## F37 uses the admitted F28 creature record; level alone never grants Dive.
 const CONFIG := "res://data/config/ripplet_traversal.json"
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 static var _configuration: Dictionary = {}
 
 static func config() -> Dictionary:
@@ -18,9 +19,24 @@ static func owned(admitted: Dictionary, uid: String) -> Dictionary:
 	return found if found.get("species_id") == "ripplet" and not found.get("fainted", true) and not found.get("resting", true) else {}
 
 static func can_dive(admitted: Dictionary, uid: String) -> bool:
-	if owned(admitted, uid).is_empty(): return false
-	var record: Dictionary = admitted.get("redesign_character", {}).get("creatures", {}).get(uid, {})
-	return record.get("breakthroughs", []).has(30)
+	var card := owned(admitted, uid)
+	if card.is_empty(): return false
+	var personal: Variant = admitted.get("redesign_character")
+	if not personal is Dictionary or not personal.get("creatures") is Dictionary: return false
+	var record: Variant = personal.creatures.get(uid)
+	if not record is Dictionary or not record.get("breakthroughs") is Array: return false
+	var tiers: Array = record.breakthroughs
+	# F28 stores sequential completed tiers, never cap levels. Its validator
+	# refuses missing prefixes, duplicates, strings and fractional tiers.
+	var cap := BREAKTHROUGH.level_cap(tiers)
+	var feast: Dictionary = BREAKTHROUGH.feasts().get("items", {}).get("feast_t3_water", {})
+	var required := int(feast.get("tier", 0))
+	var level: Variant = card.get("level")
+	var saved_cap: Variant = record.get("cap_level")
+	return cap > 0 and required > 0 and tiers.size() >= required \
+		and (saved_cap is int or saved_cap is float) and is_finite(float(saved_cap)) and float(saved_cap) == float(cap) \
+		and (level is int or level is float) and is_finite(float(level)) and float(level) == floorf(float(level)) \
+		and float(level) >= float(feast.get("breaks_level", 30)) and float(level) <= float(cap)
 
 static func local_record(game: Node) -> Dictionary:
 	return game.local.save_data() if game != null and game.local != null else {}
@@ -40,6 +56,7 @@ static func action(intent: Dictionary, actor: Dictionary) -> Dictionary:
 	if actor.get("realm") != "water" or str(actor.get("character_id", "")).is_empty(): return deny("Reach Tidewake first.")
 	var uid := str(intent.get("creature_uid", ""))
 	var admitted: Dictionary = actor.get("admitted", {})
+	if admitted.get("character_id") != actor.get("character_id"): return deny("Use your own admitted Ripplet.")
 	if owned(admitted, uid).is_empty() or actor.get("combat", true): return deny("Your own awake Ripplet can carry you outside combat.")
 	if not actor.get("motion_valid", true): return deny("Wait for Ripplet's position to settle.")
 	var command := str(intent.get("action", ""))
