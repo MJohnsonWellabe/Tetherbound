@@ -8,10 +8,19 @@ class ClockKey extends "res://scripts/world/home_key.gd":
 
 class GameDouble extends Node:
 	var requests: Array[Dictionary] = []
+	var messages: Array[String] = []
+	var local := preload("res://autoload/player_state.gd").new()
+	var world := preload("res://autoload/world_state.gd").new()
+	var session: Node
+	func push_world_message(message: String) -> void: messages.append(message)
 	func home_key_refusal() -> String: return ""
 	func request_portal_action(payload: Dictionary) -> Dictionary:
 		requests.append(payload)
 		return {"ok": true, "request_id": "finish-request"}
+
+class EpochSession extends Node:
+	var epoch := "epoch"
+	func _altar_current_epoch() -> String: return epoch
 
 func test_production_raise_uses_host_clock_despite_capped_frame_delta() -> void:
 	var key := ClockKey.new()
@@ -39,4 +48,63 @@ func test_production_raise_uses_host_clock_despite_capped_frame_delta() -> void:
 	key.free()
 	rig.free()
 	actor.free()
+	game.free()
+
+func test_consumed_permit_handoff_keeps_original_result_without_animation_timeout() -> void:
+	var key := ClockKey.new()
+	var game := GameDouble.new()
+	game.session = EpochSession.new()
+	game.add_child(game.session)
+	key._game = game
+	key._settings = {"raise_seconds": 2.0, "response_timeout_seconds": 12.0}
+	key._phase = "finishing"
+	key._pending = "finish-request"
+	key._use_id = "approved-use"
+	key._wait_started_msec = 1000
+	key.travel_started("another-request")
+	assert_eq(key._phase, "finishing", "a different request cannot hand off")
+	key.travel_started("finish-request")
+	assert_eq(key._phase, "travelling")
+	assert_true(key.owns_input())
+	key.clock = 75000
+	key._process(0.016)
+	assert_eq(game.requests.size(), 0, "cold loading cannot cancel the consumed channel")
+	assert_eq(key._pending, "finish-request", "the durable result still owns completion")
+	key._result({"kind": "home_key_finish", "request_id": "another-request", "ok": true})
+	assert_eq(key._phase, "travelling")
+	key._result({"kind": "home_key_finish", "request_id": "finish-request", "ok": true, "saved": true})
+	assert_eq(key._phase, "idle")
+	assert_false(key.owns_input())
+	key.free()
+	game.free()
+
+func test_waiting_save_releases_controls_and_identity_change_retires_only_presentation() -> void:
+	var key := ClockKey.new()
+	var game := GameDouble.new()
+	game.session = EpochSession.new()
+	game.add_child(game.session)
+	key._game = game
+	key._settings = {"raise_seconds": 2.0, "response_timeout_seconds": 12.0}
+	key._phase = "finishing"
+	key._pending = "finish-request"
+	key.travel_started("finish-request")
+	key.save_waiting("another-request")
+	assert_true(key.owns_input())
+	key.save_waiting("finish-request")
+	assert_eq(key._phase, "settling")
+	assert_false(key.owns_input(), "a failed writer cannot hold movement forever")
+	assert_eq(key._pending, "finish-request", "original durable reply remains bound")
+	assert_false(key.use(), "waiting original cannot start another trip")
+	assert_eq(game.requests.size(), 0)
+	game.world = preload("res://autoload/world_state.gd").new()
+	key._process(0.016)
+	assert_eq(key._phase, "idle", "Save/Load replacement retires stale presentation")
+	assert_eq(game.requests.size(), 0, "retirement never cancels/ACKs/mints a permit")
+	key._phase = "finishing"
+	key._pending = "finish-request"
+	key.travel_started("finish-request")
+	game.session.epoch = "new-epoch"
+	key._process(0.016)
+	assert_eq(key._phase, "idle", "session epoch loss releases stale travel")
+	key.free()
 	game.free()

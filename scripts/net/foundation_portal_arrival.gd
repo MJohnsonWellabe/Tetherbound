@@ -60,6 +60,10 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	_pending = {"session": weakref(session), "game": weakref(game), "peer": peer,
 		"owner": weakref(game.get("local")), "world": weakref(game.get("world")),
 		"envelope": envelope.duplicate(true), "permit": permit.duplicate(true), "seated": false}
+	if envelope.payload.kind == "home_key_finish":
+		var presented: bool = await session.call("portal_owner_travel_started", self, envelope, permit)
+		if not presented: _refuse("The Home Key could not finish its fade."); return
+		if not _same_owner(): _refuse("Your travel session changed."); return
 	if str(game.get("current_realm")) != permit.realm:
 		# Only the consumed host permit chooses this destination; never a debug
 		# request or client-provided coordinate. Normal transition drains actors.
@@ -75,9 +79,7 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	if world_node == null or actor == null or not world_node.is_ancestor_of(actor): _refuse("The destination is not ready."); return
 	var target := _arrival_target(world_node, permit)
 	if not target.is_finite() or not world_node.has_method("ground_height_at"): _refuse("The arrival anchor has no ground."); return
-	var height := _ground_height(world_node, target)
-	if not is_finite(height): _refuse("The arrival anchor has no supported ground."); return
-	# The actual actor's collision footprint must fit. Terrain support is
+	# The actual actor's collision footprint must fit. Physical support is
 	# sampled at four surrounding points; no saved height or invented landing.
 	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
 	if not actor is CharacterBody3D or collision == null or not collision.shape is CapsuleShape3D \
@@ -85,9 +87,11 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 		_refuse("The arrival collision is not ready."); return
 	var radius := (collision.shape as CapsuleShape3D).radius
 	var body := actor as CharacterBody3D
+	var height := _landing_height(world_node, body, target, radius)
+	if not is_finite(height): _refuse("The arrival anchor has no supported ground."); return
 	var tolerance := tan(body.floor_max_angle) * radius
 	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
-		var support := _ground_height(world_node, target + Vector3(offset.x, 0, offset.y))
+		var support := _landing_height(world_node, body, target + Vector3(offset.x, 0, offset.y), radius)
 		if not is_finite(support) or absf(support - height) > tolerance: _refuse("The arrival anchor is not supported."); return
 	var landing := Vector3(target.x, height + body.safe_margin, target.z)
 	var query := PhysicsShapeQueryParameters3D.new()
@@ -116,6 +120,7 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 		await get_tree().physics_frame
 	if not _same_owner() or not _grounded_actor(body): _refuse("The arrival has not reached supported ground."); return
 	_pending.seated = true
+	_pending.save_deadline_msec = Time.get_ticks_msec() + int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").home_key.response_timeout_seconds) * 1000.0)
 	_save_arrival()
 
 func _grounded_actor(actor: CharacterBody3D) -> bool:
@@ -142,13 +147,23 @@ func arrival_binding(envelope: Dictionary, permit: Dictionary) -> bool:
 			and _remote_binding(peer, original)
 	return not _pending.is_empty() and _same_owner() and _pending.get("seated") == true \
 		and _pending.envelope == envelope and _pending.permit == permit \
-		and _grounded_actor(_pending.game.get_ref().call("find_player") as CharacterBody3D)
+		and ((_pending.get("journal_started") == true and _original_arrival_row(_pending.world.get_ref(), _pending)) \
+			or _grounded_actor(_pending.game.get_ref().call("find_player") as CharacterBody3D))
+
+func presentation_binding(envelope: Dictionary, permit: Dictionary, waiting: bool = false) -> bool:
+	return not _pending.is_empty() and _same_owner() and _pending.envelope == envelope and _pending.permit == permit \
+		and (not waiting or _pending.get("seated") == true)
 
 func _process(delta: float) -> void:
 	_retry_left -= delta
 	if _retry_left > 0.0: return
 	_retry_left = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds)
-	if not _pending.is_empty() and _pending.get("seated") == true: _save_arrival()
+	if not _pending.is_empty() and _pending.get("seated") == true:
+		if _pending.get("save_wait_notified") != true and Time.get_ticks_msec() >= int(_pending.get("save_deadline_msec", 0)):
+			_pending.save_wait_notified = true
+			var owner: Node = _pending.session.get_ref()
+			if owner != null: owner.call("portal_owner_save_waiting", self, _pending.envelope, _pending.permit)
+		_save_arrival()
 	for peer: int in _remote.keys():
 		var original: Dictionary = _remote[peer]
 		var session: Node = original.session.get_ref()
@@ -185,17 +200,19 @@ func _save_arrival() -> void:
 		return
 	var saver: RefCounted = game.get("save_system")
 	var actor := game.call("find_player") as CharacterBody3D
-	if actor == null or not _grounded_actor(actor): _refuse("The arrival support changed before it was saved."); return
+	var retained: bool = _pending.get("journal_started") == true and _original_arrival_row(game.get("world"), _pending)
+	if not retained and (actor == null or not _grounded_actor(actor)): _refuse("The arrival support changed before it was saved."); return
 	if saver == null or saver.call("fallback_busy") == true: return
 	if _pending.get("pose_saved") != true:
 		game.call("_capture_player_pose")
 		if saver.call("save_character_prepared", game, _pending.envelope.character_id) != true: return
 		_pending.pose_saved = true
-	if not _same_owner() or not _grounded_actor(actor): _refuse("Your travel session changed."); return
+	if not _same_owner() or (not retained and not _grounded_actor(actor)): _refuse("Your travel session changed."); return
 	if session.call("is_host") != true:
 		session.call("report_portal_owner_saved", self, _pending.envelope, str(_pending.permit.request_id))
 		return
 	var journal: Dictionary = session.call("foundation_grounded_arrival", self, _pending.envelope, _pending.permit)
+	if journal.get("durable") == true and _original_arrival_row(game.get("world"), _pending): _pending.journal_started = true
 	if journal.get("ok") != true or journal.get("saved") != true: return
 	var envelope: Dictionary = _pending.envelope
 	var peer: int = _pending.peer
@@ -253,12 +270,12 @@ func _remote_binding(peer: int, original: Dictionary) -> bool:
 	if world_node == null or not world_node.is_ancestor_of(actor): return false
 	var target := _arrival_target(world_node, permit)
 	if not target.is_finite() or not world_node.has_method("ground_height_at"): return false
-	var height: float = _ground_height(world_node, target)
-	if not is_finite(height): return false
 	var radius: float = float(contact.get("capsule_radius", 0.0))
 	if radius <= 0.0: return false
+	var height: float = _landing_height(world_node, actor, target, radius)
+	if not is_finite(height): return false
 	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
-		var support: float = _ground_height(world_node, target + Vector3(offset.x, 0, offset.y))
+		var support: float = _landing_height(world_node, actor, target + Vector3(offset.x, 0, offset.y), radius)
 		if not is_finite(support) or absf(support - height) > tan(actor.floor_max_angle) * radius: return false
 	var landing := Vector3(target.x, height + actor.safe_margin, target.z)
 	return contact.position.distance_to(landing) <= radius
@@ -266,7 +283,10 @@ func _remote_binding(peer: int, original: Dictionary) -> bool:
 func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 	var id: String = preload("res://scripts/creatures/essence.gd").training_delivery_id(original.envelope.world_instance_id, original.envelope.character_id)
 	var row: Dictionary = world.reward_deliveries.get(id, {})
-	return row.get("action") == "portal_arrival" and row.get("intent") == {
+	return world.call("training_row_valid", row, original.envelope.world_instance_id, world.get("world_id")) == true \
+		and row.get("character_id") == original.envelope.character_id \
+		and row.get("session_id") == original.envelope.session_epoch \
+		and row.get("action") == "portal_arrival" and row.get("intent") == {
 		"permit_id": original.permit.request_id, "realm": original.permit.realm, "entry_id": original.permit.entry_id}
 
 func _ground_height(world_node: Node3D, at: Vector3) -> float:
@@ -274,6 +294,22 @@ func _ground_height(world_node: Node3D, at: Vector3) -> float:
 	# surface from the authored target Y; other realms retain terrain height.
 	return float(world_node.call("ground_height_near", at)) if world_node.has_method("ground_height_near") \
 		else float(world_node.call("ground_height_at", at.x, at.z))
+
+func _landing_height(world_node: Node3D, actor: CharacterBody3D, at: Vector3, radius: float) -> float:
+	# The terrain/stack resolver selects the authored surface neighborhood.
+	# Its height is not the collider: the Hall's real nave slab stands 1cm
+	# above terrain. Measure that nearby physical floor before testing the
+	# complete capsule; a missing, steep or obstructed support stays refused.
+	var terrain := _ground_height(world_node, at)
+	if not is_finite(terrain) or actor == null or not actor.is_inside_tree() or radius <= 0.0: return NAN
+	var ray := PhysicsRayQueryParameters3D.create(
+		Vector3(at.x, terrain + radius, at.z), Vector3(at.x, terrain - radius, at.z), actor.collision_mask, [actor.get_rid()])
+	var hit := actor.get_world_3d().direct_space_state.intersect_ray(ray)
+	if hit.is_empty() or not hit.get("position") is Vector3 or not hit.get("normal") is Vector3 \
+		or not hit.position.is_finite() or not hit.normal.is_finite() \
+		or hit.normal.angle_to(Vector3.UP) > actor.floor_max_angle \
+		or hit.get("collider") is CharacterBody3D: return NAN
+	return float(hit.position.y)
 
 func _arrival_target(world_node: Node3D, permit: Dictionary) -> Vector3:
 	var invalid := Vector3(INF, INF, INF)

@@ -10,7 +10,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Authority:** The owner asked Claude to move `tb/integration` ([PR519](https://github.com/MJohnsonWellabe/Tetherbound/pull/519)) to main, fixing CI as it ran; then, with a short window and no owner-run steps available, to stop at a state Codex can continue. PR519 stays **draft and unmerged**; main is 30fcc38fc. The game is unfinished; MET110/280 is unchanged. The owner deleted every other `tb/*` branch; each was verified fully contained in `tb/integration` first (including the four formerly "unmerged" closeout branches, already gone).
 
-**F18 candidate:** Durable waystone mounts/touches and permit fences are pushed; Home Key monotonic clock and Salt Crown support fixes are separate coordinator dependencies. Host-derived opening debt/inventory CAS, validated legacy-save alias preservation, protected-key paths and observer-channel cleanup have scoped46tests/505assertions passing evidence in `ralph/reports/HUB/f18/home-key-authority.json`. All six criteria remain UNPROVEN pending actual opening, authored worlds, earned-loop, live co-op and presentation proof; full shared-system batch is running.
+**F18 candidate:** Home Key opening debt/CAS and protection evidence remains in `ralph/reports/HUB/f18/home-key-authority.json` (46 tests/505 assertions). Arrival now measures actual nearby physics floor, preserves complete capsule/new contact/save fences, awaits a consumed-permit fade, and releases controls during retained save retries; source review and29 tests/377 assertions plus9 synthetic physics checks pass (`arrival-support.json`). All19 authored simulation stone/return pads pass after Salt Crown/Summit fixes (`authored-stones.json`); existing simulation/world diagnostics remain disclosed. Coordinator performance/lossless-save dependencies adopted. All six criteria remain UNPROVEN pending actual opening, earned loop, live co-op and native presentation; full shared-system batch continues.
 
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
 
@@ -58,7 +58,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
     - The LB+face command layout is an optional preset only.
     - Command unlock: item throw and Snare at the practice catch; Rally and Tag-switch at the first two-creature fight.
 
-11. **Meadows waystones (F18):** recommend home arch returns to last Meadows waystone; keep home-only until owner confirms.
+11. **Meadows waystones (F18):** current CODEX_START_HERE F18#3/#5 settles personal last-waystone return through the home arch (entry if none); candidate live proof remains open.
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 

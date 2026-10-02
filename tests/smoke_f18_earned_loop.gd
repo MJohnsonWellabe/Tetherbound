@@ -16,6 +16,7 @@ var game: Node
 var failures: Array[String] = []
 var travel: RefCounted
 var receipts: Array[Dictionary] = []
+var _presentation: Node
 
 class BuildDriver extends "res://tests/helpers/gate_a_build_segment.gd":
 	var open_ui: Callable
@@ -30,6 +31,7 @@ func _fail(message: String) -> bool:
 	return false
 
 func _report() -> void:
+	if is_instance_valid(_presentation): _presentation.call("finish")
 	print("F18_EARNED_LOOP " + JSON.stringify({"failures": failures, "receipts": receipts,
 		"input": "parsed harness actions/joypad axes through production UI", "fixtures": false,
 		"setup": "private save-system directory, preserving developer saves"}))
@@ -140,6 +142,9 @@ func _loop() -> bool:
 		return _fail("actual touch never committed this character's stone")
 	receipts.append({"phase": "deep_touch", "position": str(current_scene.get_node(^"Player").global_position),
 		"waystone": STONE_ID})
+	if DisplayServer.get_name() != "headless":
+		_presentation = preload("res://tests/helpers/f18_presentation_capture.gd").attach(self, game,
+			"res://ralph/reports/HUB/f18/native/earned_%d" % Time.get_ticks_usec())
 	if not await travel.home_key(): return _fail("actual Satchel Home Key: " + str(travel.failures))
 	if not await _craft_at_workbench(): return false
 	if not await _save_reload(): return false

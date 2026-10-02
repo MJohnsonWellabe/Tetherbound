@@ -13,12 +13,16 @@ var _f18_fixture_done := false
 var _f18_started := false
 var _f18_staged := false
 var _f18_results: Array[Dictionary] = []
+var _f18_presentation: Node
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
 	if not action.begins_with("f18_"): return await super._execute_step(msg)
 	var game := root.get_node_or_null(^"Game")
 	if game == null: return {"verdict": "ERROR", "detail": "F18 has no Game"}
+	if action in ["f18_home_key", "f18_arch"] and DisplayServer.get_name() != "headless" and not is_instance_valid(_f18_presentation):
+		_f18_presentation = preload("res://tests/helpers/f18_presentation_capture.gd").attach(self, game,
+			"res://ralph/reports/HUB/f18/native/peer_%d_%d" % [OS.get_process_id(), Time.get_ticks_usec()])
 	if not game.is_connected("portal_action_result", _f18_note):
 		game.connect("portal_action_result", _f18_note)
 	var before := _physics_count
@@ -39,6 +43,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			result = await _f18_arch(game, args)
 		_: result = _f18_verdict(false, "unknown F18 action " + action)
 	result.frames_used = _physics_count - before
+	if is_instance_valid(_f18_presentation): _f18_presentation.call("_flush")
 	return result
 
 func _f18_verdict(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
@@ -237,7 +242,7 @@ func _f18_disk_pose_at(state: Dictionary, realm: String, at: Vector3) -> bool:
 	return pose.get("realm") == realm and _f18_vector(pose.get("position", [])).distance_to(at) < 0.5
 
 func _f18_read(path: String) -> Dictionary:
-	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+	var raw: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
 	return raw if raw is Dictionary else {}
 
 func _f18_state(game: Node, args: Dictionary) -> Dictionary:
