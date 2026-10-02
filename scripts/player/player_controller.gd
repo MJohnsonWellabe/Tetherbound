@@ -779,6 +779,12 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 	# shallow recovery on flat floors; active movement releases the stop mode.
 	floor_stop_on_slope = idle_slope_stop(direction, get_floor_normal(), up_direction)
 	floor_constant_speed = direction != Vector3.ZERO
+	# A flat idle body needs native recovery, not the slope-holding -2 m/s bias.
+	# Reapplying that bias every dialogue frame sinks the capsule into a Box
+	# floor. Effective direction includes modal ownership and locomotion locks;
+	# moving/sloped/airborne gravity and the following jump step stay unchanged.
+	if is_on_floor() and direction == Vector3.ZERO and get_floor_normal().is_equal_approx(up_direction):
+		velocity.y = 0.0
 
 	var game := get_node_or_null(^"/root/Game")
 	var auto_running := game != null and bool(game.get("auto_run"))
