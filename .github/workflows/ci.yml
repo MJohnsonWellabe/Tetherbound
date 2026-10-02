@@ -2855,6 +2855,17 @@ jobs:
               output.write(f"files={mine}\n")
               output.write(f"measured_seconds={loads[shard - 1]}\n")
           PY
+      - name: Provision immutable actual F48 inputs
+        if: ${{ !cancelled() && contains(steps.select.outputs.files, 'tests/smoke_net_f48_') }}
+        run: |
+          set -euo pipefail
+          # ROOT commits this directory only after the genuine native producer
+          # and f48_profile_ready.py --require-complete produce every named start.
+          # No placeholder/profile synthesis, skipped suite or soft failure.
+          python3 tools/net/f48_relocate_profile.py \
+            --bundle "$PWD/tests/fixtures/f48-inputs" \
+            --output /tmp/net-ci/f48-relocated-profile.json
+          echo "TB_F48_PROFILE=/tmp/net-ci/f48-relocated-profile.json" >> "$GITHUB_ENV"
       - name: Run net smokes
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:
