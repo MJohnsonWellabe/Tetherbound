@@ -120,8 +120,12 @@ func _route(name: String, peer: int) -> Array:
 		if raw.has("expect") or raw.has("expect_data") or raw.has("continue_on_fail"):
 			_profile_errors.append("Route cannot supply its own outcome or suppress failure: " + name)
 			continue
-		if raw.action == "f48_button" and str(raw.args.get("text", "")).is_empty():
-			_profile_errors.append("Empty button target: " + name)
+		if raw.action == "f48_button":
+			if raw.args.has("feast_recipe"):
+				if raw.args.feast_recipe != "feast_t1_ground" or raw.args.has("text"):
+					_profile_errors.append("Invalid exact ground feast button target: " + name)
+			elif str(raw.args.get("text", "")).is_empty():
+				_profile_errors.append("Empty button target: " + name)
 		if raw.action == "f48_build_cell" and str(raw.args.get("id", "")).is_empty():
 			_profile_errors.append("Empty actual build cell target: " + name)
 		if raw.action == "f48_choice" and str(raw.args.get("uid", "")).is_empty():
