@@ -1,0 +1,120 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:15:36.510249+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "criterion": "F29#4",
+  "method": "authored wild tables only, excludes trainer teams/commentary; exact wild provider reads reviewed",
+  "data_paths": [
+    "data/config/bands/band1_lower_meadows/spawns.json",
+    "data/config/bands/band2_stone_and_root/spawns.json",
+    "data/config/bands/band3_the_river_lock/spawns.json",
+    "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+    "data/config/bands/band5_stronghold_approach/spawns.json",
+    "data/config/cloudreach_chapter.json",
+    "data/config/cloudreach_encounters.json",
+    "data/config/spawn_tables.json",
+    "data/config/spawns.json",
+    "data/config/stormwood_encounters.json",
+    "data/config/water_encounters.json"
+  ],
+  "consumer_paths": [
+    "scripts/combat/cloudreach_encounter_director.gd",
+    "scripts/combat/stormwood_encounter_catalogue.gd",
+    "scripts/creatures/water_species_catalog.gd",
+    "scripts/world/water_encounter_runtime_data.gd"
+  ],
+  "wild_reference_count": 572,
+  "forbidden_wild_references": [],
+  "cannonback_references": [
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/0/entries/0/species_id",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/0/entries/0/placeholder_species",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/1/entries/1/species_id",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/1/entries/1/placeholder_species",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/3/entries/2/species_id",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/3/entries/2/placeholder_species",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/7/entries/2/species_id",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/7/entries/2/placeholder_species",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/9/entries/1/species_id",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/9/entries/1/placeholder_species",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/11/entries/2/species_id",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/tables/11/entries/2/placeholder_species",
+      "species": "cannonback"
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "pointer": "/named_encounters/0/species_id",
+      "species": "cannonback"
+    }
+  ],
+  "stormcapra_references": [
+    {
+      "path": "data/config/cloudreach_chapter.json",
+      "pointer": "/encounter_tables/3/entries/1/placeholder_species",
+      "species": "stormcapra"
+    },
+    {
+      "path": "data/config/cloudreach_chapter.json",
+      "pointer": "/encounter_tables/4/entries/1/placeholder_species",
+      "species": "stormcapra"
+    },
+    {
+      "path": "data/config/cloudreach_chapter.json",
+      "pointer": "/encounter_tables/5/entries/1/placeholder_species",
+      "species": "stormcapra"
+    }
+  ],
+  "water_alias": "Water catalogue runtime_id(cannonback) is water_cannonback; this is disclosed, not silently merged with the base evolution species.",
+  "verdict": "STATIC_TABLE_PASS_PROVIDER_BINDING_REVIEW_OPEN",
+  "scope": "Wild eligibility only. No evolution offer, bear creation, acquisition or player-path proof."
+}

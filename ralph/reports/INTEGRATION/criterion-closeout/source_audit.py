@@ -192,6 +192,47 @@ def audit_text_removal() -> None:
                       "game_files": len(game_files), "ui_matches": ui_matches, "fields": retired_fields}, indent=2))
 
 
+def audit_wild_roster() -> None:
+    names = [p for p in paths("data/config") if p.endswith(".json") and
+             (re.search(r"(?:^|/)(?:spawn_tables|spawns|cloudreach_encounters|stormwood_encounters|water_encounters)\.json$", p)
+              or p == "data/config/cloudreach_chapter.json")]
+    consumers = ["scripts/combat/cloudreach_encounter_director.gd", "scripts/combat/stormwood_encounter_catalogue.gd",
+                 "scripts/creatures/water_species_catalog.gd", "scripts/world/water_encounter_runtime_data.gd"]
+    warm(names + consumers)
+    refs = []
+    def visit(value, path, pointer="", wild=True):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key.startswith("_"):
+                    continue
+                if key in {"species", "species_id", "placeholder_species"} and isinstance(child, str) and wild:
+                    refs.append({"path": path, "pointer": pointer + "/" + key, "species": child})
+                else:
+                    visit(child, path, pointer + "/" + key, wild)
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                visit(child, path, pointer + "/" + str(index), wild)
+    for path in names:
+        d = data(path)
+        if path.endswith("cloudreach_chapter.json"):
+            for index, table in enumerate(d.get("encounter_tables", [])):
+                if table.get("catchable") is True and "wild" in table.get("id", ""):
+                    visit(table, path, "/encounter_tables/" + str(index))
+        else:
+            visit(d, path)
+    forbidden = [r for r in refs if r["species"] in {"tuskroot", "ashtusk", "stormursa"}]
+    cannon = [r for r in refs if r["species"] in {"cannonback", "water_cannonback"}]
+    capra = [r for r in refs if r["species"] == "stormcapra"]
+    result = {**stamp(), "criterion": "F29#4", "method": "authored wild tables only, excludes trainer teams/commentary; exact wild provider reads reviewed",
+              "data_paths": names, "consumer_paths": consumers, "wild_reference_count": len(refs),
+              "forbidden_wild_references": forbidden, "cannonback_references": cannon, "stormcapra_references": capra,
+              "water_alias": "Water catalogue runtime_id(cannonback) is water_cannonback; this is disclosed, not silently merged with the base evolution species.",
+              "verdict": "STATIC_TABLE_PASS_PROVIDER_BINDING_REVIEW_OPEN" if not forbidden and cannon and capra else "OPEN",
+              "scope": "Wild eligibility only. No evolution offer, bear creation, acquisition or player-path proof."}
+    dump("f29-wild-roster-recheck.json", result)
+    print(json.dumps({"forbidden": forbidden, "cannonback": len(cannon), "stormcapra": len(capra), "refs": len(refs)}, indent=2))
+
+
 def receipts() -> None:
     records = []
     for path in sorted(PRIMARY.glob("*/result.json")):
@@ -222,7 +263,7 @@ def receipts() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=["structure", "mapping", "catalogues", "text", "receipts"])
+    parser.add_argument("action", choices=["structure", "mapping", "catalogues", "text", "wild", "receipts"])
     args = parser.parse_args()
     if args.action == "structure":
         structure()
@@ -236,6 +277,8 @@ def main() -> None:
         audit_catalogues()
     elif args.action == "text":
         audit_text_removal()
+    elif args.action == "wild":
+        audit_wild_roster()
 
 
 if __name__ == "__main__":

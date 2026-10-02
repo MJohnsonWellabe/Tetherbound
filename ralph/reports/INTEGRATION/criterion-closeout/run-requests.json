@@ -1,0 +1,83 @@
+{
+  "format": "criterion-run-request-v1",
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "executor": "ROOT only",
+  "lock": "D:/tetherbound/RENDER_LOCK.json",
+  "deadline_utc": "2026-10-02T03:55:26Z",
+  "requests_are_not_execution_or_permission": true,
+  "execution_rules": [
+    "Serialize every engine, import, GPU, network and test run under ROOT's existing lock.",
+    "Use an isolated user-data directory and record actual executed source/package, engine, platform, input, start-save origin, argv, exit, raw hashes and terminal counts.",
+    "Reuse valid unchanged dependency proof; do not run a full suite merely for this evidence commit.",
+    "No budget, assertion, contact, scope or requirement waiver. Missing actual inputs/producer prerequisites stay OPEN.",
+    "Source flags OFF means no ordinary activation credit; detached contract passes close only explicitly deterministic/data scope.",
+    "Return raw artifacts for independent judgment; do not synthesize progress, caught identity, transaction, owner-write or ACK metadata."
+  ],
+  "requests": [
+    {
+      "id": "DATA-NATIVE-01",
+      "priority": 1,
+      "state": "READY_FOR_ROOT_REVIEW_AND_SERIAL_EXECUTION",
+      "criteria": ["F23#1", "F23#2", "F35#0", "F25#1"],
+      "reason": "One bounded pure production lookup/equip-policy batch can distinguish authored counts from actual native catalogue, level/breakthrough, primary-TM, equip-policy and initial-signature behavior.",
+      "command_argv": ["Godot_v4.7-stable_win64_console.exe", "--headless", "--path", "<ROOT imported candidate checkout>", "--script", "res://ralph/reports/INTEGRATION/criterion-closeout/criterion_data_native.gd"],
+      "script": "ralph/reports/INTEGRATION/criterion-closeout/criterion_data_native.gd",
+      "original_requested_watchdog_seconds": 240,
+      "fixtures": "Detached actual production species at L15; synthetic host context for pure staging only; one detached unknown-archetype negative case. No earned progress, real station geometry, save/ACK or network credit.",
+      "required_output": "CRITERION_DATA_NATIVE_RESULT completed=true, empty failures, per-criterion checks, actual69 live species,10 utilities,19 shared IDs, native0 and no unresolved strict diagnostics.",
+      "acceptance_limit": "F23#1 TM production transaction/debit still must be judged if criterion interpreted to require full backpack transaction. F23#2 proves legal choices/equip staging only. No F23#0/#3/#4/#5, F35#1..#4 or F25#0/#2..#5 closure.",
+      "dependency_policy": "Execute at582b plus evidence or record exact production delta from582b; re-evaluate affected sources before reuse."
+    },
+    {
+      "id": "OPENING-M1-01",
+      "priority": 2,
+      "state": "ROOT_ALREADY_OWNS_PENDING_RUN_REUSE_RETURN_DO_NOT_DUPLICATE",
+      "criteria": ["F17#4"],
+      "script": "tests/smoke_gate_b_continuous.gd",
+      "needed": "Original required CORE route including real Mira dialogue/modal exit and uphill return, tools, gathering, beds and played tournament; every original assertion and controller/contact budget intact. Record starter selection; all three starter witnesses are needed for M1 integrated acceptance.",
+      "existing_gap": "Focused Mira23 PASS is not full16 completion. Prior full run failed before Mira; current582b run was in-flight at this review's initial snapshot.",
+      "acceptance_limit": "One starter's pass is a named partial witness; disclose authored starts. No earned campaign or complete all-starter M1 claim from one run."
+    },
+    {
+      "id": "F48-AUTHENTIC-01",
+      "priority": 2,
+      "state": "BLOCKED_ON_REVIEWED_AUTHENTIC_PROFILES_AND_ENABLED_PRODUCERS",
+      "criteria": ["F48#0", "F48#1", "F48#2", "F48#3"],
+      "scripts_in_order": ["tests/smoke_net_f48_loop.gd", "tests/smoke_net_f48_transactions.gd", "tests/smoke_net_f48_boss_four.gd", "tests/smoke_net_f48_behind.gd"],
+      "environment": {"TB_F48_PROFILE": "<reviewed route profile from actual isolated saved inputs>", "TB_F48_PROCESS_PYTHON": "<ROOT configured native Python>"},
+      "needed": "Actual paid Forge/Altar/feed, guest Master challenge, real boss/key/relic settlement, host and owner writes, original ACK boundaries, isolated actual process exit/restart and honest behind-guest progress; complete saved per-character inventory/carrier comparisons.",
+      "cuts": ["before_input", "after_settlement", "after_host_write_before_delivery", "after_owner_write_before_ack"],
+      "acceptance_limit": "Do not dispatch until profiles/production prerequisites are independently reviewed. Fixtures, direct callbacks, forged caught cards or invented cut markers cannot replace authentic F48 proof."
+    },
+    {
+      "id": "COMBAT-BAND-01",
+      "priority": 3,
+      "state": "AFTER_CURRENT_PRODUCER_ACTIVATION_AND_CAPTURE_READINESS",
+      "criteria": ["F22#1", "F22#2", "F22#4", "F33#2", "F47#3"],
+      "scripts": ["tests/smoke_f22_pattern_bands.gd", "tests/smoke_f22_pattern_contract.gd"],
+      "needed": "At least12 seeds per biome for F22; retain stricter C2 all3starters/24 seeds and C3 named-fight thresholds where applicable. Switching vs non-switching comparison and matching-tier vs prior-tier gear boss distributions; actual new timings. Existing pre448/450 fight numbers are stale.",
+      "acceptance_limit": "Pattern unit/publication receipts cannot prove reader/masher distributions or named fight presentation."
+    },
+    {
+      "id": "CAPTURE-JUDGES-01",
+      "priority": 3,
+      "state": "AFTER_F26_LOOKDEV_AND_CAPTURE_MATRIX_READY",
+      "criteria": ["F17#6", "F21#4", "F21#5", "F22#3", "F25#2", "F25#4", "F25#5", "F26#3", "F35#2", "F35#3", "F35#4", "F36#0", "F36#1", "F36#2", "F38#0", "F38#1", "F38#2", "F38#3", "F38#4", "F38#5", "F39#0", "F39#1", "F39#2", "F39#3", "F39#4", "F39#5", "F40#0", "F40#1", "F40#2", "F40#3", "F40#4", "F40#5", "F41#0", "F41#1", "F41#2", "F41#3", "F41#4", "F41#5", "F42#0", "F42#2", "F42#3"],
+      "named_existing_capture_entrypoints": ["tests/capture_hall_destination_day_night.gd", "tests/capture_village_overhead.gd", "tests/capture_village_walk.gd", "tests/smoke_move_effects_library.gd", "tests/smoke_f42_system_screen.gd"],
+      "needed": "Unmodified native frames/motion, recorded camera/time/weather/renderer/input/fixtures; each biome>=200 recaptured frames after F26 and rescored catalog; full approach/gameplay/reverse/detail/day/night/weather/real fight matrix on High+Medium; both1920x1080 and1280x800 all new screens. Normal-scale small/normal/giant fights and matched impact sequences; every unique ultimate and breakthrough growth; worst-case four-creature Medium timing samples.",
+      "judge_rules": "Judge pixels/motion before source changes are revealed; evaluate full ACCEPTANCE4 BarsA/B, not a scoped object read. Code-aware source audit is not code-blind visual proof.",
+      "acceptance_limit": "Current evidence lane has not seen an actual full-bar passing current-candidate frame set. Preserve prior failed judgments and native terminations."
+    },
+    {
+      "id": "F49-CONTINUOUS-01",
+      "priority": 4,
+      "state": "AFTER_OPENING_HUB_AND_PRODUCTION_LOOP_GREEN",
+      "criteria": ["F18#5", "F19#5", "F20#0", "F20#1", "F20#3", "F46#1", "F47#0", "F47#1", "F49#0"],
+      "entrypoint_helpers": ["tests/helpers/f49_campaign_journey.gd", "tests/helpers/f49_disk_handoff.gd"],
+      "needed": "One actual save title/opening→Meadows→Tidewake→Cloudreach→Stormwood→HomeKey→Grandpa→credits; actual ordinary controller inputs and named chapter saved handoffs, all shortcuts disclosed; resource/time/goal ledgers from real events. Route estimate is not owner confirmation.",
+      "acceptance_limit": "Helper presence, synthetic late saves and source flags are not a completed four-biome run. Owner play, Ally/default renderer and published download remain separate explicit gates."
+    }
+  ],
+  "owner_dependent_not_agent_claimable": ["F26#5", "F47#0 owner confirmation", "F49#1", "F49#2"],
+  "no_runs_started_by_evidence_lane": true
+}
