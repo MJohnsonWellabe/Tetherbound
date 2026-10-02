@@ -561,6 +561,11 @@ func _retry_foundation_events() -> void:
 				if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
 			var peer := int(_registry.call("peer_for_character", duty.character_id))
 			if peer < 1 or handled.has(duty.character_id) or admitted_character_state(peer).is_empty(): continue
+			if duty.action == "boss_relic" and admitted_character_state(peer).get("redesign_character", {}).get("transaction_receipts", []).has("defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]):
+				# Legacy portable receipts already settled this personal obligation.
+				# Do not retry a deliberate duplicate refusal every frame or block
+				# later owed duties for the same character behind it.
+				continue
 			if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 			var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 			var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)

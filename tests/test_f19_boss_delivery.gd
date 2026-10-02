@@ -17,6 +17,57 @@ const DELIVERY := preload("res://scripts/net/foundation_delivery.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 
+class PeerRegistry extends RefCounted:
+	func peer_for_character(character: String) -> int: return 1 if character == "character-a" else 0
+
+class RetrySession extends "res://scripts/net/session.gd":
+	var fixture: Node
+	func _game() -> Node: return fixture
+	func is_host() -> bool: return true
+	func _retry_combat_mastery_sources() -> void: pass
+	func admitted_character_state(_peer: int) -> Dictionary: return _character_authority.state("character-a")
+
+class AttemptWriter extends Node:
+	var attempted: Array = []
+	func journal_creature_training_prepared(_peer: int, _character: String, accepted: Dictionary) -> Dictionary:
+		attempted.append(accepted.source_key)
+		return {"ok": false, "durable": false, "code": "declared_test_writer_refusal"}
+
+func test_paid_legacy_boss_duty_never_starves_the_next_owed_duty_for_that_character() -> void:
+	var data := HANDOFFS.new()
+	var game := HARNESS.FixtureGame.new()
+	game.world = WORLD.new()
+	game.world.world_id = "world-a"
+	game.world.reward_delivery_namespace = "namespace-a"
+	game.local = PLAYER.new()
+	game.local.configure(ITEMS.new())
+	game.local.character_id = "character-a"
+	game.local.party.add(SPECIES.spawn("terrapup"))
+	game.local.redesign_character.transaction_receipts.append("defeat:boss_warden_aldis:character-a")
+	game.local.redesign_character.relics_held.append("meadows")
+	var session := RetrySession.new()
+	session.fixture = game
+	session._registry = PeerRegistry.new()
+	session._character_authority = AUTHORITY.new()
+	assert_true(session._character_authority.bind_world("namespace-a"))
+	assert_true(session._character_authority.seed_admitted_character(RECORD.portable_projection(game.local.save_data()), "character-a").ok)
+	for boss: String in ["warden_aldis", "captain_veyra_storm_anchor"]:
+		var context := data._context(boss)
+		context.erase("boss_settlement_world_flags")
+		context.erase("world_namespace")
+		var event := EVENT.make(game.world, "original-epoch", "boss:" + boss + ":earned-fight-1", [{
+			"character_id": "character-a", "action": "boss_relic", "intent": data._intent(boss), "context": context}])
+		assert_false(event.is_empty())
+		game.world.reward_deliveries[event.delivery_id] = event
+	var writer := AttemptWriter.new()
+	writer.name = "LedgerRpc"
+	session.add_child(writer)
+	session._retry_foundation_events()
+	assert_eq(writer.attempted, ["boss:captain_veyra_storm_anchor"], "owed second duty reaches the production stage/writer despite the earlier legacy receipt")
+	assert_eq(session._character_authority.revision("character-a"), 0, "declared writer failure rolls back that later attempt")
+	session.free()
+	game.free()
+
 func test_captured_boss_duty_keeps_original_epoch_through_real_prepared_and_owner_save_retry() -> void:
 	var data := HANDOFFS.new()
 	var directory := "user://test_f19_delivery_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
