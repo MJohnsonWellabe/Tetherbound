@@ -4,6 +4,7 @@ extends "res://tests/test_case.gd"
 ## enemy channel, transport, disk write, owner ACK or an earned Master victory.
 const SITE := preload("res://scripts/masters/master_site.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const SERVICE := preload("res://scripts/masters/breakthrough_service.gd")
 
 class OfferDirector extends "res://scripts/combat/encounter_director.gd":
 	var presented: Array[RefCounted] = []
@@ -96,6 +97,34 @@ func test_failed_guest_presentation_keeps_no_duel_or_party_lock() -> void:
 	assert_true(director.get("_master_duel").is_empty())
 	world.free()
 	session.free()
+
+func test_retained_master_site_is_unique_owned_and_survives_other_world_lookup() -> void:
+	var service: Node = SERVICE.new()
+	var world := Node3D.new()
+	var other_world := Node3D.new()
+	assert_eq(service.call("retained_site", world, "master_t1").status, "absent")
+	var site: Node3D = SITE.new()
+	site.set("master_id", "master_t1")
+	site.set("_mounted", true)
+	site.set_meta("breakthrough_service", service)
+	world.add_child(site)
+	assert_eq(service.call("retained_site", world, "master_t1").site, site)
+	assert_eq(service.call("retained_site", other_world, "master_t1").status, "absent")
+	assert_eq(service.call("retained_site", world, "master_t1").site, site, "revisiting a retained world finds the original actual site")
+	site.set_meta("breakthrough_service", null)
+	assert_eq(service.call("retained_site", world, "master_t1").status, "foreign_or_unready")
+	site.set_meta("breakthrough_service", service)
+	site.set("_mounted", false)
+	assert_eq(service.call("retained_site", world, "master_t1").status, "foreign_or_unready")
+	site.set("_mounted", true)
+	var duplicate: Node3D = SITE.new()
+	duplicate.set("master_id", "master_t1")
+	world.add_child(duplicate)
+	assert_eq(service.call("retained_site", world, "master_t1").status, "ambiguous", "no duplicate site can be hidden or adopted")
+	assert_eq(world.get_child_count(), 2, "the ownership lookup does not mutate either site")
+	world.free()
+	other_world.free()
+	service.free()
 
 func test_world_write_refusal_retains_original_guest_win_and_epoch_fences_retry() -> void:
 	var director: Node = OfferDirector.new()

@@ -6,7 +6,6 @@ var _interaction: Node
 var _board: WeakRef
 var _left := 0.0
 var _cached_view: Dictionary = {}
-var _master_world: WeakRef
 
 func _ready() -> void:
 	var breakthrough: Node = preload("res://scripts/masters/breakthrough_service.gd").new()
@@ -48,14 +47,7 @@ func _process(delta: float) -> void:
 	_left = 1.0
 	get_parent().call("_retry_foundation_camp")
 	get_parent().call("_retry_foundation_events")
-	var game: Node = get_parent().call("_game")
-	var world_node: Node3D = get_parent().call("_portal_world_node", str(game.get("current_realm")))
-	var player: Node3D = game.call("find_player")
-	if world_node != null and player != null and world_node.is_ancestor_of(player) \
-		and preload("res://scripts/build/station_rules.gd").config().get("runtime_enabled") == true \
-		and (_master_world == null or _master_world.get_ref() != world_node):
-		get_node(^"BreakthroughService").call("mount_biome", world_node, player, str(game.get("current_realm")))
-		_master_world = weakref(world_node)
+	_mount_occupied_master_sites()
 	if _board != null and _board.get_ref() != null: return
 	# Resolve Halda's actual grounded tournament board, never a packet name.
 	for node: Node in get_tree().root.find_children("*", "Node3D", true, false):
@@ -66,6 +58,37 @@ func _process(delta: float) -> void:
 		_board = weakref(board)
 		_interaction.call("mount", board, Vector3(-1.5, 0.9, 0.6))
 		break
+
+## Actual ready worlds and their current occupants, never a global realm or
+## a saved peer claim. Repeated calls retry late terrain readiness safely.
+func _mount_occupied_master_sites() -> void:
+	if preload("res://scripts/build/station_rules.gd").config().get("runtime_enabled") != true: return
+	var owner: Node = get_parent()
+	var game: Node = owner.call("_game")
+	if game == null: return
+	var service := get_node(^"BreakthroughService")
+	var local_realm: String = str(game.get("current_realm"))
+	var world_node: Node3D = owner.call("_portal_world_node", local_realm)
+	var player: Node3D = game.call("find_player")
+	var mounted := {}
+	if world_node != null and player != null and world_node.is_ancestor_of(player):
+		service.call("mount_biome", world_node, player, local_realm)
+		mounted[world_node.get_instance_id()] = true
+	if owner.call("is_host") != true: return
+	var lifecycle := get_node(^"TravelLifecycle")
+	var registry: RefCounted = owner.get("_registry")
+	for row: Dictionary in registry.call("rows"):
+		var peer: int = int(row.get("peer_id", 0))
+		if peer == owner.call("local_peer_id") or owner.call("_authority_character", peer) != row.get("character_id") \
+			or owner.call("admitted_character_state", peer).is_empty(): continue
+		var realm: String = str(row.get("realm", ""))
+		var shell: Node3D = owner.call("_portal_world_node", realm)
+		var occupant: Node3D = lifecycle.call("remote_body", peer)
+		if shell == null or occupant == null or not shell.is_inside_tree() or not occupant.is_inside_tree() \
+			or not shell.is_ancestor_of(occupant) or occupant.get("net_realm") != realm \
+			or mounted.has(shell.get_instance_id()): continue
+		service.call("mount_biome", shell, occupant, realm)
+		mounted[shell.get_instance_id()] = true
 
 func bounty_context(peer: int) -> Dictionary:
 	var session := get_parent()

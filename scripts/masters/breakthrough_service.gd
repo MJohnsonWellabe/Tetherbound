@@ -5,6 +5,7 @@ extends Node
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const BIOMES := preload("res://scripts/data/biome_order.gd")
 const PANEL := preload("res://scripts/masters/breakthrough_panel.gd")
+const SITE := preload("res://scripts/masters/master_site.gd")
 var _submit: Callable
 var _view: Callable
 var _panel: Control
@@ -33,8 +34,16 @@ func retained_transaction(actions: Array) -> Dictionary:
 		if producer != null and producer.has_method("retained_training_transaction") else {}
 
 func mount_biome(world: Node3D, player: Node3D, runtime_biome: String) -> void:
+	if not is_instance_valid(world) or not is_instance_valid(player) or not world.is_inside_tree() \
+		or not player.is_inside_tree() or not world.is_ancestor_of(player): return
 	for row: Dictionary in BREAKTHROUGH.masters().get("masters", []):
 		if BIOMES.runtime_id(str(row.biome)) != runtime_biome: continue
+		var retained := retained_site(world, str(row.id))
+		if retained.status != "absent":
+			if retained.status == "owned":
+				var npc: Node = retained.site.get_node_or_null(^"Master")
+				if npc != null and npc.has_method("set_player"): npc.call("set_player", player)
+			continue # Never duplicate or adopt a foreign/ambiguous authored site.
 		var scene: Variant = load(str(row.scene))
 		if not scene is PackedScene: continue
 		var site: Node3D = scene.instantiate()
@@ -45,6 +54,20 @@ func mount_biome(world: Node3D, player: Node3D, runtime_biome: String) -> void:
 			continue
 		site.connect("challenge_requested", _challenge)
 		site.connect("chest_requested", _chest)
+
+## Read-only ownership lookup. It is also usable by detached source controls;
+## mount_biome supplies the separate live world/occupant readiness fence.
+func retained_site(world: Node3D, master_id: String) -> Dictionary:
+	if not is_instance_valid(world): return {"status": "unavailable"}
+	var found: Node3D
+	for candidate: Node in world.find_children("*", "Node3D", true, false):
+		if candidate.get_script() != SITE or candidate.get("master_id") != master_id: continue
+		if found != null: return {"status": "ambiguous"}
+		found = candidate as Node3D
+	if found == null: return {"status": "absent"}
+	if found.get_meta("breakthrough_service", null) != self or found.get("_mounted") != true \
+		or found.is_queued_for_deletion(): return {"status": "foreign_or_unready"}
+	return {"status": "owned", "site": found}
 
 func _challenge(site: Node3D) -> void:
 	_open("duel", site, str(site.get("master_id")))
