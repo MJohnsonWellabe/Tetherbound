@@ -1,6 +1,6 @@
 {
   "feature": "F20",
-  "source_delta": "09df021bb9; later dock refresh/retry awaiting actual proof",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "F18 owns current lease and Hall obstruction fix. F20 dock current host admission refresh/retry staged separately after baseline conflict; next real replay required. Next Hall proof uses authored Approach through original navigator. Solo/net/reload/presentation remain OPEN.",
+    "reason": "Physical support/presentation dependency integrated; revised dock producer, authored Hall approach, transient source observation, unchanged main-quest oracle and actual completed Grandpa revisit ready. Awaiting serialized runtime slot after F18/F19/F17; no actual acceptance closed.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -138,6 +138,11 @@
       "feature": "coordinator lossless save codec",
       "original": "6405e9facacbeae7bed5f60118e1b7599ebfd8d5",
       "local": "0e2dba15eb"
+    },
+    {
+      "feature": "F18 physical floor and consumed-permit presentation",
+      "original": "cd272f5c5141e895c5b95b28941590054e497feb",
+      "local": "542d46d874"
     }
   ],
   "home_anchor_probe": {
@@ -191,5 +196,46 @@
       "tests/smoke_f20_arch_presentation.gd"
     ],
     "method": "Godot4.7 --headless --check-only; all exit0; no runtime acceptance"
+  },
+  "arrival_integrated_focused": {
+    "verdict": "PASS",
+    "log": "f20-arrival-integrated-focused.log.gz",
+    "tests": 33,
+    "assertions": 350,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": [
+      "ending_return_provenance",
+      "foundation_travel_protocol",
+      "regional_homecoming",
+      "test_f18_arrival_lifecycle"
+    ]
+  },
+  "criteria": {
+    "0": {
+      "verdict": "OPEN",
+      "required": "actual Tidewake dock conclusion saves world and personal receipt, no credits",
+      "latest_runtime": "f20-tidewake-r6.log.gz FAIL before scoped dock refresh/retry"
+    },
+    "1": {
+      "verdict": "OPEN",
+      "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
+      "latest_runtime": "f20-solo-r3.log.gz FAIL before F18 physical floor/presentation fix"
+    },
+    "2": {
+      "verdict": "OPEN",
+      "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
+      "latest_runtime": "f20-arch-render-r2.log.gz FAIL before authored room Approach route; no valid PNG/WAV"
+    },
+    "3": {
+      "verdict": "OPEN",
+      "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
+      "indirect_only": "synthetic62checks PASS; actual script not yet reached reload"
+    },
+    "4": {
+      "verdict": "OPEN",
+      "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
+      "latest_runtime": "not run; prerequisites now ready"
+    }
   }
 }

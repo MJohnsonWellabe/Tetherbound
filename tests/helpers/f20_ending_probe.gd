@@ -115,8 +115,12 @@ func diagnose_home_anchor(tree: SceneTree, game: Node) -> void:
 	var world := tree.current_scene as Node3D
 	if arrival == null or player == null or world == null or game.current_realm != "meadows": return
 	var target: Vector3 = arrival.call("_arrival_target", world, {"realm": "meadows", "entry_id": "hall_home"})
-	var height: float = arrival.call("_ground_height", world, target)
+	var terrain: float = arrival.call("_ground_height", world, target)
 	var collision := player.get_node("Collision") as CollisionShape3D
+	var height: float = arrival.call("_landing_height", world, player, target, (collision.shape as CapsuleShape3D).radius)
+	if not is_finite(height):
+		print("F20 HOME ANCHOR target=", target, " terrain_height=", terrain, " actual_floor=unsupported")
+		return
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
 	query.transform = collision.global_transform
@@ -127,7 +131,7 @@ func diagnose_home_anchor(tree: SceneTree, game: Node) -> void:
 	for hit: Dictionary in player.get_world_3d().direct_space_state.intersect_shape(query, 8):
 		var body: Node = hit.collider
 		paths.append(str(body.get_path()) + " class=" + body.get_class())
-	print("F20 HOME ANCHOR target=", target, " sampled_height=", height, " capsule_transform=", query.transform,
+	print("F20 HOME ANCHOR target=", target, " terrain_height=", terrain, " actual_floor=", height, " capsule_transform=", query.transform,
 		" capsule_shape=", query.shape, " safe_margin=", player.safe_margin, " collision_mask=", query.collision_mask,
 		" actual_blockers=", paths)
 	var ray := PhysicsRayQueryParameters3D.create(target + Vector3.UP * 2, target - Vector3.UP * 2,
