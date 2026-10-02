@@ -103,6 +103,36 @@ static func _watch_owner_saves(tree: SceneTree) -> bool:
 	tree.set_meta("f48_owner_save_watch", observer)
 	return true
 
+static func _saved_edge_errors(edge: Dictionary) -> Array[String]:
+	var errors: Array[String] = []
+	if not edge.get("row") is Dictionary or not edge.get("files") is Dictionary:
+		return ["Actual complete saved edge missing"]
+	var row: Dictionary = edge.row
+	var data: Dictionary = edge.files
+	for scope: String in ["memory", "disk"]:
+		if not data.get(scope) is Dictionary:
+			errors.append(scope + ": actual complete owner save carrier missing")
+			continue
+		var carrier: Dictionary = data[scope]
+		if row.get("kind") == "portal_unlock":
+			var settled: Dictionary = row.duplicate(true)
+			settled.status = "settled"
+			if not _json_equal(carrier.get("satchel_escrow", {}).get(row.receipt), settled) \
+				or carrier.get("redesign_character", {}).get("transaction_receipts", []).count(row.receipt) != 1 \
+				or not carrier.get("redesign_character", {}).get("portal_unlocks", []).has(row.biome) \
+				or _counts(carrier).get(row.item, 0) != 0:
+				errors.append(scope + ": exact portal owner codec/key debit/unlock/receipt not persisted")
+		else:
+			var full: Dictionary = RECORD_RULES.portable_projection(carrier) if RECORD_RULES.training_version(row) in [2, 3] \
+				else {"inventory": carrier.get("inventory"), "party": carrier.get("party"), "redesign_character": carrier.get("redesign_character")}
+			if not _json_equal(full, row.get("after")):
+				errors.append(scope + ": complete canonical carrier differs from actual immutable row.after at owner BOOL-save edge")
+	if row.get("kind") == "portal_unlock":
+		for field: String in ["inventory", "party", "redesign_character", "satchel_escrow", "equipment", "realm_hearts"]:
+			if not _json_equal(data.get("memory", {}).get(field), data.get("disk", {}).get(field)):
+				errors.append("Portal actual owner memory/disk complete carrier mismatch: " + field)
+	return errors
+
 static func _snapshot_errors(tree: SceneTree, now: Dictionary) -> Array[String]:
 	var errors: Array[String] = []
 	var edge: Dictionary = tree.get_meta("f48_latest_owner_save", {})
@@ -125,6 +155,7 @@ static func _snapshot_errors(tree: SceneTree, now: Dictionary) -> Array[String]:
 	if not PASSIVE.matches(tree, str(edge.anchor), now.memory.get("party")):
 		errors.append("Full owner party differs outside exact independently replayed passive clocks")
 	if not original_source:
+		errors.append_array(_saved_edge_errors(edge))
 		var current: Variant = now.world.get("reward_deliveries", {}).get(edge.identity)
 		if not current is Dictionary or current.get("status") != "accepted":
 			errors.append("Latest real owner transaction has not completed its accepted host ACK")
