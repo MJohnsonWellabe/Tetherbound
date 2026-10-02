@@ -1,0 +1,31 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only ledger_admission_guards: 1 of 738 test files
+  ok    test_ledger_admission_guards.gd :: test_actor_identity_does_not_outlive_its_commit
+  ok    test_ledger_admission_guards.gd :: test_arch_rules_are_judged_at_the_snapped_centre
+  ok    test_ledger_admission_guards.gd :: test_footing_request_near_a_free_standing_arch_is_judged_at_the_clear_centre
+  ok    test_ledger_admission_guards.gd :: test_host_overwrites_a_claimed_identity_with_the_registry_answer
+  ok    test_ledger_admission_guards.gd :: test_only_the_host_journals_the_guardian_participant_trainers
+  ok    test_ledger_admission_guards.gd :: test_other_intent_kinds_cannot_smuggle_a_forged_receipt
+  ok    test_ledger_admission_guards.gd :: test_other_intent_kinds_cannot_smuggle_a_guardian_fact
+  ok    test_ledger_admission_guards.gd :: test_prefix_list_covers_all_chapters_and_matches_generically
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_bypass_the_ceremony_with_its_own_receipt_and_host_stays_trusted
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_clear_another_characters_receipt
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_force_a_legacy_guardian_world
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_forge_a_legacy_receipt_that_blocks_the_journal
+  FAIL  test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_another_characters_legendary_receipt
+          expected host_boss_settlement_required, got not_your_character  (generic settlement requests are refused before the lower-level ownership check)
+          expected host_boss_settlement_required, got not_your_character  (generic settlement requests are refused before the lower-level ownership check)
+  FAIL  test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_or_clear_guardian_claim_facts
+          expected host_only, got host_boss_settlement_required  (the freed fact also settles the chapter; other claim facts use their host-only guard)
+          expected host_boss_settlement_required, got host_only  (the freed fact also settles the chapter; other claim facts use their host-only guard)
+  ok    test_ledger_admission_guards.gd :: test_second_arch_at_the_footing_edge_cannot_snap_onto_an_occupied_footing
+  ok    test_ledger_admission_guards.gd :: test_snapped_arch_takes_the_footing_facing
+  ok    test_ledger_admission_guards.gd :: test_stormglass_arch_commits_at_the_footing_centre
+
+17 tests, 113 assertions, 2 failed
+
+  test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_another_characters_legendary_receipt — expected host_boss_settlement_required, got not_your_character  (generic settlement requests are refused before the lower-level ownership check)
+  test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_another_characters_legendary_receipt — expected host_boss_settlement_required, got not_your_character  (generic settlement requests are refused before the lower-level ownership check)
+  test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_or_clear_guardian_claim_facts — expected host_only, got host_boss_settlement_required  (the freed fact also settles the chapter; other claim facts use their host-only guard)
+  test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_or_clear_guardian_claim_facts — expected host_boss_settlement_required, got host_only  (the freed fact also settles the chapter; other claim facts use their host-only guard)
