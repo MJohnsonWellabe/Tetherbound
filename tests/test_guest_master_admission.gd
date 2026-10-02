@@ -5,6 +5,8 @@ extends "res://tests/test_case.gd"
 const SITE := preload("res://scripts/masters/master_site.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SERVICE := preload("res://scripts/masters/breakthrough_service.gd")
+const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
+const REMOTE := preload("res://scripts/creatures/remote_creature.gd")
 
 class OfferDirector extends "res://scripts/combat/encounter_director.gd":
 	var presented: Array[RefCounted] = []
@@ -49,6 +51,27 @@ func _record() -> Dictionary:
 	return {"encounter_id": "1:original", "kind": "trainer", "phase": "active",
 		"opponent": {"owner_npc": "master_t1"},
 		"participants": {7: {"character_id": "guest_character", "creature_uid": "selected_uid"}}}
+
+func test_actual_remote_body_uses_admitted_deployment_identity_without_an_owned_instance() -> void:
+	# The real remote script intentionally has no CreatureInstance carrier.
+	var body: Node3D = REMOTE.new()
+	body.set_multiplayer_authority(7)
+	body.set("owner_peer_id", 7)
+	body.set("owner_character_id", "guest_character")
+	body.set("deploy_species", "terrapup")
+	body.set("species_id", "terrapup")
+	var owned := {"uid": "selected_uid", "species_id": "terrapup"}
+	var deployed := {"creature_uid": "selected_uid", "species_id": "terrapup"}
+	assert_true(DIRECTOR.guest_master_actor_matches(body, 7, "guest_character", "selected_uid", owned, deployed))
+	assert_false(DIRECTOR.guest_master_actor_matches(body, 8, "guest_character", "selected_uid", owned, deployed))
+	assert_false(DIRECTOR.guest_master_actor_matches(body, 7, "foreign_character", "selected_uid", owned, deployed))
+	assert_false(DIRECTOR.guest_master_actor_matches(body, 7, "guest_character", "replacement_uid", owned, deployed))
+	body.set("deploy_species", "ripplet")
+	assert_false(DIRECTOR.guest_master_actor_matches(body, 7, "guest_character", "selected_uid", owned, deployed))
+	body.set("deploy_species", "terrapup")
+	body.set_multiplayer_authority(8)
+	assert_false(DIRECTOR.guest_master_actor_matches(body, 7, "guest_character", "selected_uid", owned, deployed))
+	body.free()
 
 func test_guest_offer_refuses_foreign_character_uid_extra_participants_and_wrong_encounter() -> void:
 	var world := Node3D.new()

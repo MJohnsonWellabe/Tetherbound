@@ -552,9 +552,7 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 		owned = card
 	if owned.is_empty() or owned.get("fainted") != false or float(owned.get("hp", 0)) <= 0:
 		return {"ok": false, "code": "conscious_owned_creature_required"}
-	var actual: RefCounted = selected.get("instance")
-	if actual == null or actual.get("uid") != uid or actual.get("species_id") != owned.get("species_id") \
-		or deployed.get("species_id") != owned.get("species_id"):
+	if not selected.is_inside_tree() or not guest_master_actor_matches(selected, peer, character, uid, owned, deployed):
 		return {"ok": false, "code": "actual_owned_master_actor_required"}
 	var creature: RefCounted = TRAINERS.creature_for({"species": definition.species_id,
 		"level": definition.cap_level, "combat": definition.combat.duplicate(true)})
@@ -605,6 +603,19 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 	runtime.call("start_shared", body, selected, site.global_position, float(definition.arena_radius_m), self, id, 1, "trainer")
 	_refresh_shared_record_presentation(rec)
 	return {"ok": true, "resolved": false, "encounter_id": id, "record": rec.duplicate(true)}
+
+## RemoteCreature is a real replicated body, not a second owned instance.
+## Its UID comes from this host's admitted deployment; the frozen binding
+## below pairs that exact UID/deployment generation with this body lifetime.
+static func guest_master_actor_matches(body: Node3D, peer: int, character: String, uid: String,
+		owned: Dictionary, deployed: Dictionary) -> bool:
+	return is_instance_valid(body) and body.get_script() == REMOTE_CREATURE_SCRIPT \
+		and peer > 0 and not character.is_empty() and not uid.is_empty() \
+		and body.get_multiplayer_authority() == peer and body.get("owner_peer_id") == peer \
+		and body.get("owner_character_id") == character and owned.get("uid") == uid \
+		and deployed.get("creature_uid") == uid and not str(owned.get("species_id", "")).is_empty() \
+		and body.get("deploy_species") == owned.get("species_id") and body.get("species_id") == owned.get("species_id") \
+		and deployed.get("species_id") == owned.get("species_id")
 
 func _guest_master_identity_valid(id: String, peer: int) -> bool:
 	var duel: Dictionary = _guest_master_duels.get(id, {})
