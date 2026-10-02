@@ -22,6 +22,8 @@ class Saver extends RefCounted:
 	var writes := 0
 	var character_writes := 0
 	var store: RefCounted = SAVE.new("user://guardian_participants_%d/" % Time.get_ticks_usec())
+	func finish_fallback() -> bool: return true
+	func fallback_busy() -> bool: return false
 	func save_world(game: Object, id: String) -> bool:
 		writes += 1
 		var snapshot: Dictionary = game.world.save_data()
@@ -30,6 +32,8 @@ class Saver extends RefCounted:
 	func save_character(_game: Object, _id: String) -> bool:
 		character_writes += 1
 		return true
+	func save_character_prepared(game: Object, id: String) -> bool:
+		return save_character(game, id)
 
 class LocalFixture extends RefCounted:
 	var character_id := "host-char"

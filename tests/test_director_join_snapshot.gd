@@ -393,8 +393,8 @@ func _native_projectile_until(condition: Callable) -> bool:
 func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: bool = false) -> void:
 	_native_hp_fixture_completed = false
 	if not _native_build(): return
-	assert_true(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
-		"the returned regression now exercises active R1/F22 typed actor publication")
+	assert_true(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled") is bool,
+		"the native fixture uses the actual configured actor-publication contract")
 	var guest_id := _native_guest_api.get_unique_id()
 	var owners := {1: "native-hp-host", guest_id: "native-hp-guest"}
 	for director: NativeDirector in [_native_host, _native_guest]:
@@ -473,6 +473,7 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	assert_almost_eq(float(enemy.hp), hp_full)
 	assert_true(await _native_projectile_until(func() -> bool: return finished.size() == 1))
 	assert_true(bool(finished.back().get("verdict", {}).get("delta", {}).get("hit", false)))
+	_native_assert_actor_publication_contract(arbiter, encounter_id, 1, ally)
 	assert_true(float(enemy.hp) > 6.0 and float(enemy.hp) < hp_full)
 	assert_almost_eq(float(arbiter.call("opponent_hp", encounter_id)), float(enemy.hp))
 	assert_almost_eq(float(mirror.hp), float(enemy.hp))
@@ -535,6 +536,7 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	assert_eq(guest_manager.state, NATIVE_COMBAT.State.RESOLVING)
 	assert_true(exits.is_empty(), "the original faint pause still precedes round exit")
 	_native_hp_fixture_observation = {"kind": kind, "owner_npc": trainer_spec.get("id", ""),
+		"tracked_runtime": NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled"),
 		"record_created_by_production_opener": true, "full_hp": hp_full, "hp_after_control": hp_after_control,
 		"ceiling": 6.0, "max_hp": enemy.max_hp, "accepted_arrivals": finished.size(),
 		"killed_by_host_arrival": enemy.fainted, "record_phase": arbiter.call("phase", encounter_id)}
@@ -638,6 +640,17 @@ func _native_admit_owned_creatures(owners: Dictionary, creatures: Dictionary) ->
 			assert_eq(session.admitted_character_state(peer).party[0].uid, creatures[peer].uid)
 			player.party.remove_at(0)
 
+func _native_assert_actor_publication_contract(arbiter: RefCounted, encounter: String, peer: int, body: Node3D) -> void:
+	var participant: Dictionary = arbiter.call("record", encounter).get("participants", {}).get(peer, {})
+	var uid: String = str(body.get("instance").get("uid"))
+	if NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true:
+		var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+		assert_eq(participant.get("actor_bound_uid"), uid, "tracked arrival bound the actual owned attacker")
+		assert_eq(actor.get("body_instance_id"), body.get_instance_id(), "tracked arrival retained the exact host body")
+		assert_true(int(actor.get("body_generation", 0)) > 0, "tracked publication has a real actor lifetime")
+	else:
+		assert_eq(participant.get("actor_vitals", {}), {}, "ordinary configured mode creates no tracked actor-vitals carrier")
+
 func _native_trainer_body(parent: Node, creature: RefCounted, at: Vector3,
 		owner: int = 0) -> NativeTrainerBody:
 	var body := NativeTrainerBody.new()
@@ -660,8 +673,8 @@ func _native_trainer_request(intent: Dictionary, completed: Array[Dictionary]) -
 
 func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	if not _native_build(): return
-	assert_true(bool(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled", false)),
-		"ordinary trainer strikes use the active R1/F22 typed actor contract")
+	assert_true(NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled") is bool,
+		"ordinary trainer strikes use the actual configured actor-publication contract")
 	var guest_id := _native_guest_api.get_unique_id()
 	var owners := {1: "native-trainer-host", guest_id: "native-trainer-guest"}
 	for director: NativeDirector in [_native_host, _native_guest]:
@@ -753,6 +766,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	assert_eq(int(first.get("author", 0)), guest_id, "authorship is the real remote sender, not the listen host")
 	assert_true(bool(first_verdict.get("ok", false)))
 	assert_true(bool(first_verdict.get("delta", {}).get("hit", false)))
+	_native_assert_actor_publication_contract(arbiter, encounter_id, guest_id, guest_proxy)
 	assert_false(bool(first_verdict.get("delta", {}).get("killed", true)), "a non-killing hit cannot advance a round")
 	assert_true(float(enemy.hp) > 0.0 and float(enemy.hp) < float(enemy.max_hp))
 	assert_eq(host_manager.state, NATIVE_COMBAT.State.ACTIVE)
@@ -783,6 +797,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	assert_almost_eq(float(enemy.hp), 0.0)
 	assert_true(bool(enemy.fainted), "the host's actual take_damage caused the faint")
 	_native_trainer_observation = {"host_state": host_manager.state, "guest_state": guest_manager.state,
+		"tracked_runtime": NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled"),
 		"record_phase": str(arbiter.call("phase", encounter_id)), "enemy_hp": enemy.hp,
 		"enemy_fainted": enemy.fainted, "author": killing.get("author", 0), "guest_id": guest_id}
 	assert_eq(host_manager.state, NATIVE_COMBAT.State.RESOLVING, "a guest kill must start the host's ordinary faint pause")
