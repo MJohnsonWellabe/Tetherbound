@@ -1,0 +1,23 @@
+{
+  "owner_requested_stop": true,
+  "native_disposition": "INTERRUPTED_BY_OWNER; no completed diagnostic or native acceptance verdict",
+  "elapsed_seconds": 113.60999999998603,
+  "source_unchanged": true,
+  "engine_handles_after": 0,
+  "production_config_restored": true,
+  "acceptance_credit": false,
+  "files": [
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\physics-hash-boot-d74d88fef5f3-sample\\receipt.json",
+      "retained": "000-receipt.json.gz",
+      "bytes": 756352,
+      "sha256": "57b86ca61a1ef43cf48fd97e90f67b0df6d5923ad95e961afa9e3a32c1b78a77"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\physics-hash-boot-d74d88fef5f3-sample\\native.log",
+      "retained": "001-native.log.gz",
+      "bytes": 11205,
+      "sha256": "d09b4a8c0e96d34805409684d46114f39f104385ef8fdbc47a4f02c4f9089e9d"
+    }
+  ]
+}

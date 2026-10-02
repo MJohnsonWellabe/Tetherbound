@@ -53,5 +53,74 @@
     "producerOutput": ".tmp/closeout/f48-complete-input-producer-owner-fix-v9",
     "durableTrackingAction": "Recorded here after native V9 terminal source-exact return; prior archival history preserved.",
     "acceptance": "main and new criteria remain OPEN until actual required proof; no newMET from plan/session creation."
+  },
+  "owner_stop_and_astra_takeover": {
+    "instruction": "Wrap up and archive ROOT and all started lanes without losing work; owner will start an Astra lane to activate features, code missing behavior and produce actual criterion evidence while continually validating main.",
+    "goal_status": "paused",
+    "automation_status": "PAUSED",
+    "automation_id": "tetherbound-astra-delivery-and-criterion-closeouts",
+    "preserved": {
+      "integration": {
+        "directory": "D:\\tetherbound\\foundations-batch-check",
+        "branch": "tb/integration",
+        "head": "d74d88fef5f3955d2d4d6ee9f3e6cb1059723ab5",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "foundation": {
+        "directory": "D:\\tetherbound\\r3-foundation-wiring",
+        "branch": "tb/r3-foundation-wiring",
+        "head": "93afca390aa4e0430de84c35e34857bf2dfb9550",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "proof": {
+        "directory": "D:\\tetherbound\\r3-f48",
+        "branch": "tb/r3-f48",
+        "head": "1e696c7db194637e1a78c642e7b74cd8233354b3",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "ci": {
+        "directory": "D:\\tetherbound\\r3-f45",
+        "branch": "tb/astra-ci-closeout",
+        "head": "420eabf9e0254db0dcde7cab97d7fabdde609938",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "inputs": {
+        "directory": "D:\\tetherbound\\r3-f46",
+        "branch": "tb/astra-input-closeout",
+        "head": "bed1b235fc0452cef12ba9b19c4abf9b6e461608",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "player": {
+        "directory": "D:\\tetherbound\\r3-f47",
+        "branch": "tb/astra-player-closeout",
+        "head": "33fedcee4d40162fda7275326b7fcdf7915a93b2",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "evidence": {
+        "directory": "D:\\tetherbound\\criterion-evidence-closeout",
+        "branch": "tb/criterion-evidence-closeout",
+        "head": "5a83a6b8aea31b4d60d5d30bbe7375c6c1689c8c",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      }
+    },
+    "archived_app_threads": [
+      "01a0fb3e-a520-7bc3-92d0-e7c7ee2c3c5c",
+      "01a0fb3e-ab34-76a0-b051-0cdf8be09aeb",
+      "01a0fb3e-b50a-7de2-a4e5-ed2f4a77dd1b",
+      "01a0fa54-ebb4-71d0-bb05-7be8fb895c6d"
+    ],
+    "root_archive_after_preservation": "01a0f573-f081-7673-8b74-fd466ebdff9e",
+    "collaboration_agents": "foundation_completion/proof_completion/source_review interrupted; no new work assigned",
+    "new_MET": 0,
+    "worktrees_deleted": false,
+    "remote_pushes_during_stop": false,
+    "native_interruption": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\owner-stop-native-interruption"
   }
 }
