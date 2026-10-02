@@ -43,7 +43,7 @@ def produce(source: Path, output: Path):
         routes[f"relic_{peer}"]=contact("meadows_pedestal")+[wait(120)]
         profile["outcomes"][f"feast_{peer}"]={"creature":{"uid":uid,"level":10,"breakthroughs":[1]},
             "item_delta":{"feast_t1_ground":-1},"equals":{f"redesign_character/creatures/{uid}/cap_level":20}}
-    routes["boss_start"]=[press("interact"),wait(),press("ui_accept",times=8,gap_frames=30),wait(90)]
+    routes["boss_start"]=[press("interact"),wait(),step("f48_dialogue",conversation="stronghold_warden_challenge"),wait(90)]
     routes["boss_join_1"]=[step("f48_fixture_join_boss",fixture_disclosure="named_mechanics_actual_announced_boss_join_no_earned_credit")]
     routes["boss_fight"]=[fight("warden_aldis")]
     routes["feast_prepare"]=copy.deepcopy(feed)

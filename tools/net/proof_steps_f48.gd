@@ -26,6 +26,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
 		"f48_fixture_approach": return await _fixture_approach(tree, args)
 		"f48_deploy_owned": return await _deploy_owned(tree)
+		"f48_dialogue": return await _dialogue(tree, args)
 		"f48_fixture_join_boss": return await _fixture_join_boss(tree, args)
 		"f48_fixture_capture": return await tree.call("_step_f48_fixture_capture", args)
 		"f48_button": return await _button(tree, args)
@@ -358,6 +359,38 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 		return _result(false, "Could not retain exact fixture fight actions", data)
 	result["data"] = data
 	return result
+
+static func _dialogue(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var panel := tree.get_first_node_in_group(&"dialogue_panel")
+	var expected := str(args.get("conversation", ""))
+	if panel == null or expected.is_empty() or not panel.call("is_open"):
+		return _result(false, "Expected actual open conversation before ordinary dialogue input")
+	var runner: RefCounted = panel.get("_runner")
+	if runner.call("conversation_id") != expected:
+		return _result(false, "Wrong actual conversation", {"expected": expected, "actual": runner.call("conversation_id")})
+	var completed := {"value": false}
+	var observer := func(id: String) -> void:
+		if id == expected: completed.value = true
+	panel.connect("completed", observer)
+	var presses := 0
+	var error := ""
+	# The shipping dialogue panel reads interact, not ui_accept. Stop when
+	# that exact conversation completes so no extra input reaches combat.
+	for _attempt: int in 12:
+		if completed.value or not panel.call("is_open"): break
+		if runner.call("conversation_id") != expected:
+			error = "Conversation changed before completing expected challenge"
+			break
+		var result: Dictionary = await tree.call("_step_press", {"action": "interact"})
+		if result.get("verdict") != "PASS":
+			error = str(result.get("detail", "Dialogue input failed"))
+			break
+		presses += 1
+		for _frame: int in 30: await tree.physics_frame
+	panel.disconnect("completed", observer)
+	return _result(completed.value and error.is_empty(), "Actual named conversation completion by ordinary interact input. " + error,
+		{"conversation": expected, "presses": presses, "completed": completed.value})
+
 
 static func _deploy_owned(tree: SceneTree) -> Dictionary:
 	var director := tree.current_scene.get_node_or_null(^"EncounterDirector") if tree.current_scene != null else null

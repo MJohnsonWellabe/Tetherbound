@@ -34,7 +34,7 @@ def boss_profile(source: Path, output: Path) -> Path:
             routes[f"boss_join_{peer}"] = [prepare.step("f48_fixture_join_boss",
                 fixture_disclosure="named_mechanics_actual_announced_boss_join_no_earned_credit")]
     routes["boss_start"] = [prepare.press("interact"), prepare.wait(),
-                            prepare.press("ui_accept", times=8, gap_frames=30), prepare.wait(90)]
+                            prepare.step("f48_dialogue", conversation="stronghold_warden_challenge"), prepare.wait(90)]
     routes["boss_fight"] = [prepare.fight("warden_aldis")]
     profile["routes"] = routes
     profile["outcomes"] = {}
