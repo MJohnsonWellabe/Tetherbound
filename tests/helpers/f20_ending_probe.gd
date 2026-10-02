@@ -153,10 +153,17 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		if not check(expected.get("chapter_choices") == _expected_choices \
 			and expected.get("starter_uid") == game.party.call("at", 0).uid,
 			"reader retains the fixture's own four decisions and actual first companion"): return false
-		if not check(str(prose.get("starter_status", "")).contains(HOME.party_names(game.party)[0]) \
+		var first_companion: RefCounted = game.party.call("at", 0)
+		# Ordinary travel may discover a landmark after the disclosed setup.
+		# Check its actual retained count rather than requiring the old fixture
+		# memory to override a newly earned one. No counter is set here.
+		var landmarks := int(first_companion.get("landmarks_visited_together"))
+		var battles := int(first_companion.get("battles_fought"))
+		var memory_fact := "%d landmarks" % landmarks if landmarks > 0 else "%d battles" % battles
+		if not check(battles >= 4 and str(prose.get("starter_status", "")).contains(HOME.party_names(game.party)[0]) \
 			and str(prose.get("bond_memory", "")).contains(HOME.party_names(game.party)[0]) \
-			and str(prose.get("bond_memory", "")).contains("4 battles"),
-			"retained starter and known four-battle memory produce truthful prose"): return false
+			and str(prose.get("bond_memory", "")).contains(memory_fact),
+			"retained starter and actual landmark or battle count produce truthful prose"): return false
 	_heard = ""
 	var opened := false
 	var deadline := Time.get_ticks_msec() + 30000
@@ -198,6 +205,29 @@ func finish_credits(tree: SceneTree, game: Node) -> bool:
 		if not credits.call("is_open") and HOME.context(game).get("regional_credits_seen") == true: break
 	return check(not credits.call("is_open") and acknowledgements == [game.local.character_id] \
 		and HOME.context(game).get("regional_credits_seen") == true, "Skip emitted exactly one durable acknowledgement for this character")
+
+func revisit_completed(tree: SceneTree, game: Node) -> bool:
+	if not check(not HOME.credits_pending(game) and HOME.context(game).get("regional_credits_seen") == true,
+		"completed character starts its revisit with saved credits acknowledged"): return false
+	var receipts: Array = game.local.redesign_character.transaction_receipts.duplicate()
+	var prompt: Node3D
+	for node: Node in tree.current_scene.find_children("*", "", true, false):
+		if node.has_method("interaction_offer") and node.get_parent().name == "Grandpa": prompt = node as Node3D
+	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
+	if not check(prompt != null and panel != null, "completed revisit has the actual Grandpa prompt"): return false
+	var travel := TRAVEL.new(tree, game)
+	if not await travel.activate(prompt): failures.append_array(travel.failures); return false
+	if not check(panel.call("is_open") and panel.call("runner").call("conversation_id") == HOME.REPEAT_ID,
+		"ordinary Grandpa input selects the repeat conversation after credits"): return false
+	var deadline := Time.get_ticks_msec() + 30000
+	while panel.call("is_open") and Time.get_ticks_msec() < deadline: await travel.tap("interact")
+	for frame in 8: await tree.process_frame
+	var credits_open := false
+	for node: Node in tree.get_nodes_in_group("story_modal"):
+		if node.get_script() == load("res://scripts/ui/regional_credits.gd") and node.call("is_open"): credits_open = true
+	return check(not panel.call("is_open") and not credits_open and INPUT_OWNER.current(tree) == null \
+		and game.local.redesign_character.transaction_receipts == receipts,
+		"natural repeat returns world input without credits or another personal receipt")
 
 func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	if travel == null: travel = TRAVEL.new(tree, game)
@@ -267,6 +297,7 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
 		if not check(now.receipts.has(receipt), "disk retains " + receipt): return false
 	if not check(now.inventory == before.inventory, "disk reload preserves inventory without duplicate rewards"): return false
 	if not check(not HOME.credits_pending(game), "completed character cannot replay credits after reload"): return false
+	if not await revisit_completed(tree, game): return false
 	var travel := TRAVEL.new(tree, game)
 	var player := game.call("find_player") as CharacterBody3D
 	var position_before := player.global_position

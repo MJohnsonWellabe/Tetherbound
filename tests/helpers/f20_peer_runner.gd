@@ -28,6 +28,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"f20_return": passed = await f20.return_home(self, game)
 		"f20_talk": passed = await f20.open_credits(self, game)
 		"f20_skip": passed = await f20.finish_credits(self, game)
+		"f20_revisit": passed = await f20.revisit_completed(self, game)
 		"f20_fifth": passed = await f20.fifth(self, game)
 		"f20_inspect":
 			return {"verdict": "PASS", "data": {"retained": f20.retained(game),

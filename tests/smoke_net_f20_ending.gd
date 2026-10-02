@@ -20,6 +20,7 @@ func _run() -> void:
 		if not await _pass(peer, "f20_fifth"): return
 		if not await _pass(peer, "f20_talk"): return
 		if peer == 0 and not await _pass(peer, "f20_skip"): return
+		if peer == 0 and not await _pass(peer, "f20_revisit"): return
 	var host := await _inspect(0)
 	var guest := await _inspect(1)
 	check(host.context.regional_credits_seen and not guest.context.regional_credits_seen,
@@ -38,6 +39,7 @@ func _run() -> void:
 	if not await _pass(1, "f20_talk"): return
 	if not await _pass(1, "f20_skip"): return
 	if not await _pass(1, "save_reload_here", {}): return
+	if not await _pass(1, "f20_revisit"): return
 	var completed := await _inspect(1)
 	check(completed.context.regional_credits_seen and not completed.credits_open,
 		"guest credits acknowledged exactly once and remain closed after real disk reload")
