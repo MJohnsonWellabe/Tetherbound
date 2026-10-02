@@ -1,0 +1,40 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout; independent of implementation authors",
+  "scope": "Conservative first return; evidence only, no public board changes",
+  "supported_new_criterion_count": 2,
+  "supported_new_criteria": [
+    {
+      "id": "F25#1",
+      "verdict": "SUFFICIENT_STATIC_PASS_PENDING_GREEN_MAIN_LANDING",
+      "proof": "f25-mapping-recheck.json",
+      "finding": "All 94 moves map to the 24 declared archetypes with all eight parameters. Detached unknown-archetype negative case identifies pebble_toss exactly. Acceptance names this mapping test; activation, pixels and performance belong to other criteria."
+    },
+    {
+      "id": "F37#3",
+      "verdict": "SUFFICIENT_STATIC_PASS_PENDING_GREEN_MAIN_LANDING",
+      "proof": "f37-teleport-removal-recheck.json",
+      "finding": "Every authorized live document and 910 data/script/autoload files scanned; remaining same-line Ripplet/Teleport mentions retire the promise. No UI/dialogue promise or active Ripplet teleport field remains."
+    }
+  ],
+  "likely_after_named_rechecks_count": 4,
+  "likely_after_named_rechecks": [
+    {"id": "F23#1", "needed": "Exact all-species level/breakthrough learnset and primary-type TM re-check; any required native lookup dispatched by ROOT only."},
+    {"id": "F23#2", "needed": "Independent catalogue-to-actual equip-policy check: ten utilities; all four roles and at least two legal choices per species. No feature-activation credit from count alone."},
+    {"id": "F35#0", "needed": "Independent exact type/role and species signature-map check plus the explicitly named deterministic mapping test."},
+    {"id": "F29#4", "needed": "Exact active wild-provider census, including water aliases and Cloudreach chapter pools; preserve Cannonback/Stormcapra, exclude Tuskroot/Ashtusk/Stormursa."}
+  ],
+  "baseline_board": {"accepted": 110, "total": 280, "original_accepted": 95, "original_total": 101, "redesign_accepted": 15, "redesign_total": 179, "freshly_rechecked_baseline_count": 0},
+  "runtime_closeouts_from_existing_returns": 0,
+  "native_receipts_hash_checked": 95,
+  "native_receipt_hash_mismatches": 0,
+  "native_limits": [
+    "Combined 44 tests/317 assertions/0 failures has exact raw SHA256 1b9f0df6be102c929b4e300ab731fba8a73bb3d0a551df9e38775045a3a865b3; scoped regression pass only.",
+    "Mira focused23 PASS cannot close full Mira/opening; required full16 earlier failed during uphill return.",
+    "VFX identity r14 has retained RED termination; existing captured poses cannot prove real combat timing or whole visual bar.",
+    "F48 authentic paid producer inputs, owner ACK, real rejoin and complete loop remain open.",
+    "No source/class/config presence earns ordinary/runtime/visual/co-op credit."
+  ],
+  "acceptance_credit_added": 0,
+  "engine_runs_launched": 0
+}
