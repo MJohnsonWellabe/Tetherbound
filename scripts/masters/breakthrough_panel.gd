@@ -74,6 +74,7 @@ func _rebuild() -> void:
 			var row: Dictionary = BREAKTHROUGH.feasts().recipes[id]
 			if not state.redesign_character.feast_recipes.has(row.feast_id): continue
 			_button(str(row.name) + " · " + str(row.cost), func() -> void: _cook(id))
+		_button("Feed creatures", _open_feed_from_kitchen)
 	else:
 		for card: Dictionary in state.get("party", []):
 			var uid := str(card.uid)
@@ -114,6 +115,12 @@ func _cook(recipe: String) -> void:
 		_recipe = recipe
 		_craft_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	_send("feast_cook", {"recipe_id": recipe, "craft_id": _craft_id})
+
+func _open_feed_from_kitchen() -> void:
+	# Presentation transition only. The same bound service reads the owner's
+	# actual feast stacks and submits the existing typed personal feed action.
+	if _mode != "cook" or not is_instance_valid(_service) or not _service.has_method("open_feed"): return
+	_service.call("open_feed")
 
 func _retry_retained_feast(original: Dictionary) -> void:
 	if not original.get("recipe_id") is String or not original.get("craft_id") is String: return
