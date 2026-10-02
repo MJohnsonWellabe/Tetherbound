@@ -817,6 +817,7 @@ func creature_training_pending_matches(character: String, row: Dictionary) -> bo
 
 ## The same private stage/pending fence as Altar training. No separate
 ## inventory ledger; full admitted state remains the only mutable baseline.
+## Serves version-1 Altar and version-2 F31 Homestead records alike.
 func stage_altar_building(character: String, proposal: Dictionary) -> Dictionary:
 	if _portal_mutation_pending(character): return {"ok": false, "code": "portal_owner_save_pending"}
 	if not _records.has(character) or _training_locked(character) \
@@ -826,7 +827,7 @@ func stage_altar_building(character: String, proposal: Dictionary) -> Dictionary
 	if proposal.get("ok") != true or proposal.get("character_id") != character \
 		or proposal.get("character_revision") != revision(character) + 1 \
 		or not equivalent(proposal.get("before"), state(character)): return {"ok": false, "code": "stale_revision"}
-	var actual := preload("res://autoload/world_state.gd").altar_build_transition(state(character),
+	var actual := preload("res://autoload/world_state.gd").building_transition(state(character),
 		character, revision(character), proposal.action, proposal.action_id, proposal.record, _world_instance)
 	if actual.is_empty() or not equivalent(actual, proposal) or not errors(actual.state, character).is_empty():
 		return {"ok": false, "code": "invalid_building_candidate"}

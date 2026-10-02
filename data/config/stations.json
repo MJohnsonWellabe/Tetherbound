@@ -122,6 +122,9 @@
   "attachment_snap_tolerance_m": 0.1,
   "interaction_radius_m": 3.0,
   "interaction_height_m": 0.9,
+  "_comment_availability_poll": "F31 station prompt refresh: the producer availability read is a full admitted-character check, so a placed station polls it only while the local trainer is within availability_poll_radius_m and at most every availability_poll_seconds, never every frame.",
+  "availability_poll_seconds": 0.25,
+  "availability_poll_radius_m": 6.0,
   "den": {
     "runtime_enabled": true,
     "capacity": 5,

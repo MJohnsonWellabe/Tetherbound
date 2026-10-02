@@ -2,6 +2,7 @@ extends RefCounted
 const ACTOR_VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 
 const STORMWOOD_ARCH_BUILD := preload("res://scripts/world/stormwood_arch_build_rules.gd")
+const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 
 ## Stage B Wave 3 lane 3.A. THE WORLD LEDGER: one writer for shared world state.
 ##
@@ -575,6 +576,7 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 	var id := str(intent.get("id", ""))
 	if id == "forward_camp": return _refuse("place_building",peer_id,"camp_transaction_required","Forward camps need the host's paid kit transaction.")
 	if id == "altar": return _refuse("place_building", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
+	if HOMESTEAD_BUILDING.requires_journal(id): return _refuse("place_building", peer_id, "station_transaction_required", "Homestead stations need their paid transaction.")
 	if id.is_empty():
 		return _refuse("place_building", peer_id, "malformed", "That structure has no identity to record.")
 	var txn := str(intent.get("txn_id", ""))
@@ -671,6 +673,10 @@ func _dismantle(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var record: Dictionary = buildings[index] as Dictionary
 	if record.get("id") == "forward_camp": return _refuse("dismantle",peer_id,"camp_transaction_required","Pack up the camp through its host kit transaction.")
 	if record.get("id") == "altar": return _refuse("dismantle", peer_id, "altar_transaction_required", "The Altar needs its paid transaction.")
+	# F31: no legacy refund or free removal of a gated homestead record; a
+	# journaled one leaves only through its own paid-provenance refund row.
+	if HOMESTEAD_BUILDING.requires_journal(record.get("id")) or HOMESTEAD_BUILDING.record_valid(record):
+		return _refuse("dismantle", peer_id, "station_transaction_required", "Homestead stations need their paid transaction.")
 	if str(record.get("realm", "meadows")) != realm:
 		return _refuse("dismantle", peer_id, "gone", "That structure is already gone.")
 	var op := {"op": "building_remove", "scope": "world", "realm": realm,

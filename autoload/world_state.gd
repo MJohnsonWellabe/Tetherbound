@@ -26,6 +26,8 @@ extends RefCounted
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+## F31 version-2 Homestead records on the existing Altar building journal.
+const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 var redesign_world: Dictionary = REDESIGN_STATE.defaults("world")
 
 ## `game_state.gd::CLOCK_UNSET`, repeated here rather than imported: this file
@@ -590,6 +592,11 @@ func _apply_op(op: Dictionary) -> bool:
 			return true
 		"building_add":
 			if op.get("id") == "altar" and not _altar_building_op_bound(op, false): return false
+			# F31: every gated homestead id is planted only by its own pending
+			# version-2 journal row; the op never carries a free legacy record.
+			var homestead_record: bool = HOMESTEAD_BUILDING.requires_journal(op.get("id")) \
+				or (HOMESTEAD_BUILDING.journaled_id(op.get("id")) and op.has("parent_uid"))
+			if homestead_record and not _altar_building_op_bound(op, false): return false
 			if op.get("id") == "forward_camp" and not _foundation_camp_op_bound(op, false): return false
 			# Through `register_building()`, not a hand-built Dictionary: the
 			# shape of a placed-building record keeps exactly one construction
@@ -598,6 +605,9 @@ func _apply_op(op: Dictionary) -> bool:
 				float(op.get("yaw_deg", 0.0)), bool(op.get("paid", true)),
 				str(op.get("realm", "meadows")), str(op.get("uid", "")))
 			var placed_index := building_index_of(placed_uid)
+			if homestead_record and placed_index >= 0:
+				placed_buildings[placed_index]["parent_uid"] = str(op.get("parent_uid", ""))
+				placed_buildings[placed_index]["slot"] = int(op.get("slot", 0))
 			if op.get("id") == "forward_camp" and placed_index >= 0:
 				placed_buildings[placed_index].character_id = op.character_id
 				placed_buildings[placed_index].txn_id = op.txn_id
@@ -618,6 +628,9 @@ func _apply_op(op: Dictionary) -> bool:
 			var altar_index := building_index_of(str(op.get("uid", "")))
 			if altar_index < 0 and op.get("index") is int: altar_index = int(op.index)
 			if altar_index >= 0 and altar_index < placed_buildings.size() and placed_buildings[altar_index].get("id") == "altar" and not _altar_building_op_bound(op, true): return false
+			# A version-2 paid station/attachment leaves only through its own
+			# pending refund journal row, never a legacy or index-only removal.
+			if altar_index >= 0 and altar_index < placed_buildings.size() and HOMESTEAD_BUILDING.record_valid(placed_buildings[altar_index]) and not _altar_building_op_bound(op, true): return false
 			# By uid when the op carries one, which is every op the ledger mints
 			# now. The index fallback is only for a delta minted before uids
 			# existed; it is not a path any live code takes.
@@ -836,8 +849,21 @@ static func altar_build_transition(full: Dictionary, character: String, revision
 		"state": next, "record": record.duplicate(true), "cost": cost}
 
 
+## Character-authority stage dispatch: a version-2 Homestead record takes the
+## F31 codec; anything else is the unchanged version-1 Altar transition.
+static func building_transition(full: Dictionary, character: String, revision: int,
+		action: String, txn: String, record: Dictionary, world_namespace: String) -> Dictionary:
+	if HOMESTEAD_BUILDING.record_valid(record):
+		return HOMESTEAD_BUILDING.transition(full, character, revision, action, txn, record, world_namespace)
+	return altar_build_transition(full, character, revision, action, txn, record, world_namespace)
+
+
 static func altar_build_row_valid(raw: Variant, world_namespace: String, world_id: String = "") -> bool:
 	const E = preload("res://scripts/creatures/essence.gd")
+	# Version 2 is the F31 Homestead record on this same journal; version-1
+	# Altar rows below keep their exact original contract.
+	if raw is Dictionary and raw.get("kind") == "altar_building" and E._integer(raw.get("version"), 2, 2):
+		return HOMESTEAD_BUILDING.row_valid(raw, world_namespace, world_id)
 
 	if not raw is Dictionary or raw.size() != E.TRAINING_ROW_FIELDS.size(): return false
 	for field: String in E.TRAINING_ROW_FIELDS:
@@ -919,7 +945,11 @@ static func altar_buildings_bound(deliveries: Dictionary, buildings: Variant) ->
 		selected[uid] = row
 	var actual: Dictionary = {}
 	for record: Variant in buildings:
-		if not record is Dictionary or record.get("id") != "altar": continue
+		if not record is Dictionary: continue
+		# Altars and every version-2 Homestead record are journal-bound. An
+		# unjournaled legacy record (e.g. a pre-F31 Workbench) is not.
+		if record.get("id") != "altar" and not HOMESTEAD_BUILDING.record_valid(record) \
+			and not (record.get("uid") is String and (places.has(record.uid) or removals.has(record.uid))): continue
 		if not record.get("uid") is String or actual.has(record.uid): return false
 		actual[record.uid] = record
 	for uid: String in places:
@@ -952,7 +982,9 @@ func _altar_building_op_bound(op: Dictionary, removing: bool) -> bool:
 			if index < 0 or not preload("res://scripts/creatures/essence.gd")._equivalent(placed_buildings[index], row.intent.record): return false
 		else:
 			if row.action != "place_building" or building_index_of(row.intent.record.uid) >= 0: return false
-			for field: String in ["id", "realm", "uid", "position", "yaw_deg", "paid"]:
+			var fields: Array = ["id", "realm", "uid", "position", "yaw_deg", "paid"]
+			if HOMESTEAD_BUILDING.record_valid(row.intent.record): fields.append_array(["parent_uid", "slot"])
+			for field: String in fields:
 				if not preload("res://scripts/creatures/essence.gd")._equivalent(op.get(field), row.intent.record[field]): return false
 		found += 1
 	return found == 1

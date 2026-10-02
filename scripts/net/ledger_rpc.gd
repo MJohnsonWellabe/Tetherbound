@@ -19,6 +19,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
+const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 const ACTOR_VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 
 ## Stage B Wave 3 lane 3.A. THE LEDGER TRANSPORT: intents up, deltas down.
@@ -381,6 +382,10 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var altar: Dictionary = _altar_building_request(intent, peer_id)
 	if altar.get("intercept") == true:
 		var session: Node = _game().get("session")
+		if altar.get("homestead") == true:
+			if session == null or not session.has_method("host_homestead_building"):
+				return _pending(intent, false, "Homestead building is not ready yet.")
+			return session.call("host_homestead_building", peer_id, altar.request)
 		if session == null: return _pending(intent, false, "Altar building is not ready yet.")
 		return session.call("host_altar_building", peer_id, altar.request)
 	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
@@ -1299,6 +1304,17 @@ func _altar_building_request(intent: Dictionary, peer: int) -> Dictionary:
 		var request := intent.duplicate(true)
 		request.erase("available_materials")
 		return {"intercept": true, "request": request}
+	# F31: every gated homestead station/attachment uses the same paid journal
+	# with a version-2 record. A legacy free placement is never reachable.
+	if kind == "place_building" and HOMESTEAD_BUILDING.requires_journal(intent.get("id")):
+		for key: Variant in intent:
+			if not HOMESTEAD_BUILDING.PLACE_REQUEST_FIELDS.has(key) and key != "available_materials":
+				return {"intercept": true, "homestead": true, "request": {}}
+		if intent.has("available_materials") and (not intent.available_materials is Dictionary or not intent.available_materials.is_empty()):
+			return {"intercept": true, "homestead": true, "request": {}}
+		var homestead_request := intent.duplicate(true)
+		homestead_request.erase("available_materials")
+		return {"intercept": true, "homestead": true, "request": homestead_request}
 	if kind != "dismantle": return {}
 	var world: RefCounted = ledger.world
 	var uid := str(intent.get("uid", ""))
@@ -1306,14 +1322,22 @@ func _altar_building_request(intent: Dictionary, peer: int) -> Dictionary:
 	if index < 0 and intent.get("index") is int: index = int(intent.index)
 	var target_is_altar: bool = index >= 0 and index < world.placed_buildings.size() \
 		and world.placed_buildings[index].get("id") == "altar"
+	var target_is_homestead: bool = index >= 0 and index < world.placed_buildings.size() \
+		and world.placed_buildings[index] is Dictionary \
+		and (HOMESTEAD_BUILDING.requires_journal(world.placed_buildings[index].get("id")) \
+			or HOMESTEAD_BUILDING.record_valid(world.placed_buildings[index]))
 	var id := WORLD_STATE.altar_build_id(world.reward_delivery_namespace, character, str(intent.get("txn_id", "")))
 	var frozen: Variant = world.reward_deliveries.get(id)
-	if not target_is_altar and not (frozen is Dictionary and frozen.get("kind") == "altar_building"): return {}
+	var frozen_building: bool = frozen is Dictionary and frozen.get("kind") == "altar_building"
+	if not target_is_altar and not target_is_homestead and not frozen_building: return {}
+	# A retried txn follows its frozen row's own version; otherwise the target.
+	var homestead: bool = HOMESTEAD_BUILDING.row_valid(frozen, world.reward_delivery_namespace, world.world_id) \
+		if frozen_building else target_is_homestead
 	for key: Variant in intent:
-		if not ["kind", "realm", "uid", "index", "txn_id"].has(key): return {"intercept": true, "request": {}}
+		if not ["kind", "realm", "uid", "index", "txn_id"].has(key): return {"intercept": true, "homestead": homestead, "request": {}}
 	var request := intent.duplicate(true)
 	request.erase("index") # Never authoritative; UID is required by the typed door.
-	return {"intercept": true, "request": request}
+	return {"intercept": true, "homestead": homestead, "request": request}
 
 
 func journal_altar_building_prepared(peer: int, stage: Dictionary, request: Dictionary) -> Dictionary:
@@ -1338,7 +1362,9 @@ func journal_altar_building_prepared(peer: int, stage: Dictionary, request: Dict
 	for raw: Variant in world.reward_deliveries.values():
 		if raw is Dictionary and raw.get("kind") == "altar_building": building_rows += 1
 	if building_rows >= int(cfg.maximum_transaction_receipts): return {"ok": false, "durable": false, "code": "building_receipt_budget"}
-	var row := {"version": 1, "kind": "altar_building", "delivery_id": id,
+	# Version 2 only for a canonical F31 Homestead record; Altar rows stay v1.
+	var row := {"version": HOMESTEAD_BUILDING.VERSION if HOMESTEAD_BUILDING.record_valid(stage.record) else 1,
+		"kind": "altar_building", "delivery_id": id,
 		"world_id": world.world_id, "world_namespace": world.reward_delivery_namespace,
 		"session_id": _actor_vitals_session_id, "character_id": character,
 		"action": stage.action, "action_id": stage.action_id,
