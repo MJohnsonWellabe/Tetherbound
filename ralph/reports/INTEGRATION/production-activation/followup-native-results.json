@@ -1,5 +1,5 @@
 {
-  "recorded_utc": "2026-10-02T10:43:45.848759+00:00",
+  "recorded_utc": "2026-10-02T11:02:07.236076+00:00",
   "base_head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
   "scope": "Bounded native checks on a detached base plus exact working source hashes in each receipt. Only fixed-title ran on the unmodified base. Other checks use copied reviewed slices. Native loopback transport checks retain their disclosed physical/publication fixtures. No new acceptance closures, full campaign/co-op, visual or device proof is claimed.",
   "runs": [
@@ -285,6 +285,27 @@
         "ERROR: Failed to load script \"res://tests/smoke_f32_material_sites.gd\" with error \"Parse error\"."
       ],
       "log_sha256": "e220e015cc4cd02772a698c02e142964068f8f19d9e52bdec1cc83bc620c90c5"
+    },
+    {
+      "name": "f23-native-smoke",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "res://tests/smoke_f23_live_moves.gd",
+        "--",
+        "--enable-ultimate-visual"
+      ],
+      "exit": 1,
+      "elapsed_seconds": 11.062000000034459,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "e49292d2104b83978a1601ce21bd857dce046be1291233593b09cae20d7ac1ae"
     },
     {
       "name": "f23-smoke-parser",
@@ -1199,8 +1220,8 @@
   ],
   "archive": {
     "path": "ralph/reports/INTEGRATION/production-activation/followup-native-results.zip",
-    "bytes": 32871105,
-    "sha256": "cb9b473c13e03895f13338927bc6585e6fd19a5818b45939470a27078413922a"
+    "bytes": 34638917,
+    "sha256": "5c9b557656fa4e886c49adfb8c217e7cd81aeb7e9f3dbe67b8036d17b0c25ee5"
   },
   "reviews": [
     {
@@ -1268,5 +1289,14 @@
       "scope": "Combat start/arrival per-body binding and meter credits; F19 numeric fixture corrections; non-Water swim lifecycle",
       "verdict": "Bounded source review only. Live full fight, durable mastery and guest rematch proof remain separate."
     }
-  ]
+  ],
+  "handoff": {
+    "owner_requested_stop": true,
+    "gameplay_checkpoint": "bcff0fdc488da74f0b6e8195db48bbb60339d250",
+    "main": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+    "last_smoke": "f23-native-smoke: failed at prior-mastery fixture admission before combat; final schema-valid fixture successor is unrun",
+    "f31_and_prospective_guest_clock": "read-only architecture audit only; no implementation began",
+    "current_ci": "6180 on bcff0fd in progress at handoff; exact final head CI must be checked by the next worker",
+    "independent_review": "Root reviewed final objectives hint and mastery fixture successor; diff/JSON checks only, no new engine run or acceptance verdict."
+  }
 }

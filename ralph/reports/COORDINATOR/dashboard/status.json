@@ -1,11 +1,10 @@
 {
- "updated": "2026-10-02T10:43:46.036603+00:00",
+ "updated": "2026-10-02T11:02:07.429554+00:00",
  "headline": [
-  "Completion continues on tb/integration, draft PR519, successor to1cda44389e. Main and acceptance have not advanced.",
-  "Accepted110/280 (95/101 original;15/179 redesign). CI6179 is red; no merge, completed chapter or release claim.",
-  "F23 face controls and Snare are connected; ultimate remains gated pending rendering. Frozen checks repair authored-level, cue, director, Steam and Controls failures.",
-  "Guest preparation passes bounded owner-save and delayed-loopback checks, with physical movement/source and saved-row publication fixtures. General guest travel/feed/rest/roster synchronization remains unfinished.",
-  "Six material sites pass bounded actual approaches, stock, owner-save/ACK and reload (407.25s/259.297s;6m starts). Both release gates remain OFF pending earned routes and co-op contention."
+  "Stopped at the owner's request after preparing tb/integration and draft PR519 for Claude. Main is unchanged.",
+  "Acceptance110/280 unchanged; CI6179 red and CI6180 still running with failed steps. No merge or release claim.",
+  "Gameplay checkpoint bcff0fd includes F23 controls/Snare, durable resources/exits and bounded guest Groom. Final successor repairs the unrun combat fixture and first-catch hint.",
+  "Missing paid station producer, relic recipe grants, actual Cloudreach progression, general guest care and remaining combat/visual proofs are mapped in STATE and PR519."
  ],
  "batches": [
   {
@@ -491,30 +490,28 @@
  ],
  "four_chapter_run": null,
  "wip": [
-  "Root owns integration, exact staging, STATE, board and serialized engine use. Campaign/combat agents own bounded code; opening provides independent review. Earlier app tasks/heartbeat remain stopped.",
-  "Detached activation-proof-b152 freezes exact source before native runs. Receipts, child logs, source ZIPs and prior failures remain attached.",
-  "Clean bounded runs: active-catalog-and-owner-fixtures, authored-level-fixtures, combat-settlement-compile-sourcepath, combat-settlement-disk, den-groom-saved-transaction, destination-settlement-and-wind, f23-smoke-parser, f32-meadows-first-resource-fixed, f32-water-regional-manager-fixed, final-recovery-exit-policy, fixed-title, groom-helper-parser, groom-json-baseline-fixed, groom-session-parser, guarded-process-exit-and-mastery, guardian-native-contract-fixed, hosted-mastery-and-resource-baseline, move-den-rematch-harness, native-director-retained-mastery, native-name-grid-original, opening-with-live-combat, realm-adapter-shell-registry-preflight, regional-manager-and-mastery, shared-cue-required-children, steam-accepted-exit-focused, stormwood-level-telemetry-output.",
-  "Failed/interrupted runs retained: combat-settlement-compile, f23-and-groom-integration, f23-den-rematch-compile, f32-meadows-candidates, f32-meadows-lifecycle-fixed, f32-water-first-resource-fixed, groom-disk-fence-diagnostic, groom-native-and-controls-fixed, groom-passive-handshake, guarded-exit-and-groom-compile, initialized-cues-and-synchronous-accounting, lifecycle-ci-repairs, native-director-start-admission, opening-fixture-owned-scene, opening-teacher-approach, perimeter-case-diagnostic, perimeter-fixture-original, steam-accepted-exit-fixtures, stormwood-level-telemetry. The aborted --files invocation selected the whole suite by mistake; it is not a full-suite result.",
-  "F48 paid-Altar/catch/loop and all24 cuts remain open. Full campaign pacing, current Cloudreach economy, ordinary guest care, other utilities/Commands, actual rendered combat, visuals/audio/device and human play remain open.",
-  "Compatibility remains default. Source flags and fixture-only checks do not close acceptance."
+  "All agents frozen; no engine lease or new campaign/F31 implementation left in flight. Claude can continue from the pushed branch and existing live STATE.",
+  "46 frozen native receipts retained:26 clean,20 failed/interrupted. New F23 smoke failed at prior-mastery admission; corrected fixture has not been rerun.",
+  "Complete campaign/co-op, F48 all24 cuts, green required CI, visual/audio/device and human play remain open.",
+  "Compatibility, actor-vitals and presentation/release gates retain their recorded states; no acceptance closure."
  ],
- "last_lane_refresh": "2026-10-02T10:43:46.036603+00:00",
+ "last_lane_refresh": "2026-10-02T11:02:07.429554+00:00",
  "lane_activity": [
   {
    "lane": "root and opening_closeout in tb/integration",
-   "checkpoint": "F19 / current campaign progression: OPEN. Numeric fixtures85/2597 pass; full earned progression remains open."
+   "checkpoint": "F19 / current campaign progression: PAUSED at owner request; unfinished. See STATE and draft PR519."
   },
   {
    "lane": "build_closeout in tb/integration",
-   "checkpoint": "F22/F23/F35 / combat: OPEN. Source reviewed; other utilities, Commands, visual/controller/co-op proof required."
+   "checkpoint": "F22/F23/F35 / combat: PAUSED at owner request; unfinished. See STATE and draft PR519."
   },
   {
    "lane": "campaign_closeout in tb/integration",
-   "checkpoint": "F31/F32 / guest care and supplies: OPEN. Six material sites pass bounded actual approaches, stock, owner-save/ACK and reload (407.25s/259.297s;6m starts). Both release gates remain OFF pending earned routes and co-op contention."
+   "checkpoint": "F31/F32 / guest care and supplies: PAUSED at owner request; unfinished. See STATE and draft PR519."
   },
   {
    "lane": "root in tb/integration",
-   "checkpoint": "Integration / CI / release: Draft PR519; CI red. No acceptance closure or main merge."
+   "checkpoint": "Integration / CI / release: PAUSED at owner request; unfinished. See STATE and draft PR519."
   }
  ],
  "active_work": [
@@ -522,25 +519,25 @@
    "criterion": "F19 / current campaign progression",
    "lane": "root and opening_closeout in tb/integration",
    "source": "381 authored levels; old Cloudreach ledger needs actual Tidewake handoff and homestead training",
-   "state": "OPEN. Numeric fixtures85/2597 pass; full earned progression remains open."
+   "state": "PAUSED at owner request; unfinished. See STATE and draft PR519."
   },
   {
    "criterion": "F22/F23/F35 / combat",
    "lane": "build_closeout in tb/integration",
    "source": "Face controls, host-frozen moves, Snare and gated Ground Current; accepted-action capture in progress",
-   "state": "OPEN. Source reviewed; other utilities, Commands, visual/controller/co-op proof required."
+   "state": "PAUSED at owner request; unfinished. See STATE and draft PR519."
   },
   {
    "criterion": "F31/F32 / guest care and supplies",
    "lane": "campaign_closeout in tb/integration",
    "source": "Guest preparation passes bounded owner-save and delayed-loopback checks, with physical movement/source and saved-row publication fixtures. General guest travel/feed/rest/roster synchronization remains unfinished.",
-   "state": "OPEN. Six material sites pass bounded actual approaches, stock, owner-save/ACK and reload (407.25s/259.297s;6m starts). Both release gates remain OFF pending earned routes and co-op contention."
+   "state": "PAUSED at owner request; unfinished. See STATE and draft PR519."
   },
   {
    "criterion": "Integration / CI / release",
    "lane": "root in tb/integration",
    "source": "Exact CI6179 failures, focused repairs and independent reviews",
-   "state": "Draft PR519; CI red. No acceptance closure or main merge."
+   "state": "PAUSED at owner request; unfinished. See STATE and draft PR519."
   }
  ],
  "preserved_work": [

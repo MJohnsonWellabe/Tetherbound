@@ -14,6 +14,7 @@ const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const OWNER := preload("res://scripts/net/character_action_owner.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 const BODY := preload("res://scenes/creatures/creature.tscn")
 const FOLLOWER := preload("res://scripts/creatures/follower_creature.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
@@ -187,7 +188,8 @@ func _setup() -> void:
 	_game.local.party.clear()
 	_creature = SPECIES.spawn("bramblebun")
 	_creature.set_level(5, PROGRESSION.config())
-	_creature.move_mastery_uses = {"snare": 75, "ultimate_ground_current": 150}
+	_seed_prior_mastery("snare", 75)
+	_seed_prior_mastery("ultimate_ground_current", 150)
 	_game.local.party.add(_creature)
 	_game.world = fixture._world()
 	root.add_child(_game)
@@ -266,6 +268,23 @@ func _setup() -> void:
 	_manager.connect("impact_confirmed", func(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
 		if on_enemy: _impacts.append(receipt.duplicate(true)))
 	_capture_stage()
+
+func _seed_prior_mastery(move_id: String, count: int) -> void:
+	# Disclosed prior-history fixture: use the real staging helper to build a
+	# complete canonical document, rather than claiming uses without receipts.
+	for index: int in count:
+		var staged := MASTERY.stage_landed_use(_creature, {
+			"action_id": "fixture-prior:%s:%d" % [move_id, index],
+			"move_id": move_id, "attacker_uid": _creature.uid,
+			"target_uid": "fixture-prior-opponent", "target_hp_before": 1.0,
+			"applied_damage": 1.0})
+		if staged.get("ok") != true:
+			_check(false, "prior mastery fixture refused %s at %d: %s" % [move_id, index, staged])
+			return
+		_creature.move_mastery_uses = staged.uses
+		_creature.move_mastery_receipts = staged.receipts
+	_check(MASTERY.valid_document(_creature.known_moves, _creature.move_mastery_uses,
+		_creature.move_mastery_receipts, _creature.known_moves), "canonical prior mastery for " + move_id)
 
 func _tap_move(button: JoyButton, slot: String) -> Dictionary:
 	await _wait_ready()
@@ -356,6 +375,9 @@ func _capture_stage() -> void:
 func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> void:
 	if event.is_empty(): return
 	var duty: Dictionary = event.duties[0]
+	var expected_receipts: Array = _creature.move_mastery_receipts.get(move_id, []).duplicate()
+	_check(expected_receipts.size() == initial, "prior mastery history is complete for " + move_id)
+	expected_receipts.append(duty.intent.action_id)
 	var context: Dictionary = duty.context.duplicate(true)
 	var revision: int = _authority.revision(DATA.CHARACTER)
 	context.merge({"character_id": DATA.CHARACTER, "expected_revision": revision,
@@ -378,7 +400,8 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 	var saved := OWNER.apply_owner(_game, row)
 	_check(saved.get("saved") == true and saved.get("duplicate") == true, "owner retry saves without a second award")
 	_check(int(_creature.move_mastery_uses.get(move_id, 0)) == initial + 1, "one mastery use for " + move_id)
-	_check(_creature.move_mastery_receipts.get(move_id, []) == [duty.intent.action_id], "one exact accepted-action receipt for " + move_id)
+	_check(_creature.move_mastery_receipts.get(move_id, []) == expected_receipts,
+		"prior history plus one exact accepted-action receipt for " + move_id)
 	_check(_rpc._accept_creature_training(str(row.delivery_id), int(row.journal_revision), str(row.receipt), 1), "existing host ACK commits " + move_id)
 
 func _finish() -> void:
