@@ -579,7 +579,8 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		var counts := _counts(state)
 		for item: String in _unique(expected_counts.keys() + counts.keys()):
 			if int(counts.get(item, 0)) != int(expected_counts.get(item, 0)): errors.append(scope + ": wrong exact item debit " + item)
-		if not _json_equal(state.get("party"), prior.memory.get("party")) or not _json_equal(state.get("redesign_character"), personal):
+		if not _json_equal(state.get("party"), prior.memory.get("party")) or not _json_equal(state.get("redesign_character"), personal) \
+			or not _json_equal(state.get("satchel_escrow"), prior.memory.get("satchel_escrow")):
 			errors.append(scope + ": paid build changed an owned card/progression or did not persist exactly one receipt")
 		var projection := {"inventory": state.get("inventory"), "party": state.get("party"), "redesign_character": state.get("redesign_character")}
 		if not _json_equal(row.get("after"), projection): errors.append(scope + ": accepted full after carrier differs from real owner")

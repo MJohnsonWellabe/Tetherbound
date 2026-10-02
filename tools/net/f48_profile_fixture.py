@@ -269,13 +269,13 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
                 and mirror.get("cap_level") == 10 and mirror.get("breakthroughs") == [] and pinned_curve:
             available = sum(stack["n"] for stack in char["inventory"] if isinstance(stack, dict) and stack["id"] == "essence_ground")
             if index == 1:
-                routes["essence_spend_commit"] = [input_step("f48_button", text=f"Ground Essence Ãƒâ€šÃ‚Â· Cost 20 Ãƒâ€šÃ‚Â· Have {available}"),
+                routes["essence_spend_commit"] = [input_step("f48_button", text=f"Ground Essence · Cost 20 · Have {available}"),
                                                   input_step("wait", frames=120)]
             outcomes[f"essence_spend_{index}"] = {"item_delta": {"essence_ground": -20},
                 "creature": {"uid": card["uid"], "level": 10, "breakthroughs": []},
                 "equals": {f"redesign_character/creatures/{card['uid']}/cap_level": 10}}
         else:
-            manifest["gaps"].append(f"peer{index}: fixed Terrapup9ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢10/cap10/20essence oracle prerequisite unavailable; no repricing")
+            manifest["gaps"].append(f"peer{index}: fixed Terrapup9→10/cap10/20essence oracle prerequisite unavailable; no repricing")
         wild = [uid for uid, mirror in char["redesign_character"]["creatures"].items()
                 if mirror.get("captured_from", {}).get("kind") == "wild"]
         if not wild:
