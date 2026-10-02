@@ -127,6 +127,11 @@ func test_real_v2_and_v3_pending_journals_recover_the_exact_full_admitted_projec
 
 func test_projection_version_dispatch_preserves_integral_json_versions_without_coercing_invalid_versions() -> void:
 	var current := _before()
+	for version: Variant in [1, 1.0, 2, 2.0, 3, 3.0]:
+		assert_eq(RECORD.training_version({"kind": "creature_training", "version": version}), int(version), str(version))
+	for version: Variant in [0, 4, 2.5, 3.5, "2", "3", true, null, INF, NAN]:
+		assert_eq(RECORD.training_version({"kind": "creature_training", "version": version}), 0, str(version))
+	assert_eq(RECORD.training_version({"kind": "altar_building", "version": 3}), 0, "wrong journal kind")
 	for version: Variant in [2, 2.0, 3, 3.0]:
 		var row := {"kind": "creature_training", "version": version}
 		assert_eq(RECORD.training_projection(current, row, ESSENCE.training_projection), current, str(version))

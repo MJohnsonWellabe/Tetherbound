@@ -125,12 +125,18 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
 ## Preserve the original v1 projection by calling the caller's existing
 ## canonical function. V2 uses exactly the existing full admission fields.
 ## Injecting a pure callable here avoids an Essence/record-codec preload cycle.
-static func training_projection(raw: Dictionary, row: Dictionary, legacy: Callable) -> Dictionary:
+static func training_version(row: Variant) -> int:
+	if not row is Dictionary or row.get("kind") != "creature_training": return 0
 	var version: Variant = row.get("version")
 	# JSON retains valid integral versions as floats. Array membership is type
 	# sensitive, so dispatch by exact numeric value without coercing bad input.
-	if row.get("kind") == "creature_training" and (version is int or version is float) \
-			and is_finite(float(version)) and (float(version) == 2.0 or float(version) == 3.0):
+	if not (version is int or version is float) or not is_finite(float(version)) \
+			or float(version) != floor(float(version)) or float(version) < 1.0 or float(version) > 3.0: return 0
+	return int(version)
+
+
+static func training_projection(raw: Dictionary, row: Dictionary, legacy: Callable) -> Dictionary:
+	if training_version(row) in [2, 3]:
 		if raw.size() == FIELDS.size() and raw.has("portal_escrow") and raw.has("vitals_escrow"):
 			return raw.duplicate(true)
 		return portable_projection(raw)
