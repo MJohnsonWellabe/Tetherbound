@@ -42,7 +42,9 @@ static func level_cap(tiers: Array) -> int:
 				or float(value) != float(index + 1): return -1
 	var cap := int(cfg.get("initial_cap", 10))
 	for row: Dictionary in cfg.get("masters", []):
-		if not tiers.has(int(row.tier)): break
+		# The exact sequential prefix was validated above. JSON restores its
+		# integral numbers as floats; Array.has(int) would lose completed tiers.
+		if int(row.tier) > tiers.size(): break
 		cap = int(row.next_cap)
 	return mini(cap, int(cfg.get("ceiling", 60)))
 

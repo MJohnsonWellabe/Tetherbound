@@ -65,7 +65,7 @@ func retained_site(world: Node3D, master_id: String) -> Dictionary:
 		if found != null: return {"status": "ambiguous"}
 		found = candidate as Node3D
 	if found == null: return {"status": "absent"}
-	if found.get_meta("breakthrough_service", null) != self or found.get("_mounted") != true \
+	if not found.has_meta("breakthrough_service") or found.get_meta("breakthrough_service") != self or found.get("_mounted") != true \
 		or found.is_queued_for_deletion(): return {"status": "foreign_or_unready"}
 	return {"status": "owned", "site": found}
 

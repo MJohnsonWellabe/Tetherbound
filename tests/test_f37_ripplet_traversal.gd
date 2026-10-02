@@ -45,6 +45,17 @@ func test_level_thirty_is_not_the_breakthrough_and_other_creatures_never_dive() 
 func _species_types(id: String) -> Array:
 	return [SPECIES.definition(id).get("type", "")]
 
+func test_actual_f28_caps_survive_json_for_every_valid_completed_prefix() -> void:
+	var tiers: Array = []
+	assert_eq(BREAKTHROUGH.level_cap(tiers), 10)
+	for row: Dictionary in BREAKTHROUGH.masters().masters:
+		tiers.append(int(row.tier))
+		var restored: Array = JSON.parse_string(JSON.stringify(tiers))
+		assert_eq(BREAKTHROUGH.level_cap(restored), int(row.next_cap))
+		assert_eq(BREAKTHROUGH.level_cap(restored), BREAKTHROUGH.level_cap(tiers))
+	for malformed: Array in [[1.5], [1,3], [1,2,2], ["1"], [1,2,3,4,5,6]]:
+		assert_eq(BREAKTHROUGH.level_cap(JSON.parse_string(JSON.stringify(malformed))), -1)
+
 func test_actual_f28_water_feast_planner_produces_dive_history_without_a_level_bonus() -> void:
 	# This is the real detached planner, not an earned disk/UI/transport proof.
 	var current := admitted([1,2])
@@ -60,6 +71,8 @@ func test_actual_f28_water_feast_planner_produces_dive_history_without_a_level_b
 	assert_eq(result.state.party[0].level, 30, "a feast grants no automatic level")
 	assert_true(RULE.can_dive(result.state, UID))
 	var restored: Dictionary = JSON.parse_string(JSON.stringify(result.state))
+	assert_eq(BREAKTHROUGH.level_cap(restored.redesign_character.creatures[UID].breakthroughs), 40,
+		"canonical integral JSON tiers retain the actual F28 cap")
 	assert_true(RULE.can_dive(restored, UID), "the actual tier history survives its save representation")
 	assert_eq(current.redesign_character.creatures[UID].breakthroughs, [1,2], "detached planning does not mutate its input")
 	assert_false(RULE.can_dive(current, UID))
