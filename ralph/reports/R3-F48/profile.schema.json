@@ -10,6 +10,14 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "prepare_paid_altar": {
+      "type": "boolean",
+      "description": "Explicit input producer only; actual paid build before unique bootstrap and admitted witnesses. Does not replace default suites."
+    },
+    "prepare_alpha_capture": {
+      "type": "boolean",
+      "description": "Explicit input producer only; actual same-world authenticated guest capture and original source/durable write required. No fabricated UID or provenance."
+    },
     "provenance": {
       "type": "string",
       "minLength": 1
@@ -48,7 +56,8 @@
                 "f48_build_cell",
                 "f48_choice",
                 "f48_fixture_trainer_fight",
-                "f48_fixture_approach"
+                "f48_fixture_approach",
+                "f48_fixture_join_boss"
               ]
             },
             "args": {
