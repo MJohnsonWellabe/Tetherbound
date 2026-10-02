@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "status": "flag_off_whole_F31_source_candidate",
+  "status": "production_gameplay_enabled_validation_pending",
   "_comment": "F31 canonical F16 station/attachment identities. World buildings, personal blueprints; all production actions use Foundation durable transactions. No passive production, inventory registry or receipt journal here.",
   "forge": {
-    "runtime_enabled": false,
+    "runtime_enabled": true,
     "id": "forge",
     "realm": "meadows",
     "maximum_manual_units": 20,
@@ -110,10 +110,10 @@
     "maximum_place_distance_m": 8,
     "_comment": "Native-scale glTF POSITION bounds, identity mesh node, reused by build_piece collider; footprint plus tunable clearance. Capability supplied only by actual Foundation producer, never config runtime_enabled."
   },
-  "runtime_enabled": false,
-  "craft_runtime_enabled": false,
-  "farm_runtime_enabled": false,
-  "den_runtime_enabled": false,
+  "runtime_enabled": true,
+  "craft_runtime_enabled": true,
+  "farm_runtime_enabled": true,
+  "den_runtime_enabled": true,
   "maximum_place_distance_m": 8.0,
   "maximum_slope_rise_m": 0.15,
   "ground_tolerance_m": 0.1,
@@ -123,7 +123,7 @@
   "interaction_radius_m": 3.0,
   "interaction_height_m": 0.9,
   "den": {
-    "runtime_enabled": false,
+    "runtime_enabled": true,
     "capacity": 5,
     "comfort_bonus_per_tier": 0.25,
     "radius_m": 3.0,
@@ -1233,11 +1233,11 @@
   "greenhouse": {
     "id": "greenhouse",
     "station_id": "farm",
-    "runtime_enabled": false,
+    "runtime_enabled": true,
     "maximum_per_world": 1,
     "recipe_known_from_start": true,
     "unlocks": "Grow non-native type crops",
-    "_comment": "Single Farm building, no attachment track. Authored F32 costs; source candidate OFF."
+    "_comment": "Single Farm building, no attachment track. Canonical placement pays the authored F32 costs."
   },
   "forward_camp": {
     "maximum_per_character_per_biome": 1,

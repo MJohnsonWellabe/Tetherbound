@@ -1,7 +1,8 @@
 extends RefCounted
 
-## Detached RD-10 authoring overlay. No production provider mounts this policy.
-## Activation belongs to the proved new-order runtime boundary, not this file.
+## RD-10 authoring manifest. The levels are materialized in the live JSON so
+## every existing director reads the same values without a second loader.
+## Applying the manifest again accepts those exact values without scaling twice.
 const CONFIG_PATH := "res://data/config/redesign_level_curve.json"
 const CURVE_PATH := "res://data/config/chapter_curve.json"
 const PATHS := [
@@ -63,10 +64,12 @@ static func apply(path: String, base: Dictionary, activation: Variant = false,
 		if slot.is_empty():
 			return {}
 		if raw.legacy == null:
-			if slot.exists or not slot.container is Dictionary:
+			if not slot.container is Dictionary or (slot.exists \
+					and (not _level_number(slot.value) or float(slot.value) != float(raw.value))):
 				return {}
 		elif not _level_number(raw.legacy) or not slot.exists \
-				or not _level_number(slot.value) or float(slot.value) != float(raw.legacy):
+				or not _level_number(slot.value) or (float(slot.value) != float(raw.legacy) \
+					and float(slot.value) != float(raw.value)):
 			return {}
 	if path == CURVE_PATH and not cfg.get("biomes") is Dictionary:
 		return {}

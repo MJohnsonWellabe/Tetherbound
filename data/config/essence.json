@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "wild_victory_xp_mode": "ordinary",
-  "_scope": "F27 host-owned tunables; no new balance store. Initial authoritative earned-essence settlement preserves ordinary XP. Switch wild_victory_xp_mode to hybrid only after actual earned essence, mounted Altar spend and ordinary route gate. Mode is immutable in each host event/receipt so pending/replay is not repriced. Actual Altar registration and typed journal/owner-save ACK are required.",
+  "wild_victory_xp_mode": "hybrid",
+  "_scope": "F27 host-owned production progression: earned type essence, the automatic XP trickle and paid Altar spending. Mode is immutable in each host event/receipt so pending/replay is not repriced. Actual Altar registration and typed journal/owner-save ACK remain required.",
   "auto_xp_scale": 0.35,
   "essence_xp_value": 25,
   "level_cost_bands": [
@@ -64,8 +64,8 @@
   "maximum_release_receipts": 4096,
   "level_spend_xp_policy": "preserve_until_cap_then_discard",
   "legacy_above_cap_policy": "refuse_until_typed_cap_admitted",
-  "altar_runtime_enabled": false,
-  "altar_remote_spend_enabled": false,
-  "altar_building_runtime_enabled": false,
-  "wild_victory_runtime_enabled": false
+  "altar_runtime_enabled": true,
+  "altar_remote_spend_enabled": true,
+  "altar_building_runtime_enabled": true,
+  "wild_victory_runtime_enabled": true
 }

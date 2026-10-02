@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "runtime_enabled": false,
+  "runtime_enabled": true,
   "board_key": "halda_bounty_board",
   "board_count": 3,
   "speaker": "Halda",

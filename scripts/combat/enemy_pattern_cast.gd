@@ -23,12 +23,13 @@ static func begin(owner: Node, profile: Dictionary, geometry: Dictionary,
 		return null
 	var cast := new()
 	cast.name = "EnemyPatternCast"
+	cast.set_meta(&"enemy_pattern_cast", true)
 	cast._owner = owner
 	cast._profile = profile.duplicate(true)
 	cast._geometry = geometry.duplicate(true)
 	cast._resolve = resolve
 	cast._field = str(profile.get("telegraph_shape", "")) == "field"
-	cast._left = float(profile.get("field_duration_s", 0.0)) if cast._field else float(cfg.get("fan_travel_s", 0.3))
+	cast._left = float(profile.get("field_duration_s", 0.0)) if cast._field else float(cfg.get("casts", {}).get("fan_travel_s", 0.3))
 	cast._flight_left = 0.0 if cast._field else cast._left
 	owner.add_child(cast)
 	if cast._field:

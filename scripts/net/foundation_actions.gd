@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach"]
+const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -33,6 +33,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if context.get("foundation_runtime_authorized") != true: return deny("missing_frozen_authorization")
 	var proposal: Dictionary
 	match action:
+		"resource": proposal = resource_plan(current, revision, intent, context)
 		"tm_teach": proposal = _tm_teach(current, intent, context)
 		"wild_capture": proposal = preload("res://scripts/net/foundation_capture_rules.gd").stage(current, intent, context)
 		"station_craft":
@@ -55,6 +56,15 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"before": current.duplicate(true), "state": proposal.state.duplicate(true),
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
+
+static func resource_plan(current: Dictionary, revision: int, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if intent.size() != 2 or intent.get("operation") not in ["node", "farm"] \
+		or not intent.get("request") is Dictionary or context.get("resource_runtime_authorized") != true \
+		or not ESSENCE._opaque_id(context.get("world_namespace")) \
+		or context.get("source_key") != "resource:%s:%s" % [context.get("realm", ""), context.get("source_id", "")]:
+		return deny("invalid_resource_source")
+	return preload("res://scripts/world/f32_source_actions.gd").stage(current, revision,
+		intent.operation, intent.request, context)
 
 static func _tm_teach(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if intent.size() != 3 or not ESSENCE._component(intent.get("creature_uid")) \

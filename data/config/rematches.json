@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "runtime_enabled": false,
+  "runtime_enabled": true,
   "day_seconds": 600,
   "repeat_days": 2,
   "unique_candy": 1,

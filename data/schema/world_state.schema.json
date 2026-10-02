@@ -92,6 +92,19 @@
     "node_cycles": {
       "type": "object",
       "properties": {
+        "sites": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "revision": { "type": "integer", "minimum": 0 },
+              "next_ready_day": { "type": "integer", "minimum": 1 },
+              "generation": { "type": "integer", "minimum": 1 }
+            },
+            "required": ["revision", "next_ready_day", "generation"],
+            "additionalProperties": false
+          }
+        },
         "essence_ground": {
           "type": "integer",
           "minimum": 0

@@ -20,7 +20,12 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 	var realm := str(world.call("world_realm"))
 	var essence := _read("res://data/config/essence_nodes.json")
 	var tuning: Dictionary = essence.get("placement_validation", {})
+	var missing: Array[Dictionary] = []
 	for spec: Dictionary in SITES.sites_for(realm):
+		if node_for(str(spec.id)) == null: missing.append(spec)
+	if missing.is_empty(): return census()
+	var legacy_nodes: Array[Node] = world.find_children("*", "Node3D", true, false)
+	for spec: Dictionary in missing:
 		var id := str(spec.id)
 		if _mounted.has(id) and is_instance_valid(_mounted[id]): continue
 		var stock: Dictionary = service.call("stock", realm, id)
@@ -37,6 +42,22 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 		var model := str(spec.get("model", ""))
 		if model.is_empty() or not ResourceLoader.exists(model):
 			_refusals[id] = "Installed model unavailable."
+			continue
+		var adopted: Node3D
+		for existing: Node in legacy_nodes:
+			if not existing.has_method("adopt_renewable_source") or existing.is_queued_for_deletion() \
+				or not str(existing.get("_renewable_site_id")).is_empty(): continue
+			var flag := "harvest_node:" + str(existing.get("_node_id"))
+			var prefix := str(spec.get("legacy_flag_day_prefix", ""))
+			if flag != spec.get("legacy_flag", "") and flag != spec.get("legacy_flag_alias", "") \
+				and (prefix.is_empty() or not flag.begins_with(prefix)): continue
+			if (existing as Node3D).global_position.distance_to(verdict.position) > 1.0: continue
+			if existing.call("adopt_renewable_source", spec, service, stock) == true:
+				adopted = existing as Node3D
+				break
+		if adopted != null:
+			_mounted[id] = adopted
+			_refusals.erase(id)
 			continue
 		var node := HARVEST.new()
 		node.name = id.replace(":", "_")
@@ -74,9 +95,19 @@ func mount_authored_farm(world: Node3D, trainer: CharacterBody3D, service: Node)
 		add_child(node)
 		node.global_position = verdict.position
 		node.call("setup_source", id, config, service)
+		# Retire the matching legacy berry consumer only once its replacement
+		# has a real grounded placement and the same saved plot index.
+		var legacy := world.get_node_or_null("BerryFarm/Plot%d" % index)
+		if legacy != null and legacy.get_script() == preload("res://scripts/world/farm_plot.gd"):
+			legacy.get_parent().remove_child(legacy)
+			legacy.queue_free()
 		_mounted[id] = node
 		_refusals.erase(id)
 	return census()
+
+func node_for(id: String) -> Node3D:
+	var node: Node3D = _mounted.get(id)
+	return node if is_instance_valid(node) and node.is_inside_tree() and not node.is_queued_for_deletion() else null
 
 func census() -> Dictionary:
 	var ids: Array[String] = []

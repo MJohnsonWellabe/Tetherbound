@@ -1350,6 +1350,7 @@ func _refuse(kind: String, peer_id: int, code: String, reason: String) -> Dictio
 ## Internal host typed door; _commit_intent never accepts these op names.
 func commit_creature_training_delivery(row: Dictionary, peer_id: int) -> Dictionary:
 	if row.get("version") == 3 and row.get("action") == "camp_build": return _commit_foundation_camp(row, peer_id)
+	if row.get("version") == 3 and row.get("action") == "resource": return _commit_foundation_resource(row, peer_id)
 	var op := {"op": "creature_training_journal", "scope": "world", "delivery_id": row.get("delivery_id"), "delivery": row.duplicate(true)}
 	if world == null or not preload("res://autoload/world_state.gd").training_world_op_valid(op,
 		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
@@ -1359,6 +1360,17 @@ func commit_creature_training_delivery(row: Dictionary, peer_id: int) -> Diction
 	if row.get("action") == "dock_conclusion": ops.append({"op": "foundation_dock_departure", "scope": "world", "delivery_id": row.delivery_id, "receipt": row.receipt})
 	ops.append({"op": "creature_training_settle", "scope": "player", "peers": [peer_id], "delivery": row.duplicate(true)})
 	return _commit(ops, "creature_training", peer_id, "meadows")
+
+func _commit_foundation_resource(row: Dictionary, peer: int) -> Dictionary:
+	var journal := {"op": "creature_training_journal", "scope": "world", "delivery_id": row.get("delivery_id"), "delivery": row.duplicate(true)}
+	if world == null or not preload("res://autoload/world_state.gd").training_world_op_valid(journal,
+		world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+		return _refuse("resource", peer, "invalid_resource_journal", "That resource decision changed.")
+	var stock_op: Dictionary = world.call("resource_world_op", row)
+	if stock_op.is_empty(): return _refuse("resource", peer, "resource_stock_changed", "That resource has changed. Try again.")
+	return _commit([journal, stock_op,
+		{"op": "creature_training_settle", "scope": "player", "peers": [peer], "delivery": row.duplicate(true)}],
+		"resource", peer, stock_op.realm)
 
 func _commit_foundation_camp(row: Dictionary, peer: int) -> Dictionary:
 	if world == null or not preload("res://autoload/world_state.gd").training_row_valid(row, world.reward_delivery_namespace, world.world_id) \

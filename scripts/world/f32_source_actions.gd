@@ -20,7 +20,9 @@ const FIELDS := {
 
 static func stage(current: Dictionary, revision: int, op: String, intent: Dictionary,
 		context: Dictionary, care_stage: Callable = Callable()) -> Dictionary:
-	if _read("res://data/config/f32_runtime.json").get("runtime_enabled") != true:
+	# Runtime admission happens at the host adapter. A saved, frozen decision
+	# must still replay if the production gate is subsequently disabled.
+	if context.get("resource_runtime_authorized") != true and _read("res://data/config/f32_runtime.json").get("runtime_enabled") != true:
 		return _deny("disabled")
 	if not FIELDS.has(op) or intent.size() != FIELDS[op].size():
 		return _deny("invalid_intent")
@@ -91,11 +93,12 @@ static func stage(current: Dictionary, revision: int, op: String, intent: Dictio
 static func _node(intent: Dictionary, host: Dictionary) -> Dictionary:
 	if intent.site_id != host.get("source_id"): return _deny("wrong_source")
 	var site := SITES.by_id(str(host.realm), str(intent.site_id))
-	if site.is_empty() or host.get("source_definition") != site: return _deny("unregistered_placement")
+	if site.is_empty() or not preload("res://scripts/creatures/essence.gd")._equivalent(host.get("source_definition"), site):
+		return _deny("unregistered_placement")
 	var stock: Variant = host.get("stock")
 	if not stock is Dictionary or not _integer(stock.get("revision"), 0) \
 			or not _integer(stock.get("next_ready_day"), 1) \
-			or not _integer(stock.get("generation"), 1) or str(stock.generation) != host.source_generation \
+			or not _integer(stock.get("generation"), 1) or str(int(stock.generation)) != host.source_generation \
 			or int(stock.revision) != int(intent.expected_stock_revision): return _deny("stale_stock")
 	if int(host.host_day) < int(stock.next_ready_day): return _deny("regrowing")
 	if host.get("source_available") != true: return _deny("source_unavailable")

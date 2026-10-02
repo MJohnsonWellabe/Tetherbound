@@ -18,9 +18,9 @@
     "_comment_revive_stamina_fraction": "Same, for stamina: you get up able to move, not able to sprint away for free. Satiety is deliberately NOT touched -- a revive is not a meal, and CLAUDE.md's light-satiety rule means it was never a danger in the first place."
   },
   "session": {
-    "redesign_portal_runtime_enabled": false,
-    "redesign_boss_handoff_runtime_enabled": false,
-    "redesign_ending_runtime_enabled": false,
+    "redesign_portal_runtime_enabled": true,
+    "redesign_boss_handoff_runtime_enabled": true,
+    "redesign_ending_runtime_enabled": true,
     "port": 27015,
     "_comment_port": "Default UDP port Session.host() binds and Session.join() dials when a caller names none. D95: direct IP, no relay, no Steam.",
     "max_peers": 4,

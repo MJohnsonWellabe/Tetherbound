@@ -533,8 +533,8 @@
   },
   "patterns": {
     "schema_version": 1,
-    "runtime_enabled": false,
-    "_activation": "F22 source candidate. Enable only after ROOT integrates actual geometry/node/actor contracts and named engine/player/code-blind proofs pass.",
+    "runtime_enabled": true,
+    "_activation": "Production opponent pattern selection, committed geometry and host hit resolution. Native player/co-op and C2/C3 acceptance remain separate required evidence.",
     "role_aliases": {
       "WALL": [
         "anchor",

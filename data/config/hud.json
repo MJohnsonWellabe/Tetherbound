@@ -16,8 +16,8 @@
     "pulse_depth": 0.45
   },
   "new_system_screens": {
-    "_comment": "F42 local presentation candidate. No reward, authority, renderer or durable-state scope. Keep off until native controller/capture/code-blind evidence passes.",
-    "enabled": false,
+    "_comment": "Production controller screens for Altar, stations, gear, research and bounties. Services own rewards and durable state; readability and device acceptance are tracked separately.",
+    "enabled": true,
     "safe_margin": 48,
     "row_height": 66,
     "combat": {

@@ -2,10 +2,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
 
-// Inactive F19#1 candidate content proof; live providers keep legacy levels.
+// F19#1 shipped content proof; every production provider reads these live levels.
 const live = name => JSON.parse(fs.readFileSync(`data/config/${name}.json`, 'utf8'));
 const candidate = live('redesign_level_curve');
-assert.equal(candidate.runtime_enabled, false, 'candidate is never a live activation');
+assert.equal(candidate.runtime_enabled, true, 'RD-10 production activation');
 const read = name => {
   const data = live(name);
   const path = `data/config/${name}.json`;
@@ -14,10 +14,9 @@ const read = name => {
     for (const anchor of row.anchors) assert.equal(resolve(anchor.at), anchor.value, `${path} stable identity`);
     const parent = resolve(row.at.slice(0, -1));
     const key = row.at.at(-1);
-    assert.equal(parent[key] ?? null, row.legacy, `${path} legacy input`);
-    parent[key] = row.value;
+    assert.equal(parent[key], row.value, `${path} materialized live input`);
   }
-  if (name === 'chapter_curve') data.biomes = structuredClone(candidate.biomes);
+  if (name === 'chapter_curve') assert.deepEqual(data.biomes, candidate.biomes);
   return data;
 };
 const curve = read('chapter_curve');
@@ -160,8 +159,8 @@ for (const phase of ['calm', 'surge']) {
 assert.equal(read('stormwood_encounters').legendary_placeholder.placeholder_species, 'fulgocobra');
 assert.equal(read('stormwood_encounters').legendary_placeholder.catchable, false);
 
-// The live baseline mirrors the legacy table; the detached candidate is not
-// an earned fixture and must not rewrite that table to flatter its own proof.
+// Preserve the historical fixture as evidence. Only its level fields differ
+// from current production; encounter identity and every other field stay exact.
 const fixture = JSON.parse(fs.readFileSync('tests/fixtures/band_split_baseline/trainers.json')).trainers;
 const merged = curve.regions.flatMap(region => live(`bands/${region.id}/trainers`).trainers).toSorted((a, b) => a.order - b.order);
 const pinnedFixture = JSON.parse(execFileSync('git', ['show', '5c2c964ebaa8e25f933355324725be324218bc44:tests/fixtures/band_split_baseline/trainers.json'], {encoding: 'utf8'}));
@@ -169,7 +168,8 @@ assert.deepEqual(fixture.map(r => r.id), pinnedFixture.trainers.map(r => r.id), 
 for (let i = 0; i < fixture.length; i++) {
   const {order, ...entry} = merged[i];
   assert.equal(order, i, `baseline seeded trainer order ${i}`);
-  assert.deepEqual(entry, fixture[i], `baseline trainer ${i}`);
+  const withoutLevels = value => JSON.parse(JSON.stringify(value, (key, v) => key === 'level' ? undefined : v));
+  assert.deepEqual(withoutLevels(entry), withoutLevels(fixture[i]), `baseline trainer ${i} non-level behavior`);
 }
 for (const [name, sitesKey, tableRows, tableFields] of [
   ['cloudreach_encounters', 'wild_sites', cloud.encounter_tables, ['table_id']],
@@ -198,4 +198,4 @@ for (const [name, key] of [['cloudreach_encounters', 'wild_sites'], ['stormwood_
   const old = JSON.parse(execFileSync('git', ['show', `${baseline}:data/config/${name}.json`], {encoding: 'utf8', maxBuffer: 4 * 1024 * 1024}));
   assert.deepEqual(read(name)[key], old[key], `${name} seeded placement identity`);
 }
-console.log(JSON.stringify({proof: 'F19-inactive-candidate-curve', named_teams: namedTeamCount, regional_wild_tables: tableCount, biome_order: order.live, result: 'PASS', scope: 'detached content only; live legacy fixture retained; no engine, earning, transaction, activation or legendary-offer proof'}));
+console.log(JSON.stringify({proof: 'F19-live-curve', named_teams: namedTeamCount, regional_wild_tables: tableCount, biome_order: order.live, result: 'PASS', scope: 'enabled authored content only; historical fixture retained; no engine, earning, transaction or legendary-offer proof'}));

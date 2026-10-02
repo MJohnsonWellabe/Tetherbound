@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "runtime_enabled": false,
+  "runtime_enabled": true,
   "day_seconds": 600,
   "respawn_days": 3,
   "requires_all_region_departures": true,

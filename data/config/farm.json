@@ -1,6 +1,6 @@
 {
   "_comment": "R7.6. The berry farm beside Grandpa's house: where the beds are, and the three numbers that decide whether farming is worth walking back for. Placed by scripts/world/playground_world.gd, drawn by scripts/world/farm_plot.gd, ruled by scripts/world/farm_logic.gd. CLAUDE.md: data that will clearly vary lives here, never in gameplay code. ALL TUNABLE.",
-  "_comment_scope": "F32 manual crops. Existing berry farm remains reachable via its existing consumer while typed runtime is OFF; no offline growth or auto harvest. The typed consumer stages every verb through Foundation.",
+  "_comment_scope": "F32 manual berry and type crops. The typed consumer stages every verb through Foundation; no offline growth or auto harvest.",
   "_comment_placement": "F17: farmhouse [2,14], east door begins the village road. Existing six plots translate by [+24,+30] with the house; crop, yield, grow days and ownership remain unchanged.",
   "_comment_grid": "Two rows of three at 2.4m centres. Six beds because it is enough that a rest is worth taking and few enough that tilling the farm is one errand, not an afternoon. Spacing comfortably exceeds the prompt radius (farm_plot.gd's PROMPT_RADIUS, 2.0m), so standing at one bed the arbiter's nearest-wins rule (prompt_arbiter.gd::choose_index) picks the one you are actually on rather than the one behind it. Was 2.0m centres at z -10.6/-8.6 until the visual pass: at that pitch, and hard against the house's south wall, the six beds rendered as one continuous band of planting rather than as six plots, and the farmhouse ate the frame. Moved out to z -9.0/-6.6 (still ~4m clear of the wall line at z=-13, still 9.7m from the pad centre and well inside its 14m full-flatten radius) and opened up, so the rows read as rows from the door.",
   "_comment_grow_days": "Host in-game days only, never elapsed wall time. Existing berries grow in 1 day; type crops grow in 2 days. Readiness derives from planted_on_day and ripe_on_day in durable world plot state.",
@@ -60,8 +60,8 @@
     "allows_off_biome_types": true,
     "automatic_harvest": false,
     "buildable_candidate": {
-      "enabled": false,
-      "status": "authored_proposal_not_runtime_registered",
+      "enabled": true,
+      "status": "production_gameplay_enabled_validation_pending",
       "id": "greenhouse",
       "name": "Greenhouse",
       "building_scope": "world",
@@ -374,5 +374,5 @@
       }
     }
   },
-  "runtime_enabled": false
+  "runtime_enabled": true
 }

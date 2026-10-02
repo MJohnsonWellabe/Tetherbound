@@ -1,110 +1,123 @@
 {
   "schema_version": 1,
-  "runtime_enabled": false,
+  "runtime_enabled": true,
   "items": {
     "rootiron_ingot": {
       "name": "Rootiron Ingot",
-      "kind": "resource",
+      "kind": "material",
       "stack": 50,
-      "colour": "#ad9b70",
+      "colour": "#a6a076",
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Refined at the homestead Forge, one present channel per unit."
+      "blurb": "Meadows metal refined at the Forge for Rootiron gear.",
+      "description": "Refined from Rootstone and Ironwood. A Meadows tier material used to craft gear at the homestead."
     },
     "tidesteel_ingot": {
       "name": "Tidesteel Ingot",
-      "kind": "resource",
+      "kind": "material",
       "stack": 50,
-      "colour": "#75aaa7",
+      "colour": "#83b9ba",
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Refined at the homestead Forge, one present channel per unit."
+      "blurb": "Tidewake metal refined at the Forge for Tidesteel gear.",
+      "description": "Refined from Sluice Metal and Reef Stone. A Tidewake tier material used to craft gear at the homestead."
     },
     "skyglass_ingot": {
       "name": "Skyglass Ingot",
-      "kind": "resource",
+      "kind": "material",
       "stack": 50,
-      "colour": "#accbdb",
+      "colour": "#b4cadc",
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Refined at the homestead Forge, one present channel per unit."
+      "blurb": "Cloudreach glass refined at the Forge for Skyglass gear.",
+      "description": "Refined from Cliffglass Ore and Windworn Heartwood. A Cloudreach tier material used to craft gear at the homestead."
     },
     "stormglass_plate": {
       "name": "Stormglass Plate",
-      "kind": "resource",
+      "kind": "material",
       "stack": 50,
-      "colour": "#b2a1d8",
+      "colour": "#b6add2",
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Refined at the homestead Forge, one present channel per unit."
+      "blurb": "Stormwood glass refined at the Forge for Stormglass gear.",
+      "description": "Refined from Stormglass and Thunderwood. A Stormwood tier material used to craft gear at the homestead."
     },
     "tide_pearl": {
       "name": "Tide Pearl",
       "kind": "resource",
-      "stack": 50,
-      "colour": "#dadbc6",
+      "stack": 30,
+      "colour": "#b4d6dc",
       "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "A pearl exposed along dry island shores."
+      "blurb": "A smooth pearl gathered in Tidewake for homestead crafts.",
+      "description": "A pearl found in Tidewake's shallows. Used at the homestead to make Pearl charms. Gathered by hand."
     },
     "seed_ground": {
       "name": "Rootbud Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#b39b68",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for ground attuned ingredients and essence."
+      "blurb": "Sow Rootbud at the Farm for ground ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Rootbud grows as in-game days pass; pick it by hand when ripe."
     },
     "seed_water": {
       "name": "Tidebud Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#66b8d9",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for water attuned ingredients and essence."
+      "blurb": "Sow Tidebud at the Farm for water ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Tidebud grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
     },
     "seed_air": {
       "name": "Galebloom Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#b5d6b9",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for air attuned ingredients and essence."
+      "blurb": "Sow Galebloom at the Farm for air ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Galebloom grows as in-game days pass; pick it by hand when ripe."
     },
     "seed_electric": {
       "name": "Sparkstem Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#e5cb73",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for electric attuned ingredients and essence."
+      "blurb": "Sow Sparkstem at the Farm for electric ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Sparkstem grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
     },
     "seed_fire": {
       "name": "Emberbloom Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#e79b60",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for fire attuned ingredients and essence."
+      "blurb": "Sow Emberbloom at the Farm for fire ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Emberbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
     },
     "seed_dark": {
       "name": "Duskcap Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#9b88b8",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for dark attuned ingredients and essence."
+      "blurb": "Sow Duskcap at the Farm for dark ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Duskcap grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
     },
     "seed_ice": {
       "name": "Frostbloom Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#a6d9dd",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for ice attuned ingredients and essence."
+      "blurb": "Sow Frostbloom at the Farm for ice ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Frostbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
     },
     "seed_psychic": {
       "name": "Mindleaf Seeds",
-      "kind": "seed",
+      "kind": "resource",
       "stack": 50,
-      "colour": "#aeb477",
+      "colour": "#c6a2d6",
       "icon": "res://assets/ui/icons/items/berries.png",
-      "blurb": "Plant by hand for psychic attuned ingredients and essence."
+      "blurb": "Sow Mindleaf at the Farm for psychic ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Mindleaf grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
     }
   },
   "display_overrides": {

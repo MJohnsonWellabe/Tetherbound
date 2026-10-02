@@ -1,8 +1,8 @@
 {
   "version": 1,
   "feature_flags": {
-    "runtime_enabled": false,
-    "network_enabled": false,
+    "runtime_enabled": true,
+    "network_enabled": true,
     "visual_enabled": false
   },
   "scope": "character",

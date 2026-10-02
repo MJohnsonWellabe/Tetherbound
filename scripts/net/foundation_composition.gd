@@ -40,6 +40,9 @@ func _ready() -> void:
 	var captures: Node = preload("res://scripts/net/foundation_capture.gd").new()
 	captures.name = "Captures"
 	add_child(captures)
+	var resources: Node = preload("res://scripts/net/foundation_resources.gd").new()
+	resources.name = "Resources"
+	add_child(resources)
 
 func _process(delta: float) -> void:
 	_left -= delta

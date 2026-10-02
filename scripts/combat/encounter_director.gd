@@ -604,6 +604,7 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 	runtime.connect("telegraph", _on_shared_host_telegraph.bind(id))
 	runtime.connect("swung", _on_shared_host_strike.bind(id))
 	if body.has_signal("route_cue_started"): body.connect("route_cue_started", _on_shared_host_route.bind(id))
+	_configure_f22_patterns(body, true)
 	runtime.call("start_shared", body, selected, site.global_position, float(definition.arena_radius_m), self, id, 1, "trainer")
 	_refresh_shared_record_presentation(rec)
 	return {"ok": true, "resolved": false, "encounter_id": id, "record": rec.duplicate(true)}
@@ -2532,8 +2533,10 @@ func _rpc_shared_opponent_pose(payload: Dictionary) -> void:
 	var facing: Variant = _wire_vec3(payload.get("facing", []))
 	if feet == null or facing == null:
 		return
-	_shared_opponent_proxy.call("apply_pose", int(payload.get("body_generation", 0)),
-		int(payload.get("presentation_seq", 0)), feet as Vector3, facing as Vector3)
+	var applied := bool(_shared_opponent_proxy.call("apply_pose", int(payload.get("body_generation", 0)),
+		int(payload.get("presentation_seq", 0)), feet as Vector3, facing as Vector3))
+	if applied and payload.get("shape") is Dictionary:
+		_shared_opponent_proxy.call("apply_pattern_shape", int(payload.get("cue_serial", 0)), payload.shape)
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
@@ -3408,6 +3411,7 @@ func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vect
 	if not geometry.get("profile") is Dictionary \
 			or geometry.profile.get("pattern_attack_id") != profile.get("pattern_attack_id"):
 		return false
+	if geometry.get("blocked") == true: return false
 	return COMBAT_AI.pattern_contains(profile, geometry.origin, geometry.heading,
 		geometry.marker, target, radius)
 
@@ -3563,6 +3567,8 @@ func _shared_presentation_payload(encounter_id: String) -> Dictionary:
 		"realm": _encounter_realm(),
 		"body_generation": int(runtime.get("body_generation")) if runtime != null else 0,
 		"presentation_seq": int(runtime.get("presentation_seq")) if runtime != null else 0,
+		"cue_serial": int(runtime.get("cue_serial")) if runtime != null else 0,
+		"shape": wild.call("presentation_shape") if is_instance_valid(wild) else {},
 		"foot_position": [feet.x, feet.y, feet.z],
 		"facing": [facing.x, facing.y, facing.z],
 	}

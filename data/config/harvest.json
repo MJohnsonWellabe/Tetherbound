@@ -20,7 +20,7 @@
       "sunleaf"
     ],
     "essence_node_config": "res://data/config/essence_nodes.json",
-    "runtime_enabled": false
+    "runtime_enabled": true
   },
   "additional_material_node_candidates": {
     "status": "authored_candidates_not_runtime_mounted",

@@ -92,11 +92,13 @@ func local_sample() -> Dictionary:
 		"damage_revision": vitals.get("damage_revision"), "dialogue": dialogue, "cutscene": cutscene,
 		"swimming": bool(swim.call("is_swimming")), "flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
 		"station_ack_only": input_owner == owner and owner.call("owns_input") == true and not other_dialogue and not fading,
+		"equipped_tool": str(game.get("equipped_tool")),
 		"ending_owner": ending_owner, "party_revision": int(party.get("revision")),
 		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party)}
 
 static func valid_sample(sample: Dictionary) -> bool:
-	if sample.size() != 15: return false
+	if sample.size() not in [15, 16]: return false
+	if sample.size() == 16 and (not sample.get("equipped_tool") is String or sample.equipped_tool.length() > 96): return false
 	for field: String in ["character_id", "world_instance_id", "session_epoch", "realm"]:
 		if not sample.get(field) is String or sample[field].is_empty() or sample[field].length() > 192: return false
 	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed", "ending_owner", "station_ack_only"]:
@@ -172,6 +174,7 @@ func host_context(peer: int) -> Dictionary:
 		"realm": realm, "position": actor.global_position, "damage_revision": sample.damage_revision,
 		"combat": owner.call("_altar_peer_in_combat", peer), "dialogue": sample.dialogue, "cutscene": sample.cutscene,
 		"station_ack_only": sample.station_ack_only,
+		"equipped_tool": str(sample.get("equipped_tool", "")),
 		"swimming": sample.swimming or aquatic.get("mode") != preload("res://scripts/player/swim_state.gd").Mode.LAND,
 		"flying": sample.flying or actor.get("net_flying") == true or actor.get("net_carried") == true,
 		"downed": sample.downed or (downed.get("_downed_peers") as Dictionary).has(peer), "home_key_owned": key_count == 1,

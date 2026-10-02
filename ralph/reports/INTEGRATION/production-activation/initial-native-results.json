@@ -1,0 +1,311 @@
+{
+  "scope": "Bounded native diagnostics and regression evidence only. No criterion closure, full campaign, real ENet session, visual, device, or human-duration acceptance.",
+  "recorded_utc": "2026-10-02T07:38:29.489459+00:00",
+  "baseline": "043e02c3efbc2dd47fbf67beae6b6c9384f3c10a",
+  "archive": "initial-native-results.zip",
+  "archive_sha256": "a9c654b8ebc360ced284dcd8f382ed3426fd38dd7d291c826c1dc046970d4e1b",
+  "runs": [
+    {
+      "run": "activation-compile",
+      "exit": 0,
+      "elapsed_seconds": 12.516000000061467,
+      "source_unchanged": true,
+      "errors": [
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"saved\" variable because the value doesn't have a set type.",
+        "ERROR: Failed to load script \"res://tests/test_foundation_resources.gd\" with error \"Parse error\"."
+      ],
+      "log_sha256": "0b2d0ce720f831832342188eebd5dd177fa7659a85471e97702427a51ca6cb0e",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        ".tmp/closeout/compile_changed_batch.gd"
+      ]
+    },
+    {
+      "run": "curve-and-loop",
+      "exit": 0,
+      "elapsed_seconds": 14.233999999938533,
+      "source_unchanged": true,
+      "errors": [],
+      "log_sha256": "35da9ed9413e0b5dfebaadfdb8d085caee530a776465c04118bd824a96c5c526",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_level_curve_policy.gd,test_f19_curve.gd,test_redesign_chapter_curve.gd,test_bounty_board.gd,test_research_log.gd,test_f44_repeatables.gd"
+      ]
+    },
+    {
+      "run": "default-title",
+      "exit": 0,
+      "elapsed_seconds": 193.65700000000652,
+      "source_unchanged": false,
+      "errors": [],
+      "log_sha256": "42121a051e43619827870ae598109b413184b08d112a16f1df56928c8e7f920b",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_save_redesign_title.gd"
+      ]
+    },
+    {
+      "run": "f22-contract",
+      "exit": 0,
+      "elapsed_seconds": 8.219000000040978,
+      "source_unchanged": true,
+      "errors": [],
+      "log_sha256": "61af2b7d70a167bb35824ccbcfbbbd7030ae56a45258666790a4f7dcc9bf370e",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_f22_pattern_contract.gd"
+      ]
+    },
+    {
+      "run": "f22-live-mount",
+      "exit": 0,
+      "elapsed_seconds": 8.672000000020489,
+      "source_unchanged": true,
+      "errors": [],
+      "log_sha256": "0f7fa34cb537a767df2a8a3d8b20a18d2dbcf07e09606d624c707939f55bca44",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_f22_live_pattern_mount.gd"
+      ]
+    },
+    {
+      "run": "journal-catalogue-fixed",
+      "exit": 0,
+      "elapsed_seconds": 8.15700000000652,
+      "source_unchanged": true,
+      "errors": [],
+      "log_sha256": "31174760026afa49cd8d9b0dcfc567fc8beb3022990e9224b2cc7c1ab80de508",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_bounty_journal.gd"
+      ]
+    },
+    {
+      "run": "journal-initial",
+      "exit": 1,
+      "elapsed_seconds": 8.5,
+      "source_unchanged": true,
+      "errors": [
+        "ERROR: Conflicting canonical F32 item definition: rootiron_ingot",
+        "ERROR: initial personal bounty is shown",
+        "ERROR: completed bounty refreshes without story progress",
+        "ERROR: personal paid receipt refreshes journal",
+        "ERROR: new morning replaces yesterday's title",
+        "ERROR: Conflicting canonical F32 item definition: rootiron_ingot"
+      ],
+      "log_sha256": "4a557b053a34812b6551455ecee45e4a487c43b5616922adde0f2981d60bc33c",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_bounty_journal.gd"
+      ]
+    },
+    {
+      "run": "rematch-canonical",
+      "exit": 0,
+      "elapsed_seconds": 9.905999999959022,
+      "source_unchanged": true,
+      "errors": [
+        "SCRIPT ERROR: Parse Error: Preload file \"res://scripts/net/foundation_resources.gd\" does not exist.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "ERROR: Failed to load script \"res://autoload/game_state.gd\" with error \"Compilation failed\".",
+        "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'."
+      ],
+      "log_sha256": "68ab1ed6248e470b3966181927ac2d039f4bada7b54d952f10bb60eb033c6c21",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_foundation_rematch_bosses.gd"
+      ]
+    },
+    {
+      "run": "resource-and-rematch",
+      "exit": 1,
+      "elapsed_seconds": 12.702999999979511,
+      "source_unchanged": true,
+      "errors": [
+        "SCRIPT ERROR: Invalid access to property or key 'next_ready_day' on a base object of type 'Dictionary'.",
+        "SCRIPT ERROR: Invalid access to property or key 'outputs' on a base object of type 'Dictionary'."
+      ],
+      "log_sha256": "4257211e08ae4e1bafcf718f6f8363a022471817361475cd95814548e5621e37",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_foundation_resources.gd,test_f32_catalogue_registration.gd,test_foundation_rematch_bosses.gd"
+      ]
+    },
+    {
+      "run": "resource-and-rematch-ids-fixed",
+      "exit": 1,
+      "elapsed_seconds": 13.03200000000652,
+      "source_unchanged": true,
+      "errors": [
+        "ERROR: World training refused: invalid typed creature training journal"
+      ],
+      "log_sha256": "c546d88184fbc60ce68769ec28e031f35a0e93d9085ef347d787135d7a52b2a4",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_foundation_resources.gd,test_f32_catalogue_registration.gd,test_foundation_rematch_bosses.gd"
+      ]
+    },
+    {
+      "run": "resource-durable-and-defaults",
+      "exit": 1,
+      "elapsed_seconds": 17.891000000061467,
+      "source_unchanged": true,
+      "errors": [],
+      "log_sha256": "b1eadbe6b3bc8244a707eb67c1f33050ec17b8e4c31808290eb2c7b1ec987a46",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_foundation_resources.gd,test_foundation_resource_save.gd,test_f32_catalogue_registration.gd,test_foundation_rematch_bosses.gd,test_item_db_station_catalogue.gd,test_progression.gd"
+      ]
+    },
+    {
+      "run": "resource-reload-final",
+      "exit": 0,
+      "elapsed_seconds": 10.797000000020489,
+      "source_unchanged": true,
+      "errors": [],
+      "log_sha256": "647ee9b1a9a30ce964e4cbd56bf3899f3d3cf6ae1e9a82f0171e8e30e3ce37fc",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_foundation_resources.gd"
+      ]
+    },
+    {
+      "run": "system-modal-catalogue-fixed",
+      "exit": 1,
+      "elapsed_seconds": 1.4690000000409782,
+      "source_unchanged": true,
+      "errors": [
+        "ERROR: Attempt to open script 'res://tests/smoke_f42_system_modal.gd' resulted in error 'File not found'.",
+        "ERROR: Failed loading resource: res://tests/smoke_f42_system_modal.gd.",
+        "ERROR: Can't load script: tests/smoke_f42_system_modal.gd"
+      ],
+      "log_sha256": "018c1124579e7812012ca9ff3bea3a5223b9a8e410910c7fb89ec1bce3ee7e43",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_f42_system_modal.gd"
+      ]
+    },
+    {
+      "run": "system-modal-initial",
+      "exit": 0,
+      "elapsed_seconds": 8.390999999945052,
+      "source_unchanged": true,
+      "errors": [
+        "ERROR: Conflicting canonical F32 item definition: rootiron_ingot",
+        "ERROR: Conflicting canonical F32 item definition: rootiron_ingot"
+      ],
+      "log_sha256": "a37633ac840691539d63d7322e82ee4d9362c3e4406ca59756d4882d75fbb34a",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_f42_system_screen.gd"
+      ]
+    },
+    {
+      "run": "system-screen-catalogue-fixed",
+      "exit": 0,
+      "elapsed_seconds": 8.452999999979511,
+      "source_unchanged": true,
+      "errors": [],
+      "log_sha256": "96cb985670ec2f5a7e989b176419287e36eeea3e275104ec8c144f9c8b270d1e",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\foundations-batch-check",
+        "--script",
+        "tests/smoke_f42_system_screen.gd"
+      ]
+    }
+  ],
+  "independent_reviews": [
+    {
+      "reviewer": "campaign_closeout",
+      "subject": "loop flags and bounty journal",
+      "verdict": "No additional blocking source defect. Journal fingerprints personal bounty state before projection and retains Research focus; real research/board/lesson consumers found. Guest rematches and complete player/save proofs remain open."
+    },
+    {
+      "reviewer": "root",
+      "subject": "F19 authored levels and canonical Veyra rematch lookup",
+      "verdict": "No blocking source defect. Materializer validates stable identities and exact legacy-or-applied values; numeric-only edits preserve roster order and unrelated source. Real runtime and earned pacing remain open."
+    },
+    {
+      "reviewer": "root",
+      "subject": "F22 live body patterns and host/guest presentation",
+      "verdict": "No blocking source defect found in bounded slice;47 initialized-node checks and authored contract pass. Remote action-start observation, whole fights, difficulty and visual judgments remain open."
+    },
+    {
+      "reviewer": "build_closeout",
+      "subject": "F32 source/stock/inventory authority and prepared save path",
+      "verdict": "No actionable blocking authority/atomicity finding after reading actual source resolution, stock CAS, canonical journal re-stage, prepared rollback, replay and saved/ACK consumers. Native results must be assessed separately; source review alone is not acceptance."
+    }
+  ],
+  "known_failures": "Retain all original failures, including catalogue conflict, malformed test fixture, wrong smoke filename, transient missing preload, test parser error, numeric anchor identity, and JSON resource journal rejection. Later passing runs repair only their named scopes."
+}

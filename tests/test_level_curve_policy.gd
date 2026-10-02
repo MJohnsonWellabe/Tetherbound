@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
-## Detached data checks only. No scene, Session or production provider mounts
-## this candidate, and the route/earning/solvency gates remain independent.
+## Live RD-10 data and strict repeat-application checks. Runtime route, earning,
+## save and solvency proofs remain independent of this authored data regression.
 const POLICY := preload("res://scripts/creatures/level_curve_policy.gd")
 const PATH := "res://data/config/water_alpha.json"
 
@@ -14,9 +14,23 @@ func _base(path: String = PATH) -> Dictionary:
 
 func _enabled() -> Dictionary:
 	var cfg := POLICY.config()
-	assert_eq(cfg.get("runtime_enabled"), false)
-	cfg["runtime_enabled"] = true
+	assert_eq(cfg.get("runtime_enabled"), true)
 	return cfg
+
+
+func _legacy(path: String) -> Dictionary:
+	var data := _base(path)
+	for row: Dictionary in POLICY.config().overlays[path.trim_prefix("res://")]:
+		var node: Variant = data
+		for index in row.at.size() - 1:
+			var part: Variant = int(row.at[index]) if node is Array else row.at[index]
+			node = node[part]
+		var field: Variant = int(row.at[-1]) if node is Array else row.at[-1]
+		if row.legacy == null:
+			node.erase(field)
+		else:
+			node[field] = row.legacy
+	return data
 
 
 func _nonlevels(raw: Variant, parent: String = "") -> Variant:
@@ -41,7 +55,7 @@ func test_default_and_malformed_activation_leave_live_data_unchanged() -> void:
 	var base := _base()
 	var before := base.duplicate(true)
 	assert_eq(POLICY.apply(PATH, base), before)
-	assert_eq(POLICY.apply(PATH, base, true), before, "shipped candidate flag remains false")
+	assert_eq(POLICY.apply(PATH, base, true), before, "the shipped RD-10 table is already materialized")
 	for value: Variant in [false, null, 0, 1, "true", [], {}]:
 		assert_eq(POLICY.apply(PATH, base, value, _enabled()), before)
 		var cfg := POLICY.config()
@@ -50,15 +64,18 @@ func test_default_and_malformed_activation_leave_live_data_unchanged() -> void:
 	assert_eq(base, before)
 
 
-func test_explicit_candidate_is_detached_and_preserves_nonlevel_data() -> void:
+func test_template_and_live_tables_converge_once_without_nonlevel_mutations() -> void:
 	var cfg := _enabled()
 	for path: String in POLICY.PATHS:
 		var base := _base(path)
 		var before := base.duplicate(true)
 		var next := POLICY.apply(path, base, true, cfg)
 		assert_false(next.is_empty(), path)
-		assert_eq(base, before, "opt-in cannot mutate a cached live config")
-		assert_eq(_nonlevels(next), _nonlevels(base), "geometry, identity, rewards and guards survive opt-in")
+		assert_eq(next, before, "a repeat application cannot distort live levels")
+		assert_eq(base, before, "validation cannot mutate a cached live config")
+		var legacy := _legacy(path)
+		assert_eq(POLICY.apply(path, legacy, true, cfg), before, "the preserved template produces the shipped levels")
+		assert_eq(_nonlevels(next), _nonlevels(legacy), "geometry, identity, rewards and guards survive activation")
 		if not next.is_empty():
 			next["detached_probe"] = true
 			assert_false(base.has("detached_probe"))

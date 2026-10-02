@@ -68,6 +68,20 @@ func _canonical_boss(trainer: String) -> Dictionary:
 		return {}
 	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(str(profile.source)))
 	if not data is Dictionary: return {}
+	if profile.biome == "cloudreach":
+		# Cloudreach keeps its canonical roster in trainer_ladder and its
+		# placement/patterns separately. Use the ordinary director's adapter,
+		# including its authored send-out order, instead of treating that row
+		# as the Meadows/Water trainers shape or inventing a second boss team.
+		var encounters: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_encounters.json"))
+		if not encounters is Dictionary: return {}
+		var adapter: Script = load("res://scripts/combat/cloudreach_encounter_director.gd")
+		for authored: Dictionary in data.get("trainer_ladder", []):
+			if authored.get("id") != trainer: continue
+			for placement: Dictionary in encounters.get("trainers", []):
+				if placement.get("id") == trainer:
+					return adapter.call("trainer_spec", authored, placement, encounters)
+		return {}
 	for spec: Variant in data.get("trainers", []):
 		if spec is Dictionary and spec.get("id") == trainer: return spec.duplicate(true)
 	return {}

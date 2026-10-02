@@ -12,10 +12,11 @@ static func apply_items(items: Dictionary) -> Dictionary:
 		var row: Variant = source.items[id]
 		if not row is Dictionary or not row.get("name") is String or not _positive_integer(row.get("stack")):
 			return items
-		if result.has(id) and result[id] != row:
+		var merged := compatible_item(result.get(id, {}), row)
+		if merged.is_empty():
 			push_error("Conflicting canonical F32 item definition: " + id)
 			return items
-		result[id] = row.duplicate(true)
+		result[id] = merged
 		result[id]["stack"] = int(row["stack"])
 	for id: String in source.get("display_overrides", {}):
 		if not result.has(id): return items
@@ -25,6 +26,17 @@ static func apply_items(items: Dictionary) -> Dictionary:
 			if not field in ["name", "blurb", "description"] or not replacement[field] is String:
 				return items
 		result[id].merge(replacement, true)
+	return result
+
+
+## Duplicate canonical records may add metadata, but cannot replace any
+## existing field (including stack capacity or gathering requirements).
+static func compatible_item(existing: Dictionary, incoming: Dictionary) -> Dictionary:
+	for field: String in incoming:
+		if existing.has(field) and existing[field] != incoming[field]:
+			return {}
+	var result := existing.duplicate(true)
+	result.merge(incoming, false)
 	return result
 
 

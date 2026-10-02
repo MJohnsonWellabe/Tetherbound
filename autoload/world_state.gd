@@ -245,6 +245,55 @@ func set_farm_plot(index: int, plot: Dictionary) -> void:
 	farm_plots[index] = FARM_LOGIC.sanitised(plot)
 	revision += 1
 
+## Additive v28 stock inside the existing world carrier. Untouched canonical
+## sites start ready; a read never creates, advances, or pays a stock record.
+func renewable_stock_state(realm: String, site_id: String) -> Dictionary:
+	if preload("res://scripts/world/renewable_site_catalog.gd").by_id(realm, site_id).is_empty(): return {}
+	var key := realm + ":" + site_id
+	var sites: Dictionary = redesign_world.get("node_cycles", {}).get("sites", {})
+	return sites.get(key, {"revision": 0, "next_ready_day": 1, "generation": 1}).duplicate(true)
+
+func resource_plot_state(realm: String, plot_id: String) -> Dictionary:
+	var index := resource_plot_index(realm, plot_id)
+	if index < 0: return {}
+	var result := farm_plot_at(index)
+	result["revision"] = int(result.get("revision", 0))
+	return result
+
+static func resource_plot_index(realm: String, plot_id: String) -> int:
+	if realm != "meadows" or not plot_id.begins_with("authored:"): return -1
+	var suffix := plot_id.trim_prefix("authored:")
+	if not suffix.is_valid_int(): return -1
+	var index := int(suffix)
+	var farm: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/farm.json")
+	return index if suffix == str(index) and index >= 0 and index < farm.get("plots", []).size() else -1
+
+## Old one-shot records have no harvest day. Give those records a single
+## conservative wait from migration, persisted on the next ordinary save.
+## Existing Cloudreach flags do retain a day and use that original day.
+func _migrate_resource_cycles() -> void:
+	const SITES = preload("res://scripts/world/renewable_site_catalog.gd")
+	var cycles: Dictionary = redesign_world.get("node_cycles", {})
+	var stocks: Dictionary = cycles.get("sites", {}).duplicate(true)
+	var old_flags: Array = flags.call("save_data").get("flags", [])
+	for realm: String in SITES.REALMS:
+		for site: Dictionary in SITES.sites_for(realm):
+			var key := realm + ":" + str(site.id)
+			if stocks.has(key): continue
+			var taken_day := -1
+			if not str(site.get("legacy_flag", "")).is_empty() and flags.call("has", site.legacy_flag): taken_day = day
+			if not str(site.get("legacy_flag_alias", "")).is_empty() and flags.call("has", site.legacy_flag_alias): taken_day = day
+			var prefix := str(site.get("legacy_flag_day_prefix", ""))
+			if not prefix.is_empty():
+				for flag: String in old_flags:
+					if flag.begins_with(prefix) and flag.trim_prefix(prefix).is_valid_int():
+						taken_day = maxi(taken_day, int(flag.trim_prefix(prefix)))
+			if taken_day >= 1:
+				stocks[key] = {"revision": 0, "next_ready_day": taken_day + int(site.respawn_days), "generation": 1}
+	if not stocks.is_empty():
+		cycles["sites"] = stocks
+		redesign_world["node_cycles"] = cycles
+
 
 ## The WORLD half of today's v22 save dictionary (`MP_STATE_SEAM.md` §4), which
 ## 1.C writes to `user://worlds/<world_id>/world.json` and the net harness
@@ -341,6 +390,7 @@ func load_data(data: Dictionary) -> void:
 		flags = PROGRESSION_STATE.new()
 	var raw_flags: Variant = data.get("flags", {})
 	flags.call("load_data", raw_flags if typeof(raw_flags) == TYPE_DICTIONARY else {})
+	_migrate_resource_cycles()
 	revision += 1
 
 
@@ -410,6 +460,19 @@ func apply_delta(delta: Dictionary) -> int:
 
 func _apply_op(op: Dictionary) -> bool:
 	match str(op.get("op", "")):
+		"renewable_stock_set", "farm_plot_set":
+			var row: Variant = reward_deliveries.get(op.get("delivery_id", ""))
+			if not row is Dictionary: return false
+			var expected := resource_world_op(row)
+			if expected.is_empty() or not preload("res://scripts/creatures/essence.gd")._equivalent(expected, op): return false
+			if op.op == "renewable_stock_set":
+				var stocks: Dictionary = redesign_world.node_cycles.get("sites", {}).duplicate(true)
+				stocks[str(op.realm) + ":" + str(op.site_id)] = op.state.duplicate(true)
+				redesign_world.node_cycles["sites"] = stocks
+			else:
+				set_farm_plot(int(op.index), op.state)
+			revision += 1
+			return true
 		"alpha_cycle":
 			if op.get("world_namespace") != reward_delivery_namespace \
 				or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(op.get("plan"), redesign_world, reward_delivery_namespace): return false
@@ -522,6 +585,7 @@ func _apply_op(op: Dictionary) -> bool:
 			if id.is_empty() or flags == null:
 				return false
 			flags.call("set_flag", id, bool(op.get("value", true)))
+			if id.begins_with("harvest_node:") and op.get("value", true) == true: _migrate_resource_cycles()
 			revision += 1
 			return true
 		"building_add":
@@ -598,6 +662,28 @@ func _op_position(raw: Variant) -> Vector3:
 		var a := raw as Array
 		return Vector3(float(a[0]), float(a[1]), float(a[2]))
 	return Vector3.ZERO
+
+## Derive the only permitted stock mutation from a validated pending character
+## journal. The ledger calls this before applying either half; replicas call it
+## again after the journal op, before touching stock.
+func resource_world_op(row: Dictionary) -> Dictionary:
+	const E = preload("res://scripts/creatures/essence.gd")
+	if row.get("action") != "resource" or row.get("status") != "pending" \
+		or not training_row_valid(row, reward_delivery_namespace, world_id): return {}
+	var plan := preload("res://scripts/net/foundation_actions.gd").resource_plan(row.before,
+		int(row.character_revision) - 1, row.intent, row.host_context)
+	if plan.get("ok") != true: return {}
+	var mutation: Dictionary = plan.get("world_mutation", {})
+	if mutation.get("kind") not in ["node", "farm"]: return {}
+	var current := renewable_stock_state(mutation.realm, mutation.source_id) if mutation.kind == "node" \
+		else resource_plot_state(mutation.realm, mutation.source_id)
+	if current.is_empty() or not E._equivalent(current, mutation.before): return {}
+	var op := {"op": "renewable_stock_set" if mutation.kind == "node" else "farm_plot_set",
+		"scope": "world", "realm": mutation.realm, "state": mutation.after.duplicate(true),
+		"delivery_id": row.delivery_id, "receipt": row.receipt, "txn_id": row.intent.request.action_id}
+	if mutation.kind == "node": op["site_id"] = mutation.source_id
+	else: op["index"] = resource_plot_index(mutation.realm, mutation.source_id)
+	return op
 
 func _foundation_camp_op_bound(op: Dictionary, removing: bool) -> bool:
 	const E = preload("res://scripts/creatures/essence.gd")

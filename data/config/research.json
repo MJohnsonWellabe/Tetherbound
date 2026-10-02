@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "runtime_enabled": false,
+  "runtime_enabled": true,
   "maximum_event_receipts": 4096,
   "maximum_transaction_receipts": 4096,
   "biomes": {

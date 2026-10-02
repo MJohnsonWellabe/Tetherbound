@@ -12,13 +12,25 @@ class EnabledStationDb extends "res://autoload/item_db.gd":
 		if path == "res://data/config/stations.json": raw["runtime_enabled"] = true
 		return raw
 
+class DisabledStationDb extends EnabledStationDb:
+	func _read(path: String) -> Dictionary:
+		var raw := super._read(path)
+		if path in ["res://data/config/stations.json", "res://data/config/forward_camps.json"]:
+			raw["runtime_enabled"] = false
+		return raw
+
 func _catalogue() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(ITEM_DB.BUILDABLES_PATH))
 
-func test_shipped_disabled_station_catalogue_preserves_exact_legacy_buildables() -> void:
+func test_shipped_station_catalogue_contains_live_stations_and_preserves_ordinary_buildables() -> void:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stations.json"))
-	assert_eq(config.get("runtime_enabled"), false)
-	assert_eq(ITEM_DB.new().buildables(), _catalogue().buildables)
+	assert_eq(config.get("runtime_enabled"), true)
+	var live := ITEM_DB.new()
+	for id: String in ["forge", "den", "kitchen", "greenhouse"]:
+		assert_false(live.buildable(id).is_empty(), id + " is available in the ordinary catalogue")
+	var legacy := DisabledStationDb.new()
+	assert_eq(legacy.buildables(), _catalogue().buildables, "disabled fixture retains the original catalogue")
+	assert_eq(live.buildable("tent"), legacy.buildable("tent"))
 
 func test_only_canonical_item_db_buildables_path_can_select_station_overlay() -> void:
 	var catalogue := _catalogue()

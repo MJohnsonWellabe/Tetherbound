@@ -31,23 +31,22 @@ func test_tables_are_replaceable_and_obey_role_and_crown_limits() -> void:
 	var live := _read(PATH)
 	var candidate := POLICY.config()
 	assert_true(candidate.get("runtime_enabled") is bool)
-	assert_eq(candidate.get("runtime_enabled"), false)
+	assert_eq(candidate.get("runtime_enabled"), true)
 	assert_eq(POLICY.apply(PATH, live), live)
-	assert_eq(POLICY.apply(PATH, live, true, candidate), live, "the shipped false flag preserves actual legacy tables")
-	_assert_tables(live, [38, 40], "legacy OFF")
+	assert_eq(POLICY.apply(PATH, live, true, candidate), live, "the shipped table already carries RD-10")
+	_assert_tables(live, [48, 50], "live RD-10")
 
 
-func test_detached_redesign_tables_preserve_roles_and_pin_crown_surge_at_50() -> void:
+func test_repeated_manifest_preserves_roles_and_pins_crown_surge_at_50() -> void:
 	var live := _read(PATH)
 	var before := live.duplicate(true)
 	var candidate := POLICY.config()
-	assert_eq(candidate.get("runtime_enabled"), false)
-	candidate["runtime_enabled"] = true
+	assert_eq(candidate.get("runtime_enabled"), true)
 	for activation: Variant in [false, 1, "true"]:
 		assert_eq(POLICY.apply(PATH, live, activation, candidate), before, "activation must be a literal true boolean")
 	var next := POLICY.apply(PATH, live, true, candidate)
-	assert_false(next.is_empty(), "the detached ON projection must validate its exact legacy inputs")
-	_assert_tables(next, [48, 50], "detached redesign ON")
+	assert_false(next.is_empty(), "the manifest validates its exact live inputs")
+	_assert_tables(next, [48, 50], "repeat RD-10 application")
 	assert_eq(live, before, "a candidate projection cannot relevel the production dictionary")
 	var live_tables: Array = live.get("tables", [])
 	var next_tables: Array = next.get("tables", [])
@@ -58,7 +57,7 @@ func test_detached_redesign_tables_preserve_roles_and_pin_crown_surge_at_50() ->
 		actual.erase("level_range")
 		expected.erase("level_range")
 		assert_eq(actual, expected, "table identities, roles, clocks and replacement data survive projection")
-	assert_eq(POLICY.config().get("runtime_enabled"), false, "the local ON input never activates shipping data")
+	assert_eq(POLICY.config().get("runtime_enabled"), true, "shipping data remains active")
 
 
 func _assert_tables(data: Dictionary, crown_band: Array, context: String) -> void:

@@ -30,6 +30,7 @@ extends "res://scripts/ui/menu_tab.gd"
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const RESEARCH_PANEL := preload("res://scripts/ui/research_log_panel.gd")
 const RESEARCH_LOG := preload("res://scripts/creatures/research_log.gd")
+const BOUNTY_BOARD := preload("res://scripts/world/bounty_board.gd")
 var _research_panel: CanvasLayer
 var _research_reader := Callable()
 var _research_button: Button
@@ -88,6 +89,8 @@ var _main_list: VBoxContainer = null
 var _local_list: VBoxContainer = null
 var _last_progression_revision: int = -1
 var _last_lesson_goal := ""
+var _bounty_list: VBoxContainer
+var _last_bounty_view := ""
 
 
 func build() -> void:
@@ -95,6 +98,8 @@ func build() -> void:
 		child.queue_free()
 	_last_progression_revision = -1
 	_research_button = null
+	_bounty_list = null
+	_last_bounty_view = ""
 	if RESEARCH_PANEL.config().get("enabled") == true:
 		_research_button = Button.new()
 		_research_button.text = "Research log · Species and task rewards"
@@ -134,27 +139,36 @@ func build() -> void:
 	UITokens.make_text_legible(self)
 
 func _build_bounties(page: VBoxContainer) -> void:
-	var list := _section(page, "ACTIVE BOUNTIES · Claim at Halda's board")
-	var path := "res://scripts/world/bounty_board.gd"
-	if not ResourceLoader.exists(path):
-		var missing := Label.new()
-		missing.text = "The bounty board is unavailable."
-		missing.add_theme_font_size_override("font_size", UITokens.FONT_READ)
-		list.add_child(missing)
-		return
+	_bounty_list = _section(page, "ACTIVE BOUNTIES · Claim at Halda's board")
+	_poll_bounties()
+
+func _poll_bounties() -> void:
+	if not is_instance_valid(_bounty_list): return
 	var game := state()
 	var local: RefCounted = game.get("local") if game != null else null
 	if local == null: return
-	var board: Script = load(path)
-	var raw: Variant = board.call("view", local.get("redesign_character"), str(local.get("character_id")))
-	if not raw is Dictionary: return
+	var personal: Dictionary = local.get("redesign_character")
+	var signature := JSON.stringify([local.get("character_id"), personal.get("bounties", {}), personal.get("bounty_receipts", [])])
+	if signature == _last_bounty_view: return
+	_last_bounty_view = signature
+	var raw := BOUNTY_BOARD.view(personal, str(local.get("character_id")))
+	# Daily rotation and personal claims don't change story progression.
+	# Refresh their own rows without rebuilding the focused Research button.
+	for child: Node in _bounty_list.get_children():
+		_bounty_list.remove_child(child)
+		child.queue_free()
 	for row: Dictionary in raw.get("rows", []):
 		var label := Label.new()
 		label.text = "%s · %s · %s" % [str(row.get("title", "Bounty")), str(row.get("biome", "")).capitalize(),
 			"Claimed" if row.get("paid") == true else "Return to board" if row.get("complete") == true else "In progress"]
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
-		list.add_child(label)
+		_bounty_list.add_child(label)
+	if _bounty_list.get_child_count() == 0:
+		var empty := Label.new()
+		empty.text = "Visit Halda's board to read your notices."
+		empty.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		_bounty_list.add_child(empty)
 
 
 func _section(parent: VBoxContainer, heading_text: String) -> VBoxContainer:
@@ -178,6 +192,7 @@ func poll() -> void:
 	if _main_list == null:
 		return
 	_read_scroll()
+	_poll_bounties()
 	var game := state()
 	var progression: RefCounted = game.get("progression") if game != null else null
 	if progression == null:

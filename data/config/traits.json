@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "runtime_enabled": false,
+  "runtime_enabled": true,
   "rarities": {
     "common": 0.05,
     "rare": 0.08,

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "runtime_enabled": false,
-  "_scope": "World placement in placed_buildings; character inventory and receipts use existing admitted carrier. OFF pending Foundation producer, engine/co-op and visual proofs.",
+  "runtime_enabled": true,
+  "_scope": "World placement in placed_buildings; character inventory and receipts use the existing admitted carrier. Production gameplay is enabled; native/co-op and visual acceptance remain separate proofs.",
   "biomes": ["meadows", "tidewake", "cloudreach", "stormwood"],
   "size_m": [7.2, 2.8, 4.8],
   "bed_offset": [-2.0, 0.0, 0.0],

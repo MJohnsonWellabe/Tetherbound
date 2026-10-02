@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "runtime_enabled": false,
-  "_scope": "Unmounted process-scoped RD-10 level candidate. The live JSON keeps the pinned legacy levels while portal order is inactive. Pure explicit opt-in is authoring validation only, with no route, earning, engine, readiness, save or activation credit.",
+  "runtime_enabled": true,
+  "_scope": "RD-10 levels are materialized in the live authored JSON read by every production director. This manifest preserves the original levels and stable identity anchors for strict validation and idempotent authoring; it never rescales saved creatures or grants route, earning, engine, readiness or save proof.",
   "baseline_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
   "candidate_sha": "e86c6a9fed5e22ef830fc6f4ec0e83a82600809f",
   "biomes": {

@@ -54,6 +54,9 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
+const ENEMY_PATTERNS := preload("res://scripts/combat/combat_ai.gd")
+const ENEMY_PATTERN_CAST := preload("res://scripts/combat/enemy_pattern_cast.gd")
+var _enemy_strike_connected := false
 
 signal entered()
 signal exited(outcome: String)
@@ -3232,6 +3235,7 @@ static func with_cooldown_multiplier(profile: Dictionary, multiplier: float) -> 
 ## report of anything.
 func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vector3,
 		facing: Vector3) -> bool:
+	_enemy_strike_connected = false
 	var pick: Dictionary = _encounter_link.call("host_pick_struck_participant",
 		_encounter_id, cfg, origin, facing)
 	if pick.is_empty():
@@ -3242,6 +3246,7 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		return true
 	if int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")):
 		return false
+	_enemy_strike_connected = true
 
 	var card: Dictionary = pick.get("card", {}) as Dictionary
 	var prog_cfg: Dictionary = PROGRESSION.config()
@@ -3864,7 +3869,6 @@ func _on_enemy_strike() -> void:
 		else MATH.config().get("enemy", {})
 	var origin: Vector3 = _wild.call("centre")
 	var facing: Vector3 = _wild.call("facing")
-	var target: Vector3 = _ally_body.call("centre")
 
 	# F04: a named CHARGER's lunge has already travelled by the time it strikes
 	# (`wild_creature.gd`, combat.json `charger_lunge`), and it reports whether
@@ -3875,9 +3879,40 @@ func _on_enemy_strike() -> void:
 	var lunge: Dictionary = _wild.call("take_lunge_outcome") \
 		if _wild.has_method("take_lunge_outcome") else {}
 	var travelled := not lunge.is_empty()
-	if not travelled:
+	if not travelled and str(cfg.get("telegraph_shape", "")) != "marker":
 		_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
 		_wild.call("play_attack")
+	if _begin_enemy_pattern_cast(cfg): return
+	_resolve_enemy_strike(cfg, origin, facing, lunge)
+
+
+## Fan arrivals and persistent fields retain the original geometry. They use
+## the same host/local damage path as ordinary strikes, once per actual hit.
+func _begin_enemy_pattern_cast(cfg: Dictionary) -> bool:
+	if not cfg.has("pattern_attack_id") or str(cfg.get("telegraph_shape", "")) not in ["fan", "field"]:
+		return false
+	if _encounter_link != null and _encounter_link.has_method("is_encounter_host") \
+		and not bool(_encounter_link.call("is_encounter_host")): return true
+	var geometry: Dictionary = _wild.call("pattern_geometry")
+	if geometry.is_empty(): return true
+	var move: Dictionary = _moves.move(str(cfg.get("move_id", "")))
+	ENEMY_PATTERN_CAST.begin(_wild, cfg, geometry, move,
+		_resolve_enemy_pattern_contact.bind(weakref(_wild)), MATH.config().get("patterns", {}))
+	return true
+
+
+func _resolve_enemy_pattern_contact(profile: Dictionary, geometry: Dictionary, original: WeakRef) -> bool:
+	if state != State.ACTIVE or not is_instance_valid(_wild) or original.get_ref() != _wild \
+		or _wild.get("engaged") != true: return false
+	profile["_pattern_geometry"] = geometry
+	return _resolve_enemy_strike(profile, geometry.origin, geometry.heading, {})
+
+
+func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lunge: Dictionary) -> bool:
+	if state != State.ACTIVE or not is_instance_valid(_wild) or _enemy == null: return false
+	# A host-only simulation has no local party; its link routes all targets.
+	var creature := active_creature()
+	var travelled := not lunge.is_empty()
 
 	# Stage B lane 4.C, protocol §2 and §5, and 4.B's handover H1.
 	#
@@ -3890,24 +3925,30 @@ func _on_enemy_strike() -> void:
 	# The host swings for everybody; the answer arrives at
 	# `apply_host_enemy_hit()`.
 	if _encounter_link != null:
-		if not bool(_encounter_link.call("is_encounter_host")):
-			return
+		if _encounter_link.has_method("is_encounter_host") and not bool(_encounter_link.call("is_encounter_host")):
+			return false
 		if travelled and not bool(lunge.get("contact", false)):
 			# The charge reached nobody: a miss for everybody, decided here.
 			attack_missed.emit(false)
 			state_changed.emit()
-			return
+			return false
 		# On contact the host still picks who was struck, from where the
 		# charging body actually stopped.
 		if _host_resolve_enemy_strike_for_a_participant(cfg, origin, facing):
-			return
+			return _enemy_strike_connected
+	if creature == null or not is_instance_valid(_ally_body): return false
+	var target: Vector3 = _ally_body.call("centre")
 
 	var connects: bool = bool(lunge.get("contact", false)) if travelled \
 		else MATH.move_connects(cfg, origin, facing, target)
+	if not travelled and cfg.has("pattern_attack_id"):
+		var geometry: Dictionary = cfg.get("_pattern_geometry", _wild.call("pattern_geometry"))
+		connects = not geometry.is_empty() and geometry.get("blocked") != true and ENEMY_PATTERNS.pattern_contains(cfg,
+			geometry.origin, geometry.heading, geometry.marker, target, float(_ally_body.call("body_radius")))
 	if not connects:
 		attack_missed.emit(false)
 		state_changed.emit()
-		return
+		return false
 
 	# Ordinary wilds retain their quick-move fallback.  An opt-in named attack
 	# freezes its move id in the body's combat profile at telegraph start, and
@@ -3957,6 +3998,7 @@ func _on_enemy_strike() -> void:
 		# the second half.
 		CONDITION.note_faint(creature, CONDITION.config())
 		_handle_active_faint()
+	return true
 
 
 ## The active creature was just reduced to 0 HP. GATE-F-LEG-S04 (owner

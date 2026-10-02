@@ -161,6 +161,11 @@ static func _ordinary(realm: String, row: Dictionary, policy: Dictionary,
 		site["legacy_flag_day_prefix"] = "harvest_node:order:cloudreach:" + id + ":day:"
 	else:
 		site["legacy_flag"] = "harvest_node:" + (id if realm == "meadows" else "order:" + id)
+		if realm == "meadows":
+			# HarvestNode historically stringified the original JSON number.
+			# Canonical IDs use integer order, but retain that original flag too.
+			site["legacy_flag_alias"] = site.legacy_flag
+			site["legacy_flag"] = "harvest_node:order:" + str(row.get("order"))
 	_add(realm, site, source_path)
 
 
@@ -186,12 +191,12 @@ static func _load() -> void:
 				if not row is Dictionary or not _integer(row.get("order"), 0):
 					_fail("meadows", "Malformed band harvest order: " + path)
 					continue
-				var order := str(row["order"])
+				var order := str(int(row["order"]))
 				if orders.has(order):
 					_fail("meadows", "Duplicate authored harvest order: " + order)
 					continue
 				orders[order] = true
-				_ordinary("meadows", row, meadows_policy, "order:" + str(row["order"]),
+				_ordinary("meadows", row, meadows_policy, "order:" + order,
 					"item", "amount", "at", 2, path)
 	var water := _read(WATER_PATH)
 	_load_rows("water", water, WATER_PATH, "harvest", "item_id", "yield", 3)

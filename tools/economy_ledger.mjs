@@ -7,8 +7,8 @@ import {fileURLToPath} from 'node:url';
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
 const integer = n => Number.isSafeInteger(n) && n >= 0;
-// Read the existing F19 authoring overlay without activating any game provider.
-// Validate its original identities/values before using candidate costs.
+// Validate the materialized F19 values or the retained original authoring input.
+// Repeat application is idempotent; this arithmetic never mutates game state.
 export function authoredCurve(base, policy) {
   const object = v => v !== null && typeof v === 'object' && !Array.isArray(v);
   const level = v => Number.isInteger(v) && v >= 1 && v <= 100;
@@ -47,8 +47,8 @@ export function authoredCurve(base, policy) {
       if (!found.exists || JSON.stringify(found.value)!==JSON.stringify(anchor.value)) throw Error('Stale overlay identity');
     }
     const old=slot(base,row.at);
-    if (row.legacy===null ? old.exists || !object(old.parent) :
-        !level(row.legacy)||!old.exists||!level(old.value)||old.value!==row.legacy) throw Error('Stale overlay level');
+    if (row.legacy===null ? !object(old.parent) || (old.exists && old.value!==row.value) :
+        !level(row.legacy)||!old.exists||!level(old.value)||(old.value!==row.legacy&&old.value!==row.value)) throw Error('Stale overlay level');
   }
   const next=structuredClone(base);
   for (const row of rows) {const target=slot(next,row.at);target.parent[target.key]=row.value;}
@@ -291,8 +291,8 @@ export function sourceReport(root = ROOT) {
     rematches:rematches.runtime_enabled,alphas:alphas.runtime_enabled,level_curve:curvePolicy.runtime_enabled};
   return {schema_version:1,evidence_scope:'source-generated arithmetic; not an earned clear or acceptance verdict',
     manifest,errors,findings,bands,materials,authoredNodes,flags,missing_producers:missing,
-    level_curve:{basis:'validated F19 authoring overlay; no runtime activation',
-      legacy_meadows_exit:liveCurve.regions.at(-1).team.exit,authored_meadows_exit:curve.regions.at(-1).team.exit},
+    level_curve:{basis:'validated materialized F19 production data; earned-route solvency remains unproved',
+      live_meadows_exit:liveCurve.regions.at(-1).team.exit,authored_meadows_exit:curve.regions.at(-1).team.exit},
     economy_exploits:{trade:tradeResult,craft:craftResult,
       rest:'UNAVAILABLE: earned-day receipt and reload/world-hop witness required',
       release:{once_per:'creature uid',base:essence.release_essence_base,per_level:essence.release_essence_per_level,

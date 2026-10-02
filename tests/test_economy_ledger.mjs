@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {stock,contention,expandRefining,levelCost,tradeAudit,recipeAudit,routeBudget,observedRate,sourceReport,analyzeTrace,authoredCurve} from '../tools/economy_ledger.mjs';
 
-test('candidate costs use F19 overlay while preserving live legacy levels and gates',()=>{
+test('costs use the enabled F19 levels already consumed by live providers',()=>{
   const report=sourceReport();
-  assert.equal(report.level_curve.legacy_meadows_exit,21);
+  assert.equal(report.level_curve.live_meadows_exit,22);
   assert.equal(report.level_curve.authored_meadows_exit,22);
-  assert.equal(report.flags.level_curve,false);
+  assert.equal(report.flags.level_curve,true);
   assert.equal(report.bands.filter(b=>b.biome==='meadows').at(-1).exit,22);
   assert.ok(!report.findings.some(f=>f.kind==='meadows_exit_target_disagreement'));
 });
@@ -18,6 +18,8 @@ test('stale original identity or level refuses candidate arithmetic without muta
   assert.equal(authoredCurve(base,policy).regions[0].team.exit,22);
   assert.equal(base.regions[0].team.exit,21);
   assert.equal(policy.runtime_enabled,false);
+  const applied=authoredCurve(base,policy);
+  assert.deepEqual(authoredCurve(applied,policy),applied,'repeat application cannot scale levels again');
   assert.throws(()=>authoredCurve({...base,regions:[{id:'two',team:{exit:21}}]},policy),/identity/);
   assert.throws(()=>authoredCurve({...base,regions:[{id:'one',team:{exit:20}}]},policy),/level/);
   assert.throws(()=>authoredCurve(base,{...policy,overlays:{'data/config/chapter_curve.json':[row,row]}}),/Duplicate/);

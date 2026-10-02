@@ -122,7 +122,7 @@ func setup_source(plot_id: String, config: Dictionary, service: Node) -> void:
 	_source_service = service
 	if service != null and not service.is_connected("settled", _on_source_settled):
 		service.connect("settled", _on_source_settled)
-	setup(0, config, "meadows")
+	setup(int(plot_id.trim_prefix("authored:")), config, "meadows")
 var _config: Dictionary = {}
 var _selected_crop: String = "berries"
 var _seed_picker: CanvasLayer
@@ -427,7 +427,7 @@ func _on_source_settled(op: String, source_id: String, action_id: String, verdic
 	if op != "farm" or source_id != _plot_id: return
 	if not _claim.is_empty() and str(_claim.get("txn_id", "")) == action_id:
 		_claim = {}
-		if verdict.get("resolved") != true:
+		if verdict.get("ok") != true or verdict.get("owner_saved") != true or verdict.get("owner_acknowledged") != true:
 			harvest_refused.emit(str(verdict.get("code", "awaiting_settlement")), str(verdict.get("reason", "")))
 	_refresh()
 
@@ -458,7 +458,7 @@ func _on_delta_applied(delta: Dictionary) -> void:
 		if str(raw.get("op", "")) != "farm_plot_set" or str(raw.get("scope", "")) != "world" \
 				or str(raw.get("realm", "")) != _realm or int(raw.get("index", -1)) != _index:
 			continue
-		if not _claim.is_empty() and str(raw.get("txn_id", "")) == str(_claim.get("txn_id", "")):
+		if _source_service == null and not _claim.is_empty() and str(raw.get("txn_id", "")) == str(_claim.get("txn_id", "")):
 			_claim = {}
 		_refresh()
 

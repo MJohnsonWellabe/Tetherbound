@@ -25,7 +25,7 @@
       "region_id": "first_shores",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [43,45],
+      "level_range": [18,22],
       "entries": [
         {
           "species_id": "cannonback",
@@ -63,7 +63,7 @@
       "region_id": "first_shores",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [43,45],
+      "level_range": [18,22],
       "entries": [
         {
           "species_id": "torrentoad",
@@ -101,7 +101,7 @@
       "region_id": "marsh_channels",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [45,47],
+      "level_range": [20,24],
       "entries": [
         {
           "species_id": "mangrove_monitor",
@@ -139,7 +139,7 @@
       "region_id": "marsh_channels",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [45,47],
+      "level_range": [20,24],
       "entries": [
         {
           "species_id": "torrentoad",
@@ -177,7 +177,7 @@
       "region_id": "marsh_channels",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [45,47],
+      "level_range": [20,24],
       "entries": [
         {
           "species_id": "riptusk",
@@ -215,7 +215,7 @@
       "region_id": "marsh_channels",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [45,47],
+      "level_range": [20,24],
       "entries": [
         {
           "species_id": "cragclaw",
@@ -253,7 +253,7 @@
       "region_id": "marsh_channels",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [45,47],
+      "level_range": [20,24],
       "entries": [
         {
           "species_id": "riverdrake",
@@ -291,7 +291,7 @@
       "region_id": "marsh_channels",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [45,47],
+      "level_range": [20,24],
       "entries": [
         {
           "species_id": "riverdrake",
@@ -329,7 +329,7 @@
       "region_id": "tidal_cradle",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [47,49],
+      "level_range": [23,26],
       "entries": [
         {
           "species_id": "mosshell",
@@ -367,7 +367,7 @@
       "region_id": "tidal_cradle",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [47,49],
+      "level_range": [23,26],
       "entries": [
         {
           "species_id": "mosshell",
@@ -405,7 +405,7 @@
       "region_id": "outer_reaches",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [49,51],
+      "level_range": [25,28],
       "entries": [
         {
           "species_id": "sirenseal",
@@ -443,7 +443,7 @@
       "region_id": "outer_reaches",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [49,51],
+      "level_range": [25,28],
       "entries": [
         {
           "species_id": "sirenseal",
@@ -481,7 +481,7 @@
       "region_id": "tether_current",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [51,53],
+      "level_range": [27,30],
       "entries": [
         {
           "species_id": "mirejaw",
@@ -519,7 +519,7 @@
       "region_id": "tether_current",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [51,53],
+      "level_range": [27,30],
       "entries": [
         {
           "species_id": "riverdrake",
@@ -557,7 +557,7 @@
       "region_id": "veilfall",
       "habitat": "land",
       "amphibious": false,
-      "level_range": [53,55],
+      "level_range": [29,32],
       "entries": [
         {
           "species_id": "cragclaw",
@@ -595,7 +595,7 @@
       "region_id": "veilfall",
       "habitat": "shallows",
       "amphibious": true,
-      "level_range": [53,55],
+      "level_range": [29,32],
       "entries": [
         {
           "species_id": "riverdrake",
@@ -8296,7 +8296,7 @@
       "display_name": "Lantern Shell Sentinel",
       "island_id": "lantern_cove",
       "species_id": "cannonback",
-      "level": 45,
+      "level": 22,
       "replaces_wild_site_id": "water_lantern_cove_wild_006",
       "position": [
         -431.554,
@@ -8326,7 +8326,7 @@
       "display_name": "Basalt Claw",
       "island_id": "gull_rest",
       "species_id": "cragclaw",
-      "level": 47,
+      "level": 24,
       "replaces_wild_site_id": "water_gull_rest_wild_006",
       "position": [
         -75.328,
@@ -8356,7 +8356,7 @@
       "display_name": "Root Watcher",
       "island_id": "brine_steps",
       "species_id": "mirejaw",
-      "level": 47,
+      "level": 24,
       "replaces_wild_site_id": "water_brine_steps_wild_016",
       "position": [
         326.835,
@@ -8386,7 +8386,7 @@
       "display_name": "Garden Songweaver",
       "island_id": "drowned_garden",
       "species_id": "sirenseal",
-      "level": 51,
+      "level": 28,
       "replaces_wild_site_id": "water_drowned_garden_wild_008",
       "position": [
         1064.267,
@@ -8416,7 +8416,7 @@
       "display_name": "Tidecoil, the Abyss Serpent",
       "island_id": "deep_watch",
       "species_id": "tidecoil",
-      "level": 54,
+      "level": 32,
       "replaces_wild_site_id": "water_deep_watch_wild_008",
       "position": [
         1262.0,

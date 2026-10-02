@@ -51,7 +51,8 @@
             {"id": "revive", "count": 1}
           ],
           "acknowledgement": "The west shoulder has gone quiet."
-        }
+        },
+        "level_ceiling": 20
       },
       "_why_alpha": "ASSESS-REDS/prompt 60's 'handful of special encounters'. The pack leader of the chapter's largest aggressor cluster, on the last stretch before the Hall -- a wild fight worth winning on its own terms in the same stretch the spec already asks to feel harder than the river crossing, not just Team Tether's own gauntlet. Its existing once flag, `wild_once_5001`, now also owns a modest per-participant recovery receipt: two Large Potions and one Revive land through the durable reward-delivery path on either a win or catch, so a player who keeps the existing five can resolve the encounter without giving up its payoff. The receipt is separate per item and remains due if a full satchel cannot take one stack; no cache, second encounter or roster change is added. The acknowledgement names the cleared west shoulder rather than inventing a new quest state.",
       "_comment_alpha_scale_0901": "BACKLOG-VISUAL-ALPHA-SCALE. Dropped 1.4 -> 1.2 (2.94m -> 2.52m) on 2026-09-01: the old value put this alpha ABOVE the then-2.60m Veridian Stag legendary, which nobody had cross-checked since D69 raised ordinary Galecrest to 2.10m.",
@@ -264,7 +265,8 @@
           "reposition_distance": 2.5,
           "poise_max": 60.0,
           "stagger_seconds": 0.85
-        }
+        },
+        "level_ceiling": 20
       },
       "_why_alpha": "R-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903, Fable). 'The last one more, visible from the fire' -- this cluster's first member, promoted through the same `alpha` block order 5001's galecrest pack already uses, is the strongest wild creature in the chapter: `level_bonus: 2` over the band's [14,17] roll (16-19) puts it at parity with the elite the player is about to fight, in silhouette against the Hall from the waystop fire 60m north. `combat` is the WALL profile from G-3 (`slow, heavy, stands its ground; the punish window is long and the hit is expensive`) -- inert data until G-2's merge in `wild_creature.gd::set_engaged()` lands (the encounter lane's own work, not this one's); absent that code it changes nothing about how this cluster fights today, per G-2's own contract. The four ordinary members of this cluster are untouched.",
       "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, and that road's forced ambushes are now only the authored ones, spaced at least 150m apart. A rolled Galecrest or Frostclaw here would add an unspaced forced fight (the S08 fight chain) in some worlds. So it rolls from `meadows_rock_trailside` instead of `meadows_rock`: the same entries without the aggressive species. Position, count, level band and seed-0 species are unchanged. The rolled mix is NOT unchanged, because spawn_tables.gd `_draw` rolls against the eligible total weight. In Band 4 the eligible weight goes from 214 to 182 (Galecrest 25 and Frostclaw 7 removed): burrowback 47%->55%, mudsnout, trailpup and night shadelet each 11.7%->13.7%, mosshell 3.3%->3.8%. In Band 5 it goes from 214 to 189 (burrowback 47%->53%). The per-region rare caps and the 220m separation still bind. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."

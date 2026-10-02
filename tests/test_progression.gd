@@ -96,19 +96,19 @@ func test_xp_award_for_grows_with_enemy_level() -> void:
 	assert_true(high > low, "a tougher enemy should pay out more xp")
 
 
-## Live victory callers retain ordinary XP while the typed hybrid mount is OFF.
-## Detached staging is exercised separately with explicit essence inputs.
-func test_automatic_combat_xp_preserves_ordinary_awards_and_legacy_party_floor() -> void:
+## Raw arithmetic remains unreduced; the active typed victory transaction
+## applies the configured hybrid reduction exactly once at its boundary.
+func test_base_combat_xp_preserves_raw_awards_and_legacy_party_floor() -> void:
 	var cfg := PROGRESSION.config()
 	var rate := preload("res://scripts/creatures/essence.gd").config()
 	assert_true(rate.get("wild_victory_runtime_enabled") is bool)
-	assert_eq(rate.get("wild_victory_runtime_enabled"), false, "the shipped typed XP mount remains OFF")
+	assert_eq(rate.get("wild_victory_runtime_enabled"), true, "the typed victory producer is active")
 	var award_cfg: Dictionary = cfg.get("xp_award", {})
 	for level: int in range(1, 101):
 		var ordinary := int(float(award_cfg.get("base", 18.0))
 			+ float(award_cfg.get("per_enemy_level", 6.0)) * float(level))
 		assert_eq(PROGRESSION.xp_award_for(level, cfg), ordinary,
-			"every live enemy level retains the full ordinary award")
+			"base arithmetic retains the unreduced award before transaction staging")
 		assert_true(ordinary > 0)
 		assert_eq(PROGRESSION.party_share(ordinary, cfg),
 			int(floorf(float(ordinary) * float(award_cfg.get("party_share", 0.35)))))
@@ -127,7 +127,7 @@ func test_explicit_staged_combat_xp_uses_one_positive_configured_reduction() -> 
 	var rate := preload("res://scripts/creatures/essence.gd").config()
 	var rate_before := rate.duplicate(true)
 	assert_true(rate.get("wild_victory_runtime_enabled") is bool)
-	assert_eq(rate.get("wild_victory_runtime_enabled"), false)
+	assert_eq(rate.get("wild_victory_runtime_enabled"), true)
 	var scale := float(rate.get("auto_xp_scale", 0.0))
 	assert_true(scale > 0.0 and scale < 1.0)
 	for level: int in range(1, 101):
@@ -140,7 +140,7 @@ func test_explicit_staged_combat_xp_uses_one_positive_configured_reduction() -> 
 		assert_eq(PROGRESSION.scaled_party_combat_xp(level, cfg, rate),
 			maxi(1, PROGRESSION.party_share(award, cfg)))
 		assert_eq(PROGRESSION.xp_award_for(level, cfg), raw,
-			"a detached scaled quote cannot reduce the live ordinary award")
+			"a scaled quote cannot mutate the base formula or scale it twice")
 	var tiny := {"xp_award": {"base": 1, "per_enemy_level": 0, "party_share": 0.5}}
 	assert_eq(PROGRESSION.scaled_combat_xp(1, tiny, {"auto_xp_scale": 0.01}), 1)
 	assert_eq(PROGRESSION.scaled_party_combat_xp(1, tiny, {"auto_xp_scale": 0.01}), 1)

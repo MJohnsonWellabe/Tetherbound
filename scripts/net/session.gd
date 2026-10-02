@@ -23,7 +23,7 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
-	if op in ["regional_ack", "refine_start", "master_duel"]:
+	if op in ["regional_ack", "refine_start", "master_duel", "resource"]:
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
@@ -148,6 +148,9 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if route.get("ok") == true: part = route.part
 	var context: Dictionary = {}
 	if envelope.op == "tm_teach": context = _personal_tm_context(peer, envelope.station_key)
+	elif envelope.op == "resource":
+		var resources := get_node_or_null(^"FoundationComposition/Resources")
+		if resources != null: context = resources.call("host_context", peer, envelope.station_key, envelope.intent)
 	elif envelope.op == "camp_build": context = _foundation_build_context(peer, envelope.intent)
 	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
@@ -210,7 +213,7 @@ func _foundation_journal_refusal(action: String, journal: Dictionary) -> Diction
 	# The actual prepared BOOL writer rolls back the hidden host stage. Keep
 	# the TM's original request for its next attempt, rather than minting a new
 	# teach ID. Malformed/foreign/semantic refusals retain their terminal meaning.
-	if action == "tm_teach" and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
+	if action in ["tm_teach", "resource"] and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
 		return {"ok": false, "resolved": false, "durable": false, "terminal_refusal": false, "code": code, "reason": code}
 	return _foundation_refusal(code)
 

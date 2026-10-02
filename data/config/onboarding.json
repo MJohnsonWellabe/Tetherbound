@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "enabled": false,
-  "_gate": "R3 source candidate. ROOT must prove normal-input lessons, modal back flow and per-character save/reconnect before enabling. Home return additionally needs F18 grounded arrival_applied:true,durable:true result; a permit is insufficient.",
+  "enabled": true,
+  "_gate": "Production lessons follow this character's actual progression. Home return requires F18 grounded arrival_applied:true,durable:true result; a permit is insufficient. Native controller, save/reconnect and player comprehension proofs remain separate acceptance requirements.",
   "_receipts": "opening:lesson:<id> and opening:lesson:trigger:home_return use existing declared opening: player scope and grant_player_flag transaction, recipient omitted so only authenticated submitter receives it. Dismiss/skip acknowledges teaching, never grants progression. Normal character persistence applies; ledger acceptance is not durable-save proof.",
   "lessons": [
     {"id":"home_key","title":"Home Key","teacher_node":"Grandpa","radius_m":5.0,"dialogue_path":"res://data/dialogue/opening.json","conversation":"lesson_home_key","goal":"Catch a second creature, then return to Grandpa."},

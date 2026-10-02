@@ -81,7 +81,8 @@ func _init(
 		for id: String in camps.get("items",{}): _items[id]=camps.items[id]
 		if camps.get("runtime_enabled") == true:
 			for id: String in camps.get("recipes",{}): _recipes[id]=camps.recipes[id]
-			for row: Dictionary in catalogue.get("forward_camp_buildables",[]): _buildables.append(row)
+			if buildables_path == BUILDABLES_PATH:
+				for row: Dictionary in catalogue.get("forward_camp_buildables",[]): _buildables.append(row)
 
 
 func _read(path: String) -> Dictionary:

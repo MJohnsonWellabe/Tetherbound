@@ -108,6 +108,15 @@ func bind_source_service(service: Node) -> void:
 	if service != null and not service.is_connected("settled", _on_source_settled):
 		service.connect("settled", _on_source_settled)
 
+## Adopt an already grounded ordinary node without rebuilding its model or
+## changing its authored transform. The mount has validated canonical identity.
+func adopt_renewable_source(spec: Dictionary, service: Node, stock: Dictionary) -> bool:
+	if _claiming or is_queued_for_deletion() or not _renewable_site_id.is_empty(): return false
+	_renewable_site_id = str(spec.get("id", ""))
+	_realm_id = str(spec.get("realm", ""))
+	bind_source_service(service)
+	set_renewable_stock(stock)
+	return true
 
 func setup(spec: Dictionary) -> void:
 	_item_id = str(spec.get("item", "wood"))
@@ -525,6 +534,7 @@ func _on_gathered(equipped_tool: Variant = null) -> void:
 	if _taken or _claiming:
 		return
 	if not _renewable_site_id.is_empty():
+		if equipped_tool == null and HARVEST_LOGIC.swing_answers_the_prompt(self, get_node_or_null(^"/root/Game")): return
 		_gather_registered_source()
 		return
 	var game := get_node_or_null(^"/root/Game")
@@ -597,6 +607,9 @@ func _on_delta_applied(delta: Dictionary) -> void:
 		var op := _stock_op(delta)
 		if op.is_empty():
 			return
+		if _source_service != null:
+			set_renewable_stock(op.get("state", {}))
+			return # Owner save/ACK, not this world delta, settles local feedback.
 		var own_claim := _claiming and str(op.get("txn_id", "")) == str(_claim.get("txn_id", ""))
 		set_renewable_stock(op.get("state", {}))
 		if own_claim:
@@ -769,9 +782,10 @@ func _on_source_settled(op: String, source_id: String, action_id: String, verdic
 	_claim = {}
 	var game := get_node_or_null(^"/root/Game")
 	if game == null: return
-	if verdict.get("resolved") != true:
+	if verdict.get("ok") != true or verdict.get("owner_saved") != true or verdict.get("owner_acknowledged") != true:
 		game.call("push_world_message", str(verdict.get("reason", "Gathering is awaiting settlement.")))
 		return
+	HOME_PROGRESS.maybe_set_materials_gathered(game)
 	var items: RefCounted = game.get("items")
 	game.call("push_world_message", "Gathered %s." % str(items.call("item_name", _item_id)))
 	_play_gather_audio(items)

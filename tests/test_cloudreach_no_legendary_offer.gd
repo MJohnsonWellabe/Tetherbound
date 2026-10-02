@@ -1500,13 +1500,13 @@ func test_numeric_curve_inventory_keeps_the_existing_authorized_solmane_shape() 
 	_report("numeric inventory", _cross_scan_violations({path: source}, _legendary_species(), _offer_vocabulary()))
 	var candidate := _dict("res://data/config/redesign_level_curve.json")
 	assert_true(candidate.get("runtime_enabled") is bool)
-	assert_eq(candidate.get("runtime_enabled"), false)
+	assert_eq(candidate.get("runtime_enabled"), true)
 	var rows: Variant = _at(candidate, ["overlays", "data/config/cloudreach_solmane_climax.json"])
 	if not _need(rows, true, "numeric Solmane overlay"):
 		return
 	assert_eq(rows.size(), 1)
 	for row: Dictionary in rows:
-		assert_eq(row.get("at", []), ["legendary", "level"], "the detached inventory changes only a numeric level")
+		assert_eq(row.get("at", []), ["legendary", "level"], "the materialized inventory changes only a numeric level")
 
 
 func test_negative_control_numeric_inventory_does_not_authorize_offer_code_or_lookalikes() -> void:

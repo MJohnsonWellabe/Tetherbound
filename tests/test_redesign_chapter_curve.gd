@@ -64,17 +64,17 @@ func _read(path: String) -> Dictionary:
 	return _candidate_view(path, parsed as Dictionary)
 
 
-## These views are explicit detached opt-ins for authored targets. Production
-## providers and the legacy route ledger never mount the candidate policy.
+## The production JSON already carries the new levels. A manifest application
+## must therefore be idempotent, never a substitute for checking the live data.
 func _candidate_view(path: String, base: Dictionary) -> Dictionary:
 	var authored := POLICY.config()
-	assert_eq(authored.get("runtime_enabled"), false)
+	assert_eq(authored.get("runtime_enabled"), true)
 	if not (authored.get("overlays", {}) as Dictionary).has(path.trim_prefix("res://")):
 		return base
-	authored["runtime_enabled"] = true
 	var next := POLICY.apply(path, base, true, authored)
-	assert_false(next.is_empty(), "candidate refuses stale level/identity: " + path)
-	return next
+	assert_false(next.is_empty(), "manifest refuses stale level/identity: " + path)
+	assert_eq(next, base, "live data already contains RD-10: " + path)
+	return base
 
 
 func _candidate_curve() -> Dictionary:
@@ -242,14 +242,14 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
 	assert_eq(str(captive.get("placeholder_species", "")), "fulgocobra")
 	assert_eq(int(captive.get("level", 0)), 55)
 	assert_eq(int((_read("res://data/config/stormwood_chapter.json").get("final_encounter", {}) as Dictionary).get("legendary_level", 0)), 55)
-	assert_eq(POLICY.config().get("runtime_enabled"), false, "candidate stays OFF for the actual joining path")
+	assert_eq(POLICY.config().get("runtime_enabled"), true, "the actual joining path uses RD-10")
 	var live_dynamo: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_dynamo.json"))
-	assert_true(live_dynamo is Dictionary, "the actual legacy captive remains authored")
+	assert_true(live_dynamo is Dictionary, "the actual captive remains authored")
 	if live_dynamo is Dictionary:
 		var live_captive: Dictionary = live_dynamo.get("captive", {})
-		assert_eq(float(live_captive.get("level", 0)), 44.0, "OFF live captive keeps the pinned legacy level")
-	assert_eq(preload("res://scripts/world/stormwood_ending.gd").legendary_level(), 44,
-		"OFF actual joining companion reads legacy44; detached candidate55 is not mounted")
+		assert_eq(float(live_captive.get("level", 0)), 55.0, "live captive matches the last chapter's level")
+	assert_eq(preload("res://scripts/world/stormwood_ending.gd").legendary_level(), 55,
+		"the actual joining companion reads the live level55")
 	var offer: Dictionary = _read("res://data/config/stormwood_encounters.json").get("legendary_placeholder", {})
 	assert_eq(str(offer.get("placeholder_species", "")), "fulgocobra")
 	assert_false(bool(offer.get("catchable", true)))
@@ -257,7 +257,7 @@ func test_stormheart_uses_existing_legendary_and_volunteers() -> void:
 	assert_eq(int((_read("res://data/config/cloudreach_solmane_climax.json").get("legendary", {}) as Dictionary).get("level", 0)), 44)
 
 
-func test_inactive_curve_retains_legacy_chapter_arrival_prerequisites() -> void:
+func test_numeric_activation_preserves_chapter_arrival_prerequisite_identities() -> void:
 	var expected_entry := {"cloudreach": ["realm_key_cloudreach"], "stormwood": ["realm_key_stormwood"]}
 	var expected_arrival := {"cloudreach": "cloudreach_arrive", "stormwood": "stormwood_chapter_started"}
 	for realm: String in ["cloudreach", "stormwood"]:
@@ -269,13 +269,13 @@ func test_inactive_curve_retains_legacy_chapter_arrival_prerequisites() -> void:
 		assert_eq(_read(path).get("acts", []), acts, "a numeric candidate never changes admission guards")
 		if not acts.is_empty():
 			assert_eq(acts[0].get("entry_flags", []), expected_entry[realm],
-				"OFF preserves each realm's exact pinned legacy entry contract")
+				"numeric activation preserves each realm's saved entry contract")
 		var legacy_arrivals := 0
 		for act: Dictionary in acts:
 			for row: Dictionary in act.get("objectives", []):
 				if str(row.get("id", "")) == expected_arrival[realm]:
 					legacy_arrivals += 1
-					assert_eq(row.get("requires_flags", []), [old_key], "the OFF arrival objective retains its key guard")
+					assert_eq(row.get("requires_flags", []), [old_key], "the arrival objective retains its saved key guard")
 				else:
 					assert_false((row.get("requires_flags", []) as Array).has(old_key))
 		assert_eq(legacy_arrivals, 1, "retain each realm's exact guarded arrival identity")
@@ -300,7 +300,7 @@ func test_inactive_curve_retains_legacy_chapter_arrival_prerequisites() -> void:
 	assert_true(trial_found, "actual Maela trial greeting remains available after canonical portal arrival")
 
 
-func test_inactive_stormwood_aftermath_retains_legacy_view_and_consumed_key_contract() -> void:
+func test_numeric_activation_preserves_saved_stormwood_aftermath_and_consumed_key_contract() -> void:
 	var chapter := _read("res://data/config/stormwood_chapter.json")
 	var rewards: Dictionary = chapter.get("rewards", {})
 	assert_eq(rewards.get("next_realm_key"), "portal_key_biome5")
@@ -314,13 +314,13 @@ func test_inactive_stormwood_aftermath_retains_legacy_view_and_consumed_key_cont
 			assert_eq(objective.get("completion_event"), "aftermath:waterward_view",
 				"retain the existing durable event identity")
 			assert_eq(objective.get("requires_flags"), ["stormwood:legendary_offer_made"],
-				"OFF preserves the legacy aftermath story prerequisite")
+				"numeric activation preserves the saved aftermath story prerequisite")
 			assert_eq(objective.get("grants_flags"), ["realm_key_water", "waterward_route_revealed", "stormwood:chapter_complete"],
-				"OFF retains the exact legacy view grants without mounting a homecoming candidate")
+				"numeric activation retains the saved view grant identities")
 			assert_eq(objective.get("consumed_grants"), {"realm_key_water": "realm_gate_water_unlocked"},
 				"the legacy key keeps its existing gate consumption mapping")
 			assert_eq(objective.get("how"), "Return to the high platform for the newly clear view of water.",
-				"OFF retains the exact legacy view instruction")
+				"numeric activation retains the authored view instruction")
 	assert_true(aftermath_found, "actual Stormwood aftermath remains authored")
 
 
