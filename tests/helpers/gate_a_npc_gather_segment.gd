@@ -676,6 +676,25 @@ static func mira_approach_hint(from: Vector3, door: Vector3, box: Vector3, size:
 		return [] # Full bottom hemisphere, not a point-sized or smaller trainer.
 	var corner := Vector2(20, strip_z - 0.35)
 	var result := NAVIGATOR.road_slice(road, Vector2(from.x, from.z), corner)
+	# The actual catch can finish north of the nearest southern road segment.
+	# Joining its projection then walks away from the shop over an uphill chord.
+	# In that case join the nearest forward authored node in this same slice;
+	# retain every remaining bend and the original walking/contact allowances.
+	var origin := Vector2(from.x, from.z)
+	var return_axis := corner - origin
+	if not result.is_empty() and (result.front() - origin).dot(return_axis) < 0.0:
+		var join_index := -1
+		var join_distance := INF
+		for index in range(1, result.size()):
+			if (result[index] - origin).dot(return_axis) < 0.0:
+				continue
+			var distance := origin.distance_squared_to(result[index])
+			if distance < join_distance:
+				join_index = index
+				join_distance = distance
+		if join_index < 0:
+			return []
+		result = result.slice(join_index)
 	if result.is_empty() or result.back().distance_to(corner) > 0.0001 or result.size() >= NAVIGATOR.MAX_CHOICES:
 		return []
 	result.append(Vector2(door.x, strip_z))

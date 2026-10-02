@@ -240,6 +240,16 @@ func test_mira_return_uses_painted_bends_and_same_standoff_without_stepping_onto
 	assert_true(hint.back().distance_to(Vector2(27, 7.6)) < 1.0, "the original1m standoff threshold still decides arrival")
 	assert_almost_eq(SEGMENT.DOOR_STANDOFF, 2.6, 0.000001)
 	assert_almost_eq(SEGMENT.DOOR_STEP_IN, 2.2, 0.000001)
+	var northern_catch := Vector3(26.3094329833984, 0.305154830217361, -32.9126892089844)
+	var forward_hint := SEGMENT.mira_approach_hint(northern_catch, Vector3(27, 0.85, 5),
+		Vector3(27, 0.9, 7.9), Vector3(4, 0.1, 2), 0.4, 0.001, road)
+	assert_eq(forward_hint.size(), 5, "the actual northern catch joins the same road's forward return")
+	assert_eq(forward_hint.front(), Vector2(20, -26), "do not backtrack over the failed southern uphill chord")
+	assert_eq(forward_hint[1], Vector2(20, -18), "retain the authored return nodes after the join")
+	assert_eq(forward_hint[2], Vector2(20, -12))
+	assert_eq(forward_hint.back(), Vector2(27, 6.65), "the unchanged lip/standoff heading remains last")
+	assert_true((forward_hint.front() - Vector2(northern_catch.x, northern_catch.z)).dot(
+		Vector2(20, 6.3) - Vector2(northern_catch.x, northern_catch.z)) >= 0.0)
 	assert_eq(SEGMENT.mira_approach_hint(Vector3.ZERO, Vector3(27, 0.85, 5), Vector3(27, 0.9, 7.9),
 		Vector3(4, 0.1, 2), 0.2, 0.001, road), [], "the route cannot shrink the capsule")
 	assert_eq(SEGMENT.mira_approach_hint(Vector3.ZERO, Vector3(27, 0.85, 5), Vector3(27, 0.9, 7.9),
