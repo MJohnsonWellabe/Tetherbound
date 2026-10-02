@@ -586,6 +586,17 @@ func homestead_submit_action(action: String, original: Dictionary, station: Node
 	if is_instance_valid(station): key = "%s:%s:%s" % [station.get_meta("building_id", ""), station.get_meta("realm", ""), station.get_meta("building_uid", "")]
 	return _foundation_send(action, key, original, revision)
 
+func retained_training_transaction(actions: Array) -> Dictionary:
+	# Read the existing durable journal after reload. This is a presentation
+	# projection, never a new transaction, receipt or owner candidate.
+	var row := _owner_training_row()
+	var game := _game()
+	if game == null or game.get("world") == null or game.get("local") == null \
+		or not TRAINING_WORLD.training_row_valid(row, game.get("world").reward_delivery_namespace, game.get("world").world_id) \
+		or row.character_id != _local_character_id() or not actions.has(row.action): return {}
+	return {"action": row.action, "intent": row.intent.duplicate(true), "receipt": row.receipt,
+		"original_revision": int(row.character_revision) - 1, "status": row.status}
+
 func _register_homestead_station_node(key: String, station: Node3D) -> bool:
 	if not is_instance_valid(station) or not station.is_in_group("placed_building"): return false
 	var checked := STATION_RULES.record(STATION_RULES.config(), _game().get("world").placed_buildings, str(station.get_meta("building_uid", "")))

@@ -27,6 +27,11 @@ func view() -> Dictionary:
 	var state: Variant = _view.call()
 	return state if state is Dictionary else {}
 
+func retained_transaction(actions: Array) -> Dictionary:
+	var producer: Object = _submit.get_object() if _submit.is_valid() else null
+	return producer.call("retained_training_transaction", actions) \
+		if producer != null and producer.has_method("retained_training_transaction") else {}
+
 func mount_biome(world: Node3D, player: Node3D, runtime_biome: String) -> void:
 	for row: Dictionary in BREAKTHROUGH.masters().get("masters", []):
 		if BIOMES.runtime_id(str(row.biome)) != runtime_biome: continue

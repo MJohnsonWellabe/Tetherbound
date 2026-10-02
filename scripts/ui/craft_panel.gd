@@ -407,7 +407,7 @@ func _refresh_next_upgrade() -> void:
 		if button.get_meta("station_readonly",false) == true:
 			button.disabled=false
 		elif button.text == "Retry original transaction":
-			button.disabled=_station_intent.is_empty()
+			button.disabled=_station_intent.is_empty() and _retained_station_transaction().is_empty()
 		else:
 			var revision: Variant = view.get("registry_revision")
 			button.disabled=not _station_intent.is_empty() or not STATION_RULES.number(revision) \
@@ -441,12 +441,23 @@ func _station_action(op: String, fields: Dictionary) -> void:
 	_retry_station()
 
 func _retry_station() -> void:
-	if _station_intent.is_empty() or not is_instance_valid(_producer): return
+	if not is_instance_valid(_producer): return
+	if _station_intent.is_empty():
+		var retained := _retained_station_transaction()
+		if retained.is_empty(): return
+		_station_intent = retained.intent.duplicate(true)
+		_station_operation = retained.action
+		_original_revision = int(retained.original_revision)
+		_station_source = weakref(_station) if is_instance_valid(_station) else null
 	# A removed node may be null. The producer must reconcile the retained
 	# original journal before fresh-source validation; null cannot start work.
 	var raw: Variant = _producer.call("homestead_submit_action",_station_operation,_station_intent.duplicate(true),_original_station(),_original_revision)
 	if raw is Dictionary: _station_completed(_station_operation,_station_intent.duplicate(true),raw)
 	else: _status.text="Waiting for the original station transaction."
+
+func _retained_station_transaction() -> Dictionary:
+	if not is_instance_valid(_producer) or not _producer.has_method("retained_training_transaction"): return {}
+	return _producer.call("retained_training_transaction", ["station_craft", "den", "gear", "loadout", "camp_rest"])
 
 ## Trusted producer callback only. A displayed success needs both saves/ACK;
 ## unknown, contradictory and lost-ACK replies retain the original identity.
@@ -963,7 +974,7 @@ func _process(delta: float) -> void:
 		_status.text="Waiting for the original station transaction to reconcile." if not _station_intent.is_empty() else "This station is no longer available."
 		for button: Button in _rows: button.disabled=true
 		for button: Button in _station_buttons:
-			button.disabled=button.text != "Retry original transaction" or _station_intent.is_empty()
+			button.disabled=button.text != "Retry original transaction" or (_station_intent.is_empty() and _retained_station_transaction().is_empty())
 		return
 	if _status_left > 0.0:
 		_status_left -= delta

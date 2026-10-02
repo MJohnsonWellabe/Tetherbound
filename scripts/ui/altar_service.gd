@@ -187,6 +187,24 @@ func reconcile_essence_spend(spend_id: String) -> void:
 		_pending.request.duplicate(true))
 	_accept_result(spend_id, raw)
 
+func retained_training_transaction(actions: Array) -> Dictionary:
+	return _session.call("retained_training_transaction", actions) \
+		if _bind_session() and _session.has_method("retained_training_transaction") else {}
+
+func retry_retained_transaction(station_key: String, spend_id: String) -> void:
+	var retained := retained_training_transaction(["altar_spend"])
+	if retained.is_empty() or not _intent_valid(retained.intent) or retained.intent.spend_id != spend_id:
+		_emit_refusal(spend_id, "decision_unavailable")
+		return
+	if not _pending.is_empty():
+		if _pending.request != retained.intent: _emit_refusal(spend_id, "transaction_busy"); return
+	else:
+		var context := _context()
+		if context.is_empty(): _emit_refusal(spend_id, "authority_missing"); return
+		_pending = {"station_key": station_key, "request": retained.intent.duplicate(true), "context": context, "durable": true}
+		_retry_left = _retry_seconds()
+	reconcile_essence_spend(spend_id)
+
 
 func _retry_seconds() -> float:
 	var raw: Variant = ESSENCE.config().get("altar_result_retry_seconds")

@@ -57,6 +57,10 @@ func _rebuild() -> void:
 	var title := Label.new()
 	title.text = {"duel": "Choose your one creature · No switching · Retry any loss", "cook": "Kitchen · Cook an Ascension Feast", "feed": "Feed one creature · Lift its cap"}.get(_mode, "")
 	_list.add_child(title)
+	if _mode == "cook" and _service.has_method("retained_transaction"):
+		var retained: Dictionary = _service.call("retained_transaction", ["feast_cook"])
+		if not retained.is_empty():
+			_button("Retry original transaction", func() -> void: _retry_retained_feast(retained.intent))
 	var state: Dictionary = _service.call("view")
 	if state.is_empty():
 		_message.text = "Character transaction reconciliation is not ready."
@@ -110,6 +114,12 @@ func _cook(recipe: String) -> void:
 		_recipe = recipe
 		_craft_id = Crypto.new().generate_random_bytes(16).hex_encode()
 	_send("feast_cook", {"recipe_id": recipe, "craft_id": _craft_id})
+
+func _retry_retained_feast(original: Dictionary) -> void:
+	if not original.get("recipe_id") is String or not original.get("craft_id") is String: return
+	_recipe = original.recipe_id
+	_craft_id = original.craft_id
+	_send("feast_cook", original.duplicate(true))
 
 func _feed(uid: String, item: String, choice: String) -> void:
 	_send("feast_feed", {"creature_uid": uid, "feast_item": item, "choice": choice})

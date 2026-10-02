@@ -281,6 +281,13 @@ func _rebuild(prefer_payment: bool = false) -> void:
 	choices.add_theme_constant_override("separation", 8)
 	scroll.add_child(choices)
 	var selected := _creature()
+	var retained: Dictionary = _service.call("retained_training_transaction", ["altar_spend"]) \
+		if is_instance_valid(_service) and _service.has_method("retained_training_transaction") else {}
+	if not retained.is_empty():
+		var retry := _button(choices, "Retry original level transaction", _retry_retained_spend, _pending_id.is_empty())
+		retry.set_meta("altar_focus_key", "retry:original")
+		payment_buttons.append(retry)
+		if first_payment == null: first_payment = retry
 	if selected == null:
 		_label(choices, "That companion is no longer in your team.")
 	elif _quote.is_empty():
@@ -431,3 +438,15 @@ func _on_completed(spend_id: String, result: Dictionary) -> void:
 	if _open:
 		_refresh_quote()
 		_rebuild()
+
+func _retry_retained_spend() -> void:
+	if not _pending_id.is_empty() or not is_instance_valid(_service) \
+		or not _service.has_method("retained_training_transaction"): return
+	var retained: Dictionary = _service.call("retained_training_transaction", ["altar_spend"])
+	if retained.is_empty() or not retained.intent.get("spend_id") is String: return
+	_pending_id = retained.intent.spend_id
+	_pending_durable = true
+	_creature_uid = str(retained.intent.get("creature_uid", _creature_uid))
+	_status = "Waiting for the original saved level transaction."
+	_rebuild()
+	_service.call("retry_retained_transaction", _station_key, _pending_id)
