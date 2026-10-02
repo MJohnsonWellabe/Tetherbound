@@ -1691,10 +1691,11 @@ jobs:
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
       - name: Verify Stormwood Nysa press
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        # 420 s, not 240: the walk to Nysa's stance can legitimately draw a wild
-        # route encounter first (~55 s), which the segment resolves before the
-        # ~160 s trainer fight. Two main-based runs hit 240 s on that path.
-        run: timeout 420s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
+        # Let the smoke's existing 900 s watchdog judge its unchanged route.
+        # CI37070627396 won two intervening wild fights (138 + 122 s), then
+        # hit the former 420 s outer cap during the trainer challenge. The
+        # separate diagnostic passed; 60 s also covers startup/exit overhead.
+        run: timeout 960s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
       - name: Verify Tidewake closed-gate tide-race seal
         if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
