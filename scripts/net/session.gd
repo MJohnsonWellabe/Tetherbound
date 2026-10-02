@@ -22,6 +22,9 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
+	if op == "regional_ack":
+		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
 	return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
 
@@ -129,8 +132,14 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
 	if envelope.op == "regional_ack":
 		var ending := preload("res://scripts/story/regional_homecoming.gd")
-		if peer != local_peer_id() or config().get("redesign_ending_runtime_enabled") != true \
-			or ending.acknowledgement_intent(ending.context(_game()), str(envelope.intent.get("stage", ""))) != envelope.intent: return _foundation_refusal("ending_context_changed")
+		var expected: Dictionary = ending.context(_game()) if peer == local_peer_id() else {}
+		if peer != local_peer_id():
+			var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+			if lifecycle != null: expected = lifecycle.call("host_ending_context", peer)
+		if config().get("redesign_ending_runtime_enabled") != true \
+			or ending.acknowledgement_intent(expected, str(envelope.intent.get("stage", ""))) != envelope.intent \
+			or (envelope.intent.get("stage") == ending.CREDITS_SEEN_FLAG \
+				and not _character_authority.call("state", character).redesign_character.transaction_receipts.has("craft:regional_ending_homecoming_seen:" + character)): return _foundation_refusal("ending_context_changed")
 		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 			"in_range": true, "in_combat": false, "earned_ending_ack": true, "source_key": "regional_ending:" + character}
 	if envelope.op == "master_chest":

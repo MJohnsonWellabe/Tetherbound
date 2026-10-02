@@ -65,19 +65,38 @@ func local_sample() -> Dictionary:
 		if world_node.is_ancestor_of(node) and node.has_method("is_fading") and node.call("is_fading") == true: cutscene = true
 	for node: Node in get_tree().get_nodes_in_group("story_modal"):
 		if node.has_method("is_open") and node.call("is_open") == true: dialogue = true
+	var ending_owner: bool = false
+	if realm == "meadows" and input_owner != null:
+		for source: Node in world_node.find_children("*", "Node", true, false):
+			if source.get_script() != preload("res://scripts/story/sequence_director.gd"): continue
+			var prompt: Node3D = source.get("_grandpa_prompt")
+			if prompt == null or actor.global_position.distance_to(prompt.global_position) > float(prompt.get("radius")): continue
+			var panel: Node = source.get("_dialogue")
+			var credits: Node = source.get("_regional_credits")
+			if (input_owner == panel or input_owner == source) \
+				and str(source.get("_f18_opening_conversation_id")).begins_with("regional_homecoming_"): ending_owner = true
+			if credits != null and input_owner == credits and credits.get("_expected_character_id") == game.get("local").character_id \
+				and credits.get("_expected_world") == game.get("world"): ending_owner = true
+	var party: RefCounted = game.get("party")
+	if party == null or not preload("res://scripts/story/regional_homecoming.gd").valid_party(party): return {}
 	return {"character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace,
 		"session_epoch": owner.call("_altar_current_epoch"), "realm": realm,
 		"damage_revision": vitals.get("damage_revision"), "dialogue": dialogue, "cutscene": cutscene,
-		"swimming": bool(swim.call("is_swimming")), "flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed"))}
+		"swimming": bool(swim.call("is_swimming")), "flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
+		"ending_owner": ending_owner, "party_revision": int(party.get("revision")),
+		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party)}
 
 static func valid_sample(sample: Dictionary) -> bool:
-	if sample.size() != 11: return false
+	if sample.size() != 14: return false
 	for field: String in ["character_id", "world_instance_id", "session_epoch", "realm"]:
 		if not sample.get(field) is String or sample[field].is_empty() or sample[field].length() > 192: return false
-	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed"]:
+	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed", "ending_owner"]:
 		if not sample.get(field) is bool: return false
 	return sample.get("sequence") is int and sample.sequence > 0 \
-		and sample.get("damage_revision") is int and sample.damage_revision >= 0
+		and sample.get("damage_revision") is int and sample.damage_revision >= 0 \
+		and sample.get("party_revision") is int and sample.party_revision >= 0 \
+		and sample.get("party_signature") is String and sample.party_signature.length() == 64 \
+		and sample.party_signature.is_valid_hex_number(false)
 
 func accept(peer: int, sample: Dictionary) -> void:
 	var owner: Node = session()
@@ -153,3 +172,58 @@ func host_context(peer: int) -> Dictionary:
 		"last_waystones": personal.redesign_character.last_waystones.duplicate(true),
 		"waystones_activated": personal.redesign_character.waystones_activated.duplicate(true),
 		"waystone_positions": positions, "arch_positions": arches}
+
+func host_ending_context(peer: int) -> Dictionary:
+	var owner: Node = session()
+	var safety := host_context(peer)
+	if safety.is_empty() or safety.realm != "meadows": return {}
+	for hazard: String in ["combat", "swimming", "flying", "downed"]:
+		if safety.get(hazard) != false: return {}
+	var sample: Dictionary = _observations[peer].sample
+	if (safety.dialogue or safety.cutscene) and sample.ending_owner != true: return {}
+	var world_node: Node3D = owner.call("_portal_world_node", "meadows")
+	var nearby: bool = false
+	for source: Node in world_node.find_children("*", "Node", true, false):
+		if source.get_script() != preload("res://scripts/story/sequence_director.gd"): continue
+		var prompt: Node3D = source.get("_grandpa_prompt")
+		if prompt != null and safety.position.distance_to(prompt.global_position) <= float(prompt.get("radius")): nearby = true
+	var world: RefCounted = owner.call("_game").get("world")
+	if not nearby or not world.flags.call("has", preload("res://scripts/story/regional_homecoming.gd").WORLD_FLAG): return {}
+	var personal: Dictionary = owner.get("_character_authority").call("state", sample.character_id)
+	var flags: Dictionary = owner.call("_foundation_flags", peer)
+	return ending_fields(personal, flags, sample)
+
+static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dictionary) -> Dictionary:
+	if personal.get("character_id") != sample.get("character_id") or flags.get("stormwood:legendary_ceremony_settled") != true: return {}
+	var originals: Array[String] = []
+	var answers: Array[String] = []
+	for flag: String in flags:
+		if flags[flag] != true: continue
+		if flag.begins_with("stormwood:regional_outcome:"): originals.append(flag)
+		if flag.begins_with("stormwood:legendary_answer:"): answers.append(flag)
+	if originals.size() > 1 or (originals.is_empty() and answers.size() != 1): return {}
+	var outcome: String = answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
+	if not answers.has(outcome) or outcome.get_slice(":", outcome.get_slice_count(":") - 1) not in ["accepted", "refused"]: return {}
+	var home: String = ""
+	var starter: String = ""
+	for receipt: String in personal.get("redesign_character", {}).get("transaction_receipts", []):
+		if receipt.begins_with("craft:home_return_" + str(sample.world_instance_id) + "_") \
+			and receipt.ends_with(":" + str(sample.character_id)): home = receipt
+		var prefix: String = "starter_choice:%s:" % sample.character_id
+		if receipt.begins_with(prefix):
+			var uid: String = receipt.trim_prefix(prefix)
+			if uid.is_empty() or uid.contains(":") or (not starter.is_empty() and starter != uid): return {}
+			starter = uid
+	if home.is_empty() or starter.is_empty(): return {}
+	var temporary: RefCounted = preload("res://autoload/party.gd").new()
+	var mirrors: Dictionary = personal.redesign_character.get("creatures", {})
+	for card: Dictionary in personal.get("party", []):
+		var member: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, personal.redesign_character) \
+			if mirrors.has(card.uid) else preload("res://scripts/save/water_capture_codec.gd").decode(card)
+		if member == null or not temporary.call("add", member): return {}
+	var signature: String = preload("res://scripts/story/regional_homecoming.gd").party_signature(temporary)
+	while temporary.call("size") > 0: temporary.call("remove_at", 0)
+	if signature.is_empty() or signature != sample.get("party_signature"): return {}
+	return {"world_instance_id": sample.world_instance_id, "session_epoch": sample.session_epoch,
+		"character_id": sample.character_id, "outcome_id": outcome, "home_return_receipt": home,
+		"party_revision": sample.party_revision, "party_signature": signature}

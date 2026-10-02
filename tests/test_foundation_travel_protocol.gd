@@ -40,7 +40,8 @@ class ArrivalFixture extends "res://scripts/net/foundation_portal_arrival.gd":
 func _sample() -> Dictionary:
 	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a",
 		"realm": "meadows", "sequence": 1, "damage_revision": 0, "dialogue": false,
-		"cutscene": false, "swimming": false, "flying": false, "downed": false}
+		"cutscene": false, "swimming": false, "flying": false, "downed": false,
+		"ending_owner": false, "party_revision": 0, "party_signature": "[]".sha256_text()}
 
 func test_lifecycle_has_no_action_or_coordinates_and_requires_every_observation() -> void:
 	var sample := _sample()
@@ -104,3 +105,30 @@ func test_consumed_guest_permit_survives_failed_save_and_requires_correlated_not
 	arrival.free()
 	session.game.free()
 	session.free()
+
+func test_guest_ending_fields_require_original_personal_answer_home_receipt_and_canonical_party() -> void:
+	var sample := _sample()
+	var personal := {"character_id": "guest_a", "party": [], "redesign_character": {"creatures": {},
+		"transaction_receipts": ["starter_choice:guest_a:starter_uid", "craft:home_return_world_a_original_permit:guest_a"]}}
+	var flags := {"stormwood:legendary_ceremony_settled": true,
+		"stormwood:regional_outcome:original_claim:refused": true, "stormwood:legendary_answer:original_claim:refused": true}
+	var expected := LIFECYCLE.ending_fields(personal, flags, sample)
+	assert_false(expected.is_empty())
+	if expected.is_empty(): return
+	assert_eq(expected.outcome_id, "stormwood:legendary_answer:original_claim:refused")
+	assert_eq(expected.party_signature, "[]".sha256_text())
+	var changed := sample.duplicate(true)
+	changed.party_signature = "another_party".sha256_text()
+	assert_true(LIFECYCLE.ending_fields(personal, flags, changed).is_empty())
+	changed = sample.duplicate(true)
+	changed.world_instance_id = "foreign_world"
+	assert_true(LIFECYCLE.ending_fields(personal, flags, changed).is_empty())
+	changed = sample.duplicate(true)
+	changed.character_id = "another_character"
+	assert_true(LIFECYCLE.ending_fields(personal, flags, changed).is_empty())
+	var ambiguous := flags.duplicate(true)
+	ambiguous["stormwood:regional_outcome:other_claim:accepted"] = true
+	ambiguous["stormwood:legendary_answer:other_claim:accepted"] = true
+	assert_true(LIFECYCLE.ending_fields(personal, ambiguous, sample).is_empty())
+	var only_shared := {"stormwood:stormheart_freed": true}
+	assert_true(LIFECYCLE.ending_fields(personal, only_shared, sample).is_empty())

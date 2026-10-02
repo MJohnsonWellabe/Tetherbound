@@ -3119,6 +3119,11 @@ func regional_ending_context() -> Dictionary:
 				at_farm = true
 				farm_source = source
 	var safety: Dictionary = session.call("_host_portal_context", session.call("local_peer_id"))
+	if not is_host():
+		var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		if lifecycle != null:
+			safety = lifecycle.call("local_sample")
+			safety.combat = session.call("_altar_peer_in_combat", session.call("local_peer_id"))
 	var safe := not safety.is_empty()
 	for hazard: String in ["combat", "swimming", "flying", "downed"]:
 		if safety.get(hazard) != false: safe = false
