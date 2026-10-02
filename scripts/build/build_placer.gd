@@ -105,6 +105,13 @@ static func _station_personal_view(game: Node) -> Dictionary:
 	return raw if raw is Dictionary else {}
 
 
+static func _station_preview_personal_view(game: Node, attachment: Dictionary) -> Dictionary:
+	# Base placement reads no personal attachment recipes. Avoid a full
+	# admitted-character refresh (or guest view RPC) on every ghost tick.
+	# Attachment previews keep the original authenticated view doorway.
+	return {} if attachment.is_empty() else _station_personal_view(game)
+
+
 static func _station_building_available(game: Node, id: String) -> bool:
 	if STATION_RULES.config().get("runtime_enabled") != true: return false
 	if id == "altar": return _altar_placement_available(game)
@@ -892,7 +899,7 @@ func preview_placement(game: Node, armed: String, raw_spot: Vector3,
 			result.position = source_spot
 			result.yaw_deg = _yaw_deg
 			result.snapped_to_neighbour = true
-		var view := _station_personal_view(game)
+		var view := _station_preview_personal_view(game, def)
 		var plan := STATION_RULES.placement(cfg, buildings, armed, WORLD_RECORDS.active(game), result.position, _yaw_deg, view.get("redesign_character", {}), parent_uid)
 		if plan.get("ok") == true:
 			plan = _station_pose_valid(game, armed, WORLD_RECORDS.active(game), result.position, _yaw_deg)
