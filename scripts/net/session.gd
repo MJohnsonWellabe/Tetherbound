@@ -778,6 +778,11 @@ func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 		if duty.character_id != accepted.get("character_id") or (not capture and (duty.action != accepted.get("action") or duty.intent != accepted.get("intent"))): continue
 		var canonical: Dictionary = context.duplicate(true)
 		for field: String in ["character_id", "expected_revision", "in_range", "retained_event", "in_combat", "foundation_runtime_authorized"]: canonical.erase(field)
+		if duty.action == "boss_relic":
+			# These are re-derived from the retained event's actual world on retry,
+			# not extra fields in the immutable victory capture.
+			canonical.erase("boss_settlement_world_flags")
+			if not duty.context.has("world_namespace"): canonical.erase("world_namespace")
 		if ESSENCE._equivalent(canonical, duty.context): return row.session_id
 	return ""
 
