@@ -1431,16 +1431,19 @@ func _production_heading(direction: Vector3) -> Vector3:
 	if refused():
 		return Vector3.ZERO
 	if walls.is_empty():
-		# ONE prospective max-speed ordinary step from the real registered pose.
+		# ONE advisory cast from the real pose, covering the ordinary step plus
+		# the actual controller's acceleration-bounded turning distance. A
+		# one-step warning can arrive while cached momentum still moves inward.
 		# _motion charges the SAME query/lifetime/deadline caps and unchanged
 		# capsule, mask, skin and no extra exclusions. This is never clearance.
 		var vitals: RefCounted = _body.get("vitals")
 		if vitals == null or not vitals.has_method("move_speed_scale"):
 			_stop_geometry("missing production ground-speed state")
 			return Vector3.ZERO
-		var reach := ordinary_preview_reach(float(_body.get("_walk_speed")), float(_body.get("_sprint_speed")),
+		var reach := ordinary_avoidance_reach(float(_body.get("_walk_speed")), float(_body.get("_sprint_speed")),
 			float(vitals.call("move_speed_scale")), Vector2(_body.velocity.x, _body.velocity.z).length(),
-			float(_body.get("_max_speed")), _production_delta)
+			float(_body.get("_max_speed")), _production_delta, float(_body.get("_ground_accel")),
+			MAX_EDGE if _raw else direction.length())
 		if not is_finite(reach) or reach <= 0.0 or reach > MAX_EDGE:
 			_stop_geometry("invalid bounded provisional production step")
 			return Vector3.ZERO
@@ -1506,6 +1509,19 @@ static func ordinary_preview_reach(walk: float, sprint: float, scale: float, mom
 		return NAN
 	var speed := maxf(maxf(walk, sprint) * scale, momentum)
 	return minf(speed, ceiling) * delta if is_finite(speed) else NAN
+
+
+## Steering horizon only. The original one-step helper and actual movement,
+## overlap, contact, query, deadline and waypoint guards keep their contracts.
+static func ordinary_avoidance_reach(walk: float, sprint: float, scale: float, momentum: float,
+		ceiling: float, delta: float, acceleration: float, waypoint_distance: float) -> float:
+	var step := ordinary_preview_reach(walk, sprint, scale, momentum, ceiling, delta)
+	if not is_finite(step) or not is_finite(acceleration) or acceleration <= 0.0 \
+			or not is_finite(waypoint_distance) or waypoint_distance <= 0.0:
+		return NAN
+	var speed := step / delta
+	var horizon := step + speed * speed / (2.0 * acceleration)
+	return minf(horizon, waypoint_distance) if is_finite(horizon) else NAN
 
 
 ## A prospective surface needs a tangent, not a lateral shove toward an

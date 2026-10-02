@@ -512,6 +512,10 @@ func _reset_state(party_size: int) -> void:
 	_game.set("pending_catch", null)
 	var party: RefCounted = _game.get("party")
 	party.call("clear")
+	# Each disclosed fixture replaces the whole owned roster. The portable
+	# creature mirrors belong to that roster too; retaining the preceding
+	# scenario's IDs would correctly make its next save fail as unowned.
+	_game.get("local").set("redesign_character", preload("res://scripts/data/redesign_state.gd").defaults("character"))
 	if party_size == 0:
 		return
 	var recipe: Array = ["terrapup", "mudsnout", "bramblebun", "brooktail", "tuskroot"]

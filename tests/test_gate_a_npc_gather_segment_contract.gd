@@ -161,6 +161,20 @@ func test_prospective_tangent_does_not_push_into_the_unreported_opposite_wall() 
 	assert_almost_eq(live.length(), 1.0, 0.000001)
 
 
+func test_advisory_avoidance_accounts_for_real_turning_distance_without_crossing_the_waypoint() -> void:
+	var step := NAVIGATOR.ordinary_preview_reach(5.0, 8.6, 1.0, 5.0, 120.0, 1.0 / 60.0)
+	var horizon := NAVIGATOR.ordinary_avoidance_reach(5.0, 8.6, 1.0, 5.0, 120.0, 1.0 / 60.0, 42.0, 180.0)
+	assert_almost_eq(horizon, step + 8.6 * 8.6 / 84.0, 0.000001,
+		"the live-wild warning must arrive before cached inward momentum consumes the turning distance")
+	assert_true(horizon > step)
+	assert_almost_eq(NAVIGATOR.ordinary_avoidance_reach(5.0, 8.6, 1.0, 5.0, 120.0, 1.0 / 60.0, 42.0, 0.08), 0.08, 0.000001,
+		"a counter beyond the current axial waypoint cannot steer this leg")
+	assert_true(is_nan(NAVIGATOR.ordinary_avoidance_reach(5.0, 8.6, 1.0, 5.0, 120.0, 1.0 / 60.0, 0.0, 180.0)))
+	assert_true(is_nan(NAVIGATOR.ordinary_avoidance_reach(5.0, 8.6, 1.0, 5.0, 120.0, 1.0 / 60.0, INF, 180.0)))
+	assert_true(is_nan(NAVIGATOR.ordinary_avoidance_reach(5.0, 8.6, 1.0, 5.0, 120.0, 1.0 / 60.0, 42.0, 0.0)))
+	assert_true(is_nan(NAVIGATOR.ordinary_avoidance_reach(5.0, 8.6, INF, 5.0, 120.0, 1.0 / 60.0, 42.0, 180.0)))
+
+
 func test_road_slice_returns_in_original_reverse_order_and_refuses_broken_input() -> void:
 	var road: Array[Vector2] = [Vector2.ZERO, Vector2(4, 0), Vector2(8, 0), Vector2(10, 0)]
 	assert_eq(NAVIGATOR.road_slice(road, Vector2(9, 1), Vector2(1, 1)),
