@@ -633,7 +633,7 @@ static func _choice(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if opened.get("verdict") != "PASS": return opened
 	var popup: PopupMenu = choice.get_popup()
 	if not is_instance_valid(popup) or not popup.visible: return _result(false, "Ordinary controller input did not open actual choice popup")
-	for attempt: int in choice.item_count + 1:
+	for _attempt: int in choice.item_count + 1:
 		if popup.get_focused_item() == target:
 			var selected: Dictionary = await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
 			if selected.get("verdict") != "PASS": return selected
