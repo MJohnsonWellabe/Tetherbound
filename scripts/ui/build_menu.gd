@@ -28,6 +28,7 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const BUILD_THEME := preload("res://assets/ui/theme/build_theme.tres")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const BUILD_PHASE := preload("res://scripts/ui/build_phase_observer.gd")
 
 ## Order the tab row draws in when present — `docs/decisions/D34`. A category
 ## with zero buildables in it (SURVIVAL/FARMING/TETHER stay unbuilt per that
@@ -129,8 +130,10 @@ static func get_or_make(tree: SceneTree) -> CanvasLayer:
 	for node in tree.get_nodes_in_group(GROUP):
 		if node is CanvasLayer:
 			return node as CanvasLayer
+	var started := BUILD_PHASE.begin("menu.instance")
 	var menu: CanvasLayer = (load(SELF_PATH) as GDScript).new()
 	tree.root.add_child(menu)
+	BUILD_PHASE.finish("menu.instance", started)
 	return menu
 
 ## Which piece id was last chosen in each category — a plain `static var`
@@ -164,6 +167,7 @@ var _open := false
 var _mouse_before: int = Input.MOUSE_MODE_VISIBLE
 ## Same focus-owner watch `game_menu.gd` uses for its own `ui_focus` tick.
 var _last_focus_owner: Control = null
+var _diagnostic_frames := 0
 
 
 func _ready() -> void:
@@ -177,7 +181,9 @@ func _ready() -> void:
 	# world-verb poll asks that one question, so nothing here has to be kept in
 	# sync with what the HUD happens to check.
 	add_to_group(INPUT_OWNER.GROUP)
+	var started := BUILD_PHASE.begin("menu.initial_ui")
 	_build_ui()
+	BUILD_PHASE.finish("menu.initial_ui", started)
 
 
 func is_open() -> bool:
@@ -197,6 +203,8 @@ func open() -> void:
 	_open = true
 	_mouse_before = Input.mouse_mode
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_diagnostic_frames = 0
+	var started := BUILD_PHASE.begin("menu.open")
 	_rebuild_catalogue()
 	_update_footer()
 	_say("")
@@ -205,6 +213,7 @@ func open() -> void:
 		_select_category(_category_index)
 	else:
 		_describe(-1)
+	BUILD_PHASE.finish("menu.open", started)
 
 
 ## `play_cue` is false only from `_pick`'s own close-after-select: that
@@ -234,6 +243,14 @@ func close(play_cue: bool = true) -> void:
 
 
 func _process(delta: float) -> void:
+	var trace_frame := _open and BUILD_PHASE.enabled() and _diagnostic_frames < 12
+	if trace_frame: _diagnostic_frames += 1
+	var started := BUILD_PHASE.begin("menu.process", {"frame": _diagnostic_frames}) if trace_frame else 0
+	_run_menu_frame(delta, trace_frame)
+	BUILD_PHASE.finish("menu.process", started)
+
+
+func _run_menu_frame(delta: float, trace_frame: bool = false) -> void:
 	if not _open:
 		return
 	if Input.is_action_just_pressed("menu_cancel") or Input.is_action_just_pressed("build_cancel"):
@@ -273,8 +290,13 @@ func _process(delta: float) -> void:
 	# Cheap (at most a handful of cost rows, at most COLUMNS cells) and keeps
 	# owned/required numbers AND which cells are greyed live if the player
 	# gathers or crafts while the menu sits open over a still-running world.
+	# Bound diagnostic output to the first twelve actual idle callbacks.
+	var describe_started := BUILD_PHASE.begin("menu.describe", {"frame": _diagnostic_frames}) if trace_frame else 0
 	_describe(_selected_index)
+	BUILD_PHASE.finish("menu.describe", describe_started)
+	var afford_started := BUILD_PHASE.begin("menu.afford", {"frame": _diagnostic_frames}) if trace_frame else 0
 	_refresh_afford_state()
+	BUILD_PHASE.finish("menu.afford", afford_started)
 
 	if _message_left > 0.0:
 		_message_left -= delta
@@ -308,6 +330,7 @@ func _clear(container: Node) -> void:
 
 
 func _rebuild_catalogue() -> void:
+	var started := BUILD_PHASE.begin("menu.catalogue")
 	var game := _game()
 	var items: RefCounted = game.get("items") if game != null else null
 	var all: Array = items.call("buildables") if items != null else []
@@ -327,6 +350,7 @@ func _rebuild_catalogue() -> void:
 	if _category_index >= _categories.size():
 		_category_index = 0
 	_build_tabs()
+	BUILD_PHASE.finish("menu.catalogue", started)
 
 
 func _current_pieces() -> Array:
@@ -525,6 +549,7 @@ func _select_category(index: int) -> void:
 ## Rebuilds the thumbnail grid for the current category and lands focus on
 ## the remembered piece (spec 17), or the first cell if none is remembered.
 func _build_grid() -> void:
+	var started := BUILD_PHASE.begin("menu.grid")
 	_clear(_grid)
 	_cell_buttons.clear()
 
@@ -569,8 +594,10 @@ func _build_grid() -> void:
 		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		thumb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		var thumbnail_path := str(piece.get("thumbnail", ""))
-		if thumbnail_path != "" and ResourceLoader.exists(thumbnail_path):
-			thumb.texture = load(thumbnail_path)
+		if thumbnail_path != "":
+			var thumbnail_started := BUILD_PHASE.begin("menu.thumbnail", {"id": piece.get("id", ""), "path": thumbnail_path})
+			if ResourceLoader.exists(thumbnail_path): thumb.texture = load(thumbnail_path)
+			BUILD_PHASE.finish("menu.thumbnail", thumbnail_started)
 		center.add_child(thumb)
 
 		var slot := i
@@ -584,6 +611,7 @@ func _build_grid() -> void:
 		_grab_when_in_tree.call_deferred(_cell_buttons[_selected_index])
 	_describe(_selected_index)
 	_refresh_afford_state()
+	BUILD_PHASE.finish("menu.grid", started)
 
 
 ## Lands focus on a grid cell, one frame late and only if that cell is still
