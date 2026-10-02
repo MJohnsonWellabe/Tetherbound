@@ -1,0 +1,169 @@
+{
+  "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:54:58.140262+00:00",
+  "platform": "ROOT returned Godot4.7.stable.official.5b4e0cb0f, Windows headless; detached production policy calls",
+  "input": "Production lookup/spawn/equip-policy calls; native and unmodified JSON fixtures; no controller inputs",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "actual_executed_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+  "fixture_origin_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "actual_package_hash": null,
+  "native_probe_sha256": "374ecae0cfd041b76be2e834737642cb2f0fb730537b6303d0fe102b1e2787af",
+  "native_raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7",
+  "source_closure_canonical_sha256": "8fbfec413a3b730955ac028596d930d2af91ad69e1b5215633d733d7f37ec9d1",
+  "source_closure_count": 3365,
+  "source_closure_binding_methods": {
+    "exact Git blob": 3286,
+    "Git text checkout CRLF only": 79,
+    "null": 0
+  },
+  "shortcuts": "Detached L15 creatures and synthetic owned/reachable/Altar/not-combat context passed only to pure staging. JSON round trips are in memory. No earned progress, paid action, disk save, receipt, write, ACK, network or pixels invented.",
+  "checks": {
+    "actual_executed_head_from_receipt": true,
+    "raw_hash_and_length_match": true,
+    "one_complete_result_matches_receipt": true,
+    "original_watchdog_and_exit0": true,
+    "no_declared_or_raw_strict_errors": true,
+    "zero_engine_handles_reported": true,
+    "probe_hash_bound_to_executed_git": true,
+    "whole3365_source_before_after_identical": true,
+    "whole3365_source_bound_to_executed_git": true,
+    "fixture_constant_not_misused_as_actual_head": true,
+    "69_live_10_utility_19_shared": true,
+    "all5_and_unmodified_JSON_saved_carriers": true,
+    "expected_exact_scope_counts": true,
+    "same_evidence_probe_91b0077b48": true
+  },
+  "result": {
+    "breakthrough_prefixes_checked": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "breakthrough_representations": [
+      "native integers",
+      "unmodified JSON-restored arrays",
+      "unmodified JSON-restored saved character carrier through allowed_saved_moves"
+    ],
+    "checks_by_criterion": {
+      "F23#1": 3140,
+      "F23#2": 350,
+      "F25#1": 95,
+      "F35#0": 307
+    },
+    "completed": true,
+    "failures": [],
+    "fixture_source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+    "live_species": 69,
+    "scope": "detached production catalogue/lookup/equip policy; no controller, earned state, save, ACK, co-op or visual proof",
+    "shared_count": 19,
+    "utility_count": 10
+  },
+  "native_metadata": {
+    "executed_head": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+    "script": "ralph/reports/INTEGRATION/criterion-closeout/criterion_data_native.gd",
+    "script_sha256": "374ecae0cfd041b76be2e834737642cb2f0fb730537b6303d0fe102b1e2787af",
+    "watchdog_seconds": 240,
+    "scope": "Actual detached production catalogue/lookup/equip policy, native+unmodified JSON completed/preceding tier prefixes; no persisted/earned/visual/co-op proof",
+    "acceptance_credit": false,
+    "pid": 11428,
+    "exit": 0,
+    "elapsed_seconds": 24.60999999998603,
+    "raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7",
+    "raw_bytes": 661,
+    "results": [
+      {
+        "breakthrough_prefixes_checked": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "breakthrough_representations": [
+          "native integers",
+          "unmodified JSON-restored arrays",
+          "unmodified JSON-restored saved character carrier through allowed_saved_moves"
+        ],
+        "checks_by_criterion": {
+          "F23#1": 3140,
+          "F23#2": 350,
+          "F25#1": 95,
+          "F35#0": 307
+        },
+        "completed": true,
+        "failures": [],
+        "fixture_source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+        "live_species": 69,
+        "scope": "detached production catalogue/lookup/equip policy; no controller, earned state, save, ACK, co-op or visual proof",
+        "shared_count": 19,
+        "utility_count": 10
+      }
+    ],
+    "errors": [],
+    "engine_handles_after": "0"
+  },
+  "production_deltas_from_fixture_origin": [
+    "scripts/build/build_placer.gd",
+    "scripts/combat/encounter_director.gd",
+    "scripts/combat/shared_wild_host_fight.gd",
+    "scripts/creatures/breakthrough.gd",
+    "scripts/creatures/teaching.gd",
+    "scripts/masters/breakthrough_service.gd",
+    "scripts/masters/master_site.gd",
+    "scripts/net/foundation_alphas.gd",
+    "scripts/net/foundation_composition.gd",
+    "scripts/net/session.gd",
+    "scripts/player/ripplet_traversal.gd",
+    "scripts/world/crossing_hall.gd"
+  ],
+  "teaching_delta": "diff --git a/scripts/creatures/teaching.gd b/scripts/creatures/teaching.gd\nindex 80727c7e01..9c839fa187 100644\n--- a/scripts/creatures/teaching.gd\n+++ b/scripts/creatures/teaching.gd\n@@ -188,6 +188,10 @@ static func learnset_errors(raw: Variant, moves: RefCounted) -> Array[String]:\n ## tier in an edit payload is never a substitute for that earned character state.\n static func available_moves(species_id: String, level: int, completed_tiers: Array) -> Array[String]:\n \tvar result: Array[String] = []\n+\t# F28 owns the exact sequential completed prefix. Load lazily because its\n+\t# planner already imports Teaching; saved JSON integral tiers are floats.\n+\tvar breakthrough: GDScript = load(\"res://scripts/creatures/breakthrough.gd\")\n+\tif breakthrough.level_cap(completed_tiers) < 0: return result\n \tvar row: Dictionary = learnsets().get(species_id,{})\n \tif bool(row.get(\"reserved\",false)): return result\n \tfor raw: Variant in row.get(\"unlocks\",[]):\n@@ -195,7 +199,7 @@ static func available_moves(species_id: String, level: int, completed_tiers: Arr\n \t\tvar unlock: Dictionary = raw\n \t\tvar id := str(unlock.get(\"move_id\",\"\"))\n \t\tvar level_gate := unlock.has(\"level\") and level >= int(unlock.level)\n-\t\tvar tier_gate := unlock.has(\"breakthrough_tier\") and completed_tiers.has(int(unlock.breakthrough_tier))\n+\t\tvar tier_gate := unlock.has(\"breakthrough_tier\") and int(unlock.breakthrough_tier) <= completed_tiers.size()\n \t\tif (level_gate or tier_gate) and not id.is_empty() and not result.has(id): result.append(id)\n \treturn result\n \n",
+  "independent_verdict": "BOUNDED_NATIVE_DATA_POLICY_PASS",
+  "criterion_verdicts": {
+    "F23#1": {
+      "verdict": "PARTIAL_NATIVE_PASS_TM_PRODUCTION_USE_OPEN",
+      "checks": 3140,
+      "passed": "Every live species learnset; L5/L15 gates; all5 native and unmodified JSON completed/preceding prefixes; exact no-future-leak sets; actual saved-carrier allowed_saved_moves; primary-type-only can_learn compatibility for every TM/type.",
+      "gap": "Probe calls can_learn, not actual stage_tm_knowledge/stage_tm_candidate or owned TM debit/use. 'TMs still work' remains unproved by this run. No persisted or earned breakthrough proof."
+    },
+    "F23#2": {
+      "verdict": "SUFFICIENT_NATIVE_POLICY_PASS_PENDING_GREEN_MAIN_LANDING",
+      "checks": 350,
+      "passed": "Ten registered utilities; all four authored roles; every one of69 actual live species has at least two L15 choices; each choice accepted by production stage_loadout_edit and refused out of reach.",
+      "gap": "None for this bounded catalogue/equip-policy criterion; fixtures are detached L15 and a synthetic host station context. It does not establish F23#0 active controller combat or F23#3 actual station/save/rejoin."
+    },
+    "F35#0": {
+      "verdict": "SUFFICIENT_NATIVE_MAPPING_PASS_PENDING_GREEN_MAIN_LANDING",
+      "checks": 307,
+      "passed": "Nineteen shared signatures within16..20; actual production spawn mapping for all69 live species; each non-unique signature belongs to shared set and exact primary type×learnset role.",
+      "gap": "None for the explicitly named mapping test; presentation/runtime enablement, unique performances, growth, duration and code-blind judgment belong to F35#1..#4."
+    },
+    "F25#1": {
+      "verdict": "SUFFICIENT_NATIVE_MAPPING_PASS_PENDING_GREEN_MAIN_LANDING",
+      "checks": 95,
+      "passed": "All94 actual production resolver mappings are nonempty; unknown archetype returns empty. Corroborates independent all-eight-parameter static mapping audit.",
+      "gap": "None for mapping; active effect rendering, visual bar, real contact/HP, mastery appearance and Medium performance remain separate criteria."
+    }
+  },
+  "main_landing_state": "No green main CI/landing returned; no MET/count credit added.",
+  "members": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\criterion-data-native-e2cc41923679\\receipt.json",
+      "copy": "returned-native\\criterion-e2cc-receipt.json.gz",
+      "raw_bytes": 759261,
+      "raw_sha256": "a3b23130de17afdbdf743a00dbd51ec27ed14bf95c8c01ce73f3e5724374ec3b",
+      "gzip_sha256": "20c8bac125c8c7192fdb1cd92d476faed01dc6aae1218018f9abc06be9bf36fc"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\criterion-data-native-e2cc41923679\\native.log",
+      "copy": "returned-native\\criterion-e2cc-native.log.gz",
+      "raw_bytes": 661,
+      "raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7",
+      "gzip_sha256": "d7a98511efb36ffe5185e2c7c2444650c4018df9f11b4f497fe398a299ca4a5b"
+    }
+  ]
+}

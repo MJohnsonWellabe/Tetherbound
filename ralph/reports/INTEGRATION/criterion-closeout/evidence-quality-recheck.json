@@ -1,0 +1,124 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T03:00:55.725289+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "artifact_kind": "offline evidence QA",
+  "checks": {
+    "all280_exact_ids_and_requirements": true,
+    "original101_redesign179": true,
+    "all_source_anchors_present_and_hash_bound": true,
+    "all_artifact_links_exist": true,
+    "all_run_request_references_resolve": true,
+    "all9_new_lossless_return_copies_match": true,
+    "data_native_complete_independent_source_binding": true,
+    "no_new_acceptance_credit": true,
+    "all_lane_changes_evidence_only": true
+  },
+  "source_anchor_pairs_rehashed": 156,
+  "bad_source_anchors": [],
+  "missing_artifacts": [],
+  "unknown_run_requests": [],
+  "lossless_return_members": [
+    {
+      "judgment": "core582b-independent-judgment.json",
+      "path": "returned-native\\core582b-result.json.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "core582b-independent-judgment.json",
+      "path": "returned-native\\core582b-smoke.log.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "regression582b-independent-judgment.json",
+      "path": "returned-native\\compile582b-receipt.json.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "regression582b-independent-judgment.json",
+      "path": "returned-native\\compile582b-0.log.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "regression582b-independent-judgment.json",
+      "path": "returned-native\\unit582b-source-snapshots.json.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "regression582b-independent-judgment.json",
+      "path": "returned-native\\unit582b-result.json.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "regression582b-independent-judgment.json",
+      "path": "returned-native\\unit582b-tests.log.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "data-native-e2cc-independent-judgment.json",
+      "path": "returned-native\\criterion-e2cc-receipt.json.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    },
+    {
+      "judgment": "data-native-e2cc-independent-judgment.json",
+      "path": "returned-native\\criterion-e2cc-native.log.gz",
+      "raw_sha256_matches": true,
+      "gzip_sha256_matches": true,
+      "raw_length_matches": true
+    }
+  ],
+  "changed_paths": [
+    "ralph/reports/INTEGRATION/criterion-closeout/activation-gate-census.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/board-snapshot.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/build_evidence_map.py",
+    "ralph/reports/INTEGRATION/criterion-closeout/core582b-independent-judgment.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/criteria-evidence-map.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/criterion_data_native.gd",
+    "ralph/reports/INTEGRATION/criterion-closeout/data-native-e2cc-independent-judgment.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/data-native-e2cc-source-closure.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/f23-f35-catalogue-recheck.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/f25-mapping-recheck.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/f29-wild-roster-recheck.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/f37-teleport-removal-recheck.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/finalize_evidence.py",
+    "ralph/reports/INTEGRATION/criterion-closeout/judge_returned.py",
+    "ralph/reports/INTEGRATION/criterion-closeout/native-receipt-audit.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/preliminary-verdicts.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/regression582b-independent-judgment.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/compile582b-0.log.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/compile582b-receipt.json.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/core582b-result.json.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/core582b-smoke.log.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/criterion-e2cc-native.log.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/criterion-e2cc-receipt.json.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/unit582b-result.json.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/unit582b-source-snapshots.json.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/returned-native/unit582b-tests.log.gz",
+    "ralph/reports/INTEGRATION/criterion-closeout/run-requests.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/sealed-artifact-integrity-recheck.json",
+    "ralph/reports/INTEGRATION/criterion-closeout/source_audit.py",
+    "ralph/reports/INTEGRATION/criterion-closeout/vfx-r17-independent-scope-judgment.json"
+  ],
+  "verdict": "PASS"
+}

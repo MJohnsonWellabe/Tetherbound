@@ -197,7 +197,9 @@ def audit_wild_roster() -> None:
              (re.search(r"(?:^|/)(?:spawn_tables|spawns|cloudreach_encounters|stormwood_encounters|water_encounters)\.json$", p)
               or p == "data/config/cloudreach_chapter.json")]
     consumers = ["scripts/combat/cloudreach_encounter_director.gd", "scripts/combat/stormwood_encounter_catalogue.gd",
-                 "scripts/creatures/water_species_catalog.gd", "scripts/world/water_encounter_runtime_data.gd"]
+                 "scripts/creatures/water_species_catalog.gd", "scripts/world/water_encounter_runtime_data.gd",
+                 "scripts/combat/water_encounter_director.gd", "scripts/world/water_scene_encounters.gd",
+                 "scripts/world/water_world.gd", "scripts/world/cloudreach_world_runtime.gd"]
     warm(names + consumers)
     refs = []
     def visit(value, path, pointer="", wild=True):
@@ -223,12 +225,66 @@ def audit_wild_roster() -> None:
     forbidden = [r for r in refs if r["species"] in {"tuskroot", "ashtusk", "stormursa"}]
     cannon = [r for r in refs if r["species"] in {"cannonback", "water_cannonback"}]
     capra = [r for r in refs if r["species"] == "stormcapra"]
+    water = data("data/config/water_encounters.json")
+    cloud = data("data/config/cloudreach_chapter.json")
+    cloud_sites = data("data/config/cloudreach_encounters.json")["wild_sites"]
+    pools = []
+    for realm, tables, sites, target, field in [
+        ("water", water["tables"], water["wild_sites"], "cannonback", "species_id"),
+        ("cloudreach", [t for t in cloud["encounter_tables"] if t.get("catchable") is True], cloud_sites, "stormcapra", "placeholder_species")]:
+        for table in tables:
+            for entry in table.get("entries", []):
+                if entry.get(field) == target:
+                    matching_sites = [s for s in sites if s.get("table_id") == table["id"]]
+                    pools.append({"realm": realm, "table_id": table["id"], "species": target,
+                                  "runtime_species": "water_cannonback" if realm == "water" else target,
+                                  "weight": entry.get("weight"), "night_weight": entry.get("night_weight"),
+                                  "requires_unlock": table.get("requires_unlock"), "site_count": len(matching_sites),
+                                  "site_ids": [s["id"] for s in matching_sites]})
+    guard_needles = {
+        "scripts/world/water_world.gd": ['preload("res://scripts/world/water_scene_encounters.gd")', "ENCOUNTERS.build(self, chapter.npc_bodies)"],
+        "scripts/world/water_scene_encounters.gd": ['preload("res://scripts/combat/water_encounter_director.gd")', "director.setup(world, bodies)"],
+        "scripts/combat/water_encounter_director.gd": ["WATER_DATA.build(world.get(\"config\")", 'read_json("res://data/config/water_encounters.json")', "chapter = translated.chapter"],
+        "scripts/world/water_encounter_runtime_data.gd": ['encounters.get("tables", [])', 'entry["placeholder_species"] = _species(', "CATALOG.runtime_id(source)"],
+        "scripts/creatures/water_species_catalog.gd": ['return "water_" + board_id if board_id in BOARD_IDS else ""'],
+        "scripts/world/cloudreach_world_runtime.gd": ['preload("res://scripts/world/cloudreach_scene_encounters.gd")'],
+        "scripts/combat/cloudreach_encounter_director.gd": ['res://data/config/cloudreach_chapter.json', 'find_id(chapter.get("encounter_tables", [])', 'return {"species": entry["placeholder_species"]']}
+    bindings = []
+    for path, needles in guard_needles.items():
+        lines = source(path).splitlines()
+        bindings.append({"path": path, "source_sha256": hashlib.sha256(raw(path)).hexdigest(),
+                         "guards": [{"needle": needle, "lines": [i for i, line in enumerate(lines, 1) if needle in line]} for needle in needles]})
+    policy_pass = not forbidden and cannon and capra and all(isinstance(p["weight"], (int, float)) and p["weight"] > 0 and p["site_count"] > 0 for p in pools)
+    binding_pass = all(g["lines"] for b in bindings for g in b["guards"])
+    prior_main = "30fcc38fc591d5df3a7cfb122b9da58445467021"
+    baseline_paths = ["data/config/water_encounters.json", "data/config/cloudreach_chapter.json", "data/config/cloudreach_encounters.json"]
+    baseline_raw = {p: git("show", prior_main + ":" + p) for p in baseline_paths}
+    baseline = {p: json.loads(v.decode("utf-8-sig")) for p, v in baseline_raw.items()}
+    before_water = baseline[baseline_paths[0]]
+    before_cloud = baseline[baseline_paths[1]]
+    before_sites = baseline[baseline_paths[2]]["wild_sites"]
+    before_pools = []
+    for realm, tables, sites, target, field in [
+        ("water", before_water["tables"], before_water["wild_sites"], "cannonback", "species_id"),
+        ("cloudreach", [t for t in before_cloud["encounter_tables"] if t.get("catchable") is True], before_sites, "stormcapra", "placeholder_species")]:
+        for table in tables:
+            for entry in table.get("entries", []):
+                if entry.get(field) == target:
+                    before_pools.append({"realm": realm, "table_id": table["id"], "weight": entry.get("weight"),
+                                         "night_weight": entry.get("night_weight"), "requires_unlock": table.get("requires_unlock"),
+                                         "site_ids": [s["id"] for s in sites if s.get("table_id") == table["id"]]})
+    retained_keys = ["realm", "table_id", "weight", "night_weight", "requires_unlock", "site_ids"]
+    retention_pass = before_pools == [{k: p[k] for k in retained_keys} for p in pools]
     result = {**stamp(), "criterion": "F29#4", "method": "authored wild tables only, excludes trainer teams/commentary; exact wild provider reads reviewed",
               "data_paths": names, "consumer_paths": consumers, "wild_reference_count": len(refs),
               "forbidden_wild_references": forbidden, "cannonback_references": cannon, "stormcapra_references": capra,
+              "positive_weight_site_bound_pools": pools, "production_provider_source_bindings": bindings,
+              "authored_policy_pass": bool(policy_pass), "source_provider_binding_pass": bool(binding_pass),
+              "prior_main_retention": {"source_commit": prior_main, "source_hashes": {p: hashlib.sha256(v).hexdigest() for p, v in baseline_raw.items()},
+                                       "same_retained_pool_weights_unlocks_and_site_ids": retention_pass, "prior_pools": before_pools},
               "water_alias": "Water catalogue runtime_id(cannonback) is water_cannonback; this is disclosed, not silently merged with the base evolution species.",
-              "verdict": "STATIC_TABLE_PASS_PROVIDER_BINDING_REVIEW_OPEN" if not forbidden and cannon and capra else "OPEN",
-              "scope": "Wild eligibility only. No evolution offer, bear creation, acquisition or player-path proof."}
+              "verdict": "STATIC_POLICY_AND_PROVIDER_SOURCE_PASS_LIVE_WITNESS_OPEN" if policy_pass and binding_pass else "OPEN",
+              "scope": "Wild eligibility authoring/provider binding only. No live provider execution, evolution offer, bear creation, acquisition or player-path proof. Unlocked tables and physical site resolution are not exercised by this source audit."}
     dump("f29-wild-roster-recheck.json", result)
     print(json.dumps({"forbidden": forbidden, "cannonback": len(cannon), "stormcapra": len(capra), "refs": len(refs)}, indent=2))
 

@@ -17,7 +17,7 @@
     {
       "id": "DATA-NATIVE-01",
       "priority": 1,
-      "state": "READY_FOR_ROOT_REVIEW_AND_SERIAL_EXECUTION",
+      "state": "ROOT_EXECUTED_NATIVE_PASS_BOUNDED_SCOPE_TM_USE_OPEN",
       "criteria": ["F23#1", "F23#2", "F35#0", "F25#1"],
       "reason": "One bounded pure production lookup/equip-policy batch can distinguish authored counts from actual native catalogue, level/breakthrough, primary-TM, equip-policy and initial-signature behavior.",
       "command_argv": ["Godot_v4.7-stable_win64_console.exe", "--headless", "--path", "<ROOT imported candidate checkout>", "--script", "res://ralph/reports/INTEGRATION/criterion-closeout/criterion_data_native.gd"],
@@ -25,7 +25,8 @@
       "original_requested_watchdog_seconds": 240,
       "fixtures": "Detached actual production species at L15; five completed breakthrough-prefix/preceding-prefix pure-policy fixtures, each as native integers and unmodified JSON.parse_string(JSON.stringify(...)) arrays plus saved character carriers through actual Teaching.allowed_saved_moves; exact shared signature role against ultimates.json.visuals; synthetic host context for pure staging only; one detached unknown-archetype negative case. No tier sanitisation/casting by probe. No earned progress, real station geometry, disk save/ACK or network credit.",
       "required_output": "CRITERION_DATA_NATIVE_RESULT completed=true, empty failures, per-criterion checks, all five native and unmodified JSON-restored prefixes/carriers, actual69 live species,10 utilities,19 shared IDs, native0 and no unresolved strict diagnostics. If production lookup fails saved JSON tiers, retain that RED before any narrow Teaching repair rerun.",
-      "acceptance_limit": "F23#1 TM production transaction/debit still must be judged if criterion interpreted to require full backpack transaction. F23#2 proves legal choices/equip staging only. No F23#0/#3/#4/#5, F35#1..#4 or F25#0/#2..#5 closure.",
+      "returned_execution": {"actual_source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b", "raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7", "exit": 0, "elapsed_seconds": 24.610, "independent_judgment": "data-native-e2cc-independent-judgment.json", "independent_source_closure": "data-native-e2cc-source-closure.json"},
+      "acceptance_limit": "F23#1 remains PARTIAL: can_learn compatibility does not prove actual owned TM teaching/debit/use. F23#2 legal choices/equip policy and F35#0 mapping independently PASS pending green main; F25#1 corroborated. No F23#0/#3/#4/#5, F35#1..#4 or F25#0/#2..#5 closure; no duplicate of completed probe needed.",
       "dependency_policy": "Execute at582b plus evidence or record exact production delta from582b; re-evaluate affected sources before reuse."
     },
     {

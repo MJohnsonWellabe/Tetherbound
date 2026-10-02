@@ -1,7 +1,7 @@
 {
   "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
   "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
-  "recorded_utc": "2026-10-02T02:15:36.510249+00:00",
+  "recorded_utc": "2026-10-02T03:00:45.350009+00:00",
   "platform": "Windows; Python/Git static inspection only",
   "input": "read-only Git objects",
   "package_hash": null,
@@ -26,7 +26,11 @@
     "scripts/combat/cloudreach_encounter_director.gd",
     "scripts/combat/stormwood_encounter_catalogue.gd",
     "scripts/creatures/water_species_catalog.gd",
-    "scripts/world/water_encounter_runtime_data.gd"
+    "scripts/world/water_encounter_runtime_data.gd",
+    "scripts/combat/water_encounter_director.gd",
+    "scripts/world/water_scene_encounters.gd",
+    "scripts/world/water_world.gd",
+    "scripts/world/cloudreach_world_runtime.gd"
   ],
   "wild_reference_count": 572,
   "forbidden_wild_references": [],
@@ -114,7 +118,569 @@
       "species": "stormcapra"
     }
   ],
+  "positive_weight_site_bound_pools": [
+    {
+      "realm": "water",
+      "table_id": "water_first_shore_land",
+      "species": "cannonback",
+      "runtime_species": "water_cannonback",
+      "weight": 5,
+      "night_weight": 4,
+      "requires_unlock": null,
+      "site_count": 26,
+      "site_ids": [
+        "water_first_shore_wild_001",
+        "water_first_shore_wild_002",
+        "water_first_shore_wild_003",
+        "water_first_shore_wild_004",
+        "water_first_shore_wild_005",
+        "water_first_shore_wild_006",
+        "water_first_shore_wild_007",
+        "water_first_shore_wild_008",
+        "water_first_shore_wild_009",
+        "water_first_shore_wild_010",
+        "water_first_shore_wild_011",
+        "water_first_shore_wild_012",
+        "water_first_shore_wild_013",
+        "water_first_shore_wild_014",
+        "water_first_shore_wild_015",
+        "water_first_shore_wild_016",
+        "water_first_shore_wild_017",
+        "water_first_shore_wild_018",
+        "water_first_shore_wild_019",
+        "water_first_shore_wild_020",
+        "water_lantern_cove_wild_001",
+        "water_lantern_cove_wild_002",
+        "water_lantern_cove_wild_003",
+        "water_lantern_cove_wild_004",
+        "water_lantern_cove_wild_005",
+        "water_lantern_cove_wild_006"
+      ]
+    },
+    {
+      "realm": "water",
+      "table_id": "water_first_shore_shallows",
+      "species": "cannonback",
+      "runtime_species": "water_cannonback",
+      "weight": 3,
+      "night_weight": 2,
+      "requires_unlock": null,
+      "site_count": 12,
+      "site_ids": [
+        "water_first_shore_wild_021",
+        "water_first_shore_wild_022",
+        "water_first_shore_wild_023",
+        "water_first_shore_wild_024",
+        "water_first_shore_wild_025",
+        "water_first_shore_wild_026",
+        "water_first_shore_wild_027",
+        "water_first_shore_wild_028",
+        "water_first_shore_wild_029",
+        "water_first_shore_wild_030",
+        "water_lantern_cove_wild_007",
+        "water_lantern_cove_wild_008"
+      ]
+    },
+    {
+      "realm": "water",
+      "table_id": "water_reedhaven_shallows",
+      "species": "cannonback",
+      "runtime_species": "water_cannonback",
+      "weight": 2,
+      "night_weight": 1,
+      "requires_unlock": null,
+      "site_count": 10,
+      "site_ids": [
+        "water_reedhaven_wild_021",
+        "water_reedhaven_wild_022",
+        "water_reedhaven_wild_023",
+        "water_reedhaven_wild_024",
+        "water_reedhaven_wild_025",
+        "water_reedhaven_wild_026",
+        "water_reedhaven_wild_027",
+        "water_reedhaven_wild_028",
+        "water_reedhaven_wild_029",
+        "water_reedhaven_wild_030"
+      ]
+    },
+    {
+      "realm": "water",
+      "table_id": "water_shellwatch_shallows",
+      "species": "cannonback",
+      "runtime_species": "water_cannonback",
+      "weight": 2,
+      "night_weight": 1,
+      "requires_unlock": null,
+      "site_count": 9,
+      "site_ids": [
+        "water_shellwatch_wild_017",
+        "water_shellwatch_wild_018",
+        "water_shellwatch_wild_019",
+        "water_shellwatch_wild_020",
+        "water_shellwatch_wild_021",
+        "water_shellwatch_wild_022",
+        "water_shellwatch_wild_023",
+        "water_shellwatch_wild_024",
+        "road_visibility_shellwatch_to_tidal_cradle_sheltered_01"
+      ]
+    },
+    {
+      "realm": "water",
+      "table_id": "water_tidal_cradle_shallows",
+      "species": "cannonback",
+      "runtime_species": "water_cannonback",
+      "weight": 3,
+      "night_weight": 2,
+      "requires_unlock": null,
+      "site_count": 15,
+      "site_ids": [
+        "water_tidal_cradle_wild_020",
+        "water_tidal_cradle_wild_021",
+        "water_tidal_cradle_wild_022",
+        "water_tidal_cradle_wild_023",
+        "water_tidal_cradle_wild_024",
+        "water_tidal_cradle_wild_025",
+        "water_tidal_cradle_wild_026",
+        "water_tidal_cradle_wild_027",
+        "water_tidal_cradle_wild_028",
+        "road_visibility_tidal_cradle_to_salt_crown_sheltered_01",
+        "road_visibility_tidal_cradle_to_salt_crown_sheltered_02",
+        "road_visibility_tidal_cradle_to_salt_crown_sheltered_03",
+        "road_visibility_tidal_cradle_to_salt_crown_sheltered_04",
+        "road_visibility_tidal_cradle_to_salt_crown_sheltered_05",
+        "road_visibility_tidal_cradle_to_salt_crown_direct_01"
+      ]
+    },
+    {
+      "realm": "water",
+      "table_id": "water_salt_crown_shallows",
+      "species": "cannonback",
+      "runtime_species": "water_cannonback",
+      "weight": 2,
+      "night_weight": 1,
+      "requires_unlock": null,
+      "site_count": 14,
+      "site_ids": [
+        "water_salt_crown_wild_020",
+        "water_salt_crown_wild_021",
+        "water_salt_crown_wild_022",
+        "water_salt_crown_wild_023",
+        "water_salt_crown_wild_024",
+        "water_salt_crown_wild_025",
+        "water_salt_crown_wild_026",
+        "water_salt_crown_wild_027",
+        "water_salt_crown_wild_028",
+        "water_drowned_garden_wild_007",
+        "water_drowned_garden_wild_008",
+        "road_visibility_salt_crown_to_sluice_isle_sheltered_01",
+        "road_visibility_salt_crown_to_sluice_isle_sheltered_02",
+        "road_visibility_salt_crown_to_sluice_isle_sheltered_03"
+      ]
+    },
+    {
+      "realm": "cloudreach",
+      "table_id": "cloudreach_high_roost_wild",
+      "species": "stormcapra",
+      "runtime_species": "stormcapra",
+      "weight": 2,
+      "night_weight": null,
+      "requires_unlock": "fly_traversal_unlocked",
+      "site_count": 19,
+      "site_ids": [
+        "roost_perches",
+        "road_visibility_windscar_counterweight_pass_09",
+        "road_visibility_windscar_counterweight_pass_10",
+        "road_visibility_windscar_counterweight_pass_11",
+        "road_visibility_windscar_counterweight_pass_12",
+        "road_visibility_windscar_counterweight_pass_13",
+        "road_visibility_windscar_floor_loop_return_01",
+        "road_visibility_windscar_floor_loop_return_02",
+        "road_visibility_windscar_floor_loop_return_03",
+        "road_visibility_windscar_floor_loop_return_04",
+        "road_visibility_windscar_floor_loop_return_05",
+        "road_visibility_windscar_floor_loop_return_06",
+        "road_visibility_windscar_floor_loop_return_07",
+        "road_visibility_windscar_floor_loop_return_08",
+        "road_visibility_windscar_floor_loop_return_09",
+        "road_visibility_windscar_floor_loop_return_10",
+        "road_visibility_windscar_floor_loop_return_11",
+        "road_visibility_windscar_counterweight_return_01",
+        "road_visibility_windscar_counterweight_return_02"
+      ]
+    },
+    {
+      "realm": "cloudreach",
+      "table_id": "cloudreach_upper_wild",
+      "species": "stormcapra",
+      "runtime_species": "stormcapra",
+      "weight": 3,
+      "night_weight": null,
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "site_count": 5,
+      "site_ids": [
+        "upper_scouts",
+        "road_visibility_upper_plateau_circuit_01",
+        "road_visibility_upper_plateau_circuit_02",
+        "road_visibility_upper_plateau_circuit_05",
+        "road_visibility_upper_plateau_circuit_06"
+      ]
+    },
+    {
+      "realm": "cloudreach",
+      "table_id": "cloudreach_upper_released_wild",
+      "species": "stormcapra",
+      "runtime_species": "stormcapra",
+      "weight": 3,
+      "night_weight": null,
+      "requires_unlock": "storm_anchor_upper_east_disabled",
+      "site_count": 2,
+      "site_ids": [
+        "road_visibility_upper_plateau_circuit_03",
+        "road_visibility_upper_plateau_circuit_04"
+      ]
+    }
+  ],
+  "production_provider_source_bindings": [
+    {
+      "path": "scripts/world/water_world.gd",
+      "source_sha256": "c96df457e111b8853f271bf5b3f772088695078463565b70a71c34e94d85a7bc",
+      "guards": [
+        {
+          "needle": "preload(\"res://scripts/world/water_scene_encounters.gd\")",
+          "lines": [
+            16
+          ]
+        },
+        {
+          "needle": "ENCOUNTERS.build(self, chapter.npc_bodies)",
+          "lines": [
+            158
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/world/water_scene_encounters.gd",
+      "source_sha256": "ca280a77acafe20836d266b85aa6518f7f6337875e2ae0b185470931018393eb",
+      "guards": [
+        {
+          "needle": "preload(\"res://scripts/combat/water_encounter_director.gd\")",
+          "lines": [
+            2
+          ]
+        },
+        {
+          "needle": "director.setup(world, bodies)",
+          "lines": [
+            17
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/combat/water_encounter_director.gd",
+      "source_sha256": "edad2d2a18ed03bc61e6684fb3bd68491994224f66ce1bab9e783e1c7698b854",
+      "guards": [
+        {
+          "needle": "WATER_DATA.build(world.get(\"config\")",
+          "lines": [
+            182
+          ]
+        },
+        {
+          "needle": "read_json(\"res://data/config/water_encounters.json\")",
+          "lines": [
+            184
+          ]
+        },
+        {
+          "needle": "chapter = translated.chapter",
+          "lines": [
+            189
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/world/water_encounter_runtime_data.gd",
+      "source_sha256": "f3ec25a1abb5c74b35c4dda9aee13a41ef94ec211dfecf518f93cda3703a4d9e",
+      "guards": [
+        {
+          "needle": "encounters.get(\"tables\", [])",
+          "lines": [
+            23
+          ]
+        },
+        {
+          "needle": "entry[\"placeholder_species\"] = _species(",
+          "lines": [
+            27
+          ]
+        },
+        {
+          "needle": "CATALOG.runtime_id(source)",
+          "lines": [
+            127
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/creatures/water_species_catalog.gd",
+      "source_sha256": "b83a8cb37377a3f48715b28c77c1050621a4eb71b7b7f0046e021fc53052259f",
+      "guards": [
+        {
+          "needle": "return \"water_\" + board_id if board_id in BOARD_IDS else \"\"",
+          "lines": [
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/world/cloudreach_world_runtime.gd",
+      "source_sha256": "7901f09bdecad21cdee529d23c70b446a636ef1dcd79bcbc18949038813e221d",
+      "guards": [
+        {
+          "needle": "preload(\"res://scripts/world/cloudreach_scene_encounters.gd\")",
+          "lines": [
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "path": "scripts/combat/cloudreach_encounter_director.gd",
+      "source_sha256": "90bce44c855d23137c96cb4e8976ad9fa7425e9fe70ac4c63571710d260b18e7",
+      "guards": [
+        {
+          "needle": "res://data/config/cloudreach_chapter.json",
+          "lines": [
+            16
+          ]
+        },
+        {
+          "needle": "find_id(chapter.get(\"encounter_tables\", [])",
+          "lines": [
+            422
+          ]
+        },
+        {
+          "needle": "return {\"species\": entry[\"placeholder_species\"]",
+          "lines": [
+            216
+          ]
+        }
+      ]
+    }
+  ],
+  "authored_policy_pass": true,
+  "source_provider_binding_pass": true,
+  "prior_main_retention": {
+    "source_commit": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+    "source_hashes": {
+      "data/config/water_encounters.json": "afa4a58c46328ac2b809e860ab30c03ff9fef402139a18f79285e990e0ef9da6",
+      "data/config/cloudreach_chapter.json": "aff6828d6588e75bd9d613318812d60a29fcb02db3148770d176dda9731b0cc3",
+      "data/config/cloudreach_encounters.json": "2364835bc848933a4b01d8c4ce378b20235e53ebd683c17b82af6e6d25c07fe2"
+    },
+    "same_retained_pool_weights_unlocks_and_site_ids": true,
+    "prior_pools": [
+      {
+        "realm": "water",
+        "table_id": "water_first_shore_land",
+        "weight": 5,
+        "night_weight": 4,
+        "requires_unlock": null,
+        "site_ids": [
+          "water_first_shore_wild_001",
+          "water_first_shore_wild_002",
+          "water_first_shore_wild_003",
+          "water_first_shore_wild_004",
+          "water_first_shore_wild_005",
+          "water_first_shore_wild_006",
+          "water_first_shore_wild_007",
+          "water_first_shore_wild_008",
+          "water_first_shore_wild_009",
+          "water_first_shore_wild_010",
+          "water_first_shore_wild_011",
+          "water_first_shore_wild_012",
+          "water_first_shore_wild_013",
+          "water_first_shore_wild_014",
+          "water_first_shore_wild_015",
+          "water_first_shore_wild_016",
+          "water_first_shore_wild_017",
+          "water_first_shore_wild_018",
+          "water_first_shore_wild_019",
+          "water_first_shore_wild_020",
+          "water_lantern_cove_wild_001",
+          "water_lantern_cove_wild_002",
+          "water_lantern_cove_wild_003",
+          "water_lantern_cove_wild_004",
+          "water_lantern_cove_wild_005",
+          "water_lantern_cove_wild_006"
+        ]
+      },
+      {
+        "realm": "water",
+        "table_id": "water_first_shore_shallows",
+        "weight": 3,
+        "night_weight": 2,
+        "requires_unlock": null,
+        "site_ids": [
+          "water_first_shore_wild_021",
+          "water_first_shore_wild_022",
+          "water_first_shore_wild_023",
+          "water_first_shore_wild_024",
+          "water_first_shore_wild_025",
+          "water_first_shore_wild_026",
+          "water_first_shore_wild_027",
+          "water_first_shore_wild_028",
+          "water_first_shore_wild_029",
+          "water_first_shore_wild_030",
+          "water_lantern_cove_wild_007",
+          "water_lantern_cove_wild_008"
+        ]
+      },
+      {
+        "realm": "water",
+        "table_id": "water_reedhaven_shallows",
+        "weight": 2,
+        "night_weight": 1,
+        "requires_unlock": null,
+        "site_ids": [
+          "water_reedhaven_wild_021",
+          "water_reedhaven_wild_022",
+          "water_reedhaven_wild_023",
+          "water_reedhaven_wild_024",
+          "water_reedhaven_wild_025",
+          "water_reedhaven_wild_026",
+          "water_reedhaven_wild_027",
+          "water_reedhaven_wild_028",
+          "water_reedhaven_wild_029",
+          "water_reedhaven_wild_030"
+        ]
+      },
+      {
+        "realm": "water",
+        "table_id": "water_shellwatch_shallows",
+        "weight": 2,
+        "night_weight": 1,
+        "requires_unlock": null,
+        "site_ids": [
+          "water_shellwatch_wild_017",
+          "water_shellwatch_wild_018",
+          "water_shellwatch_wild_019",
+          "water_shellwatch_wild_020",
+          "water_shellwatch_wild_021",
+          "water_shellwatch_wild_022",
+          "water_shellwatch_wild_023",
+          "water_shellwatch_wild_024",
+          "road_visibility_shellwatch_to_tidal_cradle_sheltered_01"
+        ]
+      },
+      {
+        "realm": "water",
+        "table_id": "water_tidal_cradle_shallows",
+        "weight": 3,
+        "night_weight": 2,
+        "requires_unlock": null,
+        "site_ids": [
+          "water_tidal_cradle_wild_020",
+          "water_tidal_cradle_wild_021",
+          "water_tidal_cradle_wild_022",
+          "water_tidal_cradle_wild_023",
+          "water_tidal_cradle_wild_024",
+          "water_tidal_cradle_wild_025",
+          "water_tidal_cradle_wild_026",
+          "water_tidal_cradle_wild_027",
+          "water_tidal_cradle_wild_028",
+          "road_visibility_tidal_cradle_to_salt_crown_sheltered_01",
+          "road_visibility_tidal_cradle_to_salt_crown_sheltered_02",
+          "road_visibility_tidal_cradle_to_salt_crown_sheltered_03",
+          "road_visibility_tidal_cradle_to_salt_crown_sheltered_04",
+          "road_visibility_tidal_cradle_to_salt_crown_sheltered_05",
+          "road_visibility_tidal_cradle_to_salt_crown_direct_01"
+        ]
+      },
+      {
+        "realm": "water",
+        "table_id": "water_salt_crown_shallows",
+        "weight": 2,
+        "night_weight": 1,
+        "requires_unlock": null,
+        "site_ids": [
+          "water_salt_crown_wild_020",
+          "water_salt_crown_wild_021",
+          "water_salt_crown_wild_022",
+          "water_salt_crown_wild_023",
+          "water_salt_crown_wild_024",
+          "water_salt_crown_wild_025",
+          "water_salt_crown_wild_026",
+          "water_salt_crown_wild_027",
+          "water_salt_crown_wild_028",
+          "water_drowned_garden_wild_007",
+          "water_drowned_garden_wild_008",
+          "road_visibility_salt_crown_to_sluice_isle_sheltered_01",
+          "road_visibility_salt_crown_to_sluice_isle_sheltered_02",
+          "road_visibility_salt_crown_to_sluice_isle_sheltered_03"
+        ]
+      },
+      {
+        "realm": "cloudreach",
+        "table_id": "cloudreach_high_roost_wild",
+        "weight": 2,
+        "night_weight": null,
+        "requires_unlock": "fly_traversal_unlocked",
+        "site_ids": [
+          "roost_perches",
+          "road_visibility_windscar_counterweight_pass_09",
+          "road_visibility_windscar_counterweight_pass_10",
+          "road_visibility_windscar_counterweight_pass_11",
+          "road_visibility_windscar_counterweight_pass_12",
+          "road_visibility_windscar_counterweight_pass_13",
+          "road_visibility_windscar_floor_loop_return_01",
+          "road_visibility_windscar_floor_loop_return_02",
+          "road_visibility_windscar_floor_loop_return_03",
+          "road_visibility_windscar_floor_loop_return_04",
+          "road_visibility_windscar_floor_loop_return_05",
+          "road_visibility_windscar_floor_loop_return_06",
+          "road_visibility_windscar_floor_loop_return_07",
+          "road_visibility_windscar_floor_loop_return_08",
+          "road_visibility_windscar_floor_loop_return_09",
+          "road_visibility_windscar_floor_loop_return_10",
+          "road_visibility_windscar_floor_loop_return_11",
+          "road_visibility_windscar_counterweight_return_01",
+          "road_visibility_windscar_counterweight_return_02"
+        ]
+      },
+      {
+        "realm": "cloudreach",
+        "table_id": "cloudreach_upper_wild",
+        "weight": 3,
+        "night_weight": null,
+        "requires_unlock": "cloudreach_upper_route_unlocked",
+        "site_ids": [
+          "upper_scouts",
+          "road_visibility_upper_plateau_circuit_01",
+          "road_visibility_upper_plateau_circuit_02",
+          "road_visibility_upper_plateau_circuit_05",
+          "road_visibility_upper_plateau_circuit_06"
+        ]
+      },
+      {
+        "realm": "cloudreach",
+        "table_id": "cloudreach_upper_released_wild",
+        "weight": 3,
+        "night_weight": null,
+        "requires_unlock": "storm_anchor_upper_east_disabled",
+        "site_ids": [
+          "road_visibility_upper_plateau_circuit_03",
+          "road_visibility_upper_plateau_circuit_04"
+        ]
+      }
+    ]
+  },
   "water_alias": "Water catalogue runtime_id(cannonback) is water_cannonback; this is disclosed, not silently merged with the base evolution species.",
-  "verdict": "STATIC_TABLE_PASS_PROVIDER_BINDING_REVIEW_OPEN",
-  "scope": "Wild eligibility only. No evolution offer, bear creation, acquisition or player-path proof."
+  "verdict": "STATIC_POLICY_AND_PROVIDER_SOURCE_PASS_LIVE_WITNESS_OPEN",
+  "scope": "Wild eligibility authoring/provider binding only. No live provider execution, evolution offer, bear creation, acquisition or player-path proof. Unlocked tables and physical site resolution are not exercised by this source audit."
 }

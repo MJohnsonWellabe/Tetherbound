@@ -10,6 +10,7 @@ import hashlib
 import json
 import re
 from source_audit import BASE, BOARD, OUT, PRIMARY, data, dump, paths, raw, source, stamp, warm
+from judge_returned import blobs_at
 
 
 IMPLEMENTATION = {
@@ -62,8 +63,8 @@ IMPLEMENTATION = {
 "Named profiles and repair source exist; pre448/450 timing results are stale; current full C2/C3 and distinct patterns/aftermath remain open."],
 "F23": [
 "Production creature fields/defaults, tap dispatch and four-slot HUD/input source exist; move-loadout runtime gate is OFF and actual controller fight proof remains open.",
-"70 authored learnsets cover69 live species plus reserved bear, level/breakthrough gates and primary-type TM staging; native catalogue/TM consumer recheck requested.",
-"Ten utility definitions and every live species' two or more choices cover four authored roles; native actual equip-policy staging requested, no ordinary station claim.",
+"Native e2cc actual consumer recheck passes all69 species' level gates, all five native/unmodified JSON-restored prefixes and actual saved-carrier lookup. Primary-type TM compatibility passes; successful owned TM teaching/use remains unproved by this probe.",
+"Native e2cc passes ten utilities, all four roles, and every live species' two or more legal production-stage equip choices plus reach refusal; sufficient policy scope, no ordinary station/save/rejoin claim.",
 "Altar/forward-camp loadout staging, carrier mirror/revisions and rejoin source exist; actual owned UI change+save+two-peer rejoin witness is not supplied.",
 "MoveMastery stores bounded rank/use/receipt maps and effect growth; actual accepted uses→rank1..5 growth+durability required.",
 "Landed-hit ultimate meter/host dispatch/HUD source is composed; actual hit filling/full-only fire/controller/HUD proof is open."],
@@ -77,7 +78,7 @@ IMPLEMENTATION = {
 "F25": [
 "24 authored effect bodies/trails/impacts/audio mappings and local render implementations exist; production move_library.enabled=false; content/audio/body existence is not active effect proof.",
 "All94 pinned move rows map to24 archetypes with all8 declared parameters; independent detached unknown-ID negative check passes.",
-"Native r14/r17 identity images/motion are retained, with original RED termination; full visual bar has not passed and this reviewer has not issued a code-blind subjective verdict.",
+"Native r14 RED termination is retained; r17 smallstones:r1 selected rerun PASS is bounded to that one case with production effect nodes/posed creature. Full visual bar, actual fight authority and full matrix have not passed; this reviewer has not issued a code-blind subjective verdict.",
 "Frozen arrival/original accepted receipt and contact cue adapters are composed; actual visible contact→HP/number/audio temporal ordering requires matched native observation.",
 "Global particle/light budgets and Compatibility fallback source exist; actual worst-case four-creature Medium frame-time proof is not replaced by budget arithmetic.",
 "Five mastery parameter tiers and geometry growth exist; current native visible size/count/trail rank comparison and full-bar verdict are open."],
@@ -107,7 +108,7 @@ IMPLEMENTATION = {
 "Evolve/stay feast projection and per-tier choices are authored; actual paid feed choice/stay permanence is unproved.",
 "Detached evolution projection preserves canonical history/identity and species-derived stats; actual feed/write failure/save/rejoin behavior is not a source assertion.",
 "Bear readiness/provenance gates exist; no genuine accepted in-engine Meshy bear artifact in this evidence lane; remains flag-off.",
-"Exact wild tables retain Cannonback/Water alias and three Cloudreach Stormcapra references, exclude Tuskroot/Ashtusk/Stormursa; provider-binding inspection underway."],
+"Exact wild tables retain six positive-weight site-bound Cannonback/Water alias pools and three Cloudreach Stormcapra pools, exclude Tuskroot/Ashtusk/Stormursa; provider source chain bound. Live provider, unlock and physical site resolution remain unexecuted by this lane."],
 "F30": [
 "Trait tiers/roll hooks and candidate probabilities exist; traits.runtime_enabled=false; actual wild alpha/night/weather distribution proof open.",
 "Catch/inspect readout source exists; actual correct caught UID trait UI and readable capture required.",
@@ -142,7 +143,7 @@ IMPLEMENTATION = {
 "Existing camp/readiness/rest-bonus source retained; opening/core still has physical route failure and no whole current camp regression certificate.",
 "Host placement identity/world persistence and rejoin source exist; actual host plus guest placement/reload/rejoin remains open."],
 "F35": [
-"19 shared type×role signature move IDs and69 live species mappings authored; actual production spawn mapping native recheck requested.",
+"Native e2cc passes19 shared signature IDs and actual production spawn mappings for69 live species; every non-unique exact primary type×role binding passes the explicitly named mapping test.",
 "Twelve named unique signature IDs/local choreography rows authored including reserved bear; F35 presentation enabled=false and actual unique executions unproved.",
 "Breakthrough growth dimensions/layers authored; no current native visible milestone matrix accepted.",
 "Configured2.4s presentations/budgets/peer opacity exist; actual control restoration and four-player readability/frame-time required.",
@@ -217,7 +218,7 @@ IMPLEMENTATION = {
 "New-order pilot/C2 and gear adapters exist; current band distributions/required starter seeds not supplied.",
 "Buy/rest/release/bounty replay and bounded reward rules exist; actual exploit-loop refusal/bounded-yield witness remains open."],
 "F48": [
-"Authentic input-only ENet loop harness and producer adapters exist; profiles/paid Forge/Altar/Feed/guest Master prerequisite proof still open at pinned source.",
+"Authentic input-only ENet loop harness and producer adapters exist; profiles/paid Forge/Altar/Feed/guest Master prerequisite proof remains open. ROOT reports its first actual paidAltar producer run failed after real build selection at15s heartbeat; raw independent judgment remains pending.",
 "Process identity guards/host-owner cut observation and replay field checks authored; real persisted boundary exits/restarts/ACKs have not been passed by this lane.",
 "Four-peer boss harness and per-participant settlement source exist; actual four participants each receiving durable own key/relic proof missing.",
 "Behind-guest portal access and honest personal state policy/harness exist; actual no-earned-key guest-follow session proof missing."],
@@ -239,7 +240,7 @@ ANCHORS = {
 "F23": ["data/moves/moves.json", "data/moves/learnsets.json", "data/moves/tms.json", "scripts/creatures/teaching.gd", "scripts/creatures/move_mastery.gd", "scripts/creatures/creature_instance.gd", "data/config/combat.json"],
 "F24": ["scripts/combat/tether_commands.gd", "data/config/combat.json", "scripts/ui/tether_command_input.gd", "scripts/ui/tether_command_meter.gd"],
 "F25": ["data/moves/moves.json", "data/config/vfx.json", "scripts/vfx/move_effect_library.gd", "scripts/vfx/move_effect.gd", "scripts/combat/move_projectile.gd", "tests/test_move_effects.gd"],
-"F26": ["docs/design/ART_DIRECTION.md", "scripts/ui/tab_settings.gd", "autoload/settings_store.gd"],
+"F26": ["docs/design/ART_DIRECTION.md", "scripts/ui/tab_settings.gd", "scripts/ui/graphics_settings.gd", "scripts/ui/graphics_prefs.gd", "data/config/art.json"],
 "F27": ["data/items/items.json", "data/config/essence.json", "scripts/creatures/essence.gd", "scripts/creatures/progression.gd", "scripts/creatures/wild_victory_adapter.gd", "scripts/ui/altar_service.gd"],
 "F28": ["data/config/masters.json", "scripts/masters/master_duel.gd", "scripts/masters/breakthrough_service.gd", "scripts/creatures/breakthrough.gd", "scripts/masters/master_site.gd"],
 "F29": ["data/config/evolution_lines.json", "scripts/creatures/evolution.gd", "scripts/creatures/water_species_catalog.gd", "data/config/cloudreach_chapter.json", "data/config/water_encounters.json"],
@@ -325,6 +326,16 @@ def main() -> None:
                 for gate in config_flags(data(path)):
                     flags.append({"feature": f, "path": path, **gate})
     receipts = json.loads((OUT / "native-receipt-audit.json").read_text(encoding="utf-8"))["records"]
+    native_judgment = json.loads((OUT / "data-native-e2cc-independent-judgment.json").read_text(encoding="utf-8"))
+    if native_judgment["independent_verdict"] != "BOUNDED_NATIVE_DATA_POLICY_PASS":
+        raise ValueError("Do not use an inconsistent native return for criterion credit")
+    native_verdicts = native_judgment["criterion_verdicts"]
+    native_head = native_judgment["actual_executed_commit"]
+    native_anchor_paths = [a["path"] for f in {"F23", "F25", "F35"} for a in anchors[f] if a["present"]]
+    native_anchor_bytes = blobs_at(native_head, sorted(set(native_anchor_paths)))
+    native_anchors = {f: [{"path": a["path"], "present": True, "source_commit": native_head,
+                         "sha256_git_blob_content": hashlib.sha256(native_anchor_bytes[a["path"]]).hexdigest()} for a in anchors[f] if a["present"]]
+                      for f in {"F23", "F25", "F35"}}
     criteria = []
     for row in board["rows"]:
         fid = row["id"]
@@ -337,7 +348,8 @@ def main() -> None:
             verdict = "RECORDED_MAIN_ACCEPTED_CURRENT_RELEVANCE_NOT_RECHECKED" if historical else "OPEN"
             if ident in STATIC: verdict = "SUFFICIENT_STATIC_PASS_PENDING_GREEN_MAIN_LANDING"
             if ident in NATIVE_CANDIDATES: verdict = "AUTHORED_DATA_PASS_NAMED_NATIVE_RECHECK_PENDING"
-            if ident == "F29#4": verdict = "STATIC_TABLE_PASS_PROVIDER_BINDING_REVIEW_PENDING"
+            if ident == "F29#4": verdict = "STATIC_POLICY_AND_PROVIDER_SOURCE_PASS_LIVE_WITNESS_OPEN"
+            if ident in native_verdicts: verdict = native_verdicts[ident]["verdict"]
             existing = {"board_recorded_status": c.get("status"), "board_exact_claim": c.get("evidence", ""),
                         "board_exact_gap": c.get("gap", ""), "source_commit": None, "package_hash": None,
                         "platform": "Only as explicitly recorded in board claim; inspect named artifact for missing fields.",
@@ -348,7 +360,19 @@ def main() -> None:
                          "platform": "Windows Python/Git", "input": "read-only pinned objects", "shortcuts": "static inspection only; no engine/player/campaign"}] if ident in STATIC else []
             if ident in {"F23#1", "F23#2", "F35#0"}:
                 evidence.append({"artifact": "f23-f35-catalogue-recheck.json", "scope": "authored data bindings only; runtime unproved", "source_commit": BASE})
-            if ident == "F29#4": evidence.append({"artifact": "f29-wild-roster-recheck.json", "scope": "exact wild-table census and disclosed Water alias; provider review pending", "source_commit": BASE})
+            if ident in native_verdicts:
+                evidence.append({"artifact": "data-native-e2cc-independent-judgment.json", "scope": native_verdicts[ident]["passed"], "source_commit": native_head,
+                                 "raw_sha256": native_judgment["native_raw_sha256"], "probe_sha256": native_judgment["native_probe_sha256"],
+                                 "source_closure_artifact": "data-native-e2cc-source-closure.json", "source_closure_count": native_judgment["source_closure_count"],
+                                 "source_closure_canonical_sha256": native_judgment["source_closure_canonical_sha256"],
+                                 "platform": native_judgment["platform"], "input": native_judgment["input"], "shortcuts": native_judgment["shortcuts"]})
+            if ident == "F29#4": evidence.append({"artifact": "f29-wild-roster-recheck.json", "scope": "exact wild-table census, positive-weight site-bound pools and production provider source chain; disclosed Water alias; live execution open", "source_commit": BASE})
+            if ident == "F17#4":
+                evidence.append({"artifact": "core582b-independent-judgment.json", "scope": "actual Mira cycle1 and three equipped material gathers PASS; whole CORE FAIL before Oskar; full chain/all starters OPEN", "source_commit": BASE,
+                                 "platform": "ROOT Windows headless Godot4.7", "input": "actual controller events/production contact route with disclosed instrumented start", "shortcuts": "CORE-only harness with declared team/level assistance; no earned campaign"})
+            if fid == "F25" and ident != "F25#1":
+                evidence.append({"artifact": "vfx-r17-independent-scope-judgment.json", "scope": "one selected native lifetime case PASS; all13 original byte/hash bindings verified; no subjective full-bar or actual combat proof", "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+                                 "platform": "GTX1060 3GB; Compatibility;1920x1080; Godot4.7", "input": "production effect nodes in synthetic arena with posed Mudsnout and fixed30fps movie", "shortcuts": "single small-stones:r1 case;0.7s synthetic flight; no player/HP authority or Medium frame samples"})
             impl = IMPLEMENTATION[fid][ordinal] if not original else (
                 "Historical main implementation/acceptance is recorded in the exact board claim below; this evidence lane has not re-executed it on the combined redesign source."
                 if historical else "Original defect remains open; replacement requirement is " + ORIGINAL_OPEN.get(ident, "not identified") + "; newer timings invalidate old combat distributions.")
@@ -356,6 +380,8 @@ def main() -> None:
                 gap = "Still OPEN until replacement " + ORIGINAL_OPEN[ident] + " actually passes and lands. Old numerical/capture proof cannot close new timings/HUD. " + c.get("gap", "")
             elif historical:
                 gap = "Retain historical acceptance only within recorded scope; verify current relevant dependency/source changes and required green main landing before claiming combined-candidate reuse."
+            elif ident in native_verdicts:
+                gap = native_verdicts[ident]["gap"] + " Green main landing/counting remains; no MET credit added by this lane."
             elif ident in STATIC:
                 gap = "Exact static requirement independently passes at pinned source; green main landing/counting remains. No other row/engine/visual/co-op inference."
             else:
@@ -369,7 +395,7 @@ def main() -> None:
                                        "counts": r.get("terminal_counts"), "scope": "bounded named check only; dependencies/full criterion relevance not established here"})
             criteria.append({"id": ident, "feature_title": row.get("title"), "requirement": c["text"],
                              "acceptance_authority": "docs/ACCEPTANCE.md6.1/6.2 and current owner RD36/RD37; board ordinal is zero-based",
-                             "actual_implementation": impl, "source_anchors": anchors.get(fid, []),
+                             "actual_implementation": impl, "source_anchors": native_anchors[fid] if ident in native_verdicts else anchors.get(fid, []),
                              "needed_proof": {"exact_requirement_to_observe": c["text"], "modalities": modalities(c["text"], ident),
                                               "named_run_request_ids": proof_family(ident), "existing_entrypoints": anchor_tests,
                                               "rule": "Full row conjunction must pass. Relaxed fixture starts must be disclosed; F48 authentic input restriction and actual co-op/durable/visual requirements remain."},
@@ -383,9 +409,11 @@ def main() -> None:
         "path": str(BOARD), "sha256": hashlib.sha256(board_raw).hexdigest(), "generated_at": board.get("generated_at"),
         "recorded_main_sha": board.get("main_sha"), "note": "R2/R3 implementation status is stale; no board mutations."},
         "counts": {"mapped": len(criteria), "original": 101, "redesign": 179, "verdicts": dict(summary),
+                   "independently_sufficient_new_rows_pending_green_main": sum(c["independent_verdict"].startswith("SUFFICIENT_") for c in criteria),
                    "native_receipts_inventoried": len(receipts), "declared_raw_hashes_matched": sum(r.get("hash_matches") is True for r in receipts),
                    "without_paired_declared_raw_hash": sum(r.get("hash_matches") is None for r in receipts)},
         "criteria": criteria,
+        "newer_bounded_judgments": ["core582b-independent-judgment.json", "regression582b-independent-judgment.json", "vfx-r17-independent-scope-judgment.json", "sealed-artifact-integrity-recheck.json", "data-native-e2cc-independent-judgment.json"],
         "global_limits": ["No engine/import/GPU/net/test execution launched by this lane.", "Main/board accepted110/280 is historical; no new MET before green main landing.",
                           "Flags and class/config existence are implementation evidence only for requirements demanding actual play/pixels/durable/co-op proofs.",
                           "95 receipt inventory contains79 matched declared raw hashes;16 lack paired hashes and are not called hash-verified.",

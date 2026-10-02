@@ -1,7 +1,7 @@
 {
   "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
   "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
-  "recorded_utc": "2026-10-02T02:28:13.530862+00:00",
+  "recorded_utc": "2026-10-02T03:00:49.772073+00:00",
   "platform": "Windows; Python/Git static inspection only",
   "input": "read-only Git objects",
   "package_hash": null,
@@ -553,6 +553,168 @@
       "path": "data/config/vfx.json",
       "pointer": "/move_library/archetypes/sky_lightning/light/enabled",
       "value": true
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/kael/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/sera/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/lyra/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/environment/fog_enabled",
+      "value": true
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/environment/ssao_enabled",
+      "value": true
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/environment/adjustment_enabled",
+      "value": true
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/times/night/environment/adjustment_enabled",
+      "value": true
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/grunt_a/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/grunt_b/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/grunt_c/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/officer_a/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/officer_b/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/innkeeper/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/inn_helper/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/trader/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/craftsperson/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/creature_caretaker/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/farmer/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/local_historian/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/young_trainer/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/rival_trainer/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/field_researcher/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/wandering_trainer/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/lost_traveler/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/alpha_tracker/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/courier/body_emission_enabled",
+      "value": false
+    },
+    {
+      "feature": "F26",
+      "path": "data/config/art.json",
+      "pointer": "/former_tether_member/body_emission_enabled",
+      "value": false
     },
     {
       "feature": "F27",

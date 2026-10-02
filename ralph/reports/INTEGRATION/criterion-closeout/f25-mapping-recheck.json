@@ -1,7 +1,7 @@
 {
   "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
   "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
-  "recorded_utc": "2026-10-02T02:08:23.155190+00:00",
+  "recorded_utc": "2026-10-02T02:47:15.249858+00:00",
   "platform": "Windows; Python/Git static inspection only",
   "input": "read-only Git objects",
   "package_hash": null,

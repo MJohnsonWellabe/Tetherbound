@@ -1,0 +1,389 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:47:13.455289+00:00",
+  "platform": "ROOT returned Windows headless Godot4.7; no reviewer engine execution",
+  "input": "check-only compile and instrumented named unit contracts; no player/controller sequence",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "actual_executed_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "scope": "33 listed compile roots and44 tests/317 assertions in ten selected files only; not full-suite, CI, paid producer, M1, F48, F49 or pixels",
+  "checks": {
+    "all_executed_heads_pinned": true,
+    "compile_before_after_3358_unchanged": true,
+    "unit_before_after_3358_unchanged": true,
+    "named_source_blobs_match_both_wrappers": true,
+    "compile_raw_hash_matches": true,
+    "compile_33_exact_cases_and_terminal": true,
+    "compile_exit0_no_declared_or_strict_errors": true,
+    "unit_raw_hash_matches": true,
+    "unit_44_317_zero_terminal": true,
+    "unit_exit0_not_timed_out": true,
+    "unit_only_two_expected_runaway_negative_fixture_warnings": true,
+    "both_wrappers_report_zero_engine_handles": true
+  },
+  "named_source_bindings": [
+    {
+      "path": "autoload/game_state.gd",
+      "pinned_source_sha256": "45c72b736d81335a14ebb2596dcfddcb320750104eb69e6a9b4d2d2abaf57b56",
+      "checkout_CRLF_projection_sha256": "83790fda548bdfc6475bfebf359542c5251015159ccb40e0c2179b5ef083d50e",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "autoload/world_state.gd",
+      "pinned_source_sha256": "3bbdd2f932e1651b1c02a3ba31c007e5936758ee171b291b2b2bf3a8d6c1826c",
+      "checkout_CRLF_projection_sha256": "dd1b2ea08f89c3443a2fb2591862cae5cf7508fe5a9b073a98c9647fa4ddd684",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/build/station_actions.gd",
+      "pinned_source_sha256": "99eeb43e77c6b79e0d001c416c0537032da8d12d8e94c55a682e2737b4c0d535",
+      "checkout_CRLF_projection_sha256": "1b8eb2812a071498a3e824d429926dfc76a2cdd852129be2244b07d7e25b2a5f",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/build/station_forge.gd",
+      "pinned_source_sha256": "abc4c11f92ca5961cabf1ecc3d40a4da4507f39be134f361f6fe255723f2d135",
+      "checkout_CRLF_projection_sha256": "c6d3924ea01d4070b0202302ff7df8a41f238504ac9de629edecafb389d2d0cb",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "pinned_source_sha256": "eb496850354150b94ecad2234330ab73dc5a6c3c24d9c943ece4f5abff97c6dd",
+      "checkout_CRLF_projection_sha256": "4614a15674567abaa1b6fcfa423a4b71392b106d7d6ded7b4862de7142c9b3ad",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/masters/breakthrough_panel.gd",
+      "pinned_source_sha256": "2891a621e9acb6d320b2ea8d2891d5d0f50303c033967971bbc5b1eb56efcdcd",
+      "checkout_CRLF_projection_sha256": "2418157ead6cc9a726a9e6bb3e97161d48cecd44ea4a3d9cd1bedf3d770c4446",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/masters/breakthrough_service.gd",
+      "pinned_source_sha256": "12e8a83fe280ed74650564c29940937edbead46b1f276cf10d3e7ad58495a8e8",
+      "checkout_CRLF_projection_sha256": "ebed08630f045ee9e3e493fbc0c337f4a3c6dd5067da058ee5c6c8413fa2e7be",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/net/foundation_actions.gd",
+      "pinned_source_sha256": "a2e782ca288b9d57b1f05335b4dfdcc444e3833a3d16fa630e7f6d89695c3d42",
+      "checkout_CRLF_projection_sha256": "2a0cf61c8e053ff0cd1118bab4e623d2e47b56921eb56a8fbc33cd98b6b1df01",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/net/foundation_composition.gd",
+      "pinned_source_sha256": "3954e5f47a6205d1419af152b69a531d47120d0923fa2539931f4b298d15561e",
+      "checkout_CRLF_projection_sha256": "7d494d4a14618c0d960d6f2d9251f545d6ffea862f885c680f0b1f6f5fb8292d",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/net/foundation_forge.gd",
+      "pinned_source_sha256": "f47a216a10ae8a49707fbeac1a3ecee763720cc5446878515b2242474c81f104",
+      "checkout_CRLF_projection_sha256": "b5f785173af50c077c36ad75985ce8e408629225fc9a32cc24984b6b750858ad",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/net/foundation_travel_lifecycle.gd",
+      "pinned_source_sha256": "f5c09f5d4a1068af10bb34f0ac3b4423c04a60cf825568d31dbad77703cf8bf4",
+      "checkout_CRLF_projection_sha256": "aa87883fe10a7939617a27fe406c71287393f0178191d96adc8f8ed3986a1c63",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "pinned_source_sha256": "a94c36ae3aed5f826446e4ccfb8f5911d4c1109269beb1047e87abce1a2cd0da",
+      "checkout_CRLF_projection_sha256": "919c73d0a8d4ef2ea98b86d7672817b4c0152a41dbf87290b24e9612389441b1",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/story/sequence_director.gd",
+      "pinned_source_sha256": "7a16b12dd16c8d6066d54a5166e397425468e9361dd31f8b0bb24c7a48cb9be8",
+      "checkout_CRLF_projection_sha256": "d3ba4c6d48b758ad99ad4edd232ba5a2bfec537f3a609ba43e955c558e58b9c6",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/ui/altar_panel.gd",
+      "pinned_source_sha256": "18dedfce6536fdd258f7e4836f1d5168bccced86b4bd2680aed480becf72b8ce",
+      "checkout_CRLF_projection_sha256": "71e2b38a660abd52f0ee167a7dd14f37b99febc1d6007e52aadbab4f7602a03a",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/ui/altar_service.gd",
+      "pinned_source_sha256": "be54bfc3185cbeb3d8f4bc328290647144d035871ff264004255872e07bded00",
+      "checkout_CRLF_projection_sha256": "e05bbffe5268ac84572273beab522182dced1869c254c398b076fc8f41c6ca04",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/ui/craft_panel.gd",
+      "pinned_source_sha256": "9a2b8f23b5aa83dc3f0f2f6ba9fb85b2e134a5f50bfb9a50f3f6af6ecf63bcf3",
+      "checkout_CRLF_projection_sha256": "3e9e24abca9d357a6d8d46e4ddd57e40d7c591e5e88c6c15cee658b4f8fac2e2",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "scripts/world/homestead_refining.gd",
+      "pinned_source_sha256": "9a3c8530efab18d837f99816365317b955906cceb13c3fcf17bb0d1241414477",
+      "checkout_CRLF_projection_sha256": "26aabc9d2dc3be7788d13be42034b5d10df4ad89bfe978338333e10e0a9fc9ce",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/helpers/f48_net_proof.gd",
+      "pinned_source_sha256": "47cf20569c9aafd0c2610f01606a301ef816c03ef0c4ba2a0046239e06f07cde",
+      "checkout_CRLF_projection_sha256": "c67a74bc9f92e5243a8a9f359eddd88e8df0a027cdf562cab38d13a68a4f5529",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/helpers/gate_a_material_route.gd",
+      "pinned_source_sha256": "ffbd81746205c0279fc813e313be4174276b6aeb623598c56dfd68e81375382c",
+      "checkout_CRLF_projection_sha256": "cfb6d538ae782e2d3b9dae11aae282ddbb37011b969ad6eec82a8841a1af22fe",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "pinned_source_sha256": "1029a3bd1ff0bcbbc0043876cabeb8df3fdd973f4f55676a678a6347bae17378",
+      "checkout_CRLF_projection_sha256": "ed8e3e7e99faa244ae3a1e7f80fcc6b95f78417f87c220eaf84f20565039f1fb",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "pinned_source_sha256": "4e830b342b7205bbee78d48709a6c3f397e8c39a20e14d7fec6ec123bc29de82",
+      "checkout_CRLF_projection_sha256": "a1920feefdd929f228acfb1ad8a3f2135efaddb5e0446211aa1e9b2affd030c9",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/helpers/stick_navigator.gd",
+      "pinned_source_sha256": "830acdc8bda9e163fe6a6a0ad934e656e211859afd6b0e01d4fd5546dc18dbc4",
+      "checkout_CRLF_projection_sha256": "486da1669dc3392741d27bd6168d365a84ac55553b5d3d5d268f36dd4443d85f",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/smoke_party_count_after_catches.gd",
+      "pinned_source_sha256": "91f6308482ef731744ec1804c1fadf1c9877e2b9fcf92c72f083ce993dda76e4",
+      "checkout_CRLF_projection_sha256": "bdd6cfb02fd578708063a579b9e72b9679205b248f4caa3db087ce8a6748a2bf",
+      "compile_before_representation": "Git text checkout CRLF only",
+      "unit_before_representation": "Git text checkout CRLF only"
+    },
+    {
+      "path": "tests/test_altar_recipe_catalogue.gd",
+      "pinned_source_sha256": "3b57de2ab6c51a26982606692e8c1cdacee7a4879f4447834839b104e20f9c50",
+      "checkout_CRLF_projection_sha256": "47738f1b65717bb742437c50602979c8dd39ae5485c4d702d9c05da9c69e54b9",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_ending_presentation_owner.gd",
+      "pinned_source_sha256": "9539a15e17b36f9d7b0a013e7fc1ae7f60cf242f8879f4181d471ecdb7a728fd",
+      "checkout_CRLF_projection_sha256": "4a4d9afe47f278cb0db8077bd4e2abba2a8fddca3cb4a9f489f55e23b2276c62",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_foundation_forge_units.gd",
+      "pinned_source_sha256": "dd3aba2de2a278e8876960f4c01b6fc05f0d8d2e31da7c7cf79c532181879323",
+      "checkout_CRLF_projection_sha256": "37611784c65ca1934ff5294bae80192a88cabfb2b2a0666a7920cd8bb0abaa6b",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_foundation_travel_protocol.gd",
+      "pinned_source_sha256": "66420acbaf9fcbab91b1fb2d0737b7b3770c1e94e568c996cf2332d5a8dc9cfa",
+      "checkout_CRLF_projection_sha256": "a9390f6a8417c7b9e6ce3951a4aa3d4ae41626648d3326164a34e44fa3b7c0e0",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_gate_a_npc_gather_segment_contract.gd",
+      "pinned_source_sha256": "e3494436bd88c30e162b7c13ab4531a7225b558af6b914b71b54886f09913f59",
+      "checkout_CRLF_projection_sha256": "89009e585fbab4a6ecbddb9f00dcd4cc05449d06f455b371776243a230d2b15a",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_material_perimeter_headings.gd",
+      "pinned_source_sha256": "1c54d6d6d8a449740a9672b2d3c74d79bc974d9f9ee7ddc84a33570c6d5a176a",
+      "checkout_CRLF_projection_sha256": "d5a8430b4695869e358450b61dc29019dde99a3f0d9bfc1d7bf190fd9a643880",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_net_harness_heartbeat_allowance.gd",
+      "pinned_source_sha256": "37eee91531394fa4a2450038058bf6e489803e17d45d4e5d0bdc011c563963d6",
+      "checkout_CRLF_projection_sha256": "65fd49072292c53ec3f7640f29603ab2b8396f5fb5a2c62932f8322ba7288867",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_player_runaway_velocity_guard.gd",
+      "pinned_source_sha256": "c9d2fe5a6beaa500746358049c2fa7466e27c54c2d661e7ad5a46d6b7833a2f5",
+      "checkout_CRLF_projection_sha256": "b2c3324303895384ee7ff89c8a3e5e0bb3556ef743c21c881eb51b177b5e403e",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_shop_floor_support.gd",
+      "pinned_source_sha256": "c5906f615120da71c49dab8f1478000597653394084ebeda1219032964f17a2d",
+      "checkout_CRLF_projection_sha256": "f133428fb262da4ec034a0ff3fa1a07ca7570c2b3c58464c501874b0a405ba1e",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tests/test_training_ui_restart_retry.gd",
+      "pinned_source_sha256": "e0e2d1de7b1baf2884461605bbf6cd3d8f4bda600b74752313906ecd1729bc73",
+      "checkout_CRLF_projection_sha256": "5671957f47bf7ce2adba2dc782d6772cc6b8b1fdd6135c5eeaa2bfaa2d50fc50",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tools/net/f48_bootstrap.gd",
+      "pinned_source_sha256": "9bbdbe69a2ad54eabdacb63c2a773d427e27428e7e3b2d85d0e443e8295c41bf",
+      "checkout_CRLF_projection_sha256": "97c4e9657a59e60042b7dbfc1f3aa2b6a6360e7984998ce68638ae39424dcf65",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    },
+    {
+      "path": "tools/net/proof_steps_f48.gd",
+      "pinned_source_sha256": "008fd4cdc2cefba287c5625d097dd47b16dc9bd710ae981e9cfa0a2c66cff157",
+      "checkout_CRLF_projection_sha256": "7e2dcb8db9e8a351185f01fb8989b8e69e482c8e39f8706f4aac93c081778f2a",
+      "compile_before_representation": "exact Git blob",
+      "unit_before_representation": "exact Git blob"
+    }
+  ],
+  "compile_metadata": {
+    "head": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+    "runs": [
+      {
+        "script": ".tmp/closeout/compile_changed_batch.gd",
+        "command": [
+          "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--path",
+          "D:\\tetherbound\\foundations-batch-check",
+          "--script",
+          ".tmp/closeout/compile_changed_batch.gd"
+        ],
+        "watchdog_seconds": 240,
+        "pid": 16320,
+        "exit": 0,
+        "elapsed_seconds": 13.75,
+        "raw_sha256": "aef04b50565d7b2e8f73699bac45ca17a871a7906cbfe548fdc7a27d42a341cd",
+        "raw_bytes": 1724,
+        "errors": []
+      }
+    ],
+    "scope": "Godot4.7 actual check-only compilation of dependent production/autoload/proof and newunitroots. No gameplay/acceptance claim.",
+    "compile_base": "16fbddde393036eeea3c4dccbe0b451734e1636e",
+    "compile_paths": [
+      "autoload/game_state.gd",
+      "autoload/world_state.gd",
+      "scripts/build/station_actions.gd",
+      "scripts/build/station_forge.gd",
+      "scripts/combat/encounter_director.gd",
+      "scripts/masters/breakthrough_panel.gd",
+      "scripts/masters/breakthrough_service.gd",
+      "scripts/net/foundation_actions.gd",
+      "scripts/net/foundation_composition.gd",
+      "scripts/net/foundation_forge.gd",
+      "scripts/net/foundation_travel_lifecycle.gd",
+      "scripts/net/session.gd",
+      "scripts/story/sequence_director.gd",
+      "scripts/ui/altar_panel.gd",
+      "scripts/ui/altar_service.gd",
+      "scripts/ui/craft_panel.gd",
+      "scripts/world/homestead_refining.gd",
+      "tests/helpers/f48_net_proof.gd",
+      "tests/helpers/gate_a_material_route.gd",
+      "tests/helpers/gate_a_npc_gather_segment.gd",
+      "tests/helpers/net_harness.gd",
+      "tests/helpers/stick_navigator.gd",
+      "tests/smoke_party_count_after_catches.gd",
+      "tests/test_altar_recipe_catalogue.gd",
+      "tests/test_ending_presentation_owner.gd",
+      "tests/test_foundation_forge_units.gd",
+      "tests/test_foundation_travel_protocol.gd",
+      "tests/test_gate_a_npc_gather_segment_contract.gd",
+      "tests/test_material_perimeter_headings.gd",
+      "tests/test_net_harness_heartbeat_allowance.gd",
+      "tests/test_training_ui_restart_retry.gd",
+      "tools/net/f48_bootstrap.gd",
+      "tools/net/proof_steps_f48.gd"
+    ],
+    "engine_handles_after": "0"
+  },
+  "unit_metadata": {
+    "head": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+    "exit": 0,
+    "timed_out": false,
+    "selection": "test_altar_recipe_catalogue.gd,test_ending_presentation_owner.gd,test_foundation_forge_units.gd,test_foundation_travel_protocol.gd,test_gate_a_npc_gather_segment_contract.gd,test_material_perimeter_headings.gd,test_net_harness_heartbeat_allowance.gd,test_training_ui_restart_retry.gd,test_shop_floor_support.gd,test_player_runaway_velocity_guard.gd",
+    "summary": [
+      "44 tests, 317 assertions, 0 failed"
+    ],
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-582b2f13cc53-85033d0f\\tests.log",
+    "raw_log_sha256": "1b9f0df6be102c929b4e300ab731fba8a73bb3d0a551df9e38775045a3a865b3"
+  },
+  "source_snapshot_limit": "3358 before/after recorded entries compared;35 named source blobs independently bound to pinned Git, with any exact CRLF checkout projection disclosed per path. Other entries are unchanged wrapper claims, not individually re-read by this reviewer.",
+  "unit_strict_diagnostics": [
+    "WARNING: [player] grounded platform velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; discarded",
+    "WARNING: [player] velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; clamped"
+  ],
+  "diagnostic_binding": "Both903m/s warning lines are emitted by the explicitly authored grounded/airborne negative fixtures in test_player_runaway_velocity_guard.gd; retained rather than removed from raw proof.",
+  "independent_verdict": "BOUNDED_NATIVE_REGRESSION_PASS",
+  "members": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-582b2f13cc53\\receipt.json",
+      "copy": "returned-native\\compile582b-receipt.json.gz",
+      "raw_bytes": 758446,
+      "raw_sha256": "12d964f5d90e22996702c8c3a07beeb298c790de1c5c0e95e6dc8288d54d3ae1",
+      "gzip_sha256": "2b9a10f89a9272a00f48536001d56682cac938658fff3662cd28ec1c231bae5a"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-582b2f13cc53\\0.log",
+      "copy": "returned-native\\compile582b-0.log.gz",
+      "raw_bytes": 1724,
+      "raw_sha256": "aef04b50565d7b2e8f73699bac45ca17a871a7906cbfe548fdc7a27d42a341cd",
+      "gzip_sha256": "b93f7628d82cb16e6766734fee5637ea3f2de1b77806232835ae82c99567c478"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-affected-582b2f13cc53-85033d0f.json",
+      "copy": "returned-native\\unit582b-source-snapshots.json.gz",
+      "raw_bytes": 756592,
+      "raw_sha256": "1b3b236781c44c15b344dd475a000964f0f812e59d59f00c1845e8b65baa82e8",
+      "gzip_sha256": "166802218a8a9b31fbd4611ebfda78c6669e9dc116f4f0fb36ee3e5202f8df51"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-582b2f13cc53-85033d0f\\result.json",
+      "copy": "returned-native\\unit582b-result.json.gz",
+      "raw_bytes": 734,
+      "raw_sha256": "838ef45eb64536d23c6623de397ce6fde5ffef050fa1c78c2db2ad4b44738cd3",
+      "gzip_sha256": "121c6b19b3d8f5baf08125c46965ea6ae27df84c618287c75a2ed0063d4f6d08"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-582b2f13cc53-85033d0f\\tests.log",
+      "copy": "returned-native\\unit582b-tests.log.gz",
+      "raw_bytes": 34163,
+      "raw_sha256": "1b9f0df6be102c929b4e300ab731fba8a73bb3d0a551df9e38775045a3a865b3",
+      "gzip_sha256": "269c7ffea26160d7f716546ccdfca0baca65d1afed6d03bb70c85651209e58ea"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
   "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
-  "recorded_utc": "2026-10-02T02:28:13.506135+00:00",
+  "recorded_utc": "2026-10-02T03:00:49.751157+00:00",
   "platform": "Windows; Python/Git static inspection only",
   "input": "read-only Git objects",
   "package_hash": null,
@@ -22,10 +22,13 @@
     "verdicts": {
       "RECORDED_MAIN_ACCEPTED_CURRENT_RELEVANCE_NOT_RECHECKED": 110,
       "OPEN": 164,
-      "AUTHORED_DATA_PASS_NAMED_NATIVE_RECHECK_PENDING": 3,
-      "SUFFICIENT_STATIC_PASS_PENDING_GREEN_MAIN_LANDING": 2,
-      "STATIC_TABLE_PASS_PROVIDER_BINDING_REVIEW_PENDING": 1
+      "PARTIAL_NATIVE_PASS_TM_PRODUCTION_USE_OPEN": 1,
+      "SUFFICIENT_NATIVE_POLICY_PASS_PENDING_GREEN_MAIN_LANDING": 1,
+      "SUFFICIENT_NATIVE_MAPPING_PASS_PENDING_GREEN_MAIN_LANDING": 2,
+      "STATIC_POLICY_AND_PROVIDER_SOURCE_PASS_LIVE_WITNESS_OPEN": 1,
+      "SUFFICIENT_STATIC_PASS_PENDING_GREEN_MAIN_LANDING": 1
     },
+    "independently_sufficient_new_rows_pending_green_main": 4,
     "native_receipts_inventoried": 95,
     "declared_raw_hashes_matched": 79,
     "without_paired_declared_raw_hash": 16
@@ -4133,7 +4136,16 @@
         "shortcuts": "Exact board disclosures retained verbatim; absent disclosures remain unknown.",
         "binding": "Historical board entry is not a fresh current-source re-check."
       },
-      "independent_evidence": [],
+      "independent_evidence": [
+        {
+          "artifact": "core582b-independent-judgment.json",
+          "scope": "actual Mira cycle1 and three equipped material gathers PASS; whole CORE FAIL before Oskar; full chain/all starters OPEN",
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "platform": "ROOT Windows headless Godot4.7",
+          "input": "actual controller events/production contact route with disclosed instrumented start",
+          "shortcuts": "CORE-only harness with declared team/level assistance; no earned campaign"
+        }
+      ],
       "bounded_native_candidates": [],
       "independent_verdict": "OPEN",
       "honest_gap": "Opening driver composes practice/tools/materials and optional full camp/readiness/tournament. Earlier Mira/terrain failures remain retained; newer582b actual Mira and three equipped gathers pass, then wholeCORE fails at Oskar. CORE does not prove full M1 chain. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
@@ -7010,48 +7022,48 @@
       "feature_title": "Move loadout: three slots, ultimate, learnsets and mastery",
       "requirement": "Every species has a learnset unlocking moves at levels and breakthroughs; TMs still work under the primary-type rule.",
       "acceptance_authority": "docs/ACCEPTANCE.md6.1/6.2 and current owner RD36/RD37; board ordinal is zero-based",
-      "actual_implementation": "70 authored learnsets cover69 live species plus reserved bear, level/breakthrough gates and primary-type TM staging; native catalogue/TM consumer recheck requested.",
+      "actual_implementation": "Native e2cc actual consumer recheck passes all69 species' level gates, all five native/unmodified JSON-restored prefixes and actual saved-carrier lookup. Primary-type TM compatibility passes; successful owned TM teaching/use remains unproved by this probe.",
       "source_anchors": [
         {
           "path": "data/moves/moves.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375"
         },
         {
           "path": "data/moves/learnsets.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "308b2d1c82c19b135f361089bda61eb3a18777db9e7bb02e57fd01c355c8afc5"
         },
         {
           "path": "data/moves/tms.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "1025822885d17e93800ee26cd16cd2940d87dc6e2e9ea6a0b8cd5914cc3a6e27"
         },
         {
           "path": "scripts/creatures/teaching.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
-          "sha256_git_blob_content": "4128cf4a87384270412150ecb3bf24afdb497c049c2298ad89d7db57f77faac4"
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+          "sha256_git_blob_content": "febc5e3e5518d9af77cdd5e989a34072d4b5b1e669fbbb77d19829eee0af8b91"
         },
         {
           "path": "scripts/creatures/move_mastery.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "cf1c3797df7e2cd6042b208d463efd6b4d6d7e3c38aa49cab7cd89e1bd7c93bd"
         },
         {
           "path": "scripts/creatures/creature_instance.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "d2d5a86b9d4fcaeb1180671051b94496670c96a2ad944164bc44cc5ce7261db0"
         },
         {
           "path": "data/config/combat.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "33ba3aef23f0446040c9bc5236b06b972a4bb34161fa9e6ff018b83b46f60a2d"
         }
       ],
@@ -7082,11 +7094,24 @@
           "artifact": "f23-f35-catalogue-recheck.json",
           "scope": "authored data bindings only; runtime unproved",
           "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b"
+        },
+        {
+          "artifact": "data-native-e2cc-independent-judgment.json",
+          "scope": "Every live species learnset; L5/L15 gates; all5 native and unmodified JSON completed/preceding prefixes; exact no-future-leak sets; actual saved-carrier allowed_saved_moves; primary-type-only can_learn compatibility for every TM/type.",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+          "raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7",
+          "probe_sha256": "374ecae0cfd041b76be2e834737642cb2f0fb730537b6303d0fe102b1e2787af",
+          "source_closure_artifact": "data-native-e2cc-source-closure.json",
+          "source_closure_count": 3365,
+          "source_closure_canonical_sha256": "8fbfec413a3b730955ac028596d930d2af91ad69e1b5215633d733d7f37ec9d1",
+          "platform": "ROOT returned Godot4.7.stable.official.5b4e0cb0f, Windows headless; detached production policy calls",
+          "input": "Production lookup/spawn/equip-policy calls; native and unmodified JSON fixtures; no controller inputs",
+          "shortcuts": "Detached L15 creatures and synthetic owned/reachable/Altar/not-combat context passed only to pure staging. JSON round trips are in memory. No earned progress, paid action, disk save, receipt, write, ACK, network or pixels invented."
         }
       ],
       "bounded_native_candidates": [],
-      "independent_verdict": "AUTHORED_DATA_PASS_NAMED_NATIVE_RECHECK_PENDING",
-      "honest_gap": "70 authored learnsets cover69 live species plus reserved bear, level/breakthrough gates and primary-type TM staging; native catalogue/TM consumer recheck requested. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
+      "independent_verdict": "PARTIAL_NATIVE_PASS_TM_PRODUCTION_USE_OPEN",
+      "honest_gap": "Probe calls can_learn, not actual stage_tm_knowledge/stage_tm_candidate or owned TM debit/use. 'TMs still work' remains unproved by this run. No persisted or earned breakthrough proof. Green main landing/counting remains; no MET credit added by this lane.",
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     },
@@ -7095,48 +7120,48 @@
       "feature_title": "Move loadout: three slots, ultimate, learnsets and mastery",
       "requirement": "At least ten utility moves exist (dash-strike, heal pulse, trap and others) and every role can equip at least two.",
       "acceptance_authority": "docs/ACCEPTANCE.md6.1/6.2 and current owner RD36/RD37; board ordinal is zero-based",
-      "actual_implementation": "Ten utility definitions and every live species' two or more choices cover four authored roles; native actual equip-policy staging requested, no ordinary station claim.",
+      "actual_implementation": "Native e2cc passes ten utilities, all four roles, and every live species' two or more legal production-stage equip choices plus reach refusal; sufficient policy scope, no ordinary station/save/rejoin claim.",
       "source_anchors": [
         {
           "path": "data/moves/moves.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375"
         },
         {
           "path": "data/moves/learnsets.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "308b2d1c82c19b135f361089bda61eb3a18777db9e7bb02e57fd01c355c8afc5"
         },
         {
           "path": "data/moves/tms.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "1025822885d17e93800ee26cd16cd2940d87dc6e2e9ea6a0b8cd5914cc3a6e27"
         },
         {
           "path": "scripts/creatures/teaching.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
-          "sha256_git_blob_content": "4128cf4a87384270412150ecb3bf24afdb497c049c2298ad89d7db57f77faac4"
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+          "sha256_git_blob_content": "febc5e3e5518d9af77cdd5e989a34072d4b5b1e669fbbb77d19829eee0af8b91"
         },
         {
           "path": "scripts/creatures/move_mastery.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "cf1c3797df7e2cd6042b208d463efd6b4d6d7e3c38aa49cab7cd89e1bd7c93bd"
         },
         {
           "path": "scripts/creatures/creature_instance.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "d2d5a86b9d4fcaeb1180671051b94496670c96a2ad944164bc44cc5ce7261db0"
         },
         {
           "path": "data/config/combat.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "33ba3aef23f0446040c9bc5236b06b972a4bb34161fa9e6ff018b83b46f60a2d"
         }
       ],
@@ -7167,11 +7192,24 @@
           "artifact": "f23-f35-catalogue-recheck.json",
           "scope": "authored data bindings only; runtime unproved",
           "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b"
+        },
+        {
+          "artifact": "data-native-e2cc-independent-judgment.json",
+          "scope": "Ten registered utilities; all four authored roles; every one of69 actual live species has at least two L15 choices; each choice accepted by production stage_loadout_edit and refused out of reach.",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+          "raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7",
+          "probe_sha256": "374ecae0cfd041b76be2e834737642cb2f0fb730537b6303d0fe102b1e2787af",
+          "source_closure_artifact": "data-native-e2cc-source-closure.json",
+          "source_closure_count": 3365,
+          "source_closure_canonical_sha256": "8fbfec413a3b730955ac028596d930d2af91ad69e1b5215633d733d7f37ec9d1",
+          "platform": "ROOT returned Godot4.7.stable.official.5b4e0cb0f, Windows headless; detached production policy calls",
+          "input": "Production lookup/spawn/equip-policy calls; native and unmodified JSON fixtures; no controller inputs",
+          "shortcuts": "Detached L15 creatures and synthetic owned/reachable/Altar/not-combat context passed only to pure staging. JSON round trips are in memory. No earned progress, paid action, disk save, receipt, write, ACK, network or pixels invented."
         }
       ],
       "bounded_native_candidates": [],
-      "independent_verdict": "AUTHORED_DATA_PASS_NAMED_NATIVE_RECHECK_PENDING",
-      "honest_gap": "Ten utility definitions and every live species' two or more choices cover four authored roles; native actual equip-policy staging requested, no ordinary station claim. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
+      "independent_verdict": "SUFFICIENT_NATIVE_POLICY_PASS_PENDING_GREEN_MAIN_LANDING",
+      "honest_gap": "None for this bounded catalogue/equip-policy criterion; fixtures are detached L15 and a synthetic host station context. It does not establish F23#0 active controller combat or F23#3 actual station/save/rejoin. Green main landing/counting remains; no MET credit added by this lane.",
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     },
@@ -7827,7 +7865,16 @@
         "shortcuts": "Exact board disclosures retained verbatim; absent disclosures remain unknown.",
         "binding": "Historical board entry is not a fresh current-source re-check."
       },
-      "independent_evidence": [],
+      "independent_evidence": [
+        {
+          "artifact": "vfx-r17-independent-scope-judgment.json",
+          "scope": "one selected native lifetime case PASS; all13 original byte/hash bindings verified; no subjective full-bar or actual combat proof",
+          "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+          "platform": "GTX1060 3GB; Compatibility;1920x1080; Godot4.7",
+          "input": "production effect nodes in synthetic arena with posed Mudsnout and fixed30fps movie",
+          "shortcuts": "single small-stones:r1 case;0.7s synthetic flight; no player/HP authority or Medium frame samples"
+        }
+      ],
       "bounded_native_candidates": [
         {
           "artifact": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-3cdaa5d4\\result.json",
@@ -7869,37 +7916,37 @@
         {
           "path": "data/moves/moves.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375"
         },
         {
           "path": "data/config/vfx.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "c0d70857999ced9c41698b7fe078d092164bd39a8c9de246b8bc77e7c792fcce"
         },
         {
           "path": "scripts/vfx/move_effect_library.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "07836975d2f455af4121a0558e8cab4cda3dbb34e117b748a75bb40444d000e7"
         },
         {
           "path": "scripts/vfx/move_effect.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "feb298b1c8308516d848b17d74c7d9daa0958662bace4141afa40c3effa20367"
         },
         {
           "path": "scripts/combat/move_projectile.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "7e3b64d357665f4e57efa6bcc98a3fd66d991e257d6ab107d7c86aec67e834e6"
         },
         {
           "path": "tests/test_move_effects.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "7f1e89664968d058ac72a90712137b1aff7d12d7fd9c4b220674e4b63e8f0a23"
         }
       ],
@@ -7936,6 +7983,19 @@
           "platform": "Windows Python/Git",
           "input": "read-only pinned objects",
           "shortcuts": "static inspection only; no engine/player/campaign"
+        },
+        {
+          "artifact": "data-native-e2cc-independent-judgment.json",
+          "scope": "All94 actual production resolver mappings are nonempty; unknown archetype returns empty. Corroborates independent all-eight-parameter static mapping audit.",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+          "raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7",
+          "probe_sha256": "374ecae0cfd041b76be2e834737642cb2f0fb730537b6303d0fe102b1e2787af",
+          "source_closure_artifact": "data-native-e2cc-source-closure.json",
+          "source_closure_count": 3365,
+          "source_closure_canonical_sha256": "8fbfec413a3b730955ac028596d930d2af91ad69e1b5215633d733d7f37ec9d1",
+          "platform": "ROOT returned Godot4.7.stable.official.5b4e0cb0f, Windows headless; detached production policy calls",
+          "input": "Production lookup/spawn/equip-policy calls; native and unmodified JSON fixtures; no controller inputs",
+          "shortcuts": "Detached L15 creatures and synthetic owned/reachable/Altar/not-combat context passed only to pure staging. JSON round trips are in memory. No earned progress, paid action, disk save, receipt, write, ACK, network or pixels invented."
         }
       ],
       "bounded_native_candidates": [
@@ -7964,8 +8024,8 @@
           "scope": "bounded named check only; dependencies/full criterion relevance not established here"
         }
       ],
-      "independent_verdict": "SUFFICIENT_STATIC_PASS_PENDING_GREEN_MAIN_LANDING",
-      "honest_gap": "Exact static requirement independently passes at pinned source; green main landing/counting remains. No other row/engine/visual/co-op inference.",
+      "independent_verdict": "SUFFICIENT_NATIVE_MAPPING_PASS_PENDING_GREEN_MAIN_LANDING",
+      "honest_gap": "None for mapping; active effect rendering, visual bar, real contact/HP, mastery appearance and Medium performance remain separate criteria. Green main landing/counting remains; no MET credit added by this lane.",
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     },
@@ -7974,7 +8034,7 @@
       "feature_title": "Move effects library (real pebbles, fireballs, lightning)",
       "requirement": "A code-blind judge identifies from frames: pebble toss shows several small stones in flight, rock throw one boulder, fireball a burning orb with a trail and explosion, lightning a bolt striking the target from above.",
       "acceptance_authority": "docs/ACCEPTANCE.md6.1/6.2 and current owner RD36/RD37; board ordinal is zero-based",
-      "actual_implementation": "Native r14/r17 identity images/motion are retained, with original RED termination; full visual bar has not passed and this reviewer has not issued a code-blind subjective verdict.",
+      "actual_implementation": "Native r14 RED termination is retained; r17 smallstones:r1 selected rerun PASS is bounded to that one case with production effect nodes/posed creature. Full visual bar, actual fight authority and full matrix have not passed; this reviewer has not issued a code-blind subjective verdict.",
       "source_anchors": [
         {
           "path": "data/moves/moves.json",
@@ -8037,7 +8097,16 @@
         "shortcuts": "Exact board disclosures retained verbatim; absent disclosures remain unknown.",
         "binding": "Historical board entry is not a fresh current-source re-check."
       },
-      "independent_evidence": [],
+      "independent_evidence": [
+        {
+          "artifact": "vfx-r17-independent-scope-judgment.json",
+          "scope": "one selected native lifetime case PASS; all13 original byte/hash bindings verified; no subjective full-bar or actual combat proof",
+          "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+          "platform": "GTX1060 3GB; Compatibility;1920x1080; Godot4.7",
+          "input": "production effect nodes in synthetic arena with posed Mudsnout and fixed30fps movie",
+          "shortcuts": "single small-stones:r1 case;0.7s synthetic flight; no player/HP authority or Medium frame samples"
+        }
+      ],
       "bounded_native_candidates": [
         {
           "artifact": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-3cdaa5d4\\result.json",
@@ -8065,7 +8134,7 @@
         }
       ],
       "independent_verdict": "OPEN",
-      "honest_gap": "Native r14/r17 identity images/motion are retained, with original RED termination; full visual bar has not passed and this reviewer has not issued a code-blind subjective verdict. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
+      "honest_gap": "Native r14 RED termination is retained; r17 smallstones:r1 selected rerun PASS is bounded to that one case with production effect nodes/posed creature. Full visual bar, actual fight authority and full matrix have not passed; this reviewer has not issued a code-blind subjective verdict. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     },
@@ -8135,7 +8204,16 @@
         "shortcuts": "Exact board disclosures retained verbatim; absent disclosures remain unknown.",
         "binding": "Historical board entry is not a fresh current-source re-check."
       },
-      "independent_evidence": [],
+      "independent_evidence": [
+        {
+          "artifact": "vfx-r17-independent-scope-judgment.json",
+          "scope": "one selected native lifetime case PASS; all13 original byte/hash bindings verified; no subjective full-bar or actual combat proof",
+          "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+          "platform": "GTX1060 3GB; Compatibility;1920x1080; Godot4.7",
+          "input": "production effect nodes in synthetic arena with posed Mudsnout and fixed30fps movie",
+          "shortcuts": "single small-stones:r1 case;0.7s synthetic flight; no player/HP authority or Medium frame samples"
+        }
+      ],
       "bounded_native_candidates": [
         {
           "artifact": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-3cdaa5d4\\result.json",
@@ -8235,7 +8313,16 @@
         "shortcuts": "Exact board disclosures retained verbatim; absent disclosures remain unknown.",
         "binding": "Historical board entry is not a fresh current-source re-check."
       },
-      "independent_evidence": [],
+      "independent_evidence": [
+        {
+          "artifact": "vfx-r17-independent-scope-judgment.json",
+          "scope": "one selected native lifetime case PASS; all13 original byte/hash bindings verified; no subjective full-bar or actual combat proof",
+          "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+          "platform": "GTX1060 3GB; Compatibility;1920x1080; Godot4.7",
+          "input": "production effect nodes in synthetic arena with posed Mudsnout and fixed30fps movie",
+          "shortcuts": "single small-stones:r1 case;0.7s synthetic flight; no player/HP authority or Medium frame samples"
+        }
+      ],
       "bounded_native_candidates": [
         {
           "artifact": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-3cdaa5d4\\result.json",
@@ -8335,7 +8422,16 @@
         "shortcuts": "Exact board disclosures retained verbatim; absent disclosures remain unknown.",
         "binding": "Historical board entry is not a fresh current-source re-check."
       },
-      "independent_evidence": [],
+      "independent_evidence": [
+        {
+          "artifact": "vfx-r17-independent-scope-judgment.json",
+          "scope": "one selected native lifetime case PASS; all13 original byte/hash bindings verified; no subjective full-bar or actual combat proof",
+          "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+          "platform": "GTX1060 3GB; Compatibility;1920x1080; Godot4.7",
+          "input": "production effect nodes in synthetic arena with posed Mudsnout and fixed30fps movie",
+          "shortcuts": "single small-stones:r1 case;0.7s synthetic flight; no player/HP authority or Medium frame samples"
+        }
+      ],
       "bounded_native_candidates": [
         {
           "artifact": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-3cdaa5d4\\result.json",
@@ -8387,9 +8483,22 @@
           "sha256_git_blob_content": "9c7b49a5ff933c2d4719a591327dab60546b9d0ea2c78980d588f8fea421c949"
         },
         {
-          "path": "autoload/settings_store.gd",
-          "present": false,
-          "gap": "This proposed anchor is absent from the pinned source; no proof inferred."
+          "path": "scripts/ui/graphics_settings.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "9b6c0c119668ded2e78013d1ee27a97480d1a77454b8a0f79d6fabea64a9c66d"
+        },
+        {
+          "path": "scripts/ui/graphics_prefs.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7"
+        },
+        {
+          "path": "data/config/art.json",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
         }
       ],
       "needed_proof": {
@@ -8439,9 +8548,22 @@
           "sha256_git_blob_content": "9c7b49a5ff933c2d4719a591327dab60546b9d0ea2c78980d588f8fea421c949"
         },
         {
-          "path": "autoload/settings_store.gd",
-          "present": false,
-          "gap": "This proposed anchor is absent from the pinned source; no proof inferred."
+          "path": "scripts/ui/graphics_settings.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "9b6c0c119668ded2e78013d1ee27a97480d1a77454b8a0f79d6fabea64a9c66d"
+        },
+        {
+          "path": "scripts/ui/graphics_prefs.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7"
+        },
+        {
+          "path": "data/config/art.json",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
         }
       ],
       "needed_proof": {
@@ -8492,9 +8614,22 @@
           "sha256_git_blob_content": "9c7b49a5ff933c2d4719a591327dab60546b9d0ea2c78980d588f8fea421c949"
         },
         {
-          "path": "autoload/settings_store.gd",
-          "present": false,
-          "gap": "This proposed anchor is absent from the pinned source; no proof inferred."
+          "path": "scripts/ui/graphics_settings.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "9b6c0c119668ded2e78013d1ee27a97480d1a77454b8a0f79d6fabea64a9c66d"
+        },
+        {
+          "path": "scripts/ui/graphics_prefs.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7"
+        },
+        {
+          "path": "data/config/art.json",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
         }
       ],
       "needed_proof": {
@@ -8544,9 +8679,22 @@
           "sha256_git_blob_content": "9c7b49a5ff933c2d4719a591327dab60546b9d0ea2c78980d588f8fea421c949"
         },
         {
-          "path": "autoload/settings_store.gd",
-          "present": false,
-          "gap": "This proposed anchor is absent from the pinned source; no proof inferred."
+          "path": "scripts/ui/graphics_settings.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "9b6c0c119668ded2e78013d1ee27a97480d1a77454b8a0f79d6fabea64a9c66d"
+        },
+        {
+          "path": "scripts/ui/graphics_prefs.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7"
+        },
+        {
+          "path": "data/config/art.json",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
         }
       ],
       "needed_proof": {
@@ -8598,9 +8746,22 @@
           "sha256_git_blob_content": "9c7b49a5ff933c2d4719a591327dab60546b9d0ea2c78980d588f8fea421c949"
         },
         {
-          "path": "autoload/settings_store.gd",
-          "present": false,
-          "gap": "This proposed anchor is absent from the pinned source; no proof inferred."
+          "path": "scripts/ui/graphics_settings.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "9b6c0c119668ded2e78013d1ee27a97480d1a77454b8a0f79d6fabea64a9c66d"
+        },
+        {
+          "path": "scripts/ui/graphics_prefs.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7"
+        },
+        {
+          "path": "data/config/art.json",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
         }
       ],
       "needed_proof": {
@@ -8650,9 +8811,22 @@
           "sha256_git_blob_content": "9c7b49a5ff933c2d4719a591327dab60546b9d0ea2c78980d588f8fea421c949"
         },
         {
-          "path": "autoload/settings_store.gd",
-          "present": false,
-          "gap": "This proposed anchor is absent from the pinned source; no proof inferred."
+          "path": "scripts/ui/graphics_settings.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "9b6c0c119668ded2e78013d1ee27a97480d1a77454b8a0f79d6fabea64a9c66d"
+        },
+        {
+          "path": "scripts/ui/graphics_prefs.gd",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7"
+        },
+        {
+          "path": "data/config/art.json",
+          "present": true,
+          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "sha256_git_blob_content": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
         }
       ],
       "needed_proof": {
@@ -9768,7 +9942,7 @@
       "feature_title": "Evolution lines (one per biome)",
       "requirement": "Cannonback and Stormcapra remain wild where they already appear; Tuskroot, Ashtusk and the storm bear are not wild.",
       "acceptance_authority": "docs/ACCEPTANCE.md6.1/6.2 and current owner RD36/RD37; board ordinal is zero-based",
-      "actual_implementation": "Exact wild tables retain Cannonback/Water alias and three Cloudreach Stormcapra references, exclude Tuskroot/Ashtusk/Stormursa; provider-binding inspection underway.",
+      "actual_implementation": "Exact wild tables retain six positive-weight site-bound Cannonback/Water alias pools and three Cloudreach Stormcapra pools, exclude Tuskroot/Ashtusk/Stormursa; provider source chain bound. Live provider, unlock and physical site resolution remain unexecuted by this lane.",
       "source_anchors": [
         {
           "path": "data/config/evolution_lines.json",
@@ -9824,13 +9998,13 @@
       "independent_evidence": [
         {
           "artifact": "f29-wild-roster-recheck.json",
-          "scope": "exact wild-table census and disclosed Water alias; provider review pending",
+          "scope": "exact wild-table census, positive-weight site-bound pools and production provider source chain; disclosed Water alias; live execution open",
           "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b"
         }
       ],
       "bounded_native_candidates": [],
-      "independent_verdict": "STATIC_TABLE_PASS_PROVIDER_BINDING_REVIEW_PENDING",
-      "honest_gap": "Exact wild tables retain Cannonback/Water alias and three Cloudreach Stormcapra references, exclude Tuskroot/Ashtusk/Stormursa; provider-binding inspection underway. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
+      "independent_verdict": "STATIC_POLICY_AND_PROVIDER_SOURCE_PASS_LIVE_WITNESS_OPEN",
+      "honest_gap": "Exact wild tables retain six positive-weight site-bound Cannonback/Water alias pools and three Cloudreach Stormcapra pools, exclude Tuskroot/Ashtusk/Stormursa; provider source chain bound. Live provider, unlock and physical site resolution remain unexecuted by this lane. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     },
@@ -11903,36 +12077,36 @@
       "feature_title": "Signature ultimates",
       "requirement": "16–20 shared type×role ultimates exist and every non-unique species maps to one (test).",
       "acceptance_authority": "docs/ACCEPTANCE.md6.1/6.2 and current owner RD36/RD37; board ordinal is zero-based",
-      "actual_implementation": "19 shared type×role signature move IDs and69 live species mappings authored; actual production spawn mapping native recheck requested.",
+      "actual_implementation": "Native e2cc passes19 shared signature IDs and actual production spawn mappings for69 live species; every non-unique exact primary type×role binding passes the explicitly named mapping test.",
       "source_anchors": [
         {
           "path": "data/moves/ultimates.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "512ace1ce36cf9709bc1ca8264e99f1e55506593cfcda613f1f38db79ea8d31f"
         },
         {
           "path": "data/moves/moves.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375"
         },
         {
           "path": "data/moves/learnsets.json",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "308b2d1c82c19b135f361089bda61eb3a18777db9e7bb02e57fd01c355c8afc5"
         },
         {
           "path": "scripts/vfx/ultimates/ultimate_library.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "67183d21fb53f5231ef05102e8f06a7f35d0f66d9b9239021471d7cafb3c75f1"
         },
         {
           "path": "scripts/vfx/ultimates/ultimate_choreography.gd",
           "present": true,
-          "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
           "sha256_git_blob_content": "2f040875d0b11c652f2cb4e498f42c30f48e140978b601be038f08821a46d1a6"
         }
       ],
@@ -11963,11 +12137,24 @@
           "artifact": "f23-f35-catalogue-recheck.json",
           "scope": "authored data bindings only; runtime unproved",
           "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b"
+        },
+        {
+          "artifact": "data-native-e2cc-independent-judgment.json",
+          "scope": "Nineteen shared signatures within16..20; actual production spawn mapping for all69 live species; each non-unique signature belongs to shared set and exact primary type×learnset role.",
+          "source_commit": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+          "raw_sha256": "b76b0f887a5c7839ffb8e70a3c34b3219b8165ae4efc6f90d04bf64991dc71d7",
+          "probe_sha256": "374ecae0cfd041b76be2e834737642cb2f0fb730537b6303d0fe102b1e2787af",
+          "source_closure_artifact": "data-native-e2cc-source-closure.json",
+          "source_closure_count": 3365,
+          "source_closure_canonical_sha256": "8fbfec413a3b730955ac028596d930d2af91ad69e1b5215633d733d7f37ec9d1",
+          "platform": "ROOT returned Godot4.7.stable.official.5b4e0cb0f, Windows headless; detached production policy calls",
+          "input": "Production lookup/spawn/equip-policy calls; native and unmodified JSON fixtures; no controller inputs",
+          "shortcuts": "Detached L15 creatures and synthetic owned/reachable/Altar/not-combat context passed only to pure staging. JSON round trips are in memory. No earned progress, paid action, disk save, receipt, write, ACK, network or pixels invented."
         }
       ],
       "bounded_native_candidates": [],
-      "independent_verdict": "AUTHORED_DATA_PASS_NAMED_NATIVE_RECHECK_PENDING",
-      "honest_gap": "19 shared type×role signature move IDs and69 live species mappings authored; actual production spawn mapping native recheck requested. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
+      "independent_verdict": "SUFFICIENT_NATIVE_MAPPING_PASS_PENDING_GREEN_MAIN_LANDING",
+      "honest_gap": "None for the explicitly named mapping test; presentation/runtime enablement, unique performances, growth, duration and code-blind judgment belong to F35#1..#4. Green main landing/counting remains; no MET credit added by this lane.",
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     },
@@ -15917,7 +16104,7 @@
       "feature_title": "Co-op across the new loop",
       "requirement": "A two-peer session runs hub → homestead crafting → portal → Master → feast → boss → relic hang, with each player's receipts separate.",
       "acceptance_authority": "docs/ACCEPTANCE.md6.1/6.2 and current owner RD36/RD37; board ordinal is zero-based",
-      "actual_implementation": "Authentic input-only ENet loop harness and producer adapters exist; profiles/paid Forge/Altar/Feed/guest Master prerequisite proof still open at pinned source.",
+      "actual_implementation": "Authentic input-only ENet loop harness and producer adapters exist; profiles/paid Forge/Altar/Feed/guest Master prerequisite proof remains open. ROOT reports its first actual paidAltar producer run failed after real build selection at15s heartbeat; raw independent judgment remains pending.",
       "source_anchors": [
         {
           "path": "tests/helpers/f48_net_proof.gd",
@@ -15987,7 +16174,7 @@
       "independent_evidence": [],
       "bounded_native_candidates": [],
       "independent_verdict": "OPEN",
-      "honest_gap": "Authentic input-only ENet loop harness and producer adapters exist; profiles/paid Forge/Altar/Feed/guest Master prerequisite proof still open at pinned source. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
+      "honest_gap": "Authentic input-only ENet loop harness and producer adapters exist; profiles/paid Forge/Altar/Feed/guest Master prerequisite proof remains open. ROOT reports its first actual paidAltar producer run failed after real build selection at15s heartbeat; raw independent judgment remains pending. Named complete proof and an independent verdict are still required; source counts/compile/partial fixture passes are insufficient.",
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     },
@@ -16484,6 +16671,13 @@
       "replacement_criterion": null,
       "acceptance_credit_added": 0
     }
+  ],
+  "newer_bounded_judgments": [
+    "core582b-independent-judgment.json",
+    "regression582b-independent-judgment.json",
+    "vfx-r17-independent-scope-judgment.json",
+    "sealed-artifact-integrity-recheck.json",
+    "data-native-e2cc-independent-judgment.json"
   ],
   "global_limits": [
     "No engine/import/GPU/net/test execution launched by this lane.",
