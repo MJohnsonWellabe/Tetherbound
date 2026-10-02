@@ -56,6 +56,7 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const ENEMY_PATTERNS := preload("res://scripts/combat/combat_ai.gd")
 const ENEMY_PATTERN_CAST := preload("res://scripts/combat/enemy_pattern_cast.gd")
+const MOVE_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 var _enemy_strike_connected := false
 
 signal entered()
@@ -232,6 +233,8 @@ var _stagger_glows: Dictionary = {}
 ## This closes the attack/burst ordering window without adding prediction that
 ## the host could later have to rewind through collision.
 var _burst_awaiting_host := false
+var _move_awaiting_host := false
+var _party_ultimate: Dictionary = {}
 ## Scoped to this manager's current encounter. Transport action ids may restart
 ## for a new hosted trainer round while the physical body is reused, so replay
 ## memory belongs here/EncounterHost rather than on CreatureBody.
@@ -406,6 +409,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 
 
 func unbind_encounter() -> void:
+	_move_awaiting_host = false
 	_encounter_link = null
 	_encounter_id = ""
 	_encounter_kind = ""
@@ -601,6 +605,8 @@ func begin(
 	_quick_cooldown = 0.0
 	_charged_cooldown = 0.0
 	_initialize_wind()
+	_move_awaiting_host = false
+	_party_ultimate.clear()
 	_reset_player_poise()
 	_hitstop_left = 0.0
 	_burst_awaiting_host = false
@@ -945,8 +951,9 @@ func _place_fighters() -> void:
 	# side with room, the same treatment `_place_realm_owned_ally` gives realm
 	# fights (F14#0 C3). 0 keeps the in-line formation.
 	var lateral := float(cfg.get("trainer_ally_lateral_m", 0.0))
+	var trainer_rank: Variant = _wild.get_meta(&"trainer_rank") if _wild.has_meta(&"trainer_rank") else null
 	if _enemy_owned and lateral > 0.0 \
-			and trainer_seats_aside(cfg, _wild.get_meta(&"trainer_rank", null)):
+			and trainer_seats_aside(cfg, trainer_rank):
 		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
 		var right := _staging_reach(ally_spot, side, lateral)
 		var left := _staging_reach(ally_spot, -side, lateral)
@@ -2707,17 +2714,19 @@ func _submit_strike_intent() -> void:
 	var facing: Vector3 = _ally_body.call("facing")
 	var creature := active_creature()
 	var is_quick: bool = bool(_pending_move.get("is_quick", false))
-	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {
+	var intent := {
 		"kind": "strike_intent",
 		"encounter_id": _encounter_id,
 		# The move is named, not described. The host rebuilds the profile from
 		# its OWN `combat.json` and its own two body radii
 		# (`host_move_profile()`), so a peer cannot post itself a longer reach.
-		"slot": "quick" if is_quick else "charged",
-		"move_id": str(creature.move_quick if is_quick else creature.move_charged),
+		"slot": str(_pending_move.get("slot", "quick" if is_quick else "charged")),
+		"move_id": str(_pending_move.get("move_id", creature.move_quick if is_quick else creature.move_charged)),
 		"origin": [origin.x, origin.y, origin.z],
 		"facing": [facing.x, facing.y, facing.z],
-	})
+	}
+	if _pending_move.has("accepted_action"): intent["action"] = int(_pending_move.accepted_action)
+	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", intent)
 	# `pending` is the ordinary answer on a CLIENT: the host has not spoken yet,
 	# nothing is drawn and nothing is decremented until it does (§3), and the
 	# answer arrives later through `apply_host_strike_verdict()`.
@@ -2768,6 +2777,16 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 	_perform_player_strike(bool(payload.get("hit", false)),
 		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
 		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)), impact)
+	_apply_move_resources(payload)
+
+
+func _apply_move_resources(payload: Dictionary) -> void:
+	var uid := str(payload.get("creature_uid", ""))
+	if uid.is_empty(): return
+	for creature: RefCounted in _party:
+		if creature == null or str(creature.get("uid")) != uid: continue
+		if payload.has("energy"): creature.set("energy", clampf(float(payload.energy), 0.0, float(MATH.config().get("energy", {}).get("max", 100.0))))
+		if payload.has("ultimate_meter"): _party_ultimate[uid] = clampf(float(payload.ultimate_meter), 0.0, float(MATH.config().get("ultimate", {}).get("maximum", 100.0)))
 
 
 ## The performance of a strike, and -- solo -- the decision too.
@@ -2904,6 +2923,8 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 ## targeting bug, and a player who cannot tell "I swung at my friend" from "the
 ## game dropped my input" will conclude the second.
 func note_encounter_refusal(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "move_start":
+		_move_awaiting_host = false
 	if str(verdict.get("kind", "")) == "burst_intent":
 		_burst_awaiting_host = false
 	_sync_authoritative_wind(verdict.get("delta", {}) as Dictionary)
@@ -2950,7 +2971,15 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		var peer_id := int(_encounter_link.call(local_peer_method))
 		var participants: Dictionary = rec.get("participants", {}) as Dictionary
 		if participants.has(peer_id):
-			_sync_authoritative_wind(participants[peer_id] as Dictionary)
+			var participant: Dictionary = participants[peer_id]
+			var creature := active_creature()
+			var uid := str(creature.get("uid")) if creature != null else ""
+			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})
+			_sync_authoritative_wind(participant if resource.is_empty() else resource)
+			for resource_uid: String in participant.get("move_resources", {}):
+				var value: Dictionary = participant.move_resources[resource_uid].duplicate(true)
+				value["creature_uid"] = resource_uid
+				_apply_move_resources(value)
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
 	_apply_shared_trainer_round(opponent)
 	var snapshot_impact: Dictionary = rec.get("resolved_impact", {})
@@ -3204,6 +3233,11 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 				profile[key] = float(move[key])
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
+		profile["slot"] = str(move.get("slot", block.trim_prefix("player_")))
+		profile["is_quick"] = profile.slot == "quick"
+		profile["wind_cost"] = float(move.get("wind_cost", MATH.config().get("wind", {}).get(str(profile.slot) + "_cost", 0.0)))
+		profile["energy_cost"] = float(move.get("energy_cost", 0.0))
+		profile["energy_gain"] = float(move.get("energy_gain", 0.0))
 	profile = MATH.with_player_pace(profile, block)
 	profile = with_cooldown_multiplier(profile, cooldown_multiplier)
 	return floor_reach_for_bodies(profile, mine, theirs, reach_floor)
@@ -3335,6 +3369,9 @@ func opponent_hp_pair() -> Array:
 ## the rest of the party having been "in the fight" without taking the risk.
 ## A fainted party member gets nothing — it did not fight.
 func _award_victory() -> void:
+	if _encounter_link != null and _encounter_link.has_method("uses_durable_rematch_rewards") \
+		and _encounter_link.call("uses_durable_rematch_rewards", _encounter_id) == true:
+		return # The host's retained rematch award owns this portable mutation.
 	if _enemy == null:
 		return
 	if _victory_awarded:
@@ -3380,7 +3417,7 @@ func _award_victory() -> void:
 func _drive_player_creature() -> void:
 	if _ally_body == null:
 		return
-	if _action != Action.READY or _burst_awaiting_host:
+	if _action != Action.READY or _burst_awaiting_host or _move_awaiting_host:
 		return
 	# Aiming abandons your creature. It stops taking stick input while you line up the
 	# throw and the opponent does not stop attacking it — that is the entire cost
@@ -3409,6 +3446,7 @@ func _drive_player_creature() -> void:
 
 
 func _read_player_input() -> void:
+	if _move_awaiting_host: return
 	var creature := active_creature()
 	if creature == null:
 		return
@@ -3501,7 +3539,7 @@ func _combat_input_direction() -> Vector3:
 ## immediately. A hosted fight submits only direction; the host owns approval,
 ## the Wind spend, and the absolute value returned in the verdict and record.
 func request_burst(direction: Vector3) -> bool:
-	if state != State.ACTIVE or _action != Action.READY or _burst_awaiting_host:
+	if state != State.ACTIVE or _action != Action.READY or _burst_awaiting_host or _move_awaiting_host:
 		return false
 	if _throw == null or bool(_throw.call("is_busy")):
 		return false
@@ -3671,7 +3709,7 @@ func _refuse_flee() -> void:
 ## should stay refused, not retry itself every frame until it surprises you.
 func _consume_buffered_attack() -> void:
 	if _action != Action.READY or _buffered_attack == "" or _input_guard > 0.0 \
-			or _burst_awaiting_host:
+			or _burst_awaiting_host or _move_awaiting_host:
 		return
 	if bool(_throw.call("is_busy")):
 		return
@@ -3683,11 +3721,10 @@ func _consume_buffered_attack() -> void:
 		if _charged_cooldown > 0.0:
 			return
 		_buffered_attack = ""
-		if creature.spend_charged():
+		if _uses_host_move_start() or creature.spend_charged():
 			var charged := _move_profile("player_charged", str(creature.move_charged))
 			charged["is_quick"] = false
 			_start_action(charged, "charged")
-			_charged_cooldown = float(charged.get("cooldown", 1.2))
 		return
 
 	if _quick_cooldown > 0.0:
@@ -3696,7 +3733,6 @@ func _consume_buffered_attack() -> void:
 	var quick := _move_profile("player_quick", str(creature.move_quick))
 	quick["is_quick"] = true
 	_start_action(quick, "quick")
-	_quick_cooldown = float(quick.get("cooldown", 0.45))
 
 
 ## The config block for a slot, with the named move's own numbers laid over it.
@@ -3724,6 +3760,7 @@ func _move_profile(block: String, move_id: String) -> Dictionary:
 		# look without going back to the database for it.
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
+		profile["slot"] = str(move.get("slot", block.trim_prefix("player_")))
 	profile = MATH.with_player_pace(profile, block)
 	return with_cooldown_multiplier(profile, active_move_cooldown_multiplier())
 
@@ -3742,12 +3779,47 @@ func active_move_cooldown_multiplier() -> float:
 	return clampf(float(power.get("cooldown_multiplier", 1.0)), 0.1, 1.0)
 
 
+func _uses_host_move_start() -> bool:
+	return _encounter_link != null and _encounter_link.has_method("supports_host_move_start") \
+		and _encounter_link.call("supports_host_move_start") == true \
+		and MATH.config().get("move_commit", {}).get("runtime_enabled") == true
+
+
 func _start_action(move: Dictionary, wind_slot: String = "") -> void:
+	if _uses_host_move_start():
+		if _move_awaiting_host: return
+		_move_awaiting_host = true
+		var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {
+			"kind": "move_start", "encounter_id": _encounter_id, "slot": wind_slot})
+		if verdict.get("pending") == true: return
+		if verdict.get("ok") == true: apply_host_move_start(verdict.get("delta", {}))
+		else: note_encounter_refusal(verdict)
+		return
 	var resolved := move.duplicate(true)
 	var exhausted := not wind_slot.is_empty() and not consume_wind(wind_slot)
 	resolved = with_wind_exhaustion(resolved, exhausted)
 	resolved["wind_exhausted"] = exhausted
-	_pending_move = _with_reach_for_the_bodies(resolved)
+	_begin_move_presentation(_with_reach_for_the_bodies(resolved))
+
+
+func apply_host_move_start(payload: Dictionary) -> void:
+	var awaiting := _move_awaiting_host
+	_move_awaiting_host = false
+	var creature := active_creature()
+	if not awaiting or _action != Action.READY or state != State.ACTIVE or creature == null or payload.get("creature_uid") != str(creature.get("uid")) \
+		or payload.get("encounter_id") != _encounter_id or not payload.get("move") is Dictionary: return
+	_sync_authoritative_wind(payload)
+	_apply_move_resources(payload)
+	var move: Dictionary = payload.move.duplicate(true)
+	move["accepted_action"] = int(payload.get("accepted_action", 0))
+	_begin_move_presentation(move)
+
+
+func _begin_move_presentation(move: Dictionary) -> void:
+	_pending_move = move.duplicate(true)
+	var slot := str(move.get("slot", "quick" if move.get("is_quick") == true else "charged"))
+	if slot == "quick": _quick_cooldown = float(move.get("cooldown", 0.45))
+	elif slot == "charged": _charged_cooldown = float(move.get("cooldown", 1.2))
 	_action = Action.WINDUP
 	_action_timer = float(_pending_move.get("windup", 0.18))
 	# Face and lunge at the START of the wind-up, not at the strike. The lunge
@@ -4724,6 +4796,7 @@ func _next_switchable_index(direction: int) -> int:
 ## being spammed into a stutter of creatures.
 func can_switch() -> bool:
 	return is_fighting() \
+		and not _move_awaiting_host \
 		and not is_aiming() \
 		and not is_resolving_catch() \
 		and not player_is_committed() \
@@ -4777,6 +4850,7 @@ func request_switch(index: int) -> bool:
 ## it is safe to zero here: `can_switch()`'s `player_is_committed()` guard
 ## already refused this call unless the fight was between actions.
 func _activate_party_member(index: int) -> void:
+	_move_awaiting_host = false
 	var incoming: RefCounted = _party[index]
 	_active_index = index
 

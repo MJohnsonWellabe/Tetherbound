@@ -638,7 +638,7 @@ func _observe_pattern_reaction(delta: float) -> bool:
 	var raw: Variant = _pattern_observer.call()
 	if not raw is Dictionary: return false
 	var observation: Dictionary = raw.duplicate(true)
-	var label := str(observation.get("creature_uid", "")) + ":" + str(observation.get("action", ""))
+	var label := str(observation.get("creature_uid", "")) + ":" + str(observation.get("action", "")) + ":" + str(observation.get("action_id", ""))
 	_pattern_observed_s = _pattern_observed_s + delta if label == _pattern_observed else 0.0
 	_pattern_observed = label
 	observation["visible_for_s"] = _pattern_observed_s

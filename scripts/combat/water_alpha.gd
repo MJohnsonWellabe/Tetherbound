@@ -131,6 +131,10 @@ func _creature_card_for(peer_id: int) -> Dictionary:
 		return _creature_card(_manager.active_creature())
 	return primary._creature_card_for(peer_id)
 
+func supports_host_move_start() -> bool:
+	return false # This persistent transport retains its existing strike protocol.
+
+
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	# Aquaryn uses its own persistent transport, so it does not pass through the
 	# inherited EncounterDirector submitter that normally stamps strikes with a

@@ -28,14 +28,23 @@ const ITEM_DB := preload("res://autoload/item_db.gd")
 
 class Saver extends RefCounted:
 	var character_writes := 0
+	var fallback_pending := false
+	var refuse_character := false
+	var saved_character_flags: Dictionary = {}
 	var store: RefCounted = SAVE.new("user://guardian_confirm_%d/" % Time.get_ticks_usec())
+	func finish_fallback() -> bool: return not fallback_pending
+	func fallback_busy() -> bool: return fallback_pending
 	func save_world(game: Object, id: String) -> bool:
 		var snapshot: Dictionary = game.world.save_data()
 		snapshot.progression = game.world.flags.save_data()
 		return store.write(id, SAVE.partition(snapshot))
-	func save_character(_game: Object, _id: String) -> bool:
+	func save_character(game: Object, _id: String) -> bool:
 		character_writes += 1
+		if refuse_character: return false
+		saved_character_flags = game.local.flags.save_data().duplicate(true)
 		return true
+	func save_character_prepared(game: Object, id: String) -> bool:
+		return save_character(game, id)
 
 class LocalFixture extends RefCounted:
 	var character_id := "host-char"
@@ -45,6 +54,8 @@ class LocalFixture extends RefCounted:
 class FakeSession extends RefCounted:
 	func local_peer_id() -> int: return 1
 	func peers_in_realm(_realm: String) -> Array: return [1]
+	# Stable for this isolated fixture's complete offer/decline transaction.
+	func _altar_current_epoch() -> String: return "guardian-confirm-fixture-epoch"
 
 class FakeGame extends Node:
 	var world: RefCounted = WORLD.new()
@@ -189,13 +200,44 @@ func test_decline_refuses_through_the_host_and_grants_nothing() -> void:
 	assert_true(claims.decline_pending().ok, "Decline is the existing refuse path")
 	assert_eq(game.local.party.size(), 4, "Decline grants nothing")
 	assert_true(game.pending_catch == null and not _receipt(game, id))
-	assert_eq(game.save_system.character_writes, 0)
+	assert_eq(game.save_system.character_writes, 1, "the personal chapter answer is saved without a creature receipt")
+	assert_true(game.local.flags.has("water:legendary_refused"))
+	assert_true(game.save_system.saved_character_flags.get("flags", []).has("water:legendary_refused"))
 	assert_true(claims.is_declined(id) and claims.decline_settled(id), "refusal sent and host-confirmed")
 	assert_false(game.world.water_capture_claims.has(id), "the host journaled the refusal")
 	assert_true(game.world.flags.has(REWARD.offered_flag("host-char")))
 	assert_eq(REWARD.begin(game, claims.fake_bridge.ledger, "host-char", SPECIES.spawn("water_abyssal_guardian")).code,
 		"already_resolved", "no second offer to this character")
 	assert_false(claims.is_guardian_offer(game.pending_catch))
+
+func test_decline_answer_waits_for_fallback_and_retries_failed_character_save() -> void:
+	var claims := _setup(4)
+	var game: FakeGame = claims.fake_game
+	var id := _offer(claims)
+	game.save_system.fallback_pending = true
+	game.save_system.refuse_character = true
+	assert_true(claims.decline_pending().ok)
+	assert_true(claims.decline_settled(id), "world refusal is already journaled")
+	assert_false(game.world.water_capture_claims.has(id))
+	assert_eq(game.save_system.character_writes, 0, "busy fallback prevents the prepared personal write")
+	assert_false(game.local.flags.has("water:legendary_refused"))
+	assert_false(claims._answer_save_pending.is_empty())
+	game.save_system.fallback_pending = false
+	claims._retry_declined_answer()
+	assert_eq(game.save_system.character_writes, 1)
+	assert_false(game.local.flags.has("water:legendary_refused"), "a false save rolls the personal answer back")
+	assert_true(game.save_system.saved_character_flags.is_empty())
+	assert_false(claims._answer_save_pending.is_empty(), "the same bound answer remains retryable")
+	game.save_system.refuse_character = false
+	claims._retry_declined_answer()
+	assert_eq(game.save_system.character_writes, 2)
+	assert_true(game.local.flags.has("water:legendary_refused"))
+	assert_true(game.save_system.saved_character_flags.get("flags", []).has("water:legendary_refused"))
+	assert_true(claims._answer_save_pending.is_empty())
+	claims._retry_declined_answer()
+	assert_eq(game.save_system.character_writes, 2, "a saved answer is not written again")
+	assert_eq(game.local.party.size(), 4)
+	assert_false(_receipt(game, id), "no creature acceptance receipt is minted by a refusal")
 
 func test_cancel_puts_the_offer_off_without_declining_it() -> void:
 	var claims := _setup(4)

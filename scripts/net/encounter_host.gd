@@ -273,7 +273,7 @@ func leave(encounter_id: String, peer_id: int) -> Dictionary:
 	var participants: Dictionary = record["participants"]
 	var departing: Dictionary = participants.get(peer_id, {})
 	var stable_id := str(departing.get("character_id", ""))
-	if not stable_id.is_empty() and departing.has("actor_vitals"):
+	if not stable_id.is_empty() and (departing.has("actor_vitals") or departing.has("move_resources")):
 		var retained: Dictionary = record.get("retained_actor_participants", {})
 		record["retained_actor_participants"] = retained
 		retained[stable_id] = departing
@@ -405,10 +405,13 @@ func advance_wind(encounter_id: String, now_ms: int) -> void:
 	if rec.is_empty():
 		return
 	for row: Variant in (rec.get("participants", {}) as Dictionary).values():
-		if not (row is Dictionary) or not (row as Dictionary).has("wind"):
-			continue
-		_advance_participant_wind(row, {"max": float(row.get("wind_max", 100.0)),
-			"regen_per_second": float(row.get("wind_regen_per_second", 18.0))}, now_ms)
+		if not row is Dictionary: continue
+		var pools: Array = row.get("move_resources", {}).values()
+		if row.has("wind"): pools.append(row)
+		for pool: Dictionary in pools:
+			if not pool.has("wind"): continue
+			_advance_participant_wind(pool, {"max": float(pool.get("wind_max", 100.0)),
+				"regen_per_second": float(pool.get("wind_regen_per_second", 18.0))}, now_ms)
 
 
 func opponent_position(encounter_id: String) -> Vector3:
@@ -488,14 +491,20 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	var now_ms := int(view.get("now_ms", 0))
 	var action := int(intent["action"])
 	var authority := strike_authority_state(encounter_id, peer_id)
+	var started := move_commit(encounter_id, peer_id, action)
+	var from_start := not started.is_empty()
+	if from_start and (action != int(authority.last_action) or started.get("resolved") == true or now_ms < int(started.strike_at_ms) \
+		or view.get("move_actor_binding") != started.binding or intent.get("move_id") != started.move_id \
+		or intent.get("slot") != started.slot or move != started.move):
+		return _refuse("strike_intent", peer_id, "stale_move_start", "That move cannot arrive from this creature now.")
 	var participant: Dictionary = (rec.get("participants", {}) as Dictionary).get(peer_id, {})
 	var last_action := maxi(int(authority.get("last_action", 0)),
 		int(participant.get("wind_last_action", 0)))
-	if action <= last_action:
+	if action <= last_action and not from_start:
 		return _record_strike_receipt(intent, peer_id, view, rec,
 			_refuse("strike_intent", peer_id, "replayed_action",
 				"That attack was already handled."))
-	if now_ms < int(authority.get("deadline_ms", 0)):
+	if now_ms < int(authority.get("deadline_ms", 0)) and not from_start:
 		return _record_strike_receipt(intent, peer_id, view, rec,
 			_refuse("strike_intent", peer_id, "cooldown",
 				"That move is still recovering."))
@@ -505,19 +514,29 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	# BEFORE any roll, from bodies the host holds, by owner id (4.B's H5).
 	var friendly := _friendly_body_struck(move, host_origin, facing, peer_id, rec, view)
 	if not friendly.is_empty():
+		if from_start:
+			started["resolved"] = true
+			_strike_state_for(encounter_id)[peer_id]["move_start"] = started
+			_strike_state_for(encounter_id)[peer_id]["move_starts"][str(action)] = started
 		return _record_strike_receipt(intent, peer_id, view, rec,
 			_refuse("strike_intent", peer_id, "friendly_target",
 				"You can't attack your own side."), true)
 
 	var connected := _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
 	var lock_ms := move_lock_ms(move)
-	var deadline_ms := now_ms + lock_ms
+	var deadline_ms := int(authority.deadline_ms) if from_start else now_ms + lock_ms
+	var starts: Dictionary = _strike_state_for(encounter_id).get(peer_id, {}).get("move_starts", {})
 	_strike_state_for(encounter_id)[peer_id] = {
 		"last_action": action,
 		"accepted_at_ms": now_ms,
 		"deadline_ms": deadline_ms,
 		"cooldown_ms": lock_ms,
 	}
+	if from_start:
+		started["resolved"] = true
+		_strike_state_for(encounter_id)[peer_id]["move_start"] = started
+		starts[str(action)] = started
+	_strike_state_for(encounter_id)[peer_id]["move_starts"] = starts
 	return _record_strike_receipt(intent, peer_id, view, rec,
 		_ok("strike_intent", peer_id, {
 		"encounter_id": encounter_id,
@@ -528,6 +547,169 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"accepted_at_ms": now_ms,
 		"cooldown_deadline_ms": deadline_ms,
 		}), true)
+
+
+## The director supplies the admitted owned row and actual body binding. The
+## client names only a slot; costs, timing, cooldown and resources are host data.
+## Keep the start beside the existing strike authority, never on a client card.
+func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
+		binding: Dictionary, move: Dictionary, wind_profile: Dictionary, now_ms: int) -> Dictionary:
+	var id := str(intent.get("encounter_id", ""))
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	var uid := str(owned.get("uid", ""))
+	var slot := str(intent.get("slot", ""))
+	var move_id := str(owned.get("move_" + slot, ""))
+	if rec.get("phase") != "active" or participant.is_empty() or uid.is_empty() \
+		or binding.get("creature_uid") != uid or binding.get("character_id") != participant.get("character_id") \
+		or int(binding.get("deployment_generation", 0)) < 1 or int(binding.get("body_instance_id", 0)) < 1 \
+		or float(owned.get("hp", 0.0)) <= 0.0 or owned.get("fainted") == true \
+		or slot not in ["quick", "charged", "utility", "ultimate"] \
+		or move_id.is_empty() or not owned.get("known_moves", []).has(move_id) \
+		or move.get("move_id") != move_id or move.get("slot") != slot \
+		or typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0 or now_ms < 0:
+		return _refuse("move_start", peer, "invalid_actor_move", "That equipped move is unavailable.")
+	var authority: Dictionary = _strike_state_for(id).get(peer, {})
+	var starts: Dictionary = authority.get("move_starts", {})
+	if starts.size() >= int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)):
+		return _refuse("move_start", peer, "receipt_budget", "This encounter cannot accept another move safely.")
+	var action := int(intent.action)
+	if action <= maxi(int(authority.get("last_action", 0)), int(participant.get("wind_last_action", 0))):
+		return _refuse("move_start", peer, "replayed_action", "That move was already handled.")
+	if now_ms < int(authority.get("deadline_ms", 0)):
+		return _refuse("move_start", peer, "recovering", "Your creature is still committed.")
+	var resources: Dictionary = participant.get("move_resources", {})
+	var actor: Dictionary = resources.get(uid, {"energy": 0.0, "ultimate_meter": 0.0, "cooldowns": {}}).duplicate(true)
+	if resources.is_empty() and participant.has("wind"):
+		for key: String in ["wind", "wind_updated_ms", "wind_ready_at_ms", "wind_last_action"]:
+			if participant.has(key): actor[key] = participant[key]
+	_advance_participant_wind(actor, wind_profile, now_ms)
+	if now_ms < int(actor.get("cooldowns", {}).get(slot, 0)):
+		return _refuse("move_start", peer, "cooldown", "That move is still cooling down.")
+	var wind_cost := maxf(0.0, float(move.get("wind_cost", 0.0)))
+	var energy_cost := maxf(0.0, float(move.get("energy_cost", 0.0)))
+	if float(actor.energy) + 0.001 < energy_cost:
+		return _refuse("move_start", peer, "insufficient_energy", "Land quick hits to build Energy.")
+	var exhausted := float(actor.wind) + 0.001 < wind_cost
+	if exhausted and slot not in ["quick", "charged"]:
+		return _refuse("move_start", peer, "insufficient_wind", "Your creature needs more Wind.")
+	var maximum := float(MATH.config().get("ultimate", {}).get("maximum", 100.0))
+	if slot == "ultimate" and float(actor.ultimate_meter) < maximum:
+		return _refuse("move_start", peer, "ultimate_not_ready", "Build the Ultimate meter with landed hits.")
+	var frozen := move.duplicate(true)
+	if exhausted:
+		frozen.windup = float(frozen.get("windup", 0.18)) * float(MATH.config().get("wind", {}).get("exhausted_windup_scale", 2.0))
+		frozen.power = float(frozen.get("power", 9.0)) * float(MATH.config().get("wind", {}).get("exhausted_power_scale", 0.6))
+	frozen["wind_exhausted"] = exhausted
+	var windup_ms := ceili(float(frozen.get("windup", 0.18)) * 1000.0)
+	var recover_ms := ceili(float(frozen.get("recovery", 0.22)) * 1000.0)
+	var ready_at := now_ms + windup_ms + recover_ms
+	actor.wind = maxf(0.0, float(actor.wind) - wind_cost)
+	actor.energy = maxf(0.0, float(actor.energy) - energy_cost)
+	if slot == "ultimate": actor.ultimate_meter = 0.0
+	actor.wind_last_action = action
+	actor.wind_ready_at_ms = ready_at + ceili(float(MATH.config().get("wind", {}).get("regen_delay", 0.6)) * 1000.0)
+	actor.cooldowns[slot] = now_ms + ceili(float(frozen.get("cooldown", 0.0)) * 1000.0)
+	resources[uid] = actor
+	participant["move_resources"] = resources
+	participant["move_resource_uid"] = uid
+	participant["wind_last_action"] = action
+	var started := {"action": action, "creature_uid": uid, "binding": binding.duplicate(true),
+		"move_id": move_id, "slot": slot, "move": frozen, "started_at_ms": now_ms,
+		"strike_at_ms": now_ms + windup_ms, "ready_at_ms": ready_at,
+		"resolved": false, "credited": false,
+		"mastery_uses": int(owned.get("move_mastery_uses", {}).get(move_id, 0)),
+		"action_id": preload("res://scripts/creatures/move_mastery.gd").new_action_identity("%s:%s:%d" % [id, uid, action])}
+	# Preserve immutable accepted-action history owned by AcceptedActionHost.
+	authority["last_action"] = action
+	authority["accepted_at_ms"] = now_ms
+	authority["deadline_ms"] = ready_at
+	authority["cooldown_ms"] = windup_ms + recover_ms
+	authority["move_start"] = started
+	starts[str(action)] = started
+	authority["move_starts"] = starts
+	_strike_state_for(id)[peer] = authority
+	seq += 1
+	rec.seq = seq
+	var delta := move_resource_snapshot(id, peer, uid)
+	delta.merge({"encounter_id": id, "accepted_action": action, "creature_uid": uid,
+		"move": frozen.duplicate(true), "slot": slot, "wind_exhausted": exhausted}, true)
+	return _ok("move_start", peer, delta)
+
+
+func move_commit(id: String, peer: int, action: int = 0) -> Dictionary:
+	var authority: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
+	var started: Dictionary = authority.get("move_start", {}) if action == 0 else authority.get("move_starts", {}).get(str(action), {})
+	return started.duplicate(true)
+
+
+func move_resource_snapshot(id: String, peer: int, uid: String) -> Dictionary:
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	var actor: Dictionary = participant.get("move_resources", {}).get(uid, {})
+	if actor.is_empty(): return {}
+	return {"creature_uid": uid, "energy": float(actor.energy), "ultimate_meter": float(actor.ultimate_meter),
+		"wind": float(actor.get("wind", 0.0)), "wind_max": float(actor.get("wind_max", 100.0)),
+		"wind_ready_at_ms": int(actor.get("wind_ready_at_ms", 0))}
+
+
+func cancel_move_start(id: String, peer: int) -> void:
+	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_start", {})
+	if started.is_empty(): return
+	started["cancelled"] = true
+	started["resolved"] = true
+
+
+## Called only after the existing host damage writer committed a positive
+## actual HP debit. One retained action can credit these encounter meters once.
+func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
+		target_uid: String = "", target_hp_before: float = 0.0) -> Dictionary:
+	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
+	if started.get("action") != action or started.get("resolved") != true or started.get("credited") == true \
+		or not is_finite(actual_hp_debit) or actual_hp_debit <= 0.0: return {}
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	var actor: Dictionary = participant.get("move_resources", {}).get(started.creature_uid, {})
+	if actor.is_empty(): return {}
+	var energy: Dictionary = MATH.config().get("energy", {})
+	var ultimate: Dictionary = MATH.config().get("ultimate", {})
+	if started.slot == "quick": actor.energy = minf(float(energy.get("max", 100.0)), float(actor.energy) + float(started.move.get("energy_gain", energy.get("gain_per_quick", 26.0))))
+	actor.ultimate_meter = minf(float(ultimate.get("maximum", 100.0)), float(actor.ultimate_meter) + float(ultimate.get("landed_gain", {}).get(started.slot, 0.0)))
+	started.credited = true
+	if int(started.get("mastery_uses", 300)) < 300 and not target_uid.is_empty() \
+		and target_uid != started.creature_uid and is_finite(target_hp_before) and target_hp_before >= actual_hp_debit:
+		started["mastery_pending"] = true
+		started["mastery_outcome"] = {"action_id": str(started.action_id), "move_id": str(started.move_id),
+			"attacker_uid": str(started.creature_uid), "target_uid": target_uid,
+			"target_hp_before": target_hp_before, "applied_damage": actual_hp_debit}
+	seq += 1
+	encounters[id].seq = seq
+	return move_resource_snapshot(id, peer, str(started.creature_uid))
+
+
+func move_mastery_outcome(id: String, peer: Variant, action: int) -> Dictionary:
+	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
+	if started.get("mastery_pending") != true or not started.get("mastery_outcome") is Dictionary: return {}
+	return {"encounter_id": id, "peer": peer, "action": action,
+		"binding": started.binding.duplicate(true), "outcome": started.mastery_outcome.duplicate(true),
+		"context": started.move.get("mastery_context", {}).duplicate(true)}
+
+
+func acknowledge_move_mastery(id: String, peer: Variant, action: int, action_id: String) -> bool:
+	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
+	if started.get("action_id") != action_id or started.get("mastery_pending") != true: return false
+	started["mastery_pending"] = false
+	return true
+
+
+func pending_move_mastery() -> Array[Dictionary]:
+	var pending: Array[Dictionary] = []
+	for id: String in _strike_authority:
+		for key: Variant in _strike_authority[id]:
+			# A departed participant retains the SAME obligation under stable
+			# character. The host world writer does not require that peer online.
+			for started: Dictionary in _strike_authority[id][key].get("move_starts", {}).values():
+				if started.get("mastery_pending") == true:
+					pending.append({"encounter_id": id, "peer": key, "action": int(started.action)})
+	return pending
 
 
 ## COMBAT-3. Authorize and spend one movement burst as a single host operation.
@@ -593,9 +775,11 @@ func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 	var wind_delta := commit_wind(encounter_id, peer_id, action, profile, cost,
 		now_ms, safe_duration, regen_delay_seconds)
 	var deadline_ms := now_ms + ceili(safe_duration * 1000.0)
+	var starts: Dictionary = _strike_state_for(encounter_id).get(peer_id, {}).get("move_starts", {})
 	_strike_state_for(encounter_id)[peer_id] = {
 		"last_action": action, "accepted_at_ms": now_ms,
 		"deadline_ms": deadline_ms, "cooldown_ms": ceili(safe_duration * 1000.0),
+		"move_starts": starts,
 	}
 	var delta := {
 		"encounter_id": encounter_id,
@@ -633,7 +817,7 @@ func preview_wind(encounter_id: String, peer_id: int, profile: Dictionary,
 	var participants: Dictionary = rec.get("participants", {}) as Dictionary
 	if not participants.has(peer_id):
 		return {}
-	var row: Dictionary = participants[peer_id]
+	var row := _participant_wind_row(participants[peer_id], str(profile.get("creature_uid", "")))
 	_advance_participant_wind(row, profile, now_ms)
 	var available := float(row.get("wind", 0.0))
 	return {"wind": available, "wind_max": float(row.get("wind_max", 1.0)),
@@ -652,7 +836,8 @@ func commit_wind(encounter_id: String, peer_id: int, action: int,
 	var participants: Dictionary = rec.get("participants", {}) as Dictionary
 	if not participants.has(peer_id):
 		return {}
-	var row: Dictionary = participants[peer_id]
+	var participant: Dictionary = participants[peer_id]
+	var row := _participant_wind_row(participant, str(profile.get("creature_uid", "")), true)
 	_advance_participant_wind(row, profile, now_ms)
 	if action <= int(row.get("wind_last_action", 0)):
 		return {"wind": float(row.get("wind", 0.0)),
@@ -661,6 +846,7 @@ func commit_wind(encounter_id: String, peer_id: int, action: int,
 	var exhausted := available + 0.001 < maxf(0.0, cost)
 	row["wind"] = maxf(0.0, available - maxf(0.0, cost))
 	row["wind_last_action"] = action
+	participant["wind_last_action"] = action
 	row["wind_updated_ms"] = now_ms
 	row["wind_ready_at_ms"] = now_ms + ceili(1000.0 * (maxf(0.0, recovery_seconds)
 		+ maxf(0.0, regen_delay_seconds)))
@@ -668,6 +854,23 @@ func commit_wind(encounter_id: String, peer_id: int, action: int,
 	rec["seq"] = seq
 	return {"wind": float(row["wind"]), "wind_max": float(row["wind_max"]),
 		"wind_exhausted": exhausted, "wind_ready_at_ms": int(row["wind_ready_at_ms"])}
+
+
+func _participant_wind_row(participant: Dictionary, active_uid: String = "", install: bool = false) -> Dictionary:
+	var uid := active_uid if not active_uid.is_empty() else str(participant.get("move_resource_uid", ""))
+	if uid.is_empty(): return participant
+	var resources: Dictionary = participant.get("move_resources", {})
+	var row: Dictionary = resources.get(uid, {})
+	if row.is_empty():
+		row = {"energy": 0.0, "ultimate_meter": 0.0, "cooldowns": {}}
+		if resources.is_empty() and participant.has("wind"):
+			for key: String in ["wind", "wind_updated_ms", "wind_ready_at_ms", "wind_last_action"]:
+				if participant.has(key): row[key] = participant[key]
+	if install:
+		resources[uid] = row
+		participant["move_resources"] = resources
+		participant["move_resource_uid"] = uid
+	return row
 
 
 func _advance_participant_wind(row: Dictionary, profile: Dictionary, now_ms: int) -> void:

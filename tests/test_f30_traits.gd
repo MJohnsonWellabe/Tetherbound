@@ -17,7 +17,10 @@ func test_real_json_config_numeric_gates_and_strict_activation() -> void:
 	if not raw is Dictionary: return
 	var cfg: Dictionary = raw
 	assert_true(TRAITS.configuration_errors(cfg).is_empty(),str(TRAITS.configuration_errors(cfg)))
-	assert_false(TRAITS.runtime_enabled(cfg),"shipped F30 activation must remain off")
+	assert_true(TRAITS.runtime_enabled(cfg),"shipped F30 consumers are active")
+	var disabled := cfg.duplicate(true)
+	disabled.runtime_enabled = false
+	assert_false(TRAITS.runtime_enabled(disabled))
 	var enabled := cfg.duplicate(true)
 	enabled.runtime_enabled = true
 	assert_true(TRAITS.runtime_enabled(enabled))
@@ -47,7 +50,7 @@ func test_real_json_config_numeric_gates_and_strict_activation() -> void:
 	assert_false(TRAITS.configuration_errors(missing).is_empty())
 	assert_false(TRAITS.runtime_enabled(missing))
 	# Pure rules remain available with valid runtime_enabled:false config.
-	assert_almost_eq(TRAITS.apply_value(_one("gentle"),"healing",100.0,cfg),105.0)
+	assert_almost_eq(TRAITS.apply_value(_one("gentle"),"healing",100.0,disabled),105.0)
 
 func test_each_trait_applies_actual_consumer() -> void:
 	var cfg := TRAITS.config()

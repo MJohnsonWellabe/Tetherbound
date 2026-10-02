@@ -3,6 +3,30 @@ extends "res://tests/test_case.gd"
 const NET_HARNESS := preload("res://tests/helpers/net_harness.gd")
 
 
+func test_native_step_completion_cannot_override_a_same_pump_fault() -> void:
+	# run_tests itself starts in _init and cannot drive a frame-awaiting step.
+	# The isolated child runs the actual coroutine with controlled protocol
+	# arrivals; it launches no game peers and makes no co-op proof claim.
+	var output: Array = []
+	var code := OS.execute(OS.get_executable_path(), PackedStringArray([
+		"--headless", "--path", ProjectSettings.globalize_path("res://"),
+		"--script", "res://tests/helpers/net_harness_completion_fault.gd",
+	]), output, true)
+	var log_text := "\n".join(output)
+	var result: Dictionary = {}
+	for line: String in log_text.split("\n"):
+		if line.begins_with("HARNESS_COMPLETION_RESULT="):
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("HARNESS_COMPLETION_RESULT="))
+			if parsed is Dictionary: result = parsed
+	assert_eq(code, 0, log_text)
+	assert_eq(result.get("assertions"), 37.0, "all completion/fault controls actually ran")
+	assert_eq(result.get("failures"), [], log_text)
+	for marker: String in ["SCRIPT ERROR", "Parse Error", "ERROR:"]:
+		# The two injected coordinator/peer ERROR lines are expected protocol
+		# observations. Native/script diagnostics start their own log line.
+		assert_false(log_text.contains("\n" + marker) or log_text.begins_with(marker), log_text)
+
+
 func test_successful_production_join_restarts_the_ordinary_watchdog() -> void:
 	var peer := {
 		"last_heartbeat_t": 1.0,

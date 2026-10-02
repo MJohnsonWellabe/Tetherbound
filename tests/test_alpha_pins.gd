@@ -520,6 +520,37 @@ class _FakeInstance extends RefCounted:
 	var nickname := ""
 
 
+class DressingDirector extends Node:
+	var _wild_creatures: Array = []
+	var _once_only: Dictionary = {}
+
+
+class DressingBody extends Node3D:
+	var display_name := ""
+	var instance := _FakeInstance.new()
+
+
+func test_dressing_skips_a_freed_body_and_still_updates_the_live_alpha() -> void:
+	var world := Node.new()
+	var director := DressingDirector.new()
+	director.name = "EncounterDirector"
+	world.add_child(director)
+	var pins := ALPHA_PINS.new()
+	world.add_child(pins)
+	var departed := Node3D.new()
+	var live := DressingBody.new()
+	director._wild_creatures = [departed, live]
+	director._once_only[live] = "alpha-fixture"
+	pins._clusters = [{"once_id": "alpha-fixture", "nickname": "Retained Alpha", "aura_light": {}, "nameplate": {}}]
+	departed.free()
+	pins._dress_live_alphas()
+	assert_eq(live.display_name, "Retained Alpha")
+	assert_eq(live.instance.nickname, "Retained Alpha")
+	assert_true(live.get_meta("alpha_dressed", false))
+	live.free()
+	world.free()
+
+
 func test_dress_alpha_body_sets_names_and_one_light() -> void:
 	var body := Node3D.new()
 	var instance := _FakeInstance.new()

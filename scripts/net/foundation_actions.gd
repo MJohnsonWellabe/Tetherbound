@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource"]
+const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -33,6 +33,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if context.get("foundation_runtime_authorized") != true: return deny("missing_frozen_authorization")
 	var proposal: Dictionary
 	match action:
+		"combat_mastery": proposal = _combat_mastery(current, intent, context)
 		"resource": proposal = resource_plan(current, revision, intent, context)
 		"tm_teach": proposal = _tm_teach(current, intent, context)
 		"wild_capture": proposal = preload("res://scripts/net/foundation_capture_rules.gd").stage(current, intent, context)
@@ -56,6 +57,43 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"before": current.duplicate(true), "state": proposal.state.duplicate(true),
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
+
+
+## A retained host hit obligation enters the same full-character journal after
+## combat settles. This stage touches mastery maps only; it never restores HP.
+static func _combat_mastery(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if intent.size() != 2 or not ESSENCE._opaque_id(intent.get("action_id")) \
+		or not ESSENCE._component(intent.get("creature_uid")) or context.get("event_confirmed") != true \
+		or not context.get("outcome") is Dictionary or not ESSENCE._opaque_id(context.get("world_namespace")) \
+		or not ESSENCE._opaque_id(context.get("session_id")) or not context.get("participants") is Array \
+		or not context.participants.has(current.character_id):
+		return deny("retained_mastery_required")
+	var event: Dictionary = context.outcome
+	var retained := "foundation_event:" + JSON.stringify([context.world_namespace, context.session_id, "mastery:" + str(intent.action_id)]).sha256_text()
+	if context.get("retained_event") != retained or context.get("source_key") != "combat_mastery:" + str(intent.action_id) \
+		or event.get("action_id") != intent.action_id or event.get("attacker_uid") != intent.creature_uid:
+		return deny("retained_mastery_required")
+	var selected: Dictionary = {}
+	for card: Dictionary in current.party:
+		if card.uid == intent.creature_uid: selected = card
+	if selected.is_empty(): return deny("not_owned")
+	var mastery := preload("res://scripts/creatures/move_mastery.gd")
+	var plan := mastery.stage_landed_use(mastery.owned_record(selected), event)
+	if plan.get("ok") != true:
+		# Rank five retains the obligation's durable receipt without adding an
+		# unbounded per-move history or refusing a completed combat action.
+		if plan.get("reason") != "saturated": return deny(str(plan.get("reason", "invalid_mastery")))
+	var receipt := "craft:combat_mastery_%s:%s" % [str(intent.action_id).sha256_text(), current.character_id]
+	if current.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
+	var next := current.duplicate(true)
+	if plan.get("ok") == true:
+		for card: Dictionary in next.party:
+			if card.uid != intent.creature_uid: continue
+			card.move_mastery_uses = plan.uses.duplicate(true)
+			card.move_mastery_receipts = plan.receipts.duplicate(true)
+		next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
 
 static func resource_plan(current: Dictionary, revision: int, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if intent.size() != 2 or intent.get("operation") not in ["node", "farm"] \

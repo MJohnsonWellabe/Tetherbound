@@ -761,6 +761,18 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 	while true:
 		await process_frame
 		_pump_once()
+		# The pump can receive this step's PASS and detect a host/peer fault
+		# in the same frame. A packet cannot override that terminal failure or
+		# earn heartbeat credit after the run has already died.
+		if not _fatal_reason.is_empty():
+			p["heartbeat_deferred_until_s"] = 0.0
+			if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
+			return {"id": id, "verdict": "ERROR", "detail": _fatal_reason, "frames_used": 0}
+		if bool(p.get("exited", false)):
+			p["heartbeat_deferred_until_s"] = 0.0
+			if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
+			return {"id": id, "verdict": "ERROR", "detail": "peer %d exited before a verdict for '%s'"
+				% [peer, action], "frames_used": 0}
 		var v = p.get("last_verdict")
 		if v != null and str((v as Dictionary).get("id", "")) == id:
 			if verdict_at_s < 0.0:
@@ -772,15 +784,6 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 				or host_shell_heartbeat_resumed(_peers[shell_host], verdict_at_s):
 				if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
 				return v
-		if not _fatal_reason.is_empty():
-			p["heartbeat_deferred_until_s"] = 0.0
-			if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
-			return {"id": id, "verdict": "ERROR", "detail": _fatal_reason, "frames_used": 0}
-		if bool(p.get("exited", false)):
-			p["heartbeat_deferred_until_s"] = 0.0
-			if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
-			return {"id": id, "verdict": "ERROR", "detail": "peer %d exited before a verdict for '%s'"
-				% [peer, action], "frames_used": 0}
 		if Time.get_ticks_msec() > deadline:
 			var observed_ms := Time.get_ticks_msec()
 			var timeout_heartbeat: Variant = p.get("last_heartbeat")

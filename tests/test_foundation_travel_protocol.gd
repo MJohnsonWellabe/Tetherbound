@@ -58,6 +58,23 @@ func test_lifecycle_has_no_action_or_coordinates_and_requires_every_observation(
 	sample.damage_revision = -1
 	assert_false(LIFECYCLE.valid_sample(sample))
 
+func test_local_swimming_observation_matches_actual_realm_controller_lifecycle() -> void:
+	for realm: String in ["meadows", "cloudreach", "stormwood"]:
+		assert_eq(LIFECYCLE.swimming_observation(realm, null), {"swimming": false},
+			"ordinary non-Water player has no SwimController: " + realm)
+	assert_true(LIFECYCLE.swimming_observation("water", null).is_empty(), "Water cannot sample before its swimmer mounts")
+	assert_true(LIFECYCLE.swimming_observation("unknown", null).is_empty())
+	var swim := preload("res://scripts/player/swim_controller.gd").new()
+	assert_eq(LIFECYCLE.swimming_observation("water", swim), {"swimming": false}, "installed Water observer begins on land")
+	swim.state.enter_water(false, 0.0)
+	assert_eq(LIFECYCLE.swimming_observation("water", swim), {"swimming": true}, "actual human swimming is observed")
+	swim.state.leave_water()
+	assert_eq(LIFECYCLE.swimming_observation("water", swim), {"swimming": false}, "actual return to land is observed")
+	swim.free()
+	var missing_observer := Node.new()
+	assert_true(LIFECYCLE.swimming_observation("water", missing_observer).is_empty())
+	missing_observer.free()
+
 func test_consumed_guest_permit_survives_failed_save_and_requires_correlated_notice() -> void:
 	var session := SessionFixture.new()
 	session.game.world.reward_delivery_namespace = "world_a"

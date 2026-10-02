@@ -9,6 +9,17 @@
     "_scope": "Host encounter action receipts; fail closed at the bound without evicting replay history.",
     "receipt_limit_per_encounter": 4096
   },
+  "move_commit": {
+    "_scope": "Host-owned named equipped move starts and per-creature encounter resources. Actual strike arrival must match the retained action and body lifetime.",
+    "runtime_enabled": true
+  },
+  "ultimate": {
+    "_scope": "Per-creature encounter meter; only host-resolved positive HP debits credit it.",
+    "maximum": 100.0,
+    "landed_gain": { "quick": 6.0, "charged": 14.0, "utility": 4.0, "ultimate": 0.0 },
+    "arm_window_s": 1.5,
+    "max_fraction_of_named_hp": 0.2
+  },
   "damage": {
     "_comment": "damage = power * scale * attack / (attack + defence). Bounded on purpose: a raw attack/defence ratio explodes when defence is low and produces one-shot kills that read as bugs. With scale 2, equal attack and defence deals exactly the move's power.",
     "scale": 2.0,

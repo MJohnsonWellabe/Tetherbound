@@ -1642,6 +1642,12 @@ func _realm_crossing_valid(context: Dictionary) -> bool:
 	return true
 
 
+func _realm_destination_results_settled(realm_id: String) -> bool:
+	if session == null or not session.has_method("realms") or session.call("is_host") != true: return true
+	var hosted: Node = session.call("realms")
+	return hosted == null or hosted.call("destination_results_settled", realm_id) == true
+
+
 func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 		context: Dictionary) -> bool:
 	var profile_load := OS.get_cmdline_user_args().has("--profile-realm-load")
@@ -1671,6 +1677,7 @@ func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 	var tree := get_tree()
 	if tree == null:
 		return false
+	if not _realm_destination_results_settled(realm_id): return false
 	var source_scene := tree.current_scene
 	var coordinator: Variant = context.get("coordinator")
 	if bool(context.client):
@@ -1689,6 +1696,10 @@ func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 		context["host_permit"] = true
 	if current_realm != leaving or tree.current_scene != source_scene:
 		return false
+	# Host admission can await peer fences while an accepted hit resolves.
+	# Recheck before announcing/mutating the realm: a retained destination shell
+	# must keep its authored root path until its original outcome is durable.
+	if not _realm_destination_results_settled(realm_id): return false
 	var transition_snapshot := _realm_transition_snapshot(leaving)
 	_sync_placed_building_state()
 	_sync_death_satchel_state()

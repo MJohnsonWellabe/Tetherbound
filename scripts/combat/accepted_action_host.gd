@@ -90,6 +90,13 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	return verdict
 
 
+func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
+		binding: Dictionary, move: Dictionary, wind_profile: Dictionary, now_ms: int) -> Dictionary:
+	if move_action_publication_pending(str(intent.get("encounter_id", ""))):
+		return _refuse("move_start", peer, "pending_action", "The original hit is still being published.")
+	return super.authorize_move_start(intent, peer, owned, binding, move, wind_profile, now_ms)
+
+
 ## Called immediately before the existing host damage writer, from actual
 ## arrival state. A duplicate callback cannot invoke that writer twice.
 func begin_move_action_resolution(id: String, peer: int, action: int,
@@ -166,13 +173,16 @@ func _retain_originals(id: String, before: Dictionary) -> void:
 	var has_originals := false
 	for state: Dictionary in before.values():
 		if not (state.get("accepted_actions", {}) as Dictionary).is_empty(): has_originals = true
+		if not (state.get("move_starts", {}) as Dictionary).is_empty(): has_originals = true
 	if not has_originals: return
 	var current := _strike_state_for(id)
 	for key: Variant in before:
 		var actions: Dictionary = (before[key] as Dictionary).get("accepted_actions", {})
-		if actions.is_empty(): continue
+		var starts: Dictionary = (before[key] as Dictionary).get("move_starts", {})
+		if actions.is_empty() and starts.is_empty(): continue
 		if not current.has(key): current[key] = {}
 		current[key]["accepted_actions"] = actions
+		current[key]["move_starts"] = starts
 
 
 func _cancel_admitted(before: Dictionary) -> void:
@@ -208,6 +218,9 @@ func close(id: String) -> void:
 
 func forget(id: String) -> void:
 	if move_action_publication_pending(id): return
+	for state: Dictionary in (_strike_authority.get(id, {}) as Dictionary).values():
+		for started: Dictionary in state.get("move_starts", {}).values():
+			if started.get("mastery_pending") == true: return
 	super.forget(id)
 
 

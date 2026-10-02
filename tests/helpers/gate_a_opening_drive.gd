@@ -310,6 +310,8 @@ func run(tree: SceneTree) -> Dictionary:
 		_fail("Grandpa's first-catch conversation left %d Basic Orbs; expected 45–50" % opening_orbs)
 		return _result()
 	_checkpoint("Grandpa's first-catch supplies received (%d Basic Orbs)" % opening_orbs)
+	if not await _complete_home_key_lesson():
+		return _result()
 	if _failures.is_empty() and not await _walk_toward(house.call("marker", "door"), 700):
 		_fail("could not leave the now-unlocked front doorway")
 	if not _failures.is_empty():
@@ -1349,6 +1351,40 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 		str(_arbiter.call("winning_provider")),
 	])
 	return false
+
+
+## The first Home Key grant now opens its authored lesson beside Grandpa.
+## Read every line through its actual controller binding before walking; the
+## input owner correctly prevents locomotion while that card is on screen.
+func _complete_home_key_lesson() -> bool:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if rules.config().get("enabled") != true: return true
+	var local: RefCounted = _game.get("local")
+	var flag := rules.PREFIX + "home_key"
+	if local.get("flags").call("has", flag): return true
+	var panel: CanvasLayer = null
+	for frame: int in 180:
+		var lessons := _game.get_node_or_null(^"OnboardingLessons")
+		if lessons != null:
+			panel = lessons.get("_panel") as CanvasLayer
+			if panel != null and panel.call("is_open"): break
+		await _tree.physics_frame
+	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "home_key":
+		_fail("Home Key grant did not present its authored controller lesson")
+		return false
+	var observed: Array[String] = []
+	for line: int in 20:
+		if not panel.call("is_open"): break
+		observed.append(str(panel.get("_text").get("text")))
+		await _tap_action(&"menu_confirm")
+	for frame: int in 300:
+		if local.get("flags").call("has", flag) and not panel.call("owns_input"): break
+		await _tree.physics_frame
+	if panel.call("owns_input") or not local.get("flags").call("has", flag):
+		_fail("Home Key lesson did not acknowledge and release controller input")
+		return false
+	_checkpoint("Home Key lesson read through physical confirm (%d lines), personal acknowledgement applied" % observed.size())
+	return true
 
 
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:

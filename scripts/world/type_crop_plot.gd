@@ -128,6 +128,7 @@ var _selected_crop: String = "berries"
 var _seed_picker: CanvasLayer
 var _closing_cancel := false
 var _closing_confirm := false
+var _queued_sow_crop := ""
 var _mouse_before := Input.MOUSE_MODE_CAPTURED
 
 var _prompt: Node3D = null
@@ -198,6 +199,12 @@ func _process(_delta: float) -> void:
 		_closing_cancel = false
 	if _closing_confirm and not Input.is_action_pressed("ui_accept"):
 		_closing_confirm = false
+	# Closing confirm remains owned until release. Submit only afterwards, so
+	# the host sees ordinary world input instead of this picker's closing edge.
+	if not _queued_sow_crop.is_empty() and not owns_input() and INPUT_OWNER.current(get_tree()) == null:
+		var crop := _queued_sow_crop
+		_queued_sow_crop = ""
+		_submit_action(FARM_LOGIC.ACTION_SOW, crop)
 	if is_open():
 		if Input.is_action_just_pressed("menu_cancel"):
 			INPUT_OWNER.suppress_pause_reopen(get_tree())
@@ -588,7 +595,7 @@ func _choose_crop(crop_id: String) -> void:
 	_close_seed_picker()
 	if FARM_LOGIC.state_of(_plot(), _day()) == FARM_LOGIC.TILLED \
 			and FARM_LOGIC.available_crops(_config, _seed_counts(), _greenhouse_built()).has(crop_id):
-		_submit_action(FARM_LOGIC.ACTION_SOW, crop_id)
+		_queued_sow_crop = crop_id
 
 
 func _close_seed_picker() -> void:

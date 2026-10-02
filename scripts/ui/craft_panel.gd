@@ -216,7 +216,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 					var uid: String = row.uid
 					var label: String = str(row.get("nickname",row.get("species_id",uid)))
 					var action := "wake" if row.get("resting") == true else "rest"
-					_station_button(controls,action.capitalize()+" "+label,func() -> void: _station_action("den_rest",{"creature_uid":uid,"action":action}),"den_rest:"+uid)
+					_station_button(controls,action.capitalize()+" "+label,func() -> void: _station_action("den",{"creature_uid":uid,"action":action}),"den_rest:"+uid)
 					_station_button(controls,"Groom "+label,func() -> void: _station_action("groom",{"creature_uid":uid}),"groom:"+uid)
 		"farm":
 			_station_button(controls,"Till plot",func() -> void: _farm_action("till",""))

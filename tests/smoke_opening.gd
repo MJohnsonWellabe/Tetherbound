@@ -67,6 +67,7 @@ const STARTER_PICKER_SCRIPT := "res://scripts/ui/starter_picker.gd"
 const SEAM := preload("res://scripts/story/party_seam.gd")
 const ENTRY := preload("res://scripts/ui/name_entry.gd")
 const PARTY := preload("res://autoload/party.gd")
+const SAVE := preload("res://scripts/save/save_game.gd")
 
 ## Long enough for the terrain to build and the player to land on it. Matches
 ## smoke_catching, which boots the same scene.
@@ -96,7 +97,7 @@ var _starter_picker: CanvasLayer = null
 
 
 func _init() -> void:
-	_run()
+	_run.call_deferred()
 
 
 func _run() -> void:
@@ -104,8 +105,19 @@ func _run() -> void:
 		_report()
 		return
 
+	_game = root.get_node_or_null(^"Game")
+	if _game == null:
+		_fail("the Game autoload is not in the tree before the opening boots")
+		_report()
+		return
+	# The real starter grant now saves its owner before returning control.
+	# Keep those writes out of a player's slots when this smoke runs locally.
+	_game.set("save_system", SAVE.new("user://smoke_opening_%d_%d/" % [OS.get_process_id(), Time.get_ticks_usec()]))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
+	# Production scene entry sets this automatically. The durable adoption
+	# authenticates its director against current_scene, including in a smoke.
+	current_scene = _world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -121,11 +133,14 @@ func _run() -> void:
 	await _grandpa_says_his_piece()
 	await _a_starter_can_be_chosen()
 	await _the_creature_is_named_on_the_grid()
-	_the_named_creature_is_in_the_real_party()
+	await _the_named_creature_is_in_the_real_party()
 	_the_party_still_holds_at_most_five()
 	await _the_player_is_told_how_to_get_out_of_the_house()
 	await _grandpa_hands_over_the_first_catch_orbs()
 	_grandpa_handed_over_the_orbs()
+	if not await _the_home_key_lesson_returns_control():
+		_report()
+		return
 	await _the_road_gate_stops_until_the_key_is_found()
 	_report()
 
@@ -473,6 +488,42 @@ func _grandpa_handed_over_the_orbs() -> void:
 		print("the opening catch supply: %d Basic Orbs" % orbs)
 
 
+## The Home Key handover opens its authored lesson beside Grandpa. It owns
+## input until the player reads it; action-state polling cannot reach _input.
+func _the_home_key_lesson_returns_control() -> bool:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if rules.config().get("enabled") != true:
+		return true
+	var local: RefCounted = _game.get("local")
+	var flag := rules.PREFIX + "home_key"
+	var panel: CanvasLayer = null
+	for frame: int in 180:
+		var lessons := _game.get_node_or_null(^"OnboardingLessons")
+		if lessons != null:
+			panel = lessons.get("_panel") as CanvasLayer
+			if panel != null and panel.call("is_open"):
+				break
+		await physics_frame
+	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "home_key":
+		_fail("Grandpa's Home Key handover did not present its authored controller lesson")
+		return false
+	var lines := 0
+	for line: int in 20:
+		if not panel.call("is_open"):
+			break
+		await _press_pad("menu_confirm")
+		lines += 1
+	for frame: int in 300:
+		if local.get("flags").call("has", flag) and not panel.call("owns_input"):
+			break
+		await physics_frame
+	if panel.call("owns_input") or not local.get("flags").call("has", flag):
+		_fail("Home Key lesson did not acknowledge and release controller input after %d presses" % lines)
+		return false
+	print("Home Key: read %d lesson lines with the pad and returned to exploration" % lines)
+	return true
+
+
 ## SA2 (spec sec1D): "the player cannot leave Grandpa's house until the
 ## required Grandpa opening interaction is complete." Walks the player
 ## straight at the exterior doorway, skipping Grandpa entirely — proving the
@@ -742,12 +793,17 @@ func _the_named_creature_is_in_the_real_party() -> void:
 		_fail("the Game autoload has no party")
 		return
 
+	# Naming closes before the follower has grounded and its original-choice
+	# receipt has saved. Observe completion without granting or advancing it.
+	for frame: int in 600:
+		if int(party.call("size")) > 0:
+			break
+		await physics_frame
 	var members: Array = party.members()
 	if members.is_empty():
 		_fail(
-			"the chosen creature never reached Game.party. If scripts/story/party_seam.gd reports a creature "
-			+ "while this is empty, the seam is on its fallback list again — check the node name "
-			+ "(`Game`) and the calls (`add`/`members`/`is_full`)."
+			"the chosen creature never reached Game.party after 600 frames (beat '%s', starter save pending: %s)"
+			% [str(_director.call("beat")), str(not (_director.get("_pending_starter_adoption") as Dictionary).is_empty())]
 		)
 		return
 	if members.size() != 1:

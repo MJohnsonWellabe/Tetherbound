@@ -5,7 +5,28 @@ const BODY := preload("res://scripts/creatures/creature_body.gd")
 const SCENE := preload("res://scenes/creatures/creature.tscn")
 
 
-func test_preview_library_preserves_installed_clips_and_revive_pivot() -> void:
+func test_candidate_library_and_ordinary_body_on_initialized_scene_tree() -> void:
+	# The unit runner executes in SceneTree._init, before the engine exposes
+	# its main loop. These real animation nodes need an initialized tree.
+	var output: Array = []
+	var code := OS.execute(OS.get_executable_path(), PackedStringArray([
+		"--headless", "--path", ProjectSettings.globalize_path("res://"),
+		"--script", "res://tests/helpers/f36_pose_native.gd",
+	]), output, true)
+	var log_text := "\n".join(output)
+	var result: Dictionary = {}
+	for line: String in log_text.split("\n"):
+		if line.begins_with("F36_POSE_RESULT="):
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("F36_POSE_RESULT="))
+			if parsed is Dictionary: result = parsed
+	assert_eq(code, 0, log_text)
+	assert_eq(result.get("assertions"), 15.0, log_text)
+	assert_eq(result.get("failures"), [], log_text)
+	for marker: String in ["SCRIPT ERROR", "ERROR:", "Parse Error", "resources still in use", "instances were leaked"]:
+		assert_false(log_text.contains(marker), log_text)
+
+
+func _case_preview_library_preserves_installed_clips_and_revive_pivot() -> void:
 	var body := SCENE.instantiate() as Node3D
 	body.set_script(BODY)
 	body.set_meta("f36_pose_preview", true)
@@ -45,7 +66,7 @@ func test_preview_library_preserves_installed_clips_and_revive_pivot() -> void:
 	stage.free()
 
 
-func test_ordinary_body_keeps_candidates_off() -> void:
+func _case_ordinary_body_keeps_candidates_off() -> void:
 	var body := SCENE.instantiate() as Node3D
 	body.set_script(BODY)
 	var loop := Engine.get_main_loop() as SceneTree

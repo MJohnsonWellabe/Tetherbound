@@ -88,7 +88,7 @@ static func stage_den_rest(current: Dictionary, revision: int, intent: Dictionar
 			or context.get("homestead") != true or not context.get("in_range") is bool \
 			or not context.get("in_combat") is bool or not context.get("homestead") is bool \
 			or not context.get("source_key") is String or context.source_key.is_empty() \
-			or not context.get("den_index") is int or context.den_index < 0: return RULES.deny("den_context_invalid")
+			or not preload("res://scripts/creatures/essence.gd")._integer(context.get("den_index"), 0, 2147483646): return RULES.deny("den_context_invalid")
 	if not current.get("party") is Array or current.party.is_empty() or current.party.size() > 5 \
 			or not current.get("redesign_character") is Dictionary \
 			or not STATE.validate("character",current.redesign_character,STATE.uids(current.party)).is_empty(): return RULES.deny("character_state_invalid")
@@ -109,7 +109,7 @@ static func stage_den_rest(current: Dictionary, revision: int, intent: Dictionar
 	var next := current.duplicate(true)
 	next.party[index].resting=intent.action == "rest"
 	next.party[index].rested=false
-	next.party[index].rest_bed_index=context.den_index if intent.action == "rest" else -1
+	next.party[index].rest_bed_index=int(context.den_index) if intent.action == "rest" else -1
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not STATE.validate("character",next.redesign_character,STATE.uids(next.party)).is_empty(): return RULES.deny("receipt_budget")
 	return {"ok":true,"state":next,"before":current.duplicate(true),"receipt":receipt,

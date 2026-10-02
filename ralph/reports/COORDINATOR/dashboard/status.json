@@ -1,10 +1,10 @@
 {
- "updated": "2026-10-02T07:25:16.442558+00:00",
+ "updated": "2026-10-02T08:44:50.207364+00:00",
  "headline": [
-  "Completion run active on tb/integration under the owner request to finish the game. Production activation, real consumers and saved player paths are the current work. The earlier coordinator and heartbeat remain stopped.",
-  "Accepted: 110/280 on main30fcc38fc5 (original95/101; redesign15/179). Main CI is red. No new criterion is accepted by source activation, detached checks, or this dashboard.",
-  "PR519 is the sole integration PR. The new candidate materializes381 levels in14 authored tables, activates portal/ending and homestead/loop defaults, repairs bounty refresh and Veyra lookup, and connects live enemy patterns and resource transactions.",
-  "Clean bounded checks:43 tests/6004 assertions for curves and repeatables; bounty journal smoke. Title/new-game diagnostic passed without engine errors in193.7s, but concurrent source edits require an unchanged-source replay. Resource and combat native checks remain in progress."
+  "Completion work continues on tb/integration, draft PR519. This checkpoint follows activation base b1522e17b4; main and acceptance have not advanced.",
+  "Accepted:110/280 (95/101 original;15/179 redesign). CI6177 is red. Windows export/boot passed; a green package export does not close the remaining gameplay, save, co-op or visual gates.",
+  "Frozen title/New Game passed237.016s. Physical opening passed625.078s through Home Key lesson, combat and catch. Later mastery/guest-rematch changes have separate bounded evidence; guest rematches stay gated by actor-vitals.",
+  "All3 Meadows material sites pass actual ground/controller/prompt/owner-save/ACK and exact stock/inventory reload (407.25s; disclosed6m starts). Additional site gates remain off pending source activation; Water sites and full earned routes remain unproven."
  ],
  "batches": [
   {
@@ -365,8 +365,8 @@
  "lanes": [
   {
    "lane": "tb/foundations",
-   "now": "F16 main; paidAltar/wild17path integration sourceOFF. Departure r1/r2 pre-admission loading FAIL; actual responsive scheduler proposal under review.",
-   "next": "Finish the bounded current-main landing and required proof before expanding."
+   "now": "Integrated activation work: real resource/station transactions, owner save/ACK, hosted-shell and actor-baseline corrections.",
+   "next": "Prove saved ordinary gathering and paid progression; keep unresolved supply and full co-op gates open."
   },
   {
    "lane": "tb/hub",
@@ -375,13 +375,13 @@
   },
   {
    "lane": "tb/reorder",
-   "now": "Active within tb/integration: live authored RD-10 levels and portal/ending defaults. Veyra canonical boss lookup repaired.",
-   "next": "Guest rematch runtime with actual guest actors; then earned chapter traversal and durable handoff."
+   "now": "Active portal/ending/loop defaults; physical opening through catch passes. Canonical guest rematch source and roster hooks remain gated.",
+   "next": "Earned chapter handoffs, current Cloudreach progression and actual saved guest rematch proof."
   },
   {
    "lane": "tb/combat",
-   "now": "Active within tb/integration: F22 live body patterns, frozen geometry, host strikes and guest cues.",
-   "next": "Native pattern check, then production utility/ultimate/Commands input and authority."
+   "now": "Live pattern and quick/charged host starts, per-UID meters and retained mastery; source-reviewed follow-up, not acceptance.",
+   "next": "Finish native saved mastery and hosted-shell proof; utility/ultimate/Commands remain unfinished."
   },
   {
    "lane": "tb/vfx",
@@ -395,13 +395,13 @@
   },
   {
    "lane": "tb/training",
-   "now": "Active within tb/integration: homestead defaults and F32 host resource actions, world stock and owner-save/ACK.",
-   "next": "Check native consumers, saved stock/inventory and retries, then actual paid progression loop."
+   "now": "Integrated activation work: real resource/station transactions, owner save/ACK, hosted-shell and actor-baseline corrections.",
+   "next": "Prove saved ordinary gathering and paid progression; keep unresolved supply and full co-op gates open."
   },
   {
    "lane": "tb/homestead",
-   "now": "Active within tb/integration: homestead defaults and F32 host resource actions, world stock and owner-save/ACK.",
-   "next": "Check native consumers, saved stock/inventory and retries, then actual paid progression loop."
+   "now": "Integrated activation work: real resource/station transactions, owner save/ACK, hosted-shell and actor-baseline corrections.",
+   "next": "Prove saved ordinary gathering and paid progression; keep unresolved supply and full co-op gates open."
   },
   {
    "lane": "tb/creature-art",
@@ -430,13 +430,13 @@
   },
   {
    "lane": "tb/hud",
-   "now": "Active within tb/integration: menus, lessons, research, bounties, rematches and alpha defaults. Journal updates on personal state; independent source review found no additional blocker.",
-   "next": "Controller and earned durable paths; guest rematches remain incomplete."
+   "now": "Active portal/ending/loop defaults; physical opening through catch passes. Canonical guest rematch source and roster hooks remain gated.",
+   "next": "Earned chapter handoffs, current Cloudreach progression and actual saved guest rematch proof."
   },
   {
    "lane": "tb/loop",
-   "now": "Active within tb/integration: menus, lessons, research, bounties, rematches and alpha defaults. Journal updates on personal state; independent source review found no additional blocker.",
-   "next": "Controller and earned durable paths; guest rematches remain incomplete."
+   "now": "Active portal/ending/loop defaults; physical opening through catch passes. Canonical guest rematch source and roster hooks remain gated.",
+   "next": "Earned chapter handoffs, current Cloudreach progression and actual saved guest rematch proof."
   },
   {
    "lane": "tb/balance",
@@ -490,160 +490,56 @@
  ],
  "four_chapter_run": null,
  "wip": [
-  "Root owns integration branch, STATE, dashboard, staging and the serialized engine lease. Three disjoint agents implement/review campaign, combat and resources. No old app task or heartbeat was restarted.",
-  "All earlier source and raw evidence remain preserved. ParentD:/tetherbound is not Git; use foundations-batch-check. Do not reset local history to the older remote integration head.",
-  "Initial rootiron catalogue conflict was repaired by compatible canonical metadata. Original failure remains retained. Journal then passed cleanly; full title diagnostic also had no catalogue error.",
-  "A rematch lookup check passed26 assertions but aggregate failed while the resource preload dependency was being written. Rerun after the coherent slice is stable; this is not a clean pass.",
-  "F48 actual paid-Altar/catch/loop and24 reconnect cuts remain open. Prior default-off overlay receipts cannot prove the newly activated candidate.",
-  "Compatibility remains default. Device, internet invitation co-op, full visuals/audio, human duration/feel and complete four-chapter earned playthrough remain open. No acceptance count changed."
+  "Root owns integration, exact staging, STATE, board and serialized engine use. Campaign, combat and resource agents own disjoint bounded source and independent reviews; earlier app tasks and heartbeat remain stopped.",
+  "The detached activation-proof-b152 checkout holds frozen native source and exact run receipts. Full source hashes and original failures are sealed with the checkpoint; no live source is edited during a run.",
+  "Clean bounded native runs: combat-settlement-compile-sourcepath, combat-settlement-disk, destination-settlement-and-wind, f32-meadows-first-resource-fixed, fixed-title, guardian-native-contract-fixed, hosted-mastery-and-resource-baseline, move-den-rematch-harness, opening-with-live-combat, stormwood-level-telemetry-output.",
+  "Original failed checks retained: combat-settlement-compile, f23-den-rematch-compile, f32-meadows-candidates, f32-meadows-lifecycle-fixed, lifecycle-ci-repairs, stormwood-level-telemetry. Later repairs do not erase these failures.",
+  "F48 paid-Altar/catch/loop and all24 cuts remain open. Historical default-off overlays cannot prove newly active production defaults.",
+  "Compatibility remains default. Full campaign pacing, current Cloudreach economy, controller utility/ultimate/Commands, Groom, missing supply paths, actual co-op, visuals/audio/device and human play remain open."
  ],
- "last_lane_refresh": "2026-10-01T02:58:07Z",
+ "last_lane_refresh": "2026-10-02T08:44:50.207364+00:00",
  "lane_activity": [
   {
-   "lane": "Shared authority · tb/foundations",
-   "checkpoint": "Shared27path r5 portal/adoption/finite-gift SOURCEPASS at6d4736; runtime permits/grounded travel/F19/F20 still CLOSED. ActualdepartureR3 native1/178.375 failed155s coordinator step, realheartbeats, noleave/rejoin.66s nativeTerrain region call requires changedloader source, exact3pathreview active; finalnative maps still synchronous/unproved."
+   "lane": "campaign_closeout in tb/integration",
+   "checkpoint": "F19 / chapter integration: OPEN. Cloudreach earned progression shortfall remains; guest rematch runtime is gated by actor-vitals and lacks actual ENet proof."
   },
   {
-   "lane": "F21#4 · tb/combat",
-   "checkpoint": "F21 trackedbc07/source8da29 mergedmain30fcc; exact7 cameraR5+C2/C4 source cuts archived, independentSOURCEPASS only. PriorR2 numeric9PASS/blind6FAIL+fullcraft9FAIL retained. F23/F24 actualaction/TM/input/gear/arrival sharedproducers still unconnected; no MET."
+   "lane": "build_closeout in tb/integration",
+   "checkpoint": "F22/F23 / combat and mastery: OPEN. Full opening passed first host-start slice. Later mastery disk checks passed; hosted-shell review repairs and live final-source proof remain required. Utility/ultimate/Commands not complete."
   },
   {
-   "lane": "F17#4 · ROOT on tb/hub",
-   "checkpoint": "F17#0–#3/#5 main; F17#4 actualR3 native1/293.203s FAILED atwood contactcount12 versus8. Floor+wall, secondnodeunknown; inherited Terrain-only errorpaths incomplete. Changedapproach provisional physical sticksteering being authored with originalbounds; no unchangednative retry."
+   "lane": "opening_closeout in tb/integration",
+   "checkpoint": "F31/F32 / homestead and supplies: OPEN. All3 Meadows material sites pass actual ground/controller/prompt/owner-save/ACK and exact stock/inventory reload (407.25s; disclosed6m starts). Additional site gates remain off pending source activation; Water sites and full earned routes remain unproven."
   },
   {
-   "lane": "Preserved targets · other lanes",
-   "checkpoint": "Owned draft-source completed across features; F25effects/F31stations/F32materials/F33gear/F35ultimates source packets join existing F18–24/F28–30. Strict runtime/save/co-op/visual proofs batched only after actualsingle-owner producers; source is NOT acceptance."
+   "lane": "root in tb/integration",
+   "checkpoint": "Opening / integration / release: Draft PR519, CI red, no merge/release/acceptance closure. Recovering concrete native failures without weakening assertions."
   }
  ],
  "active_work": [
   {
-   "criterion": "F21#4",
-   "lane": "tb/combat",
-   "source": "8cff actual numericPASS; fresh blind R2 FAIL6/9 readability, all9 craft; R5 one-predicate successor",
-   "state": "OPEN; full-bar failures retained. Combined source gate reused narrowly; expensive fresh proof held for coherent code batch"
+   "criterion": "F19 / chapter integration",
+   "lane": "campaign_closeout in tb/integration",
+   "source": "381 live levels; numeric-only fixture corrections; actual rematch roster and source hooks",
+   "state": "OPEN. Cloudreach earned progression shortfall remains; guest rematch runtime is gated by actor-vitals and lacks actual ENet proof."
   },
   {
-   "criterion": "F23 actual actor incoming HP/Heal",
-   "lane": "tb/combat",
-   "source": "PR500 main7dcd core; incoming ignored R4 bb015121",
-   "state": "actual caller source coding; same actor/defence ownership and remote readiness open; Heal/remote OFF; no credit"
+   "criterion": "F22/F23 / combat and mastery",
+   "lane": "build_closeout in tb/integration",
+   "source": "Live host move starts, actual HP debit, per-owned-UID meters and existing saved obligation protocol",
+   "state": "OPEN. Full opening passed first host-start slice. Later mastery disk checks passed; hosted-shell review repairs and live final-source proof remain required. Utility/ultimate/Commands not complete."
   },
   {
-   "criterion": "F17#4",
-   "lane": "tb/hub",
-   "source": "Hub8189ef; actualM1R3 native1/293.203s, campaign277.246s",
-   "state": "OPEN; wood actualfloor+wall12cachedpoints exceedsoriginal8cap. Originalguard/budgets retained; concrete physics-aware source successor next, no genericretry"
+   "criterion": "F31/F32 / homestead and supplies",
+   "lane": "opening_closeout in tb/integration",
+   "source": "Den dispatch, crop input release, WeakRef resource mounts and non-Water lifecycle sampling",
+   "state": "OPEN. All3 Meadows material sites pass actual ground/controller/prompt/owner-save/ACK and exact stock/inventory reload (407.25s; disclosed6m starts). Additional site gates remain off pending source activation; Water sites and full earned routes remain unproven."
   },
   {
-   "criterion": "F17#5",
-   "lane": "tb/hub",
-   "source": "main b7cb96de89 PR503; independent189+packaging217 PASS",
-   "state": "MET on main; original timeout/fourENet failures retained, no clean transport/F49 claim"
-  },
-  {
-   "criterion": "F27#2/#3 mounted Altar",
-   "lane": "tb/training + tb/foundations + tb/homestead",
-   "source": "Foundation ignored F27 coherent17path591501; Training actual-r3; paid Building sealed36ccc",
-   "state": "All runtime flags OFF; real solo Director/settled actor handoff being integrated by F22 and Foundations. No runtime/criterion credit"
-  },
-  {
-   "criterion": "Affected departure/loading regression",
-   "lane": "tb/foundations",
-   "source": "Foundation6d4736; actualR3 native1/178.375s,155s stepwall; regionloader sourceproposal949bd6",
-   "state": "OPEN; hostactualheartbeats continued, nojoin/departure;64regions native66s. Different-author source review, alloriginallimits unchanged"
-  },
-  {
-   "criterion": "F18#0-#5",
-   "lane": "tb/f18",
-   "source": "DraftPR504 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f4f8-e11a-71d2-8984-caa18c9bad04"
-  },
-  {
-   "criterion": "F19#0-#5",
-   "lane": "tb/f19",
-   "source": "DraftPR505 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f4f8-e65f-7591-94a7-b4799df734b7"
-  },
-  {
-   "criterion": "F20#0-#4",
-   "lane": "tb/f20",
-   "source": "DraftPR506 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf"
-  },
-  {
-   "criterion": "F22#0-#4",
-   "lane": "tb/f22",
-   "source": "DraftPR513 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f510-cc96-7090-8e99-bf47054aed88"
-  },
-  {
-   "criterion": "F23#0-#5",
-   "lane": "tb/f23",
-   "source": "DraftPR512 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f512-a7d7-7f91-b47f-922a18d234d6"
-  },
-  {
-   "criterion": "F28#0-#5",
-   "lane": "tb/f28",
-   "source": "DraftPR508 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f512-ab97-7c93-a96c-45705ff3d26a"
-  },
-  {
-   "criterion": "F29#0-#4",
-   "lane": "tb/f29",
-   "source": "DraftPR507 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f512-b160-7053-8f6a-e84f072c2d94"
-  },
-  {
-   "criterion": "F30#0-#4",
-   "lane": "tb/f30",
-   "source": "DraftPR510 ownedsource; acceptanceUNPROVEN",
-   "state": "Source integration and necessary actualproof gates OPEN, flagsOFF, noMET",
-   "thread": "01a0f512-b8f3-7522-a5bf-59c1a4a901da"
-  },
-  {
-   "criterion": "F24#0–#5",
-   "lane": "tb/f24",
-   "source": "DraftPR511",
-   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
-  },
-  {
-   "criterion": "F25#0–#5",
-   "lane": "tb/f25",
-   "source": "tb/f25 visible task01a0f546-24b0-7e61-930f-07eae74b0746; old24 archetypes reused, source being composed",
-   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
-  },
-  {
-   "criterion": "F31#0–#6",
-   "lane": "tb/f31",
-   "source": "DraftPR516",
-   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
-  },
-  {
-   "criterion": "F32#0–#5",
-   "lane": "tb/f32",
-   "source": "DraftPR515",
-   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
-  },
-  {
-   "criterion": "F33#0–#4",
-   "lane": "tb/f33",
-   "source": "DraftPR518",
-   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
-  },
-  {
-   "criterion": "F35#0–#4",
-   "lane": "tb/f35",
-   "source": "DraftPR514",
-   "state": "Ownedsource work; allcriteriaOPEN. Actualintegration/player/save/co-op/visual batch unrun, flagsOFF."
+   "criterion": "Opening / integration / release",
+   "lane": "root in tb/integration",
+   "source": "Stable title and physical opening; exact CI6177 job failures; independent reviews and sealed native receipts",
+   "state": "Draft PR519, CI red, no merge/release/acceptance closure. Recovering concrete native failures without weakening assertions."
   }
  ],
  "preserved_work": [

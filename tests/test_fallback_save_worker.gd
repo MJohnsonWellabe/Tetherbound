@@ -196,13 +196,26 @@ func test_poll_is_nonblocking_and_delivers_completion_once() -> void:
 func test_client_fallback_writes_only_its_character() -> void:
 	_game.host = false
 	_game.current_realm = "cloudreach"
-	assert_true(_saver.request_fallback(_game, 0, "joined-trainer"))
+	_game.local.character_id = "joined-trainer"
+	var accepted: bool = _saver.request_fallback(_game, 0, "joined-trainer")
+	assert_true(accepted)
+	if not accepted: return # A refused request never starts the worker gate.
 	_gate.entered.wait()
 	_gate.release.post()
 	assert_true(_saver.finish_fallback())
 	assert_false(_saver.has_slot(0))
 	assert_true(_saver.worlds().list_ids().is_empty())
 	assert_eq(SAVE.new(_dir).characters().read("joined-trainer").get("realm"), "cloudreach")
+
+
+func test_client_cannot_queue_a_fallback_for_another_character() -> void:
+	_game.host = false
+	_game.local.character_id = "joined-trainer"
+	assert_false(_saver.request_fallback(_game, 0, "another-trainer"))
+	assert_false(_saver.fallback_busy())
+	assert_eq(_completions, [false])
+	assert_false(_saver.characters().has("another-trainer"))
+	assert_false(_saver.has_slot(0))
 
 
 func test_separate_savers_cannot_interleave_split_transactions() -> void:

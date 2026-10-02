@@ -15,7 +15,7 @@ var _muted_greetings: Dictionary = {}
 
 func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 	var service := get_parent().get_node_or_null("RippletWaterService")
-	if service != null and service.is_submerged(peer_id) and str(intent.get("kind", "")) in ["engage","strike_intent","catch_attempt"]:
+	if service != null and service.is_submerged(peer_id) and str(intent.get("kind", "")) in ["engage","move_start","strike_intent","catch_attempt"]:
 		return {"ok":false,"kind":str(intent.kind),"peer":peer_id,"code":"submerged",
 			"reason":"Surface before fighting or catching.","pending":false,"delta":{}}
 	return super._host_commit_encounter(intent,peer_id)
@@ -403,7 +403,7 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 ## heartbeat. Committing the placed transform as a static body and handing it
 ## back as kinematic makes the placement a teleport instead of a motion.
 static func settle_spawn_transform(wild: Node3D) -> void:
-	if wild is PhysicsBody3D:
+	if wild is PhysicsBody3D and wild.is_inside_tree():
 		REMOTE_CREATURE_BODY.teleport_body(wild as PhysicsBody3D, wild.global_position)
 
 

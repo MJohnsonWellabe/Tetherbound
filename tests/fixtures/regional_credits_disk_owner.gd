@@ -44,6 +44,14 @@ func is_multi_peer() -> bool:
 	return bool(real_game.call("is_multi_peer"))
 
 
+func find_player() -> Node3D:
+	return real_game.call("find_player") as Node3D
+
+
+func _find_player() -> Node3D:
+	return real_game.call("_find_player") as Node3D
+
+
 func last_input_was_gamepad() -> bool:
 	return bool(real_game.call("last_input_was_gamepad"))
 

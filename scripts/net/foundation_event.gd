@@ -25,7 +25,7 @@ static func valid(raw: Variant, namespace_id: String, world_id: String) -> bool:
 		or not raw.duties is Array or raw.duties.is_empty(): return false
 	for duty: Variant in raw.duties:
 		if not duty is Dictionary or duty.size() != 4 or not duty.get("character_id") is String or duty.character_id.is_empty() \
-			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer"] \
+			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer", "combat_mastery"] \
 			or not duty.get("intent") is Dictionary or not duty.get("context") is Dictionary: return false
 		if not _duty_valid(duty, raw): return false
 	return true
@@ -42,7 +42,7 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 	var context: Dictionary = duty.context
 	var intent: Dictionary = duty.intent
 	if not ESSENCE._opaque_id(duty.character_id) or not ESSENCE._opaque_id(context.get("source_key")): return false
-	if duty.action in ["research_event", "rematch_win", "bounty_event"]:
+	if duty.action in ["research_event", "rematch_win", "bounty_event", "combat_mastery"]:
 		if context.get("world_namespace") != row.world_namespace or context.get("session_id") != row.session_id: return false
 	if duty.action != "master_win":
 		if not _strings(context.get("participants")) or context.participants.size() > 4 or not context.participants.has(duty.character_id): return false
@@ -55,6 +55,21 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if context.kind == "cast" and not ESSENCE._opaque_id(context.get("move_id")): return false
 		if context.kind == "catch" and (context.get("wild") != true or not context.get("night") is bool): return false
 		if context.kind == "defeat" and context.get("opponent_defeated") != true: return false
+	elif duty.action == "combat_mastery":
+		if intent.size() != 2 or not ESSENCE._opaque_id(intent.get("action_id")) \
+			or not ESSENCE._component(intent.get("creature_uid")) or context.get("event_confirmed") != true \
+			or context.get("source_key") != "combat_mastery:" + str(intent.action_id) \
+			or row.source_id != "mastery:" + str(intent.action_id) or not context.get("outcome") is Dictionary \
+			or not context.get("binding") is Dictionary or context.binding.get("character_id") != duty.character_id \
+			or context.binding.get("creature_uid") != intent.creature_uid \
+			or not ESSENCE._integer(context.binding.get("deployment_generation"), 1, 2147483647) \
+			or not ESSENCE._opaque_id(context.get("encounter_id")): return false
+		var event: Dictionary = context.outcome
+		if event.size() != 6 or event.get("action_id") != intent.action_id \
+			or event.get("attacker_uid") != intent.creature_uid or not ESSENCE._component(event.get("move_id")) \
+			or not ESSENCE._opaque_id(event.get("target_uid")) or event.target_uid == event.attacker_uid \
+			or not _positive_number(event.get("target_hp_before")) or not _positive_number(event.get("applied_damage")) \
+			or float(event.applied_damage) > float(event.target_hp_before): return false
 	elif duty.action == "capture_offer":
 		if not intent.is_empty() or load("res://scripts/net/foundation_capture_rules.gd").call("offer_valid", context) != true \
 			or row.source_id != context.source_key or context.world_namespace != row.world_namespace or context.session_id != row.session_id: return false
@@ -94,6 +109,9 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if profile.is_empty(): return false
 		if profile.kind == "master" and (context.participants.size() != 1 or context.get("single_creature_duel") != true or not ESSENCE._opaque_id(context.get("creature_uid"))): return false
 	return true
+
+static func _positive_number(value: Variant) -> bool:
+	return (value is int or value is float) and is_finite(float(value)) and float(value) > 0.0
 
 static func errors(rows: Dictionary, namespace_id: String, world_id: String) -> Array[String]:
 	var result: Array[String] = []

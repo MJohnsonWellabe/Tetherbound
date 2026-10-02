@@ -56,11 +56,11 @@ func local_sample() -> Dictionary:
 	var world_node: Node3D = owner.call("_portal_world_node", realm)
 	var actor := game.call("find_player") as CharacterBody3D
 	if actor == null or world_node == null or not world_node.is_ancestor_of(actor): return {}
-	var swim: Node = actor.get("swim_controller")
+	var swimming := swimming_observation(realm, actor.get("swim_controller"))
 	var fly: Node = actor.get("fly_controller")
 	var downed: Node = game.get_node_or_null(^"DownedState")
 	var vitals: RefCounted = actor.get("vitals")
-	if swim == null or fly == null or downed == null or vitals == null: return {}
+	if swimming.is_empty() or fly == null or downed == null or vitals == null: return {}
 	var input_owner: Node = preload("res://scripts/ui/input_owner.gd").current(get_tree())
 	var key: Node = game.get_node_or_null(^"HomeKey")
 	var dialogue: bool = false
@@ -90,11 +90,21 @@ func local_sample() -> Dictionary:
 	return {"character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace,
 		"session_epoch": owner.call("_altar_current_epoch"), "realm": realm,
 		"damage_revision": vitals.get("damage_revision"), "dialogue": dialogue, "cutscene": cutscene,
-		"swimming": bool(swim.call("is_swimming")), "flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
+		"swimming": swimming.swimming, "flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
 		"station_ack_only": input_owner == owner and owner.call("owns_input") == true and not other_dialogue and not fading,
 		"equipped_tool": str(game.get("equipped_tool")),
 		"ending_owner": ending_owner, "party_revision": int(party.get("revision")),
 		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party)}
+
+## Water alone mounts SwimController. The other actual realm bodies have no
+## swimming state; absence there is ordinary dry travel, not missing authority.
+## Water still requires its installed observer, including on dry land.
+static func swimming_observation(realm: String, controller: Node) -> Dictionary:
+	if realm not in ["meadows", "water", "cloudreach", "stormwood"]: return {}
+	if controller == null: return {} if realm == "water" else {"swimming": false}
+	if not controller.has_method("is_swimming"): return {}
+	var observed: Variant = controller.call("is_swimming")
+	return {"swimming": observed} if observed is bool else {}
 
 static func valid_sample(sample: Dictionary) -> bool:
 	if sample.size() not in [15, 16]: return false

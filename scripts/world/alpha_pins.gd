@@ -185,6 +185,10 @@ func _dress_live_alphas() -> void:
 			continue
 		var once_id := str(cluster.get("once_id", ""))
 		for raw: Variant in creatures:
+			# Defeated/streamed bodies can remain in the director's observed list
+			# until its next cleanup tick. Check the reference before casting it.
+			if not is_instance_valid(raw):
+				continue
 			var body := raw as Node3D
 			if body == null or not is_instance_valid(body) or bool(body.get_meta("alpha_dressed", false)):
 				continue

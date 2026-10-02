@@ -23,7 +23,7 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
-	if op in ["regional_ack", "refine_start", "master_duel", "resource"]:
+	if op in ["regional_ack", "refine_start", "master_duel", "resource", "rematch_start"]:
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
@@ -64,7 +64,19 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 				for candidate: Node in world_node.find_children("*", "Node", true, false):
 					if candidate.get_script() != null and FOUNDATION_DIRECTORS.has(candidate.get_script().resource_path):
 						candidate.call("submit_encounter_intent", {"kind": "disengage", "encounter_id": result.get("encounter_id", "")})
+	elif envelope.op == "rematch_start" and result.get("ok") == true:
+		_foundation_requests.erase(correlation)
 	foundation_reply_received.emit(envelope.duplicate(true), result.duplicate(true))
+
+
+func foundation_rematch_start(trainer_id: String, tier: String, creature_uid: String,
+		action_id: String = "") -> Dictionary:
+	if action_id.is_empty(): action_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	if not is_host():
+		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("rematch_context_changed")
+	return _foundation_send("rematch_start", "rematch:" + trainer_id,
+		{"trainer_id": trainer_id, "tier": tier, "creature_uid": creature_uid, "action_id": action_id}, -1)
 
 func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
@@ -81,7 +93,16 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if quote.get("ok") != true: return _foundation_refusal(str(quote.get("code", "capture_choice_refused")))
 		return {"ok": true, "pending_uid": context.creature.uid, "released_uid": envelope.intent.released_uid,
 			"ceremony_id": context.offer_id, "expected_character_revision": context.expected_revision, "payout": quote.payout}
-	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion"]: return _foundation_refusal("host_producer_required")
+	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery"]: return _foundation_refusal("host_producer_required")
+	if envelope.op == "rematch_start":
+		if envelope.intent.size() != 4 or envelope.revision != -1 \
+			or not ESSENCE._component(envelope.intent.get("trainer_id")) or envelope.intent.get("tier") not in ["r1", "endgame"] \
+			or not ESSENCE._component(envelope.intent.get("creature_uid")) \
+			or not envelope.intent.get("action_id") is String or envelope.intent.action_id.length() != 32 \
+			or not envelope.intent.action_id.is_valid_hex_number(false) or envelope.intent.action_id.to_lower() != envelope.intent.action_id \
+			or envelope.station_key != "rematch:" + str(envelope.intent.trainer_id): return _foundation_refusal("invalid_rematch_intent")
+		var rematches := get_node_or_null(^"FoundationComposition/Rematches")
+		return rematches.call("request_start", peer, envelope.intent) if rematches != null and rematches.has_method("request_start") else _foundation_refusal("rematch_unavailable")
 	if envelope.op == "master_duel":
 		if envelope.intent.size() != 2 or not envelope.intent.get("master_id") is String or not envelope.intent.get("creature_uid") is String: return _foundation_refusal("invalid_duel_intent")
 		var site := _foundation_master_site(peer, envelope.intent.master_id, false)
@@ -501,6 +522,7 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 
 func _retry_foundation_events() -> void:
 	if not is_host() or _game() == null or _character_authority == null: return
+	_retry_combat_mastery_sources()
 	var world: RefCounted = _game().get("world")
 	var handled := {}
 	for raw: Variant in world.reward_deliveries.values():
@@ -509,6 +531,7 @@ func _retry_foundation_events() -> void:
 			if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
 			var peer := int(_registry.call("peer_for_character", duty.character_id))
 			if peer < 1 or handled.has(duty.character_id) or admitted_character_state(peer).is_empty(): continue
+			if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 			var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 			var receipt := _foundation_duty_receipt(duty)
 			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
@@ -534,6 +557,7 @@ func _retry_foundation_events() -> void:
 			if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
+	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
 	if duty.action == "boss_relic": return "defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]
@@ -542,6 +566,66 @@ func _foundation_duty_receipt(duty: Dictionary) -> String:
 		return "research:event_%s:%s" % [JSON.stringify([event.world_namespace, event.session_id, event.event_id, event.species_id, event.kind]).sha256_text(), duty.character_id]
 	if duty.action == "bounty_event": return "bounty:event_%s:%s" % [JSON.stringify([duty.context.world_namespace, duty.context.event_id]).sha256_text(), duty.character_id]
 	return ""
+
+
+## Called by the actual host resolver after its real HP writer, or by the
+## retry scan over that same retained action. A guest cannot send an outcome.
+func foundation_combat_mastery(director: Node, encounter_id: String, peer: Variant, action: int) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
+		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false, "durable": false}
+	var host: RefCounted = director.get("_encounter_host")
+	if host == null or not host.has_method("move_mastery_outcome"): return {"ok": false, "durable": false}
+	var original: Dictionary = host.call("move_mastery_outcome", encounter_id, peer, action)
+	if original.is_empty(): return {"ok": true, "durable": true, "no_mastery": true}
+	var event: Dictionary = original.get("outcome", {})
+	var binding: Dictionary = original.get("binding", {})
+	var character := str(binding.get("character_id", ""))
+	var world: RefCounted = _game().get("world")
+	if character.is_empty() or event.get("attacker_uid") != binding.get("creature_uid") \
+		or original.get("encounter_id") != encounter_id or original.get("action") != action \
+		or world == null or _altar_current_epoch().is_empty() \
+		or original.get("context", {}).get("world_namespace") != world.reward_delivery_namespace \
+		or original.get("context", {}).get("session_id") != _altar_current_epoch(): return {"ok": false, "durable": false}
+	var context := {"source_key": "combat_mastery:" + str(event.action_id), "event_confirmed": true,
+		"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch(),
+		"encounter_id": encounter_id, "participants": [character], "binding": binding.duplicate(true),
+		"outcome": event.duplicate(true)}
+	var duties: Array = [{"character_id": character, "action": "combat_mastery",
+		"intent": {"action_id": str(event.action_id), "creature_uid": str(event.attacker_uid)}, "context": context}]
+	var writer := get_node_or_null(^"LedgerRpc")
+	var result: Dictionary = writer.call("journal_foundation_event", "mastery:" + str(event.action_id), duties) if writer != null else {}
+	if result.get("ok") == true and result.get("durable") == true:
+		host.call("acknowledge_move_mastery", encounter_id, peer, action, str(event.action_id))
+	return result
+
+
+## Hosted worlds are siblings of current_scene, retained by Realms so their
+## multiplayer node paths match guests. Every combat settlement scan must see
+## the same registered roots, including an empty shell waiting on its journal.
+func _foundation_realm_roots() -> Array[Node]:
+	var roots: Array[Node] = []
+	if is_inside_tree() and get_tree().current_scene != null:
+		roots.append(get_tree().current_scene)
+	var hosted := realms()
+	if is_host() and is_instance_valid(hosted):
+		for realm: String in hosted.call("hosted_realms"):
+			var world: Node = hosted.call("shell", realm)
+			if is_instance_valid(world) and not roots.has(world): roots.append(world)
+	return roots
+
+
+func _retry_combat_mastery_sources() -> void:
+	var nodes := _foundation_realm_roots()
+	while not nodes.is_empty():
+		var node: Node = nodes.pop_back()
+		for child: Node in node.get_children(): nodes.append(child)
+		var script: Script = node.get_script()
+		if script == null or not FOUNDATION_DIRECTORS.has(script.resource_path): continue
+		var host: RefCounted = node.get("_encounter_host")
+		if host == null or not host.has_method("pending_move_mastery"): continue
+		for pending: Dictionary in host.call("pending_move_mastery"):
+			var result := foundation_combat_mastery(node, str(pending.encounter_id), pending.peer, int(pending.action))
+			if result.get("durable") != true: return # Preserve the exact original and retry after the writer recovers.
 
 func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 	var context: Dictionary = accepted.get("host_context", {})
@@ -553,7 +637,7 @@ func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 		if duty.character_id != accepted.get("character_id") or (not capture and (duty.action != accepted.get("action") or duty.intent != accepted.get("intent"))): continue
 		var canonical: Dictionary = context.duplicate(true)
 		for field: String in ["character_id", "expected_revision", "in_range", "retained_event", "in_combat", "foundation_runtime_authorized"]: canonical.erase(field)
-		if canonical == duty.context: return row.session_id
+		if ESSENCE._equivalent(canonical, duty.context): return row.session_id
 	return ""
 
 func homestead_breakthrough_service() -> Node:
@@ -3390,9 +3474,8 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 
 
 func _altar_peer_in_combat(peer: int) -> bool:
-	var root := get_tree().current_scene
-	if root == null: return true
-	var nodes: Array[Node] = [root]
+	var nodes := _foundation_realm_roots()
+	if nodes.is_empty(): return true
 	var found_host := false
 	var found_local_manager := false
 	while not nodes.is_empty():
@@ -3400,8 +3483,12 @@ func _altar_peer_in_combat(peer: int) -> bool:
 		for child: Node in node.get_children(): nodes.append(child)
 		var script: Script = node.get_script()
 		if script != null and FOUNDATION_DIRECTORS.has(script.resource_path):
+			if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true
 			var host: Variant = node.get("_encounter_host")
 			if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
+				if host.has_method("pending_move_mastery"):
+					for pending: Dictionary in host.call("pending_move_mastery"):
+						if pending.peer == peer or (pending.peer is String and pending.peer == _authority_character(peer)): return true
 				found_host = true
 				var records: Variant = host.get("encounters")
 				if not records is Dictionary: return true
@@ -3418,14 +3505,14 @@ func _altar_peer_in_combat(peer: int) -> bool:
 
 func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dictionary:
 	var game:=_game()
-	if not is_host() or game==null or game.get("world")==null or get_tree().current_scene==null: return {"ok":false}
+	var nodes := _foundation_realm_roots()
+	if not is_host() or game==null or game.get("world")==null or nodes.is_empty(): return {"ok":false}
 	var world: RefCounted=game.get("world")
 	var character:=_authority_character(peer)
 	if character.is_empty() or character!=training.get("character_id") \
 		or not TRAINING_WORLD.training_row_valid(training,world.reward_delivery_namespace,world.world_id): return {"ok":false}
 	var admitted: Dictionary=_character_authority.call("state",character)
 	var revision:=int(_character_authority.call("revision",character))
-	var nodes: Array[Node]=[get_tree().current_scene]
 	var seen: Dictionary={}
 	var proposals: Array[Dictionary]=[]
 	while not nodes.is_empty():
@@ -3433,6 +3520,10 @@ func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dict
 		for child: Node in node.get_children(): nodes.append(child)
 		var script: Script=node.get_script()
 		if script==null or not FOUNDATION_DIRECTORS.has(script.resource_path): continue
+		# Normal gathering/crafting can precede the first combat ingress, which
+		# otherwise creates this same sole arbiter lazily. An empty real arbiter
+		# can validate the baseline without fabricating an encounter or actor.
+		node.call("_ensure_encounter_arbiters")
 		var host: Variant=node.get("_encounter_host")
 		if not host is RefCounted or not host.has_method("stage_actor_training_baseline"): return {"ok":false}
 		if seen.has(host.get_instance_id()): continue

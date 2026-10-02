@@ -66,12 +66,12 @@ func _process(delta: float) -> void:
 func _mount_realm(realm: String, actor: CharacterBody3D) -> void:
 	var shell: Node3D = session().call("_portal_world_node", realm)
 	if shell == null or actor == null or not shell.is_inside_tree() or not shell.is_ancestor_of(actor): return
-	var mount: Node3D = _mounts.get(realm)
+	var mount := _mounted(realm)
 	if not is_instance_valid(mount) or mount.get_parent() != shell:
 		mount = MOUNT.new()
 		mount.name = "RenewableResources"
 		shell.add_child(mount)
-		_mounts[realm] = mount
+		_mounts[realm] = weakref(mount)
 		_mount_retry.erase(realm)
 	if Time.get_ticks_msec() < int(_mount_retry.get(realm, 0)): return
 	_mount_retry[realm] = Time.get_ticks_msec() + 10000
@@ -79,8 +79,12 @@ func _mount_realm(realm: String, actor: CharacterBody3D) -> void:
 	if realm == "meadows": mount.call("mount_authored_farm", shell, actor, _service)
 
 func _source(realm: String, id: String) -> Node3D:
-	var mount: Node3D = _mounts.get(realm)
+	var mount := _mounted(realm)
 	return mount.call("node_for", id) if is_instance_valid(mount) else null
+
+func _mounted(realm: String) -> Node3D:
+	var reference: WeakRef = _mounts.get(realm) as WeakRef
+	return reference.get_ref() as Node3D if reference != null else null
 
 func submit(operation: String, request: Dictionary, consumer: Node) -> Dictionary:
 	if operation not in ["node", "farm"] or not request.get("action_id") is String or not is_instance_valid(consumer):
