@@ -1378,6 +1378,9 @@ func publish_altar_building(peer: int, character: String, id: String, receipt: S
 	if not WORLD_STATE.altar_build_row_valid(row, world.reward_delivery_namespace, world.world_id) \
 		or row.character_id != character or row.receipt != receipt or saved.get("peer") != peer \
 		or not ESSENCE._equivalent(saved.get("row"), row): return false
+	_observe_training_boundary(row, "after_host_write_before_delivery")
+	# Observe only the real saved boundary; never publish a changed decision.
+	if not ESSENCE._equivalent(world.reward_deliveries.get(id), saved.row): return false
 	_training_publications.erase(id)
 	publish_journaled_delta(saved.delta)
 	return true
