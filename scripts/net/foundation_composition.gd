@@ -21,6 +21,9 @@ func _ready() -> void:
 	var lifecycle: Node = preload("res://scripts/net/foundation_travel_lifecycle.gd").new()
 	lifecycle.name = "TravelLifecycle"
 	add_child(lifecycle)
+	var channels: Node = preload("res://scripts/net/home_key_channels.gd").new()
+	channels.name = "HomeKeyChannels"
+	add_child(channels)
 	var forge: Node = preload("res://scripts/net/foundation_forge.gd").new()
 	forge.name = "ForgeHost"
 	add_child(forge)

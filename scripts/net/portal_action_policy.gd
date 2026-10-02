@@ -178,6 +178,11 @@ func consume_permit(request_id: String, peer_id: int, character_id: String,
 func has_open_channels() -> bool:
 	return not _channels.is_empty()
 
+func open_channels() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for row: Dictionary in _channels.values(): result.append(row.duplicate(true))
+	return result
+
 
 ## Host tick must cancel immediately on damage/combat/refusal or disconnect.
 ## Finish also revalidates, so a lost cancellation packet cannot grant travel.
@@ -203,6 +208,7 @@ func tick_expired(now_msec: int) -> Array[Dictionary]:
 		if now_msec >= int(row.expires_at):
 			cancelled.append({"kind": "home_key_cancel", "request_id": row.request_id,
 				"use_id": row.request_id, "character_id": character, "peer_id": row.peer_id,
+				"world_instance_id": row.world_instance_id, "realm": row.realm,
 				"ok": false, "reason": "Your Home Key use timed out. Tap it again."})
 			_channels.erase(character)
 	return cancelled

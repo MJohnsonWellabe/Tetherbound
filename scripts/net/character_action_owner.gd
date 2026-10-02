@@ -55,6 +55,8 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 			return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_capture_roster_refused")
 		if not ESSENCE._equivalent(current.equipment, row.after.equipment):
 			player.get("equipment").call("load_data", row.after.equipment)
+	if not preload("res://scripts/net/home_key_action.gd").install_owner(player, row):
+		return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_home_key_install_refused")
 	var installed: Dictionary = player.call("save_data")
 	if not ESSENCE._equivalent(RECORD.portable_projection(installed), row.after):
 		return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_action_install_conflict") if proposal.get("duplicate") != true else _end_refused(session, "owner_action_install_conflict")
@@ -146,6 +148,9 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 		var stack: Variant = snapshot.inventory[slot]
 		inventory.call("set_slot", slot, stack.duplicate(true) if stack is Dictionary else null)
 	player.set("redesign_character", snapshot.redesign_character.duplicate(true))
+	if row.action in preload("res://scripts/net/home_key_action.gd").ACTIONS:
+		player.set("satchel_escrow", snapshot.satchel_escrow.duplicate(true))
+		player.flags.call("load_data", snapshot.flags)
 	if not ESSENCE._equivalent(snapshot.equipment, row.after.equipment):
 		player.get("equipment").call("load_data", snapshot.equipment)
 	if (plan.release_index >= 0 or row.action == "wild_capture") and party_restore(player, roster) != true: return _end_refused(session, "owner_roster_rollback_failed")

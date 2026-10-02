@@ -1,0 +1,49 @@
+{
+  "status": "SCOPED PASS; actual opening/loop/co-op still UNPROVEN",
+  "checks": {
+    "tests": 46,
+    "assertions": 505,
+    "failures": 0,
+    "engine_diagnostics": []
+  },
+  "source_sha256": {
+    "autoload/game_state.gd": "cd5786ae3ac9c3e52f306572038d00b6fce4155d48474a64477c65d9d0407863",
+    "scripts/net/character_action_owner.gd": "0c71fd08b71cd3ffd89e0d16e0b8884a87c3074e019a9f74a4912d51f0e9a627",
+    "scripts/net/character_record_rules.gd": "923072805219331e0356101856b20c4bcdaeb4f789afae73c79358327cd0df17",
+    "scripts/net/foundation_actions.gd": "e78e0e9efaf8eaeced42db952de4b213545f54c8c0ca8887b66b714bb39dbcff",
+    "scripts/net/foundation_composition.gd": "4744a43d8ab2bd8f575bf1964e27a67cb0c90e4b5437870f184d034ed57b1471",
+    "scripts/net/foundation_travel_lifecycle.gd": "75a71c2de6299ef4d7204afd2e502d0f476627e9c5add8f6d0e68a16e5723b5e",
+    "scripts/net/ledger_rpc.gd": "af64df059994587374cd20b295987171fc15278fcab65a16461bf47ac84ca744",
+    "scripts/net/portal_action_policy.gd": "80bc7f460b398fb17b3237d106788190f7b3bce2f5bf8131d0a5c0adbbf5c4cd",
+    "scripts/net/session.gd": "cb5ec0f8c59c52b15915d09bcadd0b4a114ae72662bdf42c2626b228d59593af",
+    "scripts/net/home_key_action.gd": "fd01fcc86a723fd812eacfd579f690cab595b10634d572a956f362b35d624d0a",
+    "scripts/net/opening_home_key.gd": "aac628d7d37d41254564e6d8cb3886b0cea4d7c22dc3d69a4e62978783cbd57c",
+    "scripts/net/home_key_channels.gd": "f394d221ff3f6c795de236e41a44dcc8247d58c8d4ea0504814d16e8221c0538",
+    "tests/test_home_key_action.gd": "d2360a8b2b50151509ac9cf686667468a426c317a4aecc055bbf96a90226b6f1",
+    "tests/test_opening_home_key.gd": "e5f10c310e876ec679cb39a1433251ef1c1a5e3cfa08bbdc141951477a9fe054",
+    "tests/test_home_key_channels.gd": "4409cf77748ff48a3af3bd7603587c78d35b916b923bd7ab9ee7aa198563513b",
+    "tests/test_home_key_protection.gd": "1ab233b7b3ab170e8c5909a4e4df8c9b951a8c76a50b9a0de914684a9d9c5c7d",
+    "tests/smoke_f18_earned_loop.gd": "a85826748a885645dc8e607f64100f6eee1893228cace65608d28b42c1e5b19f"
+  },
+  "implementation": [
+    "Host-derived finite opening debt and inventory CAS use existing world journal and exact owner BOOL-save/ACK",
+    "No physical possession from debt, flags or unrelated settlement; training install must finish",
+    "Only validated legacy aliases omitted from derived carrier; original saves preserved",
+    "Strict finite JSON numeric equivalence without schema/source/owner/hash widening",
+    "Host orphan expiry/damage/disconnect clear observer raise without imposing cooldown"
+  ],
+  "source_review": "Independent authority, monotonic clock and legacy alias / strict finite JSON normalization recheck PASS; actual runtime and visuals remain open",
+  "full_batch": "One complete four-shard batch started for broad shared save/autoload changes; results pending",
+  "earned_loop": "Harness parses, not run. Fresh title opening + paid workbench + exact craft output/debit/accepted receipt + Save/Load feedback + real portal return; parsed inputs and isolated save path disclosed",
+  "criteria": {
+    "0": "UNPROVEN pending required live/earned/visual proofs",
+    "1": "UNPROVEN pending required live/earned/visual proofs",
+    "2": "UNPROVEN pending required live/earned/visual proofs",
+    "3": "UNPROVEN pending required live/earned/visual proofs",
+    "4": "UNPROVEN pending required live/earned/visual proofs",
+    "5": "UNPROVEN pending required live/earned/visual proofs"
+  },
+  "excluded_attempts": [
+    "r1/r2 migration tests exposed JSON numeric equivalence bug; repaired r3"
+  ]
+}

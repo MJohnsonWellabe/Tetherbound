@@ -116,7 +116,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if quote.get("ok") != true: return _foundation_refusal(str(quote.get("code", "capture_choice_refused")))
 		return {"ok": true, "pending_uid": context.creature.uid, "released_uid": envelope.intent.released_uid,
 			"ceremony_id": context.offer_id, "expected_character_revision": context.expected_revision, "payout": quote.payout}
-	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery", "waystone_touch"]: return _foundation_refusal("host_producer_required")
+	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery", "waystone_touch", "home_key_owe", "home_key_deliver"]: return _foundation_refusal("host_producer_required")
 	if envelope.op == "rematch_start":
 		if envelope.intent.size() != 4 or envelope.revision != -1 \
 			or not ESSENCE._component(envelope.intent.get("trainer_id")) or envelope.intent.get("tier") not in ["r1", "endgame"] \
@@ -2543,12 +2543,6 @@ func _on_server_disconnected() -> void:
 func _process(delta: float) -> void:
 	_bind_training_container_guards()
 	if _groom_passive != null: _groom_passive.call("tick", delta)
-	# Building the host portal context re-projects and recovers the whole local
-	# character record (~100 ms in Tidewake); cancel_invalid() can only act on a
-	# frozen Home Key channel, so build it only while one is open.
-	if portal_runtime_ready() and is_host() and _portal_policy.call("has_open_channels") == true:
-		var portal_context := _host_portal_context(local_peer_id())
-		if not portal_context.is_empty(): _portal_policy.call("cancel_invalid", portal_context)
 	if _training_bootstrap_waiting:
 		var training_transport := get_node_or_null(^"LedgerRpc")
 		if training_transport != null and training_transport.has_method("reconcile_creature_training_before_ready"):
@@ -3492,6 +3486,7 @@ func _training_decision(peer: int, row: Dictionary) -> Dictionary:
 
 func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 	if not is_host(): return
+	OPENING_HOME_KEY.accepted(self, peer, row)
 	if row.get("action") == "waystone_touch": _waystone_delivery_accepted(peer, row)
 	if peer == local_peer_id():
 		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
@@ -4327,10 +4322,17 @@ func _host_portal_action(peer: int, envelope: Dictionary) -> void:
 	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
 	if not cfg is Dictionary or not stones is Dictionary: return
 	_portal_policy.call("bind_world", envelope.world_instance_id)
+	var prior_channels: Array[Dictionary] = _portal_policy.call("open_channels")
 	var result: Dictionary = _portal_policy.call("evaluate", envelope.payload.duplicate(true), context, cfg, stones, Time.get_ticks_msec())
+	var channels := get_node_or_null(^"FoundationComposition/HomeKeyChannels")
 	if result.get("ok") != true:
+		if channels != null:
+			var remaining: Array[Dictionary] = _portal_policy.call("open_channels")
+			for row: Dictionary in prior_channels:
+				if row.character_id == envelope.character_id and not remaining.has(row): channels.call("ended", row)
 		_portal_reply(peer, envelope, result)
 		return
+	if channels != null: channels.call("approved", peer, envelope, result, str(context.realm))
 	match str(envelope.payload.kind):
 		"portal_unlock":
 			_commit_portal_unlock(peer, envelope, result.prepared)
@@ -4556,7 +4558,7 @@ func _host_portal_context(peer: int) -> Dictionary:
 		"peer_id": peer, "realm": realm, "position": player.global_position, "damage_revision": vitals.get("damage_revision"),
 		"combat": combat, "dialogue": dialogue, "cutscene": cutscene, "swimming": bool(swimming.swimming),
 		"flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
-		"home_key_owned": game.get("local").inventory.count("home_key") == 1,
+		"home_key_owned": _home_key_authoritative_owned(peer),
 		"character_unlocks": personal.redesign_character.portal_unlocks.duplicate(),
 		"world_unlocks": game.get("world").redesign_world.portal_unlocks.duplicate(),
 		"character_stirred": _character_authority.call("character_fifth_stirred", admitted.character_id),
@@ -4738,3 +4740,58 @@ func _foundation_capture_context(peer: int, key: String) -> Dictionary:
 			context.retained_event = row.delivery_id
 			return context
 	return {}
+
+
+const OPENING_HOME_KEY := preload("res://scripts/net/opening_home_key.gd")
+
+func request_opening_home_key(source: Node) -> bool:
+	if not portal_runtime_ready() or source == null: return false
+	if is_host():
+		var transport := get_node_or_null(^"LedgerRpc")
+		if transport == null: return false
+		var decision: Dictionary = transport.call("journal_opening_home_key_prepared", local_peer_id(), source)
+		if decision.get("durable") != true or _owner_training_mutation_blocked(_game().get("local")): return false
+		for row: Variant in _game().get("local").satchel_escrow.values():
+			if preload("res://scripts/net/home_key_action.gd").valid_escrow(row, _local_character_id()): return true
+		return false
+	var game := _game()
+	if not is_active() or not handshake_snapshot_applied() or game == null or game.get("local") == null or game.get("world") == null: return false
+	var request := OPENING_HOME_KEY.envelope(game.get("local").character_id, game.get("world").reward_delivery_namespace, _altar_current_epoch())
+	if not OPENING_HOME_KEY.valid_envelope(request, game.get("local").character_id, game.get("world").reward_delivery_namespace, _altar_current_epoch()): return false
+	rpc_id(HOST_PEER_ID, "_rpc_opening_home_key", request)
+	return false # The saved portable owe/deliver CAS completes the spoken effect.
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_opening_home_key(request: Dictionary) -> void:
+	if is_host(): OPENING_HOME_KEY.host_grant(self, multiplayer.get_remote_sender_id(), request)
+
+
+var _home_key_delivery_retry_at: Dictionary = {}
+
+func _request_home_key_delivery(delivery: Dictionary) -> void:
+	var game := _game()
+	if not portal_runtime_ready() or game == null or game.get("local") == null or game.get("world") == null: return
+	var character: String = game.get("local").character_id
+	var id: String = str(delivery.get("delivery_id", ""))
+	var origin: String = str(delivery.get("world_namespace", ""))
+	if id.is_empty() or origin.is_empty() or delivery.get("character_id") != character: return
+	var epoch := _altar_current_epoch()
+	var retry_key := JSON.stringify([character, game.get("world").reward_delivery_namespace, epoch, id])
+	var now := Time.get_ticks_msec()
+	if now < int(_home_key_delivery_retry_at.get(retry_key, 0)): return
+	_home_key_delivery_retry_at[retry_key] = now + 3000
+	var request := OPENING_HOME_KEY.envelope(character, game.get("world").reward_delivery_namespace, epoch)
+	request.delivery_id = id
+	request.origin_namespace = origin
+	if is_host(): OPENING_HOME_KEY.host_reconcile(self, local_peer_id(), request)
+	elif is_active() and handshake_snapshot_applied(): rpc_id(HOST_PEER_ID, "_rpc_home_key_delivery", request)
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_home_key_delivery(request: Dictionary) -> void:
+	if is_host(): OPENING_HOME_KEY.host_reconcile(self, multiplayer.get_remote_sender_id(), request)
+
+
+func _home_key_authoritative_owned(peer: int) -> bool:
+	return OPENING_HOME_KEY.authoritative_owned(self, peer)
