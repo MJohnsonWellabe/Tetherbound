@@ -4446,7 +4446,7 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var added: Array = []
 	for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
 		if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)
-	var valid := added.size() == 1 and after.get("party", []).size() == before.get("party", []).size() + 1
+	var valid: bool = added.size() == 1 and after.get("party", []).size() == before.get("party", []).size() + 1
 	if valid:
 		var provenance: Dictionary = after.redesign_character.creatures[added[0]].get("captured_from", {})
 		var reply: Dictionary = director.get("_shared_catch_finish_reply")
