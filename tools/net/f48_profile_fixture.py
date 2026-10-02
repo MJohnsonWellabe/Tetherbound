@@ -296,7 +296,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
         if f"{operation}_1" not in outcomes:
             manifest["gaps"].append(f"Independent exact {operation}_1 oracle unavailable; existing smoke fails")
     for filename, paths in (("stations.json", ("runtime_enabled", "craft_runtime_enabled", "forge.runtime_enabled")),
-                            ("essence.json", ("altar_runtime_enabled", "altar_building_runtime_enabled")),
+                            ("essence.json", ("altar_runtime_enabled", "altar_remote_spend_enabled", "altar_building_runtime_enabled")),
                             ("traits.json", ("runtime_enabled",)),
                             ("multiplayer.json", ("session.redesign_portal_runtime_enabled", "session.redesign_boss_handoff_runtime_enabled"))):
         config = read(ROOT / "data/config" / filename)
@@ -323,6 +323,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
                  "essence.json": ["altar_runtime_enabled", "altar_building_runtime_enabled"]}
     if configuration_scope == "full":
         overrides["stations.json"] += ["craft_runtime_enabled", "forge.runtime_enabled"]
+        overrides["essence.json"].append("altar_remote_spend_enabled")
         overrides.update({"traits.json": ["runtime_enabled"],
                           "multiplayer.json": ["session.redesign_portal_runtime_enabled",
                                                "session.redesign_boss_handoff_runtime_enabled"],
