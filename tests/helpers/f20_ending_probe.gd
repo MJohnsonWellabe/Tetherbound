@@ -206,6 +206,23 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 		if candidate.get("arch_id") == "biome5" and tree.current_scene.is_ancestor_of(candidate):
 			arch = candidate as Node3D
 	if not check(arch != null, "fifth arch exists in the actual Hall"): return false
+	var journal := preload("res://scripts/world/quest_log.gd").new(game)
+	journal.call("set_realm", "meadows")
+	var quests_before: Array = journal.call("main_entries", game.progression).duplicate(true)
+	var tracked_before: String = journal.call("tracked_text", game.progression)
+	var moment := {"results": 0, "presented": false}
+	# The actual arch subscribes in _ready, before this observer. Its durable
+	# result creates the transient source; observe it on that real edge.
+	var result_observer := func(result: Dictionary) -> void:
+		if result.get("kind") != "portal_unlock" or result.get("arch_id") != "biome5" \
+			or result.get("ok") != true or result.get("durable") != true: return
+		moment.results += 1
+		var light: OmniLight3D = arch.get("_stir_light")
+		var sound: AudioStreamPlayer3D = arch.get("_stir_audio")
+		moment.presented = arch.get("_stir_seen") == true and is_instance_valid(light) \
+			and light.light_energy > float(arch.get("_stir_settings").resting_energy) \
+			and is_instance_valid(sound) and sound.playing and sound.stream != null and sound.bus == "SFX"
+	game.connect("portal_action_result", result_observer)
 	var messages: Array[String] = []
 	var observer := func() -> void:
 		var hud: Node = tree.current_scene.get_node_or_null("PlaygroundHUD")
@@ -218,18 +235,22 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	var activated: bool = await travel.activate(arch.get_node("Interactable"))
 	if not activated:
 		tree.process_frame.disconnect(observer)
+		game.disconnect("portal_action_result", result_observer)
 		failures.append_array(travel.failures); return false
 	for frame in 600:
 		await tree.process_frame
 		if game.call("portal_view", "biome5").get("character_stirred") == true: break
 	for frame in 8: await tree.process_frame
 	tree.process_frame.disconnect(observer)
+	game.disconnect("portal_action_result", result_observer)
 	var view: Dictionary = game.call("portal_view", "biome5")
 	if not check(view.get("character_stirred") == true and view.get("open") == false \
 		and game.local.inventory.call("count", "fifth_portal_key") == 0, "one real key consumed; fifth arch stays sealed"): return false
-	if not check(arch.get("_stir_seen") == true and is_instance_valid(arch.get("_stir_light")) \
-		and is_instance_valid(arch.get("_stir_audio")), "durable result creates glow and diegetic SFX source"): return false
+	if not check(moment.results == 1 and moment.presented, "one actual durable result creates bright glow and a playing diegetic SFX source"): return false
 	if not check(messages.has("It stirred, but it is not ready yet."), "actual key use emits the single not-ready line"): return false
+	if not check(journal.call("main_entries", game.progression) == quests_before \
+		and journal.call("tracked_text", game.progression) == tracked_before,
+		"fifth-key use adds no main quest or sequel objective"): return false
 	return check(not arch.call("use_key"), "second fifth-key use refuses after personal stir")
 
 func retained(game: Node) -> Dictionary:
