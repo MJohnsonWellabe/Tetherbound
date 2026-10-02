@@ -418,14 +418,22 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		character_only: String = "") -> Dictionary:
 	var portal_owner: Variant = game.get("local")
-	var portal_character := str(portal_owner.get("character_id")) if portal_owner is Object else ""
+	var owner_identity: Variant = portal_owner.get("character_id") if portal_owner is Object else null
+	var portal_character: String = owner_identity if owner_identity is String else ""
+	if not character_only.is_empty() and character_only != portal_character:
+		return {} # A personal writer cannot borrow a different character's path.
 	var initial_data := snapshot(game)
+	# The merged slot codec deliberately leaves identity in the split envelope.
+	# Its owner guards require the actual local identity, so project that field
+	# only into this detached guard input, never from the caller's requested ID.
+	var owner_guard_data := initial_data.duplicate()
+	owner_guard_data["character_id"] = portal_character
 	var session: Variant = game.get("session")
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_vitals_snapshot_allowed") \
-			and not bool(session.call("_owner_vitals_snapshot_allowed", portal_owner, initial_data)):
+			and not bool(session.call("_owner_vitals_snapshot_allowed", portal_owner, owner_guard_data)):
 		return {} # Refuse before identity generation or any live/disk mutation.
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_training_snapshot_allowed") \
-			and session.call("_owner_training_snapshot_allowed", portal_owner, initial_data) != true:
+			and session.call("_owner_training_snapshot_allowed", portal_owner, owner_guard_data) != true:
 		return {}
 	var redesign_errors := _redesign_errors(initial_data, portal_character)
 	if not redesign_errors.is_empty():
