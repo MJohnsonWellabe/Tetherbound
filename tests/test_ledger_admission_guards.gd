@@ -3,7 +3,8 @@ extends "res://tests/test_case.gd"
 ## X05 work orders on the host world ledger:
 ## - F05 finding 6 (#221): an owned receipt such as
 ##   `legendary_resolution:accepted:<character_id>` can only be written by that
-##   character (host-originated writes stay trusted);
+##   character; generic guest settlement writes additionally require the host
+##   ceremony controller (host-originated writes stay trusted);
 ## - Stormwood: a Stormglass arch commits at its footing centre;
 ## - Tidewake F14 (#226): the Guardian's claim markers and facts, and the
 ##   Nerissa/Aldis delivery journal, are host-only.
@@ -36,14 +37,24 @@ func test_remote_peer_cannot_write_another_characters_legendary_receipt() -> voi
 			"stormwood:legendary_resolution:accepted:victim-char"]:
 		var verdict: Dictionary = ledger.commit(_flag(id, "forger-char"), GUEST)
 		assert_false(bool(verdict.get("ok")), "%s forged by another character" % id)
-		assert_eq(str(verdict.get("code", "")), "not_your_character")
+		assert_eq(str(verdict.get("code", "")), "host_boss_settlement_required" if id.begins_with("stormwood:") else "not_your_character",
+			"Stormwood settlement requests hit the ceremony guard; other receipts hit ownership")
 		assert_false(world.flags.has(id), "a refused receipt writes nothing")
 
 
-func test_remote_peer_writes_only_its_own_receipt_and_host_stays_trusted() -> void:
+func test_remote_peer_cannot_bypass_the_ceremony_with_its_own_receipt_and_host_stays_trusted() -> void:
 	var own := "stormwood:legendary_resolution:accepted:guest-char"
-	assert_true(bool(ledger.commit(_flag(own, "guest-char"), GUEST).get("ok")))
+	var requested: Dictionary = ledger.commit(_flag(own, "guest-char"), GUEST)
+	assert_false(bool(requested.get("ok")), "own identity alone does not authenticate a ceremony outcome")
+	assert_eq(str(requested.get("code", "")), "host_boss_settlement_required")
+	assert_false(world.flags.has(own))
+	assert_true(bool(ledger.commit(_flag(own, "host-char"), HOST).get("ok")),
+		"the validated host controller records the participant's settled answer")
 	assert_true(world.flags.has(own))
+	var clear := _flag(own, "guest-char")
+	clear["value"] = false
+	assert_false(bool(ledger.commit(clear, GUEST).get("ok")))
+	assert_true(world.flags.has(own), "a generic guest clear cannot undo the saved ceremony")
 	var empty_actor: Dictionary = ledger.commit(
 		_flag("legendary_resolution:refused:guest-char", ""), GUEST)
 	assert_false(bool(empty_actor.get("ok")), "an unregistered sender owns no receipt")
@@ -90,6 +101,8 @@ func test_other_intent_kinds_cannot_smuggle_a_forged_receipt() -> void:
 		intent["_actor_character_id"] = "forger-char"
 		var verdict: Dictionary = ledger.commit(intent, GUEST)
 		assert_false(bool(verdict.get("ok")), "%s must not write another character's receipt" % intent.kind)
+		assert_eq(str(verdict.get("code", "")), "not_your_character",
+			"other intent writers still enforce the lower-level ownership guard")
 		assert_false(world.flags.has(id))
 
 
@@ -196,7 +209,8 @@ func test_remote_peer_cannot_write_or_clear_guardian_claim_facts() -> void:
 			"water_guardian_claimed", "water_guardian_settled", "water_guardian_freed"]:
 		var verdict: Dictionary = ledger.commit(_flag(id, "guest-char"), GUEST)
 		assert_false(bool(verdict.get("ok")), "a guest must not write %s" % id)
-		assert_eq(str(verdict.get("code")), "host_only")
+		assert_eq(str(verdict.get("code")), "host_boss_settlement_required" if id == "water_guardian_settled" else "host_only",
+			"the settled fact releases the chapter drop; other claim facts use their host-only guard")
 		assert_false(world.flags.has(id))
 		assert_true(bool(ledger.commit(_flag(id, "host-char"), HOST).get("ok")),
 			"the host still writes %s" % id)
@@ -260,4 +274,3 @@ func test_only_the_host_journals_the_guardian_participant_trainers() -> void:
 func _grant(source: String) -> Dictionary:
 	return {"kind": "reward_grant", "realm": "water", "source": source, "item": "stick", "count": 1,
 		"_reward_recipients": [{"peer": GUEST, "character_id": "guest-char"}]}
-
