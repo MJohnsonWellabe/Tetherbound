@@ -134,6 +134,13 @@ func _feed(uid: String, item: String, choice: String) -> void:
 func _send(op: String, intent: Dictionary) -> void:
 	var result: Dictionary = _service.call("submit", op, intent, _source)
 	_message.text = str(result.get("reason", result.get("code", "Awaiting durable character save…")))
+	# Admission starts combat; it is not a saved Master win. Release this
+	# chooser once the actual producer returned a real encounter identity so
+	# its input ownership cannot hold the newly started fight behind a menu.
+	if op == "master_duel" and result.get("ok") == true \
+		and result.get("encounter_id") is String and not result.encounter_id.is_empty():
+		close()
+		return
 	if result.get("ok") == true and result.get("settled") == true:
 		_craft_id = ""
 		if _mode == "duel": close()
