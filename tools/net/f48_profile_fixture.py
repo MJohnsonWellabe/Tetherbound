@@ -30,7 +30,8 @@ CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
            "data/config/progression.json", "data/recipes/recipes_forge.json",
            "data/items/items.json")
-PRODUCERS = ("scripts/net/session.gd", "scripts/ui/craft_panel.gd", "scripts/build/station_piece.gd")
+PRODUCERS = ("scripts/net/session.gd", "scripts/ui/craft_panel.gd", "scripts/build/station_piece.gd",
+             "autoload/world_state.gd")
 
 
 def require(ok: bool, message: str) -> None:
@@ -108,7 +109,9 @@ def layout_records(layout: dict, cfg: dict) -> list[dict]:
             "Disclose declared/measured initial pose origin in layout.provenance")
     require(type(layout.get("native_validated")) is bool, "Declare layout.native_validated honestly")
     records = []
-    for index, station in enumerate(("forge", "altar", "kitchen"), 1):
+    # Altar placement is bound to an authentic typed paid-building journal.
+    # A disclosed fixture cannot fabricate that journal or substitute paid:true.
+    for index, station in enumerate(("forge", "kitchen"), 1):
         at = layout.get("stations", {}).get(station)
         require(vector(at), f"Declare finite initial {station} fixture position")
         # Bounded yaw0 footprint only; this is not a terrain/physics validator.
@@ -194,6 +197,10 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     layout = read(layout_path)
     records = layout_records(layout, cfg)
     require(inputs[0]["world"].get("placed_buildings") == [], "Bounded fixture requires originally empty station site")
+    require(not any(isinstance(row, dict) and row.get("kind") in ("creature_training", "altar_building")
+                    for row in inputs[0]["world"].get("reward_deliveries", {}).values()),
+            "Initial stock/pose setup cannot rewrite a character bound to an existing full typed training after-state")
+    require(vector(layout.get("stations", {}).get("altar")), "Declare planned actual Altar build target")
     require(vector(layout.get("actor_start")), "Declare finite initial actor fixture position")
     items = read(ROOT / "data/items/items.json")["items"]
     pack = read(route_pack) if route_pack else None
@@ -290,6 +297,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
             if value is not True:
                 manifest["gaps"].append(f"Production gate {filename}:{path} is not enabled; source unchanged")
     manifest["gaps"].append("Actual native terrain/interaction/transaction/BOOL-save/ACK/cut proof remains OPEN")
+    manifest["gaps"].append("Altar station deliberately absent: actual ordinary paid build and authentic altar_building journal required; no fixture receipt")
     session_source = (ROOT / "scripts/net/session.gd").read_text(encoding="utf-8")
     for method in ("homestead_start_refining", "homestead_actor_context", "homestead_commit_refine_unit"):
         if re.search(r"^func " + re.escape(method) + r"\(", session_source, re.MULTILINE) is None:
