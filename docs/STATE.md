@@ -6,6 +6,8 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Authority:** The owner asked Claude to move `tb/integration` ([PR519](https://github.com/MJohnsonWellabe/Tetherbound/pull/519)) to main, fixing CI as it ran; then, with a short window and no owner-run steps available, to stop at a state Codex can continue. PR519 stays **draft and unmerged**; main is 30fcc38fc. The game is unfinished; MET110/280 is unchanged. The owner deleted every other `tb/*` branch; each was verified fully contained in `tb/integration` first (including the four formerly "unmerged" closeout branches, already gone).
 
+**F18 candidate:** Ready-world waystone mounts, guest/local durable touch transactions, portal view fields and receiver permit enforcement have scoped passing evidence in `ralph/reports/HUB/f18/runtime-integration.json`. All six criteria remain UNPROVEN pending actual-world, earned-loop and live co-op proof; guest opening Home Key work is separate WIP.
+
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
 
 **Fixed in this pass (each verified locally on Godot 4.7 headless; commits on `tb/integration`):**

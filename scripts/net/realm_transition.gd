@@ -313,6 +313,11 @@ func _request(request: int, to: String) -> void:
 	if peer <= 1 or not _peers().has(peer):
 		return
 	var from := str(session().call("realm_of", peer))
+	if session().has_method("portal_runtime_ready") and session().call("portal_runtime_ready") == true:
+		var arrival := session().get_node_or_null(^"FoundationComposition/PortalArrival")
+		if arrival == null or arrival.call("transition_authorized", peer, to) != true:
+			_refused.rpc_id(peer, request, "Use the Crossing Hall portals.")
+			return
 	var game := get_node_or_null("/root/Game")
 	var hearts: Variant = game.get("realm_hearts") if game != null else null
 	if from.is_empty() or from == to or hearts == null or str(hearts.call("scene_for_realm", to)).is_empty():
