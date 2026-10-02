@@ -95,6 +95,13 @@ const THROW_LEAD_MS := 2000.0
 ## make the round trip. The wobble is seconds of real time
 ## (`catching.json` resolve/shake), so this is generous on purpose.
 const SETTLE_FRAMES := 900
+## One poll of the guest's confirmed grant. The settle above is spent in steps
+## this short, never as one `wait`: a step's coordinator deadline is wall clock
+## at a nominal 60 Hz (`step_budget_frames` 3000 -> 55 s), CI peers measured
+## ~10 physics fps here (run 37032778311, NET_RUN `timeout_before_finish` on
+## both 900-frame waits), and a peer's control loop is serial -- the next
+## `probe catch` queued behind the still-running wait and came back empty.
+const GRANT_POLL_FRAMES := 15
 ## Where each peer stands relative to the opponent when it throws.
 const THROW_STANDOFF_M := 4.0
 
@@ -427,8 +434,19 @@ func _run() -> void:
 		"the admitted wobble is bound to an explicit host claim id")
 	want(str(guest_during_positive.get("claim_id", "")) != race_claim,
 		"the second guest throw received a fresh claim within the same encounter")
-	for i in 2:
-		await step(i, "wait", {"frames": SETTLE_FRAMES})
+	# The same 2 x SETTLE_FRAMES window the guest used to get (it ran on through
+	# the host's wait too), polled in short steps so a slow peer cannot outlive
+	# its step deadline and swallow the read below. Stopping when the count
+	# first MOVES does not decide the assertion: a short settle follows so a
+	# duplicate grant just behind the first is still counted.
+	var guest_owned_before := int(guest_before_positive.get("owned", -2))
+	for _grant_poll in range(0, 2 * SETTLE_FRAMES, GRANT_POLL_FRAMES):
+		await step(1, "wait", {"frames": GRANT_POLL_FRAMES})
+		var grant_poll: Variant = await probe(1, "catch")
+		if grant_poll is Dictionary \
+				and int((grant_poll as Dictionary).get("owned", guest_owned_before)) != guest_owned_before:
+			break
+	await step(1, "wait", {"frames": GRANT_POLL_FRAMES * 4})
 	var guest_after_positive := await _catch_row(1, "guest after host finish confirmation")
 	var host_after_positive := await _catch_row(0, "host after guest finish confirmation")
 	want(int(guest_after_positive.get("owned", -1)) == int(guest_before_positive.get("owned", -2)) + 1,

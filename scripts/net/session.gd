@@ -3510,6 +3510,14 @@ func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: S
 		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
 
 
+## The input-owner graph asks `_owner_training_row()` many times a frame
+## (`owns_input`), and a full typed validation of every retained training row
+## costs ~100 ms once a world holds any -- enough to stall a fight to seconds
+## per frame. Its answer is a pure function of these inputs, so it is reused
+## until any of them, the delivery map's content included, changes.
+var _owner_training_row_key: Array = []
+var _owner_training_row_value: Dictionary = {}
+
 ## One local pending identity points at the durable row already in WorldState.
 ## It stores no party/inventory/balance or alternative receipt history.
 func _owner_training_row() -> Dictionary:
@@ -3517,7 +3525,12 @@ func _owner_training_row() -> Dictionary:
 	if game == null or not game.get("local") is RefCounted or not game.get("world") is RefCounted: return {}
 	var world: RefCounted = game.get("world")
 	var character := str(game.get("local").character_id)
-	return TRAINING_WORLD.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
+	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character,
+		world.reward_deliveries.size(), world.reward_deliveries.hash()]
+	if key != _owner_training_row_key:
+		_owner_training_row_value = TRAINING_WORLD.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
+		_owner_training_row_key = key
+	return _owner_training_row_value.duplicate(true)
 
 
 func _owner_training_mutation_blocked(player: RefCounted) -> bool:

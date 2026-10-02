@@ -361,8 +361,31 @@ func _physics_process(_delta: float) -> void:
 		return
 	if not Input.is_action_just_pressed("interact"):
 		return
+	if _fight_owns_the_world():
+		return
 	_recompute()
 	activate()
+
+
+## F23 put the quick attack on pad X, the same button as `interact`, and the
+## `combat` input context stands every world X reader down. Meadows gets that
+## from `sequence_director.gd::_refresh_lockout`, which disables this node for a
+## fight; Tidewake, Cloudreach and Stormwood have no SequenceDirector, so a
+## quick attack beside a trainer opened that trainer's dialogue, which owned
+## input and swallowed the attack. Asked only on a press tick, and read-only:
+## it never writes `_enabled`, which the SequenceDirector still owns.
+func _fight_owns_the_world() -> bool:
+	var world := get_parent()
+	if world == null:
+		return false
+	var manager := world.get_node_or_null(^"CombatManager")
+	if manager != null and manager.has_method("is_fighting") and bool(manager.call("is_fighting")):
+		return true
+	# R8.1, as `_refresh_lockout` reads it: the beat between a trainer's
+	# creatures is still her battle.
+	var director := world.get_node_or_null(^"EncounterDirector")
+	return director != null and director.has_method("trainer_battle_active") \
+		and bool(director.call("trainer_battle_active"))
 
 
 ## Fire the winning offer. Returns whether anything was activated, so a caller
