@@ -188,6 +188,10 @@ static func learnset_errors(raw: Variant, moves: RefCounted) -> Array[String]:
 ## tier in an edit payload is never a substitute for that earned character state.
 static func available_moves(species_id: String, level: int, completed_tiers: Array) -> Array[String]:
 	var result: Array[String] = []
+	# F28 owns the exact sequential completed prefix. Load lazily because its
+	# planner already imports Teaching; saved JSON integral tiers are floats.
+	var breakthrough: GDScript = load("res://scripts/creatures/breakthrough.gd")
+	if breakthrough.level_cap(completed_tiers) < 0: return result
 	var row: Dictionary = learnsets().get(species_id,{})
 	if bool(row.get("reserved",false)): return result
 	for raw: Variant in row.get("unlocks",[]):
@@ -195,7 +199,7 @@ static func available_moves(species_id: String, level: int, completed_tiers: Arr
 		var unlock: Dictionary = raw
 		var id := str(unlock.get("move_id",""))
 		var level_gate := unlock.has("level") and level >= int(unlock.level)
-		var tier_gate := unlock.has("breakthrough_tier") and completed_tiers.has(int(unlock.breakthrough_tier))
+		var tier_gate := unlock.has("breakthrough_tier") and int(unlock.breakthrough_tier) <= completed_tiers.size()
 		if (level_gate or tier_gate) and not id.is_empty() and not result.has(id): result.append(id)
 	return result
 
