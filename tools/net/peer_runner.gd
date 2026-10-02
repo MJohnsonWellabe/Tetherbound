@@ -3,6 +3,7 @@ extends SceneTree
 const FOUNDATIONS_STATE := preload("res://scripts/data/redesign_state.gd")
 const FOUNDATIONS_SAVE := preload("res://scripts/save/save_game.gd")
 const FOUNDATIONS_ORDER := preload("res://scripts/data/biome_order.gd")
+const PHYSICS_HEARTBEAT_CLOCK := preload("res://tools/net/physics_heartbeat_clock.gd")
 
 ## Net harness peer process. Stage B Wave 0 lane 0.F.
 ## docs/specs/MP_NET_HARNESS_CONTRACT.md §2-§5.
@@ -16,7 +17,8 @@ const FOUNDATIONS_ORDER := preload("res://scripts/data/biome_order.gd")
 ## coordinator is the TCPServer -- tests/helpers/net_harness.gd), announces
 ## itself with `hello`, then executes `step`/`probe`/`quit` messages as they
 ## arrive, replying with `verdict`/`value`, and heartbeats every
-## HEARTBEAT_FRAMES physics frames with a world-state hash (contract §7).
+## at most HEARTBEAT_FRAMES physics frames or 1000 ms between genuine physics
+## callbacks, with the same freshly sampled world-state hash (contract §7).
 ##
 ## ## Two existing seams reused, not reinvented
 ##
@@ -218,6 +220,7 @@ var _sock: StreamPeerTCP = null
 var _rx_buf := ""
 var _probe: RefCounted = null
 var _physics_count := 0
+var _physics_heartbeat_clock := PHYSICS_HEARTBEAT_CLOCK.new()
 ## Test-only trainer-driver observations: four bounded heartbeat samples, never
 ## part of world state, a verdict or an authority/input decision.
 var _trainer_fight_command_budget_frames := NET_STEP_BUDGET_FRAMES
@@ -519,7 +522,7 @@ func _handle_message(msg: Dictionary) -> void:
 
 func _on_physics_frame() -> void:
 	_physics_count += 1
-	if _physics_count % HEARTBEAT_FRAMES == 0:
+	if _physics_heartbeat_clock.physics_callback(_physics_count, Time.get_ticks_msec(), HEARTBEAT_FRAMES):
 		_send_heartbeat()
 
 
@@ -541,7 +544,7 @@ func _send_heartbeat() -> void:
 	_send(heartbeat)
 
 
-## Called only by the existing 60-physics-frame heartbeat. No probing from the
+## Called only by fresh heartbeat sampling in the actual physics callback. No probing from the
 ## driver loop: its added writes only copy locals/count already-taken branches.
 ## All strings are capped; no bodies, party arrays or refusal payloads escape.
 func _trainer_fight_heartbeat_observation() -> Dictionary:
