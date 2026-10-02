@@ -82,12 +82,20 @@ func _run() -> void:
 	var ledger := LEDGER.new(game.world)
 	var reward: Dictionary = REWARD.resolve(game, ledger, "won", [game.local.character_id])
 	_check(reward.get("ok", false) and game.world.flags.has(REWARD.RESOLVED), "Actual reward ledger journals explicit diagnostic defeat")
+	# Aquaryn observes durable completion in _process, independently of its
+	# disabled encounter physics. Multiple physics ticks can share one idle
+	# frame. process_frame is emitted before node callbacks, so cross two
+	# boundaries to observe a completed actual Alpha process notification.
+	await process_frame
+	await process_frame
 	for frame in 3:
 		await physics_frame
 	_check(body.visible and _hits(body), "Durable outcome preserves body until local result beat exits")
 	_check(not observer_body.visible and observer_body.collision_layer == 0 and not _hits(observer_body),
 		"Nonparticipant observes durable completion without needing a local fight exit")
 	manager.exited.emit("won")
+	await process_frame
+	await process_frame
 	for frame in 3:
 		await physics_frame
 	_check(not body.visible and body.collision_layer == 0, "Actual post-result Alpha process retires same-live body")
