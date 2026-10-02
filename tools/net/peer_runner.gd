@@ -2296,6 +2296,23 @@ func _step_deploy_creature(args: Dictionary) -> Dictionary:
 	var species := str(args.get("species", "terrapup"))
 	if director.call("ally_body") == null:
 		await director.call("adopt_starter", species, str(args.get("nickname", "")))
+		# `owned: true` makes the adopted body a creature this trainer OWNS,
+		# the way the opening pairs `adopt_starter()` with
+		# `sequence_director.gd::_give_to_party()`. A caller that FIGHTS needs
+		# it: the host admits a quick/charged move only from the striker's own
+		# admitted party row (`encounter_director.gd::_host_move_start`), so a
+		# body standing outside the party is a loaner whose every swing is
+		# refused (`invalid_actor_move`). Opt-in, because some fixtures (the
+		# catch race) are written around an EMPTY belt. Through the same seam
+		# `party_grant` uses, so `party.gd::add()` still enforces the cap.
+		var adopted: Variant = director.call("ally_instance")
+		var game := root.get_node_or_null(^"Game")
+		var party: Variant = game.get("party") if game != null else null
+		if args.get("owned") == true and adopted is RefCounted and party is RefCounted \
+				and not ((party as RefCounted).call("members") as Array).has(adopted):
+			if not bool(PARTY_SEAM.add(adopted as RefCounted, str(args.get("nickname", "")))):
+				return {"verdict": "FAIL",
+					"detail": "adopted a '%s' but party_seam.add() refused it (full, or owner mutation blocked)" % species}
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
 	var body: Variant = director.call("ally_body")

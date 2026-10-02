@@ -108,8 +108,12 @@ func _run() -> void:
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 	# --- end of the handshake block -------------------------------------------
 
+	# `owned`: the creature each peer fights with is in its own party, as it is
+	# for every real player. The host admits a move only from the striker's
+	# own party row (`encounter_director.gd::_host_move_start`); an unowned
+	# fixture body has every swing refused and Bryn is never beaten.
 	for i in 2:
-		var out: Dictionary = await step(i, "deploy_creature", {})
+		var out: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(out.get("detail", ""))])
 

@@ -944,6 +944,13 @@ func world_has_moved_on() -> bool:
 ##   * It is per-CHARACTER, not per-session. A host loading a solo save into a
 ##     world they themselves finished takes the same path, and should.
 func _catch_up_a_behind_character() -> void:
+	if _caught_up and not _adopting:
+		# The gates stood down once; the companion may still be owed (the
+		# joiner's party was owner-locked when the catch-up ran). Cheap when it
+		# is not: the hand-over returns on its own latch or a non-empty party.
+		_own_the_late_arrival()
+		_hand_a_late_arrival_a_companion()
+		return
 	if _caught_up or _adopting:
 		return
 	if not world_has_moved_on():
@@ -974,6 +981,15 @@ func _hand_a_late_arrival_a_companion() -> void:
 		return
 	if _starter_already_granted():
 		return
+	# A joiner's party is owner-locked for the first round trips after the
+	# snapshot lands (`session.gd` opens `groom_passive_sync.gd::begin_resume()`
+	# and holds every owner write until the host answers). The catch-up runs in
+	# that same window, so adopting now stood a body beside the trainer that
+	# `party.gd::add()` then refused -- and the one-shot latch below meant the
+	# behind character was never given a creature at all. Wait the lock out;
+	# `_catch_up_a_behind_character()` calls back here every frame until then.
+	if party.has_method("owner_mutation_blocked") and bool(party.call("owner_mutation_blocked")):
+		return
 	_late_arrival_handled = true
 	_late_arrival_in_flight = true
 	_adopting = true
@@ -983,7 +999,37 @@ func _hand_a_late_arrival_a_companion() -> void:
 	if not adopted:
 		push_warning("a late arrival could not be given a '%s'" % _sandbox_starter)
 		return
-	if _give_to_party(_encounter.call("ally_instance"), ""):
+	_late_arrival_unowned = _encounter.call("ally_instance")
+	_own_the_late_arrival()
+
+
+## The adopted body is only a companion once it is in this character's party.
+## A lock that began while `adopt_starter()` awaited ground must not leave it a
+## loaner forever, so the add is retried each frame until the party takes it
+## (the five-creature cap still lives only in `party.gd::add()`).
+var _late_arrival_unowned: RefCounted = null
+
+func _own_the_late_arrival() -> void:
+	if _late_arrival_unowned == null:
+		return
+	if _encounter == null or _encounter.call("ally_instance") != _late_arrival_unowned:
+		_late_arrival_unowned = null
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null:
+		return
+	if (party.call("members") as Array).has(_late_arrival_unowned):
+		_late_arrival_unowned = null
+		return
+	if party.has_method("owner_mutation_blocked") and bool(party.call("owner_mutation_blocked")):
+		return
+	var instance := _late_arrival_unowned
+	if bool(party.call("is_full")):
+		# Not reachable from an empty party, but never retried into a sixth slot.
+		_late_arrival_unowned = null
+	if _give_to_party(instance, ""):
+		_late_arrival_unowned = null
 		_persist_opening_fact(STARTER_GRANTED_FLAG)
 
 

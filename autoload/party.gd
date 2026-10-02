@@ -317,6 +317,13 @@ func _owner_mutation_blocked() -> bool:
 	return _owner_mutation_guard.is_valid() and _owner_mutation_guard.call() == true
 
 
+## Read-only: would `add()` (and every other owner write) be refused right now
+## because a saved owner decision is still in flight? A caller that must not
+## spend a one-shot grant on a refused add asks this first and waits.
+func owner_mutation_blocked() -> bool:
+	return _owner_mutation_blocked()
+
+
 ## Local stack rollback material, never persisted or sent across a network.
 ## The caller keeps only this transaction's original five live instances.
 func owner_training_release_snapshot() -> Dictionary:
