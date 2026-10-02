@@ -1216,11 +1216,19 @@ func _visible_build_cells(menu: Node) -> Array[Button]:
 
 
 func _cell_id(button: Button) -> String:
-	for node: Node in button.find_children("*", "TextureRect", true, false):
-		var texture := (node as TextureRect).texture
-		if texture != null and texture.resource_path.contains("/buildables/"):
-			return texture.resource_path.get_file().get_basename()
-	return ""
+	# A thumbnail is presentation, not identity: Tent and Forward Camp share
+	# tent.png. Read the real catalogue's parallel button/piece arrays without
+	# bypassing its ordinary focus, press, affordability or placement paths.
+	var menu: Node = button.get_parent()
+	while menu != null and not menu.is_in_group(&"build_menu"):
+		menu = menu.get_parent()
+	if menu == null or not menu.has_method("_current_pieces"): return ""
+	var cells: Variant = menu.get("_cell_buttons")
+	var pieces: Variant = menu.call("_current_pieces")
+	if not cells is Array or not pieces is Array: return ""
+	var index: int = cells.find(button)
+	if index < 0 or index >= pieces.size() or not pieces[index] is Dictionary: return ""
+	return str(pieces[index].get("id", ""))
 
 
 func _forward() -> Vector3:

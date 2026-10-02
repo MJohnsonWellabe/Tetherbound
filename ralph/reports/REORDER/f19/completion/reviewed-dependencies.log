@@ -1,0 +1,21 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f19_order_consumers.gd,test_f19_boss_delivery.gd,test_f19_participant_delivery.gd,test_f18_waystones.gd,test_home_key_clock.gd,test_f18_water_support.gd,test_foundation_travel_protocol.gd: 7 of 738 test files
+  ok    test_f18_water_support.gd :: test_salt_crown_shrine_and_arrival_fit_original_bake_surface_without_relaxing_support
+  ok    test_f18_waystones.gd :: test_only_host_validated_canonical_touch_can_change_a_character
+  ok    test_f18_waystones.gd :: test_touch_failed_world_save_rolls_back_and_reloaded_decision_waits_for_owner_save
+  ok    test_f18_waystones.gd :: test_touch_preserves_inventory_party_and_other_biomes_and_journal_replays_once
+  ok    test_f18_waystones.gd :: test_view_distinguishes_host_unlock_from_portable_unlock_and_names_last_stone
+  ok    test_f19_boss_delivery.gd :: test_captured_boss_duty_keeps_original_epoch_through_real_prepared_and_owner_save_retry
+  ok    test_f19_boss_delivery.gd :: test_paid_legacy_boss_duty_never_starves_the_next_owed_duty_for_that_character
+  ok    test_f19_order_consumers.gd :: test_config_journal_map_and_credits_consume_the_same_new_chapter_order
+  ok    test_f19_order_consumers.gd :: test_every_live_portal_prompt_keeps_its_recommendation_in_every_travel_state
+  ok    test_f19_order_consumers.gd :: test_recommended_levels_never_gate_the_actual_host_portal_policy
+  ok    test_f19_participant_delivery.gd :: test_all_four_handoffs_save_each_participants_entire_personal_key_and_relic
+  ok    test_foundation_travel_protocol.gd :: test_consumed_guest_permit_survives_failed_save_and_requires_correlated_notice
+  ok    test_foundation_travel_protocol.gd :: test_guest_ending_fields_require_original_personal_answer_home_receipt_and_canonical_party
+  ok    test_foundation_travel_protocol.gd :: test_lifecycle_has_no_action_or_coordinates_and_requires_every_observation
+  ok    test_foundation_travel_protocol.gd :: test_local_swimming_observation_matches_actual_realm_controller_lifecycle
+  ok    test_home_key_clock.gd :: test_production_raise_uses_host_clock_despite_capped_frame_delta
+
+16 tests, 303 assertions, 0 failed
