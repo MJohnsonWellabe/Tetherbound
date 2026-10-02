@@ -1,0 +1,101 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+
+// Promote byte-identical production handoffs only after the continuous fresh
+// campaign has completed. No save payload is edited, migrated or synthesized.
+// node tools/earned_saves/promote_f19.mjs <campaign.log> <handoffs directory>
+const [logFile, handoffDirectory] = process.argv.slice(2);
+assert.ok(logFile && handoffDirectory, 'Expected campaign log and immutable handoff directory');
+const root = process.cwd();
+assert.equal(fs.realpathSync(execFileSync('git', ['rev-parse', '--show-toplevel'], {encoding: 'utf8'}).trim()), fs.realpathSync(root), 'Run from the repository root');
+const sourceRoot = fs.realpathSync(handoffDirectory);
+const targetRoot = path.join(root, 'tests/fixtures/earned_saves/redesign');
+const sha256 = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const log = fs.readFileSync(logFile, 'utf8');
+assert.ok(!/(?:SCRIPT ERROR:|^ERROR:)/m.test(log), 'Engine errors invalidate a campaign witness');
+const lines = log.split(/\r?\n/);
+const readLine = prefix => {
+  const found = lines.filter(line => line.startsWith(prefix));
+  assert.equal(found.length, 1, `Exactly one ${prefix} required`);
+  return JSON.parse(found[0].slice(prefix.length));
+};
+const result = readLine('FRESH CAMPAIGN RESULT ');
+assert.equal(result.counts_as_proof, true, 'A resumed, legacy, dry or failed campaign is not earned proof');
+assert.equal(result.campaign_complete, true);
+assert.deepEqual(result.failures, []);
+assert.equal(result.resumed_from, '');
+assert.equal(result.dry_run, false);
+const journey = readLine('F49 JOURNEY ');
+assert.deepEqual(journey.order, ['meadows', 'tidewake', 'cloudreach', 'stormwood', 'homecoming_credits']);
+const emitted = lines.filter(line => line.startsWith('F49 DISK HANDOFF '))
+  .map(line => JSON.parse(line.slice('F49 DISK HANDOFF '.length)));
+const boundaries = ['meadows_settled', 'tidewake_settled', 'cloudreach_settled', 'stormwood_settled', 'completed_world'];
+const bosses = ['warden_aldis', 'water_trainer_nerissa', 'captain_veyra_storm_anchor', 'captain_marrow_dynamo_core'];
+assert.deepEqual(emitted.map(row => row.boundary), boundaries, 'Each actual new boundary must be captured in order');
+let sourceCommit = '';
+const candidates = [];
+for (let index = 0; index < boundaries.length; index++) {
+  const boundary = boundaries[index];
+  const directory = path.join(sourceRoot, boundary);
+  const receiptFile = path.join(directory, 'receipt.json');
+  const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
+  assert.equal(receipt.kind, 'f49_ordinary_input_handoff');
+  assert.equal(receipt.boundary, boundary);
+  assert.match(receipt.commit, /^[0-9a-f]{40}$/);
+  sourceCommit ||= receipt.commit;
+  assert.equal(receipt.commit, sourceCommit);
+  assert.equal(emitted[index].commit, sourceCommit);
+  assert.equal(fs.realpathSync(emitted[index].path), fs.realpathSync(directory));
+  assert.deepEqual(receipt.files_sha256, emitted[index].files_sha256);
+  assert.equal(receipt.realm, ['meadows', 'water', 'cloudreach', 'stormwood', 'meadows'][index]);
+  assert.ok(receipt.state.party.length > 0 && receipt.state.party.length <= 5);
+  assert.ok(receipt.state.character_id);
+  assert.equal(receipt.state.realm, receipt.realm);
+  const files = [];
+  const walk = dir => {
+    for (const item of fs.readdirSync(dir, {withFileTypes: true})) {
+      assert.ok(!item.isSymbolicLink(), 'Symlinks cannot redirect earned save bytes');
+      const name = path.join(dir, item.name);
+      if (item.isDirectory()) walk(name);
+      else if (item.isFile()) files.push(name);
+      else assert.fail('Unknown handoff entry');
+    }
+  };
+  const saves = path.join(directory, 'save');
+  walk(saves);
+  const hashes = Object.fromEntries(files.map(file => [path.relative(saves, file).replaceAll('\\', '/'), sha256(file)]));
+  assert.deepEqual(hashes, receipt.files_sha256, 'Exact production bytes must match the immutable receipt');
+  assert.ok(files.some(file => file.endsWith(`${path.sep}character.json`)));
+  assert.ok(files.some(file => file.endsWith(`${path.sep}world.json`)));
+  for (const file of files.filter(file => file.endsWith(`${path.sep}character.json`) || file.endsWith(`${path.sep}world.json`))) {
+    const envelope = JSON.parse(fs.readFileSync(file, 'utf8'));
+    assert.equal(envelope.version, 28, `Current split schema required: ${file}`);
+  }
+  const biome = ['meadows', 'tidewake', 'cloudreach', 'stormwood'][Math.min(index, 3)];
+  const held = receipt.state.redesign_character;
+  assert.ok(held.relics_held.includes(biome) || held.relics_hung.includes(biome), `Actually earned ${biome} relic`);
+  const boss = bosses[Math.min(index, 3)];
+  assert.ok(held.transaction_receipts.some(id => id === `defeat:boss_${boss}:${receipt.state.character_id}` ||
+    (id.startsWith(`defeat:boss_${boss}_`) && id.endsWith(`:${receipt.state.character_id}`))), `Exact ${boss} entitlement receipt required`);
+  const destination = path.join(targetRoot, boundary);
+  assert.ok(!fs.existsSync(destination), `Never overwrite an existing earned fixture: ${destination}`);
+  candidates.push({boundary, directory, destination, receipt});
+}
+// The evidence source must be committed and available for replay/review.
+execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {stdio: 'pipe'});
+const provenance = {kind: 'f19_earned_boundary_promotion', source_commit: sourceCommit,
+  command: 'Godot 4.7 --headless --script tests/smoke_four_biome_continuous.gd',
+  source_log_sha256: sha256(logFile), journey, boundaries,
+  disclosures: journey.shortcuts, scope: 'Earned progression/save boundaries; no hardware, timing or visual acceptance claim'};
+for (const candidate of candidates) {
+  fs.mkdirSync(path.dirname(candidate.destination), {recursive: true});
+  fs.cpSync(candidate.directory, candidate.destination, {recursive: true, errorOnExist: true, force: false});
+  fs.writeFileSync(path.join(candidate.destination, 'PROVENANCE.json'), JSON.stringify({...provenance, boundary: candidate.boundary}, null, 2) + '\n', {flag: 'wx'});
+  for (const [file, hash] of Object.entries(candidate.receipt.files_sha256)) {
+    assert.equal(sha256(path.join(candidate.destination, 'save', file)), hash, 'Promoted bytes must remain exact');
+  }
+}
+console.log(JSON.stringify({proof: 'F19-earned-save-promotion', source_commit: sourceCommit, boundaries, result: 'PASS'}));
