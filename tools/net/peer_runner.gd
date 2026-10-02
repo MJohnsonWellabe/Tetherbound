@@ -3747,7 +3747,13 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 	var manager := _combat_manager()
 	if director == null or manager == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector/CombatManager"}
-	if not bool(director.call("trainer_battle_active")):
+	var guest_master: Dictionary = director.get("_master_duel") if args.get("fixture_guest_master") == true else {}
+	var guest_master_id := str(guest_master.get("encounter_id", ""))
+	var drives_guest_master: bool = guest_master.get("guest") == true and guest_master.get("master_id") == "master_t1" \
+		and not guest_master_id.is_empty() and guest_master_id == str(manager.call("encounter_id")) and manager.call("is_fighting") == true
+	if args.get("fixture_guest_master") == true and not drives_guest_master:
+		return {"verdict": "FAIL", "detail": "No actual bound guest Master1 manager; fixture cannot select or create a duel"}
+	if not bool(director.call("trainer_battle_active")) and not drives_guest_master:
 		return {"verdict": "FAIL", "detail": "no trainer battle is running"}
 	# PHYSICS FRAMES, not loop iterations, and bounded by the budget the
 	# coordinator actually sent. The first version of this arm counted
@@ -3791,10 +3797,12 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		"not_fighting_streak": 0, "missing_body_checks": 0, "quick_not_ready_checks": 0,
 		"phase": "wait_physics", "submitted_action_at_start": int(director.get("_encounter_action")),
 	}
+	if args.get("retain_fixture_actions") == true:
+		_trainer_fight_progress["fixture_actions"] = []
 	if director.has_signal("host_strike_finished") and not director.is_connected(
 			"host_strike_finished", _trainer_fight_note_killing_verdict):
 		director.connect("host_strike_finished", _trainer_fight_note_killing_verdict)
-	while bool(director.call("trainer_battle_active")) and frames < budget:
+	while (bool(manager.call("is_fighting")) if drives_guest_master else bool(director.call("trainer_battle_active"))) and frames < budget:
 		_trainer_fight_progress["phase"] = "wait_physics"
 		await physics_frame
 		frames += 1
@@ -3820,6 +3828,12 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 			# arm is testing the payout at the end of a won battle, not the
 			# player's ability to survive one, and a creature that faints ends
 			# the battle in a LOSS and tests nothing.
+			if args.get("retain_fixture_actions") == true:
+				var observed_enemy := manager.call("enemy_body") as Node3D
+				(_trainer_fight_progress.fixture_actions as Array).append({"kind": "self_hp_topup", "frame": frames,
+					"uid": str(mine.get("uid")), "before": float(mine.get("hp")), "after": float(mine.get("max_hp")),
+					"opponent": str(observed_enemy.name) if is_instance_valid(observed_enemy) else "none",
+					"encounter_id": str(manager.call("encounter_id"))})
 			(mine as RefCounted).set("hp", float((mine as RefCounted).get("max_hp")))
 		var opponent: Variant = manager.call("enemy_body")
 		var body: Variant = director.call("ally_body")
@@ -3850,10 +3864,20 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 				return {"verdict": "ERROR", "detail": str(staged.get("why", "trainer HP fixture failed"))}
 		var target: Vector3 = (opponent as Node3D).call("centre")
 		var stand := target + Vector3(1.1, 0.0, 0.0)
+		if args.get("retain_fixture_actions") == true:
+			var prior_position: Vector3 = (body as Node3D).global_position
+			(_trainer_fight_progress.fixture_actions as Array).append({"kind": "ally_placement_request", "frame": frames,
+				"uid": str(body.get("instance").get("uid")) if body.get("instance") != null else "",
+				"before": [prior_position.x, prior_position.y, prior_position.z], "requested": [stand.x, stand.y, stand.z],
+				"opponent": str((opponent as Node3D).name), "encounter_id": str(manager.call("encounter_id")),
+				"enemy_hp_ceiling": ceiling})
 		if (body as Node3D).has_method("place_on_ground"):
 			(body as Node3D).call("place_on_ground", stand)
 		else:
 			(body as Node3D).global_position = stand
+		if args.get("retain_fixture_actions") == true:
+			var actual_position: Vector3 = (body as Node3D).global_position
+			(_trainer_fight_progress.fixture_actions as Array).back()["actual_after"] = [actual_position.x, actual_position.y, actual_position.z]
 		_trainer_fight_progress["phase"] = "settle_body"
 		for i in 4:
 			await physics_frame
@@ -3890,7 +3914,7 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		swings += 1
 		_trainer_fight_progress["driver_frames"] = frames
 		_trainer_fight_progress["swings"] = swings
-	if bool(director.call("trainer_battle_active")):
+	if bool(manager.call("is_fighting")) if drives_guest_master else bool(director.call("trainer_battle_active")):
 		var last_enemy: Variant = manager.call("enemy_body")
 		var last_instance: Variant = last_enemy.get("instance") if last_enemy != null and is_instance_valid(last_enemy) else null
 		var last_active: Variant = manager.call("active_creature")
@@ -3905,6 +3929,8 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 					float(last_active.get("hp")) if last_active != null else -1.0,
 					str(last_active.get("fainted")) if last_active != null else "?",
 					str(last_refusal), str(manager.call("encounter_id"))]}
+	if drives_guest_master and manager.call("outcome") != "won":
+		return {"verdict": "FAIL", "detail": "Actual guest Master resolved without a production won outcome"}
 	# The payout is committed from `_finish_trainer_battle()` and the deltas
 	# have to cross to the other peer before anybody asks about them.
 	_trainer_fight_progress["phase"] = "settle_payout"

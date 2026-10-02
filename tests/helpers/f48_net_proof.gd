@@ -4,7 +4,7 @@ extends "res://tests/smoke_net_proof_two_peer.gd"
 ## supplies only concrete controller taps/waypoints and existing saved inputs.
 ## There are no grant, win, teleport, fixture, intent or receipt-injection steps.
 ## Missing producers/routes/cut observation are failures, never skips or PASS.
-const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice"]
+const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight"]
 const TRANSACTIONS := ["craft", "release", "feast", "key", "relic", "essence_spend"]
 const CUTS := ["before_input", "after_settlement", "after_host_write_before_delivery", "after_owner_write_before_ack"]
 const REPLAY_FIELDS := ["inventory", "redesign_character", "satchel_escrow"]
@@ -110,7 +110,7 @@ func _route(name: String, peer: int) -> Array:
 	var out: Array = []
 	for raw: Variant in routes:
 		if not raw is Dictionary or not INPUT_ACTIONS.has(raw.get("action")) or not raw.get("args", {}) is Dictionary:
-			_profile_errors.append("Route " + name + " accepts ordinary input only; no authored outcomes/hand-grants")
+			_profile_errors.append("Route " + name + " requires actual inputs or explicitly disclosed mechanics fight; no authored outcomes/hand-grants")
 			continue
 		if raw.has("expect") or raw.has("expect_data") or raw.has("continue_on_fail"):
 			_profile_errors.append("Route cannot supply its own outcome or suppress failure: " + name)
@@ -129,7 +129,7 @@ func _route(name: String, peer: int) -> Array:
 					_profile_errors.append("Non-numeric input bound: " + name + "/" + field)
 				elif value < 0 or value > maximum or floor(float(value)) != float(value):
 					_profile_errors.append("Unbounded input: " + name + "/" + field)
-		var row := _entry(peer, raw.action, raw.args, name + ": ordinary input")
+		var row := _entry(peer, raw.action, raw.args, name + (": disclosed mechanics fixture fight" if raw.action == "f48_fixture_trainer_fight" else ": ordinary input"))
 		row.budget_frames = 10000 if raw.action == "move_to" else 3000
 		out.append(row)
 	return out

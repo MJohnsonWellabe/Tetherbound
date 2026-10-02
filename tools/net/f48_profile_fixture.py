@@ -26,7 +26,7 @@ STOCK = {"stone": 10, "rootstone": 8, "ironwood": 4, "berries": 8,
          "attuned_ground": 2, "essence_ground": 100}
 OPERATIONS = ("craft", "release", "feast", "key", "relic", "essence_spend")
 PREBOSS_LEGACY_FLAGS = ("defeated_warden", "realm_key_cloudreach", "realm_heart_meadows_earned")
-INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice"}
+INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight"}
 CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
            "data/config/hud.json",

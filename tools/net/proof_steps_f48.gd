@@ -13,6 +13,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_assert": return _assert(tree, args)
 		"f48_assert_snapshot": return _assert_snapshot(tree)
 		"f48_measure_layout": return _measure_layout(tree, args)
+		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
@@ -94,6 +95,40 @@ static func _measure_layout(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if not DETACHED.publish(output.path_join("f48-layout-measurement.json"), data):
 		return _result(false, "Could not retain detached actual layout measurement", data)
 	return _result(errors.is_empty(), "Read-only initialized native terrain layout. " + "; ".join(errors), data)
+
+static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Dictionary:
+	# Existing harness-driven fight, explicitly authorized for named mechanics.
+	# Never an ordinary survival/balance/earned campaign witness. Every kill,
+	# host verdict, retained event, journal, owner save and ACK is still real.
+	var trainer := str(args.get("trainer_id", ""))
+	var disclosure: Variant = args.get("fixture_disclosure")
+	var required := {"scope": "named_mechanics_only", "self_hp_topups": true,
+		"ally_placement": true, "enemy_hp_ceiling": 0, "earned_campaign_credit": false}
+	if trainer not in ["master_t1", "warden_aldis"] or not _json_equal(disclosure, required):
+		return _result(false, "Exact named mechanics fight disclosure required; opponent HP ceiling is disabled")
+	var director := tree.current_scene.get_node_or_null(^"EncounterDirector") if tree.current_scene != null else null
+	var manager := tree.current_scene.get_node_or_null(^"CombatManager") if tree.current_scene != null else null
+	if director == null or manager == null: return _result(false, "Actual production director/manager missing")
+	var master: Variant = director.get("_master_duel")
+	var guest: bool = trainer == "master_t1" and master is Dictionary and master.get("guest") == true
+	if (not guest and str(director.call("trainer_battle_id")) != trainer) or \
+		(guest and (master.get("master_id") != trainer or master.get("encounter_id") != manager.call("encounter_id"))):
+		return _result(false, "Fixture fight is not bound to the actual already-started named encounter")
+	var budget := int(args.get("budget_frames", 3000))
+	if budget < 240 or budget > 3000: return _result(false, "Existing bounded mechanics fight budget exceeded")
+	var result: Dictionary = await tree.call("_step_win_trainer_battle", {"budget_frames": budget,
+		"fixture_guest_master": guest, "retain_fixture_actions": true, "enemy_hp_ceiling": 0})
+	var retained: Variant = tree.get("_trainer_fight_progress")
+	var data := {"trainer_id": trainer, "fixture_disclosure": required, "result": result.duplicate(true),
+		"actions": retained.get("fixture_actions", []) if retained is Dictionary else [], "acceptance_credit": false}
+	var output := OS.get_environment("TB_PROOF_OUT")
+	if output.is_empty(): return _result(false, "No retained fixture-fight observation root", data)
+	var folder := output.path_join("f48-fixture-fights")
+	DirAccess.make_dir_recursive_absolute(folder)
+	if not DETACHED.publish(folder.path_join(str(OS.get_process_id()) + "-" + trainer + "-" + str(Time.get_ticks_usec()) + ".json"), data):
+		return _result(false, "Could not retain exact fixture fight actions", data)
+	result["data"] = data
+	return result
 
 static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")

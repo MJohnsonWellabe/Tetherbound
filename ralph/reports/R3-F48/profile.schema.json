@@ -46,7 +46,8 @@
                 "wait",
                 "f48_button",
                 "f48_build_cell",
-                "f48_choice"
+                "f48_choice",
+                "f48_fixture_trainer_fight"
               ]
             },
             "args": {
