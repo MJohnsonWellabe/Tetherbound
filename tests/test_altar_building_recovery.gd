@@ -115,10 +115,23 @@ func test_real_v2_and_v3_pending_journals_recover_the_exact_full_admitted_projec
 		assert_true(authority.bind_world(NAMESPACE))
 		assert_true(authority.seed_admitted_character(before, CHARACTER).ok)
 		var reloaded: Dictionary = JSON.parse_string(JSON.stringify(row))
-		assert_true(authority.recover_durable_training(CHARACTER, {reloaded.delivery_id: reloaded}).ok)
+		assert_eq(RECORD.training_projection(before, reloaded, ESSENCE.training_projection).size(), RECORD.FIELDS.size(), "JSON version %s" % str(reloaded.version))
+		var recovered := authority.recover_durable_training(CHARACTER, {reloaded.delivery_id: reloaded})
+		assert_true(recovered.get("ok") == true, "version %s recovery %s" % [str(reloaded.version), str(recovered)])
 		for field: String in RECORD.FIELDS:
 			assert_true(ESSENCE._equivalent(authority.state(CHARACTER)[field], reloaded.after[field]), field)
 		assert_true(authority.creature_training_pending_matches(CHARACTER, reloaded))
 		reloaded.status = "accepted"
 		assert_true(authority.acknowledge_creature_training(CHARACTER, reloaded))
 		assert_false(authority.creature_training_is_pending(CHARACTER))
+
+func test_projection_version_dispatch_preserves_integral_json_versions_without_coercing_invalid_versions() -> void:
+	var current := _before()
+	for version: Variant in [2, 2.0, 3, 3.0]:
+		var row := {"kind": "creature_training", "version": version}
+		assert_eq(RECORD.training_projection(current, row, ESSENCE.training_projection), current, str(version))
+	for version: Variant in [1, 1.0, 2.5, 3.5, "2", "3", true, null, INF, NAN]:
+		var row := {"kind": "creature_training", "version": version}
+		assert_eq(RECORD.training_projection(current, row, ESSENCE.training_projection), ESSENCE.training_projection(current), str(version))
+	assert_eq(RECORD.training_projection(current, {"kind": "altar_building", "version": 3}, ESSENCE.training_projection),
+		ESSENCE.training_projection(current), "kind remains required")
