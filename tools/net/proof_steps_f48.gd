@@ -154,7 +154,15 @@ static func _snapshot_errors(tree: SceneTree, now: Dictionary) -> Array[String]:
 			errors.append("Original admitted bystander changed owner carrier without an actual newer BOOL-save: " + field)
 	if not PASSIVE.matches(tree, str(edge.anchor), now.memory.get("party")):
 		errors.append("Full owner party differs outside exact independently replayed passive clocks")
-	if not original_source:
+	if original_source:
+		var initial_rows: Dictionary = edge.files.world.get("reward_deliveries", {})
+		for identity: Variant in now.world.get("reward_deliveries", {}):
+			var decision: Variant = now.world.reward_deliveries[identity]
+			if decision is Dictionary and decision.get("character_id") == now.character_id \
+				and decision.get("kind") in ["creature_training", "portal_unlock", "altar_building"] \
+				and not _json_equal(decision, initial_rows.get(identity)):
+				errors.append("Original admitted-source baseline cannot stand in for a newer owner decision/receipt")
+	else:
 		errors.append_array(_saved_edge_errors(edge))
 		var current: Variant = now.world.get("reward_deliveries", {}).get(edge.identity)
 		if not current is Dictionary or current.get("status") != "accepted":
@@ -181,7 +189,9 @@ static func _assert_snapshot(tree: SceneTree) -> Dictionary:
 	var now := _observe(tree)
 	var errors := _snapshot_errors(tree, now)
 	now.passive_evidence = PASSIVE.evidence(tree, _snapshot_anchor(tree))
-	return _result(errors.is_empty(), "Actual latest owner BOOL-save and current immutable files: " + "; ".join(errors), now)
+	var original_source: bool = not tree.has_meta("f48_latest_owner_save")
+	now.snapshot_source = "unchanged_original_admitted_disk_no_initial_memory_disk_convergence_or_saved_live_care_bond_claim" if original_source else "actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK"
+	return _result(errors.is_empty(), "Read-only explicit input source " + str(now.snapshot_source) + ": " + "; ".join(errors), now)
 
 static func _capture_durable(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# Disclosed producer inputs only. Copy actual files; no autosave can repair a
@@ -201,8 +211,9 @@ static func _capture_durable(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var again := _observe(tree)
 	if copied <= 0 or again.character_sha256 != now.character_sha256 or again.world_sha256 != now.world_sha256:
 		return _result(false, "Actual source files changed during read-only input copying")
-	return _result(true, "Copied exact current saved owner/world bytes after authentic latest BOOL-save/ACK; no autosave",
-		{"dir": destination, "files": copied, "character_id": now.character_id, "character_sha256": now.character_sha256, "world_sha256": now.world_sha256})
+	var source_kind := "unchanged original admitted disk; no initial memory/disk convergence or saved live care/bond claim" if not tree.has_meta("f48_latest_owner_save") else "actual newer owner BOOL-save/accepted ACK with full canonical after carriers"
+	return _result(true, "Copied exact saved input bytes from " + source_kind + "; no autosave repair",
+		{"source_kind": source_kind, "dir": destination, "files": copied, "character_id": now.character_id, "character_sha256": now.character_sha256, "world_sha256": now.world_sha256})
 
 static func _copy_exact(source: String, destination: String) -> int:
 	var directory := DirAccess.open(source)
