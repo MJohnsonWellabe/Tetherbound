@@ -811,6 +811,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_catch_throw(args)
 		"catch_fixture_rng":
 			out = _step_catch_fixture_rng(args)
+		"f48_fixture_capture":
+			out = await _step_f48_fixture_capture(args)
 		"dismiss_dialogue":
 			out = await _step_dismiss_dialogue(args)
 		"veridian_fixture":
@@ -2328,6 +2330,23 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
 	var wild: Variant = director.call("nearest_live_wild")
+	# Explicit disclosed input production may require the actual retained Alpha
+	# packet. Never substitute a nearest legacy body or fabricate its source.
+	var alpha_site := str(args.get("foundation_alpha_site", ""))
+	if not alpha_site.is_empty():
+		wild = null
+		var matches: Array[Node3D] = []
+		for candidate: Node3D in director.get("_wild_creatures"):
+			if not is_instance_valid(candidate) or not candidate.is_inside_tree() or candidate.is_queued_for_deletion() \
+				or not candidate.visible or not bool(candidate.call("is_alive")) \
+				or str(candidate.get_meta("foundation_alpha_site", "")) != alpha_site:
+				continue
+			var packet: Variant = candidate.get_meta("foundation_alpha_packet", {})
+			if not packet is Dictionary or packet.is_empty(): continue
+			matches.append(candidate)
+		if matches.size() != 1:
+			return {"verdict": "FAIL", "detail": "Expected exactly one live original retained Alpha body for " + alpha_site}
+		wild = matches[0]
 	# A caller staging a SECOND fight must be able to say "not that one". The
 	# director answers with whatever wild is nearest, and a peer that has just
 	# fled a fight is still standing beside the creature it fled -- so the
@@ -2338,6 +2357,8 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 	# Walk past it, the way a player looking for a different creature does.
 	var excluded := int(args.get("exclude_body_id", 0))
 	if excluded != 0 and wild != null and int((wild as Object).get_instance_id()) == excluded:
+		if not alpha_site.is_empty():
+			return {"verdict": "FAIL", "detail": "Exact retained Alpha was excluded; no legacy body substitution permitted"}
 		wild = _nearest_live_wild_excluding(director, excluded)
 	if wild == null:
 		return {"verdict": "FAIL", "detail": "no live wild creature to engage"
@@ -4358,11 +4379,92 @@ func _step_catch_fixture_rng(args: Dictionary) -> Dictionary:
 		var state := trial.state
 		var roll := trial.randf()
 		if (want_caught and roll < chance_min) or (not want_caught and roll >= chance_max):
+			var state_before := str(runtime_rng.state)
 			runtime_rng.state = state
 			var bound := chance_min if want_caught else chance_max
 			var relation := "below min" if want_caught else "at or above max"
-			return {"verdict": "PASS", "detail": "paused host runtime; next roll %.6f is %s catch bound %.6f" % [roll, relation, bound]}
+			return {"verdict": "PASS", "detail": "paused host runtime; next roll %.6f is %s catch bound %.6f" % [roll, relation, bound],
+				"data": {"fixture_scope": "Explicit paused real runtime and next RNG state; no earned catch/balance credit",
+					"encounter_id": encounter_id, "trial_seed": seed, "state_before": state_before,
+					"requested_state": str(state), "state_after": str(runtime_rng.state),
+					"next_roll": roll, "chance_min": chance_min, "chance_max": chance_max, "want_caught": want_caught}}
 	return {"verdict": "FAIL", "detail": "could not find a deterministic RNG state beyond configured catch bounds"}
+
+
+func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
+	if args.get("fixture_disclosure") != "actual_shared_alpha_rng_and_actor_placement_no_earned_credit":
+		return {"verdict": "FAIL", "detail": "Explicit same-world catch input fixture required"}
+	var director := _encounter_director()
+	var site := "wild_once_1900"
+	if director == null: return {"verdict": "FAIL", "detail": "No actual director"}
+	if director.call("ally_body") == null:
+		var recalled: Dictionary = await _step_press({"action": "creature_recall"})
+		if recalled.get("verdict") != "PASS": return recalled
+		for _frame: int in 30: await physics_frame
+		if director.call("ally_body") == null:
+			return {"verdict": "FAIL", "detail": "Ordinary recall did not deploy original owned companion"}
+	if args.get("role") == "host":
+		var engaged: Dictionary = await _step_engage_wild({"foundation_alpha_site": site})
+		if engaged.get("verdict") != "PASS": return engaged
+		return _step_catch_fixture_rng({"caught": true})
+	if args.get("role") != "guest" or bool(director.call("is_encounter_host")):
+		return {"verdict": "FAIL", "detail": "Actual guest role required"}
+	var offered: Array = []
+	for row: Dictionary in director.call("joinable_encounters"):
+		if row.get("kind") == "wild" and row.get("phase") == "active": offered.append(row)
+	if offered.size() != 1: return {"verdict": "FAIL", "detail": "Exactly one actual announced wild required"}
+	var announcement: Dictionary = offered[0]
+	var target: Array = announcement.get("opponent", {}).get("position", [])
+	var player := _probe.call("player") as CharacterBody3D
+	var game := root.get_node_or_null(^"Game")
+	if target.size() != 3 or player == null or game == null:
+		return {"verdict": "FAIL", "detail": "Actual target/player/owner unavailable"}
+	var before: Dictionary = game.get("local").call("save_data")
+	var actor_before := player.global_position
+	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
+	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
+	player.velocity = Vector3.ZERO
+	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
+		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
+		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
+	_fixture_capture_pose(fixture, player)
+	var joined: Dictionary = await _step_join_encounter({"encounter_id": announcement.encounter_id})
+	if joined.get("verdict") != "PASS":
+		_fixture_capture_pose(fixture, player)
+		joined["data"] = fixture; return joined
+	var record: Dictionary = director.call("encounter_record")
+	var actual: Array = record.get("opponent", {}).get("position", [])
+	var thrown: Dictionary = _step_catch_throw({"target": actual, "orb_id": "orb_basic"})
+	if thrown.get("verdict") != "PASS":
+		_fixture_capture_pose(fixture, player)
+		thrown["data"] = fixture; return thrown
+	for _frame: int in 600: await physics_frame
+	_fixture_capture_pose(fixture, player)
+	var after: Dictionary = game.get("local").call("save_data")
+	fixture["owner_before"] = before
+	fixture["owner_after"] = after
+	var added: Array = []
+	for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
+		if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)
+	var valid := added.size() == 1 and after.get("party", []).size() == before.get("party", []).size() + 1
+	if valid:
+		var provenance: Dictionary = after.redesign_character.creatures[added[0]].get("captured_from", {})
+		var reply: Dictionary = director.get("_shared_catch_finish_reply")
+		fixture["finish_reply"] = reply
+		valid = provenance.get("kind") == "wild" and provenance.get("spawn_id") == site \
+			and provenance.get("spawn_generation") == 1 \
+			and provenance.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
+			and reply.get("ok") == true and reply.get("delta", {}).get("caught") == true \
+			and reply.get("peer") == director.call("_local_peer_id") \
+			and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty()
+	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant", "data": fixture}
+
+func _fixture_capture_pose(fixture: Dictionary, player: CharacterBody3D) -> void:
+	var pose := player.global_position
+	var motion := player.velocity
+	fixture["actor_after"] = [pose.x, pose.y, pose.z]
+	fixture["actor_velocity_after"] = [motion.x, motion.y, motion.z]
+	fixture["actor_on_floor_after"] = player.is_on_floor()
 
 
 func _catch_owned_cards(party: Variant, pending: Variant) -> Array:

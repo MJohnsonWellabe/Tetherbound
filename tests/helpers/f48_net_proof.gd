@@ -1,10 +1,15 @@
 extends "res://tests/smoke_net_proof_two_peer.gd"
 
 ## F48 uses the existing process/session/save owners. A reviewed route profile
-## supplies only concrete controller taps/waypoints and existing saved inputs.
-## There are no grant, win, teleport, fixture, intent or receipt-injection steps.
+## supplies concrete controller taps/waypoints and disclosed saved inputs.
+## An explicitly disclosed existing mechanics fight may top up self HP and
+## place the actual owned ally; opponent HP ceiling stays zero. Every win,
+## host verdict, event, journal, owner save and ACK must still be real.
+## Named authored Master/Warden approach fixtures record actual actor/ally
+## writes and require real floor/proximity before ordinary interaction.
+## There are no grants or fabricated outcomes/intents/receipts.
 ## Missing producers/routes/cut observation are failures, never skips or PASS.
-const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight"]
+const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight", "f48_fixture_approach", "f48_fixture_join_boss"]
 const TRANSACTIONS := ["craft", "release", "feast", "key", "relic", "essence_spend"]
 const CUTS := ["before_input", "after_settlement", "after_host_write_before_delivery", "after_owner_write_before_ack"]
 const REPLAY_FIELDS := ["inventory", "redesign_character", "satchel_escrow"]
@@ -129,7 +134,7 @@ func _route(name: String, peer: int) -> Array:
 					_profile_errors.append("Non-numeric input bound: " + name + "/" + field)
 				elif value < 0 or value > maximum or floor(float(value)) != float(value):
 					_profile_errors.append("Unbounded input: " + name + "/" + field)
-		var row := _entry(peer, raw.action, raw.args, name + (": disclosed mechanics fixture fight" if raw.action == "f48_fixture_trainer_fight" else ": ordinary input"))
+		var row := _entry(peer, raw.action, raw.args, name + (": disclosed mechanics fixture" if str(raw.action).begins_with("f48_fixture_") else ": ordinary input"))
 		row.budget_frames = 10000 if raw.action == "move_to" else 3000
 		out.append(row)
 	return out
@@ -220,7 +225,7 @@ func _apply_profile_start(raw: Variant, label: String) -> bool:
 	_profile.provenance = str(_root_profile.get("provenance", "")) + " Actual start: " + raw.provenance
 	return true
 
-func _admit(steps: Array, saves: Array, peers: int) -> void:
+func _admit(steps: Array, saves: Array, peers: int, witness_label: String = "admitted") -> void:
 	if _profile.has("test_configuration"):
 		steps.append(_entry("all", "f48_require_configuration", {"files": _profile.test_configuration, "scope": _profile.get("configuration_scope", "bootstrap")}, "Pin disclosed effective mechanics configuration before any saved-input admission"))
 	for peer: int in peers:
@@ -230,7 +235,7 @@ func _admit(steps: Array, saves: Array, peers: int) -> void:
 	steps.append(_entry(0, "host"))
 	for peer: int in range(1, peers): steps.append(_entry(peer, "production_join", {"returning_route": true, "character": {"character_id": "$character%d" % peer}}))
 	steps.append(_entry("all", "expect_peers", {"count": peers}))
-	steps.append(_entry("all", "f48_witness", {"remember": "admitted"}))
+	steps.append(_entry("all", "f48_witness", {"remember": witness_label}))
 
 func _prerequisites(steps: Array) -> void:
 	steps.append(_entry("all", "f48_require", {"flags": [

@@ -26,7 +26,7 @@ STOCK = {"stone": 10, "rootstone": 8, "ironwood": 4, "berries": 8,
          "attuned_ground": 2, "essence_ground": 100}
 OPERATIONS = ("craft", "release", "feast", "key", "relic", "essence_spend")
 PREBOSS_LEGACY_FLAGS = ("defeated_warden", "realm_key_cloudreach", "realm_heart_meadows_earned")
-INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight"}
+INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "f48_choice", "f48_fixture_trainer_fight", "f48_fixture_approach", "f48_fixture_join_boss"}
 CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
            "data/config/hud.json",
@@ -135,10 +135,10 @@ def layout_records(layout: dict, cfg: dict) -> list[dict]:
     return records
 
 
-def stock_inventory(original: list, items: dict) -> list:
+def stock_inventory(original: list, items: dict, stock: dict | None = None) -> list:
     require(isinstance(original, list) and len(original) == 24, "Require original24slot inventory")
     slots = copy.deepcopy(original)
-    for item, amount in STOCK.items():
+    for item, amount in (STOCK if stock is None else stock).items():
         require(item in items and type(items[item].get("stack")) is int,
                 f"Fixture stock must be canonical item: {item}")
         cap = items[item]["stack"]
@@ -231,7 +231,9 @@ def preboss_legacy_world(inputs: list[dict]) -> tuple[dict, dict]:
 
 
 def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: Path | None, origin: str,
-             configuration_scope: str = "bootstrap", preboss_legacy_mechanics: bool = False) -> dict:
+             configuration_scope: str = "bootstrap", preboss_legacy_mechanics: bool = False,
+             initial_kitchen_meadows_attachment: bool = False,
+             initial_alpha_capture_orb: bool = False) -> dict:
     require(isinstance(origin, str) and bool(origin.strip()), "Disclose original native run and any earlier source setup")
     require(configuration_scope in ("bootstrap", "full"), "Unknown disclosed configuration scope")
     require(len(sources) in (2, 4), "Use two or four independently captured actual characters")
@@ -247,6 +249,26 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     cfg = read(ROOT / "data/config/stations.json")
     layout = read(layout_path)
     records = layout_records(layout, cfg)
+    kitchen_fixture = None
+    if initial_kitchen_meadows_attachment:
+        require(preboss_legacy_mechanics, "Initial Kitchen fixture requires strictly checked pre-boss typed-history absence")
+        definitions = [row for row in cfg["attachments"] if row.get("id") == "kitchen_meadows"]
+        require(len(definitions) == 1 and definitions[0].get("station_id") == "kitchen" and
+                definitions[0].get("tier") == 1 and definitions[0].get("status") == "live" and
+                definitions[0].get("registered") is True,
+                "Actual first Meadows Kitchen attachment unavailable")
+        parent = next(row for row in records if row["id"] == "kitchen")
+        require(parent["yaw_deg"] == 0, "Bounded initial Kitchen socket requires disclosed yaw0")
+        position = list(parent["position"])
+        position[0] -= cfg["pieces"]["kitchen"]["size_m"][0] / 2 + cfg["attachment_spacing_m"]
+        attachment = {"uid": "b3", "id": "kitchen_meadows", "paid": True, "removed": False,
+                      "realm": "meadows", "position": position, "yaw_deg": 0,
+                      "parent_uid": parent["uid"], "slot": 1}
+        records.append(attachment)
+        kitchen_fixture = {"scope": "DISCLOSED initial station attachment fixture; no earned payment or build transaction",
+                           "record": attachment, "authored_cost_not_claimed_paid": definitions[0]["cost"],
+                           "source_socket": "Actual StationRules.socket tier1 at yaw0: parentX−halfWidth−attachmentSpacing",
+                           "personal_recipes_changed": False, "receipt_or_journal_created": False}
     require(inputs[0]["world"].get("placed_buildings") == [], "Bounded fixture requires originally empty station site")
     require(not any(isinstance(row, dict) and row.get("kind") in ("creature_training", "altar_building")
                     for row in inputs[0]["world"].get("reward_deliveries", {}).values()),
@@ -254,6 +276,10 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     require(vector(layout.get("stations", {}).get("altar")), "Declare planned actual Altar build target")
     require(vector(layout.get("actor_start")), "Declare finite initial actor fixture position")
     items = read(ROOT / "data/items/items.json")["items"]
+    initial_stock = dict(STOCK)
+    if initial_alpha_capture_orb:
+        require(preboss_legacy_mechanics, "Capture orb stock must precede every typed producer journal")
+        initial_stock["orb_basic"] = 1
     pack = read(route_pack) if route_pack else None
     if pack:
         validate_pack(pack)
@@ -280,11 +306,16 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     if preboss_disclosure:
         manifest["preboss_legacy_mechanics"] = preboss_disclosure
         profile["provenance"] += " Explicit pre-boss legacy mechanics gates removed only in detached initial fixture; original rewards and all personal data retained."
+    if kitchen_fixture:
+        manifest["initial_kitchen_meadows_attachment_fixture"] = kitchen_fixture
+        profile["provenance"] += " INITIAL Kitchen Spice rack attachment is a disclosed mechanics station fixture, not an earned upgrade/payment/transaction; real Master recipe, cooking and feed still required."
+    if initial_alpha_capture_orb:
+        profile["provenance"] += " One initial Basic Orb per actual character is disclosed stock for the real catch producer, never a caught companion or provenance grant."
     output.mkdir(parents=True, exist_ok=False)
     for index, row in enumerate(inputs):
         destination = output / f"peer-{index}"
         char = copy.deepcopy(row["character"])
-        char["inventory"] = stock_inventory(char["inventory"], items)
+        char["inventory"] = stock_inventory(char["inventory"], items, initial_stock)
         pose = copy.deepcopy(char["player_pose"])
         pose.update(position=layout["actor_start"], realm="meadows")
         pose["traversal"].update(mode="grounded", realm="meadows", safe_anchor=layout["actor_start"], velocity=[0, 0, 0])
@@ -306,7 +337,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
             pinned.append({"path": str(original), "sha256": digest(original),
                            "fixture_path": str(target), "fixture_sha256": digest(target)})
         manifest["inputs"].append({"peer": index, "character_id": row["id"], "owned_uids": row["uids"], "documents": pinned})
-        manifest["mutations"].append({"peer": index, "initial_stock_added": STOCK, "initial_pose": pose,
+        manifest["mutations"].append({"peer": index, "initial_stock_added": initial_stock, "initial_pose": pose,
                                       "initial_paid_stations": records if index == 0 else []})
         profile["saves"].append(str(destination))
         card = char["party"][0]
@@ -363,7 +394,8 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     for method in ("homestead_start_refining", "homestead_actor_context", "homestead_commit_refine_unit"):
         if re.search(r"^func " + re.escape(method) + r"\(", session_source, re.MULTILINE) is None:
             manifest["gaps"].append(f"Ordinary Forge producer Session.{method} source unavailable; candidate button cannot complete")
-    manifest["gaps"].append("Kitchen remains tier0; Master win/recipe, boss key/relic and ordinary reopen routes are not fabricated")
+    manifest["gaps"].append("Master win/recipe, boss key/relic and ordinary reopen routes are not fabricated" +
+                            ("; Kitchen remains tier0" if not kitchen_fixture else "; INITIAL Kitchen tier1 is separately disclosed, not earned"))
     if "defeated_warden" in initial_world.get("flags", {}).get("flags", []):
         manifest["gaps"].append("Original host legacy world already defeated Warden; no flag reset or new-loop boss eligibility claim")
     # Export a separately pinned test overlay; do not change production defaults.
@@ -417,12 +449,16 @@ def main() -> int:
                         help="Export separately pinned named-mechanics gates; never apply them to production source")
     parser.add_argument("--pre-boss-legacy-mechanics", action="store_true",
                         help="Explicit detached initial gate setup; refuses all prior typed journals/receipts and preserves legacy rewards")
+    parser.add_argument("--initial-kitchen-meadows-attachment", action="store_true",
+                        help="Explicit initial Kitchen tier1 station fixture; never an earned upgrade, receipt or payment claim")
     parser.add_argument("--origin", required=True, help="Original native run and disclosed earlier setup; never relabel as earned")
+    parser.add_argument("--initial-alpha-capture-orb", action="store_true", help="Disclose one initial actual Basic Orb; no caught/provenance grant")
     args = parser.parse_args()
     try:
         manifest = generate([path.resolve() for path in args.source], args.layout.resolve(),
                             args.output.resolve(), args.route_pack.resolve() if args.route_pack else None,
-                            args.origin, args.configuration_scope, args.pre_boss_legacy_mechanics)
+                            args.origin, args.configuration_scope, args.pre_boss_legacy_mechanics,
+                            args.initial_kitchen_meadows_attachment, args.initial_alpha_capture_orb)
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(json.dumps({"ok": False, "error": str(error)}))
         return 1

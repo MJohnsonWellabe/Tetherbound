@@ -14,6 +14,8 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_assert_snapshot": return _assert_snapshot(tree)
 		"f48_measure_layout": return _measure_layout(tree, args)
 		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
+		"f48_fixture_approach": return await _fixture_approach(tree, args)
+		"f48_fixture_join_boss": return await _fixture_join_boss(tree, args)
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
@@ -128,6 +130,90 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 	if not DETACHED.publish(folder.path_join(str(OS.get_process_id()) + "-" + trainer + "-" + str(Time.get_ticks_usec()) + ".json"), data):
 		return _result(false, "Could not retain exact fixture fight actions", data)
 	result["data"] = data
+	return result
+
+static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
+	# Explicit mechanics setup at an ACTUAL mounted authored site. The shipping
+	# prompt/chooser, actor contact, admission and transaction fences still run.
+	if args.get("fixture_disclosure") != "named_mechanics_actor_and_owned_ally_placement_no_earned_credit":
+		return _result(false, "Explicit actual actor/owned-ally position fixture disclosure required")
+	var scene := tree.current_scene
+	var target_name := str(args.get("target", ""))
+	if scene == null or target_name not in ["master_t1", "master_t1_chest", "warden_aldis", "forge", "kitchen", "altar", "home_arch", "tidewake_arch", "meadows_pedestal"]:
+		return _result(false, "Unknown authored mechanics approach")
+	var target: Node3D
+	for candidate: Node in scene.find_children("*", "Node3D", true, false):
+		if target_name.begins_with("master_t1") and candidate.get_script() == preload("res://scripts/masters/master_site.gd") \
+			and candidate.get("master_id") == "master_t1" and candidate.get("_mounted") == true:
+			if target != null: return _result(false, "Ambiguous actual Master site")
+			target = candidate.get_node_or_null(^"RecipeChest" if target_name.ends_with("_chest") else ^"Master") as Node3D
+		elif target_name == "warden_aldis" and candidate.get_script() == preload("res://scripts/world/stronghold_climax.gd"):
+			if target != null: return _result(false, "Ambiguous actual Warden site")
+			target = candidate.call("warden_body") as Node3D
+		elif target_name in ["forge", "kitchen", "altar"] and candidate.get_script() == preload("res://scripts/build/station_piece.gd") \
+			and candidate.get("_id") == target_name and candidate.get("_ghost") == false and candidate.get("_registered") == true:
+			if target != null: return _result(false, "Ambiguous actual registered station")
+			target = candidate as Node3D
+		elif target_name in ["home_arch", "tidewake_arch", "meadows_pedestal"] \
+			and candidate.get_script() == preload("res://scripts/world/crossing_hall.gd"):
+			if target != null: return _result(false, "Ambiguous actual Hall")
+			var slot: Node3D
+			if target_name == "meadows_pedestal": slot = candidate.get("_pedestals").get("meadows") as Node3D
+			else: slot = candidate.call("arch", "home" if target_name == "home_arch" else "tidewake") as Node3D
+			target = slot.get_node_or_null(^"Approach") as Node3D if slot != null else null
+	var game := tree.root.get_node_or_null(^"Game")
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	var director := scene.get_node_or_null(^"EncounterDirector")
+	if not is_instance_valid(target) or game == null or player == null or director == null:
+		return _result(false, "Actual mounted target/player/director unavailable")
+	var ally := director.call("ally_body") as Node3D
+	var creature: Variant = director.call("ally_instance")
+	if not is_instance_valid(ally) or creature == null: return _result(false, "Original owned companion must already be ordinarily deployed")
+	var uid := str(creature.get("uid"))
+	var local: RefCounted = game.get("local")
+	var owned := false
+	for card: Dictionary in local.call("save_data").get("party", []):
+		if card.get("uid") == uid: owned = true
+	if not owned or uid.is_empty(): return _result(false, "Fixture cannot create or substitute an owned companion")
+	var actor_before := player.global_position
+	var ally_before := ally.global_position
+	var requested := target.global_position + Vector3(2.0, 2.0, 0.0)
+	if target_name in ["home_arch", "tidewake_arch", "meadows_pedestal"]:
+		requested = target.global_position + Vector3(0.0, 2.0, 0.0)
+	var ally_requested := target.global_position + Vector3(2.0, 0.0, 1.0)
+	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
+	player.velocity = Vector3.ZERO
+	var ally_placed: bool = ally.has_method("place_on_ground") and ally.call("place_on_ground", ally_requested) == true
+	for _frame: int in 90: await tree.physics_frame
+	var actual := player.global_position
+	var actual_ally := ally.global_position
+	var data := {"target": target_name, "source_path": str(target.get_path()), "owned_uid": uid,
+		"actor_before": [actor_before.x, actor_before.y, actor_before.z], "actor_requested": [requested.x, requested.y, requested.z],
+		"actor_after": [actual.x, actual.y, actual.z], "actor_on_floor": player.is_on_floor(),
+		"ally_before": [ally_before.x, ally_before.y, ally_before.z], "ally_requested": [ally_requested.x, ally_requested.y, ally_requested.z],
+		"ally_after": [actual_ally.x, actual_ally.y, actual_ally.z], "ally_placement_accepted": ally_placed,
+		"fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
+	var output := OS.get_environment("TB_PROOF_OUT")
+	if output.is_empty(): return _result(false, "No detached fixture approach observation root", data)
+	var folder := output.path_join("f48-fixture-approaches")
+	DirAccess.make_dir_recursive_absolute(folder)
+	if not DETACHED.publish(folder.path_join(str(OS.get_process_id()) + "-" + target_name + "-" + str(Time.get_ticks_usec()) + ".json"), data):
+		return _result(false, "Could not retain disclosed actual position fixture", data)
+	return _result(ally_placed and player.is_on_floor() and actual.distance_to(target.global_position) <= 3.0,
+		"Disclosed authored-site placement; actual actor floor/proximity required before ordinary prompt", data)
+
+static func _fixture_join_boss(tree: SceneTree, args: Dictionary) -> Dictionary:
+	if args.get("fixture_disclosure") != "named_mechanics_actual_announced_boss_join_no_earned_credit":
+		return _result(false, "Explicit authenticated actual boss join fixture required")
+	var director := tree.current_scene.get_node_or_null(^"EncounterDirector") if tree.current_scene != null else null
+	if director == null: return _result(false, "Actual director unavailable")
+	var matches: Array = []
+	for row: Dictionary in director.call("joinable_encounters"):
+		if row.get("kind") == "boss" and row.get("phase") == "active" \
+			and row.get("opponent", {}).get("owner_npc") == "warden_aldis": matches.append(row)
+	if matches.size() != 1: return _result(false, "Exactly one actual current Warden announcement required")
+	var result: Dictionary = await tree.call("_step_join_encounter", {"encounter_id": matches[0].encounter_id})
+	result["data"] = {"announcement": matches[0], "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
 	return result
 
 static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
@@ -687,7 +773,17 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# Focus is harness input setup. Press goes through real InputEvent delivery;
 	# no Button.pressed.emit(), no private _cook/_feed/submit adapters.
 	var matches: Array[Button] = []
-	_collect_buttons(tree.root, str(args.get("text", "")), matches)
+	var text := str(args.get("text", ""))
+	if args.has("feast_recipe"):
+		if args.get("feast_recipe") != "feast_t1_ground" or args.has("text"):
+			return _result(false, "Only exact original ground feast recipe label may be resolved")
+		var recipes: Dictionary = preload("res://scripts/creatures/breakthrough.gd").feasts().get("recipes", {})
+		var recipe: Dictionary = recipes.get("feast_t1_ground", {})
+		if recipe.is_empty(): return _result(false, "Actual ground feast recipe missing")
+		# Same visible shipping label construction, without assuming a cross-
+		# platform Dictionary number rendering; input still presses real button.
+		text = str(recipe.name) + " · " + str(recipe.cost)
+	_collect_buttons(tree.root, text, matches)
 	if matches.size() != 1: return _result(false, "Need exactly one visible enabled button: " + str(args.get("text", "")))
 	matches[0].grab_focus()
 	await tree.process_frame
