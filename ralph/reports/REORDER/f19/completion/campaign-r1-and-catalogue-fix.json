@@ -1,0 +1,38 @@
+{
+  "kind": "f19_rejected_fresh_campaign_and_bounded_selector_fix",
+  "rejected_campaign": {
+    "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37075247824",
+    "artifact_id": 11256983292,
+    "source_commit": "588411be6e0090e705faddcbb60fab6e19968050",
+    "command": "Godot 4.7 --headless --script tests/smoke_four_biome_continuous.gd",
+    "log": "ci-campaign-rejected-37075247824.log",
+    "reached": "earned_team",
+    "counts_as_proof": false,
+    "campaign_complete": false,
+    "earned_boundaries": [],
+    "failures": ["selected tent and the live pending selection is ''"],
+    "engine_errors": 1,
+    "disposition": "No earned fixture promoted and no partial/resumed run relabelled."
+  },
+  "cause_and_fix": {
+    "cause": "Continuous camp helper inferred item ID from thumbnail basename. Actual Tent and Forward Camp share tent.png; the helper chose Forward Camp's button when seeking Tent. Actual catalogue correctly refused it without a forward-camp kit.",
+    "change": "Read canonical IDs from the real Build menu's parallel button/piece arrays. Keep normal focus navigation, native presses, affordability checks and placement. Product menu source unchanged.",
+    "diagnostics": ["build-select-probe.log", "build-select-probe-r2.log", "build-select-probe-r3.log", "build-select-probe-r4.log"],
+    "rejected_hypothesis": "A speculative local callback-bind change did not affect the failure and was reverted before commit. The shared thumbnail, not a product callback, caused the wrong choice."
+  },
+  "validation": {
+    "command": "Godot 4.7 --headless --script tests/smoke_f19_build_catalogue_identity.gd",
+    "log": "build-catalogue-identity.log",
+    "assertions": 13,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": "Real catalogue and native joypad selector distinguish the shared-image items, select payable Tent, refuse unpayable Forward Camp, and select Forward Camp with its declared kit fixture. No placement or earned-resource claim."
+  },
+  "reviewed_f18_dependencies": [
+    {"upstream": "52f5a077bf8994617ccff83c111892cd7198e6a2", "lane": "7373775733", "purpose": "Durable waystone touch/portal producer and travel permits; coordinator-owned STATE excluded"},
+    {"upstream": "b25623fb4534284351f4d504c20790c7cfb73183", "lane": "c118a589f4", "purpose": "Supported Salt Crown waystone"},
+    {"upstream": "538c971f6fa9355113efdd0f4756aa34f889e210", "lane": "c0a8951cfb", "purpose": "Home Key raise shares host monotonic clock"}
+  ],
+  "combined_dependency_validation": {"log": "reviewed-dependencies.log", "tests": 16, "assertions": 303, "failures": 0, "engine_errors": 0},
+  "next_campaign": "Fresh full continuous new-order campaign in offloaded production OpenGL, with the bounded catalogue fix and reviewed dependencies. No checkpoint or resume flags."
+}
