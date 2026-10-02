@@ -6,9 +6,13 @@ import {execFileSync} from 'node:child_process';
 
 // Promote byte-identical production handoffs only after the continuous fresh
 // campaign has completed. No save payload is edited, migrated or synthesized.
-// node tools/earned_saves/promote_f19.mjs <campaign.log> <handoffs directory>
-const [logFile, handoffDirectory] = process.argv.slice(2);
+// CI artifacts may be downloaded to another host. The explicit relocation
+// option keeps the original runner paths in provenance and still requires all
+// five receipts and every production byte to match the unedited witness.
+// node tools/earned_saves/promote_f19.mjs <campaign.log> <handoffs directory> [--relocated-from-ci]
+const [logFile, handoffDirectory, relocation] = process.argv.slice(2);
 assert.ok(logFile && handoffDirectory, 'Expected campaign log and immutable handoff directory');
+assert.ok(relocation === undefined || relocation === '--relocated-from-ci', 'Unknown promotion option');
 const root = process.cwd();
 assert.equal(fs.realpathSync(execFileSync('git', ['rev-parse', '--show-toplevel'], {encoding: 'utf8'}).trim()), fs.realpathSync(root), 'Run from the repository root');
 const sourceRoot = fs.realpathSync(handoffDirectory);
@@ -36,6 +40,7 @@ const boundaries = ['meadows_settled', 'tidewake_settled', 'cloudreach_settled',
 const bosses = ['warden_aldis', 'water_trainer_nerissa', 'captain_veyra_storm_anchor', 'captain_marrow_dynamo_core'];
 assert.deepEqual(emitted.map(row => row.boundary), boundaries, 'Each actual new boundary must be captured in order');
 let sourceCommit = '';
+let emittedRoot = '';
 const candidates = [];
 for (let index = 0; index < boundaries.length; index++) {
   const boundary = boundaries[index];
@@ -48,7 +53,13 @@ for (let index = 0; index < boundaries.length; index++) {
   sourceCommit ||= receipt.commit;
   assert.equal(receipt.commit, sourceCommit);
   assert.equal(emitted[index].commit, sourceCommit);
-  assert.equal(fs.realpathSync(emitted[index].path), fs.realpathSync(directory));
+  const originalPath = emitted[index].path.replaceAll('\\', '/');
+  assert.ok(path.posix.isAbsolute(originalPath) || /^[A-Za-z]:\//.test(originalPath), 'Absolute original runner path required');
+  assert.equal(path.posix.normalize(originalPath), originalPath, 'Original paths must be canonical');
+  assert.equal(path.posix.basename(originalPath), boundary, 'Original runner path must identify this boundary');
+  emittedRoot ||= path.posix.dirname(originalPath);
+  assert.equal(path.posix.dirname(originalPath), emittedRoot, 'All five boundaries must come from the same original handoff root');
+  if (relocation === undefined) assert.equal(fs.realpathSync(emitted[index].path), fs.realpathSync(directory));
   assert.deepEqual(receipt.files_sha256, emitted[index].files_sha256);
   assert.equal(receipt.realm, ['meadows', 'water', 'cloudreach', 'stormwood', 'meadows'][index]);
   assert.ok(receipt.state.party.length > 0 && receipt.state.party.length <= 5);
@@ -116,6 +127,7 @@ execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {stdio: 'pip
 const provenance = {kind: 'f19_earned_boundary_promotion', source_commit: sourceCommit,
   command: 'Godot 4.7 --headless --script tests/smoke_four_biome_continuous.gd',
   source_log_sha256: sha256(logFile), journey, boundaries,
+  transport: relocation ? {kind: 'downloaded_ci_artifact', original_handoff_root: emittedRoot, original_paths: emitted.map(row => row.path)} : {kind: 'local_original_paths'},
   disclosures: journey.shortcuts, scope: 'Earned progression/save boundaries; no hardware, timing or visual acceptance claim'};
 for (const candidate of candidates) {
   fs.mkdirSync(path.dirname(candidate.destination), {recursive: true});

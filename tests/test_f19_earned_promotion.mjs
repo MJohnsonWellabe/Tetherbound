@@ -20,8 +20,8 @@ function writeLog(r = result, j = journey, rows = emitted, errors = '') {
   fs.writeFileSync(logFile, errors + `FRESH CAMPAIGN RESULT ${JSON.stringify(r)}\nF49 JOURNEY ${JSON.stringify(j)}\n` +
     rows.map(row => `F49 DISK HANDOFF ${JSON.stringify(row)}\n`).join(''));
 }
-function refused(reason) {
-  const child = spawnSync(process.execPath, ['tools/earned_saves/promote_f19.mjs', logFile, handoffs], {encoding: 'utf8'});
+function refused(reason, options = []) {
+  const child = spawnSync(process.execPath, ['tools/earned_saves/promote_f19.mjs', logFile, handoffs, ...options], {encoding: 'utf8'});
   assert.notEqual(child.status, 0, reason);
   assert.match(child.stderr, reason);
   assert.ok(!child.stdout.includes('"result":"PASS"'));
@@ -65,6 +65,11 @@ try {
   fs.writeFileSync(firstReceipt, JSON.stringify(metadata));
   writeLog();
   refused(/Exactly one actual saved owner/);
+  const remote = emitted.map(row => ({...row, path: `/runner/user/campaign_handoffs/${row.boundary}`}));
+  writeLog(result, journey, remote);
+  refused(/Exactly one actual saved owner/, ['--relocated-from-ci']);
+  writeLog(result, journey, remote.map((row, index) => index === 0 ? {...row, path: '/runner/user/campaign_handoffs/other_boundary'} : row));
+  refused(/Original runner path must identify this boundary/, ['--relocated-from-ci']);
   console.log(JSON.stringify({test: 'F19-earned-promotion-negative-controls', checks, result: 'PASS', scope: 'fabricated rejection controls only; no earned saves were generated'}));
 } finally {
   assert.ok(path.resolve(dir).startsWith(path.resolve(os.tmpdir()) + path.sep), 'Cleanup stays inside the named temporary root');
