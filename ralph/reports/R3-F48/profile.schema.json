@@ -23,7 +23,7 @@
     },
     "outcomes": {
       "type": "object",
-      "description": "Independently reviewed feast_N/release_N/essence_spend_N expectations. Cannot relax fixed counts/costs/receipts. Feast requires creature uid/unchanged level/exact breakthroughs. Release requires original released_uid and exact essence delta. Essence spend requires exact delta and owned UID/level fields in equals.",
+      "description": "Independently reviewed feast_N/release_N/essence_spend_N expectations. Cannot relax fixed counts/costs/receipts. Feast requires creature uid/unchanged level/exact breakthroughs. Release requires original released_uid and exact essence delta. Essence spend requires exact delta and creature uid/exact new level/unchanged breakthroughs.",
       "additionalProperties": {
         "type": "object",
         "properties": {

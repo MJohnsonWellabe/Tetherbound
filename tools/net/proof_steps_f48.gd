@@ -245,10 +245,10 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 			for member: Dictionary in state.get("party", []):
 				if member.get("uid") == args.creature.uid: card = member
 			if card.is_empty() or card.get("level") != args.creature.level:
-				errors.append(payload + ": feast changed level or lost owned creature")
+				errors.append(payload + ": wrong expected level or missing original owned creature")
 			var mirror: Dictionary = state.get("redesign_character", {}).get("creatures", {}).get(args.creature.uid, {})
 			if mirror.get("breakthroughs") != args.creature.breakthroughs:
-				errors.append(payload + ": feast did not clear exactly the requested tier")
+				errors.append(payload + ": wrong exact breakthrough history")
 		if args.has("released_uid"):
 			if party.has(args.released_uid): errors.append(payload + ": released UID remains owned")
 			if not prior.is_empty():

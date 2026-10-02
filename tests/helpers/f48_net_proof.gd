@@ -230,9 +230,9 @@ func _outcome(transaction: String, since: String, peer: int = 1) -> Dictionary:
 		if not expected is Dictionary or expected.is_empty():
 			_profile_errors.append("Independent exact UID/cap/essence outcome unavailable: " + transaction)
 		else:
-			if transaction == "feast":
+			if transaction in ["feast", "essence_spend"]:
 				if not expected.get("creature") is Dictionary or not expected.creature.has_all(["uid", "level", "breakthroughs"]):
-					_profile_errors.append("Independent owned UID/unchanged level/exact cleared tiers required for feast")
+					_profile_errors.append("Independent owned UID/exact level/breakthroughs required for " + transaction)
 				else: fixed.creature = expected.creature
 			if transaction == "release":
 				if not expected.get("released_uid") is String or str(expected.released_uid).is_empty():

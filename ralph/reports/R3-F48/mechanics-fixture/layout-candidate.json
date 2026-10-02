@@ -1,0 +1,10 @@
+{
+  "provenance": "DECLARED initial mechanics fixture layout, using actual configured Meadows homestead bounds. Y0 is unmeasured; terrain, actor ground, collision, path and ordinary prompts MUST be verified by ROOT's native run. No native geometry PASS is claimed.",
+  "native_validated": false,
+  "stations": {
+    "forge": [-16, 0, 10],
+    "altar": [-10, 0, 8],
+    "kitchen": [-16, 0, 25]
+  },
+  "actor_start": [-16, 0, 14]
+}

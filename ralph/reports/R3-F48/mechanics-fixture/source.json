@@ -1,0 +1,246 @@
+{
+  "status": "SOURCE_CANDIDATE_NATIVE_OPEN",
+  "acceptance_credit": false,
+  "source_baseline": "1b2485c1f4dce6178526879f16de29faa90b296b",
+  "files": {
+    "tools/net/f48_profile_fixture.py": "76ecf3e4f45da3b86e906476dd570a7926813d475e450f4171fb0871ef186ce1",
+    "tests/helpers/f48_net_proof.gd": "3993701e20eea273dbda24738c4b5c2586a7c3c643fb5aa288346433e7e93de6",
+    "tools/net/proof_steps_f48.gd": "7c4134b7b0778095f9e5650606279ff537d9de86d31224ff1988d6755a633820",
+    "ralph/reports/R3-F48/profile.schema.json": "5826734bd7e90c3445fee12620be3106f71673a0e4c37a35f5e43a6b095078e8",
+    "ralph/reports/R3-F48/mechanics-fixture/layout-candidate.json": "1783b3761b4fe0b6039ad23c37866f8091900c759cc8e86adbd23a2619786cf9"
+  },
+  "checks": {
+    "python_ast": "PASS",
+    "gdscript_standalone_grammar": "PASS",
+    "actual_fixture_generation": "PASS",
+    "original_input_hashes_preserved": "PASS",
+    "existing_output_refused": "PASS",
+    "duplicate_identity_refused": "PASS",
+    "synthetic_route_refused": "PASS",
+    "engine": "NOT_RUN"
+  },
+  "fixture": {
+    "status": "OPEN_UNVALIDATED_MECHANICS_FIXTURE",
+    "acceptance_credit": false,
+    "earned_checkpoint": false,
+    "original_input_origin": "ROOT native shared-boss run returned-net-9696b2c32862-shared_boss; original starter/native combat identities retained. Earlier level9 starter mechanics setup was disclosed, not earned redesigned campaign. The host retains legacy defeated_warden; no full-loop readiness claim.",
+    "layout": {
+      "path": "D:\\tetherbound\\r3-f48\\ralph\\reports\\R3-F48\\mechanics-fixture\\layout-candidate.json",
+      "sha256": "1783b3761b4fe0b6039ad23c37866f8091900c759cc8e86adbd23a2619786cf9"
+    },
+    "source_files": {
+      "data/config/stations.json": "25cd64cb9fa22416aa2ef13bacabb5a22bc2bb983923308b73e6f9a1d7db8c11",
+      "data/config/essence.json": "feaf5f578c03b5d88743c1f7ee95f82d616683e367b7e4e9f80530af22acf05d",
+      "data/config/traits.json": "e8c1a8c991dba8a3a7301c30ac51728db64452b3f7c93ee1dd89770c9f54192b",
+      "data/config/multiplayer.json": "01ce69dc7966e79f4cdb035d0e6b42cc52f206445059a3c0d88a3e2742faa2bd",
+      "data/config/progression.json": "ee83ea8a3c65012d57133e1803abab87647452d5c7963552bdf8b175e96b6246",
+      "data/recipes/recipes_forge.json": "31b004ed464502b56a9d1788b78b5d9882e245da62617f91f8f65fc4e0c2e378",
+      "data/items/items.json": "bcf67b7bdf175885eb2891c5facf43f8bcbd110fec75f7a2cfa534b0d5354fc0"
+    },
+    "inputs": [
+      {
+        "peer": 0,
+        "character_id": "character-219d55c08e26227b4ccba505c7b3c409",
+        "owned_uids": [
+          "creature-816f9f6954d724bc4eddc0bc0fb79946"
+        ],
+        "documents": [
+          {
+            "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-219d55c08e26227b4ccba505c7b3c409\\character.json",
+            "sha256": "fd4973fee083df26a95244be1ec4bd9339bf677196646f59f694148e15c474d9",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1b2485-v3\\peer-0\\characters\\redesign-v28\\character-219d55c08e26227b4ccba505c7b3c409\\character.json",
+            "fixture_sha256": "cb1e376377400595036716eff86bf9b8e0f8ddbe6e84dc6a83cb427c2855ac49"
+          },
+          {
+            "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\worlds\\redesign-v28\\slot-0\\world.json",
+            "sha256": "d8baa942ac4d874a27095ad1b3ddcd7a39f35716efc033d3c2ed4c30eb3f5be0",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1b2485-v3\\peer-0\\worlds\\redesign-v28\\slot-0\\world.json",
+            "fixture_sha256": "ff7212aa3f01c651e5e56a6a9ecee161226a7f415d80ea002950b8c8eac87207"
+          },
+          {
+            "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\slot_0.json",
+            "sha256": "361a548a014a5a1d01bb320214a749cf218af77e5d982ddaa3d7b4766c14feb8",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1b2485-v3\\peer-0\\saves\\redesign-v28\\slot_0.json",
+            "fixture_sha256": "aa4958a8f274c0e1159903234ddc0872c56402994df5232ce5bd25ae3c3e245d"
+          }
+        ]
+      },
+      {
+        "peer": 1,
+        "character_id": "character-92a3946dcc1ebef20650b2c4f6675001",
+        "owned_uids": [
+          "creature-15403b0082eb053f088ae6d59f10e0a4"
+        ],
+        "documents": [
+          {
+            "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-92a3946dcc1ebef20650b2c4f6675001\\character.json",
+            "sha256": "26f893c26cf4394dcfc4856f72d71c5395ead32cde54b5418607b950578f1e9b",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1b2485-v3\\peer-1\\characters\\redesign-v28\\character-92a3946dcc1ebef20650b2c4f6675001\\character.json",
+            "fixture_sha256": "3e677495b3a3e3691c41bce7f0d816127a3ea046eeb435012436556f17903927"
+          }
+        ]
+      }
+    ],
+    "mutations": [
+      {
+        "peer": 0,
+        "initial_stock_added": {
+          "rootstone": 8,
+          "ironwood": 4,
+          "berries": 8,
+          "attuned_ground": 2,
+          "essence_ground": 100
+        },
+        "initial_pose": {
+          "camera_pitch": -0.226892807154215,
+          "camera_yaw": -0.785157014069263,
+          "model_yaw": 2.82077932357788,
+          "position": [
+            -16,
+            0,
+            14
+          ],
+          "realm": "meadows",
+          "traversal": {
+            "active_index": 0,
+            "mode": "grounded",
+            "realm": "meadows",
+            "safe_anchor": [
+              -16,
+              0,
+              14
+            ],
+            "stamina_fraction": 1.0,
+            "velocity": [
+              0,
+              0,
+              0
+            ],
+            "version": 1
+          }
+        },
+        "initial_paid_stations": [
+          {
+            "uid": "b1",
+            "id": "forge",
+            "paid": true,
+            "removed": false,
+            "realm": "meadows",
+            "position": [
+              -16,
+              0,
+              10
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "uid": "b2",
+            "id": "altar",
+            "paid": true,
+            "removed": false,
+            "realm": "meadows",
+            "position": [
+              -10,
+              0,
+              8
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "uid": "b3",
+            "id": "kitchen",
+            "paid": true,
+            "removed": false,
+            "realm": "meadows",
+            "position": [
+              -16,
+              0,
+              25
+            ],
+            "yaw_deg": 0
+          }
+        ]
+      },
+      {
+        "peer": 1,
+        "initial_stock_added": {
+          "rootstone": 8,
+          "ironwood": 4,
+          "berries": 8,
+          "attuned_ground": 2,
+          "essence_ground": 100
+        },
+        "initial_pose": {
+          "camera_pitch": -0.244346095279206,
+          "camera_yaw": 1.41663752312813,
+          "model_yaw": -1.22900056838989,
+          "position": [
+            -16,
+            0,
+            14
+          ],
+          "realm": "meadows",
+          "traversal": {
+            "active_index": 0,
+            "mode": "grounded",
+            "realm": "meadows",
+            "safe_anchor": [
+              -16,
+              0,
+              14
+            ],
+            "stamina_fraction": 1.0,
+            "velocity": [
+              0,
+              0,
+              0
+            ],
+            "version": 1
+          }
+        },
+        "initial_paid_stations": []
+      }
+    ],
+    "gaps": [
+      "peer0: no authentic caught wild companion for release; none fabricated",
+      "peer1: no authentic caught wild companion for release; none fabricated",
+      "Actual ordinary craft_retry route unavailable; existing smoke fails",
+      "Actual ordinary release_prepare route unavailable; existing smoke fails",
+      "Actual ordinary release_commit route unavailable; existing smoke fails",
+      "Actual ordinary release_retry route unavailable; existing smoke fails",
+      "Actual ordinary feast_prepare route unavailable; existing smoke fails",
+      "Actual ordinary feast_commit route unavailable; existing smoke fails",
+      "Actual ordinary feast_retry route unavailable; existing smoke fails",
+      "Actual ordinary key_prepare route unavailable; existing smoke fails",
+      "Actual ordinary key_commit route unavailable; existing smoke fails",
+      "Actual ordinary key_retry route unavailable; existing smoke fails",
+      "Actual ordinary relic_prepare route unavailable; existing smoke fails",
+      "Actual ordinary relic_commit route unavailable; existing smoke fails",
+      "Actual ordinary relic_retry route unavailable; existing smoke fails",
+      "Actual ordinary essence_spend_retry route unavailable; existing smoke fails",
+      "Independent exact release_1 oracle unavailable; existing smoke fails",
+      "Independent exact feast_1 oracle unavailable; existing smoke fails",
+      "Production gate stations.json:runtime_enabled is not enabled; source unchanged",
+      "Production gate stations.json:craft_runtime_enabled is not enabled; source unchanged",
+      "Production gate stations.json:forge.runtime_enabled is not enabled; source unchanged",
+      "Production gate essence.json:altar_runtime_enabled is not enabled; source unchanged",
+      "Production gate essence.json:altar_remote_spend_enabled is not enabled; source unchanged",
+      "Production gate essence.json:altar_building_runtime_enabled is not enabled; source unchanged",
+      "Production gate traits.json:runtime_enabled is not enabled; source unchanged",
+      "Production gate multiplayer.json:session.redesign_portal_runtime_enabled is not enabled; source unchanged",
+      "Production gate multiplayer.json:session.redesign_boss_handoff_runtime_enabled is not enabled; source unchanged",
+      "Actual native terrain/interaction/transaction/BOOL-save/ACK/cut proof remains OPEN",
+      "Kitchen remains tier0; Master win/recipe, boss key/relic and original retry routes are not fabricated",
+      "Original host legacy world already defeated Warden; no flag reset or new-loop boss eligibility claim"
+    ],
+    "profile_sha256": "fdbaffb70394eef0a1a65c393b788324063e105d8bca7d9b5f1e85e96ad1c94a"
+  },
+  "working_tree_files": {
+    "tools/net/f48_profile_fixture.py": "76ecf3e4f45da3b86e906476dd570a7926813d475e450f4171fb0871ef186ce1",
+    "tests/helpers/f48_net_proof.gd": "3993701e20eea273dbda24738c4b5c2586a7c3c643fb5aa288346433e7e93de6",
+    "tools/net/proof_steps_f48.gd": "7c4134b7b0778095f9e5650606279ff537d9de86d31224ff1988d6755a633820",
+    "ralph/reports/R3-F48/profile.schema.json": "5826734bd7e90c3445fee12620be3106f71673a0e4c37a35f5e43a6b095078e8",
+    "ralph/reports/R3-F48/mechanics-fixture/layout-candidate.json": "1783b3761b4fe0b6039ad23c37866f8091900c759cc8e86adbd23a2619786cf9"
+  },
+  "files_hash_basis": "Exact staged Git blob bytes; native generated fixtures/source input hashes are exact original file bytes"
+}
