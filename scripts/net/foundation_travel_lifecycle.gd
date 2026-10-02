@@ -71,10 +71,8 @@ func local_sample() -> Dictionary:
 			if source.get_script() != preload("res://scripts/story/sequence_director.gd"): continue
 			var prompt: Node3D = source.get("_grandpa_prompt")
 			if prompt == null or actor.global_position.distance_to(prompt.global_position) > float(prompt.get("radius")): continue
-			var panel: Node = source.get("_dialogue")
 			var credits: Node = source.get("_regional_credits")
-			if (input_owner == panel or input_owner == source) \
-				and str(source.get("_f18_opening_conversation_id")).begins_with("regional_homecoming_"): ending_owner = true
+			if source.call("owns_regional_presentation", input_owner, game) == true: ending_owner = true
 			if credits != null and input_owner == credits and credits.get("_expected_character_id") == game.get("local").character_id \
 				and credits.get("_expected_world") == game.get("world"): ending_owner = true
 	var party: RefCounted = game.get("party")

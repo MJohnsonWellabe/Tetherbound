@@ -202,6 +202,9 @@ var _grandpa: Node3D = null
 var _grandpa_prompt: Node3D = null
 var _homecoming_character_id: String = ""
 var _homecoming_context: Dictionary = {}
+var _regional_presentation_context: Dictionary = {}
+var _regional_presentation_world: WeakRef
+var _regional_presentation_id: String = ""
 var _regional_credits: CanvasLayer = null
 var _bed_prompt: Node3D = null
 ## The house, if this world built one — SA2's door gate lives on it (a
@@ -1717,10 +1720,42 @@ func _start_conversation(id: String) -> bool:
 		if started:
 			_homecoming_character_id = REGIONAL_HOMECOMING.character_id(game)
 			_homecoming_context = expected_context.duplicate(true)
+			_regional_presentation_context = expected_context.duplicate(true)
+			_regional_presentation_world = weakref(game.get("world"))
+			_regional_presentation_id = id
 		return started
 	var opened := bool(_dialogue.call("start", id))
-	if opened: _f18_opening_conversation_id = id
+	if opened:
+		_f18_opening_conversation_id = id
+		_regional_presentation_context = {}
+		_regional_presentation_world = null
+		_regional_presentation_id = ""
 	return opened
+
+
+## The spoken identity survives completed() while the closing press and the
+## original owner ACK still own input. It never adopts F18 opening state.
+func owns_regional_presentation(input_owner: Node, game: Object) -> bool:
+	if game == null or _regional_presentation_world == null \
+		or _regional_presentation_world.get_ref() != game.get("world") \
+		or _regional_presentation_context.is_empty() \
+		or not (REGIONAL_HOMECOMING.is_initial(_regional_presentation_id) or _regional_presentation_id == REGIONAL_HOMECOMING.REPEAT_ID): return false
+	var expected: Dictionary = _regional_presentation_context
+	var party: Object = game.get("party")
+	var owner_session: Node = game.get("session")
+	if party == null or owner_session == null or game.get("local") == null \
+		or expected.character_id != game.get("local").character_id \
+		or expected.world_instance_id != game.get("world").reward_delivery_namespace \
+		or expected.session_epoch != owner_session.call("_altar_current_epoch") \
+		or expected.party_revision != party.get("revision") \
+		or expected.party_signature != REGIONAL_HOMECOMING.party_signature(party): return false
+	if input_owner == _dialogue:
+		return _dialogue.call("owns_input") == true
+	if input_owner != owner_session or owner_session.call("owns_input") != true: return false
+	var retained: Dictionary = owner_session.call("retained_training_transaction", ["regional_ack"])
+	for stage: String in [REGIONAL_HOMECOMING.SEEN_FLAG, REGIONAL_HOMECOMING.CREDITS_SEEN_FLAG]:
+		if retained.get("intent") == REGIONAL_HOMECOMING.acknowledgement_intent(expected, stage): return true
+	return false
 
 
 func _on_dialogue_completed(id: String) -> void:
