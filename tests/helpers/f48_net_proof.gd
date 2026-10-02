@@ -140,6 +140,11 @@ func _route(name: String, peer: int) -> Array:
 					_profile_errors.append("Unbounded input: " + name + "/" + field)
 		var row := _entry(peer, raw.action, raw.args, name + (": disclosed mechanics fixture" if str(raw.action).begins_with("f48_fixture_") else ": ordinary input"))
 		row.budget_frames = 10000 if raw.action == "move_to" else 3000
+		# Native four-peer run 37077718938 reached the real Warden fight but
+		# completed only 164 driver frames in 52 wall seconds on the CI runner.
+		# This is the response deadline only. The peer still enforces its
+		# existing 3000-frame mechanics ceiling and every original win oracle.
+		if raw.action == "f48_fixture_trainer_fight": row.budget_frames = 90000
 		out.append(row)
 	return out
 
