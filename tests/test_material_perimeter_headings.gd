@@ -20,7 +20,9 @@ class ObservedNavigator:
 		aims.append(point)
 		if not stall:
 			_player.position = _player.position.move_toward(Vector3(point.x, _player.position.y, point.z), 1.0)
-		await _tree.physics_frame
+		# Accounting fixture frames carry no physical travel claim. Production
+		# step() retains its real physics-frame input/ground/contact checks.
+		await _tree.process_frame
 
 func _boundary() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(ROUTE.VILLAGE_BOUNDARY_PATH))
@@ -82,7 +84,9 @@ func test_gate_requires_exact_current_world_live_retained_open_leaf() -> void:
 	gate.position = Vector3(38.72, 0, -19.85)
 	var shape := CollisionShape3D.new()
 	shape.shape = BoxShape3D.new()
-	gate.add_child(shape)
+	var leaf_body := StaticBody3D.new()
+	gate.add_child(leaf_body)
+	leaf_body.add_child(shape)
 	gate.set("_shape", shape)
 	# Disclosed retained-state controls; no production gate is opened or built.
 	gate.set("_open", true)
