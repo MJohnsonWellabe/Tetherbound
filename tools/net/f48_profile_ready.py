@@ -20,7 +20,7 @@ import f48_profile_fixture as fixture
 
 SUITES = {"loop", "behind", "boss_four"}
 OPERATIONS = set(fixture.OPERATIONS)
-DEFAULT_REQUIRED = {"loop", "behind"} | OPERATIONS
+DEFAULT_REQUIRED = SUITES | OPERATIONS
 CONFIGURATION_FILES = {"stations.json", "essence.json", "traits.json", "multiplayer.json", "hud.json", "alpha_respawns.json"}
 
 
