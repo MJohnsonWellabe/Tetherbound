@@ -332,7 +332,7 @@ func test_boss_hand_offs_keep_typed_keys_distinct_from_item_skus() -> void:
 		"captain_veyra_storm_anchor": ["cloudreach", "cloudreach", "stormwood_portal_key", "portal_key_stormwood"],
 		"captain_marrow_dynamo_core": ["stormwood", "stormwood", "fifth_portal_key", "portal_key_biome5"],
 	}
-	assert_eq((config.get("boss_hand_offs", {}) as Dictionary).size(), 4)
+	assert_eq((config.get("boss_handoffs", {}) as Dictionary).size(), 4)
 	for trainer: String in targets:
 		var want: Array = targets[trainer]
 		var row := REWARDS.chapter_hand_off(trainer, str(want[0]), config)

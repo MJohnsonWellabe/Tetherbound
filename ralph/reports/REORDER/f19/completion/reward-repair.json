@@ -1,0 +1,27 @@
+{
+  "feature": "F19",
+  "baseline": "f48a0ba1ea54bf39149e37695804fdc976a1f9e7",
+  "scope": "Production boss config projection and deferred personal reward release",
+  "fixes": [
+    "Read the shipped boss_handoffs table rather than missing boss_hand_offs",
+    "Resolve canonical relic IDs, runtime aliases, inventory key SKUs and schema key IDs",
+    "Retain boss participation before victory publication; retry deferred grants after the first saved ceremony settlement",
+    "Deny guest generic flag RPCs for ceremony markers that release boss rewards"
+  ],
+  "selected_engine_checks": {
+    "files": ["test_f19_boss_handoffs.gd", "test_redesign_chapter_curve.gd", "test_encounter_rewards.gd"],
+    "tests": 47,
+    "assertions": 5297,
+    "failed": 0,
+    "script_or_engine_errors": 0,
+    "log": "handoff-authority-check.log",
+    "engine": "Godot 4.7 stable official 5b4e0cb0f",
+    "profile": "isolated APPDATA; copied warm cache; no import, rendering or GPU process"
+  },
+  "content_checks": {
+    "test_f19_curve.mjs": {"result": "PASS", "named_teams": 88, "regional_wild_tables": 36},
+    "test_f19_gate_scan.mjs": {"result": "PASS", "gate_fields": 1275}
+  },
+  "discarded_run": "handoff-check.log returned zero but contained missing sparse-checkout asset/shader preload errors. It is invalid evidence. Assets/addons/shaders restored before the clean run.",
+  "acceptance_limit": "This focused transaction and content batch does not close the six F19 criteria. Live route, per-participant legendary choice matrix, regenerated current-schema earned saves, independent review and main integration remain required."
+}

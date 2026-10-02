@@ -751,6 +751,11 @@ func _storage_txn(intent: Dictionary, peer_id: int, realm: String) -> Dictionary
 
 func _set_world_flag(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var id := str(intent.get("id", ""))
+	# Ceremony markers release retained personal boss drops. Only the host's
+	# validated settlement controllers may publish them; an admitted guest's
+	# generic flag RPC must not skip the ceremony or clear a saved settlement.
+	if peer_id != HOST_PEER and load("res://scripts/net/encounter_rewards.gd").call("is_chapter_settlement_flag", id):
+		return _refuse("set_world_flag", peer_id, "host_boss_settlement_required", "The host must save the ceremony's outcome first.")
 	if id.begins_with("cache:ripplet:"):
 		return _refuse("set_world_flag", peer_id, "typed_claim_required", "Sunken finds use their own claim receipt.")
 	if id.is_empty():
