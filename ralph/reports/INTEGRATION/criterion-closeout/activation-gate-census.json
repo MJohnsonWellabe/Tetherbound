@@ -1,0 +1,835 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:28:13.530862+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "flags": [
+    {
+      "feature": "F19",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_portal_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F19",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_boss_handoff_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F19",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_ending_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F20",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_portal_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F20",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_boss_handoff_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F20",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_ending_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/actor_vitals/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/contact_spacing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/strike_reaim/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/hud_subject_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/tracking/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/occlusion_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/top_band/enabled",
+      "value": false
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/body_clear/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/aftermath/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/height_follow/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/clear_orbit/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/feedback/numbers/enabled",
+      "value": false
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/telegraph/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/stagger_feedback/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/charged_camera_nudge/enabled",
+      "value": true
+    },
+    {
+      "feature": "F21",
+      "path": "data/config/combat.json",
+      "pointer": "/patterns/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/actor_vitals/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/contact_spacing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/strike_reaim/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/hud_subject_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/tracking/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/occlusion_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/top_band/enabled",
+      "value": false
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/body_clear/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/aftermath/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/height_follow/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/clear_orbit/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/feedback/numbers/enabled",
+      "value": false
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/telegraph/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/stagger_feedback/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/charged_camera_nudge/enabled",
+      "value": true
+    },
+    {
+      "feature": "F22",
+      "path": "data/config/combat.json",
+      "pointer": "/patterns/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/actor_vitals/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/contact_spacing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/strike_reaim/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/hud_subject_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/tracking/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/occlusion_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/top_band/enabled",
+      "value": false
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/body_clear/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/aftermath/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/height_follow/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/clear_orbit/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/feedback/numbers/enabled",
+      "value": false
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/telegraph/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/stagger_feedback/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/charged_camera_nudge/enabled",
+      "value": true
+    },
+    {
+      "feature": "F23",
+      "path": "data/config/combat.json",
+      "pointer": "/patterns/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/actor_vitals/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/contact_spacing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/strike_reaim/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/hud_subject_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/tracking/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/occlusion_fade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/hud_safe/top_band/enabled",
+      "value": false
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/body_clear/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/aftermath/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/height_follow/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/camera/framing/clear_orbit/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/impact/feedback/numbers/enabled",
+      "value": false
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/telegraph/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/stagger_feedback/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/charged_camera_nudge/enabled",
+      "value": true
+    },
+    {
+      "feature": "F24",
+      "path": "data/config/combat.json",
+      "pointer": "/patterns/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/enabled",
+      "value": true
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/hit_spark/enabled",
+      "value": true
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/hit_flash/enabled",
+      "value": true
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/ko_puff/enabled",
+      "value": true
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/catch_burst/enabled",
+      "value": true
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/level_up/enabled",
+      "value": true
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/move_library/enabled",
+      "value": false
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/move_library/archetypes/fireball/light/enabled",
+      "value": true
+    },
+    {
+      "feature": "F25",
+      "path": "data/config/vfx.json",
+      "pointer": "/move_library/archetypes/sky_lightning/light/enabled",
+      "value": true
+    },
+    {
+      "feature": "F27",
+      "path": "data/config/essence.json",
+      "pointer": "/altar_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F27",
+      "path": "data/config/essence.json",
+      "pointer": "/altar_remote_spend_enabled",
+      "value": false
+    },
+    {
+      "feature": "F27",
+      "path": "data/config/essence.json",
+      "pointer": "/altar_building_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F27",
+      "path": "data/config/essence.json",
+      "pointer": "/wild_victory_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F29",
+      "path": "data/config/evolution_lines.json",
+      "pointer": "/0/enabled",
+      "value": true
+    },
+    {
+      "feature": "F29",
+      "path": "data/config/evolution_lines.json",
+      "pointer": "/1/enabled",
+      "value": true
+    },
+    {
+      "feature": "F29",
+      "path": "data/config/evolution_lines.json",
+      "pointer": "/2/enabled",
+      "value": true
+    },
+    {
+      "feature": "F29",
+      "path": "data/config/evolution_lines.json",
+      "pointer": "/3/enabled",
+      "value": true
+    },
+    {
+      "feature": "F29",
+      "path": "data/config/evolution_lines.json",
+      "pointer": "/4/enabled",
+      "value": false
+    },
+    {
+      "feature": "F30",
+      "path": "data/config/traits.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F31",
+      "path": "data/config/stations.json",
+      "pointer": "/forge/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F31",
+      "path": "data/config/stations.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F31",
+      "path": "data/config/stations.json",
+      "pointer": "/craft_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F31",
+      "path": "data/config/stations.json",
+      "pointer": "/farm_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F31",
+      "path": "data/config/stations.json",
+      "pointer": "/den_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F31",
+      "path": "data/config/stations.json",
+      "pointer": "/den/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F31",
+      "path": "data/config/stations.json",
+      "pointer": "/greenhouse/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F32",
+      "path": "data/config/f32_runtime.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F32",
+      "path": "data/config/essence_nodes.json",
+      "pointer": "/presentation_candidate/enabled",
+      "value": false
+    },
+    {
+      "feature": "F32",
+      "path": "data/config/essence_nodes.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F33",
+      "path": "data/config/gear.json",
+      "pointer": "/feature_flags/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F33",
+      "path": "data/config/gear.json",
+      "pointer": "/feature_flags/network_enabled",
+      "value": false
+    },
+    {
+      "feature": "F33",
+      "path": "data/config/gear.json",
+      "pointer": "/feature_flags/visual_enabled",
+      "value": false
+    },
+    {
+      "feature": "F34",
+      "path": "data/config/forward_camps.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F40",
+      "path": "data/config/cloudreach_f40_visual.json",
+      "pointer": "/enabled",
+      "value": false
+    },
+    {
+      "feature": "F40",
+      "path": "data/config/cloudreach_f40_visual.json",
+      "pointer": "/visual/skyline_profile/enabled",
+      "value": true
+    },
+    {
+      "feature": "F40",
+      "path": "data/config/cloudreach_f40_visual.json",
+      "pointer": "/visual/settlement/occupied_terrace/enabled",
+      "value": false
+    },
+    {
+      "feature": "F40",
+      "path": "data/config/cloudreach_f40_visual.json",
+      "pointer": "/look/route_verges/middle_ground/enabled",
+      "value": true
+    },
+    {
+      "feature": "F40",
+      "path": "data/config/cloudreach_f40_visual.json",
+      "pointer": "/aviary/crown_arcade/enabled",
+      "value": true
+    },
+    {
+      "feature": "F40",
+      "path": "data/config/cloudreach_f40_visual.json",
+      "pointer": "/aviary/towers/enabled",
+      "value": false
+    },
+    {
+      "feature": "F40",
+      "path": "data/config/cloudreach_f40_visual.json",
+      "pointer": "/aviary/sanctuary/enabled",
+      "value": true
+    },
+    {
+      "feature": "F43",
+      "path": "data/config/bounties.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F44",
+      "path": "data/config/rematches.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F44",
+      "path": "data/config/alpha_respawns.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F45",
+      "path": "data/config/research.json",
+      "pointer": "/runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F46",
+      "path": "data/config/onboarding.json",
+      "pointer": "/enabled",
+      "value": false
+    },
+    {
+      "feature": "F47",
+      "path": "data/config/essence.json",
+      "pointer": "/altar_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F47",
+      "path": "data/config/essence.json",
+      "pointer": "/altar_remote_spend_enabled",
+      "value": false
+    },
+    {
+      "feature": "F47",
+      "path": "data/config/essence.json",
+      "pointer": "/altar_building_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F47",
+      "path": "data/config/essence.json",
+      "pointer": "/wild_victory_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F48",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_portal_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F48",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_boss_handoff_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F48",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_ending_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F49",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_portal_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F49",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_boss_handoff_runtime_enabled",
+      "value": false
+    },
+    {
+      "feature": "F49",
+      "path": "data/config/multiplayer.json",
+      "pointer": "/session/redesign_ending_runtime_enabled",
+      "value": false
+    }
+  ],
+  "scope": "literal flags only; actual producer capability/activation must be independently proven"
+}

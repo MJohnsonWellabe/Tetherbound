@@ -43,7 +43,7 @@ def data(path: str):
 
 
 def paths(prefix: str) -> list[str]:
-    return git("ls-tree", "-r", "--name-only", BASE, prefix).decode().splitlines()
+    return git("ls-tree", "-r", "--name-only", BASE, *( [prefix] if prefix else [] )).decode().splitlines()
 
 
 def warm(names: list[str]) -> None:
@@ -156,7 +156,7 @@ def audit_catalogues() -> None:
               "mapping": mapping, "mapping_failures": mapping_failures,
               "species_metadata_missing_ultimate": species_metadata_missing,
               "verdicts": {"F23#2": "DATA_PASS_RUNTIME_EQUIP_OPEN", "F35#0": "DATA_PASS_NATIVE_MAPPING_OPEN"},
-              "honest_gap": "Base species omit explicit ultimate slots; Teaching.initialize_loadout supplies the authored learned signature when known. Runtime feature flags are OFF. No equip or native spawn/mapping proof is inferred from catalogue presence; omission alone is not judged a defect."}
+              "honest_gap": "Every base species supplies its authored ultimate; Teaching.initialize_loadout also resolves learned signatures. Runtime feature flags are OFF. No native equip/spawn/mapping or ordinary feature activation is inferred from catalogue presence."}
     dump("f23-f35-catalogue-recheck.json", result)
     mapping_result = audit_mapping()
     dump("f25-mapping-recheck.json", mapping_result)

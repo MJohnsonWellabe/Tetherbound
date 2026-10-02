@@ -23,7 +23,7 @@
       "command_argv": ["Godot_v4.7-stable_win64_console.exe", "--headless", "--path", "<ROOT imported candidate checkout>", "--script", "res://ralph/reports/INTEGRATION/criterion-closeout/criterion_data_native.gd"],
       "script": "ralph/reports/INTEGRATION/criterion-closeout/criterion_data_native.gd",
       "original_requested_watchdog_seconds": 240,
-      "fixtures": "Detached actual production species at L15; synthetic host context for pure staging only; one detached unknown-archetype negative case. No earned progress, real station geometry, save/ACK or network credit.",
+      "fixtures": "Detached actual production species at L15; five completed breakthrough-prefix/preceding-prefix pure-policy fixtures; exact shared signature role against ultimates.json.visuals; synthetic host context for pure staging only; one detached unknown-archetype negative case. No earned progress, real station geometry, save/ACK or network credit.",
       "required_output": "CRITERION_DATA_NATIVE_RESULT completed=true, empty failures, per-criterion checks, actual69 live species,10 utilities,19 shared IDs, native0 and no unresolved strict diagnostics.",
       "acceptance_limit": "F23#1 TM production transaction/debit still must be judged if criterion interpreted to require full backpack transaction. F23#2 proves legal choices/equip staging only. No F23#0/#3/#4/#5, F35#1..#4 or F25#0/#2..#5 closure.",
       "dependency_policy": "Execute at582b plus evidence or record exact production delta from582b; re-evaluate affected sources before reuse."
@@ -34,8 +34,8 @@
       "state": "ROOT_ALREADY_OWNS_PENDING_RUN_REUSE_RETURN_DO_NOT_DUPLICATE",
       "criteria": ["F17#4"],
       "script": "tests/smoke_gate_b_continuous.gd",
-      "needed": "Original required CORE route including real Mira dialogue/modal exit and uphill return, tools, gathering, beds and played tournament; every original assertion and controller/contact budget intact. Record starter selection; all three starter witnesses are needed for M1 integrated acceptance.",
-      "existing_gap": "Focused Mira23 PASS is not full16 completion. Prior full run failed before Mira; current582b run was in-flight at this review's initial snapshot.",
+      "needed": "Reuse original CORE regression run for its stated scope. F17#4/M1 closure additionally requires the actual full chain with --gate-b-full-chain and each --starter=terrapup/ripplet/galewisp: camp, three-bed readiness and three played tournament rounds must actually complete. Every original assertion and controller/contact budget remains intact.",
+      "existing_gap": "Focused Mira23 PASS and earlier full16 FAIL are retained. New authentic CORE582b has actual Mira dialogue/shopB/ownership/movement resume/exit and three equipped gathers PASS, then whole CORE FAIL at bounded Oskar approach. No completed full chain follows from CORE progress.",
       "acceptance_limit": "One starter's pass is a named partial witness; disclose authored starts. No earned campaign or complete all-starter M1 claim from one run."
     },
     {

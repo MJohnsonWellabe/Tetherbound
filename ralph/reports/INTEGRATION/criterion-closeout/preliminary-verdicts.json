@@ -26,7 +26,9 @@
   ],
   "baseline_board": {"accepted": 110, "total": 280, "original_accepted": 95, "original_total": 101, "redesign_accepted": 15, "redesign_total": 179, "freshly_rechecked_baseline_count": 0},
   "runtime_closeouts_from_existing_returns": 0,
-  "native_receipts_hash_checked": 95,
+  "native_receipts_inventoried": 95,
+  "native_receipts_with_declared_raw_hash_verified": 79,
+  "native_receipts_without_a_paired_declared_raw_hash": 16,
   "native_receipt_hash_mismatches": 0,
   "native_limits": [
     "Combined 44 tests/317 assertions/0 failures has exact raw SHA256 1b9f0df6be102c929b4e300ab731fba8a73bb3d0a551df9e38775045a3a865b3; scoped regression pass only.",
