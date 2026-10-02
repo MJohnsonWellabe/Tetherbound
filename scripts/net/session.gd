@@ -22,7 +22,7 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
-	if op in ["regional_ack", "refine_start"]:
+	if op in ["regional_ack", "refine_start", "master_duel"]:
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
@@ -52,6 +52,17 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 		homestead_action_completed.emit(envelope.op, envelope.intent, result)
 	elif envelope.op == "refine_start" and result.get("ok") != true:
 		_game().call("push_world_message", str(result.get("reason", result.get("code", "Refining could not start."))))
+	elif envelope.op == "master_duel" and result.get("ok") == true:
+		_foundation_requests.erase(correlation) # A replay cannot cancel an admitted fight.
+		var service := get_node_or_null(^"FoundationComposition/BreakthroughService")
+		if service == null or service.call("accept_duel_offer", envelope.intent, result) != true:
+			# Admission is already authoritative; inability to present must leave
+			# that same encounter rather than create a second challenge.
+			var world_node := _portal_world_node(str(_game().get("current_realm")))
+			if world_node != null:
+				for candidate: Node in world_node.find_children("*", "Node", true, false):
+					if candidate.get_script() != null and FOUNDATION_DIRECTORS.has(candidate.get_script().resource_path):
+						candidate.call("submit_encounter_intent", {"kind": "disengage", "encounter_id": result.get("encounter_id", "")})
 	foundation_reply_received.emit(envelope.duplicate(true), result.duplicate(true))
 
 func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
@@ -75,6 +86,8 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		var site := _foundation_master_site(peer, envelope.intent.master_id, false)
 		var director := _foundation_master_director(site)
 		if site == null or director == null: return _foundation_refusal("master_arena_unavailable")
+		if peer != local_peer_id():
+			return director.call("start_guest_master_duel", site, peer, _authority_character(peer), envelope.intent.creature_uid, preload("res://scripts/creatures/breakthrough.gd").master(envelope.intent.master_id))
 		return director.call("start_master_duel", site, _authority_character(peer), envelope.intent.creature_uid, preload("res://scripts/creatures/breakthrough.gd").master(envelope.intent.master_id))
 	if envelope.op == "research_claim":
 		if preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true: return _foundation_refusal("research_disabled")
@@ -585,6 +598,26 @@ func foundation_master_outcome(director: Node, frozen: Dictionary) -> Dictionary
 	var context := {"source_key": "master_encounter:" + frozen.encounter_id, "validated_host_outcome": "win", "participant_count": frozen.participants.size(),
 		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:%s:%s" % [frozen.master_id, frozen.encounter_id], [{"character_id": character, "action": "master_win", "intent": intent, "context": context}])
+
+## The independent host simulation's actual accepted terminal is the producer.
+## This is not an RPC and accepts no guest-declared win or creature result.
+func foundation_guest_master_outcome(director: Node, frozen: Dictionary) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get_script() == null \
+		or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) or director.get("_session") != self \
+		or not frozen.get("encounter_id") is String or frozen.encounter_id.is_empty() \
+		or director.call("retained_guest_master_win", frozen.encounter_id) != frozen \
+		or frozen.get("world_namespace") != _game().get("world").reward_delivery_namespace \
+		or frozen.get("session_id") != _game().get("world").world_id \
+		or not frozen.get("participants") is Dictionary or frozen.participants.size() != 1:
+		return FOUNDATION_ACTIONS.deny("canonical_guest_duel_win_required")
+	var participant: Dictionary = frozen.participants.values()[0]
+	if participant.get("character_id") != frozen.get("character_id") or participant.get("creature_uid") != frozen.get("creature_uid"):
+		return FOUNDATION_ACTIONS.deny("canonical_guest_duel_win_required")
+	var intent := {"master_id": frozen.master_id, "creature_uid": frozen.creature_uid, "encounter_id": frozen.encounter_id}
+	var context := {"source_key": "master_encounter:" + frozen.encounter_id, "validated_host_outcome": "win", "participant_count": 1,
+		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
+	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:%s:%s" % [frozen.master_id, frozen.encounter_id],
+		[{"character_id": frozen.character_id, "action": "master_win", "intent": intent, "context": context}])
 
 func homestead_submit_action(action: String, original: Dictionary, station: Node3D, revision: int) -> Dictionary:
 	var key := "homestead_recovery"

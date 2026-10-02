@@ -59,6 +59,20 @@ func open_kitchen(station: Node3D) -> void:
 func open_feed() -> void:
 	_open("feed", self, "")
 
+## Only Session's fenced reply for this still-open ordinary chooser reaches
+## this path. The selected actual local creature must still be the same UID.
+func accept_duel_offer(intent: Dictionary, result: Dictionary) -> bool:
+	if not is_instance_valid(_panel) or _panel.call("is_open") != true or _panel.get("_mode") != "duel" \
+		or _panel.get("_service") != self or _panel.get("_master") != intent.get("master_id"):
+		return false
+	var site := _panel.get("_source") as Node3D
+	var producer: Object = _submit.get_object() if _submit.is_valid() else null
+	if not is_instance_valid(site) or producer == null or not producer.has_method("_foundation_master_director"): return false
+	var director: Node = producer.call("_foundation_master_director", site)
+	if director == null or director.call("accept_guest_master_offer", site, intent, result) != true: return false
+	_panel.call("close")
+	return true
+
 func _open(mode: String, source: Node, master_id: String) -> void:
 	if _panel == null:
 		_panel = PANEL.new()

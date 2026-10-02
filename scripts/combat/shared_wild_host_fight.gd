@@ -20,14 +20,14 @@ var _catch_physics_was_processing := true
 
 
 func start_shared(body: Node3D, target: Node3D, centre: Vector3, radius: float,
-		link: Node, encounter_id: String, generation: int) -> void:
+		link: Node, encounter_id: String, generation: int, kind: String = "wild") -> void:
 	body_generation = generation
 	authority_body = body
 	authority_link = link
 	# Bind the inherited resolver to this adapter so peer 1 is treated exactly
 	# like every remote participant. Returning local id 0 prevents its special
 	# local-fallback branch from dropping the listen server's damage.
-	start_opponent(body, target, centre, radius, self, encounter_id, "wild")
+	start_opponent(body, target, centre, radius, self, encounter_id, kind)
 
 
 func local_encounter_peer_id() -> int:
