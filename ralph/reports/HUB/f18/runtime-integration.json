@@ -1,0 +1,67 @@
+{
+  "base_sha": "f48a0ba1ea54bf39149e37695804fdc976a1f9e7",
+  "implementation": [
+    "automatic mounts in ready worlds",
+    "host-approved guest/local waystone full-character transactions",
+    "raw receiver realm changes require consumed portal permit",
+    "per-character vs host portal UI state",
+    "swimming context permits grounded non-Water realms"
+  ],
+  "acceptance": {
+    "F18#0": "UNPROVEN",
+    "F18#1": "UNPROVEN",
+    "F18#2": "UNPROVEN",
+    "F18#3": "UNPROVEN",
+    "F18#4": "UNPROVEN",
+    "F18#5": "UNPROVEN"
+  },
+  "proof_limits": [
+    "synthetic flat mount support only",
+    "rule contexts are detached",
+    "live co-op, authored dry support, animation/native visual, earned station loop still required",
+    "guest HomeKey grant held for separate reviewed transaction implementation"
+  ],
+  "independent_review": {
+    "verdict": "no confirmed blockers in waystone/view/receiver subset; full acceptance remains unproven",
+    "agent": "/root/f18_review"
+  },
+  "source_sha256": {
+    "scripts/net/foundation_actions.gd": "8e8ae13ed31a768f21a357e315fc9c772f3da565be48421e085170786d334555",
+    "scripts/net/foundation_composition.gd": "ec4bf16014e22d391900aafbac8b09a9884123bf4d367ec386a704f66c2b86fe",
+    "scripts/net/foundation_portal_arrival.gd": "a099ed0dc4e88d7dec1c26cbc8c1a14f5bc95a78c99ca4c1bc5aa2a086fc81bb",
+    "scripts/net/realm_transition.gd": "daddb4e3e62690ddcc571250bbd3b558876250575c0b81edde1ba6db9fe2a1ad",
+    "scripts/net/session.gd": "0fb7e88ebcd019a7cfa832385e9e5016a076c5d99c71719a8c9c3fcd3ee34a8d",
+    "scripts/net/portal_view.gd": "7f2a1c3e8807b5029a0b3f133a88e44801bcbb8facbb3814e534b42422d2576f",
+    "scripts/net/waystone_action.gd": "0b7ca92286a08e238e6c9ab1eca6ba361daed87c19c31a7ebb2466023f68cab6",
+    "scripts/net/waystone_mounts.gd": "ccd026e6b80153e9fc787650e97eb0ee997efb8091b58ae543f92a3001039d2c",
+    "tests/test_f18_waystones.gd": "e4613695e1f23651e092accf5bf7224d4c1b3f026ffdc11d0b02107e97644b49",
+    "tests/test_foundation_travel_protocol.gd": "3c1560b66ca4978533c16bacf03e6c9563e2e1a034645186f7f12a7ce6f06b1c",
+    "tests/smoke_f18_waystone_mounts.gd": "2297b58aee4e3a8262efca3de901be6d0b181641b311d51ba658405351588bae"
+  },
+  "checks": [
+    {
+      "name": "minimal-rules",
+      "log": "minimal-rules.log.gz",
+      "result": "28 tests, 240 assertions, 0 failed",
+      "log_sha256": "5c151a38a60c36f7710febe1c825ced02429b1ee4c4e2bb534f72d617ef55968",
+      "engine": "Godot 4.7 stable",
+      "exit_code": 0
+    },
+    {
+      "name": "transaction-regressions",
+      "log": "transaction-regressions.log.gz",
+      "result": "112 tests, 1241 assertions, 0 failed",
+      "log_sha256": "5414458df61a277576fb842fdb573cae34ef1122ae5bfb65775f704a8812b415",
+      "engine": "Godot 4.7 stable",
+      "exit_code": 0
+    },
+    {
+      "name": "mount-lifecycle",
+      "log": "mount-lifecycle.log.gz",
+      "result": "synthetic_geometry true; failures empty",
+      "log_sha256": "811ee8d675c717231f43ba95ef7be5cd70aebc00046c2d27295738b8ed7926ff",
+      "engine": "Godot 4.7 stable",
+      "exit_code": 0
+    }
+  ]
+}
