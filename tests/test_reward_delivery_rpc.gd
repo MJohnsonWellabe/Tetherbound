@@ -32,6 +32,9 @@ class Saver extends RefCounted:
 
 
 class SessionStub extends Node:
+	var personal_mirror := preload("res://tests/fixtures/foundation_flag_mirror.gd").new()
+	func foundation_record_personal_flags(delta: Dictionary) -> void:
+		personal_mirror.record(delta, rows)
 	var training_blocked: Variant = false
 	func _owner_training_mutation_blocked(player: RefCounted) -> Variant:
 		if get_parent() == null or get_parent().get("local") != player: return true

@@ -44,6 +44,9 @@ class Saver extends RefCounted:
 ## One stub answers both the ledger's `registry()` and the director's
 ## `peers()`, so the two can never disagree about who is admitted.
 class SessionStub extends Node:
+	var personal_mirror := preload("res://tests/fixtures/foundation_flag_mirror.gd").new()
+	func foundation_record_personal_flags(delta: Dictionary) -> void:
+		personal_mirror.record(delta, rows)
 	func _owner_training_mutation_blocked(player: RefCounted) -> bool:
 		return get_parent() == null or get_parent().get("local") != player
 	var host := true

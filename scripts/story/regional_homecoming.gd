@@ -316,6 +316,7 @@ static func receipt_matches(raw: Variant, intent: Dictionary) -> bool:
 		return false
 	if acknowledgement_intent(raw, str(raw.get("stage", ""))).is_empty() \
 			or not raw.get("version") is int \
+			or not raw.get("party_revision") is int \
 			or raw.get("status") != "committed" or not raw.get("durable") is bool \
 			or raw.get("durable") != true \
 			or raw.get("kind") != intent.get("kind") or raw.get("version") != intent.get("version") \
