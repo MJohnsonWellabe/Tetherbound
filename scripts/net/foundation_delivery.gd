@@ -27,6 +27,8 @@ static func valid(raw: Variant, schema_check: Callable,
 		or raw.host_context.get("session_id") != raw.session_id): return false
 	if raw.action in ["resource", "groom"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
 		or raw.host_context.get("world_id") != raw.world_id): return false
+	if raw.action == "boss_relic" and raw.host_context.has("world_namespace") \
+		and raw.host_context.world_namespace != raw.world_namespace: return false
 	# Re-run the exact canonical callback against the frozen pre-decision full
 	# record. An imported balance, alternative trait seed or changed choice
 	# cannot turn a saved row or packet into a different accepted operation.
