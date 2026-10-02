@@ -539,6 +539,12 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 		Engine.physics_ticks_per_second = clock_hz
 		if pressed is bool:
 			return pressed
+		# A passive wild left standing closer than the target (CI 6182: the
+		# second Stormraven of a cluster 0.9 m from Nysa's stance, after its
+		# partner's road fight) wins every stance's arbiter with "Engage". A
+		# player reads that prompt, fights the wild and tries again.
+		if await _clear_blocking_wild(label):
+			continue
 	var winner := _arbiter.call("winning_provider") as Node
 	if not is_instance_valid(prompt) or not is_instance_valid(body):
 		_note("%s was freed during its approach (winner=%s); the caller checks what happened" % [label,
@@ -690,6 +696,29 @@ func _walk_xz_clocked(point: Vector2, label: String, tolerance: float = 1.3,
 
 
 var _fights_seen := 0
+
+
+var _blocking_wild_fights := 0
+
+## Engages the wild the director is offering when it is what wins the arbiter,
+## then fights it through the same real path as a road encounter. Bounded, and
+## false (nothing done) for any other winner.
+func _clear_blocking_wild(label: String) -> bool:
+	if _blocking_wild_fights >= 3 or _arbiter.call("winning_provider") != _director:
+		return false
+	var offer: Variant = _arbiter.call("winner")
+	if not offer is Dictionary or not str((offer as Dictionary).get("label", "")).begins_with("Engage "):
+		return false
+	_blocking_wild_fights += 1
+	_note("%s: %s wins the arbiter beside the stance; engaging it first" % [label, str(offer.label)])
+	await _tap(&"interact")
+	for _frame in 180:
+		if bool(_manager.call("is_fighting")):
+			break
+		await _tree.physics_frame
+	if not bool(_manager.call("is_fighting")):
+		return false
+	return await _fight_current(label + " (blocking wild)")
 
 
 func _fight_current(label: String) -> bool:
