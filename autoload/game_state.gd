@@ -3160,11 +3160,11 @@ func regional_ending_context() -> Dictionary:
 		var refused: bool = local.flags.call("has", prefix + "legendary_refused")
 		if joined or refused: choices.append(biome + (":accepted" if joined else ":refused"))
 	choices.append("stormwood:" + storm_answer)
-	var home := ""
+	var home := ending.home_return_receipt(local.redesign_character.transaction_receipts,
+		world.reward_delivery_namespace, local.character_id, outcome)
 	var home_seen := false
 	var credits_seen := false
 	for receipt: String in local.redesign_character.transaction_receipts:
-		if receipt.begins_with("craft:home_return_" + world.reward_delivery_namespace + "_") and receipt.ends_with(":" + local.character_id): home = receipt
 		if receipt == "craft:regional_ending_homecoming_seen:" + local.character_id: home_seen = true
 		if receipt == "craft:regional_ending_regional_credits_seen:" + local.character_id: credits_seen = true
 	var player := find_player() as CharacterBody3D
@@ -3190,10 +3190,8 @@ func regional_ending_context() -> Dictionary:
 	var owner := preload("res://scripts/ui/input_owner.gd").current(get_tree())
 	var ending_owner := false
 	if farm_source != null and owner != null:
-		var panel: Node = farm_source.get("_dialogue")
 		var credits: Node = farm_source.get("_regional_credits")
-		ending_owner = (owner == panel or owner == farm_source) \
-			and str(farm_source.get("_f18_opening_conversation_id")).begins_with("regional_homecoming_")
+		ending_owner = farm_source.call("owns_regional_presentation", owner, self) == true
 		if owner == credits and credits != null:
 			ending_owner = credits.get("_expected_character_id") == local.character_id and credits.get("_expected_world") == world
 	if safety.get("cutscene") == true and not ending_owner: safe = false

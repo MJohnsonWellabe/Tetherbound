@@ -373,6 +373,8 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
 		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
 		"world_namespace": world.reward_delivery_namespace}
+	if envelope.get("payload", {}).get("kind") == "home_key_finish":
+		context.ending_outcome = preload("res://scripts/story/regional_homecoming.gd").personal_outcome(_foundation_flags(peer))
 	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, character, context.expected_revision, "portal_arrival", intent, context)
 	if result.get("durable") != true: return result
 	return _foundation_decision(peer, world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
@@ -4237,6 +4239,7 @@ func portal_view(arch_id: String) -> Dictionary:
 		(biome == "meadows" or world.redesign_world.portal_unlocks.has(biome) or player.redesign_character.portal_unlocks.has(biome)),
 		"has_key": not str(arch.key_item).is_empty() and player.inventory.count(arch.key_item) == 1,
 		"fifth_arch_stirred": stirred or world.redesign_world.fifth_arch_stirred,
+		"character_stirred": stirred,
 		"destination_label": preload("res://scripts/data/biome_order.gd").display_name(biome),
 		"recommended_level": arch.get("recommended_level", 0)}
 
@@ -4395,7 +4398,8 @@ func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
 	var canonical: Variant = game.get("world").reward_deliveries.get(row.receipt)
 	if row.status != "accepted" or not PORTAL_RECEIPT.equivalent(canonical, row): return
 	_portal_waiters.erase(row.receipt)
-	_portal_reply(peer, waiter.envelope, {"ok": true, "durable": true, "receipt": row.receipt, "biome": row.biome})
+	_portal_reply(peer, waiter.envelope, {"ok": true, "durable": true, "receipt": row.receipt,
+		"biome": row.biome, "arch_id": waiter.envelope.payload.arch_id})
 
 
 func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary) -> void:

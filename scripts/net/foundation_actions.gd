@@ -158,6 +158,11 @@ static func _acknowledgement(current: Dictionary, action: String, intent: Dictio
 	if action == "portal_arrival" and intent.realm == "meadows" and intent.entry_id == "hall_home":
 		var home := "craft:home_return_%s_%s:%s" % [context.get("world_namespace", ""), intent.permit_id, current.character_id]
 		if not next.redesign_character.transaction_receipts.has(home): next.redesign_character.transaction_receipts.append(home)
+		var ending := preload("res://scripts/story/regional_homecoming.gd")
+		var prefix := ending.return_prefix(str(context.get("world_namespace", "")), str(context.get("ending_outcome", "")))
+		if not prefix.is_empty():
+			var ending_home: String = prefix + str(intent.permit_id) + ":" + str(current.character_id)
+			if not next.redesign_character.transaction_receipts.has(ending_home): next.redesign_character.transaction_receipts.append(ending_home)
 	return {"ok": true, "state": next, "receipt": receipt}
 
 static func _relic(current: Dictionary, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
