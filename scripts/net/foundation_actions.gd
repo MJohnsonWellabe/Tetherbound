@@ -175,6 +175,8 @@ static func _relic(current: Dictionary, action: String, intent: Dictionary, cont
 		if intent.size() != 3 or grant.is_empty() or grant.relic_biome != intent.biome \
 			or context.get("validated_host_outcome") != "win" or context.get("encounter_id") != intent.get("encounter_id") \
 			or not context.get("participants") is Array or not context.participants.has(current.character_id): return deny("actual_boss_participant_required")
+		if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(grant, context.get("boss_settlement_world_flags", [])):
+			return deny("boss_ceremony_pending")
 		receipt = "defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]
 		if next.redesign_character.relics_held.has(intent.biome) or next.redesign_character.relics_hung.has(intent.biome): return deny("reconcile_original_decision")
 		var bag_rules := preload("res://scripts/world/death_satchel_rules.gd")

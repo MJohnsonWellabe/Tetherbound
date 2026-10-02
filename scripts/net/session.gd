@@ -556,6 +556,9 @@ func _retry_foundation_events() -> void:
 		if not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
 		for duty: Dictionary in raw.duties:
 			if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
+			if duty.action == "boss_relic":
+				var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(duty.intent.trainer_id), str(duty.context.realm))
+				if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
 			var peer := int(_registry.call("peer_for_character", duty.character_id))
 			if peer < 1 or handled.has(duty.character_id) or admitted_character_state(peer).is_empty(): continue
 			if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
@@ -564,6 +567,7 @@ func _retry_foundation_events() -> void:
 			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
 			var context: Dictionary = duty.context.duplicate(true)
+			if duty.action == "boss_relic": context.boss_settlement_world_flags = world.flags.all_set().duplicate()
 			context.character_id = duty.character_id
 			context.expected_revision = int(_character_authority.call("revision", duty.character_id))
 			context.in_range = true

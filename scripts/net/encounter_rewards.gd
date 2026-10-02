@@ -83,14 +83,69 @@ static func chapter_hand_off(trainer_id: String, realm: String, config: Dictiona
 		if not raw is Dictionary:
 			return {}
 		data = raw as Dictionary
-	var hand_offs: Dictionary = data.get("boss_hand_offs", {})
+	var hand_offs: Variant = data.get("boss_handoffs", {})
+	if not hand_offs is Dictionary:
+		return {}
 	var raw_row: Variant = hand_offs.get(trainer_id, {})
 	if not raw_row is Dictionary:
 		return {}
 	var row: Dictionary = raw_row
-	if str(row.get("runtime_realm", "")) != realm:
+	var order := preload("res://scripts/data/biome_order.gd")
+	var biome := str(row.get("biome", ""))
+	var next_biome := str(row.get("next_biome", ""))
+	var ids := order.ids()
+	var index := ids.find(biome)
+	if index < 0 or not order.ids(false).has(biome) or index + 1 >= ids.size() \
+			or ids[index + 1] != next_biome or order.runtime_id(biome) != realm \
+			or order.canonical_id(str(row.get("relic_biome", ""))) != biome \
+			or not row.get("key_item") is String or row.key_item.is_empty() \
+			or row.get("delivery_phase") not in ["accepted_boss_victory", "accepted_legendary_settlement"] \
+			or not row.get("delivery_requires_world_flags") is Array:
 		return {}
-	return row.duplicate(true)
+	var required: Array = row.delivery_requires_world_flags
+	if (row.delivery_phase == "accepted_boss_victory") != required.is_empty():
+		return {}
+	var seen := {}
+	for flag: Variant in required:
+		if not flag is String or flag.is_empty() or seen.has(flag): return {}
+		seen[flag] = true
+	# Schema key IDs and inventory SKUs deliberately have different names.
+	# Resolve both from the authored portal catalogues, never a second reward map.
+	var portals: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/schema/portals.json"))
+	var arches: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
+	if not portals is Array or not arches is Dictionary or not arches.get("arches") is Array: return {}
+	var key_id := ""
+	for portal: Dictionary in portals:
+		if portal.get("biome") == next_biome: key_id = str(portal.get("key_id", ""))
+	var item_matches := false
+	for arch: Dictionary in arches.arches:
+		if arch.get("biome") == next_biome and arch.get("key_item") == row.key_item: item_matches = true
+	if key_id.is_empty() or not item_matches: return {}
+	var result := row.duplicate(true)
+	result.runtime_realm = realm
+	result.relic_biome = biome
+	result.portal_key_item = row.key_item
+	result.portal_key_id = key_id
+	return result
+
+
+## The host's saved world flags release a retained boss obligation. An offer
+## being displayed does not settle a ceremony; the controllers journal these
+## markers only after the first accepted/refused participant resolution.
+static func chapter_delivery_ready(row: Dictionary, world_flags: Array) -> bool:
+	if row.is_empty() or not row.get("delivery_requires_world_flags") is Array: return false
+	for flag: Variant in row.delivery_requires_world_flags:
+		if not world_flags.has(flag): return false
+	return true
+
+
+static func is_chapter_settlement_flag(id: String) -> bool:
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(CHAPTER_REWARDS_PATH))
+	if not data is Dictionary or not data.get("boss_handoffs") is Dictionary: return false
+	for row: Dictionary in data.boss_handoffs.values():
+		if row.get("delivery_phase") == "accepted_legendary_settlement" \
+				and row.get("delivery_requires_world_flags", []).has(id): return true
+	return false
 
 
 static func chapter_grants(trainer_id: String, realm: String, participants: Array,
