@@ -543,6 +543,9 @@ class FakeGame extends Node:
 
 class FakeSession extends RefCounted:
 	func local_peer_id() -> int: return 1
+	# Stable session lifetime for the retained decline envelope. The fixture
+	# does not claim an actual network handshake or persisted owner ACK.
+	func _altar_current_epoch() -> String: return "guardian-fixture-epoch"
 
 ## The host bridge (ledger_rpc in production): resolves a peer to its actor.
 class FakeBridge extends Node:
