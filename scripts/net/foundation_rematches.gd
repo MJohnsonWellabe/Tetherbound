@@ -3,6 +3,12 @@ extends Node
 ## Mounted original trainer bodies supply the authored roster and arena.
 ## Outcomes are retained before the director releases their stable census.
 const RULES := preload("res://scripts/repeatables/rematch_rules.gd")
+const MASTER_SITE := preload("res://scripts/masters/master_site.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+## Every node carrying `foundation_trainer_spec` joins this group where the
+## meta is set (trainer_npc.gd and below), so the one-second poll reads the
+## group instead of walking every node of the realm.
+const TRAINER_SPEC_GROUP := &"foundation_trainer_specs"
 var _services: Dictionary = {}
 var _prompts: Dictionary = {}
 var _boss_sources: Dictionary = {}
@@ -43,9 +49,9 @@ func _process(delta: float) -> void:
 func _director(realm: Node3D) -> Node:
 	if realm == null: return null
 	var session := get_parent().get_parent()
-	for node: Node in realm.find_children("*", "Node", true, false):
-		if node.get_script() != null and session.FOUNDATION_DIRECTORS.has(node.get_script().resource_path): return node
-	return null
+	var found: Array = session.call("_foundation_group_under", session.FOUNDATION_DIRECTOR_GROUP, [realm], session.FOUNDATION_DIRECTORS)
+	found.erase(realm)
+	return found[0] if not found.is_empty() else null
 
 func _mount_realm(realm_id: String) -> void:
 	var session := get_parent().get_parent()
@@ -66,11 +72,14 @@ func _mount_realm(realm_id: String) -> void:
 		director.call("retry_rematch_resolution")
 	_sources[director.get_instance_id()] = {}
 	if realm_id == "meadows": _mount_boss_requests(service, director)
-	for site: Node in realm.find_children("*", "Node3D", true, false):
-		if site.get_script() != preload("res://scripts/masters/master_site.gd") or site.get("_mounted") != true: continue
+	for site: Node in _under(realm, MASTER_SITE.FOUNDATION_GROUP):
+		if site.get_script() != MASTER_SITE or site.get("_mounted") != true: continue
 		var master := site.get_node_or_null(^"Master")
-		if master != null: master.set_meta("foundation_trainer_spec", RULES.master_spec(str(site.get("master_id"))))
-	for body: Node in realm.find_children("*", "Node3D", true, false):
+		if master != null:
+			master.set_meta("foundation_trainer_spec", RULES.master_spec(str(site.get("master_id"))))
+			master.add_to_group(TRAINER_SPEC_GROUP)
+	for body: Node in _under(realm, TRAINER_SPEC_GROUP):
+		if not body is Node3D: continue
 		var spec: Variant = body.get_meta("foundation_trainer_spec", {})
 		if not spec is Dictionary or spec.is_empty() or RULES.profile(str(spec.get("id", ""))).is_empty(): continue
 		if RULES.profile(spec.id).kind == "boss": continue
@@ -91,6 +100,13 @@ func _mount_realm(realm_id: String) -> void:
 			var context := _local_context(spec.id, body, director)
 			prompt.call("set_enabled", not context.is_empty() and RULES.available(spec.id, tier, context.world_flags, context.personal_flags))
 
+## Descendants of `realm` in `group`, in tree order.
+func _under(realm: Node, group: StringName) -> Array[Node]:
+	var out: Array[Node] = []
+	for node: Node in get_tree().get_nodes_in_group(group):
+		if realm.is_ancestor_of(node): out.append(node)
+	return out
+
 func _register_source(director: Node, source: Node3D, trainer: String) -> void:
 	var rows: Dictionary = _sources.get(director.get_instance_id(), {})
 	var found: Array = rows.get(trainer, [])
@@ -104,8 +120,8 @@ func _registered(director: Node, trainer: String) -> Node3D:
 	return rows[0].get_ref() as Node3D
 
 func _boss_board(director: Node) -> Node3D:
-	for node: Node in director.get_parent().find_children("*", "Node3D", true, false):
-		if node.get_script() == preload("res://scripts/world/tournament.gd") and node.call("built") == true:
+	for node: Node in _under(director.get_parent(), TOURNAMENT.FOUNDATION_GROUP):
+		if node.get_script() == TOURNAMENT and node.call("built") == true:
 			return node.get_node_or_null(^"Board") as Node3D
 	return null
 
@@ -155,6 +171,7 @@ func _mount_boss_requests(service: Node, director: Node) -> void:
 			board.add_child(source)
 			source.position = Vector3(float(index - 2) * 2.0, 0, -1.5)
 			source.set_meta("foundation_trainer_spec", spec)
+			source.add_to_group(TRAINER_SPEC_GROUP)
 			var prompt: Node3D = preload("res://scripts/world/interactable.gd").new()
 			source.add_child(prompt)
 			prompt.call("configure", "Endgame rematch: " + str(spec.get("name", spec.get("display_name", trainer))), float(original.get("radius")), false)

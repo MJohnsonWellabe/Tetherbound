@@ -53,7 +53,9 @@ func _process(delta: float) -> void:
 	_mount_occupied_master_sites()
 	if _board != null and _board.get_ref() != null: return
 	# Resolve Halda's actual grounded tournament board, never a packet name.
-	for node: Node in get_tree().root.find_children("*", "Node3D", true, false):
+	# Tournaments join their group; walking every node of the tree each second
+	# stalled Stormwood (which has no board) for its whole stay.
+	for node: Node in get_tree().get_nodes_in_group(preload("res://scripts/world/tournament.gd").FOUNDATION_GROUP):
 		var script: Script = node.get_script()
 		if script == null or script.resource_path != "res://scripts/world/tournament.gd" or node.call("built") != true: continue
 		var board := node.get_node_or_null(^"Board") as Node3D

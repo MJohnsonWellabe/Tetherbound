@@ -1,5 +1,7 @@
 extends Node
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+## Session finds production managers by group instead of walking the realm.
+const FOUNDATION_GROUP := &"foundation_combat_managers"
 
 ## Combat Mode: a STATE, not a scene.
 ##
@@ -365,6 +367,10 @@ var last_encounter_refusal: Dictionary = {}
 ## instance shared for the life of the manager is fine — the same choice
 ## `_rng` above already makes.
 var _moves: RefCounted = null
+
+
+func _enter_tree() -> void:
+	add_to_group(FOUNDATION_GROUP)
 
 
 func _ready() -> void:

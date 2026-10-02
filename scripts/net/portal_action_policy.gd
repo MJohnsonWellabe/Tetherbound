@@ -173,6 +173,12 @@ func consume_permit(request_id: String, peer_id: int, character_id: String,
 	return permit.duplicate(true)
 
 
+## True while any Home Key channel is frozen. cancel_invalid() is a no-op
+## without one, so a per-frame caller can skip building its host context.
+func has_open_channels() -> bool:
+	return not _channels.is_empty()
+
+
 ## Host tick must cancel immediately on damage/combat/refusal or disconnect.
 ## Finish also revalidates, so a lost cancellation packet cannot grant travel.
 func cancel_invalid(context: Dictionary) -> bool:

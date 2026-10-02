@@ -7,10 +7,15 @@ const NPC := preload("res://scripts/npc/npc_body.gd")
 const INTERACT := preload("res://scripts/world/interactable.gd")
 const HARVEST := preload("res://scripts/masters/attuned_herb.gd")
 @export var master_id := ""
+## Lookups find sites by group instead of walking the realm every poll.
+const FOUNDATION_GROUP := &"foundation_master_sites"
 signal challenge_requested(site: Node3D)
 signal chest_requested(site: Node3D)
 var _definition: Dictionary = {}
 var _mounted := false
+
+func _enter_tree() -> void:
+	add_to_group(FOUNDATION_GROUP)
 
 func mount(world: Node3D, player: Node3D) -> bool:
 	if _mounted: return true

@@ -7,6 +7,9 @@ const GROOM_PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
 var _groom_passive: RefCounted
 const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
 const FOUNDATION_COMBAT_MANAGERS := ["res://scripts/combat/combat_manager.gd", "res://scripts/combat/cloudreach_combat_manager.gd", "res://scripts/combat/stormwood_combat_manager.gd"]
+## Joined in each script's _enter_tree (encounter_director.gd, combat_manager.gd).
+const FOUNDATION_DIRECTOR_GROUP := &"foundation_portal_directors"
+const FOUNDATION_COMBAT_MANAGER_GROUP := &"foundation_combat_managers"
 signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
 signal homestead_personal_view_completed()
 signal foundation_reply_received(envelope: Dictionary, result: Dictionary)
@@ -637,13 +640,45 @@ func _foundation_realm_roots() -> Array[Node]:
 	return roots
 
 
-func _retry_combat_mastery_sources() -> void:
-	var nodes := _foundation_realm_roots()
-	while not nodes.is_empty():
-		var node: Node = nodes.pop_back()
-		for child: Node in node.get_children(): nodes.append(child)
+## Nodes in `group` at or under any of `roots` whose script is one of
+## `scripts`, each once. The group (joined in the script's _enter_tree)
+## replaces walking every node of a realm: Stormwood alone holds ~70k nodes,
+## and the one-second foundation polls walked it several times per tick.
+## A detached root (a unit fixture outside the tree) has no group index and is
+## walked directly.
+static func _foundation_group_under(group: StringName, roots: Array, scripts: Array) -> Array[Node]:
+	var out: Array[Node] = []
+	var attached: Array[Node] = []
+	var tree: SceneTree = null
+	for root: Variant in roots:
+		if not is_instance_valid(root): continue
+		if (root as Node).is_inside_tree():
+			attached.append(root)
+			tree = (root as Node).get_tree()
+			continue
+		var nodes: Array[Node] = [root]
+		while not nodes.is_empty():
+			var node: Node = nodes.pop_back()
+			for child: Node in node.get_children(): nodes.append(child)
+			var script: Script = node.get_script()
+			if script != null and scripts.has(script.resource_path) and not out.has(node): out.append(node)
+	if tree == null: return out
+	for node: Node in tree.get_nodes_in_group(group):
 		var script: Script = node.get_script()
-		if script == null or not FOUNDATION_DIRECTORS.has(script.resource_path): continue
+		if script == null or not scripts.has(script.resource_path): continue
+		for root: Node in attached:
+			if root == node or root.is_ancestor_of(node):
+				out.append(node)
+				break
+	return out
+
+
+func _foundation_directors_under(roots: Array) -> Array[Node]:
+	return _foundation_group_under(FOUNDATION_DIRECTOR_GROUP, roots, FOUNDATION_DIRECTORS)
+
+
+func _retry_combat_mastery_sources() -> void:
+	for node: Node in _foundation_directors_under(_foundation_realm_roots()):
 		var host: RefCounted = node.get("_encounter_host")
 		if host == null or not host.has_method("pending_move_mastery"): continue
 		for pending: Dictionary in host.call("pending_move_mastery"):
@@ -2507,7 +2542,10 @@ func _on_server_disconnected() -> void:
 func _process(delta: float) -> void:
 	_bind_training_container_guards()
 	if _groom_passive != null: _groom_passive.call("tick", delta)
-	if portal_runtime_ready() and is_host():
+	# Building the host portal context re-projects and recovers the whole local
+	# character record (~100 ms in Tidewake); cancel_invalid() can only act on a
+	# frozen Home Key channel, so build it only while one is open.
+	if portal_runtime_ready() and is_host() and _portal_policy.call("has_open_channels") == true:
 		var portal_context := _host_portal_context(local_peer_id())
 		if not portal_context.is_empty(): _portal_policy.call("cancel_invalid", portal_context)
 	if _training_bootstrap_waiting:
@@ -3637,27 +3675,23 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 
 
 func _altar_peer_in_combat(peer: int) -> bool:
-	var nodes := _foundation_realm_roots()
-	if nodes.is_empty(): return true
+	var roots := _foundation_realm_roots()
+	if roots.is_empty(): return true
 	var found_host := false
-	while not nodes.is_empty():
-		var node: Node = nodes.pop_back()
-		for child: Node in node.get_children(): nodes.append(child)
-		var script: Script = node.get_script()
-		if script != null and FOUNDATION_DIRECTORS.has(script.resource_path):
-			if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true
-			var host: Variant = node.get("_encounter_host")
-			if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
-				if host.has_method("pending_move_mastery"):
-					for pending: Dictionary in host.call("pending_move_mastery"):
-						if pending.peer == peer or (pending.peer is String and pending.peer == _authority_character(peer)): return true
-				found_host = true
-				var records: Variant = host.get("encounters")
-				if not records is Dictionary: return true
-				for id: Variant in records:
-					var record: Variant = records[id]
-					if not record is Dictionary: return true
-					if record.get("phase") != "done" and host.call("is_participant", str(id), peer) == true: return true
+	for node: Node in _foundation_directors_under(roots):
+		if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true
+		var host: Variant = node.get("_encounter_host")
+		if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
+			if host.has_method("pending_move_mastery"):
+				for pending: Dictionary in host.call("pending_move_mastery"):
+					if pending.peer == peer or (pending.peer is String and pending.peer == _authority_character(peer)): return true
+			found_host = true
+			var records: Variant = host.get("encounters")
+			if not records is Dictionary: return true
+			for id: Variant in records:
+				var record: Variant = records[id]
+				if not record is Dictionary: return true
+				if record.get("phase") != "done" and host.call("is_participant", str(id), peer) == true: return true
 	if peer != local_peer_id(): return not found_host
 	return _foundation_local_manager_in_combat(get_tree().current_scene if is_inside_tree() else null)
 
@@ -3667,13 +3701,8 @@ func _altar_peer_in_combat(peer: int) -> bool:
 ## hosted sibling realm must never stand in for a missing local manager.
 static func _foundation_local_manager_in_combat(world: Node) -> bool:
 	if not is_instance_valid(world): return true
-	var nodes: Array[Node] = [world]
 	var found := false
-	while not nodes.is_empty():
-		var node: Node = nodes.pop_back()
-		for child: Node in node.get_children(): nodes.append(child)
-		var script: Script = node.get_script()
-		if script == null or not FOUNDATION_COMBAT_MANAGERS.has(script.resource_path): continue
+	for node: Node in _foundation_group_under(FOUNDATION_COMBAT_MANAGER_GROUP, [world], FOUNDATION_COMBAT_MANAGERS):
 		found = true
 		if node.call("is_fighting") == true: return true
 	return not found

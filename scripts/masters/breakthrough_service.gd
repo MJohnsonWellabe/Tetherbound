@@ -60,7 +60,13 @@ func mount_biome(world: Node3D, player: Node3D, runtime_biome: String) -> void:
 func retained_site(world: Node3D, master_id: String) -> Dictionary:
 	if not is_instance_valid(world): return {"status": "unavailable"}
 	var found: Node3D
-	for candidate: Node in world.find_children("*", "Node3D", true, false):
+	var candidates: Array[Node] = []
+	if world.is_inside_tree():
+		for node: Node in world.get_tree().get_nodes_in_group(SITE.FOUNDATION_GROUP):
+			if world.is_ancestor_of(node): candidates.append(node)
+	else:
+		candidates = world.find_children("*", "Node3D", true, false)
+	for candidate: Node in candidates:
 		if candidate.get_script() != SITE or candidate.get("master_id") != master_id: continue
 		if found != null: return {"status": "ambiguous"}
 		found = candidate as Node3D

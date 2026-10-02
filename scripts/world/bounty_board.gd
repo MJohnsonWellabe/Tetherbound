@@ -8,9 +8,17 @@ const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const ACTIONS := ["bounty_rotate", "bounty_event", "bounty_claim"]
 
+## Parsed and validated once per file revision (the host poll reads it every
+## second per peer); callers get their own deep copy.
+static var _cache: Dictionary = {}
+
 static func config() -> Dictionary:
-	var raw: Variant = DATA.json("res://data/config/bounties.json")
-	return raw if raw is Dictionary and configuration_errors(raw).is_empty() else {}
+	var path := "res://data/config/bounties.json"
+	var stamp := FileAccess.get_modified_time(path)
+	if not _cache.has("valid") or _cache.get("stamp") != stamp:
+		var raw: Variant = DATA.json(path)
+		_cache = {"stamp": stamp, "valid": raw if raw is Dictionary and configuration_errors(raw).is_empty() else {}}
+	return (_cache.valid as Dictionary).duplicate(true)
 
 static func configuration_errors(raw: Dictionary) -> Array[String]:
 	if raw.get("schema_version") != 1 or raw.get("board_count") != 3 \

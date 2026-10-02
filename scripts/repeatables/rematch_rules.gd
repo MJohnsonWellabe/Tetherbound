@@ -9,9 +9,17 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const PATH := "res://data/config/rematches.json"
 
+## Parsed once per file revision: the one-second rematch poll asks for this
+## several times per mounted trainer, and re-reading/parsing the file each time
+## cost ~100 ms per tick in Stormwood. Callers get their own deep copy.
+static var _cache: Dictionary = {}
+
 static func config() -> Dictionary:
-	var raw: Variant = DATA.json(PATH)
-	return raw if raw is Dictionary else {}
+	var stamp := FileAccess.get_modified_time(PATH)
+	if not _cache.has("raw") or _cache.get("stamp") != stamp:
+		var raw: Variant = DATA.json(PATH)
+		_cache = {"stamp": stamp, "raw": raw if raw is Dictionary else {}}
+	return (_cache.raw as Dictionary).duplicate(true)
 
 static func profile(id: String) -> Dictionary:
 	return config().get("profiles", {}).get(id, {}).duplicate(true)

@@ -186,6 +186,8 @@ func _spawn(spec: Dictionary, positions: Dictionary = {}, facings: Dictionary = 
 	npc.name = display_name
 	npc.set_meta("trainer_id", id)
 	npc.set_meta("foundation_trainer_spec", spec.duplicate(true))
+	# foundation_rematches.gd TRAINER_SPEC_GROUP: found by group, not a realm walk.
+	npc.add_to_group(&"foundation_trainer_specs")
 	add_child(npc)
 	if not bool(npc.call("setup_from_config", model_config(spec), _player)):
 		push_error("trainer '%s' has no model; nothing will stand there" % id)
