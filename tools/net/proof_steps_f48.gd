@@ -12,6 +12,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_witness": return _witness(tree, args)
 		"f48_assert": return _assert(tree, args)
 		"f48_assert_snapshot": return _assert_snapshot(tree)
+		"f48_measure_layout": return _measure_layout(tree, args)
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
@@ -63,6 +64,36 @@ static func _assert_snapshot(tree: SceneTree) -> Dictionary:
 			if not _json_equal(now.world.get(field), now.disk_world.get(field)):
 				return _result(false, "Snapshot would repair unsaved host carrier: " + field, now)
 	return _result(true, "Original complete transaction carriers already durable before disclosed capture", now)
+
+static func _measure_layout(tree: SceneTree, args: Dictionary) -> Dictionary:
+	# Detached terrain/contact observation only. No position, velocity, save,
+	# collider, fixture or production configuration writes.
+	var scene := tree.current_scene
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	var points: Variant = args.get("points")
+	if scene == null or not scene.has_method("ground_height_at") or player == null or not points is Dictionary or points.is_empty():
+		return _result(false, "Actual initialized world/player and named layout points required")
+	var samples := {}
+	var errors: Array[String] = []
+	for label: String in points:
+		var xz: Variant = points[label]
+		if not xz is Array or xz.size() != 2 or not (xz[0] is float or xz[0] is int) or not (xz[1] is float or xz[1] is int):
+			return _result(false, "Invalid declared XZ point: " + label)
+		var x := float(xz[0])
+		var z := float(xz[1])
+		if not is_finite(x) or not is_finite(z): return _result(false, "Nonfinite declared layout point")
+		var y: float = float(scene.call("ground_height_at", x, z))
+		samples[label] = {"x": x, "z": z, "finite": is_finite(y), "ground_y": y if is_finite(y) else null}
+		if not is_finite(y): errors.append("Actual terrain sample unavailable: " + label)
+	var data := {"samples": samples, "scene": str(scene.name), "actor_position": [player.global_position.x, player.global_position.y, player.global_position.z],
+		"actor_velocity": [player.velocity.x, player.velocity.y, player.velocity.z], "actor_on_floor": player.is_on_floor(),
+		"acceptance_credit": false, "limitation": "Actual terrain-height samples; station contact, physical walk and paid build still require native proof"}
+	var output := OS.get_environment("TB_PROOF_OUT")
+	if output.is_empty(): return _result(false, "No detached native measurement output", data)
+	DirAccess.make_dir_recursive_absolute(output)
+	if not DETACHED.publish(output.path_join("f48-layout-measurement.json"), data):
+		return _result(false, "Could not retain detached actual layout measurement", data)
+	return _result(errors.is_empty(), "Read-only initialized native terrain layout. " + "; ".join(errors), data)
 
 static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")
