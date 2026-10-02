@@ -270,7 +270,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 			if card.is_empty() or card.get("level") != args.creature.level:
 				errors.append(payload + ": wrong expected level or missing original owned creature")
 			var mirror: Dictionary = state.get("redesign_character", {}).get("creatures", {}).get(args.creature.uid, {})
-			if mirror.get("breakthroughs") != args.creature.breakthroughs:
+			if not _json_equal(mirror.get("breakthroughs"), args.creature.breakthroughs):
 				errors.append(payload + ": wrong exact breakthrough history")
 		if args.has("released_uid"):
 			if party.has(args.released_uid): errors.append(payload + ": released UID remains owned")
