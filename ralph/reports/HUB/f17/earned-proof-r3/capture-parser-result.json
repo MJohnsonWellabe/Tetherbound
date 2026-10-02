@@ -1,0 +1,15 @@
+{
+  "equivalent_committed_source": "199f3236b9628544ec589d20801d475a225c319f",
+  "exit": 0,
+  "reviewed_capture_sha256": "ed5e9bbb5df29ad0f5bd4b296db3117b99083640585d4af906b5aaa985eb012d",
+  "scope": "Parser only. No world, original frames, visual acceptance or device claim.",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    ".",
+    "--script",
+    "tools/capture_f17_visual.gd",
+    "--check-only"
+  ]
+}
