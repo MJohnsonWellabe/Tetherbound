@@ -13,6 +13,7 @@ var _paired_high := false
 var _captured_companion: Node3D
 var _captured_member: RefCounted
 var _companion_required := false
+var _farm_diagnostic_only := false
 
 
 func _run() -> void:
@@ -25,6 +26,8 @@ func _run() -> void:
 			_source = argument.trim_prefix("--source-commit=")
 		elif argument == "--paired-high":
 			_paired_high = true
+		elif argument == "--farm-diagnostic-only":
+			_farm_diagnostic_only = true
 	var pattern := RegEx.new()
 	pattern.compile("^[0-9a-f]{40}$")
 	var renderer := "gl_compatibility" if _preset == "Low" else "forward_plus"
@@ -47,6 +50,19 @@ func _run() -> void:
 
 
 func _capture(label: String) -> void:
+	await _capture_matrix(label)
+	if not _failed.is_empty():
+		# Preserve the first capture failure before the inherited walk can
+		# continue and replace it with a later travel failure.
+		_finish_failure(_failed)
+		return
+	if _farm_diagnostic_only and label == "actual farmhouse doorway":
+		_write_manifest(false)
+		print("F17 partial farm-door light diagnostic; complete=false; no Hall circuit, motion or acceptance claim")
+		quit(0 if _failed.is_empty() else 1)
+
+
+func _capture_matrix(label: String) -> void:
 	_release_all()
 	var look := _world.get_node_or_null("WorldLook")
 	var weather := _world.get_node_or_null("WorldWeather")
@@ -273,11 +289,12 @@ func _write_manifest(complete: bool) -> void:
 	if file == null:
 		_failed = "could not save visual manifest"
 		return
-	file.store_string(JSON.stringify({"source": _source, "complete": complete,
+	file.store_string(JSON.stringify({"source": _source, "complete": complete and not _farm_diagnostic_only,
 		"presets": _capture_presets(), "renderer": RenderingServer.get_current_rendering_method(),
 		"resolution": [1920, 1080], "views": _views, "failure": _failed,
 		"shortcuts": ["inherited post-opening flags and starter", "one inherited initial farmhouse placement", "injected physical joypad bindings including ordinary companion recall", "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture", "separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"],
-		"scope": "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
+		"diagnostic_only": _farm_diagnostic_only,
+		"scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
 	file.close()
 
 

@@ -1,0 +1,18 @@
+{
+  "engine_errors": [
+    "ERROR: Parameter \"material\" is null."
+  ],
+  "elapsed_seconds": 72,
+  "engine_error_count": 1,
+  "artifact_id": 11257077839,
+  "exit": 0,
+  "scope": "Required unchanged world boot on actual camp-seat placement candidate. No rendered visual or M1 acceptance.",
+  "prior_worldboot_same_distinct_errors": true,
+  "native_result": "smoke: OK",
+  "prior_worldboot_engine_error_count": 1,
+  "source": "2a4dd0c6f4d1eb632a017750f37bcb7d74de4d37",
+  "job_id": 111070552100,
+  "run_id": 37077501580,
+  "artifact_sha256": "b57857c47bec15af6466c9b00017f3f7149705169aab89715a03b06d45c5e01f",
+  "script_errors": 0
+}
