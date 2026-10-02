@@ -15,6 +15,9 @@ func _ready() -> void:
 	var arrival: Node = preload("res://scripts/net/foundation_portal_arrival.gd").new()
 	arrival.name = "PortalArrival"
 	add_child(arrival)
+	var waystones: Node = preload("res://scripts/net/waystone_mounts.gd").new()
+	waystones.name = "WaystoneMounts"
+	add_child(waystones)
 	var lifecycle: Node = preload("res://scripts/net/foundation_travel_lifecycle.gd").new()
 	lifecycle.name = "TravelLifecycle"
 	add_child(lifecycle)

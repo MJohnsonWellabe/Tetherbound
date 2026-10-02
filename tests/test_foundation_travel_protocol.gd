@@ -99,6 +99,9 @@ func test_consumed_guest_permit_survives_failed_save_and_requires_correlated_not
 	assert_true(permit.request_id != envelope.request_id)
 	assert_true(session._portal_policy.consume_permit(permit.request_id, 2, "guest_a", "world_a", "meadows").is_empty())
 	assert_true(arrival._remote.has(2))
+	assert_true(arrival.transition_authorized(2, "meadows"), "consumed retained host permit authorizes its destination")
+	assert_false(arrival.transition_authorized(2, "stormwood"), "raw alternate destination is refused")
+	assert_false(arrival.transition_authorized(3, "meadows"), "another peer cannot borrow the permit")
 	arrival.owner_notice(2, envelope, envelope.request_id)
 	assert_false(arrival._remote[2].owner_saved)
 	var stale := envelope.duplicate(true)
@@ -106,6 +109,7 @@ func test_consumed_guest_permit_survives_failed_save_and_requires_correlated_not
 	arrival.owner_notice(2, stale, permit.request_id)
 	assert_false(arrival._remote[2].owner_saved)
 	arrival.owner_notice(2, envelope, permit.request_id)
+	assert_false(arrival.transition_authorized(2, "meadows"), "settled owner cannot load again on the same permit")
 	arrival._process(1.0)
 	assert_eq(session.journal_calls, 0) # A notice cannot substitute for contact.
 	arrival.actual_contact = true
