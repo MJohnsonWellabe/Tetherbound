@@ -7,6 +7,7 @@ const UIDS := preload("res://scripts/data/redesign_state.gd")
 const ATOMIC := preload("res://scripts/save/atomic_save_file.gd")
 const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
+const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
@@ -604,7 +605,7 @@ static func _check_saved_transaction(tree: SceneTree, now: Dictionary, prior: Di
 			or row.get("world_instance_id") != now.world_namespace or row.get("item") != "tidewake_portal_key":
 			errors.append("Wrong original Tidewake key journal")
 	elif not actions.has(transaction) or row.get("kind") != "creature_training" \
-		or row.get("version") not in [1, 2, 3] or row.get("action") != actions.get(transaction) \
+		or RECORD_RULES.training_version(row) not in [1, 2, 3] or row.get("action") != actions.get(transaction) \
 		or row.get("world_namespace") != now.world_namespace or str(row.get("session_id", "")).is_empty() \
 		or row.get("after", {}).get("character_id") != now.character_id \
 		or row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
@@ -669,7 +670,7 @@ static func _check_host_journal(now: Dictionary, participants: Array, encounter:
 			var receipt := "defeat:boss_warden_aldis:" + character
 			# This carrier is overwritten by each later accepted action. Its full
 			# portable after-state must preserve the original protected boss receipt.
-			if not row is Dictionary or row.get("version") not in [1, 2, 3] or row.get("kind") != "creature_training" or row.get("delivery_id") != id \
+			if not row is Dictionary or RECORD_RULES.training_version(row) not in [1, 2, 3] or row.get("kind") != "creature_training" or row.get("delivery_id") != id \
 				or row.get("character_id") != character or row.get("world_namespace") != now.world_namespace \
 				or row.get("world_id") != now.world_id or row.get("status") != "accepted" \
 				or row.get("after", {}).get("character_id") != character \
