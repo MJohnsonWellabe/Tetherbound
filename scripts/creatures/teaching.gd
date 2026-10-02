@@ -207,10 +207,13 @@ static func available_moves(species_id: String, level: int, completed_tiers: Arr
 ## Follow only authored ancestor links so evolution keeps its earlier moves.
 static func allowed_saved_moves(saved: Dictionary, character: Dictionary) -> Array[String]:
 	var allowed: Array[String] = []
-	var species_raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/creatures/species.json"))
-	var species: Dictionary = species_raw.get("species",{}) if species_raw is Dictionary else {}
-	var water := preload("res://scripts/creatures/water_species_catalog.gd").merge_catalogue(species)
-	if bool(water.get("ok",false)): species = water.catalogue
+	# Admission runs for each owned creature on every authority refresh. Reuse
+	# the same authored catalogue as spawning instead of reparsing and merging
+	# all species for every row. Eligibility still reads this character's live
+	# level and breakthrough history below; no portable state is cached.
+	# Load lazily to avoid Species -> Instance -> Teaching's preload cycle.
+	var catalogue: GDScript = load("res://scripts/creatures/creature_species.gd")
+	var species: Dictionary = catalogue.table()
 	var id := str(saved.get("species_id",""))
 	var records: Variant = character.get("creatures",{})
 	var raw_record: Variant = records.get(str(saved.get("uid","")),{}) if records is Dictionary else {}

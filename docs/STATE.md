@@ -4,6 +4,8 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 ## 0. Handoff — Claude CI pass on PR519, returned to Codex (2026-10-02)
 
+**Active integration:** The owner assigned Codex to bring the existing PR519 baseline to green main before taking the new feature sessions' work. Baseline is f48a0ba1ea; integration uses `D:/tetherbound/foundations-batch-check`, `tb/integration`. F17–F20 continue separately and return bounded deltas; only an independently verified dependency required to fix the selected gates belongs in this first cut. CI6200/37068576138 is the baseline run. No merge or acceptance closure yet. Initial admission-cost repair reuses the existing authored species catalogue without caching character state; affected checks and measurements are in `ralph/reports/INTEGRATION/main-green/PROOF.md`.
+
 **Authority:** The owner asked Claude to move `tb/integration` ([PR519](https://github.com/MJohnsonWellabe/Tetherbound/pull/519)) to main, fixing CI as it ran; then, with a short window and no owner-run steps available, to stop at a state Codex can continue. PR519 stays **draft and unmerged**; main is 30fcc38fc. The game is unfinished; MET110/280 is unchanged. The owner deleted every other `tb/*` branch; each was verified fully contained in `tb/integration` first (including the four formerly "unmerged" closeout branches, already gone).
 
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
