@@ -22,6 +22,32 @@ from f48_ci_runner import configuration_overlay
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def boss_profile(source: Path, output: Path) -> Path:
+    """Declare the same real boss input actions for four original participants."""
+    profile = fixture.read(source)
+    fixture.require(len(profile["saves"]) == 4, "Four original boss participants required")
+    fixture.require(not output.exists(), "Fresh boss profile required")
+    routes = {}
+    for peer in range(4):
+        routes[f"boss_prepare_{peer}"] = prepare.approach("warden_aldis")
+        if peer > 0:
+            routes[f"boss_join_{peer}"] = [prepare.step("f48_fixture_join_boss",
+                fixture_disclosure="named_mechanics_actual_announced_boss_join_no_earned_credit")]
+    routes["boss_start"] = [prepare.press("interact"), prepare.wait(),
+                            prepare.press("ui_accept", times=8, gap_frames=30), prepare.wait(90)]
+    routes["boss_fight"] = [prepare.fight("warden_aldis")]
+    profile["routes"] = routes
+    profile["outcomes"] = {}
+    profile["provenance"] += (" Four original distinct participants. Disclosed named actor/ally placement,"
+        " actual announced boss joins and self-HP aid. No enemy HP ceiling, authored outcome or earned campaign credit.")
+    output.mkdir(parents=True)
+    path = output / "profile.json"
+    fixture.write(path, profile)
+    fixture.write(output / "source.json", {"source": str(source), "source_sha256": fixture.digest(source),
+        "profile_sha256": fixture.digest(path), "acceptance_credit": False, "ready_ci_bundle": False})
+    return path
+
+
 def inside(root: Path, relative: str) -> Path:
     path = (root / relative).resolve()
     fixture.require(path.is_relative_to(root.resolve()) and path != root.resolve(),
@@ -69,15 +95,17 @@ def main() -> int:
     parser.add_argument("--godot", default="godot")
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument("--producer", choices=("loop", "boss_four"), default="loop")
     args = parser.parse_args()
     output = args.output.resolve()
     fixture.require(not output.exists(), "Fresh producer output required; preserve prior attempts")
     bundle = ROOT / "tests/fixtures/f48-producer-seeds"
     sources = restore_seeds(bundle, output / "originals")
     manifest = fixture.read(bundle / "manifest.json")
-    fixture.generate(sources[:2], bundle / "layout.json", output / "mechanics-start", None,
+    fixture.generate(sources if args.producer == "boss_four" else sources[:2], bundle / "layout.json", output / "mechanics-start", None,
                      manifest["provenance"], "full", True, True, True)
-    profile_path = prepare.produce(output / "mechanics-start/profile.json", output / "producer-profile")
+    build_profile = boss_profile if args.producer == "boss_four" else prepare.produce
+    profile_path = build_profile(output / "mechanics-start/profile.json", output / "producer-profile")
     if args.prepare_only:
         print(json.dumps({"profile": str(profile_path), "acceptance_credit": False, "native_run": False}))
         return 0
@@ -88,7 +116,8 @@ def main() -> int:
                TB_NET_OUT_DIR=str(output / "net-run"), TB_F48_PROCESS_PYTHON=sys.executable,
                TB_NET_RUN_ID="f48-actual-" + str(os.getpid()),
                APPDATA=str(home), LOCALAPPDATA=str(home), XDG_DATA_HOME=str(home))
-    command = [args.godot, "--headless", "--path", str(ROOT), "--script", "tools/net/f48_prepare.gd"]
+    script = "tools/net/f48_prepare_boss_four.gd" if args.producer == "boss_four" else "tools/net/f48_prepare.gd"
+    command = [args.godot, "--headless", "--path", str(ROOT), "--script", script]
     with configuration_overlay(ROOT, profile) as pins:
         fixture.write(output / "invocation.json", {"command": command, "profile_sha256": fixture.digest(profile_path),
                       "source_manifest_sha256": fixture.digest(bundle / "manifest.json"), "effective_configuration": pins,
