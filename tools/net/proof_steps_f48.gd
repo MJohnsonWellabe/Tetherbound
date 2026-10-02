@@ -292,6 +292,19 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if _path(now.memory, path) != _path(now.disk, path): errors.append("Memory/disk disagree: " + path)
 	if args.get("boss_rewards") == true:
 		_check_boss(now, errors)
+	if args.has("saved_transaction"):
+		_check_saved_transaction(tree, now, prior, args, errors)
+		now.saved_transaction_row = _transaction_row(now, str(args.saved_transaction)).duplicate(true)
+	if args.has("host_transaction_row"):
+		var expected: Dictionary = args.host_transaction_row
+		var identity := str(expected.get("delivery_id", expected.get("receipt", "")))
+		if not now.owns_world or now.disk_world.is_empty() or identity.is_empty() \
+			or expected.get("character_id") == now.character_id or expected.get("status") != "accepted":
+			errors.append("Actual guest transaction observation or host-owned file unavailable")
+		else:
+			for scope: String in ["world", "disk_world"]:
+				if now[scope].get("reward_deliveries", {}).get(identity) != expected:
+					errors.append(scope + ": host file changed/lost original guest saved transaction row")
 	if args.has("participants"):
 		_check_host_journal(now, args.participants, str(tree.get_meta("f48_boss_encounter", "")), errors)
 	if args.get("guest_world_empty") == true:
@@ -317,6 +330,44 @@ static func _check_boss(now: Dictionary, errors: Array[String]) -> void:
 		var receipt := "defeat:boss_warden_aldis:" + str(now.character_id)
 		if state.get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
 			errors.append(scope + ": missing exactly one protected personal boss receipt")
+
+static func _transaction_row(now: Dictionary, transaction: String) -> Dictionary:
+	var identity := "portal_unlock:" + ("%s\n%s\n%s" % [now.world_namespace, "tidewake", now.character_id]).sha256_text() \
+		if transaction == "key" else "creature_training:" + JSON.stringify([now.world_namespace, now.character_id]).sha256_text()
+	var value: Variant = now.get("world", {}).get("reward_deliveries", {}).get(identity)
+	return value if value is Dictionary else {}
+
+static func _check_saved_transaction(tree: SceneTree, now: Dictionary, prior: Dictionary, args: Dictionary, errors: Array[String]) -> void:
+	var transaction := str(args.saved_transaction)
+	var actions := {"craft": "station_craft", "release": "trait_release", "feast": "feast_feed",
+		"relic": "relic_hang", "essence_spend": "altar_spend"}
+	var row := _transaction_row(now, transaction)
+	var receipt := str(row.get("receipt", ""))
+	if row.is_empty() or receipt.is_empty() or row.get("character_id") != now.character_id \
+		or row.get("world_id") != now.world_id or row.get("status") != "accepted":
+		errors.append("Original transaction lacks an accepted actual admitted journal"); return
+	if transaction == "key":
+		if row.get("kind") != "portal_unlock" or row.get("version") != 2 or row.get("biome") != "tidewake" \
+			or row.get("world_instance_id") != now.world_namespace or row.get("item") != "tidewake_portal_key":
+			errors.append("Wrong original Tidewake key journal")
+	elif not actions.has(transaction) or row.get("kind") != "creature_training" \
+		or row.get("version") not in [1, 2, 3] or row.get("action") != actions.get(transaction) \
+		or row.get("world_namespace") != now.world_namespace or str(row.get("session_id", "")).is_empty() \
+		or row.get("after", {}).get("character_id") != now.character_id \
+		or row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
+		errors.append("Wrong original accepted personal transaction journal")
+	for scope: String in ["memory", "disk"]:
+		if now[scope].get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
+			errors.append(scope + ": original saved transaction receipt missing or duplicated")
+	if args.has("boundary_receipt") and (receipt != args.boundary_receipt \
+		or (row.get("delivery_id", row.get("receipt")) != args.boundary_delivery_id)):
+		errors.append("Admission replaced the original native-cut writer receipt/identity")
+	if args.has("same_transaction_as"):
+		var remembered: Dictionary = tree.get_meta("f48_witness_" + str(args.same_transaction_as), {})
+		if remembered.is_empty() or _transaction_row(remembered, transaction) != row:
+			errors.append("Reconnect changed the original accepted transaction or its full immutable intent")
+	elif not prior.is_empty() and _transaction_row(prior, transaction).get("receipt") == receipt:
+		errors.append("Expected one new original transaction, but journal already existed before input")
 
 static func _check_host_journal(now: Dictionary, participants: Array, encounter: String, errors: Array[String]) -> void:
 	if not now.owns_world or now.disk_world.is_empty():

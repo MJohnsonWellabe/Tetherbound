@@ -12,6 +12,8 @@ const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 var _profile: Dictionary = {}
 var _profile_errors: Array[String] = []
 var _boundary_pending: Dictionary = {}
+var _boundary_observations: Dictionary = {}
+var _saved_transactions: Dictionary = {}
 
 func _process_guard(pid: int, identity: String = "", stop: bool = false) -> Dictionary:
 	var python := OS.get_environment("TB_F48_PROCESS_PYTHON")
@@ -310,7 +312,9 @@ func _transactions(steps: Array, operation: String = "", boundary: String = "", 
 	if cut == "after_settlement":
 		steps.append_array(_route(transaction + "_commit", 1))
 		steps.append(_entry(1, "wait", {"frames": 180}))
-		steps.append(_entry(1, "f48_assert", _outcome(transaction, "transaction_before")))
+		var settled := _outcome(transaction, "transaction_before")
+		settled.saved_transaction = transaction
+		steps.append(_entry(1, "f48_assert", settled))
 		steps.append(_entry(1, "f48_witness", {"remember": "settled"}))
 	steps.append(_entry(1, "restart_peer", {"scene": "title"}, "F48 hard process kill; no Session.leave or autosave"))
 	if not case_id.is_empty(): steps.append(_entry(1, "f48_start_case", {"case": case_id}, "Restore detached case directory in fresh guest process"))
@@ -321,13 +325,34 @@ func _transactions(steps: Array, operation: String = "", boundary: String = "", 
 	# evidence into the fresh process metadata, never into the production state.
 	steps.append(_entry(1, "f48_restore_witness", {"remember": "transaction_before"}))
 	steps.append(_entry(1, "f48_restore_witness", {"remember": "admitted"}))
-	steps.append_array(_route(transaction + "_retry", 1))
+	if cut == "before_input":
+		# No original decision exists yet. Reopen ordinary controls without
+		# repeating preparation grants/actions, then make the FIRST commit.
+		steps.append_array(_route(transaction + "_reopen", 1))
+		steps.append_array(_route(transaction + "_commit", 1))
+	elif cut == "after_settlement":
+		steps.append(_entry(1, "f48_restore_witness", {"remember": "settled"}))
+	# Admission reconciles the original retained journal through real delivery,
+	# owner bool save and ACK. A new button press would be a new transaction.
 	steps.append(_entry(1, "wait", {"frames": 180}))
-	steps.append(_entry(1, "f48_assert", _outcome(transaction, "transaction_before")))
+	var recovered := _outcome(transaction, "transaction_before")
+	recovered.saved_transaction = transaction
+	if cut == "after_settlement": recovered.same_transaction_as = "settled"
+	if cut in ["after_host_write_before_delivery", "after_owner_write_before_ack"]:
+		recovered.boundary_case = case_id if not case_id.is_empty() else transaction
+	steps.append(_entry(1, "f48_assert", recovered, "Actual original admission replay; exact receipt and personal outcome"))
+	steps.append(_entry(0, "f48_assert", {"match_guest_transaction": transaction}, "Actual host durable row matches the original guest saved transaction"))
+	steps.append(_entry(0, "f48_assert", {"since": "admitted", "unchanged": REPLAY_FIELDS}, "Host bystander personal state unchanged"))
 	steps.append(_entry(1, "f48_witness", {"remember": "retry_settled"}))
-	steps.append_array(_route(transaction + "_retry", 1))
+	steps.append(_entry(1, "leave", {}, "Second ordinary disconnect after settlement"))
+	steps.append(_entry(0, "expect_peers", {"count": 1}))
+	steps.append(_entry(1, "production_join", {"returning_route": true, "character": {"character_id": "$character1"}}, "Replay the same actual accepted journal through ordinary returning admission"))
+	steps.append(_entry("all", "expect_peers", {"count": 2}))
 	steps.append(_entry(1, "wait", {"frames": 120}))
-	steps.append(_entry(1, "f48_assert", {"since": "retry_settled", "unchanged": REPLAY_FIELDS, "guest_world_empty": true}))
+	steps.append(_entry(1, "f48_assert", {"since": "retry_settled", "unchanged": REPLAY_FIELDS, "guest_world_empty": true,
+		"saved_transaction": transaction, "same_transaction_as": "retry_settled"}))
+	steps.append(_entry(0, "f48_assert", {"match_guest_transaction": transaction}, "Second replay preserved the same actual host file journal"))
+	steps.append(_entry(0, "f48_assert", {"since": "admitted", "unchanged": REPLAY_FIELDS}, "No duplicate guest transaction debited the host"))
 
 func _argument(key: String, fallback: String) -> String:
 	for value: String in OS.get_cmdline_user_args():
@@ -355,7 +380,30 @@ func _restart_peer(i: int, scene: String) -> Dictionary:
 
 func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 	if entry.get("action") != "f48_boundary_transaction":
+		if entry.get("action") == "f48_assert" and entry.get("args", {}).has("match_guest_transaction"):
+			var original: Dictionary = _saved_transactions.get(str(entry.args.match_guest_transaction), {})
+			if original.is_empty():
+				check(false, "Original guest accepted transaction observation unavailable for host disk check")
+				return false
+			entry = entry.duplicate(true)
+			entry.args.host_transaction_row = original.duplicate(true)
+			entry.args.erase("match_guest_transaction")
+		if entry.get("action") == "f48_assert" and entry.get("args", {}).has("boundary_case"):
+			var observed: Dictionary = _boundary_observations.get(str(entry.args.boundary_case), {})
+			if observed.is_empty():
+				check(false, "Original native writer receipt unavailable after admission replay")
+				return false
+			entry = entry.duplicate(true)
+			entry.args.boundary_receipt = observed.receipt
+			entry.args.boundary_delivery_id = observed.delivery_id
+			entry.args.erase("boundary_case")
 		var passed: bool = await super._run_entry(index, peer, entry)
+		if passed and entry.get("action") == "f48_assert" and entry.get("args", {}).has("saved_transaction"):
+			var observed_row: Dictionary = _peers[peer].get("last_verdict", {}).get("data", {}).get("saved_transaction_row", {})
+			if observed_row.is_empty():
+				check(false, "Accepted original transaction row was not preserved in detached observation")
+				return false
+			_saved_transactions[str(entry.args.saved_transaction)] = observed_row.duplicate(true)
 		if passed and entry.get("action") == "load_save":
 			# Before admission the generic resolver can learn no active registry
 			# identity. Pin the actual production loader's character result now;
@@ -424,6 +472,10 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		and not str(evidence.get("observation", {}).get("delivery_id", "")).is_empty() \
 		and not str(evidence.get("observation", {}).get("receipt", "")).is_empty()
 	check(ok, "F48 original production boundary and hard guest process death: " + token)
+	if ok:
+		var case_key := str(args.get("case", ""))
+		if case_key.is_empty(): case_key = str(args.transaction)
+		_boundary_observations[case_key] = evidence.observation.duplicate(true)
 	_rows.append({"index": index, "peer": peer, "what": "f48_boundary_transaction", "label": entry.get("label", ""),
 		"verdict": "PASS" if ok else "FAIL", "ok": ok, "expect": "PASS", "expect_data": {}, "detail": path})
 	if not ok and not exit_confirmed: _peers[peer].quit_sent = false

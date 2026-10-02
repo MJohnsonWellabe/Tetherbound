@@ -1,12 +1,12 @@
 {
   "status": "SOURCE_CANDIDATE_NATIVE_OPEN",
   "acceptance_credit": false,
-  "source_baseline": "1e05054bd6",
+  "source_baseline": "bcb20a0d29",
   "files": {
-    "tools/net/f48_profile_fixture.py": "e7941885fad153b8e64e312cf27b00789a7abd0f0c353e91fd62105446d1624f",
-    "tests/helpers/f48_net_proof.gd": "3993701e20eea273dbda24738c4b5c2586a7c3c643fb5aa288346433e7e93de6",
-    "tools/net/proof_steps_f48.gd": "7c4134b7b0778095f9e5650606279ff537d9de86d31224ff1988d6755a633820",
-    "ralph/reports/R3-F48/profile.schema.json": "5826734bd7e90c3445fee12620be3106f71673a0e4c37a35f5e43a6b095078e8",
+    "tools/net/f48_profile_fixture.py": "c84ad28202e5a833be1837b592f04c3c19ee0811c30ee009e0c74341dd9b1aba",
+    "tests/helpers/f48_net_proof.gd": "8cccdb4ece152c9d1c05d1576434221f797f22e8774cba62566b70e8795e1196",
+    "tools/net/proof_steps_f48.gd": "7ac3c80ee6e5af3a6b718ca083f82119a184a20dce2f2809f363bf419cde549f",
+    "ralph/reports/R3-F48/profile.schema.json": "a94d8a8cfbca483ae698ccbc578d07c80f1ae3f3b27890c8965b5d717dd6babc",
     "ralph/reports/R3-F48/mechanics-fixture/layout-candidate.json": "1783b3761b4fe0b6039ad23c37866f8091900c759cc8e86adbd23a2619786cf9"
   },
   "checks": {
@@ -54,19 +54,19 @@
           {
             "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-219d55c08e26227b4ccba505c7b3c409\\character.json",
             "sha256": "fd4973fee083df26a95244be1ec4bd9339bf677196646f59f694148e15c474d9",
-            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1e0505-v5\\peer-0\\characters\\redesign-v28\\character-219d55c08e26227b4ccba505c7b3c409\\character.json",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-bcb20a-v6\\peer-0\\characters\\redesign-v28\\character-219d55c08e26227b4ccba505c7b3c409\\character.json",
             "fixture_sha256": "cb1e376377400595036716eff86bf9b8e0f8ddbe6e84dc6a83cb427c2855ac49"
           },
           {
             "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\worlds\\redesign-v28\\slot-0\\world.json",
             "sha256": "d8baa942ac4d874a27095ad1b3ddcd7a39f35716efc033d3c2ed4c30eb3f5be0",
-            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1e0505-v5\\peer-0\\worlds\\redesign-v28\\slot-0\\world.json",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-bcb20a-v6\\peer-0\\worlds\\redesign-v28\\slot-0\\world.json",
             "fixture_sha256": "1d1e5aef2337b9933f24c65485f99110399aa623823e6cd75f0d42cc97e23748"
           },
           {
             "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\slot_0.json",
             "sha256": "361a548a014a5a1d01bb320214a749cf218af77e5d982ddaa3d7b4766c14feb8",
-            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1e0505-v5\\peer-0\\saves\\redesign-v28\\slot_0.json",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-bcb20a-v6\\peer-0\\saves\\redesign-v28\\slot_0.json",
             "fixture_sha256": "aa4958a8f274c0e1159903234ddc0872c56402994df5232ce5bd25ae3c3e245d"
           }
         ]
@@ -81,7 +81,7 @@
           {
             "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-92a3946dcc1ebef20650b2c4f6675001\\character.json",
             "sha256": "26f893c26cf4394dcfc4856f72d71c5395ead32cde54b5418607b950578f1e9b",
-            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-1e0505-v5\\peer-1\\characters\\redesign-v28\\character-92a3946dcc1ebef20650b2c4f6675001\\character.json",
+            "fixture_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-mechanics-fixture-source-bcb20a-v6\\peer-1\\characters\\redesign-v28\\character-92a3946dcc1ebef20650b2c4f6675001\\character.json",
             "fixture_sha256": "3e677495b3a3e3691c41bce7f0d816127a3ea046eeb435012436556f17903927"
           }
         ]
@@ -197,20 +197,18 @@
     "gaps": [
       "peer0: no authentic caught wild companion for release; none fabricated",
       "peer1: no authentic caught wild companion for release; none fabricated",
-      "Actual ordinary craft_retry route unavailable; existing smoke fails",
       "Actual ordinary release_prepare route unavailable; existing smoke fails",
       "Actual ordinary release_commit route unavailable; existing smoke fails",
-      "Actual ordinary release_retry route unavailable; existing smoke fails",
+      "Actual ordinary release_reopen route unavailable; existing smoke fails",
       "Actual ordinary feast_prepare route unavailable; existing smoke fails",
       "Actual ordinary feast_commit route unavailable; existing smoke fails",
-      "Actual ordinary feast_retry route unavailable; existing smoke fails",
+      "Actual ordinary feast_reopen route unavailable; existing smoke fails",
       "Actual ordinary key_prepare route unavailable; existing smoke fails",
       "Actual ordinary key_commit route unavailable; existing smoke fails",
-      "Actual ordinary key_retry route unavailable; existing smoke fails",
+      "Actual ordinary key_reopen route unavailable; existing smoke fails",
       "Actual ordinary relic_prepare route unavailable; existing smoke fails",
       "Actual ordinary relic_commit route unavailable; existing smoke fails",
-      "Actual ordinary relic_retry route unavailable; existing smoke fails",
-      "Actual ordinary essence_spend_retry route unavailable; existing smoke fails",
+      "Actual ordinary relic_reopen route unavailable; existing smoke fails",
       "Independent exact release_1 oracle unavailable; existing smoke fails",
       "Independent exact feast_1 oracle unavailable; existing smoke fails",
       "Production gate stations.json:runtime_enabled is not enabled; source unchanged",
@@ -227,16 +225,16 @@
       "Ordinary Forge producer Session.homestead_start_refining source unavailable; candidate button cannot complete",
       "Ordinary Forge producer Session.homestead_actor_context source unavailable; candidate button cannot complete",
       "Ordinary Forge producer Session.homestead_commit_refine_unit source unavailable; candidate button cannot complete",
-      "Kitchen remains tier0; Master win/recipe, boss key/relic and original retry routes are not fabricated",
+      "Kitchen remains tier0; Master win/recipe, boss key/relic and ordinary reopen routes are not fabricated",
       "Original host legacy world already defeated Warden; no flag reset or new-loop boss eligibility claim"
     ],
-    "profile_sha256": "775722622520f8133776ed8d2f37bcd6819814aebed331e421f8e38d19196464"
+    "profile_sha256": "c82184cab96ebe80e9729f172caccee5fc99609a370310b4c0a4077c37313893"
   },
   "working_tree_files": {
-    "tools/net/f48_profile_fixture.py": "e7941885fad153b8e64e312cf27b00789a7abd0f0c353e91fd62105446d1624f",
-    "tests/helpers/f48_net_proof.gd": "3993701e20eea273dbda24738c4b5c2586a7c3c643fb5aa288346433e7e93de6",
-    "tools/net/proof_steps_f48.gd": "7c4134b7b0778095f9e5650606279ff537d9de86d31224ff1988d6755a633820",
-    "ralph/reports/R3-F48/profile.schema.json": "5826734bd7e90c3445fee12620be3106f71673a0e4c37a35f5e43a6b095078e8",
+    "tools/net/f48_profile_fixture.py": "c84ad28202e5a833be1837b592f04c3c19ee0811c30ee009e0c74341dd9b1aba",
+    "tests/helpers/f48_net_proof.gd": "8cccdb4ece152c9d1c05d1576434221f797f22e8774cba62566b70e8795e1196",
+    "tools/net/proof_steps_f48.gd": "7ac3c80ee6e5af3a6b718ca083f82119a184a20dce2f2809f363bf419cde549f",
+    "ralph/reports/R3-F48/profile.schema.json": "a94d8a8cfbca483ae698ccbc578d07c80f1ae3f3b27890c8965b5d717dd6babc",
     "ralph/reports/R3-F48/mechanics-fixture/layout-candidate.json": "1783b3761b4fe0b6039ad23c37866f8091900c759cc8e86adbd23a2619786cf9"
   },
   "files_hash_basis": "Exact staged Git blob bytes; native generated fixtures/source input hashes are exact original file bytes"

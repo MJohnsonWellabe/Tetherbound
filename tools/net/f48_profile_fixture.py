@@ -2,7 +2,7 @@
 
 Example (ROOT runs the engine separately after source/route review):
   python tools/net/f48_profile_fixture.py --source <actual-host-user-dir> \
-      --source <actual-guest-user-dir> --layout <layout.json> --output <fresh-dir>
+      --source <actual-guest-user-dir> --layout <layout.json> --output <fresh-dir> --origin <source-description>
 
 The required layout declares initial fixture station/actor positions. Terrain,
 navigation, prompts and runtime gates still require actual native validation.
@@ -212,8 +212,10 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
                 "source_files": {name: digest(ROOT / name) for name in CONFIGS + PRODUCERS},
                 "inputs": [], "mutations": [], "gaps": []}
     routes = {"craft_prepare": prepare(layout, "forge"),
+              "craft_reopen": prepare(layout, "forge"),
               "craft_commit": [input_step("f48_button", text="Refine Rootiron Ingot"), input_step("wait", frames=150)],
-              "essence_spend_prepare": prepare(layout, "altar") + [input_step("f48_button", text="Creature training"), input_step("wait", frames=45)]}
+              "essence_spend_prepare": prepare(layout, "altar") + [input_step("f48_button", text="Creature training"), input_step("wait", frames=45)],
+              "essence_spend_reopen": prepare(layout, "altar") + [input_step("f48_button", text="Creature training"), input_step("wait", frames=45)]}
     outcomes = {}
     profile = {"provenance": "DISCLOSED initial mechanics fixture: actual retained v28 characters/owned cards; "
                "added initial material stock, paid station records and starting pose. No earned campaign claim. "
@@ -279,7 +281,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
         profile["provenance"] += " Independent route pack: " + pack["provenance"]
         manifest["route_pack"] = {"path": str(route_pack), "sha256": digest(route_pack)}
     for operation in OPERATIONS:
-        for stage in ("prepare", "commit", "retry"):
+        for stage in ("prepare", "commit", "reopen"):
             if f"{operation}_{stage}" not in routes:
                 manifest["gaps"].append(f"Actual ordinary {operation}_{stage} route unavailable; existing smoke fails")
     for operation in ("release", "feast", "essence_spend"):
@@ -302,7 +304,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     for method in ("homestead_start_refining", "homestead_actor_context", "homestead_commit_refine_unit"):
         if re.search(r"^func " + re.escape(method) + r"\(", session_source, re.MULTILINE) is None:
             manifest["gaps"].append(f"Ordinary Forge producer Session.{method} source unavailable; candidate button cannot complete")
-    manifest["gaps"].append("Kitchen remains tier0; Master win/recipe, boss key/relic and original retry routes are not fabricated")
+    manifest["gaps"].append("Kitchen remains tier0; Master win/recipe, boss key/relic and ordinary reopen routes are not fabricated")
     if "defeated_warden" in inputs[0]["world"].get("flags", {}).get("flags", []):
         manifest["gaps"].append("Original host legacy world already defeated Warden; no flag reset or new-loop boss eligibility claim")
     write(output / "profile.json", profile)
