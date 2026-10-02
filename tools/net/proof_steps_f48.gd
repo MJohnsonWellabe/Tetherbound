@@ -16,6 +16,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
 		"f48_fixture_approach": return await _fixture_approach(tree, args)
 		"f48_fixture_join_boss": return await _fixture_join_boss(tree, args)
+		"f48_fixture_capture": return await tree.call("_step_f48_fixture_capture", args)
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
