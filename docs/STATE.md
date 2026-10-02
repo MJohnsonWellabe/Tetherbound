@@ -36,7 +36,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 | Creature/world art/HUD | F36, F38–F42 | Initial source in PR519; full visual/readability/device bar remains open. |
 | Loop/balance/co-op/release | F43–F49 | Initial source in PR519; authentic co-op saved inputs, full loop/balance and release acceptance remain open. |
 
-**Ownership:** ROOT owns combined integration, STATE, serialized engine/CI and main landing. Local foundation_completion owns production capture/alpha/guest wiring; proof_completion owns F48 harness/profiles; source_review independently reviews. Older external project sessions stopped/archived with work preserved; the owner's new pinned Criterion evidence and closeouts lane independently maps and judges proof. Fourteen superseded PRs closed; sole draft519. Source/archives do not earn MET. Evidence: branch-closeout/session-takeover.json. Required proof/CI/main precede criterion closure.
+**Ownership:** ROOT owns integration, STATE, engine/CI and landing; foundation_completion owns producers, proof_completion F48, source_review independent review. Older sessions archived with work preserved. The owner's pinned Criterion evidence and closeouts lane judges evidence. Fourteen superseded PRs closed; sole draft519. No MET from source/archives. Evidence: branch-closeout/session-takeover.json. Required proof/CI/main precede closure.
 
 ### Open owner decisions
 
