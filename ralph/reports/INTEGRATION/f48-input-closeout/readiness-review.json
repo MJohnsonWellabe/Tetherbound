@@ -1,0 +1,57 @@
+{
+  "scope": "F48 complete-input readiness and portability; engine-free only",
+  "baseline": "791d17cef42e",
+  "acceptance_credit": false,
+  "status": "BLOCKED_ACTUAL_PRODUCER_FAILURE",
+  "changed_files": [
+    "tools/net/f48_ci_ready.py",
+    "tools/net/f48_ci_runner.py",
+    "tests/test_f48_ci_ready.py"
+  ],
+  "validation": {
+    "engine_free_tests": 8,
+    "result": "PASS",
+    "command": "python tests/test_f48_ci_ready.py",
+    "diff_check": "PASS",
+    "engines_started": 0,
+    "CI_launched": false
+  },
+  "producer": {
+    "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9",
+    "artifacts": {
+      "invocation.json": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1",
+      "net-run\\NET_RUN.json": "f8b1c5ecb0c8f3f8fc367b92106f85af4a200f18c946a0783ab1d7967f6fc1cd",
+      "coordinator.log": "7a2296cf92bdd4f7a52942d711afab36a5c8ad4dd587fd19af3f9bace20270d8"
+    },
+    "actual_failures": [
+      "#3 peer 0 load_save (DISCLOSED saved-input setup; original guest character only, no borrowed world) -> FAIL -- no verdict"
+    ],
+    "profile_sha256": "478a3ff3e465447b625737f4d17ae05e6b12fcb1c92cd4bc8a14ffe1713da015",
+    "gate_result": "code 1: Actual producer failed; packaging refused",
+    "strict_packager_result": "Actual original producer not terminal clean; no readiness claim",
+    "refusal_output_exists": false
+  },
+  "independent_packager_review": {
+    "path": "D:\\tetherbound\\r3-f48\\.tmp\\package_f48_actual_producer.py",
+    "sha256": "451748894c7befb865cf8c8a0c67e81393451c566ead43a14881755f091fbde6",
+    "original_profile_pin_verified": true,
+    "original_loop_and_four_peer_routes_complete": true,
+    "six_source_and_effective_configuration_hashes_verified": true,
+    "release_payout": "Reads actual retained caught UID, nickname/display name, integral level, canonical species types and essence schema; independently requires original floor(3 + 0.5 * level), primary gets remainder for dual types. No actual release carrier available from failed V9, so payout NOT runtime verified.",
+    "remaining_limits": [
+      "Existing generic profile packager/relocator accept eight starts; new runner gate requires all nine.",
+      "Reviewed local packager is outside lane ownership and remains unchanged.",
+      "Terminal evidence hashes and exact native source provenance must accompany any future successful bundle; no current bundle exists."
+    ]
+  },
+  "native_request": "After ROOT repairs and obtains a clean terminal original producer, run terminal gate with original478 SHA; use reviewed strict packager with a fresh output; run f48_relocate_profile then f48_ci_ready on relocated profile. Under ROOT engine lease, run original loop, behind, boss_four and full default transactions 6x4. No cut, bound or oracle changes.",
+  "risks": [
+    "Input integrity and ordinary route presence are not runtime success or earned campaign proof.",
+    "Relocation verified with Windows-authored path spellings on Windows; actual Linux native execution remains required.",
+    "All F48 criteria remain OPEN until clause-complete actual proof on green main."
+  ],
+  "balance": {
+    "game_files": 0,
+    "tests_tools_files": 3
+  }
+}

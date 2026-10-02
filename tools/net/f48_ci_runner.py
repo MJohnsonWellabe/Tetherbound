@@ -19,6 +19,8 @@ import subprocess
 import sys
 import tempfile
 
+import f48_ci_ready
+
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = {"tests/smoke_net_f48_loop.gd", "tests/smoke_net_f48_behind.gd",
            "tests/smoke_net_f48_transactions.gd", "tests/smoke_net_f48_boss_four.gd"}
@@ -115,8 +117,8 @@ def configuration_overlay(project: Path, profile: dict):
 def validate_ready_profile(profile: dict, script: str) -> None:
     suites = profile.get("suite_profiles", {})
     starts = profile.get("transaction_profiles", {})
-    require(isinstance(suites, dict) and {"loop", "behind"} <= suites.keys() and
-            isinstance(starts, dict) and OPERATIONS <= starts.keys(),
+    require(isinstance(suites, dict) and {"loop", "behind", "boss_four"} == suites.keys() and
+            isinstance(starts, dict) and OPERATIONS == starts.keys(),
             "Complete required F48 input bundle missing; no default suite or cut is skipped")
     if script.endswith("boss_four.gd"):
         require("boss_four" in suites, "Original four-peer boss input absent")
@@ -138,6 +140,7 @@ def main() -> int:
         profile_path = args.profile.resolve()
         profile = json.loads(profile_path.read_bytes())
         validate_ready_profile(profile, args.script)
+        readiness = f48_ci_ready.validate(profile_path)
         output = args.proof_out.resolve()
         require(not output.exists(), "Fresh detached native output required")
         output.mkdir(parents=True)
@@ -152,11 +155,11 @@ def main() -> int:
         environment.setdefault("TB_NET_OUT_DIR", str(output / "net-run"))
         with configuration_overlay(ROOT, profile) as pins:
             print(json.dumps({"disclosed_mechanics_overlay": pins, "profile_sha256": digest(profile_path.read_bytes()),
-                              "script": args.script, "acceptance_credit": False}), flush=True)
+                              "script": args.script, "readiness": readiness, "acceptance_credit": False}), flush=True)
             result = subprocess.run([args.godot, "--headless", "--path", str(ROOT), "--script", "res://" + args.script],
                                     cwd=ROOT, env=environment, check=False)
         return result.returncode
-    except (OSError, ValueError, KeyError, TypeError) as error:
+    except (OSError, ValueError, KeyError, TypeError, IndexError, AttributeError) as error:
         print(json.dumps({"ok": False, "error": str(error)}), flush=True)
         return 1
 
