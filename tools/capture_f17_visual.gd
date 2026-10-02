@@ -10,6 +10,9 @@ var _source := ""
 var _views: Array[Dictionary] = []
 var _output_created_here := false
 var _paired_high := false
+var _captured_companion: Node3D
+var _captured_member: RefCounted
+var _companion_required := false
 
 
 func _run() -> void:
@@ -87,6 +90,10 @@ func _capture(label: String) -> void:
 				if not await _save_view(label, time_name, weather_name):
 					weather.set_process(weather_processing)
 					return
+				if label == "actual farmhouse doorway" and time_name == "night":
+					if not await _capture_house_light_off(label, time_name, weather_name):
+						weather.set_process(weather_processing)
+						return
 	if GRAPHICS.choose(_preset) != OK:
 		_failed = "could not restore travel preset " + _preset
 	weather.call("set_weather", "clear")
@@ -95,9 +102,12 @@ func _capture(label: String) -> void:
 	look.call("refresh_graphics")
 
 
-func _save_view(label: String, time_name: String, weather_name: String = "clear", motion: bool = false) -> bool:
+func _save_view(label: String, time_name: String, weather_name: String = "clear", motion: bool = false, diagnostic: String = "") -> bool:
 	await RenderingServer.frame_post_draw
 	var captured_ms := Time.get_ticks_msec()
+	if _companion_required and not _companion_ready(_world.get_node_or_null("EncounterDirector")):
+		_failed = "the same healthy visible companion was not retained through its still/motion capture"
+		return false
 	if str(_world.get_node("WorldWeather").call("weather")) != weather_name:
 		_failed = "observed weather differs from capture label " + weather_name
 		return false
@@ -112,13 +122,77 @@ func _save_view(label: String, time_name: String, weather_name: String = "clear"
 		_failed = "could not save native original image"
 		return false
 	var camera := _rig.get_node("Camera3D") as Camera3D
+	var director := _world.get_node_or_null("EncounterDirector")
+	var ally := director.call("ally_body") as Node3D if director != null else null
 	_views.append({"label": label, "time": time_name, "weather": weather_name, "image": filename,
 		"body": _coordinates(_player.global_position), "camera": _coordinates(camera.global_position),
 		"camera_basis": [_coordinates(camera.global_basis.x), _coordinates(camera.global_basis.y), _coordinates(camera.global_basis.z)],
 		"on_floor": _player.is_on_floor(), "preset": GRAPHICS.selected(), "motion_sample": motion,
 		"encoding": "native-resolution JPEG95" if motion else "native-resolution PNG",
-		"features": GRAPHICS.values(), "elapsed_ms": captured_ms})
+		"features": GRAPHICS.values(), "elapsed_ms": captured_ms, "diagnostic": diagnostic,
+		"equipped_tool": str(_game.get("equipped_tool")), "nearby_lights": _nearby_lights(),
+		"companion": {"path": str(ally.get_path()), "body": _coordinates(ally.global_position)} if is_instance_valid(ally) else {}})
 	return true
+
+
+func _nearby_lights() -> Array[Dictionary]:
+	var lights: Array[Dictionary] = []
+	var capsule := (_player.get_node("Collision") as CollisionShape3D).shape as CapsuleShape3D
+	for light: OmniLight3D in _world.find_children("*", "OmniLight3D", true, false):
+		# Conservative intersection candidates include lights above the foot
+		# origin that can reach the actual capsule's shoulders.
+		if light.global_position.distance_to(_player.global_position) <= light.omni_range + capsule.height:
+			lights.append({"path": str(light.get_path()), "position": _coordinates(light.global_position),
+				"visible": light.is_visible_in_tree(), "energy": light.light_energy,
+				"range": light.omni_range, "attenuation": light.omni_attenuation,
+				"colour": [light.light_color.r, light.light_color.g, light.light_color.b],
+				"shadows": light.shadow_enabled})
+	return lights
+
+
+func _capture_house_light_off(label: String, time_name: String, weather_name: String) -> bool:
+	var house := _world.get_node_or_null("GrandpaHouse")
+	if house == null:
+		_failed = "actual farmhouse missing from light-spill diagnostic"
+		return false
+	var lights := house.find_children("*", "OmniLight3D", true, false)
+	if lights.is_empty():
+		_failed = "actual farmhouse lights missing from light-spill diagnostic"
+		return false
+	var energies: Array[float] = []
+	var body_at := _player.global_position
+	var camera := _rig.get_node("Camera3D") as Camera3D
+	var camera_at := camera.global_transform
+	for light: OmniLight3D in lights:
+		energies.append(light.light_energy)
+		light.light_energy = 0.0
+	for frame in 12:
+		await process_frame
+	var saved := false
+	if _player.global_position.distance_to(body_at) > .005 \
+			or camera.global_position.distance_to(camera_at.origin) > .005 \
+			or camera.global_basis.get_rotation_quaternion().angle_to(camera_at.basis.get_rotation_quaternion()) > .001:
+		_failed = "body/camera changed during paired farmhouse-light-off diagnostic"
+	else:
+		saved = await _save_view(label + " diagnostic house lights off", time_name, weather_name, false, "farmhouse-light-off; diagnosis only, excluded from acceptance")
+	for index in lights.size():
+		(lights[index] as OmniLight3D).light_energy = energies[index]
+	for frame in 12:
+		await process_frame
+	return saved
+
+
+func _companion_ready(director: Node) -> bool:
+	if director == null:
+		return false
+	var ally := director.call("ally_body") as Node3D
+	var member := director.call("ally_instance") as RefCounted
+	if not is_instance_valid(ally) or not ally.is_visible_in_tree() \
+			or not is_instance_valid(member) or member != (_game.get("party") as RefCounted).call("active") \
+			or float(member.get("hp")) <= 0.0 or bool(member.get("fainted")):
+		return false
+	return (_captured_companion == null or ally == _captured_companion) \
+		and (_captured_member == null or member == _captured_member)
 
 
 func _after_hall_arrival(hall: Node3D) -> bool:
@@ -136,6 +210,28 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 		_write_manifest(false)
 		return false
 	if not await super._after_hall_arrival(hall):
+		_write_manifest(false)
+		return false
+	var director := _world.get_node_or_null("EncounterDirector")
+	if director == null:
+		_failed = "production companion director is missing"
+		_write_manifest(false)
+		return false
+	if director.call("ally_body") == null:
+		await _press("creature_recall")
+	for frame in 180:
+		if _companion_ready(director):
+			break
+		await physics_frame
+	if not _companion_ready(director):
+		_failed = "physical recall did not retain the healthy active creature's visible body"
+		_write_manifest(false)
+		return false
+	_captured_companion = director.call("ally_body") as Node3D
+	_captured_member = director.call("ally_instance") as RefCounted
+	_companion_required = true
+	await _capture("companion in Shrine Room")
+	if not _failed.is_empty():
 		_write_manifest(false)
 		return false
 	# Observe thirty wall-clock seconds of the live interior without disabling
@@ -180,7 +276,7 @@ func _write_manifest(complete: bool) -> void:
 	file.store_string(JSON.stringify({"source": _source, "complete": complete,
 		"presets": _capture_presets(), "renderer": RenderingServer.get_current_rendering_method(),
 		"resolution": [1920, 1080], "views": _views, "failure": _failed,
-		"shortcuts": ["inherited post-opening flags and starter", "one inherited initial farmhouse placement", "injected physical joypad bindings", "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture"],
+		"shortcuts": ["inherited post-opening flags and starter", "one inherited initial farmhouse placement", "injected physical joypad bindings including ordinary companion recall", "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture", "separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"],
 		"scope": "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
 	file.close()
 
