@@ -1,0 +1,19 @@
+{
+  "status": "SCOPED PASS; actual baked terrain replay pending",
+  "trigger": "F20 actual Tidewake mount refused tidewake_salt_crown dry support at original [0,-7] camp offset",
+  "change": "Only Salt Crown offset [3,-9]; same arrival offset and support thresholds",
+  "source_sha256": {
+    "data/config/waystones.json": "206c668ebf94e1ad535c9bc1d7a45ed5b9752b10d0707299a2100fa3335af1e6",
+    "tests/test_f18_water_support.gd": "b92f42682e8a4cc0e77c4b962a13b477de0fcc191bc856c7e35fa622839807cf"
+  },
+  "proof": {
+    "tests": 1,
+    "assertions": 4,
+    "failures": 0,
+    "engine_diagnostics": [],
+    "surface": "original analytic source used by committed terrain bake",
+    "physics": false,
+    "native_visual": false
+  },
+  "criteria": "No acceptance criterion closed by detached source proof"
+}
