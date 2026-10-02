@@ -688,6 +688,9 @@ func _ready() -> void:
 	var transport := LEDGER_CLAIM.transport(self)
 	if transport != null and not transport.is_connected("intent_refused", _on_renewable_refused):
 		transport.connect("intent_refused", _on_renewable_refused)
+	if not _renewable_site_id.is_empty():
+		_read_renewable_stock(get_node_or_null(^"/root/Game"))
+		_refresh_renewable_presentation()
 
 
 func _process(_delta: float) -> void:
@@ -723,6 +726,10 @@ func set_renewable_stock(stock: Dictionary) -> void:
 
 
 func _refresh_renewable_presentation() -> void:
+	# Registered-world construction may supply stock before this shell enters
+	# the tree. Keep that record until ready instead of resolving an absolute
+	# Game path on a detached node or changing its presentation prematurely.
+	if not is_inside_tree() or is_queued_for_deletion(): return
 	var ready := _renewable_ready(get_node_or_null(^"/root/Game"))
 	if not ready:
 		if not _taken:

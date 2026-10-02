@@ -452,6 +452,9 @@ func _reset_state(party_size: int) -> void:
 	_game.set("pending_catch", null)
 	var party: RefCounted = _game.get("party")
 	party.call("clear")
+	# This disclosed fixture replaces its entire roster, including the portable
+	# creature mirrors loaded by the preceding scenario's actual disk reload.
+	_game.get("local").set("redesign_character", preload("res://scripts/data/redesign_state.gd").defaults("character"))
 	if party_size == 0:
 		return
 	var recipe: Array = ["terrapup", "mudsnout", "bramblebun", "brooktail", "tuskroot"]
