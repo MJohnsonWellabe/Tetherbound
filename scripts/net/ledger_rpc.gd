@@ -1,4 +1,5 @@
 extends Node
+const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 signal transaction_boundary(observation: Dictionary)
 
 ## Exact identity at the real writer edge, for ROOT's deterministic loss
@@ -1355,34 +1356,55 @@ func journal_altar_building_prepared(peer: int, stage: Dictionary, request: Dict
 	# Applied journal and building op must BOTH match before the atomic writer.
 	var building_index := int(world.call("building_index_of", stage.record.uid))
 	var placed_ok := building_index >= 0 and ESSENCE._equivalent(world.placed_buildings[building_index], stage.record)
+	var save_trace := ALTAR_TRACE.begin("journal.prepared_world_write")
 	if not ESSENCE._equivalent(world.reward_deliveries.get(id), row) \
 		or (stage.action == "place_building" and not placed_ok) \
 		or (stage.action == "dismantle" and building_index >= 0) \
 		or saver.call("save_world_prepared", game, world.world_id) != true:
+		ALTAR_TRACE.end("journal.prepared_world_write", save_trace, "guard_or_bool_refused")
 		world.call("load_data", before)
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
 		ledger.set("_seen_txns", before_seen)
 		return {"ok": false, "durable": false, "code": "building_journal_failed"}
+	ALTAR_TRACE.end("journal.prepared_world_write", save_trace, "saved")
+	var retain_trace := ALTAR_TRACE.begin("journal.retain_publication")
 	_training_publications[id] = {"peer": peer, "row": row.duplicate(true), "delta": verdict.delta.duplicate(true)}
+	ALTAR_TRACE.end("journal.retain_publication", retain_trace)
 	return {"ok": true, "durable": true, "delivery_id": id, "verdict": verdict}
 
 
 func publish_altar_building(peer: int, character: String, id: String, receipt: String) -> bool:
+	var identity_trace := ALTAR_TRACE.begin("publish.identity")
 	var game := _game()
 	if game == null or not bool(game.call("is_host")) or character.is_empty() \
-		or _registered_character(peer) != character: return false
+		or _registered_character(peer) != character:
+		ALTAR_TRACE.end("publish.identity", identity_trace, "refused")
+		return false
+	ALTAR_TRACE.end("publish.identity", identity_trace)
 	var world: RefCounted = game.get("world")
 	var row: Variant = world.reward_deliveries.get(id)
 	var saved: Dictionary = _training_publications.get(id, {})
+	var validate_trace := ALTAR_TRACE.begin("publish.canonical_row")
 	if not WORLD_STATE.altar_build_row_valid(row, world.reward_delivery_namespace, world.world_id) \
 		or row.character_id != character or row.receipt != receipt or saved.get("peer") != peer \
-		or not ESSENCE._equivalent(saved.get("row"), row): return false
+		or not ESSENCE._equivalent(saved.get("row"), row):
+		ALTAR_TRACE.end("publish.canonical_row", validate_trace, "refused")
+		return false
+	ALTAR_TRACE.end("publish.canonical_row", validate_trace)
+	var boundary_trace := ALTAR_TRACE.begin("publish.host_boundary_callbacks")
 	_observe_training_boundary(row, "after_host_write_before_delivery")
+	ALTAR_TRACE.end("publish.host_boundary_callbacks", boundary_trace)
 	# Observe only the real saved boundary; never publish a changed decision.
-	if not ESSENCE._equivalent(world.reward_deliveries.get(id), saved.row): return false
+	var original_trace := ALTAR_TRACE.begin("publish.original_row_recheck")
+	if not ESSENCE._equivalent(world.reward_deliveries.get(id), saved.row):
+		ALTAR_TRACE.end("publish.original_row_recheck", original_trace, "refused")
+		return false
+	ALTAR_TRACE.end("publish.original_row_recheck", original_trace)
 	_training_publications.erase(id)
+	var delivery_trace := ALTAR_TRACE.begin("publish.original_delta_delivery")
 	publish_journaled_delta(saved.delta)
+	ALTAR_TRACE.end("publish.original_delta_delivery", delivery_trace)
 	return true
 
 

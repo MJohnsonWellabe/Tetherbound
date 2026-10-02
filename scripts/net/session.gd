@@ -1,4 +1,5 @@
 extends Node
+const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
@@ -3543,12 +3544,20 @@ func host_altar_building(peer: int, request: Dictionary) -> Dictionary:
 		refusal.code = stage.get("code", "building_stage_refused")
 		return refusal
 	var transport := get_node_or_null(^"LedgerRpc")
+	var journal_trace := ALTAR_TRACE.begin("host.original_journal")
 	var result: Dictionary = transport.call("journal_altar_building_prepared", peer, stage, request) if transport != null else {}
-	if _character_authority.call("finish_creature_training", stage, result.get("durable") == true) != true: return refusal
+	ALTAR_TRACE.end("host.original_journal", journal_trace)
+	var registry_trace := ALTAR_TRACE.begin("host.original_registry_finish")
+	if _character_authority.call("finish_creature_training", stage, result.get("durable") == true) != true:
+		ALTAR_TRACE.end("host.original_registry_finish", registry_trace, "refused")
+		return refusal
+	ALTAR_TRACE.end("host.original_registry_finish", registry_trace)
 	if result.get("durable") != true:
 		refusal.code = result.get("code", "building_journal_failed")
 		return refusal
+	var publication_trace := ALTAR_TRACE.begin("host.original_publish")
 	transport.call("publish_altar_building", peer, character, result.delivery_id, stage.receipt)
+	ALTAR_TRACE.end("host.original_publish", publication_trace)
 	return result.verdict
 
 
@@ -3558,18 +3567,31 @@ func apply_altar_building_owner(row: Dictionary) -> Dictionary:
 	var game := _game()
 	var saver: RefCounted = game.get("save_system") if game != null else null
 	if saver == null or not saver.has_method("save_character_prepared"): return {"ok": false}
+	var fallback_trace := ALTAR_TRACE.begin("owner.finish_fallback")
 	saver.call("finish_fallback")
+	ALTAR_TRACE.end("owner.finish_fallback", fallback_trace)
 	if saver.call("fallback_busy") == true or game != _game(): return {"ok": false}
 	var player: RefCounted = game.get("local")
 	var world: RefCounted = game.get("world")
+	var validate_trace := ALTAR_TRACE.begin("owner.canonical_row")
 	if not TRAINING_WORLD.altar_build_row_valid(row, world.reward_delivery_namespace, world.world_id) \
 		or row.character_id != player.get("character_id") or row.status != "pending" \
-		or not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return {"ok": false}
+		or not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row):
+		ALTAR_TRACE.end("owner.canonical_row", validate_trace, "refused")
+		return {"ok": false}
+	ALTAR_TRACE.end("owner.canonical_row", validate_trace)
+	var snapshot_trace := ALTAR_TRACE.begin("owner.original_snapshot")
 	var snapshot: Dictionary = player.call("save_data")
 	var projected := ESSENCE.training_projection(snapshot)
+	ALTAR_TRACE.end("owner.original_snapshot", snapshot_trace)
 	var applied: bool = snapshot.redesign_character.transaction_receipts.has(row.receipt)
 	if not ESSENCE._equivalent(projected, row.after if applied else row.before): return {"ok": false}
-	if not _retain_owner_training_retry(player, world, row) or not _begin_owner_training_install(player, world, row): return {"ok": false}
+	var retention_trace := ALTAR_TRACE.begin("owner.bind_original_retry")
+	if not _retain_owner_training_retry(player, world, row) or not _begin_owner_training_install(player, world, row):
+		ALTAR_TRACE.end("owner.bind_original_retry", retention_trace, "refused")
+		return {"ok": false}
+	ALTAR_TRACE.end("owner.bind_original_retry", retention_trace)
+	var install_trace := ALTAR_TRACE.begin("owner.original_install")
 	if not applied:
 		for index: int in row.after.inventory.size():
 			var stack: Variant = row.after.inventory[index]
@@ -3577,10 +3599,18 @@ func apply_altar_building_owner(row: Dictionary) -> Dictionary:
 				player.get("inventory").call("set_slot", index, stack.duplicate(true) if stack is Dictionary else null)
 		player.set("redesign_character", row.after.redesign_character.duplicate(true))
 	_end_owner_training_install()
+	ALTAR_TRACE.end("owner.original_install", install_trace)
+	var owner_save_trace := ALTAR_TRACE.begin("owner.original_projection_and_bool_write")
 	if not ESSENCE._equivalent(ESSENCE.training_projection(player.call("save_data")), row.after) \
 		or saver.call("save_character_prepared", game, str(player.character_id)) != true:
+		ALTAR_TRACE.end("owner.original_projection_and_bool_write", owner_save_trace, "projection_or_bool_refused")
 		return {"ok": false, "pending": true, "code": "owner_building_save_failed"}
-	if not _mark_owner_training_saved(player, world, row): return {"ok": false, "saved": true}
+	ALTAR_TRACE.end("owner.original_projection_and_bool_write", owner_save_trace, "saved")
+	var marker_trace := ALTAR_TRACE.begin("owner.mark_original_saved")
+	if not _mark_owner_training_saved(player, world, row):
+		ALTAR_TRACE.end("owner.mark_original_saved", marker_trace, "refused")
+		return {"ok": false, "saved": true}
+	ALTAR_TRACE.end("owner.mark_original_saved", marker_trace)
 	return {"ok": true, "saved": true}
 
 ## Actual owning world and SAME prepared writers, including offline solo.
