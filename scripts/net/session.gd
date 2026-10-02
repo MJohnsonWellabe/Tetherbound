@@ -339,8 +339,12 @@ func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionar
 	if original.get("character_id") != character or original.get("world_namespace") != world.reward_delivery_namespace: return FOUNDATION_ACTIONS.deny("dock_context_changed")
 	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
 	if row.get("action") == "dock_conclusion" and row.get("intent") == original:
-		return _foundation_decision(local_peer_id(), row)
+		get_node(^"LedgerRpc").call("_process_creature_training", row)
+		return _foundation_decision(local_peer_id(), world.reward_deliveries.get(row.delivery_id, {}))
 	if source.call("dock_departure_ready") != true or _altar_peer_in_combat(local_peer_id()): return FOUNDATION_ACTIONS.deny("dock_departure_not_ready")
+	# The local five accumulate passive care and travel between offers. Freeze
+	# their current admitted record at this real producer, as station actions do.
+	if admitted_character_state(local_peer_id()).is_empty(): return FOUNDATION_ACTIONS.deny("character_busy")
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"source_key": original.dock_id, "world_namespace": world.reward_delivery_namespace, "realm": "water",
 		"in_range": true, "in_combat": false, "civilian_departure_ready": true, "foundation_runtime_authorized": true}

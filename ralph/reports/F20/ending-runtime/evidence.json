@@ -1,12 +1,12 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a",
+  "source_delta": "09df021bb9; later dock refresh/retry awaiting actual proof",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
     "local": "5a315cef84"
   },
-  "source_review": "PASS: independent read-only f20_review; acceptance remains open",
+  "source_review": "PASS: independent read-only f20_review, including dock host refresh/retry and installed Hall Approach navigation; actual acceptance OPEN",
   "focused": {
     "verdict": "PASS",
     "log": "f20-f18-focused-r2.log.gz",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Actual Home Key reaches Meadows but shipping footprint intersects Hall floor; F18 owns fix. Tidewake prompt movement fixed; awaiting replay with deferred owner write wait. Fifth arch renderer capture in progress. Two-peer ending/reload awaits solo proof.",
+    "reason": "F18 owns current lease and Hall obstruction fix. F20 dock current host admission refresh/retry staged separately after baseline conflict; next real replay required. Next Hall proof uses authored Approach through original navigator. Solo/net/reload/presentation remain OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -78,6 +78,18 @@
       {
         "log": "f20-tidewake-r5.log.gz",
         "verdict": "FAIL"
+      },
+      {
+        "log": "f20-arch-render-r2.log.gz",
+        "verdict": "FAIL",
+        "reason": "ordinary navigation stopped near fifth arch but exact grounded/actionable prompt ownership failed before key input; no valid capture"
+      },
+      {
+        "log": "f20-tidewake-r6.log.gz",
+        "verdict": "FAIL",
+        "checks": 21,
+        "failures": 2,
+        "reason": "after correct dock input and 30 second wait, pending owner_plan baseline conflicts in party; world journal exists, personal receipt/save absent"
       }
     ],
     "limitations": [
@@ -121,6 +133,11 @@
       "feature": "F18 supported Salt Crown",
       "original": "1c5baa6bda1911af15bdd20700dbc7e30c6315c2",
       "local": "bf0b18655d"
+    },
+    {
+      "feature": "coordinator lossless save codec",
+      "original": "6405e9facacbeae7bed5f60118e1b7599ebfd8d5",
+      "local": "0e2dba15eb"
     }
   ],
   "home_anchor_probe": {
@@ -143,5 +160,36 @@
       0
     ],
     "verdict": "F18 dependency OPEN; no capsule waiver"
+  },
+  "latest_focused": {
+    "verdict": "PASS",
+    "log": "f20-latest-focused.log.gz",
+    "tests": 27,
+    "assertions": 196,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": [
+      "ending_return_provenance",
+      "foundation_travel_protocol",
+      "regional_homecoming"
+    ]
+  },
+  "latest_synthetic_disk": {
+    "verdict": "PASS",
+    "log": "f20-latest-synthetic-disk.log.gz",
+    "checks": 62,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": "synthetic facade over real Game, credits UI, lossless split writer, reset and production disk reload; not actual world/campaign"
+  },
+  "actual_scripts_compile": {
+    "verdict": "PASS",
+    "scripts": [
+      "tests/smoke_f20_ending.gd",
+      "tests/smoke_f20_tidewake_close.gd",
+      "tests/smoke_net_f20_ending.gd",
+      "tests/smoke_f20_arch_presentation.gd"
+    ],
+    "method": "Godot4.7 --headless --check-only; all exit0; no runtime acceptance"
   }
 }

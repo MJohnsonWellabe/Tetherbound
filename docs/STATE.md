@@ -12,6 +12,8 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F18 candidate:** Ready-world waystone mounts, guest/local durable touch transactions, portal view fields and receiver permit enforcement have scoped passing evidence in `ralph/reports/HUB/f18/runtime-integration.json`. All six criteria remain UNPROVEN pending actual-world, earned-loop and live co-op proof; guest opening Home Key work is separate WIP.
 
+**F20 candidate:** Outcome-bound personal Home Key receipts, durable credits ownership and personal fifth-arch presentation are wired; Tidewake's dock prompt remains anchored while Mara turns, and its producer refreshes the exact current host party before journaling. Focused ending checks and synthetic split-writer/reload pass. Actual replay found the canonical Home anchor intersects the Hall floor (F18 dependency) and an earlier dock journal retained a stale party baseline; revised dock recovery and authored arch-approach proofs await the next serialized slot. Actual solo/two-peer ending, disk continuation and visible/audible arch acceptance remain OPEN. Logs and disclosures: `ralph/reports/F20/ending-runtime/evidence.json`.
+
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
 
 **Fixed in this pass (each verified locally on Godot 4.7 headless; commits on `tb/integration`):**

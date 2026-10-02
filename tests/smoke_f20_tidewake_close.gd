@@ -76,6 +76,13 @@ func _run() -> void:
 			for key: String in current:
 				if not preload("res://scripts/creatures/essence.gd")._equivalent(current[key], row.before.get(key)): changed.append(key)
 			print("F20 DOCK OWNER TRACE status=", row.status, " pure_plan_code=", plan.get("code", "ok"), " changed_baseline_fields=", changed)
+			for index: int in mini(current.party.size(), row.before.party.size()):
+				for field: String in current.party[index]:
+					var live: Variant = current.party[index][field]
+					var frozen: Variant = row.before.party[index].get(field)
+					if not preload("res://scripts/creatures/essence.gd")._equivalent(live, frozen):
+						print("F20 DOCK OWNER EXACT party/", index, "/", field, " live=", live, " frozen=", frozen,
+							" live_variant_hex=", var_to_bytes(live).hex_encode(), " frozen_variant_hex=", var_to_bytes(frozen).hex_encode())
 	proof.check(game.world.flags.call("has", "water_civilian_departure_complete") \
 		and game.local.redesign_character.transaction_receipts.has(receipt), "dock closes Tidewake with its own saved character and world conclusion")
 	proof.check(HOME.journey_context(game).is_empty() and not HOME.credits_pending(game), "Tidewake conclusion offers no homecoming or credits")
