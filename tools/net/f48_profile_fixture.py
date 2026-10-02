@@ -29,6 +29,7 @@ INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell", "
 CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
            "data/config/hud.json",
+           "data/config/alpha_respawns.json",
            "data/config/progression.json", "data/recipes/recipes_forge.json",
            "data/items/items.json")
 PRODUCERS = ("scripts/net/session.gd", "scripts/ui/craft_panel.gd", "scripts/build/station_piece.gd",
@@ -327,7 +328,8 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
         overrides.update({"traits.json": ["runtime_enabled"],
                           "multiplayer.json": ["session.redesign_portal_runtime_enabled",
                                                "session.redesign_boss_handoff_runtime_enabled"],
-                          "hud.json": ["new_system_screens.enabled"]})
+                          "hud.json": ["new_system_screens.enabled"],
+                          "alpha_respawns.json": ["runtime_enabled"]})
     for name, fields in overrides.items():
         source = ROOT / "data/config" / name
         effective = read(source)

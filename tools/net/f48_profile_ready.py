@@ -21,7 +21,7 @@ import f48_profile_fixture as fixture
 SUITES = {"loop", "behind", "boss_four"}
 OPERATIONS = set(fixture.OPERATIONS)
 DEFAULT_REQUIRED = {"loop", "behind"} | OPERATIONS
-CONFIGURATION_FILES = {"stations.json", "essence.json", "traits.json", "multiplayer.json", "hud.json"}
+CONFIGURATION_FILES = {"stations.json", "essence.json", "traits.json", "multiplayer.json", "hud.json", "alpha_respawns.json"}
 
 
 def require_fields(row: dict, names: set[str], label: str) -> None:
@@ -113,7 +113,7 @@ def generate(input_path: Path, output: Path, complete: bool) -> dict:
     overlay = fixture.read(Path(pack["configuration_profile"]))
     fixture.require(overlay.get("configuration_scope") == "full", "Require separately reviewed full mechanics overlay")
     configurations = overlay.get("test_configuration", [])
-    fixture.require(isinstance(configurations, list) and len(configurations) == 5 and
+    fixture.require(isinstance(configurations, list) and len(configurations) == len(CONFIGURATION_FILES) and
                     {Path(row["file"]).name for row in configurations} == CONFIGURATION_FILES,
                     "Require exact full configuration file set")
     prepared = {}
