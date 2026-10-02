@@ -27,7 +27,7 @@ func test_actual_director_binding_tracks_current_world_owner_and_reparenting() -
 	assert_true(SESSION._portal_director_owned_by(replacement_world, owner, director))
 	director.set("_session", foreign_owner)
 	assert_false(SESSION._portal_director_owned_by(replacement_world, owner, director))
-	var retained := weakref(director)
+	var retained: WeakRef = weakref(director)
 	director.free()
 	assert_false(SESSION._portal_director_owned_by(replacement_world, owner, retained.get_ref()))
 	world.free()
