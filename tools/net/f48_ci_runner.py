@@ -98,8 +98,8 @@ def configuration_overlay(project: Path, profile: dict):
         # Recheck after owning the overlay lock, before any mutation.
         for path, original, _ in prepared:
             require(path.read_bytes() == original, "Production configuration changed while acquiring the overlay lease")
-        for path, _, effective in prepared:
-            mutated.append(next(row for row in prepared if row[0] == path))
+        for path, original, effective in prepared:
+            mutated.append((path, original, effective))
             path.write_bytes(effective)
         yield [{"file": "res://data/config/" + path.name, "sha256": digest(effective)}
                for path, _, effective in prepared]
@@ -143,14 +143,18 @@ def main() -> int:
         output.mkdir(parents=True)
         environment = dict(os.environ, TB_F48_PROFILE=str(profile_path), TB_PROOF_OUT=str(output),
                            TB_F48_PROCESS_PYTHON=sys.executable)
-        with tempfile.TemporaryDirectory(prefix="f48-coordinator-", dir=output) as coordinator:
-            require(Path(coordinator).resolve().is_relative_to(output), "Coordinator cleanup path escaped its named native output")
-            environment.update(XDG_DATA_HOME=coordinator, APPDATA=coordinator, LOCALAPPDATA=coordinator)
-            with configuration_overlay(ROOT, profile) as pins:
-                print(json.dumps({"disclosed_mechanics_overlay": pins, "profile_sha256": digest(profile_path.read_bytes()),
-                                  "script": args.script, "acceptance_credit": False}), flush=True)
-                result = subprocess.run([args.godot, "--headless", "--path", str(ROOT), "--script", "res://" + args.script],
-                                        cwd=ROOT, env=environment, check=False)
+        # Keep the actual coordinator home and scenario together with native
+        # logs/receipts, even on failure. No temporary home is recursively
+        # deleted while original peer-process evidence may still be needed.
+        coordinator = tempfile.mkdtemp(prefix="f48-coordinator-", dir=output)
+        require(Path(coordinator).resolve().is_relative_to(output), "Coordinator home escaped named native output")
+        environment.update(XDG_DATA_HOME=coordinator, APPDATA=coordinator, LOCALAPPDATA=coordinator)
+        environment.setdefault("TB_NET_OUT_DIR", str(output / "net-run"))
+        with configuration_overlay(ROOT, profile) as pins:
+            print(json.dumps({"disclosed_mechanics_overlay": pins, "profile_sha256": digest(profile_path.read_bytes()),
+                              "script": args.script, "acceptance_credit": False}), flush=True)
+            result = subprocess.run([args.godot, "--headless", "--path", str(ROOT), "--script", "res://" + args.script],
+                                    cwd=ROOT, env=environment, check=False)
         return result.returncode
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(json.dumps({"ok": False, "error": str(error)}), flush=True)
