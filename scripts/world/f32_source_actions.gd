@@ -168,7 +168,8 @@ static func _refine(current: Dictionary, intent: Dictionary, host: Dictionary) -
 
 static func _groom(current: Dictionary, revision: int, intent: Dictionary,
 		host: Dictionary, care_stage: Callable) -> Dictionary:
-	if host.realm != "meadows" or host.get("paid_den") != true or not care_stage.is_valid():
+	if host.realm != "meadows" or host.get("paid_den") != true \
+		or not _identity(host.get("world_namespace")) or not care_stage.is_valid():
 		return _deny("actual_den_care_producer_required")
 	var roster: Array = []
 	for row: Variant in current.get("party", []):
@@ -178,12 +179,13 @@ static func _groom(current: Dictionary, revision: int, intent: Dictionary,
 	for receipt: Variant in current.redesign_character.transaction_receipts:
 		receipts[str(receipt)] = true
 	var shed := SHED.den_groom_candidate(str(current.character_id), roster, intent.creature_uid,
-		int(host.host_day), str(host.world_id), receipts, SHED.read())
+		int(host.host_day), str(host.world_namespace), receipts, SHED.read())
 	if shed.get("ok") != true: return shed
 	# F27 stages its existing once-per-UID/day care receipt in this same candidate.
 	var care: Variant = care_stage.call(current, str(current.character_id), intent.creature_uid,
 		int(host.host_day), revision)
-	if not care is Dictionary or care.get("ok") != true: return _deny("care_stage_refused")
+	if not care is Dictionary: return _deny("care_stage_refused")
+	if care.get("ok") != true: return _deny(str(care.get("code", "care_stage_refused")))
 	if care.get("duplicate") == true: return _deny("already_groomed")
 	var next: Dictionary = care.state.duplicate(true)
 	next.redesign_character.transaction_receipts.append(shed.receipt_id)

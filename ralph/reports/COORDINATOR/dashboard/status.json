@@ -1,10 +1,10 @@
 {
- "updated": "2026-10-02T08:44:50.207364+00:00",
+ "updated": "2026-10-02T09:39:48.669967+00:00",
  "headline": [
-  "Completion work continues on tb/integration, draft PR519. This checkpoint follows activation base b1522e17b4; main and acceptance have not advanced.",
-  "Accepted:110/280 (95/101 original;15/179 redesign). CI6177 is red. Windows export/boot passed; a green package export does not close the remaining gameplay, save, co-op or visual gates.",
-  "Frozen title/New Game passed237.016s. Physical opening passed625.078s through Home Key lesson, combat and catch. Later mastery/guest-rematch changes have separate bounded evidence; guest rematches stay gated by actor-vitals.",
-  "All3 Meadows material sites pass actual ground/controller/prompt/owner-save/ACK and exact stock/inventory reload (407.25s; disclosed6m starts). Additional site gates remain off pending source activation; Water sites and full earned routes remain unproven."
+  "Completion work continues on tb/integration, draft PR519. This successor follows pushed4ea260ec39; main and acceptance have not advanced.",
+  "Accepted:110/280 (95/101 original;15/179 redesign). CI6178 is red. Windows export/boot passed; that does not close remaining gameplay, save, co-op or visual gates.",
+  "Title/New Game passed237.016s; earlier opening/catch625.078s. New smoke observed saved starter/orbs/Home Key lesson and village exit, then timed out600.844s. Regional, catalogue/owner-save and exit checks pass. Groom8tests/149assertions pass; guest passive drift remains a confirmed blocker.",
+  "All3 Meadows and3 Tidewake candidates pass actual terrain/controller/prompt, host stock, owner-save/ACK and exact disk reload (407.25s/259.297s; disclosed6m starts). Both source-release gates remain OFF: full earned approaches and co-op contention are still unproven."
  ],
  "batches": [
   {
@@ -492,12 +492,12 @@
  "wip": [
   "Root owns integration, exact staging, STATE, board and serialized engine use. Campaign, combat and resource agents own disjoint bounded source and independent reviews; earlier app tasks and heartbeat remain stopped.",
   "The detached activation-proof-b152 checkout holds frozen native source and exact run receipts. Full source hashes and original failures are sealed with the checkpoint; no live source is edited during a run.",
-  "Clean bounded native runs: combat-settlement-compile-sourcepath, combat-settlement-disk, destination-settlement-and-wind, f32-meadows-first-resource-fixed, fixed-title, guardian-native-contract-fixed, hosted-mastery-and-resource-baseline, move-den-rematch-harness, opening-with-live-combat, stormwood-level-telemetry-output.",
-  "Original failed checks retained: combat-settlement-compile, f23-den-rematch-compile, f32-meadows-candidates, f32-meadows-lifecycle-fixed, lifecycle-ci-repairs, stormwood-level-telemetry. Later repairs do not erase these failures.",
+  "Clean bounded native runs: active-catalog-and-owner-fixtures, combat-settlement-compile-sourcepath, combat-settlement-disk, den-groom-saved-transaction, destination-settlement-and-wind, f32-meadows-first-resource-fixed, f32-water-regional-manager-fixed, final-recovery-exit-policy, fixed-title, guarded-process-exit-and-mastery, guardian-native-contract-fixed, hosted-mastery-and-resource-baseline, move-den-rematch-harness, opening-with-live-combat, realm-adapter-shell-registry-preflight, regional-manager-and-mastery, stormwood-level-telemetry-output.",
+  "Original failed checks retained: combat-settlement-compile, f23-den-rematch-compile, f32-meadows-candidates, f32-meadows-lifecycle-fixed, f32-water-first-resource-fixed, guarded-exit-and-groom-compile, lifecycle-ci-repairs, opening-fixture-owned-scene, opening-teacher-approach, stormwood-level-telemetry. Later repairs do not erase these failures.",
   "F48 paid-Altar/catch/loop and all24 cuts remain open. Historical default-off overlays cannot prove newly active production defaults.",
-  "Compatibility remains default. Full campaign pacing, current Cloudreach economy, controller utility/ultimate/Commands, Groom, missing supply paths, actual co-op, visuals/audio/device and human play remain open."
+  "Compatibility remains default. Full campaign pacing, current Cloudreach economy, controller utility/ultimate/Commands, ordinary Groom route, supply release gates, actual co-op, visuals/audio/device and human play remain open."
  ],
- "last_lane_refresh": "2026-10-02T08:44:50.207364+00:00",
+ "last_lane_refresh": "2026-10-02T09:39:48.669967+00:00",
  "lane_activity": [
   {
    "lane": "campaign_closeout in tb/integration",
@@ -505,15 +505,15 @@
   },
   {
    "lane": "build_closeout in tb/integration",
-   "checkpoint": "F22/F23 / combat and mastery: OPEN. Full opening passed first host-start slice. Later mastery disk checks passed; hosted-shell review repairs and live final-source proof remain required. Utility/ultimate/Commands not complete."
+   "checkpoint": "F22/F23 / combat and mastery: OPEN. Hosted/destination and process exit guards reviewed; actual failed-write/retry disk tests pass. Utility/ultimate/Commands remain unfinished."
   },
   {
-   "lane": "opening_closeout in tb/integration",
-   "checkpoint": "F31/F32 / homestead and supplies: OPEN. All3 Meadows material sites pass actual ground/controller/prompt/owner-save/ACK and exact stock/inventory reload (407.25s; disclosed6m starts). Additional site gates remain off pending source activation; Water sites and full earned routes remain unproven."
+   "lane": "campaign_closeout and opening_closeout in tb/integration",
+   "checkpoint": "F31/F32 / homestead and supplies: OPEN. All3 Meadows and3 Tidewake candidates pass actual terrain/controller/prompt, host stock, owner-save/ACK and exact disk reload (407.25s/259.297s; disclosed6m starts). Both source-release gates remain OFF: full earned approaches and co-op contention are still unproven."
   },
   {
    "lane": "root in tb/integration",
-   "checkpoint": "Opening / integration / release: Draft PR519, CI red, no merge/release/acceptance closure. Recovering concrete native failures without weakening assertions."
+   "checkpoint": "Opening / integration / release: Draft PR519, CI red, no merge/release/acceptance closure. Repairs preserve assertions, save ownership and all failed evidence."
   }
  ],
  "active_work": [
@@ -526,20 +526,20 @@
   {
    "criterion": "F22/F23 / combat and mastery",
    "lane": "build_closeout in tb/integration",
-   "source": "Live host move starts, actual HP debit, per-owned-UID meters and existing saved obligation protocol",
-   "state": "OPEN. Full opening passed first host-start slice. Later mastery disk checks passed; hosted-shell review repairs and live final-source proof remain required. Utility/ultimate/Commands not complete."
+   "source": "Live host move starts, per-UID meters, retained hit journal and guarded process exit",
+   "state": "OPEN. Hosted/destination and process exit guards reviewed; actual failed-write/retry disk tests pass. Utility/ultimate/Commands remain unfinished."
   },
   {
    "criterion": "F31/F32 / homestead and supplies",
-   "lane": "opening_closeout in tb/integration",
-   "source": "Den dispatch, crop input release, WeakRef resource mounts and non-Water lifecycle sampling",
-   "state": "OPEN. All3 Meadows material sites pass actual ground/controller/prompt/owner-save/ACK and exact stock/inventory reload (407.25s; disclosed6m starts). Additional site gates remain off pending source activation; Water sites and full earned routes remain unproven."
+   "lane": "campaign_closeout and opening_closeout in tb/integration",
+   "source": "Den Groom8tests/149assertions: actual disk failures/retry/ACK, full bag, ownership and source loss. Guest passive baseline conflict remains open.",
+   "state": "OPEN. All3 Meadows and3 Tidewake candidates pass actual terrain/controller/prompt, host stock, owner-save/ACK and exact disk reload (407.25s/259.297s; disclosed6m starts). Both source-release gates remain OFF: full earned approaches and co-op contention are still unproven."
   },
   {
    "criterion": "Opening / integration / release",
    "lane": "root in tb/integration",
-   "source": "Stable title and physical opening; exact CI6177 job failures; independent reviews and sealed native receipts",
-   "state": "Draft PR519, CI red, no merge/release/acceptance closure. Recovering concrete native failures without weakening assertions."
+   "source": "Exact CI6178 job failures; independent reviews and source-stable native receipts",
+   "state": "Draft PR519, CI red, no merge/release/acceptance closure. Repairs preserve assertions, save ownership and all failed evidence."
   }
  ],
  "preserved_work": [

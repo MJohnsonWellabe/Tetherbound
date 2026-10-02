@@ -4,6 +4,7 @@ const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
+const FOUNDATION_COMBAT_MANAGERS := ["res://scripts/combat/combat_manager.gd", "res://scripts/combat/cloudreach_combat_manager.gd", "res://scripts/combat/stormwood_combat_manager.gd"]
 signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
 signal homestead_personal_view_completed()
 signal foundation_reply_received(envelope: Dictionary, result: Dictionary)
@@ -11,6 +12,8 @@ var _homestead_stations: Dictionary = {}
 var _foundation_requests: Dictionary = {}
 var _foundation_personal_cache: Dictionary = {}
 var _foundation_camp_pending: Dictionary = {}
+var _process_exit_in_flight := false
+var _process_exit_refusal := ""
 
 ## All transport envelopes reuse the Session generation/character/world fence.
 ## The peer sends a source key and original intent, never a price or context.
@@ -23,7 +26,7 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 	_foundation_requests[correlation] = envelope.duplicate(true)
 	if is_host(): return _foundation_handle(local_peer_id(), envelope)
 	if not is_active(): return FOUNDATION_ACTIONS.deny("authority_missing")
-	if op in ["regional_ack", "refine_start", "master_duel", "resource", "rematch_start"]:
+	if op in ["regional_ack", "refine_start", "master_duel", "resource", "groom", "rematch_start"]:
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		if lifecycle == null or lifecycle.call("publish_now") != true: return FOUNDATION_ACTIONS.deny("ending_context_changed")
 	rpc_id(HOST_PEER_ID, "_rpc_foundation_action", envelope)
@@ -172,6 +175,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	elif envelope.op == "resource":
 		var resources := get_node_or_null(^"FoundationComposition/Resources")
 		if resources != null: context = resources.call("host_context", peer, envelope.station_key, envelope.intent)
+	elif envelope.op == "groom": context = _foundation_groom_context(peer, envelope.station_key)
 	elif envelope.op == "camp_build": context = _foundation_build_context(peer, envelope.intent)
 	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
@@ -234,7 +238,7 @@ func _foundation_journal_refusal(action: String, journal: Dictionary) -> Diction
 	# The actual prepared BOOL writer rolls back the hidden host stage. Keep
 	# the TM's original request for its next attempt, rather than minting a new
 	# teach ID. Malformed/foreign/semantic refusals retain their terminal meaning.
-	if action in ["tm_teach", "resource"] and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
+	if action in ["tm_teach", "resource", "groom"] and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
 		return {"ok": false, "resolved": false, "durable": false, "terminal_refusal": false, "code": code, "reason": code}
 	return _foundation_refusal(code)
 
@@ -627,6 +631,84 @@ func _retry_combat_mastery_sources() -> void:
 			var result := foundation_combat_mastery(node, str(pending.encounter_id), pending.peer, int(pending.action))
 			if result.get("durable") != true: return # Preserve the exact original and retry after the writer recovers.
 
+
+## A saved replay obligation is enough; this never fabricates an owner ACK or
+## awards mastery. An ordinary world snapshot cannot replace this first write.
+func prepare_process_exit() -> Dictionary:
+	if is_host():
+		_retry_combat_mastery_sources()
+		var nodes := _foundation_realm_roots()
+		while not nodes.is_empty():
+			var node: Node = nodes.pop_back()
+			for child: Node in node.get_children(): nodes.append(child)
+			var script: Script = node.get_script()
+			if script == null or not FOUNDATION_DIRECTORS.has(script.resource_path): continue
+			var host: RefCounted = node.get("_encounter_host")
+			if host != null and not (host.call("pending_move_mastery") as Array).is_empty():
+				return {"ok": false, "reason": "Could not save the latest combat result. The game will stay open; please try exiting again."}
+	return {"ok": true}
+
+
+func _prepare_process_exit_step(save_progress: bool) -> String:
+	var checked := prepare_process_exit()
+	if checked.get("ok") != true: return str(checked.reason)
+	if save_progress and not preload("res://scripts/ui/graphics_restart.gd").save_progress(_game()):
+		return "Could not save progress. The game will stay open; please try again."
+	return ""
+
+
+## One guarded process boundary for window close, explicit quit and restart.
+## Title/recovery callers preserve their existing no-new-save behavior while
+## still requiring every already-earned original to have its durable replay.
+func request_process_exit(restart_graphics: bool = false, save_progress: bool = false) -> String:
+	if _process_exit_in_flight: return "An exit is already being prepared."
+	_process_exit_in_flight = true
+	_process_exit_refusal = ""
+	var game := _game()
+	var preserve_autosave: bool = game != null and game.has_method("process_exit_preserves_autosave") \
+		and game.call("process_exit_preserves_autosave") == true
+	var write_progress: bool = save_progress and not preserve_autosave
+	var was_host := is_host()
+	var reason := _prepare_process_exit_step(write_progress)
+	# Recovery/title already used immediate process close. Do not enter leave
+	# or shell teardown: both ordinary saves would overwrite the recovery point.
+	if reason.is_empty() and write_progress and is_active():
+		leave("graphics_restart" if restart_graphics else "quit")
+		while is_active() and _process_exit_refusal.is_empty():
+			await get_tree().process_frame
+	if reason.is_empty(): reason = _process_exit_refusal
+	# A late accepted hit may finish during reliable-goodbye flushing. Check
+	# immediately before OS exit, after the final close gate, with no yield.
+	if reason.is_empty(): reason = _prepare_process_exit_step(write_progress and was_host)
+	if not reason.is_empty():
+		_process_exit_in_flight = false
+		if game != null and game.has_method("show_process_exit_refusal"): game.call("show_process_exit_refusal", reason)
+		return reason
+	_complete_process_exit(restart_graphics)
+	return ""
+
+
+func _complete_process_exit(restart_graphics: bool) -> void:
+	preload("res://scripts/net/steam_lobby.gd").leave_for_quit(_game())
+	if restart_graphics:
+		var arguments := PackedStringArray()
+		if not OS.has_feature("standalone"):
+			arguments.append_array(["--path", ProjectSettings.globalize_path("res://")])
+		OS.set_restart_on_exit(true, arguments)
+	get_tree().quit()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST and is_inside_tree():
+		call_deferred("_request_window_close")
+
+
+func _request_window_close() -> void:
+	var scene := get_tree().current_scene
+	var live_world := scene != null and scene.scene_file_path != TITLE_SCENE
+	await request_process_exit(false, live_world)
+
+
 func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 	var context: Dictionary = accepted.get("host_context", {})
 	var world: RefCounted = _game().get("world")
@@ -801,6 +883,41 @@ func _foundation_source(peer: int, key: String, part: String = "workbench") -> D
 	return {"character_id": _authority_character(peer), "expected_revision": int(_character_authority.call("revision", _authority_character(peer))),
 		"source_key": key, "station_id": checked.record.id, "station_kind": checked.record.id,
 		"homestead": true, "in_range": true, "in_combat": false, "effective_tier": tier.effective_tier, "den_index": checked.index}
+
+## Only a registered, paid Den and the admitted actor's current host-observed
+## presence can start care. The exact saved original reconciles earlier in
+## _foundation_handle, so source loss never strands an accepted transaction.
+func _foundation_groom_context(peer: int, key: String) -> Dictionary:
+	if not is_inside_tree() or not is_host(): return {}
+	var game := _game()
+	var cfg := STATION_RULES.config()
+	if game == null or game.get("world") == null or cfg.get("runtime_enabled") != true \
+		or cfg.get("den_runtime_enabled") != true or cfg.get("den", {}).get("runtime_enabled") != true \
+		or preload("res://scripts/data/redesign_data.gd").json("res://data/config/f32_runtime.json").get("runtime_enabled") != true: return {}
+	var source := _foundation_source(peer, key)
+	if source.get("station_id") != "den" or source.get("homestead") != true: return {}
+	var weak: WeakRef = _homestead_stations.get(key)
+	var station := weak.get_ref() as Node3D if weak != null else null
+	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	if station == null or not station.is_inside_tree() or station.is_queued_for_deletion() \
+		or station.get_script() != preload("res://scripts/build/station_piece.gd") or lifecycle == null: return {}
+	var actor := game.call("find_player") as CharacterBody3D if peer == local_peer_id() else lifecycle.call("remote_body", peer) as CharacterBody3D
+	var safety: Dictionary = lifecycle.call("local_sample") if peer == local_peer_id() else lifecycle.call("host_context", peer)
+	if actor == null or not actor.is_inside_tree() or actor.is_queued_for_deletion() or safety.get("realm") != "meadows": return {}
+	for hazard: String in ["dialogue", "cutscene", "downed", "swimming", "flying"]:
+		if safety.get(hazard) != false: return {}
+	var shell := _portal_world_node("meadows")
+	if shell == null or not shell.is_ancestor_of(actor) or not shell.is_ancestor_of(station) \
+		or actor.global_position.distance_to(station.global_position) > float(cfg.den.radius_m): return {}
+	var world: RefCounted = game.get("world")
+	var uid := str(station.get_meta("building_uid", ""))
+	if not ESSENCE._integer(world.day, 1, 2147483646) or not ESSENCE._opaque_id(world.world_id) \
+		or not ESSENCE._opaque_id(world.reward_delivery_namespace) or key != "den:meadows:" + uid: return {}
+	source.merge({"source_id": uid, "source_generation": uid, "world_id": world.world_id,
+		"world_namespace": world.reward_delivery_namespace, "host_day": int(world.day),
+		"realm": "meadows", "actor_realm": "meadows", "registered_live_source": true,
+		"paid_den": true, "modal_open": false, "resource_runtime_authorized": true}, true)
+	return source
 
 func homestead_station_available(key: String) -> bool:
 	if not snapshot_ready() or _owner_training_mutation_blocked(_game().get("local")): return false
@@ -1130,6 +1247,7 @@ var realm_transition: Node = null
 
 func _ready() -> void:
 	name = "Session"
+	get_tree().auto_accept_quit = false
 	add_to_group(preload("res://scripts/ui/input_owner.gd").GROUP)
 	add_to_group("story_modal")
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -2437,6 +2555,16 @@ func _poll_lingering_peer() -> void:
 
 
 func _finish_closing() -> void:
+	if _process_exit_in_flight:
+		var checked := prepare_process_exit()
+		if checked.get("ok") != true:
+			# Keep the actual source and host authority alive for a retry. Peers
+			# may already have left, but transport closure is not a save receipt.
+			_process_exit_refusal = str(checked.reason)
+			_closing_frames = 0
+			_closing_deadline_ms = 0
+			_closing_reason = ""
+			return
 	var reason := _closing_reason
 	_closing_frames = 0
 	_closing_deadline_ms = 0
@@ -3477,7 +3605,6 @@ func _altar_peer_in_combat(peer: int) -> bool:
 	var nodes := _foundation_realm_roots()
 	if nodes.is_empty(): return true
 	var found_host := false
-	var found_local_manager := false
 	while not nodes.is_empty():
 		var node: Node = nodes.pop_back()
 		for child: Node in node.get_children(): nodes.append(child)
@@ -3496,11 +3623,25 @@ func _altar_peer_in_combat(peer: int) -> bool:
 					var record: Variant = records[id]
 					if not record is Dictionary: return true
 					if record.get("phase") != "done" and host.call("is_participant", str(id), peer) == true: return true
-		if peer == local_peer_id() and script != null and script.resource_path == "res://scripts/combat/combat_manager.gd":
-			if not node.has_method("is_fighting"): return true
-			found_local_manager = true
-			if node.call("is_fighting") == true: return true
-	return not found_host if peer != local_peer_id() else not found_local_manager
+	if peer != local_peer_id(): return not found_host
+	return _foundation_local_manager_in_combat(get_tree().current_scene if is_inside_tree() else null)
+
+
+## Water/Cloudreach and Stormwood inherit the production manager's state.
+## Only the local scene can answer for the local owner: an idle manager in a
+## hosted sibling realm must never stand in for a missing local manager.
+static func _foundation_local_manager_in_combat(world: Node) -> bool:
+	if not is_instance_valid(world): return true
+	var nodes: Array[Node] = [world]
+	var found := false
+	while not nodes.is_empty():
+		var node: Node = nodes.pop_back()
+		for child: Node in node.get_children(): nodes.append(child)
+		var script: Script = node.get_script()
+		if script == null or not FOUNDATION_COMBAT_MANAGERS.has(script.resource_path): continue
+		found = true
+		if node.call("is_fighting") == true: return true
+	return not found
 
 
 func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dictionary:

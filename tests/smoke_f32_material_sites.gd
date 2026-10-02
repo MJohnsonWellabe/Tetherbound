@@ -229,7 +229,14 @@ func _actor_baseline_diagnostic() -> Dictionary:
 	var character: String = _game.get("local").character_id
 	var admitted: Dictionary = authority.call("state", character) if authority != null else {}
 	var result := {"character_id": character, "local_party_uids": [], "admitted_party_uids": [],
-		"admitted_character_id": admitted.get("character_id", ""), "directors": []}
+		"admitted_character_id": admitted.get("character_id", ""), "directors": [],
+		"session_active": session.call("is_active"), "local_peer_id": session.call("local_peer_id"),
+		"realm": _game.get("current_realm"), "registered_realm": session.call("realm_of", session.call("local_peer_id")),
+		"local_combat_manager": {}}
+	var manager := _world.get_node_or_null(^"CombatManager")
+	if manager != null and manager.get_script() != null:
+		result.local_combat_manager = {"path": str(manager.get_path()), "script": manager.get_script().resource_path,
+			"fighting": manager.call("is_fighting") if manager.has_method("is_fighting") else null}
 	for member: RefCounted in _game.get("party").call("members"):
 		result.local_party_uids.append(str(member.get("uid")))
 	for card: Dictionary in admitted.get("party", []):

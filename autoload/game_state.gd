@@ -1290,6 +1290,24 @@ func push_world_message(text: String) -> void:
 	_pending_world_message = text
 
 
+func show_process_exit_refusal(message: String) -> void:
+	push_world_message(message)
+	if is_instance_valid(_menu) and _menu.is_node_ready(): _menu.call("_flash_refusal", message)
+
+
+func process_exit_preserves_autosave() -> bool:
+	return not _realm_transition_recovery.is_empty()
+
+
+func request_process_exit(restart_graphics: bool = false, save_progress: bool = false) -> String:
+	if session != null:
+		return await session.call("request_process_exit", restart_graphics, save_progress)
+	# Empty boot/title without a Session has no combat authority to lose.
+	STEAM_LOBBY.leave_for_quit(self)
+	get_tree().quit()
+	return ""
+
+
 ## Read-and-clear: "" if nothing is waiting (the common case, polled every
 ## frame by `playground_hud.gd`), the queued line exactly once otherwise.
 func take_pending_world_message() -> String:
@@ -1926,6 +1944,10 @@ static func _rollback_overlay_may_dismiss(compensating_save_ok: bool,
 
 
 func _show_realm_recovery(overlay: CanvasLayer, message: String) -> void:
+	# Every recovery prompt preserves the last autosave, including begin/rollback
+	# admission failures that have not installed a detailed recovery snapshot.
+	if _realm_transition_recovery.is_empty():
+		_realm_transition_recovery = {"reason": "recovery_overlay"}
 	LOADING_OVERLAY.set_message(overlay, message + " Exit and restart to recover the last autosave.")
 	if not is_instance_valid(overlay) or overlay.has_node("RecoveryExit"):
 		return
@@ -1939,9 +1961,8 @@ func _show_realm_recovery(overlay: CanvasLayer, message: String) -> void:
 	button.offset_bottom = 118
 	button.focus_mode = Control.FOCUS_ALL
 	button.pressed.connect(func():
-		# get_tree().quit() sends no WM_CLOSE_REQUEST; leave the Steam lobby here.
-		STEAM_LOBBY.leave_for_quit(self)
-		get_tree().quit())
+		var reason: String = await request_process_exit()
+		if not reason.is_empty(): LOADING_OVERLAY.set_message(overlay, reason))
 	overlay.add_child(button)
 	button.grab_focus()
 

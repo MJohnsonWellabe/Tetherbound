@@ -308,6 +308,7 @@ func test_apply_refuses_a_character_that_is_not_there() -> void:
 func test_a_client_writes_its_own_character_and_only_that() -> void:
 	var game := _legacy_id_game()
 	game.host = false
+	game.local.character_id = "joiner-1"
 	game.world.reward_delivery_namespace = "friend-instance"
 	assert_true(bool(saver.call("save_character", game, "joiner-1")))
 	assert_true(bool(characters.call("has", "joiner-1")),
@@ -317,6 +318,26 @@ func test_a_client_writes_its_own_character_and_only_that() -> void:
 	var written: Dictionary = characters.call("read", "joiner-1")
 	assert_eq(str(written.get("last_world_instance_id", "")), "friend-instance",
 		"a client records the host instance received in its world snapshot")
+	assert_eq(str(written.get("character_id", "")), "joiner-1")
+	assert_false(bool(characters.call("has", "slot-1")), "the prior fixture identity is not a second character")
+
+
+func test_a_client_cannot_overwrite_another_character_file() -> void:
+	var other := _legacy_id_game()
+	other.host = false
+	other.local.character_id = "other-owner"
+	assert_true(bool(saver.call("save_character", other, "other-owner")))
+	var path := str(characters.call("path_for", "other-owner"))
+	var disk_before := FileAccess.get_file_as_bytes(path)
+	var game := _legacy_id_game()
+	game.host = false
+	game.local.character_id = "joiner-1"
+	var live_before: Dictionary = saver.snapshot(game).duplicate(true)
+	assert_false(bool(saver.call("save_character", game, "other-owner")))
+	assert_eq(FileAccess.get_file_as_bytes(path), disk_before, "a foreign owner file stays byte-identical")
+	assert_eq(saver.snapshot(game), live_before, "refusal cannot rename or mutate the local actor")
+	assert_false(bool(characters.call("has", "joiner-1")))
+	assert_true(((saver.call("worlds") as RefCounted).call("list_ids") as Array).is_empty())
 
 
 func test_rewriting_character_preserves_world_instance_envelope() -> void:

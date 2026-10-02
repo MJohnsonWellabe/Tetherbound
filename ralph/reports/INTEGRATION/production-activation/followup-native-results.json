@@ -1,8 +1,29 @@
 {
-  "recorded_utc": "2026-10-02T08:44:50.080703+00:00",
+  "recorded_utc": "2026-10-02T09:39:50.450506+00:00",
   "base_head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
   "scope": "Bounded native checks on a detached base plus the exact working source hashes in each receipt. Only fixed-title ran on the unmodified base. Other checks use copied reviewed source slices. No new acceptance closures, campaign completion, visual/device or ENet proof is claimed.",
   "runs": [
+    {
+      "name": "active-catalog-and-owner-fixtures",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_build_catalogue.gd,test_forward_camp.gd,test_recipes.gd,test_character_save_format.gd"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 22.516000000061467,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "ce133db2b3e3e72490389ef070676cc98981b52192e55c891c92ee4436b286fe"
+    },
     {
       "name": "combat-settlement-compile",
       "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
@@ -64,6 +85,27 @@
       "timed_out": null,
       "errors": [],
       "log_sha256": "39291e36fb8fab984b07719a832a77007b2cc21e40b64384131adb106f800b2a"
+    },
+    {
+      "name": "den-groom-saved-transaction",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_den_groom_saved_transaction.gd"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 17.07900000002701,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "e84790d89d5a89c97390f712e5e91244eac4b58f88eb2214cb31cbcb6ff1544e"
     },
     {
       "name": "destination-settlement-and-wind",
@@ -175,6 +217,71 @@
       "log_sha256": "1ee10559c8e3e83cc18d1e91781b6eb521baa276a813e0eee778a794dc8c8dd8"
     },
     {
+      "name": "f32-water-first-resource-fixed",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/smoke_f32_material_sites.gd",
+        "--",
+        "--realm=water",
+        "--output=D:/tetherbound/activation-proof-b152/.tmp/activation/f32-water-first-resource-fixed/site-evidence"
+      ],
+      "exit": 1,
+      "elapsed_seconds": 93.18800000008196,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "5e4dc8ff7719e337eb7ba896527a0c6ad8619cc1b8179dee039da75315671547"
+    },
+    {
+      "name": "f32-water-regional-manager-fixed",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/smoke_f32_material_sites.gd",
+        "--",
+        "--realm=water",
+        "--output=D:/tetherbound/activation-proof-b152/.tmp/activation/f32-water-regional-manager-fixed/site-evidence"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 259.2970000000205,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "ee6e96555fdbebc10c83b32796ab2755dad5df58cb2ce91ce52164a1788bc032"
+    },
+    {
+      "name": "final-recovery-exit-policy",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_process_exit_settlement.gd"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 11.437999999965541,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "ba71f45afdb1477d1f35a51199b3c9759221c70d3ca4c4fc48036f5318086146"
+    },
+    {
       "name": "fixed-title",
       "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
       "command": [
@@ -192,6 +299,69 @@
       "timed_out": null,
       "errors": [],
       "log_sha256": "c216754a54178a575f3ff0b3e6abc7c3da340a6e828cbebb149d415a215fea0b"
+    },
+    {
+      "name": "guarded-exit-and-groom-compile",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        ".tmp/compile_changed_batch.gd"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 15.858999999938533,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"preserve_autosave\" variable because the value doesn't have a set type.",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"write_progress\" variable because the value doesn't have a set type.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+        "ERROR: Failed to load script \"res://autoload/game_state.gd\" with error \"Compilation failed\".",
+        "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"preserve_autosave\" variable because the value doesn't have a set type.",
+        "SCRIPT ERROR: Parse Error: Cannot infer the type of \"write_progress\" variable because the value doesn't have a set type.",
+        "ERROR: Failed to load script \"res://scripts/net/session.gd\" with error \"Parse error\".",
+        "SCRIPT ERROR: Parse Error: Could not resolve class \"res://tests/test_foundation_resource_save.gd::FixtureSession\".",
+        "ERROR: Failed to load script \"res://tests/test_combat_mastery_delivery.gd\" with error \"Parse error\".",
+        "SCRIPT ERROR: Parse Error: Could not resolve class \"res://tests/test_foundation_resource_save.gd::FixtureSession\".",
+        "ERROR: Failed to load script \"res://tests/test_process_exit_settlement.gd\" with error \"Parse error\"."
+      ],
+      "log_sha256": "9e13bba32948e2b8114cc84b440237dcdbd61efce826a4e554a695e9a7b6923c"
+    },
+    {
+      "name": "guarded-process-exit-and-mastery",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_process_exit_settlement.gd,test_combat_mastery_delivery.gd,test_foundation_combat_manager_context.gd"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 15.062999999965541,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "37b2caa0a6fa6714d392309c8f8746e1d771a61f45e6915adbadbadc910f3160"
     },
     {
       "name": "guardian-native-contract-fixed",
@@ -281,6 +451,44 @@
       "log_sha256": "10e110b99e8bc24abd841f50aeb34b8c82806940294fc9437a7047ce6170bbcf"
     },
     {
+      "name": "opening-fixture-owned-scene",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/smoke_opening.gd"
+      ],
+      "exit": 1,
+      "elapsed_seconds": 378.68700000003446,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "9334e4cc8d25e3c178e8e79694bc9e6dd7f48612b3703c8c0bb2dce6e85371a2"
+    },
+    {
+      "name": "opening-teacher-approach",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/smoke_opening.gd"
+      ],
+      "exit": 1,
+      "elapsed_seconds": 600.8439999999246,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": true,
+      "errors": [],
+      "log_sha256": "d5f9102583006278f97e4fb00675e2926fbd41c81cf1f0c4fb59ae05f62c0237"
+    },
+    {
       "name": "opening-with-live-combat",
       "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
       "command": [
@@ -298,6 +506,48 @@
       "timed_out": null,
       "errors": [],
       "log_sha256": "e3eae5e1d5016677046747c7bfdaa0562886ff6ed6eb8a3b17dd64d87b115f9b"
+    },
+    {
+      "name": "realm-adapter-shell-registry-preflight",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tools/probe_realm_transition_adapter.gd",
+        "--",
+        "preflight"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 9.39000000001397,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "c92a8f8acb2bac151f74b20aa8e33ea46dd01fde23e51c3c2f9cf97fb93fdc71"
+    },
+    {
+      "name": "regional-manager-and-mastery",
+      "head": "b1522e17b4ae5a7402091c6f365dbe5730637243",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\activation-proof-b152",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_foundation_combat_manager_context.gd,test_combat_mastery_delivery.gd,test_foundation_resource_save.gd"
+      ],
+      "exit": 0,
+      "elapsed_seconds": 17.18799999996554,
+      "source_unchanged": true,
+      "changed_during_run": [],
+      "timed_out": null,
+      "errors": [],
+      "log_sha256": "ba84f093edffaf9e670041a33325f91eaf70e94d5d26ff6272946f7384db0378"
     },
     {
       "name": "stormwood-level-telemetry",
@@ -340,10 +590,15 @@
   ],
   "archive": {
     "path": "ralph/reports/INTEGRATION/production-activation/followup-native-results.zip",
-    "bytes": 6834751,
-    "sha256": "1f43a6e2584bc13514e0a71f0fb396230bdda685d9900152bca3d72a49736e3e"
+    "bytes": 15157076,
+    "sha256": "a0c74ea3021ccb72c97415a0096a4c524d3b2fba1b768507ba4c0bf0327dc0bc"
   },
   "reviews": [
+    {
+      "reviewer": "opening_closeout",
+      "scope": "Den Groom host transaction, first quote after input release and source-loss retention",
+      "verdict": "Bounded source review passed for host care/shed atomicity, owner-save/ACK, same-original retry, hidden source-loss retention and post-release first quote. Guest acceptance remains blocked: passive condition changes during RPC transit conflict with strict full-record equality. Native8tests/149assertions include an explicit negative for this unresolved drift; no guest or ordinary controller-route success claimed."
+    },
     {
       "reviewer": "campaign_closeout",
       "scope": "Den/crop/WeakRef transaction and input diff",
@@ -362,7 +617,22 @@
     {
       "reviewer": "opening_closeout",
       "scope": "Durable combat mastery",
-      "verdict": "Found missing remote-shell retry, combat and actor-baseline scans and shell teardown fencing. Successor review and native proof required."
+      "verdict": "Initial review found missing hosted-shell retry/combat/baseline scans, teardown fencing and destination-root collision. Narrow successor review passed after corrections; explicit process-exit durability is a separate follow-up."
+    },
+    {
+      "reviewer": "opening_closeout",
+      "scope": "Regional manager ownership and Home Key lesson fixture",
+      "verdict": "Recognizes exactly the three production manager scripts under the local current_scene, refusing missing/impostor/wrong-world managers. Opening fixture now physically approaches the canonical teacher and retains input, exact lesson and personal acknowledgment checks. No actionable source finding; native results are separately scoped."
+    },
+    {
+      "reviewer": "opening_closeout",
+      "scope": "Common process exit, graphics restart, recovery and ShellSeam",
+      "verdict": "Review identified two recovery-autosave regressions, both corrected. Final source review passed: retained original must journal before OS exit, failure remains retryable, late-flush source persists, recovery does not ordinarily save, and Steam leaves only on accepted exit. ShellSeam enumerates actual fixture roots only."
+    },
+    {
+      "reviewer": "root",
+      "scope": "Active homestead/camp/recipe and client-owner test fixtures",
+      "verdict": "Current canonical features replace obsolete default-off expectations while disabled/malformed negatives and legacy material limits remain; foreign-owner write verifies byte-identical refusal and no live mutation. Native97tests/1458assertions passed."
     },
     {
       "reviewer": "root",

@@ -496,16 +496,54 @@ func _the_home_key_lesson_returns_control() -> bool:
 		return true
 	var local: RefCounted = _game.get("local")
 	var flag := rules.PREFIX + "home_key"
+	var lesson: Dictionary = {}
+	for row: Dictionary in rules.config().get("lessons", []):
+		if row.get("id") == "home_key":
+			lesson = row
+			break
+	var teacher := _world.find_child(str(lesson.get("teacher_node", "")), true, false) as Node3D
+	if teacher == null:
+		_fail("the Home Key lesson has no mounted teacher")
+		return false
+	var forward: InputEventJoypadMotion = null
+	for binding: InputEvent in InputMap.action_get_events("move_forward"):
+		if binding is InputEventJoypadMotion:
+			forward = InputEventJoypadMotion.new()
+			forward.axis = (binding as InputEventJoypadMotion).axis
+			forward.axis_value = (binding as InputEventJoypadMotion).axis_value
+			break
+	if forward == null:
+		_fail("move_forward has no physical stick binding for the walk back to Grandpa")
+		return false
+	var stop := forward.duplicate() as InputEventJoypadMotion
+	stop.axis_value = 0.0
+	# The door-callout assertion left us outside the teacher's lesson radius.
+	# Return with the real stick, stopping as soon as the lesson owns input.
+	var walking := false
 	var panel: CanvasLayer = null
-	for frame: int in 180:
+	for frame: int in 300:
 		var lessons := _game.get_node_or_null(^"OnboardingLessons")
 		if lessons != null:
 			panel = lessons.get("_panel") as CanvasLayer
 			if panel != null and panel.call("is_open"):
 				break
+		var to := teacher.global_position - _player.global_position
+		to.y = 0.0
+		if to.length() > 0.8:
+			_rig.set("yaw", atan2(-to.x, -to.z))
+			if not walking:
+				Input.parse_input_event(forward)
+				walking = true
+		elif walking:
+			Input.parse_input_event(stop)
+			walking = false
 		await physics_frame
+	Input.parse_input_event(stop)
+	await process_frame
 	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "home_key":
-		_fail("Grandpa's Home Key handover did not present its authored controller lesson")
+		_fail("Grandpa's Home Key handover did not present its authored controller lesson (teacher %.1fm away; key %d; given %s; acknowledged %s)" % [
+			_player.global_position.distance_to(teacher.global_position), int(local.get("inventory").call("count", "home_key")),
+			str(local.get("flags").call("has", "home_key_given")), str(local.get("flags").call("has", flag))])
 		return false
 	var lines := 0
 	for line: int in 20:
@@ -1052,14 +1090,20 @@ func _press_pad(action: String) -> void:
 	var down := InputEventJoypadButton.new()
 	down.button_index = button_index
 	down.pressed = true
+	var edge_start := Engine.get_physics_frames()
 	Input.parse_input_event(down)
-	for i in 3:
+	# Match the physical opening driver: each edge must span a process frame,
+	# even when several physics ticks run before parsed events are flushed.
+	await process_frame
+	while Engine.get_physics_frames() - edge_start < 3:
 		await physics_frame
 	var up := InputEventJoypadButton.new()
 	up.button_index = button_index
 	up.pressed = false
+	edge_start = Engine.get_physics_frames()
 	Input.parse_input_event(up)
-	for i in 4:
+	await process_frame
+	while Engine.get_physics_frames() - edge_start < 4:
 		await physics_frame
 
 

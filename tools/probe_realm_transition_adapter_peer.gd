@@ -30,6 +30,17 @@ class World extends Node:
 		return true
 
 class ShellSeam extends Node:
+	var hub: Node
+	# Expose only this fixture's actual mounted worlds to the production
+	# settlement scan. There is no fabricated director or saved outcome.
+	func hosted_realms() -> Array[String]:
+		var result: Array[String] = []
+		if not is_instance_valid(hub): return result
+		for realm: String in hub.worlds:
+			if is_instance_valid(hub.worlds[realm]): result.append(realm)
+		return result
+	func shell(realm: String) -> Node:
+		return hub.worlds.get(realm) if is_instance_valid(hub) else null
 	func reconcile() -> void:
 		pass
 	func release_all() -> void:
@@ -120,6 +131,7 @@ func _ready() -> void:
 	(session.get("_realms") as Node).set_process(false)
 	var shell_seam := ShellSeam.new()
 	shell_seam.name = "FixtureShellSeam"
+	shell_seam.hub = self
 	session.add_child(shell_seam)
 	session.set("_realms", shell_seam)
 	session.set("_mode", "host" if role == "host" else "client")

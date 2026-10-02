@@ -34,14 +34,16 @@ func _item_ids() -> Array[String]:
 		out.append(id)
 	return out
 
-## The typed candidate is data, not the active legacy catalogue. These gates
-## preserve every legacy cost/mesh/obtainability assertion below unchanged.
+## F31 activates the canonical overlay. Explicit disabled/malformed fixtures
+## still preserve every legacy cost/mesh/obtainability assertion below.
 func test_homestead_catalogue_requires_exact_boolean_runtime_enable() -> void:
 	var catalogue := _buildables_config()
 	var legacy: Array = catalogue.get("buildables",[])
 	assert_eq(legacy.size(),12)
-	assert_eq(STATION_RULES.active_catalogue(catalogue,STATION_RULES.config()),legacy,
-		"default-off canonical configuration must retain the legacy catalogue")
+	var disabled_cfg := STATION_RULES.config().duplicate(true)
+	disabled_cfg.runtime_enabled = false
+	assert_eq(STATION_RULES.active_catalogue(catalogue,disabled_cfg),legacy,
+		"explicitly disabled homestead must retain the legacy catalogue")
 	for disabled: Variant in [false,0,1,1.0,"true",null,{},[]]:
 		assert_eq(STATION_RULES.active_catalogue(catalogue,{"runtime_enabled":disabled}),legacy,
 			"only an exact bool true can expose typed homestead entries")
@@ -51,7 +53,8 @@ func test_enabled_homestead_overlay_replaces_workbench_without_mutating_input() 
 	var catalogue := _buildables_config()
 	var before := catalogue.duplicate(true)
 	var cfg := STATION_RULES.config()
-	cfg.runtime_enabled=true
+	assert_true(cfg.get("runtime_enabled") is bool and cfg.runtime_enabled,
+		"F31 enables the canonical homestead catalogue")
 	var active := STATION_RULES.active_catalogue(catalogue,cfg)
 	assert_eq(active.size(),34)
 	var ids: Array[String] = []

@@ -25,7 +25,7 @@ static func valid(raw: Variant, schema_check: Callable,
 	if raw.host_context.get("source_key") != raw.source_key or raw.before.get("character_id") != raw.character_id or raw.after.get("character_id") != raw.character_id: return false
 	if raw.action in ["rematch_win", "combat_mastery"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
 		or raw.host_context.get("session_id") != raw.session_id): return false
-	if raw.action == "resource" and (raw.host_context.get("world_namespace") != raw.world_namespace \
+	if raw.action in ["resource", "groom"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
 		or raw.host_context.get("world_id") != raw.world_id): return false
 	# Re-run the exact canonical callback against the frozen pre-decision full
 	# record. An imported balance, alternative trait seed or changed choice

@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery"]
+const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -35,6 +35,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	match action:
 		"combat_mastery": proposal = _combat_mastery(current, intent, context)
 		"resource": proposal = resource_plan(current, revision, intent, context)
+		"groom": proposal = groom_plan(current, revision, intent, context)
 		"tm_teach": proposal = _tm_teach(current, intent, context)
 		"wild_capture": proposal = preload("res://scripts/net/foundation_capture_rules.gd").stage(current, intent, context)
 		"station_craft":
@@ -103,6 +104,19 @@ static func resource_plan(current: Dictionary, revision: int, intent: Dictionary
 		return deny("invalid_resource_source")
 	return preload("res://scripts/world/f32_source_actions.gd").stage(current, revision,
 		intent.operation, intent.request, context)
+
+
+## One explicit Den tap, staged with the existing F27 care receipt and shed
+## receipt. The host freezes the actual station/day before either can change.
+static func groom_plan(current: Dictionary, revision: int, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if context.get("station_id") != "den" or context.get("homestead") != true \
+		or context.get("paid_den") != true or context.get("resource_runtime_authorized") != true \
+		or not ESSENCE._opaque_id(context.get("world_namespace")) \
+		or not ESSENCE._component(context.get("source_id")) \
+		or context.get("source_key") != "den:meadows:" + str(context.get("source_id", "")):
+		return deny("actual_den_care_producer_required")
+	return preload("res://scripts/world/f32_source_actions.gd").stage(current, revision,
+		"groom", intent, context, ESSENCE.stage_care.bind(ESSENCE.config()))
 
 static func _tm_teach(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if intent.size() != 3 or not ESSENCE._component(intent.get("creature_uid")) \

@@ -24,14 +24,20 @@ func test_record_rejects_duplicate_removed_unpaid_and_bad_identity() -> void:
 
 func test_one_camp_per_stable_character_per_biome() -> void:
 	var cfg := RULES.config()
-	assert_false(cfg.runtime_enabled,"candidate remains OFF")
-	cfg.runtime_enabled=true # Detached policy fixture; never writes file.
+	assert_true(cfg.get("runtime_enabled") is bool and cfg.runtime_enabled,"F34 enables canonical forward camps")
 	for biome: String in RULES.LIVE:
 		assert_true(RULES.placement(cfg,[],"owner",biome,Vector3.ZERO,0).ok)
 		assert_eq(RULES.placement(cfg,[_row(biome)],"owner",biome,Vector3.ZERO,0).code,"camp_limit")
 		assert_true(RULES.placement(cfg,[_row(biome)],"guest",biome,Vector3.ZERO,0).ok)
 	assert_false(RULES.placement(cfg,[],"owner","biome5",Vector3.ZERO,0).ok)
 	assert_false(RULES.placement(cfg,[],"owner","meadows",Vector3.INF,0).ok)
+
+func test_disabled_forward_camp_refuses_placement_and_source_context() -> void:
+	var cfg := RULES.config().duplicate(true)
+	cfg.runtime_enabled = false
+	assert_eq(RULES.placement(cfg,[],"owner","meadows",Vector3.ZERO,0).code,"camp_disabled")
+	assert_true(RULES.source_context(cfg,[_row()],"b1",Vector3.ZERO,"meadows","owner",0,false,"bed").is_empty())
+	assert_eq(RULES.placement({},[],"owner","meadows",Vector3.ZERO,0).code,"camp_disabled")
 
 func test_saved_world_preflight_preserves_old_worlds_and_rejects_duplicate_slots() -> void:
 	assert_true(RULES.saved_errors([]).is_empty())

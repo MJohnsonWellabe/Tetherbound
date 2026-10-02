@@ -512,11 +512,8 @@ func _build() -> void:
 	_join_friend_button.pressed.connect(_show_friend_invite)
 	_join_button.pressed.connect(_show_join)
 	_quit_button.pressed.connect(func() -> void:
-		# get_tree().quit() sends no WM_CLOSE_REQUEST; leave any Steam lobby first.
-		var steam_lobby: Variant = load(STEAM_LOBBY_PATH)
-		if steam_lobby != null:
-			steam_lobby.call("leave_for_quit", _game())
-		get_tree().quit())
+		var reason: String = await _game().call("request_process_exit")
+		if not reason.is_empty(): _status.text = reason)
 
 	_load_box = VBoxContainer.new()
 	_load_box.visible = false

@@ -107,20 +107,25 @@ func _process(_delta: float) -> void:
 
 func _mount_manual_actor() -> void:
 	if _manual_actor != null or not is_instance_valid(_producer) or _id not in ["forge","den"]: return
-	var commit_method := "homestead_commit_refine_unit" if _id == "forge" else "homestead_commit_groom"
-	if not _producer.has_method("homestead_actor_context") or not _producer.has_method(commit_method): return
 	var world := get_parent() as Node3D
 	var path := FORGE_PATH if _id == "forge" else DEN_PATH
 	if not ResourceLoader.exists(path): return
 	var script: Script = load(path)
 	if script == null: return
+	if _id == "forge" and (not _producer.has_method("homestead_actor_context") \
+		or not _producer.has_method("homestead_commit_refine_unit")): return
 	_manual_actor=script.new()
 	_manual_actor.name="ManualForge" if _id == "forge" else "ManualDen"
 	add_child(_manual_actor)
 	# Child origin and basis exactly match the committed paid station root.
 	_manual_actor.transform=Transform3D.IDENTITY
+	if _id == "den":
+		# Groom uses the panel's one authenticated Foundation action. The Den
+		# child observes ordinary rest only; no competing grooming callback.
+		_manual_actor.call("configure_rest_observer", world, str(get_meta("building_uid", "")))
+		return
 	_manual_actor.call("configure",world,str(get_meta("building_uid","")),
-		Callable(_producer,"homestead_actor_context"),Callable(_producer,commit_method))
+		Callable(_producer,"homestead_actor_context"),Callable(_producer,"homestead_commit_refine_unit"))
 
 func source_key() -> String:
 	return "%s:meadows:%s" % [_id,str(get_meta("building_uid",""))]
@@ -199,4 +204,4 @@ func tint_ghost(valid: bool) -> void:
 func _exit_tree() -> void:
 	if _registered and is_instance_valid(_producer) and _producer.has_method("_unregister_homestead_station_node"):
 		_producer.call("_unregister_homestead_station_node",source_key(),self)
-	if is_instance_valid(_panel): _panel.queue_free()
+	if is_instance_valid(_panel) and _panel.call("station_source_departed", self) != true: _panel.queue_free()

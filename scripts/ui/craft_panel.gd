@@ -75,6 +75,11 @@ var _gear_cfg: Dictionary = {}
 var _gear_rules: Script
 var _refining_amount := 1
 var _refining_label: Label
+var _groom_waiting_release := false
+var _groom_scope: Dictionary = {}
+var _groom_source_lost := false
+var _groom_original_sent := false
+var _groom_retry_left := 0.0
 
 func open_station(station: Node3D) -> void:
 	if not is_instance_valid(station) or STATION_RULES.config().get("runtime_enabled") != true: return
@@ -438,10 +443,15 @@ func _station_action(op: String, fields: Dictionary) -> void:
 	_station_operation=op
 	_station_intent=fields.duplicate(true)
 	_station_intent["craft_id" if op == "station_craft" else "action_id"]=Crypto.new().generate_random_bytes(16).hex_encode()
+	if op == "groom":
+		_groom_source_lost = false
+		_groom_original_sent = false
+		_groom_scope = _current_groom_scope()
 	_retry_station()
 
 func _retry_station() -> void:
-	if not is_instance_valid(_producer): return
+	if not is_instance_valid(_producer) or _groom_waiting_release: return
+	if _groom_source_lost and _station_intent.is_empty(): return
 	if _station_intent.is_empty():
 		var retained := _retained_station_transaction()
 		if retained.is_empty(): return
@@ -449,6 +459,27 @@ func _retry_station() -> void:
 		_station_operation = retained.action
 		_original_revision = int(retained.original_revision)
 		_station_source = weakref(_station) if is_instance_valid(_station) else null
+		if _station_operation == "groom":
+			_groom_scope = _current_groom_scope()
+			_groom_original_sent = true
+	if _station_operation == "groom":
+		_groom_retry_left = 1.0
+		_groom_waiting_release = true
+		close() # The actual tap releases its modal before host presence is sampled.
+		return
+	_submit_station_original()
+
+func _submit_station_original() -> void:
+	if _station_operation == "groom" and not _groom_original_sent:
+		# In co-op, passive care keeps ticking while the physical tap releases.
+		# Freeze the FIRST quote only now; sent/failed/saved originals never rebase.
+		var revision: Variant = _station_view().get("registry_revision")
+		if not STATION_RULES.number(revision) or float(revision) != floor(float(revision)) or revision < 0:
+			_status.text = "The character's saved station state is unavailable."
+			_restore_groom_panel()
+			return
+		_original_revision = int(revision)
+		_groom_original_sent = true
 	# A removed node may be null. The producer must reconcile the retained
 	# original journal before fresh-source validation; null cannot start work.
 	var raw: Variant = _producer.call("homestead_submit_action",_station_operation,_station_intent.duplicate(true),_original_station(),_original_revision)
@@ -457,7 +488,59 @@ func _retry_station() -> void:
 
 func _retained_station_transaction() -> Dictionary:
 	if not is_instance_valid(_producer) or not _producer.has_method("retained_training_transaction"): return {}
-	return _producer.call("retained_training_transaction", ["station_craft", "den", "gear", "loadout", "camp_rest"])
+	return _producer.call("retained_training_transaction", ["station_craft", "den", "groom", "gear", "loadout", "camp_rest"])
+
+func _current_groom_scope() -> Dictionary:
+	if game == null or not is_instance_valid(_producer) or game.get("session") != _producer \
+		or game.get("local") == null or game.get("world") == null: return {}
+	return {"character_id": game.get("local").character_id,
+		"world_namespace": game.get("world").reward_delivery_namespace,
+		"session_epoch": _producer.call("_altar_current_epoch")}
+
+func _groom_input_released() -> bool:
+	for action: String in ["menu_confirm", "ui_accept", "menu_cancel", "interact"]:
+		if Input.is_action_pressed(action): return false
+	var owner := INPUT_OWNER.current(get_tree())
+	if owner == null: return true
+	# The saved original may be waiting for its owner write/ACK. Only that
+	# exact journal can reconcile under Session's existing mutation fence.
+	var retained := _retained_station_transaction()
+	return owner == _producer and retained.get("action") == "groom" \
+		and retained.get("intent") == _station_intent
+
+func _restore_groom_panel() -> void:
+	if not is_inside_tree() or is_queued_for_deletion() or _open \
+		or _groom_source_lost or _groom_scope.is_empty() or _groom_scope != _current_groom_scope(): return
+	var owner := INPUT_OWNER.current(get_tree())
+	if owner != null and owner != _producer: return
+	var source := _original_station()
+	if source == null: return
+	if not source.is_inside_tree() or source.is_queued_for_deletion():
+		station_source_departed(source)
+		return
+	var message := _status.text
+	open(source)
+	_status.text = message
+	_status_left = STATUS_SECONDS
+
+## A paid station may be dismantled while its owner's original is in flight.
+## Hold only this existing intent in the root panel until the host refuses it
+## or reconciles its saved row. World/character changes still discard the UI.
+func station_source_departed(source: Node3D) -> bool:
+	if _station_operation != "groom" or _station_intent.is_empty() or source != _original_station() \
+		or _groom_scope.is_empty() or _groom_scope != _current_groom_scope(): return false
+	_groom_source_lost = true
+	_station = null
+	_station_source = null
+	_groom_retry_left = 0.0
+	if is_inside_tree() and not _groom_waiting_release: call_deferred("_retry_station")
+	return true
+
+func _release_groom_input() -> void:
+	if is_inside_tree() and INPUT_OWNER.current(get_tree()) == null:
+		INPUT_OWNER.set_world_hud_visible(get_tree(), true)
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		LOCAL_PAUSE.release(get_tree())
 
 ## Trusted producer callback only. A displayed success needs both saves/ACK;
 ## unknown, contradictory and lost-ACK replies retain the original identity.
@@ -474,10 +557,22 @@ func _station_completed(op: String, original: Dictionary, result: Dictionary) ->
 	elif result.get("ok") is bool and result.ok == false \
 			and result.get("terminal_refusal") is bool and result.terminal_refusal == true:
 		_station_intent={}
+	if op == "groom" and _groom_source_lost and _station_intent.is_empty():
+		if game != null and game.has_method("push_world_message"): game.call("push_world_message", _status.text)
+		_groom_waiting_release = false
+		close()
+		_release_groom_input()
+		queue_free()
+		return
 	if _station_intent.is_empty() and _open:
 		_status_left=STATUS_SECONDS
 		_rebuild_station_presentation()
 	_refresh_next_upgrade()
+	# A guest stays out of its modal until an actual host result arrives; the
+	# local transport's immediate waiting marker is not that result.
+	if op == "groom" and (result.get("code") != "awaiting_saved_decision" or result.has("receipt")):
+		_restore_groom_panel()
+		if _station_intent.is_empty(): _groom_scope.clear()
 
 func _open_feasts() -> void:
 	if not _station_intent.is_empty() or not is_instance_valid(_producer) \
@@ -553,6 +648,13 @@ func _ready() -> void:
 
 func is_open() -> bool:
 	return _open
+
+func owns_input() -> bool:
+	if _open: return true
+	if not _groom_waiting_release: return false
+	for action: String in ["menu_confirm", "ui_accept", "menu_cancel", "interact"]:
+		if Input.is_action_pressed(action): return true
+	return false
 
 
 ## OF30. The list of recipes the player knows can GROW between two visits to a
@@ -961,6 +1063,22 @@ func _cancel_glyph() -> String:
 
 
 func _process(delta: float) -> void:
+	if _groom_source_lost and _groom_scope != _current_groom_scope():
+		_groom_waiting_release = false
+		close()
+		_release_groom_input()
+		queue_free()
+		return
+	if _groom_source_lost and not _groom_waiting_release and not _station_intent.is_empty():
+		_groom_retry_left -= delta
+		if _groom_retry_left <= 0.0: _retry_station()
+	if _groom_waiting_release:
+		if not _groom_input_released(): return
+		_groom_waiting_release = false
+		_release_groom_input()
+		if not _groom_scope.is_empty() and _groom_scope == _current_groom_scope():
+			_submit_station_original()
+		return
 	if not _open:
 		return
 	if Input.is_action_just_pressed("menu_cancel"):

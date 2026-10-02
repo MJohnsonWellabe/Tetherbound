@@ -1,6 +1,8 @@
 extends Node3D
 
-## Flag-off host-only manual Den grooming, mounted on the actual station.
+## Den care observer, mounted on the actual station. Production grooming uses
+## CraftPanel -> Session -> Foundation's one character transaction. The legacy
+## detached actor API below cannot produce anything without trusted callbacks.
 ## reader(actor, uid) supplies authenticated world/character save projections,
 ## modal_open (another modal)/in_combat/plot_allowed actual bools and received_shed_receipts:
 ## the canonical service's READ-ONLY projection for the existing shed helper,
@@ -26,6 +28,18 @@ var _reader: Callable
 var _commit: Callable
 var _pending: Dictionary = {}
 var _submission_serial := 0
+
+
+## The live Den owns its existing rest-bonus observer, never a second Groom
+## writer. Leaving both legacy callbacks empty keeps groom() unavailable here.
+func configure_rest_observer(world: Node3D, uid: String) -> void:
+	_world = world
+	_uid = uid
+	_config = POLICY.config().get("den", {}).duplicate(true)
+	SHED = load(SHED_PATH)
+	_reader = Callable()
+	_commit = Callable()
+	if _enabled(): add_to_group("creature_bed_rest_bonus")
 
 
 ## Trusted world-owner wiring only. Client requests cannot enable the actor.
@@ -178,9 +192,10 @@ func _canonical_den(records: Variant) -> bool:
 ## Called only by the existing ordinary sleep completion after its one rest
 ## credit. The attachment extends that credit; it never grants another one.
 func on_creature_bed_rest_completed(creature: RefCounted, bed_index: int) -> void:
-	if not _enabled() or creature == null or not is_instance_valid(_world): return
+	if not _enabled() or creature == null or not is_inside_tree() \
+		or not is_instance_valid(_world) or not _world.is_inside_tree(): return
 	var game := get_node_or_null(^"/root/Game")
-	if game == null: return
+	if game == null or game.get("world") == null: return
 	var cfg := POLICY.config()
 	var records: Array = game.get("placed_buildings")
 	var source := POLICY.record(cfg,records,_uid)
