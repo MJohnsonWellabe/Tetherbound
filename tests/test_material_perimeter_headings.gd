@@ -9,16 +9,16 @@ class ObservedNavigator:
 	extends "res://tests/helpers/stick_navigator.gd"
 	var aims: Array[Vector3] = []
 	var hold_checks := 0
-	var hold_after_first := false
-	var stall := false
+	var hold_at_steps := -1
+	var stall_after_steps := -1
 	func can_walk() -> bool:
-		if hold_after_first and aims.size() == 1 and hold_checks < 3:
+		if aims.size() == hold_at_steps and hold_checks < 3:
 			hold_checks += 1
 			return false
 		return true
 	func step(point: Vector3) -> void:
 		aims.append(point)
-		if not stall:
+		if stall_after_steps < 0 or aims.size() <= stall_after_steps:
 			_player.position = _player.position.move_toward(Vector3(point.x, _player.position.y, point.z), 1.0)
 		# Accounting fixture frames carry no physical travel claim. Production
 		# step() retains its real physics-frame input/ground/contact checks.
@@ -124,10 +124,12 @@ func test_one_walk_budget_cannot_restart_at_a_heading_or_finish_before_it() -> v
 	assert_almost_eq(body.position.x, 2.0)
 	body.position = Vector3.ZERO
 	nav.aims.clear()
-	nav.hold_after_first = true
-	assert_true(await nav.walk_to_guided(Vector3(4, 0, 0), 5, 0.1, headings))
+	nav.hold_at_steps = 3
+	var held_headings: Array[Vector3] = [Vector3(2, 100, 0), Vector3(4, 100, 0)]
+	assert_true(await nav.walk_to_guided(Vector3(5, 0, 0), 6, 0.1, held_headings))
 	assert_eq(nav.hold_checks, 3, "held frames resume the same retained heading")
-	assert_eq(nav.aims.size(), 4, "held frames consume none of the original walking budget")
+	assert_eq(nav.aims.size(), 5, "held frames consume none of the original walking budget")
+	assert_eq(nav.aims[3], held_headings[1], "a hold partway to the second heading must not revisit the first")
 	body.free()
 
 func test_confined_watchdog_and_finite_heading_guards_remain_in_the_same_loop() -> void:
@@ -135,8 +137,8 @@ func test_confined_watchdog_and_finite_heading_guards_remain_in_the_same_loop() 
 	var body := Node3D.new()
 	tree.root.add_child(body)
 	var nav := ObservedNavigator.new(tree, body, body, func(_x: float, _y: float) -> void: pass)
-	nav.stall = true
-	var headings: Array[Vector3] = [Vector3.ZERO, Vector3(2, 0, 0)]
+	nav.stall_after_steps = 2
+	var headings: Array[Vector3] = [Vector3(2, 0, 0), Vector3(3, 0, 0)]
 	assert_false(await nav.walk_to_guided(Vector3(8, 0, 0), 1201, 0.1, headings))
 	assert_eq(nav.aims.size(), 1201)
 	assert_eq(nav.confined_resets(), 1, "waypoint transitions cannot refresh the rolling confinement watchdog")
