@@ -6,7 +6,7 @@ const PLACER := preload("res://scripts/world/village_npcs.gd")
 
 func test_actual_enabled_floor_top_tracks_transform_and_refuses_absent_support() -> void:
 	var shop := SHOP.new()
-	get_tree().root.add_child(shop)
+	(Engine.get_main_loop() as SceneTree).root.add_child(shop)
 	assert_true(is_nan(shop.floor_top_world_at(0.0, 0.0)))
 	shop._build_floor()
 	shop.transform = Transform3D(Basis(Vector3.UP, 0.4).scaled(Vector3.ONE * 2.0), Vector3(6.0, 3.0, 8.0))
@@ -24,7 +24,7 @@ func test_actual_enabled_floor_top_tracks_transform_and_refuses_absent_support()
 
 func test_npc_support_uses_its_current_village_floor_without_lowering_terrain() -> void:
 	var world := Node3D.new()
-	get_tree().root.add_child(world)
+	(Engine.get_main_loop() as SceneTree).root.add_child(world)
 	var village := Node3D.new()
 	village.name = "Village"
 	world.add_child(village)
