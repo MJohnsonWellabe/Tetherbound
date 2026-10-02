@@ -13,6 +13,9 @@ import glob
 import json
 import os
 import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "net"))
+from save_document import decode
 from chain_evidence import executions, safe_id, SEMANTICS
 
 CHAIN = ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09",
@@ -28,7 +31,7 @@ def load(run_dir, seg, output_save=None):
         return None
     try:
         with open(hits[0], encoding="utf-8") as handle:
-            return json.load(handle)
+            return decode(json.load(handle))
     except (ValueError, OSError):
         return None
 

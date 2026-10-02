@@ -1,0 +1,41 @@
+{
+  "format": "tetherbound-save",
+  "codec_version": 1,
+  "payload": {
+    "version": 28,
+    "float32_height": {
+      "$tb_float64": "000000a007dbf13f"
+    },
+    "care": {
+      "$tb_float64": "3096fc62c9ff5840"
+    },
+    "negative_zero": {
+      "$tb_float64": "0000000000000080"
+    },
+    "subnormal": {
+      "$tb_float64": "0100000000000000"
+    },
+    "min_int": {
+      "$tb_int64": "-9223372036854775808"
+    },
+    "max_int": {
+      "$tb_int64": "9223372036854775807"
+    },
+    "safe_int": 9007199254740991,
+    "collision": {
+      "$tb_dictionary": [
+        [
+          "$tb_float64",
+          "original text"
+        ]
+      ]
+    },
+    "nested": [
+      true,
+      null,
+      {
+        "$tb_float64": "000000000000f03f"
+      }
+    ]
+  }
+}

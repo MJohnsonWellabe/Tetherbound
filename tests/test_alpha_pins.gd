@@ -363,7 +363,7 @@ func test_the_save_file_carries_the_pinned_set_at_its_top_level() -> void:
 	_pin_within(written.map, written.progression, Vector2(-180.0, 2250.0))
 	assert_true(saver.call("save", written, 1))
 	var raw := FileAccess.get_file_as_string(saver.call("slot_path", 1))
-	var parsed: Variant = JSON.parse_string(raw)
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(raw)
 	assert_true(parsed is Dictionary, "the save slot is not readable JSON")
 	var data: Dictionary = parsed
 	assert_eq(int(data.get("version", 0)), SAVE_GAME.VERSION)
@@ -386,7 +386,7 @@ func test_a_pre_seventeen_save_is_refused_without_changing_live_pins() -> void:
 	var written: RefCounted = _game()
 	assert_true(saver.call("save", written, 1))
 	var path: String = saver.call("slot_path", 1)
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	# Replace the ordinary split save with an intentionally flat legacy file;
 	# remove its associated split halves so load_slot cannot select stale
 	# authority from the preceding write.

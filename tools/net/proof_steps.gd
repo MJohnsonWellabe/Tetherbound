@@ -310,14 +310,16 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		form = "single slot json (legacy-migration path)"
 		var dst := str((saver as RefCounted).call("slot_path", slot))
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dst.get_base_dir()))
-		var named: Variant = JSON.parse_string(_read_text(from))
+		var named: Variant = preload("res://scripts/save/save_document.gd").parse(_read_text(from))
 		if not (named is Dictionary):
 			return {"verdict": "FAIL", "detail": "named save %s is not a JSON object" % from}
 		(named as Dictionary).erase("split_locator")
+		var encoded := preload("res://scripts/save/save_document.gd").stringify(named)
+		if encoded.is_empty(): return {"verdict": "FAIL", "detail": "named save cannot be encoded losslessly"}
 		var out := FileAccess.open(dst, FileAccess.WRITE)
 		if out == null:
 			return {"verdict": "ERROR", "detail": "could not write %s" % dst}
-		out.store_string(JSON.stringify(named))
+		out.store_string(encoded)
 		out.close()
 	else:
 		return {"verdict": "FAIL", "detail": "named save %s does not exist" % from}
