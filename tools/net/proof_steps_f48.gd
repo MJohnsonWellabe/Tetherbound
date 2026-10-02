@@ -12,6 +12,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_witness": return _witness(tree, args)
 		"f48_assert": return _assert(tree, args)
 		"f48_button": return await _button(tree, args)
+		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
 		"f48_assert_altar_build": return _assert_altar_build(tree, args)
 		"f48_require_configuration": return _require_configuration(args)
@@ -609,6 +610,46 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 	matches[0].grab_focus()
 	await tree.process_frame
 	return await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+
+static func _choice(tree: SceneTree, args: Dictionary) -> Dictionary:
+	# The actual owned UID is read from a visible shipping OptionButton's item
+	# metadata. Selection is delivered through its ordinary popup controller
+	# events, never OptionButton.select(), item_selected.emit() or trait submit.
+	var uid: Variant = args.get("uid")
+	if not uid is String or uid.is_empty(): return _result(false, "Original owned choice UID missing")
+	var choices: Array[OptionButton] = []
+	_collect_choices(tree.root, uid, choices)
+	if choices.size() != 1: return _result(false, "Need exactly one visible enabled actual UID choice: " + uid)
+	var choice: OptionButton = choices[0]
+	var target := -1
+	for index: int in choice.item_count:
+		if choice.get_item_metadata(index) == uid:
+			if target >= 0 or choice.is_item_disabled(index): return _result(false, "Duplicate or disabled original UID choice")
+			target = index
+	if target < 0 or choice.item_count > 128: return _result(false, "Missing or unbounded original UID choices")
+	choice.grab_focus()
+	await tree.process_frame
+	var opened: Dictionary = await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+	if opened.get("verdict") != "PASS": return opened
+	var popup: PopupMenu = choice.get_popup()
+	if not is_instance_valid(popup) or not popup.visible: return _result(false, "Ordinary controller input did not open actual choice popup")
+	for attempt: int in choice.item_count + 1:
+		if popup.get_focused_item() == target:
+			var selected: Dictionary = await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+			if selected.get("verdict") != "PASS": return selected
+			return _result(is_instance_valid(choice) and choice.selected == target and choice.get_item_metadata(choice.selected) == uid,
+				"Ordinary popup input selected original owned UID", {"uid": uid, "index": target})
+		var moved: Dictionary = await tree.call("_step_press", {"action": "ui_down", "tap_frames": 2})
+		if moved.get("verdict") != "PASS": return moved
+	return _result(false, "Ordinary popup input did not reach original owned UID")
+
+static func _collect_choices(node: Node, uid: String, choices: Array[OptionButton]) -> void:
+	if node is OptionButton and node.is_visible_in_tree() and not node.disabled:
+		for index: int in node.item_count:
+			if node.get_item_metadata(index) == uid:
+				choices.append(node)
+				break
+	for child: Node in node.get_children(): _collect_choices(child, uid, choices)
 
 static func _collect_buttons(node: Node, text: String, matches: Array[Button]) -> void:
 	if node is Button and node.is_visible_in_tree() and not node.disabled and node.text == text:
