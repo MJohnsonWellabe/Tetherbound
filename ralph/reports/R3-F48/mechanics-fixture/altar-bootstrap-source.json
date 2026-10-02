@@ -1,15 +1,15 @@
 {
   "scope": "Runnable source prerequisite producer; no F48 acceptance/earned campaign credit",
-  "base_commit": "56a8ac0fc437da1364b28ec40e54dafb546b1de3",
+  "base_commit": "cfe2e80965",
   "source_files": {
-    "tools/net/proof_steps_f48.gd": "f2a538044dcc425f38dcc5619aa0873c5528434f11b58c0813911cb9587a4d21",
+    "tools/net/proof_steps_f48.gd": "238a8f8568416b2f73fa63db108ca31e2cc5df898f176e22dbe031e477747c53",
     "tools/net/f48_bootstrap.gd": "42e0ea191d703735cccc7f0f9eb6ea5b8e6cc34c1f4bf606803ea683f36dedd4",
-    "tools/net/f48_profile_fixture.py": "e672831ae2eae828772fac5e262fc9e9bcee02e1e150e8ba0a6fd03c09d44974",
+    "tools/net/f48_profile_fixture.py": "1721ce4c33e0c30847853430a74bc23b19e18ccce005000f5ae0cff433442f61",
     "tests/helpers/f48_net_proof.gd": "cd59921b369a063edc147ebe7bc096b4e28ea780b5e7dcdeb3627a2476d1161c"
   },
   "fixture_profile": {
-    "path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-bootstrap-source-v7\\profile.json",
-    "sha256": "b1cd55c61d80d82359bae5938b7bdef09425197fd1714162c350d40be52951a9",
+    "path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-bootstrap-source-v8\\profile.json",
+    "sha256": "01f2b922265afdc8fe066a6416af3f8889c024348dac0d23578127156ffd3eb7",
     "origin": "Original native shared-boss9696b2c32862 v28 characters; earlier disclosed level9 starter setup, not earned campaign",
     "character_ids": [
       "character-219d55c08e26227b4ccba505c7b3c409",
@@ -25,7 +25,7 @@
         "file": "res://data/config/stations.json",
         "source_sha256": "25cd64cb9fa22416aa2ef13bacabb5a22bc2bb983923308b73e6f9a1d7db8c11",
         "sha256": "a661ce0c08762f742c2ae52ddc0a600980f0e10dad2b606efdffe9f43477318f",
-        "overlay_file": "D:\\tetherbound\\r3-f48\\.tmp\\f48-bootstrap-source-v7\\test-configuration\\data\\config\\stations.json",
+        "overlay_file": "D:\\tetherbound\\r3-f48\\.tmp\\f48-bootstrap-source-v8\\test-configuration\\data\\config\\stations.json",
         "enabled_fields": [
           "runtime_enabled"
         ]
@@ -34,7 +34,7 @@
         "file": "res://data/config/essence.json",
         "source_sha256": "feaf5f578c03b5d88743c1f7ee95f82d616683e367b7e4e9f80530af22acf05d",
         "sha256": "e437c62a7ddea00d611cad1a937cf206884a8dd82150206429f021438ddd5289",
-        "overlay_file": "D:\\tetherbound\\r3-f48\\.tmp\\f48-bootstrap-source-v7\\test-configuration\\data\\config\\essence.json",
+        "overlay_file": "D:\\tetherbound\\r3-f48\\.tmp\\f48-bootstrap-source-v8\\test-configuration\\data\\config\\essence.json",
         "enabled_fields": [
           "altar_runtime_enabled",
           "altar_building_runtime_enabled"
@@ -44,7 +44,7 @@
     "apply": "ROOT copies the exact overlay bytes to its isolated serialized native candidate, runs tools/net/f48_bootstrap.gd, then restores original configuration. No source flag or CI prerequisite waiver."
   },
   "route": "Production load_save of declared initial mechanics stock/Forge/Kitchen/pose; direct existing host Session transport setup; actual guest title admission; real build_open/Crafting tab/visible Altar cell ui_accept/build_place inputs. No private pick/place/intent/receipt callback.",
-  "oracle": "Before any capture/autosave: original admitted complete before projection, one new accepted original altar_building row, exact fixed stone10/rootstone4/ironwood2 debit, actual built UID and record, exactly one bound owner receipt, unchanged party/all other personal carriers, complete journal after == owner memory+disk, original host memory+disk world journal and exact paid record once; guest full personal bystander unchanged.",
+  "oracle": "Before any capture/autosave: original admitted complete before projection, one new accepted original altar_building row, exact fixed stone10/rootstone4/ironwood2 debit, actual built UID and record, exactly one bound owner receipt, unchanged party/all other personal carriers, complete journal after == owner memory+disk, original host memory+disk world journal and exact paid record once; guest full personal bystander unchanged. Owner satchel_escrow remains exactly unchanged.",
   "capture": "Existing capture_saves autosaves only after durable assertions; this is disclosed and cannot repair a failed pre-capture oracle.",
   "run": {
     "prerequisite": "ROOT serialized native lease; copy exact separately pinned three-field overlay bytes only into isolated native candidate and restore after run. Production defaults stay unchanged in source. Effective SHA mismatch fails before admission.",
@@ -58,7 +58,9 @@
     "native_compilation_and_producer_save_ack": "OPEN",
     "physical_terrain_collision_and_ordinary_build": "OPEN",
     "earned_caught_wild_input": "OPEN",
-    "full_profiles_and_original_24_cuts": "OPEN"
+    "full_profiles_and_original_24_cuts": "OPEN",
+    "independent_source_review": "SOURCE PASS cfe2e80965 after exact Unicode correction; paid-Altar catalogue prerequisite 4b6883608a separately SOURCE PASS, integration required",
+    "exact_essence_button": "Ground Essence U+00B7 Cost 20 U+00B7 Have 100; actual altar_panel literal matches"
   },
-  "limits": "Forge adapter c93 is separate reviewed source, absent from this original merged candidate; existing truthful missing-API gaps retained. No flags enabled in production defaults, no required smoke skip/quarantine/default PASS/cap changes."
+  "limits": "Forge adapter c93 is separate reviewed source, absent from this original merged candidate; existing truthful missing-API gaps retained. No flags enabled in production defaults, no required smoke skip/quarantine/default PASS/cap changes. This manifest replaces rejected historical v7/mojibake artifact pins with corrected v8; no historical native PASS is claimed."
 }
