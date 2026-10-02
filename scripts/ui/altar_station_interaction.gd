@@ -83,10 +83,11 @@ func _process(_delta: float) -> void:
 	if not _live_binding():
 		queue_free()
 		return
-	if is_instance_valid(_prompt): _prompt.set("enabled", _session.call("altar_canonical_producer_available") == true)
+	if is_instance_valid(_prompt): _prompt.set("enabled", _game.get("current_realm") == "meadows" \
+		and _session.call("altar_canonical_producer_available") == true)
 
 func _open() -> void:
-	if not _live_binding(): return
+	if not _live_binding() or _game.get("current_realm") != "meadows": return
 	var building := _building.get_ref() as Node3D
 	if _session.call("_register_altar_station_node", _key, building) != true \
 		or _session.call("altar_station_available", _key) != true: return
