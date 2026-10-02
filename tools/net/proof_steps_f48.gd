@@ -12,6 +12,9 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_witness": return _witness(tree, args)
 		"f48_assert": return _assert(tree, args)
 		"f48_button": return await _button(tree, args)
+		"f48_build_cell": return await _build_cell(tree, args)
+		"f48_assert_altar_build": return _assert_altar_build(tree, args)
+		"f48_require_configuration": return _require_configuration(args)
 		"f48_require": return _require(tree, args)
 		"f48_restore_witness": return _restore_witness(tree, args)
 		"f48_participants": return await _participants(tree, args)
@@ -485,6 +488,112 @@ static func _require(tree: SceneTree, args: Dictionary) -> Dictionary:
 		var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(str(request.file)))
 		if _path(config, str(request.path)) != true: missing.append(str(request.file) + "/" + str(request.path))
 	return _result(missing.is_empty(), "Actual producer prerequisite: " + ("present" if missing.is_empty() else ", ".join(missing)))
+
+static func _require_configuration(args: Dictionary) -> Dictionary:
+	var files: Variant = args.get("files")
+	var expected := ["res://data/config/stations.json", "res://data/config/essence.json"]
+	if not files is Array or files.size() != expected.size(): return _result(false, "Pinned disclosed mechanics configuration missing")
+	var evidence: Array = []
+	for row: Variant in files:
+		if not row is Dictionary or not expected.has(row.get("file")): return _result(false, "Unknown or duplicated mechanics configuration file")
+		expected.erase(row.file)
+		if str(row.get("sha256", "")).length() != 64 or not FileAccess.file_exists(row.file) or FileAccess.get_sha256(row.file) != row.sha256:
+			return _result(false, "Effective native configuration differs from the disclosed overlay: " + str(row.file))
+		evidence.append({"file": row.file, "sha256": row.sha256})
+	return _result(expected.is_empty(), "Exact effective test configuration pinned separately; production defaults unchanged", {"files": evidence})
+
+
+static func _build_cell(tree: SceneTree, args: Dictionary) -> Dictionary:
+	# Read the actual visible catalogue-to-button mapping. Only focus changes;
+	# ui_accept reaches the shipping grid callback and ordinary ghost placement.
+	var menus := tree.get_nodes_in_group("build_menu")
+	if menus.size() != 1: return _result(false, "Need exactly one actual open build menu")
+	var menu: Node = menus[0]
+	var script: Script = menu.get_script()
+	if script == null or script.resource_path != "res://scripts/ui/build_menu.gd" \
+		or menu.call("is_open") != true: return _result(false, "Actual open build menu unavailable")
+	var pieces: Array = menu.call("_current_pieces")
+	var buttons: Variant = menu.get("_cell_buttons")
+	if not buttons is Array or buttons.size() != pieces.size(): return _result(false, "Actual displayed build grid mapping unavailable")
+	var matches: Array[Button] = []
+	for index: int in pieces.size():
+		if pieces[index] is Dictionary and pieces[index].get("id") == args.get("id"):
+			var button: Variant = buttons[index]
+			if button is Button and button.is_visible_in_tree() and not button.disabled: matches.append(button)
+	if matches.size() != 1: return _result(false, "Need exactly one actual visible enabled build cell")
+	matches[0].grab_focus()
+	await tree.process_frame
+	return await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+
+
+static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var now := _observe(tree)
+	var prior: Dictionary = tree.get_meta("f48_witness_" + str(args.get("since", "")), {})
+	if now.is_empty() or prior.is_empty() or now.get("owns_world") != true \
+		or now.get("character_id") != prior.get("character_id") or now.get("world_namespace") != prior.get("world_namespace"):
+		return _result(false, "Actual owning host and original admitted witness required")
+	var rows: Array[Dictionary] = []
+	var previous: Dictionary = prior.world.get("reward_deliveries", {})
+	for id: String in now.world.get("reward_deliveries", {}):
+		var value: Variant = now.world.reward_deliveries[id]
+		if value is Dictionary and value.get("kind") == "altar_building" and not previous.has(id): rows.append(value)
+	if rows.size() != 1: return _result(false, "Need exactly one new real paid Altar journal", now)
+	var row: Dictionary = rows[0]
+	var intent: Variant = row.get("intent")
+	if not intent is Dictionary or not intent.get("record") is Dictionary or not intent.get("request") is Dictionary:
+		return _result(false, "Real Altar transaction intent unavailable", now)
+	var record: Dictionary = intent.record
+	var txn := str(row.get("action_id", ""))
+	var id := "altar_building:" + JSON.stringify([now.world_namespace, now.character_id, txn]).sha256_text()
+	var receipt := "craft:%s:altar_build:%s:%s:place_building:%s" % [now.character_id, str(now.world_namespace).sha256_text(), txn, record.get("uid", "")]
+	var cost := [{"id": "stone", "n": 10}, {"id": "rootstone", "n": 4}, {"id": "ironwood", "n": 2}]
+	var errors: Array[String] = []
+	if txn.is_empty() or row.get("version") != 1 or row.get("action") != "place_building" or row.get("status") != "accepted" \
+		or row.get("delivery_id") != id or row.get("receipt") != receipt or row.get("character_id") != now.character_id \
+		or row.get("world_id") != now.world_id or row.get("world_namespace") != now.world_namespace \
+		or intent.request.get("txn_id") != txn or intent.request.get("kind") != "place_building" or intent.request.get("id") != "altar" \
+		or intent.request.get("realm") != "meadows" or intent.request.get("paid") != true or not _json_equal(intent.get("cost"), cost):
+		errors.append("Wrong original accepted Altar transaction identity/receipt/price")
+	if record.size() != 6 or not record.get("paid") is bool or record.get("id") != "altar" or record.get("realm") != "meadows" or record.get("paid") != true \
+		or not record.get("uid") is String or not str(record.uid).begins_with("b") or not record.get("position") is Array \
+		or not _json_equal(intent.request.get("position"), record.get("position")) or not _json_equal(intent.request.get("yaw_deg"), record.get("yaw_deg")):
+		errors.append("Wrong actual paid world-building record")
+	var uid := str(record.get("uid", ""))
+	var position: Variant = record.get("position")
+	if uid.length() < 2 or not uid.substr(1).is_valid_int() or int(uid.substr(1)) < 1 or uid != "b%d" % int(uid.substr(1)):
+		errors.append("Missing actual canonical built UID")
+	if not position is Array or position.size() != 3:
+		errors.append("Missing actual finite build position")
+	else:
+		for coordinate: Variant in position:
+			if not (coordinate is int or coordinate is float) or not is_finite(float(coordinate)): errors.append("Nonfinite actual build position")
+	var yaw: Variant = record.get("yaw_deg")
+	if not (yaw is int or yaw is float) or not is_finite(float(yaw)): errors.append("Nonfinite actual build yaw")
+	var expected_counts := _counts(prior.memory)
+	for need: Dictionary in cost: expected_counts[need.id] = int(expected_counts.get(need.id, 0)) - int(need.n)
+	var personal: Dictionary = prior.memory.redesign_character.duplicate(true)
+	if personal.transaction_receipts.has(receipt): errors.append("Original build receipt existed before input")
+	personal.transaction_receipts.append(receipt)
+	for scope: String in ["memory", "disk"]:
+		var state: Dictionary = now[scope]
+		var counts := _counts(state)
+		for item: String in _unique(expected_counts.keys() + counts.keys()):
+			if int(counts.get(item, 0)) != int(expected_counts.get(item, 0)): errors.append(scope + ": wrong exact item debit " + item)
+		if not _json_equal(state.get("party"), prior.memory.get("party")) or not _json_equal(state.get("redesign_character"), personal):
+			errors.append(scope + ": paid build changed an owned card/progression or did not persist exactly one receipt")
+		var projection := {"inventory": state.get("inventory"), "party": state.get("party"), "redesign_character": state.get("redesign_character")}
+		if not _json_equal(row.get("after"), projection): errors.append(scope + ": accepted full after carrier differs from real owner")
+	var before := {"inventory": prior.memory.get("inventory"), "party": prior.memory.get("party"), "redesign_character": prior.memory.get("redesign_character")}
+	if not _json_equal(row.get("before"), before): errors.append("Accepted original before carrier differs from admitted source")
+	for world: String in ["world", "disk_world"]:
+		var carrier: Dictionary = now[world]
+		if not _json_equal(carrier.get("reward_deliveries", {}).get(id), row): errors.append(world + ": accepted journal absent or changed")
+		var found := 0
+		for building: Variant in carrier.get("placed_buildings", []):
+			if _json_equal(building, record): found += 1
+		if found != 1: errors.append(world + ": exact paid Altar record absent or duplicated")
+	return _result(errors.is_empty(), "Actual paid Altar bootstrap; no earned campaign credit. " + "; ".join(errors), {"row": row, "observation": now})
+
 
 static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# Focus is harness input setup. Press goes through real InputEvent delivery;

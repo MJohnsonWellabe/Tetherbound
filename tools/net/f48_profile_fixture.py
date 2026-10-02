@@ -22,10 +22,10 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-STOCK = {"rootstone": 8, "ironwood": 4, "berries": 8,
+STOCK = {"stone": 10, "rootstone": 8, "ironwood": 4, "berries": 8,
          "attuned_ground": 2, "essence_ground": 100}
 OPERATIONS = ("craft", "release", "feast", "key", "relic", "essence_spend")
-INPUTS = {"press", "move_to", "stick", "wait", "f48_button"}
+INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell"}
 CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
            "data/config/progression.json", "data/recipes/recipes_forge.json",
@@ -211,7 +211,12 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
                 "layout": {"path": str(layout_path), "sha256": digest(layout_path)},
                 "source_files": {name: digest(ROOT / name) for name in CONFIGS + PRODUCERS},
                 "inputs": [], "mutations": [], "gaps": []}
-    routes = {"craft_prepare": prepare(layout, "forge"),
+    routes = {"bootstrap_altar": [input_step("press", action="build_open"), input_step("wait", frames=30),
+              input_step("f48_button", text="  Crafting"), input_step("wait", frames=15),
+              input_step("f48_build_cell", id="altar"), input_step("wait", frames=30),
+              input_step("press", action="build_place"), input_step("wait", frames=180),
+              input_step("press", action="build_cancel")],
+              "craft_prepare": prepare(layout, "forge"),
               "craft_reopen": prepare(layout, "forge"),
               "craft_commit": [input_step("f48_button", text="Refine Rootiron Ingot"), input_step("wait", frames=150)],
               "essence_spend_prepare": prepare(layout, "altar") + [input_step("f48_button", text="Creature training"), input_step("wait", frames=45)],
@@ -264,13 +269,13 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
                 and mirror.get("cap_level") == 10 and mirror.get("breakthroughs") == [] and pinned_curve:
             available = sum(stack["n"] for stack in char["inventory"] if isinstance(stack, dict) and stack["id"] == "essence_ground")
             if index == 1:
-                routes["essence_spend_commit"] = [input_step("f48_button", text=f"Ground Essence · Cost 20 · Have {available}"),
+                routes["essence_spend_commit"] = [input_step("f48_button", text=f"Ground Essence Ãƒâ€šÃ‚Â· Cost 20 Ãƒâ€šÃ‚Â· Have {available}"),
                                                   input_step("wait", frames=120)]
             outcomes[f"essence_spend_{index}"] = {"item_delta": {"essence_ground": -20},
                 "creature": {"uid": card["uid"], "level": 10, "breakthroughs": []},
                 "equals": {f"redesign_character/creatures/{card['uid']}/cap_level": 10}}
         else:
-            manifest["gaps"].append(f"peer{index}: fixed Terrapup9→10/cap10/20essence oracle prerequisite unavailable; no repricing")
+            manifest["gaps"].append(f"peer{index}: fixed Terrapup9ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢10/cap10/20essence oracle prerequisite unavailable; no repricing")
         wild = [uid for uid, mirror in char["redesign_character"]["creatures"].items()
                 if mirror.get("captured_from", {}).get("kind") == "wild"]
         if not wild:
@@ -307,6 +312,27 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     manifest["gaps"].append("Kitchen remains tier0; Master win/recipe, boss key/relic and ordinary reopen routes are not fabricated")
     if "defeated_warden" in inputs[0]["world"].get("flags", {}).get("flags", []):
         manifest["gaps"].append("Original host legacy world already defeated Warden; no flag reset or new-loop boss eligibility claim")
+    # Export a separately pinned test overlay; do not change production defaults.
+    # ROOT applies these exact bytes only in its serialized isolated native
+    # candidate. A bootstrap run refuses different effective configuration.
+    configuration = []
+    overrides = {"stations.json": ["runtime_enabled"],
+                 "essence.json": ["altar_runtime_enabled", "altar_building_runtime_enabled"]}
+    for name, fields in overrides.items():
+        source = ROOT / "data/config" / name
+        effective = read(source)
+        for field in fields:
+            require(type(effective.get(field)) is bool, f"Missing typed mechanics gate: {name}/{field}")
+            effective[field] = True
+        target = output / "test-configuration/data/config" / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        write(target, effective)
+        configuration.append({"file": "res://data/config/" + name, "source_sha256": digest(source),
+                              "sha256": digest(target), "overlay_file": str(target), "enabled_fields": fields})
+    profile["test_configuration"] = configuration
+    manifest["test_configuration"] = {"status": "DISCLOSED mechanics bootstrap overlay only; production defaults unchanged; native execution OPEN",
+                                      "files": configuration,
+                                      "apply": "ROOT copies the exact overlay bytes to its isolated serialized native candidate, runs tools/net/f48_bootstrap.gd, then restores original configuration. No source flag or CI prerequisite waiver."}
     write(output / "profile.json", profile)
     manifest["profile_sha256"] = digest(output / "profile.json")
     write(output / "fixture-manifest.json", manifest)

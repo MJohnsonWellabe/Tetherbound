@@ -4,7 +4,7 @@ extends "res://tests/smoke_net_proof_two_peer.gd"
 ## supplies only concrete controller taps/waypoints and existing saved inputs.
 ## There are no grant, win, teleport, fixture, intent or receipt-injection steps.
 ## Missing producers/routes/cut observation are failures, never skips or PASS.
-const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button"]
+const INPUT_ACTIONS := ["press", "move_to", "stick", "wait", "f48_button", "f48_build_cell"]
 const TRANSACTIONS := ["craft", "release", "feast", "key", "relic", "essence_spend"]
 const CUTS := ["before_input", "after_settlement", "after_host_write_before_delivery", "after_owner_write_before_ack"]
 const REPLAY_FIELDS := ["inventory", "redesign_character", "satchel_escrow"]
@@ -115,6 +115,8 @@ func _route(name: String, peer: int) -> Array:
 			continue
 		if raw.action == "f48_button" and str(raw.args.get("text", "")).is_empty():
 			_profile_errors.append("Empty button target: " + name)
+		if raw.action == "f48_build_cell" and str(raw.args.get("id", "")).is_empty():
+			_profile_errors.append("Empty actual build cell target: " + name)
 		for field: String in ["frames", "gap_frames", "budget_frames", "times"]:
 			if raw.args.has(field):
 				var value: Variant = raw.args[field]
