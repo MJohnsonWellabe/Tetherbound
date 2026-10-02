@@ -32,7 +32,7 @@ func test_stormursa_repeated_hearten_gate_retains_the_actual_earlier_unlock() ->
 	for authored: Dictionary in TEACHING.learnsets().stormursa.unlocks:
 		if authored.move_id == "hearten" and authored.has("breakthrough_tier"):
 			gates.append(int(authored.breakthrough_tier))
-	assert_eq(gates, [2,5], "actual authored duplicate gate behind the three returned failures")
+	assert_eq(gates, [5,2], "exact authored row order of the duplicate gate behind the three returned failures")
 	var tiers: Array = []
 	for master: Dictionary in BREAKTHROUGH.masters().masters:
 		tiers.append(int(master.tier))
