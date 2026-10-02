@@ -224,6 +224,11 @@ func _named_slot_exclusion_is_wired(source: String) -> bool:
 	var start := source.find("func _spawn_creatures(")
 	if start < 0: return false
 	var end := source.find("\nfunc ", start + 1)
+	var wrapper := source.substr(start, (end - start) if end > start else -1)
+	if not wrapper.contains("await _spawn_authored_creatures(entries)"): return false
+	start = source.find("func _spawn_authored_creatures(")
+	if start < 0: return false
+	end = source.find("\nfunc ", start + 1)
 	var body := source.substr(start, (end - start) if end > start else -1)
 	return body.contains('if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty())') \
 		and body.contains('if spawn_packet.is_empty() and cycle.get("status") == "active":') \
@@ -240,6 +245,7 @@ func test_spawn_creatures_skips_a_clusters_own_alpha_or_elder_slot_once_cleared(
 func test_negative_controls_keep_cleared_waiting_and_ordinary_cluster_guards() -> void:
 	var source := _director_source()
 	for old: String in [
+		"await _spawn_authored_creatures(entries)",
 		'if n == 0 and (cycle.get("status") == "waiting"',
 		'once_already_cleared and spawn_packet.is_empty()',
 		'cycle.get("status") == "active"',

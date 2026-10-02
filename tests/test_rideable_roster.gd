@@ -76,7 +76,9 @@ func test_exact_owner_meadows_water_and_redesign_starter_roster_are_rideable() -
 func test_authorized_starter_swimmer_stays_in_tidewake() -> void:
 	var block := SPECIES.rideable("ripplet")
 	assert_false(block.is_empty(), "RD-32 requires Ripplet's surface swimming")
-	assert_eq(str(block.get("required_realm", "")), "water")
+	# The production riding controller reads this gate from the canonical
+	# definition; rideable() normalizes seat/saddle fields only.
+	assert_eq(str(SPECIES.definition("ripplet").get("rideable", {}).get("required_realm", "")), "water")
 	assert_true(SPECIES.definition("ripplet").get("swim_mount", {}).get("compatible") == true)
 
 
