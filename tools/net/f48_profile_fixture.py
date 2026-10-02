@@ -18,6 +18,7 @@ import gzip
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,6 +30,7 @@ CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
            "data/config/progression.json", "data/recipes/recipes_forge.json",
            "data/items/items.json")
+PRODUCERS = ("scripts/net/session.gd", "scripts/ui/craft_panel.gd", "scripts/build/station_piece.gd")
 
 
 def require(ok: bool, message: str) -> None:
@@ -200,7 +202,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     manifest = {"status": "OPEN_UNVALIDATED_MECHANICS_FIXTURE", "acceptance_credit": False,
                 "earned_checkpoint": False, "original_input_origin": origin,
                 "layout": {"path": str(layout_path), "sha256": digest(layout_path)},
-                "source_files": {name: digest(ROOT / name) for name in CONFIGS},
+                "source_files": {name: digest(ROOT / name) for name in CONFIGS + PRODUCERS},
                 "inputs": [], "mutations": [], "gaps": []}
     routes = {"craft_prepare": prepare(layout, "forge"),
               "craft_commit": [input_step("f48_button", text="Refine Rootiron Ingot"), input_step("wait", frames=150)],
@@ -288,6 +290,10 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
             if value is not True:
                 manifest["gaps"].append(f"Production gate {filename}:{path} is not enabled; source unchanged")
     manifest["gaps"].append("Actual native terrain/interaction/transaction/BOOL-save/ACK/cut proof remains OPEN")
+    session_source = (ROOT / "scripts/net/session.gd").read_text(encoding="utf-8")
+    for method in ("homestead_start_refining", "homestead_actor_context", "homestead_commit_refine_unit"):
+        if re.search(r"^func " + re.escape(method) + r"\(", session_source, re.MULTILINE) is None:
+            manifest["gaps"].append(f"Ordinary Forge producer Session.{method} source unavailable; candidate button cannot complete")
     manifest["gaps"].append("Kitchen remains tier0; Master win/recipe, boss key/relic and original retry routes are not fabricated")
     if "defeated_warden" in inputs[0]["world"].get("flags", {}).get("flags", []):
         manifest["gaps"].append("Original host legacy world already defeated Warden; no flag reset or new-loop boss eligibility claim")
