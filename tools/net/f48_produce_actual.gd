@@ -17,7 +17,8 @@ func _init() -> void:
 	var arguments := PackedStringArray([
 		ProjectSettings.globalize_path("res://tools/net/f48_produce_actual.py"),
 		"--godot", OS.get_executable_path(),
-		"--output", ProjectSettings.globalize_path("res://.tmp/f48-actual-producer-" + producer),
+		# render.yml's uploader excludes hidden directories, including .tmp.
+		"--output", ProjectSettings.globalize_path("res://ralph/reports/INTEGRATION/main-green/native-f48-" + producer),
 		"--producer", producer])
 	var result := OS.execute(python, arguments, output, true)
 	for line: String in output: print(line)

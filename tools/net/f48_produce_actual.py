@@ -124,6 +124,11 @@ def main() -> int:
                       "acceptance_credit": False, "ready_ci_bundle": False})
         with (output / "coordinator.log").open("wb") as log:
             result = subprocess.run(command, cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, check=False)
+    # Keep the final native failure visible even when a runner fails before its
+    # ordinary log-summary step. The complete log remains in the visible bundle.
+    with (output / "coordinator.log").open("rb") as log:
+        log.seek(max(0, (output / "coordinator.log").stat().st_size - 20000))
+        print(log.read().decode("utf-8", errors="replace"), flush=True)
     print(json.dumps({"exit_code": result.returncode, "output": str(output), "acceptance_credit": False}))
     return result.returncode
 
