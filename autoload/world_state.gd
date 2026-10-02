@@ -716,7 +716,25 @@ func _foundation_camp_op_bound(op: Dictionary, removing: bool) -> bool:
 
 ## Canonical validation for the discriminated EXISTING world carrier; the
 ## same guard runs for split/flat reads, snapshots, typed ops and both saves.
+## Full typed validation of one retained row costs ~100 ms and is a pure
+## function of its arguments, yet the input-owner graph and the per-second
+## Foundation retries ask it of the same rows over and over. Memoized by
+## content; bounded so a long session cannot grow it without limit.
+static var _training_row_valid_memo: Dictionary = {}
+
 static func training_row_valid(row: Variant, world_namespace: String, expected_world: String = "") -> bool:
+	if not row is Dictionary or not row.get("kind") in ["creature_training", "altar_building"]:
+		return _training_row_valid_uncached(row, world_namespace, expected_world)
+	var key := [(row as Dictionary).hash(), (row as Dictionary).size(), world_namespace, expected_world]
+	var hit: Array = _training_row_valid_memo.get(key, [])
+	# A hash is not identity: a hit must be the very same content.
+	if not hit.is_empty() and hit[0] == row: return bool(hit[1])
+	var verdict := _training_row_valid_uncached(row, world_namespace, expected_world)
+	if _training_row_valid_memo.size() >= 512: _training_row_valid_memo.clear()
+	_training_row_valid_memo[key] = [(row as Dictionary).duplicate(true), verdict]
+	return verdict
+
+static func _training_row_valid_uncached(row: Variant, world_namespace: String, expected_world: String = "") -> bool:
 	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 3:
 		return not world_namespace.is_empty() and preload("res://scripts/net/foundation_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors, "", world_namespace, expected_world)
 	if row is Dictionary and row.get("kind") == "creature_training" and row.get("version") == 2:

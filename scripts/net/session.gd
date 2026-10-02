@@ -3516,6 +3516,7 @@ func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: S
 ## per frame. Its answer is a pure function of these inputs, so it is reused
 ## until any of them, the delivery map's content included, changes.
 var _owner_training_row_key: Array = []
+var _owner_training_row_deliveries: Dictionary = {}
 var _owner_training_row_value: Dictionary = {}
 
 ## One local pending identity points at the durable row already in WorldState.
@@ -3527,9 +3528,11 @@ func _owner_training_row() -> Dictionary:
 	var character := str(game.get("local").character_id)
 	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character,
 		world.reward_deliveries.size(), world.reward_deliveries.hash()]
-	if key != _owner_training_row_key:
+	# The hash only finds the entry; the content itself must match too.
+	if key != _owner_training_row_key or world.reward_deliveries != _owner_training_row_deliveries:
 		_owner_training_row_value = TRAINING_WORLD.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
 		_owner_training_row_key = key
+		_owner_training_row_deliveries = world.reward_deliveries.duplicate(true)
 	return _owner_training_row_value.duplicate(true)
 
 

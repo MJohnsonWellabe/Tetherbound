@@ -24,7 +24,11 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 	for spec: Dictionary in SITES.sites_for(realm):
 		if node_for(str(spec.id)) == null: missing.append(spec)
 	if missing.is_empty(): return census()
-	var legacy_nodes: Array[Node] = world.find_children("*", "Node3D", true, false)
+	# Walked lazily, once per call and only for a placement that passed every
+	# cheap check: the world holds ~180k nodes and refused sites stay missing,
+	# so an eager walk here cost seconds on every 10 s retry.
+	var legacy_nodes: Array[Node] = []
+	var legacy_walked := false
 	for spec: Dictionary in missing:
 		var id := str(spec.id)
 		if _mounted.has(id) and is_instance_valid(_mounted[id]): continue
@@ -44,6 +48,9 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 			_refusals[id] = "Installed model unavailable."
 			continue
 		var adopted: Node3D
+		if not legacy_walked:
+			legacy_nodes = world.find_children("*", "Node3D", true, false)
+			legacy_walked = true
 		for existing: Node in legacy_nodes:
 			if not existing.has_method("adopt_renewable_source") or existing.is_queued_for_deletion() \
 				or not str(existing.get("_renewable_site_id")).is_empty(): continue
