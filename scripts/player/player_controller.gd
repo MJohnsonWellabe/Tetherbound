@@ -293,6 +293,7 @@ func _physics_process(delta: float) -> void:
 	_foundation_ground_contact_position = global_position
 	finish_environment_velocity_step()
 	_try_step_up(planned_motion)
+	_settle_skin_overlap()
 	_unwedge(planned_motion, before, delta)
 	_recover_if_entombed(delta)
 	_resolve_landing(falling_speed)
@@ -303,6 +304,34 @@ func _physics_process(delta: float) -> void:
 	if _skills_activity != null and _sprinting:
 		_skills_activity.record_movement("running", global_position - before, _wanted_dir, delta, _sprint_speed)
 	vitals.tick_satiety(delta)
+
+
+## Deepest penetration resolved here, in metres. Anything deeper is not a
+## skin graze but a body that is genuinely stuck, which `_recover_if_entombed`
+## owns (and counts).
+const SKIN_SETTLE_MAX_M := 0.02
+
+
+## Leave every frame outside the skin. Sliding along a sloped mesh top (the
+## trainer camp's log beside the village road, a 45-degree terrain bank) or a
+## step-up can end a frame a millimetre or two inside a concave shape, deeper
+## than `safe_margin`; the next frame then starts in contact and the body
+## catches. Apply the physics server's own zero-motion recovery -- the same
+## query every move starts from -- only when it exceeds the skin, and only by
+## that recovery vector, so nothing here can carry the body through anything.
+func _settle_skin_overlap() -> void:
+	var params := PhysicsTestMotionParameters3D.new()
+	params.from = global_transform
+	params.motion = Vector3.ZERO
+	params.margin = safe_margin
+	params.recovery_as_collision = true
+	var result := PhysicsTestMotionResult3D.new()
+	if not PhysicsServer3D.body_test_motion(get_rid(), params, result):
+		return
+	var travel := result.get_travel()
+	if travel.length() <= safe_margin or travel.length() > SKIN_SETTLE_MAX_M or not travel.is_finite():
+		return
+	global_position += travel
 
 
 func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:

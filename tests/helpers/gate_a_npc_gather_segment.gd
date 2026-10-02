@@ -330,7 +330,14 @@ func _assign_tools_in_satchel() -> bool:
 		if not await _focus_satchel_slot(buttons, inventory_slot):
 			_fail("controller focus could not reach %s in Satchel slot %d" % [item_id, inventory_slot + 1])
 			return false
-		for _press in destination + 1:
+		# The verb cycles unbound -> 1 -> ... -> 5 -> unbound. The HUD autofills
+		# a wholly empty bar from the Satchel, so the tool may already sit on a
+		# slot: press as a player watching the badge does, until it lands, and
+		# never more than one full cycle.
+		var hotbar_size := (_game.get("hotbar") as Array).size()
+		for _press in hotbar_size + 1:
+			if str((_game.get("hotbar") as Array)[destination]) == item_id:
+				break
 			await _tap_action(&"backpack_assign")
 		if str((_game.get("hotbar") as Array)[destination]) != item_id:
 			_fail("Satchel controller assignment did not put %s on quick slot %d" % [item_id, destination + 1])
