@@ -1,5 +1,15 @@
 extends Node
 
+## Read-only proof observation around the unchanged actual passive clocks.
+## No listener means no additional card serialization or observer snapshots.
+signal party_passive_tick(observation: Dictionary)
+var _passive_observation_sequence: int = 0
+
+class PassiveCardSnapshot extends RefCounted:
+	var instance: RefCounted
+	func members() -> Array:
+		return [instance]
+
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const STEAM_LOBBY := preload("res://scripts/net/steam_lobby.gd")
 
@@ -1078,12 +1088,30 @@ func _process(delta: float) -> void:
 	if party != null:
 		var condition_cfg: Dictionary = CREATURE_CONDITION.config()
 		for member: Variant in (party.call("members") as Array):
+			var watched: bool = not get_signal_connection_list("party_passive_tick").is_empty()
+			var source: PassiveCardSnapshot
+			var before: Dictionary = {}
+			var buffs_before: Array = []
+			if watched:
+				source = PassiveCardSnapshot.new()
+				source.instance = member as RefCounted
+				before = SAVE_GAME.new().call("_party_to_array", source)[0]
+				buffs_before = (member.get("active_buffs") as Array).duplicate(true)
 			(member as RefCounted).call("tick_buffs", delta)
 			# RG19-spec/D68. Every party member, not just the one out in
 			# front: a five that only the active companion feeds is a five in
 			# name only. Paused menus pause the tree and this with it, so
 			# reading the backpack costs no nourishment.
 			CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
+			if watched:
+				_passive_observation_sequence += 1
+				party_passive_tick.emit({"sequence": _passive_observation_sequence, "delta": delta,
+					"character_id": str(local.character_id), "world_namespace": str(world.reward_delivery_namespace),
+					"session_epoch": str(session.call("_altar_current_epoch")) if session != null else "",
+					"uid": str(member.get("uid")), "before": before,
+					"after": SAVE_GAME.new().call("_party_to_array", source)[0],
+					"buffs_before": buffs_before, "buffs_after": (member.get("active_buffs") as Array).duplicate(true),
+					"condition_config": condition_cfg.duplicate(true)})
 	var progression_revision: int = int(progression.get("revision"))
 	var realm_changed: bool = bool(quest_log.call("set_realm", current_realm))
 	var rung_moved := progression_revision != _last_progression_revision or realm_changed
