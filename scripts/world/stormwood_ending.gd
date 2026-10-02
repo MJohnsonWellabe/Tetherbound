@@ -370,8 +370,10 @@ func _commit_world_decision(peer: int, kept: bool, settle: bool) -> bool:
 	var deltas: Array[Dictionary] = []
 	var failed := [false]
 	var writer := func(flag: String) -> Dictionary:
+		# This shared write is owned by the authenticated host controller.
+		# The answering guest remains the actor/claim owner, not the writer.
 		var result: Dictionary = ledger.call("commit", {"kind": "set_world_flag", "realm": "stormwood",
-			"id": flag, "value": true, "_actor_character_id": character}, peer)
+			"id": flag, "value": true, "_actor_character_id": character}, 1)
 		if result.get("ok") != true: failed[0] = true
 		elif not result.get("delta", {}).get("ops", []).is_empty(): deltas.append(result.delta)
 		return result
