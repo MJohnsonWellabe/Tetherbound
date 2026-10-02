@@ -119,7 +119,10 @@ static func replay_packet(packet: Dictionary, configuration: Dictionary) -> Dict
 		else: clone.set(key, value)
 	if not packet.get("buffs_before") is Array or not packet.get("buffs_after") is Array:
 		return {"error": "Actual complete buff carrier missing"}
-	clone.set("active_buffs", packet.buffs_before.duplicate(true))
+	for buff: Variant in packet.buffs_before:
+		if not buff is Dictionary: return {"error": "Malformed complete buff carrier"}
+	var typed_buffs: Array = clone.get("active_buffs")
+	typed_buffs.assign(packet.buffs_before.duplicate(true))
 	var source := CardSource.new()
 	source.instance = clone
 	var saver: RefCounted = SAVE.new()
