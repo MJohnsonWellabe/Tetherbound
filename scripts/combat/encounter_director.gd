@@ -3388,8 +3388,10 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 				"world_namespace": game.world.reward_delivery_namespace, "session_id": _session.call("_altar_current_epoch"),
 				"participants": [_session.call("_authority_character", peer_id)], "realm": _encounter_realm(),
 				"creature": creature_card.duplicate(true), "capture_traits": capture_traits.duplicate(true)}
-		if _session.call("foundation_alpha_resolution", self, encounter_id, "catch", capture_offer).get("durable") != true:
-			return {"ok": false, "pending": true, "code": "alpha_resolution_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
+		var alpha_resolution: Dictionary = _session.call("foundation_alpha_resolution", self, encounter_id, "catch", capture_offer)
+		if alpha_resolution.get("durable") != true:
+			return {"ok": false, "pending": true, "code": "alpha_resolution_write_pending", "encounter_id": encounter_id, "claim_id": claim_id,
+				"reason": str(alpha_resolution.get("code", "alpha_resolution_refused"))}
 		if runtime.get_meta("foundation_catch_night_claim", "") != claim_id:
 			runtime.remove_meta("foundation_catch_night")
 		if not runtime.has_meta("foundation_catch_night") and preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:

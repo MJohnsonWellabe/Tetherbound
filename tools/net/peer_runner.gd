@@ -4617,6 +4617,7 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var after: Dictionary = game.get("local").call("save_data")
 	fixture["owner_before"] = before
 	fixture["owner_after"] = after
+	fixture["finish_reply"] = director.get("_shared_catch_finish_reply")
 	var added: Array = []
 	for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
 		if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)

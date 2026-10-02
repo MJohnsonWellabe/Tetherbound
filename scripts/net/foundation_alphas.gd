@@ -144,7 +144,16 @@ func _region(peer: Dictionary) -> String:
 	var map: RefCounted = owner.call("_game").local.call("map_for", str(peer.realm))
 	if map == null: return ""
 	var here: Vector3 = actor.position
-	return str(map.call("_region_at", Vector2(here.x, here.z)).get("id", ""))
+	return principal_region(str(peer.realm), here, map)
+
+## Meadows Alpha sites use the authored progression bands. Map landmarks
+## such as the_pond are smaller named places, not those principal regions.
+## Census and departure must resolve through the same region identity.
+static func principal_region(realm: String, here: Vector3, map: RefCounted) -> String:
+	if preload("res://scripts/data/biome_order.gd").canonical_id(realm) == "meadows":
+		var curve := preload("res://scripts/creatures/chapter_curve.gd")
+		return str(curve.region_at(here.z, curve.config()).get("id", ""))
+	return str(map.call("_region_at", Vector2(here.x, here.z)).get("id", "")) if map != null else ""
 
 func _census(site: Dictionary) -> Array[String]:
 	var result: Array[String] = []

@@ -201,6 +201,35 @@ func test_alpha_cooldown_uses_three_saved_day_transitions() -> void:
 	assert_true(ALPHA.spawn(reload, "hollows_alpha", "world_a", ALPHA_PRODUCER.day_seconds(6), false, false).is_empty())
 	assert_false(ALPHA.spawn(reload, "hollows_alpha", "world_a", ALPHA_PRODUCER.day_seconds(7), false, false).is_empty())
 
+func test_meadows_alpha_census_uses_principal_bands_and_requires_real_band_departure() -> void:
+	var map := preload("res://autoload/map_state.gd").new()
+	map.configure(JSON.parse_string(FileAccess.get_file_as_string("res://data/config/map_landmarks.json")))
+	var actual_guest := Vector3(-315, -13.29963, 505)
+	assert_eq(map._region_at(Vector2(actual_guest.x, actual_guest.z)).get("id"), "the_pond")
+	var site := ALPHA.site("wild_once_1900")
+	assert_eq(ALPHA_PRODUCER.principal_region("meadows", actual_guest, map), site.region_id)
+	# Leaving a named pond for another place inside Band 1 is not departure.
+	var same_band := ALPHA_PRODUCER.principal_region("meadows", Vector3(0, 0, 1200), map)
+	assert_eq(same_band, site.region_id)
+	var born := ALPHA.first_spawn(STATE.defaults("world"), site.id, "world_a", false, false)
+	assert_false(born.is_empty())
+	if born.is_empty(): return
+	var resolved := ALPHA.resolve(born.state, site.id, 1, 0, ["host_a", "guest_b"], "catch")
+	assert_false(resolved.is_empty())
+	if resolved.is_empty(): return
+	assert_true(ALPHA.depart(resolved.state, site.id, 1, "guest_b", same_band).is_empty())
+	assert_eq(resolved.record.required_departures, ["guest_b", "host_a"])
+	assert_eq(ALPHA_PRODUCER.principal_region("meadows", Vector3(0, 0, 1359.99), map), site.region_id)
+	var next_band := ALPHA_PRODUCER.principal_region("meadows", Vector3(0, 0, 1360), map)
+	assert_eq(next_band, "band2_stone_and_root")
+	var departed := ALPHA.depart(resolved.state, site.id, 1, "guest_b", next_band)
+	assert_false(departed.is_empty())
+	if departed.is_empty(): return
+	assert_eq(departed.record.departed, ["guest_b"])
+	assert_true(ALPHA.spawn(departed.state, site.id, "world_a", 1800, false, false).is_empty())
+	# Other realms retain their existing named-region resolution.
+	assert_eq(ALPHA_PRODUCER.principal_region("stormwood", actual_guest, map), "the_pond")
+
 func test_retained_alpha_normalizes_only_valid_integral_provenance_without_rewriting_world() -> void:
 	var born := ALPHA.first_spawn(STATE.defaults("world"), "hollows_alpha", "world_a", false, false)
 	assert_false(born.is_empty())
