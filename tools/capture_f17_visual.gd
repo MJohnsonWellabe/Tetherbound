@@ -97,6 +97,7 @@ func _capture(label: String) -> void:
 
 func _save_view(label: String, time_name: String, weather_name: String = "clear", motion: bool = false) -> bool:
 	await RenderingServer.frame_post_draw
+	var captured_ms := Time.get_ticks_msec()
 	if str(_world.get_node("WorldWeather").call("weather")) != weather_name:
 		_failed = "observed weather differs from capture label " + weather_name
 		return false
@@ -116,7 +117,7 @@ func _save_view(label: String, time_name: String, weather_name: String = "clear"
 		"camera_basis": [_coordinates(camera.global_basis.x), _coordinates(camera.global_basis.y), _coordinates(camera.global_basis.z)],
 		"on_floor": _player.is_on_floor(), "preset": GRAPHICS.selected(), "motion_sample": motion,
 		"encoding": "native-resolution JPEG95" if motion else "native-resolution PNG",
-		"features": GRAPHICS.values(), "elapsed_ms": Time.get_ticks_msec()})
+		"features": GRAPHICS.values(), "elapsed_ms": captured_ms})
 	return true
 
 
@@ -150,8 +151,11 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 		_world.get_node("WorldLook").call("refresh_graphics")
 		for frame in 12:
 			await process_frame
-		var began := Time.get_ticks_msec()
-		var next_sample := began
+		if not await _save_view("live interior motion", "day", "clear", true):
+			_write_manifest(false)
+			return false
+		var began := int(_views[-1]["elapsed_ms"])
+		var next_sample := Time.get_ticks_msec() + 100
 		while Time.get_ticks_msec() - began < 30000:
 			await process_frame
 			if Time.get_ticks_msec() >= next_sample:
@@ -161,6 +165,9 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 				# Record actual timestamps; slow rendering is retained, never
 				# presented as smooth fixed-rate motion by the video packager.
 				next_sample = Time.get_ticks_msec() + 100
+		if not await _save_view("live interior motion", "day", "clear", true):
+			_write_manifest(false)
+			return false
 	_write_manifest(_failed.is_empty())
 	return _failed.is_empty()
 
