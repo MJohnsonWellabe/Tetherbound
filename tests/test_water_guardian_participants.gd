@@ -807,8 +807,27 @@ func test_held_claim_decline_is_confirmed_only_after_the_host_journals_it() -> v
 	# The joiner side records the host's confirmation.
 	var joiner := claims_fixture(game)
 	joiner.fake_game.host = false
+	# A's endpoint owns A, not the host's PlayerState. Retain the exact decline
+	# lifetime before accepting the production confirmation envelope.
+	var a_local := LocalFixture.new()
+	a_local.character_id = "A"
+	joiner.fake_game.local = a_local
+	joiner.hold_for_decline(str(a.id))
+	var envelope := {"claim_id": str(a.id), "character_id": "A",
+		"world_namespace": game.world.reward_delivery_namespace,
+		"session_epoch": joiner.fake_game.session.call("_altar_current_epoch")}
 	assert_false(joiner.decline_settled(str(a.id)))
 	joiner._decline_done(str(a.id))
+	assert_false(joiner.decline_settled(str(a.id)), "a naked legacy packet cannot confirm an unbound owner answer")
+	var foreign := envelope.duplicate()
+	foreign.character_id = "B"
+	joiner._decline_done(str(a.id), foreign)
+	assert_false(joiner.decline_settled(str(a.id)), "another character's confirmation cannot settle A's answer")
+	foreign = envelope.duplicate()
+	foreign.session_epoch = "another-session"
+	joiner._decline_done(str(a.id), foreign)
+	assert_false(joiner.decline_settled(str(a.id)), "a previous session's confirmation cannot settle the retained answer")
+	joiner._decline_done(str(a.id), envelope)
 	assert_true(joiner.decline_settled(str(a.id)))
 	free_claims(joiner)
 	free_claims(claims)
