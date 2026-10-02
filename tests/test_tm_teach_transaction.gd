@@ -14,13 +14,17 @@ const CHARACTER := "tm-owner"
 const NAMESPACE := "tm-world"
 const TEACH_ID := "0123456789abcdef0123456789abcdef"
 
-func _before() -> Dictionary:
+func _player() -> RefCounted:
 	var player := PLAYER.new()
 	player.configure(preload("res://autoload/item_db.gd").new())
 	player.character_id = CHARACTER
 	player.party.add(SPECIES.spawn("terrapup"))
 	player.party.add(SPECIES.spawn("terrapup"))
 	player.inventory.add("tm_burrow_strike", 1)
+	return player
+
+func _before() -> Dictionary:
+	var player := _player()
 	var saved: Dictionary = player.save_data()
 	saved.redesign_character = TEACHING.character_loadout_mirror(saved.party, saved.redesign_character)
 	return RECORD.portable_projection(saved)
@@ -163,3 +167,90 @@ func test_backpack_restarts_original_tm_intent_and_never_reports_unsaved_or_unac
 	menu.free()
 	game.free()
 	producer.free()
+
+class OwnerSessionFixture extends "res://scripts/net/session.gd":
+	var fixture: Node
+	func _game() -> Node: return fixture
+	func is_host() -> bool: return false # Detached admitted-owner side, no transport or host ACK.
+	func _altar_current_epoch() -> String: return "tm-session"
+
+class OwnerGameFixture extends Node:
+	var local: RefCounted
+	var world: RefCounted
+	var session: Node
+	var save_system: RefCounted
+
+class BoolWriterFixture extends RefCounted:
+	var store: RefCounted
+	var refuse := false
+	var writes := 0
+	func finish_fallback() -> void: pass
+	func fallback_busy() -> bool: return false
+	func save_character_prepared(game: Node, id: String) -> bool:
+		writes += 1
+		if refuse: return false
+		var payload: Dictionary = game.get("local").save_data()
+		if game.get("session").call("_owner_training_snapshot_allowed", game.get("local"), payload) != true: return false
+		return store.call("write", id, payload) == true
+
+func test_actual_owner_installer_preserves_instances_and_failed_bool_write_retries_without_second_debit_or_ack() -> void:
+	const OWNER = preload("res://scripts/net/character_action_owner.gd")
+	var directory := "user://test_tm_owner_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := OwnerGameFixture.new()
+	game.local = _player()
+	game.world = preload("res://autoload/world_state.gd").new()
+	game.world.world_id = "tm-slot"
+	game.world.reward_delivery_namespace = NAMESPACE
+	var session := OwnerSessionFixture.new()
+	session.fixture = game
+	game.session = session
+	var writer := BoolWriterFixture.new()
+	writer.store = preload("res://scripts/save/character_save.gd").new(directory)
+	game.save_system = writer
+	var before := RECORD.portable_projection(game.local.save_data())
+	var staged := ACTIONS.stage(before, 0, "tm_teach", _intent(before), _context(), RECORD.errors)
+	assert_true(staged.get("ok") == true, str(staged))
+	if staged.get("ok") != true:
+		session.free()
+		game.free()
+		return
+	staged.character_revision = 1
+	var row := DELIVERY.make_record("tm-slot", NAMESPACE, "tm-session", staged, null, RECORD.errors)
+	assert_false(row.is_empty())
+	if row.is_empty():
+		session.free()
+		game.free()
+		return
+	assert_true(writer.save_character_prepared(game, CHARACTER))
+	var path: String = writer.store.call("path_for", CHARACTER)
+	var original := FileAccess.get_file_as_bytes(path)
+	var student: RefCounted = game.local.party.at(1)
+	var other: RefCounted = game.local.party.at(0)
+	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
+	writer.refuse = true
+	var failed := OWNER.apply_owner(game, row)
+	assert_false(failed.ok)
+	assert_true(failed.durable and failed.pending and not failed.saved)
+	assert_eq(failed.code, "owner_action_save_failed")
+	assert_eq(FileAccess.get_file_as_bytes(path), original, "BOOL false must leave original disk unchanged")
+	assert_true(game.local.party.at(1) == student and game.local.party.at(0) == other, "UID live instances preserved")
+	assert_true(ESSENCE._equivalent(RECORD.portable_projection(game.local.save_data()), row.after))
+	assert_eq(game.local.inventory.count("tm_burrow_strike"), 0)
+	assert_eq(student.move_quick, before.party[1].move_quick)
+	assert_true(session.owns_input(), "unsaved owner cannot unlock ordinary mutation")
+	writer.refuse = false
+	var writes_before := writer.writes
+	var retried := OWNER.apply_owner(game, row)
+	assert_true(retried.ok and retried.saved and retried.duplicate)
+	assert_eq(writer.writes, writes_before + 1, "exact installed after-state still requires a real BOOL write")
+	assert_true(ESSENCE._equivalent(RECORD.portable_projection(writer.store.call("read", CHARACTER)), row.after))
+	assert_eq(game.local.inventory.count("tm_burrow_strike"), 0)
+	assert_true(session.owns_input(), "successful owner disk write alone does not fabricate host ACK")
+	var accepted := row.duplicate(true)
+	accepted.status = "accepted"
+	game.world.reward_deliveries[row.delivery_id] = accepted
+	assert_true(session._settle_owner_training_accepted(game.local, game.world, accepted), "disclosed accepted-row control releases exact saved retry")
+	assert_false(session.owns_input())
+	session.free()
+	game.free()
+	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
