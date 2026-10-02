@@ -166,10 +166,11 @@ func test_initialized_native_child_runs_all_retained_leaf_and_walk_accounting_co
 var started := Time.get_ticks_msec()
 func _initialize():
 	call_deferred("run")
-func _process(_delta):
+func _process(_delta: float) -> bool:
 	if Time.get_ticks_msec() - started > 30000:
 		print("MATERIAL_PERIMETER_TIMEOUT")
 		quit(1)
+	return false
 func run():
 	var test = load("res://tests/test_material_perimeter_headings.gd").new()
 	await test._case_gate_requires_exact_current_world_live_retained_open_leaf()
