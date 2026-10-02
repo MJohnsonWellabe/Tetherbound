@@ -6,18 +6,22 @@
   "conversations": {
     "lesson_home_key": {
       "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": ["That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.", "It takes you to the Crossing Hall for free, with no cooldown. Finish a fight or conversation first, leave the water, and land before using it. You can cancel the raise."]
     },
     "lesson_homestead": {
       "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": ["Welcome back. Our farm is where your five grow stronger: build stations, refine what you gathered, cook feasts and prepare for the next journey.", "Each station tells you its next upgrade. Bring back a regional relic and hang it in the Hall to unlock the next tier of attachments."]
     },
     "lesson_altar": {
       "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": ["You've brought essence home. At the Altar, choose which of your five gets stronger, then spend essence of that creature's type.", "Fights still help you grow. The Altar lets you choose where your gathered power goes; it won't spend anything until you confirm."]
     },
     "lesson_traits": {
       "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": ["Releasing a creature at the Altar can distil a Trait Seed. Teach a compatible seed to one of your five here.", "Release is a farewell, so read the confirmation before agreeing. A seed does not make room for a sixth companion; five is our team."]
     },
     "grandpa_house": {

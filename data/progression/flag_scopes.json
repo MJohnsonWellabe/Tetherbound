@@ -365,6 +365,12 @@
       "transaction": "research:<species>:<task>:<character_id>; once character-global host-confirmed",
       "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
     },
+    "redesign_character.bounties": {
+      "scope": "character",
+      "authority": "host-confirmed morning/encounter participants and actual Halda board; owning peer persists character",
+      "transaction": "bounty:clock_<world/day/cycle digest>:<character_id>, bounty:event_<world/event digest>:<character_id>, bounty:<instance>:<character_id>; board and payout share existing prepared character action journal",
+      "persistence": "optional additive v28 board; absent means empty; original instances, completion and clock anchor survive worlds/reload/reconnect; host bool-save, owner bool-save and exact ACK required"
+    },
     "redesign_character.bounty_receipts": {
       "scope": "character",
       "authority": "host validates; owning peer persists character",

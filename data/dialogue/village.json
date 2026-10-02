@@ -16,18 +16,22 @@
   "conversations": {
     "lesson_masters": {
       "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": ["One of your creatures has reached level ten. That's its first cap, not the end of its training. Orin Stonewake teaches at the Old Quarry.", "Win your own one-creature duel, open Orin's recipe chest, cook the feast at your Kitchen, and feed it to a creature at that cap. Friends may watch; each trainer earns their own recipe."]
     },
     "lesson_feasts": {
       "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": ["That Master recipe makes an Ascension Feast. Your Kitchen needs the biome's materials and an ingredient attuned to the creature's type.", "Feed it at the matching cap to break through. Some creatures can evolve then. Keeping the form you love is a choice too."]
     },
     "lesson_portals": {
       "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": ["That portal key belongs at its signed arch in the Crossing Hall. Use it once to unlock that journey permanently.", "Touch waystones while exploring. The Hall's portal returns you to your last activated waystone in that biome, or its entry if you have none. Following a friend never gives you their permanent key."]
     },
     "lesson_shrines": {
       "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
       "lines": ["Bring that relic to its pedestal in the Hall's Shrine Room. Hanging it unlocks the next biome's station attachments for your character.", "You can carry one relic power at a time. The display is shared, but your relics and your choice remain yours."]
     },
     "village_mira": {
