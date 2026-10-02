@@ -200,9 +200,18 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	var journal: Dictionary = writer.call("journal_creature_training_prepared", peer, character, accepted) if writer != null else {}
 	var saved: bool = journal.get("ok") == true and journal.get("durable") == true
 	if _character_authority.call("finish_creature_training", stage, saved) != true: return FOUNDATION_ACTIONS.deny("stage_changed")
-	if not saved: return _foundation_refusal(str(journal.get("code", "world_save_failed")))
+	if not saved: return _foundation_journal_refusal(envelope.op, journal)
 	writer.call("publish_creature_training", peer, character, accepted.receipt)
 	return _foundation_decision(peer, world.reward_deliveries.get(journal.delivery_id, {}))
+
+func _foundation_journal_refusal(action: String, journal: Dictionary) -> Dictionary:
+	var code := str(journal.get("code", "world_save_failed"))
+	# The actual prepared BOOL writer rolls back the hidden host stage. Keep
+	# the TM's original request for its next attempt, rather than minting a new
+	# teach ID. Malformed/foreign/semantic refusals retain their terminal meaning.
+	if action == "tm_teach" and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
+		return {"ok": false, "resolved": false, "durable": false, "terminal_refusal": false, "code": code, "reason": code}
+	return _foundation_refusal(code)
 
 func _foundation_refusal(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "reason": code, "resolved": true, "durable": false, "terminal_refusal": true}
