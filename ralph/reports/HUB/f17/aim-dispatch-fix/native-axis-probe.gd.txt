@@ -1,0 +1,15 @@
+extends SceneTree
+func _init() -> void:
+	_run.call_deferred()
+func _run() -> void:
+	for buffered: bool in [true, false]:
+		Input.use_accumulated_input = buffered
+		for value: float in [1.0, 0.0]:
+			var event := InputEventJoypadMotion.new()
+			event.axis = JOY_AXIS_RIGHT_Y
+			event.axis_value = value
+			Input.parse_input_event(event)
+			var before := Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+			Input.flush_buffered_events()
+			print(JSON.stringify({"buffered": buffered, "requested": value, "before_flush": before, "after_flush": Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)}))
+	quit()

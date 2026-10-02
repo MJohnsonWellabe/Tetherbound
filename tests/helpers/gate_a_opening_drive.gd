@@ -903,6 +903,7 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 		var direction := Vector2(yaw_error, pitch_error).normalized()
 		_send_axis(JOY_AXIS_RIGHT_X, direction.x * deflection)
 		_send_axis(JOY_AXIS_RIGHT_Y, -direction.y * deflection)
+		Input.flush_buffered_events()
 		# The camera turns in `_process`, so that is the frame this samples on.
 		# Sampling on `physics_frame` meant every process frame in between
 		# applied the same stale stick, and the loop only ever saw the sum.
@@ -1507,6 +1508,10 @@ func _stop_left_stick() -> void:
 func _stop_right_stick() -> void:
 	_send_axis(JOY_AXIS_RIGHT_X, 0.0)
 	_send_axis(JOY_AXIS_RIGHT_Y, 0.0)
+	# parse_input_event queues accumulated pad motion. A process-phase aim
+	# candidate must release the actual axes before the camera's next callback,
+	# otherwise its old full deflection rotates past the target during settling.
+	Input.flush_buffered_events()
 
 
 func _find_interactable(words: Array[String]) -> Node3D:

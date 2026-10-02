@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_opening_aim_input.gd: 1 of 729 test files
+  ok    test_opening_aim_input.gd :: test_look_release_reaches_native_axes_before_camera_process
+
+1 tests, 4 assertions, 0 failed

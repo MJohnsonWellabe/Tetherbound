@@ -1,0 +1,13 @@
+Bounded fix PASS; F17 M1 and visual acceptance remain OPEN.
+
+The uninterrupted M1 run at 34e92d996f36807dfa836a33c139b52ae14eb98d failed catch aim, native exit 1 after 697.016 seconds, not a timeout. Its original log/profile and command are retained; ralph/reports/HUB/f17/earned-proof-r2 contains the exact receipt and raw native output. It entered the tutorial combat without earned-catch success. Repeated native diagnostics were eligible with clear throw trajectory at convergence, then became reticle_outside_body after release/settle. No earned rest checkpoint was reached.
+
+An isolated Godot 4.7 native probe establishes accumulated pad semantics: parsing RIGHT_Y neutral while the native axis is 1 still reads 1 until flush_buffered_events, then reads 0. The opening drive now flushes both right-axis commands before camera processing and the paired neutral release before readiness settling. It changes only test input dispatch. No camera transform, HP/inventory, eligibility window, timeout, trajectory guard or throw-commit assertion changes.
+
+Selected native regression: tests/test_opening_aim_input.gd, 1 test, 4 assertions, 0 failures, process exit 0. It checks both actual native axes immediately after the production helper's release, without a masking test-side flush. The original isolated probe and native output are retained.
+
+Independent source/evidence review found the flush correctly ordered before camera process/throw physics waits, consistent with the raw convergence-to-post-settle movement, and no weakened readiness or earned-state restrictions. It requires a fresh native M1 retry before catch or M1 acceptance.
+
+The earned tournament now overrides the inherited fixture activation seam. It observes Halda's physically selected first entrant, refuses a mismatched active member, uses the physical recall button only when its body is absent, and requires the exact selected live body. It makes no private party activation or follower dismissal. Independent review passes the source; native actual selector/signup and three completed rounds remain required.
+
+The paired visual helper passes native parser exit 0. Medium/High share one Forward+ scene and matched full camera/body poses; day/night/clear/rain use real look/weather presets with only the stationary weather scheduler held. Each image verifies observed weather. Each preset receives a thirty-second live interval with native-resolution JPEG95 motion samples and actual timestamps; still comparisons remain original PNG. Video packaging must retain native sample gaps without resizing or interpolation. Source review found no blockers; actual original frames and code-blind Bars A/B acceptance remain required.
