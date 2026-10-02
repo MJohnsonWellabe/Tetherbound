@@ -70,6 +70,23 @@ try {
   refused(/Exactly one actual saved owner/, ['--relocated-from-ci']);
   writeLog(result, journey, remote.map((row, index) => index === 0 ? {...row, path: '/runner/user/campaign_handoffs/other_boundary'} : row));
   refused(/Original runner path must identify this boundary/, ['--relocated-from-ci']);
+  // Codec-wrapped forged evidence must remain rejected; no positive campaign
+  // or earned target is constructed by these controls.
+  const codec = payload => JSON.stringify({format: 'tetherbound-save', codec_version: 1, payload});
+  const wrappedSave = codec({version: 28});
+  fs.writeFileSync(firstSave, wrappedSave);
+  metadata.files_sha256['character.json'] = sha(wrappedSave);
+  emitted[0].files_sha256['character.json'] = sha(wrappedSave);
+  fs.writeFileSync(firstReceipt, codec(metadata));
+  writeLog();
+  refused(/Exactly one actual saved owner/);
+  const invalidSave = codec({version: 28, x: {$tb_int64: '9223372036854775808'}});
+  fs.writeFileSync(firstSave, invalidSave);
+  metadata.files_sha256['character.json'] = sha(invalidSave);
+  emitted[0].files_sha256['character.json'] = sha(invalidSave);
+  fs.writeFileSync(firstReceipt, codec(metadata));
+  writeLog();
+  refused(/Invalid production save codec/);
   console.log(JSON.stringify({test: 'F19-earned-promotion-negative-controls', checks, result: 'PASS', scope: 'fabricated rejection controls only; no earned saves were generated'}));
 } finally {
   assert.ok(path.resolve(dir).startsWith(path.resolve(os.tmpdir()) + path.sep), 'Cleanup stays inside the named temporary root');

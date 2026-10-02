@@ -4,6 +4,7 @@ extends RefCounted
 ## Hashes attest bytes, not earned play. Only the continuous caller can earn a
 ## boundary. No supplied fixture/resume is accepted by F49's campaign driver.
 const SAVE := preload("res://scripts/save/save_game.gd")
+const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
 const COMMITS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 var tree: SceneTree
@@ -49,7 +50,12 @@ func export_boundary(label: String) -> bool:
 		"files_sha256": hashes, "state": _state(), "earned_claim": "continuous caller only; hashes do not prove play"}
 	var output := FileAccess.open(destination.path_join("receipt.json"), FileAccess.WRITE)
 	if output == null: return _fail("F49 immutable receipt write failed")
-	output.store_string(JSON.stringify(receipt, "\t"))
+	# Receipt comparisons must retain the same exact numbers as the copied save.
+	var encoded := DOCUMENT.stringify(receipt)
+	if encoded.is_empty():
+		output.close()
+		return _fail("F49 immutable receipt contains unencodable values")
+	output.store_string(encoded)
 	output.close()
 	snapshots[label] = receipt
 	print("F49 DISK HANDOFF " + JSON.stringify({"path": destination, "boundary": label, "commit": source_commit, "files_sha256": hashes}))

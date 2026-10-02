@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {execFileSync} from 'node:child_process';
+import {parseSaveDocument} from './save_document.mjs';
 
 // Promote byte-identical production handoffs only after the continuous fresh
 // campaign has completed. No save payload is edited, migrated or synthesized.
@@ -46,7 +47,7 @@ for (let index = 0; index < boundaries.length; index++) {
   const boundary = boundaries[index];
   const directory = path.join(sourceRoot, boundary);
   const receiptFile = path.join(directory, 'receipt.json');
-  const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
+  const receipt = parseSaveDocument(fs.readFileSync(receiptFile, 'utf8'));
   assert.equal(receipt.kind, 'f49_ordinary_input_handoff');
   assert.equal(receipt.boundary, boundary);
   assert.match(receipt.commit, /^[0-9a-f]{40}$/);
@@ -82,7 +83,7 @@ for (let index = 0; index < boundaries.length; index++) {
   assert.ok(files.some(file => file.endsWith(`${path.sep}character.json`)));
   assert.ok(files.some(file => file.endsWith(`${path.sep}world.json`)));
   for (const file of files.filter(file => file.endsWith(`${path.sep}character.json`) || file.endsWith(`${path.sep}world.json`))) {
-    const envelope = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const envelope = parseSaveDocument(fs.readFileSync(file, 'utf8'));
     assert.equal(envelope.version, 28, `Current split schema required: ${file}`);
   }
   const biome = ['meadows', 'tidewake', 'cloudreach', 'stormwood'][Math.min(index, 3)];
@@ -92,7 +93,7 @@ for (let index = 0; index < boundaries.length; index++) {
   assert.ok(held.transaction_receipts.some(id => id === `defeat:boss_${boss}:${receipt.state.character_id}` ||
     (id.startsWith(`defeat:boss_${boss}_`) && id.endsWith(`:${receipt.state.character_id}`))), `Exact ${boss} entitlement receipt required`);
   const characters = files.filter(file => file.endsWith(`${path.sep}character.json`))
-    .map(file => JSON.parse(fs.readFileSync(file, 'utf8')))
+    .map(file => parseSaveDocument(fs.readFileSync(file, 'utf8')))
     .filter(saved => saved.character_id === receipt.state.character_id);
   assert.equal(characters.length, 1, 'Exactly one actual saved owner must match the receipt character');
   const character = characters[0];
@@ -109,7 +110,7 @@ for (let index = 0; index < boundaries.length; index++) {
   }
   const inventory = Object.fromEntries(character.inventory.flatMap((stack, slot) => stack ? [[String(slot), stack]] : []));
   assert.deepEqual(inventory, receipt.state.inventory, 'Observed inventory must be in the actual saved character');
-  const worlds = files.filter(file => file.endsWith(`${path.sep}world.json`)).map(file => JSON.parse(fs.readFileSync(file, 'utf8')));
+  const worlds = files.filter(file => file.endsWith(`${path.sep}world.json`)).map(file => parseSaveDocument(fs.readFileSync(file, 'utf8')));
   assert.equal(worlds.length, 1, 'A fresh campaign must retain exactly its actual world');
   const world = worlds[0];
   assert.ok(typeof world.reward_delivery_namespace === 'string' && world.reward_delivery_namespace.length > 0);
@@ -125,7 +126,7 @@ for (let index = 0; index < boundaries.length; index++) {
 // The evidence source must be committed and available for replay/review.
 execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {stdio: 'pipe'});
 const provenance = {kind: 'f19_earned_boundary_promotion', source_commit: sourceCommit,
-  command: 'Godot 4.7 --headless --script tests/smoke_four_biome_continuous.gd',
+  command: `Godot 4.7 ${/^OpenGL.*(?:API|Renderer)/m.test(log) ? '' : '--headless '}--script tests/smoke_four_biome_continuous.gd`,
   source_log_sha256: sha256(logFile), journey, boundaries,
   transport: relocation ? {kind: 'downloaded_ci_artifact', original_handoff_root: emittedRoot, original_paths: emitted.map(row => row.path)} : {kind: 'local_original_paths'},
   disclosures: journey.shortcuts, scope: 'Earned progression/save boundaries; no hardware, timing or visual acceptance claim'};
