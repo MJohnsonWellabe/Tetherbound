@@ -5203,7 +5203,8 @@
       "registration": "planned",
       "gather_action": "pickaxe",
       "placement_reason": "Moved into authored reward pocket cradle_shell_nest (water_world.json reward_pockets) for side_water_cradle_care (docs/design/WORLD.md, Tidewake local chains): the nest's exposed seam pays the chain's 4 Reef Stone in one pickaxe gather (yield 2 -> 4; bare hands pay nothing for a pickaxe resource). Analytic dry footing within the 35° walkable slope limit (measured 31.1°); walked and gathered in tests/smoke_water_pocket_walk_claim.gd.",
-      "reward_pocket_id": "cradle_shell_nest"
+      "reward_pocket_id": "cradle_shell_nest",
+      "claim_policy": "existing_world_pickup_policy"
     },
     {
       "id": "water:tidal_cradle:harvest:008",

@@ -261,7 +261,11 @@ static func _load_rows(realm: String, config: Dictionary, source_path: String,
 			if not row.get("claim_policy", "") in ["", "existing_world_pickup_policy", "character_once"]:
 				_fail(realm, "Unknown harvest claim policy")
 				continue
-			if row.get("claim_policy", "") == "character_once":
+			# Per-character patches and authored story seams marked with the
+			# world-once pickup policy (side_water_cradle_care's nest seam,
+			# required by its chain as `harvest_node:order:<id>`) keep their
+			# receipts; respawns never restore a spent story item (SYSTEMS §1).
+			if row.get("claim_policy", "") in ["character_once", "existing_world_pickup_policy"]:
 				continue
 		if realm == "cloudreach":
 			if not row.get("respawn_policy") in ["world_day_regrow", "encounter_cycle"]:
