@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture"]
+const ACTIONS := ["station_craft", "den", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -33,6 +33,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if context.get("foundation_runtime_authorized") != true: return deny("missing_frozen_authorization")
 	var proposal: Dictionary
 	match action:
+		"tm_teach": proposal = _tm_teach(current, intent, context)
 		"wild_capture": proposal = preload("res://scripts/net/foundation_capture_rules.gd").stage(current, intent, context)
 		"station_craft":
 			var items := preload("res://scripts/world/death_satchel_rules.gd").db()
@@ -54,6 +55,22 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"before": current.duplicate(true), "state": proposal.state.duplicate(true),
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
+
+static func _tm_teach(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if intent.size() != 3 or not ESSENCE._component(intent.get("creature_uid")) \
+		or not ESSENCE._component(intent.get("tm_id")) or not intent.get("teach_id") is String \
+		or intent.teach_id.length() != 32 or intent.teach_id.to_lower() != intent.teach_id \
+		or not intent.teach_id.is_valid_hex_number(false): return deny("invalid_tm_intent")
+	if context.get("source_key") != "personal_tm:" + current.character_id \
+		or context.get("owns_character") != true: return deny("personal_tm_owner_required")
+	var receipt := "craft:%s:tm_%s_%s_%s" % [current.character_id, intent.creature_uid, intent.tm_id, intent.teach_id]
+	if current.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
+	if current.redesign_character.transaction_receipts.size() >= int(ESSENCE.config().maximum_transaction_receipts): return deny("transaction_receipt_limit")
+	var plan := TEACHING.stage_tm_candidate(current, intent.creature_uid, intent.tm_id,
+		preload("res://scripts/creatures/tm_db.gd").load_default(), preload("res://scripts/creatures/move_db.gd").load_default())
+	if plan.get("ok") != true: return plan
+	plan.state.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": plan.state, "receipt": receipt}
 
 static func _acknowledgement(current: Dictionary, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
 	var receipt: String

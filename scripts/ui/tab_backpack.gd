@@ -38,6 +38,11 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
+var _tm_producer: Node = null
+var _tm_intent: Dictionary = {}
+var _tm_revision: int = -1
+var _tm_scope: Dictionary = {}
+var _tm_retry_at: int = 0
 ## D47: elixir caps live in data/config/progression.json, read through the
 ## same loader the level curve uses.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -977,6 +982,7 @@ func notify_shell_opened() -> void:
 
 
 func poll() -> void:
+	_poll_tm_transaction()
 	var inventory: RefCounted = _inventory()
 	if inventory == null or _summary == null:
 		return
@@ -1404,6 +1410,9 @@ func _read_use() -> void:
 	if _targeting >= 0 or _confirming >= 0 or _held >= 0:
 		return
 	if not Input.is_action_just_pressed(USE_ACTION):
+		return
+	if not _tm_intent.is_empty():
+		_retry_tm_transaction()
 		return
 
 	var inventory: RefCounted = _inventory()
@@ -2069,19 +2078,13 @@ func _tm_teachable(creature: RefCounted, tm_id: String) -> bool:
 	return not _tm_already_known(creature, tm_id)
 
 
-## Whether the creature already carries this TM's move in the slot that move
-## occupies. Reads the slot from the move's own data, exactly as
-## `teaching.gd::teach()` does, so this preview and that write can never
-## disagree about which slot is at stake.
+## Learning adds knowledge; equipped slots are edited only at Altar/camp.
 func _tm_already_known(creature: RefCounted, tm_id: String) -> bool:
 	var move_id := str(_tm_db().call("move_id", tm_id))
 	if move_id.is_empty():
 		return false
-	var slot := str(_move_db().call("slot", move_id))
-	if slot != "quick" and slot != "charged":
-		return false
-	var current := str(creature.get("move_quick" if slot == "quick" else "move_charged"))
-	return current == move_id
+	var known: Variant = creature.get("known_moves")
+	return known is Array and known.has(move_id)
 
 
 ## Is there ANY row this item could land on, checked against the live party
@@ -2331,21 +2334,12 @@ func _on_target_row(index: int) -> void:
 		return
 
 	if not _targeting_tm.is_empty():
-		if not TEACHING.teach(creature, _targeting_tm, _tm_db(), _move_db()):
-			# `_eligible()` said yes a line ago, so this is the same defensive
-			# dead-end guard the ineligible-row branch above is: never leave
-			# the picker open, never spend the disc on a teach that failed.
-			say("%s can't learn that." % str(creature.call("label")))
-			_end_targeting()
-			return
-		# OF29, an owner-directed change to R4.4: a TM used to be permanent
-		# knowledge that any number of creatures could be taught from. "Choose
-		# who to teach it to" only means something if the choice costs
-		# something, so one disc now teaches one creature. Reverting to the
-		# never-consumed design is exactly this one line.
-		inventory.call("remove", id, 1)
-		say("%s learned %s!" % [str(creature.call("label")), _tm_move_name(_targeting_tm)])
+		var tm := _targeting_tm
 		_end_targeting()
+		if id != tm:
+			say("The original TM is no longer in that slot.")
+			return
+		_begin_tm_transaction(str(creature.get("uid")), tm)
 		return
 
 	if _targeting_revive > 0.0:
@@ -2391,6 +2385,78 @@ func _on_target_row(index: int) -> void:
 	say("%s recovers %d." % [str(creature.call("label")), int(restored)])
 	_end_targeting()
 
+
+func _bind_tm_producer() -> bool:
+	var game := state()
+	var producer: Variant = game.get("session") if game != null else null
+	if not producer is Node or not producer.has_method("personal_tm_submit") \
+		or not producer.has_method("retained_training_transaction") or not producer.has_method("homestead_personal_view") \
+		or not producer.has_method("personal_tm_scope") or not producer.has_signal("homestead_action_completed"): return false
+	if is_instance_valid(_tm_producer) and _tm_producer != producer:
+		if _tm_producer.is_connected("homestead_action_completed", _tm_completed): _tm_producer.disconnect("homestead_action_completed", _tm_completed)
+		_tm_intent = {}
+		_tm_revision = -1
+		_tm_scope = {}
+	_tm_producer = producer
+	if not _tm_producer.is_connected("homestead_action_completed", _tm_completed): _tm_producer.connect("homestead_action_completed", _tm_completed)
+	return true
+
+func _poll_tm_transaction() -> void:
+	if not _bind_tm_producer(): return
+	if Time.get_ticks_msec() < _tm_retry_at: return
+	if _tm_intent.is_empty():
+		_tm_retry_at = Time.get_ticks_msec() + 1000
+		var retained: Dictionary = _tm_producer.call("retained_training_transaction", ["tm_teach"])
+		if retained.get("status") != "pending": return
+		_tm_intent = retained.intent.duplicate(true)
+		_tm_revision = int(retained.original_revision)
+		_tm_scope = _tm_producer.call("personal_tm_scope")
+	_retry_tm_transaction()
+
+func _begin_tm_transaction(uid: String, tm: String) -> void:
+	if not _bind_tm_producer():
+		say("TM teaching is unavailable until your character is admitted.")
+		return
+	_poll_tm_transaction()
+	if not _tm_intent.is_empty():
+		say("Waiting for your original TM teaching decision.")
+		return
+	var view: Dictionary = _tm_producer.call("homestead_personal_view")
+	var revision: Variant = view.get("registry_revision")
+	if not preload("res://scripts/creatures/essence.gd")._integer(revision, 0, 2147483646):
+		say("Waiting for your admitted character. Try the same TM again.")
+		return
+	_tm_intent = {"creature_uid": uid, "tm_id": tm, "teach_id": Crypto.new().generate_random_bytes(16).hex_encode()}
+	_tm_revision = int(revision)
+	_tm_scope = _tm_producer.call("personal_tm_scope")
+	_retry_tm_transaction()
+
+func _retry_tm_transaction() -> void:
+	if _tm_intent.is_empty() or not is_instance_valid(_tm_producer): return
+	_tm_retry_at = Time.get_ticks_msec() + 1000
+	var original := _tm_intent.duplicate(true)
+	var result: Variant = _tm_producer.call("personal_tm_submit", original, _tm_revision, _tm_scope.duplicate(true))
+	if result is Dictionary: _tm_completed("tm_teach", original, result)
+
+func _tm_completed(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action != "tm_teach" or _tm_intent.is_empty() or original != _tm_intent: return
+	if result.get("ok") == true and result.get("settled") == true and result.get("durable") == true \
+		and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
+		say("Learned %s. Saved to your character; equip it at an Altar or camp." % _tm_move_name(str(_tm_intent.tm_id)))
+		_tm_intent = {}
+		_tm_revision = -1
+		_tm_scope = {}
+	elif result.get("ok") == false and result.get("terminal_refusal") == true:
+		say(str(result.get("reason", result.get("code", "TM teaching refused."))))
+		_tm_intent = {}
+		_tm_revision = -1
+		_tm_scope = {}
+	else:
+		say("Waiting for your original TM teaching decision to save.")
+
+func _exit_tree() -> void:
+	if is_instance_valid(_tm_producer) and _tm_producer.is_connected("homestead_action_completed", _tm_completed):
+		_tm_producer.disconnect("homestead_action_completed", _tm_completed)
 
 func _read_targeting_cancel() -> void:
 	if _targeting < 0:

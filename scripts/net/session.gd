@@ -145,7 +145,10 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		var recipe: Dictionary = _game().get("items").call("recipe", str(envelope.intent.get("recipe_id", "")))
 		var route := preload("res://scripts/build/forward_camp_rules.gd").recipe(str(envelope.intent.get("recipe_id", "")), recipe)
 		if route.get("ok") == true: part = route.part
-	var context := _foundation_build_context(peer, envelope.intent) if envelope.op == "camp_build" else _foundation_source(peer, envelope.station_key, part)
+	var context: Dictionary = {}
+	if envelope.op == "tm_teach": context = _personal_tm_context(peer, envelope.station_key)
+	elif envelope.op == "camp_build": context = _foundation_build_context(peer, envelope.intent)
+	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
 	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
 	if envelope.op == "regional_ack":
@@ -618,6 +621,23 @@ func foundation_guest_master_outcome(director: Node, frozen: Dictionary) -> Dict
 		"encounter_id": frozen.encounter_id, "creature_uid": frozen.creature_uid, "master_id": frozen.master_id}
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "master:%s:%s" % [frozen.master_id, frozen.encounter_id],
 		[{"character_id": frozen.character_id, "action": "master_win", "intent": intent, "context": context}])
+
+func _personal_tm_context(peer: int, key: String) -> Dictionary:
+	# Learning uses the admitted owner's portable Satchel. Equipping continues
+	# to require the actual Altar/camp context in the loadout action.
+	var character := _authority_character(peer)
+	if character.is_empty() or key != "personal_tm:" + character or _altar_peer_in_combat(peer): return {}
+	return {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+		"source_key": key, "in_range": true, "in_combat": false, "owns_character": true}
+
+func personal_tm_scope() -> Dictionary:
+	var envelope := _altar_envelope("tm_teach", "personal_tm:" + _local_character_id())
+	if envelope.is_empty(): return {}
+	return {"character_id": envelope.character_id, "world_namespace": envelope.world_namespace, "session_epoch": envelope.session_epoch}
+
+func personal_tm_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
+	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_tm_scope()): return _foundation_refusal("tm_owner_context_changed")
+	return _foundation_send("tm_teach", "personal_tm:" + _local_character_id(), original, revision)
 
 func homestead_submit_action(action: String, original: Dictionary, station: Node3D, revision: int) -> Dictionary:
 	var key := "homestead_recovery"
