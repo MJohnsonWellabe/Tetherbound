@@ -3,6 +3,7 @@ const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 const GROOM_PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
 var _groom_passive: RefCounted
 const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
@@ -3857,6 +3858,157 @@ func host_altar_building(peer: int, request: Dictionary) -> Dictionary:
 	var publication_trace := ALTAR_TRACE.begin("host.original_publish")
 	transport.call("publish_altar_building", peer, character, result.delivery_id, stage.receipt)
 	ALTAR_TRACE.end("host.original_publish", publication_trace)
+	return result.verdict
+
+
+## F31 paid Homestead stations/attachments: the same authority, world BOOL,
+## owner BOOL, ACK and refund journal as the Altar, with a version-2 record.
+## Host-local only for now: a guest's full-state drift is the same closed
+## dependency as remote Altar building, so a guest is refused, never priced.
+func homestead_building_available(id: String) -> bool:
+	return HOMESTEAD_BUILDING.requires_journal(id) and is_host() and _homestead_building_ready() \
+		and not HOMESTEAD_BUILDING.cost(id).is_empty()
+
+
+func _homestead_building_ready() -> bool:
+	var game := _game()
+	return STATION_RULES.config().get("runtime_enabled") == true and game != null \
+		and game.get("world") != null and not str(game.get("world").reward_delivery_namespace).is_empty() \
+		and snapshot_ready() and not _owner_training_mutation_blocked(game.get("local")) \
+		and get_node_or_null(^"LedgerRpc") != null
+
+
+## Den removal needs the complete host projection of every resting owner.
+## A solo host observes its own five; a shared world fails closed.
+func homestead_validate_dismantle(uid: String) -> Dictionary:
+	var game := _game()
+	if game == null or not is_host() or game.get("world") == null: return STATION_RULES.deny("den_owners_unavailable")
+	var target := STATION_RULES.dismantle(STATION_RULES.config(), game.get("world").placed_buildings, uid)
+	if target.get("ok") != true or target.record.id != "den": return target
+	if is_multi_peer() or game.get("party") == null: return STATION_RULES.validate_resting_owners(target, [], false)
+	var rows: Array = []
+	for creature: Variant in game.get("party").call("members"):
+		if not creature is RefCounted: return STATION_RULES.deny("den_owners_unavailable")
+		rows.append({"resting": bool(creature.get("resting")), "rest_bed_index": int(creature.get("rest_bed_index"))})
+	return STATION_RULES.validate_resting_owners(target, [rows], true)
+
+
+## Existing place/dismantle ingress calls this only after sender resolution.
+## The request supplies a pose/parent or a UID, never stock, price or state.
+func host_homestead_building(peer: int, request: Dictionary) -> Dictionary:
+	var refusal := {"ok": false, "pending": false, "kind": request.get("kind", ""), "peer": peer,
+		"code": "station_transaction_unavailable", "reason": STATION_RULES.reason("station_transaction_unavailable"),
+		"txn_id": request.get("txn_id", ""), "delta": {"ops": []}}
+	if not is_host() or not HOMESTEAD_BUILDING.txn_valid(request.get("txn_id")) or request.get("realm") != "meadows": return refusal
+	var game := _game()
+	var character := _authority_character(peer)
+	if game == null or character.is_empty() or game.get("world") == null: return refusal
+	var world: RefCounted = game.get("world")
+	if not ESSENCE._integer(world.next_building_uid, 1, 2147483646): return refusal
+	var id := HOMESTEAD_BUILDING.delivery_id(world.reward_delivery_namespace, character, request.txn_id)
+	if id.is_empty(): return refusal
+	var prior: Variant = world.reward_deliveries.get(id)
+	if prior is Dictionary:
+		# Reconcile the frozen ID before probing a now-removed building or stock.
+		if not HOMESTEAD_BUILDING.row_valid(prior, world.reward_delivery_namespace, world.world_id) \
+			or not ESSENCE._equivalent(prior.intent.request, request):
+			refusal.code = "building_receipt_conflict"
+			return refusal
+		var replay := get_node_or_null(^"LedgerRpc")
+		if replay != null: replay.call("_process_creature_training", prior)
+		return {"ok": true, "pending": true, "kind": prior.action, "peer": peer, "code": "duplicate",
+			"reason": "", "txn_id": prior.action_id, "uid": prior.intent.record.uid, "delta": {"ops": []}}
+	if peer != local_peer_id():
+		refusal.code = "station_host_only"
+		refusal.reason = STATION_RULES.reason("station_host_only")
+		return refusal
+	if not _homestead_building_ready(): return refusal
+	var saver: RefCounted = game.get("save_system")
+	if saver == null: return refusal
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or _authority_character(peer) != character \
+		or not _homestead_building_ready() or _altar_peer_in_combat(peer) \
+		or admitted_character_state(peer).is_empty(): return refusal
+	var actor: Node3D = game.call("_find_player") as Node3D
+	if not is_instance_valid(actor) or not actor.is_inside_tree() or not actor.global_position.is_finite() \
+		or game.get("current_realm") != "meadows": return refusal
+	var full: Dictionary = _character_authority.call("state", character)
+	var revision := int(_character_authority.call("revision", character))
+	var placer: Node
+	for node: Node in get_tree().get_nodes_in_group("build_placer"):
+		if node.is_inside_tree() and get_tree().current_scene.is_ancestor_of(node) \
+			and node.get_script() != null and node.get_script().resource_path == "res://scripts/build/build_placer.gd":
+			if placer != null: return refusal
+			placer = node
+	if placer == null: return refusal
+	var cfg := STATION_RULES.config()
+	var record: Dictionary = {}
+	if request.get("kind") == "place_building":
+		if request.size() != HOMESTEAD_BUILDING.PLACE_REQUEST_FIELDS.size() \
+			or not HOMESTEAD_BUILDING.requires_journal(request.get("id")) or request.get("paid") != true \
+			or not request.get("parent_uid") is String or not request.get("position") is Array \
+			or request.position.size() != 3 or not STATION_RULES.number(request.get("yaw_deg")): return refusal
+		for cell: Variant in request.position:
+			if not STATION_RULES.number(cell): return refusal
+		var price := HOMESTEAD_BUILDING.cost(request.id)
+		if price.is_empty(): return refusal
+		var position := Vector3(float(request.position[0]), float(request.position[1]), float(request.position[2]))
+		var inv := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(full.inventory)
+		# Admitted inventory and personal attachment recipes, the actual body,
+		# the canonical world records and the real ground decide; never the ghost.
+		var plan: Dictionary = placer.call("validate_station_placement", game, request.id, "meadows", position,
+			float(request.yaw_deg), inv, actor, full.redesign_character, request.parent_uid)
+		if plan.get("ok") != true:
+			refusal.code = str(plan.get("code", refusal.code))
+			refusal.reason = STATION_RULES.reason(refusal.code)
+			return refusal
+		if not ESSENCE._equivalent(plan.get("cost"), price) or plan.get("parent_uid") != request.parent_uid: return refusal
+		record = {"id": request.id, "realm": "meadows", "uid": "b%d" % int(world.next_building_uid),
+			"position": plan.position.duplicate(true), "yaw_deg": float(plan.yaw_deg), "paid": true,
+			"parent_uid": str(plan.parent_uid), "slot": int(plan.slot)}
+	elif request.get("kind") == "dismantle":
+		if request.size() != HOMESTEAD_BUILDING.DISMANTLE_REQUEST_FIELDS.size() \
+			or not HOMESTEAD_BUILDING.uid_valid(request.get("uid")): return refusal
+		var legal := STATION_RULES.dismantle(cfg, world.placed_buildings, request.uid)
+		if legal.get("ok") == true and legal.record.id == "den": legal = homestead_validate_dismantle(request.uid)
+		if legal.get("ok") != true:
+			refusal.code = str(legal.get("code", refusal.code))
+			refusal.reason = STATION_RULES.reason(refusal.code)
+			return refusal
+		if not HOMESTEAD_BUILDING.record_valid(legal.record):
+			refusal.code = "unproved_paid_station"
+			return refusal
+		var building: Node3D
+		for node: Node in get_tree().get_nodes_in_group("placed_building"):
+			if node.get_meta("building_uid", "") != request.uid or not get_tree().current_scene.is_ancestor_of(node): continue
+			if building != null: return refusal
+			building = node as Node3D
+		var key := "%s:meadows:%s" % [legal.record.id, request.uid]
+		if not is_instance_valid(building) or placer.call("resolve_station", game, key, building).get("ok") != true \
+			or actor.global_position.distance_to(building.global_position) > float(cfg.get("maximum_place_distance_m", 0)): return refusal
+		record = legal.record.duplicate(true)
+		if TRAINING_WORLD.altar_paid_provenance(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, record, character).is_empty():
+			refusal.code = "unproved_paid_station"
+			return refusal
+	else: return refusal
+	var proposal := HOMESTEAD_BUILDING.transition(full, character, revision, request.kind,
+		request.txn_id, record, world.reward_delivery_namespace)
+	if proposal.is_empty():
+		refusal.code = "building_stock_or_receipt_refused"
+		refusal.reason = STATION_RULES.reason("station_materials")
+		return refusal
+	var stage: Dictionary = _character_authority.call("stage_altar_building", character, proposal)
+	if stage.get("ok") != true:
+		refusal.code = stage.get("code", "building_stage_refused")
+		return refusal
+	var transport := get_node_or_null(^"LedgerRpc")
+	var result: Dictionary = transport.call("journal_altar_building_prepared", peer, stage, request) if transport != null else {}
+	if _character_authority.call("finish_creature_training", stage, result.get("durable") == true) != true:
+		return refusal
+	if result.get("durable") != true:
+		refusal.code = result.get("code", "building_journal_failed")
+		return refusal
+	transport.call("publish_altar_building", peer, character, result.delivery_id, stage.receipt)
 	return result.verdict
 
 

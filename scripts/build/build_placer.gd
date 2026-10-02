@@ -270,7 +270,8 @@ func _place_station(game: Node, id: String) -> void:
 		game.call("push_world_message","Wait for the previous building transaction.")
 		return
 	if not _station_building_available(game,id):
-		game.call("push_world_message",STATION_RULES.reason("station_disabled"))
+		var host_only: bool = STATION_RULES.config().get("runtime_enabled") == true and game.call("is_host") != true
+		game.call("push_world_message",STATION_RULES.reason("station_host_only" if host_only else "station_disabled"))
 		return
 	var at := _ghost.global_position
 	var preview := preview_placement(game,id,at)
@@ -1122,6 +1123,9 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		placed.call("build_real")
 	elif _station_path(id) and id != "altar":
 		placed = STATION_PIECE.new()
+		# Same scene name as every other catalogue piece (tools and smokes
+		# address a planted Workbench as Piece_workbench*).
+		placed.name = "Piece_%s" % id
 		get_parent().add_child(placed)
 		placed.build(id)
 	elif id == "door":

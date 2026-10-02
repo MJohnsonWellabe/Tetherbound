@@ -17,6 +17,7 @@ var _producer: Node
 var _materials: Array[StandardMaterial3D] = []
 var _registered := false
 var _manual_actor: Node3D
+var _poll_left := 0.0
 
 func build(id: String, ghost: bool = false) -> void:
 	_id = id
@@ -87,7 +88,9 @@ func mount_interaction() -> void:
 	_registered=_producer.call("_register_homestead_station_node",source_key(),self) == true
 	if not _registered: return
 	_prompt = PROMPT.new()
-	_prompt.name = "StationInteractable"
+	# The Workbench prompt is the same Craft prompt the legacy bench and the
+	# campfire carry, so it keeps that one name; other stations are their own.
+	_prompt.name = "CraftInteractable" if _id == "workbench" else "StationInteractable"
 	var p: Array = _cfg.pieces[_id].prompt_offset
 	_prompt.position = Vector3(p[0],p[1],p[2])
 	_prompt.call("configure","Use "+_id.capitalize(),float(_cfg.interaction_radius_m),true)
@@ -95,10 +98,22 @@ func mount_interaction() -> void:
 	add_child(_prompt)
 	_mount_manual_actor()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _ghost: return
+	# The producer's availability read is a full admitted-character check.
+	# Poll it at the configured rate and only near the local trainer, so a
+	# yard of stations never costs that check every frame.
+	_poll_left -= delta
+	if _poll_left > 0.0: return
+	_poll_left = float(_cfg.get("availability_poll_seconds", 0.25))
 	if _prompt == null:
 		mount_interaction()
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var trainer: Node3D = game.call("find_player") as Node3D if game != null and game.has_method("find_player") else null
+	if trainer != null and trainer.global_position.distance_to(interaction_origin()) \
+			> float(_cfg.get("availability_poll_radius_m", 6.0)):
+		_prompt.set("actionable",false)
 		return
 	var available: bool = is_instance_valid(_producer) and _registered \
 		and _producer.call("homestead_station_available",source_key()) == true

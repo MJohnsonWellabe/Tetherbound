@@ -265,7 +265,9 @@ static func deny(code: String) -> Dictionary:
 
 static func reason(code: String) -> String:
 	return {"station_home_only":"Build this at Grandpa's homestead, clear of the house, road and crop beds.",
-		"station_disabled":"Homestead stations are awaiting integration.","attachment_recipe_unknown":"Hang the previous biome's relic in the Shrine Room.",
+		"station_disabled":"Homestead stations are awaiting integration.",
+		"station_host_only":"Only the host can build homestead stations in a shared world for now.",
+		"station_materials":"You need the listed materials to build this.","attachment_recipe_unknown":"Hang the previous biome's relic in the Shrine Room.",
 		"attachment_slot_occupied":"That biome's attachment is already built.","attachment_previous_tier":"Build the previous attachment first.",
 		"attachment_snap_required":"Place the attachment at its station's marked socket.","attachment_reserved":"This biome is reserved for later.",
 		"remove_attachments_first":"Dismantle this station's attachments first.","remove_later_attachment_first":"Dismantle the later attachment first.",
