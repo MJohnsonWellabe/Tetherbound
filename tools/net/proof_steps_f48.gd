@@ -9,9 +9,9 @@ const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
-		"f48_witness": return _witness(tree, args)
-		"f48_assert": return _assert(tree, args)
-		"f48_assert_snapshot": return _assert_snapshot(tree)
+		"f48_witness": return await _witness(tree, args)
+		"f48_assert": return await _sealed_reply(tree, action, args, _assert(tree, args))
+		"f48_assert_snapshot": return await _sealed_reply(tree, action, args, _assert_snapshot(tree))
 		"f48_measure_layout": return _measure_layout(tree, args)
 		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
 		"f48_fixture_approach": return await _fixture_approach(tree, args)
@@ -20,7 +20,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)
-		"f48_assert_altar_build": return _assert_altar_build(tree, args)
+		"f48_assert_altar_build": return await _sealed_reply(tree, action, args, _assert_altar_build(tree, args))
 		"f48_require_configuration": return _require_configuration(args)
 		"f48_require": return _require(tree, args)
 		"f48_restore_witness": return _restore_witness(tree, args)
@@ -41,7 +41,7 @@ static func _start_case(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if observer is Callable and writer != null and writer.is_connected("transaction_boundary", observer):
 		writer.disconnect("transaction_boundary", observer)
 	for key: StringName in tree.get_meta_list():
-		if str(key).begins_with("f48_witness_") or str(key) in ["f48_boundary_armed", "f48_boundary_fired", "f48_boss_encounter"]:
+		if str(key).begins_with("f48_witness_") or str(key) in ["f48_witnesses", "f48_boundary_armed", "f48_boundary_fired", "f48_boss_encounter"]:
 			tree.remove_meta(key)
 	tree.set_meta("f48_portal_results", [])
 	if not tree.has_meta("f48_matrix_output_base"):
@@ -285,6 +285,8 @@ static func _arm_boundary(tree: SceneTree, args: Dictionary) -> Dictionary:
 	return _result(true, "Armed real writer boundary for original admitted character; no state mutation")
 
 static func _observe(tree: SceneTree) -> Dictionary:
+	var started := Time.get_ticks_msec()
+	_phase("current", "observe_begin", started)
 	var game := tree.root.get_node_or_null(^"Game")
 	if game == null: return {}
 	var local: RefCounted = game.get("local")
@@ -294,36 +296,93 @@ static func _observe(tree: SceneTree) -> Dictionary:
 	var characters: RefCounted = saver.call("characters")
 	var worlds: RefCounted = saver.call("worlds")
 	var disk: Dictionary = characters.call("read", str(local.character_id))
+	_phase(str(local.character_id), "owner_disk_read", started)
 	var owns_world := bool(game.call("world_save_owned"))
 	var disk_world: Dictionary = worlds.call("read", str(world.world_id)) if owns_world else {}
 	var memory: Dictionary = local.call("save_data")
+	_phase(str(local.character_id), "owner_memory_read", started)
 	var character_path := ATOMIC.readable_path(str(characters.call("path_for", str(local.character_id))))
 	var world_path := ATOMIC.readable_path(str(worlds.call("path_for", str(world.world_id))))
-	return {"character_id": str(local.character_id), "world_id": str(world.world_id),
+	var observed := {"character_id": str(local.character_id), "world_id": str(world.world_id),
 		"world_namespace": str(world.reward_delivery_namespace), "realm": str(local.realm),
 		"memory": memory, "disk": disk, "world": world.call("save_data"), "disk_world": disk_world,
 		"owns_world": owns_world, "character_path": character_path, "world_path": world_path,
 		"character_sha256": _digest(character_path), "world_sha256": _digest(world_path),
 		"world_files": _files(OS.get_user_data_dir().path_join("worlds"))}
+	_phase(str(local.character_id), "observe_complete", started)
+	return observed
 
 static func _digest(path: String) -> String:
 	return FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
 
-static func _witness(tree: SceneTree, args: Dictionary) -> Dictionary:
-	var data := _observe(tree)
-	if data.is_empty() or data.disk.is_empty(): return _result(false, "Actual durable character file unavailable", data)
-	var label := str(args.get("remember", ""))
-	if not label.is_empty(): tree.set_meta("f48_witness_" + label, data.duplicate(true))
-	# Write detached observations only to the proof output, never user saves.
+static func _remember(tree: SceneTree, label: String, data: Dictionary) -> void:
+	# Labels are exact dictionary keys, never Godot metadata identifiers.
+	var witnesses: Dictionary = tree.get_meta("f48_witnesses", {})
+	witnesses[label] = data.duplicate(true)
+	tree.set_meta("f48_witnesses", witnesses)
+
+static func _remembered(tree: SceneTree, label: String) -> Dictionary:
+	var witnesses: Dictionary = tree.get_meta("f48_witnesses", {})
+	return witnesses.get(label, {})
+
+static func _phase(label: String, phase: String, started: int) -> void:
+	print("[f48-observation] label=%s phase=%s elapsed_ms=%d" % [label, phase, Time.get_ticks_msec() - started])
+
+static func _summary(data: Dictionary, path: String) -> Dictionary:
+	return {"character_id": data.get("character_id", ""), "world_id": data.get("world_id", ""),
+		"world_namespace": data.get("world_namespace", ""), "realm": data.get("realm", ""),
+		"character_sha256": data.get("character_sha256", ""), "world_sha256": data.get("world_sha256", ""),
+		"observation_path": path, "observation_sha256": _digest(path)}
+
+static func _sealed_reply(tree: SceneTree, action: String, args: Dictionary, result: Dictionary) -> Dictionary:
+	# Preserve the entire original verdict/args/full observation on PASS and FAIL.
+	# Only transport is compact; the complete saved transaction row is required IPC.
+	var started := Time.get_ticks_msec()
+	_phase(action, "oracle_complete", started)
+	await tree.process_frame
 	var output := OS.get_environment("TB_PROOF_OUT")
-	if not output.is_empty():
-		var dir := output.path_join("f48-witnesses").path_join(str(data.character_id))
-		DirAccess.make_dir_recursive_absolute(dir)
-		var file := FileAccess.open(dir.path_join(label.validate_filename() + ".json"), FileAccess.WRITE)
-		if file == null: return _result(false, "Could not preserve detached witness", data)
-		file.store_string(JSON.stringify(data, "\t"))
-		file.close()
-	return _result(true, "Read actual files without autosave; identities and file digests preserved", data)
+	if output.is_empty(): return _result(false, "Detached oracle output required")
+	var dir := output.path_join("f48-observations")
+	DirAccess.make_dir_recursive_absolute(dir)
+	var path := dir.path_join("%s-%d-%d.json" % [action, OS.get_process_id(), Time.get_ticks_usec()])
+	if not DETACHED.publish(path, {"action": action, "args": args, "result": result}):
+		return _result(false, "Could not seal complete original oracle result")
+	_phase(action, "full_result_published", started)
+	await tree.process_frame
+	var original: Dictionary = result.get("data", {})
+	var observed: Dictionary = original.get("observation", original)
+	var compact := _summary(observed, path)
+	if original.has("saved_transaction_row"):
+		compact.saved_transaction_row = original.saved_transaction_row.duplicate(true)
+	_phase(action, "compact_reply_ready", started)
+	return _result(result.get("verdict") == "PASS", str(result.get("detail", "")), compact)
+
+static func _witness(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var label := str(args.get("remember", ""))
+	var started := Time.get_ticks_msec()
+	_phase(label, "begin", started)
+	var data := _observe(tree)
+	_phase(label, "observed", started)
+	if data.is_empty() or data.disk.is_empty():
+		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Actual durable character file unavailable", data))
+	if not label.is_empty(): _remember(tree, label, data)
+	_phase(label, "remembered", started)
+	# The coherent full observation is already captured. Yield only afterwards,
+	# allowing the existing genuine heartbeat timer to run between costly phases.
+	await tree.process_frame
+	var output := OS.get_environment("TB_PROOF_OUT")
+	if output.is_empty() or label.is_empty() or label != label.validate_filename():
+		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Exact detached witness label/output required", data))
+	var dir := output.path_join("f48-witnesses").path_join(str(data.character_id))
+	DirAccess.make_dir_recursive_absolute(dir)
+	var path := dir.path_join(label + ".json")
+	if not DETACHED.publish(path, data):
+		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Could not preserve immutable detached witness", data))
+	_phase(label, "full_witness_published", started)
+	await tree.process_frame
+	var compact := _summary(data, path)
+	_phase(label, "compact_reply_ready", started)
+	return _result(true, "Read actual files without autosave; full immutable witness retained", compact)
 
 static func _restore_witness(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var label := str(args.get("remember", ""))
@@ -333,7 +392,7 @@ static func _restore_witness(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
 	if not prior is Dictionary or prior.get("character_id") != now.character_id or prior.get("world_namespace") != now.world_namespace:
 		return _result(false, "Detached before witness missing or belongs to another character/world")
-	tree.set_meta("f48_witness_" + label, prior)
+	_remember(tree, label, prior)
 	return _result(true, "Recovered detached observation only; production state unchanged")
 
 static func _participants(tree: SceneTree, args: Dictionary) -> Dictionary:
@@ -417,7 +476,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 					and result.get("character_id") == now.character_id and result.get("world_instance_id") == now.world_namespace \
 					and not str(result.get("request_id", "")).is_empty(): entered = true
 		if not entered: errors.append("No actual successful correlated portal-enter result")
-	var prior: Dictionary = tree.get_meta("f48_witness_" + str(args.get("since", "")), {})
+	var prior: Dictionary = _remembered(tree, str(args.get("since", "")))
 	if args.has("since") and prior.is_empty(): errors.append("Missing before witness")
 	if not prior.is_empty():
 		if now.character_id != prior.character_id or now.world_namespace != prior.world_namespace:
@@ -500,7 +559,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if args.has("participants"):
 		_check_host_journal(now, args.participants, str(tree.get_meta("f48_boss_encounter", "")), errors)
 	if args.get("guest_world_empty") == true:
-		var admitted: Dictionary = tree.get_meta("f48_witness_admitted", {})
+		var admitted: Dictionary = _remembered(tree, "admitted")
 		if now.owns_world or admitted.is_empty() or now.world_files != admitted.get("world_files"):
 			errors.append("Guest wrote a host world file")
 	return _result(errors.is_empty(), "Exact durable assertions: " + ("passed" if errors.is_empty() else "; ".join(errors)), now)
@@ -555,7 +614,7 @@ static func _check_saved_transaction(tree: SceneTree, now: Dictionary, prior: Di
 		or (row.get("delivery_id", row.get("receipt")) != args.boundary_delivery_id)):
 		errors.append("Admission replaced the original native-cut writer receipt/identity")
 	if args.has("same_transaction_as"):
-		var remembered: Dictionary = tree.get_meta("f48_witness_" + str(args.same_transaction_as), {})
+		var remembered: Dictionary = _remembered(tree, str(args.same_transaction_as))
 		if remembered.is_empty() or not _json_equal(_transaction_row(remembered, transaction), row):
 			errors.append("Reconnect changed the original accepted transaction or its full immutable intent")
 	elif not prior.is_empty() and _transaction_row(prior, transaction).get("receipt") == receipt:
@@ -702,7 +761,7 @@ static func _build_cell(tree: SceneTree, args: Dictionary) -> Dictionary:
 
 static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var now := _observe(tree)
-	var prior: Dictionary = tree.get_meta("f48_witness_" + str(args.get("since", "")), {})
+	var prior: Dictionary = _remembered(tree, str(args.get("since", "")))
 	if now.is_empty() or prior.is_empty() or now.get("owns_world") != true \
 		or now.get("character_id") != prior.get("character_id") or now.get("world_namespace") != prior.get("world_namespace"):
 		return _result(false, "Actual owning host and original admitted witness required")
