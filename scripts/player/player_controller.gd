@@ -775,25 +775,15 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 	# Godot's floor-stop mode is for an idle body, but leaving it enabled while
 	# the player actively climbs can pin the capsule to a perfectly valid floor
 	# without any wall contact. Production Rise receipts reproduced this on
-	# 20-degree authored treads. Active movement releases the stop mode.
-	#
-	# An idle GROUNDED body needs native recovery, not the slope-holding -2 m/s
-	# bias: reapplying that bias every dialogue frame sinks the capsule into a
-	# Box floor, flat or sloped. On a sloped box (the village doorsteps) the
-	# bias plus the idle stop's cancelled-slide pass discards any recovery under
-	# margin + precision, so the capsule stayed 0.0015-0.0026 m inside its skin
-	# on 20-26 degree boxes (gate B "deep actual overlap" after Tam). With no
-	# downward velocity there is nothing for the stop to hold against, so the
-	# grounded idle body drops it and keeps the ordinary recovery; floor snap
-	# holds it on the slope (measured zero drift over 240 idle ticks, 0-44
-	# degrees). The stop stays for an idle body that is not yet grounded (the
-	# landing tick), and moving/airborne gravity and the jump step are unchanged.
-	# Effective direction includes modal ownership and locomotion locks.
-	var idle_grounded := is_on_floor() and direction == Vector3.ZERO
-	floor_stop_on_slope = idle_slope_stop(direction, get_floor_normal(), up_direction) \
-		and not idle_grounded
+	# 20-degree authored treads. Keep idle slope stability and retain native
+	# shallow recovery on flat floors; active movement releases the stop mode.
+	floor_stop_on_slope = idle_slope_stop(direction, get_floor_normal(), up_direction)
 	floor_constant_speed = direction != Vector3.ZERO
-	if idle_grounded:
+	# A flat idle body needs native recovery, not the slope-holding -2 m/s bias.
+	# Reapplying that bias every dialogue frame sinks the capsule into a Box
+	# floor. Effective direction includes modal ownership and locomotion locks;
+	# moving/sloped/airborne gravity and the following jump step stay unchanged.
+	if is_on_floor() and direction == Vector3.ZERO and get_floor_normal().is_equal_approx(up_direction):
 		velocity.y = 0.0
 
 	var game := get_node_or_null(^"/root/Game")
