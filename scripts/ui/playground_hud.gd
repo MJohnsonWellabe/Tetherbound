@@ -775,6 +775,11 @@ const STUCK_AXES_EPSILON := 0.05
 var _player: CharacterBody3D = null
 var _arbiter: Node = null
 var _game: Node = null
+## True from the first idle poll that sees an orb aim until every hotbar button
+## is released. A press that began while aiming belongs to the aim: the B that
+## backs out is consumed by ThrowAim on a physics tick, and the HUD's next idle
+## poll would otherwise read the same edge as slot one (one press, two verbs).
+var _aim_hotbar_latch := false
 var _party: RefCounted = null
 
 var _since_readout := 0.0
@@ -4367,6 +4372,10 @@ func _hotbar_assignments_are_empty(assignments: Array) -> bool:
 func _read_hotbar_input() -> void:
 	if _game == null:
 		return
+	if _combat_is_aiming():
+		_aim_hotbar_latch = true
+	elif _aim_hotbar_latch and not _any_hotbar_action_live():
+		_aim_hotbar_latch = false
 	# OW10: one gate, shared with `_read_world_hotkeys`. This poll used to carry
 	# its own two-thirds of the answer (a fight, the arbiter's modal flag) and
 	# not the third -- `_build_menu_is_open()` was written onto the world-hotkey
@@ -4381,13 +4390,25 @@ func _read_hotbar_input() -> void:
 	# same one-press-two-verbs bug in a smaller window.
 	if not _world_input_allowed(false, true):
 		return
-	if _combat_is_aiming():
+	# The latch also covers the idle frame right after a physics-tick cancel,
+	# when the aim has already closed but the backing-out press is still live.
+	if _aim_hotbar_latch:
 		return
 	for i in HOTBAR_SLOTS:
 		var action: String = COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i]
 		if Input.is_action_just_pressed(action):
 			_use_hotbar_slot(i)
 			return
+
+
+## Held, or pressed at any point since the last idle frame: a tap whose press
+## and release both land on physics ticks between two idle polls is no longer
+## held but still reads `just_pressed` here, and is still the aim's press.
+func _any_hotbar_action_live() -> bool:
+	for action in HOTBAR_ACTIONS + COMBAT_HOTBAR_ACTIONS:
+		if Input.is_action_pressed(action) or Input.is_action_just_pressed(action):
+			return true
+	return false
 
 
 ## The same defensive CombatManager lookup the minimap dim uses; false when
