@@ -738,8 +738,12 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 	var projected := RECORD_RULES.training_projection(current, row, ESSENCE.training_projection)
 	if not equivalent(projected, row.before) and not equivalent(projected, row.after):
 		return {"ok": false, "code": "unsettled_training_conflict"}
-	for field: String in ["party", "inventory", "redesign_character", "equipment"]:
-		current[field] = row.after[field].duplicate(true)
+	# The validated journal owns exactly its canonical projection: v1 Altar
+	# building/training has three fields; v2/v3 training has all eight admitted
+	# fields. Preserve unrelated v1 gear/escrows, and recover every v2/v3 field.
+	for field: String in projected:
+		var value: Variant = row.after[field]
+		current[field] = value.duplicate(true) if value is Dictionary or value is Array else value
 	if not errors(current, character).is_empty(): return {"ok": false, "code": "invalid_training_candidate"}
 	_replace_record(character, int(row.character_revision), current)
 	_training_pending[character] = {"receipt": row.receipt, "character_revision": row.character_revision}
