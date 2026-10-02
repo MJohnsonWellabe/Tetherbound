@@ -240,7 +240,23 @@ func _trainer_prompt_label() -> String:
 ## `_refuse_combat_input()` already exists to prevent for the other three.
 func _a_trainer_fight_cannot_be_walked_out_of() -> void:
 	await _let_the_input_guard_expire()
-	for action: String in ["combat_run", "creature_recall"]:
+	# F23 combat map (owner, 2026-09-29, RD-11/RD-12; UX §2.2, COMBAT §1):
+	# RB flee is superseded in combat -- RB/R now arms the Ultimate latch -- and
+	# the disengage verb is RT. Both physical disengage bindings (keyboard
+	# Escape and pad RT) therefore live on `combat_run`; prove that, then press
+	# it. `creature_recall` is no longer a combat action at all.
+	var has_escape := false
+	var has_rt := false
+	for event: InputEvent in InputMap.action_get_events("combat_run"):
+		if event is InputEventKey and (event as InputEventKey).physical_keycode == KEY_ESCAPE:
+			has_escape = true
+		elif event is InputEventJoypadMotion and (event as InputEventJoypadMotion).axis == JOY_AXIS_TRIGGER_RIGHT \
+				and (event as InputEventJoypadMotion).axis_value > 0.0:
+			has_rt = true
+	if not (has_escape and has_rt):
+		_fail("'combat_run' is not bound to both disengage inputs (Escape %s, RT %s)" % [str(has_escape), str(has_rt)])
+		return
+	for action: String in ["combat_run"]:
 		# Blank the toast first. `_throw_pressed()` reads `interact` as well as
 		# `combat_throw`, so every interact press of the challenge just above
 		# left "Can't throw an orb outside a fight." sitting on this label --

@@ -165,6 +165,12 @@ class SessionDouble extends Node:
 		var disabled: bool = preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") != true \
 			and (kind != "catch" or preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") != true)
 		return {"ok": disabled, "durable": disabled, "disabled": disabled}
+	## `encounter_director.gd::_finish_host_strike()` hands every landed host
+	## strike to the Session's mastery journal. This arithmetic fixture supplies
+	## no durable mastery writer (as with research above), so it reports that
+	## nothing was journaled instead of inventing a saved receipt.
+	func foundation_combat_mastery(_director: Node, _encounter: String, _peer: Variant, _action: int) -> Dictionary:
+		return {"ok": false, "durable": false, "disabled": true}
 	## Everybody the session holds. `_resume_trainer_encounter()` reads this to
 	## decide who may be put back into the next round, and refuses to re-seat a
 	## peer the session no longer has -- so a peer that leaves the fight below is
@@ -334,6 +340,23 @@ func _collect_nodes() -> bool:
 		await _director.call("adopt_starter", "terrapup")
 	if _director.call("ally_instance") == null:
 		_fail("the player has no creature to fight with")
+		return false
+	# The sandbox's `default_starter` stands a body up beside the trainer but
+	# never puts it on the belt (`sequence_director.gd::_give_to_party()` is the
+	# opening's job, and its late-arrival catch-up refuses once a body exists).
+	# Host-observed move starts admit only an OWNED loadout row from the
+	# admitted character (`encounter_director.gd::_host_move_start`), so the
+	# fixture owns the creature it fights with -- the same `party.add` the
+	# opening makes -- before `_seat_the_session_double()` admits the portable
+	# state. Without this every quick press is refused as `invalid_actor_move`.
+	var game := root.get_node_or_null(^"Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	var ally: RefCounted = _director.call("ally_instance") as RefCounted
+	if party == null:
+		_fail("the Game autoload has no party for the fixture's creature")
+		return false
+	if not (party.call("members") as Array).has(ally) and not bool(party.call("add", ally)):
+		_fail("the fixture's creature could not be put on the player's belt")
 		return false
 	return true
 
