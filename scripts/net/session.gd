@@ -116,7 +116,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if quote.get("ok") != true: return _foundation_refusal(str(quote.get("code", "capture_choice_refused")))
 		return {"ok": true, "pending_uid": context.creature.uid, "released_uid": envelope.intent.released_uid,
 			"ceremony_id": context.offer_id, "expected_character_revision": context.expected_revision, "payout": quote.payout}
-	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery"]: return _foundation_refusal("host_producer_required")
+	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery", "waystone_touch"]: return _foundation_refusal("host_producer_required")
 	if envelope.op == "rematch_start":
 		if envelope.intent.size() != 4 or envelope.revision != -1 \
 			or not ESSENCE._component(envelope.intent.get("trainer_id")) or envelope.intent.get("tier") not in ["r1", "endgame"] \
@@ -3508,6 +3508,7 @@ func _training_decision(peer: int, row: Dictionary) -> Dictionary:
 
 func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 	if not is_host(): return
+	if row.get("action") == "waystone_touch": _waystone_delivery_accepted(peer, row)
 	if peer == local_peer_id():
 		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
 	elif bool(_registry.call("has", peer)):
@@ -4243,18 +4244,7 @@ func portal_view(arch_id: String) -> Dictionary:
 	if not raw is Dictionary: return unavailable
 	var arch := PORTAL_POLICY._find_arch(raw, arch_id)
 	if arch.is_empty(): return unavailable
-	var player: RefCounted = game.get("local")
-	var world: RefCounted = game.get("world")
-	var biome: String = arch.biome
-	var stirred := false
-	for row: Variant in player.satchel_escrow.values():
-		if PORTAL_RECEIPT.valid(row, player.character_id) and row.biome == "biome5" and row.status == "settled": stirred = true
-	return {"ready": not player.character_id.is_empty(), "open": arch.kind == "live" and
-		(biome == "meadows" or world.redesign_world.portal_unlocks.has(biome) or player.redesign_character.portal_unlocks.has(biome)),
-		"has_key": not str(arch.key_item).is_empty() and player.inventory.count(arch.key_item) == 1,
-		"fifth_arch_stirred": stirred or world.redesign_world.fifth_arch_stirred,
-		"destination_label": preload("res://scripts/data/biome_order.gd").display_name(biome),
-		"recommended_level": arch.get("recommended_level", 0)}
+	return preload("res://scripts/net/portal_view.gd").build(game.get("local"), game.get("world"), arch)
 
 
 func request_portal_action(payload: Dictionary) -> Dictionary:
@@ -4415,29 +4405,52 @@ func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
 
 
 func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary) -> void:
-	# Remote portable CAS waits for its typed owner mutation protocol. A
-	# client-supplied activated set is never imported into admitted authority.
-	if peer != local_peer_id():
-		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone save is not ready."})
+	if not _portal_envelope_valid(peer, envelope): return
+	var character: String = envelope.character_id
+	var current: Dictionary = _character_authority.call("state", character)
+	var writer := get_node_or_null(^"LedgerRpc")
+	if current.is_empty() or writer == null: return
+	var stone: Dictionary = result.waystone
+	var world: RefCounted = _game().get("world")
+	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
+	var row: Dictionary = world.reward_deliveries.get(id, {})
+	# Retry the saved original before considering another touch. Lost ACKs
+	# never create a second mutation or replace an unsettled owner baseline.
+	if row.get("action") == "waystone_touch" and row.get("intent", {}).get("waystone_id") == stone.id:
+		_portal_waiters[row.receipt] = {"peer": peer, "envelope": envelope.duplicate(true),
+			"first_activation": not row.before.redesign_character.waystones_activated.get(stone.biome, []).has(stone.id)}
+		writer.call("_process_creature_training", row)
+		if row.status == "accepted": _waystone_delivery_accepted(peer, row)
 		return
-	var game := _game()
-	var saver: RefCounted = game.get("save_system")
-	if saver == null or saver.call("fallback_busy") == true: return
-	var player: RefCounted = game.get("local")
-	if _owner_training_mutation_blocked(player): return
-	var before: Dictionary = player.redesign_character.duplicate(true)
-	var biome: String = result.waystone.biome
-	var stone: String = result.waystone.id
-	var active: Array = player.redesign_character.waystones_activated.get(biome, []).duplicate()
-	var first := not active.has(stone)
-	if first: active.append(stone)
-	player.redesign_character.waystones_activated[biome] = active
-	player.redesign_character.last_waystones[biome] = stone
-	if not bool(saver.call("save_character_prepared", game, player.character_id)):
-		player.redesign_character = before
+	if current.redesign_character.last_waystones.get(stone.biome) == stone.id \
+		and current.redesign_character.waystones_activated.get(stone.biome, []).has(stone.id):
+		_portal_reply(peer, envelope, {"ok": true, "durable": true, "waystone_id": stone.id, "first_activation": false})
+		return
+	var touch_id: String = Crypto.new().generate_random_bytes(16).hex_encode()
+	var intent := {"waystone_id": stone.id, "touch_id": touch_id}
+	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true,
+		"validated_touch": true, "source_key": "waystone:" + str(stone.id), "touch_id": touch_id,
+		"realm": str(stone.realm_id), "world_namespace": world.reward_delivery_namespace}
+	var receipt := "craft:waystone_%s:%s" % [touch_id.sha256_text(), character]
+	_portal_waiters[receipt] = {"peer": peer, "envelope": envelope.duplicate(true),
+		"first_activation": not current.redesign_character.waystones_activated.get(stone.biome, []).has(stone.id)}
+	var committed := FOUNDATION_ACTIONS.commit(_character_authority, writer, peer, character,
+		context.expected_revision, "waystone_touch", intent, context)
+	if committed.get("durable") != true:
+		_portal_waiters.erase(receipt)
 		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
-		return
-	_portal_reply(peer, envelope, {"ok": true, "durable": true, "waystone_id": stone, "first_activation": first})
+
+func _waystone_delivery_accepted(peer: int, row: Dictionary) -> void:
+	var waiter: Dictionary = _portal_waiters.get(row.get("receipt"), {})
+	if waiter.is_empty() or waiter.peer != peer or row.get("status") != "accepted" \
+		or not _portal_envelope_valid(peer, waiter.envelope): return
+	var world: RefCounted = _game().get("world")
+	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row) \
+		or _foundation_decision(peer, row).get("saved") != true: return
+	_portal_waiters.erase(row.receipt)
+	_portal_reply(peer, waiter.envelope, {"ok": true, "durable": true,
+		"waystone_id": row.intent.waystone_id, "first_activation": waiter.first_activation})
 
 
 func _portal_reply(peer: int, envelope: Dictionary, result: Dictionary) -> void:
@@ -4521,7 +4534,8 @@ func _host_portal_context(peer: int) -> Dictionary:
 	var fly: Node = player.get("fly_controller")
 	var downed := game.get_node_or_null("DownedState")
 	var vitals: RefCounted = player.get("vitals")
-	if swim == null or fly == null or downed == null or vitals == null: return {}
+	var swimming := preload("res://scripts/net/foundation_travel_lifecycle.gd").swimming_observation(realm, swim)
+	if swimming.is_empty() or fly == null or downed == null or vitals == null: return {}
 	var input_owner := preload("res://scripts/ui/input_owner.gd").current(get_tree())
 	var key := game.get_node_or_null("HomeKey")
 	var dialogue := false
@@ -4556,7 +4570,7 @@ func _host_portal_context(peer: int) -> Dictionary:
 	var personal: Dictionary = _character_authority.call("state", admitted.character_id)
 	return {"world_instance_id": game.get("world").reward_delivery_namespace, "character_id": admitted.character_id,
 		"peer_id": peer, "realm": realm, "position": player.global_position, "damage_revision": vitals.get("damage_revision"),
-		"combat": combat, "dialogue": dialogue, "cutscene": cutscene, "swimming": bool(swim.call("is_swimming")),
+		"combat": combat, "dialogue": dialogue, "cutscene": cutscene, "swimming": bool(swimming.swimming),
 		"flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
 		"home_key_owned": game.get("local").inventory.count("home_key") == 1,
 		"character_unlocks": personal.redesign_character.portal_unlocks.duplicate(),

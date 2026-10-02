@@ -45,6 +45,16 @@ func owner_travel(session: Node, envelope: Dictionary, permit: Dictionary) -> vo
 		return
 	await _travel_owner(session, int(session.call("local_peer_id")), envelope, permit)
 
+## The receiver coordinator may load only the destination of this retained,
+## consumed host permit. A legacy client-selected realm RPC cannot mint one.
+func transition_authorized(peer: int, realm: String) -> bool:
+	var original: Dictionary = _remote.get(peer, {})
+	if original.is_empty() or original.permit.realm != realm or original.get("owner_saved") == true: return false
+	var session: Node = original.session.get_ref()
+	return session != null and session.call("is_host") == true \
+		and session.call("_game").get("world") == original.world.get_ref() \
+		and session.call("_portal_envelope_valid", peer, original.envelope) == true
+
 func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dictionary) -> void:
 	var game: Node = session.call("_game")
 	_pending = {"session": weakref(session), "game": weakref(game), "peer": peer,
