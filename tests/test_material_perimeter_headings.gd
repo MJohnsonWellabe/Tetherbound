@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
+var _native_cases_completed := 0
 
 ## These doubles exercise the existing walk loop's accounting with synthetic
 ## observed poses. They do not prove controller, terrain or collision travel.
@@ -75,7 +76,7 @@ func test_same_side_concave_chord_requires_verified_detour_and_bad_authored_data
 	assert_false(ROUTE.scatter_perimeter_plan(Vector2.ZERO, Vector2.ONE, oversized, terrain).get("ok", false))
 	assert_false(ROUTE.scatter_perimeter_plan(Vector2.INF, Vector2.ONE, boundary, terrain).get("ok", false))
 
-func test_gate_requires_exact_current_world_live_retained_open_leaf() -> void:
+func _case_gate_requires_exact_current_world_live_retained_open_leaf() -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	var world := Node3D.new()
 	tree.root.add_child(world)
@@ -110,8 +111,9 @@ func test_gate_requires_exact_current_world_live_retained_open_leaf() -> void:
 	assert_false(ROUTE._open_material_gate(world, impostor, at))
 	world.free()
 	other.free()
+	_native_cases_completed += 1
 
-func test_one_walk_budget_cannot_restart_at_a_heading_or_finish_before_it() -> void:
+func _case_one_walk_budget_cannot_restart_at_a_heading_or_finish_before_it() -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	var body := Node3D.new()
 	tree.root.add_child(body)
@@ -131,8 +133,9 @@ func test_one_walk_budget_cannot_restart_at_a_heading_or_finish_before_it() -> v
 	assert_eq(nav.aims.size(), 5, "held frames consume none of the original walking budget")
 	assert_eq(nav.aims[3], held_headings[1], "a hold partway to the second heading must not revisit the first")
 	body.free()
+	_native_cases_completed += 1
 
-func test_confined_watchdog_and_finite_heading_guards_remain_in_the_same_loop() -> void:
+func _case_confined_watchdog_and_finite_heading_guards_remain_in_the_same_loop() -> void:
 	var tree := Engine.get_main_loop() as SceneTree
 	var body := Node3D.new()
 	tree.root.add_child(body)
@@ -147,3 +150,57 @@ func test_confined_watchdog_and_finite_heading_guards_remain_in_the_same_loop() 
 	assert_false(await nav.walk_to_guided(Vector3.ZERO, 10, 0.1, invalid))
 	assert_eq(nav.aims.size(), 1201, "nonfinite guidance cannot drive even one frame")
 	body.free()
+	_native_cases_completed += 1
+
+
+func test_initialized_native_child_runs_all_retained_leaf_and_walk_accounting_controls() -> void:
+	# The parent unit runner invokes cases during SceneTree._init, before
+	# Engine.get_main_loop is available. One deferred child owns all fixtures.
+	var suffix := "%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	var runner_path := "user://material-perimeter-" + suffix + ".gd"
+	var log_path := ProjectSettings.globalize_path("user://material-perimeter-" + suffix + ".log")
+	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null: return
+	runner.store_string('''extends SceneTree
+var started := Time.get_ticks_msec()
+func _initialize():
+	call_deferred("run")
+func _process(_delta):
+	if Time.get_ticks_msec() - started > 30000:
+		print("MATERIAL_PERIMETER_TIMEOUT")
+		quit(1)
+func run():
+	var test = load("res://tests/test_material_perimeter_headings.gd").new()
+	await test._case_gate_requires_exact_current_world_live_retained_open_leaf()
+	await test._case_one_walk_budget_cannot_restart_at_a_heading_or_finish_before_it()
+	await test._case_confined_watchdog_and_finite_heading_guards_remain_in_the_same_loop()
+	var complete = test._native_cases_completed == 3
+	print("MATERIAL_PERIMETER_RESULT=" + JSON.stringify({"completed":complete,"cases":test._native_cases_completed,"assertions":test.assertion_count,"failures":test.failures}))
+	quit(0 if complete and test.failures.is_empty() else 1)
+''')
+	runner.close()
+	var output: Array = []
+	var absolute := ProjectSettings.globalize_path(runner_path)
+	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", absolute, "--log-file", log_path], output, true)
+	DirAccess.remove_absolute(absolute)
+	var combined := "\n".join(output)
+	assert_true(FileAccess.file_exists(log_path), "the child must retain its actual engine log")
+	if FileAccess.file_exists(log_path): combined += "\n" + FileAccess.get_file_as_string(log_path)
+	var result: Dictionary = {}
+	var result_count := 0
+	# Parse stdout only; the same engine log repeats its console summary.
+	for line: String in "\n".join(output).split("\n"):
+		if line.begins_with("MATERIAL_PERIMETER_RESULT="):
+			result_count += 1
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("MATERIAL_PERIMETER_RESULT="))
+			if parsed is Dictionary: result = parsed
+	assert_eq(result_count, 1, combined)
+	assert_true(result.get("completed") == true, combined)
+	assert_eq(result.get("cases", 0), 3, combined)
+	assert_eq(result.get("assertions", 0), 21, "every original retained-leaf, budget, hold and anchor assertion must finish")
+	assert_eq(result.get("failures", ["missing summary"]), [], combined)
+	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR") or combined.contains("MATERIAL_PERIMETER_TIMEOUT"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \
+		or combined.contains("RID allocations") or combined.contains("RIDs of type"), combined)
+	assert_eq(code, 0, combined)
