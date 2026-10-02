@@ -250,7 +250,7 @@ func _prerequisites(steps: Array) -> void:
 
 func _capture_prepared_start(steps: Array, label: String) -> void:
 	steps.append(_entry("all", "f48_assert_snapshot", {}, "Read actual memory/disk carriers before any capture autosave"))
-	steps.append(_entry("all", "capture_saves", {"label": label}, "Retain actual producer input bytes; no earned campaign credit"))
+	steps.append(_entry("all", "f48_capture_durable", {"label": label}, "Retain exact actual owner BOOL-saved input bytes without autosave repair; no earned campaign credit"))
 
 func _loop(steps: Array, capture_inputs: bool = false) -> void:
 	_prerequisites(steps)

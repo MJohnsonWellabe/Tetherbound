@@ -8,12 +8,19 @@ const ATOMIC := preload("res://scripts/save/atomic_save_file.gd")
 const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
 const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
+const PASSIVE := preload("res://tools/net/f48_passive_witness.gd")
+const PORTAL_DELIVERY := preload("res://scripts/net/portal_delivery.gd")
+const PROOF_FILES := preload("res://tools/net/proof_steps.gd")
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
 		"f48_witness": return await _witness(tree, args)
 		"f48_assert": return await _sealed_reply(tree, action, args, _assert(tree, args))
 		"f48_assert_snapshot": return await _sealed_reply(tree, action, args, _assert_snapshot(tree))
+		"f48_watch_owner_saves":
+			tree.set_meta("f48_producer_observation", true)
+			return _result(_watch_owner_saves(tree), "Read-only producer actual owner BOOL-save observer")
+		"f48_capture_durable": return _capture_durable(tree, args)
 		"f48_measure_layout": return _measure_layout(tree, args)
 		"f48_fixture_trainer_fight": return await _fixture_trainer_fight(tree, args)
 		"f48_fixture_approach": return await _fixture_approach(tree, args)
@@ -34,6 +41,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 	return _result(false, "Unknown F48 action: " + action)
 
 static func _start_case(tree: SceneTree, args: Dictionary) -> Dictionary:
+	PASSIVE.stop(tree)
 	var case_id := str(args.get("case", ""))
 	if case_id.is_empty() or case_id != case_id.validate_filename(): return _result(false, "Invalid independent matrix case identity")
 	var game := tree.root.get_node_or_null(^"Game")
@@ -57,20 +65,130 @@ static func _start_case(tree: SceneTree, args: Dictionary) -> Dictionary:
 static func _result(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
 
-static func _assert_snapshot(tree: SceneTree) -> Dictionary:
-	# capture_saves performs a disclosed autosave. Establish the existing
-	# durable transaction carriers FIRST so it cannot repair a failed proof.
-	var now := _observe(tree)
-	if now.is_empty() or now.disk.is_empty(): return _result(false, "Actual prior durable owner file unavailable")
-	for field: String in ["inventory", "party", "redesign_character", "satchel_escrow"]:
+static func _watch_owner_saves(tree: SceneTree) -> bool:
+	if tree.has_meta("f48_owner_save_watch"): return true
+	var game := tree.root.get_node_or_null(^"Game")
+	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
+	if game == null or writer == null or not writer.has_signal("transaction_boundary"): return false
+	var observer := func(packet: Dictionary) -> void:
+		if packet.get("phase") != "after_owner_write_before_ack" or game.get("local") == null or game.get("world") == null \
+			or packet.get("character_id") != game.local.character_id or packet.get("world_namespace") != game.world.reward_delivery_namespace:
+			return
+		var epoch := str(game.session.call("_altar_current_epoch"))
+		if epoch.is_empty() or packet.get("session_id") != epoch: return
+		var row: Variant = game.world.reward_deliveries.get(packet.get("delivery_id"))
+		var valid: bool = WORLD_STATE.training_row_valid(row, str(game.world.reward_delivery_namespace), str(game.world.world_id))
+		if row is Dictionary and row.get("kind") == "portal_unlock":
+			valid = PORTAL_DELIVERY.valid(row, str(game.local.character_id), str(game.world.reward_delivery_namespace)) and row.get("world_id") == game.world.world_id
+		elif valid: valid = row.get("session_id") == epoch
+		if not valid or row.get("character_id") != packet.get("character_id") or row.get("receipt") != packet.get("receipt"): return
+		var data := _observe(tree)
+		var evidence := {"packet": packet.duplicate(true), "row": row.duplicate(true), "files": data,
+			"world_ref": weakref(game.world), "session_ref": weakref(game.session), "epoch": epoch, "identity": str(packet.delivery_id)}
+		var receipt := str(row.receipt)
+		var sequence: int = int(tree.get_meta("f48_owner_save_sequence", 0)) + 1
+		tree.set_meta("f48_owner_save_sequence", sequence)
+		var anchor := "owner-%s-%d" % [receipt.sha256_text(), sequence]
+		if not PASSIVE.start(tree) or not PASSIVE.anchor(tree, anchor, data): return
+		evidence.anchor = anchor
+		var disk := {"packet": packet, "row": row, "files": data, "passive": PASSIVE.evidence(tree, anchor), "observer_pid": OS.get_process_id()}
+		var dir := OS.get_environment("TB_PROOF_OUT").path_join("f48-owner-saves").path_join(str(game.local.character_id))
+		DirAccess.make_dir_recursive_absolute(dir)
+		var path := dir.path_join(anchor + ".json")
+		if not DETACHED.publish(path, disk): return
+		evidence.path = path
+		evidence.sha256 = _digest(path)
+		tree.set_meta("f48_latest_owner_save", evidence)
+	writer.connect("transaction_boundary", observer)
+	tree.set_meta("f48_owner_save_watch", observer)
+	return true
+
+static func _snapshot_errors(tree: SceneTree, now: Dictionary) -> Array[String]:
+	var errors: Array[String] = []
+	var edge: Dictionary = tree.get_meta("f48_latest_owner_save", {})
+	var original_source: bool = edge.is_empty()
+	if original_source: edge = tree.get_meta("f48_admitted_source", {})
+	var game := tree.root.get_node_or_null(^"Game")
+	if now.is_empty() or edge.is_empty() or game == null:
+		return ["Actual latest owner BOOL-save or unchanged original admitted-source edge missing"]
+	if game.world != edge.world_ref.get_ref() or game.session != edge.session_ref.get_ref() \
+		or game.session.call("_altar_current_epoch") != edge.epoch or now.character_id != edge.files.character_id \
+		or now.world_namespace != edge.files.world_namespace or _digest(str(edge.path)) != edge.sha256:
+		errors.append("Actual saved owner/world/session/immutable edge changed")
+	if now.character_sha256 != edge.files.character_sha256 or not _json_equal(now.disk, edge.files.disk):
+		errors.append("Actual complete owner file changed after the latest observed edge")
+	for field: String in ["inventory", "redesign_character", "satchel_escrow"]:
 		if not _json_equal(now.memory.get(field), now.disk.get(field)):
-			return _result(false, "Snapshot would repair unsaved owner carrier: " + field, now)
+			errors.append("Snapshot would hide an unsaved owner carrier: " + field)
+		if original_source and not _json_equal(now.memory.get(field), edge.files.memory.get(field)):
+			errors.append("Original admitted bystander changed owner carrier without an actual newer BOOL-save: " + field)
+	if not PASSIVE.matches(tree, str(edge.anchor), now.memory.get("party")):
+		errors.append("Full owner party differs outside exact independently replayed passive clocks")
+	if not original_source:
+		var current: Variant = now.world.get("reward_deliveries", {}).get(edge.identity)
+		if not current is Dictionary or current.get("status") != "accepted":
+			errors.append("Latest real owner transaction has not completed its accepted host ACK")
+		else:
+			var original: Dictionary = edge.row.duplicate(true)
+			var accepted: Dictionary = current.duplicate(true)
+			original.erase("status")
+			accepted.erase("status")
+			if not _json_equal(original, accepted): errors.append("Latest authentic full transaction changed after owner save")
 	if now.owns_world:
-		if now.disk_world.is_empty(): return _result(false, "Actual prior durable host world unavailable", now)
+		if now.disk_world.is_empty(): errors.append("Actual durable host world unavailable")
 		for field: String in ["reward_deliveries", "placed_buildings", "redesign_world"]:
 			if not _json_equal(now.world.get(field), now.disk_world.get(field)):
-				return _result(false, "Snapshot would repair unsaved host carrier: " + field, now)
-	return _result(true, "Original complete transaction carriers already durable before disclosed capture", now)
+				errors.append("Snapshot would hide an unsaved full host carrier: " + field)
+	return errors
+
+static func _snapshot_anchor(tree: SceneTree) -> String:
+	var edge: Dictionary = tree.get_meta("f48_latest_owner_save", {})
+	if edge.is_empty(): edge = tree.get_meta("f48_admitted_source", {})
+	return str(edge.get("anchor", ""))
+
+static func _assert_snapshot(tree: SceneTree) -> Dictionary:
+	var now := _observe(tree)
+	var errors := _snapshot_errors(tree, now)
+	now.passive_evidence = PASSIVE.evidence(tree, _snapshot_anchor(tree))
+	return _result(errors.is_empty(), "Actual latest owner BOOL-save and current immutable files: " + "; ".join(errors), now)
+
+static func _capture_durable(tree: SceneTree, args: Dictionary) -> Dictionary:
+	# Disclosed producer inputs only. Copy actual files; no autosave can repair a
+	# missing transaction write, stale roster, receipt, journal or world source.
+	var now := _observe(tree)
+	var errors := _snapshot_errors(tree, now)
+	if not errors.is_empty(): return _result(false, "Refuse invalid actual durable input: " + "; ".join(errors))
+	var label := str(args.get("label", ""))
+	if label.is_empty() or label != label.validate_filename(): return _result(false, "Exact fresh input capture label required")
+	var destination := PROOF_FILES.out_dir(tree).path_join(label)
+	if DirAccess.dir_exists_absolute(destination): return _result(false, "Actual input capture already exists")
+	var copied := 0
+	for directory: String in ["characters", "worlds", "saves"]:
+		var count := _copy_exact(OS.get_user_data_dir().path_join(directory), destination.path_join(directory))
+		if count < 0: return _result(false, "Exact byte copy failed; partial capture is not accepted")
+		copied += count
+	var again := _observe(tree)
+	if copied <= 0 or again.character_sha256 != now.character_sha256 or again.world_sha256 != now.world_sha256:
+		return _result(false, "Actual source files changed during read-only input copying")
+	return _result(true, "Copied exact current saved owner/world bytes after authentic latest BOOL-save/ACK; no autosave",
+		{"dir": destination, "files": copied, "character_id": now.character_id, "character_sha256": now.character_sha256, "world_sha256": now.world_sha256})
+
+static func _copy_exact(source: String, destination: String) -> int:
+	var directory := DirAccess.open(source)
+	if directory == null: return 0
+	if DirAccess.make_dir_recursive_absolute(destination) != OK: return -1
+	var count := 0
+	for file: String in directory.get_files():
+		var from := source.path_join(file)
+		var to := destination.path_join(file)
+		if directory.is_link(file) or DirAccess.copy_absolute(from, to) != OK or _digest(from) != _digest(to): return -1
+		count += 1
+	for sub: String in directory.get_directories():
+		if directory.is_link(sub): return -1
+		var copied := _copy_exact(source.path_join(sub), destination.path_join(sub))
+		if copied < 0: return -1
+		count += copied
+	return count
 
 static func _measure_layout(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# Detached terrain/contact observation only. No position, velocity, save,
@@ -318,11 +436,13 @@ static func _observe(tree: SceneTree) -> Dictionary:
 static func _digest(path: String) -> String:
 	return FileAccess.get_sha256(path) if FileAccess.file_exists(path) else ""
 
-static func _remember(tree: SceneTree, label: String, data: Dictionary) -> void:
+static func _remember(tree: SceneTree, label: String, data: Dictionary, live_anchor: bool = false) -> bool:
 	# Labels are exact dictionary keys, never Godot metadata identifiers.
 	var witnesses: Dictionary = tree.get_meta("f48_witnesses", {})
 	witnesses[label] = data.duplicate(true)
+	if live_anchor and not PASSIVE.anchor(tree, label, data): return false
 	tree.set_meta("f48_witnesses", witnesses)
+	return true
 
 static func _remembered(tree: SceneTree, label: String) -> Dictionary:
 	var witnesses: Dictionary = tree.get_meta("f48_witnesses", {})
@@ -364,11 +484,14 @@ static func _witness(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var label := str(args.get("remember", ""))
 	var started := Time.get_ticks_msec()
 	_phase(label, "begin", started)
+	var producer: bool = tree.get_meta("f48_producer_observation", false) == true
+	if producer and not PASSIVE.start(tree): return _result(false, "Actual passive-clock observation unavailable")
 	var data := _observe(tree)
 	_phase(label, "observed", started)
 	if data.is_empty() or data.disk.is_empty():
 		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Actual durable character file unavailable", data))
-	if not label.is_empty(): _remember(tree, label, data)
+	if not label.is_empty() and not _remember(tree, label, data, producer):
+		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Actual full-card witness anchor refused", data))
 	_phase(label, "remembered", started)
 	# The coherent full observation is already captured. Yield only afterwards,
 	# allowing the existing genuine heartbeat timer to run between costly phases.
@@ -381,6 +504,10 @@ static func _witness(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var path := dir.path_join(label + ".json")
 	if not DETACHED.publish(path, data):
 		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Could not preserve immutable detached witness", data))
+	if producer and not tree.has_meta("f48_admitted_source"):
+		var game := tree.root.get_node_or_null(^"Game")
+		tree.set_meta("f48_admitted_source", {"files": data.duplicate(true), "anchor": label, "path": path, "sha256": _digest(path),
+			"world_ref": weakref(game.world), "session_ref": weakref(game.session), "epoch": str(game.session.call("_altar_current_epoch"))})
 	_phase(label, "full_witness_published", started)
 	await tree.process_frame
 	var compact := _summary(data, path)
@@ -525,7 +652,9 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if not prior.is_empty():
 			var before: Dictionary = prior[payload]
 			for path: String in args.get("unchanged", []):
-				if not _json_equal(_path(state, path), _path(before, path)): errors.append(payload + ": replay changed " + path)
+				var same: bool = PASSIVE.matches(tree, str(args.get("since", "")), state.get("party")) if path == "party" and payload == "memory" and tree.get_meta("f48_producer_observation", false) == true \
+					else _json_equal(_path(state, path), _path(before, path))
+				if not same: errors.append(payload + ": replay changed " + path)
 			var counts := _counts(state)
 			var old_counts := _counts(before)
 			for item: String in args.get("item_delta", {}):
@@ -565,6 +694,7 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 		var admitted: Dictionary = _remembered(tree, "admitted")
 		if now.owns_world or admitted.is_empty() or now.world_files != admitted.get("world_files"):
 			errors.append("Guest wrote a host world file")
+	now.passive_evidence = PASSIVE.evidence(tree, str(args.get("since", "")))
 	return _result(errors.is_empty(), "Exact durable assertions: " + ("passed" if errors.is_empty() else "; ".join(errors)), now)
 
 static func _unique(values: Array) -> Array:

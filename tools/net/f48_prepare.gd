@@ -12,6 +12,7 @@ func _build() -> Dictionary:
 		_profile_errors.append("Input production requires two distinct actual v28 starts and disclosed origin")
 		return {}
 	var steps: Array = []
+	steps.append(_entry("all", "f48_watch_owner_saves", {}, "Arm actual saved-edge observation before production admission; no save or ACK"))
 	# The explicit producer may build its real paid prerequisite in the same
 	# startup. The original suites and their admitted baseline stay unchanged.
 	if bool(_profile.get("prepare_paid_altar", false)):
