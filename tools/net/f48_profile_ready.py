@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import shutil
 from pathlib import Path
 
@@ -77,8 +78,10 @@ def prerequisite(name: str, inputs: list[dict]) -> None:
                   if row.get("captured_from", {}).get("kind") == "wild" and
                   row["captured_from"].get("world_namespace") and
                   row["captured_from"].get("spawn_id") and
-                  type(row["captured_from"].get("generation")) is int and
-                  row["captured_from"]["generation"] >= 1]
+                  type(row["captured_from"].get("spawn_generation")) in (int, float) and
+                  math.isfinite(row["captured_from"]["spawn_generation"]) and
+                  1 <= row["captured_from"]["spawn_generation"] <= 2147483647 and
+                  int(row["captured_from"]["spawn_generation"]) == row["captured_from"]["spawn_generation"]]
         fixture.require(len(owner["party"]) > 1 and caught,
                         "Release requires an actual caught wild companion; no provenance is fabricated")
     if name == "key":
