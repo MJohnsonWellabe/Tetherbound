@@ -1,0 +1,160 @@
+{
+  "acceptance_credit": false,
+  "head": "74e79427923ff86404b77d828c0fcd478ac204d4",
+  "producer_profile": "478a3ff3e465447b625737f4d17ae05e6b12fcb1c92cd4bc8a14ffe1713da015",
+  "terminal_exit": 2,
+  "elapsed_seconds": 438.530999999959,
+  "source_unchanged": true,
+  "engine_handles_after": "0",
+  "observation": "Original both-peer admission/full witnesses and ordinary menu/place PASS; #17 host silence15s FAIL. Opt-in phase logs prove prepared world BOOL94.6ms, journal206.8ms, registry238us, publication130.9ms returned. Owner projection/BOOL repeatedly refused in145-159ms. Altar callback identity refused229us; generic owner callback correctly refuses host-phase notification. No paid owner save/catch/loop/complete bundle/CI/criterion credit.",
+  "causal_source_audit": "Actual SaveGame.snapshot lacks character_id required by real pending owner snapshot guard, so prepared owner writer refuses before disk. Foundation branch implementing canonical actual identity + real writer regression. Altar watcher incorrectly compares journal writer actor-vitals epoch to distinct Session Altar epoch; proof branch implementing exact separate bindings. Native fixes unverified.",
+  "files": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-74e79427923f\\0.log",
+      "sealed": "000-0.log.gz",
+      "raw_bytes": 278,
+      "raw_sha256": "69b3571044a80637312c635d1b90ff98a17609df6d9ab5df1d2c17a9bdd35893",
+      "gzip_sha256": "29aadabebf5187c88b36bcf9e9cb2562f0a1ac7b362504668f941ee3ba7099cd"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-74e79427923f\\receipt.json",
+      "sealed": "001-receipt.json.gz",
+      "raw_bytes": 760994,
+      "raw_sha256": "c009675252118670d16c2a563a97c4fbe97ae24b36ac09acd7ae7b790ca659f9",
+      "gzip_sha256": "4e93626be92859191215171cfdc0e5af063148a3ed1ff4e3f18e9533e31573ea"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-74e79427923f\\scripts.json",
+      "sealed": "002-scripts.json.gz",
+      "raw_bytes": 124,
+      "raw_sha256": "61a0ac8373a1f380ed7f7f39c9c1201464308cf9fceaf65cf7997563312c6974",
+      "gzip_sha256": "cc8b79f72339cda8558822b7f3f48a557637e4e26cb51c646a7de880fd493243"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-commit-trace-wrapper-74e79427923f\\receipt.json",
+      "sealed": "003-receipt.json.gz",
+      "raw_bytes": 762104,
+      "raw_sha256": "cc43c9be2d672293ec5eeee1e968dd34ca0a967295552062222398cae6c1b430",
+      "gzip_sha256": "4ce037dc1555d5f7ca302a4c829d3ee740f233b6c1c736c5c480c9730bca5bfe"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-commit-trace-wrapper-74e79427923f\\wrapper.log",
+      "sealed": "004-wrapper.log.gz",
+      "raw_bytes": 161,
+      "raw_sha256": "dafbabdee9d1257be2aed2784749281ab06073bcc0b28d1af7e2e3baa5668467",
+      "gzip_sha256": "7d1f5f43c0941f4e9ac6218947e3304afcec905442654d168a2e424c54abeacf"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\coordinator.log",
+      "sealed": "005-coordinator.log.gz",
+      "raw_bytes": 4518,
+      "raw_sha256": "aa59cc4e73e05bae590bbc4149be0787da97bae62ea4e02aebf4a7ab87238be9",
+      "gzip_sha256": "d1a8d5a4824a9bdc0f71bdf4aa168bd5f1e45d2179073fd5a37ec15354e81a8c"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\invocation.json",
+      "sealed": "006-invocation.json.gz",
+      "raw_bytes": 1732,
+      "raw_sha256": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1",
+      "gzip_sha256": "a52e68067c8dde41c0b3cb84df1bb9e4f5ed8f2a6db55ae90c891d062f740829"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\net-run\\NET_RUN.json",
+      "sealed": "007-NET_RUN.json.gz",
+      "raw_bytes": 2804,
+      "raw_sha256": "be73704f659cffbc8ff0fdbb84f8702369098ecbbf767d5a768e8ec576affbf7",
+      "gzip_sha256": "6a6fe7d2f2818d6ba5d199174144dcf7064402cc375ecf6a90db1112f1713746"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-626300bee616b52bfa1d40ab32fb776a\\character.json",
+      "sealed": "008-character.json.gz",
+      "raw_bytes": 2779501,
+      "raw_sha256": "186c04274b0651cc4e2a2e08467547fe809dd432408eea59024d0c50e013d35b",
+      "gzip_sha256": "21e80242f3e09bda59595159f69689aa7ecbfc3f64b104beedf94050b4e55eaf"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\worlds\\redesign-v28\\slot-0\\world.json",
+      "sealed": "009-world.json.gz",
+      "raw_bytes": 35349,
+      "raw_sha256": "904c30b2ec81f47d3445e6b650008943d9ba6fe877e58c07a80b9975abcfe8f6",
+      "gzip_sha256": "2f25b870129c124164782a011708c95a457e16d7cefc4ac90aff8bd901ec2124"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-a79c7bee9128c2ef03d266ce0352c666\\character.json",
+      "sealed": "010-character.json.gz",
+      "raw_bytes": 2779502,
+      "raw_sha256": "bd5d1be4a935eefc1d516a826ed88a7a96cd3da9543142b9b76b6fccb55d18b3",
+      "gzip_sha256": "f36d386d333a63dab5c788b53922417963d03930a29764717e40ff2d8b4e11d8"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\characters\\character-a79c7bee9128c2ef03d266ce0352c666\\character.json",
+      "sealed": "011-character.json.gz",
+      "raw_bytes": 2778464,
+      "raw_sha256": "866a6701f5d9acfe84c415bdc1aaf2049d8dee9edfa72918b507c9a230252219",
+      "gzip_sha256": "9daa55df36e7b8077f54d076759a6d439dbe47468ad4238713795f5e02969528"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\net-run\\peer-0.log",
+      "sealed": "012-peer-0.log.gz",
+      "raw_bytes": 36750,
+      "raw_sha256": "9775bd9535378c5afa947b7adfd02307d39b2a5789aab0b6be8c49fbc3fc53d5",
+      "gzip_sha256": "0e8d688d19ee88e0200a1a9d02ef445d8b97cc3ed4fa74a6fc69bbe6fa8dc957"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\net-run\\peer-1.log",
+      "sealed": "013-peer-1.log.gz",
+      "raw_bytes": 11780,
+      "raw_sha256": "cd9ca99ef46c96fd6d4203439d6028de8dac04b0417b3dc3a95d5978980a3729",
+      "gzip_sha256": "807937487031444383a95f1283c587db158ad980164726be34f58e841aa96abf"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\proof\\PROOF.md",
+      "sealed": "014-PROOF.md.gz",
+      "raw_bytes": 5184,
+      "raw_sha256": "7fe539e14918f5c112639c55906132017304bcf6c1087f2f5adbb03699fd05ca",
+      "gzip_sha256": "9ae56c72bf05c2191b0f2688ef5d8bcf4adc3bbd853d0b8c8017dcd847f16903"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\proof\\f48-passive\\actual-15556.jsonl",
+      "sealed": "015-actual-15556.jsonl.gz",
+      "raw_bytes": 332563,
+      "raw_sha256": "bb5936cb113b6211ec2d9935d10fc05890bb620ea558faa49b19c6c2ed2e5a47",
+      "gzip_sha256": "efadd9b91a12680b20f4c5a69df00e530886fb8b8e79e71a91b496eeb128033e"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\proof\\f48-passive\\actual-18740.jsonl",
+      "sealed": "016-actual-18740.jsonl.gz",
+      "raw_bytes": 8192,
+      "raw_sha256": "7f0973329e500d7af5c0a5ae3f12968276aa8691d093c0d2100b9169af2ec03c",
+      "gzip_sha256": "a07d184926704e2c97f2f1ffda8eca36eed6424f6942d6c24475768baaead457"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\proof\\f48-witnesses\\character-626300bee616b52bfa1d40ab32fb776a\\initial-bootstrap.json",
+      "sealed": "017-initial-bootstrap.json.gz",
+      "raw_bytes": 5612225,
+      "raw_sha256": "736ef78de1fb4527e41c0c96cea0a8e9dc4ec9fb6ce2c3357d7c1ed7febaca3b",
+      "gzip_sha256": "26718551f83d68f283fe4b3c8c922eaa5c638a8f42da785e20bf0f281ed94b01"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-commit-trace-v8\\proof\\f48-witnesses\\character-a79c7bee9128c2ef03d266ce0352c666\\initial-bootstrap.json",
+      "sealed": "018-initial-bootstrap.json.gz",
+      "raw_bytes": 5584909,
+      "raw_sha256": "37a1472fdd3f72e3ca63533dc2736770c3c88bb847c81e2769cadb0132181ac6",
+      "gzip_sha256": "cab7219cc74f52c80e0503de7da9b60ff0d22a4fd022237aaf26a3901aba2d02"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\launch_f48_commit_trace.py",
+      "sealed": "019-launch_f48_commit_trace.py.gz",
+      "raw_bytes": 1891,
+      "raw_sha256": "54acee6054279e5ec5a627593cdc801e535b2618fbd0194a46e3dc6e24d96d6e",
+      "gzip_sha256": "bad2f25e044ad06ae4b6a18f91f09dc707c6fafe006e149cfbe48034496a3aad"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\run_f48_commit_trace.py",
+      "sealed": "020-run_f48_commit_trace.py.gz",
+      "raw_bytes": 4864,
+      "raw_sha256": "e84e0393509e36c1c061c34f944c175e8aec17e98532ffb12929945e3fc0c693",
+      "gzip_sha256": "6835f3512d898c963bbe2c948281db29eb87ad174e96b9b4ad605db046b23bda"
+    }
+  ]
+}
