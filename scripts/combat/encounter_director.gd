@@ -1,5 +1,9 @@
 extends Node
 
+## SceneTree maintains this live index on enter/exit. Portal views need only
+## actual directors, rather than every terrain/harvest node in the world.
+const PORTAL_DIRECTOR_GROUP := &"foundation_portal_directors"
+
 ## Synchronous observation only: emitted around the complete authoritative
 ## strike handler. Copies keep diagnostic subscribers away from live intents.
 signal host_strike_started(intent: Dictionary, peer_id: int)
@@ -825,6 +829,10 @@ var _scaling_base_owner: RefCounted = null
 var _scaling_applied: Dictionary = {}
 ## Invalidates population continuations even if this node is later reattached.
 var _population_generation := 0
+
+
+func _enter_tree() -> void:
+	add_to_group(PORTAL_DIRECTOR_GROUP)
 
 
 func _ready() -> void:

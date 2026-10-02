@@ -3938,6 +3938,30 @@ func _portal_world_node(realm: String) -> Node3D:
 	return node
 
 
+## Read-only binding shared by the live indexed lookup and detached source
+## controls. Tree readiness/lifetime is checked separately at every view.
+static func _portal_director_owned_by(world_node: Node, owner: Node, director: Node) -> bool:
+	return is_instance_valid(world_node) and is_instance_valid(owner) and is_instance_valid(director) \
+		and world_node.is_ancestor_of(director) and director.get_script() != null \
+		and FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		and director.get("_session") == owner and director.has_method("trainer_battle_active") \
+		and director.has_method("encounter_record")
+
+
+func _portal_world_directors(world_node: Node3D) -> Array[Node]:
+	var result: Array[Node] = []
+	if not is_instance_valid(world_node) or not world_node.is_inside_tree() or world_node.is_queued_for_deletion() \
+		or world_node.get_tree() != get_tree() or world_node != _portal_world_node(_local_realm()): return result
+	# Actual base Director registers on every enter_tree, inherited by all
+	# approved regional Directors. SceneTree drops departed/freed members;
+	# late/replacement Directors appear without caching a prior combat answer.
+	for director: Node in get_tree().get_nodes_in_group(&"foundation_portal_directors"):
+		if not director.is_inside_tree() or director.is_queued_for_deletion() \
+			or director.get_tree() != get_tree() or not _portal_director_owned_by(world_node, self, director): continue
+		result.append(director)
+	return result
+
+
 func _host_portal_context(peer: int) -> Dictionary:
 	if not is_host() or not portal_runtime_ready(): return {}
 	var admitted := admitted_character_state(peer)
@@ -3949,7 +3973,8 @@ func _host_portal_context(peer: int) -> Dictionary:
 	var player := game.call("find_player") as CharacterBody3D
 	var realm := _local_realm()
 	var world_node := _portal_world_node(realm)
-	if player == null or world_node == null or not world_node.is_ancestor_of(player): return {}
+	if player == null or world_node == null or not player.is_inside_tree() or player.is_queued_for_deletion() \
+		or not world_node.is_ancestor_of(player): return {}
 	var swim: Node = player.get("swim_controller")
 	var fly: Node = player.get("fly_controller")
 	var downed := game.get_node_or_null("DownedState")
@@ -3964,9 +3989,7 @@ func _host_portal_context(peer: int) -> Dictionary:
 	for node: Node in get_tree().get_nodes_in_group("story_modal"):
 		if node.has_method("is_open") and node.call("is_open") == true: dialogue = true
 	var combat := false
-	var directors: Array[Node] = []
-	for node: Node in world_node.find_children("*", "Node", true, false):
-		if node.has_method("trainer_battle_active") and node.has_method("encounter_record"): directors.append(node)
+	var directors := _portal_world_directors(world_node)
 	if directors.is_empty(): return {}
 	for director: Node in directors:
 		if director.call("trainer_battle_active") == true: combat = true
