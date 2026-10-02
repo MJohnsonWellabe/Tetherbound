@@ -9,6 +9,43 @@ const SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const NAVIGATOR := preload("res://tests/helpers/opening_geometry_navigator.gd")
 
 
+func test_oskar_return_preserves_authored_street_and_house_approach_bends() -> void:
+	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	var roads: Dictionary = {}
+	for entry: Dictionary in terrain.paths.routes + terrain.paths.approaches:
+		var key := str(entry.get("id", entry.get("label", "")))
+		if key not in ["Practice Meadow", "village_main_street", "oskar_house_walk"]:
+			continue
+		var points: Array[Vector2] = []
+		for pair: Array in entry.points:
+			points.append(Vector2(float(pair[0]), float(pair[1])))
+		roads[key] = points
+	var meadow: Array[Vector2] = roads["Practice Meadow"]
+	var street: Array[Vector2] = roads["village_main_street"]
+	var approach: Array[Vector2] = roads["oskar_house_walk"]
+	var actual_goal := Vector2(62.0, 20.0)
+	var route := SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(45.371, -17.773), actual_goal)
+	assert_eq(route, [Vector2(20.0, -17.773), Vector2(20.0, 14.0),
+		Vector2(64.0, 14.0), Vector2(64.0, 21.1), Vector2(61.0, 21.1), actual_goal])
+	var deep_route := SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(30.0, -40.0), actual_goal)
+	assert_true(deep_route.is_empty(),
+		"an over-eight-bend path must refuse instead of dropping bends")
+	var bend_route := SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(14.6, -31.0), actual_goal)
+	assert_eq(bend_route, [Vector2(14.6, -31.0), Vector2(20.0, -26.0), Vector2(20.0, 14.0),
+		Vector2(64.0, 14.0), Vector2(64.0, 21.1), Vector2(61.0, 21.1), actual_goal])
+
+
+func test_oskar_approach_refuses_unjoined_roads_nonfinite_and_remote_prompt() -> void:
+	var meadow: Array[Vector2] = [Vector2(20, 14), Vector2(20, -26)]
+	var street: Array[Vector2] = [Vector2(8.3, 14), Vector2(91, 14)]
+	var approach: Array[Vector2] = [Vector2(64, 14), Vector2(64, 21.1), Vector2(61, 21.1)]
+	assert_true(SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(40, -18), Vector2(62, 20)).size() <= NAVIGATOR.MAX_CHOICES)
+	assert_true(SEGMENT.oskar_approach_path(meadow, street, approach, Vector2.INF, Vector2(62, 20)).is_empty())
+	assert_true(SEGMENT.oskar_approach_path(meadow, street, approach, Vector2(40, -18), Vector2(90, 20)).is_empty())
+	var detached: Array[Vector2] = [Vector2(64, 15), Vector2(64, 21.1), Vector2(61, 21.1)]
+	assert_true(SEGMENT.oskar_approach_path(meadow, street, detached, Vector2(40, -18), Vector2(62, 20)).is_empty())
+
+
 func test_controller_activation_is_confirmed_by_the_live_arbiter_signal() -> void:
 	var source := FileAccess.get_file_as_string(SEGMENT_PATH).replace("\r\n", "\n")
 	assert_true(source.contains("_arbiter.connect(\"activated\", activation_handler)"),

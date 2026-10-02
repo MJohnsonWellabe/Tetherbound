@@ -291,6 +291,45 @@ func authored_road_points(label: String) -> Array[Vector2]:
 	return points
 
 
+## Authored approach coordinates are headings only, never a clearance proof.
+## Read by stable id: several existing house walks intentionally have no label.
+func authored_approach_points(id: String) -> Array[Vector2]:
+	var points: Array[Vector2] = []
+	if not _production_steering or id.is_empty():
+		return points
+	var terrain: Variant = _config("res://data/config/terrain_playground.json")
+	if not terrain is Dictionary or not terrain.get("paths") is Dictionary \
+			or not terrain.paths.get("approaches") is Array \
+			or terrain.paths.approaches.size() > MAX_ROAD_INPUTS:
+		_stop_geometry("missing/excessive authored approach data")
+		return points
+	var found := false
+	for entry: Variant in terrain.paths.approaches:
+		if not entry is Dictionary or str(entry.get("id", "")) != id:
+			continue
+		if found or not entry.get("points") is Array \
+				or entry.points.size() < 2 or entry.points.size() > MAX_ROAD_INPUTS:
+			_stop_geometry("duplicate/malformed authored approach")
+			return []
+		found = true
+		for pair: Variant in entry.points:
+			if not pair is Array or pair.size() != 2 \
+					or not (pair[0] is int or pair[0] is float) \
+					or not (pair[1] is int or pair[1] is float):
+				_stop_geometry("malformed authored approach coordinate")
+				return []
+			var at := Vector2(float(pair[0]), float(pair[1]))
+			if not at.is_finite() or (not points.is_empty() \
+					and (points.back().distance_to(at) <= CONTACT_EPS \
+					or points.back().distance_to(at) > MAX_EDGE)):
+				_stop_geometry("invalid authored approach edge")
+				return []
+			points.append(at)
+	if not found:
+		_stop_geometry("requested authored approach is unavailable")
+	return points
+
+
 func uses_production_steering() -> bool:
 	return _production_steering
 

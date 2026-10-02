@@ -246,7 +246,7 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		# two cottages and a wagon between them. Derived from the leg.
 		if not await _walk_to_and_activate(prompt,
 				maxi(1400, 600 + int(_player.global_position.distance_to(
-					prompt.global_position) * 120.0))):
+					prompt.global_position) * 120.0)), who == "Oskar"):
 			var holder: Variant = _arbiter.call("winning_provider")
 			_fail(("natural controller travel could not activate %s cycle %d "
 				+ "(%.1fm away, arbiter winner=%s under %s). A winner that is not %s "
@@ -837,9 +837,24 @@ func _npc_prompt(npc: Node3D) -> Node3D:
 ##
 ##   natural controller travel could not activate Mira cycle 1
 ##   (7.0m away, arbiter winner=EncounterDirector under MeadowsPlayground)
-func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
+func _walk_to_and_activate(target: Node3D, budget: int, oskar_road: bool = false) -> bool:
 	for attempt in 3:
-		if await _one_approach(target, budget):
+		var headings: Array[Vector2] = []
+		if oskar_road:
+			var npc := _world.find_child("Oskar", true, false) as Node3D
+			if npc == null or target != _npc_prompt(npc) or not _world.is_ancestor_of(target):
+				_fail("authored Oskar guidance lacks the actual current-world prompt")
+				return false
+			var from := Vector2(_player.global_position.x, _player.global_position.z)
+			var goal := Vector2(target.global_position.x, target.global_position.z)
+			if from.distance_to(goal) > 4.0:
+				headings = oskar_approach_path(_nav.authored_road_points("Practice Meadow"),
+					_nav.authored_approach_points("village_main_street"),
+					_nav.authored_approach_points("oskar_house_walk"), from, goal)
+				if headings.is_empty() or _nav.refused():
+					_fail("missing/malformed bounded authored Oskar approach")
+					return false
+		if await _one_approach(target, budget, headings):
 			return true
 		if not _failures.is_empty():
 			return false
@@ -854,11 +869,12 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 ## fight that freezes the body for twenty seconds is not twenty seconds of
 ## failing to get somewhere. Counting them spent the whole allowance waiting
 ## and then reported the villager as unreachable from twenty-nine metres away.
-func _one_approach(target: Node3D, budget: int) -> bool:
+func _one_approach(target: Node3D, budget: int, headings: Array[Vector2] = []) -> bool:
 	_nav.reset()
-	_nav.set_approach_radius(1.65)
+	_nav.set_approach_radius(1.65 if headings.is_empty() else 0.8)
 	var walked := 0
 	var held := 0
+	var heading_index := 0
 	while walked < budget:
 		if not _nav.can_walk():
 			# Hands off while a fight owns the body; nothing learned during it
@@ -874,7 +890,22 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			_fail("Native opening refused: " + _nav.refusal_reason())
 			return false
 		walked += 1
-		if not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
+		# Keep the same walking allowance and index through fights/resets. Every
+		# authored bend is reached by observed real motion before the next one.
+		if heading_index < headings.size() and not _nav.departure_pending(target.global_position):
+			var at := Vector2(_player.global_position.x, _player.global_position.z)
+			if at.distance_to(headings[heading_index]) <= 0.8:
+				heading_index += 1
+				_nav.reset()
+				_nav.set_approach_radius(1.65 if heading_index == headings.size() else 0.8)
+			if heading_index < headings.size():
+				var next := headings[heading_index]
+				await _nav.step(Vector3(next.x, target.global_position.y, next.y))
+				if _nav.refused():
+					_fail("Native authored Oskar approach refused: " + _nav.refusal_reason())
+					return false
+				continue
+		if heading_index == headings.size() and not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
 			var activation := await _press_and_observe_activation(target)
 			if activation == ActivationVerdict.TARGET:
 				return true
@@ -889,7 +920,7 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			continue
 		var to := target.global_position - _player.global_position
 		to.y = 0.0
-		if not _nav.departure_pending(target.global_position) and to.length() <= 1.65:
+		if heading_index == headings.size() and not _nav.departure_pending(target.global_position) and to.length() <= 1.65:
 			# Close enough, and something ELSE is holding the interact line.
 			#
 			# The village stands in open meadow and the arbiter ranks by
@@ -929,7 +960,7 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 	# settle before giving up, which is what the previous version did and is
 	# still right once the walking is over.
 	for _i in 30:
-		if not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
+		if heading_index == headings.size() and not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
 			var activation := await _press_and_observe_activation(target)
 			if activation == ActivationVerdict.TARGET:
 				return true
@@ -939,6 +970,58 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 				return false
 		await _tree.physics_frame
 	return false
+
+
+## Join existing painted roads without claiming their geometry is clear. Only
+## same-direction collinear intermediate coordinates may be compressed; bends
+## and the unchanged eight-choice/edge bounds are preserved.
+static func oskar_approach_path(meadow: Array[Vector2], street: Array[Vector2], approach: Array[Vector2], from: Vector2, goal: Vector2) -> Array[Vector2]:
+	if not from.is_finite() or not goal.is_finite():
+		return []
+	for road: Array[Vector2] in [meadow, street, approach]:
+		if road.size() < 2 or road.size() > NAVIGATOR.MAX_ROAD_INPUTS:
+			return []
+		for index in road.size():
+			if not road[index].is_finite() or (index > 0 \
+					and (road[index - 1].distance_to(road[index]) <= NAVIGATOR.CONTACT_EPS \
+					or road[index - 1].distance_to(road[index]) > NAVIGATOR.MAX_EDGE)):
+				return []
+	var street_join := NAVIGATOR.road_slice(street, meadow[0], approach[0])
+	if street_join.is_empty() or street_join[0].distance_to(meadow[0]) > NAVIGATOR.CONTACT_EPS \
+			or street_join.back().distance_to(approach[0]) > NAVIGATOR.CONTACT_EPS \
+			or approach.back().distance_to(goal) > 1.65:
+		return []
+	var meadow_leg := NAVIGATOR.road_slice(meadow, from, meadow[0])
+	var street_leg := NAVIGATOR.road_slice(street, from, approach[0])
+	if meadow_leg.is_empty() or street_leg.is_empty():
+		return []
+	var raw: Array[Vector2] = []
+	if from.distance_to(meadow_leg[0]) < from.distance_to(street_leg[0]):
+		raw.append_array(meadow_leg)
+		raw.append_array(street_join)
+	else:
+		raw.append_array(street_leg)
+	raw.append_array(approach)
+	raw.append(goal)
+	var result: Array[Vector2] = []
+	for point: Vector2 in raw:
+		if not result.is_empty() and result.back().distance_to(point) <= NAVIGATOR.CONTACT_EPS:
+			continue
+		if result.size() >= 2:
+			var incoming := result.back() - result[result.size() - 2]
+			var outgoing := point - result.back()
+			if absf(incoming.cross(outgoing)) <= NAVIGATOR.CONTACT_EPS \
+					and incoming.dot(outgoing) > 0.0:
+				result.pop_back()
+		result.append(point)
+	if result.size() > NAVIGATOR.MAX_CHOICES:
+		return []
+	var previous := from
+	for point: Vector2 in result:
+		if previous.distance_to(point) > NAVIGATOR.MAX_EDGE:
+			return []
+		previous = point
+	return result
 
 
 ## A physical press succeeds only when the live arbiter says the requested
