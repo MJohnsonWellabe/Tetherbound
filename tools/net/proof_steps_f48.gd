@@ -8,6 +8,7 @@ const ATOMIC := preload("res://scripts/save/atomic_save_file.gd")
 const DETACHED := preload("res://tools/net/f48_detached_file.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
 const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
+const COMMIT_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 const PASSIVE := preload("res://tools/net/f48_passive_witness.gd")
 const PORTAL_DELIVERY := preload("res://scripts/net/portal_delivery.gd")
 const PROOF_FILES := preload("res://tools/net/proof_steps.gd")
@@ -71,34 +72,57 @@ static func _watch_owner_saves(tree: SceneTree) -> bool:
 	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
 	if game == null or writer == null or not writer.has_signal("transaction_boundary"): return false
 	var observer := func(packet: Dictionary) -> void:
+		var callback_started := COMMIT_TRACE.begin("proof.owner.callback")
+		var identity_started := COMMIT_TRACE.begin("proof.owner.identity")
 		if packet.get("phase") != "after_owner_write_before_ack" or game.get("local") == null or game.get("world") == null \
 			or packet.get("character_id") != game.local.character_id or packet.get("world_namespace") != game.world.reward_delivery_namespace:
+			COMMIT_TRACE.end("proof.owner.identity", identity_started, "refused")
+			COMMIT_TRACE.end("proof.owner.callback", callback_started, "refused")
 			return
 		var epoch := str(game.session.call("_altar_current_epoch"))
-		if epoch.is_empty() or packet.get("session_id") != epoch: return
+		if epoch.is_empty() or packet.get("session_id") != epoch:
+			COMMIT_TRACE.end("proof.owner.identity", identity_started, "epoch_refused")
+			COMMIT_TRACE.end("proof.owner.callback", callback_started, "refused")
+			return
+		COMMIT_TRACE.end("proof.owner.identity", identity_started, "passed")
 		var row: Variant = game.world.reward_deliveries.get(packet.get("delivery_id"))
+		var validation_started := COMMIT_TRACE.begin("proof.owner.row_validation")
 		var valid: bool = WORLD_STATE.training_row_valid(row, str(game.world.reward_delivery_namespace), str(game.world.world_id))
 		if row is Dictionary and row.get("kind") == "portal_unlock":
 			valid = PORTAL_DELIVERY.valid(row, str(game.local.character_id), str(game.world.reward_delivery_namespace)) and row.get("world_id") == game.world.world_id
 		elif valid: valid = row.get("session_id") == epoch
-		if not valid or row.get("character_id") != packet.get("character_id") or row.get("receipt") != packet.get("receipt"): return
+		if not valid or row.get("character_id") != packet.get("character_id") or row.get("receipt") != packet.get("receipt"):
+			COMMIT_TRACE.end("proof.owner.row_validation", validation_started, "refused")
+			COMMIT_TRACE.end("proof.owner.callback", callback_started, "refused")
+			return
+		COMMIT_TRACE.end("proof.owner.row_validation", validation_started, "passed")
+		var observe_started := COMMIT_TRACE.begin("proof.owner.full_observe")
 		var data := _observe(tree)
+		COMMIT_TRACE.end("proof.owner.full_observe", observe_started)
 		var evidence := {"packet": packet.duplicate(true), "row": row.duplicate(true), "files": data,
 			"world_ref": weakref(game.world), "session_ref": weakref(game.session), "epoch": epoch, "identity": str(packet.delivery_id)}
 		var receipt := str(row.receipt)
 		var sequence: int = int(tree.get_meta("f48_owner_save_sequence", 0)) + 1
 		tree.set_meta("f48_owner_save_sequence", sequence)
 		var anchor := "owner-%s-%d" % [receipt.sha256_text(), sequence]
-		if not PASSIVE.start(tree) or not PASSIVE.anchor(tree, anchor, data): return
+		if not PASSIVE.start(tree) or not PASSIVE.anchor(tree, anchor, data):
+			COMMIT_TRACE.end("proof.owner.callback", callback_started, "passive_refused")
+			return
 		evidence.anchor = anchor
 		var disk := {"packet": packet, "row": row, "files": data, "passive": PASSIVE.evidence(tree, anchor), "observer_pid": OS.get_process_id()}
 		var dir := OS.get_environment("TB_PROOF_OUT").path_join("f48-owner-saves").path_join(str(game.local.character_id))
 		DirAccess.make_dir_recursive_absolute(dir)
 		var path := dir.path_join(anchor + ".json")
-		if not DETACHED.publish(path, disk): return
+		var publish_started := COMMIT_TRACE.begin("proof.owner.publish")
+		if not DETACHED.publish(path, disk):
+			COMMIT_TRACE.end("proof.owner.publish", publish_started, "refused")
+			COMMIT_TRACE.end("proof.owner.callback", callback_started, "refused")
+			return
+		COMMIT_TRACE.end("proof.owner.publish", publish_started)
 		evidence.path = path
 		evidence.sha256 = _digest(path)
 		tree.set_meta("f48_latest_owner_save", evidence)
+		COMMIT_TRACE.end("proof.owner.callback", callback_started, "published")
 	writer.connect("transaction_boundary", observer)
 	tree.set_meta("f48_owner_save_watch", observer)
 	return true
@@ -951,32 +975,53 @@ static func _watch_altar_save(tree: SceneTree) -> Dictionary:
 	var prior_receipts: Array = game.local.save_data().redesign_character.transaction_receipts.duplicate()
 	tree.set_meta("f48_altar_save_edges", {})
 	var observer := func(observation: Dictionary) -> void:
+		var callback_started := COMMIT_TRACE.begin("proof.altar.callback")
+		var identity_started := COMMIT_TRACE.begin("proof.altar.identity")
 		var phase := str(observation.get("phase", ""))
 		if phase not in ["after_host_write_before_delivery", "after_owner_write_before_ack"] \
 			or observation.get("kind") != "altar_building" or observation.get("action") != "place_building" \
 			or observation.get("character_id") != character or observation.get("world_namespace") != namespace_id \
 			or observation.get("session_id") != epoch or game.world != world_ref.get_ref() \
 			or game.local.character_id != character or game.session.call("_altar_current_epoch") != epoch:
+			COMMIT_TRACE.end("proof.altar.identity", identity_started, "refused")
+			COMMIT_TRACE.end("proof.altar.callback", callback_started, "refused")
 			return
+		COMMIT_TRACE.end("proof.altar.identity", identity_started, "passed")
 		var row: Variant = game.world.reward_deliveries.get(observation.get("delivery_id"))
+		var validation_started := COMMIT_TRACE.begin("proof.altar.row_validation")
 		if not WORLD_STATE.altar_build_row_valid(row, namespace_id, str(game.world.world_id)) \
 			or row.get("receipt") != observation.get("receipt") or row.get("character_id") != character \
 			or row.get("session_id") != epoch or prior_receipts.has(row.get("receipt")):
+			COMMIT_TRACE.end("proof.altar.row_validation", validation_started, "refused")
+			COMMIT_TRACE.end("proof.altar.callback", callback_started, "refused")
 			return
+		COMMIT_TRACE.end("proof.altar.row_validation", validation_started, "passed")
 		var edges: Dictionary = tree.get_meta("f48_altar_save_edges", {})
-		if edges.has(phase): return
+		if edges.has(phase):
+			COMMIT_TRACE.end("proof.altar.callback", callback_started, "duplicate")
+			return
 		if edges.has("after_host_write_before_delivery") \
-			and edges.after_host_write_before_delivery.row.delivery_id != row.delivery_id: return
+			and edges.after_host_write_before_delivery.row.delivery_id != row.delivery_id:
+			COMMIT_TRACE.end("proof.altar.callback", callback_started, "identity_changed")
+			return
+		var observe_started := COMMIT_TRACE.begin("proof.altar.full_observe")
 		var evidence := {"phase": phase, "observation": observation.duplicate(true), "row": row.duplicate(true),
 			"files": _observe(tree), "observer_pid": OS.get_process_id(), "session_epoch": epoch}
+		COMMIT_TRACE.end("proof.altar.full_observe", observe_started)
 		var dir := output.path_join("f48-altar-save-edges").path_join(character)
 		DirAccess.make_dir_recursive_absolute(dir)
 		var path := dir.path_join(phase + ".json")
-		if not DETACHED.publish(path, evidence): return
+		var publish_started := COMMIT_TRACE.begin("proof.altar.publish")
+		if not DETACHED.publish(path, evidence):
+			COMMIT_TRACE.end("proof.altar.publish", publish_started, "refused")
+			COMMIT_TRACE.end("proof.altar.callback", callback_started, "refused")
+			return
+		COMMIT_TRACE.end("proof.altar.publish", publish_started)
 		evidence.path = path
 		evidence.sha256 = _digest(path)
 		edges[phase] = evidence
 		tree.set_meta("f48_altar_save_edges", edges)
+		COMMIT_TRACE.end("proof.altar.callback", callback_started, "published")
 	writer.connect("transaction_boundary", observer)
 	tree.set_meta("f48_altar_save_watch", observer)
 	return _result(true, "Read-only exact host/owner save edges armed before original paid build input")
