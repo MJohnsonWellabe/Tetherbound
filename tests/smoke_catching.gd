@@ -195,7 +195,9 @@ func _aiming_hands_control_to_the_trainer() -> void:
 
 	# Backing out is free and must spend nothing.
 	var before := int(_manager.call("orbs_left"))
-	await _press("combat_run")
+	# The combat_aim context backs out with menu_cancel (pad B); RT/combat_run
+	# is not read while aiming since the physical X/Y/B/A combat map.
+	await _press("menu_cancel")
 	for i in 20:
 		await physics_frame
 	if bool(_manager.call("is_aiming")):

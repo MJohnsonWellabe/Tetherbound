@@ -1002,7 +1002,10 @@ func _the_road_gate_stops_until_the_key_is_found() -> void:
 		_fail("the gate reports open before the player ever held the key")
 		return
 
-	var key := _find_interactable_matching(["key"])
+	# The gate's own key ("Take the old key", playground_world.gd), not the
+	# first label containing "key": live portal arches now read "... · Needs
+	# the Tidewake Portal Key" and win a bare "key" match on tree order.
+	var key := _find_interactable_matching(["old key"])
 	if key == null:
 		_fail("no key offered anywhere; the gate is locked with no way through")
 		return

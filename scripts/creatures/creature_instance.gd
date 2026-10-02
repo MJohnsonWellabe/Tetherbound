@@ -587,11 +587,51 @@ func set_level(new_level: int, cfg: Dictionary) -> void:
 	hp = max_hp
 	# This API is the existing pre-fight spawn/story jump. Caught above an
 	# unlock arrives knowing it; picking its initial utility is not a field edit.
+	# A jump DOWN (a pinned practice/fixed-level spawn overriding its rolled
+	# level) must also forget learnset moves gated above the new level: kept,
+	# the creature is a level-2 Bramblebun knowing its level-5 Snare, and the
+	# save boundary refuses the whole party as an invalid mastery document.
+	_forget_unlocks_above_level()
 	TEACHING.refresh_known_moves(self)
 	if move_utility.is_empty():
 		var row: Dictionary = TEACHING.learnsets().get(species_id,{})
 		var first := str(row.get("first_utility",""))
 		if known_moves.has(first): move_utility = first
+
+
+## Spawn/story jump only (`set_level`). Drops a known move whose ONLY source in
+## the species learnset is a level unlock above `level`, unless it has mastery
+## history; taught/TM/default moves are untouched. An equipped slot left naming
+## a dropped move is cleared so the initial-utility pick below can refill it.
+func _forget_unlocks_above_level() -> void:
+	var row: Dictionary = TEACHING.learnsets().get(species_id, {})
+	var gated_above: Array[String] = []
+	for raw: Variant in row.get("unlocks", []):
+		if raw is Dictionary and (raw as Dictionary).has("level") \
+				and int(raw.level) > level and not gated_above.has(str(raw.get("move_id", ""))):
+			gated_above.append(str(raw.get("move_id", "")))
+	if gated_above.is_empty():
+		return
+	var still := TEACHING.available_moves(species_id, level, [])
+	# Loaded lazily: creature_species.gd preloads this script.
+	var species_db: GDScript = load("res://scripts/creatures/creature_species.gd")
+	var definition: Variant = species_db.call("definition", species_id)
+	var defaults: Dictionary = (definition as Dictionary).get("moves", {}) if definition is Dictionary else {}
+	var kept: Array[String] = []
+	var dropped: Array[String] = []
+	for id: String in known_moves:
+		if gated_above.has(id) and not still.has(id) and not defaults.values().has(id) \
+				and not move_mastery_uses.has(id) and not move_mastery_receipts.has(id):
+			dropped.append(id)
+		else:
+			kept.append(id)
+	if dropped.is_empty():
+		return
+	known_moves = kept
+	if dropped.has(move_quick): move_quick = ""
+	if dropped.has(move_charged): move_charged = ""
+	if dropped.has(move_utility): move_utility = ""
+	if dropped.has(move_ultimate): move_ultimate = ""
 
 
 ## PROGRESSION-VISIBLE (prompt 73, D76): this is the single place XP arrives

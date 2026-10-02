@@ -186,7 +186,10 @@ func _check_refusal_shows_an_on_screen_reason(world: Node) -> void:
 		combat.set("state", 0)
 		return
 
-	await _press("inventory")
+	# The Menu button itself. Since the physical X/Y/B/A combat map, pad Y
+	# (`inventory`) is the piloted creature's Charged move mid-fight, so the
+	# shell's shortcut path stands aside silently there by design.
+	await _press("game_menu")
 
 	if bool(_menu.call("is_open")):
 		_fail("the menu opened mid-fight; `menu_cancel` would open a menu instead of fleeing")

@@ -780,7 +780,14 @@ func _read_actions() -> void:
 			return
 		for action in _shortcuts().keys():
 			# X/Y belong to the piloted creature in combat and the Dynamo.
-			if _fight_in_progress() or INPUT_OWNER.current(get_tree()) != null: return
+			if _fight_in_progress(): return
+			if INPUT_OWNER.current(get_tree()) != null:
+				# A story panel (picker, conversation, naming) reads neither
+				# shortcut, so the press is a menu request it refuses: say why,
+				# or the button just looks broken. Other owners keep the press.
+				if _story_modal_open() and Input.is_action_just_pressed(str(action)):
+					_explain_refusal()
+				return
 			if Input.is_action_just_pressed(str(action)):
 				if not open(str(_shortcuts()[action])):
 					_explain_refusal()
