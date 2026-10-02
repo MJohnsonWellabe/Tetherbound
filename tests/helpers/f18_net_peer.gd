@@ -29,6 +29,13 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	var args: Dictionary = msg.get("args", {})
 	var result: Dictionary
 	match action:
+		"f18_boot_world":
+			if _f18_started or _f18_fixture_done or _session().call("is_active") == true:
+				result = _f18_verdict(false, "direct world fixture boot must precede setup/admission")
+			else:
+				await _boot_scene("world", 30)
+				result = _f18_verdict(current_scene != null and current_scene.scene_file_path == WORLD_SCENE,
+					"disclosed sequential world fixture boot after lightweight title hello")
 		"f18_fixture": result = await _f18_fixture(game, args)
 		"f18_stage": result = await _f18_stage(game, args)
 		"f18_inspect": result = _f18_verdict(true, "read-only production/disk witness", _f18_state(game, args))
@@ -260,13 +267,19 @@ func _f18_state(game: Node, args: Dictionary) -> Dictionary:
 	for row: Dictionary in _session().call("peers"):
 		if row.get("character_id") == target: admitted = _session().call("admitted_character_state", int(row.get("peer_id", 0)))
 	var disk := _f18_read(world_path)
+	# Compare native decoded Variants before the JSON verdict wire can round
+	# doubles. A rounded report dictionary cannot prove immutable disk equality.
+	var exact_rows := {}
+	for id: String in world.get("reward_deliveries"):
+		exact_rows[id] = preload("res://scripts/creatures/essence.gd")._equivalent(
+			world.get("reward_deliveries")[id], disk.get("reward_deliveries", {}).get(id))
 	var payload := {"character_id": character, "world_id": world_id,
 		"world_instance": world.get("reward_delivery_namespace"), "realm": game.get("current_realm"),
 		"position": [player.global_position.x, player.global_position.y, player.global_position.z] if player != null else [],
 		"grounded": player != null and player.is_on_floor(), "character": local.get("redesign_character").duplicate(true),
 		"world": world.get("redesign_world").duplicate(true), "world_disk": disk,
 		"character_disk": _f18_read(character_path), "admitted": admitted,
-		"deliveries": world.get("reward_deliveries").duplicate(true),
+		"deliveries": world.get("reward_deliveries").duplicate(true), "deliveries_disk_exact": exact_rows,
 		"home_key_count": inventory.call("count", "home_key"), "tidewake_key_count": inventory.call("count", "tidewake_portal_key"),
 		"tidewake_view": game.call("portal_view", "tidewake"), "runtime_enabled": _session().call("portal_runtime_ready")}
 	# JSON normalizes int/float domains and makes verdict transport explicit.

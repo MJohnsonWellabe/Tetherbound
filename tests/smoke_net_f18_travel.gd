@@ -17,7 +17,9 @@ func _run() -> void:
 	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
 	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:", "WARNING:"], "F18 gameplay peer logs have no errors/warnings")
-	if not await launch(3, "world", [], {1: ["--joiner"]}):
+	# Title/control hello stays lightweight. Build the same actual fixture
+	# worlds sequentially before setup/admission; no simultaneous world writers.
+	if not await launch(3, "title", [], {1: ["--joiner"]}):
 		quit(await finish())
 		return
 	var homes := []
@@ -25,6 +27,7 @@ func _run() -> void:
 		var hello: Dictionary = _peers[peer].hello
 		check(not homes.has(hello.get("user_data_dir")), "peer %d has a distinct isolated save directory" % peer)
 		homes.append(hello.get("user_data_dir"))
+		if not await _f18_pass(peer, "f18_boot_world", {}, 12000): return
 		if not await _f18_pass(peer, "f18_fixture", {"guest": peer == 1}): return
 	var port_a := int(_peers[0].hello.enet_port)
 	var port_b := int(_peers[2].hello.enet_port)
@@ -172,7 +175,7 @@ func _f18_accepted(state: Dictionary, character: String, action: String, receipt
 		if row.get("action", row.get("kind", "")) != action: continue
 		if not receipt.is_empty() and row.get("receipt") != receipt: continue
 		if not entry.is_empty() and row.get("intent", {}).get("entry_id") != entry: continue
-		if disk.get(id) == row: return true
+		if state.get("deliveries_disk_exact", {}).get(id) == true and disk.get(id) == row: return true
 	return false
 
 func _f18_position_same(before: Dictionary, after: Dictionary) -> bool:
