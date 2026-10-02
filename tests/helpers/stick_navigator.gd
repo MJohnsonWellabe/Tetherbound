@@ -328,6 +328,18 @@ const HELD_FRAMES := 36000
 ## Frames spent held do not count against the leg's budget: the budget is a
 ## measure of walking, and none is being done.
 func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
+	return await walk_to_guided(point, budget, close_enough)
+
+
+## Separate entry preserves existing subclasses' walk_to signatures (some
+## already use a fourth argument for an authored road name). Both entries use
+## this one original walk loop, including its unchanged movement budgets.
+func walk_to_guided(point: Vector3, budget: int, close_enough: float = 0.8, headings: Array[Vector3] = []) -> bool:
+	if not point.is_finite() or headings.size() > 32:
+		return false
+	for heading: Vector3 in headings:
+		if not heading.is_finite():
+			return false
 	reset()
 	_confined_resets = 0
 	var held := 0
@@ -335,11 +347,22 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 	# The leg-level watchdog's rolling anchor -- see `CONFINED_FRAMES`.
 	var anchor := _player.global_position
 	var anchor_age := 0
+	# Waypoints share this entire walk's budget and watchdog. Held movement or
+	# a confined reset must never forget which actual waypoint was reached.
+	var heading_index := 0
 	while walked < budget:
-		var to := point - _player.global_position
+		var aim := headings[heading_index] if heading_index < headings.size() else point
+		var to := aim - _player.global_position
 		to.y = 0.0
-		if to.length() <= close_enough:
-			return true
+		var tolerance := 0.6 if heading_index < headings.size() else close_enough
+		if to.length() <= tolerance:
+			if heading_index == headings.size():
+				return true
+			heading_index += 1
+			# Only local steering resets at an observed heading; counters and
+			# the rolling confined anchor retain the whole walk's history.
+			reset()
+			continue
 		if not can_walk():
 			held += 1
 			if held > HELD_FRAMES:
@@ -374,7 +397,7 @@ func walk_to(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
 				_back_off(to)
 				anchor = _player.global_position
 				anchor_age = 0
-		await step(point)
+		await step(aim)
 	return false
 
 
