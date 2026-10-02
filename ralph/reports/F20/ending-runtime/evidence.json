@@ -1,0 +1,34 @@
+{
+  "feature": "F20",
+  "source_delta": "804a66388a",
+  "proof_dependency": {"feature": "F18", "original": "98ff2a89cc", "local": "5a315cef84"},
+  "source_review": "PASS: independent read-only f20_review; acceptance remains open",
+  "focused": {
+    "verdict": "PASS",
+    "log": "f20-f18-focused-r2.log.gz",
+    "tests": 31,
+    "assertions": 240,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": ["test_ending_return_provenance.gd", "test_foundation_travel_protocol.gd", "test_regional_homecoming.gd", "test_f18_waystones.gd"]
+  },
+  "pending_acknowledgement": {"verdict": "PASS", "log": "f20-pending.log.gz", "cases": 2, "assertions": 9},
+  "synthetic_disk": {"verdict": "PASS", "log": "f20-synthetic-disk.log.gz", "checks": 62, "scope": "synthetic facade over actual split writer, Game, credits UI and disk; not earned gameplay"},
+  "actual_world": {
+    "verdict": "OPEN",
+    "reason": "queued behind F17 shared full-world lease",
+    "scripts": ["tests/smoke_f20_ending.gd", "tests/smoke_f20_tidewake_close.gd", "tests/smoke_net_f20_ending.gd", "tests/smoke_f20_arch_presentation.gd"]
+  },
+  "disclosures": [
+    "World proofs start from explicit saved post-finale/post-Nerissa fixtures; they do not claim earned boss fights or a complete campaign.",
+    "Fixture team, inventory, starter receipt, memories and personal chapter choices are supplied before the tested production inputs.",
+    "Credits completion uses ordinary controller Skip, not a full-duration credits viewing.",
+    "Source presence, compilation and synthetic tests do not satisfy actual-world or visible/audible acceptance."
+  ],
+  "setup_incident": {
+    "invalid_log": "f20-f18-focused.log.gz",
+    "reason": "Sparse Git merge followed F20 asset junctions and removed 3735 coordinator tracked assets/addons. Run invalid despite exit zero.",
+    "recovery": "Removed F20 junctions; restored only git ls-files --deleted -z -- assets addons paths via git restore --worktree --pathspec-from-file --pathspec-file-nul. Coordinator missing tracked assets count returned to zero. F17 independent local directories unaffected. F20 assets/addons now ordinary local directories."
+  },
+  "landing": "Handoff to coordinator; no direct main mutation or acceptance claim."
+}

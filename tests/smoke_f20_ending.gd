@@ -12,8 +12,10 @@ func _run() -> void:
 	await process_frame
 	var game := root.get_node("Game")
 	if not proof.fixture(game, "Solo"): finish(); return
-	if change_scene_to_file("res://scenes/world/meadows_playground.tscn") != OK:
-		proof.check(false, "production Meadows scene loads"); finish(); return
+	game.set("current_realm", "stormwood")
+	game.local.set("realm", "stormwood")
+	if change_scene_to_file("res://scenes/world/stormwood.tscn") != OK:
+		proof.check(false, "production post-finale Stormwood scene loads"); finish(); return
 	if not await proof.ending(self, game): finish(); return
 	if not proof.check(game.call("save_game", 0), "completed world saves"): finish(); return
 	var before := proof.retained(game)

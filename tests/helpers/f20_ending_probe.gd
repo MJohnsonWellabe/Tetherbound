@@ -10,6 +10,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 var failures: Array[String] = []
 var checks := 0
 var _heard := ""
+var _expected_choices: Array[String] = ["meadows:refused", "water:refused", "cloudreach:refused", "stormwood:refused"]
 
 func check(value: bool, message: String) -> bool:
 	checks += 1
@@ -27,6 +28,10 @@ func fixture(game: Node, label: String) -> bool:
 		game.local.flags.call("set_flag", flag)
 	for flag: String in [HOME.WORLD_FLAG, "stormwood:long_storm_ended", "water_currents_restored", "old_champion_met"]:
 		game.progression.call("set_flag", flag)
+	if label == "Peer1":
+		game.local.flags.call("set_flag", "water:legendary_refused", false)
+		game.local.flags.call("set_flag", "water:legendary_joined")
+		_expected_choices[1] = "water:accepted"
 	for index in 5:
 		var species: String = ["terrapup", "brooktail", "mosshell", "bramblebun", "trailpup"][index]
 		var companion: RefCounted = game.local.call("make_creature", species, label + str(index + 1))
@@ -55,6 +60,18 @@ func ready(tree: SceneTree, game: Node) -> bool:
 
 func ending(tree: SceneTree, game: Node, stir: bool = true) -> bool:
 	if not await ready(tree, game): return false
+	# A resumed Stormwood may offer the shipping aftermath automatically.
+	# Complete it through ordinary input before using the Home Key.
+	var owner := INPUT_OWNER.current(tree)
+	if owner != null:
+		var deadline := Time.get_ticks_msec() + 30000
+		var travel_after := TRAVEL.new(tree, game)
+		while owner != null and Time.get_ticks_msec() < deadline:
+			if not check(owner.get_script() == load("res://scripts/ui/dialogue_panel.gd") \
+				and owner.call("runner").call("conversation_id") == "stormwood_homecoming_aftermath", "only the actual settled-finale aftermath owns input"): return false
+			await travel_after.tap("interact")
+			owner = INPUT_OWNER.current(tree)
+		if not check(owner == null, "natural aftermath returns input for the Home Key"): return false
 	if not check(HOME.context(game).is_empty(), "older return cannot acknowledge homecoming"): return false
 	var travel := TRAVEL.new(tree, game)
 	if not await travel.home_key():
@@ -83,6 +100,14 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	var expected := HOME.context(game)
 	var first: bool = expected.get("homecoming_seen") != true
 	var prose := HOME.substitutions(game)
+	if first:
+		if not check(expected.get("chapter_choices") == _expected_choices \
+			and expected.get("starter_uid") == game.party.call("at", 0).uid,
+			"reader retains the fixture's own four decisions and actual first companion"): return false
+		if not check(str(prose.get("starter_status", "")).contains(HOME.party_names(game.party)[0]) \
+			and str(prose.get("bond_memory", "")).contains(HOME.party_names(game.party)[0]) \
+			and str(prose.get("bond_memory", "")).contains("4 battles"),
+			"retained starter and known four-battle memory produce truthful prose"): return false
 	_heard = ""
 	var opened := false
 	var deadline := Time.get_ticks_msec() + 30000
@@ -114,7 +139,10 @@ func finish_credits(tree: SceneTree, game: Node) -> bool:
 	credits.connect("acknowledged", func(id: String) -> void: acknowledgements.append(id))
 	var travel := TRAVEL.new(tree, game)
 	var deadline := Time.get_ticks_msec() + 30000
-	while float(credits.get("_elapsed")) < 0.3: await tree.process_frame
+	while credits.call("is_open") and float(credits.get("_elapsed")) < 0.3 \
+		and Time.get_ticks_msec() < deadline: await tree.process_frame
+	if not check(credits.call("is_open") and float(credits.get("_elapsed")) >= 0.3,
+		"actual credits remain open through their input guard"): return false
 	await travel.tap("menu_cancel")
 	while Time.get_ticks_msec() < deadline:
 		await tree.process_frame
@@ -180,7 +208,10 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
 
 func continuation_content(tree: SceneTree, game: Node) -> bool:
 	var journal := preload("res://scripts/world/quest_log.gd").new(game)
-	if not check(not journal.call("local_entries", game.progression).is_empty(), "actual journal keeps unfinished local activities after credits"): return false
+	var unfinished := false
+	for entry: Dictionary in journal.call("local_entries", game.progression):
+		if entry.get("done") == false: unfinished = true
+	if not check(unfinished, "actual journal keeps unfinished local activities after credits"): return false
 	var rematches: Node = game.session.get_node_or_null("FoundationComposition/Rematches")
 	if not check(rematches != null, "production rematch service remains mounted"): return false
 	var available := 0

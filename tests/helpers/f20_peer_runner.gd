@@ -9,6 +9,15 @@ func _boot_scene(which: String, settle: int) -> void:
 	var game := root.get_node("Game")
 	if not f20.fixture(game, "Peer%d" % _peer_index):
 		quit(2); return
+	# reset_for_new_game in the disclosed setup reclaims solo ownership.
+	# Restore the shipping joiner's guard before a throwaway world is built.
+	if OS.get_cmdline_user_args().has("--joiner"):
+		# A shipping guest resumes its portable character, with no host-world
+		# slot competing with that newer acknowledgement on the title route.
+		if not f20.check(game.save_system.call("delete_slot", 0) and not game.call("has_save", 0),
+			"guest fixture retains only its portable character save"):
+			quit(2); return
+		game.call("relinquish_world_save_ownership")
 	await super._boot_scene(which, settle)
 
 func _execute_step(msg: Dictionary) -> Dictionary:
