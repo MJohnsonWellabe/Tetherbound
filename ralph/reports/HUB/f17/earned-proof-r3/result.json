@@ -1,0 +1,14 @@
+{
+  "source": "1a7a390cc5eeead8685a42094cedc683648c3e59",
+  "reached": "village",
+  "artifact_sha256": "d7b08ebe3e6b42b369f06e913c0fda65282c9d146758fd78f68de7e63b59de80",
+  "failure": "Native opening refused: actual production walk lost grounded floor",
+  "native_elapsed_seconds": 414.503,
+  "artifact_id": 11257110166,
+  "run_id": 37074556589,
+  "earned_rest_checkpoint": false,
+  "native_log_sha256": "bf04b23e5c5de71effb23ad57159399300481b03763ae128945cca65b008a2fb",
+  "job_id": 111061440752,
+  "workflow_exit": 1,
+  "requested_prefix_passed": false
+}

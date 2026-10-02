@@ -1,0 +1,29 @@
+# F17 continuation evidence
+
+Five criteria have retained scoped passes. F17#4 and F17#6 remain open; this index does not award acceptance or main credit.
+
+| Criterion | Retained evidence | Scope |
+|---|---|---|
+| #0 topology | `integration-result.md`, `regional-generation-result.md`, `recheck-f17-0.md` | 18 geometry methods / 3437 assertions; actual farmhouse → road → nave walk, native 0 / 175.714 s; unchanged playground smoke, native 0 / 96.515 s. |
+| #1 Hall destination | `destination-day-night-r2-result.md`, `destination-day-night-r2/strict-codeblind.txt` | Ordinary native 1920×1080 Low day/night originals; independent DAY YES / NIGHT YES. This grants no full visual-bar verdict. |
+| #2 all Hall approaches | `hall-circuit-result.md`, `recheck-f17-2.md`, `runtime/hall-circuit-r1.txt` | All eight signed arches and eight signed pedestals reached on real floor/collision with parsed controller input; native 0 / 242.640 s. |
+| #3 houses/services | `services-result.md`, `recheck-f17-3.txt`, `runtime/services-day-night-r3.txt` | Eight named/dressed houses and required service prompts reached by day/night controller input; native 0 / 448.703 s. |
+| #5 join/reload agreement | `hall-agreement-finalizer-r1/README.md`, `hall-agreement-finalizer-r1/independent/strict-review.txt.gz` and `independent/review.json.gz` | Frozen actual ENet producer records and disk saves; 527 finalizer checks, native 0 / 4.956 s. Original failed R4 finalization/transport output retained. Fresh default states only; no mutable F18/F19 state claim. |
+
+The source-aware reuse boundary is integration baseline `f48a0ba1ea54bf39149e37695804fdc976a1f9e7` to runtime candidate `1a7a390cc5eeead8685a42094cedc683648c3e59`. No village, Hall, floor/collision, route, terrain/scatter generation, service placement, lighting, imported presentation, or layout/state producer source changed in that interval. The sole production delta is independently reviewed integration `41dfee404b3ed8deafe9c04f84220f8a90a8159c`, which reuses the authored species catalogue in teaching rather than repeatedly loading it. Other executable deltas are isolated test input dispatch, earned tournament verification, visual capture, and evidence packaging. The previous five passes are reused within their original scope; they are not rerun or broadened by this index.
+
+The subsequent M1 trial candidate changes one external trainer-camp log's collider/model transform. The earlier unchanged-collision statement ends at `1a7a390cc5`; it does not cover that later prop placement. The camp is outside the retained village/Hall topology, service and state producer scopes, and the existing five passes remain scoped to those unchanged subjects. New earned M1 and the mandatory world boot must run on the placement candidate; neither is inferred from old evidence.
+
+## Pending native proof
+
+- **#4:** Fresh continuous earned M1 r3 at exact candidate `1a7a390cc5eeead8685a42094cedc683648c3e59`, [run 37074556589](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37074556589), job 111061440752, failed after414.503s on grounded travel across the old trainer-camp log. `earned-proof-r3/result.md` and exact originals retain actual catch success and the subsequent refusal. No earned rest checkpoint exists. Command: `tests/smoke_four_biome_continuous.gd --through-tournament --world-seed=4 --no-checkpoints --fight-log`. A fresh retry must establish the actual prefix result, earned starter/catches/camp/three-bed readiness, and three real tournament round receipts. Whole-campaign `counts_as_proof` is expected to remain false for this deliberately bounded prefix. Never substitute either failed partial profile for an earned rested team.
+- **#6 Low readability:** Native 1920×1080 Compatibility/software render at the same exact candidate, [run 37075566898](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37075566898). It requests the full physical Hall circuit, matched day/night clear/rain views, and at least 30 native seconds of motion. Actual originals, complete manifest, process result, and independent readability judgment remain required.
+- **#6 Medium/High:** Shared physical GPU slot pending. The capture source verifies Forward+, native 1920×1080, matching body/full camera poses, actual production preset/weather, fresh immutable output, and original PNG stills. Each preset retains JPEG95 native motion samples with actual timestamps spanning at least 30 seconds. `tools/package_f17_visual_motion.py` retains variable timing without resizing/interpolation. Parser and independent source review pass; actual captures and code-blind Bar A and Bar B verdicts remain required.
+
+`preliminary-low-review-r1.md` is the independent image-only critique of the retained two Low farm-door frames. It repeats DAY/NIGHT YES but withholds both full bars, identifies road/depth/night-player defects, and leaves creature appeal unassessed. Its findings are not a replacement for the pending matrix.
+
+## Preserved failures and bounded repair
+
+`earned-proof-r2` retains the exact native exit 1 / 697.016 s catch-aim failure. `aim-dispatch-fix/result.md` and adjacent originals document native buffered-axis behavior, the paired flush correction, and selected native regression (1 test / 4 assertions / native 0). The earned tournament override now observes Halda's physical activation and live selected body instead of calling the inherited fixture activation. Independent source review passes both changes; runtime acceptance remains pending.
+
+`stone-grounding-diagnostic-r1` preserves the separate steep camp-prop diagnostic failure. No speculative production controller repair, widened walkable angle, forced floor snap, changed throw eligibility, increased game budget, staged tournament party, or relaxed assertion is included.

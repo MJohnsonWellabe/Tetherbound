@@ -159,11 +159,11 @@
         },
         {
           "model": "tree-log",
-          "at": [28.7, -25.6],
-          "yaw_deg": 120.0,
+          "at": [27.0, -30.0],
+          "yaw_deg": 90.0,
           "scale": 1.0,
           "dir": "res://assets/props/kenney_survival",
-          "_why": "A log seat on the fire's village side, so the camp reads as somewhere a trainer sits."
+          "_why": "F17 earned M1 r3: the former village-side seat at [28.7,-25.6] caught the actual return from Practice Meadow around the supply pile, lifting the player onto its top before a grounded-floor refusal on the descending edge. Keep the same visible seat, full matching collider and scale, but place it south of the fire facing north, leaving the village-side return open. No controller, floor assertion, navigation waypoint, camp fire/tent/bed or terrain/scatter change. TUNABLE; fresh earned route proof required."
         }
       ]
     },
