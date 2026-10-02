@@ -28,6 +28,7 @@ OPERATIONS = ("craft", "release", "feast", "key", "relic", "essence_spend")
 INPUTS = {"press", "move_to", "stick", "wait", "f48_button", "f48_build_cell"}
 CONFIGS = ("data/config/stations.json", "data/config/essence.json",
            "data/config/traits.json", "data/config/multiplayer.json",
+           "data/config/hud.json",
            "data/config/progression.json", "data/recipes/recipes_forge.json",
            "data/items/items.json")
 PRODUCERS = ("scripts/net/session.gd", "scripts/ui/craft_panel.gd", "scripts/build/station_piece.gd",
@@ -183,8 +184,10 @@ def validate_pack(pack: dict) -> None:
                             f"Unbounded ordinary input: {name}/{field}")
 
 
-def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: Path | None, origin: str) -> dict:
+def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: Path | None, origin: str,
+             configuration_scope: str = "bootstrap") -> dict:
     require(isinstance(origin, str) and bool(origin.strip()), "Disclose original native run and any earlier source setup")
+    require(configuration_scope in ("bootstrap", "full"), "Unknown disclosed configuration scope")
     require(len(sources) in (2, 4), "Use two or four independently captured actual characters")
     require(not output.exists(), "Fresh output required; existing artifacts are never replaced")
     require(all(not output.is_relative_to(source) and not source.is_relative_to(output) for source in sources),
@@ -293,7 +296,7 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
         if f"{operation}_1" not in outcomes:
             manifest["gaps"].append(f"Independent exact {operation}_1 oracle unavailable; existing smoke fails")
     for filename, paths in (("stations.json", ("runtime_enabled", "craft_runtime_enabled", "forge.runtime_enabled")),
-                            ("essence.json", ("altar_runtime_enabled", "altar_remote_spend_enabled", "altar_building_runtime_enabled")),
+                            ("essence.json", ("altar_runtime_enabled", "altar_building_runtime_enabled")),
                             ("traits.json", ("runtime_enabled",)),
                             ("multiplayer.json", ("session.redesign_portal_runtime_enabled", "session.redesign_boss_handoff_runtime_enabled"))):
         config = read(ROOT / "data/config" / filename)
@@ -318,19 +321,31 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
     configuration = []
     overrides = {"stations.json": ["runtime_enabled"],
                  "essence.json": ["altar_runtime_enabled", "altar_building_runtime_enabled"]}
+    if configuration_scope == "full":
+        overrides["stations.json"] += ["craft_runtime_enabled", "forge.runtime_enabled"]
+        overrides.update({"traits.json": ["runtime_enabled"],
+                          "multiplayer.json": ["session.redesign_portal_runtime_enabled",
+                                               "session.redesign_boss_handoff_runtime_enabled"],
+                          "hud.json": ["new_system_screens.enabled"]})
     for name, fields in overrides.items():
         source = ROOT / "data/config" / name
         effective = read(source)
         for field in fields:
-            require(type(effective.get(field)) is bool, f"Missing typed mechanics gate: {name}/{field}")
-            effective[field] = True
+            owner = effective
+            components = field.split(".")
+            for component in components[:-1]:
+                require(isinstance(owner.get(component), dict), f"Missing mechanics configuration section: {name}/{field}")
+                owner = owner[component]
+            require(type(owner.get(components[-1])) is bool, f"Missing typed mechanics gate: {name}/{field}")
+            owner[components[-1]] = True
         target = output / "test-configuration/data/config" / name
         target.parent.mkdir(parents=True, exist_ok=True)
         write(target, effective)
         configuration.append({"file": "res://data/config/" + name, "source_sha256": digest(source),
                               "sha256": digest(target), "overlay_file": str(target), "enabled_fields": fields})
     profile["test_configuration"] = configuration
-    manifest["test_configuration"] = {"status": "DISCLOSED mechanics bootstrap overlay only; production defaults unchanged; native execution OPEN",
+    profile["configuration_scope"] = configuration_scope
+    manifest["test_configuration"] = {"status": "DISCLOSED mechanics " + configuration_scope + " overlay only; production defaults unchanged; native execution OPEN",
                                       "files": configuration,
                                       "apply": "ROOT copies the exact overlay bytes to its isolated serialized native candidate, runs tools/net/f48_bootstrap.gd, then restores original configuration. No source flag or CI prerequisite waiver."}
     write(output / "profile.json", profile)
@@ -345,11 +360,14 @@ def main() -> int:
     parser.add_argument("--layout", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--route-pack", type=Path)
+    parser.add_argument("--configuration-scope", choices=("bootstrap", "full"), default="bootstrap",
+                        help="Export separately pinned named-mechanics gates; never apply them to production source")
     parser.add_argument("--origin", required=True, help="Original native run and disclosed earlier setup; never relabel as earned")
     args = parser.parse_args()
     try:
         manifest = generate([path.resolve() for path in args.source], args.layout.resolve(),
-                            args.output.resolve(), args.route_pack.resolve() if args.route_pack else None, args.origin)
+                            args.output.resolve(), args.route_pack.resolve() if args.route_pack else None,
+                            args.origin, args.configuration_scope)
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(json.dumps({"ok": False, "error": str(error)}))
         return 1

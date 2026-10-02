@@ -165,6 +165,8 @@ func _build() -> Dictionary:
 		"peers": peers, "scene": "title", "budget_s": 3600, "build_allowance_s": 300, "steps": steps}
 
 func _admit(steps: Array, saves: Array, peers: int) -> void:
+	if _profile.has("test_configuration"):
+		steps.append(_entry("all", "f48_require_configuration", {"files": _profile.test_configuration, "scope": _profile.get("configuration_scope", "bootstrap")}, "Pin disclosed effective mechanics configuration before any saved-input admission"))
 	for peer: int in peers:
 		if not saves[peer] is String or not DirAccess.dir_exists_absolute(saves[peer]):
 			_profile_errors.append("Missing actual saved input for peer %d" % peer)

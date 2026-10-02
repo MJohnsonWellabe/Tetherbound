@@ -15,7 +15,7 @@ func _build() -> Dictionary:
 		_profile_errors.append("Paid Altar bootstrap requires two original distinct v28 saved inputs")
 		return {}
 	if str(_profile.get("provenance", "")).is_empty(): _profile_errors.append("Disclose original inputs and mechanics setup")
-	var steps: Array = [_entry("all", "f48_require_configuration", {"files": _profile.get("test_configuration")})]
+	var steps: Array = [_entry("all", "f48_require_configuration", {"files": _profile.get("test_configuration"), "scope": _profile.get("configuration_scope", "bootstrap")})]
 	_admit(steps, saves, 2)
 	steps.append(_entry(0, "f48_require", {"flags": [
 		{"file": "res://data/config/stations.json", "path": "runtime_enabled"},

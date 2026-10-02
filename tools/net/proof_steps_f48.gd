@@ -492,6 +492,10 @@ static func _require(tree: SceneTree, args: Dictionary) -> Dictionary:
 static func _require_configuration(args: Dictionary) -> Dictionary:
 	var files: Variant = args.get("files")
 	var expected := ["res://data/config/stations.json", "res://data/config/essence.json"]
+	var scope: Variant = args.get("scope", "bootstrap")
+	if scope == "full":
+		expected.append_array(["res://data/config/traits.json", "res://data/config/multiplayer.json", "res://data/config/hud.json"])
+	elif scope != "bootstrap": return _result(false, "Unknown disclosed mechanics configuration scope")
 	if not files is Array or files.size() != expected.size(): return _result(false, "Pinned disclosed mechanics configuration missing")
 	var evidence: Array = []
 	for row: Variant in files:
