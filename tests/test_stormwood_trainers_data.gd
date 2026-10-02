@@ -84,7 +84,7 @@ func test_parties_ranks_and_critical_ladder_are_live_and_bounded() -> void:
 			if order > 1:
 				assert_true(ace - last_ace <= 4, "critical ace progression may not jump over four levels")
 			last_ace = ace
-	assert_eq(last_ace, 44, "Captain Marrow's ace is the chapter cap")
+	assert_eq(last_ace, 55, "F19 / RD-10 puts Captain Marrow at the final biome's level-55 exit")
 	var named_ranks := {}
 	var picket_leaders := 0
 	for trainer: Dictionary in _read(PATH).get("trainers", []):

@@ -102,8 +102,6 @@ const PAD_UNBOUND_BY_DESIGN := {
 	"torch_toggle": "the torch is a hotbar tool -- the torch does not need a button",
 	"torch_place": "same verb's fast-equip half",
 	"build_open": "the build hammer is a hotbar tool: select it, press interact",
-	"combat_throw": "the orb is selected on the bar and thrown with interact",
-	"combat_run": "fleeing is RB -- putting your creature away IS disengaging",
 }
 
 

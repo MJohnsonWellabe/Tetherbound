@@ -12,6 +12,10 @@ extends "res://scripts/creatures/creature_body.gd"
 ## clocks, and turning an intent into movement.
 
 const AI := preload("res://scripts/combat/combat_ai.gd")
+const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
+var _landed_utility_state: Dictionary = {}
+var _utility_clock_ms := 0.0
+var _ultimate_reaction_left := 0.0
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const LUNGE_LANE := preload("res://scripts/combat/lunge_lane.gd")
@@ -220,6 +224,11 @@ func _physics_process(delta: float) -> void:
 		_tick_combat(delta)
 	elif is_alive():
 		_tick_peaceful(delta)
+	if engaged and not protected_heavy_committed() and (utility_movement_multiplier() <= 0.0 or _ultimate_reaction_left > 0.0):
+		request_move(Vector3.ZERO)
+		velocity.x = 0.0
+		velocity.z = 0.0
+		_impulse = Vector3.ZERO
 	# The body integrates whatever was requested above. Calling super LAST is
 	# required: request_move is cleared every frame by design, so a request made
 	# after integration would be thrown away.
@@ -664,6 +673,10 @@ func _observe_pattern_reaction(delta: float) -> bool:
 
 ## Called by the combat manager when a fight opens and closes.
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
+	if not value:
+		_landed_utility_state.clear()
+		_utility_clock_ms = 0.0
+		_ultimate_reaction_left = 0.0
 	engaged = value
 	_opponent = opponent
 	# Engagement boundaries can occur while this body is stationary: ordinary
@@ -720,6 +733,11 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 func _tick_combat(delta: float) -> void:
 	if not is_alive() or _opponent == null:
 		return
+	_utility_clock_ms += delta * 1000.0
+	_ultimate_reaction_left = maxf(0.0, _ultimate_reaction_left - delta)
+	# An already committed protected heavy still runs. Only this opponent's
+	# issuance/movement pauses; other hosted opponents keep their own clocks.
+	if _ultimate_reaction_left > 0.0 and not protected_heavy_committed(): return
 
 	_cooldown = maxf(0.0, _cooldown - delta)
 	# F04: the recovery beat starts when the charge stops, not when it starts,
@@ -776,6 +794,7 @@ func _tick_combat(delta: float) -> void:
 
 	var waiting := distance <= float(spaced.get("preferred_range", 2.1))
 	var direction := AI.movement_for(_intent, to, _side_sign, waiting)
+	if utility_movement_multiplier() <= 0.0: direction = Vector3.ZERO
 	if direction != Vector3.ZERO:
 		var movement_profile := spaced.duplicate()
 		if _intent == AI.Intent.DODGE: movement_profile.merge(_patterns.get("reactions", {}), true)
@@ -801,6 +820,40 @@ func _tick_combat(delta: float) -> void:
 ## where it can no longer hit anything.
 func combat_config() -> Dictionary:
 	return _selected_attack if not _selected_attack.is_empty() else _spaced_config()
+
+
+func protected_heavy_committed() -> bool:
+	return _route_cue_left > 0.0 or ((_intent == AI.Intent.TELEGRAPH or _lunge_active or _pattern_leap_active) \
+		and (_selected_attack.get("heavy") == true or _selected_attack.get("protected") == true \
+		or _selected_attack.get("interruptible") == false))
+
+
+func named_combat_target() -> bool:
+	return trainer_owned or not str(get_meta(&"named_encounter_id", "")).is_empty() \
+		or not str(get_meta(&"water_named_encounter", "")).is_empty() \
+		or str(_pattern_context.get("pattern_id", "")).begins_with("named_")
+
+
+## The one host HP writer calls this after a positive landed debit. Utility
+## receipts and expiry use this opponent's clock, which pauses with hitstop.
+func apply_landed_utility(move: Dictionary, context: Dictionary) -> bool:
+	if move.get("move_id") != "snare" or not engaged or not is_alive(): return false
+	if _landed_utility_state.is_empty():
+		_landed_utility_state = UTILITY_EFFECTS.empty_state(str(context.get("encounter_id", "")), int(context.get("generation", 0)))
+	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, "snare", move,
+		context, int(_utility_clock_ms), int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
+	if staged.get("ok") != true: return false
+	_landed_utility_state = staged.state
+	return true
+
+
+func utility_movement_multiplier() -> float:
+	var where := global_position if is_inside_tree() else position
+	return UTILITY_EFFECTS.movement_multiplier(_landed_utility_state, str(instance.get("uid")), where, int(_utility_clock_ms)) if instance != null else 1.0
+
+
+func hold_ultimate_reaction(seconds: float) -> void:
+	_ultimate_reaction_left = maxf(_ultimate_reaction_left, clampf(seconds, 0.0, 3.0))
 
 
 func _selected_heading_is_locked() -> bool:

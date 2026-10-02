@@ -356,10 +356,10 @@ func _throw_at_the_target(target: Node3D) -> bool:
 	_aim_at_the_target(target)
 	for i in 4:
 		await physics_frame
-	Input.action_press("combat_throw")
+	Input.action_press("combat_orb_release")
 	await physics_frame
 	await physics_frame
-	Input.action_release("combat_throw")
+	Input.action_release("combat_orb_release")
 	await physics_frame
 	return true
 

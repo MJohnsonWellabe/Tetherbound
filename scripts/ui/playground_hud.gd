@@ -124,6 +124,7 @@ const HOTBAR_ASSIGNED_SLOT_HEIGHT := 132.0
 ## Action name IS the glyph id (input_glyph.gd's GLYPHS dict uses the same
 ## keys), so one list serves both jobs.
 const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
+const COMBAT_HOTBAR_ACTIONS := ["combat_item_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
 ## Named constants (not the magic 28/16 this used to inline directly into the
 ## bbcode format string) so `smoke_hud_handheld_legibility.gd` can assert real
 ## physical pixel sizes against the values actually drawn, the way it already
@@ -4285,7 +4286,7 @@ func _update_hotbar(inventory: RefCounted) -> void:
 		# A blind critic separately flagged the hotbar numerals as visibly
 		# more pixelated than the legend's -- same vendored PNGs, same
 		# `icon()` call, the only difference was this smaller target size.
-		var glyph := INPUT_GLYPH.icon(HOTBAR_ACTIONS[i], HOTBAR_GLYPH_PX)
+		var glyph := INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i], HOTBAR_GLYPH_PX)
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old
@@ -4383,7 +4384,8 @@ func _read_hotbar_input() -> void:
 	if _combat_is_aiming():
 		return
 	for i in HOTBAR_SLOTS:
-		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
+		var action: String = COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i]
+		if Input.is_action_just_pressed(action):
 			_use_hotbar_slot(i)
 			return
 

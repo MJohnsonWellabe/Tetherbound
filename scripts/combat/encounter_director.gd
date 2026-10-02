@@ -2915,7 +2915,7 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var deny := {"ok": false, "kind": "move_start", "peer": peer,
 		"code": "invalid_actor_move", "reason": "That equipped move is unavailable.", "pending": false, "delta": {}}
 	if MATH.config().get("move_commit", {}).get("runtime_enabled") != true \
-		or slot not in ["quick", "charged"] or not is_instance_valid(body) \
+		or slot not in ["quick", "charged", "utility", "ultimate"] or not is_instance_valid(body) \
 		or not _tournament_combat_identity_valid(id, peer) or _host_peer_staggered(id, peer) \
 		or _session == null or not _session.has_method("admitted_character_state"): return deny
 	var admitted: Dictionary = _session.call("admitted_character_state", peer)
@@ -2927,6 +2927,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var moves := preload("res://scripts/creatures/move_db.gd").load_default()
 	if owned.is_empty() or not moves.has(move_id) or moves.slot(move_id) != slot \
 		or not owned.get("known_moves", []).has(move_id): return deny
+	if not COMBAT_MANAGER.live_move_supported(slot, move_id):
+		deny.code = "move_not_mounted"
+		deny.reason = "That move is not available in this build yet."
+		return deny
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
 	if not is_instance_valid(wild): return deny
@@ -2935,8 +2939,15 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var binding := _strike_actor_binding(id, peer, body)
 	if binding.is_empty() or admitted.get("character_id") != binding.get("character_id") \
 		or float(card.get("hp", 0.0)) <= 0.0: return deny
+	var actor := {"character_id": binding.character_id, "creature_uid": binding.creature_uid,
+		"encounter_id": id, "generation": binding.deployment_generation, "action": int(intent.get("action", 0))}
+	var tiers: Variant = admitted.get("redesign_character", {}).get("creatures", {}).get(binding.creature_uid, {}).get("breakthroughs")
+	if not tiers is Array: return deny
+	var frozen := preload("res://scripts/creatures/move_mastery.gd").freeze_action(
+		preload("res://scripts/creatures/move_mastery.gd").owned_record(owned), slot, actor, tiers, moves)
+	if frozen.get("ok") != true: return deny
 	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id,
-		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild))
+		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,
@@ -3000,7 +3011,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(striker, wild))
 	var now_ms := Time.get_ticks_msec()
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
-	var cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))
+	var cost := float(move.get("wind_cost", wind_cfg.get(slot + "_cost", 0.0)))
 	var wind_profile: Dictionary = COMBAT_MANAGER.host_wind_profile(card)
 	var wind_preview: Dictionary = _encounter_host.call("preview_wind",
 		encounter_id, peer_id, wind_profile, cost, now_ms)
@@ -3042,12 +3053,15 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
 		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position, _host_visual_bounds(wild)).duplicate(true)
 	launch["attacker_binding"] = attacker_binding
+	launch["move"] = move.duplicate(true)
+	launch["mastery_rank"] = int(move.get("mastery_rank", 1))
+	launch["source_ground"] = striker.global_position
 	launch.make_read_only()
+	_publish_host_attack_launch(encounter_id, peer_id, launch)
 	if float(launch.travel_seconds) <= 0.0:
 		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false, intent.duplicate(true))
 	delta["scheduled"] = true
 	delta["launch"] = launch
-	_publish_host_attack_launch(encounter_id, peer_id, launch)
 	_host_after_encounter_change(encounter_id, peer_id)
 	get_tree().create_timer(float(launch.travel_seconds), false).timeout.connect(
 		_finish_host_strike.bind(encounter_id, peer_id, card.duplicate(true), move.duplicate(true), launch, verdict.duplicate(true), true, intent.duplicate(true)), CONNECT_ONE_SHOT)
@@ -3069,7 +3083,9 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		or not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id): return {}
 	if not _strike_actor_binding_matches(encounter_id, peer_id, striker, launch.get("attacker_binding", {})): return {}
 	var committed: Dictionary = _encounter_host.call("move_commit", encounter_id, peer_id, int(intent.get("action", 0)))
-	if committed.get("cancelled") == true or float(_creature_card_for(peer_id).get("hp", 0.0)) <= 0.0: return {}
+	if committed.get("cancelled") == true or float(_creature_card_for(peer_id).get("hp", 0.0)) <= 0.0:
+		MOVE_PROJECTILE.cancel_action(get_tree(), str(launch.get("action_id", "")))
+		return {}
 	if not _guest_master_identity_valid(encounter_id, peer_id): return {}
 	var current_card := _creature_card_for(peer_id)
 	var opponent := wild.get("instance") as RefCounted
@@ -3083,13 +3099,14 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	var hp_before := float(opponent.get("hp"))
 	var rolled: Dictionary = engine.call("host_roll_damage", card,
 		str(launch.move_id), float(move.get("power", 9.0)) * armor, str(launch.slot) == "charged",
-		{"action_id": str(launch.action_id), "striker_body": striker,
+		{"action_id": str(launch.action_id), "striker_body": striker, "move": move,
+		 "travel_seconds": float(launch.travel_seconds), "body_generation": int(launch.body_generation),
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
 	var resources: Dictionary = _encounter_host.call("credit_move_hit", encounter_id, peer_id,
 		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before)
 	var impact: Dictionary = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
-	impact["presentation_launched"] = float(launch.travel_seconds) > 0.0
+	impact["presentation_launched"] = true
 	impact["killed"] = bool(rolled.get("killed", false))
 	impact.make_read_only()
 	rolled["impact"] = impact
@@ -3154,6 +3171,19 @@ func _publish_host_attack_launch(encounter_id: String, author: int, launch: Dict
 			if _manager != null and _local_bound_encounter_id() == encounter_id:
 				_manager.call("present_host_attack_launch", launch, deployed_body_for(author))
 		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_attack_launch", [encounter_id, author, launch])
+
+
+func presentation_move_actor(launch: Dictionary, body: Node3D) -> Dictionary:
+	if not is_instance_valid(body): return {}
+	var frozen: Dictionary = launch.get("move", {}).get("actor_binding", {})
+	for peer: int in _deployment_identity:
+		if deployed_body_for(peer) != body: continue
+		var live: Dictionary = _deployment_identity[peer]
+		if live.get("character_id") != frozen.get("character_id") or live.get("creature_uid") != frozen.get("creature_uid") \
+			or live.get("generation") != frozen.get("generation"): return {}
+		return {"character_id": live.character_id, "creature_uid": live.creature_uid,
+			"generation": live.generation, "encounter_id": str(launch.get("encounter_id", "")), "action": int(frozen.get("action", 0))}
+	return {}
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
@@ -3743,6 +3773,8 @@ func _on_shared_host_strike(encounter_id: String = "") -> void:
 func _shared_cue_payload(encounter_id: String, kind: String, remaining_s: float) -> Dictionary:
 	var runtime := _shared_host_fight(encounter_id)
 	var payload := _shared_presentation_payload(encounter_id)
+	# Pose snapshots retain shape; transient cues carry it only for a live tell.
+	payload.erase("shape")
 	payload.merge({
 		"kind": kind,
 		"cue_serial": int(runtime.get("cue_serial")) if runtime != null else 0,

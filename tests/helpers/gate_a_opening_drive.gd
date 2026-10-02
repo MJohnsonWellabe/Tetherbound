@@ -42,12 +42,9 @@ const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const NPC_GATHER_SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
-## CONTROLLER-MAP (archive/owner/OWNER_DIRECTIVES_2026-08-22.md section 1) took the pad
-## binding off `combat_throw`: the orb is a hotbar item now and X throws it, so
-## `interact` IS the pad's throw button. combat_manager.gd::_throw_pressed and
-## throw_aim.gd both read it beside `combat_throw`'s surviving keyboard F. This
-## harness may only press what a pad can press, so it presses that.
-const THROW_ACTION := &"interact"
+## F23 separates physical LT aim from the physical X release inside aim.
+const AIM_ACTION := &"combat_throw"
+const THROW_ACTION := &"combat_orb_release"
 ## What `combat_manager.gd` records for a fight that ended in a capture
 ## (`OUTCOME_CAUGHT`). Named here because the catch loop has to tell that apart
 ## from a fight your own creature simply won.
@@ -813,7 +810,7 @@ func _open_throw_aim() -> bool:
 				if not _target_is_out_cold() or not bool(_combat.call("is_fighting")):
 					break
 			continue
-		await _tap_action(THROW_ACTION)
+		await _tap_action(AIM_ACTION)
 		for _i in 6:
 			if bool(_combat.call("is_aiming")):
 				return true
@@ -1488,9 +1485,8 @@ func _event_for(action: StringName, pressed: bool) -> InputEvent:
 
 
 func _required_pad_actions_exist() -> bool:
-	# `combat_throw` is deliberately absent: CONTROLLER-MAP left it keyboard-only
-	# and requiring a pad binding for it failed this whole run at boot.
-	for action in [&"ui_accept", &"ui_right", &"ui_down", &"menu_confirm", &"interact", &"combat_quick"]:
+	# Both aim and release must have their actual physical controller events.
+	for action in [&"ui_accept", &"ui_right", &"ui_down", &"menu_confirm", &"interact", &"combat_quick", AIM_ACTION, THROW_ACTION]:
 		if _event_for(action, true) == null:
 			_fail("required action '%s' has no physical joypad binding" % action)
 	return _failures.is_empty()

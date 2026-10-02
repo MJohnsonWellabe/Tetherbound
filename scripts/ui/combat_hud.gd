@@ -250,6 +250,9 @@ var _effect_clock: float = 0.0
 
 @onready var _orbs_panel: PanelContainer = $Root/OrbsPanel
 @onready var _orbs: Label = $Root/OrbsPanel/OrbsLabel
+var _ultimate_readout: RichTextLabel
+var _ultimate_meter: ProgressBar
+const COMBAT_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 @onready var _grid_panel: PanelContainer = $Root/GridPanel
 
 @onready var _cell_quick: PanelContainer = $Root/GridPanel/Grid/CellQuick
@@ -304,6 +307,18 @@ func _ready() -> void:
 	_orbs_panel.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 	for cell in [_cell_quick, _cell_charged, _cell_throw, _cell_switch]:
 		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
+	_ultimate_readout = RichTextLabel.new()
+	_ultimate_readout.bbcode_enabled = true
+	_ultimate_readout.fit_content = true
+	_ultimate_readout.scroll_active = false
+	_ultimate_readout.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ultimate_readout.add_theme_font_size_override("normal_font_size", 22)
+	$Root/AllyPanel/AllyVBox.add_child(_ultimate_readout)
+	_ultimate_meter = ProgressBar.new()
+	_ultimate_meter.custom_minimum_size.y = 8.0
+	_ultimate_meter.show_percentage = false
+	_ultimate_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Root/AllyPanel/AllyVBox.add_child(_ultimate_meter)
 
 	_party_strip = PARTY_STRIP.new()
 	_party_strip.set("progression_feedback_enabled", false)
@@ -908,6 +923,13 @@ func _draw_ally() -> void:
 
 	var energy: float = creature.energy_fraction()
 	_ally_energy.value = energy * 100.0
+	var ultimate: float = float(_manager.call("ultimate_fraction"))
+	_ultimate_meter.value = ultimate * 100.0
+	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
+	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", 22, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
+	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
+	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
+	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full
 	# stops meaning anything. Only the RISING edge (not-full -> full) fires it.
@@ -952,7 +974,9 @@ func _species_colour(species_id: String) -> Color:
 ## of those are true.
 func _draw_grid() -> void:
 	var orbs: int = int(_manager.call("orbs_left"))
-	_orbs.text = "Orbs  %d" % orbs
+	_orbs.text = "%s Aim · %d orbs   %s Switch   %s Flee" % [
+		_combat_binding_text("combat_throw"), orbs,
+		_combat_binding_text("party_cycle"), _combat_binding_text("combat_run")]
 
 	var resolving: bool = bool(_manager.call("is_resolving_catch"))
 	var aiming: bool = bool(_manager.call("is_aiming"))
@@ -1011,21 +1035,30 @@ func _draw_grid() -> void:
 	_draw_cells(orbs)
 
 
-func _draw_cells(orbs: int) -> void:
+func _combat_binding_text(action: String) -> String:
+	return INPUT_GLYPH.pad_button_name_for_action(action) if INPUT_GLYPH.using_gamepad() else INPUT_GLYPH.key_name_for_action(action)
+
+
+func _draw_cells(_orbs_count: int) -> void:
 	var creature: RefCounted = _manager.call("active_creature")
 	if creature == null:
 		return
 
 	var quick_ready: bool = bool(_manager.call("quick_ready"))
 	var charged_ready: bool = bool(_manager.call("charged_ready"))
-	var throw_ready: bool = orbs > 0
-	var switchable: Array = _manager.call("switchable_indices")
-	var switch_ready: bool = bool(_manager.call("can_switch")) and not switchable.is_empty()
-
 	_draw_quick_cell(creature, quick_ready)
 	_draw_charged_cell(creature, charged_ready)
-	_draw_throw_cell(orbs, throw_ready)
-	_draw_switch_cell(switch_ready)
+	var utility_id := str(creature.get("move_utility"))
+	var utility_ready: bool = bool(_manager.call("utility_ready"))
+	var utility_name := _move_name(utility_id, "No utility")
+	var cooldown: float = float(_manager.call("utility_cooldown"))
+	if cooldown > 0.0: utility_name += " %.1fs" % cooldown
+	elif not utility_id.is_empty() and not _manager.call("live_move_supported", "utility", utility_id): utility_name += " · unavailable"
+	_cell_throw_content.text = "[center]%s\n%s[/center]" % [INPUT_GLYPH.icon("combat_utility", CELL_GLYPH_PX), utility_name]
+	_cell_throw.modulate = CELL_READY if utility_ready else CELL_DIMMED
+	var burst_ready: bool = not bool(_manager.call("player_is_committed")) and float(_manager.call("wind_value")) >= float(_manager.call("wind_cost", "burst"))
+	_cell_switch_content.text = "[center]%s\nDodge[/center]" % INPUT_GLYPH.icon("jump", CELL_GLYPH_PX)
+	_cell_switch.modulate = CELL_READY if burst_ready else CELL_DIMMED
 
 
 func _move_name(move_id: String, fallback: String) -> String:
@@ -1134,7 +1167,7 @@ func _draw_orb_cluster(orbs: int) -> void:
 			icon_path = str(db.call("definition", orb_id).get("icon", ORB_ICON_PATH))
 	_orb_cluster.text = "[right][img=24x24]%s[/img]  %s  x%d\n%s %s     %s %s[/right]" % [
 		icon_path, item_name, orbs,
-		INPUT_GLYPH.icon("throw", 26, VERB_READY), "Throw",
+		INPUT_GLYPH.icon("combat_orb_release", 26, VERB_READY), "Throw",
 		INPUT_GLYPH.icon("cancel", 26, VERB_READY), "Cancel",
 	]
 
@@ -1210,7 +1243,7 @@ func _update_capture_reticle() -> void:
 ## CONTROLLER-MAP removes: LB is this verb and nothing else, and the d-pad is
 ## the hotbar and nothing else, in every context including a fight.
 func _handle_switch_input() -> void:
-	if _manager == null:
+	if _manager == null or COMBAT_INPUT_OWNER.current(get_tree()) != null:
 		return
 
 	# Aiming and a resolving catch both already own player input elsewhere in

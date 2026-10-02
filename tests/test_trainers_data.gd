@@ -323,11 +323,11 @@ const RELAY_IDS := [
 	"relay_officer_dell",
 	"relay_captain",
 ]
-## Spec §3 Band 3. Tunable, but not player-scaled and not open-ended: this is
+## F19 / RD-10 Band 3. Tunable, but not player-scaled and not open-ended: this is
 ## the band the relay is fought at, and a level outside it is a data slip
 ## rather than a design choice made here.
-const BAND_3_MIN := 8
-const BAND_3_MAX := 12
+const BAND_3_MIN := 12
+const BAND_3_MAX := 16
 
 
 func _relay_site() -> Dictionary:
@@ -612,7 +612,8 @@ func test_the_captain_badge_survives_the_regional_accent() -> void:
 			"'%s' resolves to a body with no rank badge; it wears %s" % [id, str(names)])
 
 
-## §3: "roughly 10-16 entering this band -- tunable, and never player-scaled."
+## F19 / RD-10: Riverwatch sits at the Band 3 seam; the Upper Meadows captains
+## occupy the authored 15-17 band. These are fixed, never player-scaled levels.
 ## The band check is deliberately loose (it is tunable); what it really guards
 ## is a captain accidentally authored at Band 1 levels, or scaled off anything.
 func test_captain_teams_sit_in_the_bands_own_level_range() -> void:
@@ -621,8 +622,8 @@ func test_captain_teams_sit_in_the_bands_own_level_range() -> void:
 		assert_true(team.size() >= 3, "'%s' fields fewer than three creatures" % id)
 		for member: Variant in team:
 			var level := int((member as Dictionary).get("level", 0))
-			assert_true(level >= 10 and level <= 16,
-				"'%s' fields a level %d creature; §3 puts this band at roughly 10-16" % [id, level])
+			assert_true(level >= 15 and level <= 17,
+				"'%s' fields a level %d creature; F19 places the captain teams at 15-17" % [id, level])
 
 
 ## T3-CAPTAINS, owner-direction §8: "different aspects of team-building, not
@@ -847,8 +848,8 @@ func test_the_wardens_team_is_the_hardest_in_the_chapter() -> void:
 		captain_high = maxi(captain_high, int((entry as Dictionary).get("level", 0)))
 	assert_true(lowest > captain_high,
 		"the Warden's weakest creature (Lv %d) is not above the relay captain's best (Lv %d)" % [lowest, captain_high])
-	assert_true(highest >= lowest + 2,
-		"the Warden has no ace; his team is flat at Lv %d-%d" % [lowest, highest])
+	assert_eq([lowest, highest], [21, 22],
+		"F19's final Meadows band gives the Warden a level-22 ace above his level-21 team")
 
 	# Three types across the five, so no single answer sweeps the fight.
 	var types := {}

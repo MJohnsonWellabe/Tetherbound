@@ -28,14 +28,14 @@
     },
 
     "combat": {
-      "_comment": "A fight is running and the player is piloting a creature. NOT `includes: world`: the pause shell and its two shortcuts (inventory, map) refuse to open mid-fight (game_menu.gd::open), and the world hotkeys stand down (playground_hud.gd::_world_input_allowed). The hotbar does NOT stand down any more -- the directive puts food and orbs on the d-pad during a fight, which is safe precisely because the directional switch actions that used to share it are gone. `interact` is here as the throw button: combat_manager.gd::_throw_pressed reads it beside combat_throw's keyboard F.",
+      "_comment": "F23 piloting: X quick, Y charged, B utility, A burst; RB release then a new face tap commits Ultimate. LT aim, RT flee, LB switch. Interim ordinary item slot1 uses L3; d-pad slots2-5 remain until F24. World X/Y/B/L3 readers stand down.",
       "actions": [
         "move_forward", "move_back", "move_left", "move_right",
         "look_up", "look_down", "look_left", "look_right",
-        "jump", "sprint", "auto_run", "camera_recenter",
-        "interact", "combat_throw", "combat_quick", "combat_charged", "combat_run",
-        "hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
-        "party_cycle", "creature_recall"
+        "jump", "camera_recenter",
+        "combat_throw", "combat_quick", "combat_charged", "combat_utility", "combat_ultimate_arm", "combat_run",
+        "combat_item_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5",
+        "party_cycle"
       ]
     },
 
@@ -45,8 +45,19 @@
         "move_forward", "move_back", "move_left", "move_right",
         "look_up", "look_down", "look_left", "look_right",
         "camera_recenter",
-        "interact", "combat_throw", "combat_quick", "combat_run", "menu_cancel"
+        "combat_orb_release", "menu_cancel"
       ]
+    },
+
+    "combat_ultimate_armed": {
+      "_comment": "The same face actions are consumed centrally by CombatManager as one Ultimate; ordinary moves do not also run. No held chord. A cancels the latch and bursts.",
+      "includes": ["combat"],
+      "actions": []
+    },
+
+    "dynamo_pilot": {
+      "_comment": "The actual Dynamo pilot joins input_owner; world interaction, Satchel and hotbar stand down. X/Y strike conduits through the existing host resolver.",
+      "actions": ["move_forward", "move_back", "move_left", "move_right", "look_up", "look_down", "look_left", "look_right", "camera_recenter", "combat_quick", "combat_charged"]
     },
 
     "build_placement": {

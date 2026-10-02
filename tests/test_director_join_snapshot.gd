@@ -14,6 +14,10 @@ class SessionStub extends Node:
 		_character_authority.bind_world("native_director_namespace")
 	func _game() -> Node: return get_parent()
 	func _altar_current_epoch() -> String: return "native_director_epoch"
+	func foundation_combat_mastery(_director: Node, _encounter: String, _peer: Variant, _action: int) -> Dictionary:
+		# This transport/round fixture has no disk writer. Refuse honestly and
+		# retain the production original; saved mastery has its own disk tests.
+		return {"ok": false, "durable": false, "code": "fixture_writer_missing"}
 	func admitted_character_state(peer: int) -> Dictionary:
 		return _character_authority.actor_stat_state(_authority_character(peer))
 	func foundation_rematch_participant_context(peer: int) -> Dictionary:
@@ -387,6 +391,31 @@ func _native_projectile_until(condition: Callable) -> bool:
 	_native_drain()
 	return bool(condition.call())
 
+
+func _native_prepare_quick_start(director: NativeDirector, manager: Node) -> bool:
+	# Only presentation clocks are manually driven in this fixture. The real
+	# host owns start admission, Wind, action identity, cooldown and strike time;
+	# a guest start still crosses the existing loopback ENet connection.
+	var arbiter: RefCounted = _native_host.get("_encounter_host")
+	var encounter: String = manager.call("encounter_id")
+	var peer := director._local_peer_id()
+	var uid: String = str(manager.call("active_creature").get("uid"))
+	var authority: Dictionary = arbiter.call("strike_authority_state", encounter, peer)
+	var previous := int(authority.get("last_action", 0))
+	var actor: Dictionary = (arbiter.call("record", encounter) as Dictionary).get("participants", {}).get(peer, {}).get("move_resources", {}).get(uid, {})
+	var ready_at := maxi(int(authority.get("deadline_ms", 0)), int(actor.get("cooldowns", {}).get("quick", 0)))
+	if not await _native_projectile_until(func() -> bool: return Time.get_ticks_msec() >= ready_at): return false
+	# Disabled fixture physics cannot advance its local animation state. This
+	# does not touch the arbiter's retained commitment or resource state.
+	manager.set("_action", NATIVE_COMBAT.Action.READY)
+	manager.call("_start_action", {}, "quick")
+	if not await _native_projectile_until(func() -> bool:
+		return not bool(manager.get("_move_awaiting_host"))): return false
+	var pending: Dictionary = manager.get("_pending_move")
+	var started: Dictionary = arbiter.call("move_commit", encounter, peer)
+	if int(pending.get("accepted_action", 0)) <= previous or int(started.get("action", 0)) != int(pending.get("accepted_action", 0)): return false
+	return await _native_projectile_until(func() -> bool: return Time.get_ticks_msec() >= int(started.get("strike_at_ms", 0)))
+
 ## The old live-only six-HP setup is a negative control, followed by the exact
 ## helper used by win_trainer_battle. Production authority/presentation stays
 ## unchanged; this witnesses the fixture and arrival, not a complete Warden win.
@@ -469,12 +498,14 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	assert_eq(str(striker.move_quick), "pebble_toss")
 	var hp_full := float(enemy.hp)
 	# Ordinary full-health control: admission does not change HP; arrival does.
+	assert_true(await _native_prepare_quick_start(_native_host, host_manager), "a real host start precedes the strike")
 	host_manager._submit_strike_intent()
 	assert_almost_eq(float(enemy.hp), hp_full)
 	assert_true(await _native_projectile_until(func() -> bool: return finished.size() == 1))
 	assert_true(bool(finished.back().get("verdict", {}).get("delta", {}).get("hit", false)))
 	_native_assert_actor_publication_contract(arbiter, encounter_id, 1, ally)
 	assert_true(float(enemy.hp) > 6.0 and float(enemy.hp) < hp_full)
+	assert_false((arbiter.call("pending_move_mastery") as Array).is_empty(), "the absent fixture writer cannot fake saved mastery")
 	assert_almost_eq(float(arbiter.call("opponent_hp", encounter_id)), float(enemy.hp))
 	assert_almost_eq(float(mirror.hp), float(enemy.hp))
 	var hp_after_control := float(enemy.hp)
@@ -482,6 +513,7 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	assert_true(await _native_projectile_until(func() -> bool: return Time.get_ticks_msec() >= deadline))
 	# Reproduce only the original smoke's live-only cap, without changing authority.
 	enemy.set("hp", 6.0)
+	assert_true(await _native_prepare_quick_start(_native_host, host_manager))
 	host_manager._submit_strike_intent()
 	assert_almost_eq(float(enemy.hp), hp_after_control, 0.001, "the authoritative launch snapshot correctly overwrites the invalid live-only fixture")
 	assert_true(await _native_projectile_until(func() -> bool: return finished.size() == 2))
@@ -523,6 +555,7 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 		assert_true(await _native_projectile_until(func() -> bool: return Time.get_ticks_msec() >= deadline))
 		var hp_before := float(enemy.hp)
 		var count_before := finished.size()
+		assert_true(await _native_prepare_quick_start(_native_host, host_manager))
 		host_manager._submit_strike_intent()
 		assert_almost_eq(float(enemy.hp), hp_before, 0.001, "launch cannot undo the consistent canonical fixture")
 		assert_true(await _native_projectile_until(func() -> bool: return finished.size() > count_before))
@@ -596,6 +629,10 @@ class NativeTrainerBody extends Node3D:
 	func set_engaged(value: bool, _target: Node3D = null) -> void:
 		engaged = value
 	func add_impulse(_direction: Vector3, _amount: float) -> void:
+		pass
+	func face_towards(_point: Vector3) -> void:
+		pass
+	func play_attack() -> void:
 		pass
 	func play_hit() -> void:
 		pass
@@ -761,6 +798,8 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 		"slot": "quick", "move_id": guest_creature.move_quick,
 		"origin": [guest_proxy.centre().x, guest_proxy.centre().y, guest_proxy.centre().z],
 		"facing": [0.0, 0.0, -1.0]}
+	assert_true(await _native_prepare_quick_start(_native_guest, guest_manager), "the guest's real ENet move start precedes its strike")
+	intent["action"] = int((guest_manager.get("_pending_move") as Dictionary).get("accepted_action", 0))
 	var first := _native_trainer_request(intent, completed)
 	var first_verdict: Dictionary = first.get("verdict", {})
 	assert_eq(int(first.get("author", 0)), guest_id, "authorship is the real remote sender, not the listen host")
@@ -777,7 +816,8 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	assert_almost_eq(float(mirror.hp), float(enemy.hp), 0.001, "the ordinary snapshot/verdict reconciles absolute HP")
 	var hp_after_first := float(enemy.hp)
 	var duplicate := _native_trainer_request(intent, completed)
-	assert_eq(str(duplicate.get("verdict", {}).get("code", "")), "replayed_action")
+	assert_eq(str(duplicate.get("verdict", {}).get("code", "")), "move_start_required",
+		"a resolved committed move cannot be reused as a current start")
 	assert_almost_eq(float(enemy.hp), hp_after_first)
 	assert_true(exits.is_empty(), "replayed non-killing intent cannot fake a won round")
 	var host_energy_before := float(host_creature.energy)
@@ -785,7 +825,8 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	for action in range(2, 65):
 		var deadline := int((arbiter.call("strike_authority_state", encounter_id, guest_id) as Dictionary).get("deadline_ms", 0))
 		if not _native_until(func() -> bool: return Time.get_ticks_msec() >= deadline): break
-		intent["action"] = action
+		assert_true(await _native_prepare_quick_start(_native_guest, guest_manager))
+		intent["action"] = int((guest_manager.get("_pending_move") as Dictionary).get("accepted_action", 0))
 		var answer := _native_trainer_request(intent, completed)
 		var verdict: Dictionary = answer.get("verdict", {})
 		if not bool(verdict.get("ok", false)): break
@@ -796,6 +837,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	assert_eq(int(killing.get("author", 0)), guest_id)
 	assert_almost_eq(float(enemy.hp), 0.0)
 	assert_true(bool(enemy.fainted), "the host's actual take_damage caused the faint")
+	assert_false((arbiter.call("pending_move_mastery") as Array).is_empty(), "real accepted hits remain pending without a disk writer")
 	_native_trainer_observation = {"host_state": host_manager.state, "guest_state": guest_manager.state,
 		"tracked_runtime": NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled"),
 		"record_phase": str(arbiter.call("phase", encounter_id)), "enemy_hp": enemy.hp,
@@ -846,7 +888,7 @@ func test_native_guest_killing_strike_advances_host_trainer_round_once() -> void
 	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
 	assert_true(runner != null)
 	if runner == null: return
-	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_director_join_snapshot.gd").new()\n\ttest._case_native_guest_kill_advances_host_trainer_round()\n\ttest._native_cleanup()\n\tprint("DIRECTOR_GUEST_TRAINER_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures,"completed":test._native_trainer_completed,"observation":test._native_trainer_observation}))\n\tquit(0 if test.failures.is_empty() and test._native_trainer_completed else 1)\n')
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_director_join_snapshot.gd").new()\n\tawait test._case_native_guest_kill_advances_host_trainer_round()\n\ttest._native_cleanup()\n\tprint("DIRECTOR_GUEST_TRAINER_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures,"completed":test._native_trainer_completed,"observation":test._native_trainer_observation}))\n\tquit(0 if test.failures.is_empty() and test._native_trainer_completed else 1)\n')
 	runner.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(runner_path)

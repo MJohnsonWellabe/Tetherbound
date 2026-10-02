@@ -3,6 +3,8 @@ const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const GROOM_PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
+var _groom_passive: RefCounted
 const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
 const FOUNDATION_COMBAT_MANAGERS := ["res://scripts/combat/combat_manager.gd", "res://scripts/combat/cloudreach_combat_manager.gd", "res://scripts/combat/stormwood_combat_manager.gd"]
 signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
@@ -14,6 +16,13 @@ var _foundation_personal_cache: Dictionary = {}
 var _foundation_camp_pending: Dictionary = {}
 var _process_exit_in_flight := false
 var _process_exit_refusal := ""
+
+func _groom_service() -> RefCounted:
+	if _groom_passive == null: _groom_passive = GROOM_PASSIVE.new(self)
+	return _groom_passive
+
+func groom_original_pending(original: Dictionary) -> bool:
+	return _groom_passive != null and _groom_passive.call("pending_original", original) == true
 
 ## All transport envelopes reuse the Session generation/character/world fence.
 ## The peer sends a source key and original intent, never a price or context.
@@ -49,7 +58,10 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	if result.get("ok") == true and result.get("resolved") == true:
 		var row := _owner_training_row()
 		if row.get("receipt") != result.get("receipt") or _training_decision(local_peer_id(), row).get("ok") != true: return
-	if envelope.op == "personal_view":
+	if envelope.op in ["groom_prepare", "groom_commit", "groom_resume", "groom_cancel"]:
+		_groom_service().call("receive", envelope, result)
+		_foundation_requests.erase(correlation)
+	elif envelope.op == "personal_view":
 		_foundation_personal_cache = result.duplicate(true)
 		homestead_personal_view_completed.emit()
 	elif envelope.op in FOUNDATION_ACTIONS.ACTIONS:
@@ -85,6 +97,10 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
 		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
 	if envelope.op == "personal_view": return _foundation_personal_view(peer)
+	if envelope.op == "groom_prepare": return _groom_service().call("host_prepare", peer, envelope)
+	if envelope.op == "groom_commit": return _groom_service().call("host_commit", peer, envelope)
+	if envelope.op == "groom_resume": return _groom_service().call("host_resume", peer, envelope)
+	if envelope.op == "groom_cancel": return _groom_service().call("host_cancel", peer, envelope)
 	if envelope.op == "refine_start":
 		var forge := get_node_or_null(^"FoundationComposition/ForgeHost")
 		return forge.call("start", peer, envelope) if forge != null else _foundation_refusal("forge_unavailable")
@@ -158,6 +174,9 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
 	if row is Dictionary and row.get("action") == envelope.op and ESSENCE._equivalent(row.get("intent"), envelope.intent):
 		return _foundation_decision(peer, row)
+	if envelope.op == "groom" and peer != local_peer_id() \
+		and (_groom_passive == null or not ESSENCE._equivalent(_groom_passive.get("committing"), envelope)):
+		return _foundation_refusal("groom_prepared_baseline_required")
 	# A removed source is allowed only when recovering that exact durable row.
 	var saver: RefCounted = _game().get("save_system")
 	if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
@@ -821,6 +840,9 @@ func personal_tm_submit(original: Dictionary, revision: int, scope: Dictionary) 
 func homestead_submit_action(action: String, original: Dictionary, station: Node3D, revision: int) -> Dictionary:
 	var key := "homestead_recovery"
 	if is_instance_valid(station): key = "%s:%s:%s" % [station.get_meta("building_id", ""), station.get_meta("realm", ""), station.get_meta("building_uid", "")]
+	if action == "groom" and not is_host():
+		var retained := retained_training_transaction(["groom"])
+		if retained.get("intent") != original: return _groom_service().call("begin", original, key)
 	return _foundation_send(action, key, original, revision)
 
 func homestead_start_refining(station: Node3D, recipe_id: String, amount: int) -> Dictionary:
@@ -904,7 +926,10 @@ func _foundation_groom_context(peer: int, key: String) -> Dictionary:
 	var actor := game.call("find_player") as CharacterBody3D if peer == local_peer_id() else lifecycle.call("remote_body", peer) as CharacterBody3D
 	var safety: Dictionary = lifecycle.call("local_sample") if peer == local_peer_id() else lifecycle.call("host_context", peer)
 	if actor == null or not actor.is_inside_tree() or actor.is_queued_for_deletion() or safety.get("realm") != "meadows": return {}
+	var preparation_fence: bool = peer != local_peer_id() and _groom_passive != null \
+		and _groom_passive.call("allows_fence", peer, key) == true and safety.get("station_ack_only") == true
 	for hazard: String in ["dialogue", "cutscene", "downed", "swimming", "flying"]:
+		if preparation_fence and hazard in ["dialogue", "cutscene"]: continue
 		if safety.get(hazard) != false: return {}
 	var shell := _portal_world_node("meadows")
 	if shell == null or not shell.is_ancestor_of(actor) or not shell.is_ancestor_of(station) \
@@ -1452,6 +1477,7 @@ func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 	if admission_game != null and admission_game.get("local") != null:
 		summary["portable_authority"] = CHARACTER_AUTHORITY.portable_projection(admission_game.get("local").save_data())
 		summary["personal_flags"] = admission_game.get("local").flags.call("save_data").duplicate(true)
+		summary["discovered_landmarks"] = _groom_service().call("admission_landmarks")
 	# Always this process's own fingerprint: a caller cannot claim another build.
 	summary["build"] = BUILD_FINGERPRINT.current()
 	_pending_hello = summary
@@ -1821,6 +1847,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 	var portable: Variant = summary.get("portable_authority")
 	var authority_errors := CHARACTER_AUTHORITY.errors(portable, character_id)
 	if not CHARACTER_AUTHORITY.personal_flags_valid(summary.get("personal_flags", {"flags": []})): authority_errors.append("Invalid portable personal flags")
+	if _groom_service().call("admission_valid", summary.get("discovered_landmarks"), true) != true: authority_errors.append("Invalid portable landmark identities")
 	if not authority_errors.is_empty():
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
 		return
@@ -1838,6 +1865,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 		return
 	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
 	if seeded.get("ok") == true and _character_authority.call("seed_personal_flags", character_id, summary.get("personal_flags", {"flags": []})) != true: seeded = {"ok": false}
+	if seeded.get("ok") == true and _character_authority.call("seed_discovered_landmarks", character_id, summary.get("discovered_landmarks", {})) != true: seeded = {"ok": false}
 	if bool(seeded.get("ok", false)):
 		seeded = _character_authority.call("recover_durable_vitals", character_id, _game().get("world").reward_deliveries)
 	if bool(seeded.get("ok", false)):
@@ -1846,6 +1874,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 		_registry.call("remove", sender)
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
 		return
+	_groom_service().call("admitted", character_id, _character_authority.call("discovered_landmarks", character_id))
 	if realm_transition != null and bool(realm_transition.call("prepare_joined_sender", sender)):
 		return
 	_finish_peer_hello(sender)
@@ -2124,6 +2153,7 @@ func _finalize_snapshot_receive() -> bool:
 	_training_bootstrap_waiting = false
 	_box["snapshot"] = true
 	_box["handshake_snapshot_applied"] = true
+	_groom_service().call("begin_resume")
 	print("[session] snapshot applied (%d keys, day %d)" % [data.size(), int(data.get("day", 1))])
 	var pending_ack := _pending_snapshot_ack.duplicate()
 	_clear_snapshot_bootstrap()
@@ -2399,6 +2429,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	if not is_host():
 		return
 	var lost_character := str((_registry.call("row", peer_id) as Dictionary).get("character_id", ""))
+	if _groom_passive != null: _groom_passive.call("departed", lost_character)
 	if bool(_registry.call("remove", peer_id)):
 		if not departed and _closing_frames == 0 and peer_id != HOST_PEER_ID:
 			var window_ms := int(1000.0 * float(_cfg("reconnect_window_s", 120.0)))
@@ -2475,6 +2506,7 @@ func _on_server_disconnected() -> void:
 
 func _process(delta: float) -> void:
 	_bind_training_container_guards()
+	if _groom_passive != null: _groom_passive.call("tick", delta)
 	if portal_runtime_ready() and is_host():
 		var portal_context := _host_portal_context(local_peer_id())
 		if not portal_context.is_empty(): _portal_policy.call("cancel_invalid", portal_context)
@@ -2766,6 +2798,7 @@ func _restore_character_here(wanted_id: String) -> bool:
 ## torn down exactly as always, but the transport is detached and handed to
 ## `_poll_lingering_peer()` instead of being closed under the goodbye.
 func _teardown(linger_transport: bool = false) -> void:
+	if _groom_passive != null: _groom_passive.call("reset")
 	# Session's altar epoch survives a transport teardown. Explicitly retire
 	# observations and consumed travel identities before a peer can rejoin.
 	for path: NodePath in [^"FoundationComposition/TravelLifecycle", ^"FoundationComposition/PortalArrival", ^"FoundationComposition/ForgeHost"]:
@@ -3451,6 +3484,7 @@ func _owner_training_row() -> Dictionary:
 func _owner_training_mutation_blocked(player: RefCounted) -> bool:
 	var game := _game()
 	if game == null or player == null or player != game.get("local"): return false
+	if _groom_passive != null and _groom_passive.call("blocked", player) == true: return true
 	var row := _owner_training_row()
 	if _pending_portal_for(str(player.character_id)): return true
 	if is_host() and _character_authority.call("creature_training_is_pending", str(player.character_id)) == true:
@@ -3574,6 +3608,7 @@ func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dict
 
 
 func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
+	if _groom_passive != null and _groom_passive.call("snapshot_allowed", player, payload) == true: return true
 	if _pending_portal_for(str(player.character_id)):
 		return not _owner_portal_conflicting_transaction(player) and _owner_portal_snapshot_allowed(player, payload)
 	if not _owner_training_mutation_blocked(player): return true

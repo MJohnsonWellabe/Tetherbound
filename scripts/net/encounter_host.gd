@@ -569,6 +569,10 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 		or move.get("move_id") != move_id or move.get("slot") != slot \
 		or typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0 or now_ms < 0:
 		return _refuse("move_start", peer, "invalid_actor_move", "That equipped move is unavailable.")
+	if slot in ["utility", "ultimate"] and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id):
+		return _refuse("move_start", peer, "move_not_mounted", "That move is not available in this build yet.")
+	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id):
+		return _refuse("move_start", peer, "move_not_mounted", "That ultimate is not available in this build yet.")
 	var authority: Dictionary = _strike_state_for(id).get(peer, {})
 	var starts: Dictionary = authority.get("move_starts", {})
 	if starts.size() >= int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)):
@@ -614,12 +618,15 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 	participant["move_resources"] = resources
 	participant["move_resource_uid"] = uid
 	participant["wind_last_action"] = action
+	var action_identity := str(frozen.get("action_id", ""))
+	if action_identity.is_empty():
+		action_identity = preload("res://scripts/creatures/move_mastery.gd").new_action_identity("%s:%s:%d" % [id, uid, action])
 	var started := {"action": action, "creature_uid": uid, "binding": binding.duplicate(true),
 		"move_id": move_id, "slot": slot, "move": frozen, "started_at_ms": now_ms,
 		"strike_at_ms": now_ms + windup_ms, "ready_at_ms": ready_at,
 		"resolved": false, "credited": false,
 		"mastery_uses": int(owned.get("move_mastery_uses", {}).get(move_id, 0)),
-		"action_id": preload("res://scripts/creatures/move_mastery.gd").new_action_identity("%s:%s:%d" % [id, uid, action])}
+		"action_id": action_identity}
 	# Preserve immutable accepted-action history owned by AcceptedActionHost.
 	authority["last_action"] = action
 	authority["accepted_at_ms"] = now_ms
@@ -648,6 +655,7 @@ func move_resource_snapshot(id: String, peer: int, uid: String) -> Dictionary:
 	var actor: Dictionary = participant.get("move_resources", {}).get(uid, {})
 	if actor.is_empty(): return {}
 	return {"creature_uid": uid, "energy": float(actor.energy), "ultimate_meter": float(actor.ultimate_meter),
+		"utility_cooldown_s": maxf(0.0, float(int(actor.get("cooldowns", {}).get("utility", 0)) - Time.get_ticks_msec()) / 1000.0),
 		"wind": float(actor.get("wind", 0.0)), "wind_max": float(actor.get("wind_max", 100.0)),
 		"wind_ready_at_ms": int(actor.get("wind_ready_at_ms", 0))}
 

@@ -44,11 +44,11 @@ func test_resite_keeps_both_derived_encounter_identities() -> void:
 		assert_almost_eq(float(spawn.radius), 40.0)
 	assert_eq(str(calm.species), "tanglevolt")
 	# `wild_config()` seeds the phase-qualified cluster id. For the calm table
-	# that derives the absolute base level 40; the director pins every spawned
+	# F19 / RD-10 derives level 52 here in the final biome; the director pins every spawned
 	# member to this value after consuming its ordinary per-instance rolls.
-	assert_eq(int(calm.level), 40)
+	assert_eq(int(calm.level), 52)
 	assert_eq(str(surge.species), "sparkit")
-	assert_eq(int(surge.level), 42)
+	assert_eq(int(surge.level), 54)
 
 
 func test_resite_preserves_two_forward_visible_bodies_on_terminal_road() -> void:

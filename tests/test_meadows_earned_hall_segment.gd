@@ -146,7 +146,7 @@ func test_named_admission_rejects_another_trainer_and_out_of_order_opponents() -
 	var combat := Combat.new()
 	var creature := CREATURE.new()
 	creature.species_id = "mosshell"
-	creature.level = 16
+	creature.level = 15
 	combat.creature = creature
 	segment._director = director
 	segment._combat = combat
@@ -167,7 +167,7 @@ func test_named_admission_rejects_another_trainer_and_out_of_order_opponents() -
 	assert_false(segment.result().failures.is_empty())
 	segment._failures.clear()
 	creature.species_id = "trailpup"
-	creature.level = 16
+	creature.level = 15
 	segment._on_entered()
 	assert_eq(segment._captain_rounds, 2)
 	assert_eq(segment.result().failures, [])

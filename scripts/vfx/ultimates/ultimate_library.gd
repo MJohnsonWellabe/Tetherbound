@@ -13,6 +13,11 @@ static func config() -> Dictionary:
 		if raw is Dictionary: _config = raw
 	return _config.duplicate(true)
 
+## The host checks this same presentation gate before it spends a meter.
+static func available(move_id: String) -> bool:
+	var data := config()
+	return bool(data.get("enabled", false)) and (data.get("visuals", {}) as Dictionary).has(move_id)
+
 static func resolve(move_id: String, breakthroughs: int) -> Dictionary:
 	var data := config()
 	var rows: Dictionary = data.get("visuals", {})

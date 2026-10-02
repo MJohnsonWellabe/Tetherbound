@@ -25,13 +25,14 @@ var _vitals_pending: Dictionary = {}
 var _vitals_seen: Dictionary = {}
 var _vitals_stages: Dictionary = {}
 var _vitals_stage_sequence := 0
+var _groom_preparations: Dictionary = {}
 
 
 func bind_world(world_instance: String) -> bool:
 	if world_instance.is_empty():
 		return false
 	if world_instance != _world_instance:
-		if not _training_stages.is_empty() or not _training_pending.is_empty() or not _portal_stages.is_empty() or not _loadout_pending.is_empty() or not _vitals_pending.is_empty():
+		if not _groom_preparations.is_empty() or not _training_stages.is_empty() or not _training_pending.is_empty() or not _portal_stages.is_empty() or not _loadout_pending.is_empty() or not _vitals_pending.is_empty():
 			return false
 		_records.clear()
 		_portal_stages.clear()
@@ -80,8 +81,60 @@ func seed_admitted_character(raw: Dictionary, character_id: String) -> Dictionar
 func _replace_record(character: String, next_revision: int, next_state: Dictionary) -> void:
 	var carried: bool = _records.get(character, {}).has("personal_flags")
 	var flags := personal_flags(character)
+	var discovered: Variant = _records.get(character, {}).get("discovered_landmarks")
 	_records[character] = {"revision": next_revision, "state": next_state}
 	if carried: _records[character].personal_flags = flags
+	if discovered is Dictionary: _records[character].discovered_landmarks = discovered.duplicate(true)
+
+## Admission-only companion on the SAME record. A rejoin never refreshes it.
+## Session validates every ID against the authored realm map catalogue first.
+func seed_discovered_landmarks(character: String, discoveries: Dictionary) -> bool:
+	if not _records.has(character): return false
+	if _records[character].has("discovered_landmarks"): return true
+	_records[character].discovered_landmarks = discoveries.duplicate(true)
+	return true
+
+func discovered_landmarks(character: String) -> Dictionary:
+	return _records.get(character, {}).get("discovered_landmarks", {}).duplicate(true)
+
+## A preparation is a transient CAS reservation, not an award or receipt.
+func reserve_groom_preparation(character: String, prepared: Dictionary) -> bool:
+	if _groom_preparations.has(character):
+		return equivalent(_groom_preparations[character], prepared)
+	if _portal_mutation_pending(character) or _training_locked(character) or _portal_stages.has(character) \
+		or _loadout_pending.has(character) or _vitals_pending.has(character) or _vitals_stages.has(character) \
+		or revision(character) != prepared.get("revision", -1) or not equivalent(state(character), prepared.get("before")) \
+		or not preload("res://scripts/net/groom_passive_sync.gd").valid(prepared): return false
+	_groom_preparations[character] = prepared.duplicate(true)
+	return true
+
+func cancel_groom_preparation(character: String, hash: String) -> bool:
+	if _groom_preparations.get(character, {}).get("hash") != hash: return false
+	_groom_preparations.erase(character)
+	return true
+
+## Called only after the authenticated owner's BOOL-save acknowledgement.
+## The candidate was derived/reserved by this host; packets carry only its hash.
+func commit_groom_preparation(character: String, prepared: Dictionary) -> bool:
+	if not equivalent(_groom_preparations.get(character), prepared): return false
+	if revision(character) == int(prepared.revision) + 1 and equivalent(state(character), prepared.after):
+		_groom_preparations.erase(character)
+		return true # Same-original retry after the world writer failed.
+	if revision(character) != prepared.revision or not equivalent(state(character), prepared.before): return false
+	_replace_record(character, int(prepared.revision) + 1, prepared.after.duplicate(true))
+	for realm: String in prepared.discoveries:
+		var ids: Array = _records[character].discovered_landmarks.get(realm, [])
+		for id: String in prepared.discoveries[realm]:
+			if not ids.has(id): ids.append(id)
+		_records[character].discovered_landmarks[realm] = ids
+	_groom_preparations.erase(character)
+	return true
+
+func retain_groom_preparation(character: String, prepared: Dictionary) -> bool:
+	if revision(character) != int(prepared.revision) + 1 or not equivalent(state(character), prepared.after) \
+		or _training_locked(character): return false
+	_groom_preparations[character] = prepared.duplicate(true)
+	return true
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
@@ -647,7 +700,7 @@ static func equivalent(left: Variant, right: Variant) -> bool:
 ## Only the same admitted full record is staged. Proposed before/state are
 ## internal frozen outputs, recomputed here rather than packet baselines.
 func _training_locked(character: String) -> bool:
-	return _training_stages.has(character) or _training_pending.has(character)
+	return _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character)
 
 
 func stage_creature_training(character: String, action: String, action_id: String,

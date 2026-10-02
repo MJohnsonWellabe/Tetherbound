@@ -140,8 +140,8 @@
         },
         {
           "name": "Fighting",
-          "note": "D35 (Palworld parity). `combat_quick`/`combat_charged` sit on RT/LT, the same triggers `build_rotate_right`/`build_rotate_left` use -- a build ghost is never out mid-fight, so the triggers never mean two things at once. CONTROLLER-MAP took the pad buttons off `combat_throw` and `combat_run`: the orb is selected on the quick bar and thrown with interact (X), and fleeing is RB, because putting your creature away IS disengaging. Both keep their keys. Switching creatures is `party_cycle` (The world group), one LB press, in the field and mid-fight alike.",
-          "actions": ["combat_quick", "combat_charged", "combat_throw", "combat_run"]
+          "note": "X quick, Y charged, B utility, A burst. Tap and release RB, then tap X/Y/B to fire a full Ultimate; A dodges and cancels it. LT aims an orb; X releases and B cancels. RT flees wild fights; LB switches. During combat ordinary quick-item slot1 uses L3; slots2-5 keep the d-pad. World B item, L3 sprint, X interact, Y Satchel and RB recall are unchanged. Tether Commands are separate and are not enabled by this map.",
+          "actions": ["combat_quick", "combat_charged", "combat_utility", "combat_ultimate_arm", "combat_throw", "combat_orb_release", "combat_run", "combat_item_1"]
         },
         {
           "name": "Building",
@@ -164,7 +164,7 @@
         "move_back": "Walk back",
         "move_left": "Step left",
         "move_right": "Step right",
-        "jump": "Jump",
+        "jump": "Jump / combat dodge",
         "sprint": "Sprint",
         "auto_run": "Auto-run",
         "look_up": "Look up",
@@ -179,7 +179,7 @@
         "creature_recall": "Call out  /  put away your creature",
         "game_menu": "Open the game menu",
         "camera_recenter": "Swing the camera back behind you",
-        "party_cycle": "Cycle to your next creature",
+        "party_cycle": "Cycle to your next creature / combat switch",
         "torch_toggle": "Toggle your torch (it also lights itself after dark)",
         "use_tool": "Swing the equipped tool",
         "build_open": "Open the build menu",
@@ -193,7 +193,11 @@
         "hotbar_5": "Use quick-item slot 5",
         "combat_quick": "Quick attack",
         "combat_charged": "Charged attack",
-        "combat_throw": "Throw an orb",
+        "combat_utility": "Utility move",
+        "combat_ultimate_arm": "Ultimate: release, then tap a move",
+        "combat_item_1": "Combat: use quick-item slot 1",
+        "combat_orb_release": "Release the aimed orb",
+        "combat_throw": "Aim an orb",
         "combat_run": "Flee the fight",
         "menu_confirm": "Confirm",
         "menu_cancel": "Back  /  close the menu",

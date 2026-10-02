@@ -158,17 +158,19 @@ static func route_contract(route: Dictionary) -> bool:
 		and (route.get("polyline", []) as Array).size() == 3
 
 
-static func trainer_contract(trainer: Dictionary, id: String, level: int,
+static func trainer_contract(trainer: Dictionary, id: String, levels: Array[int],
 		species: Array[String]) -> bool:
+	# F19 / RD-10 preserves each authored member's level, including the ace.
+	if levels.is_empty() or levels.size() != species.size(): return false
 	if str(trainer.get("id", "")) != id or str(trainer.get("npc_entity_id", "")) != id \
-			or not bool(trainer.get("critical", false)) or int(trainer.get("ace_level", 0)) != level:
+			or not bool(trainer.get("critical", false)) or int(trainer.get("ace_level", 0)) != levels[-1]:
 		return false
 	var team: Array = trainer.get("team", [])
 	if team.size() != species.size():
 		return false
 	for index in species.size():
 		if str((team[index] as Dictionary).get("species", "")) != species[index] \
-				or int((team[index] as Dictionary).get("level", 0)) != level:
+				or int((team[index] as Dictionary).get("level", 0)) != levels[index]:
 			return false
 	return true
 
@@ -219,10 +221,10 @@ func _preconditions_hold() -> bool:
 	for id: String in [SOLM_ID, IRVA_ID]:
 		if not _director.trainer_nodes.has(id) or not _director.trainer_prompts.has(id):
 			return _fail("mandatory production trainer/prompt is absent: " + id)
-	if not trainer_contract(_director.trainer_specs.get(SOLM_ID, {}), SOLM_ID, 47,
+	if not trainer_contract(_director.trainer_specs.get(SOLM_ID, {}), SOLM_ID, [24, 25],
 			["water_mirejaw", "water_mangrove_monitor"]):
 		return _fail("production Solm team contract is absent")
-	if not trainer_contract(_director.trainer_specs.get(IRVA_ID, {}), IRVA_ID, 48,
+	if not trainer_contract(_director.trainer_specs.get(IRVA_ID, {}), IRVA_ID, [25, 26],
 			["water_riptusk", "water_cannonback"]):
 		return _fail("production Irva team contract is absent")
 	return true

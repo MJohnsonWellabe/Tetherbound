@@ -505,12 +505,13 @@ func _groom_input_released() -> bool:
 	# The saved original may be waiting for its owner write/ACK. Only that
 	# exact journal can reconcile under Session's existing mutation fence.
 	var retained := _retained_station_transaction()
-	return owner == _producer and retained.get("action") == "groom" \
-		and retained.get("intent") == _station_intent
+	return owner == _producer and ((retained.get("action") == "groom" and retained.get("intent") == _station_intent) \
+		or (_producer.has_method("groom_original_pending") and _producer.call("groom_original_pending", _station_intent) == true))
 
 func _restore_groom_panel() -> void:
 	if not is_inside_tree() or is_queued_for_deletion() or _open \
 		or _groom_source_lost or _groom_scope.is_empty() or _groom_scope != _current_groom_scope(): return
+	if _producer.has_method("groom_original_pending") and _producer.call("groom_original_pending", _station_intent) == true: return
 	var owner := INPUT_OWNER.current(get_tree())
 	if owner != null and owner != _producer: return
 	var source := _original_station()

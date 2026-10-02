@@ -779,6 +779,8 @@ func _read_actions() -> void:
 				_explain_refusal()
 			return
 		for action in _shortcuts().keys():
+			# X/Y belong to the piloted creature in combat and the Dynamo.
+			if _fight_in_progress() or INPUT_OWNER.current(get_tree()) != null: return
 			if Input.is_action_just_pressed(str(action)):
 				if not open(str(_shortcuts()[action])):
 					_explain_refusal()

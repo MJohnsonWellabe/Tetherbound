@@ -363,7 +363,7 @@ func _a_throw_at_the_sky_misses_and_still_costs_an_orb() -> void:
 	var refusals_before := _refusals.size()
 	var resolutions_before := _resolutions.size()
 
-	await _press("combat_throw")
+	await _press("combat_orb_release")
 	for i in 300:
 		await physics_frame
 		if _refusals.size() > refusals_before or _resolutions.size() > resolutions_before:
@@ -509,7 +509,7 @@ func _throw_at_the_target() -> bool:
 	for i in 4:
 		await physics_frame
 
-	await _press("combat_throw")
+	await _press("combat_orb_release")
 	return true
 
 

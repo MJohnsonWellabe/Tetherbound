@@ -301,7 +301,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 			_send_axis(LEFT_Y, 0.0)
 			_send_axis(RIGHT_X, 0.0)
 			_send_axis(RIGHT_Y, 0.0)
-			_send_axis(JOY_AXIS_TRIGGER_RIGHT, 0.0)
+			_send_button(JOY_BUTTON_X, false)
 			var pair := ally_class + "/" + foe_class
 			var case_started := Time.get_ticks_msec()
 			var samples: Array[Dictionary] = []
@@ -323,14 +323,14 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 					ctx.movement_end = _ally.global_position
 					_send_axis(LEFT_Y,0.0)
 				elif observed_frame == 120:
-					_send_axis(JOY_AXIS_TRIGGER_RIGHT,1.0)
+					_send_button(JOY_BUTTON_X, true)
 					# This edge is scheduled inside physics_frame, after the
 					# engine's normal input flush. Deliver the physical event
 					# before the manager reads it; slow draws must not coalesce
-					# both edges of the two-tick tap into a released axis.
+					# both edges of the two-tick tap into a released button.
 					Input.flush_buffered_events()
 				elif observed_frame == 122:
-					_send_axis(JOY_AXIS_TRIGGER_RIGHT,0.0)
+					_send_button(JOY_BUTTON_X, false)
 					Input.flush_buffered_events()
 				var pending: Dictionary = _manager.get("_pending_move") as Dictionary
 				var action := int(_manager.get("_action"))
@@ -435,7 +435,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 					break
 			physics_frame.disconnect(drive)
 			_send_axis(LEFT_Y,0.0)
-			_send_axis(JOY_AXIS_TRIGGER_RIGHT,0.0)
+			_send_button(JOY_BUTTON_X, false)
 			var input_travel: float = (ctx.movement_end as Vector3).distance_to(ctx.movement_start as Vector3)
 			var scored_renders := 0
 			for row: Dictionary in render_samples:
@@ -837,12 +837,12 @@ func _prove_neutral_camera_keeps_the_opponent_in_frame() -> void:
 
 
 func _prove_creature_switch_keeps_the_camera() -> void:
-	await _press_button(JOY_BUTTON_DPAD_RIGHT)
+	await _press_button(JOY_BUTTON_LEFT_SHOULDER)
 	for i in 20:
 		await physics_frame
 	var active: RefCounted = _manager.call("active_creature")
 	if active == null or str(active.get("species_id")) != "ripplet":
-		_fail("physical D-pad switch did not make the second creature active")
+		_fail("physical LB switch did not make the second creature active")
 	if _rig.get("_target") != _ally:
 		_fail("switching left the camera on a stale/non-deployed target")
 	if not _rig.is_processing():
@@ -851,18 +851,18 @@ func _prove_creature_switch_keeps_the_camera() -> void:
 
 
 func _prove_aim_cancel_returns_combat_orbit() -> void:
-	# CONTROLLER-MAP: the orb is a hotbar item thrown with X, so `interact`
-	# (raw button 2) is what opens throw aim on a pad now -- `combat_throw`
-	# kept only its keyboard F. RB, which used to carry it, is
-	# `creature_recall`, which combat_manager.gd::_flee_pressed() reads as
-	# DISENGAGE: pressing it here ended the fight instead of opening the aim.
-	await _press_button(JOY_BUTTON_X)
+	# F23 gives aim its own LT tap; X is reserved for release once aim owns input.
+	_send_axis(JOY_AXIS_TRIGGER_LEFT, 1.0)
+	await process_frame
+	await physics_frame
+	_send_axis(JOY_AXIS_TRIGGER_LEFT, 0.0)
+	await process_frame
 	for i in 30:
 		if bool(_manager.call("is_aiming")):
 			break
 		await physics_frame
 	if not bool(_manager.call("is_aiming")):
-		_fail("physical X did not enter throw aim despite available orbs")
+		_fail("physical LT did not enter throw aim despite available orbs")
 		return
 	print("camera target in aim: %s" % _node_label(_rig.get("_target")))
 	if _rig.get("_target") != _player:
@@ -885,18 +885,15 @@ func _prove_aim_cancel_returns_combat_orbit() -> void:
 	await _assert_raw_orbit_changes("after aim cancel")
 
 
-## CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS disengaging."
-## `combat_run` kept its keyboard Escape and lost its pad button;
-## `combat_manager.gd::_flee_pressed()` reads `creature_recall` (RB) instead. B
-## is `hotbar_1`/`build_cancel` now and does not end a fight.
+## RT is flee in combat; RB recall remains an exploration action.
 func _prove_combat_exit_restores_exploration() -> void:
-	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
+	await _tap_trigger(JOY_AXIS_TRIGGER_RIGHT)
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
 		await physics_frame
 	if bool(_manager.call("is_fighting")):
-		_fail("physical RB did not disengage from combat")
+		_fail("physical RT did not disengage from combat")
 		return
 	print("camera target on exit: %s" % _node_label(_rig.get("_target")))
 	if _rig.get("_target") != _player:
@@ -939,7 +936,7 @@ func _prove_a_second_entry_exit_cycle() -> void:
 	for i in 20:
 		await physics_frame
 	await _assert_raw_orbit_changes("second combat cycle")
-	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
+	await _tap_trigger(JOY_AXIS_TRIGGER_RIGHT)
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
@@ -1124,6 +1121,21 @@ func _send_axis(axis: JoyAxis, value: float) -> void:
 	event.axis_value = value
 	Input.parse_input_event(event)
 
+func _send_button(button: JoyButton, pressed: bool) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button
+	event.pressed = pressed
+	Input.parse_input_event(event)
+
+func _tap_trigger(axis: JoyAxis) -> void:
+	_send_axis(axis, 1.0)
+	await process_frame
+	await process_frame
+	_send_axis(axis, 0.0)
+	for i in 3:
+		await process_frame
+
 
 func _node_label(value: Variant) -> String:
 	var node := value as Node
@@ -1139,6 +1151,8 @@ func _report() -> void:
 	_send_axis(RIGHT_Y, 0.0)
 	_send_axis(LEFT_Y, 0.0)
 	_send_axis(JOY_AXIS_TRIGGER_RIGHT, 0.0)
+	_send_axis(JOY_AXIS_TRIGGER_LEFT, 0.0)
+	_send_button(JOY_BUTTON_X, false)
 	print("")
 	if _failures.is_empty():
 		print("PASS: combat camera follows the active creature, keeps free controller orbit, survives switch/aim, and restores exploration repeatedly")

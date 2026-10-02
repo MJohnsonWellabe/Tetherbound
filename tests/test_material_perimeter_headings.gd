@@ -21,9 +21,10 @@ class ObservedNavigator:
 		aims.append(point)
 		if stall_after_steps < 0 or aims.size() <= stall_after_steps:
 			_player.position = _player.position.move_toward(Vector3(point.x, _player.position.y, point.z), 1.0)
-		# Accounting fixture frames carry no physical travel claim. Production
-		# step() retains its real physics-frame input/ground/contact checks.
-		await _tree.process_frame
+		# Synthetic pose samples exercise the actual walk loop synchronously.
+		# They carry no elapsed-time/physical-travel claim; waiting for 1201
+		# rendered frames made this accounting check depend on machine speed.
+		# Production step() keeps its real physics/input/ground/contact waits.
 
 func _boundary() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(ROUTE.VILLAGE_BOUNDARY_PATH))
@@ -173,8 +174,11 @@ func _process(_delta: float) -> bool:
 	return false
 func run():
 	var test = load("res://tests/test_material_perimeter_headings.gd").new()
+	print("MATERIAL_PERIMETER_CASE=retained_leaf at_ms=" + str(Time.get_ticks_msec() - started))
 	await test._case_gate_requires_exact_current_world_live_retained_open_leaf()
+	print("MATERIAL_PERIMETER_CASE=walk_budget at_ms=" + str(Time.get_ticks_msec() - started))
 	await test._case_one_walk_budget_cannot_restart_at_a_heading_or_finish_before_it()
+	print("MATERIAL_PERIMETER_CASE=confined_watchdog at_ms=" + str(Time.get_ticks_msec() - started))
 	await test._case_confined_watchdog_and_finite_heading_guards_remain_in_the_same_loop()
 	var complete = test._native_cases_completed == 3
 	print("MATERIAL_PERIMETER_RESULT=" + JSON.stringify({"completed":complete,"cases":test._native_cases_completed,"assertions":test.assertion_count,"failures":test.failures}))
