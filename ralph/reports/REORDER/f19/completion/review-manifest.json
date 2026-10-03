@@ -429,7 +429,9 @@
     "acceptance": false,
     "full_choice_witnesses": {
       "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
-      "status": "Dispatched; exact run/job IDs pending first listing",
+      "status": "Live original full choice witnesses; terminal raw logs required",
+      "veridian": {"run": 37108379739, "job": 111161260966, "script": "tests/smoke_f19_veridian_functional.gd"},
+      "solmane": {"run": 37108381309, "job": 111161263274, "script": "tests/smoke_f19_solmane_functional.gd"},
       "scope": "Entire original six-case choice/save/reload matrices; no resource retention, original guards unchanged"
     }
   }
