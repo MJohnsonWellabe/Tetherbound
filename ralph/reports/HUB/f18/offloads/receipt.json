@@ -1,0 +1,253 @@
+{
+  "local_resource_constraint": "User playing Valheim; all own local Godot processes verified absent and lease released. No new local engine/import/render/full-suite or desktop-control launches.",
+  "full_slice4": {
+    "run_id": 37081274565,
+    "checkout": "2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
+    "status": "completed with original JSON-oracle failure; 1342 tests/378911 assertions; affected reviewed native exact-oracle proof reused.",
+    "evidence": "../full-regressions/shard4-remote-r1.log.gz"
+  },
+  "earned_render": {
+    "initial_run": 37081480285,
+    "initial_status": "cancelled before gameplay while setup-godot in progress; reviewed remote Dummy-audio workflow substituted.",
+    "run_id": 37081693748,
+    "workflow_ref": "tb/integration@0537ae7bd13252d66ae6177bec9759304b9aed6e",
+    "checkout": "2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
+    "label": "f18-earned-loop-dummy-2237",
+    "status": "completed failure before F18 receipt verification of the Home Key gift: live first-catch aim did not converge; original artifact retained in ../native-followups/earned-r1-remote.zip",
+    "scope": "Rendered controller path and pixels only; Dummy audio cannot prove audible playback."
+  },
+  "three_peer": {
+    "initial_run": 37081696241,
+    "source": "73566735625cb04368b03e5fc3612a0d3c586929",
+    "status": "cancelled during checkout, before any wide net smoke, when independent audit confirmed pending shared SaveGame world-ID validation defect.",
+    "required_followup": "F18 travel fails ordinary-input touch with original Home Key lesson open; exact independent lesson-confirmation correction18b90c adopted by coordinator331. Portablecrosshosts separately fails unexpected traveller worldfile slot0. Four other discovered3peer suites pass. Updated actual arrival/lesson proof remains required.",
+    "authority_prerequisite_cancel": {
+      "run_id": 37090034416,
+      "source": "a97a33a28b7718b14068f602046a2132fbe7df44",
+      "cancel_request_http_status": 202,
+      "observed_stage_before_cancel": "setup-godot; wide gameplay discovery and smoke steps pending",
+      "reason": "Reviewed root real idle-guest arbiter initialization absent from old checkout; exact bounded correction adopted as c01cef5764, dependency native check pending.",
+      "jobs_snapshot": {
+        "path": "/repos/MJohnsonWellabe/Tetherbound/actions/runs/37090034416/jobs"
+      },
+      "scope": "Cancellation is neither gameplay failure nor PASS; only own remote run cancelled.",
+      "final_result": {
+        "id": 37090034416,
+        "display_title": "Multiplayer wide (3/4 peers)",
+        "head_sha": "a97a33a28b7718b14068f602046a2132fbe7df44",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37090034416"
+      }
+    },
+    "corrected_retry_dispatch": {
+      "source": "b24864060e5f66837a885868e7292ae4f5fd2acd",
+      "workflow": "multiplayer-wide.yml",
+      "inputs": {
+        "peers": "3"
+      },
+      "run_id": 37090915265,
+      "filters_or_workflow_changes": false,
+      "status": "completed",
+      "conclusion": "failure",
+      "artifact_id": 11263765919,
+      "raw_artifact": "wide-r4-remote.zip",
+      "bytes": 14213233,
+      "sha256": "0dc7e5e07379ae140828c7d8cfc8b0c562d3bb61fc6f33865831d3916419bfb9",
+      "census": [
+        {
+          "case": "net-f18_travel-20261003T024739Z",
+          "failures": [
+            "peer 1 f18_touch: touch needs actual stone and ordinary world input",
+            "F18 gameplay peer logs have no errors/warnings (peer 0: WARNING: x9; peer 1: WARNING: x17; peer 2: WARNING: x9)"
+          ],
+          "fatal": "",
+          "peers": [
+            {
+              "index": 0,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 1,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 2,
+              "exited": true,
+              "unexpected_exit": false
+            }
+          ],
+          "peer_log_counts": {
+            "ERROR:": 0,
+            "SCRIPT ERROR:": 0,
+            "WARNING:": 35
+          },
+          "raw_result_path": "net-f18_travel-20261003T024739Z/NET_RUN.json"
+        },
+        {
+          "case": "net-join_portable_across_hosts-20261003T025536Z",
+          "failures": [
+            "the traveller never wrote a world file ([\"slot-0\"])"
+          ],
+          "fatal": "",
+          "peers": [
+            {
+              "index": 0,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 1,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 2,
+              "exited": true,
+              "unexpected_exit": false
+            }
+          ],
+          "peer_log_counts": {
+            "ERROR:": 0,
+            "SCRIPT ERROR:": 0,
+            "WARNING:": 27
+          },
+          "raw_result_path": "net-join_portable_across_hosts-20261003T025536Z/NET_RUN.json"
+        },
+        {
+          "case": "net-reconnect_reservation-20261003T025853Z",
+          "failures": [],
+          "fatal": "",
+          "peers": [
+            {
+              "index": 0,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 1,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 2,
+              "exited": true,
+              "unexpected_exit": false
+            }
+          ],
+          "peer_log_counts": {
+            "ERROR:": 126,
+            "SCRIPT ERROR:": 0,
+            "WARNING:": 29
+          },
+          "raw_result_path": "net-reconnect_reservation-20261003T025853Z/NET_RUN.json"
+        },
+        {
+          "case": "net-rejoin_exact_pose-20261003T030206Z",
+          "failures": [],
+          "fatal": "",
+          "peers": [
+            {
+              "index": 0,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 1,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 2,
+              "exited": true,
+              "unexpected_exit": false
+            }
+          ],
+          "peer_log_counts": {
+            "ERROR:": 3,
+            "SCRIPT ERROR:": 0,
+            "WARNING:": 51
+          },
+          "raw_result_path": "net-rejoin_exact_pose-20261003T030206Z/NET_RUN.json"
+        },
+        {
+          "case": "net-session_guest_sees_guest-20261003T030954Z",
+          "failures": [],
+          "fatal": "",
+          "peers": [
+            {
+              "index": 0,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 1,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 2,
+              "exited": true,
+              "unexpected_exit": false
+            }
+          ],
+          "peer_log_counts": {
+            "ERROR:": 0,
+            "SCRIPT ERROR:": 0,
+            "WARNING:": 27
+          },
+          "raw_result_path": "net-session_guest_sees_guest-20261003T030954Z/NET_RUN.json"
+        },
+        {
+          "case": "net-three_peer_session-20261003T031315Z",
+          "failures": [],
+          "fatal": "",
+          "peers": [
+            {
+              "index": 0,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 1,
+              "exited": true,
+              "unexpected_exit": false
+            },
+            {
+              "index": 2,
+              "exited": true,
+              "unexpected_exit": false
+            }
+          ],
+          "peer_log_counts": {
+            "ERROR:": 1,
+            "SCRIPT ERROR:": 0,
+            "WARNING:": 27
+          },
+          "raw_result_path": "net-three_peer_session-20261003T031315Z/NET_RUN.json"
+        }
+      ],
+      "scope": "Unchanged all-discovered peers3 wide workflow. All original cases retained; no skipped, filtered or quarantined tests."
+    }
+  },
+  "acceptance": {
+    "F18#0": "UNPROVEN",
+    "F18#1": "UNPROVEN",
+    "F18#2": "UNPROVEN",
+    "F18#3": "UNPROVEN",
+    "F18#4": "UNPROVEN",
+    "F18#5": "UNPROVEN"
+  },
+  "native_followups": "../native-followups/receipt.json",
+  "earned_latest": {
+    "id": 37095561951,
+    "checkout": "e269dcfe2474640e8929a9b1b1036113a1dbfe75",
+    "status": "completed",
+    "conclusion": "failure",
+    "scope": "All4strictactualshop-owner handoffs/vendorabsence pass; Workbench pending remains empty because basefixture uses sharedthumbnail identity and selects unaffordable Stormwoodforge; originalnullmaterialERROR retained.",
+    "evidence": "../native-followups/receipt.json",
+    "followup": "8a3d204ef3d17e598444077a38d24177ca5e98aa F18-only read actualbutton catalogueID, unchanged physical navigation/guards/materials/budgets; independent SolsourceAPPROVE; earnedR7 dispatched."
+  }
+}

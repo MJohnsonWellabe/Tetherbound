@@ -30,12 +30,7 @@ func _process(delta: float) -> void:
 	var forge_ready: bool = stations.get("runtime_enabled") == true and stations.get("forge", {}).get("runtime_enabled") == true
 	if not portal_ready and not forge_ready: return
 	if owner.call("is_host") == true:
-		if not portal_ready: return
-		for peer: int in _observations.keys():
-			var context := host_context(peer)
-			if context.is_empty():
-				context = {"character_id": _observations[peer].sample.character_id, "combat": true}
-			owner.get("_portal_policy").call("cancel_invalid", context)
+		# HomeKeyChannels owns host cancellation and observer cleanup together.
 		return
 	if owner.call("is_active") != true: return
 	publish_now()
@@ -221,7 +216,7 @@ func host_context(peer: int) -> Dictionary:
 		"equipped_tool": str(sample.get("equipped_tool", "")),
 		"swimming": sample.swimming or aquatic.get("mode") != preload("res://scripts/player/swim_state.gd").Mode.LAND,
 		"flying": sample.flying or actor.get("net_flying") == true or actor.get("net_carried") == true,
-		"downed": sample.downed or (downed.get("_downed_peers") as Dictionary).has(peer), "home_key_owned": key_count == 1,
+		"downed": sample.downed or (downed.get("_downed_peers") as Dictionary).has(peer), "home_key_owned": owner.call("_home_key_authoritative_owned", peer),
 		"character_unlocks": personal.redesign_character.portal_unlocks.duplicate(),
 		"world_unlocks": game.get("world").redesign_world.portal_unlocks.duplicate(),
 		"character_stirred": owner.get("_character_authority").call("character_fifth_stirred", sample.character_id),

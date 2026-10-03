@@ -3118,6 +3118,7 @@ func home_key_refusal() -> String:
 
 func use_home_key() -> bool:
 	if local == null or local.inventory.count("home_key") != 1 or session == null: return false
+	if session.call("_owner_training_mutation_blocked", local) == true: return false
 	var key := get_node_or_null(^"HomeKey")
 	if key == null:
 		key = preload("res://scripts/world/home_key.gd").new()
@@ -3281,7 +3282,8 @@ func regional_ending_ack_result(transaction_id: String) -> Dictionary:
 
 
 func grant_home_key_from_opening(source: Node) -> bool:
-	if session == null or not is_host() or not bool(session.call("portal_runtime_ready")) or source == null: return false
+	if session == null or not bool(session.call("portal_runtime_ready")) or source == null: return false
+	if session.call("_owner_training_mutation_blocked", local) == true: return false
 	var scene := get_tree().current_scene
 	if scene == null or not scene.is_ancestor_of(source) or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": return false
 	if source.get("_f18_opening_conversation_id") != "grandpa_first_catch" or current_realm != "meadows": return false
@@ -3294,8 +3296,7 @@ func grant_home_key_from_opening(source: Node) -> bool:
 	# A finite gift already owed by a former world follows its character even
 	# with a full bag; another Grandpa interaction cannot produce another key.
 	for row: Variant in local.satchel_escrow.values():
-		if row is Dictionary and row.get("kind") == "reward_delivery" and row.get("source") == "home_key:grant:" + local.character_id:
-			return row.get("status") in ["grant_due", "settled"]
+		if preload("res://scripts/net/home_key_action.gd").valid_escrow(row, local.character_id): return true
 	var ledger := session.get_node_or_null("LedgerRpc")
 	if ledger == null or save_system == null or not bool(save_system.call("finish_fallback")): return false
-	return bool(ledger.call("journal_opening_home_key_prepared", session.call("local_peer_id"), source).get("durable", false))
+	return bool(session.call("request_opening_home_key", source))

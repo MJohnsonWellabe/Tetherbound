@@ -9,6 +9,9 @@ var _left := 0.0
 var _cached_view: Dictionary = {}
 
 func _ready() -> void:
+	# Install the refusal observer before the first successful key use. Defer
+	# because Session may itself still be joining Game's child list.
+	_mount_home_key.call_deferred()
 	var breakthrough: Node = preload("res://scripts/masters/breakthrough_service.gd").new()
 	breakthrough.name = "BreakthroughService"
 	add_child(breakthrough)
@@ -22,6 +25,9 @@ func _ready() -> void:
 	var lifecycle: Node = preload("res://scripts/net/foundation_travel_lifecycle.gd").new()
 	lifecycle.name = "TravelLifecycle"
 	add_child(lifecycle)
+	var channels: Node = preload("res://scripts/net/home_key_channels.gd").new()
+	channels.name = "HomeKeyChannels"
+	add_child(channels)
 	var forge: Node = preload("res://scripts/net/foundation_forge.gd").new()
 	forge.name = "ForgeHost"
 	add_child(forge)
@@ -47,6 +53,14 @@ func _ready() -> void:
 	var resources: Node = preload("res://scripts/net/foundation_resources.gd").new()
 	resources.name = "Resources"
 	add_child(resources)
+
+func _mount_home_key() -> void:
+	if not is_inside_tree() or is_queued_for_deletion(): return
+	var game: Node = get_parent().call("_game")
+	if game == null or game.get_node_or_null(^"HomeKey") != null: return
+	var key := preload("res://scripts/world/home_key.gd").new()
+	key.name = "HomeKey"
+	game.add_child(key)
 
 func _process(delta: float) -> void:
 	_left -= delta

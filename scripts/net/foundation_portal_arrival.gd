@@ -87,6 +87,10 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	_pending = {"session": weakref(session), "game": weakref(game), "peer": peer,
 		"owner": weakref(game.get("local")), "world": weakref(game.get("world")),
 		"envelope": envelope.duplicate(true), "permit": permit.duplicate(true), "seated": false}
+	if envelope.payload.kind == "home_key_finish":
+		var presented: bool = await session.call("portal_owner_travel_started", self, envelope, permit)
+		if not presented: _refuse("The Home Key could not finish its fade."); return
+		if not _same_owner(): _refuse("Your travel session changed."); return
 	if str(game.get("current_realm")) != permit.realm:
 		# Only the consumed host permit chooses this destination; never a debug
 		# request or client-provided coordinate. Normal transition drains actors.
@@ -138,6 +142,7 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 		await get_tree().physics_frame
 	if not _same_owner() or not _grounded_actor(body): _refuse("The arrival has not reached supported ground."); return
 	_pending.seated = true
+	_pending.save_deadline_msec = Time.get_ticks_msec() + int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").home_key.response_timeout_seconds) * 1000.0)
 	_save_arrival()
 
 func _grounded_actor(actor: CharacterBody3D) -> bool:
@@ -166,13 +171,23 @@ func arrival_binding(envelope: Dictionary, permit: Dictionary) -> bool:
 			and _remote_binding(peer, original)
 	return not _pending.is_empty() and _same_owner() and _pending.get("seated") == true \
 		and _pending.envelope == envelope and _pending.permit == permit \
-		and _grounded_actor(_pending.game.get_ref().call("find_player") as CharacterBody3D)
+		and ((_pending.get("journal_started") == true and _original_arrival_row(_pending.world.get_ref(), _pending)) \
+			or _grounded_actor(_pending.game.get_ref().call("find_player") as CharacterBody3D))
+
+func presentation_binding(envelope: Dictionary, permit: Dictionary, waiting: bool = false) -> bool:
+	return not _pending.is_empty() and _same_owner() and _pending.envelope == envelope and _pending.permit == permit \
+		and (not waiting or _pending.get("seated") == true)
 
 func _process(delta: float) -> void:
 	_retry_left -= delta
 	if _retry_left > 0.0: return
 	_retry_left = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds)
-	if not _pending.is_empty() and _pending.get("seated") == true and not _pending.has("refused"): _save_arrival()
+	if not _pending.is_empty() and _pending.get("seated") == true and not _pending.has("refused"):
+		if _pending.get("save_wait_notified") != true and Time.get_ticks_msec() >= int(_pending.get("save_deadline_msec", 0)):
+			_pending.save_wait_notified = true
+			var owner: Node = _pending.session.get_ref()
+			if owner != null: owner.call("portal_owner_save_waiting", self, _pending.envelope, _pending.permit)
+		_save_arrival()
 	for peer: int in _remote.keys():
 		var original: Dictionary = _remote[peer]
 		var session: Node = original.session.get_ref()
@@ -214,7 +229,8 @@ func _save_arrival() -> void:
 		return
 	var saver: RefCounted = game.get("save_system")
 	var actor := game.call("find_player") as CharacterBody3D
-	if actor == null or not _grounded_actor(actor): _refuse("The arrival support changed before it was saved."); return
+	var retained: bool = _pending.get("journal_started") == true and _original_arrival_row(game.get("world"), _pending)
+	if not retained and (actor == null or not _grounded_actor(actor)): _refuse("The arrival support changed before it was saved."); return
 	if saver == null or saver.call("fallback_busy") == true: return
 	if _pending.get("pose_saved") != true:
 		game.call("_capture_player_pose")
@@ -223,11 +239,12 @@ func _save_arrival() -> void:
 			if session.call("_owner_passive_service").call("portal_pose_save", self, request) != true: return
 		elif saver.call("save_character_prepared", game, _pending.envelope.character_id) != true: return
 		_pending.pose_saved = true
-	if not _same_owner() or not _grounded_actor(actor): _refuse("Your travel session changed."); return
+	if not _same_owner() or (not retained and not _grounded_actor(actor)): _refuse("Your travel session changed."); return
 	if session.call("is_host") != true:
 		session.call("report_portal_owner_saved", self, _pending.envelope, str(_pending.permit.request_id))
 		return
 	var journal: Dictionary = session.call("foundation_grounded_arrival", self, _pending.envelope, _pending.permit)
+	if journal.get("durable") == true and _original_arrival_row(game.get("world"), _pending): _pending.journal_started = true
 	if journal.get("ok") != true or journal.get("saved") != true: return
 	var envelope: Dictionary = _pending.envelope
 	var peer: int = _pending.peer
@@ -304,7 +321,10 @@ func _remote_binding(peer: int, original: Dictionary) -> bool:
 func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 	var id: String = preload("res://scripts/creatures/essence.gd").training_delivery_id(original.envelope.world_instance_id, original.envelope.character_id)
 	var row: Dictionary = world.reward_deliveries.get(id, {})
-	return row.get("action") == "portal_arrival" and row.get("intent") == {
+	return world.call("training_row_valid", row, original.envelope.world_instance_id, world.get("world_id")) == true \
+		and row.get("character_id") == original.envelope.character_id \
+		and row.get("session_id") == original.envelope.session_epoch \
+		and row.get("action") == "portal_arrival" and row.get("intent") == {
 		"permit_id": original.permit.request_id, "realm": original.permit.realm, "entry_id": original.permit.entry_id}
 
 func _supported_capsule(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> bool:

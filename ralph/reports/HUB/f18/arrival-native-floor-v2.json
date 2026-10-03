@@ -1,0 +1,85 @@
+{
+  "integration_base": "ae55266fa3591092d6d3498b5f69f8a789c35ef3",
+  "production_only_commit": "388672a86dbf60b6a8784b76da56f3bf4148e0c6",
+  "geometry_checkout": "61106753e257ccbca23c2390d43698953538f0c4",
+  "changed_paths": [
+    "scripts/net/foundation_portal_arrival.gd"
+  ],
+  "changed_functions": [
+    "_contacts_on_support",
+    "_capsule_landing"
+  ],
+  "patch_sha256": "5141d205182b024b1777f8a6395c1a2ae61666b8fa961dc36c26a9e1b35f1d29",
+  "applied_portal_file_lf_sha256": "151fe3efbb74b7082ed9a356ae3efab3f2ab69c3dadb566fde1fe45ee2d4ff84",
+  "patch_bytes": 4294,
+  "source_review": "Independent source PASS; unchanged ceiling/unsafe-witness/full-capsule and final contact/save fences. Equivalent Terrain3D cross-RID retains normal proof. New same-RID bevel/foreign-RID/highY fixtures and full production first-entry/19stone geometry runtime IN PROGRESS.",
+  "prior_package_preserved": "arrival-physical-only.patch/json at09b4586a1f unchanged; this is a separate two-function delta, not replacement.",
+  "runtime_status": "Current388 actual syntheticR8 passes67/67 including real tinybevel and foreign-body classifier guards; native resident28 remains passing. Genuine canonical Cloud entryR3 refuses32saturated duplicate contacts from50triangle hub; coordinator-authorized flattransition topology correction980 independently sourceAPPROVED and actualnativeR4 pending. Summit isolated controller omitted shipping skin helper, inherited unchanged helper added980; native outcome pending. All sixF18criteria UNPROVEN.",
+  "local_resource_constraint": "No local Godot/import/render/desktop/GPU use.",
+  "native_runs": [
+    {
+      "id": 37094743571,
+      "display_title": "render f18-native-stones-water-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
+      "head_branch": "tb/integration",
+      "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094743571"
+    },
+    {
+      "id": 37094741748,
+      "display_title": "render f18-native-stones-meadows-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
+      "head_branch": "tb/integration",
+      "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094741748"
+    },
+    {
+      "id": 37094740030,
+      "display_title": "render f18-native-stones-stormwood-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
+      "head_branch": "tb/integration",
+      "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094740030"
+    },
+    {
+      "id": 37094738320,
+      "display_title": "render f18-resident-r7 @ 61106753e257ccbca23c2390d43698953538f0c4",
+      "head_branch": "tb/integration",
+      "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094738320"
+    },
+    {
+      "id": 37094736602,
+      "display_title": "render f18-arrival-r7 @ 61106753e257ccbca23c2390d43698953538f0c4",
+      "head_branch": "tb/integration",
+      "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094736602"
+    },
+    {
+      "id": 37094735034,
+      "display_title": "render f18-native-stones-cloudreach-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
+      "head_branch": "tb/integration",
+      "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094735034"
+    }
+  ],
+  "expected_counts": {
+    "synthetic_arrival": 67,
+    "resident": 28,
+    "native_cloudreach": 63,
+    "native_other_realms": 74
+  },
+  "reused_rounding": "R6 scalar helper and exact test unchanged;2tests7assertions native0fail reused, no redundant unit rerun.",
+  "isolated_patch_apply": "git apply --check + actual apply against exact ae552 baseline in isolated .tmp fixture; applied LF SHA256 matches receipt. No root/shared worktree writes.",
+  "original_results": "native-followups/receipt.json",
+  "new_source_fix": "674f86d54827442a6cdd64b5598ac5465cbf7d95: actualPlayer readonly first-entry case; corrected clockwise ridge/bevel winding and actual unobserved-RID classifier fixture. Production two-function patch unchanged."
+}

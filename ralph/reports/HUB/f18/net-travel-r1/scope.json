@@ -1,0 +1,7 @@
+{
+  "status": "FAILED before gameplay; diagnostic only",
+  "source": "cd272f5c51",
+  "failure": "Three simultaneous world boots did not finish hello within180s; peer warnings retained.",
+  "cleanup": "Harness stopped only its own three peer PIDs; confirmed gone.",
+  "change": "Next invocation boots lightweight titles, then the same disclosed fixture worlds sequentially under existing step/heartbeat bounds. No gameplay runtime gate, support rule or assertion is relaxed. Native row equality now evaluated before JSON verdict serialization."
+}
