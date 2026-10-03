@@ -4643,14 +4643,28 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 		var provenance: Dictionary = after.redesign_character.creatures[added[0]].get("captured_from", {})
 		var reply: Dictionary = director.get("_shared_catch_finish_reply")
 		fixture["finish_reply"] = reply
+		# The director exposes the normalized local finish reply, after its
+		# authority-only verdict matched the pending encounter and claim.
+		var capture_uid := str(added[0])
+		var capture_offer := JSON.stringify([game.get("world").get("reward_delivery_namespace"),
+			str(reply.get("claim_id", "")), capture_uid]).sha256_text()
+		var owned_capture := false
+		for creature: Dictionary in after.get("party", []):
+			if creature.get("uid") == capture_uid: owned_capture = true
 		valid = provenance.get("kind") == "wild" and provenance.get("spawn_id") == site \
 			and provenance.get("spawn_generation") == 1 \
 			and provenance.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
-			and reply.get("ok") == true and reply.get("delta", {}).get("caught") == true \
-			and reply.get("peer") == director.call("_local_peer_id") \
-			and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty()
+			and reply.get("ok") == true and reply.get("caught") == true \
+			and reply.get("kind") == "catch_finished" and reply.get("pending") == false \
+			and reply.get("creature", {}).get("uid") == capture_uid and owned_capture \
+			and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty() \
+			and row.get("action") == "wild_capture" and row.get("status") == "accepted" \
+			and row.get("character_id") == after.get("character_id") \
+			and row.get("source_key") == "capture:" + capture_offer \
+			and not str(row.get("receipt", "")).is_empty() \
+			and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
 	if not valid: fixture["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
-	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
+	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch created one source companion with its accepted original receipt and normalized finish reply." if valid else "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
 
 func _f48_owner_passive_diagnostic() -> Dictionary:
 	# Read existing state only: never construct a service, admit, stage or save.
