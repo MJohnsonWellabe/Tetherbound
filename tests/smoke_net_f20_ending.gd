@@ -7,6 +7,15 @@ extends "res://tests/helpers/net_harness.gd"
 func _initialize() -> void:
 	_run()
 
+func _init_budgets() -> void:
+	super._init_budgets()
+	# This is the total post-hello proof, not an individual command timeout.
+	# r5 completed the host ending/revisit, then exhausted300s as the guest
+	# began its Home Key. Both personal endings plus disconnect/title rejoin/
+	# real disk reload require the existing long two-peer proof allowance.
+	# Keep command, hello, heartbeat, input and production ACK limits intact.
+	_budgets["smoke_step_budget_s_2peer"] = 1500.0
+
 func _run() -> void:
 	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
