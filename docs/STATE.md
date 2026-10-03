@@ -14,26 +14,22 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F18 arrival dependency:** Upstream `cd272f5c51` measures actual nearby physics floor, preserves complete capsule/new contact/save fences, awaits the consumed-permit fade, and releases presentation during retained save retries. Source review and29 tests/377 assertions plus9 synthetic physics checks pass (`ralph/reports/HUB/f18/arrival-support.json`). All19 authored simulation stone/return pads pass after Salt Crown/Summit fixes (`authored-stones.json`). These dependency checks do not close actual arrival or F20 ending acceptance.
 
-**F20 candidate:** Tidewake r7 on `687732d0b2` passes 21 actual dock checks; independent §7.2 review scores
-F20#0 MET on candidate, main pending (restored-current fixture and warning retained). Focused ending checks33/350,
-synthetic split-writer/reload62 and SaveGame locator regression12/104 pass. Diagnostic `a507d6022d` parse failures
-and clearance withdrawal remain in evidence; corrected `769d93e9ba` compiles. Actual solo-r10 on `37b17d2917`
-completes the 11 authored Grandpa lines using 11 normal presses, names the current five/starter/one actual landmark/
-four choices, opens production credits and saves exactly one guarded Skip acknowledgement. The character file holds
-both ending receipts; completed-world save and memory-reset load return true. The proof then emits3 SCRIPT ERRORs
-calling nonexistent Inventory.save_data and reading its empty result, aborting reload comparison and continuation
-despite a misleading34checks0/exit0. This is retained as FAIL. Reviewed credits closing-press fix `72fde3eb14` and
-authored-line input `37b17d2917` are exercised; F20-only serializer/UID/phase-completion correction `7dc0283081`
-and peer UID assertions `11aa0b1afe` pass independent source review; affected solo-r11 (37090781811)
-runs on exact `11aa0b1afe`. Two-peer-r4 (37090792874) connects both peers and completes host Grandpa
-dialogue, then host f20_talk yields no verdict at the unchanged300s limit; full peer logs have0 engine/script
-errors. Actual disk confirms host homecoming receipt and acceptedregional_ack; credits and guest ending/rejoin/
-reload remain unproved. Reviewed read-only clock diagnostic `29bc4f7145` preserves all inputs and budgets. Arch-r5 has16functionalchecks0/exit0 but its PNG fails visible
-arch/glow acceptance and its661.676s mixed WAV does not isolate the hum. Reviewed capture `65cbb/c620` compiles in
-arch-r6 but shell readiness/player release remain false at182460ms; no key/recenter/capture callbacks or PNG/WAV.
-No further render retry/shared-world change is queued. F20#1–4 remain OPEN, including clean once-after-reload,
-completed-world activities, two-peer ending and visual/audio. No local engine/GPU while the owner plays Valheim.
-Logs, exact original ZIPs and disclosures: `ralph/reports/F20/ending-runtime/evidence.json`.
+**F20 candidate:** Independent §7.2 review scores #0 MET on Tidewake-r7 (`687732d0b2`,21checks0) and
+#1 MET on solo-r11 (`11aa0b1afe`), main landing pending. Actual post-finale Stormwood Home Key, Grandpa's
+11 authored lines naming the current five/starter/one actual landmark/four choices, production credits and one
+guarded Skip acknowledgement pass. Real save/reset/reload retains ordered companion IDs/names, inventory,
+world and both ending receipts; ordinary completed Grandpa repeat returns world input without credits or another
+receipt. Fixture start/restored currents, harness input and controller Skip remain disclosed; no earned campaign claim.
+Solo-r11 remains overall FAIL58checks2/zero engine-script errors: safe movement, unfinished journal and enabled
+actual endgame rematches pass, then ordinary bounty-board navigation fails before its screen/three active rows.
+F20-only authored-road proof `c352e4979e` passes independent source review; affected replay pending, #3 OPEN. Earlier r10 misleading green with
+three script errors is preserved as FAIL; reviewed7dc/11aa now produce clean retained snapshot/reload checks.
+Two-peer-r4 connects both peers and saves host homecoming, then yields no f20_talk verdict at the unchanged300s
+limit; credits/guest ending/rejoin/reload remain unproved. Reviewed input-clock29bc runs as net-r5 (37091888883).
+#4 remains OPEN. Arch-r5 functional16/0 creates files but image lacks visible arch/glow and mixed audio does not
+isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. #2 remains OPEN;
+no further blind render retry or shared-world edit. No local engine/GPU while the owner plays Valheim. Exact original
+ZIPs, native logs and disclosures: `ralph/reports/F20/ending-runtime/evidence.json`.
 
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
 
