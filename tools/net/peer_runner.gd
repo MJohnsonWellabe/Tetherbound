@@ -4560,12 +4560,15 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	if local != null:
 		var saved: Dictionary = (local as RefCounted).call("save_data")
 		var personal: Dictionary = TEACHING.character_loadout_mirror(saved.get("party", []), (local as RefCounted).get("redesign_character"))
-		for card: Variant in saved.get("party", []):
-			if card is Dictionary and card.get("uid") == creature.get("uid"):
-				personal = BREAKTHROUGH.initialize_caught(personal, card)
-		if personal.is_empty():
-			return {"verdict": "FAIL", "detail": "could not record breakthroughs for a level-%d '%s'" % [level, species]}
-		(local as RefCounted).set("redesign_character", personal)
+		# Above the authored ceiling there is no cap to record; such fixtures
+		# (level 99) keep the record they had before this step.
+		if level <= int(BREAKTHROUGH.masters().get("ceiling", 60)):
+			for card: Variant in saved.get("party", []):
+				if card is Dictionary and card.get("uid") == creature.get("uid"):
+					personal = BREAKTHROUGH.initialize_caught(personal, card)
+			if personal.is_empty():
+				return {"verdict": "FAIL", "detail": "could not record breakthroughs for a level-%d '%s'" % [level, species]}
+			(local as RefCounted).set("redesign_character", personal)
 	if not PARTY_SEAM.has_game_state():
 		return {"verdict": "FAIL",
 			"detail": "party_seam is running on its FALLBACK array, not Game.party -- "
