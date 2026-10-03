@@ -14,7 +14,7 @@
   "patch_bytes": 4294,
   "source_review": "Independent source PASS; unchanged ceiling/unsafe-witness/full-capsule and final contact/save fences. Equivalent Terrain3D cross-RID retains normal proof. New same-RID bevel/foreign-RID/highY fixtures and full production first-entry/19stone geometry runtime IN PROGRESS.",
   "prior_package_preserved": "arrival-physical-only.patch/json at09b4586a1f unchanged; this is a separate two-function delta, not replacement.",
-  "runtime_status": "Current388 production partial native proof: resident28/28 and Meadows74/74 pass, all18other stone initial casts pass but Summit probe final support fails. Original49synthetic+8highY pass; new wrong-winding fixture failures retained and corrected674. Canonical entries in Cloud/Water/Storm falsely collide with actual Player due copy-probe fixture; actualPlayer readonly entry correction674 pending.",
+  "runtime_status": "Current388 actual syntheticR8 passes67/67 including real tinybevel and foreign-body classifier guards; native resident28 remains passing. Genuine canonical Cloud entryR3 refuses32saturated duplicate contacts from50triangle hub; coordinator-authorized flattransition topology correction980 independently sourceAPPROVED and actualnativeR4 pending. Summit isolated controller omitted shipping skin helper, inherited unchanged helper added980; native outcome pending. All sixF18criteria UNPROVEN.",
   "local_resource_constraint": "No local Godot/import/render/desktop/GPU use.",
   "native_runs": [
     {

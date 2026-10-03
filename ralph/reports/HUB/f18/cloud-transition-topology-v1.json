@@ -1,0 +1,16 @@
+{
+  "source": "980d3aede789146ddb30d4bf95e6298aacce773c",
+  "path": "scripts/world/cloudreach_world.gd",
+  "base": "1fee47bc5848bbc072f1376567433a87ae505a60",
+  "patch": "cloud-transition-topology-v1.patch",
+  "sha256": "d698bc2c6410b81ee5963419c5490844208d808d77ceec6314f6e3db5785430c",
+  "bytes": 4261,
+  "coordinator_preimage_matches_source_parent": true,
+  "coordinator_preimage_lf_sha256": "81d3780920a50f1e669d14d46fac2fba5df9a98f7442768bd48c1eb6c0863c85",
+  "isolated_apply_check": true,
+  "isolated_applied_lf_sha256": "88e6ea6d519624b2d735206262032f2ffe8828dc46f62735b21ad4d3590cf428",
+  "ownership": "Coordinator explicitly authorizes isolated Cloud transition-only correction; root worktree not mutated.",
+  "source_review": "Independent GPT-6.1 Sol APPROVE; engine4.7 Geometry2D CCW winding verified; actualnative pending.",
+  "scope": "Only flat transition ledges, same irregular perimeter/height/yaw/UV/skirt; one triangulation index array shared by visible top and collision. Other mesa callers default unchanged. Saturated-contact predicate remains unchanged.",
+  "runtime_status": "Actual canonical Cloud entry plus all four stones dispatched exact source; no main acceptance claim."
+}

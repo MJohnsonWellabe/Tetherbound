@@ -2508,6 +2508,133 @@
       ],
       "outcome": "74checks5fails. All five actual shrine/landing/controller/final-support stones pass; canonical entry isolated probe collides with actual Player. Entry fixture self-obstacle, not identified production obstruction.",
       "fixtures": "Explicit isolated actual native geometry/controller probe; not earned play/travel/touch-save-reload/co-op/presentation proof."
+    },
+    {
+      "id": 37095738335,
+      "display_title": "render f18-native-stones-cloudreach-r3 @ 674f86d54827442a6cdd64b5598ac5465cbf7d95",
+      "head_branch": "tb/integration",
+      "head_sha": "a47882b020fb2458d908cddb57f2e5670830b7ed",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37095738335",
+      "checkout": "674f86d54827442a6cdd64b5598ac5465cbf7d95",
+      "artifact_id": 11264107150,
+      "raw_artifact": "native-cloudreach-r3-remote.zip",
+      "sha256": "d658416556f24f1d2ef392c58c1a8e5f9842fbe1cfb7e10115b433fabfd4739e",
+      "bytes": 7132,
+      "native_exit_code": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)",
+        "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+        "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+      ],
+      "result_lines": [
+        "F18_NATIVE_STONES {\"camera_changes\":false,\"checks\":63,\"co_op\":false,\"earned_play\":false,\"failures\":[\"cloudreach_arrival_from_meadows actual Player full-capsule landing accepted\",\"cloudreach_arrival_from_meadows actual Player complete candidate capsule clear\",\"cloudreach_arrival_from_meadows actual existing Player controller stable walkable contact\",\"cloudreach_summit_bivouac actual move_and_slide stable walkable contact\",\"cloudreach_summit_bivouac production final five-floor/full-capsule guard\"],\"fixture\":\"direct realm/scene, private save, isolated copy of actual Player capsule and probe candidate poses\",\"grants\":false,\"permission_bypass\":false,\"player_teleports\":false,\"portal_entries\":[{\"consecutive_floor_frames\":60,\"final_supported\":true,\"fixture\":\"direct scene boot; observe existing actual Player; no harness pose writes or controller changes\",\"id\":\"cloudreach_arrival_from_meadows\",\"landing\":[1e99999,1e99999,1e99999],\"mask\":1,\"safe_margin\":0.00100000004749745,\"settled\":[0.0,105.030944824219,-260.0],\"shape_radius\":0.400000005960464,\"stable_contact\":false,\"target\":[0.0,105.0,-260.0]}],\"readable_presentation\":false,\"realm\":\"cloudreach\",\"settle_frames_per_stone\":60,\"simulation_only\":false,\"stones\":[{\"consecutive_floor_frames\":63,\"final_supported\":true,\"id\":\"cloudreach_galefoot_waycamp\",\"landing\":[-273.0,180.034118652344,517.0],\"mask\":1,\"safe_margin\":0.00100000004749745,\"settled\":[-273.0,180.03010559082,517.0],\"shape_height\":1.79999995231628,\"shape_radius\":0.400000005960464,\"shrine\":[-273.0,180.0,520.0],\"stable_contact\":true,\"target\":[-273.0,180.0,517.0]},{\"consecutive_floor_frames\":67,\"final_supported\":true,\"id\":\"cloudreach_windscar_flight_aerie_camp\",\"landing\":[388.0,610.073608398438,3248.0],\"mask\":1,\"safe_margin\":0.00100000004749745,\"settled\":[388.002044677734,610.070373535156,3248.0],\"shape_height\":1.79999995231628,\"shape_radius\":0.400000005960464,\"shrine\":[388.0,610.0,3251.0],\"stable_contact\":true,\"target\":[388.0,610.0,3248.0]},{\"consecutive_floor_frames\":63,\"final_supported\":true,\"id\":\"cloudreach_cliffhold_commons\",\"landing\":[-340.0,830.0341796875,3960.0],\"mask\":1,\"safe_margin\":0.00100000004749745,\"settled\":[-340.0,830.030090332031,3960.0],\"shape_height\":1.79999995231628,\"shape_radius\":0.400000005960464,\"shrine\":[-340.0,830.0,3963.0],\"stable_contact\":true,\"target\":[-340.0,830.0,3960.0]},{\"consecutive_floor_frames\":66,\"final_supported\":false,\"id\":\"cloudreach_summit_bivouac\",\"landing\":[132.0,1160.0341796875,5338.0],\"mask\":1,\"safe_margin\":0.00100000004749745,\"settled\":[132.000076293945,1160.02563476562,5338.0],\"shape_height\":1.79999995231628,\"shape_radius\":0.400000005960464,\"shrine\":[132.0,1160.0,5335.0],\"stable_contact\":false,\"target\":[132.0,1160.0,5338.0]}],\"total_budget_msec\":300000,\"touch_save_reload\":false}"
+      ],
+      "outcome": "63checks5fails, no engine/script errors. Genuine actualPlayer canonical entry unsafe contacts saturate32 duplicates at old50triangle central fan; actual floor stable60frames, initial candidate refused. Other3stones pass; Summit isolated probe final support fails. Source-backed topology correction980 only flat transitions, preserves saturation guard and complete capsule/floor gates; nativeR4 pending.",
+      "evidence_limit": "Full original run.log retained inside exact ZIP, including all diagnostics/physical edges. Native/direct-scene fixtures do not prove earned travel consumption/touch/save/reload/co-op/readable audio/visual acceptance."
+    },
+    {
+      "id": 37095740133,
+      "display_title": "render f18-arrival-r8 @ 674f86d54827442a6cdd64b5598ac5465cbf7d95",
+      "head_branch": "tb/integration",
+      "head_sha": "a47882b020fb2458d908cddb57f2e5670830b7ed",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37095740133",
+      "checkout": "674f86d54827442a6cdd64b5598ac5465cbf7d95",
+      "artifact_id": 11264366739,
+      "raw_artifact": "arrival-r8-remote.zip",
+      "sha256": "c1e186b0a39d3e737398baec53968d92159349ef5cb55c1f0dc10d84ff3e68f2",
+      "bytes": 4068,
+      "native_exit_code": "0",
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_lines": [],
+      "result_lines": [
+        "F18_FIRST_CONTACT_WITNESS {\"above_margin_inside_bound\":true,\"floor_y\":0.0,\"foreign_coplanar_contact\":false,\"maximum_y\":0.00412500009406358,\"peak_y\":0.0025,\"walkable_contacts\":4}",
+        "F18_FOREIGN_FLOOR_CONTACT_WITNESS {\"actual_safe_margin\":0.00100000004749745,\"actual_walkable_contacts\":1,\"fixture\":\"old native floor ray witnesses, newly registered distinct native floor body; no dictionary injection or actor pose writes\",\"foreign_contact_observed\":true,\"old_surfaces\":5}"
+      ],
+      "outcome": "67checks0fails/exit0, no engine/script errors. Original49 preserved; actual highY concave floors, ridge, above-margin tinybevel actual contact inside old bound, and foreignRID actual within-margin contact refused against previous five-floor identities all pass. Original R7 invalid fixture failures retained separately.",
+      "evidence_limit": "Full original run.log retained inside exact ZIP, including all diagnostics/physical edges. Native/direct-scene fixtures do not prove earned travel consumption/touch/save/reload/co-op/readable audio/visual acceptance."
+    },
+    {
+      "id": 37095561951,
+      "display_title": "render f18-earned-headless-r6 @ e269dcfe2474640e8929a9b1b1036113a1dbfe75",
+      "head_branch": "tb/integration",
+      "head_sha": "a47882b020fb2458d908cddb57f2e5670830b7ed",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37095561951",
+      "checkout": "e269dcfe2474640e8929a9b1b1036113a1dbfe75",
+      "artifact_id": 11264645846,
+      "raw_artifact": "earned-r6-remote.zip",
+      "sha256": "e26b35cf30fccd0b87cdfa4334f26320bc4848eb9b26b1fc227471a5c8e98bf6",
+      "bytes": 1022561,
+      "native_exit_code": null,
+      "error_lines": [
+        "ERROR: Parameter \"material\" is null."
+      ],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated.",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light"
+      ],
+      "result_lines": [],
+      "outcome": "Actual earned opening/catch/key Drop/slot5/combat/dialogue/SettingsReplay/tool bindings and all4actual shopInputOwner handoffs/vendor key absence pass. Strict original Workbench pending-build guard fails because fixture identifies several different pieces by sharedworkbench.png then selects final Stormwood forge; actualproduction properly refuses its unearned cost. Native null-material error retained. F18-only canonical button/catalogue ID correction pending, no production UI edits/grants/bound changes.",
+      "evidence_limit": "Full original run.log retained inside exact ZIP, including all diagnostics/physical edges. Native/direct-scene fixtures do not prove earned travel consumption/touch/save/reload/co-op/readable audio/visual acceptance.",
+      "earned_summary": {
+        "failures": [
+          "controller Workbench catalogue: [\"controller selected workbench but live pending selection is \\'\\'\"]"
+        ],
+        "receipt_phases": [
+          "opening",
+          "earned_key_starting_bindings",
+          "protected_drop",
+          "key_binding",
+          "combat_key_refusal",
+          "cutscene_key_refusal",
+          "settings_home_key_replay",
+          "dialogue_key_refusal",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_tool_bindings",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_build_selection"
+        ],
+        "shop_handoffs": [
+          {
+            "passed": true,
+            "elapsed_process_frames": 0
+          },
+          {
+            "passed": true,
+            "elapsed_process_frames": 0
+          },
+          {
+            "passed": true,
+            "elapsed_process_frames": 1
+          },
+          {
+            "passed": true,
+            "elapsed_process_frames": 0
+          }
+        ]
+      }
     }
   ],
   "acceptance": {

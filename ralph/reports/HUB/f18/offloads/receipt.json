@@ -242,12 +242,12 @@
   },
   "native_followups": "../native-followups/receipt.json",
   "earned_latest": {
-    "id": 37094320580,
-    "checkout": "7e7b9d9aae7e690098f90c4de50eb4c6a501fa57",
+    "id": 37095561951,
+    "checkout": "e269dcfe2474640e8929a9b1b1036113a1dbfe75",
     "status": "completed",
     "conclusion": "failure",
-    "scope": "Actual opening/catch/key protections/tool bindings and first shop observation pass; later Bram shop is open but not current InputOwner. Original strict guard failure and separate null-material error retained; later BuildDriver path not reached.",
+    "scope": "All4strictactualshop-owner handoffs/vendorabsence pass; Workbench pending remains empty because basefixture uses sharedthumbnail identity and selects unaffordable Stormwoodforge; originalnullmaterialERROR retained.",
     "evidence": "../native-followups/receipt.json",
-    "followup": "e269dcfe24 bounded same90totalprocessframes exactactualshop input-owner handoff. Actual R6 dispatched; original strict guard unchanged."
+    "followup": "8a3d204ef3d17e598444077a38d24177ca5e98aa F18-only read actualbutton catalogueID, unchanged physical navigation/guards/materials/budgets; independent SolsourceAPPROVE; earnedR7 dispatched."
   }
 }
