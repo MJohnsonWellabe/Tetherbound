@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CAPSULE_DIAGNOSTIC := preload("res://tests/helpers/f18_capsule_diagnostic.gd")
+
 ## Bounded real physics regression, synthetic Hall, slopes and obstructions.
 ## This is not a live realm, earned loop, saved arrival or co-op witness.
 class FlatWorld extends Node3D:
@@ -68,6 +70,7 @@ func _concave_boxes(world: Node3D, boxes: Array) -> StaticBody3D:
 func _landing_check(arrival: Node, world: Node3D, actor: CharacterBody3D, target: Vector3, accepted: bool, label: String) -> Vector3:
 	var before := actor.global_transform
 	var landing: Vector3 = arrival.call("_capsule_landing", world, actor, target, .4)
+	if accepted and not landing.is_finite(): CAPSULE_DIAGNOSTIC.report(arrival, world, actor, target, .4, label)
 	_check(landing.is_finite() == accepted, label)
 	_check(actor.global_transform == before, label + " leaves the actual actor pose unchanged")
 	if accepted and landing.is_finite():

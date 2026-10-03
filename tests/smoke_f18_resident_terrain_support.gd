@@ -5,6 +5,7 @@ extends SceneTree
 const SUPPORT := preload("res://scripts/world/waystone_terrain_support.gd")
 const ARRIVAL := preload("res://scripts/net/foundation_portal_arrival.gd")
 const HEIGHT := preload("res://scripts/world/terrain_height.gd")
+const CAPSULE_DIAGNOSTIC := preload("res://tests/helpers/f18_capsule_diagnostic.gd")
 
 class ProbeWorld extends Node3D:
 	var terrain: Node3D
@@ -179,6 +180,7 @@ func _run() -> void:
 		return
 	var original_pose := probe.global_transform
 	var capsule_landing: Vector3 = arrival._capsule_landing(world, probe, target, .4)
+	if not capsule_landing.is_finite(): CAPSULE_DIAGNOSTIC.report(arrival, world, probe, target, .4, "distant baked native slope")
 	_check(capsule_landing.is_finite(), "production complete-capsule cast finds distant native sloped landing")
 	_check(probe.global_transform == original_pose, "native landing solver observes without moving the probe")
 	if capsule_landing.is_finite():
