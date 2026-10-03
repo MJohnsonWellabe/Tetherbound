@@ -22,6 +22,113 @@ class PermissionEndpoint extends Node:
 	var evidence: Dictionary = {}
 	var safety: Dictionary = {}
 
+	static func diagnostic_fields(value: Dictionary, fields: Array) -> Dictionary:
+		var result: Dictionary = {}
+		for key: String in fields:
+			if value.has(key): result[key] = value[key]
+		return result
+
+	static func diagnostic_position(value: Vector3) -> Array:
+		return [value.x, value.y, value.z]
+
+	## Read-only failure evidence. Never advances a producer, checkpoint or save.
+	func arrival_snapshot(peer: int) -> Dictionary:
+		var owner: Node = session()
+		var game: Node = get_parent()
+		var is_host: bool = owner.call("is_host") == true
+		var character: String = owner.call("_authority_character", peer)
+		var result: Dictionary = {"peer": peer, "character_id": character, "host": is_host,
+			"physics_frame": Engine.get_physics_frames(), "sampled_ms": Time.get_ticks_msec(),
+			"session_epoch": owner.call("_altar_current_epoch"),
+			"world_instance_id": game.get("world").reward_delivery_namespace,
+			"registry_realm": owner.call("realm_of", peer), "local_realm": game.get("current_realm")}
+		var arrival: Node = owner.get_node_or_null(^"FoundationComposition/PortalArrival")
+		var original: Dictionary = {}
+		if arrival != null:
+			original = (arrival.get("_remote") as Dictionary).get(peer, {}) if is_host and peer != owner.call("local_peer_id") \
+				else arrival.get("_pending")
+			result.arrival = diagnostic_fields(original, ["owner_saved", "journal_started", "seated", "pose_saved", "refused", "contact_generation"])
+			result.arrival.present = not original.is_empty()
+			if peer == owner.call("local_peer_id"):
+				var offered: Dictionary = arrival.get("_offered")
+				result.arrival.offered_envelope = diagnostic_fields(offered.get("envelope", {}), ["request_id", "character_id", "world_instance_id", "session_epoch"])
+			result.arrival.envelope = diagnostic_fields(original.get("envelope", {}), ["request_id", "character_id", "world_instance_id", "session_epoch"])
+			result.arrival.permit = diagnostic_fields(original.get("permit", {}), ["request_id", "peer_id", "origin_realm", "realm", "entry_id"])
+			if not original.is_empty():
+				result.arrival.binding = arrival.call("arrival_binding", original.envelope, original.permit)
+		var passive: RefCounted = owner.get("_owner_passive")
+		if passive != null:
+			if is_host:
+				var streams: Dictionary = passive.get("hosts")
+				var stream: Dictionary = streams.get(character, {})
+				result.passive = diagnostic_fields(stream, ["id", "peer", "epoch", "error", "revision", "departed"])
+				var checkpoint: Dictionary = stream.get("checkpoint", {})
+				result.passive.checkpoint = diagnostic_fields(checkpoint, ["id", "source_kind", "travel_ready", "grounded", "refused", "no_effect"])
+				for key: String in ["last_result", "result"]:
+					if checkpoint.get(key) is Dictionary:
+						result.passive.checkpoint[key] = diagnostic_fields(checkpoint[key], ["ok", "code", "reason", "durable", "saved", "receipt", "resolved", "settled"])
+				result.passive.checkpoint.has_arrival_discoveries = checkpoint.has("arrival_discoveries")
+				result.passive.cursor = diagnostic_fields(stream.get("cursor", {}), ["sequence", "prefix_hash", "realm", "position", "travel_valid"])
+				if not stream.is_empty():
+					var context: Dictionary = passive.call("_context", peer, stream)
+					result.passive.context = diagnostic_fields(context, ["realm", "initial_max_distance", "max_speed", "max_elapsed"])
+					if context.get("initial_position") is Vector3:
+						result.passive.context.initial_position = diagnostic_position(context.initial_position)
+			else:
+				var pending: Dictionary = passive.get("pending")
+				result.passive = {"local": diagnostic_fields(passive.get("local"), ["id", "character", "sequence", "acked", "error", "admission_pending"]),
+					"pending": diagnostic_fields(pending, ["id", "source_kind", "phase", "sequence", "hash", "prefix_hash"])}
+				var prepared: Dictionary = pending.get("prepared", {})
+				result.passive.pending.prepared = not prepared.is_empty()
+				if not prepared.is_empty():
+					var projection: Dictionary = passive.call("_projection")
+					result.passive.pending.projection_matches_after = preload("res://scripts/net/owner_passive_preparation.gd").exact(projection, prepared.after)
+					result.passive.pending.projection_matches_before = preload("res://scripts/net/owner_passive_preparation.gd").exact(projection, prepared.before)
+		var lifecycle: Node = owner.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		var actor: CharacterBody3D = lifecycle.call("remote_body", peer) if is_host and peer != owner.call("local_peer_id") and lifecycle != null \
+			else game.call("find_player") if peer == owner.call("local_peer_id") else null
+		result.body = {"unique_body": actor != null}
+		if actor != null:
+			result.body.merge({"instance_id": actor.get_instance_id(), "path": str(actor.get_path()),
+				"position": diagnostic_position(actor.global_position), "on_floor": actor.is_on_floor(),
+				"physics_processing": actor.is_physics_processing(), "safe_margin": actor.safe_margin})
+			if not original.get("permit", {}).is_empty():
+				var shell: Node3D = owner.call("_portal_world_node", original.permit.realm)
+				result.body.destination_shell = str(shell.get_path()) if shell != null else ""
+				result.body.in_destination_shell = shell != null and shell.is_ancestor_of(actor)
+			if actor.has_method("foundation_ground_contact"):
+				result.body.contact_frame = actor.get("_foundation_ground_contact_frame")
+				result.body.contact_generation = actor.get("_foundation_ground_contact_generation")
+				result.body.contact_epoch = actor.get("_foundation_ground_contact_epoch")
+				result.body.contact_character = actor.get("_foundation_ground_contact_character")
+				result.body.flying = actor.get("net_flying")
+				result.body.carried = actor.get("net_carried")
+				var contact: Dictionary = actor.call("foundation_ground_contact")
+				for key: String in ["position", "floor_normal"]:
+					if contact.get(key) is Vector3: contact[key] = diagnostic_position(contact[key])
+				result.body.contact = contact
+		if is_host:
+			var candidates: Array[Dictionary] = []
+			for proxy: Node in get_tree().get_nodes_in_group("remote_trainer"):
+				if proxy.get_multiplayer_authority() != peer: continue
+				if candidates.size() == 4: break
+				candidates.append({"instance_id": proxy.get_instance_id(), "path": str(proxy.get_path()),
+					"realm": proxy.get("net_realm"), "character_id": proxy.get("character_id")})
+			result.remote_candidates = candidates
+		return result
+
+	@rpc("any_peer", "call_remote", "reliable", 0)
+	func read_arrival_timeout(trigger: String) -> void:
+		var peer: int = multiplayer.get_remote_sender_id()
+		if peer <= 1 or session().call("is_host") != true \
+			or session().call("_authority_character", peer).is_empty() \
+			or trigger not in ["near_deadline", "at_timeout"]: return
+		# Print in the host's original log. The failed client never waits beyond
+		# its deadline for this read-only reply or substitutes it for a verdict.
+		var observation: Dictionary = arrival_snapshot(peer)
+		observation.trigger = trigger # Its own sample time is not the final client time.
+		print("SPLIT_ARRIVAL_TIMEOUT_HOST_SAMPLE " + JSON.stringify(observation))
+
 	func safety_snapshot(peer: int) -> Dictionary:
 		var owner: Node = session()
 		if owner.call("is_host") != true or owner.call("admitted_character_state", peer).is_empty(): return {}
@@ -324,12 +431,20 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 	else:
 		if game.call("use_home_key") != true: return {"verdict": "FAIL", "detail": "actual fixture Home Key refused: " + str(game.call("home_key_refusal"))}
 	var wanted: String = str(REALM_ROOT_NAMES.get(realm, ""))
+	var diagnostic_requested: bool = false
 	while Engine.get_physics_frames() - started_frame <= budget:
 		await physics_frame
 		if not str(_split_endpoint.get("error")).is_empty():
 			return {"verdict": "FAIL", "detail": str(_split_endpoint.get("error")) + " [actual local combat observation: " + JSON.stringify(settled.data) + "] [actual presentation: " + JSON.stringify(presentation.data) + "] [actual host safety: " + JSON.stringify(host_safety.data) + "]"}
 		if _split_reply.get("ok") == false: return {"verdict": "FAIL", "detail": _split_reply.get("reason", "production arrival refused")}
-		if _split_reply.get("ok") != true: continue
+		if _split_reply.get("ok") != true:
+			# One early read while the ORIGINAL wait is still pending leaves the
+			# host time to log evidence before failure-driven coordinator teardown.
+			if not diagnostic_requested and _session().call("is_host") != true \
+				and Engine.get_physics_frames() - started_frame >= maxi(0, budget - 120):
+				diagnostic_requested = true
+				_split_endpoint.rpc_id(1, "read_arrival_timeout", "near_deadline")
+			continue
 		var permission: Dictionary = _split_endpoint.get("evidence")
 		if realm == "cloudreach" and permission.is_empty(): continue
 		if _split_reply.get("kind") != ("portal_enter" if realm == "cloudreach" else "home_key_finish") \
@@ -354,4 +469,9 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 			"data": {"reply": _split_reply, "permission": _split_endpoint.get("evidence"), "raw_refusal": _split_raw_refusal, "combat": settled.data,
 				"presentation": presentation.data, "host_safety": host_safety.data,
 				"orchestration": "PortalArrival invokes original Game.enter_realm; inherited receiver/shell/heartbeat machinery unchanged"}}
-	return {"verdict": "FAIL", "detail": "production consumed-permit arrival exceeded original %d-physics-frame budget" % budget}
+	var diagnostic: Dictionary = _split_endpoint.call("arrival_snapshot", _session().call("local_peer_id"))
+	print("SPLIT_ARRIVAL_TIMEOUT_LOCAL " + JSON.stringify(diagnostic))
+	if not diagnostic_requested and _session().call("is_host") != true:
+		_split_endpoint.rpc_id(1, "read_arrival_timeout", "at_timeout")
+	return {"verdict": "FAIL", "detail": "production consumed-permit arrival exceeded original %d-physics-frame budget" % budget,
+		"data": diagnostic}
