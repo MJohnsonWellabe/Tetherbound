@@ -1079,7 +1079,7 @@ func _process(delta: float) -> void:
 		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
 	var canonical_passive := _canonical_guest_passive()
-	var record_passive := session != null and session.has_method("owner_passive_recording_active") \
+	var record_passive: bool = session != null and session.has_method("owner_passive_recording_active") \
 		and session.call("owner_passive_recording_active") == true
 	if canonical_passive: _travel_pos_valid = false
 	_tick_autosave(delta)
