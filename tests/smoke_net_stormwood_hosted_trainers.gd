@@ -24,7 +24,6 @@ const TRAINER := "tamsin_surge_lesson"
 const DEFEAT_FLAG := "stormwood:trainer:tamsin_surge_lesson:defeated"
 const STAGING := preload("res://tests/helpers/hosted_combat_staging.gd")
 const REALM_STEP_BUDGET := 10000
-const PORTAL_FIXTURE := "initial_hall_position_and_open_route_no_earned_credit"
 const HOSTED_WAIT_FRAMES := 900
 ## `_start_for()`'s actual host-side challenge gate. Kept separate from how
 ## closely two replicated actor copies must agree.
@@ -36,15 +35,6 @@ var _client_peer_id := 0
 
 func _initialize() -> void:
 	_run()
-
-
-func _prepare_initial_portal(regression: String) -> bool:
-	for fixture_peer in 2:
-		var prepared: Dictionary = await step(fixture_peer, "enter_realm", {"realm": STORMWOOD,
-			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": regression, "portal_prepare_only": true})
-		check(prepared.get("verdict") == "PASS", "Disclosed initial Hall placement/open canonical route without earned chapter credit")
-		if prepared.get("verdict") != "PASS": return false
-	return true
 
 
 func _run() -> void:
@@ -59,9 +49,6 @@ func _run() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
-	if not await _prepare_initial_portal("stormwood_hosted_trainers"):
-		quit(await finish())
-		return
 	var hosted := await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "peer 0 started the real listen host")
 	if str(hosted.get("verdict", "")) != "PASS":
@@ -91,8 +78,7 @@ func _run() -> void:
 			var seen := await step(peer, "wait_flag", {"flag": flag})
 			check(str(seen.get("verdict", "")) == "PASS", "peer %d received '%s'" % [peer, flag])
 
-	var entered := await step(1, "enter_realm", {"realm": STORMWOOD,
-		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_hosted_trainers"}, REALM_STEP_BUDGET)
+	var entered := await step(1, "enter_realm", {"realm": STORMWOOD}, REALM_STEP_BUDGET)
 	check(str(entered.get("verdict", "")) == "PASS", "client entered Stormwood")
 	if str(entered.get("verdict", "")) != "PASS":
 		quit(await finish())

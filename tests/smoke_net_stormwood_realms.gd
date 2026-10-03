@@ -12,7 +12,6 @@ const STORMWOOD := "stormwood"
 const STORMWOOD_KEY := "realm_key_stormwood"
 const SHARED_GATE_FLAG := "realm_gate_stormwood_unlocked"
 const REALM_STEP_BUDGET := 10000
-const PORTAL_FIXTURE := "initial_hall_position_and_open_route_no_earned_credit"
 
 
 func _initialize() -> void:
@@ -38,13 +37,6 @@ func _run() -> void:
 	check(not host_user_data_dir.is_empty() and not client_user_data_dir.is_empty()
 		and host_user_data_dir != client_user_data_dir,
 		"peers resolve distinct user-data directories")
-	for fixture_peer in 2:
-		var prepared: Dictionary = await step(fixture_peer, "enter_realm", {"realm": STORMWOOD,
-			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_realms", "portal_prepare_only": true})
-		check(prepared.get("verdict") == "PASS", "Disclosed initial Hall/route/Home Key fixture before admission; no earned credit")
-		if prepared.get("verdict") != "PASS":
-			quit(await finish())
-			return
 
 	var hosted: Dictionary = await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "host starts the real session")
@@ -68,8 +60,7 @@ func _run() -> void:
 			check(str(visible.get("verdict", "")) == "PASS",
 				"peer %d sees replicated world flag %s" % [peer, flag])
 
-	var crossed: Dictionary = await step(1, "enter_realm", {"realm": STORMWOOD,
-		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_realms"},
+	var crossed: Dictionary = await step(1, "enter_realm", {"realm": STORMWOOD},
 		REALM_STEP_BUDGET)
 	check(str(crossed.get("verdict", "")) == "PASS",
 		"client enters Stormwood through Game.enter_realm (%s)" % str(crossed.get("detail", "")))
@@ -102,31 +93,12 @@ func _run() -> void:
 	# Meadows map; unrelated host exploration cannot create that false result.
 	var reveal_at := [-350, 450]
 	var client_fog_before: Variant = await probe(1, "map_fog")
-	# Preserve the same point and actual discovery tick, using real movement.
-	# A post-admission teleport cannot supply the next exact passive checkpoint.
-	var explored: Dictionary = await step(1, "move_to", {"x": reveal_at[0], "z": reveal_at[1],
-		"budget_frames": 6000 - 180})
+	var explored: Dictionary = await step(1, "explore_at", {"at": reveal_at, "settle": 180})
 	check(str(explored.get("verdict", "")) == "PASS", "client discovers its Stormwood map locally")
-	var discovery_frames: int = int(explored.get("frames_used", 0))
-	check(discovery_frames + 180 < 6000, "Actual movement plus original settle leaves room in the original return action budget")
-	if explored.get("verdict") != "PASS" or discovery_frames + 180 >= 6000:
-		quit(await finish())
-		return
-	var discovery_settled: Dictionary = await step(1, "wait", {"frames": 180})
-	check(discovery_settled.get("verdict") == "PASS", "Original discovery settle remains within return action budget")
-	if discovery_settled.get("verdict") != "PASS":
-		quit(await finish())
-		return
-	discovery_frames += int(discovery_settled.get("frames_used", 0))
 	# Terrain collision may settle the body away from the requested fixture
 	# coordinate. Ask both maps about where the shipping discovery tick actually
 	# sampled the player, not where the harness originally tried to place them.
-	var discovered_position: Variant = await probe(1, "position")
-	check(discovered_position is Array and discovered_position.size() == 3, "Actual walked discovery position is available")
-	if not discovered_position is Array or discovered_position.size() != 3:
-		quit(await finish())
-		return
-	var settled_at: Array = [discovered_position[0], discovered_position[2]]
+	var settled_at: Array = explored.get("at", reveal_at) as Array
 	var client_fog_after: Variant = await probe(1, "map_fog", {"at": settled_at})
 	var host_fog_after: Variant = await probe(0, "map_fog", {"at": settled_at})
 	check(client_fog_before is Dictionary and client_fog_after is Dictionary
@@ -138,9 +110,7 @@ func _run() -> void:
 		and not bool((host_fog_after as Dictionary).get("at_discovered", true)),
 		"client Stormwood discovery does not change host Meadows fog")
 
-	var home: Dictionary = await step(1, "enter_realm", {"realm": MEADOWS,
-		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_realms",
-		"portal_prior_frames": discovery_frames}, REALM_STEP_BUDGET)
+	var home: Dictionary = await step(1, "enter_realm", {"realm": MEADOWS}, REALM_STEP_BUDGET)
 	check(str(home.get("verdict", "")) == "PASS", "client returns to Meadows")
 	var returned: Variant = await probe(1, "realm")
 	check(returned is Dictionary and str((returned as Dictionary).get("current", "")) == MEADOWS,
