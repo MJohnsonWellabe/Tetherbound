@@ -12,6 +12,9 @@ extends SceneTree
 ## (names as `run_net_smoke.sh` takes them, e.g. `water_alpha`) one after
 ## another through `tools/net/run_net_smoke.sh --out=<out>`, and exits non-zero
 ## if any failed.
+## `deep_watch_resolver=client|host` selects the actual killing-hit driver only
+## when `smokes=water_deep_watch_chart` is the sole smoke. Omit it to preserve
+## the current environment and the smoke's client default.
 ##
 ## `out` should sit in the working tree so render.yml's artifact collects it.
 ## `render=1` needs render.yml's `render` mode (it installs xvfb-run); in
@@ -25,6 +28,8 @@ func _init() -> void:
 	var smokes := PackedStringArray()
 	var out := ""
 	var render := false
+	var deep_watch_resolver: String = ""
+	var resolver_option_seen: bool = false
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("scenario="):
 			scenario = arg.trim_prefix("scenario=")
@@ -34,7 +39,21 @@ func _init() -> void:
 			smokes = arg.trim_prefix("smokes=").split(",", false)
 		elif arg == "render=1":
 			render = true
+		elif arg.begins_with("deep_watch_resolver="):
+			if resolver_option_seen:
+				printerr("proof_via_render: deep_watch_resolver may be specified only once")
+				quit(2)
+				return
+			resolver_option_seen = true
+			deep_watch_resolver = arg.trim_prefix("deep_watch_resolver=")
+	if resolver_option_seen and (deep_watch_resolver not in ["client", "host"] \
+		or smokes.size() != 1 or smokes[0] != "water_deep_watch_chart"):
+		printerr("proof_via_render: deep_watch_resolver=client|host requires only smokes=water_deep_watch_chart")
+		quit(2)
+		return
 	if not smokes.is_empty() and not out.is_empty() and not out.contains(".."):
+		if resolver_option_seen:
+			OS.set_environment("TB_DEEP_WATCH_RESOLVER", deep_watch_resolver)
 		quit(_run_smokes(smokes, out))
 		return
 	if scenario.is_empty() or out.is_empty() or scenario.contains("..") or out.contains(".."):
