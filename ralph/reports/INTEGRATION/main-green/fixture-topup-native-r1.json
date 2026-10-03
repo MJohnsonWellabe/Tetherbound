@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL",
+  "checkout_ref": "492546317ee273e57fc6645e8d1c5a3ffc83d6db",
+  "run_id": 37113962643,
+  "artifact_id": 11270287397,
+  "tests": 60,
+  "assertions": 1304,
+  "failed": 1,
+  "original_log_sha256": "eefdf3463641796ac23732d4985bc55decce381e92a18a437f8a82da8400f50b",
+  "cause": "New test references Script instance resource_path through static class; combat_progression parsed-file refusal. All seven ordinary recovery cases executed PASS. No actual producer acceptance."
+}

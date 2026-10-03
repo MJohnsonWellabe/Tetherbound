@@ -640,7 +640,8 @@ func test_disclosed_original_full_topup_uses_exact_actor_receipt_and_survives_te
 
 
 func test_actual_fixture_provider_refuses_non_runner_tree_and_detached_request() -> void:
-	assert_eq(F48_PEER_RUNNER.resource_path, "res://tools/net/peer_runner.gd",
+	var driver: Script = F48_PEER_RUNNER
+	assert_eq(driver.resource_path, "res://tools/net/peer_runner.gd",
 		"the actual driver is compiled by the focused native check")
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
 	assert_eq(F48_ACTOR_TOPUP.install(tree, F48_ACTOR_TOPUP.DISCLOSURE), null,
