@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Criteria0/1/3 MET candidate/main pending. Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline.",
+    "reason": "Criteria0/1/2/3 independently MET candidates/main pending. #4 actual matched fullpeer remains held until coordinator baseline release. No human verdict dependency remains.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -1184,7 +1184,7 @@
         "job": 111151068714,
         "artifact": 11267687918,
         "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
-        "verdict": "Functional and visible-stir PASS; audible hum OPEN",
+        "verdict": "Functional, visible-stir and automatic low-hum PASS; F20#2 MET candidate",
         "workflow_conclusion": "success",
         "checks": 20,
         "failures": 0,
@@ -1237,10 +1237,11 @@
           "frames": 233472,
           "seconds": 5.294149659863946,
           "interval": "Actual own durable result starts SFX recording, actual first postdraw after5384ms; mixed clip5.29414966s. Original bytes unchanged.",
-          "verdict": "OPEN audible hum: model audio input explicitly unsupported; no listening/low-hum verdict inferred from PCM/state. Original r7 human listener question remains pending; new original clip also retained."
+          "verdict": "PASS automatic waveform proof: configured98Hz and2.5s half-sine cue matches actual mixed output, no clipping and silent tail. Human verdict removed by explicit user direction; no listening/speaker claim."
         },
         "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user/PNG/WAV sizes and SHA256,20checks0/exit0/1595s/zeroerrors. Independently VIEWED visible-stir PASS: sealed centered arch/paleviolet glow/dust/singleline, no new quest. Audible sound withheld; F20#2 OPEN.",
-        "limits": "Hosted llvmpipe Compatibility/Dummy audio, disclosed post-finale fixture and ordinary harness input; no physical-device performance, full visual-quality, supported-listener or earned-campaign claim."
+        "limits": "Hosted llvmpipe Compatibility/Dummy audio, disclosed post-finale fixture and ordinary harness input; no physical-device performance, full visual-quality, supported-listener or earned-campaign claim.",
+        "automatic_audio_review": "MET GPT-6.1 Sol f20_review_sol independent concrete verifier review and Python-only execution on untouched hosted r8 WAV plus seven sensitivity controls. Production-source config/hash and original WAV/hash verified. Measured98Hz/active2.48236s vs configured2.5s, fixed-frequency/duration half-sine residual1.16126e-5, zero clipping and exact silent tail. Combined with actual20/0 runtime/result-edge and independent PNG glow/dust/sealed/singleline/unchangedquest proof, F20#2 MET candidate. No human/listening/speaker/subjective/device claim."
       }
     ],
     "limitations": [
@@ -1384,9 +1385,12 @@
       "independent_verdict": "MET f20_review \u00a77.2 exactartifact audit; ending criterion independently closed on candidate, main pending. Disclosed post-finale/restoredcurrent fixture, harnessinput/controllerSkip/headless; no earnedcampaign orpeer acceptance."
     },
     "2": {
-      "verdict": "OPEN",
-      "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
-      "latest_runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
+      "verdict": "MET on candidate; main landing pending",
+      "required": "actual key debit, sealed fifth arch, inspected glow and rendered low-hum SFX/one line, unchanged main quest",
+      "latest_runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending.",
+      "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+      "independent_verdict": "MET GPT-6.1 Sol f20_review_sol independent concrete verifier review and Python-only execution on untouched hosted r8 WAV plus seven sensitivity controls. Production-source config/hash and original WAV/hash verified. Measured98Hz/active2.48236s vs configured2.5s, fixed-frequency/duration half-sine residual1.16126e-5, zero clipping and exact silent tail. Combined with actual20/0 runtime/result-edge and independent PNG glow/dust/sealed/singleline/unchangedquest proof, F20#2 MET candidate. No human/listening/speaker/subjective/device claim.",
+      "sound_evidence_policy": "Automatic matched waveform proof per explicit user direction; no human verdict required."
     },
     "3": {
       "verdict": "MET on candidate; main landing pending",
@@ -1470,7 +1474,7 @@
   "arch_capture_correction": {
     "source": "65cbb1e878c7363c8c84590490a1115bb26c6e42,c620ba4e9da42c76956c622bb67253799a8f8244",
     "independent_source_review": "PASS f20_review: consumedonce ordinary camera_recenter callback after existing exactprovider navigation; no transforms assigned. Actualown durable result starts recording/firstpostdraw capture; in-flight capture joined before effect removal; real camera/arch framing diagnostics read-only. Compilation/artifact/visual/audio pendingr6.",
-    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending."
   },
   "dialogue_input_correction": {
     "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
@@ -1709,14 +1713,14 @@
     "reason": "Actual r5 readiness121444ms/maxgap82289; r6 timeout182460ms/17physics/maxgap132569/shellfalse/playerheldfloorfalse, no capture. These observations justify accommodating slow software-render lifecycle; no GL warmup or exact engine-call cause inferred. Criterion2 has no startup-time requirement.",
     "change": "Presentation-only600000ms readiness allowance; defaultsolo/net180000 unchanged. Full shell/floor/journey predicates unchanged. Process/postdraw observers connected before scene startup and disconnected on either readiness outcome; readonly counters/elapsed and actual budget logged.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol decision and concrete source. Typedtimeout/default and counters avoid inferredVariant concerns. No world/player/constructionhold/pose/input/assertion mutation; no physicaldevice/audibleacceptance claim. If bounded run still fails same predicates, investigate measured lifecycle rather than repeat render.",
-    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending."
   },
   "arch_ordinary_look_candidate": {
     "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
     "reason": "Actualr7 arch/glow projects belowviewport; player-root recenter bearing does not face actual arch. The camera must orbit the player through ordinary input to place the lens on the opposite side.",
     "change": "Render-only preparation uses actual surface/player bearing and pure horizontal preference sensitivity, <=32 ordinary relative mouse motions/180s, real idle+physics settling; requires all8 actual opening AABB corners and glow point front/inset, zero queued motion, captured mouse, no UI owner, floor/no recovery and exact actionable provider. Explicit false callback suppresses X and records failure; null callback behavior retained. No transforms/settings/geometry or production camera changes.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete diff, followed by requested final captured-mouse guard recheck. Sign/sensitivity matches production unhandled_input/apply_look; known types avoid inferredVariant. Projection is framing only, not occlusion/visible-glow proof. No engine/GPU execution.",
-    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending."
   },
   "two_peer_both_reload_candidate": {
     "source": "99e6fca560fb09d416d5d8a10ae91c7635df00dc",
@@ -1725,5 +1729,25 @@
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol design and concrete20-line diff. Receipt IDs match production foundation_actions; typed loops/string formatting avoid inferredVariant. Real load_slot validates disk pair. No engine execution.",
     "disclosure": "Host shipping reload occurs within existing process, without memory reset. Guest exercises genuine interrupted disconnect/wipe/title rejoin plus completed portable disk reload. No fresh host-process restart claim.",
     "runtime": "Pending actual full two-peer run after coordinator then-green main framework baseline. No dispatch or F20#4 acceptance claim."
+  },
+  "owner_verdict_policy": {
+    "date": "2026-10-03",
+    "instruction": "We're not doing human verdicts on anything",
+    "effect": "Human/listener gate withdrawn. F20 acceptance uses automatic/runtime evidence and independent agent review; do not require or claim human listening. Previous pending listener question is withdrawn."
+  },
+  "automatic_audio_verification": {
+    "source": "c33d20621031564034c7cd58fad218524f10e651",
+    "tested_runtime_source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+    "runtime_run": 37104784649,
+    "analysis": "f20-arch-render-r8-audio-analysis.json",
+    "controls": "f20-audio-verifier-controls.json",
+    "command": "python tools/audio/verify_f20_stir.py --wav ralph/reports/F20/ending-runtime/f20-arch-render-r8-fifth-sfx.wav --config data/config/portals.json",
+    "test_command": "python tests/test_f20_audio_verifier.py -v",
+    "checks": 6,
+    "checks_failed": 0,
+    "tests": 7,
+    "tests_failed": 0,
+    "independent_review": "MET GPT-6.1 Sol f20_review_sol independent concrete verifier review and Python-only execution on untouched hosted r8 WAV plus seven sensitivity controls. Production-source config/hash and original WAV/hash verified. Measured98Hz/active2.48236s vs configured2.5s, fixed-frequency/duration half-sine residual1.16126e-5, zero clipping and exact silent tail. Combined with actual20/0 runtime/result-edge and independent PNG glow/dust/sealed/singleline/unchangedquest proof, F20#2 MET candidate. No human/listening/speaker/subjective/device claim.",
+    "scope": "Original result-window mixed PCM contains configured low hum. Frequency/duration/envelope fixed from production; gain/phase fitted perchannel, no artifact changes. No engine rerun/playback/GPU/UI use."
   }
 }
