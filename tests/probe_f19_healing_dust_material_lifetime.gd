@@ -34,12 +34,7 @@ func _run() -> void:
 					AABB(Vector3(-2, 0, -1), Vector3(4, 2, 2)), spec)
 			if healing.get_child_count() != 3: _failures.append("Actual dust factory did not create three bursts")
 			if treatment == "retain-dust-materials":
-				for child: Node in healing.get_children():
-					if child is CPUParticles3D and (child as CPUParticles3D).mesh != null:
-						var mesh := (child as CPUParticles3D).mesh
-						for surface in mesh.get_surface_count():
-							var material := mesh.surface_get_material(surface)
-							if material != null: _held.append(material)
+				_retain_dust_materials(healing)
 				if _held.size() != 3: _failures.append("Retained counterfactual missing actual dust materials")
 			if deletion == "authored-timer":
 				print("F19 HEALING DUST WAIT TIMER " + phase)
@@ -58,3 +53,13 @@ func _run() -> void:
 	print("F19 HEALING DUST DIAGNOSTIC ONLY " + JSON.stringify({"failures": _failures,
 		"acceptance": false, "authored_spec": HEALING.CONFIG_PATH, "mesh_retention": false}))
 	quit(0 if _failures.is_empty() else 1)
+
+func _retain_dust_materials(healing: Node) -> void:
+	# Return before any awaits, so observer-local Mesh references cannot survive
+	# the actual destruction. Only the explicit Material array remains alive.
+	for child: Node in healing.get_children():
+		if child is CPUParticles3D and (child as CPUParticles3D).mesh != null:
+			var mesh := (child as CPUParticles3D).mesh
+			for surface in mesh.get_surface_count():
+				var material := mesh.surface_get_material(surface)
+				if material != null: _held.append(material)
