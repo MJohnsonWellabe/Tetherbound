@@ -118,8 +118,93 @@ class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
 
 class BuildDriver extends "res://tests/helpers/gate_a_build_segment.gd":
 	var open_ui: Callable
+	var guards: RefCounted
+	var _f18_selecting := false
+	var _f18_selection_trace: Array[Dictionary] = []
 	func _open_the_catalogue() -> Node:
 		return await open_ui.call()
+	func _select_piece(id: String) -> bool:
+		var inventory_before: Array = guards._inventory()
+		var initial: Dictionary = _f18_build_observation(id)
+		_f18_selection_trace.clear()
+		_f18_selecting = true
+		# Retain the original category/focus algorithm and all selection bounds.
+		var passed: bool = await super._select_piece(id)
+		_f18_selecting = false
+		var unchanged: bool = guards._inventory() == inventory_before
+		guards.receipts.append({"phase": "earned_build_selection", "piece": id,
+			"initial": initial, "physical_edges": _f18_selection_trace.duplicate(true),
+			"final": _f18_build_observation(id), "inventory_unchanged": unchanged,
+			"input": "actual InputMap joypad edges, each flushed through a process frame; original 2/3 physics minima",
+			"passed": passed and unchanged})
+		if passed and not unchanged: _fail("F18 catalogue selection changed earned inventory before placement")
+		return passed and unchanged
+	func _f18_build_observation(wanted: String, action: StringName = &"ui_accept") -> Dictionary:
+		var menu: Node = null
+		for candidate: Node in _tree.get_nodes_in_group(BUILD_MENU_GROUP):
+			if candidate.has_method("is_open") and bool(candidate.call("is_open")):
+				menu = candidate
+				break
+		var focused: Control = _tree.root.gui_get_focus_owner()
+		var cells: Array[Dictionary] = []
+		var category := ""
+		var selected := ""
+		var message := ""
+		if menu != null:
+			var categories: Array = menu.get("_categories")
+			var category_index: int = int(menu.get("_category_index"))
+			if category_index >= 0 and category_index < categories.size(): category = str(categories[category_index])
+			var catalogue: Dictionary = menu.get("_catalogue_by_category")
+			var pieces: Array = catalogue.get(category, [])
+			var selected_index: int = int(menu.get("_selected_index"))
+			if selected_index >= 0 and selected_index < pieces.size(): selected = str(pieces[selected_index].get("id", ""))
+			message = str(menu.get("_message").get("text"))
+			for cell: Button in _visible_build_cells(menu):
+				cells.append({"id": _cell_id(cell), "path": str(cell.get_path()),
+					"focused": cell == focused, "disabled": cell.disabled, "alpha": cell.modulate.a})
+		var inventory: RefCounted = _game.get("inventory")
+		var cost: Array = _game.call("build_cost_for", wanted)
+		var stock: Dictionary = {}
+		for need: Dictionary in cost:
+			var resource_id: String = str(need.get("id", ""))
+			stock[resource_id] = inventory.call("count", resource_id)
+		return {"menu_open": menu != null, "category": category, "selected_piece": selected,
+			"gui_focus": str(focused.get_path()) if focused != null else "",
+			"gui_piece": _cell_id(focused as Button) if focused is Button else "",
+			"cells": cells, "message": message, "pending_build": str(_game.get("pending_build")),
+			"free_build": bool(_game.get("free_build")), "cost": cost.duplicate(true), "earned_stock": stock,
+			"can_afford": bool(_game.call("can_afford", wanted)), "inventory": guards._inventory(),
+			"action_pressed": Input.is_action_pressed(action), "action_just_pressed": Input.is_action_just_pressed(action),
+			"physics_frame": Engine.get_physics_frames(), "process_frame": Engine.get_process_frames()}
+	func _tap_action(action: StringName) -> void:
+		if not _f18_selecting:
+			await super._tap_action(action)
+			return
+		var binding: InputEvent = null
+		for event: InputEvent in InputMap.action_get_events(action):
+			if event is InputEventJoypadButton or event is InputEventJoypadMotion:
+				binding = event
+				break
+		if binding == null:
+			_fail("%s has no physical joypad binding" % action)
+			return
+		var trace: Dictionary = {"action": str(action), "before": _f18_build_observation("workbench", action), "edges": []}
+		for pressed: bool in [true, false]:
+			var edge: InputEvent = InputEventJoypadButton.new() if binding is InputEventJoypadButton else InputEventJoypadMotion.new()
+			if binding is InputEventJoypadButton:
+				(edge as InputEventJoypadButton).button_index = (binding as InputEventJoypadButton).button_index
+				(edge as InputEventJoypadButton).pressed = pressed
+			else:
+				(edge as InputEventJoypadMotion).axis = (binding as InputEventJoypadMotion).axis
+				(edge as InputEventJoypadMotion).axis_value = (binding as InputEventJoypadMotion).axis_value if pressed else 0.0
+			var started: int = Engine.get_physics_frames()
+			Input.parse_input_event(edge)
+			await _tree.process_frame
+			while Engine.get_physics_frames() - started < (2 if pressed else 3): await _tree.physics_frame
+			trace.edges.append({"pressed": pressed, "event": edge.as_text(), "physics_start": started,
+				"observed": _f18_build_observation("workbench", action)})
+		trace["after"] = _f18_build_observation("workbench", action)
+		_f18_selection_trace.append(trace)
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -242,6 +327,7 @@ func _build_workbench() -> bool:
 	driver.set("_player", current_scene.get_node(^"Player"))
 	driver.set("_camera_rig", current_scene.get_node(^"CameraRig"))
 	driver.open_ui = _open_build
+	driver.guards = _guards
 	driver.call("_resolve_move_bindings")
 	if not await driver.call("_turn_camera_toward", Vector3(0, 0, -1)) \
 		or not await driver.call("_select_piece", "workbench"):
