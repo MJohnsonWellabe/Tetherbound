@@ -957,10 +957,6 @@ func _ordinary_combat_director_live(director: Node) -> bool:
 ## Exact ordinary shared-round ownership is announced before Manager binding.
 ## An unavailable canonical writer refuses ownership; it never permits a local award.
 func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dictionary:
-	# Off: ordinary trainer/boss rounds award through the shipped local path,
-	# exactly as main does. The durable round journal returns with F48.
-	if _cfg("ordinary_combat_reward_runtime_enabled", false) != true:
-		return {"enabled": false, "ready": true, "scope": {}}
 	var unavailable: Dictionary = {"enabled": true, "ready": false, "scope": {}}
 	if not _ordinary_combat_director_live(director) or not _bind_character_authority() \
 		or get_node_or_null(^"LedgerRpc") == null \
