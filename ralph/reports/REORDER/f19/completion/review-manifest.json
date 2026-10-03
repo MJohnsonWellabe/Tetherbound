@@ -558,7 +558,14 @@
     "previous_ninth_contact_failure_closed": false,
     "broader_journey_rerun": "Held by coordinator pending matched green main baseline.",
     "raw_log": "ci-fresh-contact-overflow-rejected-37109365598.log.gz",
-    "raw_log_sha256": "08805e896779e06ccf1f998d31241762b576c0868e04b48deb0c1dd19ed048bc"
+    "raw_log_sha256": "08805e896779e06ccf1f998d31241762b576c0868e04b48deb0c1dd19ed048bc",
+    "prepared_paid_camp_observation": {
+      "source_commit": "044a1a26e5",
+      "script": "tests/probe_f19_fresh_contact_overflow.gd",
+      "status": "Prepared, unexecuted; broader campaign still held pending matched green main",
+      "scope": "First32 original paid_camp physics samples: existing build/equipped/hammer-slot state, actual marshal/prompt paths, physical build-cancel pressed state and input-group member paths. No input-owner methods, physics queries, grants, pose/input writes, cap changes or F17 helper edits. Deferred serialization/output; records no scene/resource references.",
+      "acceptance": false
+    }
   },
   "coordinator_disposition": {
     "status": "No harvest integration/import approval yet; review deferred until a required root green gate needs the material dependency. Preserve existing root Harvest ready/stock guards. No matched moving portal group approved before actual main green.",
