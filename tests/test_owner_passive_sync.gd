@@ -42,6 +42,7 @@ class Discoveries extends RefCounted:
 class Session extends Node:
 	var game: Node
 	var host := false
+	var owner_peer := 2
 	var _character_authority: RefCounted
 	var messages: Array[Dictionary] = []
 	var maps: RefCounted
@@ -58,11 +59,11 @@ class Session extends Node:
 	func is_host() -> bool: return host
 	func local_peer_id() -> int: return 1 if host else 2
 	func snapshot_ready() -> bool: return true
-	func _authority_character(peer: int) -> String: return game.local.character_id if peer == 2 else "host"
+	func _authority_character(peer: int) -> String: return game.local.character_id if peer == owner_peer else "host"
 	func _owner_passive_send_host(packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_send_peer(_peer: int, packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_request_matches(kind: String, request: Dictionary) -> bool:
-		return kind == "foundation_request" and PREP.exact(action_original, request)
+		return kind in ["foundation_request", "portal_arrival"] and PREP.exact(action_original, request)
 	func _owner_passive_request_terminal(kind: String, request: Dictionary, result: Dictionary) -> void:
 		action_terminals.append({"kind": kind, "request": request.duplicate(true), "result": result.duplicate(true)})
 	func _owner_passive_commit_request(peer: int, kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
@@ -83,15 +84,17 @@ class Session extends Node:
 
 class Service extends SYNC:
 	var body_ready := true
+	# Disclosed host-body fixture used by reset endpoint confirmation.
+	var body_position := Vector3.ZERO
 	func _context(_peer: int, _stream: Dictionary) -> Dictionary:
 		var result := {"realm": "meadows", "landmarks": {}, "max_speed": 40.0, "max_elapsed": 100.0}
 		if body_ready:
-			result.initial_position = Vector3.ZERO
+			result.initial_position = body_position
 			result.initial_max_distance = 80.0
 		return result
 
 var session: Session
-var service: RefCounted
+var service: Service
 var game: GameFixture
 var before: Dictionary
 var event: Dictionary
@@ -524,9 +527,381 @@ func test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint() -> 
 	service.receive_owner(session.messages[-1])
 	assert_true(service.local.rebase.is_empty())
 
+func _portal_request() -> Dictionary:
+	var envelope := {"request_id": "current-epoch:actual-request", "session_epoch": "current-epoch",
+		"character_id": before.character_id, "world_instance_id": event.world_namespace,
+		"payload": {"kind": "portal_enter", "arch_id": "tidewake"}}
+	var permit := {"peer_id": 2, "character_id": before.character_id, "world_instance_id": event.world_namespace,
+		"request_id": "consumed-permit-distinct-from-envelope", "origin_realm": "meadows", "realm": "water", "entry_id": "hall_home"}
+	return PREP.portal_request(envelope, permit)
+
+func _portal_frozen(request: Dictionary) -> Dictionary:
+	service.record_input(_input(0.6))
+	var stream := _host_stream()
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	assert_eq(service.portal_begin(2, request).code, "owner_passive_checkpoint_pending")
+	service.receive_host(2, _envelope({"op": "frozen", "id": stream.checkpoint.id,
+		"sequence": stream.cursor.sequence, "prefix_hash": stream.cursor.prefix_hash, "hash": PREP.fingerprint(stream.cursor.state)}))
+	assert_true(stream.checkpoint.has("prepared"))
+	session.capture_service = service
+	return stream
+
+func test_portal_origin_checkpoint_reserves_without_promoting_until_actual_ground() -> void:
+	var request := _portal_request()
+	var stream := _portal_frozen(request)
+	if not stream.checkpoint.has("prepared"): return
+	assert_false(service.portal_departure_authorized(2, request))
+	assert_true(session._character_authority.creature_training_is_pending(before.character_id), "real exclusion held before origin BOOL ACK")
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), before))
+	var saved := _envelope({"op": "saved", "id": stream.checkpoint.id, "hash": stream.checkpoint.prepared.hash, "saved": false})
+	service.receive_host(2, saved)
+	assert_false(service.portal_departure_authorized(2, request))
+	saved.saved = true
+	for attempt: int in range(2):
+		service.receive_host(2, saved)
+		assert_eq(session.messages[-1].op, "portal_travel")
+		assert_true(PREP.exact(session.messages[-1].request, request))
+		assert_true(session.action_calls.is_empty(), "duplicate pretravel ACK never stages arrival")
+		assert_true(PREP.exact(session._character_authority.state(before.character_id), before), "reservation stays uncommitted while travelling")
+	assert_true(service.portal_departure_authorized(2, request))
+	var changed: Dictionary = request.duplicate(true)
+	changed.permit.entry_id = "substituted-entry"
+	assert_false(service.portal_departure_authorized(2, changed))
+	assert_eq(service.portal_grounded(2, changed).code, "owner_passive_arrival_pending")
+	for attempt: int in range(2):
+		var result: Dictionary = service.portal_grounded(2, request)
+		assert_eq(result.code, "fixture_world_write_failed")
+		assert_eq(session.action_calls.size(), attempt + 1)
+		assert_true(session.action_calls[-1].gate.ok)
+		assert_true(PREP.exact(session.action_calls[-1].state, stream.cursor.state))
+		assert_true(PREP.exact(session.action_calls[-1].request, request))
+		assert_eq(session._character_authority.revision(before.character_id), 0)
+		assert_true(session._character_authority.creature_training_is_pending(before.character_id))
+
+func test_portal_owner_freeze_blocks_new_inputs_and_pose_save_requires_exact_saved_token() -> void:
+	var request := _portal_request()
+	var stream := _portal_frozen(request)
+	if not stream.checkpoint.has("prepared"): return
+	var prepared: Dictionary = stream.checkpoint.prepared
+	session.host = false
+	session.action_original = request
+	game.local.data = prepared.after.duplicate(true)
+	service.receive_owner(_envelope({"op": "freeze", "id": prepared.preparation_id, "source_kind": "portal_arrival",
+		"request": request, "request_hash": prepared.request_hash}))
+	var sequence: int = service.local.sequence
+	service.record_input(_input(0.5))
+	assert_eq(service.local.sequence, sequence, "no care/discovery input crosses the frozen origin prefix")
+	assert_true(service.blocked(game.local))
+	service.receive_owner(_envelope({"op": "prepared", "id": prepared.preparation_id, "prepared": prepared, "retained": {}}))
+	assert_eq(service.pending.phase, "save", "failed BOOL cannot authorize departure")
+	game.save_system.accepted = true
+	service._retry_owner()
+	assert_eq(service.pending.phase, "saved")
+	var composition := Node.new()
+	composition.name = "FoundationComposition"
+	session.add_child(composition)
+	var arrival := Node.new()
+	arrival.name = "PortalArrival"
+	composition.add_child(arrival)
+	var other := Node.new()
+	assert_false(service.portal_pose_save(other, request))
+	other.free()
+	game.local.data.saved_player_pose = {"position": [1.0, 2.0, 3.0], "realm": "water"}
+	assert_true(service.portal_pose_save(arrival, request), "real pose is outside the exact portable projection")
+	assert_false(service.snapshot_allowed(game.local, game.local.data), "save privilege ends synchronously")
+	game.local.data.party[0].nourishment -= 0.1
+	assert_false(service.portal_pose_save(arrival, request), "care cannot change under the pose-save bracket")
+	assert_true(service.blocked(game.local), "pose BOOL alone never releases the journal fence")
+
+func test_portal_refusal_preserves_saved_care_and_immutable_journal() -> void:
+	var request := _portal_request()
+	var stream := _portal_frozen(request)
+	if not stream.checkpoint.has("prepared"): return
+	var saved := _envelope({"op": "saved", "id": stream.checkpoint.id, "hash": stream.checkpoint.prepared.hash, "saved": true})
+	service.receive_host(2, saved)
+	var row := {"action": "portal_arrival", "intent": {"permit_id": request.permit.request_id}, "status": "pending"}
+	var id: String = preload("res://scripts/creatures/essence.gd").training_delivery_id(event.world_namespace, before.character_id)
+	game.world.reward_deliveries[id] = row.duplicate(true)
+	var original := var_to_bytes(game.world.reward_deliveries)
+	assert_false(service.portal_refused(2, request, "support changed"), "an existing journal remains its only recovery source")
+	assert_eq(var_to_bytes(game.world.reward_deliveries), original)
+	game.world.reward_deliveries.erase(id) # Disclosed fixture removes its synthetic row, not production recovery.
+	assert_true(service.portal_refused(2, request, "support changed"))
+	assert_true(session.action_calls.is_empty(), "no receipt is staged for failed physical arrival")
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), stream.cursor.state), "already BOOL-saved care never rolls back")
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_eq(session.messages[-1].op, "no_effect")
+	assert_true(stream.checkpoint.no_effect)
+	assert_false(service.portal_departure_authorized(2, request))
+
+func test_portal_codec_binds_consumed_permit_without_faking_grounded_departure() -> void:
+	var request := _portal_request()
+	var stream := _portal_frozen(request)
+	if not stream.checkpoint.has("prepared"): return
+	var prepared: Dictionary = stream.checkpoint.prepared
+	assert_true(PREP.valid_action_host(prepared, stream.cursor))
+	assert_false(prepared.host_context.has("grounded_arrival"))
+	for field: String in ["realm", "entry_id", "request_id", "origin_realm"]:
+		var changed: Dictionary = prepared.duplicate(true)
+		changed.request.permit[field] = "changed"
+		assert_false(PREP.valid_action(changed), "changed consumed permit must invalidate its original hash")
+	var fake_ground: Dictionary = prepared.duplicate(true)
+	fake_ground.host_context.grounded_arrival = true
+	fake_ground.hash = PREP.preparation_hash(fake_ground)
+	assert_false(PREP.valid_action(fake_ground), "departure cannot claim future physics proof")
+	var wrong_peer: Dictionary = request.duplicate(true)
+	wrong_peer.permit.peer_id = 3
+	assert_eq(service.portal_begin(2, wrong_peer).code, "owner_passive_request_scope_changed")
+
+func test_portal_known_origin_save_disconnect_preserves_rejoin_baseline_without_arrival() -> void:
+	var request := _portal_request()
+	var stream := _portal_frozen(request)
+	if not stream.checkpoint.has("prepared"): return
+	var after: Dictionary = stream.cursor.state.duplicate(true)
+	service.receive_host(2, _envelope({"op": "saved", "id": stream.checkpoint.id,
+		"hash": stream.checkpoint.prepared.hash, "saved": true}))
+	service.portal_departed(2)
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), after))
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_true(session.action_calls.is_empty())
+	assert_false(service.hosts.has(before.character_id))
+	assert_true(service._add_host(2, before.character_id, "d".repeat(32), after, {}))
+	assert_true(PREP.exact(service.hosts[before.character_id].cursor.base, after))
+
+func test_portal_refusal_owner_fence_releases_only_after_exact_no_effect_rebase() -> void:
+	var request := _portal_request()
+	var stream := _portal_frozen(request)
+	if not stream.checkpoint.has("prepared"): return
+	var prepared: Dictionary = stream.checkpoint.prepared
+	game.local.data = prepared.after.duplicate(true)
+	session.action_original = request.duplicate(true)
+	session.host = false
+	service.receive_owner(_envelope({"op": "inputs_ack", "sequence": prepared.final_sequence}))
+	service.receive_owner(_envelope({"op": "freeze", "id": prepared.preparation_id, "source_kind": "portal_arrival",
+		"request": request, "request_hash": prepared.request_hash}))
+	game.save_system.accepted = true
+	service.receive_owner(_envelope({"op": "prepared", "id": prepared.preparation_id, "prepared": prepared, "retained": {}}))
+	var saved: Dictionary = session.messages[-1].duplicate(true)
+	session.host = true
+	service.receive_host(2, saved)
+	assert_true(service.portal_refused(2, request, "real support refused"))
+	var completion: Dictionary = session.messages[-1].duplicate(true)
+	session.host = false
+	assert_true(service.blocked(game.local))
+	var wrong: Dictionary = completion.duplicate(true)
+	wrong.hash = "0".repeat(64)
+	service.receive_owner(wrong)
+	assert_true(service.blocked(game.local))
+	service.receive_owner(completion)
+	assert_false(service.blocked(game.local))
+	assert_true(PREP.exact(game.local.data, prepared.after))
+	assert_eq(session.action_terminals.size(), 1)
+	assert_eq(session.action_terminals[0].kind, "portal_arrival")
+	var rebase: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(rebase.op, "rebase")
+	session.host = true
+	service.receive_host(2, rebase)
+	assert_eq(session.messages[-1].op, "rebase_ack")
+	assert_true(PREP.exact(service.hosts[before.character_id].cursor.base, prepared.after))
+
+func test_portal_lost_origin_ack_rejoin_requires_fresh_bool_and_replays_new_care() -> void:
+	var request := _portal_request()
+	var original_stream := _portal_frozen(request)
+	if not original_stream.checkpoint.has("prepared"): return
+	var original: Dictionary = original_stream.checkpoint.prepared.duplicate(true)
+	var original_bytes := var_to_bytes(original_stream.checkpoint)
+	game.local.data = original.after.duplicate(true) # Disclosed successful origin disk write; its ACK is lost.
+	service.portal_departed(2)
+	assert_true(service.hosts.has(before.character_id))
+	assert_true(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), original.before))
+	assert_eq(var_to_bytes(original_stream.checkpoint), original_bytes)
+	var declaration: Dictionary = service.arm_owner(original.after, original.discoveries)
+	session.owner_peer = 3 # Reconnect has a fresh authenticated transport identity.
+	service.admitted(3, {"portable_authority": original.after, "discovered_landmarks": original.discoveries,
+		"owner_passive_stream": declaration})
+	var challenge: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(challenge.op, "portal_recover")
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), original.before), "hello is never a BOOL ACK")
+	service.record_input(_input(0.4))
+	var applied := REPLAY.apply(REPLAY.begin(original.after, original.discoveries), service.local.inputs[0], service._context(3, {}))
+	assert_true(applied.ok)
+	game.local.data = applied.cursor.state.duplicate(true) # Real owner care during reconnect, modeled by pure replay.
+	var start: int = session.messages.size()
+	session.host = false
+	service.receive_owner(challenge)
+	assert_true(service.blocked(game.local))
+	var to_host: Array[Dictionary] = session.messages.slice(start).duplicate(true)
+	session.host = true
+	for packet: Dictionary in to_host: service.receive_host(3, packet)
+	var prepared_packet: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(prepared_packet.op, "recovery_prepared")
+	assert_true(PREP.valid_recovery(prepared_packet.prepared))
+	assert_true(PREP.exact(prepared_packet.prepared.original, original))
+	assert_true(PREP.exact(prepared_packet.prepared.after, game.local.data))
+	session.host = false
+	service.receive_owner(prepared_packet)
+	assert_eq(service.pending.phase, "save", "a refused fresh BOOL keeps the original reservation")
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), original.before))
+	game.save_system.accepted = true
+	service._retry_owner()
+	var saved: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(saved.op, "saved")
+	session.host = true
+	var wrong: Dictionary = saved.duplicate(true)
+	wrong.hash = original.hash
+	service.receive_host(3, wrong)
+	service.receive_host(2, saved)
+	wrong = saved.duplicate(true)
+	wrong.saved = false
+	service.receive_host(3, wrong)
+	wrong = saved.duplicate(true)
+	wrong.stream_id = original_stream.id
+	service.receive_host(3, wrong)
+	wrong = saved.duplicate(true)
+	wrong.session_epoch = "retired-epoch"
+	service.receive_host(3, wrong)
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), original.before))
+	service.receive_host(3, saved)
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), game.local.data), "original then fresh replay CAS promote only the BOOL-saved care")
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id))
+	var recovered: Dictionary = service.hosts[before.character_id]
+	assert_true(PREP.exact(recovered.cursor.base, original.after))
+	assert_true(PREP.exact(recovered.cursor.state, game.local.data), "new care stays in the authenticated replay")
+	assert_eq(recovered.id, declaration.id)
+	assert_eq(var_to_bytes(original_stream.checkpoint), original_bytes)
+	assert_true(session.action_calls.is_empty(), "departed travel never stages arrival")
+	var input_ack: Dictionary = session.messages[-2].duplicate(true)
+	var completion: Dictionary = session.messages[-1].duplicate(true)
+	service.receive_host(3, saved) # Completion ACK lost: same proof resends without another CAS or trip.
+	assert_eq(session.messages[-1].op, "portal_recovered")
+	session.host = false
+	service.receive_owner(input_ack)
+	service.receive_owner(completion)
+	assert_false(service.blocked(game.local))
+	assert_true(PREP.exact(game.local.data, applied.cursor.state), "no saved state is installed or rolled back")
+	var rebase: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(rebase.op, "rebase")
+	session.host = true
+	service.receive_host(3, rebase)
+	assert_eq(session.messages[-1].op, "rebase_ack")
+	assert_true(PREP.exact(service.hosts[before.character_id].cursor.base, game.local.data))
+	assert_false(service.hosts[before.character_id].cursor.travel_valid, "fresh stream matches Game's travel reset after its mutation fence")
+
+func test_portal_recovery_refuses_changed_hello_and_old_scope_without_discarding_original() -> void:
+	var stream := _portal_frozen(_portal_request())
+	if not stream.checkpoint.has("prepared"): return
+	var original: Dictionary = stream.checkpoint.prepared.duplicate(true)
+	service.portal_departed(2)
+	var changed: Dictionary = original.after.duplicate(true)
+	changed.party[0].nourishment -= 0.1
+	var declaration: Dictionary = service.arm_owner(changed, original.discoveries)
+	service.admitted(2, {"portable_authority": changed, "discovered_landmarks": original.discoveries,
+		"owner_passive_stream": declaration})
+	assert_false(stream.has("recovery"), "an arbitrary claimed current record cannot replace retained replay")
+	assert_true(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_true(PREP.exact(stream.checkpoint.prepared, original))
+	assert_false(service.portal_departure_authorized(2, original.request))
+
+func test_portal_unsaved_origin_rejoin_cancels_original_only_after_fresh_bool() -> void:
+	var stream := _portal_frozen(_portal_request())
+	if not stream.checkpoint.has("prepared"): return
+	var original: Dictionary = stream.checkpoint.prepared.duplicate(true)
+	service.portal_departed(2)
+	var declaration: Dictionary = service.arm_owner(original.before, {})
+	game.local.data = original.before.duplicate(true) # Failed origin BOOL restores its existing earlier disk baseline.
+	service.admitted(2, {"portable_authority": original.before, "discovered_landmarks": {}, "owner_passive_stream": declaration})
+	var challenge: Dictionary = session.messages[-1].duplicate(true)
+	session.host = false
+	service.receive_owner(challenge)
+	var frozen: Dictionary = session.messages[-1].duplicate(true)
+	session.host = true
+	service.receive_host(2, frozen)
+	var prepared: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(prepared.op, "recovery_prepared")
+	session.host = false
+	game.save_system.accepted = true
+	service.receive_owner(prepared)
+	var saved: Dictionary = session.messages[-1].duplicate(true)
+	session.host = true
+	assert_true(session._character_authority.creature_training_is_pending(before.character_id))
+	service.receive_host(2, saved)
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), original.before), "never promote the unsaved old care candidate")
+	assert_true(PREP.exact(service.hosts[before.character_id].cursor.base, original.before))
+	assert_true(session.action_calls.is_empty())
+
+func _recovery_saved_packet(peer: int, baseline: Dictionary, discoveries: Dictionary) -> Dictionary:
+	var declaration: Dictionary = service.arm_owner(baseline, discoveries)
+	session.owner_peer = peer
+	session.host = true
+	service.admitted(peer, {"portable_authority": baseline, "discovered_landmarks": discoveries,
+		"owner_passive_stream": declaration})
+	var challenge: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(challenge.op, "portal_recover")
+	service.record_input(_input(0.4))
+	var applied := REPLAY.apply(REPLAY.begin(baseline, discoveries), service.local.inputs[0], service._context(peer, {}))
+	assert_true(applied.ok)
+	game.local.data = applied.cursor.state.duplicate(true)
+	var start: int = session.messages.size()
+	session.host = false
+	service.receive_owner(challenge)
+	var outgoing: Array[Dictionary] = session.messages.slice(start).duplicate(true)
+	session.host = true
+	for packet: Dictionary in outgoing: service.receive_host(peer, packet)
+	var prepared: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(prepared.op, "recovery_prepared")
+	session.host = false
+	game.save_system.accepted = true
+	service.receive_owner(prepared)
+	assert_eq(service.pending.phase, "saved")
+	assert_eq(session.messages[-1].op, "saved")
+	return session.messages[-1].duplicate(true)
+
+func test_portal_repeated_recovery_bool_ack_loss_keeps_only_exact_latest_candidates() -> void:
+	var original_stream := _portal_frozen(_portal_request())
+	if not original_stream.checkpoint.has("prepared"): return
+	var original: Dictionary = original_stream.checkpoint.prepared.duplicate(true)
+	var original_bytes := var_to_bytes(original_stream.checkpoint)
+	game.local.data = original.after.duplicate(true)
+	service.portal_departed(2)
+	for peer: int in [3, 4, 5]:
+		var disk_baseline: Dictionary = game.local.data.duplicate(true)
+		_recovery_saved_packet(peer, disk_baseline, original.discoveries) # Fresh BOOL succeeds; every ACK is lost.
+		session.host = true
+		service.portal_departed(peer)
+		assert_true(session._character_authority.creature_training_is_pending(before.character_id))
+		assert_true(PREP.exact(session._character_authority.state(before.character_id), original.before))
+		assert_true(original_stream.recovery_candidates.size() <= 2, "retention is bounded to latest exact before/after")
+		assert_eq(var_to_bytes(original_stream.checkpoint), original_bytes, "the consumed original permit/reservation remains immutable")
+		assert_false(original_stream.has("recovery"))
+		var found := false
+		for candidate: Dictionary in original_stream.recovery_candidates:
+			if PREP.exact(candidate.prepared.after, game.local.data): found = true
+		assert_true(found, "the actual BOOL-saved care candidate remains recoverable")
+	var final_baseline: Dictionary = game.local.data.duplicate(true)
+	var saved := _recovery_saved_packet(6, final_baseline, original.discoveries)
+	session.host = true
+	service.receive_host(6, saved)
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), game.local.data))
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_true(session.action_calls.is_empty(), "no departed trip stages an arrival across any recovery")
+	# Host committed the fresh BOOL, but its completion/rebase never reached the
+	# owner. This cut must permit ordinary admission from the completed baseline.
+	service.portal_departed(6)
+	assert_false(service.hosts.has(before.character_id))
+	var declaration: Dictionary = service.arm_owner(game.local.data, original.discoveries)
+	session.owner_peer = 7
+	service.admitted(7, {"portable_authority": game.local.data, "discovered_landmarks": original.discoveries,
+		"owner_passive_stream": declaration})
+	assert_true(service.hosts.has(before.character_id))
+	assert_true(PREP.exact(service.hosts[before.character_id].cursor.base, game.local.data))
+	assert_true(service.hosts[before.character_id].checkpoint.is_empty())
+
 func test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance() -> void:
 	var stream := _host_stream()
 	service.body_position = Vector3(-16, 1.11597406864166, 14)
+	assert_eq(service._context(2, stream).initial_position, service.body_position, "host geometry uses the configured fixture endpoint")
 	service.travel_reset_confirmed(3, "meadows", service.body_position)
 	assert_false(stream.has("travel_reset"), "a different peer cannot mint a reset proof")
 	service.travel_reset_confirmed(2, "water", service.body_position)

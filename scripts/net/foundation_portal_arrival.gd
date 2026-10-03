@@ -3,19 +3,27 @@ extends Node
 ## Consumes a host-issued permit, uses normal realm loading, then measures the
 ## destination's actual supported ground. Success requires the portable write.
 var _pending: Dictionary = {}
+var _offered: Dictionary = {} # Original authenticated permit, retained through checkpoint settlement.
 var _remote: Dictionary = {}
 var _retry_left := 0.0
 
 func _ready() -> void:
 	var session: Node = get_parent().get_parent()
-	session.connect("peer_left", func(peer: int) -> void: _remote.erase(peer))
+	session.connect("peer_left", func(peer: int) -> void:
+		session.call("_owner_passive_service").call("portal_departed", peer)
+		_remote.erase(peer))
 	session.connect("session_ended", func(_reason: String) -> void:
 		_remote.clear()
-		_pending.clear())
+		_pending.clear()
+		_offered.clear())
 
 func reset() -> void:
 	_remote.clear()
 	_pending.clear()
+	_offered.clear()
+
+func original_pending(peer: int, envelope: Dictionary) -> bool:
+	return _remote.has(peer) and _remote[peer].envelope == envelope
 
 func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	if session.call("is_host") != true or (peer == session.call("local_peer_id") and not _pending.is_empty()) or _remote.has(peer):
@@ -33,17 +41,34 @@ func travel(session: Node, peer: int, envelope: Dictionary, result: Dictionary) 
 		_remote[peer] = {"session": weakref(session), "world": weakref(game.get("world")),
 			"envelope": envelope.duplicate(true), "permit": permit.duplicate(true), "owner_saved": false}
 		session.call("send_portal_owner_permit", self, peer, envelope, permit)
+		session.call("_owner_passive_service").call("portal_begin", peer,
+			preload("res://scripts/net/owner_passive_preparation.gd").portal_request(envelope, permit))
 		return
 	await _travel_owner(session, peer, envelope, permit)
 
 func owner_travel(session: Node, envelope: Dictionary, permit: Dictionary) -> void:
 	# Session checked the authority-only RPC against its original pending
 	# envelope. A duplicate original permit resumes rather than travels twice.
+	if not _offered.is_empty():
+		if _offered.envelope == envelope and _offered.permit == permit: return
+		session.call("report_portal_owner_refused", self, envelope, str(permit.get("request_id", "")), "Another arrival is still settling.")
+		return
 	if not _pending.is_empty():
 		if _pending.envelope == envelope and _pending.permit == permit: return
 		session.call("report_portal_owner_refused", self, envelope, str(permit.get("request_id", "")), "Another arrival is still settling.")
 		return
-	await _travel_owner(session, int(session.call("local_peer_id")), envelope, permit)
+	_offered = {"session": weakref(session), "envelope": envelope.duplicate(true), "permit": permit.duplicate(true)}
+	# Only the exact checkpoint's saved grant may now start normal realm travel.
+
+func owner_request_matches(request: Dictionary) -> bool:
+	return not _offered.is_empty() and preload("res://scripts/net/owner_passive_preparation.gd").exact(request,
+		preload("res://scripts/net/owner_passive_preparation.gd").portal_request(_offered.envelope, _offered.permit))
+
+func start_prepared(request: Dictionary) -> void:
+	if not owner_request_matches(request) or not _pending.is_empty(): return
+	var session: Node = _offered.session.get_ref()
+	if session == null or session.call("_owner_passive_request_matches", "portal_arrival", request) != true: return
+	await _travel_owner(session, int(session.call("local_peer_id")), _offered.envelope, _offered.permit)
 
 ## The receiver coordinator may load only the destination of this retained,
 ## consumed host permit. A legacy client-selected realm RPC cannot mint one.
@@ -53,7 +78,9 @@ func transition_authorized(peer: int, realm: String) -> bool:
 	var session: Node = original.session.get_ref()
 	return session != null and session.call("is_host") == true \
 		and session.call("_game").get("world") == original.world.get_ref() \
-		and session.call("_portal_envelope_valid", peer, original.envelope) == true
+		and session.call("_portal_envelope_valid", peer, original.envelope) == true \
+		and session.call("_owner_passive_service").call("portal_departure_authorized", peer,
+			preload("res://scripts/net/owner_passive_preparation.gd").portal_request(original.envelope, original.permit)) == true
 
 func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dictionary) -> void:
 	var game: Node = session.call("_game")
@@ -145,16 +172,21 @@ func _process(delta: float) -> void:
 	_retry_left -= delta
 	if _retry_left > 0.0: return
 	_retry_left = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds)
-	if not _pending.is_empty() and _pending.get("seated") == true: _save_arrival()
+	if not _pending.is_empty() and _pending.get("seated") == true and not _pending.has("refused"): _save_arrival()
 	for peer: int in _remote.keys():
 		var original: Dictionary = _remote[peer]
 		var session: Node = original.session.get_ref()
 		if session == null or session.call("is_host") != true \
 			or session.call("_game").get("world") != original.world.get_ref() \
 			or session.call("_portal_envelope_valid", peer, original.envelope) != true:
+			if session != null: session.call("_owner_passive_service").call("portal_departed", peer)
 			_remote.erase(peer)
 			continue
-		if original.owner_saved != true or not _remote_binding(peer, original): continue
+		if original.owner_saved != true:
+			session.call("_owner_passive_service").call("portal_begin", peer,
+				preload("res://scripts/net/owner_passive_preparation.gd").portal_request(original.envelope, original.permit))
+			continue
+		if not _remote_binding(peer, original): continue
 		var journal: Dictionary = session.call("foundation_grounded_arrival", self, original.envelope, original.permit)
 		if journal.get("durable") == true: original.journal_started = true
 		if journal.get("ok") != true or journal.get("saved") != true: continue
@@ -186,7 +218,10 @@ func _save_arrival() -> void:
 	if saver == null or saver.call("fallback_busy") == true: return
 	if _pending.get("pose_saved") != true:
 		game.call("_capture_player_pose")
-		if saver.call("save_character_prepared", game, _pending.envelope.character_id) != true: return
+		if session.call("is_host") != true:
+			var request := preload("res://scripts/net/owner_passive_preparation.gd").portal_request(_pending.envelope, _pending.permit)
+			if session.call("_owner_passive_service").call("portal_pose_save", self, request) != true: return
+		elif saver.call("save_character_prepared", game, _pending.envelope.character_id) != true: return
 		_pending.pose_saved = true
 	if not _same_owner() or not _grounded_actor(actor): _refuse("Your travel session changed."); return
 	if session.call("is_host") != true:
@@ -206,15 +241,20 @@ func _refuse(reason: String) -> void:
 	var envelope: Dictionary = _pending.envelope
 	var peer: int = _pending.peer
 	var permit_id: String = _pending.permit.request_id
-	_pending.clear()
 	if session == null: return
-	if session.call("is_host") == true: session.call("_portal_reply", peer, envelope, {"ok": false, "reason": reason})
-	else: session.call("report_portal_owner_refused", self, envelope, permit_id, reason)
+	if session.call("is_host") == true:
+		_pending.clear()
+		session.call("_portal_reply", peer, envelope, {"ok": false, "reason": reason})
+	else:
+		_pending.refused = reason # Keep original correlation until exact no-effect settlement.
+		session.call("report_portal_owner_refused", self, envelope, permit_id, reason)
 
 func owner_finished(reply: Dictionary) -> void:
-	if _pending.is_empty() or reply.get("request_id") != _pending.envelope.request_id: return
-	if reply.get("ok") == true and (reply.get("saved") != true or reply.get("permit_id") != _pending.permit.request_id): return
+	var original: Dictionary = _pending if not _pending.is_empty() else _offered
+	if original.is_empty() or reply.get("request_id") != original.envelope.request_id: return
+	if reply.get("ok") == true and (reply.get("saved") != true or reply.get("permit_id") != original.permit.request_id): return
 	_pending.clear()
+	_offered.clear()
 
 func owner_notice(peer: int, envelope: Dictionary, permit_id: String, refused: String = "") -> void:
 	var original: Dictionary = _remote.get(peer, {})
@@ -222,8 +262,9 @@ func owner_notice(peer: int, envelope: Dictionary, permit_id: String, refused: S
 	var session: Node = original.session.get_ref()
 	if session == null or session.call("_portal_envelope_valid", peer, envelope) != true: return
 	if not refused.is_empty():
-		_remote.erase(peer)
-		session.call("_portal_reply", peer, envelope, {"ok": false, "reason": refused})
+		var request := preload("res://scripts/net/owner_passive_preparation.gd").portal_request(original.envelope, original.permit)
+		if session.call("_owner_passive_service").call("portal_refused", peer, request, refused) == true:
+			_remote.erase(peer) # Owner receives the exact saved-baseline no-effect completion.
 		return
 	original.owner_saved = true
 

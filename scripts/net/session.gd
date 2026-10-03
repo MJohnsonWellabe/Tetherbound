@@ -42,6 +42,7 @@ func owner_passive_recording_active() -> bool:
 func record_owner_passive_input(packet: Dictionary) -> void:
 	if _owner_passive != null: _owner_passive.call("record_input", packet)
 
+## Only the existing host landing arbiter's accepted placement calls this.
 func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
 	if is_host() and _owner_passive != null:
 		_owner_passive.call("travel_reset_confirmed", peer, realm, anchor)
@@ -50,6 +51,11 @@ func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, 
 	return _owner_passive_service().call("gate", peer, action, intent, event)
 
 func _owner_passive_request_matches(source_kind: String, request: Dictionary) -> bool:
+	if source_kind == "portal_arrival":
+		var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
+		return arrival != null and request.get("envelope") is Dictionary \
+			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope) \
+			and arrival.call("owner_request_matches", request) == true
 	if source_kind == "altar_spend":
 		return preload("res://scripts/net/owner_passive_preparation.gd").exact(_owner_passive_altar_original, request)
 	if source_kind == "altar_traits": return _altar_traits_service().call("owner_request_matches", request) == true
@@ -59,6 +65,12 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 
 func _owner_passive_commit_request(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
 	match source_kind:
+		"portal_arrival":
+			var result := foundation_grounded_arrival(get_node_or_null(^"FoundationComposition/PortalArrival"), request.envelope, request.permit)
+			if result.get("code") == "arrival_binding_changed":
+				result.resolved = true
+				result.terminal_refusal = true
+			return result
 		"foundation_request": return _foundation_handle(peer, request)
 		"altar_spend": return _handle_altar_spend(peer, request)
 		"altar_traits": return _altar_traits_service().call("commit_prepared", peer, request)
@@ -70,7 +82,13 @@ func _owner_passive_commit_request(peer: int, source_kind: String, request: Dict
 func _owner_passive_request_terminal(source_kind: String, request: Dictionary, result: Dictionary) -> void:
 	if is_host() or result.get("terminal_refusal") != true or result.get("resolved") != true \
 		or result.get("durable") == true or not _owner_passive_request_matches(source_kind, request): return
-	if source_kind == "altar_traits":
+	if source_kind == "portal_arrival":
+		var reply := result.duplicate(true)
+		var envelope: Dictionary = request.envelope
+		for field: String in ["request_id", "character_id", "world_instance_id", "session_epoch"]: reply[field] = envelope[field]
+		reply.kind = envelope.payload.kind
+		_receive_portal_reply(reply)
+	elif source_kind == "altar_traits":
 		var reply := result.duplicate(true)
 		reply.terminal = true # Existing Traits UI's terminal presentation flag.
 		_altar_traits_service().call("receive_result", request, reply)
@@ -521,6 +539,13 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 	if row.get("action") == "portal_arrival" and row.get("intent") == intent:
 		get_node(^"LedgerRpc").call("_process_creature_training", row)
 		return _foundation_decision(peer, row)
+	if peer != local_peer_id():
+		var request := preload("res://scripts/net/owner_passive_preparation.gd").portal_request(envelope, permit)
+		var passive := _owner_passive_service()
+		var binding: Dictionary = passive.get("committing")
+		if binding.get("source_kind") != "portal_arrival" or binding.get("character") != character \
+			or not preload("res://scripts/net/owner_passive_preparation.gd").exact(binding.get("envelope"), request):
+			return passive.call("portal_grounded", peer, request)
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
 		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
@@ -4560,6 +4585,8 @@ func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
 
 func _host_portal_action(peer: int, envelope: Dictionary) -> void:
 	if not _portal_envelope_valid(peer, envelope): return
+	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
+	if arrival != null and arrival.call("original_pending", peer, envelope) == true: return # Existing exact permit/checkpoint owns retries.
 	var context := _host_portal_context(peer)
 	if context.is_empty():
 		_portal_reply(peer, envelope, {"ok": false, "reason": "Your authoritative travel state is not ready."})

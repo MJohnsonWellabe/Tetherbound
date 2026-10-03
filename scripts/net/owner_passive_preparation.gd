@@ -10,6 +10,8 @@ const EVENT := preload("res://scripts/net/foundation_event.gd")
 const PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
 const KIND := "owner_passive_preparation"
 const ACTION_KIND := "owner_action_passive_preparation"
+const RECOVERY_KIND := "owner_portal_recovery"
+const RECOVERY_FIELDS := ["version", "kind", "original", "baseline", "stream_id", "preparation_id", "before", "after", "discoveries", "input_prefix_hash", "final_sequence", "hash"]
 const ACTION_FIELDS := ["version", "kind", "character_id", "world_id", "world_namespace", "session_epoch", "source_kind", "request", "request_hash", "host_context", "preparation_id", "revision", "before", "after", "discoveries", "input_prefix_hash", "final_sequence", "hash"]
 const FIELDS := ["version", "kind", "character_id", "world_id", "world_namespace", "session_epoch", "retained_event", "duty", "duty_hash", "preparation_id", "revision", "before", "after", "discoveries", "input_prefix_hash", "final_sequence", "hash"]
 
@@ -71,6 +73,7 @@ static func _fields(value: Dictionary, fields: Array) -> bool:
 
 static func _action_request_valid(raw: Dictionary) -> bool:
 	var request: Dictionary = raw.request
+	if raw.source_kind == "portal_arrival": return _portal_request_valid(raw)
 	var fields := ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent"]
 	if raw.source_kind in ["foundation_request", "manual_refine"]: fields.append("revision")
 	if not _fields(request, fields) or not request.intent is Dictionary \
@@ -110,6 +113,37 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 				and raw.host_context.manual_unit_plan.get("recipe_id") == request.intent.recipe_id
 	return false
 
+## This source is a retained consumed permit, not a claim that departure is
+## already grounded. Session/PortalArrival prove actual ground at final stage.
+static func portal_request(envelope: Dictionary, permit: Dictionary) -> Dictionary:
+	return {"op": "portal_arrival", "session_epoch": envelope.get("session_epoch"),
+		"world_namespace": envelope.get("world_instance_id"), "character_id": envelope.get("character_id"),
+		"envelope": envelope.duplicate(true), "permit": permit.duplicate(true)}
+
+static func _portal_request_valid(raw: Dictionary) -> bool:
+	var request: Dictionary = raw.request
+	if not _fields(request, ["op", "session_epoch", "world_namespace", "character_id", "envelope", "permit"]) \
+		or request.op != "portal_arrival" or request.session_epoch != raw.session_epoch \
+		or request.world_namespace != raw.world_namespace or request.character_id != raw.character_id \
+		or not request.envelope is Dictionary or not request.permit is Dictionary: return false
+	var envelope: Dictionary = request.envelope
+	var permit: Dictionary = request.permit
+	if not _fields(envelope, ["request_id", "session_epoch", "world_instance_id", "character_id", "payload"]) \
+		or not _fields(permit, ["peer_id", "character_id", "world_instance_id", "request_id", "origin_realm", "realm", "entry_id"]) \
+		or envelope.session_epoch != raw.session_epoch or envelope.world_instance_id != raw.world_namespace \
+		or envelope.character_id != raw.character_id or not E._opaque_id(envelope.request_id) \
+		or not envelope.request_id.begins_with(raw.session_epoch + ":") \
+		or not envelope.payload is Dictionary or envelope.payload.get("kind") not in ["home_key_finish", "portal_enter"] \
+		or not preload("res://scripts/net/portal_action_policy.gd").valid_payload(envelope.payload) \
+		or not E._integer(permit.peer_id, 1, 2147483647) or permit.character_id != raw.character_id \
+		or permit.world_instance_id != raw.world_namespace or not E._opaque_id(permit.request_id) \
+		or permit.origin_realm not in ["meadows", "water", "cloudreach", "stormwood"] \
+		or permit.realm not in ["meadows", "water", "cloudreach", "stormwood"] or not E._opaque_id(permit.entry_id): return false
+	var context: Dictionary = raw.host_context
+	return _fields(context, ["character_id", "expected_revision", "source_key", "consumed_portal_permit"]) \
+		and context.character_id == raw.character_id and context.expected_revision == raw.revision \
+		and context.source_key == "arrival:" + permit.request_id and context.consumed_portal_permit == true
+
 static func valid_action_host(raw: Variant, cursor: Variant) -> bool:
 	return valid_action(raw) and cursor is Dictionary \
 		and exact(raw.before, cursor.get("base")) and exact(raw.after, cursor.get("state")) \
@@ -119,6 +153,34 @@ static func valid_action_host(raw: Variant, cursor: Variant) -> bool:
 
 static func preparation_hash(prepared: Dictionary) -> String:
 	return BASE.preparation_hash(prepared)
+
+## A reconnect saves its own replayed state, while the original reservation
+## still owns the old CAS. No departed permit authorizes a second journey.
+static func make_recovery(original: Dictionary, baseline: Dictionary, stream_id: String, cursor: Dictionary, id: String) -> Dictionary:
+	var prepared := {"version": 1, "kind": RECOVERY_KIND, "original": original.duplicate(true),
+		"baseline": baseline.duplicate(true), "stream_id": stream_id, "preparation_id": id, "before": cursor.base.duplicate(true),
+		"after": cursor.state.duplicate(true), "discoveries": cursor.discovered.duplicate(true),
+		"input_prefix_hash": cursor.prefix_hash, "final_sequence": cursor.sequence}
+	prepared.hash = preparation_hash(prepared)
+	return prepared if valid_recovery(prepared) else {}
+
+static func valid_recovery(raw: Variant) -> bool:
+	if not raw is Dictionary or not _fields(raw, RECOVERY_FIELDS) or not E._integer(raw.version, 1, 1) or raw.kind != RECOVERY_KIND \
+		or not valid_action(raw.original) or raw.original.source_kind != "portal_arrival" \
+		or not valid_action(raw.baseline) or raw.baseline.source_kind != "portal_arrival" \
+		or raw.baseline.world_id != raw.original.world_id \
+		or not exact(raw.baseline.request, raw.original.request) or not exact(raw.baseline.host_context, raw.original.host_context) \
+		or (not exact(raw.baseline.before, raw.original.before) and not exact(raw.baseline.before, raw.original.after)) \
+		or not BASE._hex(raw.stream_id, 32) or not BASE._hex(raw.preparation_id, 32) \
+		or not BASE._hex(raw.hash, 64) or not BASE._hex(raw.input_prefix_hash, 64) \
+		or not E._integer(raw.final_sequence, 0, 2147483647) \
+		or not raw.before is Dictionary or not raw.after is Dictionary \
+		or not BASE._passive_shape(raw.before) or not BASE._passive_shape(raw.after) \
+		or not PASSIVE.discovery_shape(raw.discoveries): return false
+	return exact(raw.before, raw.baseline.after) \
+		and RECORD.errors(raw.after, raw.original.character_id).is_empty() \
+		and exact(PASSIVE.unchanged_core(raw.before), PASSIVE.unchanged_core(raw.after)) \
+		and preparation_hash(raw) == raw.hash
 
 static func exact(left: Variant, right: Variant) -> bool:
 	if not left is Dictionary or not right is Dictionary: return false
@@ -161,7 +223,7 @@ static func valid_host(raw: Variant, retained: Variant, cursor: Variant) -> bool
 
 static func owner_plan(current: Dictionary, prepared: Dictionary, retained: Dictionary,
 		current_discoveries: Dictionary) -> Dictionary:
-	var source_valid: bool = valid_action(prepared) if prepared.get("kind") == ACTION_KIND else valid(prepared, retained)
+	var source_valid: bool = valid_recovery(prepared) if prepared.get("kind") == RECOVERY_KIND else (valid_action(prepared) if prepared.get("kind") == ACTION_KIND else valid(prepared, retained))
 	if not source_valid or not exact(current, prepared.after) \
 		or not exact(current_discoveries, prepared.discoveries):
 		return {"ok": false, "code": "owner_passive_checkpoint_conflict"}

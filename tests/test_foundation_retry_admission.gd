@@ -74,8 +74,11 @@ func _saturated_research_record() -> Dictionary:
 	# Explicit detached history, not an earned player-path witness.
 	var before: Dictionary = DATA.new()._before()
 	before.redesign_character.research = RESEARCH.empty_log()
-	before.redesign_character.research.species.terrapup = {
+	# Persisted species IDs are Strings; dotted insertion creates a StringName
+	# and the real canonical research/admission validator correctly rejects it.
+	before.redesign_character.research.species["terrapup"] = {
 		"seen": true, "caught": false, "tasks": {"sight": 1, "casts": 3}}
+	assert_eq(RECORD.errors(before, DATA.CHARACTER), [], "research fixture must pass the real admission schema")
 	return before
 
 func _research_fixture(before: Dictionary) -> Dictionary:
@@ -90,7 +93,8 @@ func _research_fixture(before: Dictionary) -> Dictionary:
 	session.add_child(writer)
 	var authority := preload("res://scripts/net/character_authority.gd").new()
 	assert_true(authority.bind_world(game.world.reward_delivery_namespace))
-	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).get("ok") == true)
+	var admitted := authority.seed_admitted_character(before, DATA.CHARACTER)
+	assert_true(admitted.get("ok") == true, str(admitted))
 	session.set("_character_authority", authority)
 	session.get("_registry").call("add", 1, DATA.CHARACTER)
 	return {"game": game, "session": session, "world": game.world, "writer": writer, "authority": authority}
