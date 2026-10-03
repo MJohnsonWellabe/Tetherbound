@@ -293,3 +293,59 @@ increment while another lane held Godot. Native parsing/import/shader rendering,
 motion/audio/performance, real-world integration and fresh code-blind craft
 remain pending. Existing r1..r6 originals, native failures and strict verdicts
 are retained unchanged. F25#0..#5 remain open.
+
+## R27 staged contact/aftermath, in-container captures and blind A/B review
+
+Lane `tb/vfx` (Claude), branched from `tb/integration` 96ca08843. Captures run
+in a cloud container on official Godot 4.7 `5b4e0cb0f`, Compatibility, Xvfb +
+Mesa llvmpipe (software), 1920x1080, `--fixed-fps` so presentation time is
+deterministic regardless of draw speed. Runner and package builder are kept in
+`meadows-r27/`. Software rendering: frame times are meaningless and no
+performance claim follows.
+
+Harness repair first: on integration, `LIBRARY.launch` admits only a frozen
+move row bound to an actor action (`move_presentation_contract.gd`), but the
+identity harness still passed the bare `vfx` block, so every launch returned
+null and no F25 capture could run. The harness now builds that frozen row with
+a synthetic proof binding, and the light lifecycle expects the receipt-owned
+contact cue the contract freezes (`impact_audio_owner=receipt`). Shutters gained
+launch and aftermath phases (impact moved to ~0.2 s after arrival). Effects are
+posed between a production attacker of the move's type and the target, placed
+by measured bounds about 6 m apart.
+
+Source change (e736d1e8a): optional `launch` (muzzle flash, ground kick) and
+`impact.stages` (contact flash, ground shockwave, lingering scorch/dust/burn
+ground mark, settled chips). At most five meshes per effect, outside particle
+leases, sized from the resolved mastery scale with authored metre caps, on the
+existing presentation clock. Stones multiply scree detail into a darker tint.
+Host timing, HP and arrival are unchanged. Library stays OFF.
+
+Baseline (original effects) and candidate (e736d1e8a) rendered the 12 identity
+cases on a synthetic Meadows-look clearing; candidate exit 0, 12 cases, 0
+failures, light lifecycle 18/18. Baseline's three light-lifecycle failures were
+its wall-clock deadline under software rendering (fixed in 47474167d, then on
+the presentation clock). A fresh code-blind reviewer received shuffled,
+neutrally named A/B pairs (`blind-mapping.json` private) and the reference
+boards. Verbatim report: `meadows-r27/independent-review.txt`.
+
+Result: candidate preferred in 12/12 pairs; all four identities named from the
+frames (single fire orb with trail and burst; bolt from the sky onto the
+target; one boulder; a volley of three to five stones); every group's strength
+order matched ranks 1<3<5. Full craft FAIL for every group: pale/low-energy
+effects, a hard UI-like contact ring, boulder shrinking at contact, floating
+debris, no attacker/target reaction, and an unconvincing clearing. Coverage
+limit: the reviewer's image loader dropped some full-resolution frames; all 24
+strips were seen. Originals (~360 MB) are retained off-repo with SHA-256
+manifests; judged strips are committed as JPEG.
+
+Changes after that review (83287668a onward): the harness gained a `world`
+stage that loads the shipped `meadows_playground.tscn` read-only (clock and
+weather frozen, HUD hidden, player/rig/encounter/trainer/sequence systems
+disabled, resident NPCs in the fight area moved behind the attacker) and poses
+the fight at the practice trainer's clearing on real terrain height; attacker
+and target make combat's own public presentation calls (`play_attack`,
+`play_combat_flinch`). Effects: soft broken shockwave, rock chunks that scale
+with the projectile and drop at the target, brighter lightning with a longer
+charge, softer fireball edge and trail, and a fireball burst that holds its
+body (`fade_hold_power`). One real-world Fireball r3 case ran exit 0 with all
+five phases. No F25 criterion is closed by any of this.
