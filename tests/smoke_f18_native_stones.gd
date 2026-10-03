@@ -23,12 +23,17 @@ const IDS := {
 const TOTAL_BUDGET_MSEC := 300000
 const SETTLE_FRAMES := 60
 
-class ProbeBody extends CharacterBody3D:
+class ProbeBody extends "res://scripts/player/player_controller.gd":
 	var gravity := 26.0
 	var consecutive_floor_frames := 0
+	# Suppress gameplay registration, stats/torch/tool children and input.
+	# Only the shipping collision-skin helper below runs on this isolated RID.
+	func _ready() -> void: pass
+	func _process(_delta: float) -> void: pass
 	func _physics_process(delta: float) -> void:
 		velocity.y -= gravity * delta
 		move_and_slide()
+		_settle_skin_overlap()
 		consecutive_floor_frames = consecutive_floor_frames + 1 if is_on_floor() else 0
 
 var checks := 0
@@ -52,6 +57,7 @@ func _finish(world: Node3D = null) -> void:
 		"fixture": "direct realm/scene, private save, isolated copy of actual Player capsule and probe candidate poses",
 		"player_teleports": false, "camera_changes": false, "grants": false, "permission_bypass": false,
 		"earned_play": false, "touch_save_reload": false, "co_op": false, "readable_presentation": false,
+		"probe_controller": "isolated gravity/move_and_slide plus inherited unchanged shipping _settle_skin_overlap; not full Player input/vitals/idle policy",
 		"total_budget_msec": TOTAL_BUDGET_MSEC, "settle_frames_per_stone": SETTLE_FRAMES}))
 	if world != null:
 		current_scene = null
@@ -185,6 +191,43 @@ func _geometry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival
 		"safe_margin": probe.safe_margin, "mask": probe.collision_mask,
 		"consecutive_floor_frames": probe.consecutive_floor_frames, "stable_contact": stable, "final_supported": final_supported}
 
+func _transition_topology(world: Node3D, entry_id: String) -> void:
+	var label: String = world.call("_safe_name", entry_id)
+	var pad := world.get_node_or_null("RealmTransitionLedges/" + label) as Node3D
+	var mesh := pad.get_node_or_null(^"StratifiedCliffBody") as MeshInstance3D if pad != null else null
+	var body := pad.get_node_or_null(^"Collision") as StaticBody3D if pad != null else null
+	var collision := body.get_child(0) as CollisionShape3D if body != null and body.get_child_count() == 1 else null
+	_check(mesh != null and mesh.mesh != null and collision != null and collision.shape is ConcavePolygonShape3D,
+		entry_id + " actual transition render and concave collision")
+	if mesh == null or mesh.mesh == null or collision == null or not collision.shape is ConcavePolygonShape3D: return
+	var top: PackedVector3Array = mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var faces := (collision.shape as ConcavePolygonShape3D).get_faces()
+	# The canonical 50-sided flat entry retains 48 top triangles and its same
+	# 100-triangle shallow skirt. Compare the ACTUAL visible/collision vertices.
+	_check(top.size() == 48 * 3 and faces.size() == top.size() + 100 * 3,
+		entry_id + " perimeter triangulation and original skirt triangle counts")
+	var identical := faces.size() >= top.size()
+	var flat := true
+	var upward := true
+	var boundary: Array[Vector3] = []
+	for i in top.size():
+		identical = identical and i < faces.size() and faces[i] == top[i]
+		flat = flat and top[i].y == Vector3(0, 8.03, 0).y
+		if not boundary.has(top[i]): boundary.append(top[i])
+	for i in range(0, top.size(), 3):
+		upward = upward and (top[i + 2] - top[i]).cross(top[i + 1] - top[i]).y > 0.0
+	_check(identical and flat and upward, entry_id + " exact shared flat upward render/collision top")
+	var rim: Array[Vector3] = []
+	for i in range(top.size(), faces.size()):
+		if faces[i].y == Vector3(0, 8.03, 0).y and not rim.has(faces[i]): rim.append(faces[i])
+	var same_perimeter := boundary.size() == 50 and rim.size() == 50
+	for point: Vector3 in boundary: same_perimeter = same_perimeter and rim.has(point)
+	_check(same_perimeter and not boundary.has(Vector3(0, 8.03, 0)),
+		entry_id + " original skirt perimeter vertices with no central contact hub")
+	print("F18_TRANSITION_TOPOLOGY " + JSON.stringify({"entry_id": entry_id, "top_vertices": top.size(),
+		"collision_vertices": faces.size(), "boundary_vertices": boundary.size(), "rim_vertices": rim.size(),
+		"identical_top": identical, "flat": flat, "upward": upward, "same_perimeter": same_perimeter}))
+
 func _entry(world: Node3D, player: CharacterBody3D, arrival: Node, game: Node) -> void:
 	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
 	var entry_id := ""
@@ -221,7 +264,9 @@ func _entry(world: Node3D, player: CharacterBody3D, arrival: Node, game: Node) -
 		query.exclude = [player.get_rid()]
 		clear = player.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty()
 	_check(clear, entry_id + " actual Player complete candidate capsule clear")
-	if not landing.is_finite() and target.is_finite(): DIAGNOSTIC.report(arrival, world, player, target, radius, entry_id)
+	if target.is_finite() and (not landing.is_finite() or realm == "cloudreach"):
+		DIAGNOSTIC.report(arrival, world, player, target, radius, entry_id)
+	if realm == "cloudreach": _transition_topology(world, entry_id)
 	var floor_streak := 0
 	var supported_frames := 0
 	var queries_untouched := true

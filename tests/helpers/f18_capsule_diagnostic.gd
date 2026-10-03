@@ -25,6 +25,16 @@ static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target:
 	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
 	var out := {"case": label, "actor_position": vector(actor.global_position), "target": vector(target),
 		"safe_margin": actor.safe_margin, "radius": radius, "collision_mask": actor.collision_mask}
+	var registered_shapes: Array[Dictionary] = []
+	for i in PhysicsServer3D.body_get_shape_count(actor.get_rid()):
+		var shape_rid := PhysicsServer3D.body_get_shape(actor.get_rid(), i)
+		var shape_transform := PhysicsServer3D.body_get_shape_transform(actor.get_rid(), i)
+		registered_shapes.append({"index": i, "rid": str(shape_rid), "type": PhysicsServer3D.shape_get_type(shape_rid),
+			"local_origin": vector(shape_transform.origin)})
+	out["registered_body"] = {"shapes": registered_shapes,
+		"layer": PhysicsServer3D.body_get_collision_layer(actor.get_rid()), "mask": PhysicsServer3D.body_get_collision_mask(actor.get_rid()),
+		"floor_stop_on_slope": actor.floor_stop_on_slope, "floor_snap_length": actor.floor_snap_length,
+		"motion_mode": actor.motion_mode, "max_slides": actor.max_slides, "velocity": vector(actor.velocity)}
 	out["guards"] = {"world_ancestor": world != null and world.is_ancestor_of(actor),
 		"target_finite": target.is_finite(), "radius_finite_positive": is_finite(radius) and radius > 0.0,
 		"margin_finite_positive_within_radius": is_finite(actor.safe_margin) and actor.safe_margin > 0.0 and actor.safe_margin <= radius,
