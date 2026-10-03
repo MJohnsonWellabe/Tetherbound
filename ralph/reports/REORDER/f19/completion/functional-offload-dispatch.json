@@ -7,14 +7,26 @@
   "mode": "render",
   "resolution": "640x360",
   "runs": [
-    {"run": 37081325571, "script": "tests/smoke_f19_veridian_functional.gd", "scope": "Entire inherited six-choice controller/save/reload driver"},
-    {"run": 37081327114, "script": "tests/smoke_f19_solmane_functional.gd", "scope": "Entire inherited six-choice controller/save/reload driver"},
-    {"run": 37081328436, "script": "tests/smoke_f19_campaign_functional.gd", "scope": "Entire inherited fresh ordinary-input four-chapter campaign and all five immutable boundaries"}
+    {
+      "run": 37081325571,
+      "script": "tests/smoke_f19_veridian_functional.gd",
+      "scope": "Entire inherited six-choice controller/save/reload driver"
+    },
+    {
+      "run": 37081327114,
+      "script": "tests/smoke_f19_solmane_functional.gd",
+      "scope": "Entire inherited six-choice controller/save/reload driver"
+    },
+    {
+      "run": 37081328436,
+      "script": "tests/smoke_f19_campaign_functional.gd",
+      "scope": "Entire inherited fresh ordinary-input four-chapter campaign and all five immutable boundaries"
+    }
   ],
-  "mechanics_policy": "OpenGL backend active, continuous drawing disabled as existing remote net proof does; no supplied gameplay/HP/pose/rewards/save state, unchanged original input/physics/encounter/clock/budget mechanics",
+  "mechanics_policy": "Real OpenGL backend, continuous drawing disabled. Full fresh campaign retains ordinary input/physics/encounter/clock/budget mechanics without supplied saves/state. Choice wrappers preserve original declared victory/party/pose fixtures.",
   "audit": "Compatibility shell_build_budget never awaits Forward+ upload draws. Default continuous driver does not attach frame-capture recorders. Capture arguments refused.",
   "provenance": "Promoter preserves explicit functional offload declaration and still demands full fresh success, five boundaries and exact actual production byte hashes",
-  "status": "Dispatched, engine verification and independent review pending",
+  "status": "Source independently approved; Veridian completed with engine errors, campaign failed before a boundary, Solmane pending; actual-results audit authoritative",
   "exclusions": "No visual, audio, owner-play or device-performance acceptance. No accepted earned fixture exists yet.",
   "resource_constraint": "User playing Valheim; all engine/import/render testing offloaded, no local Godot tests"
 }

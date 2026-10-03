@@ -3,42 +3,146 @@
   "branch": "tb/f19-completion",
   "base": "f48a0ba1ea54bf39149e37695804fdc976a1f9e7",
   "already_independently_approved": [
-    {"commit": "8ab9637e107eaac3a07704b2baa657b22ccc1fe3", "purpose": "Shipped boss handoff schema and deferred delivery authority", "coordinator_integrations": ["275cd8a7a6", "4d3bf864f4"]},
-    {"commit": "d8b18de7160613c5e8207d509e9ded006acb9b74", "purpose": "Actual Stormwood settlement required; guest-first host writer"},
-    {"commit": "508867805939671ed93cb4f9feb58f5b80be783b", "branch": "tb/f19-epoch-only", "purpose": "Minimal retained epoch comparison fix and independent regression; subset of6206 below", "coordinator_integration": "f4f914cc02"},
-    {"commit": "abdab9e7e1ca72159bea5331b1e911a35a723e2b", "purpose": "Admission proofs preserve authenticated ceremony restrictions and lower-level ownership guards", "coordinator_integration": "d21f0a970d", "validation": "ledger-admission-contract-r2.log:17 tests/113 assertions/0 failures/0 engine errors"}
+    {
+      "commit": "8ab9637e107eaac3a07704b2baa657b22ccc1fe3",
+      "purpose": "Shipped boss handoff schema and deferred delivery authority",
+      "coordinator_integrations": [
+        "275cd8a7a6",
+        "4d3bf864f4"
+      ]
+    },
+    {
+      "commit": "d8b18de7160613c5e8207d509e9ded006acb9b74",
+      "purpose": "Actual Stormwood settlement required; guest-first host writer"
+    },
+    {
+      "commit": "508867805939671ed93cb4f9feb58f5b80be783b",
+      "branch": "tb/f19-epoch-only",
+      "purpose": "Minimal retained epoch comparison fix and independent regression; subset of6206 below",
+      "coordinator_integration": "f4f914cc02"
+    },
+    {
+      "commit": "abdab9e7e1ca72159bea5331b1e911a35a723e2b",
+      "purpose": "Admission proofs preserve authenticated ceremony restrictions and lower-level ownership guards",
+      "coordinator_integration": "d21f0a970d",
+      "validation": "ledger-admission-contract-r2.log:17 tests/113 assertions/0 failures/0 engine errors"
+    },
+    {
+      "commit": "1351af5394bd0a5a7394f3b627df420545bc0518",
+      "purpose": "Functional offload runner; actual failed/errorful results retained separately"
+    },
+    {
+      "commit": "fd329e6f60c1af217a5199357dd58095505dbc65",
+      "purpose": "Bounded F32 freed adopted-node read and actual native lifecycle regression",
+      "validation": "8 checks, 0 failures, 0 engine errors; resource-mount-and-material-audit.json"
+    }
   ],
   "remaining_review_sequence": [
-    {"commit": "6206b4971bee4b3a1e94b1ea237f999db20f7657", "purpose": "World-scoped new boss receipts with preserved legacy reconstruction; also contains already-approved epoch fix"},
-    {"commit": "d417fbead5c7ecec72124a7a533876f3e8d513e3", "purpose": "Required follow-up: paid legacy duties cannot starve the next owed delivery"},
-    {"commit": "879068624cc9f7896db6ffb11685fd16332a6226", "purpose": "Visible portal recommendations, real production-consumer checks and earned-boundary promotion validator"},
-    {"commit": "ad344eb032", "purpose": "Actual Stormheart capacity UI smoke and saved-byte entitlement validation"},
-    {"commit": "6b4a1a5592", "purpose": "All four two-owner persisted handoffs, retained CI witnesses and explicit artifact relocation validation"}
+    {
+      "commit": "6206b4971bee4b3a1e94b1ea237f999db20f7657",
+      "purpose": "World-scoped new boss receipts with preserved legacy reconstruction; also contains already-approved epoch fix"
+    },
+    {
+      "commit": "d417fbead5c7ecec72124a7a533876f3e8d513e3",
+      "purpose": "Required follow-up: paid legacy duties cannot starve the next owed delivery"
+    },
+    {
+      "commit": "879068624cc9f7896db6ffb11685fd16332a6226",
+      "purpose": "Visible portal recommendations, real production-consumer checks and earned-boundary promotion validator"
+    },
+    {
+      "commit": "ad344eb032",
+      "purpose": "Actual Stormheart capacity UI smoke and saved-byte entitlement validation"
+    },
+    {
+      "commit": "6b4a1a5592",
+      "purpose": "All four two-owner persisted handoffs, retained CI witnesses and explicit artifact relocation validation"
+    }
   ],
   "separate_dependency": {
     "upstream_commit": "2e24263a81f8410fe000bbccfc707b2580ec5d41",
     "lane_cherry_pick": "588411be6e0090e705faddcbb60fab6e19968050",
     "owner": "F17",
     "purpose": "Reviewed native buffered-axis dispatch and earned deployment verification; used by the actual continuous campaign",
-    "local_validation": {"log": "opening-axis-dependency.log", "tests": 1, "assertions": 4, "failures": 0, "engine_errors": 0}
+    "local_validation": {
+      "log": "opening-axis-dependency.log",
+      "tests": 1,
+      "assertions": 4,
+      "failures": 0,
+      "engine_errors": 0
+    }
   },
   "subsequent_cuts": [
-    {"commit": "25dbbd7cdaa9942315c1297c90ecaf76aec3f89b", "purpose": "Solmane fixture mirror reset and renewable-node presentation lifecycle", "evidence": "choice-rejections-and-lifecycle.json"},
-    {"commit": "7373775733", "dependency": "52f5a077bf8994617ccff83c111892cd7198e6a2", "purpose": "Reviewed F18 durable waystone/portal traversal producer; coordinator STATE excluded"},
-    {"commit": "c118a589f4", "dependency": "b25623fb4534284351f4d504c20790c7cfb73183", "purpose": "Reviewed Tidewake support pad"},
-    {"commit": "c0a8951cfb", "dependency": "538c971f6fa9355113efdd0f4756aa34f889e210", "purpose": "Reviewed monotonic HomeKey travel clock"},
-    {"commit": "e2c0354783d8f5fb919df50a17e16b89ef47470a", "purpose": "Actual Tent catalogue identity in controller route helper", "evidence": "campaign-r1-and-catalogue-fix.json"},
-    {"commit": "3e7435b763", "dependency": "6405e9facacbeae7bed5f60118e1b7599ebfd8d5", "purpose": "Full reviewed lossless save codec and all consumers; coordinator STATE excluded"},
-    {"commit": "beb28e24f1aafce360e4257625e1995fdabecb06", "purpose": "Lossless immutable F49 receipts and compatible strict F19 promotion reader", "evidence": "lossless-handoff-codec.json"}
+    {
+      "commit": "25dbbd7cdaa9942315c1297c90ecaf76aec3f89b",
+      "purpose": "Solmane fixture mirror reset and renewable-node presentation lifecycle",
+      "evidence": "choice-rejections-and-lifecycle.json"
+    },
+    {
+      "commit": "7373775733",
+      "dependency": "52f5a077bf8994617ccff83c111892cd7198e6a2",
+      "purpose": "Reviewed F18 durable waystone/portal traversal producer; coordinator STATE excluded"
+    },
+    {
+      "commit": "c118a589f4",
+      "dependency": "b25623fb4534284351f4d504c20790c7cfb73183",
+      "purpose": "Reviewed Tidewake support pad"
+    },
+    {
+      "commit": "c0a8951cfb",
+      "dependency": "538c971f6fa9355113efdd0f4756aa34f889e210",
+      "purpose": "Reviewed monotonic HomeKey travel clock"
+    },
+    {
+      "commit": "e2c0354783d8f5fb919df50a17e16b89ef47470a",
+      "purpose": "Actual Tent catalogue identity in controller route helper",
+      "evidence": "campaign-r1-and-catalogue-fix.json"
+    },
+    {
+      "commit": "3e7435b763",
+      "dependency": "6405e9facacbeae7bed5f60118e1b7599ebfd8d5",
+      "purpose": "Full reviewed lossless save codec and all consumers; coordinator STATE excluded"
+    },
+    {
+      "commit": "beb28e24f1aafce360e4257625e1995fdabecb06",
+      "purpose": "Lossless immutable F49 receipts and compatible strict F19 promotion reader",
+      "evidence": "lossless-handoff-codec.json"
+    }
   ],
   "acceptance_evidence": {
-    "F19#0": ["order-consumers-corrected.log: config/journal/map/credits/sign production consumers"],
-    "F19#1": ["boss-delivery-validated.log: production curve readers and tables", "node tests/test_f19_curve.mjs:88 named teams/36 wild tables"],
-    "F19#2": ["participant-delivery-world-flags.log:128 assertions, actual two-owner files for all four handoffs", "boss-delivery-validated.log:durable journal and failure/retry fences", "legacy-retry.log:paid-legacy follow-up regression", "settlement-followup-validated.log:guest-first actual controller persistence"],
-    "F19#3": ["node tests/test_f19_gate_scan.mjs:1275 prerequisite fields and negative controls"],
-    "F19#4": ["legendary-contract-check.log:105 tests/773 assertions", "ci-guardian-37074149226.log:120 checks", "ci-stormheart-37074151200.log:44 assertions", "stormheart-capacity-r2.log:89 assertions"],
-    "F19#5": ["order-consumers-corrected.log:recommendations visible; host policy accepts level1 with earned unlock", "promotion-codec-negative.log:11 rejection controls", "lossless-handoff-codec.json:exact reader compatibility, no earned progression claim"]
+    "F19#0": [
+      "order-consumers-corrected.log: config/journal/map/credits/sign production consumers"
+    ],
+    "F19#1": [
+      "boss-delivery-validated.log: production curve readers and tables",
+      "node tests/test_f19_curve.mjs:88 named teams/36 wild tables"
+    ],
+    "F19#2": [
+      "participant-delivery-world-flags.log:128 assertions, actual two-owner files for all four handoffs",
+      "boss-delivery-validated.log:durable journal and failure/retry fences",
+      "legacy-retry.log:paid-legacy follow-up regression",
+      "settlement-followup-validated.log:guest-first actual controller persistence"
+    ],
+    "F19#3": [
+      "node tests/test_f19_gate_scan.mjs:1275 prerequisite fields and negative controls"
+    ],
+    "F19#4": [
+      "legendary-contract-check.log:105 tests/773 assertions",
+      "ci-guardian-37074149226.log:120 checks",
+      "ci-stormheart-37074151200.log:44 assertions",
+      "stormheart-capacity-r2.log:89 assertions"
+    ],
+    "F19#5": [
+      "order-consumers-corrected.log:recommendations visible; host policy accepts level1 with earned unlock",
+      "promotion-codec-negative.log:11 rejection controls",
+      "lossless-handoff-codec.json:exact reader compatibility, no earned progression claim"
+    ]
   },
-  "open_acceptance": ["Veridian and Solmane actual choice runs with clean engine startup; render runner ALSA error reported to coordinator.", "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries.", "Independent review and coordinator integration of the broader receipt/consumer/proof follow-ups."],
-  "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes."
+  "open_acceptance": [
+    "Clean Veridian and Solmane actual choice runs; Veridian completed all six but emitted 136 GLES3 material-null errors; Solmane remains running.",
+    "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
+    "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups."
+  ],
+  "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
+  "latest_remote_audit": "functional-offload-actual-results.json"
 }

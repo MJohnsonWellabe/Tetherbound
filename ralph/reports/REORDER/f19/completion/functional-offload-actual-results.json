@@ -1,0 +1,85 @@
+{
+  "kind": "f19_functional_offload_actual_results",
+  "source_commit": "1351af5394bd0a5a7394f3b627df420545bc0518",
+  "engine": "Godot 4.7; real gl_compatibility backend; reviewed Dummy audio workflow",
+  "source_review": "Coordinator independently approved 1351af5394 functional runner; source approval does not imply acceptance",
+  "veridian": {
+    "run": 37081325571,
+    "artifact": 11259339637,
+    "process_exit": 0,
+    "selected_cases": [
+      "space-accept",
+      "space-refuse",
+      "capacity-refuse-at-prompt",
+      "capacity-accept-then-let-newcomer-go",
+      "capacity-accept-release-one",
+      "save-while-choice-open"
+    ],
+    "native_result": "veridian offer choice smoke test passed",
+    "engine_errors": 136,
+    "script_errors": 0,
+    "unique_engine_error": "Parameter material is null; four GLES3 material dependency functions",
+    "accepted_clean_witness": false,
+    "fixtures": "Original declared victory, party and pose fixtures retained; actual choice controller and save/reload",
+    "log": "ci-veridian-functional-rejected-37081325571.log.gz"
+  },
+  "campaign": {
+    "run": 37081328436,
+    "artifact": 11258664305,
+    "accepted_clean_witness": false,
+    "campaign_complete": false,
+    "counts_as_proof": false,
+    "checkpoints": [],
+    "reached": "village",
+    "elapsed_seconds": 1061.635,
+    "engine_errors": 4,
+    "script_errors": 0,
+    "failures": [
+      "Native opening refused: actual production contact observation cap"
+    ],
+    "last_observation": {
+      "requests": 6227,
+      "frame": 6226,
+      "progress_m": 512.758859934285,
+      "stall_frames": 0,
+      "callback_own_us": 563,
+      "callback_cap_us": 10000,
+      "player": [
+        -49.9696350097656,
+        0.911674201488495,
+        54.1063346862793
+      ],
+      "request": [
+        -34.5519676208496,
+        -2.99817681312561,
+        79.7608489990234
+      ]
+    },
+    "shared_helper_owner": "Coordinator relays actual contact-cap evidence to F17; F19 does not edit competing helper",
+    "log": "ci-campaign-functional-rejected-37081328436.log.gz"
+  },
+  "solmane": {
+    "run": 37081327114,
+    "status": "in_progress_at_last_verified_check",
+    "accepted_clean_witness": false
+  },
+  "body_diagnostic": {
+    "source_commit": "9c2034f0f6367c8271d7ca708cd6a62bd56f5592",
+    "run": 37082873789,
+    "artifact": 11259429217,
+    "process_exit": 0,
+    "engine_errors": 0,
+    "actual_body_model": true,
+    "camera": true,
+    "real_draw_frames": true,
+    "outcome": "Negative material-error reproduction; no product fix justified",
+    "log": "ci-legendary-body-lifetime-37082873789.log"
+  },
+  "next_diagnostic": {
+    "source_commit": "742ed94d2af49924d5048b45914f143326a82a57",
+    "run": 37083791397,
+    "script": "tests/probe_f19_build_material_lifetime.gd",
+    "scope": "Actual station ghost tint/cancel, placed geometry teardown and BuildPlacer overlay lifecycle; startup/interaction fixtures; no paid placement claim"
+  },
+  "exclusions": "No earned fixtures promoted, no visual/audio/owner-play/device-performance acceptance. All engine work remains offloaded while user plays Valheim."
+}
