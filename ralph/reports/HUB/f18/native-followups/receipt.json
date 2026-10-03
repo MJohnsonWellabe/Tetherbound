@@ -5840,6 +5840,487 @@
       "independent_review": "GPT-6.1 Sol original artifact/source audit APPROVE scoped geometry; same exact guards, actual Player unchanged by fixture; all19 config/all5Water mounts/no skipped count; actual shifted entry60floorframes/fullcapsule/fivefloor/final support PASS.",
       "outcome": "74checks/0fail, exit0, run.log40s, zero engine/script errors in both run.log/Godotlog; actual canonical entry and all5actual Waterstones PASS.",
       "evidence_limit": "Direct scene/native geometry and controller support only. Artifact manifest is a file list; source/run/workflow identity binding uses retained API/dispatch provenance. Earned consumption/touch/reload/co-op/render/audio and fullsixF18 acceptance remain UNPROVEN."
+    },
+    {
+      "id": 37102718245,
+      "display_title": "render f18-fixture-teaching-r1 @ f9494ce9e4774a3233a81986579eaa0517789dea",
+      "head_sha": "79b03632901cff02ae292623d8d9a373f0943a20",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37102718245",
+      "checkout": "f9494ce9e4774a3233a81986579eaa0517789dea",
+      "artifact_id": 11266913471,
+      "raw_artifact": "fixture-teaching-r1-remote.zip",
+      "bytes": 168860,
+      "sha256": "bc1eff43bf032dcfecee88224e2ea59aaf566403ca206d3da4844e64050a9ee3",
+      "native_exit_code": "0",
+      "logs": {
+        "net-runs/net-run-local-5265825/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        },
+        "net-runs/net-run-local-5265825/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        },
+        "net-runs/net-run-local-5265825/peer-0.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        },
+        "net-runs/net-run-local-5265825/peer-1.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        },
+        "run.log": {
+          "errors": {},
+          "warnings": {}
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {}
+        }
+      },
+      "peer_teaching": [
+        {
+          "peer": 0,
+          "verdict": "PASS",
+          "teaching": {
+            "budget_frames": 180.0,
+            "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+            "earned_opening_credit": false,
+            "frames_used": 37.0,
+            "menu_confirm_presses": [
+              {
+                "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+                "line": 0.0,
+                "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+                "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa."
+              },
+              {
+                "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+                "line": 1.0,
+                "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+                "text": "It takes you to the Crossing Hall for free, with no cooldown. Finish a fight or conversation first, leave the water, and land before using it. You can cancel the raise.\n\nNext: Catch a second creature, then return to Grandpa."
+              }
+            ]
+          },
+          "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+          "portable_disk_has_ack": true,
+          "home_key_count": 1.0
+        },
+        {
+          "peer": 1,
+          "verdict": "PASS",
+          "teaching": {
+            "budget_frames": 180.0,
+            "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+            "earned_opening_credit": false,
+            "frames_used": 49.0,
+            "menu_confirm_presses": [
+              {
+                "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+                "line": 0.0,
+                "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+                "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa."
+              },
+              {
+                "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+                "line": 1.0,
+                "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+                "text": "It takes you to the Crossing Hall for free, with no cooldown. Finish a fight or conversation first, leave the water, and land before using it. You can cancel the raise.\n\nNext: Catch a second creature, then return to Grandpa."
+              }
+            ]
+          },
+          "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+          "portable_disk_has_ack": true,
+          "home_key_count": 1.0
+        }
+      ],
+      "assertions": 17,
+      "outcome": "Scoped PASS: actual two-line Continue input, production acknowledgement/input release and fixture save for both peers; exit0/223s; no engine/script errors.",
+      "independent_review": "GPT-6.1 Sol audited original ZIP and both raw portable character.json payloads: APPROVE scoped teaching seam only.",
+      "evidence_limit": "Disconnected fixture setup only; no earned/admission/travel/co-op/reload/render/audio acceptance. Nine warnings per peer: interpolation1/Torch8, duplicated in peer Godot logs. Manifest file list does not encode source SHA; API/dispatch proves source binding."
+    },
+    {
+      "id": 37101535389,
+      "display_title": "render f18-earned-headless-r9 @ ce5c6224567836c82191a8585423ea0987718329",
+      "head_sha": "12961eaaf0ff955f0bef45eb205e1388fa45f180",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101535389",
+      "checkout": "ce5c6224567836c82191a8585423ea0987718329",
+      "artifact_id": 11266583903,
+      "raw_artifact": "earned-r9-remote.zip",
+      "bytes": 1037754,
+      "sha256": "a2ecc70293973d3577597e3b403b30bdf3c95628780db33e62654f1984a941ad",
+      "native_exit_code": null,
+      "logs": {
+        "run.log": {
+          "errors": {
+            "ERROR: Parameter \"material\" is null.": 1,
+            "SCRIPT ERROR: Trying to cast a freed object.": 1192,
+            "SCRIPT ERROR: Invalid access to property or key 'transition' on a base object of type 'Dictionary'.": 1191
+          },
+          "warnings": {
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {
+            "ERROR: Parameter \"material\" is null.": 1,
+            "SCRIPT ERROR: Trying to cast a freed object.": 1192,
+            "SCRIPT ERROR: Invalid access to property or key 'transition' on a base object of type 'Dictionary'.": 1191
+          },
+          "warnings": {
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        }
+      },
+      "failures": [
+        "actual Satchel Home Key: [\"F49 actual Home Key return never reached the ready home arch\"]"
+      ],
+      "receipt_phases": [
+        "opening",
+        "earned_key_starting_bindings",
+        "protected_drop",
+        "key_binding",
+        "combat_key_refusal",
+        "ordinary_walk",
+        "paid_workbench",
+        "ordinary_walk",
+        "deep_touch",
+        "cutscene_key_refusal",
+        "settings_home_key_replay",
+        "dialogue_key_refusal",
+        "earned_shop_input_handoff",
+        "shop_key_offer_absent",
+        "earned_tool_bindings",
+        "earned_shop_input_handoff",
+        "shop_key_offer_absent",
+        "earned_shop_input_handoff",
+        "shop_key_offer_absent",
+        "earned_shop_input_handoff",
+        "shop_key_offer_absent",
+        "earned_build_selection"
+      ],
+      "selected_receipts": [
+        {
+          "actual_position": "(-5.977296, 0.900843, 21.55014)",
+          "arrived": true,
+          "confined_resets": 0,
+          "grounded": true,
+          "headings": [],
+          "original_frame_budget": 10019,
+          "phase": "ordinary_walk",
+          "target": "(-6.0, -0.425985, 22.0)",
+          "unstick_count_after": 0,
+          "unstick_count_before": 0
+        },
+        {
+          "before": {
+            "stone": 8,
+            "wood": 31
+          },
+          "phase": "paid_workbench",
+          "position": "(-6.0, 0.9, 18.0)"
+        },
+        {
+          "actual_position": "(342.4232, 1.990416, 930.4442)",
+          "arrived": true,
+          "confined_resets": 0,
+          "grounded": true,
+          "headings": [
+            "(13.79, 0.0, 14.0)",
+            "(14.0, 0.0, 20.0)",
+            "(13.79, 0.85, 22.4)",
+            "(8.0, 0.0, 90.0)",
+            "(-40.0, 0.0, 180.0)",
+            "(-120.0, 0.0, 270.0)",
+            "(-230.0, 0.0, 330.0)",
+            "(-360.0, 0.0, 400.0)",
+            "(-430.0, 0.0, 508.0)",
+            "(-458.0, 0.0, 518.0)",
+            "(-466.0, 0.0, 540.0)",
+            "(-469.0, 0.0, 572.0)",
+            "(-443.0, 0.0, 600.0)",
+            "(-400.0, 0.0, 605.0)",
+            "(-345.0, 0.0, 610.0)",
+            "(-322.0, 0.0, 594.0)",
+            "(-190.0, 0.0, 650.0)",
+            "(-50.0, 0.0, 700.0)",
+            "(90.0, 0.0, 760.0)",
+            "(230.0, 0.0, 830.0)",
+            "(360.0, 0.0, 910.0)"
+          ],
+          "original_frame_budget": 97292,
+          "phase": "ordinary_walk",
+          "target": "(344.3, 1.983212, 929.6)",
+          "unstick_count_after": 0,
+          "unstick_count_before": 0
+        },
+        {
+          "phase": "deep_touch",
+          "position": "(342.4992, 1.990429, 930.4101)",
+          "waystone": "meadows_trail_camp"
+        },
+        {
+          "actual_safety": {
+            "combat": false,
+            "cutscene": true,
+            "dialogue": false
+          },
+          "binding": 4,
+          "channel_created": false,
+          "dialogue": "",
+          "epoch": "fcde5dee8dc1aad14fab4c509815f9ea",
+          "expected_reason": "Wait until the scene finishes.",
+          "home_keys": 1,
+          "input": "hotbar_5",
+          "lesson_layer": 30,
+          "lesson_line": 0,
+          "owner": "character-9c9f0f47c9d0564912d55c53c8a2b744",
+          "passed": true,
+          "phase": "cutscene_key_refusal",
+          "portal_actions": [],
+          "readable": true,
+          "realm": "meadows",
+          "reason": "Wait until the scene finishes.",
+          "refusal_layer": 31,
+          "source": "/root/Game/OnboardingLessons/@CanvasLayer@67244",
+          "unchanged": true,
+          "visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim"
+        },
+        {
+          "confirmed_lines": 2,
+          "conversation": "lesson_home_key",
+          "epoch": "fcde5dee8dc1aad14fab4c509815f9ea",
+          "flags_unchanged": true,
+          "input": [
+            "inventory",
+            "menu_tab_right",
+            "ui_accept",
+            "hotbar_5",
+            "menu_confirm"
+          ],
+          "lesson": "home_key",
+          "owner": "character-9c9f0f47c9d0564912d55c53c8a2b744",
+          "passed": true,
+          "phase": "settings_home_key_replay",
+          "released": true,
+          "transaction_receipts_unchanged": true,
+          "unchanged": true
+        }
+      ],
+      "resource_lifetime_events": [
+        {
+          "event": "watch",
+          "instance_id": 34878003578486,
+          "path": "/root/MeadowsPlayground/@Node3D@63537",
+          "physics_frame": 4719,
+          "process_frame": 1888,
+          "role": "harvest:wood"
+        },
+        {
+          "event": "watch",
+          "instance_id": 34878305568378,
+          "path": "/root/MeadowsPlayground/@Node3D@63537/@Node3D@63538/DeadTree_22/DeadTree_2",
+          "physics_frame": 4719,
+          "process_frame": 1888,
+          "role": "harvest:wood"
+        },
+        {
+          "event": "watch",
+          "instance_id": 34871057810894,
+          "path": "/root/MeadowsPlayground/@Node3D@63483",
+          "physics_frame": 5418,
+          "process_frame": 2062,
+          "role": "harvest:stone"
+        },
+        {
+          "event": "watch",
+          "instance_id": 34871124919761,
+          "path": "/root/MeadowsPlayground/@Node3D@63483/@Node3D@63484/Rock_Medium_22/Rock_Medium_2",
+          "physics_frame": 5418,
+          "process_frame": 2062,
+          "role": "harvest:stone"
+        },
+        {
+          "event": "watch",
+          "instance_id": 60642002453260,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2",
+          "physics_frame": 5418,
+          "process_frame": 2062,
+          "role": "outgoing:axe"
+        },
+        {
+          "event": "watch",
+          "instance_id": 60642019038322,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2/Axe_Bronze",
+          "physics_frame": 5418,
+          "process_frame": 2062,
+          "role": "outgoing:axe"
+        },
+        {
+          "event": "exiting",
+          "instance_id": 60642019038322,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2/Axe_Bronze",
+          "physics_frame": 6236,
+          "process_frame": 2253,
+          "role": "outgoing:axe"
+        },
+        {
+          "event": "exiting",
+          "instance_id": 60642002453260,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2",
+          "physics_frame": 6236,
+          "process_frame": 2253,
+          "role": "outgoing:axe"
+        },
+        {
+          "event": "exited",
+          "instance_id": 60642019038322,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2/Axe_Bronze",
+          "physics_frame": 6236,
+          "process_frame": 2253,
+          "role": "outgoing:axe"
+        },
+        {
+          "event": "exited",
+          "instance_id": 60642002453260,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2",
+          "physics_frame": 6236,
+          "process_frame": 2253,
+          "role": "outgoing:axe"
+        },
+        {
+          "event": "watch",
+          "instance_id": 34879043765895,
+          "path": "/root/MeadowsPlayground/@Node3D@63543",
+          "physics_frame": 6282,
+          "process_frame": 2262,
+          "role": "harvest:fiber"
+        },
+        {
+          "event": "watch",
+          "instance_id": 34879328978571,
+          "path": "/root/MeadowsPlayground/@Node3D@63543/@Node3D@63544/Plant_7_Big2/Plant_7_Big",
+          "physics_frame": 6282,
+          "process_frame": 2262,
+          "role": "harvest:fiber"
+        },
+        {
+          "event": "watch",
+          "instance_id": 62420236354205,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2",
+          "physics_frame": 6282,
+          "process_frame": 2262,
+          "role": "outgoing:pickaxe"
+        },
+        {
+          "event": "watch",
+          "instance_id": 62420253131411,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2/Pickaxe_Bronze",
+          "physics_frame": 6282,
+          "process_frame": 2262,
+          "role": "outgoing:pickaxe"
+        },
+        {
+          "event": "exiting",
+          "instance_id": 62420253131411,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2/Pickaxe_Bronze",
+          "physics_frame": 6355,
+          "process_frame": 2275,
+          "role": "outgoing:pickaxe"
+        },
+        {
+          "event": "exiting",
+          "instance_id": 62420236354205,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2",
+          "physics_frame": 6355,
+          "process_frame": 2275,
+          "role": "outgoing:pickaxe"
+        },
+        {
+          "event": "exited",
+          "instance_id": 62420253131411,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2/Pickaxe_Bronze",
+          "physics_frame": 6355,
+          "process_frame": 2275,
+          "role": "outgoing:pickaxe"
+        },
+        {
+          "event": "exited",
+          "instance_id": 62420236354205,
+          "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2",
+          "physics_frame": 6355,
+          "process_frame": 2275,
+          "role": "outgoing:pickaxe"
+        }
+      ],
+      "first_error_blocks": {
+        "ERROR: Parameter \"material\" is null.": [
+          "F18_RESOURCE_LIFETIME {\"event\":\"exiting\",\"instance_id\":60642002453260,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2\",\"physics_frame\":6236,\"process_frame\":2253,\"role\":\"outgoing:axe\"}",
+          "F18_RESOURCE_LIFETIME {\"event\":\"exited\",\"instance_id\":60642019038322,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2/Axe_Bronze\",\"physics_frame\":6236,\"process_frame\":2253,\"role\":\"outgoing:axe\"}",
+          "F18_RESOURCE_LIFETIME {\"event\":\"exited\",\"instance_id\":60642002453260,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2\",\"physics_frame\":6236,\"process_frame\":2253,\"role\":\"outgoing:axe\"}",
+          "ERROR: Parameter \"material\" is null.",
+          "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+          "GATE A NPC/GATHER +53.25s \u2014 pickaxe equipped, swung, gathered +4 Stone",
+          "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":34879043765895,\"path\":\"/root/MeadowsPlayground/@Node3D@63543\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"harvest:fiber\"}",
+          "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":34879328978571,\"path\":\"/root/MeadowsPlayground/@Node3D@63543/@Node3D@63544/Plant_7_Big2/Plant_7_Big\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"harvest:fiber\"}",
+          "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":62420236354205,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"outgoing:pickaxe\"}",
+          "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":62420253131411,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2/Pickaxe_Bronze\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"outgoing:pickaxe\"}",
+          "F18_RESOURCE_LIFETIME {\"event\":\"exiting\",\"instance_id\":62420253131411,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2/Pickaxe_Bronze\",\"physics_frame\":6355,\"process_frame\":2275,\"role\":\"outgoing:pickaxe\"}",
+          "F18_RESOURCE_LIFETIME {\"event\":\"exiting\",\"instance_id\":62420236354205,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2\",\"physics_frame\":6355,\"process_frame\":2275,\"role\":\"outgoing:pickaxe\"}"
+        ],
+        "SCRIPT ERROR: Trying to cast a freed object.": [
+          "EARNED WALK END phase=materials purpose=material route target=(59.01032, -0.417062, -53.53291) tolerance=1.65 budget=1858 start_frame=13132 end_frame=14481 start_player=(33.33486, -0.322436, -45.26517) player=(60.22439, -0.531985, -52.48141) arrived=true distance=1.6061178445816",
+          "EARNED WALK START phase=materials purpose=material route target=(60.07959, -0.40381, -54.45318) tolerance=1.5 budget=300 frame=14532 player=(59.93699, -0.49192, -52.7298)",
+          "EARNED WALK END phase=materials purpose=material route target=(60.07959, -0.40381, -54.45318) tolerance=1.5 budget=300 start_frame=14532 end_frame=14543 start_player=(59.93699, -0.49192, -52.7298) player=(59.95691, -0.467456, -52.97237) arrived=true distance=1.48588144779205",
+          "SCRIPT ERROR: Trying to cast a freed object.",
+          "          at: _snapshot (res://tests/helpers/f18_presentation_capture.gd:132)",
+          "          GDScript backtrace (most recent call first):",
+          "              [0] _snapshot (res://tests/helpers/f18_presentation_capture.gd:132)",
+          "              [1] _observe (res://tests/helpers/f18_presentation_capture.gd:86)",
+          "              [2] _process (res://tests/helpers/f18_presentation_capture.gd:60)",
+          "SCRIPT ERROR: Invalid access to property or key 'transition' on a base object of type 'Dictionary'.",
+          "          at: _observe (res://tests/helpers/f18_presentation_capture.gd:102)",
+          "          GDScript backtrace (most recent call first):"
+        ],
+        "SCRIPT ERROR: Invalid access to property or key 'transition' on a base object of type 'Dictionary'.": [
+          "              [0] _snapshot (res://tests/helpers/f18_presentation_capture.gd:132)",
+          "              [1] _observe (res://tests/helpers/f18_presentation_capture.gd:86)",
+          "              [2] _process (res://tests/helpers/f18_presentation_capture.gd:60)",
+          "SCRIPT ERROR: Invalid access to property or key 'transition' on a base object of type 'Dictionary'.",
+          "          at: _observe (res://tests/helpers/f18_presentation_capture.gd:102)",
+          "          GDScript backtrace (most recent call first):",
+          "              [0] _observe (res://tests/helpers/f18_presentation_capture.gd:102)",
+          "              [1] _process (res://tests/helpers/f18_presentation_capture.gd:60)",
+          "SCRIPT ERROR: Trying to cast a freed object.",
+          "          at: _snapshot (res://tests/helpers/f18_presentation_capture.gd:132)",
+          "          GDScript backtrace (most recent call first):",
+          "              [0] _snapshot (res://tests/helpers/f18_presentation_capture.gd:132)"
+        ]
+      },
+      "outcome": "Actual earned material route, paidWorkbench, authored gate/road deep walk, grounded/unstick0/confined0 and actual deep waystone touch PASS. Satchel HomeKey return did not reach ready Hall; full loop FAIL.",
+      "native_exit_limit": "Original ZIP has no exit_code file; do not infer native exit from workflow conclusion.",
+      "independent_source_review": "Observer stale-reference fix APPROVE: raw node Variants precede validity checks; no driver/timing/budget/gameplay changes. Native regression pending.",
+      "material_limit": "One materialnull follows Axe root/mesh tree exits at physics6236/process2253, preceding +4Stone completion. No Stone exits. Stronger Axe candidate; no offending RID or renderer-destructor causality proved. Shared cleanup remains coordinator-owned.",
+      "observer_failure": "1192 freed casts at snapshot132 stale glow and1191 cascading missing-transition errors; partial manifest then1200sample cap, not valid presentation acceptance.",
+      "evidence_limit": "Entire earned loop, warning/error cleanliness, durable Hall arrival/station/save-reload/portal-return and allsixF18 remain UNPROVEN. No rendered or audible acceptance."
     }
   ],
   "acceptance": {
@@ -5860,31 +6341,5 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": [
-    {
-      "id": 37101535389,
-      "display_title": "render f18-earned-headless-r9 @ ce5c6224567836c82191a8585423ea0987718329",
-      "head_branch": "tb/integration",
-      "head_sha": "12961eaaf0ff955f0bef45eb205e1388fa45f180",
-      "status": "in_progress",
-      "conclusion": null,
-      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101535389",
-      "checkout": "ce5c6224567836c82191a8585423ea0987718329",
-      "mode": "headless",
-      "scope": "Originalearnedloop, reviewedguidededroadwithsameoriginaltotalbudget/watchdog/floor/unstickguards plusintIDidempotentread-onlyresourceexitobserver. R8earlierStonevariation andoriginalengineerrorsretained; noNAV/budget/terrainfix.",
-      "runtime_verdict": "UNPROVEN pending original artifact"
-    },
-    {
-      "id": 37102718245,
-      "display_title": "render f18-fixture-teaching-r1 @ f9494ce9e4774a3233a81986579eaa0517789dea",
-      "head_branch": "tb/integration",
-      "head_sha": "79b03632901cff02ae292623d8d9a373f0943a20",
-      "status": "in_progress",
-      "conclusion": null,
-      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37102718245",
-      "checkout": "f9494ce9e4774a3233a81986579eaa0517789dea",
-      "script": "tests/smoke_net_f18_fixture_teaching.gd",
-      "scope": "Pre-admission actual lesson continuation only; no earned/co-op/travel credit."
-    }
-  ]
+  "pending_dispatches": []
 }

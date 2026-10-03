@@ -125,12 +125,14 @@ func _observe(drawn: bool) -> void:
 
 func _snapshot(key: Node, now: int, drawn: bool) -> Dictionary:
 	var owner: Node = INPUT_OWNER.current(get_tree())
-	var actor: Node3D = key.get("_actor") as Node3D if key != null else null
+	# Scene/visual cleanup can leave freed references in the retained presenter.
+	# Keep raw Variants until validity is checked; casting first itself errors.
+	var actor: Variant = key.get("_actor") if key != null else null
 	var live_actor: Node = get_tree().current_scene.get_node_or_null(^"Player") if get_tree().current_scene != null else null
-	var rig: Skeleton3D = key.get("_rig") as Skeleton3D if key != null else null
-	var prop: BoneAttachment3D = key.get("_prop") as BoneAttachment3D if key != null else null
-	var glow: OmniLight3D = key.get("_glow") as OmniLight3D if key != null else null
-	var audio: AudioStreamPlayer = key.get("_audio") as AudioStreamPlayer if key != null else null
+	var rig: Variant = key.get("_rig") if key != null else null
+	var prop: Variant = key.get("_prop") if key != null else null
+	var glow: Variant = key.get("_glow") if key != null else null
+	var audio: Variant = key.get("_audio") if key != null else null
 	var progress: Variant = null
 	var settings: Dictionary = key.get("_settings") if key != null else {}
 	if key != null and float(settings.get("raise_seconds", 0.0)) > 0.0:
@@ -156,7 +158,7 @@ func _snapshot(key: Node, now: int, drawn: bool) -> Dictionary:
 		"audio": _audio_info(audio), "remote_raises": _remote_info(key), "transition": _transition_info()}
 
 
-func _node_info(node: Node) -> Dictionary:
+func _node_info(node: Variant) -> Dictionary:
 	if not is_instance_valid(node): return {"present": false}
 	var result: Dictionary = {"present": true, "instance_id": node.get_instance_id(),
 		"path": str(node.get_path()) if node.is_inside_tree() else "", "class": node.get_class(),
@@ -167,7 +169,7 @@ func _node_info(node: Node) -> Dictionary:
 	return result
 
 
-func _audio_info(audio: AudioStreamPlayer) -> Dictionary:
+func _audio_info(audio: Variant) -> Dictionary:
 	if not is_instance_valid(audio): return {"present": false, "listened": false}
 	var stream: AudioStream = audio.stream
 	var bus_index: int = AudioServer.get_bus_index(audio.bus)

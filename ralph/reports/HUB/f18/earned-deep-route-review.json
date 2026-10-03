@@ -24,6 +24,42 @@
     "grants_or_pose_writes": false,
     "shared_navigator_edits": false
   },
-  "runtime_status": "UNPROVEN; corrected earned remote run pending",
-  "all_six_f18_criteria": "UNPROVEN"
+  "runtime_status": "R9 actual authored gate/road deep walk and deep touch PASS; entire earned loop fails at subsequent Home Key return. Original R9 and all errors retained in native-followups receipt/ZIP.",
+  "all_six_f18_criteria": "UNPROVEN",
+  "native_source": "ce5c6224567836c82191a8585423ea0987718329",
+  "native_run": 37101535389,
+  "actual_deep_walk": {
+    "actual_position": "(342.4232, 1.990416, 930.4442)",
+    "arrived": true,
+    "confined_resets": 0,
+    "grounded": true,
+    "headings": [
+      "(13.79, 0.0, 14.0)",
+      "(14.0, 0.0, 20.0)",
+      "(13.79, 0.85, 22.4)",
+      "(8.0, 0.0, 90.0)",
+      "(-40.0, 0.0, 180.0)",
+      "(-120.0, 0.0, 270.0)",
+      "(-230.0, 0.0, 330.0)",
+      "(-360.0, 0.0, 400.0)",
+      "(-430.0, 0.0, 508.0)",
+      "(-458.0, 0.0, 518.0)",
+      "(-466.0, 0.0, 540.0)",
+      "(-469.0, 0.0, 572.0)",
+      "(-443.0, 0.0, 600.0)",
+      "(-400.0, 0.0, 605.0)",
+      "(-345.0, 0.0, 610.0)",
+      "(-322.0, 0.0, 594.0)",
+      "(-190.0, 0.0, 650.0)",
+      "(-50.0, 0.0, 700.0)",
+      "(90.0, 0.0, 760.0)",
+      "(230.0, 0.0, 830.0)",
+      "(360.0, 0.0, 910.0)"
+    ],
+    "original_frame_budget": 97292,
+    "phase": "ordinary_walk",
+    "target": "(344.3, 1.983212, 929.6)",
+    "unstick_count_after": 0,
+    "unstick_count_before": 0
+  }
 }

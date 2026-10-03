@@ -1,0 +1,17 @@
+{
+  "scope": "F18 passive observer tolerates freed presenter visual references",
+  "parent_source": "1a4fcf8c3f7a4ee0091ab9f668098a96cf8e4846",
+  "original_failure_run": 37101535389,
+  "original_failure_artifact": 11266583903,
+  "reviewer": "independent GPT-6.1 Sol read-only",
+  "source_verdict": "APPROVE bounded observer fix and focused regression source",
+  "changes": [
+    "Raw actor/rig/prop/glow/audio Variants reach validity checks without premature casts.",
+    "Node/audio observation parameters accept raw Variants, including remote raise fields.",
+    "Detached actual HomeKey presenters regression frees all five fields and checks ten local/remote absent results plus complete transition snapshot."
+  ],
+  "no_changes_to": ["gameplay", "driver", "physics", "input", "flags", "travel guards", "budgets", "timers"],
+  "native_status": "NOT RUN",
+  "native_proof": "tests/smoke_f18_presentation_lifetime.gd",
+  "limits": "Component lifetime proof only. Original1192 freed casts/1191 cascading errors and one unresolved materialnull are retained; full earned travel, rendered/audio and allsixF18 acceptance remain UNPROVEN."
+}

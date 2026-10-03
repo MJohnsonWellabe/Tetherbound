@@ -4,7 +4,7 @@
   "reviewer": "independent GPT-6.1 Sol read-only",
   "source_verdict": "APPROVE peer continuation and focused native proof source",
   "focused_native_proof": "tests/smoke_net_f18_fixture_teaching.gd",
-  "native_status": "IN_PROGRESS; no original artifact/result yet",
+  "native_status": "PASS scoped original native proof; independent original-artifact review APPROVE",
   "prior_actual_failure": "F18 co-op fixture Home Key lesson retained ordinary input ownership",
   "checks": {
     "ordinary_harness_input": "existing F49 tap parses menu_confirm press/release, four process frames each",
@@ -37,5 +37,117 @@
     "script": "tests/smoke_net_f18_fixture_teaching.gd",
     "mode": "headless",
     "timeout_minutes": 15
+  },
+  "native_result": {
+    "id": 37102718245,
+    "display_title": "render f18-fixture-teaching-r1 @ f9494ce9e4774a3233a81986579eaa0517789dea",
+    "head_sha": "79b03632901cff02ae292623d8d9a373f0943a20",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37102718245",
+    "checkout": "f9494ce9e4774a3233a81986579eaa0517789dea",
+    "artifact_id": 11266913471,
+    "raw_artifact": "fixture-teaching-r1-remote.zip",
+    "bytes": 168860,
+    "sha256": "bc1eff43bf032dcfecee88224e2ea59aaf566403ca206d3da4844e64050a9ee3",
+    "native_exit_code": "0",
+    "logs": {
+      "net-runs/net-run-local-5265825/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+        "errors": {},
+        "warnings": {
+          "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+          "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+        }
+      },
+      "net-runs/net-run-local-5265825/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+        "errors": {},
+        "warnings": {
+          "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+          "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+        }
+      },
+      "net-runs/net-run-local-5265825/peer-0.log": {
+        "errors": {},
+        "warnings": {
+          "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+          "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+        }
+      },
+      "net-runs/net-run-local-5265825/peer-1.log": {
+        "errors": {},
+        "warnings": {
+          "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+          "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+        }
+      },
+      "run.log": {
+        "errors": {},
+        "warnings": {}
+      },
+      "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+        "errors": {},
+        "warnings": {}
+      }
+    },
+    "peer_teaching": [
+      {
+        "peer": 0,
+        "verdict": "PASS",
+        "teaching": {
+          "budget_frames": 180.0,
+          "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+          "earned_opening_credit": false,
+          "frames_used": 37.0,
+          "menu_confirm_presses": [
+            {
+              "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+              "line": 0.0,
+              "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+              "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa."
+            },
+            {
+              "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+              "line": 1.0,
+              "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+              "text": "It takes you to the Crossing Hall for free, with no cooldown. Finish a fight or conversation first, leave the water, and land before using it. You can cancel the raise.\n\nNext: Catch a second creature, then return to Grandpa."
+            }
+          ]
+        },
+        "character_id": "character-259cfd85bed87a13ecd2a9f3526de875",
+        "portable_disk_has_ack": true,
+        "home_key_count": 1.0
+      },
+      {
+        "peer": 1,
+        "verdict": "PASS",
+        "teaching": {
+          "budget_frames": 180.0,
+          "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+          "earned_opening_credit": false,
+          "frames_used": 49.0,
+          "menu_confirm_presses": [
+            {
+              "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+              "line": 0.0,
+              "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+              "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa."
+            },
+            {
+              "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+              "line": 1.0,
+              "panel": "/root/Game/OnboardingLessons/@CanvasLayer@67081",
+              "text": "It takes you to the Crossing Hall for free, with no cooldown. Finish a fight or conversation first, leave the water, and land before using it. You can cancel the raise.\n\nNext: Catch a second creature, then return to Grandpa."
+            }
+          ]
+        },
+        "character_id": "character-21b9a2784241390597dec6b7da0cebd5",
+        "portable_disk_has_ack": true,
+        "home_key_count": 1.0
+      }
+    ],
+    "assertions": 17,
+    "outcome": "Scoped PASS: actual two-line Continue input, production acknowledgement/input release and fixture save for both peers; exit0/223s; no engine/script errors.",
+    "independent_review": "GPT-6.1 Sol audited original ZIP and both raw portable character.json payloads: APPROVE scoped teaching seam only.",
+    "evidence_limit": "Disconnected fixture setup only; no earned/admission/travel/co-op/reload/render/audio acceptance. Nine warnings per peer: interpolation1/Torch8, duplicated in peer Godot logs. Manifest file list does not encode source SHA; API/dispatch proves source binding."
   }
 }
