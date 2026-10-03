@@ -25,7 +25,7 @@ actual endgame rematches pass, then ordinary bounty-board navigation fails befor
 Solo-r12/r13 authoredroadwalk succeeds. Exactr13 trace: playergrounded/boardLOStrue/actionableboardoffer
 distance2.2524, butstoredarbiter HaldaGreetwinner distance2.2921. Oldproof awaitedphysicssettling only;
 arbiterpublishes onidleframes. Reviewed `31003a424b` awaits twoordinaryidleedges before unchangedprovider/input
-checks; affectedreplay pending. Actual bounty screen/three rows remain unproved, #3 OPEN. Earlier r10 misleading green with
+checks; solo-r14 (37094641926) live. Actual bounty screen/three rows remain unproved, #3 OPEN. Earlier r10 misleading green with
 three script errors is preserved as FAIL; reviewed7dc/11aa now produce clean retained snapshot/reload checks.
 Two-peer-r4 saves host homecoming then times out its command. Net-r5 on29bc cleanly passes host ending,
 guarded credits1ACK and completed repeat; navigation takes143.303s and11ordinarytaps38.138s. The inherited300s
@@ -33,7 +33,8 @@ is the ENTIRE post-hello proof allowance, not per-command; it expires as guestHo
 total-proof allowance1500s `b066552af9` passes independent source review; actualnet-r6 (37092788092) again passes host ending/revisit, then guest HomeKey times out its205s command.
 Host disk has guest portal_arrival pending, guest portable disk lacks the new receipt; fresh668ms heartbeat,
 no globalfatal or engine-script errors. Owner apply/save/ACK remains unproved; reviewedF20-only raw observer `e39a361e7c` has
-affectednet-r7 (37093999890) live; per-command205s/readiness180s/productionACK8s remain unchanged.
+actualnet-r7 (37093999890) hits hostGrandpa205s deadline beforeguestHome; nativecreditsopens duringteardown,
+coordinatorcommand notPASS. Reviewed `81318b919d` scopes nextdiagnostic to twoactualpeers/guestHome only; full#4stillrequired; per-command205s/readiness180s/productionACK8s remain unchanged.
 #4 remains OPEN. Arch-r5 functional16/0 creates files but image lacks visible arch/glow and mixed audio does not
 isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. #2 remains OPEN;
 no further blind render retry or shared-world edit. No local engine/GPU while the owner plays Valheim. Exact original
