@@ -1,0 +1,30 @@
+{
+  "base": "3313852380fc17e9a4fc6782f04828b1cb62a902",
+  "source": "b24864060e5f66837a885868e7292ae4f5fd2acd",
+  "path": "scripts/net/foundation_portal_arrival.gd",
+  "helpers_exact_source": [
+    "_supported_capsule",
+    "_walkable_contacts",
+    "_contacts_on_support",
+    "_capsule_landing",
+    "_cast_landing_y",
+    "_landing_height",
+    "_landing_hit"
+  ],
+  "scope": "Only actual physical floor/full capsule cast/scalar rounding/final support and actual destination-world binding; no HomeKey fade/save retry/runtime flags/session/passive/terrain resident changes.",
+  "runtime": "Extracted candidate requires coordinator parser/native split run; feature exact helpers natively proven on b248, not a claim this extracted root candidate ran.",
+  "evidence": {
+    "arrival_run": 37090828863,
+    "arrival_checks": 49,
+    "resident_run": 37090830963,
+    "resident_checks": 28,
+    "rounding_run": 37090832740,
+    "rounding_tests": 2,
+    "rounding_assertions": 7
+  },
+  "retained": "Original owner/permit/envelope/controller generation/collision object/shape/complete own-RID-only intersection/contact/save ACK fences remain; final support is strengthened.",
+  "candidate_normalized_lf_sha256": "08f92c69072a72466c658a26ac7847b3b347c1905f6e7833dc36b06546792807",
+  "candidate_delivered_crlf_sha256": "774253e43c747e59003638f9e8aa9002f9b32edda12da78a91fba2dd70e1753a",
+  "independent_source_review": "PASS: exact seven helper bodies verified; original authority/controller/contact/save fences retained; remote host validator unchanged; extracted candidate native proof pending.",
+  "patch_application": "git apply --check and actual apply against isolated exact331 fixture passed; normalized/byte result matched generated candidate. Initial checks on wrong current feature source and PowerShell reconstructed baseline failed, corrected by exact git subprocess source; no root files changed."
+}
