@@ -1,0 +1,20 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_tournament_ground_presentation.gd,test_realm_world_components.gd: 2 of 730 test files
+  ok    test_realm_world_components.gd :: test_active_portal_runtime_retires_gate_even_with_an_earned_key
+  ok    test_realm_world_components.gd :: test_components_build_their_world_contract_without_external_assets
+  ok    test_realm_world_components.gd :: test_gate_never_unlocks_without_the_durable_key_flag
+  ok    test_realm_world_components.gd :: test_gate_passes_realm_and_authored_entry_to_game_router
+  ok    test_realm_world_components.gd :: test_gate_unlock_retains_key_and_persists_its_own_flag
+  ok    test_realm_world_components.gd :: test_home_circle_presentation_uses_the_large_crescent_mesh
+  ok    test_realm_world_components.gd :: test_inactive_portals_preserve_real_gate_unlock_and_route
+  ok    test_realm_world_components.gd :: test_shrine_exposes_all_four_durable_states
+  ok    test_tournament_ground_presentation.gd :: test_equipment_is_asymmetric_installed_and_outside_the_fight_floor
+  ok    test_tournament_ground_presentation.gd :: test_equipment_night_light_has_an_installed_visible_source_and_safe_footprint
+  ok    test_tournament_ground_presentation.gd :: test_presentation_is_visual_only_and_mounted_by_the_existing_tournament
+  ok    test_tournament_ground_presentation.gd :: test_the_tournament_field_route_is_read_from_the_real_roads
+  ok    test_tournament_ground_presentation.gd :: test_tournament_cloth_and_ring_are_not_team_tether_red
+  ok    test_tournament_ground_presentation.gd :: test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring
+
+14 tests, 193 assertions, 0 failed
+exit=0 took=5s

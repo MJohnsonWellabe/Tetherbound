@@ -1,0 +1,21 @@
+{
+  "source": "12b0553e7a966476b96a6544eb2151d3f2947d58",
+  "run": 37082489973,
+  "job": 111085819098,
+  "artifact": 11259546336,
+  "passed": false,
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 1032.267,
+  "script_error_count": 0,
+  "error_count": 1,
+  "scope": "fresh title/starter/catches; actual4paidMira purchases coin140to28 potion3to7 partyunchanged; fourthtrainingloss beforecamp/rest/tournament; no M1pass",
+  "hashes": {
+    "job.log": "a83d406ba3975879cda486781ccecc675dfd4a42115714c1f0847022f4c5e18b",
+    "native.log": "895b1be8d7d012053344774f61e732819ca7aed9d4e22c22bd8fa25c13c4489d",
+    "request.json": "067dcadb1354f96343d3b3883705edfd80a3ccd6b22165f607976d098f3a8295",
+    "runtime-artifact.zip": "8e9a2313f28f9b6b8397b098620d5cb6b138b48ce3a758d4a1388c2ebecdd769",
+    "workflow-artifacts.json": "335f8807d617de15f958d156d97ede5d363293dac5f7385c51c1dbb8b96df6f0",
+    "workflow-jobs.json": "a5192411500383ab92b8ba649068cc3300398c3e05b7787ec63336c1dd3b9f61"
+  }
+}
