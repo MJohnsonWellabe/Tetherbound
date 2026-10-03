@@ -126,3 +126,125 @@ func test_capture_checkpoint_binds_original_offer_without_granting_its_creature(
 	var unsupported := capture.duplicate(true)
 	unsupported.duties[0].action = "wild_capture"
 	assert_true(PREP.make(unsupported, unsupported.duties[0], f.before, 0, "current-epoch", f.cursor, DATA.TXN).is_empty())
+
+func _action_fixture() -> Dictionary:
+	var player: RefCounted = GROOM.new()._player()
+	var cfg: Dictionary = E.config()
+	player.inventory.add(str(cfg.tether_candy_item), int(cfg.tether_candy_cost))
+	var before: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(player.save_data())
+	var cursor := REPLAY.begin(before, {})
+	var applied := REPLAY.apply(cursor, {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
+		"uids": [before.party[0].uid]}, {"max_elapsed": 1.0, "max_speed": 20.0, "realm": "meadows", "landmarks": {}})
+	assert_true(applied.ok)
+	var request := {"op": "altar_spend", "session_epoch": "current-epoch", "world_namespace": "resource-namespace",
+		"character_id": DATA.CHARACTER, "station_key": "altar:meadows:actual",
+		"intent": {"spend_id": "checkpoint-spend", "creature_uid": before.party[0].uid,
+			"expected_level": before.party[0].level, "payment_item": str(cfg.tether_candy_item), "expected_character_revision": 0}}
+	var context := {"character_id": DATA.CHARACTER, "expected_revision": 0, "source_key": request.station_key,
+		"station_id": "altar", "actual_altar": true, "in_range": true, "in_combat": false, "foundation_runtime_authorized": true}
+	var prepared := PREP.make_action(request, context, before, 0, "current-epoch", "resource-slot", applied.cursor, DATA.TXN, "altar_spend")
+	assert_false(prepared.is_empty())
+	var authority := AUTH.new()
+	assert_true(authority.bind_world("resource-namespace"))
+	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).ok)
+	return {"before": before, "cursor": applied.cursor, "request": request, "context": context, "prepared": prepared, "authority": authority}
+
+func test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_owner_state() -> void:
+	var f := _action_fixture()
+	assert_true(PREP.valid_action_host(f.prepared, f.cursor))
+	assert_false(PREP.valid(f.prepared, {}), "a request never pretends to be a retained event")
+	assert_true(PREP.owner_plan(f.cursor.state, f.prepared, {}, {}).ok)
+	assert_false(PREP.owner_plan(f.before, f.prepared, {}, {}).ok)
+	var changed: Dictionary = f.prepared.duplicate(true)
+	changed.request.intent.expected_level += 1
+	changed.hash = PREP.preparation_hash(changed)
+	assert_false(PREP.valid_action(changed), "original request hash binds the full quote")
+	changed = f.prepared.duplicate(true)
+	changed.after.party[0].xp += 1
+	changed.hash = PREP.preparation_hash(changed)
+	assert_false(PREP.valid_action(changed), "request checkpoint cannot grant progression")
+	var request: Dictionary = f.request.duplicate(true)
+	request.op = "station_craft"
+	request.revision = 0
+	request.intent = {"recipe_id": "fixture-recipe", "craft_id": DATA.TXN}
+	for action: String in ["station_craft", "feast_cook", "feast_feed", "relic_hang"]:
+		request.op = action
+		assert_false(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN).is_empty(), action)
+	request.op = "arbitrary_action"
+	assert_true(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN).is_empty())
+	var chest := request.duplicate(true)
+	chest.op = "master_chest"
+	chest.station_key = "master:meadows_master"
+	chest.intent = {"master_id": "meadows_master"}
+	var chest_context: Dictionary = f.context.duplicate(true)
+	chest_context.source_key = "master_chest:meadows_master"
+	chest_context.master_id = "meadows_master"
+	assert_false(PREP.make_action(chest, chest_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN).is_empty(), "actual request station and canonical chest source have distinct exact prefixes")
+	chest_context.master_id = "another_master"
+	assert_true(PREP.make_action(chest, chest_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN).is_empty())
+	request.op = "refine_start"
+	request.revision = -1
+	request.intent = {"recipe_id": "fixture-recipe", "amount": 1}
+	var context: Dictionary = f.context.duplicate(true)
+	assert_true(PREP.make_action(request, context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "manual_refine").is_empty())
+	context.merge({"completed_manual_refine": true, "manual_unit_ticket": DATA.TXN,
+		"manual_unit_plan": {"recipe_id": "fixture-recipe", "fixture": "host-verified-completed-unit"}})
+	assert_false(PREP.make_action(request, context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "manual_refine").is_empty())
+	request = f.request.duplicate(true)
+	request.op = "altar_trait"
+	request.intent = {"action_id": DATA.TXN, "action": "release", "creature_uid": f.before.party[0].uid,
+		"trait_id": "", "slot": -1, "payment_item": "", "expected_character_revision": 0}
+	assert_false(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
+	request.intent.expected_character_revision = 1
+	assert_true(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
+
+func test_request_cas_preserves_quote_then_original_altar_stage_advances_once_and_retries() -> void:
+	const TEACHING := preload("res://scripts/creatures/teaching.gd")
+	const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+	var f := _action_fixture()
+	var authority: RefCounted = f.authority
+	var original_request: PackedByteArray = var_to_bytes(f.request)
+	assert_false(authority.reserve_research_preparation(DATA.CHARACTER, f.prepared, {}), "packet alone has no local replay capability")
+	assert_true(authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, f.prepared, {}, f.cursor))
+	assert_eq(authority.stage_portal_debit(DATA.CHARACTER, "water", "unused").code, "transaction_busy")
+	assert_false(authority.commit_owner_passive_checkpoint(DATA.CHARACTER, "a".repeat(64)))
+	assert_true(authority.commit_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
+	assert_eq(authority.revision(DATA.CHARACTER), 0, "passive CAS preserves the original quoted transaction revision")
+	assert_true(PREP.exact(authority.state(DATA.CHARACTER), f.cursor.state))
+	for attempt: int in range(2):
+		assert_true(authority.commit_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
+		var proposal := E.stage_core_spend(authority.state(DATA.CHARACTER), DATA.CHARACTER, 0, f.request.intent,
+			E.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+		assert_true(proposal.get("ok") == true, str(proposal))
+		if proposal.get("ok") != true: return
+		var stage: Dictionary = authority.stage_creature_training(DATA.CHARACTER, "altar_spend", f.request.intent.spend_id,
+			0, f.request.intent, authority.state(DATA.CHARACTER), proposal.state, proposal.receipt)
+		assert_true(stage.get("ok") == true, str(stage))
+		if stage.get("ok") != true: return
+		assert_eq(authority.revision(DATA.CHARACTER), 1)
+		var row := E.next_training_delivery("resource-slot", "resource-namespace", "current-epoch", stage,
+			null, E.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+		assert_false(row.is_empty(), "original immutable v1 journal validates unchanged quoted intent")
+		assert_eq(var_to_bytes(f.request), original_request)
+		if attempt == 0:
+			assert_true(authority.finish_creature_training(stage, false))
+			assert_eq(authority.revision(DATA.CHARACTER), 0)
+			assert_true(PREP.exact(authority.state(DATA.CHARACTER), f.cursor.state))
+			assert_true(authority.retain_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
+		else:
+			assert_true(authority.finish_creature_training(stage, true))
+			assert_true(authority.cancel_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
+			assert_false(authority.commit_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
+			assert_eq(authority.revision(DATA.CHARACTER), 1)
+
+func test_same_revision_request_checkpoint_rejects_stale_before_and_other_transaction_locks() -> void:
+	var f := _action_fixture()
+	assert_true(f.authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, f.prepared, {}, f.cursor))
+	assert_true(f.authority.commit_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
+	assert_true(f.authority.cancel_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
+	assert_eq(f.authority.revision(DATA.CHARACTER), 0)
+	assert_false(f.authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, f.prepared, {}, f.cursor), "same revision never permits a stale full-record baseline")
+	for lock: String in ["_training_stages", "_training_pending", "_portal_stages", "_loadout_pending", "_vitals_pending", "_vitals_stages", "_groom_preparations"]:
+		var separate := _action_fixture()
+		separate.authority.set(lock, {DATA.CHARACTER: {"fixture": true}})
+		assert_false(separate.authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, separate.prepared, {}, separate.cursor), lock)

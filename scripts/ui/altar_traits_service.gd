@@ -5,6 +5,7 @@ extends Node
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 const PANEL := preload("res://scripts/ui/altar_traits_panel.gd")
 signal action_completed(result: Dictionary)
+signal quote_updated(station_key: String, uid: String)
 var _game: Node
 var _session: Node
 var _panel: CanvasLayer
@@ -12,6 +13,7 @@ var _pending: Dictionary = {}
 var _original_context: Dictionary = {}
 var _retry_left := 0.0
 var _connection := Callable()
+var _quote_connection := Callable()
 var _return_route := Callable()
 
 func configure_return_route(route: Callable) -> void:
@@ -50,18 +52,30 @@ func _bind() -> bool:
 	if candidate != _session:
 		if is_instance_valid(_session) and _connection.is_valid() and _session.is_connected("altar_trait_completed",_connection):
 			_session.disconnect("altar_trait_completed",_connection)
+		if is_instance_valid(_session) and _quote_connection.is_valid() and _session.is_connected("altar_trait_quote_completed", _quote_connection):
+			_session.disconnect("altar_trait_quote_completed", _quote_connection)
 		_session = candidate
 		_connection = _completed.bind(_session)
 		_session.connect("altar_trait_completed",_connection)
+		if _session.has_signal("altar_trait_quote_completed"):
+			_quote_connection = _quote_completed.bind(_session)
+			_session.connect("altar_trait_quote_completed", _quote_connection)
 	return true
 
 func _exit_tree() -> void:
 	if is_instance_valid(_session) and _connection.is_valid() and _session.is_connected("altar_trait_completed",_connection):
 		_session.disconnect("altar_trait_completed",_connection)
+	if is_instance_valid(_session) and _quote_connection.is_valid() and _session.is_connected("altar_trait_quote_completed", _quote_connection):
+		_session.disconnect("altar_trait_quote_completed", _quote_connection)
+
+func _quote_completed(station_key: String, uid: String, source: Node) -> void:
+	if source == _session and _pending.is_empty(): quote_updated.emit(station_key, uid)
 
 func open(station_key: String) -> bool:
 	if not _pending.is_empty() or station_key.is_empty() or not _bind() \
 		or _session.call("altar_station_available",station_key) != true: return false
+	if _session.has_method("invalidate_altar_trait_quote"):
+		_session.call("invalidate_altar_trait_quote")
 	if not is_instance_valid(_panel):
 		_panel = PANEL.new()
 		add_child(_panel)

@@ -147,9 +147,11 @@ func reserve_research_preparation(character: String, prepared: Dictionary, retai
 ## never a value read from a peer packet. The common reservation keeps every
 ## existing transaction exclusion and original/retry guard in one place.
 func reserve_owner_passive_checkpoint(character: String, prepared: Dictionary, retained: Dictionary, cursor: Dictionary) -> bool:
+	var codec := preload("res://scripts/net/owner_passive_preparation.gd")
+	var valid_cursor: bool = codec.valid_action_host(prepared, cursor) if prepared.get("kind") == codec.ACTION_KIND else codec.valid_host(prepared, retained, cursor)
 	if not _records.has(character) or prepared.get("character_id") != character \
 		or prepared.get("world_namespace") != _world_instance \
-		or not preload("res://scripts/net/owner_passive_preparation.gd").valid_host(prepared, retained, cursor): return false
+		or not valid_cursor or (prepared.get("kind") == codec.ACTION_KIND and not retained.is_empty()): return false
 	for realm: String in discovered_landmarks(character):
 		for id: String in discovered_landmarks(character)[realm]:
 			if not prepared.discoveries.get(realm, []).has(id): return false
@@ -170,7 +172,7 @@ func cancel_owner_passive_checkpoint(character: String, token_hash: String) -> b
 
 func _owner_passive_original(character: String, token_hash: String) -> Dictionary:
 	var original: Dictionary = _research_preparations.get(character, {})
-	if original.get("prepared", {}).get("kind") != "owner_passive_preparation" \
+	if original.get("prepared", {}).get("kind") not in ["owner_passive_preparation", "owner_action_passive_preparation"] \
 		or original.prepared.get("hash") != token_hash: return {}
 	return original
 
@@ -197,7 +199,7 @@ func commit_research_preparation(character: String, prepared: Dictionary, retain
 		or _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character): return false
 	var original: Dictionary = _research_preparations[character]
 	if original.committed:
-		return revision(character) == int(prepared.revision) + 1 and _research_state_equivalent(prepared, state(character), prepared.after)
+		return revision(character) == _research_applied_revision(prepared) and _research_state_equivalent(prepared, state(character), prepared.after)
 	if not _research_reserved_state_matches(character, prepared): return false
 	if not original.applied:
 		var discovered := discovered_landmarks(character)
@@ -206,7 +208,7 @@ func commit_research_preparation(character: String, prepared: Dictionary, retain
 			for id: String in prepared.discoveries[realm]:
 				if not discovered[realm].has(id): discovered[realm].append(id)
 		if not preload("res://scripts/net/groom_passive_sync.gd").discovery_shape(discovered): return false
-		_replace_record(character, int(prepared.revision) + 1, prepared.after.duplicate(true))
+		_replace_record(character, _research_applied_revision(prepared), prepared.after.duplicate(true))
 		_records[character].discovered_landmarks = discovered
 		original.applied = true
 	original.committed = true
@@ -216,7 +218,7 @@ func retain_research_preparation(character: String, prepared: Dictionary, retain
 	if not _research_original_matches(character, prepared, retained) or _research_other_transaction(character) \
 		or _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character) \
 		or _research_preparations[character].applied != true \
-		or revision(character) != int(prepared.revision) + 1 or not _research_state_equivalent(prepared, state(character), prepared.after): return false
+		or revision(character) != _research_applied_revision(prepared) or not _research_state_equivalent(prepared, state(character), prepared.after): return false
 	# Exact retained retry is idempotent; an unreserved candidate cannot create it.
 	_research_preparations[character].committed = false
 	return true
@@ -229,9 +231,11 @@ func cancel_research_preparation(character: String, hash: String) -> bool:
 func _research_preparation_valid(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
 	if not _records.has(character) or prepared.get("character_id") != character \
 		or prepared.get("world_namespace") != _world_instance: return false
-	if prepared.get("kind") == "owner_passive_preparation":
+	if prepared.get("kind") in ["owner_passive_preparation", "owner_action_passive_preparation"]:
 		# Only the explicit host cursor reservation can introduce this variant.
 		var cursor: Dictionary = _research_preparations.get(character, {}).get("owner_cursor", {})
+		if prepared.get("kind") == "owner_action_passive_preparation":
+			return retained.is_empty() and preload("res://scripts/net/owner_passive_preparation.gd").valid_action_host(prepared, cursor)
 		return preload("res://scripts/net/owner_passive_preparation.gd").valid_host(prepared, retained, cursor)
 	return preload("res://scripts/net/research_passive_preparation.gd").valid(prepared, retained)
 
@@ -242,11 +246,17 @@ func _research_original_matches(character: String, prepared: Dictionary, retaine
 
 func _research_reserved_state_matches(character: String, prepared: Dictionary) -> bool:
 	if _research_preparations.get(character, {}).get("applied") == true:
-		return revision(character) == int(prepared.revision) + 1 and _research_state_equivalent(prepared, state(character), prepared.after)
+		return revision(character) == _research_applied_revision(prepared) and _research_state_equivalent(prepared, state(character), prepared.after)
 	return revision(character) == prepared.revision and _research_state_equivalent(prepared, state(character), prepared.before)
 
+func _research_applied_revision(prepared: Dictionary) -> int:
+	# Request checkpoints preserve the original quoted action revision. The
+	# synchronous real transaction advances it once; exact full-record CAS and
+	# the shared reservation prevent another baseline or writer using this slot.
+	return int(prepared.revision) if prepared.get("kind") == "owner_action_passive_preparation" else int(prepared.revision) + 1
+
 func _research_state_equivalent(prepared: Dictionary, left: Dictionary, right: Dictionary) -> bool:
-	if prepared.get("kind") == "owner_passive_preparation":
+	if prepared.get("kind") in ["owner_passive_preparation", "owner_action_passive_preparation"]:
 		return preload("res://scripts/net/owner_passive_preparation.gd").exact(left, right)
 	return equivalent(left, right)
 

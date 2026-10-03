@@ -83,6 +83,8 @@ func actor_context(actor: CharacterBody3D, uid: String) -> Dictionary:
 		var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, source.character_id), {})
 		if row.get("action") == "station_craft" and row.get("receipt") == pending.receipt \
 			and ESSENCE._equivalent(row.get("intent"), pending.intent): modal_open = false
+		elif pending.get("phase") == "preparing" and owner.call("_owner_passive_service").call("pending_manual_unit", source.character_id, ticket) == true:
+			modal_open = false # The same completed unit's exact owner checkpoint owns this fence.
 	return {"world": game.get("world").call("save_data"),
 		"character": owner.get("_character_authority").call("state", source.character_id),
 		"modal_open": modal_open,
@@ -104,7 +106,8 @@ func start(peer: int, envelope: Dictionary) -> Dictionary:
 	var result: Dictionary = manual.call("start_refining", actor, intent.recipe_id, intent.amount)
 	if result.get("started") == true:
 		_channels[manual.get_instance_id()] = {"peer": peer, "manual": weakref(manual),
-			"world": weakref(owner.call("_game").get("world")), "epoch": owner.call("_altar_current_epoch")}
+			"world": weakref(owner.call("_game").get("world")), "epoch": owner.call("_altar_current_epoch"),
+			"request": envelope.duplicate(true)}
 	return result
 
 func commit_unit(plan: Dictionary, ticket: String, actor: CharacterBody3D) -> Dictionary:
@@ -133,6 +136,22 @@ func commit_unit(plan: Dictionary, ticket: String, actor: CharacterBody3D) -> Di
 	context.manual_unit_ticket = ticket
 	context.recipe_known = true # The exact four current source recipes have no personal prerequisites.
 	var intent := {"recipe_id": plan.recipe_id, "craft_id": ticket}
+	if peer != owner.call("local_peer_id"):
+		var channel: Dictionary = _channels.get(manual.get_instance_id(), {})
+		if channel.get("peer") != peer or not channel.get("request") is Dictionary: return {}
+		context.manual_unit_plan = plan.duplicate(true)
+		var preview := ACTIONS.stage(owner.get("_character_authority").call("state", context.character_id),
+			int(context.expected_revision), "station_craft", intent, context,
+			preload("res://scripts/net/character_record_rules.gd").errors)
+		if preview.get("ok") != true:
+			preview.resolved = true
+			return unit_verdict(ticket, plan, preview)
+		_pending[ticket] = {"peer": peer, "manual": weakref(manual), "world": weakref(game.get("world")),
+			"epoch": owner.call("_altar_current_epoch"), "intent": intent, "plan": plan.duplicate(true),
+			"receipt": "", "phase": "preparing", "request": channel.request.duplicate(true)}
+		var ready: Dictionary = owner.call("_owner_passive_service").call("action_gate", peer,
+			"manual_refine", channel.request, context)
+		if ready.get("ok") != true: return unit_verdict(ticket, plan, ready)
 	var result := ACTIONS.commit(owner.get("_character_authority"), writer, peer, context.character_id,
 		int(context.expected_revision), "station_craft", intent, context)
 	if result.get("durable") != true:
@@ -145,6 +164,33 @@ func commit_unit(plan: Dictionary, ticket: String, actor: CharacterBody3D) -> Di
 		_pending[ticket] = {"peer": peer, "manual": weakref(manual), "world": weakref(world),
 			"epoch": owner.call("_altar_current_epoch"), "intent": intent, "plan": plan.duplicate(true), "receipt": row.get("receipt", "")}
 	return unit_verdict(ticket, plan, decision)
+
+## Called synchronously only after this original unit's exact owner BOOL/CAS.
+## Re-resolve the live actor, Forge, completed ticket and full plan in commit_unit.
+func commit_prepared(peer: int, request: Dictionary, context: Dictionary) -> Dictionary:
+	var ticket := str(context.get("manual_unit_ticket", ""))
+	var original: Dictionary = _pending.get(ticket, {})
+	if original.is_empty() or original.get("phase") != "preparing" or original.peer != peer \
+		or not preload("res://scripts/net/owner_passive_preparation.gd").exact(original.request, request) \
+		or not preload("res://scripts/net/owner_passive_preparation.gd").exact(original.plan, context.get("manual_unit_plan")):
+		return {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true, "code": "refining_original_changed"}
+	var verdict := commit_unit(original.plan, ticket, _body(peer))
+	var owner := session()
+	var world: RefCounted = owner.call("_game").get("world")
+	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, original.plan.character_id), {})
+	if row.get("action") == "station_craft" and ESSENCE._equivalent(row.get("intent"), original.intent):
+		return owner.call("_foundation_decision", peer, row)
+	if verdict.is_empty() or verdict.get("pending") == false:
+		var code := str(verdict.get("reason", "refining_source_changed"))
+		if code in ["training_journal_failed", "world_not_prepared", "world_save_failed", "stage_changed", "fallback_busy", "character_busy", "transaction_busy"]:
+			return ACTIONS.deny(code)
+		var manual: Node = original.manual.get_ref()
+		if manual != null:
+			manual.call("resolve_pending_unit", unit_verdict(ticket, original.plan, {"ok": false, "resolved": true, "code": code}))
+		_pending.erase(ticket)
+		return {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true,
+			"code": code}
+	return ACTIONS.deny(str(verdict.get("reason", "refining_original_pending")))
 
 static func unit_verdict(ticket: String, plan: Dictionary, decision: Dictionary) -> Dictionary:
 	var saved: bool = decision.get("ok") == true and decision.get("saved") == true
@@ -176,6 +222,12 @@ func _process(delta: float) -> void:
 			or original.epoch != owner.call("_altar_current_epoch") \
 			or original.plan.character_id != owner.call("_authority_character", original.peer):
 			_pending.erase(ticket)
+			continue
+		if original.get("phase") == "preparing":
+			var verdict := commit_unit(original.plan, ticket, _body(original.peer))
+			if not verdict.is_empty() and verdict.get("pending") == false:
+				manual.call("resolve_pending_unit", verdict)
+				_pending.erase(ticket)
 			continue
 		var world: RefCounted = game.get("world")
 		var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, original.plan.character_id), {})

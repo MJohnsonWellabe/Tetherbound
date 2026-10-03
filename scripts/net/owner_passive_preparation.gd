@@ -9,6 +9,8 @@ const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const EVENT := preload("res://scripts/net/foundation_event.gd")
 const PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
 const KIND := "owner_passive_preparation"
+const ACTION_KIND := "owner_action_passive_preparation"
+const ACTION_FIELDS := ["version", "kind", "character_id", "world_id", "world_namespace", "session_epoch", "source_kind", "request", "request_hash", "host_context", "preparation_id", "revision", "before", "after", "discoveries", "input_prefix_hash", "final_sequence", "hash"]
 const FIELDS := ["version", "kind", "character_id", "world_id", "world_namespace", "session_epoch", "retained_event", "duty", "duty_hash", "preparation_id", "revision", "before", "after", "discoveries", "input_prefix_hash", "final_sequence", "hash"]
 
 static func make(retained: Dictionary, duty: Dictionary, before: Dictionary, revision: int,
@@ -26,6 +28,94 @@ static func make(retained: Dictionary, duty: Dictionary, before: Dictionary, rev
 
 static func fingerprint(value: Dictionary) -> String:
 	return BASE.fingerprint(value)
+
+## A real authenticated player request is a different source from a retained
+## FoundationEvent. Context is host-derived; packet validation cannot prove it.
+static func make_action(request: Dictionary, host_context: Dictionary, before: Dictionary,
+		revision: int, epoch: String, world_id: String, cursor: Dictionary,
+		preparation_id: String, source_kind: String = "foundation_request") -> Dictionary:
+	if not cursor.get("state") is Dictionary or not cursor.get("discovered") is Dictionary: return {}
+	var prepared := {"version": 1, "kind": ACTION_KIND, "character_id": before.get("character_id"),
+		"world_id": world_id, "world_namespace": request.get("world_namespace"), "session_epoch": epoch,
+		"source_kind": source_kind, "request": request.duplicate(true), "request_hash": fingerprint(request),
+		"host_context": host_context.duplicate(true), "preparation_id": preparation_id, "revision": revision,
+		"before": before.duplicate(true), "after": cursor.state.duplicate(true),
+		"discoveries": cursor.discovered.duplicate(true), "input_prefix_hash": cursor.get("prefix_hash", ""),
+		"final_sequence": cursor.get("sequence", -1)}
+	prepared.hash = preparation_hash(prepared)
+	return prepared if valid_action_host(prepared, cursor) else {}
+
+static func valid_action(raw: Variant) -> bool:
+	if not raw is Dictionary or not _fields(raw, ACTION_FIELDS): return false
+	if not E._integer(raw.version, 1, 1) or raw.kind != ACTION_KIND: return false
+	for field: String in ["character_id", "world_id", "world_namespace", "session_epoch"]:
+		if not E._opaque_id(raw[field]): return false
+	if not BASE._hex(raw.preparation_id, 32) or not BASE._hex(raw.hash, 64) \
+		or not BASE._hex(raw.request_hash, 64) or not BASE._hex(raw.input_prefix_hash, 64) \
+		or not E._integer(raw.revision, 0, 2147483645) or not E._integer(raw.final_sequence, 0, 2147483647) \
+		or not raw.before is Dictionary or not raw.after is Dictionary \
+		or not raw.request is Dictionary or not raw.host_context is Dictionary \
+		or not BASE._passive_shape(raw.before) or not BASE._passive_shape(raw.after) \
+		or not PASSIVE.discovery_shape(raw.discoveries): return false
+	if not RECORD.errors(raw.before, raw.character_id).is_empty() \
+		or not RECORD.errors(raw.after, raw.character_id).is_empty() \
+		or not _action_request_valid(raw) or fingerprint(raw.request) != raw.request_hash: return false
+	return preparation_hash(raw) == raw.hash \
+		and exact(PASSIVE.unchanged_core(raw.before), PASSIVE.unchanged_core(raw.after))
+
+static func _fields(value: Dictionary, fields: Array) -> bool:
+	if value.size() != fields.size(): return false
+	for field: String in fields:
+		if not value.has(field): return false
+	return true
+
+static func _action_request_valid(raw: Dictionary) -> bool:
+	var request: Dictionary = raw.request
+	var fields := ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent"]
+	if raw.source_kind in ["foundation_request", "manual_refine"]: fields.append("revision")
+	if not _fields(request, fields) or not request.intent is Dictionary \
+		or request.session_epoch != raw.session_epoch or request.world_namespace != raw.world_namespace \
+		or request.character_id != raw.character_id or not E._opaque_id(request.station_key) \
+		or raw.host_context.get("character_id") != raw.character_id \
+		or raw.host_context.get("expected_revision") != raw.revision \
+		or raw.host_context.get("in_range") != true or raw.host_context.get("in_combat") != false \
+		or raw.host_context.get("foundation_runtime_authorized") != true: return false
+	var expected_source: String = request.station_key
+	if raw.source_kind == "foundation_request" and request.op == "master_chest":
+		if not E._component(request.intent.get("master_id")) \
+			or request.station_key != "master:" + str(request.intent.master_id) \
+			or raw.host_context.get("master_id") != request.intent.master_id: return false
+		expected_source = "master_chest:" + str(request.intent.master_id)
+	if raw.host_context.get("source_key") != expected_source: return false
+	match raw.source_kind:
+		"foundation_request":
+			return request.op in ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest"] \
+				and E._integer(request.revision, 0, 2147483645) and request.revision == raw.revision
+		"altar_spend":
+			return request.op == "altar_spend" \
+				and raw.host_context.get("actual_altar") == true and raw.host_context.get("station_id") == "altar" \
+				and _fields(request.intent, ["spend_id", "creature_uid", "expected_level", "payment_item", "expected_character_revision"]) \
+				and request.intent.expected_character_revision == raw.revision
+		"altar_traits":
+			return request.op == "altar_trait" \
+				and _fields(request.intent, ["action_id", "action", "creature_uid", "trait_id", "slot", "payment_item", "expected_character_revision"]) \
+				and request.intent.action in ["teach", "release"] and request.intent.expected_character_revision == raw.revision
+		"manual_refine":
+			return request.op == "refine_start" and request.revision == -1 \
+				and _fields(request.intent, ["recipe_id", "amount"]) \
+				and E._opaque_id(request.intent.recipe_id) and E._integer(request.intent.amount, 1, 2147483647) \
+				and raw.host_context.get("completed_manual_refine") == true \
+				and BASE._hex(raw.host_context.get("manual_unit_ticket"), 32) \
+				and raw.host_context.get("manual_unit_plan") is Dictionary \
+				and raw.host_context.manual_unit_plan.get("recipe_id") == request.intent.recipe_id
+	return false
+
+static func valid_action_host(raw: Variant, cursor: Variant) -> bool:
+	return valid_action(raw) and cursor is Dictionary \
+		and exact(raw.before, cursor.get("base")) and exact(raw.after, cursor.get("state")) \
+		and exact(raw.discoveries, cursor.get("discovered")) \
+		and raw.final_sequence == cursor.get("sequence", -1) \
+		and raw.input_prefix_hash == cursor.get("prefix_hash", "")
 
 static func preparation_hash(prepared: Dictionary) -> String:
 	return BASE.preparation_hash(prepared)
@@ -52,7 +142,7 @@ static func valid(raw: Variant, retained: Variant) -> bool:
 	if not RECORD.errors(raw.before, raw.character_id).is_empty() \
 		or not RECORD.errors(raw.after, raw.character_id).is_empty() \
 		or not EVENT.valid(retained, raw.world_namespace, raw.world_id) \
-		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer"] \
+		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer", "master_win", "boss_relic", "combat_mastery"] \
 		or raw.duty.get("character_id") != raw.character_id or fingerprint(raw.duty) != raw.duty_hash:
 		return false
 	var matches := 0
@@ -71,7 +161,8 @@ static func valid_host(raw: Variant, retained: Variant, cursor: Variant) -> bool
 
 static func owner_plan(current: Dictionary, prepared: Dictionary, retained: Dictionary,
 		current_discoveries: Dictionary) -> Dictionary:
-	if not valid(prepared, retained) or not exact(current, prepared.after) \
+	var source_valid: bool = valid_action(prepared) if prepared.get("kind") == ACTION_KIND else valid(prepared, retained)
+	if not source_valid or not exact(current, prepared.after) \
 		or not exact(current_discoveries, prepared.discoveries):
 		return {"ok": false, "code": "owner_passive_checkpoint_conflict"}
 	return {"ok": true, "state": current.duplicate(true), "discoveries": current_discoveries.duplicate(true)}

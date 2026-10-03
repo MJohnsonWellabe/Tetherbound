@@ -99,9 +99,13 @@ func open(service: Node, station_key: String) -> bool:
 	if not service.has_signal("action_completed"): return false
 	if is_instance_valid(_service) and _service != service and _service.is_connected("action_completed",_completed):
 		_service.disconnect("action_completed",_completed)
+	if is_instance_valid(_service) and _service != service and _service.has_signal("quote_updated") and _service.is_connected("quote_updated", _quote_updated):
+		_service.disconnect("quote_updated", _quote_updated)
 	_service = service
 	_station = station_key
 	if not _service.is_connected("action_completed",_completed): _service.connect("action_completed",_completed)
+	if _service.has_signal("quote_updated") and not _service.is_connected("quote_updated", _quote_updated):
+		_service.connect("quote_updated", _quote_updated)
 	var previous_uid := str(_selected(_creature)) if _creature.item_count > 0 else ""
 	_creature.clear()
 	for row: Dictionary in _service.call("creature_choices"):
@@ -144,6 +148,12 @@ func _exit_tree() -> void:
 		_release_presentation()
 	if is_instance_valid(_service) and _service.is_connected("action_completed",_completed):
 		_service.disconnect("action_completed",_completed)
+	if is_instance_valid(_service) and _service.has_signal("quote_updated") and _service.is_connected("quote_updated", _quote_updated):
+		_service.disconnect("quote_updated", _quote_updated)
+
+func _quote_updated(station_key: String, uid: String) -> void:
+	if _shown and station_key == _station and uid == str(_selected(_creature)):
+		_refresh()
 
 func owns_input() -> bool:
 	return _shown or _closing

@@ -10,6 +10,9 @@ const E := preload("res://scripts/creatures/essence.gd")
 const EVENT := preload("res://scripts/net/foundation_event.gd")
 const GROOM := preload("res://scripts/net/groom_passive_sync.gd")
 const RESEARCH := preload("res://scripts/creatures/research_actions.gd")
+const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits"]
+const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest"]
+const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
 const MAX_PEERS := 4
@@ -201,7 +204,7 @@ func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> D
 	var character: String = session.call("_authority_character", peer)
 	var binding := {"character": character, "action": action, "intent": intent, "event": event}
 	if E._equivalent(committing, binding): return {"ok": true}
-	if action != "research_event" or not hosts.has(character): return _deny("owner_passive_recording_unavailable")
+	if action not in RETAINED_ACTIONS or not hosts.has(character): return _deny("owner_passive_recording_unavailable")
 	var stream: Dictionary = hosts[character]
 	if not str(stream.error).is_empty(): return _deny(str(stream.error))
 	var world: RefCounted = _game().get("world")
@@ -215,6 +218,10 @@ func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> D
 		expected.expected_revision = event.get("expected_revision")
 		expected.in_range = true
 		expected.retained_event = retained.delivery_id
+		if action != "research_event":
+			expected.in_combat = false
+			expected.foundation_runtime_authorized = true
+		if action == "boss_relic": expected.boss_settlement_world_flags = world.flags.call("all_set").duplicate()
 		if E._equivalent(expected, event): matching.append(duty)
 	if matching.size() != 1: return _deny("owner_passive_original_duty_required")
 	return _checkpoint(peer, stream, binding, retained, matching[0])
@@ -225,7 +232,10 @@ func capture_gate(peer: int, envelope: Dictionary, context: Dictionary) -> Dicti
 	var character: String = session.call("_authority_character", peer)
 	# Only the synchronous post-BOOL/CAS call below can reuse this exact request.
 	if committing.get("character") == character and committing.get("action") == "wild_capture" \
-		and PREP.exact(committing.get("envelope"), envelope): return {"ok": true}
+		and PREP.exact(committing.get("envelope"), envelope):
+		var expected: Dictionary = committing.event.duplicate(true)
+		expected.expected_revision = envelope.revision
+		return {"ok": true} if PREP.exact(expected, context) else _terminal("owner_passive_source_changed")
 	if envelope.get("op") != "wild_capture" or not envelope.get("intent") is Dictionary \
 		or not hosts.has(character): return _deny("owner_passive_recording_unavailable")
 	var stream: Dictionary = hosts[character]
@@ -267,6 +277,48 @@ func _checkpoint(peer: int, stream: Dictionary, binding: Dictionary, retained: D
 		"retained_event": retained.delivery_id, "duty_hash": HASH.fingerprint(duty)})
 	return _deny("owner_passive_checkpoint_pending")
 
+## Each caller has already authenticated its original request and validated
+## its actual station/completed unit with the existing pure action producer.
+## No invented retained event represents these explicit player requests.
+func action_gate(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
+	var session := owner()
+	if peer == session.call("local_peer_id"): return {"ok": true}
+	var character: String = session.call("_authority_character", peer)
+	if source_kind not in REQUEST_KINDS: return _deny("owner_passive_request_kind")
+	if source_kind == "foundation_request" and request.get("op") not in REQUEST_ACTIONS: return _deny("owner_passive_request_kind")
+	if committing.get("character") == character and committing.get("source_kind") == source_kind \
+		and PREP.exact(committing.get("envelope"), request):
+		return {"ok": true} if PREP.exact(committing.event, context) else _terminal("owner_passive_source_changed")
+	if not hosts.has(character): return _deny("owner_passive_recording_unavailable")
+	var stream: Dictionary = hosts[character]
+	if not str(stream.error).is_empty(): return _deny(str(stream.error))
+	var world: RefCounted = _game().get("world")
+	if request.get("character_id") != character or request.get("session_epoch") != session.call("_altar_current_epoch") \
+		or request.get("world_namespace") != world.reward_delivery_namespace: return _deny("owner_passive_request_scope_changed")
+	var binding := {"character": character, "action": request.get("op"), "source_kind": source_kind,
+		"envelope": request.duplicate(true), "event": context.duplicate(true)}
+	if stream.checkpoint.is_empty():
+		var authority: RefCounted = session.get("_character_authority")
+		if authority.call("creature_training_is_pending", character) == true: return _deny("owner_passive_prior_transaction_pending")
+		# Validate the exact source shape and locally replayed cursor before
+		# asking the owner to freeze. This check does not promote any state.
+		var shape := PREP.make_action(request, context, authority.call("state", character),
+			int(authority.call("revision", character)), str(stream.epoch), world.world_id, stream.cursor,
+			"0".repeat(32), source_kind)
+		if shape.is_empty(): return _deny("owner_passive_request_source_changed")
+		stream.checkpoint = {"id": Crypto.new().generate_random_bytes(16).hex_encode(),
+			"binding": binding, "source_kind": source_kind, "request": request.duplicate(true),
+			"host_context": context.duplicate(true)}
+	elif not PREP.exact(stream.checkpoint.binding, binding): return _deny("owner_passive_original_pending")
+	_send_owner(peer, stream, {"op": "freeze", "id": stream.checkpoint.id, "source_kind": source_kind,
+		"request": request, "request_hash": HASH.fingerprint(request)})
+	return _deny("owner_passive_checkpoint_pending")
+
+func pending_manual_unit(character: String, ticket: String) -> bool:
+	var checkpoint: Dictionary = hosts.get(character, {}).get("checkpoint", {})
+	return checkpoint.get("source_kind") == "manual_refine" \
+		and checkpoint.get("host_context", {}).get("manual_unit_ticket") == ticket
+
 func _frozen_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	var checkpoint: Dictionary = stream.checkpoint
 	if checkpoint.is_empty() or packet.get("id") != checkpoint.id \
@@ -290,38 +342,68 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 		var before: Dictionary = authority.call("state", stream.character)
 		if not E._equivalent(before, stream.cursor.base) or authority.call("revision", stream.character) != stream.revision:
 			stream.error = "owner_passive_authority_changed"; return
-		var prepared := PREP.make(checkpoint.retained, checkpoint.duty, before, stream.revision,
-			stream.epoch, stream.cursor, checkpoint.id)
-		if prepared.is_empty() or authority.call("reserve_owner_passive_checkpoint", stream.character, prepared, checkpoint.retained, stream.cursor) != true: return
+		var prepared: Dictionary
+		if checkpoint.has("source_kind"):
+			prepared = PREP.make_action(checkpoint.request, checkpoint.host_context, before, stream.revision,
+				stream.epoch, str(stream.world_id), stream.cursor, checkpoint.id, checkpoint.source_kind)
+		else:
+			prepared = PREP.make(checkpoint.retained, checkpoint.duty, before, stream.revision,
+				stream.epoch, stream.cursor, checkpoint.id)
+		if prepared.is_empty() or authority.call("reserve_owner_passive_checkpoint", stream.character, prepared, checkpoint.get("retained", {}), stream.cursor) != true: return
 		checkpoint.prepared = prepared
 	_send_owner(peer, stream, {"op": "prepared", "id": checkpoint.id, "prepared": checkpoint.prepared,
-		"retained": checkpoint.retained})
+		"retained": checkpoint.get("retained", {})})
 
 func _saved_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	var checkpoint: Dictionary = stream.checkpoint
 	if checkpoint.is_empty() or not checkpoint.has("prepared") or packet.get("id") != checkpoint.id \
 		or packet.get("hash") != checkpoint.prepared.hash or packet.get("saved") != true: return
+	if checkpoint.has("result"):
+		_completion(peer, stream)
+		return
 	var world: RefCounted = _game().get("world")
-	if not E._equivalent(world.reward_deliveries.get(checkpoint.retained.delivery_id), checkpoint.retained): return
+	if not checkpoint.has("source_kind") and not E._equivalent(world.reward_deliveries.get(checkpoint.retained.delivery_id), checkpoint.retained): return
 	var authority: RefCounted = owner().get("_character_authority")
 	if authority.call("commit_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash) != true: return
 	committing = checkpoint.binding.duplicate(true)
 	var result: Dictionary
-	if committing.action == "wild_capture":
+	if checkpoint.has("source_kind"):
+		# Request checkpoints preserve the action revision. Original Altar/
+		# Traits intent and immutable receipt correlation are never rewritten.
+		result = owner().call("_owner_passive_commit_request", peer, checkpoint.source_kind,
+			committing.envelope, checkpoint.host_context)
+	elif committing.action == "wild_capture":
 		# The exact choice/source remains the authenticated original. Only this
 		# host's successful checkpoint CAS advances its expected revision.
 		committing.envelope.revision = authority.call("revision", stream.character)
 		result = owner().call("_foundation_handle", peer, committing.envelope)
-	else:
+	elif committing.action == "research_event":
 		result = RESEARCH.commit(owner(), peer, committing.action, committing.intent, committing.event)
+	else:
+		result = owner().call("_owner_passive_commit_retained", peer, committing)
 	committing.clear()
-	if result.get("durable") == true or result.get("code") == "research_no_progress":
+	var no_effect: bool = _terminal_without_effect(stream, result)
+	if result.get("durable") == true or result.get("code") == "research_no_progress" or no_effect:
 		authority.call("cancel_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash)
 		checkpoint.result = result.duplicate(true)
-		_send_owner(peer, stream, {"op": "no_progress" if result.get("code") == "research_no_progress" else "journaled",
-			"id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": result})
+		checkpoint.no_effect = no_effect
+		_completion(peer, stream)
 	else:
 		authority.call("retain_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash)
+
+func _terminal_without_effect(stream: Dictionary, result: Dictionary) -> bool:
+	if result.get("durable") == true or result.get("terminal_refusal") != true or result.get("resolved") != true: return false
+	if result.get("code") in ["training_journal_failed", "world_not_prepared", "world_save_failed", "stage_changed", "fallback_busy", "character_busy", "transaction_busy"]: return false
+	var authority: RefCounted = owner().get("_character_authority")
+	return authority.call("creature_training_is_pending", str(stream.character)) != true \
+		and PREP.exact(authority.call("state", stream.character), stream.checkpoint.prepared.after)
+
+func _completion(peer: int, stream: Dictionary) -> void:
+	var checkpoint: Dictionary = stream.checkpoint
+	var op := "journaled"
+	if checkpoint.get("no_effect") == true: op = "no_effect"
+	elif checkpoint.result.get("code") == "research_no_progress": op = "no_progress"
+	_send_owner(peer, stream, {"op": op, "id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": checkpoint.result})
 
 func receive_owner(packet: Dictionary) -> void:
 	if local.is_empty(): return
@@ -341,7 +423,12 @@ func receive_owner(packet: Dictionary) -> void:
 			local.acked = packet.sequence
 			while not local.inputs.is_empty() and int(local.inputs[0].sequence) <= int(local.acked): local.inputs.pop_front()
 		"freeze":
-			if not HASH._hex(packet.get("id"), 32) or not HASH._hex(packet.get("duty_hash"), 64): return
+			if not HASH._hex(packet.get("id"), 32): return
+			var request_source: bool = packet.get("source_kind") in REQUEST_KINDS
+			if request_source:
+				if not packet.get("request") is Dictionary or HASH.fingerprint(packet.request) != packet.get("request_hash") \
+					or owner().call("_owner_passive_request_matches", packet.source_kind, packet.request) != true: return
+			elif packet.has("source_kind") or not HASH._hex(packet.get("duty_hash"), 64): return
 			if not pending.is_empty() and pending.id != packet.id: return
 			if pending.is_empty():
 				var saver: RefCounted = _game().get("save_system")
@@ -349,17 +436,26 @@ func receive_owner(packet: Dictionary) -> void:
 				saver.call("finish_fallback") # Complete reentrant save callbacks before freezing any owner state.
 				if saver.call("fallback_busy") == true or _scope() != scope or local.is_empty() or local.id != packet.stream_id: return
 				pending = {"id": packet.id, "scope": scope, "retained_event": packet.get("retained_event"),
-					"duty_hash": packet.duty_hash, "sequence": local.sequence, "prefix_hash": local.prefix_hash,
+					"duty_hash": packet.get("duty_hash", ""), "sequence": local.sequence, "prefix_hash": local.prefix_hash,
 					"hash": HASH.fingerprint(_projection()), "phase": "frozen"}
+				if request_source:
+					pending.source_kind = packet.source_kind
+					pending.request_hash = packet.request_hash
 			_retry_owner()
 		"prepared":
 			if pending.is_empty() or pending.id != packet.get("id"): return
 			var prepared: Variant = packet.get("prepared")
 			var retained: Variant = packet.get("retained")
-			if not PREP.valid(prepared, retained) or prepared.character_id != scope.character_id \
+			var request_source: bool = pending.has("source_kind")
+			if request_source:
+				if not PREP.valid_action(prepared) or prepared.source_kind != pending.source_kind \
+					or prepared.request_hash != pending.request_hash \
+					or owner().call("_owner_passive_request_matches", prepared.source_kind, prepared.request) != true: return
+			elif not PREP.valid(prepared, retained) or prepared.retained_event != pending.retained_event \
+				or prepared.duty_hash != pending.duty_hash: return
+			if prepared.character_id != scope.character_id \
 				or prepared.session_epoch != scope.session_epoch or prepared.world_namespace != scope.world_namespace \
-				or prepared.world_id != scope.world_id or prepared.retained_event != pending.retained_event \
-				or prepared.duty_hash != pending.duty_hash or prepared.final_sequence != pending.sequence \
+				or prepared.world_id != scope.world_id or prepared.final_sequence != pending.sequence \
 				or prepared.input_prefix_hash != pending.prefix_hash or HASH.fingerprint(prepared.after) != pending.hash: return
 			if pending.has("prepared") and not E._equivalent(pending.prepared, prepared): return
 			pending.prepared = prepared.duplicate(true)
@@ -369,16 +465,23 @@ func receive_owner(packet: Dictionary) -> void:
 		"journaled":
 			if not pending.is_empty() and pending.id == packet.get("id"):
 				pending.phase = "journaled" # Existing original owner-row settlement releases the fence.
-		"no_progress":
+		"no_progress", "no_effect":
 			if pending.is_empty() or pending.id != packet.get("id") or not pending.has("prepared") \
-				or packet.get("hash") != pending.prepared.hash or packet.get("result", {}).get("code") != "research_no_progress" \
+				or packet.get("hash") != pending.prepared.hash \
 				or not PREP.exact(_projection(), pending.prepared.after): return
+			var result: Dictionary = packet.get("result", {})
+			if packet.op == "no_progress" and result.get("code") != "research_no_progress": return
+			if packet.op == "no_effect" and (result.get("terminal_refusal") != true or result.get("resolved") != true or result.get("durable") == true): return
 			var old := {"checkpoint_id": pending.id, "checkpoint_hash": pending.prepared.hash}
+			var terminal_source := str(pending.get("source_kind", ""))
+			var terminal_request: Dictionary = pending.prepared.get("request", {}).duplicate(true)
 			var previous := local.duplicate(true)
 			var declaration := arm_owner(_projection(), _discoveries())
 			if declaration.is_empty(): return
 			_queue_rebase(declaration, previous, old)
 			_flush()
+			if packet.op == "no_effect" and not terminal_source.is_empty():
+				owner().call("_owner_passive_request_terminal", terminal_source, terminal_request, result)
 
 func blocked(player: RefCounted) -> bool:
 	return not pending.is_empty() and _game() != null and player == _game().get("local") and pending.scope == _scope()
@@ -475,7 +578,7 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 		var checkpoint: Dictionary = old.checkpoint
 		if old.id != packet.get("old_stream") or checkpoint.get("id") != packet.checkpoint_id \
 			or checkpoint.get("prepared", {}).get("hash") != packet.get("checkpoint_hash") \
-			or checkpoint.get("result", {}).get("code") != "research_no_progress" \
+			or (checkpoint.get("result", {}).get("code") != "research_no_progress" and checkpoint.get("no_effect") != true) \
 			or not PREP.exact(before, checkpoint.prepared.after) or HASH.fingerprint(before) != packet.get("baseline_hash"): return
 		hosts.erase(character)
 		if _add_host(peer, character, packet.stream_id, before, discoveries):
@@ -507,3 +610,6 @@ func reset() -> void:
 
 static func _deny(code: String) -> Dictionary:
 	return {"ok": false, "durable": false, "resolved": false, "code": code}
+
+static func _terminal(code: String) -> Dictionary:
+	return {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true, "code": code}

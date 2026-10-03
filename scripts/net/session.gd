@@ -9,6 +9,8 @@ const GROOM_PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
 var _groom_passive: RefCounted
 const OWNER_PASSIVE := preload("res://scripts/net/owner_passive_sync.gd")
 var _owner_passive: RefCounted
+var _owner_passive_altar_original: Dictionary = {}
+var _altar_traits_transport: Node
 const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
 const FOUNDATION_COMBAT_MANAGERS := ["res://scripts/combat/combat_manager.gd", "res://scripts/combat/cloudreach_combat_manager.gd", "res://scripts/combat/stormwood_combat_manager.gd"]
 ## Joined in each script's _enter_tree (encounter_director.gd, combat_manager.gd).
@@ -17,6 +19,8 @@ const FOUNDATION_COMBAT_MANAGER_GROUP := &"foundation_combat_managers"
 signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
 signal homestead_personal_view_completed()
 signal foundation_reply_received(envelope: Dictionary, result: Dictionary)
+signal altar_trait_completed(station_key: String, action_id: String, result: Dictionary)
+signal altar_trait_quote_completed(station_key: String, uid: String)
 var _homestead_stations: Dictionary = {}
 var _foundation_requests: Dictionary = {}
 var _foundation_personal_cache: Dictionary = {}
@@ -40,6 +44,106 @@ func record_owner_passive_input(packet: Dictionary) -> void:
 
 func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
 	return _owner_passive_service().call("gate", peer, action, intent, event)
+
+func _owner_passive_request_matches(source_kind: String, request: Dictionary) -> bool:
+	if source_kind == "altar_spend":
+		return preload("res://scripts/net/owner_passive_preparation.gd").exact(_owner_passive_altar_original, request)
+	if source_kind == "altar_traits": return _altar_traits_service().call("owner_request_matches", request) == true
+	if source_kind not in ["foundation_request", "manual_refine"]: return false
+	var correlation := JSON.stringify([request.get("op"), request.get("station_key"), request.get("intent"), request.get("revision")]).sha256_text()
+	return preload("res://scripts/net/owner_passive_preparation.gd").exact(_foundation_requests.get(correlation), request)
+
+func _owner_passive_commit_request(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
+	match source_kind:
+		"foundation_request": return _foundation_handle(peer, request)
+		"altar_spend": return _handle_altar_spend(peer, request)
+		"altar_traits": return _altar_traits_service().call("commit_prepared", peer, request)
+		"manual_refine":
+			var forge := get_node_or_null(^"FoundationComposition/ForgeHost")
+			return forge.call("commit_prepared", peer, request, context) if forge != null else FOUNDATION_ACTIONS.deny("forge_unavailable")
+	return FOUNDATION_ACTIONS.deny("owner_passive_request_kind")
+
+func _owner_passive_request_terminal(source_kind: String, request: Dictionary, result: Dictionary) -> void:
+	if is_host() or result.get("terminal_refusal") != true or result.get("resolved") != true \
+		or result.get("durable") == true or not _owner_passive_request_matches(source_kind, request): return
+	if source_kind == "altar_traits":
+		var reply := result.duplicate(true)
+		reply.terminal = true # Existing Traits UI's terminal presentation flag.
+		_altar_traits_service().call("receive_result", request, reply)
+	elif source_kind == "altar_spend":
+		_owner_passive_altar_original.clear()
+		_altar_spend_request.clear()
+		altar_essence_spend_completed.emit(request.station_key, request.intent.spend_id, result.duplicate(true))
+	elif source_kind in ["foundation_request", "manual_refine"]:
+		_rpc_foundation_reply(request, result) # Existing exact correlation/presentation path, no RPC send.
+
+func _owner_passive_commit_retained(peer: int, binding: Dictionary) -> Dictionary:
+	if not is_host() or binding.get("character") != _authority_character(peer) \
+		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery"]:
+		return FOUNDATION_ACTIONS.deny("owner_passive_original_duty_required")
+	var world: RefCounted = _game().get("world")
+	if binding.action == "boss_relic":
+		var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(binding.intent.trainer_id), str(binding.event.realm))
+		if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()):
+			return FOUNDATION_ACTIONS.deny("boss_settlement_world_pending")
+	if binding.action == "combat_mastery" and _altar_peer_in_combat(peer): return FOUNDATION_ACTIONS.deny("combat_still_active")
+	var context: Dictionary = binding.event.duplicate(true)
+	context.expected_revision = int(_character_authority.call("revision", binding.character))
+	var writer := get_node_or_null(^"LedgerRpc")
+	if binding.action in FOUNDATION_ACTIONS.ACTIONS:
+		return FOUNDATION_ACTIONS.commit(_character_authority, writer, peer, binding.character,
+			context.expected_revision, binding.action, binding.intent, context)
+	return preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority,
+		writer, peer, binding.character, context.expected_revision, binding.action, binding.intent, context)
+
+func _altar_traits_service() -> Node:
+	if _altar_traits_transport == null:
+		_altar_traits_transport = load("res://scripts/net/altar_traits_transport.gd").new(self)
+		_altar_traits_transport.name = "AltarTraitsTransport"
+		add_child(_altar_traits_transport)
+	return _altar_traits_transport
+
+func quote_altar_traits(key: String, uid: String) -> Dictionary:
+	return _altar_traits_service().call("quote", key, uid)
+
+func invalidate_altar_trait_quote() -> void:
+	_altar_traits_service().call("invalidate_quote")
+
+func submit_altar_trait(key: String, intent: Dictionary) -> Dictionary:
+	return _altar_traits_service().call("send", key, intent, false)
+
+func reconcile_altar_trait(key: String, intent: Dictionary) -> Dictionary:
+	return _altar_traits_service().call("send", key, intent, true)
+
+func _altar_traits_send_quote(envelope: Dictionary) -> void:
+	if not is_host() and is_active(): rpc_id(HOST_PEER_ID, "_rpc_altar_traits_quote", envelope)
+
+func _altar_traits_send(envelope: Dictionary, reconcile: bool) -> void:
+	if not is_host() and is_active(): rpc_id(HOST_PEER_ID, "_rpc_altar_traits", envelope, reconcile)
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_traits_quote(envelope: Dictionary) -> void:
+	if not is_host(): return
+	var peer := multiplayer.get_remote_sender_id()
+	var result: Dictionary = _altar_traits_service().call("handle_quote", peer, envelope)
+	if _registry.call("has", peer) == true: rpc_id(peer, "_rpc_altar_traits_quote_reply", envelope, result)
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_traits(envelope: Dictionary, reconcile: bool) -> void:
+	if not is_host(): return
+	var peer := multiplayer.get_remote_sender_id()
+	var result: Dictionary = _altar_traits_service().call("handle", peer, envelope, reconcile)
+	if _registry.call("has", peer) == true: rpc_id(peer, "_rpc_altar_traits_reply", envelope, result)
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_traits_quote_reply(envelope: Dictionary, result: Dictionary) -> void:
+	if not is_host() and multiplayer.get_remote_sender_id() == HOST_PEER_ID:
+		_altar_traits_service().call("receive_quote", envelope, result)
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_altar_traits_reply(envelope: Dictionary, result: Dictionary) -> void:
+	if not is_host() and multiplayer.get_remote_sender_id() == HOST_PEER_ID:
+		_altar_traits_service().call("receive_result", envelope, result)
 
 func _owner_passive_send_host(packet: Dictionary) -> void:
 	if not is_host() and is_active(): rpc_id(HOST_PEER_ID, "_rpc_owner_passive_input", packet)
@@ -250,7 +354,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if envelope.intent.size() != 1 or not envelope.intent.get("master_id") is String: return _foundation_refusal("invalid_chest_intent")
 		var site := _foundation_master_site(peer, envelope.intent.master_id, true)
 		if site != null:
-			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)), "in_range": true,
+			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)), "in_range": true, "in_combat": false,
 				"master_id": envelope.intent.master_id, "source_key": "master_chest:" + envelope.intent.master_id}
 	if envelope.op == "feast_feed" and STATION_RULES.config().get("runtime_enabled") == true and not _altar_peer_in_combat(peer):
 		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
@@ -281,6 +385,13 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	# Matching immutable pending/accepted decisions returned above stay untouched.
 	if envelope.op == "wild_capture" and peer != local_peer_id():
 		var ready: Dictionary = _owner_passive_service().call("capture_gate", peer, envelope, context)
+		if ready.get("ok") != true: return ready
+	if envelope.op in OWNER_PASSIVE.REQUEST_ACTIONS and peer != local_peer_id():
+		var rules: Script = FOUNDATION_ACTIONS if envelope.op in FOUNDATION_ACTIONS.ACTIONS else preload("res://scripts/net/character_action_rules.gd")
+		var preview: Dictionary = rules.stage(full, envelope.revision, envelope.op, envelope.intent, context,
+			preload("res://scripts/net/character_record_rules.gd").errors)
+		if preview.get("ok") != true: return _foundation_refusal(str(preview.get("code", "stage_refused")))
+		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "foundation_request", envelope, context)
 		if ready.get("ok") != true: return ready
 	var stage: Dictionary = _character_authority.call("stage_character_action", character, envelope.revision, envelope.op, envelope.intent, context)
 	if stage.get("ok") != true: return _foundation_refusal(str(stage.get("code", stage.get("reason", "stage_refused"))))
@@ -603,6 +714,11 @@ func _retry_foundation_events() -> void:
 			var receipt := _foundation_duty_receipt(duty)
 			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
+				and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
+				get_node(^"LedgerRpc").call("_process_creature_training", latest)
+				handled[duty.character_id] = true
+				continue # Re-deliver the immutable original; never prepare it again.
 			# Retained historical duties and in-fight mastery need no new action.
 			# Project/recover authority only after those exclusions; a long fight
 			# can retain hundreds of mastery sources for this same character.
@@ -623,6 +739,11 @@ func _retry_foundation_events() -> void:
 			else:
 				context.in_combat = false
 				context.foundation_runtime_authorized = true
+				if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery"]:
+					var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
+					if ready.get("ok") != true:
+						handled[duty.character_id] = true
+						continue
 				if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 					result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 				else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
@@ -2892,6 +3013,8 @@ func _restore_character_here(wanted_id: String) -> bool:
 func _teardown(linger_transport: bool = false) -> void:
 	if _groom_passive != null: _groom_passive.call("reset")
 	if _owner_passive != null: _owner_passive.call("reset")
+	_owner_passive_altar_original.clear()
+	if _altar_traits_transport != null: _altar_traits_transport.call("reset")
 	# Session's altar epoch survives a transport teardown. Explicitly retire
 	# observations and consumed travel identities before a peer can rejoin.
 	for path: NodePath in [^"FoundationComposition/TravelLifecycle", ^"FoundationComposition/PortalArrival", ^"FoundationComposition/ForgeHost"]:
@@ -3445,6 +3568,7 @@ func _send_altar_spend(op: String, key: String, intent: Dictionary) -> Dictionar
 	if envelope.is_empty(): return {"ok": false, "resolved": false, "code": "decision_unavailable"}
 	envelope["intent"] = intent.duplicate(true)
 	_altar_spend_request = envelope.duplicate(true)
+	if op == "altar_spend": _owner_passive_altar_original = envelope.duplicate(true)
 	if is_host(): return _handle_altar_spend(local_peer_id(), envelope)
 	if not is_active(): return {"ok": false, "resolved": false, "code": "decision_unavailable"}
 	rpc_id(HOST_PEER_ID, "_rpc_altar_spend", envelope)
@@ -3500,6 +3624,13 @@ func _handle_altar_spend(peer: int, envelope: Dictionary) -> Dictionary:
 	revision = int(_character_authority.call("revision", character))
 	proposal = ESSENCE.stage_core_spend(full, character, revision, intent, ESSENCE.config(),
 		PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	if proposal.get("ok") != true: return proposal
+	if peer != local_peer_id():
+		var context := {"character_id": character, "expected_revision": revision, "source_key": envelope.station_key,
+			"station_id": "altar", "actual_altar": true, "in_range": true, "in_combat": false,
+			"foundation_runtime_authorized": true}
+		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "altar_spend", envelope, context)
+		if ready.get("ok") != true: return ready
 	var transport := get_node_or_null(^"LedgerRpc")
 	var committed := ESSENCE.commit_host_training(_character_authority, transport, peer, character,
 		"altar_spend", intent.spend_id, intent, proposal)
@@ -3765,6 +3896,8 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
+	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:
+		_owner_passive_altar_original.clear()
 	if not _altar_spend_request.is_empty() and _altar_spend_request.get("intent", {}).get("spend_id") == row.action_id:
 		var request := _altar_spend_request.duplicate(true)
 		_altar_spend_request = {}

@@ -48,6 +48,10 @@ class Session extends Node:
 	var capture_service: RefCounted
 	var capture_context: Dictionary = {}
 	var capture_calls: Array[Dictionary] = []
+	var action_original: Dictionary = {}
+	var action_calls: Array[Dictionary] = []
+	var action_terminals: Array[Dictionary] = []
+	var action_result := {"ok": false, "durable": false, "code": "fixture_world_write_failed"}
 	func _game() -> Node: return game
 	func _groom_service() -> RefCounted: return maps
 	func _altar_current_epoch() -> String: return "current-epoch"
@@ -57,6 +61,16 @@ class Session extends Node:
 	func _authority_character(peer: int) -> String: return game.local.character_id if peer == 2 else "host"
 	func _owner_passive_send_host(packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_send_peer(_peer: int, packet: Dictionary) -> void: messages.append(packet.duplicate(true))
+	func _owner_passive_request_matches(kind: String, request: Dictionary) -> bool:
+		return kind == "foundation_request" and PREP.exact(action_original, request)
+	func _owner_passive_request_terminal(kind: String, request: Dictionary, result: Dictionary) -> void:
+		action_terminals.append({"kind": kind, "request": request.duplicate(true), "result": result.duplicate(true)})
+	func _owner_passive_commit_request(peer: int, kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
+		var gate: Dictionary = capture_service.call("action_gate", peer, kind, request, context)
+		action_calls.append({"request": request.duplicate(true), "gate": gate,
+			"revision": _character_authority.call("revision", game.local.character_id),
+			"state": _character_authority.call("state", game.local.character_id)})
+		return action_result.duplicate(true)
 	func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		# Disclosed failed world-writer seam: the real service must have completed
 		# its CAS, and must retain the original for another authenticated ACK.
@@ -379,3 +393,133 @@ func test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_h
 	assert_eq(session._character_authority.revision(before.character_id), 1, "saved ACK retry cannot replay passive inputs twice")
 	assert_true(PREP.exact(stream.checkpoint.binding.envelope, envelope), "host-derived CAS revision never rewrites original request")
 	assert_eq(session._character_authority.state(before.character_id).party.size(), before.party.size(), "failed capture writer grants no creature")
+
+func _request_fixture() -> Dictionary:
+	var request := {"op": "station_craft", "session_epoch": "current-epoch", "world_namespace": event.world_namespace,
+		"character_id": before.character_id, "station_key": "workbench:meadows:fixture", "revision": 0,
+		"intent": {"recipe_id": "fixture-recipe", "craft_id": "f".repeat(32)}}
+	var context := {"character_id": before.character_id, "expected_revision": 0, "source_key": request.station_key,
+		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true}
+	return {"request": request, "context": context}
+
+func test_request_owner_requires_existing_exact_request_and_actual_bool_save() -> void:
+	var f := _request_fixture()
+	service.record_input(_input())
+	var applied := REPLAY.apply(REPLAY.begin(before, {}), service.local.inputs[0],
+		{"realm": "meadows", "landmarks": {}, "max_speed": 40.0, "max_elapsed": 2.0})
+	assert_true(applied.ok)
+	game.local.data = applied.cursor.state.duplicate(true)
+	var prepared := PREP.make_action(f.request, f.context, before, 0, "current-epoch", event.world_id,
+		applied.cursor, "b".repeat(32))
+	assert_false(prepared.is_empty())
+	var freeze := _envelope({"op": "freeze", "id": prepared.preparation_id, "source_kind": "foundation_request",
+		"request": f.request, "request_hash": prepared.request_hash})
+	service.receive_owner(freeze)
+	assert_true(service.pending.is_empty(), "host cannot invent an owner request")
+	session.action_original = f.request.duplicate(true)
+	session.action_original.intent.recipe_id = "different-recipe"
+	service.receive_owner(freeze)
+	assert_true(service.pending.is_empty())
+	session.action_original = f.request.duplicate(true)
+	service.receive_owner(freeze)
+	assert_true(service.blocked(game.local))
+	var original: PackedByteArray = var_to_bytes(game.local.data)
+	service.receive_owner(_envelope({"op": "prepared", "id": prepared.preparation_id, "prepared": prepared, "retained": {}}))
+	assert_eq(game.save_system.writes, 1)
+	assert_eq(service.pending.phase, "save")
+	for message: Dictionary in session.messages: assert_ne(message.op, "saved")
+	game.save_system.accepted = true
+	service._retry_owner()
+	assert_eq(service.pending.phase, "saved")
+	assert_eq(session.messages[-1].op, "saved")
+	assert_eq(session.messages[-1].hash, prepared.hash)
+	assert_eq(var_to_bytes(game.local.data), original)
+
+func test_request_host_preserves_original_scope_and_same_revision_on_failed_world_retry() -> void:
+	var f := _request_fixture()
+	service.record_input(_input())
+	var stream := _host_stream()
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	assert_eq(service.action_gate(2, "foundation_request", f.request, f.context).code, "owner_passive_checkpoint_pending")
+	var original: PackedByteArray = var_to_bytes(stream.checkpoint)
+	assert_eq(service.action_gate(2, "foundation_request", f.request, f.context).code, "owner_passive_checkpoint_pending")
+	assert_eq(var_to_bytes(stream.checkpoint), original)
+	var changed: Dictionary = f.context.duplicate(true)
+	changed.source_key = "another-station"
+	assert_eq(service.action_gate(2, "foundation_request", f.request, changed).code, "owner_passive_original_pending")
+	assert_eq(var_to_bytes(stream.checkpoint), original)
+	service.receive_host(2, _envelope({"op": "frozen", "id": stream.checkpoint.id, "sequence": stream.cursor.sequence,
+		"prefix_hash": stream.cursor.prefix_hash, "hash": PREP.fingerprint(stream.cursor.state)}))
+	assert_true(stream.checkpoint.has("prepared"))
+	if not stream.checkpoint.has("prepared"): return
+	session.capture_service = service
+	var saved := _envelope({"op": "saved", "id": stream.checkpoint.id, "hash": stream.checkpoint.prepared.hash, "saved": false})
+	service.receive_host(2, saved)
+	assert_true(session.action_calls.is_empty())
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), before))
+	saved.saved = true
+	for attempt: int in range(2):
+		service.receive_host(2, saved)
+		assert_eq(session.action_calls.size(), attempt + 1)
+		if session.action_calls.is_empty(): return
+		assert_true(session.action_calls[-1].gate.ok)
+		assert_eq(session.action_calls[-1].revision, 0)
+		assert_true(PREP.exact(session.action_calls[-1].request, f.request))
+		assert_true(PREP.exact(session.action_calls[-1].state, stream.cursor.state))
+		assert_true(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_true(PREP.exact(stream.checkpoint.request, f.request))
+
+func test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint() -> void:
+	var f := _request_fixture()
+	session.action_original = f.request.duplicate(true)
+	service.record_input(_input())
+	var stream := _host_stream()
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	game.local.data = stream.cursor.state.duplicate(true)
+	var input_ack: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(service.action_gate(2, "foundation_request", f.request, f.context).code, "owner_passive_checkpoint_pending")
+	var freeze: Dictionary = session.messages[-1].duplicate(true)
+	session.host = false
+	service.receive_owner(input_ack)
+	service.receive_owner(freeze)
+	assert_true(service.blocked(game.local))
+	var frozen: Dictionary = session.messages[-1].duplicate(true)
+	session.host = true
+	service.receive_host(2, frozen)
+	var prepared: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(prepared.op, "prepared")
+	session.host = false
+	game.save_system.accepted = true
+	service.receive_owner(prepared)
+	assert_eq(game.save_system.writes, 1)
+	var saved: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(saved.op, "saved")
+	session.host = true
+	session.capture_service = service
+	session.action_result = {"ok": false, "durable": false, "resolved": true,
+		"terminal_refusal": true, "code": "fixture_source_disappeared"}
+	service.receive_host(2, saved)
+	var completed: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(completed.op, "no_effect")
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_eq(session._character_authority.revision(before.character_id), 0)
+	session.host = false
+	var wrong := completed.duplicate(true)
+	wrong.hash = "a".repeat(64)
+	service.receive_owner(wrong)
+	assert_true(service.blocked(game.local), "unbound refusal cannot release the owner fence")
+	assert_true(session.action_terminals.is_empty())
+	service.receive_owner(completed)
+	assert_false(service.blocked(game.local))
+	assert_eq(session.action_terminals.size(), 1)
+	assert_true(PREP.exact(session.action_terminals[0].request, f.request))
+	assert_eq(session.action_terminals[0].result.code, "fixture_source_disappeared")
+	var rebase: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(rebase.op, "rebase")
+	session.host = true
+	service.receive_host(2, rebase)
+	assert_eq(session.messages[-1].op, "rebase_ack")
+	assert_true(PREP.exact(service.hosts[before.character_id].cursor.base, game.local.data))
+	session.host = false
+	service.receive_owner(session.messages[-1])
+	assert_true(service.local.rebase.is_empty())
