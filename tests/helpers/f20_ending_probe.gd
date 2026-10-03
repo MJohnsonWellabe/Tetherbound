@@ -45,6 +45,11 @@ func fixture(game: Node, label: String) -> bool:
 	game.local.inventory.call("add", "potion_small", 3)
 	# Negative control: this perfectly valid older return must not satisfy F20.
 	personal.transaction_receipts.append("craft:home_return_%s_before_finale:%s" % [game.world.reward_delivery_namespace, game.local.character_id])
+	if label == "Solo":
+		# Disclosed post-finale clock setup: the actual host advances one morning.
+		# The production board poll alone must issue and durably deliver its rows.
+		if not check(game.call("advance_day") == 2 and int(game.world.redesign_world.bounty_day) == 1,
+			"solo post-finale fixture has passed its first actual host morning"): return false
 	return check(game.call("save_game", 0), "post-finale fixture saves through production schema")
 
 func ready(tree: SceneTree, game: Node) -> bool:
@@ -410,6 +415,9 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 	var panel := INPUT_OWNER.current(tree)
 	if not check(panel != null and panel.get_script() == load("res://scripts/ui/bounty_board_panel.gd"), "ordinary board input opens the production bounty screen"): return false
 	var view: Dictionary = adapter.call("view")
+	if view.get("ready") != true or view.get("rows", []).size() != 3:
+		print("F20 BOUNTY live view=", view, " local_board=", game.local.redesign_character.bounties,
+			" world_day=", game.world.day, " bounty_day=", game.world.redesign_world.bounty_day)
 	if not check(view.get("ready") == true and view.get("rows", []).size() == 3,
 		"reloaded character has three active bounties in the live board"): return false
 	await travel.tap("menu_cancel")
