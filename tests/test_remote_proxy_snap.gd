@@ -81,7 +81,7 @@ func _free_floor_fixture(tree: SceneTree, fixture: Dictionary) -> void:
 func run_initialized_remote_floor_case(tree: SceneTree) -> Dictionary:
 	var f := _floor_fixture(tree)
 	var actor: FloorTrainer = f.actor
-	assert_eq(actor.floor_snap_length, 0.4)
+	assert_almost_eq(actor.floor_snap_length, 0.4, 0.0000001, "authored float32 property representation only")
 	assert_false(actor.is_on_floor())
 	for _frame in 8: await tree.physics_frame
 	assert_true(actor.is_on_floor(), "stationary remote landing must acquire ACTUAL floor contact")

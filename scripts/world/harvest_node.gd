@@ -723,6 +723,8 @@ func set_renewable_stock(stock: Dictionary) -> void:
 
 
 func _refresh_renewable_presentation() -> void:
+	# Stock reconciliation survives a swap; the outgoing presentation does not.
+	if not is_inside_tree() or is_queued_for_deletion(): return
 	var ready := _renewable_ready(get_node_or_null(^"/root/Game"))
 	if not ready:
 		if not _taken:

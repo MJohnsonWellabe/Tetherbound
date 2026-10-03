@@ -7,6 +7,8 @@ const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 ## Uses the existing registry and LedgerRpc journal, never a second ledger.
 const BOARD := preload("res://scripts/world/bounty_board.gd")
 const ACTIONS := preload("res://scripts/net/character_action_rules.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const WORLD := preload("res://autoload/world_state.gd")
 var _session: Node
 var _source_context: Callable
 var _accepted_event: Callable
@@ -68,6 +70,23 @@ func _commit(peer: int, action: String, intent: Dictionary, context: Dictionary)
 	if context.is_empty(): return ACTIONS.deny("bounty_source_unavailable")
 	var registry: RefCounted = _session.get("_character_authority")
 	var writer := _session.get_node_or_null(^"LedgerRpc")
+	if action in ["bounty_rotate", "bounty_event"]:
+		var game: Node = _session.call("_game")
+		var world: RefCounted = game.get("world")
+		var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, context.character_id))
+		# A pending original fences every fresh action, even when its action kind
+		# differs. Redeliver it without claiming the requested bounty was applied.
+		if row is Dictionary and WORLD.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+			and row.get("character_id") == context.character_id and row.get("status") == "pending":
+			if writer == null or not writer.has_method("_process_creature_training"): return ACTIONS.deny("bounty_writer_unavailable")
+			writer.call("_process_creature_training", row)
+			return {"ok": false, "durable": true, "resolved": false, "code": "awaiting_saved_decision"}
+		var current: Dictionary = registry.call("state", context.character_id)
+		var proposal := BOARD.stage(current, int(context.expected_revision), action, intent, context)
+		if proposal.get("ok") != true: return proposal
+		var in_combat: Variant = context.get("in_combat")
+		if not in_combat is bool: return ACTIONS.deny("bounty_combat_state_unavailable")
+		if in_combat: return ACTIONS.deny("combat_still_active")
 	return ACTIONS.commit_host_action(registry, writer, peer, context.character_id,
 		int(context.expected_revision), action, intent, context)
 

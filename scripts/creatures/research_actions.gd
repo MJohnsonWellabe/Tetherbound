@@ -47,6 +47,12 @@ static func commit(session: Node, peer: int, action: String, intent: Dictionary,
 			return ACTIONS.deny("research_decision_not_retained")
 		if row.get("status") == "pending": writer.call("_process_creature_training", row)
 		return {"ok": true, "durable": true, "resolved": row.get("status") == "accepted"}
+	# Combat owns the live party card until settlement. Existing decisions above
+	# retain their exact delivery; only a fresh full-card proposal waits.
+	if not session.has_method("_altar_peer_in_combat"): return ACTIONS.deny("research_combat_state_unavailable")
+	var in_combat: Variant = session.call("_altar_peer_in_combat", peer)
+	if not in_combat is bool: return ACTIONS.deny("research_combat_state_unavailable")
+	if in_combat: return ACTIONS.deny("combat_still_active")
 	# Flush exact owner-input history BEFORE creating a new immutable row. A
 	# retained pending decision above always retries its original codec instead.
 	if action == "research_event" and peer != session.call("local_peer_id"):

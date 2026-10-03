@@ -12,6 +12,7 @@ const COMMIT_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 const PASSIVE := preload("res://tools/net/f48_passive_witness.gd")
 const PORTAL_DELIVERY := preload("res://scripts/net/portal_delivery.gd")
 const PROOF_FILES := preload("res://tools/net/proof_steps.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
@@ -34,6 +35,13 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 			if data.get("owner_training_row") is Dictionary and data.has("owner_projection"):
 				data["owner_before_difference"] = _json_difference(data.owner_training_row.get("before"), data.owner_projection)
 				data["owner_after_difference"] = _json_difference(data.owner_training_row.get("after"), data.owner_projection)
+			if captured.get("verdict") == "PASS" and args.get("role") == "guest":
+				var presentation: Dictionary = await _finish_capture_presentation(tree)
+				data["presentation_exit"] = presentation.get("data", {})
+				captured["data"] = data
+				if presentation.get("verdict") != "PASS":
+					captured["verdict"] = "FAIL"
+					captured["detail"] = str(captured.get("detail", "")) + " " + str(presentation.get("detail", ""))
 			return await _sealed_reply(tree, action, args, captured)
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
@@ -423,6 +431,59 @@ static func _deploy_owned(tree: SceneTree) -> Dictionary:
 	var owned := creature != null and original.has(str(creature.get("uid")))
 	return _result(unchanged and owned and director.call("ally_body") != null,
 		"Ordinary recall input must deploy an original owned companion without changing party UIDs")
+
+static func _capture_input_state(tree: SceneTree) -> Dictionary:
+	var owner := INPUT_OWNER.current(tree)
+	var probe := tree.get("_probe") as Object
+	var game := tree.root.get_node_or_null(^"Game")
+	var captures := game.get_node_or_null(^"Session/FoundationComposition/Captures") if game != null else null
+	var requests: Variant = captures.get("_requests") if captures != null else null
+	return {"context": str(probe.call("input_context")) if probe != null else "missing_probe",
+		"owner_path": str(owner.get_path()) if owner != null else "",
+		"owner_script": str(owner.get_script().resource_path) if owner != null and owner.get_script() != null else "",
+		"tab": str(owner.call("current_tab_id")) if owner != null and owner.has_method("current_tab_id") else "",
+		"pending_catch_uid": str(game.pending_catch.get("uid")) if game != null and game.pending_catch != null else "",
+		"capture_active": str(captures.get("_active")) if captures != null else "missing_capture_service",
+		"capture_requests": requests.size() if requests is Dictionary else -1}
+
+static func _finish_capture_presentation(tree: SceneTree) -> Dictionary:
+	# An accepted free-slot catch leaves the real Creatures menu open. Finish
+	# that presentation with ordinary input only after all catch work settled.
+	var game := tree.root.get_node_or_null(^"Game")
+	var captures := game.get_node_or_null(^"Session/FoundationComposition/Captures") if game != null else null
+	var before := _capture_input_state(tree)
+	var data := {"before": before, "ordinary_cancel": false}
+	if game == null or game.session == null or captures == null \
+		or captures.get_script() != preload("res://scripts/net/foundation_capture.gd") \
+		or game.pending_catch != null or not before.capture_active.is_empty() or before.capture_requests != 0 \
+		or game.session.call("_owner_training_mutation_blocked", game.local) == true:
+		return _result(false, "Accepted catch presentation still has pending catch/owner/capture work; no close input sent", data)
+	var owner := INPUT_OWNER.current(tree)
+	if owner == null:
+		data["after"] = before.duplicate(true)
+		return _result(before.context == "world", "Accepted catch must release actual world input", data)
+	if owner != game.call("menu") or owner.get_script() != preload("res://scripts/ui/game_menu.gd") \
+		or owner.call("is_open") != true or before.tab != "creatures" or before.context != "menu_creatures":
+		return _result(false, "Only the actual settled catch's Creatures menu may receive close input", data)
+	var session: Node = game.session
+	var epoch := str(session.call("_altar_current_epoch"))
+	var local: RefCounted = game.local
+	var world: RefCounted = game.world
+	var pressed: Dictionary = await tree.call("_step_press", {"action": "menu_cancel"})
+	data["ordinary_cancel"] = true
+	data["press"] = pressed.duplicate(true)
+	if pressed.get("verdict") != "PASS": return _result(false, "Ordinary settled-catch menu close input failed", data)
+	for _frame: int in 15: await tree.physics_frame # Existing modal release wait; no deadline extension.
+	var after := _capture_input_state(tree)
+	data["after"] = after
+	var released := is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(captures) and is_instance_valid(owner) \
+		and tree.root.get_node_or_null(^"Game") == game and game.session == session and game.local == local and game.world == world \
+		and session.call("_altar_current_epoch") == epoch \
+		and game.get_node_or_null(^"Session/FoundationComposition/Captures") == captures \
+		and INPUT_OWNER.current(tree) == null and after.context == "world" and owner.call("is_open") == false \
+		and game.pending_catch == null and after.capture_active.is_empty() and after.capture_requests == 0 \
+		and session.call("_owner_training_mutation_blocked", game.local) != true
+	return _result(released, "Ordinary settled-catch menu close must restore actual world input before onward interaction", data)
 
 
 static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:

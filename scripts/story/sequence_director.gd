@@ -1077,6 +1077,8 @@ func _on_ledger_delta(delta: Dictionary) -> void:
 ## the evaluation runs again on every peer whenever the world's building list
 ## moves, which is exactly what a `place_building` delta is.
 func _share_the_camp() -> void:
+	# A committed delta can still reach an outgoing scene's connected listener.
+	if not is_inside_tree() or is_queued_for_deletion(): return
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return
