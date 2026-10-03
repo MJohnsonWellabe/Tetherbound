@@ -244,10 +244,46 @@
     "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
   },
   "next_diagnostic": {
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Actual scriptless world Sprite3D PREDELETE rendering-base detachment; unchanged live properties, original spaceaccept/save/reload; no product edit or acceptance claim.",
+    "status": "Prepared; not yet dispatched"
+  },
+  "particle_material_counterfactual_r4": {
+    "kind": "f19_actual_world_particle_material_counterfactual",
     "source_commit": "be1c10b18f6191d950e1dc5648a12e9024b4f154",
     "run": 37090546213,
-    "script": "tests/probe_f19_world_material_lifetime.gd",
-    "scope": "Original spaceaccept/reload baseline versus retained actual CPU/GPU particle draw Meshes/Materials/process Material; actual geometry class histogram and particle owner paths. Diagnostic only.",
-    "status": "Verified native Run step live on same handle; no result yet"
+    "job": 111109766132,
+    "artifact": 11262318995,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 702,
+    "engine_errors": 48,
+    "script_errors": 0,
+    "original_assertion_failures": [],
+    "accepted_clean_witness": false,
+    "scopes": {
+      "baseline": {
+        "post_choice_errors": 16
+      },
+      "retained_particle_mesh_materials": {
+        "peak_references": 219,
+        "actual_GPUParticles3D": 73,
+        "actual_CPUParticles3D": 0,
+        "post_choice_errors": 16,
+        "prior_world_teardown_errors": 8,
+        "final_teardown_errors": 8
+      }
+    },
+    "choice_geometry_classes": {
+      "GPUParticles3D": 73,
+      "Label3D": 141,
+      "MeshInstance3D": 15112,
+      "MultiMeshInstance3D": 32916,
+      "Sprite3D": 1
+    },
+    "result": "Holding actual particle draw Meshes, surface Materials, process Materials and geometry override/overlay references did not reduce original full-world post-choice errors. All original gameplay guards passed; raw engine errors prohibit acceptance.",
+    "raw_log": "ci-particle-material-negative-37090546213.log.gz",
+    "raw_log_sha256": "9dd63f653b02007467d0d81001363c3d027e020456774073aa5e74fd1e39d160",
+    "next_diagnostic": "Actual scriptless world Sprite3D PREDELETE rendering-base detachment; unchanged live properties, original spaceaccept/save/reload; no product edit or acceptance claim."
   }
 }

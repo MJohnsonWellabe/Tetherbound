@@ -1,6 +1,6 @@
 {
   "kind": "f19_material_lifetime_primary_source_audit",
-  "scope": "Godot 4.7 source facts informing the already-dispatched actual chamber diagnostic; no production fix or acceptance claim",
+  "scope": "Primary engine source facts informing full-world teardown diagnosis; no production fix or acceptance claim",
   "sources": [
     {
       "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/mesh_instance_3d.h",
@@ -53,6 +53,17 @@
       "GPUParticles3D owns draw-pass Mesh references and a particle RID; destructor frees its particle RID."
     ],
     "inference": "Draw Mesh surface Materials are outside the previous MeshInstance/MultiMeshInstance retention set. Actual owner and failure are unproven until the live full-world comparison.",
-    "terrain_source_correction": "Terrain3DMaterial::uninitialize only clears its terrain pointer; destroy frees its material RID. Explicit uninitialize does not establish material RID destruction."
+    "terrain_source_correction": "Terrain3DMaterial::uninitialize only clears its terrain pointer; destroy frees its material RID. Explicit uninitialize does not establish material RID destruction.",
+    "result": "Actual full-world comparison 37090546213 is terminal negative; 219 refs retained, baseline and treatment both 16 post-choice errors."
+  },
+  "sprite_followup": {
+    "source": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/sprite_3d.cpp",
+    "facts": [
+      "SpriteBase3D creates an internal material RID; its destructor frees its mesh and material RIDs before VisualInstance3D base destruction.",
+      "Sprite3D drawing restores its rendering base to its mesh when different."
+    ],
+    "actual_product_factory": "scripts/world/ironwood_grove_presentation.gd: LightningHeartAura Sprite3D, instantiated by playground_world.gd; prior choice census contains one Sprite3D.",
+    "inference": "Prior Mesh/Material Resource retention does not retain internal SpriteBase3D material RIDs. Observe actual scriptless Sprite3D path and compare PREDELETE base detachment before inferring a product fix.",
+    "limitations": "Counterfactual only. Exact native owner remains unproven; no independently verified binary-to-tag commit mapping."
   }
 }

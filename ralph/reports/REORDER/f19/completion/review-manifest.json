@@ -152,12 +152,12 @@
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
-  "latest_material_diagnostic": "world-material-counterfactual-r3.json",
+  "latest_material_diagnostic": "particle-material-counterfactual-r4.json",
   "latest_material_probe": {
     "run": 37090546213,
     "source_commit": "be1c10b18f6191d950e1dc5648a12e9024b4f154",
     "acceptance": false,
-    "status": "Verified native Run step live; original full-world particle resource counterfactual"
+    "status": "Terminal negative: original assertions passed; 48 engine errors; particle retention did not reduce post-choice errors"
   },
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
   "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",

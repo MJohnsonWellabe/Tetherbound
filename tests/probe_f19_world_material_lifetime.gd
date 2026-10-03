@@ -1,10 +1,11 @@
 extends "res://tests/smoke_f19_veridian_functional.gd"
 
 ## Diagnostic only: original choice/save/reload, with actual whole-world
-## resource retention. Prior world Mesh/MultiMesh/terrain-resource retention
-## and scriptless Label3D deletion observers were negative. Particle draw
-## meshes were outside that retained-resource set; compare them explicitly.
+## teardown. Prior Mesh/MultiMesh/terrain/particle resource retention and
+## scriptless Label3D deletion observers were negative. Compare the actual
+## remaining Sprite3D, whose internal material is a native RID.
 const LABEL_DELETE_PROBE := preload("res://tests/helpers/f19_label_base_teardown_probe.gd")
+const SPRITE_DELETE_PROBE := preload("res://tests/helpers/f19_sprite_base_teardown_probe.gd")
 var _treatment := "baseline"
 var _held: Array[Resource] = []
 var _held_ids: Dictionary = {}
@@ -21,7 +22,7 @@ func _run_diagnostic() -> void:
 	if _game == null:
 		quit(2)
 		return
-	for treatment: String in ["baseline", "retain-particle-meshes"]:
+	for treatment: String in ["baseline", "detach-world-sprites"]:
 		_treatment = treatment
 		print("F19 WORLD MATERIAL BEGIN " + JSON.stringify({
 			"treatment": treatment, "acceptance": false,
@@ -56,13 +57,16 @@ func _drive_to_choice(climax: Node, label: String) -> bool:
 
 func _observe_world(phase: String) -> void:
 	var state := {"labels": [], "existing_script_labels": [], "geometry_count": 0,
-		"geometry_classes": {}, "particles": []}
+		"geometry_classes": {}, "particles": [], "sprites": []}
 	_observe(_world, state)
+	if phase == "choice-ready" and _treatment == "detach-world-sprites" and (state["sprites"] as Array).is_empty():
+		_fail("Sprite counterfactual observed no actual world Sprite3D")
 	print("F19 WORLD MATERIAL OBSERVED " + JSON.stringify({
 		"phase": phase, "treatment": _treatment, "held_resources": _held.size(),
 		"geometry_count": state["geometry_count"], "labels": state["labels"],
 		"existing_script_labels": state["existing_script_labels"],
-		"geometry_classes": state["geometry_classes"], "particles": state["particles"]}))
+		"geometry_classes": state["geometry_classes"], "particles": state["particles"],
+		"sprites": state["sprites"]}))
 
 func _observe(node: Node, state: Dictionary) -> void:
 	if node is GeometryInstance3D:
@@ -111,6 +115,22 @@ func _observe(node: Node, state: Dictionary) -> void:
 			_hold((node as GeometryInstance3D).material_overlay)
 		(state["particles"] as Array).append({"path": str(node.get_path()), "class": node.get_class(),
 			"draw_meshes": meshes.size(), "draw_materials": materials})
+	if node is Sprite3D:
+		var sprite := node as Sprite3D
+		(state["sprites"] as Array).append({"path": str(sprite.get_path()),
+			"script_present": sprite.get_script() != null,
+			"observer_installed": sprite.get_script() == SPRITE_DELETE_PROBE})
+		if _treatment == "detach-world-sprites":
+			if sprite.get_script() == SPRITE_DELETE_PROBE:
+				pass # Already observed; do not replace or reinitialize.
+			elif sprite.get_script() != null:
+				_fail("Sprite deletion observer refused existing product script: " + str(sprite.get_path()))
+			else:
+				var before := _sprite_live_state(sprite)
+				sprite.set_meta("f19_diagnostic_original_path", str(sprite.get_path()))
+				sprite.set_script(SPRITE_DELETE_PROBE)
+				if _sprite_live_state(sprite) != before:
+					_fail("Sprite deletion observer changed live properties: " + str(sprite.get_path()))
 	if node is Label3D:
 		var label := node as Label3D
 		(state["labels"] as Array).append(str(label.get_path()))
@@ -139,4 +159,13 @@ func _label_live_state(label: Label3D) -> Dictionary:
 			"fixed_size", "billboard", "modulate", "outline_modulate", "no_depth_test",
 			"shaded", "visible", "cast_shadow", "transform", "material_override", "material_overlay"]:
 		state[property] = label.get(property)
+	return state
+
+func _sprite_live_state(sprite: Sprite3D) -> Dictionary:
+	var state := {"base": sprite.get_base()}
+	for property: String in ["texture", "pixel_size", "centered", "offset", "flip_h", "flip_v",
+			"billboard", "modulate", "alpha_cut", "alpha_scissor_threshold", "shaded",
+			"transparent", "double_sided", "no_depth_test", "fixed_size", "visible",
+			"cast_shadow", "transform", "material_override", "material_overlay"]:
+		state[property] = sprite.get(property)
 	return state
