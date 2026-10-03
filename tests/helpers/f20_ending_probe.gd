@@ -452,14 +452,40 @@ func admit_endgame_rematch(tree: SceneTree, game: Node, rematches: Node) -> bool
 		and manager.call("is_fighting") == false, "rematch admission starts from ordinary completed-world exploration"): return false
 	print("F20 REMATCH ordinary source=", source.get_path(), " trainer=", original.id, " tier=endgame")
 	var travel := TRAVEL.new(tree, game)
+	# A fresh load keeps the owned party but deliberately does not send anyone
+	# out. Use the normal call-out button before asking for a trainer fight.
+	var blocker := str(director.call("usable_ally_blocker"))
+	print("F20 REMATCH callout initial_blocker=", blocker)
+	if blocker == "undeployed":
+		await travel.tap("creature_recall")
+		var callout_deadline := Time.get_ticks_msec() + 30000
+		while Time.get_ticks_msec() < callout_deadline and director.call("usable_ally_blocker") == "undeployed":
+			await tree.process_frame
+	var ally: RefCounted = director.get("_ally")
+	var ally_body := director.call("ally_body") as Node3D
+	if not check(director.call("usable_ally_blocker") == "" and ally != null \
+		and game.party.call("members").has(ally) and is_instance_valid(ally_body) and ally_body.visible \
+		and ally_body.get("owner_peer_id") == game.session.call("local_peer_id"),
+		"ordinary call-out has a conscious actually owned companion before the rematch"): return false
 	if not await travel.activate_endgame_rematch(prompt): failures.append_array(travel.failures); return false
 	var deadline := Time.get_ticks_msec() + 30000
 	while Time.get_ticks_msec() < deadline and manager.call("is_fighting") != true: await tree.process_frame
 	var body := director.get("_trainer_body") as Node3D
 	var enemy: RefCounted = body.get("instance") if is_instance_valid(body) else null
-	return check(director.call("trainer_battle_active") == true and manager.call("is_fighting") == true \
+	var admitted: bool = director.call("trainer_battle_active") == true and manager.call("is_fighting") == true \
 		and director.get("_trainer_node") == source and director.get("_trainer_spec") == expected \
 		and enemy != null and enemy.get("species_id") == expected.team[0].species \
 		and int(enemy.get("level")) == int(expected.team[0].level) and manager.get("_enemy") == enemy \
-		and manager.get("_enemy_owned") == true,
+		and manager.get("_enemy_owned") == true
+	if not admitted:
+		var actual_source := director.get("_trainer_node") as Node
+		print("F20 REMATCH admission fighting=", manager.call("is_fighting"), " trainer_active=", director.call("trainer_battle_active"),
+			" expected_source=", source.get_path(), " actual_source=", actual_source.get_path() if is_instance_valid(actual_source) else "none",
+			" expected_spec=", expected, " actual_spec=", director.get("_trainer_spec"),
+			" enemy=", enemy, " species=", enemy.get("species_id") if enemy != null else "none",
+			" level=", enemy.get("level") if enemy != null else 0, " manager_enemy_matches=", manager.get("_enemy") == enemy,
+			" enemy_owned=", manager.get("_enemy_owned"), " ally_blocker=", director.call("usable_ally_blocker"),
+			" can_challenge=", director.call("can_challenge", expected), " source_busy=", director.call("rematch_source_busy", source),
+			" pending_world_message=", game.get("_pending_world_message"))
+	return check(admitted,
 		"ordinary input admits the actual canonical endgame rematch at its configured tier; isolated proof quits during fight")
