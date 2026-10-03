@@ -801,7 +801,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"guardian_pilot":
 			out = await _step_guardian_pilot(args)
 		"join_encounter":
-			out = await _step_join_encounter(args)
+			out = await _step_join_encounter(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"teleport":
 			out = await _step_teleport(args)
 		"place_creature":
@@ -2107,9 +2107,23 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 	var driver := game.get_node_or_null(^"JoinDriver")
 	if driver == null:
 		return {"verdict": "FAIL", "detail": "title entry did not mount JoinDriver (returning route may have shown character picker)"}
+	# The title consumes/frees a failed driver when it returns. Keep the actual
+	# failure signal independently so that a later physics frame can still
+	# report it without calling the freed instance.
+	var failure := {"message": ""}
+	driver.connect("failed", func(message: String) -> void: failure.message = message, CONNECT_ONE_SHOT)
+	var driver_ref := weakref(driver)
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 	for i in maxi(1, budget):
 		await physics_frame
+		driver = driver_ref.get_ref() as Node
+		if driver == null:
+			return {"verdict": "FAIL", "detail": "JoinDriver ended after %d frames: %s"
+				% [i, str(failure.message) if not str(failure.message).is_empty()
+					else "the title removed the driver before a join completed"]}
+		if not str(failure.message).is_empty():
+			return {"verdict": "FAIL", "detail": "JoinDriver failed after %d frames: %s"
+				% [i, str(failure.message)]}
 		if current_scene != null and current_scene.is_in_group(&"title_screen") \
 				and not bool(driver.call("is_running")):
 			return {"verdict": "FAIL", "detail": "JoinDriver returned to title after %d frames: %s"
@@ -2206,6 +2220,11 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 		if preparation_frames < 0:
 			return {"verdict": "FAIL", "detail": "Initial actual Hall fixture unavailable"}
 		started_physics_frame -= preparation_frames
+		var prior_frames: Variant = args.get("portal_prior_frames", 0)
+		if not (prior_frames is int or prior_frames is float) or not is_finite(float(prior_frames)) \
+			or float(prior_frames) != floorf(float(prior_frames)) or prior_frames < 0 or prior_frames >= budget:
+			return {"verdict": "FAIL", "detail": "Observed prior movement/settle must fit original portal frame budget"}
+		started_physics_frame -= int(prior_frames)
 		var driver: RefCounted = portal.new()
 		var travel: Dictionary = await driver.call("travel", self, args, started_physics_frame, budget)
 		crossed = travel.get("ok") == true
@@ -2601,7 +2620,7 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 
 
 ## Protocol §6: join a fight already running, by id.
-func _step_join_encounter(args: Dictionary) -> Dictionary:
+func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var director := _encounter_director()
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
@@ -2610,16 +2629,77 @@ func _step_join_encounter(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
+	# A shared join returns while the host's admission/record is still pending.
+	# Observe THAT request's original deadline, rather than inventing a longer
+	# settle delay. Legacy/tournament joins keep their existing 120-frame wait.
+	var shared := str(director.get("_pending_shared_join_id")) == id \
+		or str(director.get("_shared_active_id")) == id
+	var admission_deadline := int(director.get("_pending_shared_join_deadline_ms")) if shared else 0
+	var frames := maxi(1, int(args.get("settle", 120)))
+	if shared:
+		frames = maxi(1, command_budget_frames)
+		if args.has("settle"):
+			frames = mini(frames, maxi(1, int(args["settle"])))
 	var manager := _combat_manager()
 	var bound := false
-	for i in maxi(1, int(args.get("settle", 120))):
+	var failure := ""
+	var observed_world_message := ""
+	for i in frames:
 		await physics_frame
+		if shared:
+			if (director.get("_cancelled_shared_joins") as Dictionary).has(id):
+				failure = "shared admission was cancelled by the producer"
+				# Shared refusal bypasses manager.last_encounter_refusal. This
+				# global toast is observation only: the HUD may have consumed it,
+				# or another gameplay message may have replaced the actual reason.
+				var game := root.get_node_or_null(^"Game")
+				if game != null:
+					observed_world_message = str(game.get("_pending_world_message"))
+				break
 		manager = _combat_manager()
 		if manager != null and bool(manager.call("is_fighting")) \
 				and str(manager.call("encounter_id")) == id:
-			bound = true
-			break
+			if not shared:
+				bound = true
+			else:
+				var rec: Dictionary = director.call("encounter_record")
+				var opponent: Dictionary = rec.get("opponent", {})
+				var body: Node3D = manager.call("enemy_body") as Node3D
+				var card: Dictionary = opponent.get("card", {})
+				var creature: RefCounted = body.get("instance") as RefCounted if is_instance_valid(body) else null
+				var generation := int(opponent.get("body_generation", 0))
+				var source_matches := false
+				if is_instance_valid(body) and generation > 0:
+					if bool(director.call("_is_host")):
+						var runtime: Node = director.call("_shared_host_fight", id) as Node
+						source_matches = is_instance_valid(runtime) and runtime.call("body") == body \
+							and int(runtime.get("body_generation")) == generation
+					else:
+						var script: Script = body.get_script() as Script
+						source_matches = body == director.get("_shared_opponent_proxy") and script != null \
+							and script.resource_path == "res://scripts/creatures/shared_opponent_proxy.gd" \
+							and int(body.get("body_generation")) == generation
+				bound = str(rec.get("encounter_id", "")) == id and rec.get("phase") == "active" \
+					and director.call("_shared_record_is_current_realm", rec) == true \
+					and (rec.get("participants", {}) as Dictionary).has(int(director.call("_local_peer_id"))) \
+					and str(director.get("_shared_active_id")) == id and source_matches \
+					and creature != null and not str(card.get("uid", "")).is_empty() \
+					and str(creature.get("uid")) == str(card.get("uid", "")) \
+					and str(creature.get("species_id")) == str(opponent.get("species_id", ""))
+			if bound:
+				break
+		if shared:
+			if str(director.get("_pending_shared_join_id")) != id:
+				failure = "shared admission ended without a matching host record and presentation"
+				break
+			if admission_deadline <= 0 or Time.get_ticks_msec() >= admission_deadline:
+				failure = "shared admission reached its original producer deadline"
+				break
 	if not bound:
+		if shared:
+			return {"verdict": "FAIL", "detail": failure if not failure.is_empty() else "shared admission reached the caller frame limit",
+				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline,
+					"frame_limit": frames, "observed_world_message": observed_world_message}}
 		if manager == null or not bool(manager.call("is_fighting")):
 			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
 		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
@@ -4075,6 +4155,11 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 			return {"verdict": "PASS",
 				"detail": "stopped with %d of their creatures still queued after %d frames / %d swings"
 					% [int(director.call("trainer_creatures_left")), frames, swings]}
+		# A won round retains its bodies while actual owner save/ACKs settle.
+		# Wait for shipping resolution before requesting another aid or swing.
+		if manager.get("state") == NET_COMBAT_MANAGER.State.RESOLVING:
+			_trainer_fight_progress["phase"] = "wait_round_resolution"
+			continue
 		if frames % stride != 0:
 			continue
 		var mine: Variant = manager.call("active_creature")
@@ -7970,7 +8055,10 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 	var local: RefCounted = game.get("local")
 	var saver: RefCounted = game.get("save_system")
 	var mode := str(args.get("mode", "inspect"))
+	var personal_only := args.get("personal_only") == true
 	if mode == "seed":
+		if personal_only and _session() != null and _session().call("is_active") == true:
+			return {"verdict": "FAIL", "detail": "personal fixture must be prepared before admission"}
 		var marker := clampi(int(args.get("marker", 1)), 1, 2)
 		var party: RefCounted = local.get("party")
 		if int(party.call("size")) == 0:
@@ -8024,12 +8112,44 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 			"station_tiers": {"forge": 2}, "node_cycles": {"essence_ground": 3},
 			"rematch_cycles": {"meadows": 4}, "alpha_cycles": {"meadows": 5},
 			"bounty_day": 6, "fifth_arch_stirred": true}
-		if bool(game.call("is_host")): errors.append_array(FOUNDATIONS_STATE.validate("world", hosted))
+		if not personal_only and bool(game.call("is_host")): errors.append_array(FOUNDATIONS_STATE.validate("world", hosted))
 		if not errors.is_empty(): return {"verdict": "FAIL", "detail": str(errors)}
 		local.set("redesign_character", canonical)
-		if bool(game.call("is_host")):
+		if not personal_only and bool(game.call("is_host")):
 			world.set("redesign_world", hosted)
 			world.set("revision", int(world.get("revision")) + 1)
+	elif mode == "personal_roundtrip":
+		if _session() != null and _session().call("is_active") == true:
+			return {"verdict": "FAIL", "detail": "personal fixture roundtrip must precede admission"}
+		var character_id := str(local.get("character_id"))
+		var characters: RefCounted = saver.call("characters")
+		var world_path := str((saver.call("worlds") as RefCounted).call("path_for", str(world.get("world_id"))))
+		if characters == null or character_id.is_empty() or FileAccess.file_exists(world_path):
+			return {"verdict": "FAIL", "detail": "personal fixture requires its named owner and no guest world file"}
+		saver.call("finish_fallback")
+		if saver.call("fallback_busy") == true:
+			return {"verdict": "FAIL", "detail": "personal fixture fallback is still writing"}
+		var before := _foundations_payload()
+		var before_snapshot: Dictionary = saver.call("snapshot", game)
+		# No autosave_here: a disconnected process may own a local world. Only
+		# the real prepared character writer may create this portable fixture.
+		var saved: Variant = saver.call("save_character_prepared", game, character_id)
+		if not saved is bool or saved != true:
+			return {"verdict": "FAIL", "detail": "personal fixture prepared character Bool write refused"}
+		var disk: Dictionary = characters.call("state", character_id)
+		if disk.get("character_id") != character_id or disk.get("party") != before_snapshot.get("party") \
+				or disk.get("redesign_character") != before_snapshot.get("redesign_character"):
+			return {"verdict": "FAIL", "detail": "personal fixture disk readback changed its owner or full carrier"}
+		var applied: Variant = characters.call("apply", game, character_id)
+		if not applied is bool or applied != true:
+			return {"verdict": "FAIL", "detail": "personal fixture portable character apply refused"}
+		var after := _foundations_payload()
+		var after_snapshot: Dictionary = saver.call("snapshot", game)
+		if after.character_id != character_id or after.character != before.character \
+				or after.world != before.world or after_snapshot.get("party") != before_snapshot.get("party") \
+				or after_snapshot.get("redesign_character") != before_snapshot.get("redesign_character") \
+				or FileAccess.file_exists(world_path):
+			return {"verdict": "FAIL", "detail": "personal fixture reload changed its carrier or created a guest world"}
 	elif mode == "roundtrip":
 		var before := _foundations_payload()
 		var result := await _step_save_reload_here({})

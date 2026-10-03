@@ -23,6 +23,9 @@ extends "res://tests/helpers/net_harness.gd"
 ## * `realm_key_cloudreach` is granted as a WORLD flag through the ledger on
 ##   the host (the `smoke_net_split_realms.gd` fixture), so the crossing is
 ##   not refused for a key this smoke is not about.
+## * Initial actual Hall placement, canonical open route and one Home Key are
+##   disclosed mechanics fixtures before admission. Actual portal requests,
+##   Home Key raise, Hall walking, owner BOOL saves and host ACKs remain real.
 ## * Each peer's party is seeded with `party_grant` in the solo Cloudreach
 ##   saddle smoke's order: meadowhart, bramblebun, mudsnout, terrapup,
 ##   brooktail. Index 0 (the Meadowhart) is active. One `saddle` is put in each
@@ -153,6 +156,13 @@ func _run() -> void:
 	_step_phase_deadline_ms = Time.get_ticks_msec() + REALM_STEP_BUDGET_S * 1000.0
 	var crossing_budget := int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) * 4
 
+	for fixture_peer in 2:
+		var prepared: Dictionary = await step(fixture_peer, "enter_realm", {"realm": CLOUDREACH,
+			"actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+			"portal_regression": "cloudreach_riding", "portal_prepare_only": true})
+		if not _ok(prepared, "Disclosed initial Hall/route/Home Key mechanics fixture before admission; no earned credit"):
+			quit(await finish())
+			return
 	# --- handshake (smoke_net_riding.gd) --------------------------------------
 	if not _ok(await step(0, "host", {}), "peer 0 hosted a world"):
 		quit(await finish())
@@ -198,7 +208,8 @@ func _run() -> void:
 	# the re-entry leg at the end of this file, where it is asserted on rather
 	# than routed around: see `_guest_rejoins_the_hosts_realm()`.
 	for i: int in [1, 0]:
-		var crossed: Dictionary = await step(i, "enter_realm", {"realm": CLOUDREACH}, crossing_budget)
+		var crossed: Dictionary = await step(i, "enter_realm", {"realm": CLOUDREACH,
+			"actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit", "portal_regression": "cloudreach_riding"}, crossing_budget)
 		if not _ok(crossed, "peer %d crossed into Cloudreach" % i):
 			quit(await finish())
 			return
@@ -554,9 +565,11 @@ func _check_host_tracks_guest(context: String) -> void:
 ## mid-chapter has. Asserted, not routed around: the host's copy of the
 ## guest must land on the guest when the guest arrives second.
 func _guest_rejoins_the_hosts_realm(crossing_budget: int) -> void:
-	if not _ok(await step(1, "enter_realm", {"realm": "meadows"}, crossing_budget), "re-entry: the guest crossed back to the Meadows"):
+	if not _ok(await step(1, "enter_realm", {"realm": "meadows",
+		"actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit", "portal_regression": "cloudreach_riding"}, crossing_budget), "re-entry: the guest crossed back to the Meadows"):
 		return
-	if not _ok(await step(1, "enter_realm", {"realm": CLOUDREACH}, crossing_budget), "re-entry: the guest walked back into the host's Cloudreach"):
+	if not _ok(await step(1, "enter_realm", {"realm": CLOUDREACH,
+		"actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit", "portal_regression": "cloudreach_riding"}, crossing_budget), "re-entry: the guest walked back into the host's Cloudreach"):
 		return
 	await step(1, "dismiss_dialogue", {"settle": 10})
 	_check(await _recall_until_out(1) != Vector3.INF, "re-entry: the guest called its Meadowhart out again")

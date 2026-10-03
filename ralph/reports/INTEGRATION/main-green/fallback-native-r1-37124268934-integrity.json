@@ -1,0 +1,53 @@
+{
+  "run_id": 37124268934,
+  "artifact_id": 11274199457,
+  "checkout_ref": "3c27dd1eb81b0373749e3e62d0e0f1ec74a2b059",
+  "result": "PASS 135 tests / 1188 assertions / exit0 / 23s / no original errors",
+  "archive_sha256": "f39657db07f88b3383b03be87af44987889c96001ad125023c70bdd6884464a8",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "fallback-native-r1-37124268934-0-MANIFEST.txt.gz",
+      "sha256": "a2d1da33edbbf3b69d8e51f52a71aeac64bad8dac536b57e94bb8c6d5b86f844"
+    },
+    "exit_code": {
+      "retained_file": "fallback-native-r1-37124268934-1-exit_code.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "run.log": {
+      "retained_file": "fallback-native-r1-37124268934-2-run.log.gz",
+      "sha256": "a58e6bc42133233b3878ee43fefb63e823c33a62c1c4b7c3eafae973b7825622"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "fallback-native-r1-37124268934-3-boot_log.txt.gz",
+      "sha256": "0963c1aeb4bd2087c697cb62991f6d49bcf4a70f775e281b19c8968f7cf89115"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "fallback-native-r1-37124268934-4-godot.log.gz",
+      "sha256": "869b52b0cfc517ce7353f2bbc4ec3962d77bb2c537620cce146ec9b637f6aa66"
+    },
+    "user/godot/app_userdata/Tetherbound/test_saves_autosave_fallback/characters/admitted-client/character.json": {
+      "retained_file": "fallback-native-r1-37124268934-5-character.json.gz",
+      "sha256": "fd19641b45f06022f2ed5be29bf20fe16666d802a214940b3f823303074f1d70"
+    },
+    "user/godot/app_userdata/Tetherbound/test_saves_autosave_fallback/characters/character-286f921cfe9277b49f2a388b422e67a8/character.json": {
+      "retained_file": "fallback-native-r1-37124268934-6-character.json.gz",
+      "sha256": "75de97a201bea99f08ef996126c10cd2d45a4bfae0f01e6ca2fc02411c042f2f"
+    },
+    "user/godot/app_userdata/Tetherbound/test_saves_autosave_fallback/characters/character-29b59d879ce780bb21b4d81c39328f28/character.json": {
+      "retained_file": "fallback-native-r1-37124268934-7-character.json.gz",
+      "sha256": "780f8dc518850f168a61d92d87adc1d7ede690cdb88f3217453a2cefcd8dfd43"
+    },
+    "user/godot/app_userdata/Tetherbound/test_saves_autosave_fallback/characters/character-4f8e3aa474ca6a2448394624ba015b31/character.json": {
+      "retained_file": "fallback-native-r1-37124268934-8-character.json.gz",
+      "sha256": "1f2d3954bf486dbad3ca18baad8c7a70bbad7a2316c410ccd45c7354bcec7d71"
+    },
+    "user/godot/app_userdata/Tetherbound/test_saves_autosave_fallback/characters/character-9170a39712c36c6b1c6d8d5fcd2d4d99/character.json": {
+      "retained_file": "fallback-native-r1-37124268934-9-character.json.gz",
+      "sha256": "62bd258d3a15d03acb5f911d783c014f539967b3b07e0e92be452f16898e9478"
+    },
+    "user/godot/app_userdata/Tetherbound/test_saves_autosave_fallback/worlds/slot-0/world.json": {
+      "retained_file": "fallback-native-r1-37124268934-10-world.json.gz",
+      "sha256": "1297fdc0a541693227f1ec2c007715a102bd1cf964c1b964f27fcf7ab1bcdf98"
+    }
+  }
+}

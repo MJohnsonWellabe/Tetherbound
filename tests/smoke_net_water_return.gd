@@ -2,10 +2,11 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
-## Fixture-only network proof for the ordinary Water return connection. Both
-## peers boot the production Water scene and form a real Session. The host
-## ledger supplies only the two route prerequisites an earned save would have;
-## the connected client then walks to the physical gate and presses Interact.
+## Fixture-only network proof for Water -> Home Key -> Hall -> Stormwood. Both
+## peers boot production Water and form a real Session. Initial Home Key and
+## canonical route fixtures are disclosed before admission. Retired physical
+## gates must refuse travel (WORLD §2.2/2.7, RD-17; F18#2), then the actual Home
+## Key raise and portal transaction supply the consumed permits/BOOL/ACKs.
 ## This is not earned campaign evidence.
 
 const WATER := "water"
@@ -17,6 +18,7 @@ const ROUTE_FLAGS: Array[String] = [STORMWOOD_KEY, WATER_UNLOCK, WATER_KEY]
 ## Same production Stormwood transition budget used by the existing focused
 ## two-peer Stormwood realm smoke; this test does not extend a global budget.
 const REALM_STEP_BUDGET := 10000
+const PORTAL_FIXTURE := "initial_hall_position_and_open_route_no_earned_credit"
 ## water_world.json places the gate at (12, 162) and RealmGate places its
 ## Interactable 0.72 m forward. This is the same 2.2 m physical stance derived
 ## by the single-process proof, on the First Shore side of the threshold.
@@ -60,6 +62,12 @@ func _run() -> void:
 			quit(await finish())
 			return
 
+	for fixture_peer in 2:
+		var prepared: Dictionary = await step(fixture_peer, "enter_realm", {"realm": STORMWOOD,
+			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "water_return", "portal_prepare_only": true})
+		if not _require(_passed(prepared), "Disclosed initial actual Water ground/Home Key/open canonical route; no earned chapter credit"):
+			quit(await finish())
+			return
 	var hosted: Dictionary = await step(0, "host")
 	if not _require(_passed(hosted), "host starts the real session (%s)" % _detail(hosted)):
 		quit(await finish())
@@ -89,8 +97,9 @@ func _run() -> void:
 		quit(await finish())
 		return
 
-	# Prove these are the only fixture progression writes: all three route facts
-	# are initially absent in both scopes before the two named WORLD submissions.
+	# These retired route flags remain independently absent in both scopes
+	# before the two named WORLD submissions. Canonical route/Home Key mechanics
+	# fixtures were explicitly supplied before admission above.
 	for peer in 2:
 		var empty_story := await _route_story(peer)
 		if not _require(_route_state(empty_story, false, false, false, false),
@@ -131,26 +140,39 @@ func _run() -> void:
 				% _detail(moved)):
 		quit(await finish())
 		return
+	var prior_frames: int = int(moved.get("frames_used", 0))
 
 	var pressed: Dictionary = await step(1, "press", {"action": "interact"})
 	if not _require(_passed(pressed),
 			"connected client sends ordinary Interact at the physical gate (%s)" % _detail(pressed)):
 		quit(await finish())
 		return
-	# The gate issues its router request asynchronously. Poll the read-only
-	# destination state inside the same frame budget used by the existing
-	# focused Stormwood transition smoke; this never calls the router directly.
-	var client_realm := await _await_client_completion()
+	prior_frames += int(pressed.get("frames_used", 0))
+	var refused_gate: Variant = await probe(1, "realm")
+	if not _require(refused_gate is Dictionary and str(refused_gate.get("current", "")) == WATER \
+		and str(refused_gate.get("scene", "")) == "WaterArchipelago",
+		"Retired physical gate does not authorize a realm transfer (RD-17/F18#2)"):
+		quit(await finish())
+		return
+	# Same original 6000 action-frame budget includes walking/pressing the old
+	# gate, real Home Key animation/arrival, Hall walking and actual portal ACK.
+	var entered: Dictionary = await step(1, "enter_realm", {"realm": STORMWOOD,
+		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "water_return",
+		"portal_prior_frames": prior_frames}, REALM_STEP_BUDGET)
+	if not _require(_passed(entered), "Actual Home Key/Hall public route reaches Stormwood with saved arrival ACK (%s)" % _detail(entered)):
+		quit(await finish())
+		return
+	var client_realm: Dictionary = await _await_client_completion()
 	if not _require(str(client_realm.get("current", "")) == STORMWOOD
 			and str(client_realm.get("scene", "")) == "Stormwood"
 			and bool(client_realm.get("world_ready", false))
 			and str(client_realm.get("pending_entry", "<missing>")).is_empty(),
-			"ordinary gate interaction completes in the production Stormwood scene"):
+			"ordinary Home Key/Hall portal route completes in the production Stormwood scene"):
 		quit(await finish())
 		return
 	var arrival_raw: Variant = await probe(1, "position")
 	var on_floor: Variant = await probe(1, "on_floor")
-	var authored_arrival := _authored_stormheart_arrival()
+	var authored_arrival := _authored_portal_arrival()
 	var arrival := Vector3.ZERO
 	var has_arrival := arrival_raw is Array and (arrival_raw as Array).size() == 3
 	if has_arrival:
@@ -161,7 +183,7 @@ func _run() -> void:
 				Vector2(authored_arrival.x, authored_arrival.z)) <= 0.75
 			and absf(arrival.y - authored_arrival.y) <= 0.5
 			and on_floor is bool and bool(on_floor),
-			"completed client arrival is grounded at the authored Stormheart return anchor"):
+			"completed client arrival is grounded at the exact authored Stormwood portal anchor"):
 		quit(await finish())
 		return
 	var host_realm: Variant = await probe(0, "realm")
@@ -250,15 +272,15 @@ func _await_client_completion() -> Dictionary:
 	return last
 
 
-func _authored_stormheart_arrival() -> Vector3:
+func _authored_portal_arrival() -> Vector3:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/config/stormwood_world.json"))
 	if not (parsed is Dictionary):
 		return Vector3.INF
 	var transitions: Dictionary = (parsed as Dictionary).get("transition_points", {}) as Dictionary
-	var spec: Dictionary = transitions.get("water_departure", {}) as Dictionary
+	var spec: Dictionary = transitions.get("cloudreach_entry", {}) as Dictionary
 	var raw: Array = spec.get("position", []) as Array
-	if str(spec.get("id", "")) != "stormwood_departure_to_water" or raw.size() < 3:
+	if str(spec.get("id", "")) != "stormwood_arrival_from_cloudreach" or raw.size() < 3:
 		return Vector3.INF
 	return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
 

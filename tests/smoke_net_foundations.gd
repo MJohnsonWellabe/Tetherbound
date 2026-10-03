@@ -32,12 +32,14 @@ func _run() -> void:
 	# later equality checks compare against the host's own state, not a race.
 	var host := await _settled_carrier(0)
 	check(_populated(host), "host populated all 8 world / 14 personal / 9 per-creature fields (%s)" % _unpopulated(host))
+	# The initial admission must see the exact portable fixture. Replacing it
+	# after joining leaves the host's immutable full-owner bounty row stale.
+	if not await _pass(1, "foundations_state", {"mode": "seed", "marker": 2, "personal_only": true}): return
+	if not await _pass(1, "foundations_state", {"mode": "personal_roundtrip"}): return
 	if not await _pass(1, "join", {"host": "127.0.0.1", "port": port}): return
 	for peer in 2:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return
-	if not await _pass(1, "foundations_state", {"mode": "seed", "marker": 2}): return
-	if not await _pass(1, "foundations_state", {"mode": "roundtrip"}): return
-	var guest := await _carrier(1)
+	var guest := await _settled_carrier(1)
 	check(_populated(guest), "guest populated every personal and per-creature field")
 	check(guest.get("world", {}) == host.get("world", {}), "host snapshot carries all 8 world fields")
 	check(guest.get("character", {}) != host.get("character", {}), "personal fixture payloads are distinct")

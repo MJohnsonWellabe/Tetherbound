@@ -1,0 +1,437 @@
+{
+  "run_id": 37122870115,
+  "artifact_id": 11273364444,
+  "checkout_ref": "31d07d769afba5b387cc1a44f8ff978f2a26b351",
+  "result": "FAIL step36: typed topup attempted during actual won round RESOLVING; original provider correctly refused terminal source",
+  "archive_sha256": "eac2edae299f4e709707932a60d4e9ca574240852c85a19858c5b0ba12f0c7c1",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "four-r13-37122870115-0-MANIFEST.txt.gz",
+      "sha256": "a9edbfeb87331041ceb08132b078c4835fc5aa9922f6f050cdbea1a93cf9dff0"
+    },
+    "run.log": {
+      "retained_file": "four-r13-37122870115-1-run.log.gz",
+      "sha256": "c9a6e029df0f67497a1e8b8953770545f2e00d1d09885c665de4850aee0e581c"
+    },
+    "tree/data/config/alpha_respawns.json": {
+      "retained_file": "four-r13-37122870115-2-alpha_respawns.json.gz",
+      "sha256": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851"
+    },
+    "tree/data/config/essence.json": {
+      "retained_file": "four-r13-37122870115-3-essence.json.gz",
+      "sha256": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e"
+    },
+    "tree/data/config/hud.json": {
+      "retained_file": "four-r13-37122870115-4-hud.json.gz",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f"
+    },
+    "tree/data/config/multiplayer.json": {
+      "retained_file": "four-r13-37122870115-5-multiplayer.json.gz",
+      "sha256": "f8b37f2736c75f20889649f8467caec67c4a09bf7dbefd04c2553d55bd3dd699"
+    },
+    "tree/data/config/stations.json": {
+      "retained_file": "four-r13-37122870115-6-stations.json.gz",
+      "sha256": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9"
+    },
+    "tree/data/config/traits.json": {
+      "retained_file": "four-r13-37122870115-7-traits.json.gz",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator-home/godot/app_userdata/Tetherbound/f48-prepare_boss_four-scenario.json": {
+      "retained_file": "four-r13-37122870115-8-f48-prepare_boss_four-scenario.json.gz",
+      "sha256": "a0bdeef8894091c1a0ca66b3ce54912765a8a7b8dd52d5103e6e82bc816c5003"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator-home/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r13-37122870115-9-godot.log.gz",
+      "sha256": "66c7ba3f33023a56c770b88bdf98b1e0d7ef1a84987e80be2b729f605258fd4b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator.log": {
+      "retained_file": "four-r13-37122870115-10-coordinator.log.gz",
+      "sha256": "66c7ba3f33023a56c770b88bdf98b1e0d7ef1a84987e80be2b729f605258fd4b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/invocation.json": {
+      "retained_file": "four-r13-37122870115-11-invocation.json.gz",
+      "sha256": "894dcde527414ecb0e668e01d500d551adf22b51d1bb31c2e7cbfc016ff26385"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/fixture-manifest.json": {
+      "retained_file": "four-r13-37122870115-12-fixture-manifest.json.gz",
+      "sha256": "047584c59579945cee1f7739be9a999c81a98ee3654e3626e906a1b0248b0e2f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r13-37122870115-13-character.json.gz",
+      "sha256": "48289d457580a72f0a791d4d2e8c4451f4e19d9b3a42c935dc661a01c15b36e5"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-0/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-14-slot_0.json.gz",
+      "sha256": "c207428705adb761c2ecef8935184ebecd538db12e61a7015ff244ef2f7d57cb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-0/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-15-world.json.gz",
+      "sha256": "71b59819d2a8bcae12d555d05d819ea0755e49909138e7447e7574f1a6c95324"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r13-37122870115-16-character.json.gz",
+      "sha256": "b7eb1ad4489e484792d9fc0a91bd7d54a684f563ec9f8c28ea5f4aafdc73ebf3"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-2/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r13-37122870115-17-character.json.gz",
+      "sha256": "db9aabfcae6742630b79549af8b5dd30b524e6fd317474a76abf998fcf67dc00"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-3/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r13-37122870115-18-character.json.gz",
+      "sha256": "0c835a1f7a0b284235995504d78fc223a881e4ba96cadf146830d7178b11ed39"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/profile.json": {
+      "retained_file": "four-r13-37122870115-19-profile.json.gz",
+      "sha256": "aa1ee49f6457449b223c2a5644ad586f8b9af1de5b93dabe8ac9993b2aba2f12"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/alpha_respawns.json": {
+      "retained_file": "four-r13-37122870115-20-alpha_respawns.json.gz",
+      "sha256": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/essence.json": {
+      "retained_file": "four-r13-37122870115-21-essence.json.gz",
+      "sha256": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/hud.json": {
+      "retained_file": "four-r13-37122870115-22-hud.json.gz",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/multiplayer.json": {
+      "retained_file": "four-r13-37122870115-23-multiplayer.json.gz",
+      "sha256": "ca39e27adee3d8b18cd3c19c4a6fd045b66ee0f92b1892467f70a0c9013acf79"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/stations.json": {
+      "retained_file": "four-r13-37122870115-24-stations.json.gz",
+      "sha256": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/traits.json": {
+      "retained_file": "four-r13-37122870115-25-traits.json.gz",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/NET_RUN.json": {
+      "retained_file": "four-r13-37122870115-26-NET_RUN.json.gz",
+      "sha256": "af5376ebfe114e4949ecbd0cbc64f19376b254a4e20c4c2395cbb06591125cfd"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/SUMMARY.md": {
+      "retained_file": "four-r13-37122870115-27-SUMMARY.md.gz",
+      "sha256": "e3267795429879668acc262b774a487d35e79e1d7f1224c026692a2b5e89d659"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "four-r13-37122870115-28-boot_log.txt.gz",
+      "sha256": "8fa863cffef1938cccfd73f9e25e1f84b0e117f964d8dacb1f958e7abc817138"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r13-37122870115-31-character.json.gz",
+      "sha256": "a0f5bbf60071d9272c27abb7be58ceb91d7913a10c17e1f3982bc784279299bf"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r13-37122870115-32-godot.log.gz",
+      "sha256": "0bf34a13aba42fe5d8cc76b3c29365a3e12978a32aa7b5e3a4bed10aaeb7fb7d"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r13-37122870115-33-character.json.gz",
+      "sha256": "5a1fd96748488ae08822ed1e96454a5e16dde88de757ad4c975043f34bbdede4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-34-slot_0.json.gz",
+      "sha256": "efef5be2fdfbd841393e864cb697a5a7faa98e6176649f5da0c93f6bae058b9f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-35-world.json.gz",
+      "sha256": "4f347356b272c8411a189556098e6ec801255c5315062b24c4726cde41ba9d7e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-36-world.json.gz",
+      "sha256": "267b70f8641589d61f36194d369eb212374bde6cf4935e379ff6dc24817fda28"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "four-r13-37122870115-37-boot_log.txt.gz",
+      "sha256": "ad7600c112ba75500fd9cd5d68fe70e26207c2fa1faf2edc5fba1f09e58b2243"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r13-37122870115-40-character.json.gz",
+      "sha256": "9fcc5fecd453ff44129351694007658cb782439cd10e7435779f98459d47fe7c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r13-37122870115-41-godot.log.gz",
+      "sha256": "898411ee94dd9f9d1d3ee1b51a0baa5f67e9730a1edea75e0d902403b0973383"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-1/godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r13-37122870115-42-character.json.gz",
+      "sha256": "4b6b751741fe8cdad1af72c94206b700849d13ecf9f81139c02cfcf4bc26b6c6"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "four-r13-37122870115-43-boot_log.txt.gz",
+      "sha256": "0c8a4cb6b7e377a6a8e2da5e13f1a31522e32399b16366ba0c95a9b0e2ba4d87"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r13-37122870115-46-character.json.gz",
+      "sha256": "a574105c07820c200b53c61d83f16ec9ae80447f1069a474d51f589c8471f1fc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r13-37122870115-47-godot.log.gz",
+      "sha256": "f96138be105174584f041722d3c7515a4060e464463a18e02570d8c81d1d36fe"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r13-37122870115-48-character.json.gz",
+      "sha256": "83c46bd9ed22ff4a442c37d01c98413ccf7fabdc8d98d3fa48398e57275d2427"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-49-world.json.gz",
+      "sha256": "a30277bebda4a276445aa5191bbc73aed9e76304d580c4432cdc302abeb9ba3e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-50-slot_0.json.gz",
+      "sha256": "ce84f188dd9269361bc54e693d581570883ba12181f0d19999a1ae6334511f3f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "four-r13-37122870115-51-boot_log.txt.gz",
+      "sha256": "b3bf96ad1c29e2cb4ce0a6de782281d33207d1dae32f297a6232f5fbd209cfcc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r13-37122870115-54-character.json.gz",
+      "sha256": "05601ae6bd1f3c75cd4b4789ac89ddc3bd75cab69a6e81f091f39eb346e6f370"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r13-37122870115-55-godot.log.gz",
+      "sha256": "bb56063fe0fbeaf7c2266e14a3bd8def15f91a68564223e19d066501b0235776"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r13-37122870115-56-character.json.gz",
+      "sha256": "9510f62121c41c2ee9279b859e35f45236c6b5197b6c722a92299124410c9fcd"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-57-slot_0.json.gz",
+      "sha256": "594128010825fc7400376312775947448598d8a0444f151988a958dffbe3b38c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-58-world.json.gz",
+      "sha256": "630aa6c1eae1c094b41a6d684fea2848e86334b3863a5e1eed9489d89497e0ea"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-0.log": {
+      "retained_file": "four-r13-37122870115-59-peer-0.log.gz",
+      "sha256": "a6b365851c95dae811c048050f381389ef6cacf69647220f9a944d7d3906c892"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-1.log": {
+      "retained_file": "four-r13-37122870115-60-peer-1.log.gz",
+      "sha256": "ed89d5aa60b15f1a2ab044852b49a63e6ce53f3d1ccc131eabc62946903e39a4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-2.log": {
+      "retained_file": "four-r13-37122870115-61-peer-2.log.gz",
+      "sha256": "e52c6f11e94d8443896fad850b86f0abd765bef6e6740c917acb96eae2760b59"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r13-37122870115-62-character.json.gz",
+      "sha256": "06fea685d133a680a4d7dcc887fbd6179b7675f36b2c87a54753c7b7c81d2063"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-3.log": {
+      "retained_file": "four-r13-37122870115-63-peer-3.log.gz",
+      "sha256": "c567120b126e62ea497147d993ec8f531c949eace9f70721dc0c95fb7fbb4c10"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-0/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-64-slot_0.json.gz",
+      "sha256": "b187d4f8abeffd9bbe6e6d4daedf28a472368ce1d849bf0f69d27d2f9562fe2b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-0/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-65-world.json.gz",
+      "sha256": "4e5b04e982f85a10d38c07865306bb0f1e13fa08b0e1624e501873c3ac2f35bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r13-37122870115-66-character.json.gz",
+      "sha256": "8d2deab960882f4f25172de6147a965fe3fb2b9366ebea9b40402a55e4b37172"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-2/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r13-37122870115-67-character.json.gz",
+      "sha256": "fd4973fee083df26a95244be1ec4bd9339bf677196646f59f694148e15c474d9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-3/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r13-37122870115-68-character.json.gz",
+      "sha256": "26f893c26cf4394dcfc4856f72d71c5395ead32cde54b5418607b950578f1e9b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/producer-profile/profile.json": {
+      "retained_file": "four-r13-37122870115-69-profile.json.gz",
+      "sha256": "5f05b49156971ee7dfbb542f849c89d399dcaa0fa20c9975122531856c7bf203"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/producer-profile/source.json": {
+      "retained_file": "four-r13-37122870115-70-source.json.gz",
+      "sha256": "b7f90f51208901d1be055b034e5edd02efd0e3ba8e9363291e99bfcc00c1526d"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/PROOF.md": {
+      "retained_file": "four-r13-37122870115-71-PROOF.md.gz",
+      "sha256": "031a75367a0454c21f033319b607d82bd4bb3d05bf95617972b5136ef264708b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fallback-completions/character-219d55c08e26227b4ccba505c7b3c409/completion-2480-1.json": {
+      "retained_file": "four-r13-37122870115-72-completion-2480-1.json.gz",
+      "sha256": "53ff2f873ee636c4437376e1ec262fadd4d003424234ffa5ba665f5476b9c969"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fallback-completions/character-626300bee616b52bfa1d40ab32fb776a/completion-2478-1.json": {
+      "retained_file": "four-r13-37122870115-73-completion-2478-1.json.gz",
+      "sha256": "f9a15be0e350932294835d34779f81f2800eb8ebae2020f4d35e2f8195084092"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fallback-completions/character-a79c7bee9128c2ef03d266ce0352c666/completion-2479-1.json": {
+      "retained_file": "four-r13-37122870115-74-completion-2479-1.json.gz",
+      "sha256": "dd37c925a2d2a3f7b421c359308c5df4074e2f88898f89dab7d1254af29b129c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fallback-completions/character-a79c7bee9128c2ef03d266ce0352c666/completion-2479-2.json": {
+      "retained_file": "four-r13-37122870115-75-completion-2479-2.json.gz",
+      "sha256": "63dfe5ef4cbce456ace6bbdc63b71713e6f637cf886cd3b7a791bf9f9aa8a164"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fallback-completions/character-a79c7bee9128c2ef03d266ce0352c666/completion-2479-3.json": {
+      "retained_file": "four-r13-37122870115-76-completion-2479-3.json.gz",
+      "sha256": "528082d6fff10a4e82757c0b354d69c1b56c387d9739f09d3aa593fdf4d828a6"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fixture-approaches/2478-warden_aldis-576537413.json": {
+      "retained_file": "four-r13-37122870115-77-2478-warden_aldis-576537413.json.gz",
+      "sha256": "6d41efe63361dc1e37ba545d78bcd5c2ff362e0d1f3cb1a71f187b77af880ebe"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fixture-approaches/2479-warden_aldis-582022140.json": {
+      "retained_file": "four-r13-37122870115-78-2479-warden_aldis-582022140.json.gz",
+      "sha256": "7eecc5f289b97e728c3637630bb8b983b2787d35831aa1430fda81fae6dbca91"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fixture-approaches/2481-warden_aldis-595484770.json": {
+      "retained_file": "four-r13-37122870115-79-2481-warden_aldis-595484770.json.gz",
+      "sha256": "24963360861bf909cf376673b978ecda2338770ae043dca1ba0c772a9a365555"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fixture-approaches/2480-warden_aldis-588313502.json": {
+      "retained_file": "four-r13-37122870115-80-2480-warden_aldis-588313502.json.gz",
+      "sha256": "3c45330ff43cc3f70445af4204bad93b0573fe3aa9e2bb4f32e04e632c3b0bcf"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fixture-fights/2478-warden_aldis-942520649.json": {
+      "retained_file": "four-r13-37122870115-81-2478-warden_aldis-942520649.json.gz",
+      "sha256": "0a9dceb7c219344f0b55b0aa1e8a213e274b8e4b5b760814fd57aced34e9a4d2"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert-2478-565653312.json": {
+      "retained_file": "four-r13-37122870115-82-f48_assert-2478-565653312.json.gz",
+      "sha256": "70a7595ab065cc6dab8cea88af4a34247aa4a0c7ffa0a703e78c3050dd2d3e18"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert-2479-577239226.json": {
+      "retained_file": "four-r13-37122870115-83-f48_assert-2479-577239226.json.gz",
+      "sha256": "19a9b4036f4f2395751c54b324db4c9523be195133bfb9d76da2826344c95d71"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert-2480-582429175.json": {
+      "retained_file": "four-r13-37122870115-84-f48_assert-2480-582429175.json.gz",
+      "sha256": "bd269f4b284cffd46624d66f5e3818cfd946970e9fe03616892767de06cf3443"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert-2481-588974364.json": {
+      "retained_file": "four-r13-37122870115-85-f48_assert-2481-588974364.json.gz",
+      "sha256": "19fc3d3eeccfb93cc371e52c31bca4ff3c3d56d8d7cacfe22b7867c47de62a22"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert_snapshot-2478-559104367.json": {
+      "retained_file": "four-r13-37122870115-86-f48_assert_snapshot-2478-559104367.json.gz",
+      "sha256": "31c6d1a5a3a40c0c0c2800e90637d7049e1a44b2f1bb9bb011f104a6380bea89"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert_snapshot-2479-560441825.json": {
+      "retained_file": "four-r13-37122870115-87-f48_assert_snapshot-2479-560441825.json.gz",
+      "sha256": "d8a9cb6d58d80680e077387ec57396c5fb4796e118eb54678b5cf0120ea063b9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert_snapshot-2480-561114877.json": {
+      "retained_file": "four-r13-37122870115-88-f48_assert_snapshot-2480-561114877.json.gz",
+      "sha256": "e4214fb798cc172752e5373098fc6d4f43417bc5b0ae25e3e5454a9379211bf8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert_snapshot-2481-561685468.json": {
+      "retained_file": "four-r13-37122870115-89-f48_assert_snapshot-2481-561685468.json.gz",
+      "sha256": "3978862bb148dad217f6c7b3d99927dc7f5aded8a0a04e468101a4b83de34f79"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-passive/actual-2478.jsonl": {
+      "retained_file": "four-r13-37122870115-90-actual-2478.jsonl.gz",
+      "sha256": "207e5c6a5cd5c9f77b6f6f2bcb2b14d898fc7e95f2fb83d9715a388f92dd871a"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-passive/actual-2479.jsonl": {
+      "retained_file": "four-r13-37122870115-91-actual-2479.jsonl.gz",
+      "sha256": "c00f6c942e0892563e28f906da88ede321db9872fe0beda4223b77418a7b4d89"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-passive/actual-2480.jsonl": {
+      "retained_file": "four-r13-37122870115-92-actual-2480.jsonl.gz",
+      "sha256": "6912f93d2cbc2bd305bd05238db3262eab23ecfef6afa9823b371c6bbe3b75e4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-passive/actual-2481.jsonl": {
+      "retained_file": "four-r13-37122870115-93-actual-2481.jsonl.gz",
+      "sha256": "caefbb9e846ee49be81bb0796707d7d131ca42a472e68c10f6dd07c7b1c32405"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-witnesses/character-626300bee616b52bfa1d40ab32fb776a/admitted.json": {
+      "retained_file": "four-r13-37122870115-94-admitted.json.gz",
+      "sha256": "2bdf5b14d44c8628eed1e78beb86781c62ba831b867fd09c25a83cafce268ec5"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-witnesses/character-219d55c08e26227b4ccba505c7b3c409/admitted.json": {
+      "retained_file": "four-r13-37122870115-95-admitted.json.gz",
+      "sha256": "293f9cad8d5e4dfe73271c6f741fae6099cebead77ad042970f361c0a2d844c2"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-witnesses/character-92a3946dcc1ebef20650b2c4f6675001/admitted.json": {
+      "retained_file": "four-r13-37122870115-96-admitted.json.gz",
+      "sha256": "6414edbfb90985df2723759cbc14051e684719a6642e05c13954feb65b44891a"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-0/f48-boss-four-input/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r13-37122870115-97-character.json.gz",
+      "sha256": "48289d457580a72f0a791d4d2e8c4451f4e19d9b3a42c935dc661a01c15b36e5"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-witnesses/character-a79c7bee9128c2ef03d266ce0352c666/admitted.json": {
+      "retained_file": "four-r13-37122870115-98-admitted.json.gz",
+      "sha256": "4ddaa750645a4655707dcad6cfa7e072a3e1316ff441523192d781442a781c25"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-0/f48-boss-four-input/saves/redesign-v28/characters/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r13-37122870115-99-character.json.gz",
+      "sha256": "5a1fd96748488ae08822ed1e96454a5e16dde88de757ad4c975043f34bbdede4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-0/f48-boss-four-input/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-100-slot_0.json.gz",
+      "sha256": "efef5be2fdfbd841393e864cb697a5a7faa98e6176649f5da0c93f6bae058b9f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-0/f48-boss-four-input/saves/redesign-v28/worlds/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-101-world.json.gz",
+      "sha256": "4f347356b272c8411a189556098e6ec801255c5315062b24c4726cde41ba9d7e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-0/f48-boss-four-input/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-102-world.json.gz",
+      "sha256": "9a04255bf32107a6c393afffe69942e7779df6bb367933a3fa7abf145a2b0249"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-1/f48-boss-four-input/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r13-37122870115-103-character.json.gz",
+      "sha256": "b7eb1ad4489e484792d9fc0a91bd7d54a684f563ec9f8c28ea5f4aafdc73ebf3"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-1/f48-boss-four-input/saves/redesign-v28/characters/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r13-37122870115-104-character.json.gz",
+      "sha256": "003308a662d429b534d34f4d3f0eeaf68c9edb9e3bea8df33f01bbb55a79ad9c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-2/f48-boss-four-input/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r13-37122870115-105-character.json.gz",
+      "sha256": "db9aabfcae6742630b79549af8b5dd30b524e6fd317474a76abf998fcf67dc00"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-2/f48-boss-four-input/saves/redesign-v28/characters/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r13-37122870115-106-character.json.gz",
+      "sha256": "83c46bd9ed22ff4a442c37d01c98413ccf7fabdc8d98d3fa48398e57275d2427"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-2/f48-boss-four-input/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-107-slot_0.json.gz",
+      "sha256": "ce84f188dd9269361bc54e693d581570883ba12181f0d19999a1ae6334511f3f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-2/f48-boss-four-input/saves/redesign-v28/worlds/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-108-world.json.gz",
+      "sha256": "a30277bebda4a276445aa5191bbc73aed9e76304d580c4432cdc302abeb9ba3e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-3/f48-boss-four-input/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r13-37122870115-109-character.json.gz",
+      "sha256": "0c835a1f7a0b284235995504d78fc223a881e4ba96cadf146830d7178b11ed39"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-3/f48-boss-four-input/saves/redesign-v28/characters/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r13-37122870115-110-character.json.gz",
+      "sha256": "9510f62121c41c2ee9279b859e35f45236c6b5197b6c722a92299124410c9fcd"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-3/f48-boss-four-input/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r13-37122870115-111-slot_0.json.gz",
+      "sha256": "594128010825fc7400376312775947448598d8a0444f151988a958dffbe3b38c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/peer-3/f48-boss-four-input/saves/redesign-v28/worlds/slot-0/world.json": {
+      "retained_file": "four-r13-37122870115-112-world.json.gz",
+      "sha256": "630aa6c1eae1c094b41a6d684fea2848e86334b3863a5e1eed9489d89497e0ea"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "four-r13-37122870115-119-boot_log.txt.gz",
+      "sha256": "823d8dcb391885c126b5d0ac952bfdb0a470df8c621eeeb3eed5a38854047b94"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r13-37122870115-121-godot.log.gz",
+      "sha256": "c9a6e029df0f67497a1e8b8953770545f2e00d1d09885c665de4850aee0e581c"
+    }
+  }
+}

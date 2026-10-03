@@ -1,0 +1,29 @@
+{
+  "run_id": 37122873996,
+  "artifact_id": 11273892873,
+  "checkout_ref": "31d07d769afba5b387cc1a44f8ff978f2a26b351",
+  "result": "PASS 4 tests / 44 assertions / exit0 / 4s / no original errors",
+  "archive_sha256": "4bac855bb2404b8df301baf8309b2c630e1622759cba2ba214b9599fd4298755",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "travel-native-r1-37122873996-0-MANIFEST.txt.gz",
+      "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+    },
+    "run.log": {
+      "retained_file": "travel-native-r1-37122873996-1-run.log.gz",
+      "sha256": "35e839b1e6faa0fb44867448b08f114c9707db3bb4785a5f221fcbcb8004ff70"
+    },
+    "exit_code": {
+      "retained_file": "travel-native-r1-37122873996-2-exit_code.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "travel-native-r1-37122873996-3-boot_log.txt.gz",
+      "sha256": "0a945ff8b065ea6f23907a2530e761836c8d2e793a6f3e4c269cc1a1a4ef0d02"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "travel-native-r1-37122873996-4-godot.log.gz",
+      "sha256": "38fba9a352da47220c9109a343c2703f2209e4a3e7b3ca4cc0a7e795c15da544"
+    }
+  }
+}
