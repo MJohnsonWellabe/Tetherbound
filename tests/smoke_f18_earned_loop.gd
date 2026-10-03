@@ -160,6 +160,23 @@ class BuildDriver extends "res://tests/helpers/gate_a_build_segment.gd":
 	var guards: RefCounted
 	var _f18_selecting := false
 	var _f18_selection_trace: Array[Dictionary] = []
+	func _cell_id(button: Button) -> String:
+		# Several production pieces share workbench.png. Identify the actual
+		# button's catalogue row; an icon filename cannot identify its piece.
+		# This only observes the menu: focus and selection still use pad input.
+		for menu: Node in _tree.get_nodes_in_group(BUILD_MENU_GROUP):
+			if not menu.has_method("is_open") or not bool(menu.call("is_open")): continue
+			var buttons: Array = menu.get("_cell_buttons")
+			var slot := buttons.find(button)
+			if slot < 0: continue
+			var categories: Array = menu.get("_categories")
+			var category_index := int(menu.get("_category_index"))
+			if category_index < 0 or category_index >= categories.size(): return ""
+			var catalogue: Dictionary = menu.get("_catalogue_by_category")
+			var pieces: Array = catalogue.get(categories[category_index], [])
+			if slot >= pieces.size(): return ""
+			return str(pieces[slot].get("id", ""))
+		return ""
 	func _open_the_catalogue() -> Node:
 		return await open_ui.call()
 	func _select_piece(id: String) -> bool:

@@ -1,6 +1,6 @@
 extends RefCounted
 
-## Failure-only physics observations for the isolated arrival probes. This
+## Read-only physics observations for isolated probes and the actual entry. This
 ## never moves a body, changes a predicate or turns a failing check into PASS.
 static func vector(value: Vector3) -> Array:
 	return [value.x, value.y, value.z]
