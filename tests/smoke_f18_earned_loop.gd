@@ -11,12 +11,14 @@ const MATERIALS := preload("res://tests/helpers/gate_a_material_route.gd")
 const TRAVEL := preload("res://tests/helpers/f49_portal_travel.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const GUARDS := preload("res://tests/helpers/f18_player_guards.gd")
 const STONE_ID := "meadows_trail_camp"
 var game: Node
 var failures: Array[String] = []
 var travel: RefCounted
 var receipts: Array[Dictionary] = []
 var _presentation: Node
+var _guards: RefCounted
 
 class BuildDriver extends "res://tests/helpers/gate_a_build_segment.gd":
 	var open_ui: Callable
@@ -53,6 +55,13 @@ func _run() -> void:
 		_fail("Grandpa's actual opening did not give exactly one protected Home Key")
 		_report()
 		return
+	_guards = GUARDS.new(self, game, travel)
+	if not await _guards.protected_drop_and_assign():
+		_fail("actual Home Key Drop/binding: " + str(_guards.failures))
+		_report()
+		return
+	receipts.append_array(_guards.receipts)
+	_guards.receipts.clear()
 	var village: Array[String] = await VILLAGE.new().run(self, current_scene, game,
 		current_scene.get_node(^"Player"), current_scene.get_node(^"CameraRig"))
 	if not village.is_empty():
@@ -146,6 +155,9 @@ func _loop() -> bool:
 		_presentation = preload("res://tests/helpers/f18_presentation_capture.gd").attach(self, game,
 			"res://ralph/reports/HUB/f18/native/earned_%d" % Time.get_ticks_usec())
 	if not await travel.home_key(): return _fail("actual Satchel Home Key: " + str(travel.failures))
+	if not await _guards.locked_arch(): return _fail("actual locked arch: " + str(_guards.failures))
+	receipts.append_array(_guards.receipts)
+	_guards.receipts.clear()
 	if not await _craft_at_workbench(): return false
 	if not await _save_reload(): return false
 	var arch: Node3D
