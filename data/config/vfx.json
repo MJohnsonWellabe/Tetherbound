@@ -169,7 +169,10 @@
           }
         },
         "body": {
+          "min_body_size_m": 0.27,
+          "volley_vertical_ratio": 0.3,
           "shape": "stone",
+          "stone_smoothing": 0.62,
           "motion": "projectile",
           "lit": true,
           "opacity": 1.0,
@@ -206,8 +209,8 @@
           "flow_speed": 2.4
         },
         "impact": {
-          "mote_max_growth": 4.5,
-          "mote_reference_scale": 0.22,
+          "mote_max_growth": 6.0,
+          "mote_reference_scale": 0.5,
           "stages": {
             "flash": {
               "size_scale": 2.0,
@@ -261,7 +264,7 @@
           "card_extent_scale": 2.4,
           "mote_shape": "stone",
           "mote_size": 0.12,
-          "speed": 3.6,
+          "speed": 6.2,
           "gravity": 19.0,
           "width": 0.12,
           "height_ratio": 2.3,
@@ -558,6 +561,17 @@
         "impact": {
           "fade_hold_power": 2.4,
           "stages": {
+            "glow": {
+              "size_scale": 2.6,
+              "min_m": 0.8,
+              "max_m": 1.8,
+              "duration": 0.55,
+              "core_colour": "#fff1c2",
+              "edge_colour": "#ff6a1a",
+              "opacity": 0.75,
+              "streaks": 0,
+              "streak_strength": 0.0
+            },
             "flash": {
               "size_scale": 2.0,
               "min_m": 0.5,
@@ -568,22 +582,6 @@
               "opacity": 1.0,
               "streaks": 9,
               "streak_strength": 0.6
-            },
-            "shockwave": {
-              "style": "shockwave",
-              "radius_scale": 5.0,
-              "min_m": 1.2,
-              "max_m": 3.6,
-              "duration": 0.36,
-              "colour": "#ffbf6a",
-              "glow_colour": "#ff7a1f",
-              "glow_strength": 1.6,
-              "opacity": 0.8,
-              "ring_width": 0.08,
-              "lift_m": 0.035,
-              "hold": 0.0,
-              "fade_in": 0.02,
-              "initial_scale": 1.0
             },
             "mark": {
               "style": "scorch",
@@ -678,19 +676,6 @@
                 0.38,
                 0.55,
                 -0.12
-              ]
-            },
-            {
-              "shape": "soft_dust",
-              "size_scale": 0.4,
-              "card_extent_scale": 2.6,
-              "colour": "#635f59",
-              "opacity": 0.16,
-              "flow_speed": 1.7,
-              "offset": [
-                -0.12,
-                0.88,
-                0.08
               ]
             }
           ],
@@ -1197,6 +1182,24 @@
           "flicker": 0.04
         },
         "launch": {
+          "sky_call": {
+            "height_m": 3.6,
+            "duration": 0.32,
+            "stroke_width_scale": 1.6,
+            "opacity": 1.0,
+            "branch_count": 2,
+            "branch_length_m": 0.5,
+            "core_width": 0.36,
+            "corona_width": 0.9,
+            "corona_opacity": 0.5,
+            "emission_strength": 2.6,
+            "emission_floor": 0.35,
+            "pulse_strength": 0.04,
+            "filament_sway": 0.015,
+            "corona_sway": 0.025,
+            "corona_power": 1.8,
+            "vein_strength": 0.18
+          },
           "flash": {
             "size_scale": 4.5,
             "min_m": 0.35,
@@ -1258,6 +1261,18 @@
         },
         "impact": {
           "stages": {
+            "glow": {
+              "size_scale": 5.0,
+              "min_m": 0.8,
+              "max_m": 1.6,
+              "duration": 0.4,
+              "core_colour": "#f2fbff",
+              "edge_colour": "#6fc4ff",
+              "opacity": 0.7,
+              "streaks": 0,
+              "streak_strength": 0.0,
+              "toward_source_scale": 0.0
+            },
             "flash": {
               "size_scale": 4.0,
               "min_m": 0.6,
@@ -1288,7 +1303,7 @@
             },
             "mark": {
               "style": "burn",
-              "toward_source_scale": 3.0,
+              "toward_source_scale": 0.8,
               "radius_scale": 8.0,
               "min_m": 1.4,
               "max_m": 3.0,
@@ -1306,9 +1321,9 @@
           },
           "shape": "electrical_splash",
           "duration": 0.48,
-          "grow": 1.8,
+          "grow": 1.25,
           "heat": 0.6,
-          "opacity": 1.0,
+          "opacity": 0.7,
           "mote_shape": "soft_ember",
           "mote_size": 0.06,
           "speed": 7.0,
@@ -1340,7 +1355,7 @@
           "visual_anchor": "sky_surface",
           "visual_surface_lift_m": 0.03,
           "accent_count": 6,
-          "accent_width_scale": 0.6,
+          "accent_width_scale": 0.3,
           "core_width": 0.28,
           "corona_width": 0.74,
           "corona_opacity": 0.28,

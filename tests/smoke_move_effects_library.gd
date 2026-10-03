@@ -17,6 +17,7 @@ const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
+const COMBAT_VFX := preload("res://scripts/vfx/combat_vfx.gd")
 var _arena: Node3D
 var _target: CharacterBody3D
 var _attackers: Dictionary = {}
@@ -362,8 +363,12 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		var reacting := capture and _stage in ["meadows", "world"]
 		if reacting and _current_attacker != null and _current_attacker.has_method("play_attack"): _current_attacker.call("play_attack")
 		var away := (to - from).normalized()
+		var tint: Variant = COMBAT_VFX.tint_for_type(str(_moves.get(move_id, {}).get("type", "")))
 		effect.connect("arrived", func() -> void:
 			if reacting and _target != null and _target.has_method("play_combat_flinch"): _target.call("play_combat_flinch", away)
+			# Combat's own landed-hit feedback (spark + struck-body flash), the
+			# same public call the manager makes on a hit; no HP is changed.
+			if reacting and _target != null: COMBAT_VFX.hit(_arena, to, tint, true, _target, 0.35)
 			arrivals[0] += 1
 			arrival_frames.append(Engine.get_process_frames())
 			arrival_wall.append(float(Time.get_ticks_usec() - started) / 1000000.0)
@@ -754,9 +759,11 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary) -> void:
 	if _current_attacker != null and _current_attacker.has_method("play_attack"): _current_attacker.call("play_attack")
 	var arrivals := [0]
 	var away := (to - from).normalized()
+	var tint: Variant = COMBAT_VFX.tint_for_type(str(move.get("type", "")))
 	effect.connect("arrived", func() -> void:
 		arrivals[0] += 1
-		if _target.has_method("play_combat_flinch"): _target.call("play_combat_flinch", away))
+		if _target.has_method("play_combat_flinch"): _target.call("play_combat_flinch", away)
+		COMBAT_VFX.hit(_arena, to, tint, true, _target, 0.6))
 	var ready := {}
 	var shutters: Dictionary = cfg.shutters
 	for phase: String in shutters:

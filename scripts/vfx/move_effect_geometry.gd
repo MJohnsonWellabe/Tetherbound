@@ -279,6 +279,10 @@ static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
 	var mesh := ImmediateMesh.new()
 	var segments := int(profile.get("segments", 12))
 	var rings := int(profile.get("rings", 7))
+	# 0 keeps one flat normal per facet; higher values blend each vertex
+	# normal toward the radial direction so shading and the triplanar
+	# surface flow across facets instead of banding facet by facet.
+	var smoothing := clampf(float(profile.get("stone_smoothing", 0.0)), 0.0, 1.0)
 	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	for y in rings:
 		for x in segments:
@@ -286,10 +290,26 @@ static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
 			var b := _stone_point(x + 1, y, segments, rings, size)
 			var c := _stone_point(x + 1, y + 1, segments, rings, size)
 			var d := _stone_point(x, y + 1, segments, rings, size)
-			_triangle(mesh, a, b, c)
-			_triangle(mesh, a, c, d)
+			if smoothing > 0.0:
+				_stone_triangle(mesh, a, b, c, smoothing)
+				_stone_triangle(mesh, a, c, d, smoothing)
+			else:
+				_triangle(mesh, a, b, c)
+				_triangle(mesh, a, c, d)
 	mesh.surface_end()
 	return mesh
+
+static func _stone_triangle(mesh: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3, smoothing: float) -> void:
+	var face := (b - a).cross(c - a)
+	if face.length_squared() < 0.000001: return
+	if face.dot(a + b + c) < 0.0:
+		var swap := b; b = c; c = swap
+		face = -face
+	face = face.normalized()
+	for point: Vector3 in [a, b, c]:
+		mesh.surface_set_normal(face.lerp(point.normalized(), smoothing).normalized())
+		mesh.surface_set_color(Color.WHITE)
+		mesh.surface_add_vertex(point)
 
 static func _stone_point(x: int, y: int, segments: int, rings: int, size: float) -> Vector3:
 	var latitude := PI * float(y) / float(rings)

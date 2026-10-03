@@ -11,7 +11,7 @@ const GROUND_MARK_SHADER := preload("res://assets/vfx/shaders/impact_ground_mark
 ## Launch/contact/aftermath stage meshes are a fixed small set per effect
 ## (flash, ground kick, contact flash, shockwave, ground mark). They are not
 ## particles and never draw from the particle lease.
-const MAX_STAGE_MESHES := 5
+const MAX_STAGE_MESHES := 6
 
 signal arrived()
 signal presentation_arrived(receipt: Dictionary)
@@ -73,8 +73,11 @@ func _ready() -> void:
 	_lease = BUDGET.reserve(str(_context.get("encounter_id", "global")), requested_impact,
 		requested_trail, int(_config.get("encounter_particle_cap", 384)))
 	var profile: Dictionary = _row.get("body", {})
+	# Presentation-only readability floor for very small bodies; the frozen
+	# parameters, timing and every other size-derived value are unchanged.
+	var body_size := maxf(float(_params.size), float(profile.get("min_body_size_m", 0.0)))
 	for i in int(_params.count):
-		var body := _mesh_node(GEOMETRY.shape(str(profile.shape), float(_params.size), profile),
+		var body := _mesh_node(GEOMETRY.shape(str(profile.shape), body_size, profile),
 			_colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
 		if str(profile.shape) in ["stone", "flame_orb", "burning_core", "water_stream", "rolling_wave", "ice_crystal", "flame_volume", "mist_cone", "bubble"]:
 			body.material_override = GEOMETRY.authored_material(str(profile.shape), profile, _colour)
@@ -208,7 +211,7 @@ func _update_bodies(t: float) -> void:
 		if _bodies.size() > 1:
 			spread_size = maxf(spread_size, float(_params.size) * float(_row.body.get("volley_separation_scale", 2.8)))
 		var spread := spread_size * sin(t * PI)
-		body.position = front + (side * cos(angle) + Vector3.UP * sin(angle)) * spread
+		body.position = front + (side * cos(angle) + Vector3.UP * sin(angle) * float(_row.body.get("volley_vertical_ratio", 1.0))) * spread
 		if _bodies.size() > 1:
 			body.position += direction * (float(i) - float(_bodies.size() - 1) * 0.5) * float(_row.body.get("volley_stagger_m", 0.25)) * sin(t * PI)
 		body.position.y += float(_params.get("arc", 0.0)) * sin(t * PI)
@@ -310,7 +313,9 @@ func _projectile_position(t: float, index: int) -> Vector3:
 	var spread_size := float(_params.get("spread", 0.0))
 	if count > 1: spread_size = maxf(spread_size, float(_params.size) * float(_row.body.get("volley_separation_scale", 2.8)))
 	var angle := TAU * float(index) / float(count)
-	var position := _from.lerp(_to, t) + (side * cos(angle) + Vector3.UP * sin(angle)) * spread_size * sin(t * PI)
+	# volley_vertical_ratio < 1 flattens the volley toward a fan, so a volley
+	# seen from the side does not read as a vertical stack.
+	var position := _from.lerp(_to, t) + (side * cos(angle) + Vector3.UP * sin(angle) * float(_row.body.get("volley_vertical_ratio", 1.0))) * spread_size * sin(t * PI)
 	if count > 1:
 		position += direction * (float(index) - float(count - 1) * 0.5) * float(_row.body.get("volley_stagger_m", 0.25)) * sin(t * PI)
 	position.y += float(_params.get("arc", 0.0)) * sin(t * PI)
@@ -624,6 +629,8 @@ func _build_launch_stages() -> void:
 	if launch.get("flash") is Dictionary:
 		var toward := (_to - _from).normalized()
 		_add_flash(launch.flash, _from + toward * scale * float((launch.flash as Dictionary).get("forward_scale", 0.4)), scale, 0.0)
+	if launch.get("sky_call") is Dictionary:
+		_add_sky_call(launch.sky_call, scale)
 	if launch.get("ground") is Dictionary:
 		var fallback := Vector3(_from.x, _ground_height(), _from.z)
 		var source: Vector3 = _context.get("source_ground", fallback)
@@ -640,6 +647,10 @@ func _build_impact_stages(profile: Dictionary, scale_factor: float, origin: Vect
 	back = back.normalized() if back.length_squared() > 0.0001 else Vector3.ZERO
 	if stages.get("flash") is Dictionary:
 		_add_flash(stages.flash, origin + back * scale_factor * float((stages.flash as Dictionary).get("toward_source_scale", 0.35)), scale_factor, _elapsed)
+	if stages.get("glow") is Dictionary:
+		# A soft additive halo that outlives the flash: stands in for bloom on
+		# renderers without post-processing, so hot impacts carry energy.
+		_add_flash(stages.glow, origin + back * scale_factor * float((stages.glow as Dictionary).get("toward_source_scale", 0.2)), scale_factor, _elapsed)
 	var ground := Vector3(origin.x, _ground_height(), origin.z)
 	if str(_row.body.get("motion", "")) == "sky":
 		ground = _context.get("target_ground", Vector3(_to.x, _ground_height(), _to.z))
@@ -648,6 +659,29 @@ func _build_impact_stages(profile: Dictionary, scale_factor: float, origin: Vect
 		var stage: Dictionary = stages[kind]
 		var centre := ground + back * scale_factor * float(stage.get("toward_source_scale", 0.0))
 		_add_ground_mark(stage, centre, scale_factor, _elapsed)
+
+## Lightning-style launch: a short jagged bolt rising from the attacker into
+## the sky, so the later strike from above reads as called by this creature.
+func _add_sky_call(profile: Dictionary, scale: float) -> void:
+	if _stages.size() >= MAX_STAGE_MESHES: return
+	var height := float(profile.get("height_m", 3.5))
+	var points: Array[Vector3] = []
+	var across := (_to - _from).normalized().cross(Vector3.UP).normalized()
+	for k in 7:
+		var f := float(k) / 6.0
+		var jitter := across * sin(f * 17.0 + float(_rng.randi() % 7)) * 0.18 * sin(f * PI)
+		points.append(_from + Vector3.UP * height * f + jitter)
+	var bolt_profile := profile.duplicate(true)
+	bolt_profile["branch_count"] = int(profile.get("branch_count", 2))
+	bolt_profile["branch_length_m"] = float(profile.get("branch_length_m", 0.5))
+	var node := MeshInstance3D.new()
+	node.mesh = GEOMETRY.bolt(points, maxf(0.03, scale * float(profile.get("stroke_width_scale", 1.6))), _colour, bolt_profile)
+	node.material_override = GEOMETRY.authored_material("ion_filament", profile, Color(str(profile.get("colour", _params.get("colour", "#f5d24a")))))
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(node)
+	_stages.append({"node": node, "born": 0.0, "duration": maxf(0.05, float(profile.get("duration", 0.3))),
+		"kind": "call", "profile": profile})
+	_update_stage(_stages.back())
 
 func _add_flash(profile: Dictionary, position: Vector3, scale: float, born: float) -> void:
 	if _stages.size() >= MAX_STAGE_MESHES: return
@@ -714,6 +748,9 @@ func _update_stage(stage: Dictionary) -> void:
 	node.visible = _elapsed >= float(stage.born) and age < 1.0
 	var material := node.material_override as ShaderMaterial
 	material.set_shader_parameter("age", age)
+	if str(stage.kind) == "call":
+		material.set_shader_parameter("opacity", float((stage.profile as Dictionary).get("opacity", 1.0)) * pow(1.0 - age, 1.4))
+		return
 	if str(stage.kind) != "ground": return
 	var profile: Dictionary = stage.profile
 	# Ground marks arrive fast, hold, then fade; the shader owns ring growth.
