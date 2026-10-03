@@ -101,6 +101,8 @@ const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 ## Row 21's `party_grant`: the opening's own door into `Game.party`, and the
 ## level curve `adopt_starter()` reads for a starter.
 const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
@@ -4551,6 +4553,19 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	var party: Variant = game.get("party") if game != null else null
 	var size := int((party as RefCounted).call("size")) if party != null else -1
+	# A creature above the starting cap carries the breakthroughs its level
+	# implies, exactly as a caught one does (foundation_capture_rules.gd).
+	# Without them a level-18 grant sits above cap 10 and earns no round XP.
+	var local: Variant = game.get("local") if game != null else null
+	if local != null:
+		var saved: Dictionary = (local as RefCounted).call("save_data")
+		var personal: Dictionary = TEACHING.character_loadout_mirror(saved.get("party", []), (local as RefCounted).get("redesign_character"))
+		for card: Variant in saved.get("party", []):
+			if card is Dictionary and card.get("uid") == creature.get("uid"):
+				personal = BREAKTHROUGH.initialize_caught(personal, card)
+		if personal.is_empty():
+			return {"verdict": "FAIL", "detail": "could not record breakthroughs for a level-%d '%s'" % [level, species]}
+		(local as RefCounted).set("redesign_character", personal)
 	if not PARTY_SEAM.has_game_state():
 		return {"verdict": "FAIL",
 			"detail": "party_seam is running on its FALLBACK array, not Game.party -- "
