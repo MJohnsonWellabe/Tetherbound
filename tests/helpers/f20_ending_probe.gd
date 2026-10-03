@@ -48,14 +48,35 @@ func fixture(game: Node, label: String) -> bool:
 	return check(game.call("save_game", 0), "post-finale fixture saves through production schema")
 
 func ready(tree: SceneTree, game: Node) -> bool:
-	var deadline := Time.get_ticks_msec() + 180000
+	var began := Time.get_ticks_msec()
+	var deadline := began + 180000
+	var previous := began
+	var samples := 0
+	var max_wait_ms := 0
 	while Time.get_ticks_msec() < deadline:
 		await tree.physics_frame
+		var now := Time.get_ticks_msec()
+		max_wait_ms = maxi(max_wait_ms, now - previous)
+		previous = now
+		samples += 1
 		var scene := tree.current_scene
 		var player := game.call("find_player") as CharacterBody3D
 		if scene != null and scene.has_method("shell_build_complete") and scene.call("shell_build_complete") \
 			and player != null and player.is_on_floor() and not HOME.journey_context(game).is_empty():
+			print("F20 READY elapsed_ms=", now - began, " physics_samples=", samples, " max_wait_ms=", max_wait_ms)
 			return true
+	var scene := tree.current_scene
+	var player := game.call("find_player") as CharacterBody3D
+	var owner := INPUT_OWNER.current(tree)
+	print("F20 READY TIMEOUT elapsed_ms=", Time.get_ticks_msec() - began,
+		" physics_samples=", samples, " max_wait_ms=", max_wait_ms,
+		" scene=", scene.get_path() if scene != null else "none",
+		" shell_complete=", scene.call("shell_build_complete") if scene != null and scene.has_method("shell_build_complete") else false,
+		" player=", player.get_path() if player != null else "none",
+		" floor=", player.is_on_floor() if player != null else false,
+		" position=", player.global_position if player != null else Vector3.INF,
+		" journey_empty=", HOME.journey_context(game).is_empty(),
+		" paused=", tree.paused, " owner=", owner.get_path() if owner != null else "none")
 	return check(false, "production world and personal ending context become ready")
 
 func ending(tree: SceneTree, game: Node, stir: bool = true) -> bool:
@@ -170,6 +191,12 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 			"retained starter and actual landmark or battle count produce truthful prose"): return false
 	_heard = ""
 	var opened := false
+	var completed: Array[String] = []
+	var completion_observer := func(id: String) -> void:
+		completed.append(id)
+		print("F20 DIALOGUE completed id=", id)
+	panel.connect("completed", completion_observer)
+	print("F20 DIALOGUE start id=", panel.call("runner").call("conversation_id"), " expected=", expected)
 	var deadline := Time.get_ticks_msec() + 30000
 	while Time.get_ticks_msec() < deadline:
 		await tree.process_frame
@@ -178,6 +205,18 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 			_heard += "\n" + str(panel.get("_body").text)
 			await travel.tap("interact")
 		elif HOME.context(game).get("homecoming_seen") == true: break
+	panel.disconnect("completed", completion_observer)
+	var owner := INPUT_OWNER.current(tree)
+	var row: Dictionary = game.session.call("_owner_training_row")
+	print("F20 DIALOGUE finish opened=", opened, " completed=", completed,
+		" panel_open=", panel.call("is_open"), " id=", panel.call("runner").call("conversation_id"),
+		" owner=", owner.get_path() if owner != null else "none",
+		" owner_script=", owner.get_script().resource_path if owner != null and owner.get_script() != null else "none",
+		" context=", game.call("regional_ending_context"),
+		" ack_intents=", game.get("_regional_ack_intents"),
+		" training_action=", row.get("action", ""), " training_intent=", row.get("intent", {}),
+		" notice=", game.get("_pending_world_message"))
+	print("F20 DIALOGUE rendered ", _heard)
 	if not check(opened and HOME.context(game).get("homecoming_seen") == true, "natural Grandpa completion receives durable personal acknowledgement"): return false
 	if first:
 		for companion: String in HOME.party_names(game.party):
