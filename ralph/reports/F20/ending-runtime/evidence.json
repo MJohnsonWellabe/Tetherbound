@@ -6,7 +6,7 @@
     "original": "98ff2a89cc",
     "local": "5a315cef84"
   },
-  "source_review": "Production/input through9d4 independently reviewed; diagnostic a507 clearance WITHDRAWN;769d actual compile confirmed.72fde closing-press handoff and37b17 authored input sourcePASS, exercised by actualr10 homecoming/credits/Skip1ACK.65cbb/c620 capture sourcePASS compilesr6 but readyFAIL.7dc snapshot/phase guard and11aa peer identity assertions sourcePASS; actualsolo-r11 cleanending/reload partial confirms7dc; net-r4fails finaltap boundary, newpeerUIDinspectunexercised.29bc inputclock sourcePASS/net-r5live. Criteria0/1METcandidate;2/3/4OPEN.",
+  "source_review": "Production/input through9d4 independently reviewed; diagnostic a507 clearance WITHDRAWN;769d actual compile confirmed.72fde closing-press handoff and37b17 authored input sourcePASS, exercised by actualr10 homecoming/credits/Skip1ACK.65cbb/c620 capture sourcePASS compilesr6 but readyFAIL.7dc snapshot/phase guard and11aa peer identity assertions sourcePASS; actualsolo-r11 cleanending/reload partial confirms7dc; net-r4fails finaltap boundary, newpeerUIDinspectunexercised.29bc inputclock sourcePASS/net-r5live. Current Criteria0/1/3METcandidate (independentactualsolo-r20);2/4OPEN, main landing pending.",
   "focused": {
     "verdict": "PASS",
     "log": "f20-f18-focused-r2.log.gz",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Actual solo-r19 FAIL67/2/zeroerrors: ordinary owned callout and expected normalX endgame prompt activation pass; no fight/source/spec/enemy, can_challenge true. Independent raw auditPASS strict failed scope; #3 OPEN. Source investigation now targets solo authority mismatch in rematch-only guard and bound service lifecycle. #0/#1 retain measured candidate scope; #2/#4 OPEN. Reviewed scoped solo authority fix b610786130 pushed; focusednative37101544118 and actualsolo37101560576 in progress, no result claimed.",
+    "reason": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim. Criteria0/1 retain independently measured candidate scope; #2 actualarch-r7 hosted capture in progress and #4 fullpeer waits then-green framework baseline. F20 is not complete.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -1085,6 +1085,40 @@
         "independent_review": "PASS GPT-6.1 Sol f20_review_sol verifies exact workflow/source/ZIP/native/user hashes, 67/2, zero errors, 22 warnings each. Strict FAIL retained; #3 OPEN.",
         "source_investigation": "Director begin_trainer_battle rematch guard uses _is_host requiring active network session, whereas Foundation mounting/host context uses Session.is_host which accepts solo. This fixture never hosts. Bound-service lifecycle is another source hazard; neither is yet a measured activation-time cause.",
         "limits": "Disclosed post-finale/current/firstmorning fixture, headless/harnessinput/Skip. No F44 victory/reward/recovery claim; #2/#3/#4 OPEN."
+      },
+      {
+        "run": 37101560576,
+        "job": 111141951247,
+        "artifact": 11266362854,
+        "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+        "verdict": "PASS full actual solo ending/reload/continuation with canonical rematch admission",
+        "workflow_conclusion": "success",
+        "checks": 67,
+        "failures": 0,
+        "exit": 0,
+        "seconds": 529,
+        "native_bytes": 76618,
+        "native_sha256": "1df9d87b73976f85a106177e6b7705faa1aff6228178ac6c771c508923fca4c4",
+        "user_log_bytes": 76347,
+        "user_log_sha256": "f7aed1bf1e7a976e8719fda6188b7a23a73b602d1c9d6527a1bacc80f12f2ba1",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "native_warnings": 22,
+        "user_warnings": 22,
+        "artifact_bytes": 673096,
+        "artifact_sha256": "0d06bef3267af6c27c47bbd4dd5a67797b1533462302cb2573660841bea4f392",
+        "logs": [
+          "f20-solo-r20-native.log.gz",
+          "f20-solo-r20-workflow.log.gz",
+          "f20-solo-r20-artifact.zip"
+        ],
+        "passed": "All actual HomeKey/Grandpa/currentfive/starter/memory/fourchoices/creditsoneACK/reset/diskreload/identity/inventory/receipt/repeat/safemovement/journal/bounty3rows/Bclose checks pass. Normal owned callout and ordinaryX admit canonical nonmaster endgamefight. Unchanged final predicate checks active director+manager, exact trainer/source/spec, species/configured55level, manager enemy identity and enemy_owned.",
+        "disk_audit": "Independent lossless persistent envelope contains three production bounty instances with matching world namespace/anchor1/cycle1/clock receipt, ending acknowledgements; worldday2/bountyday1. Detached before/after identity/inventory/receipt comparisons pass.",
+        "authority": "Actual preX host=true active=false writer_valid=true; bound connection arguments not printed, so not claimed inspected. Successful fight proves service path worked in this run.",
+        "independent_review": "MET F20#3 GPT-6.1 Sol f20_review_sol exactsource/workflow/ZIP/native/user/hash/error/fullfinalpredicate/disk audit. 67/0/exit0/529s/zeroerrors; all22warnings retained eachlog.",
+        "limits": "Disclosed post-finale/restoredcurrent/firsthostmorning fixture, headless/harnessinput/controllerSkip. Isolated proof quits during admitted fight, no F44win/reward/recovery or earnedcampaign closure; #2/#4 remain OPEN and main landing pending."
       }
     ],
     "limitations": [
@@ -1223,7 +1257,7 @@
     "1": {
       "verdict": "MET on candidate; main landing pending",
       "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
-      "latest_runtime": "Independent solo-r11 ending MET candidate corroborated by independently audited solo-r15 (63 checks/0 failures): actual Home Key, current five/starter/one truthful memory/four choices, credits exactly one durable acknowledgement, real reset/reload with exact identities/inventory/receipts, completed repeat with no replay. Post-finale and first-host-morning fixture/normal harness input/controller Skip disclosed.",
+      "latest_runtime": "Independent solo-r11 ending MET candidate corroborated by independently audited solo-r15 (63 checks/0 failures): actual Home Key, current five/starter/one truthful memory/four choices, credits exactly one durable acknowledgement, real reset/reload with exact identities/inventory/receipts, completed repeat with no replay. Post-finale and first-host-morning fixture/normal harness input/controller Skip disclosed. Fullactualsolo-r20 67/0 independently corroborates this ending scope and now completes required #3 rematch admission.",
       "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
       "independent_verdict": "MET f20_review \u00a77.2 exactartifact audit; ending criterion independently closed on candidate, main pending. Disclosed post-finale/restoredcurrent fixture, harnessinput/controllerSkip/headless; no earnedcampaign orpeer acceptance."
     },
@@ -1233,11 +1267,13 @@
       "latest_runtime": "r5functional16/0/exit0 butimagevisiblearchFAIL/audiounattributed; source65cbb/c620capturefix compilesinr6 butREADY182460ms shellfalse/playerheldfloorfalse, noPNG/WAV. Exactready/release predicatesknown, time/callcauseunknown. Noextra renderretry;criterion2OPEN. Reviewedfe6496 render-only600s startup allowance+lifecycle counters now actualarch-r7 37102097177 in progress; unchanged readiness predicates and no result claimed."
     },
     "3": {
-      "verdict": "OPEN",
+      "verdict": "MET on candidate; main landing pending",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
-      "indirect_only": "Synthetic62 PASS is supplemental only. Actual solo-r15 directly proves reload, safe movement and ordinary bounty availability; actual rematch admission remains required.",
-      "latest_runtime": "Actual solo-r19 FAIL67/2/zeroerrors: ordinary owned callout and expected normalX endgame prompt activation pass; no fight/source/spec/enemy, can_challenge true. Independent raw auditPASS strict failed scope; #3 OPEN.",
-      "limits": "Requires strengthened actual nonmaster rematch admission in addition to retained reload/safe movement/journal and normalbountyinput/live3rows/Bclose. Enabledprompts alone do not establish full admission. No F44win or allrepeatloop closure claimed."
+      "indirect_only": "Synthetic/focused tests remain supplemental; actualsolo-r20 now directly proves all required continuation gates including actual rematch admission.",
+      "latest_runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
+      "limits": "Requires strengthened actual nonmaster rematch admission in addition to retained reload/safe movement/journal and normalbountyinput/live3rows/Bclose. Enabledprompts alone do not establish full admission. No F44win or allrepeatloop closure claimed.",
+      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+      "independent_verdict": "MET GPT-6.1 Sol f20_review_sol exact original artifact/source/workflow/fullpredicate/disk audit. Disclosed post-finale and firstmorning fixture; no earnedcampaign or F44outcome claim."
     },
     "4": {
       "verdict": "OPEN",
@@ -1289,17 +1325,6 @@
     }
   },
   "remote_pending": {
-    "solo_r20": {
-      "run": 37101560576,
-      "job": 111141951247,
-      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
-      "script": "tests/smoke_f20_ending.gd",
-      "args": "",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101560576",
-      "status": "Original exact-source job setup/import in progress; no duplicate/restart or result claimed."
-    },
     "arch_r7": {
       "run": 37102097177,
       "job": 111143496815,
@@ -1428,7 +1453,7 @@
     "change": "Afterallpriorreload/movement/journal/bountyinput/live3rows/Bclose checks, nearestactualenabledcanonicaltrainerprofile Endgameprompt walkedusingoriginalcapsule NAV/maxframes/recovery/ground/LOS/exactwinner/actionable checks. NormalX activatesproducer, bounded30s verifiesactualmanagerfighting/director/source/exactcanonicalendgamespec/liveopponentfirstspecies/configuredlevel/enemyidentity/trainerowned. ExistingordinarylessonContinue wrapper retained. No directactivation/challenge/resolve/HP/transform edits.",
     "cleanup": "Terminalisolatedfixture quits duringgenuinelyadmittedtrainerfight; flee prohibitedbyproduction. No win/payout/recovery claim; safemovementprovedbeforeadmission.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact c184 plus e782: actualsource/spec/livebody/fight gates sound, existinglessonwrapper cleanup correctly retained. Original8/2clocksettling/NAV/recovery/input/admission bounded; affectedactualsolo required.",
-    "runtime": "Actual solo-r19 FAIL67/2/zeroerrors: ordinary owned callout and expected normalX endgame prompt activation pass; no fight/source/spec/enemy, can_challenge true. Independent raw auditPASS strict failed scope; #3 OPEN."
+    "runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim."
   },
   "home_begin_refusal_proof": {
     "source": "7fefaea2ed86a4328b537903a74c513a811b8f95",
@@ -1460,7 +1485,7 @@
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact working diff committed unchanged93e9: no parser/API/type concern; initial placement before inherited registration, notification reindex, child lifetime cleanup, all production guards preserved. Native synthetic fixture uses actual NPC-facing callback/arbiter ordinaryX both tiers, translation/free. Runtime still required. Original no-parser-concern clearance WITHDRAWN for fixture line67 after actual native parse failure; production portion has no runtime result from this check. One-line explicit WeakRef correction under fresh review.",
     "limits": "Idle translation is not frame-atomic moving-trainer admission. Native empty fixture has no art, ground, campaign, fight or save proof. Original full F20 actual reload/canonical rematch admission remains required, #3 OPEN.",
     "native": "Actual native-r2 PASS13checks0/exit0/4s/zeroengine-script errors. Original r1 failed fixture parse retained. Scope remains synthetic actual NPC/arbiter; fullsolo-r18 canonical encounter remains required.",
-    "actual": "Actual solo-r18 FAIL66checks2/zeroerrors: expected normalX rematch provider activation passes, dialogueclosed; finalcanonicalfight predicate fails with actual subpredicate unknown. Independent raw auditPASS narrow scope; #3 OPEN.",
+    "actual": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
     "native_attempts": [
       {
         "run": 37099206242,
@@ -1527,7 +1552,7 @@
     "change": "Before originalrematch NAV/X, only actualundeployed blocker gets normal creature_recall input andbounded30s deploymentwait. Require actualconsciousownedparty member/visiblebody/localowner. Original finalcanonicalfight predicate unchanged; failure-only reads expose each condition/source/spec/enemy/ownership and pure admissionqueries.",
     "reason": "Freshload intentionallydoesnotauto deploy; can_challenge requires actualallybody. Earlier proof omittednormalcallout. Actualr18 blocker notprinted, so noobservedcauseclaim.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact4530 normalcallout +011964 asyncvisiblewait: onlyactualundeployed normalinput;30sboundedwait, visibleactualownedlocalbody requirement; no directdeployment/stat/pose/save orguard changes. Typedfinalpredicate unchanged. Purecan_challenge/rematch_source_busy/failurefields; affectedactualreplay required.",
-    "runtime": "Actual solo-r19 FAIL67/2/zeroerrors: ordinary owned callout and expected normalX endgame prompt activation pass; no fight/source/spec/enemy, can_challenge true. Independent raw auditPASS strict failed scope; #3 OPEN.",
+    "runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
     "source": "011964eff4fb9b2f5bcd3fe7f6b86e87a605228c"
   },
   "rematch_solo_authority_candidate": {
@@ -1535,7 +1560,7 @@
     "change": "Only begin_trainer_battle rematch authority guard now uses present Session.is_host, consistent with Foundation offline solo authority. Shared director _is_host unchanged; writer/runtime/normal trainer guards unchanged. Readonly preX host/active/director/writer/signal bindings diagnostic.",
     "source_cause": "Session.is_host explicitly accepts offline solo; director _is_host requires active networking. This offline smoke never hosts. Prior first rematch guard therefore refuses the solo path; additional actual blockers not excluded.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete source: scoped guard preserves missingSession/client/preparingclient/writer/runtime/normal admission gates; focused actualSession/productionbegin guard test explicitly stubs only can_challenge/sendout; preX observer adds no mutations or input changes. Actual remote verification required.",
-    "runtime": "Focused authority native PASS1test10assertions0failed/exit0/6s/zeroerrors; actual solo-r20 still in progress, #3 OPEN.",
+    "runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
     "focused_native": {
       "run": 37101544118,
       "job": 111141902304,
