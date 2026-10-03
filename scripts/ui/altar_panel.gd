@@ -357,7 +357,18 @@ func _rebuild(prefer_payment: bool = false) -> void:
 			if not button.disabled and str(button.get_meta("altar_focus_key", "")) == focus_key:
 				first = button
 				break
-	if first != null and not first.disabled: first.call_deferred("grab_focus")
+	if first != null and not first.disabled: call_deferred("_focus_current_button", weakref(first))
+
+
+func _focus_current_button(target: WeakRef) -> void:
+	# A synchronous quote/rebuild can remove this button before deferred focus.
+	# The weak reference cannot keep an obsolete presentation alive.
+	if not _open or _closing or not is_inside_tree() or is_queued_for_deletion() \
+		or not is_instance_valid(_root) or not _root.is_inside_tree() or _root.is_queued_for_deletion(): return
+	var button: Button = target.get_ref() as Button
+	if not is_instance_valid(button) or not button.is_inside_tree() or button.is_queued_for_deletion() \
+		or button.disabled or not button.is_visible_in_tree() or not _root.is_ancestor_of(button): return
+	button.grab_focus()
 
 
 func _wire_focus(roster: Array[Button], payments: Array[Button], selected: Button) -> void:

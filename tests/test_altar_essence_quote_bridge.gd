@@ -304,6 +304,68 @@ func run_initialized_cases(tree: SceneTree) -> Dictionary:
 	return {"cases": completed, "case_assertions": counts, "assertions": assertion_count, "failures": failures}
 
 
+static func _exact_native_counts(raw: Variant, expected: Array) -> bool:
+	if not raw is Array or raw.size() != expected.size(): return false
+	for index: int in expected.size():
+		var value: Variant = raw[index]
+		if not (value is int or value is float) or not is_finite(float(value)) or value != expected[index]: return false
+	return true
+
+
+func test_native_count_guard_compares_json_numbers_without_rounding_or_coercion() -> void:
+	assert_true(_exact_native_counts([12.0, 11.0], [12, 11]))
+	assert_false(_exact_native_counts([12.5, 11.0], [12, 11]))
+	assert_false(_exact_native_counts([12.0, 11.0, 0.0], [12, 11]))
+	assert_false(_exact_native_counts(["12", 11.0], [12, 11]))
+	assert_false(_exact_native_counts([true, 11.0], [1, 11]))
+	assert_false(_exact_native_counts([INF, 11.0], [12, 11]))
+
+
+func run_initialized_focus_case(tree: SceneTree) -> Dictionary:
+	_fixture_tree = tree
+	var f := _fixture()
+	assert_true(f.service.open(STATION))
+	var stale: Button = _buttons(f.panel, "Ground Essence · Cost 20 · Have 100")[0]
+	var obsolete: WeakRef = weakref(stale)
+	f.panel._rebuild(true)
+	assert_false(stale.is_inside_tree(), "the original deferred target is orphaned by the actual rebuild")
+	var current: Button = _buttons(f.panel, "Ground Essence · Cost 20 · Have 100")[0]
+	await tree.process_frame
+	await tree.process_frame
+	assert_true(obsolete.get_ref() == null, "old presentation is freed without focus retaining its button")
+	assert_true(current.has_focus(), "valid current payment button still receives deferred focus")
+	var sentinel := Button.new()
+	f.holder.add_child(sentinel)
+	sentinel.grab_focus()
+	assert_true(sentinel.has_focus())
+	current.disabled = true
+	f.panel.call_deferred("_focus_current_button", weakref(current))
+	await tree.process_frame
+	await tree.process_frame
+	assert_true(sentinel.has_focus(), "disabled targets cannot steal current focus")
+	current.disabled = false
+	var foreign := Button.new()
+	f.holder.add_child(foreign)
+	f.panel.call_deferred("_focus_current_button", weakref(foreign))
+	await tree.process_frame
+	await tree.process_frame
+	assert_true(sentinel.has_focus(), "an enabled button outside the current root is refused")
+	f.panel.call("_focus_current_button", obsolete)
+	assert_true(sentinel.has_focus(), "a dead weak target is harmless")
+	current.queue_free()
+	f.panel.call("_focus_current_button", weakref(current))
+	assert_true(sentinel.has_focus(), "a queued current button is refused before it leaves the tree")
+	f.panel._rebuild(true)
+	f.panel.close()
+	sentinel.grab_focus()
+	await tree.process_frame
+	await tree.process_frame
+	assert_true(sentinel.has_focus(), "close prevents pending current-root focus from stealing focus")
+	_free_fixture(f)
+	_fixture_tree = null
+	return {"assertions": assertion_count, "failures": failures, "completed": true}
+
+
 func test_initialized_native_tree_preserves_all_altar_quote_bridge_assertions() -> void:
 	# The ordinary runner calls cases during SceneTree._init, before the engine
 	# main loop is available. Use the existing cue/focus test pattern: one real
@@ -322,8 +384,13 @@ func run():
 	var result = test.run_initialized_cases(self)
 	test = null
 	await process_frame
+	var focus_test: RefCounted = load("res://tests/test_altar_essence_quote_bridge.gd").new()
+	var focus_result: Dictionary = await focus_test.call("run_initialized_focus_case", self)
+	focus_test = null
+	await process_frame
 	print("ALTAR_QUOTE_BRIDGE_RESULT=" + JSON.stringify(result))
-	quit(0 if result.failures.is_empty() and result.cases.size() == 8 and result.assertions == 157 else 1)
+	print("ALTAR_QUOTE_FOCUS_RESULT=" + JSON.stringify(focus_result))
+	quit(0 if result.failures.is_empty() and result.cases.size() == 8 and result.assertions == 157 and focus_result.completed == true and focus_result.assertions == 12 and focus_result.failures.is_empty() else 1)
 ''')
 	runner.close()
 	var output: Array = []
@@ -336,17 +403,28 @@ func run():
 	if FileAccess.file_exists(log_path): combined += "\n" + FileAccess.get_file_as_string(log_path)
 	var result: Dictionary = {}
 	var result_count := 0
+	var focus_result: Dictionary = {}
+	var focus_result_count := 0
 	for line: String in "\n".join(output).split("\n"):
 		if line.begins_with("ALTAR_QUOTE_BRIDGE_RESULT="):
 			print(line) # Preserve the original child case/count proof in the parent artifact.
 			result_count += 1
 			var parsed: Variant = JSON.parse_string(line.trim_prefix("ALTAR_QUOTE_BRIDGE_RESULT="))
 			if parsed is Dictionary: result = parsed
+		elif line.begins_with("ALTAR_QUOTE_FOCUS_RESULT="):
+			print(line)
+			focus_result_count += 1
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("ALTAR_QUOTE_FOCUS_RESULT="))
+			if parsed is Dictionary: focus_result = parsed
 	assert_eq(result_count, 1, combined)
 	assert_eq(result.get("cases", []), NATIVE_CASES, "every original quote case must execute")
-	assert_eq(result.get("case_assertions", []), NATIVE_ASSERTIONS, "no case can abort and still appear green")
+	assert_true(_exact_native_counts(result.get("case_assertions"), NATIVE_ASSERTIONS), "no case can abort and still appear green")
 	assert_eq(result.get("assertions", 0), 157, "preserve all original assertions")
 	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_eq(focus_result_count, 1, combined)
+	assert_eq(focus_result.get("assertions", 0), 12)
+	assert_true(focus_result.get("completed") == true)
+	assert_eq(focus_result.get("failures", ["missing result"]), [], combined)
 	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
 	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \
 		or combined.contains("RID allocations") or combined.contains("RIDs of type"), combined)
