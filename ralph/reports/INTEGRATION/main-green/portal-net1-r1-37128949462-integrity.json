@@ -1,0 +1,9 @@
+{
+  "run_id": 37128949462,
+  "artifact_id": 11276451967,
+  "checkout_ref": "9794a21092e8162c3708280b43ae17527404f47a",
+  "result": "FAIL Bryn clientStormwood arrival; samefive guestCloudreachcrossPASS buthostarrivalanchorobstructed; originalengineerrors retained withoutwaiver.",
+  "archive": "portal-net1-r1-37128949462-original-artifact.zip",
+  "archive_sha256": "1beb88c616f64ed303129504ef04de9b24ec97080c14a2e006c8ad3836a4c874",
+  "retention": "Complete original archive, no filtering, no error waivers."
+}

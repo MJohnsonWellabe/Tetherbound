@@ -23,6 +23,10 @@ class ButtonActivationObservation extends RefCounted:
 		count += 1
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
+	if action == "f48_diagnostic":
+		var diagnostic: Script = load("res://tools/net/f48_diagnostic_steps.gd") as Script
+		if diagnostic == null: return _result(false,"Diagnostic tools script unavailable")
+		return await diagnostic.call("run",tree,args)
 	match action:
 		"f48_witness": return await _witness(tree, args)
 		"f48_assert": return await _sealed_reply(tree, action, args, _assert(tree, args))
