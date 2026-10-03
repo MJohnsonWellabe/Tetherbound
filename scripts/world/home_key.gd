@@ -128,6 +128,8 @@ func _process(_delta: float) -> void:
 	if is_instance_valid(_refusal_panel) and _refusal_until_msec > 0 and _now_msec() >= _refusal_until_msec:
 		_refusal_panel.hide()
 		_refusal_until_msec = 0
+	elif is_instance_valid(_refusal_panel) and _refusal_panel.visible:
+		_refusal_layer.layer = _refusal_draw_layer(INPUT_OWNER.current(get_tree()))
 	if _closing_edge and not Input.is_action_pressed("menu_cancel") and not Input.is_action_pressed("hotbar_1"):
 		_closing_edge = false
 	if _remote_only:
@@ -529,12 +531,36 @@ func _refuse(reason: String) -> void:
 	if _game != null and _game.has_method("push_world_message"):
 		_game.call("push_world_message", reason)
 
+## Input owners can be CanvasLayers or nodes with a child presentation layer
+## (for example the crop picker). Inspect only this owner's branch and its
+## ancestors, never siblings or the whole scene. The previous toast layer
+## cannot contribute to its own next draw order.
+func _refusal_draw_layer(owner: Node) -> int:
+	var draw_layer := UI_TOKENS.LAYER_MENU + 1
+	if not is_instance_valid(owner) or owner == self or owner.is_queued_for_deletion() or not owner.is_inside_tree():
+		return draw_layer
+	var ancestor: Node = owner.get_parent()
+	while is_instance_valid(ancestor):
+		if not ancestor.is_queued_for_deletion() and ancestor is CanvasLayer and ancestor != _refusal_layer:
+			draw_layer = maxi(draw_layer, (ancestor as CanvasLayer).layer + 1)
+		ancestor = ancestor.get_parent()
+	var pending: Array[Node] = [owner]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		if not is_instance_valid(node) or node.is_queued_for_deletion() or node == self or node == _refusal_layer:
+			continue
+		if node is CanvasLayer:
+			draw_layer = maxi(draw_layer, (node as CanvasLayer).layer + 1)
+		for child: Node in node.get_children():
+			pending.append(child)
+	return draw_layer
+
+
 func _show_refusal(reason: String) -> void:
 	if reason.is_empty() or not is_inside_tree(): return
 	if not is_instance_valid(_refusal_layer):
 		_refusal_layer = CanvasLayer.new()
 		_refusal_layer.name = "HomeKeyMessage"
-		_refusal_layer.layer = UI_TOKENS.LAYER_MENU + 1
 		_refusal_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 		_refusal_panel = PanelContainer.new()
 		_refusal_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -554,6 +580,7 @@ func _show_refusal(reason: String) -> void:
 		_refusal_panel.add_child(_refusal_label)
 		_refusal_layer.add_child(_refusal_panel)
 		add_child(_refusal_layer)
+	_refusal_layer.layer = _refusal_draw_layer(INPUT_OWNER.current(get_tree()))
 	_refusal_label.text = reason
 	_refusal_panel.show()
 	_refusal_until_msec = _now_msec() + maxi(2500, int(float(_settings.get("refusal_interval_seconds", 2.0)) * 1000.0))

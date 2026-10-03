@@ -2,9 +2,12 @@ extends SceneTree
 
 ## Component input/presentation fixture, NOT ordinary gameplay refusal proof.
 ## Actual parsed binding and actual HomeKey observer/toast, with fake refusal
-## context and modal. No actual fight, dialogue, swim, flight or cutscene.
+## context. Real lesson/system-screen presenters use disclosed fixture content;
+## no actual fight, dialogue, swim, flight, cutscene or earned gameplay proof.
 const KEY := preload("res://scripts/world/home_key.gd")
 const OWNER := preload("res://scripts/ui/input_owner.gd")
+const LESSON := preload("res://scripts/onboarding/lesson_panel.gd")
+const SCREEN := preload("res://scripts/ui/system_screen.gd")
 
 class FixtureGame extends Node:
 	var inventory: RefCounted = preload("res://autoload/inventory.gd").new(preload("res://autoload/item_db.gd").new())
@@ -25,7 +28,8 @@ class Modal extends Node:
 
 class Fight extends Node:
 	var aiming := false
-	func presenting_fight() -> bool: return true
+	var presenting := true
+	func presenting_fight() -> bool: return presenting
 	func is_aiming() -> bool: return aiming
 
 var checks := 0
@@ -48,6 +52,18 @@ func _press(action: String) -> void:
 	event.pressed = false
 	Input.parse_input_event(event)
 	await process_frame
+
+func _capture(path: String) -> void:
+	if DisplayServer.get_name() == "headless": return
+	await RenderingServer.frame_post_draw
+	var pixels := root.get_texture().get_image()
+	_check(pixels != null and not pixels.is_empty() and pixels.save_png(path) == OK,
+		"native component presenter/message screenshot saved: " + path)
+
+func _preserved(game: FixtureGame, key: Node, owner: Node, before: Vector3, message: String) -> void:
+	_check(OWNER.current(self) == owner and key.call("owns_input") == false and game.requests == 0
+		and key.get("_phase") == "idle" and game.inventory.count("home_key") == 1
+		and game.actor.global_position == before, message)
 
 func _run() -> void:
 	await process_frame
@@ -98,19 +114,89 @@ func _run() -> void:
 	_check(key._refusal_label.text == game.reason and key._refusal_label.is_visible_in_tree()
 		and OWNER.current(self) == modal, "paused modal still receives a reason without losing ownership")
 	paused = false
-	if DisplayServer.get_name() != "headless":
-		await RenderingServer.frame_post_draw
-		var pixels := root.get_texture().get_image()
-		_check(pixels != null and not pixels.is_empty() and pixels.save_png("user://F18_HOME_KEY_REFUSAL_COMPONENT.png") == OK, "native component message screenshot saved")
 	key._refusal_at = -INF
 	game.reason = ""
 	notices = game.messages.size()
 	await _press("combat_item_1")
 	_check(game.messages.size() == notices and game.requests == 0, "eligible key use remains owned by ordinary HUD route")
+	modal.free()
+	fight.presenting = false
+	game.reason = "Finish talking first."
+	var lesson := LESSON.new()
+	world.add_child(lesson)
+	_check(lesson.open({"id": "home_key", "speaker": "Grandpa · Component fixture",
+		"lines": ["Home Key lesson presentation fixture."],
+		"goal": "UI fixture only; no earned gameplay acceptance."}), "actual lesson presenter opens with disclosed fixture content")
+	key._refusal_at = -INF
+	await _press("hotbar_1")
+	_check(lesson.layer == 30 and key._refusal_layer.layer == 31
+		and key._refusal_label.text == game.reason and key._refusal_label.is_visible_in_tree(),
+		"assigned key refusal is structurally above actual layer-30 lesson")
+	_preserved(game, key, lesson, before, "lesson refusal preserves owner, travel, inventory and actor pose")
+	key._refusal_at = -INF
+	await _press("hotbar_1")
+	_check(key._refusal_layer.layer == 31, "repeated lesson refusal does not escalate its draw layer")
+	await _capture("user://F18_HOME_KEY_REFUSAL_COMPONENT.png")
+	# Keep an existing visible toast while the actual input owner changes.
+	key._show_refusal(game.reason)
+	lesson.free()
+	var screen := SCREEN.new()
+	world.add_child(screen)
+	_check(screen.begin("Home Key refusal · Component fixture", "UI fixture only; no earned gameplay acceptance."),
+		"actual system-screen presenter opens with disclosed fixture content")
+	await process_frame
+	_check(screen.layer == 80 and key._refusal_layer.layer == 81 and key._refusal_panel.visible,
+		"visible toast follows actual input-owner change without a new refusal")
+	game.reason = "Close the current screen first."
+	key._refusal_at = -INF
+	await _press("hotbar_1")
+	_check(key._refusal_layer.layer == 81 and key._refusal_label.text == game.reason,
+		"assigned key refusal is structurally above actual layer-80 system screen")
+	_preserved(game, key, screen, before, "system-screen refusal preserves owner, travel, inventory and actor pose")
+	key._refusal_at = -INF
+	await _press("hotbar_1")
+	_check(key._refusal_layer.layer == 81, "repeated system-screen refusal does not escalate its draw layer")
+	await _capture("user://F18_HOME_KEY_REFUSAL_SYSTEM_COMPONENT.png")
+	screen.free()
+	var ancestor := CanvasLayer.new()
+	ancestor.layer = 40
+	world.add_child(ancestor)
+	var nested_owner := Modal.new()
+	nested_owner.add_to_group(OWNER.GROUP)
+	ancestor.add_child(nested_owner)
+	_check(key._refusal_draw_layer(nested_owner) == 41, "Node owner inherits its actual ancestor CanvasLayer draw order")
+	var child_layer := CanvasLayer.new()
+	child_layer.layer = 60
+	nested_owner.add_child(child_layer)
+	_check(key._refusal_draw_layer(nested_owner) == 61, "Node owner's child CanvasLayer contributes its draw order")
+	var unrelated := CanvasLayer.new()
+	unrelated.layer = 250
+	root.add_child(unrelated)
+	key._refusal_at = -INF
+	await _press("hotbar_1")
+	_check(key._refusal_layer.layer == 61, "unrelated root layer never influences the current owner's refusal")
+	_preserved(game, key, nested_owner, before, "nested-owner refusal preserves owner, travel, inventory and actor pose")
+	key._refusal_at = -INF
+	await _press("hotbar_1")
+	_check(key._refusal_layer.layer == 61, "repeated nested-owner refusal does not escalate its draw layer")
+	var queued_layer := CanvasLayer.new()
+	queued_layer.layer = 400
+	nested_owner.add_child(queued_layer)
+	queued_layer.queue_free()
+	_check(key._refusal_draw_layer(nested_owner) == 61, "queued child layer contributes no draw order")
+	nested_owner.queue_free()
+	_check(key._refusal_draw_layer(nested_owner) == 21, "queued owner contributes no draw order")
+	_check(key._refusal_draw_layer(null) == 21 and key._refusal_draw_layer(key) == 21,
+		"absent owner and Home Key itself cannot feed back the toast's previous draw layer")
+	await process_frame
+	await process_frame
+	_check(key._refusal_layer.layer == 21, "visible toast returns to baseline after its owner leaves")
+	unrelated.free()
+	ancestor.free()
 	key.free()
 	game.free()
 	world.queue_free()
 	await process_frame
 	print("F18_HOME_KEY_REFUSAL_COMPONENT " + JSON.stringify({"checks": checks, "failures": failures,
-		"fixtures": "real inventory/parsed input/HomeKey toast; fake modal/fight/refusal state; no live gameplay acceptance"}))
+		"fixtures": "real inventory/parsed input/HomeKey toast and lesson/system-screen presenters; fixture content/modal branches/fight/refusal state; structural checks and component captures only, no live gameplay acceptance"}))
 	quit(0 if failures.is_empty() else 1)
