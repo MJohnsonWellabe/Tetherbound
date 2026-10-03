@@ -611,7 +611,7 @@
           "emission_fade_power": 2.2,
           "afterburn_porosity": 0.55,
           "duration": 0.72,
-          "grow": 1.18,
+          "grow": 1.65,
           "heat": 0.9,
           "opacity": 0.95,
           "mote_shape": "soft_ember",
