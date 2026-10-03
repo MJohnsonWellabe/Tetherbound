@@ -244,11 +244,9 @@
     "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
   },
   "next_diagnostic": {
-    "source_commit": "0d0ba1dabf65112e76bbd5f5ef97bfe5cf696624",
-    "run": 37093187450,
-    "script": "tests/probe_f19_populated_terrain_material_lifetime.gd",
-    "scope": "Actual committed Meadows regions and production Terrain3D factory/material methods; default/authored materials and drawing true/false; blank inherited rig structure; component diagnosis only",
-    "status": "Replacement dispatched; job queued confirmed; no terminal reproduction verdict"
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original full-world spaceaccept/save/reload; baseline versus all exposed geometry Mesh/Material resources sampled again immediately before actual world deletion. Prior readiness-only scans could miss post-choice or post-load creations/replacements. Log newly retained Material owner paths without altering product state.",
+    "status": "Prepared temporal coverage expansion; not yet dispatched"
   },
   "particle_material_counterfactual_r4": {
     "kind": "f19_actual_world_particle_material_counterfactual",
@@ -326,6 +324,37 @@
     "cancel_requested": true,
     "reason": "Inherited playground onready fields require Player and CameraRig/Camera3D nodes; original component host omitted them. Add blank structurally correct fixture nodes before tree entry. No reproduction or acceptance verdict from this handle.",
     "workflow_conclusion": "cancelled",
-    "artifact": 11262968002
+    "artifact": 11262968002,
+    "artifact_contents": "MANIFEST.txt only; no run.log, no engine reproduction verdict"
+  },
+  "populated_terrain_component_r2": {
+    "kind": "f19_actual_populated_terrain_component",
+    "source_commit": "0d0ba1dabf65112e76bbd5f5ef97bfe5cf696624",
+    "run": 37093187450,
+    "job": 111117691688,
+    "artifact": 11263617640,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 23,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "cases": 4,
+    "resident_regions_each": 64,
+    "installed_terrain_version": "1.0.2",
+    "drawing": [
+      true,
+      false
+    ],
+    "material_variants": [
+      "default",
+      "production ground material factory"
+    ],
+    "result": "Negative reproduction: populated actual Terrain3D with committed Meadows region data and production material methods completed all four component teardowns without the full-world material errors. Does not certify full-world deletion batches or justify a terrain product fix.",
+    "fixtures": "Blank Player/CameraRig/Camera3D structure for inherited onready fields; production full-world ready/process suppressed. Actual terrain factory and authored material methods retained; no region generation, write, actors, campaign or earned-save claim.",
+    "accepted_full_world_witness": false,
+    "raw_log": "ci-populated-terrain-negative-37093187450.log",
+    "raw_log_sha256": "ded91a11922da4328358b2926659a0c0060f548b0ffba25c2827c896949c9025",
+    "next_diagnostic": "Original full-world spaceaccept/save/reload; baseline versus all exposed geometry Mesh/Material resources sampled again immediately before actual world deletion. Prior readiness-only scans could miss post-choice or post-load creations/replacements. Log newly retained Material owner paths without altering product state."
   }
 }

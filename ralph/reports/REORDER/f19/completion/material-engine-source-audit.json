@@ -78,6 +78,12 @@
       "Mesher creates direct RenderingServer instances and binds terrain material RID to native meshes; these handles are outside a Node GeometryInstance3D census. Its destroy method frees clipmap instance RIDs before mesh RIDs."
     ],
     "inference": "An empty Terrain3D component does not cover actual committed region data and native populated mesher ownership. Reuse production factories in a disclosed component host, suppress unrelated world startup, and compare default versus authored material before any product change.",
-    "limitations": "Installed version1.0.2; exact binary-to-upstream commit not independently verified. Component counterfactual cannot close full-world or earned-save acceptance."
+    "limitations": "Installed version1.0.2; exact binary-to-upstream commit not independently verified. Component counterfactual cannot close full-world or earned-save acceptance.",
+    "result": "37093187450 actual four populated cases terminal negative,64regions each,0errors/exit0; no terrain product fix justified."
+  },
+  "temporal_scope_followup": {
+    "observation": "Whole-world retention scans ran at world-ready and choice-ready. Original scenario then resolves choice, saves, resets state, and performs fresh/load/world rebuilds; actual full-world errors follow answered/reload markers. New or replaced resources after readiness were not necessarily retained by prior scans.",
+    "diagnostic": "Resample exposed geometry Meshes/MultiMeshes/Materials and particle draw Meshes/process Materials immediately before inherited world deletion and final teardown; retain through native deletion/new-world settle. Log newly retained Material owner samples, preserve original assertions and fixtures.",
+    "limitations": "This expands temporal and Mesh ownership coverage; no production state mutation or acceptance claim. Internal native RIDs, cached detached templates and resources outside the actual scene tree remain outside exposed Mesh/Material reference coverage."
   }
 }
