@@ -1,0 +1,61 @@
+{
+  "source": "38b655d684d4da586a964fae933a516b448e0b27",
+  "run": 37085229684,
+  "job": 111094023490,
+  "artifact": 11262000625,
+  "passed": false,
+  "complete": false,
+  "workflow_conclusion": "failure",
+  "wrapper_exit": 124,
+  "native_exit_record": null,
+  "timed_out": true,
+  "script_timeout_seconds": 3600,
+  "native_images": {
+    "0000-actual-farmhouse-doorway-day-clear-low.png": [
+      1920,
+      1080
+    ],
+    "0001-actual-farmhouse-doorway-night-clear-low.png": [
+      1920,
+      1080
+    ],
+    "0002-actual-farmhouse-doorway-diagnostic-house-lights-off-night-clear-low.png": [
+      1920,
+      1080
+    ],
+    "0003-actual-farmhouse-doorway-day-rain-low.png": [
+      1920,
+      1080
+    ],
+    "0004-actual-farmhouse-doorway-night-rain-low.png": [
+      1920,
+      1080
+    ],
+    "0005-actual-farmhouse-doorway-diagnostic-house-lights-off-night-rain-low.png": [
+      1920,
+      1080
+    ]
+  },
+  "capture_manifest_present": false,
+  "motion_present": false,
+  "script_error_count": 0,
+  "error_count": 1,
+  "scope": "Partial native1920x1080 Low/software farm-door day/night clear/rain originals plus2matched house-light-off diagnostics excludedfromacceptance. No completed Hall circuit/manifest/motion/device/MHigh/fullBarsAorB proof. Native process terminated by timeout; wrapper exit124 is explicit joblog, no native exit_code file.",
+  "hashes": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "artifact-manifest.txt": "e988f278fefbfeb43e184001ea9ab2638a333416ece4db8bd7cf5e82a2eacd67",
+    "graphics_override.cfg": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30",
+    "job.log": "6f13c06e0425fc39dc5ab3353d288e99255d7f29aa191562a26500aff92b2e77",
+    "native.log": "ddd4a44ebf2b9d3a0d44c9fd97a90c48baf02add07bc68022d51b50895e1bb89",
+    "request.json": "b57ee04fd61eaae3905e3047964e1ba8c94a1ccd47b0773ecffbedb9cfd60784",
+    "runtime-artifact.zip": "3a9c429b640be210d792b9e79bdb120c9d40e9346980fe1e4a4a4a95c0bf18ca",
+    "workflow-artifacts.json": "8ff822f560b92460f200d8bf77a9d21492f2d5a4fbff3e74ba22818311f31c0b",
+    "workflow-jobs.json": "0492a0febd1b075b8ba397e605eb389685d9df4e69605870ac36b37c3370f437",
+    "images/0000-actual-farmhouse-doorway-day-clear-low.png": "2741802fac39dab03e8449b1b745807b1435bb74f285a9ef3f38f05e0ffef941",
+    "images/0001-actual-farmhouse-doorway-night-clear-low.png": "3d39501182196864b285cb04e538e088f12800e5b14e5b931e502f213232d261",
+    "images/0002-actual-farmhouse-doorway-diagnostic-house-lights-off-night-clear-low.png": "477cc486c2afaa897ab4b5999577197e1b65464186eb185dbe74f91fb962a6cc",
+    "images/0003-actual-farmhouse-doorway-day-rain-low.png": "604b7e7ae16dcb34eb209bc90c6f26d3460bdf3666b2d8c2c7c5f220698ef7b6",
+    "images/0004-actual-farmhouse-doorway-night-rain-low.png": "af8ec16bbd01b1053c27cc9d88208cca4d9ad3bc7bb746a01b8cac77ba5ca773",
+    "images/0005-actual-farmhouse-doorway-diagnostic-house-lights-off-night-rain-low.png": "9c7777a7e4dee7d3b0beeedafd108370e6f5ffaf37a972d6b30a9d1e51e2ac1f"
+  }
+}

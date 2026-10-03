@@ -148,7 +148,10 @@ func _save_view(label: String, time_name: String, weather_name: String = "clear"
 		"features": GRAPHICS.values(), "elapsed_ms": captured_ms, "diagnostic": diagnostic,
 		"equipped_tool": str(_game.get("equipped_tool")), "nearby_lights": _nearby_lights(),
 		"companion": {"path": str(ally.get_path()), "body": _coordinates(ally.global_position)} if is_instance_valid(ally) else {}})
-	return true
+	# Best-effort partial metadata; an external kill during a rewrite may still
+	# interrupt it. Only the completed circuit can set complete=true.
+	_write_manifest(false)
+	return _failed.is_empty()
 
 
 func _nearby_lights() -> Array[Dictionary]:
@@ -295,7 +298,11 @@ func _write_manifest(complete: bool) -> void:
 		"shortcuts": ["inherited post-opening flags and starter", "one inherited initial farmhouse placement", "injected physical joypad bindings including ordinary companion recall", "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture", "separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"],
 		"diagnostic_only": _farm_diagnostic_only,
 		"scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
+	file.flush()
+	var write_error := file.get_error()
 	file.close()
+	if write_error != OK:
+		_failed = "could not finish writing visual manifest"
 
 
 func _coordinates(value: Vector3) -> Array[float]:
