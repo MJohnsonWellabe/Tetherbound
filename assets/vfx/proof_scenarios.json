@@ -593,8 +593,9 @@
       "origin_why": "The practice trainer's fight ground (vegetation.json clearings[4]): an authored open clearing the game keeps for 11 m trainer arenas.",
       "yaw_deg": 0.0,
       "weather": "clear",
-      "settle_frames": 180,
-      "post_freeze_frames": 30
+      "settle_frames": 60,
+      "post_freeze_frames": 30,
+      "capture_fixed_fps": 20
     }
   },
   "capture_wall_watchdog_s": 120.0
