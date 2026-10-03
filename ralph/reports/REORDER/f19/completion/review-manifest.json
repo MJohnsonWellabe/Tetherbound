@@ -355,7 +355,10 @@
   },
   "solmane_cold_resource_partition": {
     "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
-    "status": "Prepared; not yet dispatched",
+    "status": "Live separate native resource owner partitions; no acceptance pending terminal raw logs",
+    "source_commit": "13ead2b4318d4b627f4e17eb58c72f040b1bd62a",
+    "resources": {"run": 37107215424, "job": 111157991749},
+    "except_resources_landmarks": {"run": 37107216842, "job": 111157998170},
     "scope": "Only active surface override refs under CloudreachResources/RenewableResources versus remaining non-Landmarks roots. Original cold lifecycle unchanged; diagnosis only."
   }
 }
