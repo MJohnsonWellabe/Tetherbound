@@ -1,6 +1,6 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Physical support/presentation dependency integrated; revised dock producer, authored Hall approach, transient source observation, unchanged main-quest oracle and actual completed Grandpa revisit ready. Awaiting serialized runtime slot after F18/F19/F17; no actual acceptance closed.",
+    "reason": "Actual Tidewake r7 passes on687732d0b2 after host admission refresh and lossless codec integration; independent f20_review scores criterion0 MET on candidate. Solo/net/render criteria1-4 remain OPEN and await the serialized slot after F18/F19/F17.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -90,6 +90,17 @@
         "checks": 21,
         "failures": 2,
         "reason": "after correct dock input and 30 second wait, pending owner_plan baseline conflicts in party; world journal exists, personal receipt/save absent"
+      },
+      {
+        "log": "f20-tidewake-r7.log.gz",
+        "verdict": "PASS",
+        "source": "687732d0b2",
+        "checks": 21,
+        "failures": 0,
+        "exit_code": 0,
+        "engine_errors": 0,
+        "warnings": "One pre-existing water_world instance_reset_physics_interpolation deprecation; retained in exact log.",
+        "scope": "Disclosed restored-current fixture, then real Mara afterword, ordinary capsule walk/exact dock X, durable world and personal receipt, production save0true, no homecoming or credits. No earned Nerissa/campaign claim."
       }
     ],
     "limitations": [
@@ -213,9 +224,12 @@
   },
   "criteria": {
     "0": {
-      "verdict": "OPEN",
+      "verdict": "MET on candidate; main landing pending",
       "required": "actual Tidewake dock conclusion saves world and personal receipt, no credits",
-      "latest_runtime": "f20-tidewake-r6.log.gz FAIL before scoped dock refresh/retry"
+      "latest_runtime": "f20-tidewake-r7.log.gz PASS21checks0failures",
+      "source": "687732d0b2e76cbc701b4bcd618ef574a0ab0e53",
+      "independent_verdict": "f20_review §7.2 MET: actual Mara afterword, ordinary capsule/exact grounded actionable dock input, both durable world and personal completion, production save0true, no credits/homecoming. Gzip matches raw log; zero engine/script errors; retained deprecation warning.",
+      "limitations": "Disclosed restored-current/post-Nerissa fixture, no earned campaign, co-op or reload claim. Does not claim main acceptance."
     },
     "1": {
       "verdict": "OPEN",
