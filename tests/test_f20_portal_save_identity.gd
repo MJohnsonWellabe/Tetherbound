@@ -66,7 +66,7 @@ func test_pending_world_owner_bool_save_and_merged_slot_reload_use_actual_locato
 	assert_true(owner_disk.get("satchel_escrow", {}).get(row.receipt, {}).get("status") == "settled")
 	game.host = true
 	assert_true(saver.save(game, 0), "ordinary merged save retains the same portal identities")
-	var flat := DOCUMENT.parse(FileAccess.get_file_as_string(saver.slot_path(0)))
+	var flat: Dictionary = DOCUMENT.parse(FileAccess.get_file_as_string(saver.slot_path(0)))
 	assert_false(flat.has("world_id"), "validation projection must not alter the merged slot schema")
 	assert_eq(flat.get(SAVE.SPLIT_LOCATOR_KEY, {}).get("world_id"), "slot-0")
 	var loaded := _game()
@@ -112,7 +112,7 @@ func test_corrupt_disk_locator_cannot_authorize_another_world_portal_journal() -
 	var owner_bytes := FileAccess.get_file_as_bytes(owner_path)
 	var world_path: String = saver.worlds().path_for("slot-0")
 	var world_bytes := FileAccess.get_file_as_bytes(world_path)
-	var flat := DOCUMENT.parse(FileAccess.get_file_as_string(saver.slot_path(0)))
+	var flat: Dictionary = DOCUMENT.parse(FileAccess.get_file_as_string(saver.slot_path(0)))
 	flat[SAVE.SPLIT_LOCATOR_KEY].world_id = "another-world"
 	var file := FileAccess.open(saver.slot_path(0), FileAccess.WRITE)
 	assert_true(file != null)
