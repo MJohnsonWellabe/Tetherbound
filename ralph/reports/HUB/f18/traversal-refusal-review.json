@@ -998,5 +998,13 @@
         "outcome": "FAIL: original traversal command timed out after actual boot/fixture/fly_setup passed. No exit_code/no PNG/no receipt. Source shows callback guard but original does not prove bound-refusal/draw/callback/Jump release; force_draw stall merely plausible, not established."
       }
     ]
+  },
+  "water_flight_followup": {
+    "parent_source": "eaf3fab2bd05a9858471257714dc296e0fffd825",
+    "source_status": "APPROVE independent GPT-6.1 Sol: actual Water Player mounts shipped FlyController, no Water launch exclusion; dry staging prevents swimming confusion, unchanged actualcontext/refusal/release/recovery/deadline guards; traces JSONsafe/read-only; nativepending.",
+    "scope": "Optional --flying --f18-flight-water direct actual Water fixture, existing dry lesson staging before existing fly_setup, actual Water Player grounded double Jump thereafter. Previous Meadows native failures remain unproven. No earned Water/Fly unlock or crossing credit.",
+    "invariants": "Same actual mountedFly/offfloor/preciseLandfirst/keybinding/owner/inventory/request/channel/context/recovery/release guards and original deadlines; no gameplaystate/posewrites beyond disclosed priorfixtures; defaultflyingMeadowsunchanged.",
+    "native_phase_trace": "Read-only originalguardreceipt beforecapture and passed/captured/monotonic fields aftercapture; noawait/inputchanges",
+    "native_status": "UNPROVEN"
   }
 }

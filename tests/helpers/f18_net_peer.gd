@@ -264,7 +264,12 @@ func _f18_traversal_refusal(game: Node, kind: String) -> Dictionary:
 	var refused: bool = await guards.bound_refusal(kind, source)
 	var pixels: Dictionary = {}
 	if refused and DisplayServer.get_name() != "headless":
+		print("F18_REFUSAL_CAPTURE_PHASE " + JSON.stringify({"phase": "before_native_capture", "kind": kind,
+			"monotonic_msec": Time.get_ticks_msec(), "process_frame": Engine.get_process_frames(),
+			"guard_receipt": guards.receipts.back()}))
 		pixels = await _f18_capture_refusal(game, guards, kind, source, player)
+		print("F18_REFUSAL_CAPTURE_PHASE " + JSON.stringify({"phase": "after_native_capture", "kind": kind,
+			"monotonic_msec": Time.get_ticks_msec(), "passed": pixels.get("passed"), "captured": pixels.get("captured")}))
 	var released: bool = true
 	if kind == "flying":
 		var release_edge: Dictionary = _press_edge("jump", false)
